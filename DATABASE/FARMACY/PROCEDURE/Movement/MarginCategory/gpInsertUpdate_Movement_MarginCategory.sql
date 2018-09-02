@@ -19,16 +19,26 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_MarginCategory(
     IN inPriceMin              TFloat,     --
     IN inPriceMax              TFloat,     --
     IN inUnitId                Integer    , -- Подразделение
+   OUT outMessageText          Text       , -- вернули, если есть ошибка
     IN inSession               TVarChar     -- сессия пользователя
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
+
+   DECLARE vbPeriodCount  Integer;
+   DECLARE vbOperDateStart TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
+
+    -- проверка
+    IF COALESCE (inDayCount, 0) = 0 
+    THEN
+        RAISE EXCEPTION 'Ошибка.Не выбрано кол-во дней периода для анализа.';
+    END IF;
 
     -- определяем признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -79,6 +89,19 @@ BEGIN
   
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
+    
+    -- проверка даты начала периода для анализа
+    vbPeriodCount := (CEIL( (date_part('DAY', inEndSale - inStartSale) / inDayCount) ::TFloat)) :: Integer;
+    --должно быть мин. 2 периода для анализа
+    IF vbPeriodCount < 2 THEN vbPeriodCount := 2; END IF;
+    vbOperDateStart := (inEndSale - ('' ||(vbPeriodCount * inDayCount)-1 || 'DAY ')  :: interval ) TDateTime;
+
+    IF vbOperDateStart <> inStartSale
+    THEN
+        outMessageText:= 'Ошибка.Кол-во дней периода не кратно периоду для анализа.Рекомендуемая нач.дата ' || CAST (vbOperDateStart AS Date)  ;
+    END IF; 
+    
+    
 
 END;
 $BODY$

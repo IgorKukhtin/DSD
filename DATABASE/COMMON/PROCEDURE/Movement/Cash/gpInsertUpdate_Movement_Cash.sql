@@ -4,24 +4,26 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTi
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TdateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
- INOUT ioId                  Integer   , -- Ключ объекта <Документ>
-    IN inInvNumber           TVarChar  , -- Номер документа
-    IN inOperDate            TDateTime , -- Дата документа
-    IN inServiceDate         TDateTime , -- Дата начисления
-    IN inAmountIn            TFloat    , -- Сумма прихода
-    IN inAmountOut           TFloat    , -- Сумма расхода
-    IN inAmountSumm          TFloat    , -- Cумма грн, обмен
-    IN inComment             TVarChar  , -- Комментарий
-    IN inCashId              Integer   , -- Касса
-    IN inMoneyPlaceId        Integer   , -- Объекты работы с деньгами
-    IN inPositionId          Integer   , -- Должность
-    IN inMemberId            Integer   , -- Физ лицо (через кого)
-    IN inContractId          Integer   , -- Договора
-    IN inInfoMoneyId         Integer   , -- Управленческие статьи
-    IN inUnitId              Integer   , -- Подразделения
-    IN inMovementId_Invoice  Integer   , -- документ счет
+ INOUT ioId                   Integer   , -- Ключ объекта <Документ>
+    IN inInvNumber            TVarChar  , -- Номер документа
+    IN inOperDate             TDateTime , -- Дата документа
+    IN inServiceDate          TDateTime , -- Дата начисления
+    IN inAmountIn             TFloat    , -- Сумма прихода
+    IN inAmountOut            TFloat    , -- Сумма расхода
+    IN inAmountSumm           TFloat    , -- Cумма грн, обмен
+    IN inComment              TVarChar  , -- Комментарий
+    IN inCarId                Integer   , -- автомобиль
+    IN inCashId               Integer   , -- Касса
+    IN inMoneyPlaceId         Integer   , -- Объекты работы с деньгами
+    IN inPositionId           Integer   , -- Должность
+    IN inMemberId             Integer   , -- Физ лицо (через кого)
+    IN inContractId           Integer   , -- Договора
+    IN inInfoMoneyId          Integer   , -- Управленческие статьи
+    IN inUnitId               Integer   , -- Подразделения
+    IN inMovementId_Invoice   Integer   , -- документ счет
 
     IN inCurrencyId           Integer   , -- Валюта
    OUT outCurrencyValue       TFloat    , -- Курс для перевода в валюту баланса
@@ -204,6 +206,7 @@ BEGIN
                                          , inAmountSumm  := inAmountSumm
                                          , inAmountCurrency := vbAmountCurrency
                                          , inComment     := inComment
+                                         , inCarId       := inCarId
                                          , inCashId      := inCashId
                                          , inMoneyPlaceId:= inMoneyPlaceId
                                          , inPositionId  := inPositionId
@@ -246,6 +249,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 01.09.18         * add Car
  21.05.17         * inCurrencyPartnerId
  26.07.16         *
  27.05.15         * add MovementId_Partion

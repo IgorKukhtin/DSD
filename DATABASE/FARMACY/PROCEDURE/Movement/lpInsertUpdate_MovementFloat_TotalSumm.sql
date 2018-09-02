@@ -40,6 +40,7 @@ $BODY$
   DECLARE vbDiscountPercent TFloat;
   DECLARE vbExtraChargesPercent TFloat;
   DECLARE vbChangePrice TFloat;
+  DECLARE vbRoundingTo10 Boolean;
 BEGIN
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -53,7 +54,8 @@ BEGIN
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END
           , COALESCE (MovementFloat_ChangePrice.ValueData, 0)
-            INTO vbMovementDescId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePrice
+          , COALESCE (MB_RoundingTo10.ValueData, FALSE)::boolean
+            INTO vbMovementDescId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePrice, vbRoundingTo10
       FROM Movement
            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -67,8 +69,10 @@ BEGIN
            LEFT JOIN MovementFloat AS MovementFloat_ChangePrice
                                    ON MovementFloat_ChangePrice.MovementId =  Movement.Id
                                   AND MovementFloat_ChangePrice.DescId = zc_MovementFloat_ChangePrice()
+           LEFT JOIN MovementBoolean AS MB_RoundingTo10
+                                     ON MB_RoundingTo10.MovementId =  Movement.Id
+                                    AND MB_RoundingTo10.DescId = zc_MovementBoolean_RoundingTo10()
       WHERE Movement.Id = inMovementId;
-
 
      -- Расчет Итоговых суммы
      SELECT 
@@ -189,10 +193,16 @@ BEGIN
                                  THEN CAST (tmpMI.OperCount_calc * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
                             ELSE CAST (tmpMI.OperCount_calc * tmpMI.Price AS NUMERIC (16, 2))
                        END) AS OperSumm_Partner
-                   -- сумма по Контрагенту с учетом скидки в цене - с округлением до 2-х знаков
+                   -- сумма по Контрагенту с учетом скидки в цене - с округлением до 2-х знаков, в чеках до 1 знака
                  , SUM (CASE WHEN tmpMI.CountForPrice <> 0
-                                  THEN CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                             ELSE CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) AS NUMERIC (16, 2))
+                             THEN 
+                                CASE WHEN vbRoundingTo10 = True 
+                                THEN CAST (CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) / tmpMI.CountForPrice AS NUMERIC (16, 1)) AS NUMERIC (16, 2))
+                                ELSE CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) / tmpMI.CountForPrice AS NUMERIC (16, 2)) END
+                             ELSE 
+                                CASE WHEN vbRoundingTo10 = True 
+                                THEN CAST (CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) AS NUMERIC (16, 1)) AS NUMERIC (16, 2))
+                                ELSE CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) AS NUMERIC (16, 2)) END
                         END
                        ) AS OperSumm_Partner_ChangePrice
                    -- сумма по Заготовителю - с округлением до 2-х знаков
@@ -321,7 +331,7 @@ BEGIN
                              , SUM (COALESCE (MIFloat_SummChild.ValueData, 0))      AS OperSumm_Child
  
                              , SUM (COALESCE (MIFloat_AmountPlanMax.ValueData, 0))  AS OperCount_PlanMax -- 
-
+                             
                         FROM Movement
                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                     AND MovementItem.isErased = FALSE
@@ -423,7 +433,7 @@ BEGIN
           ) AS _tmp;
 
      -- Тест
-     -- RAISE EXCEPTION '%', vbOperCount_Master;
+     -- RAISE EXCEPTION '%', vbOperSumm_Partner;
 
      IF vbMovementDescId = zc_Movement_PersonalSendCash() OR vbMovementDescId = zc_Movement_PersonalAccount()
      THEN
@@ -486,10 +496,11 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgres;
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 31.08.18                                                      * add vbRoundingTo10
  04.02.17         * 
  20.04.16         * add vbTotalSummHoliday
  19.10.14                                        * add vbOperCount_Second

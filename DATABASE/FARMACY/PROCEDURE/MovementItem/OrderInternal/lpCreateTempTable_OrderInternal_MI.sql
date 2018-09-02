@@ -36,6 +36,7 @@ BEGIN
              , MinimumLot       TFloat
              , MCS              TFloat
              , Remains          TFloat
+             , Reserved         TFloat
              , Income           TFloat
              , CheckAmount      TFloat
              , SendAmount       TFloat
@@ -123,6 +124,10 @@ BEGIN
                              FROM tmpMIF
                              WHERE tmpMIF.DescId = zc_MIFloat_Remains()
                              )
+        , tmpMIF_Reserve AS (SELECT tmpMIF.*
+                             FROM tmpMIF
+                             WHERE tmpMIF.DescId = zc_MIFloat_Reserved()
+                             )
         , tmpMIF_Income AS (SELECT tmpMIF.*
                             FROM tmpMIF
                             WHERE tmpMIF.DescId = zc_MIFloat_Income()  
@@ -169,6 +174,7 @@ BEGIN
             , MIFloat_MinimumLot.ValueData         AS MinimumLot
             , MIFloat_MCS.ValueData                AS MCS
             , MIFloat_Remains.ValueData            AS Remains
+            , MIFloat_Reserved.ValueData           AS Reserved
             , MIFloat_Income.ValueData             AS Income
             , MIFloat_Check.ValueData              AS CheckAmount
             , MIFloat_Send.ValueData               AS SendAmount
@@ -221,6 +227,7 @@ BEGIN
               LEFT JOIN tmpMIF_MinimumLot     AS MIFloat_MinimumLot     ON MIFloat_MinimumLot.MovementItemId     = MovementItem.Id
               LEFT JOIN tmpMIF_MCS            AS MIFloat_MCS            ON MIFloat_MCS.MovementItemId            = MovementItem.Id 
               LEFT JOIN tmpMIF_Remains        AS MIFloat_Remains        ON MIFloat_Remains.MovementItemId        = MovementItem.Id
+              LEFT JOIN tmpMIF_Reserve        AS MIFloat_Reserved       ON MIFloat_Reserved.MovementItemId       = MovementItem.Id
               LEFT JOIN tmpMIF_Income         AS MIFloat_Income         ON MIFloat_Income.MovementItemId         = MovementItem.Id
               LEFT JOIN tmpMIF_Check          AS MIFloat_Check          ON MIFloat_Check.MovementItemId          = MovementItem.Id
               LEFT JOIN tmpMIF_Send           AS MIFloat_Send           ON MIFloat_Send.MovementItemId           = MovementItem.Id
@@ -235,6 +242,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 31.08.18         *
  20.03.18         *
  09.04.17         * оптимизация
  22.12.16         * add AmountDeferred

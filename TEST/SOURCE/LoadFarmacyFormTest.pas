@@ -1310,6 +1310,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMCSForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMCSForm');
 

@@ -66,6 +66,9 @@ type
     cxLabel20: TcxLabel;
     ceCurrencyPartner: TcxButtonEdit;
     CurrencyPartnerGuides: TdsdGuides;
+    cxLabel21: TcxLabel;
+    edCar: TcxButtonEdit;
+    GuidesCar: TdsdGuides;
   private
     { Private declarations }
   public

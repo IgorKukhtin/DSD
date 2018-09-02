@@ -528,6 +528,7 @@ BEGIN
                      ELSE 0
                 END                                                 AS PartionGoodsDateColor
            , tmpMI.Remains                                          AS RemainsInUnit
+           , tmpMI.Reserved
            , tmpMI.MCS
 
            , tmpMI.MCSIsClose
@@ -869,26 +870,26 @@ BEGIN
 
      -- ДАННЫЕ
      CREATE TEMP TABLE _tmpMI (Id integer
-             , MovementItemId Integer
-             , PriceListMovementItemId Integer
-             , Price TFloat
-             , PartionGoodsDate TDateTime
-             , GoodsId Integer
-             , GoodsCode TVarChar
-             , GoodsName TVarChar
-             , MainGoodsName TVarChar
-             , JuridicalId Integer
-             , JuridicalName TVarChar
-             , MakerName TVarChar
-             , ContractId Integer
-             , ContractName TVarChar
-             , AreaId Integer
-             , AreaName TVarChar
-             , isDefault Boolean
-             , Deferment Integer
-             , Bonus TFloat
-             , Percent TFloat
-             , SuperFinalPrice TFloat) ON COMMIT DROP;
+                             , MovementItemId Integer
+                             , PriceListMovementItemId Integer
+                             , Price TFloat
+                             , PartionGoodsDate TDateTime
+                             , GoodsId Integer
+                             , GoodsCode TVarChar
+                             , GoodsName TVarChar
+                             , MainGoodsName TVarChar
+                             , JuridicalId Integer
+                             , JuridicalName TVarChar
+                             , MakerName TVarChar
+                             , ContractId Integer
+                             , ContractName TVarChar
+                             , AreaId Integer
+                             , AreaName TVarChar
+                             , isDefault Boolean
+                             , Deferment Integer
+                             , Bonus TFloat
+                             , Percent TFloat
+                             , SuperFinalPrice TFloat) ON COMMIT DROP;
 
 
       -- Сохраниели данные
@@ -1669,7 +1670,7 @@ BEGIN
                     FROM tmpGoods
                          FULL JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
                    )
-
+      -- считаем остатки
       , tmpRemains AS (SELECT Container.ObjectId
                             , SUM (Container.Amount) AS Amount
                        FROM Container
@@ -1683,7 +1684,7 @@ BEGIN
 --                         AND Container.ObjectId in (SELECT tmpMI.GoodsId FROM tmpGoodsId AS tmpMI)
                        GROUP BY Container.ObjectId
                       )
-
+      -- приход
       , tmpIncome AS (SELECT MovementItem_Income.ObjectId               AS Income_GoodsId
                            , SUM (MovementItem_Income.Amount) :: TFloat AS Income_Amount
                       FROM Movement AS Movement_Income
@@ -1940,6 +1941,42 @@ BEGIN
 --                                      AND ObjectLink.ObjectId IN (SELECT DISTINCT tmpData.Id FROM tmpData)
                                  )
 
+
+   -- выбираем отложенные Чеки (как в кассе колонка VIP) 
+   , tmpMovementChek AS (SELECT Movement.Id
+                         FROM MovementBoolean AS MovementBoolean_Deferred
+                              INNER JOIN Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
+                                                 AND Movement.DescId = zc_Movement_Check()
+                                                 AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                           AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                         WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
+                           AND MovementBoolean_Deferred.ValueData = TRUE
+                        UNION
+                         SELECT Movement.Id
+                         FROM MovementString AS MovementString_CommentError
+                              INNER JOIN Movement ON Movement.Id     = MovementString_CommentError.MovementId
+                                                 AND Movement.DescId = zc_Movement_Check()
+                                                 AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                           AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                        WHERE MovementString_CommentError.DescId = zc_MovementString_CommentError()
+                          AND MovementString_CommentError.ValueData <> ''
+                        )
+   , tmpReserve AS (SELECT MovementItem.ObjectId             AS GoodsId
+                         , SUM (MovementItem.Amount)::TFloat AS Amount
+                    FROM tmpMovementChek
+                         INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementChek.Id
+                                                AND MovementItem.DescId     = zc_MI_Master()
+                                                AND MovementItem.isErased   = FALSE
+                    GROUP BY MovementItem.ObjectId
+                    )
+
+
        -- Результат 1
        SELECT
              tmpMI.Id                                       AS Id
@@ -1995,6 +2032,7 @@ BEGIN
                      ELSE 0
                 END AS PartionGoodsDateColor
            , Remains.Amount                                                  AS RemainsInUnit
+           , COALESCE (tmpReserve.Amount, 0)                       :: TFloat AS Reserved           -- кол-во в отложенных чеках
            , Object_Price_View.MCSValue                                      AS MCS
            , COALESCE (Object_Price_View.MCSIsClose, FALSE)                  AS MCSIsClose
            , COALESCE (Object_Price_View.MCSNotRecalc, FALSE)                AS MCSNotRecalc
@@ -2057,6 +2095,7 @@ BEGIN
             LEFT JOIN tmpCheck                          ON tmpCheck.GoodsId                 = tmpMI.GoodsId
             LEFT JOIN tmpSend                           ON tmpSend.GoodsId                  = tmpMI.GoodsId
             LEFT JOIN tmpDeferred                       ON tmpDeferred.GoodsId              = tmpMI.GoodsId
+            LEFT JOIN tmpReserve                        ON tmpReserve.GoodsId               = tmpMI.GoodsId
             LEFT JOIN SelectMinPrice_AllGoods ON SelectMinPrice_AllGoods.MovementItemId = tmpMI.Id
 
             LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = tmpMI.JuridicalId
@@ -2187,6 +2226,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 31.08.18         * add Reserved               
  02.10.17         * add area
  12.09.17         *
  04.08.17         *

@@ -440,6 +440,17 @@ inherited PriceForm: TPriceForm
             Options.Editing = False
             Width = 80
           end
+          object Reserved: TcxGridDBColumn
+            Caption = #1054#1090#1083'. '#1090#1086#1074#1072#1088' ('#1095#1077#1082')'
+            DataBinding.FieldName = 'Reserved'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' ('#1095#1077#1082')'
+            Options.Editing = False
+            Width = 55
+          end
           object RemainsNotMCS: TcxGridDBColumn
             Caption = #1042#1080#1088#1090'. '#1074#1086#1079#1074#1088#1072#1090
             DataBinding.FieldName = 'RemainsNotMCS'

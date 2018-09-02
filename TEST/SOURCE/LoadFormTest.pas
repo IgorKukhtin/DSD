@@ -311,7 +311,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCashJournalUserForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashOperationForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCash_PersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCash_PersonalForm');
 
@@ -2095,6 +2095,7 @@ end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceList_Unit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceList_Unit_ObjectForm');
   exit;
@@ -2112,16 +2113,16 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMoneyPlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMoneyPlace_ObjectForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMoneyPlaceCash_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMoneyPlaceCash_ObjectForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsFuel_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsFuel_ObjectForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberPlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberPlace_ObjectForm');
-
+  }
 end;
 
 procedure TLoadFormTest.LoadUnitFormTest;

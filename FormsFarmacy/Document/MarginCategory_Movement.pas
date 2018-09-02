@@ -123,6 +123,7 @@ type
     bbOpenReportSimple: TdxBarButton;
     gpUpdate_isReport: TdsdStoredProc;
     actUpdateisReport: TdsdExecStoredProc;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public
