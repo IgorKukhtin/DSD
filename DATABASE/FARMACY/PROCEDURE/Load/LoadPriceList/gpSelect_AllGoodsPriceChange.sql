@@ -247,9 +247,9 @@ BEGIN
         ResultSet.NewPrice,
         ResultSet.PriceFix_Goods :: TFloat AS PriceFix_Goods,
 
-        COALESCE (ResultSet.PercentMarkup, inMinPercent) :: TFloat AS MinMarginPercent,
+        COALESCE (ResultSet.PercentMarkup, 0) :: TFloat AS MinMarginPercent,
 
-        CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
+        CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 100.0
                    ELSE (ResultSet.NewPrice / ResultSet.LastPrice) * 100 - 100
               END AS NUMERIC (16, 1)) :: TFloat AS PriceDiff,
 
@@ -277,9 +277,9 @@ BEGIN
         ResultSet.isOneJuridical,
         -- CASE WHEN ResultSet.isTop_calc = TRUE THEN ResultSet.isTop_calc ELSE ResultSet.IsTop END :: Boolean AS IsTop,
         ResultSet.IsTop_Goods,
-        CASE WHEN ResultSet.MinExpirationDate < (CURRENT_DATE + Interval '6 month')
+        CASE WHEN ResultSet.MinExpirationDate < (CURRENT_DATE + Interval '6 MONTH')
                   THEN TRUE
-             ELSE FALSE
+             ELSE TRUE
         END  AS Reprice
     FROM
         ResultSet
@@ -298,15 +298,15 @@ BEGIN
                   AND COALESCE(ResultSet.NDSKindId,0) = zc_Enum_NDSKind_Common()
                  )
              )
-         AND (ResultSet.ExpirationDate IS NULL
+         /*AND (ResultSet.ExpirationDate IS NULL
            OR ResultSet.ExpirationDate = '1899-12-30'::TDateTime
-           OR ResultSet.ExpirationDate > (CURRENT_DATE + Interval '6 month')
-             )
+           OR ResultSet.ExpirationDate > (CURRENT_DATE + Interval '6 MONTH')
+             )*/
          AND (COALESCE(ResultSet.LastPrice,0) = 0
-           OR ABS (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0
+           OR ABS (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 100.0
                         ELSE (ResultSet.NewPrice / ResultSet.LastPrice) * 100 - 100
                    END
-                  ) >= COALESCE (ResultSet.PercentMarkup, 0)
+                  ) >= inMinPercent
              )
        ))
    AND ResultSet.RemainsCount > 0

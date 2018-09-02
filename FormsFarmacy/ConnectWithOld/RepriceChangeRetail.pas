@@ -26,12 +26,12 @@ type
     AllGoodsPriceGridTableView: TcxGridDBTableView;
     AllGoodsPriceGridLevel: TcxGridLevel;
     AllGoodsPriceGrid: TcxGrid;
-    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    DBViewAddOn: TdsdDBViewAddOn;
     spSelect_AllGoodsPrice: TdsdStoredProc;
     AllGoodsPriceCDS: TClientDataSet;
     dsResult: TDataSource;
     FormParams: TdsdFormParams;
-    ActionList1: TActionList;
+    ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
     colGoodsCode: TcxGridDBColumn;
     colGoodsName: TcxGridDBColumn;
@@ -93,7 +93,7 @@ type
     colIsOneJuridical: TcxGridDBColumn;
     cdsResultJuridicalId: TIntegerField;
     colJuridicalId: TcxGridDBColumn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     btnRepriceSelYes: TButton;
     btnRepriceSelNo: TButton;
     colId: TcxGridDBColumn;
@@ -211,20 +211,20 @@ begin
           except ShowMessage('1');exit;end;
 
           try
-          spInsertUpdate_MovementItem_Reprice.ParamByName('inUnitId').Value :=
+          spInsertUpdate_MovementItem_Reprice.ParamByName('inRetailId').Value :=
             AllGoodsPriceGridTableView.DataController.Values[RecIndex,colUnitId.Index];
           except ShowMessage('2.1.');exit;end;
 
           try
           if edUnit.Text <> ''
           then begin
-              spInsertUpdate_MovementItem_Reprice.ParamByName('inUnitId_Forwarding').Value :=
-                 GuidesUnit.Params.ParamByName('Key').Value;
+              spInsertUpdate_MovementItem_Reprice.ParamByName('inRetailId_Forwarding').Value :=
+                 0;//GuidesUnit.Params.ParamByName('Key').Value;
               //
-              spInsertUpdate_MovementItem_Reprice.ParamByName('inTax').Value := lTax;
+              spInsertUpdate_MovementItem_Reprice.ParamByName('inTax').Value := 0;//lTax;
           end
           else begin
-              spInsertUpdate_MovementItem_Reprice.ParamByName('inUnitId_Forwarding').Value := 0;
+              spInsertUpdate_MovementItem_Reprice.ParamByName('inRetailId_Forwarding').Value := 0;
               spInsertUpdate_MovementItem_Reprice.ParamByName('inTax').Value := 0;
           end;
           except ShowMessage('2.2.');exit;end;
@@ -502,7 +502,7 @@ end;
 
 procedure TReprice—hangeRetailForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  dsdUserSettingsStorageAddOn.SaveUserSettings;
+  UserSettingsStorageAddOn.SaveUserSettings;
   Action:=caFree;
 end;
 
@@ -522,7 +522,7 @@ end;
 
 procedure TReprice—hangeRetailForm.FormShow(Sender: TObject);
 begin
-  dsdUserSettingsStorageAddOn.LoadUserSettings
+  UserSettingsStorageAddOn.LoadUserSettings
 end;
 
 end.

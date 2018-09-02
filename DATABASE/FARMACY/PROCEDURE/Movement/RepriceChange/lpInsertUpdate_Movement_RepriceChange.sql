@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_RepriceChange(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
     IN inInvNumber             TVarChar   , -- Номер документа
     IN inOperDate              TDateTime  , -- Дата документа
-    IN inUnitId                Integer    , -- От кого (подразделение)
+    IN inRetailId                Integer    , -- От кого (подразделение)
     IN inGUID                  TVarChar   , -- GUID для определения текущей переоценки
     IN inUserId                Integer     -- сессия пользователя
 )
@@ -22,7 +22,7 @@ BEGIN
     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_RepriceChange(), inInvNumber, inOperDate, NULL, 0);
     
     -- сохранили связь с <подразделение>
-    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Retail(), ioId, inRetailId);
     
     -- сохранили <GUID>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inGUID);

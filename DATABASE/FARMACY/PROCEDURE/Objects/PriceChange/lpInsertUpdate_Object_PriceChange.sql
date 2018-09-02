@@ -12,10 +12,11 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_PriceChange(
 RETURNS VOID
 AS
 $BODY$
-    DECLARE vbId Integer;
-    DECLARE vbPriceChange TFloat;
-    DECLARE vbDateChange TDateTime;
-    DECLARE vbFixValue  TFloat;
+    DECLARE vbId            Integer;
+    DECLARE vbPriceChange   TFloat;
+    DECLARE vbDateChange    TDateTime;
+    DECLARE vbFixValue      TFloat;
+    DECLARE vbPercentMarkup TFloat;
 
     -- DECLARE vbOperDate_StartBegin1 TDateTime;
     DECLARE vbOperDate_StartBegin2 TDateTime;
@@ -26,10 +27,12 @@ BEGIN
         , ROUND(PriceChange_Value.ValueData,2)::TFloat  AS PriceChange
         , PriceChange_DateChange.valuedata              AS DateChange
         , ObjectFloat_FixValue.ValueData                AS FixValue
+        , ObjectFloat_PercentMarkup.ValueData           AS PercentMarkup
           INTO vbId
              , vbPriceChange
              , vbDateChange
              , vbFixValue
+             , vbPercentMarkup
    FROM ObjectLink AS PriceChange_Goods
         INNER JOIN ObjectLink AS ObjectLink_PriceChange_Retail
                               ON ObjectLink_PriceChange_Retail.ObjectId      = PriceChange_Goods.ObjectId
@@ -44,6 +47,9 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_FixValue
                               ON ObjectFloat_FixValue.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
                              AND ObjectFloat_FixValue.DescId   = zc_ObjectFloat_PriceChange_FixValue()
+        LEFT JOIN ObjectFloat AS ObjectFloat_PercentMarkup
+                              ON ObjectFloat_PercentMarkup.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
+                             AND ObjectFloat_PercentMarkup.DescId   = zc_ObjectFloat_PriceChange_PercentMarkup()
    WHERE PriceChange_Goods.DescId        = zc_ObjectLink_PriceChange_Goods()
      AND PriceChange_Goods.ChildObjectId = inGoodsId;
 
@@ -71,13 +77,12 @@ BEGIN
             vbOperDate_StartBegin2:= CLOCK_TIMESTAMP();
 
             -- сохранили историю
-            PERFORM gpInsertUpdate_ObjectHistory_PriceChange (ioId             := 0                     :: Integer     -- ключ объекта <Элемент истории прайса>
-                                                            , inPriceChangeId  := vbId                                 -- Прайс
+            PERFORM gpInsertUpdate_ObjectHistory_PriceChange (ioId             := 0                           :: Integer     -- ключ объекта
+                                                            , inPriceChangeId  := vbId                                       -- 
                                                             , inOperDate       := CURRENT_TIMESTAMP           :: TDateTime   -- Дата действия прайса
-                                                            , inPriceChange    := inPriceChange         :: TFloat      -- Цена
-                                                            , inFixValue       := vbFixValue                  :: TFloat      -- НТЗ
-                                                            , inPercentMarkup  := COALESCE (vbMCSPeriod, 0)   :: TFloat      -- Количество дней для анализа НТЗ - нашли, что б эти с-ва не изменять
-                                                            , inMCSDay   := COALESCE (vbMCSDay, 0)      :: TFloat      -- Страховой запас дней НТЗ        - нашли, что б эти с-ва не изменять
+                                                            , inPriceChange    := inPriceChange               :: TFloat      -- Цена
+                                                            , inFixValue       := vbFixValue                  :: TFloat
+                                                            , inPercentMarkup  := COALESCE (vbPercentMarkup, 0)   :: TFloat
                                                             , inSession  := inUserId :: TVarChar
                                                              );
 

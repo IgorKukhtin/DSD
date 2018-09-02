@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_RepriceChange()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_RepriceChange (Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_RepriceChange (Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_RepriceChange(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -14,8 +15,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_RepriceChange(
     IN inPriceOld            TFloat    , -- Цена
     IN inPriceNew            TFloat    , -- НОВАЯ цена
     IN inJuridical_Price     TFloat    , -- Цена поставщика
---    IN inJuridical_Percent   TFloat    , -- % Корректировки наценки поставщика
---    IN inContract_Percent    TFloat    , -- % Корректировки наценки Договора
+    IN inJuridical_Percent   TFloat    , -- % Корректировки наценки поставщика
+    IN inContract_Percent    TFloat    , -- % Корректировки наценки Договора
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -38,9 +39,9 @@ BEGIN
     -- сохранили <цену поставщика>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_JuridicalPrice(), ioId, inJuridical_Price);
     -- сохранили <% Корректировки наценки поставщика>
-    --PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_JuridicalPercent(), ioId, inJuridical_Percent);
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_JuridicalPercent(), ioId, inJuridical_Percent);
     -- сохранили <% Корректировки наценки Договора>
-    --PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContractPercent(), ioId, inContract_Percent);
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContractPercent(), ioId, inContract_Percent);
 
     -- сохранили <Срок годности>
     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ExpirationDate(), ioId, inExpirationDate);
