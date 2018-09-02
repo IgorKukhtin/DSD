@@ -51,6 +51,7 @@ BEGIN
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
      WHERE Movement.Id = inMovementId;
 
+
      IF inShowAll = TRUE
      THEN
         -- ѕоказываем ¬—≈
@@ -120,10 +121,15 @@ BEGIN
                              INNER JOIN Container ON Container.PartionId     = Object_PartionGoods.MovementItemId
                                                  AND Container.WhereObjectId = vbUnitId
                                                  AND Container.DescId        = zc_Container_count()
-                                                 AND Container.Amount        <> 0
                                                  -- !!!об€зательно условие, т.к. мог мен€тьс€ GoodsId и тогда в Container - несколько строк!!!
                                                  AND Container.ObjectId      = Object_PartionGoods.GoodsId
+                                                 -- !!!об€зательно условие, т.к. мог мен€тьс€ GoodsSizeId и тогда в Container - несколько строк!!!
+                                                 AND Container.Amount        <> 0
+                             LEFT JOIN ContainerLinkObject AS CLO_Client
+                                                           ON CLO_Client.ContainerId = Container.Id
+                                                          AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
                              LEFT JOIN tmpCurrency AS tmp ON 1=0
+                        WHERE CLO_Client.ContainerId IS NULL -- !!!отбросили ƒолги ѕокупателей!!!
                        )
          -- ѕоследн€€ цена из ѕрайс-листа - zc_PriceList_Basis
       /* , tmpPriceList AS (SELECT tmp.GoodsId
@@ -155,9 +161,10 @@ BEGIN
                            INNER JOIN Container ON Container.PartionId     = tmpMI.PartionId
                                                AND Container.WhereObjectId = vbUnitId
                                                AND Container.DescId        = zc_Container_count()
-                                               AND COALESCE(Container.Amount, 0) <> 0
                                                -- !!!об€зательно условие, т.к. мог мен€тьс€ GoodsId и тогда в Container - несколько строк!!!
                                                AND Container.ObjectId      = tmpMI.GoodsId
+                                               -- !!!об€зательно условие, т.к. мог мен€тьс€ GoodsSizeId и тогда в Container - несколько строк!!!
+                                               AND Container.Amount        <> 0
                            LEFT JOIN ContainerLinkObject AS CLO_Client
                                                          ON CLO_Client.ContainerId = Container.Id
                                                         AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
@@ -330,6 +337,8 @@ BEGIN
                                                      AND Container.DescId        = zc_Container_Count()
                                                      -- !!!об€зательно условие, т.к. мог мен€тьс€ GoodsId и тогда в Container - несколько строк!!!
                                                      AND Container.ObjectId      = tmpMI.GoodsId
+                                                     -- !!!об€зательно условие, т.к. мог мен€тьс€ GoodsSizeId и тогда в Container - несколько строк!!!
+                                                     AND Container.Amount        <> 0
                                  LEFT JOIN ContainerLinkObject AS CLO_Client
                                                                ON CLO_Client.ContainerId = Container.Id
                                                               AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()

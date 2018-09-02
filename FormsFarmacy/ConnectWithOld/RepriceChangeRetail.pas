@@ -85,7 +85,6 @@ type
     cdsResultSumReprice: TCurrencyField;
     cdsResultMinExpirationDate: TDateField;
     cdsResultRealSummReprice: TCurrencyField;
-    colMinMarginPercent: TcxGridDBColumn;
     cdsResultMinMarginPercent: TCurrencyField;
     colUnitId: TcxGridDBColumn;
     colGoodsId: TcxGridDBColumn;
@@ -95,13 +94,9 @@ type
     cdsResultJuridicalId: TIntegerField;
     colJuridicalId: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    cdsResultisPriceFix: TBooleanField;
-    cdsResultisIncome: TBooleanField;
     btnRepriceSelYes: TButton;
     btnRepriceSelNo: TButton;
     colId: TcxGridDBColumn;
-    cdsResultisTop: TBooleanField;
-    cdsResultisPromo: TBooleanField;
     cdsResultMidPriceSale: TCurrencyField;
     colMidPriceSale: TcxGridDBColumn;
     cdsResultMidPriceDiff: TCurrencyField;
@@ -110,10 +105,6 @@ type
     colContractName: TcxGridDBColumn;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
-    cdsResultLastPrice_to: TFloatField;
-    cdsResultPriceDiff_to: TFloatField;
-    cdsResultRemainsCount_to: TCurrencyField;
-    cdsResultMinExpirationDate_to: TDateField;
     cdsResultIsTop_Goods: TBooleanField;
     cdsResultPriceFix_Goods: TFloatField;
     colIsTop_Goods: TcxGridDBColumn;
@@ -130,13 +121,13 @@ type
     TaxEdit: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
     PriceMaxEdit: TcxCurrencyEdit;
-    cdsResultNewPrice_to: TCurrencyField;
     edJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
     BtnUnitsList: TButton;
     actChoiceJuridical: TOpenChoiceForm;
     edProvinceCity: TcxButtonEdit;
     GuidesProvinceCity: TdsdGuides;
+    colMinMarginPercent: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
@@ -277,11 +268,7 @@ begin
           except ShowMessage('9');exit;end;
 
           try
-          if edUnit.Text <> ''
-          then spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceNew').Value :=
-                  AllGoodsPriceGridTableView.DataController.Values[RecIndex,colNewPrice_To.Index]
-                // * (1 + lTax/100)
-          else spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceNew').Value :=
+             spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceNew').Value :=
                   AllGoodsPriceGridTableView.DataController.Values[RecIndex,colNewPrice.Index];
           except ShowMessage('10');exit;end;
 
@@ -447,19 +434,19 @@ begin
           cdsResult.FieldByName('GoodsName').AsString := AllGoodsPriceCDS.FieldByName('GoodsName').AsString;
           //!!!if AllGoodsPriceCDS.FieldByName('LastPrice').AsCurrency <> 0 then
             cdsResult.FieldByName('LastPrice').AsCurrency := AllGoodsPriceCDS.FieldByName('LastPrice').AsCurrency;
-            cdsResult.FieldByName('LastPrice_to').AsCurrency := AllGoodsPriceCDS.FieldByName('LastPrice_to').AsCurrency;
+            //***cdsResult.FieldByName('LastPrice_to').AsCurrency := AllGoodsPriceCDS.FieldByName('LastPrice_to').AsCurrency;
           cdsResult.FieldByName('RemainsCount').AsCurrency := AllGoodsPriceCDS.FieldByName('RemainsCount').AsCurrency;
-          cdsResult.FieldByName('RemainsCount_to').AsCurrency := AllGoodsPriceCDS.FieldByName('RemainsCount_to').AsCurrency;
+          //***cdsResult.FieldByName('RemainsCount_to').AsCurrency := AllGoodsPriceCDS.FieldByName('RemainsCount_to').AsCurrency;
           cdsResult.FieldByName('NDS').AsCurrency := AllGoodsPriceCDS.FieldByName('NDS').AsCurrency;
           if AllGoodsPriceCDS.FieldByName('ExpirationDate').AsDateTime <> 0 then
             cdsResult.FieldByName('ExpirationDate').AsDateTime := AllGoodsPriceCDS.FieldByName('ExpirationDate').AsDateTime;
           cdsResult.FieldByName('NewPrice').AsCurrency := AllGoodsPriceCDS.FieldByName('NewPrice').AsCurrency;
-          cdsResult.FieldByName('NewPrice_to').AsCurrency := AllGoodsPriceCDS.FieldByName('NewPrice_to').AsCurrency;
+          //***cdsResult.FieldByName('NewPrice_to').AsCurrency := AllGoodsPriceCDS.FieldByName('NewPrice_to').AsCurrency;
           cdsResult.FieldByName('PriceFix_Goods').AsCurrency := AllGoodsPriceCDS.FieldByName('PriceFix_Goods').AsCurrency;
           cdsResult.FieldByName('MarginPercent').AsCurrency := AllGoodsPriceCDS.FieldByName('MarginPercent').AsCurrency;
           cdsResult.FieldByName('MinMarginPercent').AsCurrency := AllGoodsPriceCDS.FieldByName('MinMarginPercent').AsCurrency;
           cdsResult.FieldByName('PriceDiff').AsCurrency := AllGoodsPriceCDS.FieldByName('PriceDiff').AsCurrency;
-          cdsResult.FieldByName('PriceDiff_to').AsCurrency := AllGoodsPriceCDS.FieldByName('PriceDiff_to').AsCurrency;
+          //***cdsResult.FieldByName('PriceDiff_to').AsCurrency := AllGoodsPriceCDS.FieldByName('PriceDiff_to').AsCurrency;
           cdsResult.FieldByName('Reprice').AsBoolean := AllGoodsPriceCDS.FieldByName('Reprice').AsBoolean;
           cdsResult.FieldByName('UnitId').AsInteger := UnitId;
           cdsResult.FieldByName('UnitName').AsString := CheckListBox.Items[i];

@@ -71,7 +71,7 @@ BEGIN
                              LEFT JOIN MovementItemContainer AS MIContainer
                                                              ON MIContainer.ContainerId = Container.Id
                                                             AND MIContainer.OperDate >= vbOperDate
-                        WHERE Container.DescId    = zc_Container_count()
+                        WHERE Container.DescId        = zc_Container_Count()
                           AND Container.WhereObjectId IN (vbFromId, vbToId)
                         GROUP BY Container.Id
                                , Container.PartionId

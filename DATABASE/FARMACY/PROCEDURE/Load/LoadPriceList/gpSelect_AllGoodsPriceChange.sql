@@ -23,17 +23,17 @@ RETURNS TABLE (
     RemainsCount        TFloat,     -- Остаток
 --    RemainsCount_to     TFloat,     -- Остаток - Подразделение (с которым есть сравнение цен)
     NDS                 TFloat,     -- ставка НДС
-    NewPrice            TFloat,     -- Новая цена
+    NewPrice            TFloat,     -- !!! Новая цена со скидкой !!!
 --    NewPrice_to         TFloat,     -- Новая цена
     PriceFix_Goods      TFloat  ,   -- фиксированная цена сети
-    MinMarginPercent    TFloat,     -- минимальный % отклонения
+    MinMarginPercent    TFloat,     -- !!! ?Мин. % разницы / минимальный % отклонения? = % наценки для цены со скидкой - с корректировкой!!!
     PriceDiff           TFloat,     -- % отклонения
 --    PriceDiff_to        TFloat,     -- % отклонения - inUnitId_to
     ExpirationDate      TDateTime,  -- Срок годности
     JuridicalId         Integer,    -- Поставщик Id
     JuridicalName       TVarChar,   -- Поставщик
     Juridical_Price     TFloat,     -- Цена у поставщика
-    MarginPercent       TFloat,     -- !!! % наценки для цены со скидкой !!!
+    MarginPercent       TFloat,     -- !!! % наценки для цены со скидкой - с корректировкой!!!
     Juridical_GoodsName TVarChar,   -- Наименование у поставщика
     ProducerName        TVarChar,   -- производитель
     ContractId          Integer,    -- договор Ид
@@ -168,30 +168,27 @@ BEGIN
             SelectMinPrice_AllGoods.GoodsCode AS Code,
             SelectMinPrice_AllGoods.GoodsName AS GoodsName,
             Object_Price.Price                AS LastPrice,
-            Object_Price_to.Price             AS LastPrice_to,
-            ROUND (Object_Price_to.Price * (1 + CASE WHEN Object_Price_to.Price >= inPriceMaxTo AND inPriceMaxTo > 0 THEN 0 ELSE inTaxTo END / 100), 1) :: TFloat AS NewPrice_to,
-            Object_Price.Fix                  AS isPriceFix,
             SelectMinPrice_AllGoods.Remains   AS RemainsCount,
-            RemainsTo.Amount                  AS RemainsCount_to,
             Object_Goods.NDS                  AS NDS
-          , CASE WHEN SelectMinPrice_AllGoods.isTop = TRUE
-                      THEN COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), COALESCE (Object_Goods.PercentMarkup, 0)) /*- COALESCE(ObjectFloat_Juridical_Percent.ValueData, 0)*/
-                 ELSE CASE WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0
-                                THEN COALESCE (SelectMinPrice_AllGoods.PercentMarkup,0) + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0)
-                           ELSE COALESCE (SelectMinPrice_AllGoods.PercentMarkup,0) + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0)
-                      END
-            END::TFloat AS MarginPercent
+            -- !!! % наценки для цены со скидкой - с корректировкой!!!
+          , CASE WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0 
+                      THEN COALESCE (SelectMinPrice_AllGoods.PercentMarkup, 0) + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0)
+                 ELSE COALESCE (SelectMinPrice_AllGoods.PercentMarkup, 0) + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0)
+            END :: TFloat AS MarginPercent
+            -- !!! % наценки для цены со скидкой !!!
           , SelectMinPrice_AllGoods.PercentMarkup
+            -- Цена поставщика С НДС
           , (SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)::TFloat AS Juridical_Price
-          , zfCalc_SalePrice((SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)               -- Цена С НДС
+            -- НОВАЯ Цена С НДС
+          , zfCalc_SalePrice((SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)
                             , CASE WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0
                                        THEN SelectMinPrice_AllGoods.PercentMarkup + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) -- % наценки в КАТЕГОРИИ
                                    ELSE SelectMinPrice_AllGoods.PercentMarkup + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0) -- % наценки в КАТЕГОРИИ
                               END
                             , SelectMinPrice_AllGoods.isTop                                               -- ТОП позиция
-                            , COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), Object_Goods.PercentMarkup) -- % наценки у товара
-                            , 0 /*ObjectFloat_Juridical_Percent.ValueData*/                                         -- % корректировки у Юр Лица для ТОПа
-                            , CASE WHEN Object_Price.Fix = TRUE THEN Object_Price.Price ELSE Object_Goods.Price END -- Цена у товара (почти фиксированная)
+                            , SelectMinPrice_AllGoods.PercentMarkup                                       -- % наценки для цены со скидкой
+                            , 0 /*ObjectFloat_Juridical_Percent.ValueData*/                               -- % корректировки у Юр Лица для ТОПа
+                            , 0                                                                           -- Цена у товара (почти фиксированная)
                              ) ::TFloat AS NewPrice
           , SelectMinPrice_AllGoods.PartionGoodsDate         AS ExpirationDate,
             SelectMinPrice_AllGoods.JuridicalId              AS JuridicalId,
@@ -203,16 +200,12 @@ BEGIN
             Object_Area.Id                                   AS AreaId,
             Object_Area.ValueData                            AS AreaName,
             SelectMinPrice_AllGoods.MinExpirationDate        AS MinExpirationDate,
-            RemainsTo.MinExpirationDate                      AS MinExpirationDate_to,
             SelectMinPrice_AllGoods.MidPriceSale             AS MidPriceSale,
             Object_Goods.NDSKindId,
             SelectMinPrice_AllGoods.isOneJuridical,
-            CASE WHEN Select_Income_AllGoods.IncomeCount > 0 THEN TRUE ELSE FALSE END :: Boolean AS isIncome,
             SelectMinPrice_AllGoods.isTop AS isTop_calc,
-            Object_Price.IsTop    AS IsTop,
             Object_Goods.IsTop    AS IsTop_Goods,
-            Coalesce(ObjectBoolean_Goods_IsPromo.ValueData, False) :: Boolean   AS IsPromo,
-            Object_Goods.Price    AS PriceFix_Goods
+            0                     AS PriceFix_Goods
         FROM
             lpSelectMinPrice_AllGoods_retail (inObjectId := inUnitId
                                             , inUserId   := vbUserId
@@ -220,16 +213,10 @@ BEGIN
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = SelectMinPrice_AllGoods.ContractId
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = SelectMinPrice_AllGoods.AreaId
 
-            LEFT OUTER JOIN RemainsTo ON RemainsTo.GoodsId = SelectMinPrice_AllGoods.GoodsId
-
 
             LEFT OUTER JOIN tmpPrice_View AS Object_Price
                                           ON Object_Price.GoodsId = SelectMinPrice_AllGoods.GoodsId_retail
-                                         AND Object_Price.UnitId = inUnitId
-
-            LEFT OUTER JOIN tmpPrice_View AS Object_Price_to
-                                          ON Object_Price_to.GoodsMainId = Object_Price.GoodsMainId --SelectMinPrice_AllGoods.GoodsId_retail
-                                         AND Object_Price_to.UnitId = CASE WHEN inUnitId_to = 0 THEN NULL ELSE inUnitId_to END
+                                         AND Object_Price.UnitId  = inUnitId
 
             LEFT OUTER JOIN tmpGoodsView AS Object_Goods
                                          -- !!!берем из сети!!!
@@ -241,10 +228,6 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Contract_Percent
                                   ON ObjectFloat_Contract_Percent.ObjectId = SelectMinPrice_AllGoods.ContractId
                                  AND ObjectFloat_Contract_Percent.DescId = zc_ObjectFloat_Contract_Percent()
-
-            LEFT JOIN lpSelect_Income_AllGoods(inUnitId := inUnitId,
-                                               inUserId := vbUserId) AS Select_Income_AllGoods
-                                                                     ON Select_Income_AllGoods.GoodsId = SelectMinPrice_AllGoods.GoodsId_retail
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsPromo
                                     ON ObjectBoolean_Goods_IsPromo.ObjectId = SelectMinPrice_AllGoods.Partner_GoodsId
@@ -259,21 +242,16 @@ BEGIN
         ResultSet.Code,
         ResultSet.GoodsName,
         ResultSet.LastPrice,
-        ResultSet.LastPrice_to,
         ResultSet.RemainsCount,
-        ResultSet.RemainsCount_to,
         ResultSet.NDS,
         ResultSet.NewPrice,
-        ResultSet.NewPrice_to,
-        ResultSet.PriceFix_Goods,
-        COALESCE(ResultSet.PercentMarkup,inMinPercent)::TFloat AS MinMarginPercent,
+        ResultSet.PriceFix_Goods :: TFloat AS PriceFix_Goods,
+
+        COALESCE (ResultSet.PercentMarkup, inMinPercent) :: TFloat AS MinMarginPercent,
+
         CAST (CASE WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
                    ELSE (ResultSet.NewPrice / ResultSet.LastPrice) * 100 - 100
               END AS NUMERIC (16, 1)) :: TFloat AS PriceDiff,
-        CAST (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0
-                   ELSE (ResultSet.NewPrice_to / ResultSet.LastPrice) * 100 - 100
-
-              END AS NUMERIC (16, 1)) :: TFloat AS PriceDiff_to,
 
         ResultSet.ExpirationDate         AS ExpirationDate,
         ResultSet.JuridicalId            AS JuridicalId,
@@ -289,43 +267,18 @@ BEGIN
         ObjectFloat_Juridical_Percent.ValueData  ::TFloat AS Juridical_Percent,
         ObjectFloat_Contract_Percent.ValueData   ::TFloat AS Contract_Percent,
 
-        ROUND ((CASE WHEN inUnitId_to <> 0 THEN CASE WHEN ResultSet.NewPrice_to > 0 THEN (ResultSet.NewPrice_to - ResultSet.LastPrice) ELSE 0 END ELSE (ResultSet.NewPrice - ResultSet.LastPrice) END
+        ROUND (((ResultSet.NewPrice - ResultSet.LastPrice)
                * ResultSet.RemainsCount
                )
            , 2) :: TFloat AS SumReprice,
         ResultSet.MidPriceSale,
         CAST (CASE WHEN COALESCE(ResultSet.MidPriceSale,0) = 0 THEN 0 ELSE ((ResultSet.NewPrice / ResultSet.MidPriceSale) * 100 - 100) END AS NUMERIC (16, 1)) :: TFloat AS MidPriceDiff,
         ResultSet.MinExpirationDate,
-        ResultSet.MinExpirationDate_to,
         ResultSet.isOneJuridical,
-        ResultSet.isPriceFix,
-        ResultSet.isIncome,
-        ResultSet.IsTop,
         -- CASE WHEN ResultSet.isTop_calc = TRUE THEN ResultSet.isTop_calc ELSE ResultSet.IsTop END :: Boolean AS IsTop,
         ResultSet.IsTop_Goods,
-        ResultSet.IsPromo,
         CASE WHEN ResultSet.MinExpirationDate < (CURRENT_DATE + Interval '6 month')
-                  THEN FALSE
-             WHEN COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isPriceFix = TRUE OR ResultSet.PriceFix_Goods <> 0)
                   THEN TRUE
-             WHEN -- COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isIncome = TRUE /*OR ResultSet.isTop_calc = TRUE*/ OR ResultSet.isPriceFix = TRUE OR ResultSet.PriceFix_Goods <> 0)
-                  COALESCE (inUnitId_to, 0) = 0 AND ResultSet.isIncome = TRUE
-                  THEN FALSE
-             WHEN COALESCE (inUnitId_to, 0) = 0
-                  THEN TRUE
-
-             WHEN inUnitId_to <> 0 AND (ResultSet.MinExpirationDate < (CURRENT_DATE + Interval '6 month')
-                                    OR  ResultSet.MinExpirationDate_to < (CURRENT_DATE + Interval '6 month')
-                                    OR  ResultSet.isIncome = TRUE)
-                  THEN FALSE
-
-             WHEN inUnitId_to <> 0
-              AND ResultSet.NewPrice_to > 0
-              AND 0 <> CAST (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0
-                                  ELSE (ResultSet.NewPrice_to / ResultSet.LastPrice) * 100 - 100
-                             END AS NUMERIC (16, 1))
-                  THEN TRUE
-
              ELSE FALSE
         END  AS Reprice
     FROM
@@ -337,13 +290,9 @@ BEGIN
                               ON ObjectFloat_Contract_Percent.ObjectId = ResultSet.ContractId
                              AND ObjectFloat_Contract_Percent.DescId = zc_ObjectFloat_Contract_Percent()
 
-    WHERE
-       ((inUnitId_to > 0 AND ResultSet.NewPrice_to > 0 AND 0 <> CAST (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0
-                                                                            ELSE (ResultSet.NewPrice_to / ResultSet.LastPrice) * 100 - 100
-                                                                       END AS NUMERIC (16, 1))
-        )
-     -- OR inSession = '3'
-     OR (COALESCE(ResultSet.NewPrice,0) > 0
+    WHERE (
+     -- inSession = '3' OR
+       (COALESCE(ResultSet.NewPrice,0) > 0
          AND (COALESCE(ResultSet.NDSKindId,0) = zc_Enum_NDSKind_Medical()
               OR (inVAT20 = TRUE
                   AND COALESCE(ResultSet.NDSKindId,0) = zc_Enum_NDSKind_Common()
@@ -357,12 +306,10 @@ BEGIN
            OR ABS (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0
                         ELSE (ResultSet.NewPrice / ResultSet.LastPrice) * 100 - 100
                    END
-                  ) >= COALESCE (ResultSet.PercentMarkup, inMinPercent)
+                  ) >= COALESCE (ResultSet.PercentMarkup, 0)
              )
        ))
-   AND (inUnitId_to = 0 or ResultSet.isPriceFix = FALSE)
    AND ResultSet.RemainsCount > 0
-   AND (ResultSet.RemainsCount_to > 0 OR COALESCE (inUnitId_to, 0) = 0)
    ;
 
 END;
@@ -377,4 +324,4 @@ ALTER FUNCTION gpSelect_AllGoodsPriceChange (Integer,  Integer,  TFloat, Boolean
 */
 
 -- тест
--- SELECT * FROM gpSelect_AllGoodsPriceChange (183292, 0, 30, True, 0, 0, '3')  -- Аптека_1 пр_Правды_6
+-- SELECT * FROM gpSelect_AllGoodsPriceChange (4, 0, 30, True, 0, 0, '3')  -- Аптека_1 пр_Правды_6

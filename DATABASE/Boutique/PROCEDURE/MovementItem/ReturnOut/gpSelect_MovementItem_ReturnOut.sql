@@ -138,15 +138,14 @@ BEGIN
                                                            AND OHF_Value.DescId          = zc_ObjectHistoryFloat_PriceListItem_Value()
                          )
        */
-        , tmpRemains AS (SELECT tmpMI.PartionId
-                              , SUM (Container.Amount) AS Amount
-                         FROM tmpMI 
-                              LEFT JOIN Container ON Container.PartionId     = tmpMI.PartionId
-                                                 AND Container.WhereObjectId = vbUnitId
-                                                 AND Container.DescId        = zc_Container_count()
-                          GROUP BY tmpMI.PartionId
+        , tmpContainer AS (SELECT tmpMI.PartionId
+                                , SUM (Container.Amount) AS Amount
+                           FROM tmpMI 
+                                LEFT JOIN Container ON Container.PartionId     = tmpMI.PartionId
+                                                   AND Container.WhereObjectId = vbUnitId
+                                                   AND Container.DescId        = zc_Container_count()
+                            GROUP BY tmpMI.PartionId
                          )
-
        -- результат
        SELECT
              0                                    AS Id
@@ -235,9 +234,9 @@ BEGIN
 
        FROM tmpMI
             LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpMI.PartionId
-            LEFT JOIN tmpRemains AS Container ON Container.PartionId     = tmpMI.PartionId
-                               --AND Container.WhereObjectId = vbUnitId
-                               --AND Container.DescId        = zc_Container_count()
+            LEFT JOIN tmpContainer AS Container ON Container.PartionId     = tmpMI.PartionId
+                               -- AND Container.WhereObjectId = vbUnitId
+                               -- AND Container.DescId        = zc_Container_count()
             LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id   = Object_PartionGoods.MovementId
             LEFT JOIN Object AS Object_Goods       ON Object_Goods.Id       = tmpMI.GoodsId                    -- Object_PartionGoods.GoodsId - тоже самое
             LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = Object_PartionGoods.GoodsGroupId
@@ -286,15 +285,14 @@ BEGIN
                                                        AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
                        )
 
-        , tmpRemains AS (SELECT tmpMI.PartionId
-                              , SUM (Container.Amount) AS Amount
-                         FROM tmpMI 
-                              LEFT JOIN Container ON Container.PartionId     = tmpMI.PartionId
-                                                 AND Container.WhereObjectId = vbUnitId
-                                                 AND Container.DescId        = zc_Container_count()
-                          GROUP BY tmpMI.PartionId
-                         )
-
+        , tmpContainer AS (SELECT tmpMI.PartionId
+                                , SUM (Container.Amount) AS Amount
+                           FROM tmpMI 
+                                LEFT JOIN Container ON Container.PartionId     = tmpMI.PartionId
+                                                   AND Container.WhereObjectId = vbUnitId
+                                                   AND Container.DescId        = zc_Container_count()
+                            GROUP BY tmpMI.PartionId
+                          )
        -- результат
        SELECT
              tmpMI.Id                             AS Id
@@ -331,9 +329,9 @@ BEGIN
 
        FROM tmpMI
             LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpMI.PartionId
-            LEFT JOIN tmpRemains AS Container ON Container.PartionId     = tmpMI.PartionId
-                               --AND Container.WhereObjectId = vbUnitId
-                               --AND Container.DescId        = zc_Container_count()
+            LEFT JOIN tmpContainer AS Container ON Container.PartionId     = tmpMI.PartionId
+                               -- AND Container.WhereObjectId = vbUnitId
+                               -- AND Container.DescId        = zc_Container_count()
             LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id   = Object_PartionGoods.MovementId
             LEFT JOIN Object AS Object_Goods       ON Object_Goods.Id       = tmpMI.GoodsId -- Object_PartionGoods.GoodsId - тоже самое
             LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = Object_PartionGoods.GoodsGroupId

@@ -194,6 +194,8 @@ BEGIN
                                                AND COALESCE(Container.Amount, 0) <> 0
                                                -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
                                                AND Container.ObjectId      = tmpMI.GoodsId
+                                               -- !!!обязательно условие, т.к. мог меняться GoodsSizeId и тогда в Container - несколько строк!!!
+                                               AND Container.Amount        <> 0
                            LEFT JOIN ContainerLinkObject AS CLO_Client
                                                          ON CLO_Client.ContainerId = Container.Id
                                                         AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
@@ -474,6 +476,8 @@ BEGIN
                                                     AND COALESCE(Container.Amount, 0) <> 0
                                                     -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
                                                     AND Container.ObjectId      = tmpMI.GoodsId
+                                                    -- !!!обязательно условие, т.к. мог меняться GoodsSizeId и тогда в Container - несколько строк!!!
+                                                    AND Container.Amount        <> 0
                                 LEFT JOIN ContainerLinkObject AS CLO_Client
                                                               ON CLO_Client.ContainerId = Container.Id
                                                              AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()

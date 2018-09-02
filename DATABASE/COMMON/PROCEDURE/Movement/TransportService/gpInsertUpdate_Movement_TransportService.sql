@@ -74,6 +74,7 @@ BEGIN
                                     , zc_Enum_ContractConditionKind_TransportOneTrip20() -- Ставка за маршрут 20т. в одну сторону, грн 
                                     , zc_Enum_ContractConditionKind_TransportRoundTrip() -- Ставка за маршрут в обе стороны, грн
                                     --, zc_Enum_ContractConditionKind_TransportPoint()   -- Ставка за точку, грн 
+                                    , zc_Enum_ContractConditionKind_TransportForward()   -- доплата за экспедитора, грн/месяц
                                      )
      THEN
                     -- по условиям в договоре "Ставка за маршрут..."

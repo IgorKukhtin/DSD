@@ -29,7 +29,7 @@ RETURNS TABLE (
     SuperFinalPrice    TFloat,
     isTop              Boolean,
     isOneJuridical     Boolean,
-    PercentMarkup      TFloat
+    PercentMarkup      TFloat   -- !!! % наценки дл€ цены со скидкой !!!
 )
 
 AS
@@ -79,7 +79,7 @@ BEGIN
     CREATE TEMP TABLE _tmpMinPrice_Remains ON COMMIT DROP AS
        (WITH tmpRemains AS
        (SELECT
-            _tmpPriceChange.GoodsId           AS ObjectId_retail -- здесь товар "сети"
+            _tmpPriceChange.GoodsId      AS ObjectId_retail -- здесь товар "сети"
           , SUM (Container.Amount)       AS Amount
           , MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()))  AS MinExpirationDate -- —рок годности
           , SUM (Container.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0)) / SUM (Container.Amount) AS MidPriceSale -- !!! средн€€ ÷ена реал. с Ќƒ—!!!

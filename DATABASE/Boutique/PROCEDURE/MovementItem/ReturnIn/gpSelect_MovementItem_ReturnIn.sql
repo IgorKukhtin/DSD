@@ -357,6 +357,8 @@ BEGIN
                                                AND Container.DescId        = zc_Container_count()
                                                -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
                                                AND Container.ObjectId      = tmpMI_Master.GoodsId
+                                               -- !!!обязательно условие, т.к. мог меняться GoodsSizeId и тогда в Container - несколько строк!!!
+                                               AND Container.Amount        <> 0
                            LEFT JOIN ContainerLinkObject AS CLO_Client
                                                          ON CLO_Client.ContainerId = Container.Id
                                                         AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
@@ -610,6 +612,8 @@ BEGIN
                                                AND Container.DescId        = zc_Container_count()
                                                -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
                                                AND Container.ObjectId      = tmpMI_Master.GoodsId
+                                               -- !!!обязательно условие, т.к. мог меняться GoodsSizeId и тогда в Container - несколько строк!!!
+                                               AND Container.Amount        <> 0
                            LEFT JOIN ContainerLinkObject AS CLO_Client
                                                          ON CLO_Client.ContainerId = Container.Id
                                                         AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()

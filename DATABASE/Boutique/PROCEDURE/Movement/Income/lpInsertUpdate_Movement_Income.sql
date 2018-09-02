@@ -72,8 +72,8 @@ BEGIN
          -- !!!Кроме Sybase!!! - !!!не забыли - проверили что НЕТ движения, тогда инфу в партии можно менять!!!
          -- ДЛЯ всех ПАРТИЙ
          IF inUserId <> zc_User_Sybase()
-            AND (inFromId             <> (SELECT MAX (COALESCE (Object_PartionGoods.PartnerId, 0))  FROM Object_PartionGoods WHERE Object_PartionGoods.MovementId = ioId AND COALESCE (Object_PartionGoods.PartnerId, 0)  <> inFromId)
-              OR inToId               <> (SELECT MAX (COALESCE (Object_PartionGoods.UnitId, 0))     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementId = ioId AND COALESCE (Object_PartionGoods.UnitId, 0)     <> inToId)
+            AND (inToId               <> (SELECT MAX (COALESCE (Object_PartionGoods.UnitId, 0))     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementId = ioId AND COALESCE (Object_PartionGoods.UnitId, 0)     <> inToId)
+              -- OR inFromId             <> (SELECT MAX (COALESCE (Object_PartionGoods.PartnerId, 0))  FROM Object_PartionGoods WHERE Object_PartionGoods.MovementId = ioId AND COALESCE (Object_PartionGoods.PartnerId, 0)  <> inFromId)
               OR inCurrencyDocumentId <> (SELECT MAX (COALESCE (Object_PartionGoods.CurrencyId, 0)) FROM Object_PartionGoods WHERE Object_PartionGoods.MovementId = ioId AND COALESCE (Object_PartionGoods.CurrencyId, 0) <> inCurrencyDocumentId)
                 )
          THEN
