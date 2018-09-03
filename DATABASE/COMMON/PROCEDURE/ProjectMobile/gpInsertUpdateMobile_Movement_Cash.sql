@@ -96,7 +96,7 @@ BEGIN
                                          , inAmountSumm           := 0.0
                                          , inAmountCurrency       := 0.0
                                          , inComment              := COALESCE (inComment, '') || COALESCE (vbCommentIfSaleAbsent, '')
-                                         , inCarId                := Null
+                                         , inCarId                := NULL
                                          , inCashId               := inCashId
                                          , inMoneyPlaceId         := inPartnerId
                                          , inPositionId           := 0

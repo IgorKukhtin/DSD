@@ -163,8 +163,8 @@ BEGIN
            , Object_Unit.ObjectCode             AS UnitCode
            , Object_Unit.ValueData              AS UnitName
 
-           , Object_CarModel.Id                 AS CarId
-           , Object_CarModel.ValueData          AS CarName
+           , Object_Car.Id                      AS CarId
+           , Object_Car.ValueData               AS CarName
            , Object_CarModel.Id                 AS CarModelId
            , Object_CarModel.ValueData          AS CarModelName
            , Object_Unit_Car.Id                 AS UnitId_Car
