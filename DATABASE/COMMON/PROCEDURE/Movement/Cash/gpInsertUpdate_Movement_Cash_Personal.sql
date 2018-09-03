@@ -35,7 +35,7 @@ BEGIN
                                                          , inAmountSumm     := NULL
                                                          , inAmountCurrency := NULL
                                                          , inComment     := inComment
-                                                         , inCarId       := Null
+                                                         , inCarId       := NULL
                                                          , inCashId      := inCashId
                                                          , inMoneyPlaceId:= MovementLinkObject_PersonalServiceList.ObjectId
                                                          , inPositionId  := NULL

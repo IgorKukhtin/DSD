@@ -72,6 +72,7 @@ BEGIN
                          , PartionMovementId
                          , AnalyzerId
                          , CurrencyId
+                         , CarId
                          , IsActive, IsMaster
                           )
         SELECT Movement.DescId
@@ -122,6 +123,8 @@ BEGIN
 
                -- Валюта
              , COALESCE (MILinkObject_Currency.ObjectId, zc_Enum_Currency_Basis()) AS CurrencyId
+             
+             , 0 AS CarId
 
              , CASE WHEN MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END AS IsActive
              , TRUE AS IsMaster
@@ -184,6 +187,7 @@ BEGIN
                          , PartionMovementId
                          , AnalyzerId
                          , CurrencyId
+                         , CarId
                          , IsActive, IsMaster
                           )
         SELECT _tmpItem.MovementDescId
@@ -281,6 +285,8 @@ BEGIN
                -- Валюта
              , COALESCE (MILinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis()) AS CurrencyId
 
+             , MILinkObject_Car.ObjectId AS CarId
+
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
         FROM _tmpItem
@@ -312,6 +318,10 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
                                               ON MILinkObject_Position.MovementItemId = COALESCE (MI_Child.Id, _tmpItem.MovementItemId)
                                              AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Car
+                                              ON MILinkObject_Car.MovementItemId = _tmpItem.MovementItemId
+                                             AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_CurrencyPartner
                                               ON MILinkObject_CurrencyPartner.MovementItemId = _tmpItem.MovementItemId

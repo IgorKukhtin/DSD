@@ -563,7 +563,7 @@ BEGIN
                                                                             , inDescId_3          := zc_ContainerLinkObject_Branch()
                                                                             , inObjectId_3        := _tmpItem.BranchId_Balance
                                                                             , inDescId_4          := zc_ContainerLinkObject_Car()
-                                                                            , inObjectId_4        := 0 -- дл€ ‘из.лица (подотчетные лица) !!!именно здесь последн€€ аналитика всегда значение = 0!!!
+                                                                            , inObjectId_4        := _tmpItem.CarId -- дл€ ‘из.лица (подотчетные лица) !!!именно здесь последн€€ аналитика всегда значение = 0!!!
                                                                              )
                                             WHEN _tmpItem.ObjectDescId = zc_Object_Personal() -- «ѕ
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()

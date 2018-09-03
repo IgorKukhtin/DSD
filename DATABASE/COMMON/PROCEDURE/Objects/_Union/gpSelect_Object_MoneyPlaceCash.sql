@@ -59,6 +59,29 @@ BEGIN
                                     OR View_Personal.UnitId = 8409 -- Отдел экспедиторов
                                  GROUP BY View_Personal.MemberId
                                 )
+        , tmpMember_Car AS (SELECT ObjectLink_Personal_Member.ChildObjectId AS MemberId
+                                 , Object_Car.Id              AS CarId
+                                 , Object_Car.ValueData       AS CarName
+                                 , Object_CarModel.ValueData  AS CarModelName
+                                 , Object_Unit.ValueData      AS UnitName
+                                   -- № п/п
+                                 , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Personal_Member.ChildObjectId ORDER BY Object_Car.Id DESC) AS Ord
+                            FROM ObjectLink AS ObjectLink_Car_PersonalDriver
+                                 INNER JOIN Object AS Object_Car ON Object_Car.Id       = ObjectLink_Car_PersonalDriver.ObjectId
+                                                                AND Object_Car.isErased = FALSE
+                                 INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                       ON ObjectLink_Personal_Member.ObjectId = ObjectLink_Car_PersonalDriver.ChildObjectId
+                                                      AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
+                                 LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel
+                                                      ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
+                                                     AND ObjectLink_Car_CarModel.DescId   = zc_ObjectLink_Car_CarModel()
+                                 LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+                                 LEFT JOIN ObjectLink AS ObjectLink_Car_Unit 
+                                                      ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
+                                                     AND ObjectLink_Car_Unit.DescId   = zc_ObjectLink_Car_Unit()
+                                 LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Car_Unit.ChildObjectId
+                            WHERE ObjectLink_Car_PersonalDriver.DescId = zc_ObjectLink_Car_PersonalDriver()
+                           )
         , tmpContainer_Partner_View AS (SELECT * FROM Container_Partner_View)
         -- , tmpObject_InfoMoney_View AS (SELECT * FROM gpSelect_Object_InfoMoney_Desc ('zc_Object_Juridical', inSession))
 
@@ -176,14 +199,17 @@ BEGIN
           , ''::TVarChar AS PaidKindName
           , Object_Currency.Id        AS CurrencyId
           , Object_Currency.ValueData AS CurrencyName
-          , 0            AS CarId
-          , ''::TVarChar AS CarName
-          , ''::TVarChar AS CarModelName
-          , ''::TVarChar AS UnitName_Car
+          , tmpMember_Car.CarId
+          , tmpMember_Car.CarName
+          , tmpMember_Car.CarModelName
+          , tmpMember_Car.UnitName AS UnitName_Car
      FROM Object AS Object_Member
           LEFT JOIN tmpPersonal_Branch ON tmpPersonal_Branch.MemberId = Object_Member.Id
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Member.DescId
           LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = zc_Enum_Currency_Basis()
+          LEFT JOIN tmpMember_Car ON tmpMember_Car.MemberId = Object_Member.Id
+                                 AND tmpMember_Car.Ord      = 1
+
     WHERE Object_Member.DescId = zc_Object_Member()
       AND Object_Member.isErased = FALSE
       AND (tmpPersonal_Branch.MemberId > 0
@@ -378,4 +404,4 @@ ALTER FUNCTION gpSelect_Object_MoneyPlaceCash (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_MoneyPlaceCash (inSession:= '300547')
+-- SELECT * FROM gpSelect_Object_MoneyPlaceCash (inSession:= '300547') AS tmp WHERE CarName <> ''
