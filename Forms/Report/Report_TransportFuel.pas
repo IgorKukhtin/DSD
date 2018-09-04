@@ -78,7 +78,7 @@ type
     ExecuteDialog: TExecuteDialog;
     dxBarStatic: TdxBarButton;
     FromName: TcxGridDBColumn;
-    MemberName: TcxGridDBColumn;
+    PersonalName: TcxGridDBColumn;
     cbCar: TcxCheckBox;
     actRefreshCar: TdsdDataSetRefresh;
     cbPartner: TcxCheckBox;
