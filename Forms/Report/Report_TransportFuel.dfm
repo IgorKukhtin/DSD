@@ -146,6 +146,11 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
           Format = ',0.00'
           Kind = skSum
           Column = outSumm_Kompensaciya
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = TotalSummIncome
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -257,6 +262,11 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
           Format = ',0.00'
           Kind = skSum
           Column = outSumm_Kompensaciya
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = TotalSummIncome
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -365,6 +375,17 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object TotalSummIncome: TcxGridDBColumn
+        Caption = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' '#1048#1058#1054#1043#1054
+        DataBinding.FieldName = 'OutSumm'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' ('#1087#1091#1090#1077#1074#1086#1081')'
+        Width = 80
+      end
       object outSumm_ZP: TcxGridDBColumn
         Caption = #1056#1072#1089#1093#1086#1076'  '#1089#1091#1084#1084#1072' ('#1047#1055')'
         DataBinding.FieldName = 'outSumm_ZP'
@@ -436,9 +457,9 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         HeaderAlignmentVert = vaCenter
         Width = 102
       end
-      object MemberName: TcxGridDBColumn
+      object PersonalName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
-        DataBinding.FieldName = 'MemberName'
+        DataBinding.FieldName = 'PersonalName'
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
