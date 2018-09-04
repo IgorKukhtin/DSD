@@ -121,7 +121,8 @@ BEGIN
                            AND MIContainer.OperDate >= inStartDate
                          )
     -- все документы прихода, участвующие в движении
-    , tmpMov AS (SELECT tmpMIContainer.ContainerId
+    , tmpMov AS (SELECT DISTINCT 
+                        tmpMIContainer.ContainerId
                       , tmpContainer.ObjectId
                       , tmpMIContainer.MovementId
                  FROM tmpContainer
@@ -129,6 +130,7 @@ BEGIN
                                                AND tmpMIContainer.OperDate <= inEndDate
                                                AND tmpMIContainer.MovementDescId = zc_Movement_Income()
                  WHERE tmpContainer.DescId = zc_Container_Count() 
+--                 AND tmpMIContainer.MovementId IN ( 6248443 ,10253265 , 10252827, 9909118, 9909106)                                   
                  )
      -- MovementItemContainer для документов движения для получения сумм прихода / расхода
     , tmpOutContainer AS (SELECT tmpMov.ContainerId AS ContainerId_main
@@ -181,7 +183,6 @@ BEGIN
                       LEFT JOIN ObjectLink AS ObjectLink_CardFuel_Juridical
                                            ON ObjectLink_CardFuel_Juridical.ObjectId = MovementLinkObject_From.ObjectId
                                           AND ObjectLink_CardFuel_Juridical.DescId   = zc_ObjectLink_CardFuel_Juridical()
-                                                   
                  GROUP BY MIContainer.ContainerId_main
                         , MIContainer.ObjectId_main
                         , ObjectLink_CardFuel_Juridical.ChildObjectId
@@ -204,7 +205,7 @@ BEGIN
                        GROUP BY tmpContainer.Id
                               , tmpContainer.ObjectId
                        )
-                       
+
     -- остатки кол-во / сумма
     , tmpRemains AS (SELECT tmp.ContainerId
                           , tmp.ObjectId
@@ -237,7 +238,6 @@ BEGIN
                        , SUM (tmp.InAmount)     AS InAmount
                        , SUM (tmp.OutAmount)    AS OutAmount
                        , SUM (tmp.InSumm)       AS InSumm
-                       , SUM (tmp.OutSumm)      AS OutSumm
                        , SUM (tmp.outSumm_ZP)           AS outSumm_ZP
                        , SUM (tmp.outSumm_Zatraty)      AS outSumm_Zatraty
                        , SUM (tmp.outSumm_Kompensaciya) AS outSumm_Kompensaciya
@@ -253,7 +253,6 @@ BEGIN
                              , 0 AS InAmount
                              , 0 AS OutAmount
                              , 0 AS InSumm
-                             , 0 AS OutSumm
                              , 0 AS outSumm_ZP
                              , 0 AS outSumm_Zatraty
                              , 0 AS outSumm_Kompensaciya
@@ -271,7 +270,6 @@ BEGIN
                              , tmp.IncomeCount AS InAmount
                              , tmp.OutCount    AS OutAmount
                              , tmp.IncomeSumm  AS InSumm
-                             , 0 AS OutSumm
                              , tmp.outSumm_ZP
                              , tmp.outSumm_Zatraty
                              , tmp.outSumm_Kompensaciya
@@ -289,7 +287,6 @@ BEGIN
                              , 0 AS InAmount
                              , tmp.outCount_Transport AS OutAmount
                              , 0 AS InSumm
-                             , 0 AS OutSumm
                              , 0 AS outSumm_ZP
                              , 0 AS outSumm_Zatraty
                              , 0 AS outSumm_Kompensaciya
@@ -312,7 +309,6 @@ BEGIN
                           , SUM (tmpData.InAmount)     AS InAmount
                           , SUM (tmpData.OutAmount)    AS OutAmount
                           , SUM (tmpData.InSumm)       AS InSumm
-                          , SUM (tmpData.OutSumm)      AS OutSumm
                           , SUM (tmpData.outSumm_ZP)           AS outSumm_ZP
                           , SUM (tmpData.outSumm_Zatraty)      AS outSumm_Zatraty
                           , SUM (tmpData.outSumm_Kompensaciya) AS outSumm_Kompensaciya
@@ -342,7 +338,6 @@ BEGIN
                          OR SUM (tmpData.InAmount)     <> 0
                          OR SUM (tmpData.OutAmount)    <> 0
                          OR SUM (tmpData.InSumm)       <> 0
-                         OR SUM (tmpData.OutSumm)      <> 0
                          OR SUM (tmpData.outSumm_ZP)       <> 0
                          OR SUM (tmpData.outSumm_Zatraty)  <> 0
                          OR SUM (tmpData.outSumm_Kompensaciya) <> 0
@@ -372,7 +367,8 @@ BEGIN
              , tmpData.EndAmount             ::TFloat
              , tmpData.StartSumm             ::TFloat
              , tmpData.InSumm                ::TFloat
-             , tmpData.OutSumm               ::TFloat
+             , (COALESCE (tmpData.outSumm_ZP, 0) + COALESCE (tmpData.outSumm_Zatraty, 0) 
+              + COALESCE (tmpData.outSumm_Kompensaciya,0) + COALESCE (tmpData.outSumm_Transport, 0)) ::TFloat AS OutSumm
              , tmpData.EndSumm               ::TFloat
              , tmpData.outSumm_ZP            ::TFloat
              , tmpData.outSumm_Zatraty       ::TFloat
