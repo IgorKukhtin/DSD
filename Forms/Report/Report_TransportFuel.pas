@@ -83,6 +83,7 @@ type
     actRefreshCar: TdsdDataSetRefresh;
     cbPartner: TcxCheckBox;
     actRefreshPartner: TdsdDataSetRefresh;
+    outSumm_Juridical: TcxGridDBColumn;
   private
   public
   end;

@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpReport_TransportFuel (TDateTime, TDateTime, Integer, I
 DROP FUNCTION IF EXISTS gpReport_TransportFuel (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_TransportFuel(
-    IN inStartDate     TDateTime , -- 
+    IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
     IN inFuelId        Integer   , --
     IN inCarId         Integer   , --
@@ -24,6 +24,7 @@ RETURNS TABLE (CarModelName TVarChar, CarId Integer, CarCode Integer, CarName TV
              , outSumm_ZP            TFloat
              , outSumm_Zatraty       TFloat
              , outSumm_Kompensaciya  TFloat
+             , outSumm_Juridical     TFloat
              , outSumm_Transport     TFloat
              )
 AS
@@ -33,25 +34,28 @@ BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Transport());
 
-      RETURN QUERY 
+      RETURN QUERY
       WITH
-         -- авто, согласно вх. параметров, все / выбранный / ограничннные филиалом
+         -- список Авто с ограничением по inBranchId
          tmpCar AS (SELECT tmp.CarId
                          , ObjectLink_Unit_Branch.ChildObjectId AS BranchId
                     FROM (SELECT inCarId AS CarId) AS tmp
-                         LEFT JOIN ObjectLink AS ObjectLink_Car_Unit 
+                         LEFT JOIN ObjectLink AS ObjectLink_Car_Unit
                                               ON ObjectLink_Car_Unit.ObjectId = tmp.CarId
                                              AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
-                         LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch 
+                         LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                               ON ObjectLink_Unit_Branch.ObjectId = ObjectLink_Car_Unit.ChildObjectId
                                              AND ObjectLink_Unit_Branch.DescId = zc_Objectlink_Unit_Branch()
                     WHERE COALESCE (inCarId, 0) <> 0
-                        AND (ObjectLink_Unit_Branch.ChildObjectId = inBranchId OR inBranchId = 0 OR (inBranchId = zc_Branch_Basis() AND COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) = 0)) 
+                        AND (ObjectLink_Unit_Branch.ChildObjectId = inBranchId
+                          OR inBranchId = 0
+                          OR (inBranchId = zc_Branch_Basis() AND COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) = 0)
+                            )
                    UNION
                     SELECT ObjectLink_Car_Unit.ObjectId         AS CarId
                          , ObjectLink_Unit_Branch.ChildObjectId AS BranchId
                     FROM Object AS Object_Car
-                         LEFT JOIN ObjectLink AS ObjectLink_Car_Unit 
+                         LEFT JOIN ObjectLink AS ObjectLink_Car_Unit
                                               ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id    --ObjectLink_Unit_Branch.ObjectId
                                              AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
                          LEFT JOIN Objectlink AS ObjectLink_Unit_Branch
@@ -59,8 +63,12 @@ BEGIN
                                              AND ObjectLink_Unit_Branch.descid = zc_Objectlink_Unit_Branch()
                     WHERE Object_Car.DescId = zc_Object_Car()
                       AND COALESCE (inCarId, 0) = 0
-                      AND (ObjectLink_Unit_Branch.ChildObjectId = inBranchId OR inBranchId = 0 OR (inBranchId = zc_Branch_Basis() AND COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) = 0))
-                    )
+                      AND (ObjectLink_Unit_Branch.ChildObjectId = inBranchId
+                        OR inBranchId = 0
+                        OR (inBranchId = zc_Branch_Basis() AND COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) = 0)
+                          )
+                   )
+        -- список Сотрудников с ограничением по inBranchId
       , tmpPersonal AS (SELECT Object_Personal.Id        AS PersonalId
                              , Object_Branch.Id          AS BranchId
                              , Object_Branch.ValueData   AS BranchName
@@ -73,55 +81,62 @@ BEGIN
                                                  AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
                              LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
                         WHERE Object_Personal.DescId = zc_Object_Personal()
-                          AND (ObjectLink_Unit_Branch.ChildObjectId = inBranchId OR inBranchId = 0 OR (inBranchId = zc_Branch_Basis() AND COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) = 0))
+                          AND (ObjectLink_Unit_Branch.ChildObjectId = inBranchId
+                            OR inBranchId = 0
+                            OR (inBranchId = zc_Branch_Basis() AND COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) = 0)
+                              )
                        )
 
-      -- товарам у которых есть ObjectLink_Goods_Fuel
-      , tmpGoodsFuel AS (-- по топливу
-                         SELECT DISTINCT
+        -- товары у которых есть ObjectLink_Goods_Fuel
+      , tmpGoodsFuel AS (SELECT DISTINCT
                                 ObjectLink_Goods_Fuel.ObjectId      AS GoodsId
                               , ObjectLink_Goods_Fuel.ChildObjectId AS FuelId
                          FROM ObjectLink AS ObjectLink_Goods_Fuel
-                         WHERE ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
-                           AND COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, 0) <> 0 
+                         WHERE ObjectLink_Goods_Fuel.DescId         = zc_ObjectLink_Goods_Fuel()
+                           AND ObjectLink_Goods_Fuel.ChildObjectId  > 0
                            AND (ObjectLink_Goods_Fuel.ChildObjectId = inFuelId OR inFuelId = 0)
-
-                         )
-      , Fuel AS (-- по топливу
-                 SELECT Container.Id, 
-                        Container.DescId, 
-                        Container.Amount, 
-                        Container.ObjectId AS ObjectId
-                 FROM Container 
-                      INNER JOIN Object AS Object_Fuel
-                                        ON Object_Fuel.DescId = zc_Object_Fuel()
-                                       AND Object_Fuel.Id = Container.ObjectId 
-                                       AND (Object_Fuel.Id = inFuelId OR inFuelId = 0)
-                UNION
-                 -- по товарам
-                 SELECT Container.Id, 
-                        Container.DescId, 
-                        Container.Amount, 
-                        tmpGoodsFuel.FuelId  AS ObjectId
-                 FROM Container
-                      INNER JOIN tmpGoodsFuel ON tmpGoodsFuel.GoodsId = Container.ObjectId 
-                )
-
-      , tmpContainer AS (SELECT Container.Id, Container.DescId, Container.Amount, Fuel.ObjectId--, Fuel.CarId -- здесь топливо деньги для получения сумм остатков
-                         FROM Container 
-                              JOIN Fuel ON Container.ParentId = Fuel.Id
-                       UNION All 
-                         SELECT Fuel.Id, Fuel.DescId, Fuel.Amount, Fuel.ObjectId--, Fuel.CarId -- здесь топливо кол-во
-                         FROM Fuel                            
+                        )
+        -- список Container.Id - zc_Container_Count, по которым строится отчет
+      , tmpContainer_count AS (-- для топлива
+                               SELECT Container.Id,
+                                      Container.DescId,
+                                      Container.Amount,
+                                      Container.ObjectId AS ObjectId
+                               FROM Container
+                                    INNER JOIN Object AS Object_Fuel
+                                                      ON Object_Fuel.DescId = zc_Object_Fuel()
+                                                     AND Object_Fuel.Id = Container.ObjectId
+                                                     AND (Object_Fuel.Id = inFuelId OR inFuelId = 0)
+                               WHERE Container.DescId = zc_Container_Count()
+                              UNION
+                               -- для товаров
+                               SELECT Container.Id,
+                                      Container.DescId,
+                                      Container.Amount,
+                                      tmpGoodsFuel.FuelId  AS ObjectId
+                               FROM Container
+                                    INNER JOIN tmpGoodsFuel ON tmpGoodsFuel.GoodsId = Container.ObjectId
+                               WHERE Container.DescId = zc_Container_Count()
+                              )
+        -- список ВСЕ Container.Id - добавлены zc_Container_Summ, по которым строится отчет
+      , tmpContainer AS (SELECT Container.Id, Container.DescId, Container.Amount
+                              , tmpContainer_count.ObjectId -- здесь или Товар или Fuel
+                         FROM Container
+                              JOIN tmpContainer_count ON tmpContainer_count.Id = Container.ParentId
+                         WHERE Container.DescId = zc_Container_Summ()
+                        UNION All
+                         SELECT tmpContainer_count.Id, tmpContainer_count.DescId, tmpContainer_count.Amount
+                              , tmpContainer_count.ObjectId--, Fuel.CarId -- здесь топливо кол-во
+                         FROM tmpContainer_count
                       )
-     -- Для ускорения выбираю отдельно MovementItemContainer для tmpContainer
-    , tmpMIContainer AS (SELECT * 
-                         FROM MovementItemContainer AS MIContainer 
-                         WHERE MIContainer.Containerid IN (SELECT DISTINCT tmpContainer.Id FROM tmpContainer)
+      -- Для ускорения выбираю отдельно MovementItemContainer для tmpContainer
+    , tmpMIContainer AS (SELECT *
+                         FROM MovementItemContainer AS MIContainer
+                         WHERE MIContainer.ContainerId IN (SELECT DISTINCT tmpContainer.Id FROM tmpContainer)
                            AND MIContainer.OperDate >= inStartDate
                          )
-    -- все документы прихода, участвующие в движении
-    , tmpMov AS (SELECT DISTINCT 
+      -- все документы прихода, участвующие в движении
+    , tmpMov AS (SELECT DISTINCT
                         tmpMIContainer.ContainerId
                       , tmpContainer.ObjectId
                       , tmpMIContainer.MovementId
@@ -129,49 +144,71 @@ BEGIN
                       INNER JOIN tmpMIContainer ON tmpMIContainer.ContainerId = tmpContainer.Id
                                                AND tmpMIContainer.OperDate <= inEndDate
                                                AND tmpMIContainer.MovementDescId = zc_Movement_Income()
-                 WHERE tmpContainer.DescId = zc_Container_Count() 
---                 AND tmpMIContainer.MovementId IN ( 6248443 ,10253265 , 10252827, 9909118, 9909106)                                   
+                 WHERE tmpContainer.DescId = zc_Container_Count()
+--                 AND tmpMIContainer.MovementId IN ( 6248443 ,10253265 , 10252827, 9909118, 9909106)
                  )
-     -- MovementItemContainer для документов движения для получения сумм прихода / расхода
+      -- MovementItemContainer для документов движения для получения сумм прихода / расхода
     , tmpOutContainer AS (SELECT tmpMov.ContainerId AS ContainerId_main
                                , tmpMov.ObjectId    AS ObjectId_main
                                , MIContainer.*
                          FROM tmpMov
-                              LEFT JOIN MovementItemContainer AS MIContainer 
+                              LEFT JOIN MovementItemContainer AS MIContainer
                                                               ON MIContainer.MovementId = tmpMov.MovementId
                                                              AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                           )
-    -- суммы прихода / расхода
+      -- суммы прихода / расхода
     , tmpOut AS (SELECT MIContainer.ContainerId_main AS ContainerId
                       , MIContainer.ObjectId_main    AS ObjectId
                       , ObjectLink_CardFuel_Juridical.ChildObjectId  AS FromId  --MovementLinkObject_From.ObjectId
-                      --, MIContainer.MovementId
-                      , SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.DescId = 1 THEN MIContainer.Amount ELSE 0 END)      AS IncomeCount
-                      , SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.DescId = 1 THEN -1 * MIContainer.Amount ELSE 0 END) AS OutCount
-                       
-                      , SUM (CASE WHEN MIContainer.DescId = zc_Container_Summ() AND  COALESCE (MIContainer.Amount,0) < 0 and View_Account.AccountDirectionId = zc_Enum_AccountDirection_70100()
-                                  THEN -1 * MIContainer.Amount ELSE 0 END) AS IncomeSumm
-                               
-                      , SUM (CASE WHEN (View_ProfitLoss.ProfitLossId = 9342 -- "Содержание филиалов" + "услуги полученные"
-                                          OR View_Account.AccountDirectionId = zc_Enum_AccountDirection_70500()
-                                        )
-                                       AND MIContainer.DescId = zc_Container_Summ() THEN MIContainer.Amount ELSE 0 END ) AS outSumm_ZP
-                      
-                      , SUM (CASE WHEN (OL_ProfitLoss_InfoMoneyDestination.ChildObjectId = zc_Enum_InfoMoneyDestination_20400()
-                                        OR View_ProfitLoss.ProfitLossId = 568166 -- "Содержание филиалов" + "ГСМ"
+                      -- , MIContainer.MovementId -- !!!отладка
+                      , 0 AS MovementId -- !!!отладка
+                      , SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.DescId = zc_Container_Count() THEN  1 * MIContainer.Amount ELSE 0 END) AS IncomeCount
+                      , SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.DescId = zc_Container_Count() THEN -1 * MIContainer.Amount ELSE 0 END) AS OutCount
+                        -- Сумма приход
+                      , SUM (CASE WHEN MIContainer.DescId = zc_Container_Summ()
+                                   AND COALESCE (MIContainer.Amount,0) < 0
+                                   AND View_Account.AccountDirectionId = zc_Enum_AccountDirection_70100() -- Кредиторы + поставщики
+                                       THEN -1 * MIContainer.Amount
+                                  ELSE 0
+                             END) AS IncomeSumm
+                        -- Сумма расход на ЗП (т.е. сотрудник заправлялся в счет ЗП)
+                      , SUM (CASE WHEN MIContainer.DescId = zc_Container_Summ()
+                                   AND (-- View_ProfitLoss.ProfitLossId                  = 9342                                 -- "Содержание филиалов" + "услуги полученные"
+                                        OL_ProfitLoss_InfoMoneyDestination.ChildObjectId = zc_Enum_InfoMoneyDestination_21400() -- Общефирменные + услуги полученные
+                                     OR View_Account.AccountDirectionId                  = zc_Enum_AccountDirection_70500()     -- Кредиторы     + Сотрудники + ???Заработная плата???
                                        )
-                                       AND MIContainer.DescId = zc_Container_Summ() THEN MIContainer.Amount ELSE 0 END) AS outSumm_Zatraty
-                      
-                      , SUM (CASE WHEN View_Account.AccountDirectionId = zc_Enum_AccountDirection_100400() AND MIContainer.DescId = zc_Container_Summ()
-                                  THEN MIContainer.Amount ELSE 0 END) AS outSumm_Kompensaciya
+                                       THEN MIContainer.Amount
+                                  ELSE 0
+                             END) AS outSumm_ZP
+                        -- Сумма расход - затраты (затраты предприятия)
+                      , SUM (CASE WHEN MIContainer.DescId = zc_Container_Summ()
+                                   AND (-- View_ProfitLoss.ProfitLossId = 568166                                                -- "Содержание филиалов" + "ГСМ"
+                                        OL_ProfitLoss_InfoMoneyDestination.ChildObjectId = zc_Enum_InfoMoneyDestination_20400() -- Общефирменные + ГСМ
+                                       )
+                                       THEN MIContainer.Amount
+                                  ELSE 0
+                             END) AS outSumm_Zatraty
+                        -- Сумма расход - на учредителя (т.е. учредителю меньше потом выплатят)
+                      , SUM (CASE WHEN MIContainer.DescId = zc_Container_Summ()
+                                   AND View_Account.AccountDirectionId = zc_Enum_AccountDirection_100400() -- Собственный капитал + Расчеты с участниками
+                                       THEN MIContainer.Amount
+                                  ELSE 0
+                             END) AS outSumm_Kompensaciya
 
-                 FROM tmpOutContainer AS MIContainer 
-                      LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = MIContainer.AccountId 
-                      LEFT JOIN ContainerLinkObject AS CLO_ProfitLoss 
+                        -- Сумма расход - на юр лицо (т.е. юр лицо компенсирует эти затраты)
+                      , SUM (CASE WHEN MIContainer.DescId = zc_Container_Summ()
+                                   AND View_Account.AccountDirectionId = zc_Enum_AccountDirection_30200() -- Дебиторы + наши компании
+                                       THEN MIContainer.Amount
+                                  ELSE 0
+                             END) AS outSumm_Juridical
+
+                 FROM tmpOutContainer AS MIContainer
+                      LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = MIContainer.AccountId
+                      LEFT JOIN ContainerLinkObject AS CLO_ProfitLoss
                                                     ON CLO_ProfitLoss.ContainerId = MIContainer.ContainerId
                                                    AND CLO_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
-                      LEFT JOIN lfSelect_Object_ProfitLoss() AS View_ProfitLoss ON View_ProfitLoss.ProfitLossId = CLO_ProfitLoss.ObjectId 
-                      LEFT JOIN ObjectLink AS OL_ProfitLoss_InfoMoneyDestination 
+                      LEFT JOIN lfSelect_Object_ProfitLoss() AS View_ProfitLoss ON View_ProfitLoss.ProfitLossId = CLO_ProfitLoss.ObjectId
+                      LEFT JOIN ObjectLink AS OL_ProfitLoss_InfoMoneyDestination
                                            ON OL_ProfitLoss_InfoMoneyDestination.ObjectId = CLO_ProfitLoss.ObjectId
                                           AND OL_ProfitLoss_InfoMoneyDestination.DescId = zc_ObjectLink_ProfitLoss_InfoMoneyDestination()
                       -- поставщик
@@ -186,7 +223,7 @@ BEGIN
                  GROUP BY MIContainer.ContainerId_main
                         , MIContainer.ObjectId_main
                         , ObjectLink_CardFuel_Juridical.ChildObjectId
-                 
+                        --, MIContainer.MovementId -- !!!отладка
                  )
     -- расход по путевым
     , tmpTransport AS (SELECT tmpContainer.Id AS ContainerId
@@ -194,13 +231,13 @@ BEGIN
                             , SUM (CASE WHEN tmpContainer.DescId = zc_Container_Count() THEN COALESCE (tmp.Amount, 0) * (-1) ELSE 0 END) AS outCount_Transport
                             , SUM (CASE WHEN tmpContainer.DescId = zc_Container_Summ() THEN COALESCE (tmp.Amount, 0)  * (-1) ELSE 0 END) AS outSumm_Transport
                        FROM tmpContainer
-                            LEFT JOIN (SELECT MIContainer.* 
-                                       FROM MovementItemContainer AS MIContainer 
+                            LEFT JOIN (SELECT MIContainer.*
+                                       FROM MovementItemContainer AS MIContainer
                                        WHERE MIContainer.ContainerId IN (SELECT tmpContainer.Id FROM tmpContainer)
                                          AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                          AND MIContainer.MovementDescId = zc_Movement_Transport()
                                          --AND MIContainer.DescId = zc_Container_Summ()
-                                       ) AS tmp ON tmp.ContainerId = tmpContainer.Id 
+                                       ) AS tmp ON tmp.ContainerId = tmpContainer.Id
                        --WHERE tmpContainer.DescId = zc_Container_Summ()
                        GROUP BY tmpContainer.Id
                               , tmpContainer.ObjectId
@@ -219,15 +256,15 @@ BEGIN
                                 , tmpContainer.Amount - SUM (COALESCE (MIContainer.Amount, 0))                                                            AS StartAmount
                                 , tmpContainer.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS EndAmount
                            FROM tmpContainer
-                                LEFT JOIN tmpMIContainer AS MIContainer 
-                                                         ON MIContainer.Containerid = tmpContainer.Id
+                                LEFT JOIN tmpMIContainer AS MIContainer
+                                                         ON MIContainer.ContainerId = tmpContainer.Id
                            GROUP BY tmpContainer.Amount, tmpContainer.Id, tmpContainer.ObjectId, tmpContainer.DescId
                            ) AS tmp
                      GROUP BY tmp.ContainerId
                             , tmp.ObjectId
                      )
 
-     -- соединили остатки и движение и все остальное
+      -- соединили остатки и движение и все остальное
     , tmpData AS (SELECT tmp.ContainerId
                        , tmp.ObjectId
                        , tmp.FromId
@@ -241,7 +278,9 @@ BEGIN
                        , SUM (tmp.outSumm_ZP)           AS outSumm_ZP
                        , SUM (tmp.outSumm_Zatraty)      AS outSumm_Zatraty
                        , SUM (tmp.outSumm_Kompensaciya) AS outSumm_Kompensaciya
+                       , SUM (tmp.outSumm_Juridical)    AS outSumm_Juridical
                        , SUM (tmp.outSumm_Transport)    AS outSumm_Transport
+                       , tmp.MovementId
                   FROM (--остатки
                         SELECT tmp.ContainerId
                              , tmp.ObjectId
@@ -256,13 +295,15 @@ BEGIN
                              , 0 AS outSumm_ZP
                              , 0 AS outSumm_Zatraty
                              , 0 AS outSumm_Kompensaciya
+                             , 0 AS outSumm_Juridical
                              , 0 AS outSumm_Transport
+                             , 0 AS MovementId
                         FROM tmpRemains AS tmp
                       UNION ALL
                         -- расход зп., компенс, затрат., приход
                         SELECT tmp.ContainerId
                              , tmp.ObjectId
-                             , COALESCE (tmp.FromId, 0) AS FromId 
+                             , COALESCE (tmp.FromId, 0) AS FromId
                              , 0 AS StartAmount
                              , 0 AS EndAmount
                              , 0 AS StartSumm
@@ -273,13 +314,15 @@ BEGIN
                              , tmp.outSumm_ZP
                              , tmp.outSumm_Zatraty
                              , tmp.outSumm_Kompensaciya
+                             , tmp.outSumm_Juridical
                              , 0 AS outSumm_Transport
-                        FROM tmpOut AS tmp  
+                             , tmp.MovementId
+                        FROM tmpOut AS tmp
                       UNION ALL
                         -- расход пут. лист
                         SELECT tmp.ContainerId
                              , tmp.ObjectId
-                             , 0 AS FromId 
+                             , 0 AS FromId
                              , 0 AS StartAmount
                              , 0 AS EndAmount
                              , 0 AS StartSumm
@@ -290,18 +333,21 @@ BEGIN
                              , 0 AS outSumm_ZP
                              , 0 AS outSumm_Zatraty
                              , 0 AS outSumm_Kompensaciya
+                             , 0 AS outSumm_Juridical
                              , tmp.outSumm_Transport
-                        FROM tmpTransport AS tmp 
-                        ) AS tmp
+                             , 0 AS MovementId
+                        FROM tmpTransport AS tmp
+                       ) AS tmp
                   GROUP BY tmp.ContainerId
                          , tmp.ObjectId
                          , tmp.FromId
+                         , tmp.MovementId
                   )
-    -- привязываю по контейнерам свойства
+      -- добавляются свойства ContainerLinkObject
     , tmpDataAll AS (SELECT tmpData.ObjectId
                           , tmpData.FromId
                           , CASE WHEN inIsCar = TRUE THEN ContainerLinkObject_Car.ObjectId ELSE 0 END  AS CarId
-                          , CASE WHEN inIsCar = TRUE THEN ContainerLinkObject_Unit.ObjectId ELSE 0 END AS PersonalId
+                          , CASE WHEN inIsCar = TRUE THEN COALESCE (ContainerLinkObject_Unit.ObjectId, ContainerLinkObject_Juridical.ObjectId) ELSE 0 END AS PersonalId
                           , SUM (tmpData.StartAmount)  AS StartAmount
                           , SUM (tmpData.EndAmount)    AS EndAmount
                           , SUM (tmpData.StartSumm)    AS StartSumm
@@ -312,7 +358,9 @@ BEGIN
                           , SUM (tmpData.outSumm_ZP)           AS outSumm_ZP
                           , SUM (tmpData.outSumm_Zatraty)      AS outSumm_Zatraty
                           , SUM (tmpData.outSumm_Kompensaciya) AS outSumm_Kompensaciya
+                          , SUM (tmpData.outSumm_Juridical)    AS outSumm_Juridical
                           , SUM (tmpData.outSumm_Transport)    AS outSumm_Transport
+                          , tmpData.MovementId
                      FROM tmpData
                           LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Car
                                                         ON ContainerLinkObject_Car.DescId = zc_ContainerLinkObject_Car()
@@ -322,15 +370,21 @@ BEGIN
                                                         ON ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
                                                        AND ContainerLinkObject_Unit.ContainerId = tmpData.ContainerId
 
+                          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
+                                                        ON ContainerLinkObject_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                                                       AND ContainerLinkObject_Juridical.ContainerId = tmpData.ContainerId
+                                                       AND 1=0
+
                           LEFT JOIN tmpCar ON tmpCar.CarId = ContainerLinkObject_Car.ObjectId
                           LEFT JOIN tmpPersonal ON tmpPersonal.PersonalId = ContainerLinkObject_Unit.ObjectId
 
-                     WHERE (ContainerLinkObject_Car.ObjectId = inCarId OR inCarId = 0) 
+                     WHERE (ContainerLinkObject_Car.ObjectId = inCarId OR inCarId = 0)
                        AND ((COALESCE (tmpCar.BranchId, tmpPersonal.BranchId,0) = inBranchId OR inBranchId = 0) OR (inBranchId = zc_Branch_Basis() AND COALESCE (tmpCar.BranchId, tmpPersonal.BranchId,0) = 0))
                      GROUP BY tmpData.ObjectId
                             , tmpData.FromId
-                            , CASE WHEN inIsCar = TRUE THEN ContainerLinkObject_Car.ObjectId ELSE 0 END 
-                            , CASE WHEN inIsCar = TRUE THEN ContainerLinkObject_Unit.ObjectId ELSE 0 END
+                            , CASE WHEN inIsCar = TRUE THEN ContainerLinkObject_Car.ObjectId ELSE 0 END
+                            , CASE WHEN inIsCar = TRUE THEN COALESCE (ContainerLinkObject_Unit.ObjectId, ContainerLinkObject_Juridical.ObjectId) ELSE 0 END
+                            , tmpData.MovementId
                      HAVING SUM (tmpData.StartAmount)  <> 0
                          OR SUM (tmpData.EndAmount)    <> 0
                          OR SUM (tmpData.StartSumm)    <> 0
@@ -341,17 +395,19 @@ BEGIN
                          OR SUM (tmpData.outSumm_ZP)       <> 0
                          OR SUM (tmpData.outSumm_Zatraty)  <> 0
                          OR SUM (tmpData.outSumm_Kompensaciya) <> 0
+                         OR SUM (tmpData.outSumm_Juridical)    <> 0
                          OR SUM (tmpData.outSumm_Transport)    <> 0
                      )
 
-       -- результат 
+       -- результат
         SELECT Object_CarModel.ValueData AS CarModelName
              , Object_Car.Id             AS CarId
              , Object_Car.ObjectCode     AS CarCode
              , Object_Car.ValueData      AS CarName
+             -- , tmpData.MovementId :: TVarChar AS CarName
              , Object_Fuel.ObjectCode    AS FuelCode
              , Object_Fuel.ValueData     AS FuelName
-              
+
              , Object_Branch.Id          AS BranchId
              , Object_Branch.ValueData   AS BranchName
 
@@ -360,39 +416,42 @@ BEGIN
 
              , Object_Personal.Id          AS PersonalId
              , Object_Personal.ValueData   AS PersonalName
-              
+
              , tmpData.StartAmount           ::TFloat
              , tmpData.InAmount              ::TFloat
              , tmpData.OutAmount             ::TFloat
              , tmpData.EndAmount             ::TFloat
              , tmpData.StartSumm             ::TFloat
              , tmpData.InSumm                ::TFloat
-             , (COALESCE (tmpData.outSumm_ZP, 0) + COALESCE (tmpData.outSumm_Zatraty, 0) 
-              + COALESCE (tmpData.outSumm_Kompensaciya,0) + COALESCE (tmpData.outSumm_Transport, 0)) ::TFloat AS OutSumm
+             , (COALESCE (tmpData.outSumm_ZP, 0)           + COALESCE (tmpData.outSumm_Zatraty, 0)
+              + COALESCE (tmpData.outSumm_Kompensaciya, 0) + COALESCE (tmpData.outSumm_Juridical, 0)
+              + COALESCE (tmpData.outSumm_Transport, 0)
+               ) ::TFloat AS OutSumm
              , tmpData.EndSumm               ::TFloat
              , tmpData.outSumm_ZP            ::TFloat
              , tmpData.outSumm_Zatraty       ::TFloat
              , tmpData.outSumm_Kompensaciya  ::TFloat
+             , tmpData.outSumm_Juridical     ::TFloat
              , tmpData.outSumm_Transport     ::TFloat
-              
+
         FROM tmpDataAll AS tmpData
              LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = tmpData.ObjectId
              LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpData.CarId
              LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
-             
-             LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel 
+
+             LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel
                                   ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                  AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
              LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
-             
+
              LEFT JOIN tmpCar ON tmpCar.CarId = tmpData.CarId
              LEFT JOIN tmpPersonal ON tmpPersonal.PersonalId = tmpData.PersonalId
              LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = COALESCE (tmpCar.BranchId, tmpPersonal.BranchId)
-             
-             LEFT JOIN ObjectLink AS ObjectLink_Car_PersonalDriver 
+
+             LEFT JOIN ObjectLink AS ObjectLink_Car_PersonalDriver
                                   ON ObjectLink_Car_PersonalDriver.ObjectId = Object_Car.Id
                                  AND ObjectLink_Car_PersonalDriver.DescId = zc_ObjectLink_Car_PersonalDriver()
-                                 
+
              LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = COALESCE (tmpData.PersonalId, ObjectLink_Car_PersonalDriver.ChildObjectId)
 
     ;
@@ -408,4 +467,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_TransportFuel(inStartDate := ('01.06.2018')::TDateTime , inEndDate := ('01.06.2018')::TDateTime , inFuelId:=0, inCarId := 0, inBranchId := 0 , inIsCar:= False :: Boolean, inIsPartner := False ::Boolean , inSession := '5');
+-- SELECT * FROM gpReport_TransportFuel (inStartDate:= '31.07.2018', inEndDate:= '31.07.2018', inFuelId:= 0, inCarId:= 0, inBranchId:= 0, inIsCar:= FALSE, inIsPartner:= FALSE, inSession:= zfCalc_UserAdmin());
