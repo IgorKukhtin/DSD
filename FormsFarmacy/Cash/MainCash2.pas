@@ -450,6 +450,10 @@ type
     procedure SetWorkMode(ALocal: Boolean);
     procedure AppMsgHandler(var Msg: TMsg; var Handled: Boolean);  // только 2 форма
     function GetAmount : currency;
+
+    // Сохранение чеков в CSV по дням
+    procedure Add_Check_History;
+
   public
     procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String; var AOperDateSP : TDateTime);
     procedure SetPromoCode(APromoCodeId: Integer; APromoName, APromoCodeGUID: String;
@@ -3487,6 +3491,8 @@ begin
       end;
     end;
 
+    Add_Check_History;
+
     // Непосредственно печать чека
     str_log_xml:=''; i:=0;
     result := not Assigned(Cash) or Cash.AlwaysSold or Cash.OpenReceipt(isFiscal);
@@ -4615,6 +4621,74 @@ begin
     end else Result := RoundTo(nAmount, - 3);
   end;
 end;
+
+// Сохранение чеков в CSV по дням
+procedure TMainCashForm2.Add_Check_History;
+  var F: TextFile; cName, S : string;  bNew : boolean;
+begin
+  try
+    if not ForceDirectories(ExtractFilePath(Application.ExeName) + 'CheckHistory') then
+    begin
+      ShowMessage('Ошибка создания директории для сохранения истории чеков на локальном компьютере. Покажите это окно системному администратору...');
+      Exit;
+    end;
+
+    cName := ExtractFilePath(Application.ExeName) + 'CheckHistory\' + FormatDateTime('YYYY-MM-DD', Date) + '.CSV';
+
+    AssignFile(F,cName);
+    if not fileExists(cName) then
+    begin
+      Rewrite(F);
+      bNew := True;
+    end else
+    begin
+      Append(F);
+      bNew := False;
+    end;
+
+    try
+      if bNew then Writeln(F, 'Тип;Дата и время;Подразделение;Касса;Кассир;Код;Наименование товара;Кол-во;Цена;Сумма');
+      bNew := True;
+      if pnlVIP.Visible then S := 'Вип' else S := '';
+      if pnlVIP.Visible and pnlSP.Visible then S := S + ',';
+      if pnlSP.Visible  then S := S + 'Сп.';
+
+        // Содержимое чека
+      with CheckCDS do
+      begin
+        First;
+        while not EOF do
+        begin
+          if bNew then
+            Writeln(F, S + ';' +
+              DateTimeToStr(Now) + ';' +
+              iniLocalUnitNameGet + ';' +
+              IntToStr(iniCashID) + ';' +
+              gc_User.Login + ';' +
+              FieldByName('GoodsCode').AsString + ';' +
+              StringReplace(FieldByName('GoodsName').AsString, ';', ',', [rfReplaceAll]) + ';' +
+              FieldByName('Amount').AsString + ';' +
+              FieldByName('Price').asString + ';' +
+              FieldByName('Summ').asString)
+          else Writeln(F, ';;;;;' +
+            FieldByName('GoodsCode').AsString + ';' +
+            StringReplace(FieldByName('GoodsName').AsString, ';', ',', [rfReplaceAll]) + ';' +
+            FieldByName('Amount').AsString + ';' +
+            FieldByName('Price').asString + ';' +
+            FieldByName('Summ').asString);
+          Next;
+          bNew := False;
+        end;
+        First;
+      end;
+    finally
+      CloseFile(F);
+    end;
+  except on E: Exception do
+    ShowMessage('Ошибка сохранения истории чеков на локальном компьютере. Покажите это окно системному администратору: ' + #13#10 + E.Message);
+  end;
+end;
+
 
 { TSaveRealThread }
 { TRefreshDiffThread }
