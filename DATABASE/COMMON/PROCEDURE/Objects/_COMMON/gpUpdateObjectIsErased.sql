@@ -13,6 +13,12 @@ BEGIN
    -- НЕТ проверки прав пользователя на вызов процедуры
    vbUserId:= lpGetUserBySession (Session);
 
+   -- проверка прав пользователя
+   IF EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId = zc_Object_ArticleLoss())
+   THEN
+       PERFORM lpCheckRight (Session, zc_Enum_Process_Update_Object_isErased_ArticleLoss());
+   END IF;
+
    -- изменили
    PERFORM lpUpdate_Object_isErased (inObjectId:= inObjectId, inUserId:= vbUserId);
 

@@ -1,4 +1,5 @@
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Object_ArticleLoss() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_Object_ArticleLoss' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_isErased_ArticleLoss() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_isErased_ArticleLoss' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 
 DO $$
 BEGIN
@@ -8,7 +9,13 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Object_A
                                   , inCode:= 1
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_ArticleLoss())||'> - сохранение данных.'
                                   , inEnumName:= 'zc_Enum_Process_InsertUpdate_Object_ArticleLoss');
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_isErased_ArticleLoss()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 2
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_ArticleLoss())||'> - удаление/восстановление.'
+                                  , inEnumName:= 'zc_Enum_Process_Update_Object_isErased_ArticleLoss');
 
+/*
  -- заливка прав - InsertUpdate
  PERFORM gpInsertUpdate_Object_RoleProcess (ioId        := tmpData.RoleRightId
                                           , inRoleId    := tmpRole.RoleId
@@ -28,7 +35,7 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Object_A
                  WHERE ObjectLink_RoleRight_Role.DescId = zc_ObjectLink_RoleRight_Role()
                 ) AS tmpData ON tmpData.RoleId    = tmpRole.RoleId
                             AND tmpData.ProcessId = tmpProcess.ProcessId
- ;
+ ;*/
 
 END $$;
 
