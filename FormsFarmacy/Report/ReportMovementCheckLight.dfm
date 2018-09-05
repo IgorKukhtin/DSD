@@ -2,6 +2,7 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
   Caption = 'C'#1091#1084#1084#1072#1088#1085#1099#1077' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1086' '#1089#1077#1090#1080' '
   ClientHeight = 480
   ClientWidth = 1251
+  AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1267
   ExplicitHeight = 518
@@ -312,6 +313,16 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object PersentMargin: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094#1077#1085#1082#1080
+            DataBinding.FieldName = 'PersentMargin'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 63
+          end
           object PartionDescName: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' '#1042#1080#1076
             DataBinding.FieldName = 'PartionDescName'
@@ -514,14 +525,16 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
       Width = 83
     end
     object cbPartionPrice: TcxCheckBox
-      Left = 348
+      Left = 352
       Top = 35
       Action = actRefreshPartionPrice
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 7
-      Width = 195
+      Width = 196
     end
     object cbJuridical: TcxCheckBox
-      Left = 545
+      Left = 551
       Top = 35
       Action = actRefreshJuridical
       TabOrder = 8
@@ -632,8 +645,7 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
           StoredProc = spSelect
         end>
       Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1072#1088#1090#1080#1080' '#1094#1077#1085#1099
-      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1072#1088#1090#1080#1080' '#1094#1077#1085#1099
-      ShortCut = 116
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077', '#1070#1088'.'#1083#1080#1094#1086' '#1080#1079' '#1087#1072#1088#1090#1080#1080' '#1094#1077#1085#1099
       RefreshOnTabSetChanges = False
     end
     object actRefreshIsPartion: TdsdDataSetRefresh
@@ -804,6 +816,9 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -889,8 +904,8 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 168
+    Left = 72
+    Top = 200
   end
   inherited BarManager: TdxBarManager
     Left = 120
@@ -1058,7 +1073,8 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 512
+    Left = 616
+    Top = 80
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
