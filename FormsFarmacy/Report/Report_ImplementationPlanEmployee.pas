@@ -432,6 +432,7 @@ begin
     while not ClientDataSet.Eof do
     begin
       if (ClientDataSet.FieldByName('Amount').AsCurrency = 0) or
+        (ClientDataSet.FieldByName('AmountPlanTab').AsCurrency = 0) or
         (ClientDataSet.FieldByName('Amount').AsCurrency < ClientDataSet.FieldByName('AmountPlanTab').AsCurrency) then Inc(FCountO);
       ClientDataSet.Edit;
       if ClientDataSet.FieldByName('AmountPlanTab').AsCurrency >= 0.1 then
