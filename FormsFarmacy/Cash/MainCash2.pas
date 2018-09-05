@@ -3491,7 +3491,7 @@ begin
       end;
     end;
 
-    Add_Check_History;
+    if isFiscal then Add_Check_History;
 
     // Непосредственно печать чека
     str_log_xml:=''; i:=0;
