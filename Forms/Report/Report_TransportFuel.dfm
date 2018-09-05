@@ -298,6 +298,14 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         HeaderAlignmentVert = vaCenter
         Width = 84
       end
+      object PersonalName: TcxGridDBColumn
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+        DataBinding.FieldName = 'PersonalName'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 145
+      end
       object CarModelName: TcxGridDBColumn
         Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
         DataBinding.FieldName = 'CarModelName'
@@ -477,14 +485,6 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 102
-      end
-      object PersonalName: TcxGridDBColumn
-        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
-        DataBinding.FieldName = 'PersonalName'
-        GroupSummaryAlignment = taCenter
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 145
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -715,6 +715,14 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
           ItemName = 'dxBarStatic'
         end
         item
+          Visible = True
+          ItemName = 'bbPrintDetail'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbToExcel'
@@ -745,6 +753,10 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
     end
     object bbPrint: TdxBarButton
       Action = dsdPrintAction
+      Category = 0
+    end
+    object bbPrintDetail: TdxBarButton
+      Action = actPrintDetail
       Category = 0
     end
   end
@@ -803,10 +815,54 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actPrintDetail: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1076#1077#1090#1072#1083#1100#1085#1086
+      Hint = #1055#1077#1095#1072#1090#1100' '#1076#1077#1090#1072#1083#1100#1085#1086
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = ClientDataSet
+          UserName = 'frxDBDataset'
+          IndexFieldNames = 'BranchName;PersonalName;CarName;FuelName'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 43101d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43101d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDetail'
+          Value = Null
+          Component = cbCar
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1043#1057#1052
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1043#1057#1052
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object dsdPrintAction: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       DataSets = <
@@ -828,6 +884,11 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDetail'
+          Value = 'False'
           MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1043#1057#1052

@@ -84,6 +84,8 @@ type
     cbPartner: TcxCheckBox;
     actRefreshPartner: TdsdDataSetRefresh;
     outSumm_Juridical: TcxGridDBColumn;
+    actPrintDetail: TdsdPrintAction;
+    bbPrintDetail: TdxBarButton;
   private
   public
   end;
