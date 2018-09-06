@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalService(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
-             , INN TVarChar, Card TVarChar, CardSecond TVarChar, isMain Boolean, isOfficial Boolean
+             , INN TVarChar, Card TVarChar, CardSecond TVarChar
+             , isMain Boolean, isOfficial Boolean, DateOut TDateTime
              , PersonalCode_to Integer, PersonalName_to TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , PositionId Integer, PositionName TVarChar
@@ -168,6 +169,7 @@ BEGIN
             , ObjectString_Member_CardSecond.ValueData      AS CardSecond
             , CASE WHEN tmpAll.MovementItemId > 0 THEN COALESCE (MIBoolean_Main.ValueData, FALSE) ELSE COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE) END :: Boolean   AS isMain
             , COALESCE (ObjectBoolean_Member_Official.ValueData, FALSE) :: Boolean AS isOfficial
+            , CASE WHEN COALESCE (ObjectDate_Personal_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN NULL ELSE ObjectDate_Personal_DateOut.ValueData END     :: TDateTime AS DateOut   -- дата увольнения
 
             , Object_PersonalTo.ObjectCode            AS PersonalCode_to
             , Object_PersonalTo.ValueData             AS PersonalName_to
@@ -355,6 +357,10 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
                                     ON ObjectBoolean_Personal_Main.ObjectId = tmpAll.PersonalId
                                    AND ObjectBoolean_Personal_Main.DescId = zc_ObjectBoolean_Personal_Main()
+            LEFT JOIN ObjectDate AS ObjectDate_Personal_DateOut
+                                 ON ObjectDate_Personal_DateOut.ObjectId = tmpAll.PersonalId
+                                AND ObjectDate_Personal_DateOut.DescId = zc_ObjectDate_Personal_Out()
+
             LEFT JOIN ObjectString AS ObjectString_Member_INN
                                    ON ObjectString_Member_INN.ObjectId = tmpAll.MemberId_Personal
                                   AND ObjectString_Member_INN.DescId = zc_ObjectString_Member_INN()
@@ -367,6 +373,8 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Member_Official
                                     ON ObjectBoolean_Member_Official.ObjectId = tmpAll.MemberId_Personal
                                    AND ObjectBoolean_Member_Official.DescId = zc_ObjectBoolean_Member_Official()
+
+
             LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpAll.MovementItemId
       ;
 
