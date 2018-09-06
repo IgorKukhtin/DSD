@@ -73,7 +73,7 @@ end if;*/
      THEN
          RAISE EXCEPTION 'Ошибка.У Вас в настройках код Филиала = <%>.Документ можно закрыть на компьютере где код Филиала = <%>.'
                        , inBranchCode
-                       , (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_BranchCode())
+                       , (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_BranchCode())
                         ;
      END IF;
 
