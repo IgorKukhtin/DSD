@@ -218,9 +218,9 @@ inherited MainCashForm2: TMainCashForm2
     TabOrder = 0
     object MainGrid: TcxGrid
       Left = 0
-      Top = 0
+      Top = 21
       Width = 784
-      Height = 186
+      Height = 165
       Align = alClient
       TabOrder = 0
       object MainGridDBTableView: TcxGridDBTableView
@@ -942,6 +942,56 @@ inherited MainCashForm2: TMainCashForm2
         Width = 55
       end
     end
+    object pnlExpirationDateFilter: TPanel
+      Left = 0
+      Top = 0
+      Width = 784
+      Height = 21
+      Align = alTop
+      Color = 15656679
+      ParentBackground = False
+      TabOrder = 2
+      Visible = False
+      object Label13: TLabel
+        Left = 1
+        Top = 1
+        Width = 204
+        Height = 19
+        Align = alLeft
+        Caption = '     '#1060#1080#1083#1100#1090#1088' '#1087#1086' '#1089#1088#1088#1086#1082#1091' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072'.'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clGray
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        ExplicitHeight = 13
+      end
+      object Label14: TLabel
+        Left = 500
+        Top = 2
+        Width = 59
+        Height = 13
+        Align = alCustom
+        Caption = #1043#1086#1076#1085#1099#1077' '#1076#1086':'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clGray
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+      end
+      object edlExpirationDateFilter: TcxTextEdit
+        Left = 567
+        Top = 0
+        Properties.MaxLength = 8
+        TabOrder = 0
+        OnExit = edPromoCodeExit
+        OnKeyDown = edPromoCodeKeyDown
+        OnKeyPress = edPromoCodeKeyPress
+        Width = 80
+      end
+    end
   end
   object pnlVIP: TPanel [3]
     Left = 0
@@ -1115,8 +1165,8 @@ inherited MainCashForm2: TMainCashForm2
       ParentFont = False
     end
     object edPrice: TcxCurrencyEdit
-      Left = 567
-      Top = -1
+      Left = 569
+      Top = -5
       Properties.DisplayFormat = ',0.00;-,0.00'
       TabOrder = 0
       Width = 60
@@ -2088,6 +2138,10 @@ inherited MainCashForm2: TMainCashForm2
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1087#1088#1080#1074#1103#1079#1082#1091' '#1090#1086#1074#1072#1088#1072' '#1082' '#1088#1072#1079#1084#1077#1097#1077#1085#1080#1102
       OnExecute = actDeleteAccommodationExecute
     end
+    object actExpirationDateFilter: TAction
+      Caption = #1060#1080#1083#1100#1090#1088' '#1087#1086' '#1089#1088#1086#1082#1091' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
+      OnExecute = actExpirationDateFilterExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2347,6 +2401,10 @@ inherited MainCashForm2: TMainCashForm2
     end
     object mmDeleteAccommodation: TMenuItem
       Action = actDeleteAccommodation
+    end
+    object N11: TMenuItem
+      Action = actExpirationDateFilter
+      Visible = False
     end
   end
   object FormParams: TdsdFormParams
@@ -2614,6 +2672,10 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'LIST_UID'
         DataType = ftString
         Size = 50
+      end
+      item
+        Name = 'Remains'
+        DataType = ftFloat
       end>
     IndexDefs = <>
     Params = <>
