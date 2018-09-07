@@ -437,6 +437,8 @@ type
     miRepriceChange: TMenuItem;
     actRepriceChangeJournal: TdsdOpenForm;
     miRepriceChangeJournal: TMenuItem;
+    actReport_Check_PriceChange: TdsdOpenForm;
+    miReport_Check_PriceChange: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

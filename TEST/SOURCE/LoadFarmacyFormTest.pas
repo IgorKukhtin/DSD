@@ -483,7 +483,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategory_TotalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategory_TotalForm');
-
 end;
 
 procedure TLoadFormTest.LoadMarginCategoryMovement;
@@ -590,6 +589,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PriceChangeForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_Check_PriceChangeForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PriceChangeDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_Check_PriceChangeDialogForm');
+    exit;
   {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsCurrentForm'));
     TdsdFormStorageFactory.GetStorage.Load('TRReport_GoodsRemainsCurrentForm');

@@ -1020,8 +1020,8 @@ inherited MarginCategory_MovementForm: TMarginCategory_MovementForm
         item
           Action = actRefresh
         end>
-      Caption = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1076#1072#1085#1085#1099#1077
-      Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1086#1090#1095#1077#1090
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1086#1090#1095#1077#1090
     end
     object actOpenReportSimple: TdsdOpenForm
       Category = 'DSDLib'

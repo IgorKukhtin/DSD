@@ -601,7 +601,9 @@ uses
   GoodsSPJournalChoice in '..\..\FormsFarmacy\Document\GoodsSPJournalChoice.pas' {GoodsSPJournalChoiceForm: TParentForm},
   Report_Liquidity in '..\..\FormsFarmacy\Report\Report_Liquidity.pas' {Report_LiquidityForm: TParentForm},
   Overdraft in '..\..\FormsFarmacy\Guides\Overdraft.pas' {OverdraftForm: TParentForm},
-  OverdraftEdit in '..\..\FormsFarmacy\Guides\OverdraftEdit.pas' {OverdraftEditForm: TParentForm};
+  OverdraftEdit in '..\..\FormsFarmacy\Guides\OverdraftEdit.pas' {OverdraftEditForm: TParentForm},
+  Report_Check_PriceChange in '..\..\FormsFarmacy\Report\Report_Check_PriceChange.pas' {Report_Check_PriceChangeForm: TParentForm},
+  Report_Check_PriceChangeDialog in '..\..\FormsFarmacy\Report\Report_Check_PriceChangeDialog.pas' {Report_Check_PriceChangeDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
