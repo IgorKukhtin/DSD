@@ -55,6 +55,12 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
 
+    -- Проверка
+    IF (vbBranchId :: Integer) > 1000
+    THEN
+        RAISE EXCEPTION 'Ошибка.Для печати этикетки сканировать нельзя.';
+    END IF;
+
     -- определяется
     vbBranchId:= CASE WHEN inBranchCode > 100 THEN zc_Branch_Basis()
                       ELSE (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBranchCode and Object.DescId = zc_Object_Branch())
