@@ -17,41 +17,42 @@ CREATE OR REPLACE FUNCTION  gpReport_Movement_Check_Light(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
-  JuridicalCode  Integer,  
-  JuridicalName  TVarChar,
-  GoodsId        Integer, 
-  GoodsCode      Integer, 
-  BarCode        TVarChar,
-  GoodsName      TVarChar,
-  GoodsGroupName TVarChar, 
-  NDSKindName    TVarChar,
-  NDS            TFloat,
-  ConditionsKeepName    TVarChar,
-  Amount                TFloat,
-  Price                 TFloat,
-  PriceSale             TFloat,
-  PriceWithVAT          Tfloat,      --Цена поставщика с учетом НДС (без % корр.)
-  PriceWithOutVAT       Tfloat, 
-  Summa                 TFloat,
-  SummaSale             TFloat,
-  SummaWithVAT          Tfloat,      --Сумма поставщика с учетом НДС (без % корр.)
-  SummaWithOutVAT       Tfloat,
-  SummaMargin           TFloat,
-  SummaMarginWithVAT    TFloat,
-
-  PartionDescName       TVarChar,
-  PartionInvNumber      TVarChar,
-  PartionOperDate       TDateTime,
-  PartionPriceDescName  TVarChar,
-  PartionPriceInvNumber TVarChar,
-  PartionPriceOperDate  TDateTime,
-  UnitName              TVarChar,
-  OurJuridicalName      TVarChar,
-  
-  IsClose Boolean, UpdateDate TDateTime,
-  isTop boolean, isFirst boolean , isSecond boolean,
-  isSP Boolean, isPromo boolean
-)
+               JuridicalCode  Integer,  
+               JuridicalName  TVarChar,
+               GoodsId        Integer, 
+               GoodsCode      Integer, 
+               BarCode        TVarChar,
+               GoodsName      TVarChar,
+               GoodsGroupName TVarChar, 
+               NDSKindName    TVarChar,
+               NDS            TFloat,
+               ConditionsKeepName    TVarChar,
+               Amount                TFloat,
+               Price                 TFloat,
+               PriceSale             TFloat,
+               PriceWithVAT          Tfloat,      --Цена поставщика с учетом НДС (без % корр.)
+               PriceWithOutVAT       Tfloat, 
+               Summa                 TFloat,
+               SummaSale             TFloat,
+               SummaWithVAT          Tfloat,      --Сумма поставщика с учетом НДС (без % корр.)
+               SummaWithOutVAT       Tfloat,
+               SummaMargin           TFloat,
+               SummaMarginWithVAT    TFloat,
+               PersentMargin         TFloat,      -- процент наценки
+             
+               PartionDescName       TVarChar,
+               PartionInvNumber      TVarChar,
+               PartionOperDate       TDateTime,
+               PartionPriceDescName  TVarChar,
+               PartionPriceInvNumber TVarChar,
+               PartionPriceOperDate  TDateTime,
+               UnitName              TVarChar,
+               OurJuridicalName      TVarChar,
+               
+               IsClose Boolean, UpdateDate TDateTime,
+               isTop boolean, isFirst boolean , isSecond boolean,
+               isSP Boolean, isPromo boolean
+               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -62,7 +63,6 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
 
-  
     -- Результат
     RETURN QUERY
     WITH
@@ -272,6 +272,7 @@ BEGIN
 
            , (tmpData.SummaSale - tmpData.Summa)        :: TFloat AS SummaMargin
            , (tmpData.SummaSale - tmpData.SummaWithVAT) :: TFloat AS SummaMarginWithVAT
+           , CASE WHEN COALESCE (tmpData.SummaWithVAT, 0) <> 0 THEN (tmpData.SummaSale - tmpData.SummaWithVAT) * 100 / tmpData.SummaWithVAT ELSE 0 END  :: TFloat AS PersentMargin
 
            , MovementDesc_Income.ItemName AS PartionDescName
            , Movement_Income.InvNumber    AS PartionInvNumber
@@ -360,6 +361,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 05.09.18         * add PersentMargin
  15.07.17         *
  12.07.17         *
 */

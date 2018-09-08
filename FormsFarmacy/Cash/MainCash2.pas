@@ -310,6 +310,12 @@ type
     actDeleteAccommodation: TAction;
     mmDeleteAccommodation: TMenuItem;
     spDelete_Accommodation: TdsdStoredProc;
+    actExpirationDateFilter: TAction;
+    N11: TMenuItem;
+    pnlExpirationDateFilter: TPanel;
+    Label13: TLabel;
+    Label14: TLabel;
+    edlExpirationDateFilter: TcxTextEdit;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -383,7 +389,8 @@ type
     procedure edPromoCodeKeyPress(Sender: TObject; var Key: Char);
     procedure actDeleteAccommodationExecute(Sender: TObject);
     procedure AccommodationNamePropertiesButtonClick(Sender: TObject;
-      AButtonIndex: Integer); //***12.02.18
+      AButtonIndex: Integer);
+    procedure actExpirationDateFilterExecute(Sender: TObject); //***12.02.18
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -453,6 +460,8 @@ type
 
     // Сохранение чеков в CSV по дням
     procedure Add_Check_History;
+    // Очистка фильтров
+    procedure ClearFilterAll;
 
   public
     procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String; var AOperDateSP : TDateTime);
@@ -788,6 +797,8 @@ begin
   //***27.06.18
   FormParams.ParamByName('ManualDiscount').Value            := 0;
 
+  ClearFilterAll;
+
   FiscalNumber := '';
   pnlVIP.Visible := False;
   edPrice.Value := 0.0;
@@ -953,6 +964,38 @@ begin
       CalcTotalSumm;
     end;
 
+            //***04.09.18
+    CheckCDS.DisableControls;
+    CheckCDS.Filtered := False;
+    RemainsCDS.DisableControls;
+    RemainsCDS.Filtered := False;
+    nRecNo := RemainsCDS.RecNo;
+    try
+
+      CheckCDS.First;
+      while not CheckCDS.Eof do
+      begin
+
+        if RemainsCDS.Locate('GoodsCode', checkCDS.FieldByName('GoodsCode').AsInteger,[]) and
+          ((checkCDS.FieldByName('Amount').asCurrency + checkCDS.FieldByName('Remains').asCurrency) <>
+          RemainsCDS.FieldByName('Remains').asCurrency) then
+        begin
+          checkCDS.Edit;
+          checkCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency +
+            checkCDS.FieldByName('Amount').asCurrency;
+          checkCDS.Post;
+        end;
+        CheckCDS.Next;
+      end;
+      CheckCDS.First;
+    finally
+      RemainsCDS.RecNo := nRecNo;
+      CheckCDS.Filtered := True;
+      CheckCDS.EnableControls;
+      RemainsCDS.Filtered := True;
+      RemainsCDS.EnableControls;
+    end;
+
     pnlVIP.Visible := true;
   End;
   //
@@ -968,6 +1011,64 @@ begin
       ReleaseMutex(MutexVip);
     end;
   End;
+end;
+
+procedure TMainCashForm2.ClearFilterAll;
+begin
+  if pnlExpirationDateFilter.Visible then
+  begin
+    RemainsCDS.DisableControls;
+    RemainsCDS.Filtered := False;
+    try
+      RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0';
+      pnlExpirationDateFilter.Visible := False;
+    finally
+      RemainsCDS.Filtered := True;
+      RemainsCDS.EnableControls;
+      edlExpirationDateFilter.Text := '';
+    end;
+  end;
+end;
+
+procedure TMainCashForm2.actExpirationDateFilterExecute(Sender: TObject);
+  var S : string; I : integer;
+begin
+
+  if pnlExpirationDateFilter.Visible then
+  begin
+    ClearFilterAll;
+    Exit;
+  end;
+
+  S := '';
+  while True do
+  begin
+    S := InputBox('Фильтр по сроку годности остатка', 'Введите количество месяцев: ', S);
+    if S = '' then Exit;
+    if not TryStrToInt(S, I) or (I < 1) then
+    begin
+      ShowMessage('Количество месяцев должно быть не менее одного.');
+    end else Break;
+  end;
+
+  RemainsCDS.DisableControls;
+  RemainsCDS.Filtered := False;
+  try
+    try
+      RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0) and MinExpirationDate <= ' +
+        QuotedStr(FormatDateTime(FormatSettings.ShortDateFormat, IncMonth(Date, I)));
+      edlExpirationDateFilter.Text := FormatDateTime(FormatSettings.ShortDateFormat, IncMonth(Date, I));
+      pnlExpirationDateFilter.Visible := True;
+    except
+      RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0';
+      pnlExpirationDateFilter.Visible := False;
+      edlExpirationDateFilter.Text := '';
+    end;
+  finally
+    RemainsCDS.Filtered := True;
+    RemainsCDS.EnableControls;
+  end;
+
 end;
 
 procedure TMainCashForm2.actGetJuridicalListExecute(Sender: TObject);
@@ -2921,6 +3022,8 @@ begin
         checkCDS.FieldByName('AmountOrder').asCurrency       :=0;
         //***10.08.16
         checkCDS.FieldByName('List_UID').AsString := GenerateGUID;
+        //***04.09.18
+        checkCDS.FieldByName('Remains').asCurrency:=SourceClientDataSet.FieldByName('Remains').asCurrency;
         checkCDS.Post;
 
         if (FormParams.ParamByName('DiscountExternalId').Value > 0) and
@@ -2945,8 +3048,18 @@ begin
     CalcTotalSumm;
   End
   else
-  if not SoldRegim AND (nAmount < 0) then
+  if not SoldRegim AND (nAmount <> 0) then
   Begin
+
+    if (nAmount > 0) then
+    begin
+      if (nAmount + CheckCDS.FieldByName('Amount').AsCurrency) > CheckCDS.FieldByName('Remains').AsCurrency then
+      begin
+        ShowMessage('Не хватает количества для продажи!');
+        exit;
+      end;
+    end;
+
     UpdateRemainsFromCheck(CheckCDS.FieldByName('GoodsId').AsInteger,nAmount,CheckCDS.FieldByName('PriceSale').asCurrency);
     //Update Дисконт в CDS - по всем "обновим" Дисконт
     if FormParams.ParamByName('DiscountExternalId').Value > 0
@@ -2958,8 +3071,8 @@ begin
   if SoldRegim AND (nAmount < 0) then
     ShowMessage('Для продажи можно указывать только количество больше 0!')
   else
-  if not SoldRegim AND (nAmount > 0) then
-    ShowMessage('Для возврата можно указывать только количество меньше 0!');
+  if not SoldRegim AND (nAmount = 0) then
+    ShowMessage('При изменении количества можно указывать значения не равные 0!');
 end;
 
 {------------------------------------------------------------------------------}
@@ -3491,7 +3604,7 @@ begin
       end;
     end;
 
-    Add_Check_History;
+    if isFiscal then Add_Check_History;
 
     // Непосредственно печать чека
     str_log_xml:=''; i:=0;
@@ -4594,21 +4707,40 @@ begin
         Exit;
       end;
 
-      if (Frac(nAmount) = (Frac(CheckCDS.FieldByName('Amount').asCurrency) + 0.001)) and (nPack < 500) then
-        nAmount := nAmount - 0.001
-      else if (Frac(nAmount) = (Frac(CheckCDS.FieldByName('Amount').asCurrency) - 0.001)) and (nPack < 500) then
-        nAmount := nAmount + 0.001
-      else if Frac(nAmount) <> Frac(CheckCDS.FieldByName('Amount').asCurrency) then
+      if Pos('-', edAmount.Text) = 1 then
       begin
-        if Frac(CheckCDS.FieldByName('Amount').asCurrency) = 0 then nOst := nPack - (nOut mod nPack)
-        else nOst := Round(Frac(CheckCDS.FieldByName('Amount').asCurrency) / nOne) - (nOut mod nPack);
-        if nOst = 0 then
-          nAmount := nAmount + (Frac(CheckCDS.FieldByName('Amount').asCurrency) - Frac(nAmount))
-        else if Frac(CheckCDS.FieldByName('Amount').asCurrency) = 0 then
-          nAmount := nAmount + (1 - RoundTo(nOst * nOne, - 3) - Frac(nAmount))
-        else nAmount := nAmount + (Frac(CheckCDS.FieldByName('Amount').asCurrency) - RoundTo(nOst * nOne, - 3) - Frac(nAmount));
+        if (Frac(nAmount) = (Frac(CheckCDS.FieldByName('Amount').asCurrency) + 0.001)) and (nPack < 500) then
+          nAmount := nAmount - 0.001
+        else if (Frac(nAmount) = (Frac(CheckCDS.FieldByName('Amount').asCurrency) - 0.001)) and (nPack < 500) then
+          nAmount := nAmount + 0.001
+        else if Frac(nAmount) <> Frac(CheckCDS.FieldByName('Amount').asCurrency) then
+        begin
+          if Frac(CheckCDS.FieldByName('Amount').asCurrency) = 0 then nOst := nPack - (nOut mod nPack)
+          else nOst := Round(Frac(CheckCDS.FieldByName('Amount').asCurrency) / nOne) - (nOut mod nPack);
+          if nOst = 0 then
+            nAmount := nAmount + (Frac(CheckCDS.FieldByName('Amount').asCurrency) - Frac(nAmount))
+          else if Frac(CheckCDS.FieldByName('Amount').asCurrency) = 0 then
+            nAmount := nAmount + (1 - RoundTo(nOst * nOne, - 3) - Frac(nAmount))
+          else nAmount := nAmount + (Frac(CheckCDS.FieldByName('Amount').asCurrency) - RoundTo(nOst * nOne, - 3) - Frac(nAmount));
+        end;
+        nAmount := - nAmount;
+      end else
+      begin
+        if (Frac(nAmount) = (Frac(CheckCDS.FieldByName('Remains').asCurrency - CheckCDS.FieldByName('Amount').asCurrency) + 0.001)) and (nPack < 500) then
+          nAmount := nAmount - 0.001
+        else if (Frac(nAmount) = (Frac(CheckCDS.FieldByName('Remains').asCurrency - CheckCDS.FieldByName('Amount').asCurrency) - 0.001)) and (nPack < 500) then
+          nAmount := nAmount + 0.001
+        else if Frac(nAmount) <> Frac(CheckCDS.FieldByName('Remains').asCurrency - CheckCDS.FieldByName('Amount').asCurrency) then
+        begin
+          if Frac(CheckCDS.FieldByName('Remains').asCurrency - CheckCDS.FieldByName('Amount').asCurrency) = 0 then nOst := nPack - (nOut mod nPack)
+          else nOst := Round(Frac(CheckCDS.FieldByName('Remains').asCurrency - CheckCDS.FieldByName('Amount').asCurrency) / nOne) - (nOut mod nPack);
+          if nOst = 0 then
+            nAmount := nAmount + (Frac(CheckCDS.FieldByName('Remains').asCurrency - CheckCDS.FieldByName('Amount').asCurrency) - Frac(nAmount))
+          else if Frac(CheckCDS.FieldByName('Remains').asCurrency - CheckCDS.FieldByName('Amount').asCurrency) = 0 then
+            nAmount := nAmount + (1 - RoundTo(nOst * nOne, - 3) - Frac(nAmount))
+          else nAmount := nAmount + (Frac(CheckCDS.FieldByName('Remains').asCurrency - CheckCDS.FieldByName('Amount').asCurrency) - RoundTo(nOst * nOne, - 3) - Frac(nAmount));
+        end;
       end;
-      nAmount := - nAmount;
     end;
 
     Result := nAmount;
@@ -4625,6 +4757,7 @@ end;
 // Сохранение чеков в CSV по дням
 procedure TMainCashForm2.Add_Check_History;
   var F: TextFile; cName, S : string;  bNew : boolean;
+      I : integer; SR: TSearchRec; FileList: TStringList;
 begin
   try
     if not ForceDirectories(ExtractFilePath(Application.ExeName) + 'CheckHistory') then
@@ -4638,6 +4771,21 @@ begin
     AssignFile(F,cName);
     if not fileExists(cName) then
     begin
+
+{      FileList := TStringList.Create;
+      try
+        if FindFirst(ExtractFilePath(Application.ExeName) + 'CheckHistory\*.CSV', faAnyFile, SR) = 0 then
+        repeat
+          if SR.Name < FormatDateTime('YYYY-MM-DD', IncMonth(Date, -1)) + '.CSV' then
+            FileList.Add(ExtractFilePath(Application.ExeName) + 'CheckHistory\' + SR.Name);
+        until FindNext(SR) <> 0;
+        FindClose(SR);
+
+        for I := 0 to FileList.Count - 1 do DeleteFile(FileList.Strings[I]);
+      finally
+        FileList.Free;
+      end;}
+
       Rewrite(F);
       bNew := True;
     end else
@@ -4710,4 +4858,3 @@ finalization
   DeleteCriticalSection(csCriticalSection_Save);
   DeleteCriticalSection(csCriticalSection_All);
 end.
-

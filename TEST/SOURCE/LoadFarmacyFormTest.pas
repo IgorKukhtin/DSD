@@ -483,19 +483,16 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategory_TotalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategory_TotalForm');
-
 end;
 
 procedure TLoadFormTest.LoadMarginCategoryMovement;
 begin
-  TdsdFormStorageFactory.GetStorage.Save
-    (GetForm('TMarginCategory_MovementForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategory_MovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategory_MovementForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryJournalForm');
   //
-  TdsdFormStorageFactory.GetStorage.Save
-    (GetForm('TReport_SAMP_AnalysisDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SAMP_AnalysisDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SAMP_AnalysisDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SAMP_AnalysisForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SAMP_AnalysisForm');
@@ -592,6 +589,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PriceChangeForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_Check_PriceChangeForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PriceChangeDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_Check_PriceChangeDialogForm');
+    exit;
   {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsCurrentForm'));
     TdsdFormStorageFactory.GetStorage.Load('TRReport_GoodsRemainsCurrentForm');
@@ -645,8 +647,8 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_Check_AssortmentdForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_AssortmentDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Check_AssortmentDialogForm');
-    exit; }
-  {
+    exit;
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementPriceListForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementPriceListForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementPriceList_DialogForm'));
@@ -740,17 +742,17 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_CrossForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_CrossForm');
     exit;
-  }
-  { TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsLightForm'));
+
+   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsLightForm'));
     TdsdFormStorageFactory.GetStorage.Load('TRReport_GoodsRemainsLightForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsRemainsLightDialogForm'));
-    TdsdFormStorageFactory.GetStorage.Load('TRReport_GoodsRemainsLightDialogForm'); }
-  { //
+    TdsdFormStorageFactory.GetStorage.Load('TRReport_GoodsRemainsLightDialogForm');
+   }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckLightForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckLightForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementChecLightDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementChecLightDialogForm');
-
+   {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportMovementCheckForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReportMovementCheckForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheckDialogForm'));
@@ -827,16 +829,16 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsDialogForm');
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LiquidityForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_LiquidityForm');
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdraftForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TOverdraftForm');
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdraftEditForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TOverdraftEditForm');
   }
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LiquidityForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_LiquidityForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdraftForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TOverdraftForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOverdraftEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TOverdraftEditForm');
 end;
 
 procedure TLoadFormTest.LoadReportForSiteTest;

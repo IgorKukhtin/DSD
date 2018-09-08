@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, ParentId integer
              , List_UID TVarChar
              , isErased Boolean
              , isSp Boolean
+             , Remains TFloat
               )
 AS
 $BODY$
@@ -78,6 +79,7 @@ BEGIN
            , MovementItem.List_UID
            , MovementItem.isErased
            , CASE WHEN COALESCE (vbMovementId_SP,0) = 0 THEN False ELSE TRUE END AS isSp
+           , MovementItem.Amount
        FROM MovementItem_Check_View AS MovementItem 
             -- получаем GoodsMainId
             LEFT JOIN  ObjectLink AS ObjectLink_Child 

@@ -48,8 +48,6 @@ BEGIN
                                    AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
           WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();
 
-
-
     -- Результат
     IF COALESCE (inRetailId, 0) = 0
     THEN
