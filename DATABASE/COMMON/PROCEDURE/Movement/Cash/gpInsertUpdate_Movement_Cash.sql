@@ -65,8 +65,7 @@ BEGIN
      THEN
         RAISE EXCEPTION 'Ошибка.Счет № <%> от <%> уже полность оплачен.Выберите другой.', (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId_Invoice), DATE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId_Invoice));
      END IF;
-
-
+     
      -- 1. если  update
      IF ioId > 0 AND vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_Cash())
      THEN
@@ -151,6 +150,15 @@ BEGIN
          inCurrencyPartnerValue:= 0;
          inParPartnerValue     := 0;
      END IF;
+
+
+     -- проверка - Обмен только в ту же кассу
+     IF inInfoMoneyId = zc_Enum_InfoMoney_41001() -- Покупка/продажа валюты
+        AND inMoneyPlaceId <> inCashId
+     THEN
+        RAISE EXCEPTION 'Ошибка.Нет прав проводить обмен в кассу <%>.', lfGet_Object_ValueData_sh (inMoneyPlaceId);
+     END IF;
+
 
 
      -- !!!очень важный расчет!!!
