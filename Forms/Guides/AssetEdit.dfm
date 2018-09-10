@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1053#1086#1074#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086
-  ClientHeight = 463
+  ClientHeight = 472
   ClientWidth = 380
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,18 +18,18 @@
   TextHeight = 13
   object edName: TcxTextEdit
     Left = 40
-    Top = 71
+    Top = 64
     TabOrder = 0
     Width = 296
   end
   object cxLabel1: TcxLabel
     Left = 40
-    Top = 48
+    Top = 46
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 71
-    Top = 426
+    Top = 439
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 221
-    Top = 426
+    Top = 439
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -55,7 +55,7 @@
   end
   object ceCode: TcxCurrencyEdit
     Left = 40
-    Top = 26
+    Top = 21
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
@@ -63,23 +63,23 @@
   end
   object ceInvNumber: TcxTextEdit
     Left = 40
-    Top = 167
+    Top = 153
     TabOrder = 6
     Width = 138
   end
   object cxLabel2: TcxLabel
     Left = 40
-    Top = 144
+    Top = 134
     Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1085#1099#1081' '#1085#1086#1084#1077#1088
   end
   object cxLabel4: TcxLabel
     Left = 40
-    Top = 274
+    Top = 260
     Caption = #1043#1088#1091#1087#1087#1099' '#1086#1089#1085#1086#1074#1085#1099#1093' '#1089#1088#1077#1076#1089#1090#1074
   end
   object ceAssetGroup: TcxButtonEdit
     Left = 40
-    Top = 297
+    Top = 279
     Properties.Buttons = <
       item
         Default = True
@@ -90,23 +90,23 @@
   end
   object cxLabel3: TcxLabel
     Left = 43
-    Top = 192
+    Top = 178
     Caption = #1047#1072#1074#1086#1076#1089#1082#1086#1081' '#1085#1086#1084#1077#1088
   end
   object ceSerialNumber: TcxTextEdit
     Left = 40
-    Top = 211
+    Top = 197
     TabOrder = 11
     Width = 138
   end
   object cxLabel5: TcxLabel
     Left = 212
-    Top = 147
+    Top = 134
     Caption = #1044#1072#1090#1072' '#1074#1099#1087#1091#1089#1082#1072
   end
   object edRelease: TcxDateEdit
     Left = 212
-    Top = 167
+    Top = 153
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 13
@@ -114,72 +114,74 @@
   end
   object cxLabel6: TcxLabel
     Left = 189
-    Top = 192
+    Top = 178
     Caption = #1053#1086#1084#1077#1088' '#1087#1072#1089#1087#1086#1088#1090#1072
   end
   object cePassportNumber: TcxTextEdit
     Left = 189
-    Top = 211
+    Top = 197
     TabOrder = 15
     Width = 147
   end
   object cxLabel7: TcxLabel
     Left = 43
-    Top = 99
+    Top = 89
     Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077' '#1054#1057
   end
   object ceFullName: TcxTextEdit
     Left = 40
-    Top = 118
+    Top = 108
     TabOrder = 17
     Width = 296
   end
   object cxLabel8: TcxLabel
     Left = 40
-    Top = 234
+    Top = 220
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit
     Left = 40
-    Top = 251
+    Top = 237
     TabOrder = 19
     Width = 296
   end
   object cxLabel9: TcxLabel
     Left = 41
-    Top = 320
+    Top = 304
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
   end
   object ceJuridical: TcxButtonEdit
     Left = 40
-    Top = 338
+    Top = 322
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 21
     Width = 296
   end
   object ceMaker: TcxButtonEdit
     Left = 40
-    Top = 378
+    Top = 362
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 22
     Width = 296
   end
   object cxLabel10: TcxLabel
     Left = 43
-    Top = 361
+    Top = 345
     Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' ('#1054#1057')'
   end
   object edPeriodUse: TcxCurrencyEdit
     Left = 189
-    Top = 26
+    Top = 21
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
@@ -191,6 +193,23 @@
     Left = 189
     Top = 3
     Caption = #1055#1077#1088#1080#1086#1076' '#1101#1082#1089#1087#1083#1091#1072#1090#1072#1094#1080#1080' ('#1083#1077#1090')'
+  end
+  object cxLabel12: TcxLabel
+    Left = 43
+    Top = 387
+    Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+  end
+  object edCar: TcxButtonEdit
+    Left = 40
+    Top = 404
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 27
+    Width = 296
   end
   object ActionList: TActionList
     Left = 344
@@ -321,6 +340,14 @@
         Name = 'inMakerId'
         Value = ''
         Component = MakerGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCarId'
+        Value = Null
+        Component = GuidesCar
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -466,6 +493,21 @@
         Component = edPeriodUse
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CarId'
+        Value = Null
+        Component = GuidesCar
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CarName'
+        Value = Null
+        Component = GuidesCar
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -517,7 +559,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 128
-    Top = 292
+    Top = 282
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -545,8 +587,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 96
-    Top = 332
+    Left = 80
+    Top = 306
   end
   object MakerGuides: TdsdGuides
     KeyField = 'Id'
@@ -575,6 +617,35 @@
         MultiSelectSeparator = ','
       end>
     Left = 176
-    Top = 372
+    Top = 362
+  end
+  object GuidesCar: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCar
+    FormNameParam.Value = 'TCar_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCar_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCar
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCar
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 168
+    Top = 396
   end
 end

@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_Asset()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Asset(Integer, Integer, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Asset(Integer, Integer, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Asset(
  INOUT ioId                  Integer   ,    -- ключ объекта < Основные средства>
@@ -18,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Asset(
     IN inAssetGroupId        Integer   ,    -- ссылка на группу основных средств
     IN inJuridicalId         Integer   ,    -- ссылка на Юридические лица
     IN inMakerId             Integer   ,    -- ссылка на Производитель (ОС)
+    IN inCarId               Integer   ,    -- ссылка на авто
 
     IN inPeriodUse           TFloat   ,     -- период эксплуатации
     IN inSession             TVarChar       -- сессия пользователя
@@ -55,6 +57,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Asset_AssetGroup(), ioId, inAssetGroupId);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Asset_Juridical(), ioId, inJuridicalId);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Asset_Maker(), ioId, inMakerId);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Asset_Car(), ioId, inCarId);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Asset_PeriodUse(), ioId, inPeriodUse);
@@ -73,6 +77,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.09.18         * add Car
  11.02.14         * add wiki  
  02.07.13          *
 */

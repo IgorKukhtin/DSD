@@ -2307,7 +2307,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TAssetForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetEditForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGroupEditForm'));
@@ -2331,6 +2331,7 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGoods_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetGoods_ObjectForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadArticleLossFormTest;
