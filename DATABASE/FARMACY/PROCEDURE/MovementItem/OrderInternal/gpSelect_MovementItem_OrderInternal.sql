@@ -529,6 +529,7 @@ BEGIN
                 END                                                 AS PartionGoodsDateColor
            , tmpMI.Remains                                          AS RemainsInUnit
            , tmpMI.Reserved
+           , CASE WHEN (tmpMI.Remains - tmpMI.Reserved) < 0 THEN (tmpMI.Remains - tmpMI.Reserved) ELSE 0 END :: TFLoat AS Remains_Diff   --не хватает с учетом отлож. чеком
            , tmpMI.MCS
 
            , tmpMI.MCSIsClose
@@ -2033,6 +2034,7 @@ BEGIN
                 END AS PartionGoodsDateColor
            , Remains.Amount                                                  AS RemainsInUnit
            , COALESCE (tmpReserve.Amount, 0)                       :: TFloat AS Reserved           -- кол-во в отложенных чеках
+           , CASE WHEN (Remains.Amount - COALESCE (tmpReserve.Amount, 0)) < 0 THEN (Remains.Amount - COALESCE (tmpReserve.Amount, 0)) ELSE 0 END :: TFLoat AS Remains_Diff  --не хватает с учетом отлож. чеком
            , Object_Price_View.MCSValue                                      AS MCS
            , COALESCE (Object_Price_View.MCSIsClose, FALSE)                  AS MCSIsClose
            , COALESCE (Object_Price_View.MCSNotRecalc, FALSE)                AS MCSNotRecalc
@@ -2226,6 +2228,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 10.09.18         * add Remains_Diff --не хватает с учетом отлож. чеков
  31.08.18         * add Reserved               
  02.10.17         * add area
  12.09.17         *
