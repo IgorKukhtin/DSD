@@ -125,6 +125,9 @@ type
     bbExecuteDialog: TdxBarButton;
     actPrint_Calc_PriceListExcel: TdsdPrintAction;
     bbPrint_Calc_PriceListExcel: TdxBarButton;
+    Color_Profit: TcxGridDBColumn;
+    actPrint_Profit: TdsdPrintAction;
+    bbPrint_Profit: TdxBarButton;
   private
     { Private declarations }
   public

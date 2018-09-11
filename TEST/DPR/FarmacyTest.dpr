@@ -603,7 +603,9 @@ uses
   Overdraft in '..\..\FormsFarmacy\Guides\Overdraft.pas' {OverdraftForm: TParentForm},
   OverdraftEdit in '..\..\FormsFarmacy\Guides\OverdraftEdit.pas' {OverdraftEditForm: TParentForm},
   Report_Check_PriceChange in '..\..\FormsFarmacy\Report\Report_Check_PriceChange.pas' {Report_Check_PriceChangeForm: TParentForm},
-  Report_Check_PriceChangeDialog in '..\..\FormsFarmacy\Report\Report_Check_PriceChangeDialog.pas' {Report_Check_PriceChangeDialogForm: TParentForm};
+  Report_Check_PriceChangeDialog in '..\..\FormsFarmacy\Report\Report_Check_PriceChangeDialog.pas' {Report_Check_PriceChangeDialogForm: TParentForm},
+  MarginCategory_Movement2 in '..\..\FormsFarmacy\Document\MarginCategory_Movement2.pas' {MarginCategory_Movement2Form: TParentForm},
+  MarginCategoryJournal2 in '..\..\FormsFarmacy\Document\MarginCategoryJournal2.pas' {MarginCategoryJournal2Form: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

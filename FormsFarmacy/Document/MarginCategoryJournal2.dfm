@@ -1,5 +1,5 @@
-inherited MarginCategoryJournalForm: TMarginCategoryJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' <'#1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1082#1080' ('#1057#1040#1059#1062')>'
+inherited MarginCategoryJournal2Form: TMarginCategoryJournal2Form
+  Caption = '2 '#1046#1091#1088#1085#1072#1083' <'#1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1082#1080' ('#1057#1040#1059#1062')>'
   ClientHeight = 491
   ClientWidth = 979
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -206,12 +206,12 @@ inherited MarginCategoryJournalForm: TMarginCategoryJournalForm
       Caption = #1044#1072#1090#1099' '#1086#1090#1095#1077#1090#1072
     end
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TMarginCategory_MovementForm'
-      FormNameParam.Value = 'TMarginCategory_MovementForm'
+      FormName = 'TMarginCategory_Movement2Form'
+      FormNameParam.Value = 'TMarginCategory_Movement2Form'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TMarginCategory_MovementForm'
-      FormNameParam.Value = 'TMarginCategory_MovementForm'
+      FormName = 'TMarginCategory_Movement2Form'
+      FormNameParam.Value = 'TMarginCategory_Movement2Form'
       GuiParams = <
         item
           Name = 'Id'
@@ -506,8 +506,8 @@ inherited MarginCategoryJournalForm: TMarginCategoryJournalForm
     Left = 528
   end
   inherited RefreshDispatcher: TRefreshDispatcher
-    Left = 600
-    Top = 144
+    Left = 640
+    Top = 152
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_MarginCategory'

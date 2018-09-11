@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , AssetGroupId Integer, AssetGroupCode Integer, AssetGroupName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , MakerId Integer, MakerCode Integer, MakerName TVarChar
+             , CarId Integer, CarName TVarChar
              , Release TDateTime
              , InvNumber TVarChar, FullName TVarChar, SerialNumber TVarChar, PassportNumber TVarChar, Comment TVarChar
              , PeriodUse TFloat
@@ -38,7 +39,10 @@ $BODY$BEGIN
            , CAST (0 as Integer)    AS MakerId
            , CAST (0 as Integer)    AS MakerCode
            , CAST ('' as TVarChar)  AS MakerName
-           
+
+           , CAST (0 as Integer)    AS CarId
+           , CAST ('' as TVarChar)  AS CarName
+ 
            , CURRENT_DATE :: TDateTime AS Release
            
            , CAST ('' as TVarChar)  AS InvNumber
@@ -67,10 +71,13 @@ $BODY$BEGIN
          , Object_Juridical.ObjectCode AS JuridicalCode
          , Object_Juridical.ValueData  AS JuridicalName
 
-         , Object_Maker.Id         AS MakerId
-         , Object_Maker.ObjectCode AS MakerCode
-         , Object_Maker.ValueData  AS MakerName
-         
+         , Object_Maker.Id             AS MakerId
+         , Object_Maker.ObjectCode     AS MakerCode
+         , Object_Maker.ValueData      AS MakerName
+
+         , Object_Car.Id               AS CarId
+         , Object_Car.ValueData        AS CarName
+
          , COALESCE (ObjectDate_Release.ValueData,CAST (CURRENT_DATE as TDateTime)) AS Release
          
          , ObjectString_InvNumber.ValueData      AS InvNumber
@@ -98,11 +105,16 @@ $BODY$BEGIN
                                ON ObjectLink_Asset_Maker.ObjectId = Object_Asset.Id
                               AND ObjectLink_Asset_Maker.DescId = zc_ObjectLink_Asset_Maker()
           LEFT JOIN Object AS Object_Maker ON Object_Maker.Id = ObjectLink_Asset_Maker.ChildObjectId
-                    
+
+          LEFT JOIN ObjectLink AS ObjectLink_Asset_Car
+                               ON ObjectLink_Asset_Car.ObjectId = Object_Asset.Id
+                              AND ObjectLink_Asset_Car.DescId = zc_ObjectLink_Asset_Car()
+          LEFT JOIN Object AS Object_Car ON Object_Car.Id = ObjectLink_Asset_Car.ChildObjectId
+
           LEFT JOIN ObjectDate AS ObjectDate_Release
                                 ON ObjectDate_Release.ObjectId = Object_Asset.Id
                                AND ObjectDate_Release.DescId = zc_ObjectDate_Asset_Release()
-          
+
           LEFT JOIN ObjectString AS ObjectString_InvNumber
                                  ON ObjectString_InvNumber.ObjectId = Object_Asset.Id
                                 AND ObjectString_InvNumber.DescId = zc_ObjectString_Asset_InvNumber()
@@ -140,6 +152,7 @@ ALTER FUNCTION gpGet_Object_Asset(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 10.09.18         * add Car
  11.02.14         * add wiki             
  02.07.13         *
 

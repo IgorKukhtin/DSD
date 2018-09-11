@@ -1,4 +1,4 @@
-unit MarginCategoryJournal;
+unit MarginCategoryJournal2;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TMarginCategoryJournalForm = class(TAncestorJournalForm)
+  TMarginCategoryJournal2Form = class(TAncestorJournalForm)
     spGet_Movement_MarginCategory: TdsdStoredProc;
     UnitName: TcxGridDBColumn;
     OperDateStart: TcxGridDBColumn;
@@ -59,6 +59,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TMarginCategoryJournalForm);
+  RegisterClass(TMarginCategoryJournal2Form);
 
 end.

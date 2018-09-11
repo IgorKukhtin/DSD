@@ -62,6 +62,9 @@ type
     MakerGuides: TdsdGuides;
     edPeriodUse: TcxCurrencyEdit;
     cxLabel11: TcxLabel;
+    cxLabel12: TcxLabel;
+    edCar: TcxButtonEdit;
+    GuidesCar: TdsdGuides;
   private
     { Private declarations }
   public

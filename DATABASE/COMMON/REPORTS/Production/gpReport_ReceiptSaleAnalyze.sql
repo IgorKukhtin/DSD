@@ -678,9 +678,9 @@ BEGIN
            , Object_GoodsKind.ValueData                  AS GoodsKindName
            , Object_Measure.ValueData                    AS MeasureName
            
-           , Object_Receipt_Parent.ObjectCode      AS Code_Parent
-           , ObjectString_Code_Parent.ValueData    AS ReceiptCode_Parent
-           , ObjectBoolean_Main_Parent.ValueData   AS isMain_Parent
+           , Object_Receipt_Parent.ObjectCode            AS Code_Parent
+           , ObjectString_Code_Parent.ValueData          AS ReceiptCode_Parent
+           , ObjectBoolean_Main_Parent.ValueData         AS isMain_Parent
            , Object_Goods_Parent.ObjectCode              AS GoodsCode_Parent
            , Object_Goods_Parent.ValueData               AS GoodsName_Parent
            , Object_Measure_Parent.ValueData             AS MeasureName_Parent
@@ -874,6 +874,32 @@ BEGIN
            , CAST (CASE WHEN tmpResult.OperCount_return <> 0 THEN tmpResult.SummOut_PriceList_return / tmpResult.OperCount_return ELSE 0 END AS NUMERIC (16, 3)) AS Price_out_pl_return
            , tmpResult.SummOut_return AS SummOut_return
            , CAST (CASE WHEN tmpResult.OperCount_return <> 0 THEN tmpResult.SummOut_return / tmpResult.OperCount_return ELSE 0 END AS NUMERIC (16, 3)) AS Price_out_return
+           -- чистая прибыль
+           , CAST ((tmpResult.OperCount_sale * ((CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END)
+                                                - ( (CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummIn_sale / tmpResult.OperCount_sale ELSE 0 END) 
+                                                    + (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+                                                                 THEN COALESCE (tmpPrice_10100.Price2, 0)
+                                                            WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                                                                 THEN COALESCE (tmpPrice_20900.Price2, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
+                                                            WHEN tmpResult.newSumm2_cost <> 0 AND tmpResult.OperCount_sale <> 0
+                                                                 THEN tmpResult.newSumm2_cost / tmpResult.OperCount_sale
+                                                            ELSE tmpResult.Summ2_cost / tmpResult.Value_receipt
+                                                       END))
+                                                )
+                   - tmpResult.SummOut_return ) AS NUMERIC (16, 3) )  AS Profit
+           -- если  чистая прибыль отриц. подсвечиваем красным
+           , CASE WHEN (tmpResult.OperCount_sale * ((CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END)
+                                                   - ( (CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummIn_sale / tmpResult.OperCount_sale ELSE 0 END) 
+                                                       + (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+                                                                    THEN COALESCE (tmpPrice_10100.Price2, 0)
+                                                               WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                                                                    THEN COALESCE (tmpPrice_20900.Price2, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
+                                                               WHEN tmpResult.newSumm2_cost <> 0 AND tmpResult.OperCount_sale <> 0
+                                                                    THEN tmpResult.newSumm2_cost / tmpResult.OperCount_sale
+                                                               ELSE tmpResult.Summ2_cost / tmpResult.Value_receipt
+                                                          END))
+                                                   )
+                   - tmpResult.SummOut_return ) < 0 THEN zc_Color_Red() ELSE zc_Color_Black() END AS Color_Profit
 
            , CASE WHEN Object_Goods.Id <> Object_Goods_Parent.Id THEN TRUE ELSE FALSE END AS isCheck_Parent
 
@@ -1093,3 +1119,4 @@ ALTER FUNCTION gpReport_ReceiptSaleAnalyze (TDateTime, TDateTime, Integer, Integ
 
 -- тест
 -- SELECT * FROM gpReport_ReceiptSaleAnalyze (inStartDate:= '01.02.2016', inEndDate:= '01.02.2016', inUnitId_sale:= 8447, inUnitId_return:= 8447, inGoodsGroupId:= 0, inPriceListId_1:= 0, inPriceListId_2:= 0, inPriceListId_3:= 0, inPriceListId_sale:= 0, inIsGoodsKind:= FALSE, inSession:= zfCalc_UserAdmin())
+-- select * from gpReport_ReceiptSaleAnalyze(inStartDate := ('22.01.2018')::TDateTime , inEndDate := ('25.01.2018')::TDateTime , inUnitId_sale := 8459 , inUnitId_return := 8460 , inGoodsGroupId := 1832 , inPriceListId_1 := 18886 , inPriceListId_2 := 18887 , inPriceListId_3 := 18885 , inPriceListId_sale := 18840 , inIsGoodsKind := 'True' ,  inSession := '5');

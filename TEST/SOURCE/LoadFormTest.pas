@@ -2045,6 +2045,7 @@ procedure TLoadFormTest.LoadReportSaleAnalyzeFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptSaleAnalyzeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptSaleAnalyzeForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptSaleAnalyzeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ReceiptSaleAnalyzeDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ReceiptSaleAnalyzeRealForm'));
@@ -2307,7 +2308,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TAssetForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetEditForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGroupEditForm'));
@@ -2331,6 +2332,7 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGoods_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetGoods_ObjectForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadArticleLossFormTest;
