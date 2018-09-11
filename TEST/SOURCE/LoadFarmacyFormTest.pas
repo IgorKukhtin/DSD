@@ -594,6 +594,10 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TestingUserForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_TestingUserForm');
+    exit;
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PriceChangeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Check_PriceChangeForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PriceChangeDialogForm'));

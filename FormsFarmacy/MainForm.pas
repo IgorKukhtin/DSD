@@ -442,6 +442,8 @@ type
     actMarginCategoryJournal2: TdsdOpenForm;
     miMarginCategoryJournal2: TMenuItem;
     N166: TMenuItem;
+    actReport_TestingUser: TdsdOpenForm;
+    N167: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

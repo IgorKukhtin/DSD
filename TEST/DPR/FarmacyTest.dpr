@@ -605,7 +605,8 @@ uses
   Report_Check_PriceChange in '..\..\FormsFarmacy\Report\Report_Check_PriceChange.pas' {Report_Check_PriceChangeForm: TParentForm},
   Report_Check_PriceChangeDialog in '..\..\FormsFarmacy\Report\Report_Check_PriceChangeDialog.pas' {Report_Check_PriceChangeDialogForm: TParentForm},
   MarginCategory_Movement2 in '..\..\FormsFarmacy\Document\MarginCategory_Movement2.pas' {MarginCategory_Movement2Form: TParentForm},
-  MarginCategoryJournal2 in '..\..\FormsFarmacy\Document\MarginCategoryJournal2.pas' {MarginCategoryJournal2Form: TParentForm};
+  MarginCategoryJournal2 in '..\..\FormsFarmacy\Document\MarginCategoryJournal2.pas' {MarginCategoryJournal2Form: TParentForm},
+  Report_TestingUser in '..\..\FormsFarmacy\Report\Report_TestingUser.pas' {Report_TestingUserForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -622,7 +623,7 @@ begin
 
   if FindCmdLineSwitch('realfarmacy', true)
   then gc_AdminPassword := 'Админ1234'
-  else gc_AdminPassword := 'Админ1234';
+  else gc_AdminPassword := 'Админ1111';
 
   gc_ProgramName := 'Farmacy.exe';
 

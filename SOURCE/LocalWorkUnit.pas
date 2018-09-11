@@ -26,6 +26,7 @@ function AddBoolField(ADataBase: TVKSmartDBF; AName: string): TVKDBFFieldDef; ov
 function Users_lcl: String;
 function Remains_lcl: String;
 function Alternative_lcl: String;
+function Goods_lcl: String;
 function Member_lcl: String;
 function Vip_lcl: String;
 function VipList_lcl: String;
@@ -66,6 +67,11 @@ End;
 function Alternative_lcl: String;
 Begin
   Result := ExtractFilePath(Application.ExeName) + 'alternative.local';
+End;
+
+function Goods_lcl: String;
+Begin
+  Result := ExtractFilePath(Application.ExeName) + 'goods.local';
 End;
 
 function Member_lcl: String;

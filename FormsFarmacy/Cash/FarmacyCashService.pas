@@ -3,8 +3,8 @@ unit FarmacyCashService;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs,  DataModul,  Vcl.ActnList, dsdAction,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, System.DateUtils,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,  DataModul,  Vcl.ActnList, dsdAction,
   Data.DB,  Vcl.ExtCtrls, dsdDB, Datasnap.DBClient,  Vcl.Menus,  Vcl.StdCtrls,
   IniFIles, dxmdaset,  ActiveX,  Math,  VKDBFDataSet, FormStorage, CommonData, ParentForm,
   LocalWorkUnit , IniUtils, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters,
@@ -154,6 +154,7 @@ type
     FirstRemainsReceived: boolean;
     FHasError: boolean;
     procedure SaveLocalVIP;
+    procedure SaveLocalGoods;
     procedure SaveRealAll;
     procedure ChangeStatus(AStatus: String);
     function InitLocalStorage: Boolean;
@@ -178,7 +179,7 @@ var
   csCriticalSection_Save,
   csCriticalSection_All: TRTLCriticalSection;
   AllowedConduct : Boolean = false;
-  MutexDBF, MutexDBFDiff,  MutexVip, MutexRemains, MutexAlternative, MutexRefresh, MutexAllowedConduct: THandle;
+  MutexDBF, MutexDBFDiff,  MutexVip, MutexRemains, MutexAlternative, MutexRefresh, MutexAllowedConduct, MutexGoods: THandle;
   LastErr: Integer;
 
   FM_SERVISE: Integer;
@@ -460,6 +461,8 @@ begin   //yes
           SaveLocalData(AlternativeCDS,Alternative_lcl);
           //Получение ВИП чеков и сохранение в локальной базе
           SaveLocalVIP;
+          //Получение товаров
+          SaveLocalGoods;
           PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 3);
           // Вывод уведомления сервиса
           tiServise.BalloonHint:='Остатки обновлены.';
@@ -684,6 +687,45 @@ begin  //+
         Add_Log('End MutexVip 629');
         ReleaseMutex(MutexVip);
       end;
+    finally
+      ds.free;
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+
+procedure TMainCashForm2.SaveLocalGoods;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+  DateTime: TDateTimeInfoRec;
+begin  //+
+  // pr вызывается из обновления остатков
+  // Проверяем обновляли ли сегодня
+
+  if FileExists(Goods_lcl) and FileGetDateTimeInfo(Goods_lcl, DateTime) and
+    (StartOfTheDay(DateTime.CreationTime) >= Date) then Exit;
+
+  sp := TdsdStoredProc.Create(nil);
+  try
+    ds := TClientDataSet.Create(nil);
+    try
+      sp.OutputType := otDataSet;
+      sp.DataSet := ds;
+
+      sp.StoredProcName := 'gpSelect_CashGoods';
+      sp.Params.Clear;
+      sp.Execute;
+      Add_Log('Start MutexGoods');
+      WaitForSingleObject(MutexGoods, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+      try
+        SaveLocalData(ds,Goods_lcl);
+      finally
+        Add_Log('End MutexGoods');
+        ReleaseMutex(MutexGoods);
+      end;
+
     finally
       ds.free;
     end;

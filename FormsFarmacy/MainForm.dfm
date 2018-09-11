@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 229
+  ExplicitHeight = 230
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -2352,6 +2352,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_TestingUser: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1056#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1090#1077#1089#1090#1080#1088#1086#1074#1072#1085#1080#1103' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1074' '
+      Hint = #1056#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1090#1077#1089#1090#1080#1088#1086#1074#1072#1085#1080#1103' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1074' '
+      FormName = 'TReport_TestingUserForm'
+      FormNameParam.Value = 'TReport_TestingUserForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -2904,6 +2916,9 @@ inherited MainForm: TMainForm
       end
       object N124: TMenuItem
         Action = actReport_Check_Rating
+      end
+      object N167: TMenuItem
+        Action = actReport_TestingUser
       end
       object N133: TMenuItem
         Caption = '-'

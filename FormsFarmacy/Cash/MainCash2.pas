@@ -660,6 +660,7 @@ begin
     RemainsCDS.FieldByName('AccommodationId').AsVariant     := actOpenAccommodation.GuiParams.ParamByName('Key').Value;
     RemainsCDS.FieldByName('AccommodationName').AsVariant   := actOpenAccommodation.GuiParams.ParamByName('TextValue').Value;
     RemainsCDS.Post;
+    spUpdate_Accommodation.Execute;
   finally
     RemainsCDS.EnableControls;
   end;
@@ -3579,15 +3580,27 @@ begin
           end;
           Prior;
         end;
-      end;
 
-      // Если есть скидка и нет товара с суммой больше скидки то ищем товар рапвный скидке
-      if Disc < 0 then
+        // Если есть скидка и нет товара с суммой больше скидки то ищем товар равный скидке
+        if (Disc < 0) and (PosDisc = 0) then
+        begin
+          Last;
+          while not BOF do
+          begin
+            if (GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency) + Disc) >= 0 then
+            begin
+              PosDisc:= RecNo;
+              Break;
+            end;
+            Prior;
+          end;
+        end;
+      end else if Disc > 0 then
       begin
         Last;
         while not BOF do
         begin
-          if (GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency) + Disc) >= 0 then
+          if GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency) > Disc then
           begin
             PosDisc:= RecNo;
             Break;
@@ -3596,10 +3609,10 @@ begin
         end;
       end;
 
-      if (Disc < 0) and (PosDisc = 0) then
+      if (Disc <> 0) and (PosDisc = 0) then
       begin
-        ShowMessage('Сумма скидки по чеку:' + FormatCurr('0.00', Disc) + #13#10 +
-          'В чеке не найден товар на который можно применить скидку по округлению копеек...');
+        ShowMessage('Сумма скидки (наценки) по чеку:' + FormatCurr('0.00', Disc) + #13#10 +
+          'В чеке не найден товар на который можно применить скидку (наценку) по округлению копеек...');
         Exit;
       end;
     end;
