@@ -487,6 +487,11 @@ end;
 
 procedure TLoadFormTest.LoadMarginCategoryMovement;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategory_Movement2Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TMarginCategory_Movement2Form');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryJournal2Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryJournal2Form');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategory_MovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategory_MovementForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryJournalForm'));

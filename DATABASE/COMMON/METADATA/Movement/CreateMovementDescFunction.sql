@@ -276,6 +276,10 @@ CREATE OR REPLACE FUNCTION zc_Movement_MarginCategory() RETURNS Integer AS $BODY
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_MarginCategory', 'Категории наценки (САУЦ)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_MarginCategory');
 
+CREATE OR REPLACE FUNCTION zc_Movement_MarginCategoryUnit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_MarginCategoryUnit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_MarginCategoryUnit', 'Список аптек/юр.лиц' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_MarginCategoryUnit');
+
 CREATE OR REPLACE FUNCTION zc_Movement_PromoCode() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_PromoCode'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_PromoCode', 'Промо-коды' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PromoCode');
@@ -296,6 +300,7 @@ INSERT INTO MovementDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 10.09.18         * zc_Movement_MarginCategoryUnit
  20.08.18         * zc_Movement_RepriceChange
  14.08.18         * zc_Movement_GoodsSP
  27.02.18         * zc_Movement_LossPersonal

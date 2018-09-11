@@ -439,6 +439,9 @@ type
     miRepriceChangeJournal: TMenuItem;
     actReport_Check_PriceChange: TdsdOpenForm;
     miReport_Check_PriceChange: TMenuItem;
+    actMarginCategoryJournal2: TdsdOpenForm;
+    miMarginCategoryJournal2: TMenuItem;
+    N166: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
