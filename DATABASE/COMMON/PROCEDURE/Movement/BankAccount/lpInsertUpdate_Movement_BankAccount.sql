@@ -165,7 +165,7 @@ BEGIN
      IF EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId = zc_Object_PersonalServiceList())
      THEN
          -- сохранили свойство <Месяц начислений> - 1-ое число месяца
-         IF EXTRACT (DAY FROM CURRENT_DATE) < 10
+         IF EXTRACT (DAY FROM CURRENT_DATE) < 12
          THEN
              PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_ServiceDate(), ioId, DATE_TRUNC ('MONTH', inOperDate - INTERVAL '1 MONTH'));
          ELSE

@@ -95,8 +95,8 @@ BEGIN
                )
         AND 1=0
      THEN
-         IF inUserId <> zfCalc_UserAdmin() :: Integer
-            AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = inUserId)
+         IF inUserId = zfCalc_UserAdmin() :: Integer
+            OR NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = inUserId)
          THEN
              -- Нашли
              vbInsertDate:= (SELECT MIN (tmp.OperDate) FROM (SELECT MIN (MovementProtocol.OperDate) AS OperDate FROM MovementProtocol WHERE MovementProtocol.MovementId = inMovementId UNION ALL SELECT MIN (MovementProtocol.OperDate) AS OperDate FROM MovementProtocol_arc AS MovementProtocol WHERE MovementProtocol.MovementId = inMovementId) AS tmp);
@@ -141,20 +141,24 @@ BEGIN
                                     LIMIT 1
                                     );
              IF vbMovementItemId_err > 0
-             THEN RAISE EXCEPTION 'Ошибка.Сотрудник <%> <%> <%> уволен <%>. Необходимо его удалить в ведомости за <%> которая создана <%>.'
+             THEN RAISE EXCEPTION 'Ошибка.Сотрудник <%> <%> <%> уволен <%>. Необходимо его удалить в ведомости за <%> № <%> от <%> которая создана <%>.'
                            , lfGet_Object_ValueData_sh ((SELECT MI.ObjectId FROM MovementItem AS MI WHERE MI.Id = vbMovementItemId_err))
                            , lfGet_Object_ValueData_sh ((SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMovementItemId_err AND MILO.DescId = zc_MILinkObject_Position()))
                            , lfGet_Object_ValueData_sh ((SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMovementItemId_err AND MILO.DescId = zc_MILinkObject_Unit()))
                            , zfConvert_DateToString ((SELECT ObjectDate_DateOut.ValueData FROM MovementItem AS MI LEFT JOIN ObjectDate AS ObjectDate_DateOut ON ObjectDate_DateOut.ObjectId = MI.ObjectId AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out() WHERE MI.Id = vbMovementItemId_err))
                            , zfCalc_MonthYearName (vbServiceDate)
+                           , (SELECT Movement.InvNumber FROM MovementItem AS MI LEFT JOIN Movement ON Movement.Id = MI.MovementId WHERE MI.Id = vbMovementItemId_err)
+                           , zfConvert_DateToString ((SELECT Movement.OperDate FROM MovementItem AS MI LEFT JOIN Movement ON Movement.Id = MI.MovementId WHERE MI.Id = vbMovementItemId_err))
                            , zfConvert_DateTimeToString (vbInsertDate)
+                           --, vbMovementItemId_err
                             ;
              END IF;
          END IF;
 
      ELSEIF 1=1
-        -- AND inUserId <> zfCalc_UserAdmin() :: Integer
-        AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = inUserId)
+        AND (NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = inUserId)
+          OR inUserId = zfCalc_UserAdmin() :: Integer
+            )
      THEN
          -- для остальных - нельзя "следующий" месяц
          vbMovementItemId_err:= (SELECT MovementItem.Id
@@ -178,12 +182,15 @@ BEGIN
                                  LIMIT 1
                                 );
          IF vbMovementItemId_err > 0
-         THEN RAISE EXCEPTION 'Ошибка.Сотрудник <%> <%> <%> уволен <%>. Необходимо его удалить в ведомости за <%>.'
+         THEN RAISE EXCEPTION 'Ошибка.Сотрудник <%> <%> <%> уволен <%>. Необходимо его удалить в ведомости за <%> № <%> от <%>.' --  id=%
                        , lfGet_Object_ValueData_sh ((SELECT MI.ObjectId FROM MovementItem AS MI WHERE MI.Id = vbMovementItemId_err))
                        , lfGet_Object_ValueData_sh ((SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMovementItemId_err AND MILO.DescId = zc_MILinkObject_Position()))
                        , lfGet_Object_ValueData_sh ((SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMovementItemId_err AND MILO.DescId = zc_MILinkObject_Unit()))
                        , zfConvert_DateToString ((SELECT ObjectDate_DateOut.ValueData FROM MovementItem AS MI LEFT JOIN ObjectDate AS ObjectDate_DateOut ON ObjectDate_DateOut.ObjectId = MI.ObjectId AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out() WHERE MI.Id = vbMovementItemId_err))
                        , zfCalc_MonthYearName (vbServiceDate)
+                       , (SELECT Movement.InvNumber FROM MovementItem AS MI LEFT JOIN Movement ON Movement.Id = MI.MovementId WHERE MI.Id = vbMovementItemId_err)
+                       , zfConvert_DateToString ((SELECT Movement.OperDate FROM MovementItem AS MI LEFT JOIN Movement ON Movement.Id = MI.MovementId WHERE MI.Id = vbMovementItemId_err))
+                       --, vbMovementItemId_err
                         ;
          END IF;
 

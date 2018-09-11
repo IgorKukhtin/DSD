@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Intege
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
  INOUT ioId                                Integer   , -- ключ объекта <Сотрудники>
-    IN inMemberId                          Integer   , -- ссылка на Физ.лица 
+    IN inMemberId                          Integer   , -- ссылка на Физ.лица
     IN inPositionId                        Integer   , -- ссылка на Должность
     IN inPositionLevelId                   Integer   , -- ссылка на Разряд должности
     IN inUnitId                            Integer   , -- ссылка на Подразделение
@@ -24,8 +24,8 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode Integer;   
-   DECLARE vbName TVarChar;   
+   DECLARE vbCode Integer;
+   DECLARE vbName TVarChar;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Personal());
@@ -47,7 +47,7 @@ BEGIN
    END IF;
 
    -- определяем параметры, т.к. значения должны быть синхронизированы с объектом <Физические лица>
-   SELECT ObjectCode, ValueData INTO vbCode, vbName FROM Object WHERE Id = inMemberId;   
+   SELECT ObjectCode, ValueData INTO vbCode, vbName FROM Object WHERE Id = inMemberId;
 
    -- !!! это временно !!!
    -- IF COALESCE(ioId, 0) = 0
@@ -55,14 +55,24 @@ BEGIN
    -- END IF;
 
    -- проверка  уникальности для свойств: <ФИО> + <Подразделение> + <Должность> + <Разряд должности>
-   IF EXISTS (SELECT PersonalName FROM Object_Personal_View WHERE PersonalName = vbName AND UnitId = inUnitId AND PositionId = COALESCE (inPositionId, 0) AND PositionLevelId = COALESCE (inPositionLevelId, 0) AND PersonalId <> COALESCE(ioId, 0)) THEN
+   IF EXISTS (SELECT 1 FROM Object_Personal_View WHERE PersonalName = vbName AND UnitId = inUnitId AND PositionId = COALESCE (inPositionId, 0) AND PositionLevelId = COALESCE (inPositionLevelId, 0) AND PersonalId <> COALESCE(ioId, 0)) THEN
       RAISE EXCEPTION 'Значение <%> для подразделения: <%> должность: <%> разряд должности: <%> не уникально в справочнике <%>.'
                     , vbName
-                    , lfGet_Object_ValueData (inUnitId)
-                    , lfGet_Object_ValueData (inPositionId)
-                    , COALESCE (lfGet_Object_ValueData (inPositionLevelId), '')
+                    , lfGet_Object_ValueData_sh (inUnitId)
+                    , lfGet_Object_ValueData_sh (inPositionId)
+                    , COALESCE (lfGet_Object_ValueData_sh (inPositionLevelId), '')
                     , (SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Personal());
-   END IF; 
+   END IF;
+   -- Основное место работы - только одно
+   IF inIsMain = TRUE
+      AND EXISTS (SELECT 1 FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = inMemberId AND View_Personal.isMain = TRUE AND View_Personal.PersonalId <> COALESCE(ioId, 0)) THEN
+      RAISE EXCEPTION 'Значение <Основное место работы> = ДА, уже установлено для подразделения: <%> должность: <%> разряд должности: <%>. Этот признак можно установить только 1 раз.'
+                    , lfGet_Object_ValueData_sh ((SELECT View_Personal.UnitId          FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = inMemberId AND View_Personal.isMain = TRUE ORDER BY View_Personal.PersonalId LIMIT 1))
+                    , lfGet_Object_ValueData_sh ((SELECT View_Personal.PositionId      FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = inMemberId AND View_Personal.isMain = TRUE ORDER BY View_Personal.PersonalId LIMIT 1))
+                    , lfGet_Object_ValueData_sh ((SELECT View_Personal.PositionLevelId FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = inMemberId AND View_Personal.isMain = TRUE ORDER BY View_Personal.PersonalId LIMIT 1))
+                     ;
+   END IF;
+   
 
 
    -- сохранили <Объект>
@@ -83,11 +93,11 @@ BEGIN
    -- сохранили связь с <Группировки Сотрудников>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalGroup(), ioId, inPersonalGroupId);
    -- сохранили связь с <Ведомость начисления()>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceList(), ioId, inPersonalServiceListId); 
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceList(), ioId, inPersonalServiceListId);
    -- сохранили связь с <Ведомость начисления(БН)>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceListOfficial(), ioId, inPersonalServiceListOfficialId); 
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceListOfficial(), ioId, inPersonalServiceListOfficialId);
    -- сохранили связь с <Ведомость начисления(карта ф2)>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceListCardSecond(), ioId, inPersonalServiceListCardSecondId);    
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceListCardSecond(), ioId, inPersonalServiceListCardSecondId);
    -- сохранили связь с <Режим работы (Шаблон табеля р.вр.)>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Personal_SheetWorkTime(), ioId, inSheetWorkTimeId);
    -- сохранили связь с <линия производства>
@@ -114,7 +124,7 @@ END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
-  
+
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
@@ -132,11 +142,11 @@ $BODY$
  09.11.13                                        * синхронизируем с объектом <Физические лица>
  28.10.13                                        * add RAISE...
  30.09.13                                        * del vbCode
- 25.09.13         * add _PersonalGroup; remove _Juridical, _Business              
+ 25.09.13         * add _PersonalGroup; remove _Juridical, _Business
  06.09.13                         * inName - УБРАЛ. Не нашел для него применения
  24.07.13                                        * inName - БЫТЬ !!! или хотя бы vbMemberName
- 01.07.13          * 
- 19.07.13                         * 
+ 01.07.13          *
+ 19.07.13                         *
  19.07.13         *    rename zc_ObjectDate...
 */
 
