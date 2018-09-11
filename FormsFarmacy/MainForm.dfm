@@ -2919,6 +2919,7 @@ inherited MainForm: TMainForm
       end
       object N167: TMenuItem
         Action = actReport_TestingUser
+        Visible = False
       end
       object N133: TMenuItem
         Caption = '-'
