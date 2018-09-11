@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpReport_OrderGoodsSearch (Integer, TDateTime, TDateTime
 
 CREATE OR REPLACE FUNCTION gpReport_OrderGoodsSearch(
     IN inGoodsId       Integer     -- поиск товаров
-  , IN inStartDate     TDateTime 
+  , IN inStartDate     TDateTime
   , IN inEndDate       TDateTime
   , IN inSession       TVarChar    -- сессия пользователя
 )
@@ -23,7 +23,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,UnitName TVarChar       --Подразделение
               ,JuridicalName TVarChar  --Юр. лицо
               ,Price TFloat            --Цена в документе
-              ,PriceWithVAT TFloat     --Цена прихода с НДС 
+              ,PriceWithVAT TFloat     --Цена прихода с НДС
               ,StatusName TVarChar     --Состояние документа
               ,PriceSale TFloat        --Цена продажи
               ,OrderKindId Integer     --ИД вида заказа
@@ -44,15 +44,29 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
+   DECLARE vbRetailId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PriceList());
     vbUserId:= lpGetUserBySession (inSession);
-    vbUnitKey := COALESCE(lpGet_DefaultValue('-zc_Object_Unit', vbUserId), '');
+
+
+    vbUnitKey := COALESCE (lpGet_DefaultValue ('-zc_Object_Unit', vbUserId), '');
     IF vbUnitKey = '' OR vbUserId = 3 THEN
       vbUnitKey := '0';
-    END IF;   
+    END IF;
     vbUnitId := vbUnitKey::Integer;
+
+    IF COALESCE (vbUnitId, 0) = 0
+    THEN
+        vbRetailId:= zfConvert_StringToFloat (COALESCE (lpGet_DefaultValue ('zc_Object_Retail', vbUserId), '')) :: Integer;
+        IF vbRetailId = 4 -- "Не болей"
+        THEN vbRetailId:= 0;
+        END IF;
+    ELSE
+        vbRetailId:= 0;
+    END IF;
+
 
     RETURN QUERY
       WITH tmpGoods AS (-- ???временно захардкодил, будет всегда товар сети???
@@ -85,7 +99,7 @@ BEGIN
 
             ,Object_NDSKind.ValueData                 AS NDSKindName
             ,ObjectFloat_NDSKind_NDS.ValueData        AS NDS
-            
+
             ,Movement.OperDate                        AS OperDate
             ,Movement.InvNumber                       AS InvNumber
             ,Object_Unit.ValueData                    AS UnitName
@@ -105,9 +119,9 @@ BEGIN
 
             ,MovementDate_Insert.ValueData        AS InsertDate
             ,Object_Insert.ValueData              AS InsertName
-      FROM Movement 
-        JOIN Object AS Status 
-                    ON Status.Id = Movement.StatusId 
+      FROM Movement
+        JOIN Object AS Status
+                    ON Status.Id = Movement.StatusId
                    AND Status.Id <> zc_Enum_Status_Erased()
         LEFT JOIN MovementDate AS MovementDate_Insert
                                ON MovementDate_Insert.MovementId = Movement.Id
@@ -115,7 +129,7 @@ BEGIN
         LEFT JOIN MovementLinkObject AS MLO_Insert
                                      ON MLO_Insert.MovementId = Movement.Id
                                     AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-        LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId 
+        LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
         JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                          AND MovementItem.isErased = FALSE
@@ -159,6 +173,12 @@ BEGIN
                                      ON MovementLinkObject_To.MovementId = Movement.Id
                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE(MovementLinkObject_Unit.ObjectId, MovementLinkObject_To.ObjectId)
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                             ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
+                            AND ObjectLink_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical()
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                             ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                            AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
 
         LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                      ON MovementLinkObject_From.MovementId = Movement.Id
@@ -173,9 +193,9 @@ BEGIN
         LEFT JOIN MovementString AS MovementString_Comment
                                  ON MovementString_Comment.DescId = zc_MovementString_Comment()
                                 AND MovementString_Comment.MovementId = Movement.Id
-        LEFT JOIN MovementItemString AS MIString_Comment 
+        LEFT JOIN MovementItemString AS MIString_Comment
                                      ON MIString_Comment.DescId = zc_MIString_Comment()
-                                    AND MIString_Comment.MovementItemId = MovementItem.id  
+                                    AND MIString_Comment.MovementItemId = MovementItem.id
 
         LEFT JOIN MovementItemString AS MIString_PartionGoods
                                      ON MIString_PartionGoods.MovementItemId = MovementItem.Id
@@ -187,7 +207,7 @@ BEGIN
         LEFT JOIN MovementDate AS MovementDate_Payment
                                ON MovementDate_Payment.MovementId = Movement.Id
                               AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
-        
+
         LEFT JOIN MovementString AS MovementString_InvNumberBranch
                                  ON MovementString_InvNumberBranch.MovementId = Movement.Id
                                 AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
@@ -199,8 +219,9 @@ BEGIN
                                    AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
 
     WHERE Movement.DescId in (zc_Movement_OrderInternal(), zc_Movement_OrderExternal(), zc_Movement_Income(), zc_Movement_Send(), zc_Movement_Check())
-      AND Movement.OperDate >= inStartDate AND Movement.OperDate <inEndDate + interval '1 day'
-      AND ((Object_Unit.Id = vbUnitId) OR (vbUnitId = 0)) 
+      AND Movement.OperDate >= inStartDate AND Movement.OperDate <inEndDate + INTERVAL '1 DAY'
+      AND (Object_Unit.Id = vbUnitId OR vbUnitId = 0)
+      AND (ObjectLink_Juridical_Retail.ChildObjectId = vbRetailId OR vbRetailId = 0)
       -- AND Object.Id = inGoodsId
      ;
 
@@ -226,4 +247,4 @@ ALTER FUNCTION gpReport_OrderGoodsSearch (Integer, TDateTime, TDateTime, TVarCha
 */
 
 -- тест
--- SELECT * FROM gpReport_OrderGoodsSearch (inGoodsId:= 0, inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inSession:= '2')
+-- SELECT * FROM gpReport_OrderGoodsSearch (inGoodsId:= 0, inStartDate:= '30.01.2019', inEndDate:= '01.02.2019', inSession:= '2')

@@ -11,15 +11,15 @@ $BODY$
 BEGIN
 
   IF LOWER (REPLACE (inDefaultKey, '-zc_Object_Unit', 'zc_Object_Unit')) = LOWER ('zc_Object_Unit') AND inUserId = 183242 -- Ћюба
-  THEN 
+  THEN
        RETURN '0'; -- !!!захардодил дл€ Pharmacy!!!
   ELSE
-  
+
   IF EXISTS (SELECT 1
-                              FROM DefaultValue 
+                              FROM DefaultValue
                                    INNER JOIN DefaultKeys ON DefaultKeys.Id = DefaultValue.DefaultKeyId
                                    INNER JOIN (SELECT RoleId, 2 AS OrderId FROM ObjectLink_UserRole_View WHERE UserId = inUserId
-                                              UNION 
+                                              UNION
                                                SELECT inUserId AS RoleId, 1 AS OrderId
                                               ) AS UserRole ON UserRole.RoleId = DefaultValue.UserKeyId
                               WHERE DefaultKeys.Key = REPLACE (inDefaultKey, '-zc_Object_Unit', 'zc_Object_Unit')
@@ -29,14 +29,14 @@ BEGIN
   RETURN COALESCE (CASE WHEN 1=0 AND 0 < (SELECT RoleId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
                              THEN '-1' -- !!!захардодил дл€ Pharmacy!!!
                         ELSE (SELECT DefaultValue
-                              FROM DefaultValue 
+                              FROM DefaultValue
                                    INNER JOIN DefaultKeys ON DefaultKeys.Id = DefaultValue.DefaultKeyId
                                    INNER JOIN (SELECT RoleId, 2 AS OrderId FROM ObjectLink_UserRole_View WHERE UserId = inUserId
-                                              UNION 
+                                              UNION
                                                SELECT inUserId AS RoleId, 1 AS OrderId
                                               ) AS UserRole ON UserRole.RoleId = DefaultValue.UserKeyId
                               WHERE DefaultKeys.Key = REPLACE (inDefaultKey, '-zc_Object_Unit', 'zc_Object_Unit')
-                              ORDER BY UserRole.OrderId 
+                              ORDER BY UserRole.OrderId
                               LIMIT 1)
                    END, '0') :: TVarChar;
   ELSE
@@ -44,14 +44,14 @@ BEGIN
   RETURN COALESCE (CASE WHEN 1=0 AND 0 < (SELECT RoleId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
                              THEN '-1' -- !!!захардодил дл€ Pharmacy!!!
                         ELSE (SELECT DefaultValue
-                              FROM DefaultValue 
+                              FROM DefaultValue
                                    INNER JOIN DefaultKeys ON DefaultKeys.Id = DefaultValue.DefaultKeyId
                                    LEFT JOIN (SELECT RoleId, 2 AS OrderId FROM ObjectLink_UserRole_View WHERE UserId = inUserId
-                                              UNION 
+                                              UNION
                                                SELECT inUserId AS RoleId, 1 AS OrderId
                                               ) AS UserRole ON UserRole.RoleId = DefaultValue.UserKeyId
                               WHERE DefaultKeys.Key = REPLACE (inDefaultKey, '-zc_Object_Unit', 'zc_Object_Unit')
-                              ORDER BY UserRole.OrderId 
+                              ORDER BY UserRole.OrderId
                               LIMIT 1)
                    END, '0') :: TVarChar;
 
