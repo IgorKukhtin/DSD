@@ -3,7 +3,7 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
   Top = 0
   Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1089#1095#1077#1090#1091'>'
   ClientHeight = 521
-  ClientWidth = 1189
+  ClientWidth = 1227
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,10 +21,11 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 137
-    Width = 1189
+    Width = 1227
     Height = 384
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 1189
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -534,10 +535,11 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 1189
+    Width = 1227
     Height = 111
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 1189
     object deStart: TcxDateEdit
       Left = 10
       Top = 29
@@ -720,8 +722,8 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
       Width = 200
     end
     object cbMovement: TcxCheckBox
-      Left = 952
-      Top = 6
+      Left = 1100
+      Top = 5
       Action = actRefreshMovement
       Caption = #1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
       ParentShowHint = False
@@ -730,8 +732,8 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
       Width = 102
     end
     object cbGoods: TcxCheckBox
-      Left = 952
-      Top = 29
+      Left = 1100
+      Top = 28
       Hint = #1087#1086' '#1090#1086#1074#1072#1088#1072#1084' ('#1076#1072'/'#1085#1077#1090')'
       Action = actRefreshGoods
       Caption = #1087#1086' '#1090#1086#1074#1072#1088#1072#1084
@@ -741,8 +743,8 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
       Width = 81
     end
     object cbGoodskind: TcxCheckBox
-      Left = 1060
-      Top = 33
+      Left = 1100
+      Top = 79
       Hint = #1087#1086' '#1074#1080#1076#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1076#1072'/'#1085#1077#1090')'
       Action = actRefreshGoodsKind
       Caption = #1087#1086' '#1074#1080#1076#1072#1084' '#1090#1086#1074#1072#1088#1072
@@ -752,14 +754,48 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
       Width = 111
     end
     object cbDetail: TcxCheckBox
-      Left = 1060
-      Top = 6
+      Left = 1100
+      Top = 54
       Action = actRefreshDetail
       ParentShowHint = False
       ShowHint = True
       TabOrder = 25
       Width = 74
     end
+    object cxLabel13: TcxLabel
+      Left = 954
+      Top = 6
+      Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+    end
+    object edMovementDesc: TcxButtonEdit
+      Left = 954
+      Top = 29
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 27
+      Width = 132
+    end
+  end
+  object cxLabel12: TcxLabel
+    Left = 954
+    Top = 56
+    Caption = #1041#1080#1079#1085#1077#1089
+  end
+  object cxButtonEdit1: TcxButtonEdit
+    Left = 954
+    Top = 79
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 132
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -839,6 +875,12 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
           'Left'
           'Top'
           'Width')
+      end
+      item
+        Component = GuidesMovementDesc
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -1153,8 +1195,8 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_AccountDialogForm'
-      FormNameParam.Value = 'TReport_AccountDialogForm'
+      FormName = 'TReport_AccountMotionDialogForm'
+      FormNameParam.Value = 'TReport_AccountMotionDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1326,6 +1368,55 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementDescId'
+          Value = Null
+          Component = GuidesMovementDesc
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementDescName'
+          Value = Null
+          Component = GuidesMovementDesc
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDetail'
+          Value = Null
+          Component = cbDetail
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGoods'
+          Value = Null
+          Component = cbGoods
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGoodskind'
+          Value = Null
+          Component = cbGoodskind
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMovement'
+          Value = Null
+          Component = cbMovement
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1429,6 +1520,14 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementDescId'
+        Value = Null
+        Component = GuidesMovementDesc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsMovement'
         Value = Null
         Component = cbMovement
@@ -1526,9 +1625,12 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
       end
       item
         Component = BusinessGuides
+      end
+      item
+        Component = GuidesMovementDesc
       end>
-    Left = 432
-    Top = 136
+    Left = 688
+    Top = 272
   end
   object AccountGuides: TdsdGuides
     KeyField = 'Id'
@@ -1960,8 +2062,8 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 984
-    Top = 96
+    Left = 992
+    Top = 88
   end
   object ProfitLossGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -2241,5 +2343,35 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
     Params = <>
     Left = 844
     Top = 262
+  end
+  object GuidesMovementDesc: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMovementDesc
+    FormNameParam.Value = 'TMovementDescForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMovementDescForm'
+    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMovementDesc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMovementDesc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 1016
+    Top = 24
   end
 end
