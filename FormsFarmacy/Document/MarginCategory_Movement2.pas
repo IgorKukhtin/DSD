@@ -157,6 +157,7 @@ type
     bbSetUnErasedMarginCategoryUnit: TdxBarButton;
     bbInsertRecordUnit: TdxBarButton;
     dsdUpdateUnitDS: TdsdUpdateDataSet;
+    RetailName: TcxGridDBColumn;
   private
     { Private declarations }
   public

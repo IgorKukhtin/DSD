@@ -87,7 +87,7 @@ BEGIN
                  ANd MovementItem.DescId = zc_MI_Master()
                ;
                
-    CREATE TEMP TABLE _tmpData (GoodsId Integer,TotalAmount TFloat, Amount TFloat, AmountMin TFloat, NumMin TFloat, AmountMax TFloat, NumMax TFloat, Remains TFloat, Price TFloat) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpData (GoodsId Integer,TotalAmount TFloat, Amount TFloat, AmountMin TFloat, NumMin TFloat, AmountMax TFloat, NumMax TFloat, Remains TFloat, PriceMin TFloat, PriceMax TFloat) ON COMMIT DROP;
     WITH
     --получаем список товаров с розничной ценой в пределах от inPriceMin до inPriceMax 
     tmpPriceGoods AS (SELECT ObjectLink_Price_Unit.ChildObjectId     AS UnitId
@@ -137,20 +137,31 @@ BEGIN
                          WHERE tmpData_Container_ALL.TotalAmount >= inAmount
                          )
   -- определяем мин и макс цену по товару за период (разные аптеки разные могут быть цены)
-  , tmpData_All AS (SELECT tmpData_Container.GoodsId
-                         , tmpData_Container.NumPeriod
-                         , SUM (tmpData_Container.Amount)      AS Amount
-                         , SUM (tmpData_Container.TotalAmount) AS TotalAmount
-                         , MAX (tmpData_Container.Price) OVER (PARTITION BY tmpData_Container.GoodsId, tmpData_Container.NumPeriod) AS PriceMax
-                         , MIN (tmpData_Container.Price) OVER (PARTITION BY tmpData_Container.GoodsId, tmpData_Container.NumPeriod) AS PriceMin
-                    FROM tmpData_Container
-                    GROUP BY tmpData_Container.GoodsId
-                           , tmpData_Container.NumPeriod
+  , tmpData_All AS (SELECT tmp.GoodsId
+                         , tmp.NumPeriod
+                         , tmp.TotalAmount
+                         , tmp.PriceMin
+                         , tmp.PriceMax
+                         , SUM (tmp.Amount)      AS Amount
+                    FROM (SELECT tmpData_Container.GoodsId
+                               , tmpData_Container.NumPeriod
+                               , tmpData_Container.TotalAmount
+                               , (tmpData_Container.Amount)      AS Amount
+                               , MAX (tmpData_Container.Price) OVER (PARTITION BY tmpData_Container.GoodsId, tmpData_Container.NumPeriod) AS PriceMax
+                               , MIN (tmpData_Container.Price) OVER (PARTITION BY tmpData_Container.GoodsId, tmpData_Container.NumPeriod) AS PriceMin
+                          FROM tmpData_Container
+                          ) AS tmp
+                    GROUP BY tmp.GoodsId
+                           , tmp.NumPeriod
+                           , tmp.TotalAmount
+                           , tmp.PriceMin
+                           , tmp.PriceMax    
                     )
 
   --Выбираем период с мин и макс продажами
   , tmpMin_Max AS (SELECT tmp.GoodsId
-                        , tmp.Price
+                        , tmp.PriceMax
+                        , tmp.PriceMin
                         , SUM (CASE WHEN tmp.OrdMax = 1 THEN tmp.Amount ELSE 0 END)     AS AmountMax
                         , SUM (CASE WHEN tmp.OrdMax = 1 THEN tmp.NumPeriod ELSE 0 END)  AS NumMax
                         , SUM (CASE WHEN tmp.OrdMin = 1 THEN tmp.Amount ELSE 0 END)     AS AmountMin
@@ -159,11 +170,13 @@ BEGIN
                          SELECT tmpData_Container.*
                               , ROW_NUMBER() OVER (PARTITION BY tmpData_Container.GoodsId ORDER BY tmpData_Container.Amount desc) AS OrdMax
                               , ROW_NUMBER() OVER (PARTITION BY tmpData_Container.GoodsId ORDER BY tmpData_Container.Amount )     AS OrdMin
-                         FROM tmpData_Container 
+                         FROM tmpData_All AS tmpData_Container 
                          WHERE tmpData_Container.NumPeriod <> vbPeriodCount
                          ) AS tmp
                    WHERE tmp.OrdMax = 1 OR tmp.OrdMin = 1
-                   GROUP BY tmp.GoodsId, tmp.Price
+                   GROUP BY tmp.GoodsId
+                          , tmp.PriceMax
+                          , tmp.PriceMin
                    )
   -- остатки
   , tmpRemains AS (SELECT tmpPriceGoods.GoodsId                AS GoodsId
@@ -177,7 +190,7 @@ BEGIN
                    HAVING SUM (COALESCE (Container.Amount, 0)) <> 0
                   )
    -- Анализируем позиции, у которых продажи упали или выросли на NNN%, за последние N дней анализируемого периода попадают в отчет.                      
-   INSERT INTO _tmpData (GoodsId, TotalAmount, Amount, AmountMin, NumMin, AmountMax, NumMax, Remains, Price)
+   INSERT INTO _tmpData (GoodsId, TotalAmount, Amount, AmountMin, NumMin, AmountMax, NumMax, Remains, PriceMin, PriceMax)
                SELECT tmpData.GoodsId
                     , tmpData.TotalAmount AS TotalAmount
                     , tmpData.Amount      AS Amount
@@ -187,11 +200,12 @@ BEGIN
                     , CASE WHEN tmpData.Amount_WithPerSent <= tmpMin_Max.AmountMax    THEN tmpMin_Max.NumMax ELSE 0 END    AS NumMax      -- продажа упала
                     
                     , COALESCE (tmpRemains.Amount_Remains, 0)  :: Tfloat AS Remains
-                    , tmpData.Price                            :: Tfloat AS Price
+                    , tmpData.PriceMin                         :: Tfloat AS PriceMin
+                    , tmpData.PriceMax                         :: Tfloat AS PriceMax
                  FROM (SELECT tmpData_Container.*
                             , CASE WHEN tmpData_Container.NumPeriod = vbPeriodCount THEN (tmpData_Container.Amount + tmpData_Container.Amount * inChangePercent/100) ELSE 0 END AS Amount_WithPerSent
                             , CASE WHEN tmpData_Container.NumPeriod = vbPeriodCount THEN (tmpData_Container.Amount - tmpData_Container.Amount * inChangePercent/100) ELSE 0 END AS Amount_WithOutPerSent
-                       FROM tmpData_Container
+                       FROM tmpData_All AS tmpData_Container
 
                        ) AS tmpData
                        LEFT JOIN tmpMin_Max ON tmpMin_Max.GoodsId = tmpData.GoodsId
@@ -216,19 +230,20 @@ BEGIN
          SET isErased = TRUE 
    WHERE MovementItem.Id IN (SELECT tmpMI_Del.Id FROM tmpMI_Del);
    
-   PERFORM lpInsertUpdate_MI_MarginCategory_Master (ioId           := COALESCE (_tmpMI.Id, 0)           ::integer
-                                                  , inMovementId   := inMovementId
-                                                  , inGoodsId      := _tmpData.GoodsId
-                                                  , inAmount       := _tmpData.TotalAmount              ::TFloat
-                                                  , inAmountAnalys := COALESCE (_tmpData.Amount, 0)     ::TFloat
-                                                  , inAmountMin    := COALESCE (_tmpData.AmountMin, 0)  ::TFloat
-                                                  , inAmountMax    := COALESCE (_tmpData.AmountMax, 0)  ::TFloat
-                                                  , inNumberMin    := COALESCE (_tmpData.NumMin, 0)     ::TFloat
-                                                  , inNumberMax    := COALESCE (_tmpData.NumMax, 0)     ::TFloat
-                                                  , inRemains      := COALESCE (_tmpData.Remains, 0)    ::TFloat
-                                                  , inPrice        := COALESCE (_tmpData.Price, 0)      ::TFloat
-                                                  , inUserId       := vbUserId
-                                                  )
+   PERFORM lpInsertUpdate_MI_MarginCategory_Master2 (ioId           := COALESCE (_tmpMI.Id, 0)           ::integer
+                                                   , inMovementId   := inMovementId
+                                                   , inGoodsId      := _tmpData.GoodsId
+                                                   , inAmount       := _tmpData.TotalAmount              ::TFloat
+                                                   , inAmountAnalys := COALESCE (_tmpData.Amount, 0)     ::TFloat
+                                                   , inAmountMin    := COALESCE (_tmpData.AmountMin, 0)  ::TFloat
+                                                   , inAmountMax    := COALESCE (_tmpData.AmountMax, 0)  ::TFloat
+                                                   , inNumberMin    := COALESCE (_tmpData.NumMin, 0)     ::TFloat
+                                                   , inNumberMax    := COALESCE (_tmpData.NumMax, 0)     ::TFloat
+                                                   , inRemains      := COALESCE (_tmpData.Remains, 0)    ::TFloat
+                                                   , inPrice        := COALESCE (_tmpData.PriceMin, 0)   ::TFloat
+                                                   , inPriceMax     := COALESCE (_tmpData.PriceMax, 0)   ::TFloat
+                                                   , inUserId       := vbUserId
+                                                   )
    FROM _tmpData   
        LEFT JOIN _tmpMI ON _tmpMI.GoodsId = _tmpData.GoodsId;
 

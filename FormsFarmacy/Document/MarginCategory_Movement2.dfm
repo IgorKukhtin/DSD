@@ -1,5 +1,5 @@
 inherited MarginCategory_Movement2Form: TMarginCategory_Movement2Form
-  Caption = '2 '#1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1082#1080' ('#1057#1040#1059#1062')'
+  Caption = 'test '#1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1082#1080' ('#1057#1040#1059#1062')'
   ClientHeight = 596
   ClientWidth = 1121
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
@@ -136,13 +136,24 @@ inherited MarginCategory_Movement2Form: TMarginCategory_Movement2Form
             Width = 41
           end
           object cPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1088#1086#1079#1085'.'
+            Caption = #1062#1077#1085#1072' '#1088#1086#1079#1085'. '#1084#1080#1085'.'
             DataBinding.FieldName = 'Price'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = #1062#1077#1085#1072' '#1088#1086#1079#1085'. '#1085#1072' '#1084#1086#1084#1077#1085#1090' '#1092#1086#1088#1084'. '#1086#1090#1095#1077#1090#1072
             Options.Editing = False
+            Width = 63
+          end
+          object cPriceMax: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1088#1086#1079#1085'. '#1084#1072#1082#1089'.'
+            DataBinding.FieldName = 'PriceMax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1062#1077#1085#1072' '#1088#1086#1079#1085'. '#1085#1072' '#1084#1086#1084#1077#1085#1090' '#1092#1086#1088#1084'. '#1086#1090#1095#1077#1090#1072
+            Options.Editing = False
+            Width = 63
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078' '#1079#1072' '#1087#1077#1088#1080#1086#1076
@@ -320,6 +331,13 @@ inherited MarginCategory_Movement2Form: TMarginCategory_Movement2Form
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Width = 90
+          end
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075'. '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
         end
       end

@@ -1,5 +1,5 @@
 inherited MarginCategoryJournal2Form: TMarginCategoryJournal2Form
-  Caption = '2 '#1046#1091#1088#1085#1072#1083' <'#1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1082#1080' ('#1057#1040#1059#1062')>'
+  Caption = 'test '#1046#1091#1088#1085#1072#1083' <'#1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1082#1080' ('#1057#1040#1059#1062')>'
   ClientHeight = 491
   ClientWidth = 979
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -63,6 +63,22 @@ inherited MarginCategoryJournal2Form: TMarginCategoryJournal2Form
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 157
+          end
+          object ObjectName: TcxGridDBColumn
+            Caption = #1040#1087#1090#1077#1082#1072' / '#1102#1088'.'#1083#1080#1094#1086
+            DataBinding.FieldName = 'ObjectName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 157
+          end
+          object DescName_Object: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090
+            DataBinding.FieldName = 'DescName_Object'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -375,7 +391,7 @@ inherited MarginCategoryJournal2Form: TMarginCategoryJournal2Form
     end
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_MarginCategory'
+    StoredProcName = 'gpSelect_Movement_MarginCategory2'
     Params = <
       item
         Name = 'inStartDate'
