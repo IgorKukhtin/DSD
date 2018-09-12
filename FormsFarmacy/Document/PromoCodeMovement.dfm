@@ -87,7 +87,6 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 2
-        ExplicitTop = 2
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -442,14 +441,14 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
     end
     object cbisElectron: TcxCheckBox
       Left = 565
-      Top = 23
+      Top = 21
       Caption = #1076#1083#1103' '#1057#1072#1081#1090#1072
       TabOrder = 10
       Width = 78
     end
     object cbisOne: TcxCheckBox
       Left = 652
-      Top = 23
+      Top = 21
       Caption = #1059#1085#1080#1082#1072#1083#1100#1085#1099#1081' '#1082#1086#1076
       TabOrder = 11
       Width = 117
@@ -503,6 +502,13 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
       Properties.ReadOnly = True
       TabOrder = 17
       Width = 120
+    end
+    object cbisBuySite: TcxCheckBox
+      Left = 565
+      Top = 37
+      Caption = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1087#1086#1082#1091#1087#1086#1082' '#1085#1072' '#1057#1072#1081#1090#1077
+      TabOrder = 18
+      Width = 196
     end
   end
   object edStartPromo: TcxDateEdit [2]
@@ -693,6 +699,9 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
       ImageIndex = 77
+    end
+    inherited actGridToExcel: TdsdGridToExcel
+      Grid = cxGrid2
     end
     object actSetErasedPromoCodeSign: TdsdUpdateErased [11]
       Category = 'DSDLib'
@@ -1631,6 +1640,13 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'isBuySite'
+        Value = Null
+        Component = cbisBuySite
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'PromoCodeId'
         Value = Null
         Component = GuidesPromoCode
@@ -1788,6 +1804,14 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisBuySite'
+        Value = Null
+        Component = cbisBuySite
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPromoCodeId'
         Value = Null
         Component = GuidesPromoCode
@@ -1852,6 +1876,9 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
       end
       item
         Control = cbisOne
+      end
+      item
+        Control = cbisBuySite
       end>
     Left = 224
     Top = 177
