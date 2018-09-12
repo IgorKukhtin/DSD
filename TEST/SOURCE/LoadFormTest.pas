@@ -1688,8 +1688,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AccountDialogForm');
   }
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountMotionDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_AccountMotionDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountMotionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_AccountMotionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountMotionDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AccountMotionDialogForm');
   exit;
