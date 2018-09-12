@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_BankStatementItem(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+             , ServiceDate TDateTime
              , Debet TFloat, Kredit TFloat
              , AmountSumm TFloat, AmountCurrency TFloat
              , OKPO TVarChar, Juridicalname TVarChar, Comment TVarChar
@@ -39,23 +40,25 @@ BEGIN
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
+           , MovementDate_ServiceDate.ValueData     AS ServiceDate
+           
            , CASE SIGN(MovementFloat_Amount.ValueData) 
                WHEN 1
                  THEN MovementFloat_Amount.ValueData
                ELSE 
                  0 
-             END::TFloat AS Debet
+             END                           ::TFloat AS Debet
            , CASE SIGN(MovementFloat_Amount.ValueData) 
                WHEN 1
                  THEN 0
                ELSE 
                  - MovementFloat_Amount.ValueData 
-             END::TFloat AS Kredit
+             END                           ::TFloat AS Kredit
            , MovementFloat_Amount.ValueData         AS AmountSumm
            , MovementFloat_AmountCurrency.ValueData AS AmountCurrency
-           , MovementString_OKPO.ValueData  AS OKPO
+           , MovementString_OKPO.ValueData          AS OKPO
            , MovementString_JuridicalName.ValueData AS JuridicalName
-           , MovementString_Comment.ValueData AS Comment
+           , MovementString_Comment.ValueData       AS Comment
 
            , Object_Juridical.Id          AS LinkJuridicalId
            , (Object_Juridical.ValueData || COALESCE (' * '|| Object_Bank.ValueData, '')) :: TVarChar AS LinkJuridicalName
@@ -116,28 +119,32 @@ BEGIN
             
 
             LEFT JOIN MovementString AS MovementString_OKPO
-                                     ON MovementString_OKPO.MovementId =  Movement.Id
+                                     ON MovementString_OKPO.MovementId = Movement.Id
                                     AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
 
             LEFT JOIN MovementString AS MovementString_BankAccount
-                                     ON MovementString_BankAccount.MovementId =  Movement.Id
+                                     ON MovementString_BankAccount.MovementId = Movement.Id
                                     AND MovementString_BankAccount.DescId = zc_MovementString_BankAccount()
 
             LEFT JOIN MovementString AS MovementString_BankMFO
-                                     ON MovementString_BankMFO.MovementId =  Movement.Id
+                                     ON MovementString_BankMFO.MovementId = Movement.Id
                                     AND MovementString_BankMFO.DescId = zc_MovementString_BankMFO()
 
             LEFT JOIN MovementString AS MovementString_BankName
-                                     ON MovementString_BankName.MovementId =  Movement.Id
+                                     ON MovementString_BankName.MovementId = Movement.Id
                                     AND MovementString_BankName.DescId = zc_MovementString_BankName()
 
             LEFT JOIN MovementString AS MovementString_JuridicalName
-                                     ON MovementString_JuridicalName.MovementId =  Movement.Id
+                                     ON MovementString_JuridicalName.MovementId = Movement.Id
                                     AND MovementString_JuridicalName.DescId = zc_MovementString_JuridicalName()
 
             LEFT JOIN MovementString AS MovementString_Comment
-                                     ON MovementString_Comment.MovementId =  Movement.Id
+                                     ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementDate AS MovementDate_ServiceDate
+                                   ON MovementDate_ServiceDate.MovementId = Movement.Id
+                                  AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_InfoMoney
                                          ON MovementLinkObject_InfoMoney.MovementId = Movement.Id
@@ -198,6 +205,7 @@ ALTER FUNCTION gpSelect_Movement_BankStatementItem (Integer, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.09.18         *
  18.03.14                                        * add zc_ObjectLink_BankAccount_Bank
  13.03.14                                        * add Object_InfoMoney_View
  15.11.13                        *              

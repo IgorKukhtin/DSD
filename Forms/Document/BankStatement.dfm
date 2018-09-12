@@ -5,7 +5,7 @@ inherited BankStatementForm: TBankStatementForm
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1100
-  ExplicitHeight = 451
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -77,6 +77,16 @@ inherited BankStatementForm: TBankStatementForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 53
+          end
+          object ServiceDate: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+            DataBinding.FieldName = 'ServiceDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'MMMM YYYY'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+            Width = 83
           end
           object Debet: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090
@@ -777,8 +787,8 @@ inherited BankStatementForm: TBankStatementForm
     Top = 112
   end
   inherited BarManager: TdxBarManager
-    Left = 104
-    Top = 120
+    Left = 136
+    Top = 128
     DockControlHeights = (
       0
       0
@@ -963,6 +973,15 @@ inherited BankStatementForm: TBankStatementForm
         Component = MasterCDS
         ComponentItem = 'MovementId_Invoice'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioServiceDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'ServiceDate'
+        DataType = ftDateTime
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
