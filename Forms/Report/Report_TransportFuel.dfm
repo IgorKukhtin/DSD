@@ -156,6 +156,11 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
           Format = ',0.00'
           Kind = skSum
           Column = outSumm_Juridical
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = outSumm_virt
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -277,6 +282,11 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
           Format = ',0.00'
           Kind = skSum
           Column = outSumm_Juridical
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = outSumm_virt
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -341,6 +351,17 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         DataBinding.FieldName = 'FuelName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object outSumm_virt: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1074' '#1087#1091#1090#1080
+        DataBinding.FieldName = 'outSumm_virt'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086' - '#1057#1091#1084#1084#1072' '#1074' '#1087#1091#1090#1080
         Width = 70
       end
       object StartAmount: TcxGridDBColumn
@@ -448,14 +469,14 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         Width = 80
       end
       object outSumm_Transport: TcxGridDBColumn
-        Caption = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' ('#1087#1091#1090'.)'
+        Caption = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' ('#1087'.'#1083#1080#1089#1090')'
         DataBinding.FieldName = 'outSumm_Transport'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' ('#1087#1091#1090#1077#1074#1086#1081')'
+        HeaderHint = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' ('#1087#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090')'
         Width = 80
       end
       object EndAmount: TcxGridDBColumn

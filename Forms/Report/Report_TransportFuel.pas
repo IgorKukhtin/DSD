@@ -86,6 +86,7 @@ type
     outSumm_Juridical: TcxGridDBColumn;
     actPrintDetail: TdsdPrintAction;
     bbPrintDetail: TdxBarButton;
+    outSumm_virt: TcxGridDBColumn;
   private
   public
   end;

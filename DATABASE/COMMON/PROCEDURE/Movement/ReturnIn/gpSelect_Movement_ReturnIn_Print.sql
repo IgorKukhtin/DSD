@@ -314,8 +314,14 @@ BEGIN
            , Object_BankAccount.MFO                         AS BankMFO_ByContract
            , Object_BankAccount.BankName                    AS BankName_ByContract
 
+           , MovementString_Comment.ValueData               AS Comment
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId = Movement.Id
+                                    AND MovementString_Comment.DescId     = zc_MovementString_Comment()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                          ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id

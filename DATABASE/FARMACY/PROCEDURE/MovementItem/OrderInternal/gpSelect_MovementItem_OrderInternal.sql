@@ -1705,7 +1705,7 @@ BEGIN
                                                    ON MovementDate_Branch.MovementId = Movement_Income.Id
                                                   AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
                        WHERE Movement_Income.DescId = zc_Movement_Income()
-                         AND MovementDate_Branch.ValueData BETWEEN CURRENT_DATE - INTERVAL '7 DAY' AND CURRENT_DATE + INTERVAL '7 DAY'
+                         AND MovementDate_Branch.ValueData BETWEEN CURRENT_DATE - INTERVAL '31 DAY' AND CURRENT_DATE + INTERVAL '7 DAY'
                          AND Movement_Income.StatusId = zc_Enum_Status_UnComplete()
                        GROUP BY MovementItem_Income.ObjectId
                      )
@@ -1805,7 +1805,7 @@ BEGIN
                             INNER JOIN tmpGoodsId AS tmp
                                                   ON tmp.GoodsId = MI_Send.ObjectId
                      -- WHERE Movement_Send.OperDate >= vbOperDate - interval '30 DAY'
-                     WHERE Movement_Send.OperDate BETWEEN CURRENT_DATE - INTERVAL '30 DAY' AND CURRENT_DATE + INTERVAL '30 DAY'
+                     WHERE Movement_Send.OperDate BETWEEN CURRENT_DATE - INTERVAL '31 DAY' AND CURRENT_DATE + INTERVAL '30 DAY'
                        AND Movement_Send.OperDate < vbOperDateEnd
                        AND Movement_Send.DescId = zc_Movement_Send()
                        AND Movement_Send.StatusId = zc_Enum_Status_UnComplete()
