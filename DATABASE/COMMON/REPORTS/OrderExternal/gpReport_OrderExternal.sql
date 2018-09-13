@@ -310,11 +310,12 @@ BEGIN
                     AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
                  )
      -- Для документы продажи и перемещения по цене получаем дату, номер, дату у покупателя 
-     , tmpMLM_All AS (SELECT   tmpMLM.MovementChildId AS MovementId_Order
-                             , tmpMLM.MovementId      AS MovementId
-                             , Movement.InvNumber     AS InvNumber
-                             , Movement.OperDate      AS OperDate
+     , tmpMLM_All AS (SELECT   tmpMLM.MovementChildId                  AS MovementId_Order
+                             , tmpMLM.MovementId                       AS MovementId
+                             , Movement.InvNumber                      AS InvNumber
+                             , Movement.OperDate                       AS OperDate
                              , MovementDate_OperDatePartner.ValueData  AS OperDatePartner
+                             , ROW_NUMBER() OVER (PARTITION BY tmpMLM.MovementChildId ORDER BY tmpMLM.MovementId) AS Ord
                       FROM tmpMLM
                            INNER JOIN Movement ON Movement.Id = tmpMLM.MovementId
                                               AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
@@ -372,38 +373,37 @@ BEGIN
 
              -- Вес в упаковке - GoodsByGoodsKind
            , ObjectFloat_WeightTotal.ValueData AS WeightTotal
+           -- кол-во и суммы  показываем только для первой строки заказа
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.Summ1 ELSE 0 END                            :: TFloat AS AmountSumm1
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.Summ2 ELSE 0 END                            :: TFloat AS AmountSumm2
 
-           , tmpMovement.Summ1                            :: TFloat AS AmountSumm1
-           , tmpMovement.Summ2                            :: TFloat AS AmountSumm2
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.SummSecond1) ELSE 0 END                    :: TFloat AS AmountSumm_Dozakaz1
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.SummSecond2) ELSE 0 END                    :: TFloat AS AmountSumm_Dozakaz2
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.Summ1 + tmpMovement.Summ2 + tmpMovement.SummSecond1 + tmpMovement.SummSecond2) ELSE 0 END :: TFloat AS AmountSumm
 
-           , (tmpMovement.SummSecond1)       :: TFloat AS AmountSumm_Dozakaz1
-           , (tmpMovement.SummSecond2)       :: TFloat AS AmountSumm_Dozakaz2
-           , (tmpMovement.Summ1 + tmpMovement.Summ2 + tmpMovement.SummSecond1 + tmpMovement.SummSecond2) :: TFloat AS AmountSumm
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.Amount_Weight1 ELSE 0 END                   :: TFloat AS Amount_Weight1
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.Amount_Sh1 ELSE 0 END                       :: TFloat AS Amount_Sh1
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.Amount_Weight2 ELSE 0 END                   :: TFloat AS Amount_Weight2
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.Amount_Sh2 ELSE 0 END                       :: TFloat AS Amount_Sh2
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.AmountSecond_Weight1) ELSE 0 END           :: TFloat AS Amount_Weight_Dozakaz1
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.AmountSecond_Sh1 ) ELSE 0 END              :: TFloat AS Amount_Sh_Dozakaz1
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.AmountSecond_Weight2) ELSE 0 END           :: TFloat AS Amount_Weight_Dozakaz2
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.AmountSecond_Sh2) ELSE 0 END               :: TFloat AS Amount_Sh_Dozakaz2
 
-           , tmpMovement.Amount_Weight1        :: TFloat AS Amount_Weight1
-           , tmpMovement.Amount_Sh1            :: TFloat AS Amount_Sh1
-           , tmpMovement.Amount_Weight2        :: TFloat AS Amount_Weight2
-           , tmpMovement.Amount_Sh2            :: TFloat AS Amount_Sh2
-           , (tmpMovement.AmountSecond_Weight1) :: TFloat AS Amount_Weight_Dozakaz1
-           , (tmpMovement.AmountSecond_Sh1 )    :: TFloat AS Amount_Sh_Dozakaz1
-           , (tmpMovement.AmountSecond_Weight2) :: TFloat AS Amount_Weight_Dozakaz2
-           , (tmpMovement.AmountSecond_Sh2)     :: TFloat AS Amount_Sh_Dozakaz2
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.Amount) ELSE 0 END                         :: TFloat AS Amount
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.AmountZakaz) ELSE 0 END                    :: TFloat AS AmountZakaz                       -- количество без дозаказа
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountSecond1 ELSE 0 END                    :: TFloat AS AmountSecond1
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN tmpMovement.AmountSecond2 ELSE 0 END                    :: TFloat AS AmountSecond2
 
-           , (tmpMovement.Amount)      :: TFloat AS Amount
-           , (tmpMovement.AmountZakaz) :: TFloat AS AmountZakaz                       -- количество без дозаказа
-           , tmpMovement.AmountSecond1 :: TFloat AS AmountSecond1
-           , tmpMovement.AmountSecond2 :: TFloat AS AmountSecond2
-
-           , (tmpMovement.Amount_Weight1 + tmpMovement.Amount_Weight2 + tmpMovement.AmountSecond_Weight1 + tmpMovement.AmountSecond_Weight2) :: TFloat AS Amount_Weight
-           , (tmpMovement.Amount_Weight1 + tmpMovement.Amount_Weight2) :: TFloat AS AmountZakaz_Weight                       -- вес без дозаказа
-           , (tmpMovement.Amount_Sh1 + tmpMovement.Amount_Sh2 + tmpMovement.AmountSecond_Sh1 + tmpMovement.AmountSecond_Sh2)         :: TFloat AS Amount_Sh
-           , (tmpMovement.Amount_Sh1 + tmpMovement.Amount_Sh2) :: TFloat AS AmountZakaz_Sh                                    -- шт без дозаказа
-
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.Amount_Weight1 + tmpMovement.Amount_Weight2 + tmpMovement.AmountSecond_Weight1 + tmpMovement.AmountSecond_Weight2) ELSE 0 END :: TFloat AS Amount_Weight
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.Amount_Weight1 + tmpMovement.Amount_Weight2) ELSE 0 END                                                                       :: TFloat AS AmountZakaz_Weight  -- вес без дозаказа
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.Amount_Sh1 + tmpMovement.Amount_Sh2 + tmpMovement.AmountSecond_Sh1 + tmpMovement.AmountSecond_Sh2) ELSE 0 END                 :: TFloat AS Amount_Sh
+           , CASE WHEN COALESCE (tmpMLM_All.Ord, 1) = 1 THEN (tmpMovement.Amount_Sh1 + tmpMovement.Amount_Sh2) ELSE 0 END                                                                               :: TFloat AS AmountZakaz_Sh      -- шт без дозаказа
            , 0 :: TFloat AS Amount_WeightSK
 
-           , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
-           , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
-           , View_InfoMoney.InfoMoneyName_all               AS InfoMoneyName_all
+           , View_InfoMoney.InfoMoneyCode                         AS InfoMoneyCode
+           , View_InfoMoney.InfoMoneyName                         AS InfoMoneyName
+           , View_InfoMoney.InfoMoneyName_all                     AS InfoMoneyName_all
 
            , View_InfoMoney_goods.InfoMoneyCode                   AS InfoMoneyCode_goods
            , View_InfoMoney_goods.InfoMoneyName                   AS InfoMoneyName_goods

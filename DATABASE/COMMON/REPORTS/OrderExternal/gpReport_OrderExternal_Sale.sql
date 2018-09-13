@@ -237,38 +237,42 @@ BEGIN
                               AND COALESCE (MovementLinkMovement_Order.MovementId, 0) = 0
                             )
    -- все продажи и за€вки
-    , tmpMovementAll AS (SELECT tmp.MovementId_Sale
-                              , tmp.OperDate_Sale
-                              , tmp.OperDatePartner_Sale
-                              , tmp.InvNumber_Sale
-                              
-                              , tmp.MovementId_Order
-                              , tmp.OperDate_Order
-                              , tmp.OperDatePartner_Order
-                              , tmp.InvNumber_Order
-                              , tmp.InvNumberPartner_Order
-
-                              , tmp.FromId
-                              , tmp.RouteId
-                              , tmp.PaidKindId
-                         FROM tmpMovementSale AS tmp
-                       UNION 
-                         SELECT 0                   AS MovementId_Sale
-                              , NULL :: TDateTime   AS OperDate_Sale
-                              , NULL :: TDateTime   AS OperDatePartner_Sale
-                              , NULL :: TVarChar    AS InvNumber_Sale
-
-                              , tmp.MovementId_Order
-                              , tmp.OperDate_Order
-                              , tmp.OperDatePartner_Order
-                              , tmp.InvNumber_Order
-                              , tmp.InvNumberPartner_Order
- 
-                              , tmp.FromId
-                              , tmp.RouteId
-                              , tmp.PaidKindId
-                         FROM tmpMovementOrder AS tmp
-                         )
+    , tmpMovementAll AS (SELECT *, ROW_NUMBER() OVER (PARTITION BY tmpMovementAll.MovementId_Order ORDER BY tmpMovementAll.MovementId_Sale) AS Ord
+                         FROM (
+                               SELECT tmp.MovementId_Sale
+                                    , tmp.OperDate_Sale
+                                    , tmp.OperDatePartner_Sale
+                                    , tmp.InvNumber_Sale
+                                    
+                                    , tmp.MovementId_Order
+                                    , tmp.OperDate_Order
+                                    , tmp.OperDatePartner_Order
+                                    , tmp.InvNumber_Order
+                                    , tmp.InvNumberPartner_Order
+      
+                                    , tmp.FromId
+                                    , tmp.RouteId
+                                    , tmp.PaidKindId
+                               FROM tmpMovementSale AS tmp
+                             UNION 
+                               SELECT 0                   AS MovementId_Sale
+                                    , NULL :: TDateTime   AS OperDate_Sale
+                                    , NULL :: TDateTime   AS OperDatePartner_Sale
+                                    , NULL :: TVarChar    AS InvNumber_Sale
+      
+                                    , tmp.MovementId_Order
+                                    , tmp.OperDate_Order
+                                    , tmp.OperDatePartner_Order
+                                    , tmp.InvNumber_Order
+                                    , tmp.InvNumberPartner_Order
+       
+                                    , tmp.FromId
+                                    , tmp.RouteId
+                                    , tmp.PaidKindId
+                               FROM tmpMovementOrder AS tmp
+                               ) AS tmpMovementAll
+                        )
+                   
      -- данные по продажам
     , tmpMI_Sale AS (SELECT     tmpSale.MovementId_Sale
                               , tmpSale.OperDate_Sale
@@ -285,16 +289,16 @@ BEGIN
                               , tmpSale.RouteId
                               , tmpSale.PaidKindId
 
-                          , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId
-                          , MovementItem.ObjectId                      AS GoodsId
-                          , CAST (SUM ((MIFloat_AmountPartner.ValueData * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ))) AS TFloat) AS AmountSalePartner_Weight    -- ¬ес у покупател€
-                          , CAST (SUM ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN MIFloat_AmountPartner.ValueData ELSE 0 END)) AS TFloat)                                   AS AmountSalePartner_Sh        -- кол-во у покупател€
-                          , CAST (SUM ((MovementItem.Amount * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ))) AS TFloat)             AS AmountSale_Weight  -- ¬ес склад
-                          , CAST (SUM ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN MovementItem.Amount ELSE 0 END)) AS TFloat)                                               AS AmountSale_Sh      -- кол-во склад
-                          , CAST (SUM (MovementItem.Amount) AS TFloat)                                                                                                                                    AS AmountSale
-                          , MIFloat_Price.ValueData                                                              AS PriceSale
-                          , CAST (SUM((MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData)) AS TFloat)    AS SumSale
-                     FROM (SELECT tmpMovementAll.* FROM tmpMovementAll WHERE tmpMovementAll.MovementId_Sale <> 0) AS tmpSale
+                              , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId
+                              , MovementItem.ObjectId                                            AS GoodsId
+                              , CAST (SUM ((MIFloat_AmountPartner.ValueData * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ))) AS TFloat) AS AmountSalePartner_Weight    -- ¬ес у покупател€
+                              , CAST (SUM ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN MIFloat_AmountPartner.ValueData ELSE 0 END)) AS TFloat)                                   AS AmountSalePartner_Sh        -- кол-во у покупател€
+                              , CAST (SUM ((MovementItem.Amount * (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END ))) AS TFloat)             AS AmountSale_Weight  -- ¬ес склад
+                              , CAST (SUM ((CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN MovementItem.Amount ELSE 0 END)) AS TFloat)                                               AS AmountSale_Sh      -- кол-во склад
+                              , CAST (SUM (MovementItem.Amount) AS TFloat)                                                                                                                                    AS AmountSale
+                              , MIFloat_Price.ValueData                                                              AS PriceSale
+                              , CAST (SUM((MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData)) AS TFloat)    AS SumSale
+                     FROM (SELECT tmpMovementAll.* FROM tmpMovementAll WHERE tmpMovementAll.MovementId_Sale <> 0)    AS tmpSale
                            INNER JOIN MovementItem ON MovementItem.MovementId = tmpSale.MovementId_Sale
                                                   AND MovementItem.DescId     = zc_MI_Master()
                                                   AND MovementItem.isErased   = FALSE
@@ -421,7 +425,7 @@ BEGIN
                                                  ELSE CAST (  COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                                          END) AS TFloat)                      AS AmountSummTotal
       
-                          FROM (SELECT tmpMovementAll.* FROM tmpMovementAll WHERE tmpMovementAll.MovementId_Order <> 0
+                          FROM (SELECT tmpMovementAll.* FROM tmpMovementAll WHERE tmpMovementAll.MovementId_Order <> 0 AND COALESCE (tmpMovementAll.Ord, 1) = 1
                                 ) AS tmpOrder
                                 -- строки
                                  INNER JOIN MovementItem ON MovementItem.MovementId = tmpOrder.MovementId_Order
