@@ -153,6 +153,7 @@ type
     UnitName_Check: TcxGridDBColumn;
     JuridicalName_Check: TcxGridDBColumn;
     RetailName_Check: TcxGridDBColumn;
+    cbisBuySite: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpReport_AccountMotion (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean);
 DROP FUNCTION IF EXISTS lpReport_AccountMotion (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean);
+DROP FUNCTION IF EXISTS lpReport_AccountMotion (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean);
 
 CREATE OR REPLACE FUNCTION lpReport_AccountMotion (
     IN inStartDate              TDateTime ,  
@@ -15,6 +16,7 @@ CREATE OR REPLACE FUNCTION lpReport_AccountMotion (
     IN inProfitLossDirectionId  Integer , 
     IN inProfitLossId           Integer ,
     IN inBranchId               Integer ,
+    IN inMovementDescId         Integer ,
     IN inUserId                 Integer ,
     IN inIsMovement             Boolean ,
     IN inIsGoods                Boolean ,
@@ -564,20 +566,18 @@ BEGIN
 
        LEFT JOIN Object_ProfitLoss_View AS View_ProfitLoss_inf ON View_ProfitLoss_inf.ProfitLossId = tmpReport.ProfitLossId_inf
 
-       LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id
-                         = CASE WHEN tmpReport.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
-                                     THEN CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.ObjectId_Direction ELSE tmpReport.ObjectId_Destination END
-                                ELSE COALESCE (tmpReport.ObjectId_Direction
-                                             , CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.ObjectId_inf ELSE tmpReport.MoneyPlaceId_inf END
-                                              )
-                           END
-       LEFT JOIN Object AS Object_Destination ON Object_Destination.Id
-                         = CASE WHEN tmpReport.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash()) 
-                                     THEN CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.ObjectId_Destination ELSE tmpReport.ObjectId_Direction END
-                                ELSE COALESCE (tmpReport.ObjectId_Destination
-                                             , CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.MoneyPlaceId_inf ELSE tmpReport.ObjectId_inf END
-                                              )
-                           END
+       LEFT JOIN Object AS Object_Direction 
+                        ON Object_Direction.Id = CASE WHEN tmpReport.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+                                                           THEN CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.ObjectId_Direction ELSE tmpReport.ObjectId_Destination END
+                                                      ELSE COALESCE (tmpReport.ObjectId_Direction
+                                                                   , CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.ObjectId_inf ELSE tmpReport.MoneyPlaceId_inf END)
+                                                 END
+       LEFT JOIN Object AS Object_Destination 
+                        ON Object_Destination.Id = CASE WHEN tmpReport.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash()) 
+                                                             THEN CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.ObjectId_Destination ELSE tmpReport.ObjectId_Direction END
+                                                        ELSE COALESCE (tmpReport.ObjectId_Destination
+                                                                     , CASE WHEN tmpReport.SummIn > 0 THEN tmpReport.MoneyPlaceId_inf ELSE tmpReport.ObjectId_inf END)
+                                                   END
 
        LEFT JOIN ObjectDesc AS ObjectDesc_Direction ON ObjectDesc_Direction.Id = Object_Direction.DescId
        LEFT JOIN ObjectDesc AS ObjectDesc_Destination ON ObjectDesc_Destination.Id = Object_Destination.DescId
@@ -593,6 +593,7 @@ BEGIN
       AND (COALESCE (View_InfoMoney.InfoMoneyGroupId, 0) <> zc_Enum_InfoMoneyGroup_60000() -- Заработная плата
         OR View_Account.AccountGroupId = zc_Enum_AccountGroup_110000 () -- Транзит
           )
+      AND (tmpReport.MovementDescId = inMovementDescId OR inMovementDescId = 0)
     ;
 
 END;
@@ -602,10 +603,11 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 12.09.18         *
  18.06.18         *
 */
 
 -- тест
--- SELECT * FROM lpReport_AccountMotion (inStartDate:= '01.06.2018', inEndDate:= '10.06.2018', inAccountGroupId:= 0, inAccountDirectionId:= 0, inInfoMoneyId:= 0, inAccountId:= 9128, inBusinessId:= 0, inProfitLossGroupId:= 0,  inProfitLossDirectionId:= 0,  inProfitLossId:= 0,  inBranchId:= 0, inUserId:= 5);
+-- SELECT * FROM lpReport_AccountMotion (inStartDate:= '01.06.2018', inEndDate:= '10.06.2018', inAccountGroupId:= 0, inAccountDirectionId:= 0, inInfoMoneyId:= 0, inAccountId:= 9128, inBusinessId:= 0, inProfitLossGroupId:= 0,  inProfitLossDirectionId:= 0,  inProfitLossId:= 0,  inBranchId:= 0, inMovementDescId:=0, inUserId:= 5);
 
    -- IN inIsMovement             Boolean

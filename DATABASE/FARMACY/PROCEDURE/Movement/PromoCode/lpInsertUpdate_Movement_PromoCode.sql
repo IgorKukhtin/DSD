@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PromoCode(
     IN inChangePercent         Tfloat     , --
     IN inIsElectron            Boolean    , 
     IN inIsOne                 Boolean    , 
+    IN inIsBuySite             Boolean    , 
     IN inPromoCodeId           Integer    , --
     IN inComment               TVarChar   , -- Примечание
     IN inUserId                Integer     -- сессия пользователя
@@ -53,6 +54,9 @@ BEGIN
     -- сохранили свойство <>
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_One(), ioId, inIsOne);
     
+    -- сохранили свойство <>
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_BuySite(), ioId, inIsBuySite);
+
     -- сохранили <Примечание>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
     
@@ -78,6 +82,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.  Шаблий О.В.
+ 12.09.18                                                                                  *
  13.12.17         *
 */

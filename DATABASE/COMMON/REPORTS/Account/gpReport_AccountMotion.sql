@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpReport_AccountMotion (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_AccountMotion (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_AccountMotion (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_AccountMotion (
     IN inStartDate              TDateTime ,  
@@ -15,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpReport_AccountMotion (
     IN inProfitLossDirectionId  Integer , 
     IN inProfitLossId           Integer ,
     IN inBranchId               Integer ,
+    IN inMovementDescId         Integer ,
     IN inIsMovement             Boolean ,
     IN inIsGoods                Boolean ,
     IN inIsGoodsKind            Boolean ,
@@ -68,24 +70,24 @@ BEGIN
 
 
     RETURN QUERY
-    SELECT * FROM lpReport_AccountMotion (
-         inStartDate             := inStartDate,  
-         inEndDate               := inEndDate,
-         inAccountGroupId        := inAccountGroupId, 
-         inAccountDirectionId    := inAccountDirectionId, 
-         inInfoMoneyId           := inInfoMoneyId, 
-         inAccountId             := inAccountId,
-         inBusinessId            := inBusinessId,
-         inProfitLossGroupId     := inProfitLossGroupId,
-         inProfitLossDirectionId := inProfitLossDirectionId, 
-         inProfitLossId          := inProfitLossId,
-         inBranchId              := inBranchId,
-         inUserId                := vbUserId,
-         inIsMovement            := inIsMovement,
-         inIsGoods               := inIsGoods,
-         inIsGoodsKind           := inIsGoodsKind,
-         inIsDetail              := inIsDetail
-       ) AS tmp
+    SELECT * FROM lpReport_AccountMotion (inStartDate             := inStartDate,  
+                                          inEndDate               := inEndDate,
+                                          inAccountGroupId        := inAccountGroupId, 
+                                          inAccountDirectionId    := inAccountDirectionId, 
+                                          inInfoMoneyId           := inInfoMoneyId, 
+                                          inAccountId             := inAccountId,
+                                          inBusinessId            := inBusinessId,
+                                          inProfitLossGroupId     := inProfitLossGroupId,
+                                          inProfitLossDirectionId := inProfitLossDirectionId, 
+                                          inProfitLossId          := inProfitLossId,
+                                          inBranchId              := inBranchId,
+                                          inMovementDescId        := inMovementDescId,
+                                          inUserId                := vbUserId,
+                                          inIsMovement            := inIsMovement,
+                                          inIsGoods               := inIsGoods,
+                                          inIsGoodsKind           := inIsGoodsKind,
+                                          inIsDetail              := inIsDetail
+                                          ) AS tmp
     WHERE tmp.SummStart <> 0 OR tmp.SummIn <> 0 OR tmp.SummOut <> 0 OR tmp.SummEnd <> 0
    ;
 
@@ -98,8 +100,9 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.09.18         * add inMovementDescId
  19.06.18         *  
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpReport_AccountMotion (inStartDate:= '01.12.2015', inEndDate:= '31.12.2015', inAccountGroupId:= 0, inAccountDirectionId:= 0, inInfoMoneyId:= 0, inAccountId:= 9128, inBusinessId:= 0, inProfitLossGroupId:= 0,  inProfitLossDirectionId:= 0,  inProfitLossId:= 0,  inBranchId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_AccountMotion (inStartDate:= '01.12.2015', inEndDate:= '31.12.2015', inAccountGroupId:= 0, inAccountDirectionId:= 0, inInfoMoneyId:= 0, inAccountId:= 9128, inBusinessId:= 0, inProfitLossGroupId:= 0,  inProfitLossDirectionId:= 0,  inProfitLossId:= 0,  inBranchId:= 0, inMovementDescId:=0, inSession:= zfCalc_UserAdmin());

@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PromoCode(
     IN inChangePercent         Tfloat     , --
     IN inIsElectron            Boolean    , 
     IN inIsOne                 Boolean    , 
+    IN inIsBuySite             Boolean    , 
     IN inPromoCodeId           Integer    , --
     IN inComment               TVarChar   , -- Примечание
     IN inSession               TVarChar     -- сессия пользователя
@@ -31,7 +32,8 @@ BEGIN
                                              , inEndPromo      := inEndPromo
                                              , inChangePercent := inChangePercent
                                              , inIsElectron    := inIsElectron
-                                             , inIsOne         := inIsOne                                         
+                                             , inIsOne         := inIsOne  
+                                             , inIsBuySite     := inIsBuySite                                       
                                              , inPromoCodeId   := inPromoCodeId
                                              , inComment       := inComment
                                              , inUserId        := vbUserId
@@ -43,6 +45,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.  Шаблий О.В.
+ 12.09.18                                                                                  *
  13.12.17         *
 */

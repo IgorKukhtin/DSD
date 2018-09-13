@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer
              , ChangePercent TFloat
              , isElectron    Boolean
              , isOne         Boolean
+             , isBuySite     Boolean     
              , PromoCodeId   Integer
              , PromoCodeName TVarChar
              , InsertId Integer
@@ -49,6 +50,7 @@ BEGIN
           , 0     ::TFloat              AS ChangePercent
           , FALSE ::Boolean             AS isElectron
           , FALSE ::Boolean             AS isOne
+          , FALSE ::Boolean             AS isBuySite
           , NULL  ::Integer             AS PromoCodeId
           , NULL  ::TVarChar            AS PromoCodeName
           , NULL  ::Integer             AS InsertId
@@ -75,6 +77,7 @@ BEGIN
           , COALESCE(MovementFloat_ChangePercent.ValueData,0)::TFloat      AS ChangePercent
           , COALESCE(MovementBoolean_Electron.ValueData, FALSE) ::Boolean  AS isElectron
           , COALESCE(MovementBoolean_One.ValueData, FALSE)      ::Boolean  AS isOne
+          , COALESCE(MovementBoolean_BuySite.ValueData, FALSE)  ::Boolean  AS isBuySite
           , MovementLinkObject_PromoCode.ObjectId                          AS PromoCodeId
           , Object_PromoCode.ValueData                                     AS PromoCodeName
           , Object_Insert.Id                                               AS InsertId
@@ -97,6 +100,9 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_One
                                   ON MovementBoolean_One.MovementId =  Movement.Id
                                  AND MovementBoolean_One.DescId = zc_MovementBoolean_One()
+        LEFT JOIN MovementBoolean AS MovementBoolean_BuySite
+                                  ON MovementBoolean_BuySite.MovementId =  Movement.Id
+                                 AND MovementBoolean_BuySite.DescId = zc_MovementBoolean_BuySite()
                                
         LEFT JOIN MovementDate AS MovementDate_StartPromo
                                ON MovementDate_StartPromo.MovementId = Movement.Id
@@ -141,7 +147,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.  Шаблий О.В.
+ 12.09.18                                                                                  *
  13.12.17         *
 */
 

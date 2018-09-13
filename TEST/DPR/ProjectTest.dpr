@@ -1032,7 +1032,8 @@ uses
   Report_Sale_OlapDialog in '..\..\Forms\Report\Report_Sale_OlapDialog.pas' {Report_Sale_OlapDialogForm: TParentForm},
   dsdPivotGrid in '..\..\SOURCE\COMPONENT\dsdPivotGrid.pas',
   Report_TransportFuel in '..\..\Forms\Report\Report_TransportFuel.pas' {Report_TransportFuelForm: TParentForm},
-  Report_TransportFuelDialog in '..\..\Forms\Report\Report_TransportFuelDialog.pas' {Report_TransportFuelDialogForm: TParentForm};
+  Report_TransportFuelDialog in '..\..\Forms\Report\Report_TransportFuelDialog.pas' {Report_TransportFuelDialogForm: TParentForm},
+  Report_AccountMotionDialog in '..\..\Forms\Report\Report_AccountMotionDialog.pas' {Report_AccountMotionDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -19,6 +19,7 @@ $BODY$
     DECLARE vbEndPromo                  TDateTime;
     DECLARE vbForSite                   Boolean;
     DECLARE vbOneCode                   Boolean;
+    DECLARE vbBuySite                   Boolean;
     DECLARE vbPromoCodeChangePercent    TFloat;
     DECLARE vbPromoID                   Integer;
     DECLARE vbPromoChecked              Boolean;
@@ -52,6 +53,7 @@ BEGIN
         EndPromo.valuedata as EndPromo,
         ForSite.valuedata as ForSite,
         OneCode.valuedata as OneCode,
+        BuySite.valuedata as BuySite,
         ChangePercent.valuedata as ChangePercent,
         PromoCode.id,
         CASE WHEN PromoCode.amount > 0 THEN TRUE ELSE FALSE END as PromoCodeChecked,
@@ -59,7 +61,7 @@ BEGIN
         PromoAction.valuedata,
         MIString_Bayer.ValueData
     INTO
-        vbStatusID, vbStartPromo, vbEndPromo, vbForSite, vbOneCode, vbPromoCodeChangePercent,
+        vbStatusID, vbStartPromo, vbEndPromo, vbForSite, vbOneCode, vbBuySite, vbPromoCodeChangePercent,
         vbPromoID, vbPromoChecked, vbPromoErased, vbPromoName, vbBayerName
     FROM
         MovementItemString PromoCode_GUID
@@ -75,6 +77,8 @@ BEGIN
                 ON Promo.id = ForSite.movementid AND ForSite.descid = zc_MovementBoolean_Electron()
         LEFT JOIN MovementBoolean OneCode
                 ON Promo.id = OneCode.movementid AND OneCode.descid = zc_MovementBoolean_One()
+        LEFT JOIN MovementBoolean BuySite
+                ON Promo.id = BuySite.movementid AND BuySite.descid = zc_MovementBoolean_BuySite()
         LEFT JOIN MovementFloat ChangePercent
                 ON Promo.id = ChangePercent.movementid AND ChangePercent.descid = zc_MovementFloat_ChangePercent()
         LEFT JOIN MovementLinkObject LinkPromoAction
@@ -108,6 +112,10 @@ BEGIN
 
     IF NOT vbPromoChecked THEN
         RAISE EXCEPTION 'Промокод неактивен';
+    END IF;
+    
+    IF vbBuySite THEN
+        RAISE EXCEPTION 'Промокод предназначен только для покупок на сайте';
     END IF;
 
     IF vbForSite and COALESCE(vbBayerName, '') = '' THEN

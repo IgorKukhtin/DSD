@@ -144,7 +144,7 @@ BEGIN
                         GROUP BY MovementItemContainer.MovementItemId
                        )
 
-      , tmpCheck AS (SELECT MI_Check.ObjectId                    AS GoodsId
+      , tmpCheck AS (SELECT MI_Check.ObjectId               AS GoodsId
                           , SUM (MI_Check.Amount) ::TFloat  AS Amount
                      FROM Movement AS Movement_Check
                             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -155,8 +155,8 @@ BEGIN
                                                     ON MI_Check.MovementId = Movement_Check.Id
                                                    AND MI_Check.DescId = zc_MI_Master()
                                                    AND MI_Check.isErased = FALSE
-                     WHERE Movement_Check.OperDate >= vbOperDate AND Movement_Check.OperDate < vbOperDateEnd
-                       AND Movement_Check.DescId = zc_Movement_Check()
+                     WHERE /*Movement_Check.OperDate >= vbOperDate AND Movement_Check.OperDate < vbOperDateEnd
+                       AND */Movement_Check.DescId = zc_Movement_Check()
                        AND Movement_Check.StatusId = zc_Enum_Status_UnComplete()
                      GROUP BY MI_Check.ObjectId 
                      HAVING SUM (MI_Check.Amount) <> 0 
@@ -315,8 +315,8 @@ BEGIN
                                                   ON MI_Check.MovementId = Movement_Check.Id
                                                  AND MI_Check.DescId = zc_MI_Master()
                                                  AND MI_Check.isErased = FALSE
-                     WHERE Movement_Check.OperDate >= vbOperDate AND Movement_Check.OperDate < vbOperDateEnd
-                       AND Movement_Check.DescId = zc_Movement_Check()
+                     WHERE /*Movement_Check.OperDate >= vbOperDate AND Movement_Check.OperDate < vbOperDateEnd
+                       AND */Movement_Check.DescId = zc_Movement_Check()
                        AND Movement_Check.StatusId = zc_Enum_Status_UnComplete()
                      GROUP BY MI_Check.ObjectId 
                      HAVING SUM (MI_Check.Amount) <> 0 
@@ -352,6 +352,7 @@ ALTER FUNCTION gpSelect_MovementItem_Loss (Integer, Boolean, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.09.18         * убрала огр. периода при выборе непров. чеков
  04.12.17         *
  12.06.17         * убрали Object_Price_View
  27.10.16         * 

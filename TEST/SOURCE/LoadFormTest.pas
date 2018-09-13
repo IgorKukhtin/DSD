@@ -1592,13 +1592,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_OlapDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_OlapDialogForm');
   //exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnion_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnion_OlapForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnion_OlapDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnion_OlapDialogForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTaxCorrective_NPPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTaxCorrective_NPPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTC_NPPDialogForm'));
@@ -1687,10 +1687,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_AccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AccountDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountMotionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AccountMotionForm');
-
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountMotionDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_AccountMotionDialogForm');
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportHoursWorkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportHoursWorkForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportHoursWorkDialogForm'));
