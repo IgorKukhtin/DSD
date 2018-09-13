@@ -97,6 +97,7 @@ type
     actRefreshDoc: TdsdDataSetRefresh;
     Diff_M: TcxGridDBColumn;
     InvNumber_Order: TcxGridDBColumn;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
   private
     { Private declarations }
   public

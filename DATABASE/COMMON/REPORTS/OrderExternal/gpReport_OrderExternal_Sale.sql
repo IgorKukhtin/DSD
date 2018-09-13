@@ -43,6 +43,7 @@ RETURNS TABLE (OperDate TDateTime, OperDatePartner TDateTime
              , AmountTax    TFloat
              , DiffTax      TFloat
              , isPrint_M    Boolean
+             , CountPrint_M TFloat
               )
 
 AS
@@ -573,7 +574,7 @@ BEGIN
                        FROM tmpMI_Sale AS tmpMovementSale
                       )
 
-    , tmpData AS (SELECT tmpDataUnion.MovementId_Sale
+    , tmpData1 AS (SELECT tmpDataUnion.MovementId_Sale
                        , tmpDataUnion.OperDate_Sale
                        , tmpDataUnion.OperDatePartner_Sale
                        , tmpDataUnion.InvNumber_Sale
@@ -612,6 +613,10 @@ BEGIN
                        , SUM (tmpDataUnion.AmountSale)            AS AmountSale
                        , MAX (tmpDataUnion.PriceSale)             AS PriceSale
                        , SUM (tmpDataUnion.SumSale)               AS SumSale
+
+                       -- итого по заявке, если 1 заявка и несколько продаж нужно свернуть суммы
+                      -- , SUM (tmpDataUnion.AmountSale_Sh)     OVER (PARTITION BY tmpDataUnion.MovementId_Order, tmpDataUnion.GoodsId, tmpDataUnion.GoodsKindId) AS TotalSale_Sh
+                      -- , SUM (tmpDataUnion.AmountSale_Weight) OVER (PARTITION BY tmpDataUnion.MovementId_Order, tmpDataUnion.GoodsId, tmpDataUnion.GoodsKindId) AS TotalSale_Weight
                   FROM tmpDataUnion
                   GROUP BY tmpDataUnion.MovementId_Sale
                          , tmpDataUnion.OperDate_Sale
@@ -627,6 +632,55 @@ BEGIN
                          , tmpDataUnion.PaidKindId
                          , tmpDataUnion.GoodsKindId
                          , tmpDataUnion.GoodsId
+                  )
+
+    , tmpData AS (SELECT tmpDataUnion.MovementId_Sale
+                       , tmpDataUnion.OperDate_Sale
+                       , tmpDataUnion.OperDatePartner_Sale
+                       , tmpDataUnion.InvNumber_Sale
+                       
+                       , tmpDataUnion.MovementId_Order
+                       , tmpDataUnion.OperDate_Order
+                       , tmpDataUnion.OperDatePartner_Order
+                       , tmpDataUnion.InvNumber_Order
+                       , tmpDataUnion.InvNumberPartner_Order
+
+                       , tmpDataUnion.FromId
+                       , tmpDataUnion.RouteId
+                       , tmpDataUnion.PaidKindId
+
+                       , tmpDataUnion.GoodsKindId
+                       , tmpDataUnion.GoodsId
+
+                       ,  (tmpDataUnion.AmountSumm1)           AS AmountSumm1
+                       ,  (tmpDataUnion.AmountSumm2)           AS AmountSumm2
+                       ,  (tmpDataUnion.AmountSummTotal)       AS AmountSummTotal
+                       ,  (tmpDataUnion.AmountSumm_Dozakaz)    AS AmountSumm_Dozakaz
+                       ,  (tmpDataUnion.Amount_Weight1)        AS Amount_Weight1
+                       ,  (tmpDataUnion.Amount_Sh1)            AS Amount_Sh1
+                       ,  (tmpDataUnion.Amount_Weight2)        AS Amount_Weight2
+                       ,  (tmpDataUnion.Amount_Sh2)            AS Amount_Sh2
+                       ,  (tmpDataUnion.Amount_Weight_Itog)    AS Amount_Weight_Itog
+                       ,  (tmpDataUnion.Amount_Sh_Itog)        AS Amount_Sh_Itog
+                       ,  (tmpDataUnion.Amount_Weight_Dozakaz) AS Amount_Weight_Dozakaz
+                       ,  (tmpDataUnion.Amount_Sh_Dozakaz)     AS Amount_Sh_Dozakaz
+                       ,  (tmpDataUnion.Amount12)              AS Amount12
+                       ,  (tmpDataUnion.Amount_Dozakaz)        AS Amount_Dozakaz
+                       ,  (tmpDataUnion.AmountSalePartner_Weight)  AS AmountSalePartner_Weight
+                       ,  (tmpDataUnion.AmountSalePartner_Sh)      AS AmountSalePartner_Sh
+                       ,  (tmpDataUnion.AmountSale_Weight)     AS AmountSale_Weight
+                       ,  (tmpDataUnion.AmountSale_Sh)         AS AmountSale_Sh
+                       ,  (tmpDataUnion.AmountSale)            AS AmountSale
+                       ,  (tmpDataUnion.PriceSale)             AS PriceSale
+                       ,  (tmpDataUnion.SumSale)               AS SumSale
+
+                       -- итого по заявке, если 1 заявка и несколько продаж нужно свернуть суммы
+                      , SUM (COALESCE (tmpDataUnion.AmountSale_Sh,0))     OVER (PARTITION BY tmpDataUnion.MovementId_Order, tmpDataUnion.GoodsId, tmpDataUnion.GoodsKindId) AS TotalSale_Sh
+                      , SUM (COALESCE (tmpDataUnion.AmountSale_Weight,0)) OVER (PARTITION BY tmpDataUnion.MovementId_Order, tmpDataUnion.GoodsId, tmpDataUnion.GoodsKindId) AS TotalSale_Weight
+                      , SUM (COALESCE (tmpDataUnion.Amount_Sh_Itog,0) + COALESCE (tmpDataUnion.Amount_Sh_Dozakaz,0))         OVER (PARTITION BY tmpDataUnion.MovementId_Order, tmpDataUnion.GoodsId, tmpDataUnion.GoodsKindId) AS TotalAmount_Sh
+                      , SUM (COALESCE (tmpDataUnion.Amount_Weight_Itog,0) + COALESCE (tmpDataUnion.Amount_Weight_Dozakaz,0)) OVER (PARTITION BY tmpDataUnion.MovementId_Order, tmpDataUnion.GoodsId, tmpDataUnion.GoodsKindId) AS TotalAmount_Weight
+                      , SUM (COALESCE (tmpDataUnion.Amount12,0) + COALESCE (tmpDataUnion.Amount_Dozakaz,0))                  OVER (PARTITION BY tmpDataUnion.MovementId_Order, tmpDataUnion.GoodsId, tmpDataUnion.GoodsKindId) AS TotalAmount
+                  FROM tmpData1 AS tmpDataUnion
                   )
 
     , tmpData_All AS (SELECT tmp.OperDate_Order
@@ -662,8 +716,31 @@ BEGIN
                            , tmp.AmountSale
                            , tmp.PriceSale
                            , tmp.SumSale
+                           
+                          , CASE WHEN COALESCE (tmp.TotalSale_Sh,0) - COALESCE (tmp.TotalAmount_Sh,0) > 0
+                                 THEN COALESCE (tmp.TotalSale_Sh,0) - COALESCE (tmp.TotalAmount_Sh,0)
+                                 ELSE 0
+                            END :: TFloat AS CountDiff_B
+                          , CASE WHEN       COALESCE (tmp.TotalSale_Sh,0) - COALESCE (tmp.TotalAmount_Sh,0) < 0
+                                 THEN -1 * (COALESCE (tmp.TotalSale_Sh,0) - COALESCE (tmp.TotalAmount_Sh,0))
+                                 ELSE 0
+                            END :: TFloat AS CountDiff_M
 
-                          , CASE WHEN COALESCE (tmp.AmountSale_Sh,0) - COALESCE (tmp.Amount_Sh_Itog,0) - COALESCE (tmp.Amount_Sh_Dozakaz,0) > 0
+                          , CASE WHEN COALESCE (tmp.TotalSale_Weight,0) - COALESCE (tmp.TotalAmount_Weight,0) > 0
+                                 THEN COALESCE (tmp.TotalSale_Weight,0) - COALESCE (tmp.TotalAmount_Weight,0)
+                                 ELSE 0
+                            END :: TFloat AS WeightDiff_B
+                          , CASE WHEN       COALESCE (tmp.TotalSale_Weight,0) - COALESCE (tmp.TotalAmount_Weight,0) < 0
+                                 THEN -1 * (COALESCE (tmp.TotalSale_Weight,0) - COALESCE (tmp.TotalAmount_Weight,0))
+                                 ELSE 0
+                            END :: TFloat AS WeightDiff_M
+
+                           --кол-во заказа по % откл.
+                          , (COALESCE (tmp.TotalAmount,0) * vbDiffTax / 100) :: TFloat AS AmountTax
+                          --вес заказа по % откл.
+                          , (COALESCE (tmp.TotalAmount_Weight,0) * vbDiffTax / 100) :: TFloat AS WeightTax
+
+                         /* , CASE WHEN COALESCE (tmp.AmountSale_Sh,0) - COALESCE (tmp.Amount_Sh_Itog,0) - COALESCE (tmp.Amount_Sh_Dozakaz,0) > 0
                                  THEN COALESCE (tmp.AmountSale_Sh,0) - COALESCE (tmp.Amount_Sh_Itog,0) - COALESCE (tmp.Amount_Sh_Dozakaz,0)
                                  ELSE 0
                             END :: TFloat AS CountDiff_B
@@ -680,11 +757,12 @@ BEGIN
                                  THEN -1 * (COALESCE (tmp.AmountSale_Weight,0) - COALESCE (tmp.Amount_Weight_Itog,0)- COALESCE (tmp.Amount_Weight_Dozakaz,0))
                                  ELSE 0
                             END :: TFloat AS WeightDiff_M
+                            
                            --кол-во заказа по % откл.
                           , ((COALESCE (tmp.Amount12,0) + COALESCE (tmp.Amount_Dozakaz,0)) * vbDiffTax / 100) :: TFloat AS AmountTax
                           --вес заказа по % откл.
                           , ((COALESCE (tmp.Amount_Weight_Itog,0)+ COALESCE (tmp.Amount_Weight_Dozakaz,0)) * vbDiffTax / 100) :: TFloat AS WeightTax
-
+                          */
                        FROM tmpData AS tmp
                       )
 
@@ -750,6 +828,7 @@ BEGIN
            , tmpMovement.AmountTax    :: TFloat AS AmountTax
            , vbDiffTax                :: TFloat AS DiffTax
            , CASE WHEN ( tmpMovement.CountDiff_M <> 0 AND tmpMovement.CountDiff_M >= tmpMovement.AmountTax) OR (tmpMovement.WeightDiff_M <> 0 AND tmpMovement.WeightDiff_M >= WeightTax ) THEN TRUE ELSE FALSE END AS isPrint_M
+           , SUM (CASE WHEN ( tmpMovement.CountDiff_M <> 0 AND tmpMovement.CountDiff_M >= tmpMovement.AmountTax) OR (tmpMovement.WeightDiff_M <> 0 AND tmpMovement.WeightDiff_M >= WeightTax ) THEN 1 ELSE 0 END) OVER (PARTITION BY Object_From.Id, tmpMovement.InvNumber_Order)  ::TFloat AS CountPrint_M
        FROM tmpData_All AS tmpMovement
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
           LEFT JOIN ObjectDesc AS ObjectDesc_From ON ObjectDesc_From.Id = Object_From.DescId

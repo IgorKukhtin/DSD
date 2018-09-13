@@ -738,6 +738,12 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             VisibleForCustomization = False
             Width = 60
           end
+          object cxGridDBTableViewColumn1: TcxGridDBColumn
+            DataBinding.FieldName = 'CountPrint_M'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 20
+          end
         end
       end
     end
@@ -1622,7 +1628,7 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 872
+    Left = 904
     Top = 8
   end
   object FormParams: TdsdFormParams
