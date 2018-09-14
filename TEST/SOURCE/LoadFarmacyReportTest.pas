@@ -59,6 +59,8 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+  {
+end;
   //доп. соглащения Соц. проект
   {LoadReportFromFile('PrintReport_CheckSP_4474509', ReportPath + '\PrintReport_CheckSP_4474509.fr3');
   LoadReportFromFile('PrintReport_CheckSP_4474508', ReportPath + '\PrintReport_CheckSP_4474508.fr3');
@@ -67,17 +69,16 @@ begin
   LoadReportFromFile('PrintReport_CheckSP_4212299', ReportPath + '\PrintReport_CheckSP_4212299.fr3');
 
   LoadReportFromFile('Реестр лекарственных препаратов', ReportPath + '\Реестр лекарственных препаратов.fr3');
-  LoadReportFromFile('Счет соц.проект', ReportPath + '\Счет соц.проект.fr3');
 
   LoadReportFromFile('Счет постановление 1303', ReportPath + '\Счет постановление 1303.fr3');
-  }
   LoadReportFromFile('Pеестр по постановлению 1303', ReportPath + '\Pеестр по постановлению 1303.fr3');
-
+  }
   LoadReportFromFile('Отчет по продажам Соц.проекта', ReportPath + '\Отчет по продажам Соц.проекта.fr3');
-
+  LoadReportFromFile('Счет соц.проект', ReportPath + '\Счет соц.проект.fr3');
   LoadReportFromFile('Отчет по продажам Соц.проекта(пост.152)', ReportPath + '\Отчет по продажам Соц.проекта(пост.152).fr3');
+  LoadReportFromFile('PrintReport_CheckSP_4474558', ReportPath + '\PrintReport_CheckSP_4474558.fr3');
   exit;
-
+  {
   LoadReportFromFile('Печать стикера самоклейки', ReportPath + '\Печать стикера самоклейки.fr3');
   LoadReportFromFile('Копия чека клиенту', ReportPath + '\Копия чека клиенту.fr3');
   LoadReportFromFile('Копия чека клиенту(продажа)', ReportPath + '\Копия чека клиенту(продажа).fr3');
@@ -93,7 +94,7 @@ begin
   LoadReportFromFile('Возвратная_накладная', ReportPath + '\Возвратная_накладная.fr3');
   LoadReportFromFile('Отчет по продажам на кассах', ReportPath + '\Отчет по продажам на кассах.fr3');
   LoadReportFromFile('Отчет Доходности', ReportPath + '\Отчет Доходности.fr3');
-
+   }
 end;
 
 procedure TLoadReportTest.SetUp;

@@ -72,6 +72,7 @@ type
     TotalSumm_Invoice: TcxGridDBColumn;
     JuridicalId: TcxGridDBColumn;
     isPrintLast: TcxGridDBColumn;
+    HospitalId: TcxGridDBColumn;
   private
     { Private declarations }
   public
