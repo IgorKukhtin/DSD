@@ -58,14 +58,14 @@ BEGIN
             INTO vbMovementDescId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePrice, vbRoundingTo10
       FROM Movement
            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                    ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
-                   AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
+                                    AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                    ON MovementFloat_VATPercent.MovementId = Movement.Id
-                   AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+                                   ON MovementFloat_VATPercent.MovementId = Movement.Id
+                                  AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                    ON MovementFloat_ChangePercent.MovementId = Movement.Id
-                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                                   ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                  AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
            LEFT JOIN MovementFloat AS MovementFloat_ChangePrice
                                    ON MovementFloat_ChangePrice.MovementId =  Movement.Id
                                   AND MovementFloat_ChangePrice.DescId = zc_MovementFloat_ChangePrice()

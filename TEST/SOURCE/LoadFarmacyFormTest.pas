@@ -60,6 +60,7 @@ type
     procedure LoadLoadFormTest;
     procedure LoadLossDebtFormTest;
     procedure LoadLossFormTest;
+    procedure LoadListDiffFormTest;
     procedure LoadMakerFormTest;
     procedure LoadMargineCategory;
     procedure LoadMarginCategoryMovement;
@@ -1252,6 +1253,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLossForm');
+end;
+
+procedure TLoadFormTest.LoadListDiffFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TListDiffJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TListDiffJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TListDiffForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TListDiffForm');
 end;
 
 procedure TLoadFormTest.LoadArticleLossFormTest;
