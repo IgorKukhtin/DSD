@@ -29,6 +29,7 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
              , AmountPartner_Sh      TFloat
              , Summ                  TFloat
              , Summ_ProfitLoss       TFloat
+             , TotalSumm             TFloat
 
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyId_Detail Integer, InfoMoneyCode_Detail Integer, InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar, InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
@@ -165,7 +166,7 @@ BEGIN
                                        , tmpMI_ContainerIn.LocationId                       AS LocationId
                                        , SUM (tmpMI_ContainerIn.Amount)                     AS Amount
                                        , SUM (tmpMI_ContainerIn.AmountPartner)              AS AmountPartner
-                                       , SUM (tmpMI_ContainerIn.AmountPartner)              AS Summ
+                                       , SUM (tmpMI_ContainerIn.Summ)                       AS Summ
                                        , SUM (tmpMI_ContainerIn.Summ_ProfitLoss_partner)    AS Summ_ProfitLoss_partner
                                        , SUM (tmpMI_ContainerIn.Summ_ProfitLoss)            AS Summ_ProfitLoss
                                     
@@ -367,6 +368,7 @@ BEGIN
            , CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpOperationGroup.AmountPartner ELSE 0 END                    :: TFloat AS AmountPartner_Sh
            , (tmpOperationGroup.Summ - tmpOperationGroup.Summ_ProfitLoss)                                                       :: TFloat AS Summ
            , (tmpOperationGroup.Summ_ProfitLoss + tmpOperationGroup.Summ_ProfitLoss_partner)                                    :: TFloat AS Summ_ProfitLoss
+           , tmpOperationGroup.Summ                                                                                             :: TFloat AS TotalSumm
            
            , View_InfoMoney.InfoMoneyId
            , View_InfoMoney.InfoMoneyCode

@@ -718,6 +718,12 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             VisibleForCustomization = False
             Width = 30
           end
+          object HospitalId: TcxGridDBColumn
+            DataBinding.FieldName = 'HospitalId'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 30
+          end
         end
       end
       object cbisInsert: TcxCheckBox
@@ -1336,6 +1342,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
     end
     object bbPrint1: TdxBarButton
       Action = actPrint1
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086#1089#1090'.152'
       Category = 0
     end
     object dxBarControlContainerItem1: TdxBarControlContainerItem

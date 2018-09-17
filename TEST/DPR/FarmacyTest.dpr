@@ -606,7 +606,9 @@ uses
   Report_Check_PriceChangeDialog in '..\..\FormsFarmacy\Report\Report_Check_PriceChangeDialog.pas' {Report_Check_PriceChangeDialogForm: TParentForm},
   MarginCategory_Movement2 in '..\..\FormsFarmacy\Document\MarginCategory_Movement2.pas' {MarginCategory_Movement2Form: TParentForm},
   MarginCategoryJournal2 in '..\..\FormsFarmacy\Document\MarginCategoryJournal2.pas' {MarginCategoryJournal2Form: TParentForm},
-  Report_TestingUser in '..\..\FormsFarmacy\Report\Report_TestingUser.pas' {Report_TestingUserForm: TParentForm};
+  Report_TestingUser in '..\..\FormsFarmacy\Report\Report_TestingUser.pas' {Report_TestingUserForm: TParentForm},
+  ListDiffJournal in '..\..\FormsFarmacy\Document\ListDiffJournal.pas' {ListDiffJournalForm: TParentForm},
+  ListDiff in '..\..\FormsFarmacy\Document\ListDiff.pas' {ListDiffForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

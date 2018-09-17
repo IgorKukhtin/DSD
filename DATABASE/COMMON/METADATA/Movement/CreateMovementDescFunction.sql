@@ -300,10 +300,14 @@ CREATE OR REPLACE FUNCTION zc_Movement_TestingUser() RETURNS Integer AS $BODY$BE
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_TestingUser', 'Результаты тестирования фармацевтов' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_TestingUser');
 
+CREATE OR REPLACE FUNCTION zc_Movement_ListDiff() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_ListDiff'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_ListDiff', 'Лист отказов' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_ListDiff');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 15.09.18         * zc_Movement_ListDiff
  11.09.18                                                                                     * zc_Movement_TestingUser
  10.09.18         * zc_Movement_MarginCategoryUnit
  20.08.18         * zc_Movement_RepriceChange

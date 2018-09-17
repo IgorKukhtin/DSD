@@ -444,6 +444,8 @@ type
     N166: TMenuItem;
     actReport_TestingUser: TdsdOpenForm;
     N167: TMenuItem;
+    actListDiff: TdsdOpenForm;
+    N168: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

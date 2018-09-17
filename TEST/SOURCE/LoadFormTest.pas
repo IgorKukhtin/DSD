@@ -1586,6 +1586,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Income_OlapForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Income_OlapForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Income_OlapDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Income_OlapDialogForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_OlapForm');

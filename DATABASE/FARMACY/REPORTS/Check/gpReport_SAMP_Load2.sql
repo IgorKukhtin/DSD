@@ -160,8 +160,8 @@ BEGIN
 
   --¬ыбираем период с мин и макс продажами
   , tmpMin_Max AS (SELECT tmp.GoodsId
-                        , tmp.PriceMax
-                        , tmp.PriceMin
+                       -- , tmp.PriceMax
+                       -- , tmp.PriceMin
                         , SUM (CASE WHEN tmp.OrdMax = 1 THEN tmp.Amount ELSE 0 END)     AS AmountMax
                         , SUM (CASE WHEN tmp.OrdMax = 1 THEN tmp.NumPeriod ELSE 0 END)  AS NumMax
                         , SUM (CASE WHEN tmp.OrdMin = 1 THEN tmp.Amount ELSE 0 END)     AS AmountMin
@@ -175,8 +175,8 @@ BEGIN
                          ) AS tmp
                    WHERE tmp.OrdMax = 1 OR tmp.OrdMin = 1
                    GROUP BY tmp.GoodsId
-                          , tmp.PriceMax
-                          , tmp.PriceMin
+                         -- , tmp.PriceMax
+                         -- , tmp.PriceMin
                    )
   -- остатки
   , tmpRemains AS (SELECT tmpPriceGoods.GoodsId                AS GoodsId

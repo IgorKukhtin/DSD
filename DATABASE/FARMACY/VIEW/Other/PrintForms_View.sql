@@ -18,6 +18,7 @@ AS
                                         , 4474307        -- "Комунальний заклад "ДЦПМСД №4""
                                         , 4474556        -- "Комунальний заклад "ДЦПМСД №9""
                                         , 4212299        -- "Комунальний заклад "ДЦПМСД №11""
+                                        , 4474558        -- КНП Кам’янської міської ради "ЦПМСД N3"
                                          )
       ;
 
@@ -54,3 +55,4 @@ AS
 
 ALTER TABLE PrintForms_View OWNER TO postgres;
 */
+--select * from gpGet_ReportNameSP(inJuridicalId := 393054 , inPartnerMedicalId := 4474558 ,  inSession := '3');

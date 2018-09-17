@@ -60,6 +60,7 @@ type
     procedure LoadLoadFormTest;
     procedure LoadLossDebtFormTest;
     procedure LoadLossFormTest;
+    procedure LoadListDiffFormTest;
     procedure LoadMakerFormTest;
     procedure LoadMargineCategory;
     procedure LoadMarginCategoryMovement;
@@ -1254,6 +1255,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TLossForm');
 end;
 
+procedure TLoadFormTest.LoadListDiffFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TListDiffJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TListDiffJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TListDiffForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TListDiffForm');
+end;
+
 procedure TLoadFormTest.LoadArticleLossFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TArticleLossForm'));
@@ -1550,13 +1559,13 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSPEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMemberSPEditForm');
     //exit;
-  }
+
   // отчет реестр по постановлению 1303
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPDialogForm');
-  { exit;
+  exit;
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGroupMemberSPForm');
