@@ -86,6 +86,7 @@ inherited BankStatementForm: TBankStatementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+            Options.Editing = False
             Width = 83
           end
           object Debet: TcxGridDBColumn
@@ -369,6 +370,21 @@ inherited BankStatementForm: TBankStatementForm
       Properties.ReadOnly = True
       TabOrder = 7
       Width = 160
+    end
+    object cxLabel6: TcxLabel
+      Left = 545
+      Top = 2
+      Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+    end
+    object edServiceDate: TcxDateEdit
+      Left = 545
+      Top = 20
+      EditValue = 41640d
+      Properties.DisplayFormat = 'mmmm yyyy'
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 9
+      Width = 97
     end
   end
   object cxSplitter: TcxSplitter [2]
@@ -978,10 +994,17 @@ inherited BankStatementForm: TBankStatementForm
       item
         Name = 'ioServiceDate'
         Value = 'NULL'
+        Component = edServiceDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioServiceDate'
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'ServiceDate'
         DataType = ftDateTime
-        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

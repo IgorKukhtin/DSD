@@ -80,6 +80,8 @@ type
     MovementId_Invoice: TcxGridDBColumn;
     Comment_Invoice: TcxGridDBColumn;
     ServiceDate: TcxGridDBColumn;
+    cxLabel6: TcxLabel;
+    edServiceDate: TcxDateEdit;
   private
     { Private declarations }
   public
