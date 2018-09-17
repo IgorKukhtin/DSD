@@ -24,7 +24,8 @@ BEGIN
                                               ) AS UserRole ON UserRole.RoleId = DefaultValue.UserKeyId
                               WHERE DefaultKeys.Key = REPLACE (inDefaultKey, '-zc_Object_Unit', 'zc_Object_Unit')
             )
-    OR REPLACE (inDefaultKey, '-zc_Object_Unit', 'zc_Object_Unit') <> inDefaultKey
+       -- или с МИНУСОМ
+    OR REPLACE (inDefaultKey, '-zc_Object_Unit', 'zc_Object_Unit') <> inDefaultKey -- !!!вот здесь имееет значение этот МИНУС!!!
   THEN
   RETURN COALESCE (CASE WHEN 1=0 AND 0 < (SELECT RoleId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
                              THEN '-1' -- !!!захардодил для Pharmacy!!!
@@ -39,6 +40,37 @@ BEGIN
                               ORDER BY UserRole.OrderId
                               LIMIT 1)
                    END, '0') :: TVarChar;
+  -- если у Роли или у Пользователя - отсутсвует Default - Unit, тогда будем искать любой из zc_Object_Retail
+  ELSEIF
+        NOT EXISTS (SELECT 1
+                              FROM DefaultValue
+                                   INNER JOIN DefaultKeys ON DefaultKeys.Id = DefaultValue.DefaultKeyId
+                                   INNER JOIN (SELECT RoleId, 2 AS OrderId FROM ObjectLink_UserRole_View WHERE UserId = inUserId
+                                              UNION
+                                               SELECT inUserId AS RoleId, 1 AS OrderId
+                                              ) AS UserRole ON UserRole.RoleId = DefaultValue.UserKeyId
+                              WHERE DefaultKeys.Key = REPLACE (inDefaultKey, '-zc_Object_Unit', 'zc_Object_Unit')
+            )
+    AND REPLACE (inDefaultKey, '-zc_Object_Unit', 'zc_Object_Unit') = 'zc_Object_Unit'
+
+  THEN
+  RETURN COALESCE ((WITH tmpRetail AS (SELECT zfConvert_StringToFloat (lpGet_DefaultValue ('zc_Object_Retail', inUserId)) :: Integer AS RetailId)
+                    SELECT MIN (OL_Unit_Juridical.ObjectId)
+                    FROM tmpRetail
+                         INNER JOIN ObjectLink AS OL_Juridical_Retail
+                                               ON OL_Juridical_Retail.ChildObjectId = tmpRetail.RetailId
+                                              AND OL_Juridical_Retail.DescId        = zc_ObjectLink_Juridical_Retail()
+                         INNER JOIN ObjectLink AS OL_Unit_Juridical
+                                               ON OL_Unit_Juridical.ChildObjectId = OL_Juridical_Retail.ObjectId
+                                              AND OL_Unit_Juridical.DescId        = zc_ObjectLink_Unit_Juridical()
+                         INNER JOIN Object AS Object_Unit ON Object_Unit.Id       = OL_Unit_Juridical.ObjectId
+                                                         AND Object_Unit.isErased = FALSE
+                         LEFT JOIN ObjectLink AS OL_Unit_Parent
+                                              ON OL_Unit_Parent.ChildObjectId = OL_Unit_Juridical.ObjectId
+                                             AND OL_Unit_Parent.DescId        = zc_ObjectLink_Unit_Parent()
+                    WHERE OL_Unit_Parent.ObjectId IS NULL -- т.е. это НЕ Группа
+                   ), '0') :: TVarChar;
+  
   ELSE
 
   RETURN COALESCE (CASE WHEN 1=0 AND 0 < (SELECT RoleId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())

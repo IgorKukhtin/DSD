@@ -940,11 +940,11 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbSignList'
+          ItemName = 'bbInsertUpdateMISignYesList'
         end
         item
           Visible = True
-          ItemName = 'bbSignNOList'
+          ItemName = 'bbInsertUpdateMISignNoList'
         end
         item
           Visible = True
@@ -1018,9 +1018,10 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbGridToExcel: TdxBarButton
-      Action = dsdGridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object bbReCompleteAll: TdxBarButton
@@ -1040,19 +1041,19 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       Category = 0
     end
     object bbUpdate_ChangePrice: TdxBarButton
-      Action = macUpdate_ChangePrice
+      Action = macUpdate_ChangePriceList
       Category = 0
     end
-    object bbSignList: TdxBarButton
-      Action = actInsertUpdateMISignList
+    object bbInsertUpdateMISignYesList: TdxBarButton
+      Action = mactInsertUpdateMISignYesList
       Category = 0
     end
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
     end
-    object bbSignNOList: TdxBarButton
-      Action = actInsertUpdateMISignNOList
+    object bbInsertUpdateMISignNoList: TdxBarButton
+      Action = mactInsertUpdateMISignNoList
       Category = 0
     end
   end
@@ -1074,7 +1075,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
       Grid = cxGrid
@@ -1299,7 +1300,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       Hint = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
     end
-    object macSUpdate_ChangePrice: TMultiAction
+    object mactUpdate_ChangePrice: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1307,14 +1308,13 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
           Action = actUpdate_ChangePrice
         end>
       View = cxGridDBTableView
-      ImageIndex = 27
     end
-    object macUpdate_ChangePrice: TMultiAction
+    object macUpdate_ChangePriceList: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = macSUpdate_ChangePrice
+          Action = mactUpdate_ChangePrice
         end
         item
           Action = actRefresh
@@ -1497,39 +1497,37 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         end>
       Caption = 'ChangePrice'
     end
-    object actInsertUpdateMISign0: TdsdExecStoredProc
-      Category = 'DSDLib'
+    object actInsertUpdateMISignYes: TdsdExecStoredProc
+      Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMISign
+      StoredProc = spInsertUpdateMISign_Yes
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateMISign
+          StoredProc = spInsertUpdateMISign_Yes
         end
         item
         end>
       Caption = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
-      ImageIndex = 58
     end
-    object actInsertUpdateMISign1: TMultiAction
-      Category = 'DSDLib'
+    object mactInsertUpdateMISignYes: TMultiAction
+      Category = 'Sign'
       MoveParams = <>
       ActionList = <
         item
-          Action = actInsertUpdateMISign0
+          Action = actInsertUpdateMISignYes
         end>
       View = cxGridDBTableView
       Caption = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
-      ImageIndex = 58
     end
-    object actInsertUpdateMISignList: TMultiAction
-      Category = 'DSDLib'
+    object mactInsertUpdateMISignYesList: TMultiAction
+      Category = 'Sign'
       MoveParams = <>
       ActionList = <
         item
-          Action = actInsertUpdateMISign1
+          Action = mactInsertUpdateMISignYes
         end
         item
           Action = actRefresh
@@ -1588,9 +1586,12 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       ReportNameParam.Value = 'PrintMovement_IncomeFuel'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actInsertUpdateMISignNO: TdsdExecStoredProc
-      Category = 'DSDLib'
+    object actInsertUpdateMISignNo: TdsdExecStoredProc
+      Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMISign_No
@@ -1602,26 +1603,24 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         end>
       Caption = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
-      ImageIndex = 52
     end
-    object actInsertUpdateMISignNO1: TMultiAction
-      Category = 'DSDLib'
+    object mactInsertUpdateMISignNo: TMultiAction
+      Category = 'Sign'
       MoveParams = <>
       ActionList = <
         item
-          Action = actInsertUpdateMISignNO
+          Action = actInsertUpdateMISignNo
         end>
       View = cxGridDBTableView
       Caption = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
-      ImageIndex = 52
     end
-    object actInsertUpdateMISignNOList: TMultiAction
-      Category = 'DSDLib'
+    object mactInsertUpdateMISignNoList: TMultiAction
+      Category = 'Sign'
       MoveParams = <>
       ActionList = <
         item
-          Action = actInsertUpdateMISignNO1
+          Action = mactInsertUpdateMISignNo
         end
         item
           Action = actRefresh
@@ -1867,7 +1866,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     Left = 440
     Top = 184
   end
-  object spInsertUpdateMISign: TdsdStoredProc
+  object spInsertUpdateMISign_Yes: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Sign'
     DataSets = <>
     OutputType = otResult

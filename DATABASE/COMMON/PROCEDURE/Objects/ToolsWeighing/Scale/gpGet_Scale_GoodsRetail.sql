@@ -58,7 +58,8 @@ BEGIN
     IF COALESCE (inGoodsPropertyId, 0) = 0
     THEN
         -- inGoodsPropertyId:= 0;
-        inGoodsPropertyId:= 83956; -- Фоззи
+        inGoodsPropertyId:= 713462; -- Фоззи
+        -- inGoodsPropertyId:= 83956; -- Фора
         -- inGoodsPropertyId:= 83963; -- Ашан
     END IF;
 

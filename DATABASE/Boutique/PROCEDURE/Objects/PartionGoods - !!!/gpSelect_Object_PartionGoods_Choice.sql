@@ -106,7 +106,8 @@ BEGIN
                         INNER JOIN ObjectHistory AS ObjectHistory_DiscountPeriodItem
                                                  ON ObjectHistory_DiscountPeriodItem.ObjectId = ObjectLink_DiscountPeriodItem_Goods.ObjectId
                                                 AND ObjectHistory_DiscountPeriodItem.DescId   = zc_ObjectHistory_DiscountPeriodItem()
-                                                AND ObjectHistory_DiscountPeriodItem.EndDate  = zc_DateEnd()
+                                                -- AND ObjectHistory_DiscountPeriodItem.EndDate  = zc_DateEnd()
+                                                AND ObjectHistory_DiscountPeriodItem.StartDate <= CURRENT_DATE AND ObjectHistory_DiscountPeriodItem.EndDate > CURRENT_DATE
                         LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_DiscountPeriodItem_Value
                                                      ON ObjectHistoryFloat_DiscountPeriodItem_Value.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
                                                     AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()

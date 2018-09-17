@@ -188,12 +188,12 @@ type
     SignInternalChoiceForm: TOpenChoiceForm;
     SignProtocolOpenForm: TdsdOpenForm;
     bbSignProtocolOpenForm: TdxBarButton;
-    spInsertUpdateMISign: TdsdStoredProc;
-    actInsertUpdateMISign: TdsdExecStoredProc;
-    bbInsertUpdateMISign: TdxBarButton;
+    spInsertUpdateMISign_Yes: TdsdStoredProc;
+    actInsertUpdateMISignYes: TdsdExecStoredProc;
+    bbInsertUpdateMISignYes: TdxBarButton;
     spInsertUpdateMISign_No: TdsdStoredProc;
-    actInsertUpdateMISignNO: TdsdExecStoredProc;
-    bbInsertUpdateMISignNO: TdxBarButton;
+    actInsertUpdateMISignNo: TdsdExecStoredProc;
+    bbInsertUpdateMISignNo: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;

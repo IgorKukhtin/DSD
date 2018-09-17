@@ -4,8 +4,7 @@ inherited PromoJournalForm: TPromoJournalForm
   ClientWidth = 1084
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -311
-  ExplicitTop = 0
+  ExplicitLeft = -232
   ExplicitWidth = 1100
   ExplicitHeight = 465
   PixelsPerInch = 96
@@ -370,6 +369,9 @@ inherited PromoJournalForm: TPromoJournalForm
       ReportNameParam.Value = #1040#1082#1094#1080#1103
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactUpdate_Movement_Promo_Data: TMultiAction
       Category = 'Update_Promo_Data'
@@ -517,39 +519,37 @@ inherited PromoJournalForm: TPromoJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actInsertUpdateMISign0: TdsdExecStoredProc
+    object actInsertUpdateMISignYes: TdsdExecStoredProc
       Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMISign
+      StoredProc = spInsertUpdateMISign_Yes
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateMISign
+          StoredProc = spInsertUpdateMISign_Yes
         end
         item
         end>
       Caption = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
-      ImageIndex = 58
     end
-    object actInsertUpdateMISign1: TMultiAction
+    object mactInsertUpdateMISignYes: TMultiAction
       Category = 'Sign'
       MoveParams = <>
       ActionList = <
         item
-          Action = actInsertUpdateMISign0
+          Action = actInsertUpdateMISignYes
         end>
       View = cxGridDBTableView
       Caption = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
-      ImageIndex = 58
     end
-    object actInsertUpdateMISignList: TMultiAction
+    object mactInsertUpdateMISignYesList: TMultiAction
       Category = 'Sign'
       MoveParams = <>
       ActionList = <
         item
-          Action = actInsertUpdateMISign1
+          Action = mactInsertUpdateMISignYes
         end
         item
           Action = actRefresh
@@ -560,7 +560,7 @@ inherited PromoJournalForm: TPromoJournalForm
       Hint = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1042#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
       ImageIndex = 58
     end
-    object actInsertUpdateMISignNO: TdsdExecStoredProc
+    object actInsertUpdateMISignNo: TdsdExecStoredProc
       Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -573,26 +573,24 @@ inherited PromoJournalForm: TPromoJournalForm
         end>
       Caption = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
-      ImageIndex = 52
     end
-    object actInsertUpdateMISignNO1: TMultiAction
+    object mactInsertUpdateMISignNo: TMultiAction
       Category = 'Sign'
       MoveParams = <>
       ActionList = <
         item
-          Action = actInsertUpdateMISignNO
+          Action = actInsertUpdateMISignNo
         end>
       View = cxGridDBTableView
       Caption = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
-      ImageIndex = 52
     end
-    object actInsertUpdateMISignNOList: TMultiAction
+    object mactInsertUpdateMISignNoList: TMultiAction
       Category = 'Sign'
       MoveParams = <>
       ActionList = <
         item
-          Action = actInsertUpdateMISignNO1
+          Action = mactInsertUpdateMISignNo
         end
         item
           Action = actRefresh
@@ -719,11 +717,11 @@ inherited PromoJournalForm: TPromoJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbSignList'
+          ItemName = 'bbInsertUpdateMISignYesList'
         end
         item
           Visible = True
-          ItemName = 'bbSignNOList'
+          ItemName = 'bbInsertUpdateMISignNoList'
         end
         item
           Visible = True
@@ -754,6 +752,9 @@ inherited PromoJournalForm: TPromoJournalForm
           ItemName = 'dxBarStatic'
         end>
     end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
+    end
     object dxBarButton1: TdxBarButton
       Action = actPrint
       Category = 0
@@ -762,12 +763,12 @@ inherited PromoJournalForm: TPromoJournalForm
       Action = actUpdate_Movement_Promo_Data
       Category = 0
     end
-    object bbSignList: TdxBarButton
-      Action = actInsertUpdateMISignList
+    object bbInsertUpdateMISignYesList: TdxBarButton
+      Action = mactInsertUpdateMISignYesList
       Category = 0
     end
-    object bbSignNOList: TdxBarButton
-      Action = actInsertUpdateMISignNOList
+    object bbInsertUpdateMISignNoList: TdxBarButton
+      Action = mactInsertUpdateMISignNoList
       Category = 0
     end
   end
@@ -968,7 +969,7 @@ inherited PromoJournalForm: TPromoJournalForm
     Left = 640
     Top = 48
   end
-  object spInsertUpdateMISign: TdsdStoredProc
+  object spInsertUpdateMISign_Yes: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Sign'
     DataSets = <>
     OutputType = otResult

@@ -81,6 +81,16 @@ type
     spSelectPrint_All: TdsdStoredProc;
     actPrint_All: TdsdPrintAction;
     bbPrint_All: TdxBarButton;
+    spInsertUpdateMISign_Yes: TdsdStoredProc;
+    spInsertUpdateMISign_No: TdsdStoredProc;
+    actInsertUpdateMISignYes: TdsdExecStoredProc;
+    mactInsertUpdateMISignYes: TMultiAction;
+    mactInsertUpdateMISignYesList: TMultiAction;
+    actInsertUpdateMISignNo: TdsdExecStoredProc;
+    mactInsertUpdateMISignNo: TMultiAction;
+    mactInsertUpdateMISignNoList: TMultiAction;
+    bbInsertUpdateMISignYesList: TdxBarButton;
+    bbInsertUpdateMISignNoList: TdxBarButton;
   private
     { Private declarations }
   public

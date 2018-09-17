@@ -25,6 +25,7 @@ RETURNS TABLE (CarModelName TVarChar, CarId Integer, CarCode Integer, CarName TV
              , outSumm_Zatraty       TFloat
              , outSumm_Kompensaciya  TFloat
              , outSumm_Juridical     TFloat
+             , outSumm_virt          TFloat
              , outSumm_Transport     TFloat
              )
 AS
@@ -197,10 +198,10 @@ BEGIN
                         -- Сумма = Товар в пути
                       , SUM (CASE WHEN MIContainer.DescId = zc_Container_Summ()
                                    AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                   AND View_Account.AccountDirectionId = zc_Enum_AccountDirection_110100() -- Транзит + товар в пути
+                                   AND View_Account.AccountGroupId = zc_Enum_AccountGroup_110000() -- Транзит
                                        THEN MIContainer.Amount
                                   ELSE 0
-                             END) AS Summ_virt
+                             END) AS outSumm_virt
 
                  FROM tmpMIContainer_m AS MIContainer
                       LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = MIContainer.AccountId
@@ -266,6 +267,7 @@ BEGIN
                        , SUM (tmp.outSumm_Zatraty)      AS outSumm_Zatraty
                        , SUM (tmp.outSumm_Kompensaciya) AS outSumm_Kompensaciya
                        , SUM (tmp.outSumm_Juridical)    AS outSumm_Juridical
+                       , SUM (tmp.outSumm_virt)         AS outSumm_virt
                        , SUM (tmp.outSumm_Transport)    AS outSumm_Transport
                        , tmp.MovementId
                   FROM (--остатки
@@ -273,7 +275,7 @@ BEGIN
                              , tmpRemains.ObjectId
                              , tmpRemains.StartAmount
                              , tmpRemains.EndAmount
-                             , tmpRemains.StartSumm + COALESCE (tmpOut.Summ_virt, 0) AS StartSumm
+                             , tmpRemains.StartSumm + COALESCE (tmpOut.outSumm_virt, 0) AS StartSumm
                              , tmpRemains.EndSumm
 
                              , tmpOut.FromId
@@ -284,6 +286,8 @@ BEGIN
                              , COALESCE (tmpOut.outSumm_Zatraty, 0)         AS outSumm_Zatraty
                              , COALESCE (tmpOut.outSumm_Kompensaciya, 0)    AS outSumm_Kompensaciya
                              , COALESCE (tmpOut.outSumm_Juridical, 0)       AS outSumm_Juridical
+                             , COALESCE (tmpOut.outSumm_virt, 0)            AS outSumm_virt
+                             
                              , tmpOut.MovementId
                              , COALESCE (tmpTransport.outSumm_Transport, 0) AS outSumm_Transport
                         FROM tmpRemains
@@ -311,6 +315,7 @@ BEGIN
                           , SUM (tmpData.outSumm_Zatraty)      AS outSumm_Zatraty
                           , SUM (tmpData.outSumm_Kompensaciya) AS outSumm_Kompensaciya
                           , SUM (tmpData.outSumm_Juridical)    AS outSumm_Juridical
+                          , SUM (tmpData.outSumm_virt)         AS outSumm_virt
                           , SUM (tmpData.outSumm_Transport)    AS outSumm_Transport
                           , tmpData.MovementId
                      FROM tmpData
@@ -348,6 +353,7 @@ BEGIN
                          OR SUM (tmpData.outSumm_Zatraty)  <> 0
                          OR SUM (tmpData.outSumm_Kompensaciya) <> 0
                          OR SUM (tmpData.outSumm_Juridical)    <> 0
+                         OR SUM (tmpData.outSumm_virt)         <> 0
                          OR SUM (tmpData.outSumm_Transport)    <> 0
                      )
 
@@ -384,6 +390,7 @@ BEGIN
              , tmpData.outSumm_Zatraty       ::TFloat
              , tmpData.outSumm_Kompensaciya  ::TFloat
              , tmpData.outSumm_Juridical     ::TFloat
+             , tmpData.outSumm_virt          ::TFloat
              , tmpData.outSumm_Transport     ::TFloat
 
         FROM tmpDataAll AS tmpData

@@ -4,7 +4,7 @@ inherited PromoForm: TPromoForm
   ClientHeight = 599
   ClientWidth = 1204
   ExplicitWidth = 1220
-  ExplicitHeight = 637
+  ExplicitHeight = 634
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -688,6 +688,9 @@ inherited PromoForm: TPromoForm
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -988,6 +991,9 @@ inherited PromoForm: TPromoForm
     object cxTabSheetCalc: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0
@@ -1243,6 +1249,9 @@ inherited PromoForm: TPromoForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -1336,6 +1345,9 @@ inherited PromoForm: TPromoForm
     object cxTabSheetPlan: TcxTabSheet
       Caption = #1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080
       ImageIndex = 4
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -1976,7 +1988,7 @@ inherited PromoForm: TPromoForm
       Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' ('#1082#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088')'
       ImageIndex = 42
     end
-    object actInsertUpdateMISignNO: TdsdExecStoredProc [3]
+    object actInsertUpdateMISignNo: TdsdExecStoredProc [3]
       Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1986,10 +1998,10 @@ inherited PromoForm: TPromoForm
           StoredProc = spInsertUpdateMISign_No
         end
         item
+          StoredProc = spSelectMISign
         end>
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
-      ImageIndex = 52
     end
     object actUpdatePlanDS: TdsdUpdateDataSet [4]
       Category = 'Plan'
@@ -2036,20 +2048,18 @@ inherited PromoForm: TPromoForm
           StoredProc = spSelectPlan
         end>
     end
-    object actInsertUpdateMISignNO1: TMultiAction [6]
+    object mactInsertUpdateMISignNo: TMultiAction [6]
       Category = 'Sign'
-      TabSheet = cxTabSheetSign
       MoveParams = <>
-      Enabled = False
       ActionList = <
         item
-          Action = actInsertUpdateMISignNO
+          Action = actInsertUpdateMISignNo
         end
         item
           Action = actRefresh_Get
         end>
-      Caption = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
-      Hint = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1076#1083#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1076#1083#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 52
     end
     object InsertRecord: TInsertRecord [8]
@@ -2913,35 +2923,33 @@ inherited PromoForm: TPromoForm
         end>
       Caption = 'actInsertUpdate_Movement_PromoPartnerFromRetail'
     end
-    object actInsertUpdateMISign: TdsdExecStoredProc
+    object actInsertUpdateMISignYes: TdsdExecStoredProc
       Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMISign
+      StoredProc = spInsertUpdateMISign_Yes
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateMISign
+          StoredProc = spInsertUpdateMISign_Yes
         end
         item
+          StoredProc = spSelectMISign
         end>
       Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
-      ImageIndex = 58
     end
-    object actInsertUpdateMISign1: TMultiAction
+    object mactInsertUpdateMISignYes: TMultiAction
       Category = 'Sign'
-      TabSheet = cxTabSheetSign
       MoveParams = <>
-      Enabled = False
       ActionList = <
         item
-          Action = actInsertUpdateMISign
+          Action = actInsertUpdateMISignYes
         end
         item
           Action = actRefresh_Get
         end>
-      Caption = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
-      Hint = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1076#1083#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1076#1083#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 58
     end
     object actOpenReportForm: TdsdOpenForm
@@ -3141,11 +3149,11 @@ inherited PromoForm: TPromoForm
         end
         item
           Visible = True
-          ItemName = 'bbMISign'
+          ItemName = 'bbInsertUpdateMISignYes'
         end
         item
           Visible = True
-          ItemName = 'bbSignNO'
+          ItemName = 'bbInsertUpdateMISignNo'
         end
         item
           Visible = True
@@ -3322,12 +3330,12 @@ inherited PromoForm: TPromoForm
       Action = macInsertUpdate_MI_Param
       Category = 0
     end
-    object bbMISign: TdxBarButton
-      Action = actInsertUpdateMISign1
+    object bbInsertUpdateMISignYes: TdxBarButton
+      Action = mactInsertUpdateMISignYes
       Category = 0
     end
-    object bbSignNO: TdxBarButton
-      Action = actInsertUpdateMISignNO1
+    object bbInsertUpdateMISignNo: TdxBarButton
+      Action = mactInsertUpdateMISignNo
       Category = 0
     end
     object bbPrint_Calc: TdxBarButton
@@ -4968,10 +4976,10 @@ inherited PromoForm: TPromoForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 968
-    Top = 227
+    Left = 976
+    Top = 259
   end
-  object spInsertUpdateMISign: TdsdStoredProc
+  object spInsertUpdateMISign_Yes: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Sign'
     DataSets = <>
     OutputType = otResult
@@ -4993,7 +5001,7 @@ inherited PromoForm: TPromoForm
       end>
     PackSize = 1
     Left = 976
-    Top = 291
+    Top = 203
   end
   object SignCDS: TClientDataSet
     Aggregates = <>

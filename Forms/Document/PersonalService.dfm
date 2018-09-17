@@ -3,7 +3,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
   ClientHeight = 673
   ClientWidth = 1307
   ExplicitWidth = 1323
-  ExplicitHeight = 711
+  ExplicitHeight = 708
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1534,7 +1534,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.  '#1044#1072'/'#1053#1077#1090'"'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.  '#1044#1072'/'#1053#1077#1090'"'
-      ImageIndex = 52
+      ImageIndex = 76
     end
     inherited actUpdateMainDS: TdsdUpdateDataSet
       StoredProcList = <
@@ -1904,36 +1904,36 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' Excel ('#1050#1072#1088#1090#1086#1095#1082#1072' '#1041#1053' '#1080' '#1053#1072#1083#1086#1075#1080')'
       ImageIndex = 41
     end
-    object actInsertUpdateMISign: TdsdExecStoredProc
+    object actInsertUpdateMISignYes: TdsdExecStoredProc
       Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMISign
+      StoredProc = spInsertUpdateMISign_Yes
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateMISign
+          StoredProc = spInsertUpdateMISign_Yes
+        end
+        item
+          StoredProc = spSelectMISign
         end>
       Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
-      ImageIndex = 76
     end
-    object macInsertUpdateMISign: TMultiAction
+    object mactInsertUpdateMISignYes: TMultiAction
       Category = 'Sign'
-      TabSheet = cxTabSheetSign
       MoveParams = <>
-      Enabled = False
       ActionList = <
         item
-          Action = actInsertUpdateMISign
+          Action = actInsertUpdateMISignYes
         end
         item
           Action = actRefresh_Sign
         end>
-      Caption = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
-      Hint = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
-      ImageIndex = 76
+      Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1076#1083#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1076#1083#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 58
     end
-    object actInsertUpdateMISignNO: TdsdExecStoredProc
+    object actInsertUpdateMISignNo: TdsdExecStoredProc
       Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1943,26 +1943,24 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spInsertUpdateMISign_No
         end
         item
+          StoredProc = spSelectMISign
         end>
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
-      ImageIndex = 58
     end
-    object macInsertUpdateMISignNO: TMultiAction
+    object mactInsertUpdateMISignNo: TMultiAction
       Category = 'Sign'
-      TabSheet = cxTabSheetSign
       MoveParams = <>
-      Enabled = False
       ActionList = <
         item
-          Action = actInsertUpdateMISignNO
+          Action = actInsertUpdateMISignNo
         end
         item
           Action = actRefresh_Sign
         end>
-      Caption = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
-      Hint = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
-      ImageIndex = 58
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1076#1083#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1076#1083#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 52
     end
   end
   inherited MasterDS: TDataSource
@@ -2117,11 +2115,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
-          ItemName = 'bbMISign'
+          ItemName = 'bbInsertUpdateMISignYes'
         end
         item
           Visible = True
-          ItemName = 'bbMISignNO'
+          ItemName = 'bbInsertUpdateMISignNo'
         end
         item
           Visible = True
@@ -2181,12 +2179,12 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Action = macUpdateCardSecond
       Category = 0
     end
-    object bbMISignNO: TdxBarButton
-      Action = macInsertUpdateMISignNO
+    object bbInsertUpdateMISignNo: TdxBarButton
+      Action = mactInsertUpdateMISignNo
       Category = 0
     end
-    object bbMISign: TdxBarButton
-      Action = macInsertUpdateMISign
+    object bbInsertUpdateMISignYes: TdxBarButton
+      Action = mactInsertUpdateMISignYes
       Category = 0
     end
     object bbPrint_All: TdxBarButton
@@ -3176,7 +3174,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Left = 980
     Top = 438
   end
-  object spInsertUpdateMISign: TdsdStoredProc
+  object spInsertUpdateMISign_Yes: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_PersonalService_Sign'
     DataSets = <>
     OutputType = otResult
@@ -3197,8 +3195,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1016
-    Top = 363
+    Left = 992
+    Top = 227
   end
   object spInsertUpdateMISign_No: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_PersonalService_Sign'

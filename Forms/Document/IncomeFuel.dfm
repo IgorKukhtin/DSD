@@ -978,8 +978,8 @@ object IncomeFuelForm: TIncomeFuelForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 411
-    Top = 209
+    Left = 99
+    Top = 203
     DockControlHeights = (
       0
       0
@@ -1065,11 +1065,11 @@ object IncomeFuelForm: TIncomeFuelForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertUpdateMISign'
+          ItemName = 'bbInsertUpdateMISignYes'
         end
         item
           Visible = True
-          ItemName = 'bbInsertUpdateMISignNO'
+          ItemName = 'bbInsertUpdateMISignNo'
         end
         item
           Visible = True
@@ -1191,12 +1191,12 @@ object IncomeFuelForm: TIncomeFuelForm
       Action = SignProtocolOpenForm
       Category = 0
     end
-    object bbInsertUpdateMISign: TdxBarButton
-      Action = actInsertUpdateMISign
+    object bbInsertUpdateMISignYes: TdxBarButton
+      Action = actInsertUpdateMISignYes
       Category = 0
     end
-    object bbInsertUpdateMISignNO: TdxBarButton
-      Action = actInsertUpdateMISignNO
+    object bbInsertUpdateMISignNo: TdxBarButton
+      Action = actInsertUpdateMISignNo
       Category = 0
     end
   end
@@ -1212,13 +1212,13 @@ object IncomeFuelForm: TIncomeFuelForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 678
-    Top = 187
+    Left = 65
+    Top = 205
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 641
-    Top = 185
+    Left = 33
+    Top = 203
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1371,6 +1371,9 @@ object IncomeFuelForm: TIncomeFuelForm
       ReportNameParam.Value = 'PrintMovement_IncomeFuel'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -1734,8 +1737,8 @@ object IncomeFuelForm: TIncomeFuelForm
         end>
       isShowModal = False
     end
-    object actInsertUpdateMISignNO: TdsdExecStoredProc
-      Category = 'DSDLib'
+    object actInsertUpdateMISignNo: TdsdExecStoredProc
+      Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMISign_No
@@ -1746,24 +1749,24 @@ object IncomeFuelForm: TIncomeFuelForm
         item
           StoredProc = spSelectMISign
         end>
-      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
-      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1076#1083#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1076#1083#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 52
     end
-    object actInsertUpdateMISign: TdsdExecStoredProc
-      Category = 'DSDLib'
+    object actInsertUpdateMISignYes: TdsdExecStoredProc
+      Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMISign
+      StoredProc = spInsertUpdateMISign_Yes
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateMISign
+          StoredProc = spInsertUpdateMISign_Yes
         end
         item
           StoredProc = spSelectMISign
         end>
-      Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
-      Hint = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
+      Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1076#1083#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1076#1083#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 58
     end
   end
@@ -3311,7 +3314,7 @@ object IncomeFuelForm: TIncomeFuelForm
     Left = 964
     Top = 344
   end
-  object spInsertUpdateMISign: TdsdStoredProc
+  object spInsertUpdateMISign_Yes: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Sign'
     DataSets = <>
     OutputType = otResult
@@ -3332,8 +3335,8 @@ object IncomeFuelForm: TIncomeFuelForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 968
-    Top = 291
+    Left = 976
+    Top = 219
   end
   object spInsertUpdateMISign_No: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Sign'
@@ -3356,8 +3359,8 @@ object IncomeFuelForm: TIncomeFuelForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 648
-    Top = 443
+    Left = 968
+    Top = 275
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
