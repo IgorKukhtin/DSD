@@ -39,11 +39,11 @@ type
     ListDiffGridDBTableViewColumn1: TcxGridDBColumn;
     procedure ParentFormCreate(Sender: TObject);
     procedure ListDiffCDSBeforePost(DataSet: TDataSet);
-    procedure ParentFormDestroy(Sender: TObject);
     procedure ParentFormClose(Sender: TObject; var Action: TCloseAction);
     procedure actSendExecute(Sender: TObject);
     procedure actDeleteExecute(Sender: TObject);
     procedure ListDiffCDSAfterPost(DataSet: TDataSet);
+    procedure ParentFormDestroy(Sender: TObject);
   private
     { Private declarations }
   public
@@ -225,7 +225,11 @@ procedure TListDiffForm.ParentFormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
   try
-    if ListDiffCDS.State = dsEdit then ListDiffCDS.Post;
+    if ListDiffCDS.State = dsEdit then
+    begin
+      ListDiffCDS.Post;
+      SaveLocalData(ListDiffCDS, ListDiff_lcl);
+    end;
   Except ON E:Exception do
     begin
       Action := caNone;
@@ -243,11 +247,10 @@ end;
 procedure TListDiffForm.ParentFormDestroy(Sender: TObject);
 begin
   try
-    SaveLocalData(ListDiffCDS, ListDiff_lcl);
+    if ListDiffCDS.State = dsEdit then ListDiffCDS.Post;
   Except ON E:Exception do
-    ShowMessage('Ошибка сохранения листа отказов:'#13#10 + E.Message);
+      ShowMessage('Ошибка сохранения листа отказов:'#13#10 + E.Message);
   end;
-  ListDiffCDS.Close;
 end;
 
 End.
