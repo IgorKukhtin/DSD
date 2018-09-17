@@ -384,7 +384,7 @@ inherited BankStatementForm: TBankStatementForm
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 9
-      Width = 97
+      Width = 112
     end
   end
   object cxSplitter: TcxSplitter [2]
@@ -932,6 +932,13 @@ inherited BankStatementForm: TBankStatementForm
         Value = ''
         Component = edBankName
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ServiceDate'
+        Value = 'NULL'
+        Component = edServiceDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1

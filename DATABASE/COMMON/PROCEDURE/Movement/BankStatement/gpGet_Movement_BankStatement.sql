@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_BankStatement(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+             , ServiceDate TDateTime
              , BankAccountId Integer, BankAccountName TVarChar
              , BankId Integer, BankName TVarChar
               )
@@ -22,6 +23,7 @@ BEGIN
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
+           , CURRENT_DATE           :: TDateTime AS ServiceDate
 
            , Object_BankAccount_View.Id          AS BankAccountId
            , Object_BankAccount_View.Name        AS BankAccountName
