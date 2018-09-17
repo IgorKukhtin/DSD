@@ -316,6 +316,14 @@ type
     Label13: TLabel;
     Label14: TLabel;
     edlExpirationDateFilter: TcxTextEdit;
+    actListDiffAddGoods: TAction;
+    N15: TMenuItem;
+    N16: TMenuItem;
+    actShowListDiff: TAction;
+    N17: TMenuItem;
+    N18: TMenuItem;
+    actListGoods: TAction;
+    N19: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -390,7 +398,10 @@ type
     procedure actDeleteAccommodationExecute(Sender: TObject);
     procedure AccommodationNamePropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
-    procedure actExpirationDateFilterExecute(Sender: TObject); //***12.02.18
+    procedure actExpirationDateFilterExecute(Sender: TObject);
+    procedure actListDiffAddGoodsExecute(Sender: TObject);
+    procedure actShowListDiffExecute(Sender: TObject);
+    procedure actListGoodsExecute(Sender: TObject); //***12.02.18
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -495,7 +506,7 @@ implementation
 {$R *.dfm}
 
 uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog, CashWork, MessagesUnit,
-     LocalWorkUnit, Splash, DiscountService, MainCash, UnilWin,
+     LocalWorkUnit, Splash, DiscountService, MainCash, UnilWin, ListDiff, ListGoods,
 	   MediCard.Intf, PromoCodeDialog, TlHelp32;
 
 const
@@ -1044,7 +1055,7 @@ begin
   S := '';
   while True do
   begin
-    S := InputBox('Фильтр по сроку годности остатка', 'Введите количество месяцев: ', S);
+    if not InputQuery('Фильтр по сроку годности остатка', 'Введите количество месяцев: ', S) then Exit;
     if S = '' then Exit;
     if not TryStrToInt(S, I) or (I < 1) then
     begin
@@ -1131,6 +1142,40 @@ begin
   else ActiveControl := lcName;
 end;
 
+procedure TMainCashForm2.actListDiffAddGoodsExecute(Sender: TObject);
+begin
+
+  if not RemainsCDS.Active  then Exit;
+  if RemainsCDS.RecordCount < 1  then Exit;
+
+  ListDiffAddGoods(RemainsCDS);
+end;
+
+procedure TMainCashForm2.actListGoodsExecute(Sender: TObject);
+  var S : string;
+begin
+  if not FileExists(Goods_lcl) then
+  begin
+    ShowMessage('Справочник медикаментов не найден обратитесь к администратору...');
+    Exit;
+  end;
+
+  if Self.ActiveControl is TcxGridSite then
+    S := MainGridDBTableView.DataController.Search.SearchText
+  else if ActiveControl is TcxCustomComboBoxInnerEdit then
+    S := Copy(lcName.Text, 1, Length(lcName.Text) - Length(lcName.SelText))
+  else S := '';;
+
+  with TListGoodsForm.Create(nil) do
+  try
+    if S <> '' then SetFilter(S);
+
+    ShowModal
+  finally
+    Free;
+  end;
+end;
+
 procedure TMainCashForm2.actManualDiscountExecute(Sender: TObject);
   var S : string; I, nRecNo : integer;
 begin
@@ -1156,7 +1201,7 @@ begin
   S := '';
   while True do
   begin
-    S := InputBox('Ручная скидка', 'Процент скидки: ', S);
+    if not InputQuery('Ручная скидка', 'Процент скидки: ', S) then Exit;
     if S = '' then Exit;
     if not TryStrToInt(S, I) or (I < 0) or (I > 50) then
     begin
@@ -2417,6 +2462,17 @@ begin
     NewCheck(False);
 
   End;
+end;
+
+procedure TMainCashForm2.actShowListDiffExecute(Sender: TObject);
+begin
+  inherited;
+  with TListDiffForm.Create(nil) do
+  try
+    ShowModal
+  finally
+    Free;
+  end;
 end;
 
 procedure TMainCashForm2.actSoldExecute(Sender: TObject);

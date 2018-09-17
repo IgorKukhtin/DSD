@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_CashGoods (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_CashGoods(
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (GoodsId   Integer, 
+RETURNS TABLE (Id        Integer, 
                GoodsCode Integer, 
                GoodsName TVarChar, 
                Price     TFloat
@@ -58,7 +58,7 @@ BEGIN
 
         LEFT OUTER JOIN Object AS Object_Goods 
                                ON Object_Goods.Id = tmpObject_Price.GoodsId
-    ORDER BY Object_Goods.ObjectCode LIMIT 100;
+    ORDER BY Object_Goods.ObjectCode;
 
 
 END;

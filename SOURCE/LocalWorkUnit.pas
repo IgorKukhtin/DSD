@@ -31,6 +31,7 @@ function Member_lcl: String;
 function Vip_lcl: String;
 function VipList_lcl: String;
 function VipDfm_lcl: String;
+function ListDiff_lcl: String;
 
 procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
 procedure LoadLocalData(ADst: TClientDataSet; AFileName: String);
@@ -92,6 +93,11 @@ End;
 function VipDfm_lcl: String;
 Begin
   Result := ExtractFilePath(Application.ExeName) + 'VIP.dfm.local';
+End;
+
+function ListDiff_lcl: String;
+Begin
+  Result := ExtractFilePath(Application.ExeName) + 'ListDiff.local';
 End;
 
 function AddIntField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string): TVKDBFFieldDef;
