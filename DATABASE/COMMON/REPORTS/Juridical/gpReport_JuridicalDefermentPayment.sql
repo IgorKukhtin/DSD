@@ -53,6 +53,7 @@ BEGIN
      -- определяется уровень доступа
      IF NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId 
                                                                   AND RoleId IN (447972 -- Просмотр СБ
+                                                                               , 279795 -- Бухгалтер Киев
                                                                                 )
                    )
      THEN
