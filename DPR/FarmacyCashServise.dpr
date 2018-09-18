@@ -68,7 +68,8 @@ uses
   Splash in '..\FormsFarmacy\Cash\Splash.pas' {frmSplash},
   LocalStorage in '..\FormsFarmacy\Cash\LocalStorage.pas',
   IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas',
-  IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas';
+  IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
+  dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas';
 
 {$R *.res}
 
