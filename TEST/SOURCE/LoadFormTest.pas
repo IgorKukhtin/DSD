@@ -1989,7 +1989,13 @@ end;
 
 procedure TLoadFormTest.LoadReportBranchFormTest;
 begin
-//exit;
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_App1_FullForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_App1_FullForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_App7_FullForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_App7_FullForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_App7Form'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Branch_App7Form');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Branch_App7DialogForm'));

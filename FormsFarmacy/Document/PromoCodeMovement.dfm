@@ -1,42 +1,40 @@
 inherited PromoCodeMovementForm: TPromoCodeMovementForm
   Caption = #1055#1088#1086#1084#1086'-'#1082#1086#1076#1099
-  ClientHeight = 564
-  ClientWidth = 1023
+  ClientHeight = 565
+  ClientWidth = 991
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 1039
-  ExplicitHeight = 603
+  ExplicitWidth = 1007
+  ExplicitHeight = 604
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 123
-    Width = 1023
-    Height = 441
+    Width = 991
+    Height = 442
     ExplicitTop = 123
-    ExplicitWidth = 1023
-    ExplicitHeight = 441
-    ClientRectBottom = 441
-    ClientRectRight = 1023
+    ExplicitWidth = 991
+    ExplicitHeight = 442
+    ClientRectBottom = 442
+    ClientRectRight = 991
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1023
-      ExplicitHeight = 417
+      ExplicitWidth = 991
+      ExplicitHeight = 418
       inherited cxGrid: TcxGrid
-        Top = 187
-        Width = 1023
-        Height = 121
-        Align = alBottom
-        ExplicitTop = 187
-        ExplicitWidth = 1023
-        ExplicitHeight = 121
+        Width = 991
+        Height = 200
+        ExplicitWidth = 991
+        ExplicitHeight = 200
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.DataSource = SignDS
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00'
               Kind = skSum
             end>
           OptionsBehavior.IncSearch = True
-          OptionsData.Deleting = False
+          OptionsData.Appending = True
           OptionsData.DeletingConfirmation = False
-          OptionsView.ColumnAutoWidth = True
+          OptionsView.Footer = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -46,69 +44,6 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object IsChecked: TcxGridDBColumn
-            Caption = #1054#1090#1084#1077#1095#1077#1085
-            DataBinding.FieldName = 'IsChecked'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1084#1077#1095#1077#1085' '#1076#1072'/'#1085#1077#1090
-            Width = 60
-          end
-          object GoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'GoodsCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 51
-          end
-          object GoodsName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
-            DataBinding.FieldName = 'GoodsName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 340
-          end
-          object Comment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            DataBinding.FieldName = 'Comment'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-        end
-      end
-      object cxGrid2: TcxGrid
-        Left = 0
-        Top = 0
-        Width = 1023
-        Height = 179
-        Align = alClient
-        PopupMenu = PopupMenu
-        TabOrder = 2
-        object cxGridDBTableView2: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = SignDS
-          DataController.Filter.Options = [fcoCaseInsensitive]
-          DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <>
-          DataController.Summary.SummaryGroups = <>
-          Images = dmMain.SortImageList
-          OptionsBehavior.GoToNextCellOnEnter = True
-          OptionsBehavior.IncSearch = True
-          OptionsBehavior.FocusCellOnCycle = True
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsCustomize.DataRowSizing = True
-          OptionsData.Appending = True
-          OptionsData.CancelOnExit = False
-          OptionsData.DeletingConfirmation = False
-          OptionsView.GroupByBox = False
-          OptionsView.GroupSummaryLayout = gslAlignWithColumns
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.Indicator = True
-          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object sgIsChecked: TcxGridDBColumn
             Caption = #1054#1090#1084#1077#1095#1077#1085
             DataBinding.FieldName = 'IsChecked'
@@ -123,7 +58,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1086#1084#1086' '#1082#1086#1076
-            Width = 48
+            Width = 59
           end
           object clBayerName: TcxGridDBColumn
             Caption = #1060#1048#1054' '#1082#1083#1080#1077#1085#1090#1072
@@ -247,141 +182,293 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             Width = 94
           end
         end
-        object cxGridLevel2: TcxGridLevel
-          GridView = cxGridDBTableView2
-        end
-      end
-      object cxGrid1: TcxGrid
-        Left = 0
-        Top = 316
-        Width = 1023
-        Height = 101
-        Align = alBottom
-        PopupMenu = PopupMenu
-        TabOrder = 1
-        object cxGridDBTableView1: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = DetailDS
-          DataController.Filter.Options = [fcoCaseInsensitive]
-          DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <>
-          DataController.Summary.SummaryGroups = <>
-          Images = dmMain.SortImageList
-          OptionsBehavior.GoToNextCellOnEnter = True
-          OptionsBehavior.IncSearch = True
-          OptionsBehavior.FocusCellOnCycle = True
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsCustomize.DataRowSizing = True
-          OptionsData.Appending = True
-          OptionsData.CancelOnExit = False
-          OptionsData.DeletingConfirmation = False
-          OptionsView.ColumnAutoWidth = True
-          OptionsView.GroupByBox = False
-          OptionsView.GroupSummaryLayout = gslAlignWithColumns
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.Indicator = True
-          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object chIsChecked: TcxGridDBColumn
-            Caption = #1054#1090#1084#1077#1095#1077#1085
-            DataBinding.FieldName = 'IsChecked'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1084#1077#1095#1077#1085' '#1076#1072'/'#1085#1077#1090
-            Width = 59
-          end
-          object ObjectCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'ObjectlCode'
-            Options.Editing = False
-            Width = 42
-          end
-          object ObjectName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1070#1088'. '#1083#1080#1094#1086
-            DataBinding.FieldName = 'ObjectName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = JuridicalChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 260
-          end
-          object DescName: TcxGridDBColumn
-            Caption = #1069#1083#1077#1084#1077#1085#1090
-            DataBinding.FieldName = 'DescName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 71
-          end
-          object JuridicalName: TcxGridDBColumn
-            Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1072#1087#1090#1077#1082#1072')'
-            DataBinding.FieldName = 'JuridicalName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 176
-          end
-          object RetailName: TcxGridDBColumn
-            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
-            DataBinding.FieldName = 'RetailName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 155
-          end
-          object chComment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            DataBinding.FieldName = 'Comment'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 176
-          end
-          object IsErased: TcxGridDBColumn
-            Caption = #1059#1076#1072#1083#1077#1085
-            DataBinding.FieldName = 'IsErased'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-        end
-        object cxGridLevel1: TcxGridLevel
-          GridView = cxGridDBTableView1
-        end
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 308
-        Width = 1023
+        Top = 200
+        Width = 991
         Height = 8
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
-        Control = cxGrid1
+        Control = Panel1
       end
-      object cxSplitter2: TcxSplitter
+      object Panel1: TPanel
         Left = 0
-        Top = 179
-        Width = 1023
-        Height = 8
-        Touch.ParentTabletOptions = False
-        Touch.TabletOptions = [toPressAndHold]
-        AlignSplitter = salBottom
-        Control = cxGrid
+        Top = 208
+        Width = 991
+        Height = 210
+        Align = alBottom
+        BevelOuter = bvNone
+        Caption = 'Panel1'
+        ShowCaption = False
+        TabOrder = 2
+        object Panel2: TPanel
+          Left = 0
+          Top = 0
+          Width = 632
+          Height = 210
+          Align = alClient
+          BevelOuter = bvNone
+          Caption = 'Panel2'
+          ShowCaption = False
+          TabOrder = 0
+          object cxGrid1: TcxGrid
+            Left = 0
+            Top = 109
+            Width = 632
+            Height = 101
+            Align = alBottom
+            PopupMenu = PopupMenu
+            TabOrder = 0
+            object cxGridDBTableView1: TcxGridDBTableView
+              Navigator.Buttons.CustomButtons = <>
+              DataController.DataSource = DetailDS
+              DataController.Filter.Options = [fcoCaseInsensitive]
+              DataController.Summary.DefaultGroupSummaryItems = <>
+              DataController.Summary.FooterSummaryItems = <>
+              DataController.Summary.SummaryGroups = <>
+              Images = dmMain.SortImageList
+              OptionsBehavior.GoToNextCellOnEnter = True
+              OptionsBehavior.IncSearch = True
+              OptionsBehavior.FocusCellOnCycle = True
+              OptionsCustomize.ColumnHiding = True
+              OptionsCustomize.ColumnsQuickCustomization = True
+              OptionsCustomize.DataRowSizing = True
+              OptionsData.Appending = True
+              OptionsData.CancelOnExit = False
+              OptionsData.DeletingConfirmation = False
+              OptionsView.ColumnAutoWidth = True
+              OptionsView.GroupByBox = False
+              OptionsView.GroupSummaryLayout = gslAlignWithColumns
+              OptionsView.HeaderAutoHeight = True
+              OptionsView.Indicator = True
+              Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+              object chIsChecked: TcxGridDBColumn
+                Caption = #1054#1090#1084#1077#1095#1077#1085
+                DataBinding.FieldName = 'IsChecked'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                HeaderHint = #1054#1090#1084#1077#1095#1077#1085' '#1076#1072'/'#1085#1077#1090
+                Width = 59
+              end
+              object ObjectCode: TcxGridDBColumn
+                Caption = #1050#1086#1076
+                DataBinding.FieldName = 'ObjectlCode'
+                Options.Editing = False
+                Width = 42
+              end
+              object ObjectName: TcxGridDBColumn
+                Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' / '#1070#1088'. '#1083#1080#1094#1086
+                DataBinding.FieldName = 'ObjectName'
+                PropertiesClassName = 'TcxButtonEditProperties'
+                Properties.Buttons = <
+                  item
+                    Action = JuridicalChoiceForm
+                    Default = True
+                    Kind = bkEllipsis
+                  end>
+                Properties.ReadOnly = True
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Width = 260
+              end
+              object DescName: TcxGridDBColumn
+                Caption = #1069#1083#1077#1084#1077#1085#1090
+                DataBinding.FieldName = 'DescName'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Options.Editing = False
+                Width = 71
+              end
+              object JuridicalName: TcxGridDBColumn
+                Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1072#1087#1090#1077#1082#1072')'
+                DataBinding.FieldName = 'JuridicalName'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Options.Editing = False
+                Width = 176
+              end
+              object RetailName: TcxGridDBColumn
+                Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+                DataBinding.FieldName = 'RetailName'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Options.Editing = False
+                Width = 155
+              end
+              object chComment: TcxGridDBColumn
+                Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+                DataBinding.FieldName = 'Comment'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Width = 176
+              end
+              object IsErased: TcxGridDBColumn
+                Caption = #1059#1076#1072#1083#1077#1085
+                DataBinding.FieldName = 'IsErased'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Options.Editing = False
+                Width = 70
+              end
+            end
+            object cxGridLevel1: TcxGridLevel
+              GridView = cxGridDBTableView1
+            end
+          end
+          object cxGrid2: TcxGrid
+            Left = 0
+            Top = 0
+            Width = 632
+            Height = 101
+            Align = alClient
+            PopupMenu = PopupMenu
+            TabOrder = 1
+            ExplicitLeft = 2
+            ExplicitTop = -2
+            object cxGridDBTableView2: TcxGridDBTableView
+              Navigator.Buttons.CustomButtons = <>
+              DataController.DataSource = MasterDS
+              DataController.Summary.DefaultGroupSummaryItems = <>
+              DataController.Summary.FooterSummaryItems = <>
+              DataController.Summary.SummaryGroups = <>
+              OptionsBehavior.IncSearch = True
+              OptionsData.Deleting = False
+              OptionsData.DeletingConfirmation = False
+              OptionsView.ColumnAutoWidth = True
+              OptionsView.GroupByBox = False
+              Styles.Content = dmMain.cxContentStyle
+              Styles.Inactive = dmMain.cxSelection
+              Styles.Selection = dmMain.cxSelection
+              Styles.Footer = dmMain.cxFooterStyle
+              Styles.Header = dmMain.cxHeaderStyle
+              Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+              object GoodsisErased: TcxGridDBColumn
+                DataBinding.FieldName = 'isErased'
+                Visible = False
+              end
+              object IsChecked: TcxGridDBColumn
+                Caption = #1054#1090#1084#1077#1095#1077#1085
+                DataBinding.FieldName = 'IsChecked'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                HeaderHint = #1054#1090#1084#1077#1095#1077#1085' '#1076#1072'/'#1085#1077#1090
+                Width = 60
+              end
+              object GoodsCode: TcxGridDBColumn
+                Caption = #1050#1086#1076
+                DataBinding.FieldName = 'GoodsCode'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Options.Editing = False
+                Width = 51
+              end
+              object GoodsName: TcxGridDBColumn
+                Caption = #1058#1086#1074#1072#1088
+                DataBinding.FieldName = 'GoodsName'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Options.Editing = False
+                Width = 340
+              end
+              object Comment: TcxGridDBColumn
+                Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+                DataBinding.FieldName = 'Comment'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Width = 70
+              end
+            end
+            object cxGridLevel2: TcxGridLevel
+              GridView = cxGridDBTableView2
+            end
+          end
+          object cxSplitter2: TcxSplitter
+            Left = 0
+            Top = 101
+            Width = 632
+            Height = 8
+            Touch.ParentTabletOptions = False
+            Touch.TabletOptions = [toPressAndHold]
+            AlignSplitter = salBottom
+            Control = cxGrid1
+          end
+        end
+        object Panel3: TPanel
+          Left = 640
+          Top = 0
+          Width = 351
+          Height = 210
+          Align = alRight
+          BevelOuter = bvNone
+          Caption = 'Panel3'
+          ShowCaption = False
+          TabOrder = 1
+          object cxGrid3: TcxGrid
+            Left = 0
+            Top = 0
+            Width = 351
+            Height = 210
+            Align = alClient
+            PopupMenu = PopupMenu
+            TabOrder = 0
+            object cxGridDBTableView3: TcxGridDBTableView
+              Navigator.Buttons.CustomButtons = <>
+              DataController.DataSource = InfoDS
+              DataController.Summary.DefaultGroupSummaryItems = <>
+              DataController.Summary.FooterSummaryItems = <>
+              DataController.Summary.SummaryGroups = <>
+              OptionsBehavior.IncSearch = True
+              OptionsData.Deleting = False
+              OptionsData.DeletingConfirmation = False
+              OptionsView.ColumnAutoWidth = True
+              OptionsView.GroupByBox = False
+              Styles.Content = dmMain.cxContentStyle
+              Styles.Inactive = dmMain.cxSelection
+              Styles.Selection = dmMain.cxSelection
+              Styles.Footer = dmMain.cxFooterStyle
+              Styles.Header = dmMain.cxHeaderStyle
+              Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+              object InfoName: TcxGridDBColumn
+                Caption = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072
+                DataBinding.FieldName = 'Name'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Options.Editing = False
+                Width = 241
+              end
+              object InfoValue: TcxGridDBColumn
+                Caption = #1047#1085#1072#1095#1077#1085#1080#1077
+                DataBinding.FieldName = 'Value'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Width = 108
+              end
+            end
+            object cxGridLevel3: TcxGridLevel
+              GridView = cxGridDBTableView3
+            end
+          end
+        end
+        object cxSplitter3: TcxSplitter
+          Left = 632
+          Top = 0
+          Width = 8
+          Height = 210
+          Touch.ParentTabletOptions = False
+          Touch.TabletOptions = [toPressAndHold]
+          AlignSplitter = salRight
+          Control = Panel3
+        end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 1023
+    Width = 991
     Height = 97
     TabOrder = 3
-    ExplicitWidth = 1023
+    ExplicitWidth = 991
     ExplicitHeight = 97
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -646,6 +733,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
           StoredProc = spSelect_MovementItem_PromoCodeChild
         end
         item
+          StoredProc = spSelectPromoCodeInfo
         end>
     end
     object macUpdateSignIsCheckedYes_S: TMultiAction [6]
@@ -655,7 +743,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         item
           Action = spUpdateSignIsCheckedYes
         end>
-      View = cxGridDBTableView2
+      View = cxGridDBTableView
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
       ImageIndex = 76
@@ -667,7 +755,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         item
           Action = spUpdateSignIsCheckedNo
         end>
-      View = cxGridDBTableView2
+      View = cxGridDBTableView
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
       ImageIndex = 77
@@ -699,9 +787,6 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
       ImageIndex = 77
-    end
-    inherited actGridToExcel: TdsdGridToExcel
-      Grid = cxGrid2
     end
     object actSetErasedPromoCodeSign: TdsdUpdateErased [11]
       Category = 'DSDLib'
@@ -1188,7 +1273,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         item
           Action = spUpdateGoodsIsCheckedYes
         end>
-      View = cxGridDBTableView
+      View = cxGridDBTableView2
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1044#1072
       ImageIndex = 76
@@ -1214,7 +1299,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         item
           Action = spUpdateGoodsIsCheckedNo
         end>
-      View = cxGridDBTableView
+      View = cxGridDBTableView2
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
       ImageIndex = 77
@@ -2818,5 +2903,37 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
     ParamKeyField = 'inMovementId'
     Left = 528
     Top = 504
+  end
+  object InfoDS: TDataSource
+    DataSet = InfoDSD
+    Left = 944
+    Top = 432
+  end
+  object InfoDSD: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 896
+    Top = 416
+  end
+  object spSelectPromoCodeInfo: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_PromoCodeInfo'
+    DataSet = InfoDSD
+    DataSets = <
+      item
+        DataSet = InfoDSD
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 848
+    Top = 384
   end
 end

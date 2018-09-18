@@ -86,7 +86,9 @@ uses
   IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas',
   IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
   PromoCodeDialog in '..\FormsFarmacy\Cash\PromoCodeDialog.pas' {PromoCodeDialogForm: TParentForm},
-  dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas';
+  dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas',
+  ListDiff in '..\FormsFarmacy\Cash\ListDiff.pas' {ListDiffForm: TParentForm},
+  ListGoods in '..\FormsFarmacy\Cash\ListGoods.pas' {ListGoodsForm: TParentForm};
 
 {$R *.res}
 

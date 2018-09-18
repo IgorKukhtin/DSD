@@ -154,6 +154,19 @@ type
     JuridicalName_Check: TcxGridDBColumn;
     RetailName_Check: TcxGridDBColumn;
     cbisBuySite: TcxCheckBox;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    cxSplitter3: TcxSplitter;
+    cxGrid3: TcxGrid;
+    cxGridDBTableView3: TcxGridDBTableView;
+    InfoName: TcxGridDBColumn;
+    InfoValue: TcxGridDBColumn;
+    cxGridLevel3: TcxGridLevel;
+    InfoDS: TDataSource;
+    InfoDSD: TClientDataSet;
+    spSelectPromoCodeInfo: TdsdStoredProc;
+    GoodsisErased: TcxGridDBColumn;
   private
     { Private declarations }
   public

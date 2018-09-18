@@ -973,6 +973,11 @@ type
     miReport_TransportFuel: TMenuItem;
     actReport_Income_Olap: TdsdOpenForm;
     N195: TMenuItem;
+    actReport_Branch_App1_Full: TdsdOpenForm;
+    actReport_Branch_App7_Full: TdsdOpenForm;
+    miReport_Branch_App1_Full: TMenuItem;
+    miReport_Branch_App7_Full: TMenuItem;
+    N196: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
