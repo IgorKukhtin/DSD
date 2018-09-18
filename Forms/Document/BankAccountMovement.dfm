@@ -43,7 +43,7 @@
   end
   object ceBankAccount: TcxButtonEdit [6]
     Left = 284
-    Top = 28
+    Top = 25
     Properties.Buttons = <
       item
         Default = True
@@ -111,7 +111,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 8
-    Width = 563
+    Width = 397
   end
   object ceContract: TcxButtonEdit [15]
     Left = 280
@@ -273,6 +273,21 @@
     TabOrder = 35
     Width = 291
   end
+  object cxLabel17: TcxLabel [36]
+    Left = 415
+    Top = 170
+    Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+  end
+  object ceServiceDate: TcxDateEdit [37]
+    Left = 415
+    Top = 190
+    EditValue = 42005d
+    Properties.DisplayFormat = 'mmmm yyyy'
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 37
+    Width = 156
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 131
     Top = 316
@@ -325,6 +340,14 @@
         Name = 'inoperdate'
         Value = 0d
         Component = ceOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inServiceDate'
+        Value = 'NULL'
+        Component = ceServiceDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -645,6 +668,13 @@
         Component = ceComment_Invoice
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ServiceDate'
+        Value = 'NULL'
+        Component = ceServiceDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 408
     Top = 272
@@ -816,8 +846,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 144
-    Top = 122
+    Left = 160
+    Top = 114
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'

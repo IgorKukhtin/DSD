@@ -4,10 +4,7 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -255
-  ExplicitTop = -221
   ExplicitWidth = 998
-  ExplicitHeight = 714
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

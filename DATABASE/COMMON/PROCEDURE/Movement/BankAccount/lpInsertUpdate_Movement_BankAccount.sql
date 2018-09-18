@@ -2,11 +2,13 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount (Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_BankAccount(
  INOUT ioId                    Integer   , -- Ключ объекта <Документ>
     IN inInvNumber             TVarChar  , -- Номер документа
     IN inOperDate              TDateTime , -- Дата документа
+    IN inServiceDate           TDateTime , -- Месяц начислений
     IN inAmount                TFloat    , -- Сумма операции 
     IN inAmountSumm            TFloat    , -- Cумма грн, обмен
     IN inAmountCurrency        TFloat    , -- Сумма в валюте
@@ -115,6 +117,9 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.<УП статья назначения> не выбрана.';
      END IF;
 
+     -- расчет - 1-ое число месяца
+     inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_BankAccount(), inInvNumber, inOperDate, inParentId);
 
@@ -156,7 +161,10 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), vbMovementItemId, inCurrencyId);
      -- 
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BankAccount(), vbMovementItemId, inBankAccountPartnerId);
-     
+
+     -- сохранили свойство <Дата начисления>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ServiceDate(), vbMovementItemId, inServiceDate);
+
      -- сохранили связь с документом <Счет>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), ioId, inMovementId_Invoice);
 
@@ -202,6 +210,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 18.09.18         *
  21.07.16         *
  10.05.14                                        * add lpInsert_MovementItemProtocol
  07.03.14                                        * add zc_Enum_InfoMoney_21419
