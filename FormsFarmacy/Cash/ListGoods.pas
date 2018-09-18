@@ -12,7 +12,7 @@ uses
   cxStyles, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage,
   cxDBData, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGrid, cxCurrencyEdit,
-  Vcl.ComCtrls;
+  Vcl.ComCtrls, cxCheckBox, cxBlobEdit;
 
 type
   TListGoodsForm = class(TAncestorBaseForm)
@@ -29,6 +29,19 @@ type
     edt1: TEdit;
     ProgressBar1: TProgressBar;
     actListDiffAddGoods: TAction;
+    ListDiffDS: TDataSource;
+    ListDiffCDS: TClientDataSet;
+    ListDiffGrid: TcxGrid;
+    ListDiffGridDBTableView: TcxGridDBTableView;
+    colIsSend: TcxGridDBColumn;
+    colCode: TcxGridDBColumn;
+    colName: TcxGridDBColumn;
+    colAmount: TcxGridDBColumn;
+    cxGridDBColumn1: TcxGridDBColumn;
+    colComment: TcxGridDBColumn;
+    colDateInput: TcxGridDBColumn;
+    colUserName: TcxGridDBColumn;
+    ListDiffGridLevel: TcxGridLevel;
     procedure ParentFormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure edt1Exit(Sender: TObject);
@@ -40,6 +53,10 @@ type
     procedure ParentFormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure ListGoodsGridDBTableViewDblClick(Sender: TObject);
+    procedure ListGoodsGridDBTableViewFocusedRecordChanged(
+      Sender: TcxCustomGridTableView; APrevFocusedRecord,
+      AFocusedRecord: TcxCustomGridRecord;
+      ANewItemRecordFocusingChanged: Boolean);
   private
     { Private declarations }
     FOldStr : String;
@@ -83,6 +100,13 @@ begin
   actListDiffAddGoodsExecute(Sender);
 end;
 
+procedure TListGoodsForm.ListGoodsGridDBTableViewFocusedRecordChanged(
+  Sender: TcxCustomGridTableView; APrevFocusedRecord,
+  AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
+begin
+  ListDiffCDS.Filter := 'Id = ' + ListGoodsCDS.FieldByName('Id').AsString;
+end;
+
 procedure TListGoodsForm.actListDiffAddGoodsExecute(Sender: TObject);
   var S: String; nCount : currency;
 begin
@@ -91,6 +115,17 @@ begin
   if ListGoodsCDS.RecordCount < 1  then Exit;
 
   ListDiffAddGoods(ListGoodsCDS);
+
+  WaitForSingleObject(MutexDiffCDS, INFINITE);
+  try
+    if FileExists(ListDiff_lcl) then LoadLocalData(ListDiffCDS, ListDiff_lcl);
+    if not ListDiffCDS.Active then ListDiffCDS.Open;
+  finally
+    ReleaseMutex(MutexDiffCDS);
+  end;
+
+  ListDiffCDS.Filter := 'Id = ' + ListGoodsCDS.FieldByName('Id').AsString;
+  ListDiffCDS.Filtered := True;
 end;
 
 procedure TListGoodsForm.colGoodsNameCustomDrawCell(
@@ -165,6 +200,18 @@ begin
   finally
     ReleaseMutex(MutexGoods);
   end;
+
+  WaitForSingleObject(MutexDiffCDS, INFINITE);
+  try
+    if FileExists(ListDiff_lcl) then LoadLocalData(ListDiffCDS, ListDiff_lcl);
+    if not ListDiffCDS.Active then ListDiffCDS.Open;
+  finally
+    ReleaseMutex(MutexDiffCDS);
+  end;
+
+  ListDiffCDS.Filter := 'Id = ' + ListGoodsCDS.FieldByName('Id').AsString;
+  ListDiffCDS.Filtered := True;
+
   FOldStr := '';
 end;
 
