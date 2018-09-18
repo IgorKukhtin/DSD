@@ -10,7 +10,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_BankAccount(
     IN inIsErased          Boolean ,
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, BankSInvNumber_Parent TVarChar, ParentId Integer, OperDate TDateTime
+RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, BankSInvNumber_Parent TVarChar, ParentId Integer
+             , OperDate TDateTime
+             , ServiceDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , AmountIn TFloat
              , AmountOut TFloat
@@ -55,8 +57,9 @@ BEGIN
            , Movement_BankStatementItem.InvNumber AS BankSInvNumber_Parent
            , Movement.ParentId
            , Movement.OperDate
-           , Object_Status.ObjectCode   AS StatusCode
-           , Object_Status.ValueData    AS StatusName
+           , MIDate_ServiceDate.ValueData  AS ServiceDate
+           , Object_Status.ObjectCode      AS StatusCode
+           , Object_Status.ValueData       AS StatusName
            , CASE WHEN MovementItem.Amount > 0 THEN
                        MovementItem.Amount
                   ELSE
@@ -173,8 +176,8 @@ BEGIN
             LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
-                                         ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
-                                        AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                             ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
@@ -195,7 +198,15 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_BankAccount
                                              ON MILinkObject_BankAccount.MovementItemId = MovementItem.Id
                                             AND MILinkObject_BankAccount.DescId = zc_MILinkObject_BankAccount()
-            LEFT JOIN Object_BankAccount_View AS Partner_BankAccount_View ON Partner_BankAccount_View.Id = MILinkObject_BankAccount.ObjectId;
+            LEFT JOIN Object_BankAccount_View AS Partner_BankAccount_View ON Partner_BankAccount_View.Id = MILinkObject_BankAccount.ObjectId
+
+            LEFT JOIN MovementItemDate AS MIDate_ServiceDate
+                                       ON MIDate_ServiceDate.MovementItemId = MovementItem.Id
+                                      AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
+                                      -- так в кассе 
+                                      --AND MILinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_60101() -- Заработная плата + Заработная плата
+                                      --AND MILinkObject_MoneyPlace.ObjectId > 0
+            ;
 
   
 END;

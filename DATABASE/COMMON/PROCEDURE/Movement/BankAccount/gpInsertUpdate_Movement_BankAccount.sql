@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Movement_BankAccount()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
     IN inInvNumber            TVarChar  , -- Номер документа
     IN inOperDate             TDateTime , -- Дата документа
+    IN inServiceDate          TDateTime , -- Дата начисления
     IN inAmountIn             TFloat    , -- Сумма прихода
     IN inAmountOut            TFloat    , -- Сумма расхода
     IN inAmountSumm           TFloat    , -- Cумма грн, обмен
@@ -86,6 +88,7 @@ BEGIN
      ioId:= lpInsertUpdate_Movement_BankAccount (ioId                   := ioId
                                                , inInvNumber            := inInvNumber
                                                , inOperDate             := inOperDate
+                                               , inServiceDate          := inServiceDate
                                                , inAmount               := vbAmount
                                                , inAmountSumm           := inAmountSumm
                                                , inAmountCurrency       := vbAmountCurrency
@@ -124,6 +127,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 18.09.18         *
  21.07.15         *
  12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp
  12.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...

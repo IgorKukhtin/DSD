@@ -55,6 +55,8 @@ type
     InvoiceGuides: TdsdGuides;
     cxLabel16: TcxLabel;
     ceComment_Invoice: TcxTextEdit;
+    cxLabel17: TcxLabel;
+    ceServiceDate: TcxDateEdit;
   private
     { Private declarations }
   public
