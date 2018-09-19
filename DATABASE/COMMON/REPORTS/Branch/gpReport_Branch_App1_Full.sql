@@ -76,7 +76,7 @@ BEGIN
                         )
        , tmpObject_Account_View AS (SELECT *
                                    FROM Object_Account_View
-                                   WHERE Object_Account_View.AccountDirectionId IN (zc_Enum_AccountDirection_20700(), zc_Enum_AccountDirection_60200())
+                                   WHERE Object_Account_View.AccountDirectionId IN (/*zc_Enum_AccountDirection_20700(), */zc_Enum_AccountDirection_60200())
                                    )
      
        , tmpContainerListSum AS (SELECT tmpUnitList.BranchId, tmpUnitList.Id AS UnitId, tmpUnitList.isUnit_Vz, Container.Id AS ContainerId, Object_Account_View.AccountDirectionId, Container.*
@@ -487,7 +487,142 @@ BEGIN
                                             ON ObjectFloat_Weight.ObjectId = tmpGoodsCount.GoodsId
                                            AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                      )
+       , tmpAll AS (SELECT tmpGoodsSumm.BranchId 
+                         , CAST (SUM (tmpGoodsSumm.SummStart) AS NUMERIC (16, 2))   AS SummStart
+                         , CAST (SUM (tmpGoodsSumm.SummEnd) AS NUMERIC (16, 2))     AS SummEnd
+                         , CAST (SUM (tmpGoodsSumm.SummIn) AS NUMERIC (16, 2))      AS SummIn
+                         , CAST (SUM (tmpGoodsSumm.SummOut) AS NUMERIC (16, 2))     AS SummOut
+                         , CAST (SUM (tmpGoodsSumm.SummSale) AS NUMERIC (16, 2))           AS SummSale
+                         , CAST (SUM (tmpGoodsSumm.SummSaleReal)   AS NUMERIC (16, 2))     AS SummSaleReal
+                         , CAST (SUM (tmpGoodsSumm.SummSaleReal_A) AS NUMERIC (16, 2))     AS SummSaleReal_A
+                         , CAST (SUM (tmpGoodsSumm.SummSaleReal_P) AS NUMERIC (16, 2))     AS SummSaleReal_P
+                         , CAST (SUM (tmpGoodsSumm.SummReturnIn) AS NUMERIC (16, 2))       AS SummReturnIn
+                         
+                         , CAST (SUM (tmpGoodsSumm.SummReturnIn_10200) AS NUMERIC (16, 2)) AS SummReturnIn_10200
+                         , CAST (SUM (tmpGoodsSumm.SummReturnIn_10300) AS NUMERIC (16, 2)) AS SummReturnIn_10300
+                         , CAST (SUM (tmpGoodsSumm.SummReturnInReal)   AS NUMERIC (16, 2)) AS SummReturnInReal
+                         , CAST (SUM (tmpGoodsSumm.SummReturnInReal_A) AS NUMERIC (16, 2)) AS SummReturnInReal_A
+                         , CAST (SUM (tmpGoodsSumm.SummReturnInReal_P) AS NUMERIC (16, 2)) AS SummReturnInReal_P
+                                                 
+                         , CAST (SUM (tmpGoodsSumm.SummSendOnPriceIn) AS NUMERIC (16, 2))  AS SummSendOnPriceIn
+                         , CAST (SUM (tmpGoodsSumm.SummLoss) AS NUMERIC (16, 2))           AS SummLoss    
+                         , CAST (SUM (tmpGoodsSumm.SummSendOnPriceOut) AS NUMERIC (16, 2)) AS SummSendOnPriceOut  
+                         , CAST (SUM (tmpGoodsSumm.SummPeresortIn) AS NUMERIC (16, 2))     AS SummPeresortIn    
+                         , CAST (SUM (tmpGoodsSumm.SummPeresortOut) AS NUMERIC (16, 2))    AS SummPeresortOut    
+                         , CAST (-1 * SUM (tmpGoodsSumm.SummInventory) AS NUMERIC (16, 2))  AS SummInventory
+                         , CAST (SUM (tmpGoodsSumm.SummSale_40208) AS NUMERIC (16, 2)) AS SummSale_40208
+                         , CAST (SUM (tmpGoodsSumm.SummSale_10500) AS NUMERIC (16, 2)) AS SummSale_10500
+                         , CAST (SUM (tmpGoodsSumm.SummSale_10200) AS NUMERIC (16, 2)) AS SummSale_10200
+                         , CAST (SUM (tmpGoodsSumm.SummSale_10250) AS NUMERIC (16, 2)) AS SummSale_10250
+                         , CAST (SUM (tmpGoodsSumm.SummSale_10300) AS NUMERIC (16, 2)) AS SummSale_10300
+                         , CAST (SUM (tmpGoodsSumm.SummInventory_RePrice) AS NUMERIC (16, 2)) AS SummInventory_RePrice
+ 
+                         , CAST (SUM (tmpGoodsSumm.SummStart_Vz) AS NUMERIC (16, 2))          AS SummStart_Vz
+                         , CAST (SUM (tmpGoodsSumm.SummEnd_Vz) AS NUMERIC (16, 2))            AS SummEnd_Vz
+                         , CAST (SUM (tmpGoodsSumm.SummReturnIn_Vz) AS NUMERIC (16, 2))       AS SummReturnIn_Vz
+                         , CAST (SUM (tmpGoodsSumm.SummPeresortIn_Vz) AS NUMERIC (16, 2))     AS SummPeresortIn_Vz    
+                         , CAST (SUM (tmpGoodsSumm.SummPeresortOut_Vz) AS NUMERIC (16, 2))    AS SummPeresortOut_Vz  
+                         , CAST (SUM (tmpGoodsSumm.SummSendOnPriceOut_Vz) AS NUMERIC (16, 2)) AS SummSendOnPriceOut_Vz  
+                         , CAST (SUM (tmpGoodsSumm.SummLoss_Vz) AS NUMERIC (16, 2))           AS SummLoss_Vz
+                         , CAST (-1 * SUM (tmpGoodsSumm.SummInventory_Vz) AS NUMERIC (16, 2))      AS SummInventory_Vz
+                         , CAST (SUM (tmpGoodsSumm.SummInventory_RePrice_Vz) AS NUMERIC (16, 2)) AS SummInventory_RePrice_Vz
+                         , 0 AS CountStart
+                         , 0 AS CountEnd
+                         , 0 AS CountIn
+                         , 0 AS CountOut
+                         , 0 AS CountSale
+                         , 0 AS CountSaleReal
+                         , 0 AS CountReturnIn
+                         , 0 AS CountSendOnPriceIn
+                         , 0 AS CountLoss    
+                         , 0 AS CountSendOnPriceOut  
+                         , 0 AS CountPeresortIn    
+                         , 0 AS CountPeresortOut    
+                         , 0 AS CountInventory
+                         , 0 AS CountSale_40208
+                         , 0 AS CountSale_10500
+                         , 0 AS CountInventory_RePrice
+                         , 0 AS CountStart_Vz
+                         , 0 AS CountEnd_Vz
+                         , 0 AS CountReturnIn_Vz
+                         , 0 AS CountPeresortIn_Vz    
+                         , 0 AS CountPeresortOut_Vz  
+                         , 0 AS CountSendOnPriceOut_Vz  
+                         , 0 AS CountLoss_Vz
+                         , 0 AS CountInventory_Vz
+                         , 0 AS CountInventory_RePrice_Vz
 
+                    FROM tmpGoodsSumm
+                    GROUP BY tmpGoodsSumm.BranchId
+               UNION ALL
+                    SELECT tmpGoodsWeight.BranchId 
+                         , 0 AS SummStart
+                         , 0 AS SummEnd
+                         , 0 AS SummIn
+                         , 0 AS SummOut
+                         , 0 AS SummSale
+                         , 0 AS SummSaleReal
+                         , 0 AS SummSaleReal_A
+                         , 0 AS SummSaleReal_P
+ 
+                         , 0 AS SummReturnIn
+                         , 0 AS SummReturnIn_10200
+                         , 0 AS SummReturnIn_10300
+                         , 0 AS SummReturnInReal
+                         , 0 AS SummReturnInReal_A
+                         , 0 AS SummReturnInReal_P
+ 
+                         , 0 AS SummSendOnPriceIn
+                         , 0 AS SummLoss    
+                         , 0 AS SummSendOnPriceOut  
+                         , 0 AS SummPeresortIn    
+                         , 0 AS SummPeresortOut    
+                         , 0 AS SummInventory
+                         , 0 AS SummSale_40208
+                         , 0 AS SummSale_10500
+                         , 0 AS SummSale_10200
+                         , 0 AS SummSale_10250
+                         , 0 AS SummSale_10300
+                         , 0 AS SummInventory_RePrice
+                         , 0 AS SummStart_Vz
+                         , 0 AS SummEnd_Vz
+                         , 0 AS SummReturnIn_Vz
+                         , 0 AS SummPeresortIn_Vz    
+                         , 0 AS SummPeresortOut_Vz  
+                         , 0 AS SummSendOnPriceOut_Vz  
+                         , 0 AS SummLoss_Vz
+                         , 0 AS SummInventory_Vz
+                         , 0 AS SummInventory_RePrice_Vz
+ 
+                         , CAST (SUM (tmpGoodsWeight.CountStart) AS NUMERIC (16, 2))   AS CountStart
+                         , CAST (SUM (tmpGoodsWeight.CountEnd) AS NUMERIC (16, 2))     AS CountEnd
+                         , CAST (SUM (tmpGoodsWeight.CountIn) AS NUMERIC (16, 2))      AS CountIn
+                         , CAST (SUM (tmpGoodsWeight.CountOut) AS NUMERIC (16, 2))     AS CountOut
+                         , CAST (SUM (tmpGoodsWeight.CountSale) AS NUMERIC (16, 2))           AS CountSale
+                         , CAST (SUM (tmpGoodsWeight.CountSaleReal) AS NUMERIC (16, 2))       AS CountSaleReal
+                         , CAST (SUM (tmpGoodsWeight.CountReturnIn) AS NUMERIC (16, 2))       AS CountReturnIn
+                         , CAST (SUM (tmpGoodsWeight.CountSendOnPriceIn) AS NUMERIC (16, 2))  AS CountSendOnPriceIn
+                         , CAST (SUM (tmpGoodsWeight.CountLoss) AS NUMERIC (16, 2))           AS CountLoss    
+                         , CAST (SUM (tmpGoodsWeight.CountSendOnPriceOut) AS NUMERIC (16, 2)) AS CountSendOnPriceOut  
+                         , CAST (SUM (tmpGoodsWeight.CountPeresortIn) AS NUMERIC (16, 2))     AS CountPeresortIn 
+                         , CAST (SUM (tmpGoodsWeight.CountPeresortOut) AS NUMERIC (16, 2))    AS CountPeresortOut    
+                         , CAST (SUM (tmpGoodsWeight.CountInventory) AS NUMERIC (16, 2))      AS CountInventory
+                         , CAST (SUM (tmpGoodsWeight.CountSale_40208) AS NUMERIC (16, 2))     AS CountSale_40208
+                         , CAST (SUM (tmpGoodsWeight.CountSale_10500) AS NUMERIC (16, 2))     AS CountSale_10500
+                         , CAST (SUM (tmpGoodsWeight.CountInventory_RePrice) AS NUMERIC (16, 2)) AS CountInventory_RePrice
+ 
+                         , CAST (SUM (tmpGoodsWeight.CountStart_Vz) AS NUMERIC (16, 2))          AS CountStart_Vz
+                         , CAST (SUM (tmpGoodsWeight.CountEnd_Vz) AS NUMERIC (16, 2))            AS CountEnd_Vz
+                         , CAST (SUM (tmpGoodsWeight.CountReturnIn_Vz) AS NUMERIC (16, 2))       AS CountReturnIn_Vz
+                         , CAST (SUM (tmpGoodsWeight.CountPeresortIn_Vz) AS NUMERIC (16, 2))     AS CountPeresortIn_Vz    
+                         , CAST (SUM (tmpGoodsWeight.CountPeresortOut_Vz) AS NUMERIC (16, 2))    AS CountPeresortOut_Vz  
+                         , CAST (SUM (tmpGoodsWeight.CountSendOnPriceOut_Vz) AS NUMERIC (16, 2)) AS CountSendOnPriceOut_Vz  
+                         , CAST (SUM (tmpGoodsWeight.CountLoss_Vz) AS NUMERIC (16, 2))           AS CountLoss_Vz
+                         , CAST (SUM (tmpGoodsWeight.CountInventory_Vz) AS NUMERIC (16, 2))      AS CountInventory_Vz
+                         , CAST (SUM (tmpGoodsWeight.CountInventory_RePrice_Vz) AS NUMERIC (16, 2)) AS CountInventory_RePrice_Vz
+                    FROM tmpGoodsWeight
+                    GROUP BY tmpGoodsWeight.BranchId
+                    )
  
    SELECT Object_Branch.ValueData  ::TVarChar   AS BranchName
        
@@ -564,147 +699,10 @@ BEGIN
         , CAST (SUM (tmpAll.CountInventory_Vz)                AS TFloat) AS InventoryWeight_Vz
         , CAST (SUM (tmpAll.CountInventory_RePrice_Vz)        AS TFloat) AS WeightInventory_RePrice_Vz        
   
-   FROM 
-                  (SELECT tmpGoodsSumm.BranchId 
-                        , CAST (SUM (tmpGoodsSumm.SummStart) AS NUMERIC (16, 2))   AS SummStart
-                        , CAST (SUM (tmpGoodsSumm.SummEnd) AS NUMERIC (16, 2))     AS SummEnd
-                        , CAST (SUM (tmpGoodsSumm.SummIn) AS NUMERIC (16, 2))      AS SummIn
-                        , CAST (SUM (tmpGoodsSumm.SummOut) AS NUMERIC (16, 2))     AS SummOut
-                        , CAST (SUM (tmpGoodsSumm.SummSale) AS NUMERIC (16, 2))           AS SummSale
-                        , CAST (SUM (tmpGoodsSumm.SummSaleReal)   AS NUMERIC (16, 2))     AS SummSaleReal
-                        , CAST (SUM (tmpGoodsSumm.SummSaleReal_A) AS NUMERIC (16, 2))     AS SummSaleReal_A
-                        , CAST (SUM (tmpGoodsSumm.SummSaleReal_P) AS NUMERIC (16, 2))     AS SummSaleReal_P
-                        , CAST (SUM (tmpGoodsSumm.SummReturnIn) AS NUMERIC (16, 2))       AS SummReturnIn
-                        
-                        , CAST (SUM (tmpGoodsSumm.SummReturnIn_10200) AS NUMERIC (16, 2)) AS SummReturnIn_10200
-                        , CAST (SUM (tmpGoodsSumm.SummReturnIn_10300) AS NUMERIC (16, 2)) AS SummReturnIn_10300
-                        , CAST (SUM (tmpGoodsSumm.SummReturnInReal)   AS NUMERIC (16, 2)) AS SummReturnInReal
-                        , CAST (SUM (tmpGoodsSumm.SummReturnInReal_A) AS NUMERIC (16, 2)) AS SummReturnInReal_A
-                        , CAST (SUM (tmpGoodsSumm.SummReturnInReal_P) AS NUMERIC (16, 2)) AS SummReturnInReal_P
-                                                
-                        , CAST (SUM (tmpGoodsSumm.SummSendOnPriceIn) AS NUMERIC (16, 2))  AS SummSendOnPriceIn
-                        , CAST (SUM (tmpGoodsSumm.SummLoss) AS NUMERIC (16, 2))           AS SummLoss    
-                        , CAST (SUM (tmpGoodsSumm.SummSendOnPriceOut) AS NUMERIC (16, 2)) AS SummSendOnPriceOut  
-                        , CAST (SUM (tmpGoodsSumm.SummPeresortIn) AS NUMERIC (16, 2))     AS SummPeresortIn    
-                        , CAST (SUM (tmpGoodsSumm.SummPeresortOut) AS NUMERIC (16, 2))    AS SummPeresortOut    
-                        , CAST (-1 * SUM (tmpGoodsSumm.SummInventory) AS NUMERIC (16, 2))  AS SummInventory
-                        , CAST (SUM (tmpGoodsSumm.SummSale_40208) AS NUMERIC (16, 2)) AS SummSale_40208
-                        , CAST (SUM (tmpGoodsSumm.SummSale_10500) AS NUMERIC (16, 2)) AS SummSale_10500
-                        , CAST (SUM (tmpGoodsSumm.SummSale_10200) AS NUMERIC (16, 2)) AS SummSale_10200
-                        , CAST (SUM (tmpGoodsSumm.SummSale_10250) AS NUMERIC (16, 2)) AS SummSale_10250
-                        , CAST (SUM (tmpGoodsSumm.SummSale_10300) AS NUMERIC (16, 2)) AS SummSale_10300
-                        , CAST (SUM (tmpGoodsSumm.SummInventory_RePrice) AS NUMERIC (16, 2)) AS SummInventory_RePrice
-
-                        , CAST (SUM (tmpGoodsSumm.SummStart_Vz) AS NUMERIC (16, 2))          AS SummStart_Vz
-                        , CAST (SUM (tmpGoodsSumm.SummEnd_Vz) AS NUMERIC (16, 2))            AS SummEnd_Vz
-                        , CAST (SUM (tmpGoodsSumm.SummReturnIn_Vz) AS NUMERIC (16, 2))       AS SummReturnIn_Vz
-                        , CAST (SUM (tmpGoodsSumm.SummPeresortIn_Vz) AS NUMERIC (16, 2))     AS SummPeresortIn_Vz    
-                        , CAST (SUM (tmpGoodsSumm.SummPeresortOut_Vz) AS NUMERIC (16, 2))    AS SummPeresortOut_Vz  
-                        , CAST (SUM (tmpGoodsSumm.SummSendOnPriceOut_Vz) AS NUMERIC (16, 2)) AS SummSendOnPriceOut_Vz  
-                        , CAST (SUM (tmpGoodsSumm.SummLoss_Vz) AS NUMERIC (16, 2))           AS SummLoss_Vz
-                        , CAST (-1 * SUM (tmpGoodsSumm.SummInventory_Vz) AS NUMERIC (16, 2))      AS SummInventory_Vz
-                        , CAST (SUM (tmpGoodsSumm.SummInventory_RePrice_Vz) AS NUMERIC (16, 2)) AS SummInventory_RePrice_Vz
-                        , 0 AS CountStart
-                        , 0 AS CountEnd
-                        , 0 AS CountIn
-                        , 0 AS CountOut
-                        , 0 AS CountSale
-                        , 0 AS CountSaleReal
-                        , 0 AS CountReturnIn
-                        , 0 AS CountSendOnPriceIn
-                        , 0 AS CountLoss    
-                        , 0 AS CountSendOnPriceOut  
-                        , 0 AS CountPeresortIn    
-                        , 0 AS CountPeresortOut    
-                        , 0 AS CountInventory
-                        , 0 AS CountSale_40208
-                        , 0 AS CountSale_10500
-                        , 0 AS CountInventory_RePrice
-                        , 0 AS CountStart_Vz
-                        , 0 AS CountEnd_Vz
-                        , 0 AS CountReturnIn_Vz
-                        , 0 AS CountPeresortIn_Vz    
-                        , 0 AS CountPeresortOut_Vz  
-                        , 0 AS CountSendOnPriceOut_Vz  
-                        , 0 AS CountLoss_Vz
-                        , 0 AS CountInventory_Vz
-                        , 0 AS CountInventory_RePrice_Vz
-
-                   FROM tmpGoodsSumm
-                   GROUP BY tmpGoodsSumm.BranchId
-               UNION ALL
-                   SELECT tmpGoodsWeight.BranchId 
-                        , 0 AS SummStart
-                        , 0 AS SummEnd
-                        , 0 AS SummIn
-                        , 0 AS SummOut
-                        , 0 AS SummSale
-                        , 0 AS SummSaleReal
-                        , 0 AS SummSaleReal_A
-                        , 0 AS SummSaleReal_P
-
-                        , 0 AS SummReturnIn
-                        , 0 AS SummReturnIn_10200
-                        , 0 AS SummReturnIn_10300
-                        , 0 AS SummReturnInReal
-                        , 0 AS SummReturnInReal_A
-                        , 0 AS SummReturnInReal_P
-
-                        , 0 AS SummSendOnPriceIn
-                        , 0 AS SummLoss    
-                        , 0 AS SummSendOnPriceOut  
-                        , 0 AS SummPeresortIn    
-                        , 0 AS SummPeresortOut    
-                        , 0 AS SummInventory
-                        , 0 AS SummSale_40208
-                        , 0 AS SummSale_10500
-                        , 0 AS SummSale_10200
-                        , 0 AS SummSale_10250
-                        , 0 AS SummSale_10300
-                        , 0 AS SummInventory_RePrice
-                        , 0 AS SummStart_Vz
-                        , 0 AS SummEnd_Vz
-                        , 0 AS SummReturnIn_Vz
-                        , 0 AS SummPeresortIn_Vz    
-                        , 0 AS SummPeresortOut_Vz  
-                        , 0 AS SummSendOnPriceOut_Vz  
-                        , 0 AS SummLoss_Vz
-                        , 0 AS SummInventory_Vz
-                        , 0 AS SummInventory_RePrice_Vz
-
-                        , CAST (SUM (tmpGoodsWeight.CountStart) AS NUMERIC (16, 2))   AS CountStart
-                        , CAST (SUM (tmpGoodsWeight.CountEnd) AS NUMERIC (16, 2))     AS CountEnd
-                        , CAST (SUM (tmpGoodsWeight.CountIn) AS NUMERIC (16, 2))      AS CountIn
-                        , CAST (SUM (tmpGoodsWeight.CountOut) AS NUMERIC (16, 2))     AS CountOut
-                        , CAST (SUM (tmpGoodsWeight.CountSale) AS NUMERIC (16, 2))           AS CountSale
-                        , CAST (SUM (tmpGoodsWeight.CountSaleReal) AS NUMERIC (16, 2))       AS CountSaleReal
-                        , CAST (SUM (tmpGoodsWeight.CountReturnIn) AS NUMERIC (16, 2))       AS CountReturnIn
-                        , CAST (SUM (tmpGoodsWeight.CountSendOnPriceIn) AS NUMERIC (16, 2))  AS CountSendOnPriceIn
-                        , CAST (SUM (tmpGoodsWeight.CountLoss) AS NUMERIC (16, 2))           AS CountLoss    
-                        , CAST (SUM (tmpGoodsWeight.CountSendOnPriceOut) AS NUMERIC (16, 2)) AS CountSendOnPriceOut  
-                        , CAST (SUM (tmpGoodsWeight.CountPeresortIn) AS NUMERIC (16, 2))     AS CountPeresortIn 
-                        , CAST (SUM (tmpGoodsWeight.CountPeresortOut) AS NUMERIC (16, 2))    AS CountPeresortOut    
-                        , CAST (SUM (tmpGoodsWeight.CountInventory) AS NUMERIC (16, 2))      AS CountInventory
-                        , CAST (SUM (tmpGoodsWeight.CountSale_40208) AS NUMERIC (16, 2))     AS CountSale_40208
-                        , CAST (SUM (tmpGoodsWeight.CountSale_10500) AS NUMERIC (16, 2))     AS CountSale_10500
-                        , CAST (SUM (tmpGoodsWeight.CountInventory_RePrice) AS NUMERIC (16, 2)) AS CountInventory_RePrice
-
-                        , CAST (SUM (tmpGoodsWeight.CountStart_Vz) AS NUMERIC (16, 2))          AS CountStart_Vz
-                        , CAST (SUM (tmpGoodsWeight.CountEnd_Vz) AS NUMERIC (16, 2))            AS CountEnd_Vz
-                        , CAST (SUM (tmpGoodsWeight.CountReturnIn_Vz) AS NUMERIC (16, 2))       AS CountReturnIn_Vz
-                        , CAST (SUM (tmpGoodsWeight.CountPeresortIn_Vz) AS NUMERIC (16, 2))     AS CountPeresortIn_Vz    
-                        , CAST (SUM (tmpGoodsWeight.CountPeresortOut_Vz) AS NUMERIC (16, 2))    AS CountPeresortOut_Vz  
-                        , CAST (SUM (tmpGoodsWeight.CountSendOnPriceOut_Vz) AS NUMERIC (16, 2)) AS CountSendOnPriceOut_Vz  
-                        , CAST (SUM (tmpGoodsWeight.CountLoss_Vz) AS NUMERIC (16, 2))           AS CountLoss_Vz
-                        , CAST (SUM (tmpGoodsWeight.CountInventory_Vz) AS NUMERIC (16, 2))      AS CountInventory_Vz
-                        , CAST (SUM (tmpGoodsWeight.CountInventory_RePrice_Vz) AS NUMERIC (16, 2)) AS CountInventory_RePrice_Vz
-                   FROM tmpGoodsWeight
-                   GROUP BY tmpGoodsWeight.BranchId
-                ) AS tmpAll
-
-          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpAll.BranchId   --CASE WHEN COALESCE(inBranchId,0) <> 0 THEN inBranchId END
-      GROUP BY  Object_Branch.ValueData  
-      ORDER BY Object_Branch.ValueData 
+   FROM tmpAll            
+        LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpAll.BranchId   --CASE WHEN COALESCE(inBranchId,0) <> 0 THEN inBranchId END
+   GROUP BY  Object_Branch.ValueData  
+   ORDER BY Object_Branch.ValueData 
 
       ;
 
