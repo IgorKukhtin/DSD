@@ -292,6 +292,14 @@ inherited ListDiffForm: TListDiffForm
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserId'
+        Value = Null
+        Component = ListDiffCDS
+        ComponentItem = 'UserID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 64

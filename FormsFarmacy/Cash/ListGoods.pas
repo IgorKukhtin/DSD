@@ -104,7 +104,9 @@ procedure TListGoodsForm.ListGoodsGridDBTableViewFocusedRecordChanged(
   Sender: TcxCustomGridTableView; APrevFocusedRecord,
   AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
 begin
-  ListDiffCDS.Filter := 'Id = ' + ListGoodsCDS.FieldByName('Id').AsString;
+  if not ListGoodsCDS.Eof then
+    ListDiffCDS.Filter := 'Id = ' + ListGoodsCDS.FieldByName('Id').AsString
+  else ListDiffCDS.Filter := 'Id = 0';
 end;
 
 procedure TListGoodsForm.actListDiffAddGoodsExecute(Sender: TObject);

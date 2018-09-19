@@ -124,6 +124,8 @@ type
     N7: TMenuItem;
     actCashRemains: TAction;
     N8: TMenuItem;
+    ListDiffCDS: TClientDataSet;
+    spSendListDiff: TdsdStoredProc;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -156,6 +158,7 @@ type
     procedure SaveLocalVIP;
     procedure SaveLocalGoods;
     procedure SaveRealAll;
+    procedure SaveListDiff;
     procedure ChangeStatus(AStatus: String);
     function InitLocalStorage: Boolean;
     function ExistNotCompletedCheck: boolean;
@@ -179,7 +182,8 @@ var
   csCriticalSection_Save,
   csCriticalSection_All: TRTLCriticalSection;
   AllowedConduct : Boolean = false;
-  MutexDBF, MutexDBFDiff,  MutexVip, MutexRemains, MutexAlternative, MutexRefresh, MutexAllowedConduct, MutexGoods: THandle;
+  MutexDBF, MutexDBFDiff,  MutexVip, MutexRemains, MutexAlternative, MutexRefresh,
+  MutexAllowedConduct, MutexGoods, MutexDiffCDS: THandle;
   LastErr: Integer;
 
   FM_SERVISE: Integer;
@@ -219,6 +223,10 @@ begin
 
         3: begin
             SaveRealAll;    // попросили провести чеки
+           end;
+
+        4: begin
+             SaveListDiff;  // попросили отправить листы звквзовж
            end;
 
         9: begin
@@ -548,8 +556,9 @@ begin
   ChangeStatus('Инициализация локального хранилища - да');
   FSaveRealAllRunning := false;
   TimerSaveReal.Enabled := false;
-  SaveRealAll; // Проводим чеки которые остались не проведенными раньше. Учитывается CountСhecksAtOnce = 7
-               // проведутся первые 7 чеков и будут ждать или таймер или пока не пройдет первая покупка
+  SaveRealAll;  // Проводим чеки которые остались не проведенными раньше. Учитывается CountСhecksAtOnce = 7
+                // проведутся первые 7 чеков и будут ждать или таймер или пока не пройдет первая покупка
+  SaveListDiff; // Отправляем листы отказов
   if not FHasError then
     ChangeStatus('Получение остатков');
   FirstRemainsReceived := false;
@@ -732,6 +741,40 @@ begin  //+
   finally
     freeAndNil(sp);
   end;
+
+  // Очистка лисиа заказов
+  if FileExists(ListDiff_lcl) then
+  begin
+    Add_Log('Start MutexDiffCDS');
+    WaitForSingleObject(MutexDiffCDS, INFINITE);
+    try
+      try
+
+        LoadLocalData(ListDiffCDS, ListDiff_lcl);
+        if not ListDiffCDS.Active then ListDiffCDS.Open;
+
+        ListDiffCDS.First;
+        while not ListDiffCDS.Eof do
+        begin
+          if ListDiffCDS.FieldByName('IsSend').AsBoolean and
+            (StartOfTheDay(ListDiffCDS.FieldByName('DateInput').AsDateTime) < IncDay(Date, - 1)) then
+          begin
+            ListDiffCDS.Delete;
+            Continue;
+          end;
+          ListDiffCDS.Next;
+        end;
+        SaveLocalData(ListDiffCDS, ListDiff_lcl);
+
+      Except ON E:Exception do
+        Add_Log('Ошибка отправки листа отказов:' + E.Message);
+      end;
+    finally
+      Add_Log('End MutexDiffCDS');
+      ReleaseMutex(MutexDiffCDS);
+    end;
+  end;
+
 end;
 
 procedure TMainCashForm2.TimerSaveRealTimer(Sender: TObject);
@@ -740,6 +783,7 @@ begin
 
   try
     SaveRealAll;
+    SaveListDiff;
   finally
     TimerSaveReal.Enabled := True;
   end;
@@ -1434,6 +1478,43 @@ begin
     Add_Log('SaveReal end');
     TimerSaveReal.Interval := GetInterval_CashRemains_Diff;
     TimerSaveReal.Enabled := true;
+  end;
+end;
+
+procedure TMainCashForm2.SaveListDiff;
+begin
+  // Отправка лисиа отказов
+  if FileExists(ListDiff_lcl) then
+  begin
+    Add_Log('Start MutexDiffCDS');
+    WaitForSingleObject(MutexDiffCDS, INFINITE);
+    try
+      try
+
+        LoadLocalData(ListDiffCDS, ListDiff_lcl);
+        if not ListDiffCDS.Active then ListDiffCDS.Open;
+
+        ListDiffCDS.First;
+        while not ListDiffCDS.Eof do
+        begin
+          if not ListDiffCDS.FieldByName('IsSend').AsBoolean then
+          begin
+            spSendListDiff.Execute;
+            ListDiffCDS.Edit;
+            ListDiffCDS.FieldByName('IsSend').AsBoolean := True;
+            ListDiffCDS.Post;
+          end;
+          ListDiffCDS.Next;
+        end;
+        SaveLocalData(ListDiffCDS, ListDiff_lcl);
+
+      Except ON E:Exception do
+        Add_Log('Ошибка отправки листа отказов:' + E.Message);
+      end;
+    finally
+      Add_Log('End MutexDiffCDS');
+      ReleaseMutex(MutexDiffCDS);
+    end;
   end;
 end;
 

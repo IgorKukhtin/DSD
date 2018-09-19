@@ -55,7 +55,7 @@ implementation
 
 {$R *.dfm}
 
-uses LocalWorkUnit, CommonData;
+uses LocalWorkUnit, CommonData, MainCash2;
 
 
 function CheckListDiffCDS : boolean;
@@ -183,6 +183,8 @@ begin
     end;
   finally
     ReleaseMutex(MutexDiffCDS);
+      // отправка сообщения о необходимости отправки листа отказов
+    PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 4);
   end;
 end;
 
