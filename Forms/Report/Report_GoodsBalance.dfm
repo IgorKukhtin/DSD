@@ -1870,6 +1870,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_MOAuto'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintBarCode'
         end
         item
@@ -1956,6 +1964,10 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
     end
     object bbReport_Goods: TdxBarButton
       Action = actReport_Goods
+      Category = 0
+    end
+    object bbPrint_MOAuto: TdxBarButton
+      Action = actPrint_MOAuto
       Category = 0
     end
   end
@@ -2763,6 +2775,118 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1086#1094#1077#1085#1090' '#1089#1087#1080#1089#1072#1085#1080#1103')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1086#1094#1077#1085#1090' '#1089#1087#1080#1089#1072#1085#1080#1103')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_MOAuto: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1052#1054' '#1080#1083#1080' '#1040#1074#1090#1086
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1052#1054' '#1080#1083#1080' '#1040#1074#1090#1086
+      ImageIndex = 16
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'LocationName;UnitName_to;DriverName;GoodsGroupNameFull;GoodsGrou' +
+            'pName;GoodsName;GoodsKindName;PartionGoodsName;AssetToName;InfoM' +
+            'oneyName_all;InfoMoneyName_all_Detail'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 43101d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43101d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesUnitGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationName'
+          Value = ''
+          Component = GuidesLocation
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GuidesGoodsGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = ''
+          Component = GuidesGoods
+          ComponentItem = 'TextValue'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = 'False'
+          Component = cbGoodsKind
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartionGoods'
+          Value = 'False'
+          Component = cbPartionGoods
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAmount'
+          Value = 'False'
+          Component = cbAmount
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isInfoMoney'
+          Value = 'False'
+          Component = cbInfoMoney
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName_by'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationName_by'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1087#1086' '#1052#1054' '#1080#1083#1080' '#1040#1074#1090#1086')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1072' ('#1087#1086' '#1052#1054' '#1080#1083#1080' '#1040#1074#1090#1086')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''

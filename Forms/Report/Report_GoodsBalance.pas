@@ -187,6 +187,8 @@ type
     bbReport_Goods: TdxBarButton;
     UnitName_to: TcxGridDBColumn;
     DriverName: TcxGridDBColumn;
+    actPrint_MOAuto: TdsdPrintAction;
+    bbPrint_MOAuto: TdxBarButton;
   private
   public
   end;
