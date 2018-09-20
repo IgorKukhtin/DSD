@@ -1,4 +1,4 @@
- -- Function: gpReport_Transport ()
+-- Function: gpReport_Transport ()
 
 DROP FUNCTION IF EXISTS gpReport_TransportFuel (TDateTime, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_TransportFuel (TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, TVarChar);
@@ -22,6 +22,7 @@ RETURNS TABLE (CarModelName TVarChar, CarId Integer, CarCode Integer, CarName TV
              , StartAmount TFloat, InAmount TFloat, OutAmount TFloat, EndAmount TFloat
              , StartSumm TFloat, InSumm TFloat, OutSumm TFloat, EndSumm TFloat
              , outSumm_ZP            TFloat
+             , outSumm_ZP_pl         TFloat
              , outSumm_Zatraty       TFloat
              , outSumm_Kompensaciya  TFloat
              , outSumm_Juridical     TFloat
@@ -166,13 +167,19 @@ BEGIN
                              END) AS IncomeSumm
                         -- Сумма расход на ЗП (т.е. сотрудник заправлялся в счет ЗП)
                       , SUM (CASE WHEN MIContainer.DescId = zc_Container_Summ()
-                                   AND (-- View_ProfitLoss.ProfitLossId                  = 9342                                 -- "Содержание филиалов" + "услуги полученные"
-                                        OL_ProfitLoss_InfoMoneyDestination.ChildObjectId = zc_Enum_InfoMoneyDestination_21400() -- Общефирменные + услуги полученные
-                                     OR View_Account.AccountDirectionId                  = zc_Enum_AccountDirection_70500()     -- Кредиторы     + Сотрудники + ???Заработная плата???
+                                   AND (View_Account.AccountDirectionId = zc_Enum_AccountDirection_70500() -- Кредиторы     + Сотрудники + ???Заработная плата???
                                        )
                                        THEN MIContainer.Amount
                                   ELSE 0
                              END) AS outSumm_ZP
+                        -- Сумма расход на ЗП (т.е. сотрудник заправлялся в счет ЗП)
+                      , SUM (CASE WHEN MIContainer.DescId = zc_Container_Summ()
+                                   AND (-- View_ProfitLoss.ProfitLossId                  = 9342                                 -- "Содержание филиалов" + "услуги полученные"
+                                        OL_ProfitLoss_InfoMoneyDestination.ChildObjectId = zc_Enum_InfoMoneyDestination_21400() -- Общефирменные + услуги полученные
+                                       )
+                                       THEN MIContainer.Amount
+                                  ELSE 0
+                             END) AS outSumm_ZP_pl
                         -- Сумма расход - затраты (затраты предприятия)
                       , SUM (CASE WHEN MIContainer.DescId = zc_Container_Summ()
                                    AND (-- View_ProfitLoss.ProfitLossId = 568166                                                -- "Содержание филиалов" + "ГСМ"
@@ -264,6 +271,7 @@ BEGIN
                        , SUM (tmp.OutAmount)    AS OutAmount
                        , SUM (tmp.InSumm)       AS InSumm
                        , SUM (tmp.outSumm_ZP)           AS outSumm_ZP
+                       , SUM (tmp.outSumm_ZP_pl)        AS outSumm_ZP_pl
                        , SUM (tmp.outSumm_Zatraty)      AS outSumm_Zatraty
                        , SUM (tmp.outSumm_Kompensaciya) AS outSumm_Kompensaciya
                        , SUM (tmp.outSumm_Juridical)    AS outSumm_Juridical
@@ -275,14 +283,17 @@ BEGIN
                              , tmpRemains.ObjectId
                              , tmpRemains.StartAmount
                              , tmpRemains.EndAmount
-                             , tmpRemains.StartSumm + COALESCE (tmpOut.outSumm_virt, 0) AS StartSumm
+                             -- , tmpRemains.StartSumm - COALESCE (tmpOut.outSumm_virt, 0) AS StartSumm
+                             , tmpRemains.StartSumm AS StartSumm
                              , tmpRemains.EndSumm
 
                              , tmpOut.FromId
                              , COALESCE (tmpOut.IncomeCount, 0)             AS InAmount
                              , COALESCE (tmpOut.OutCount, 0) + COALESCE (tmpTransport.outCount_Transport, 0) AS OutAmount
-                             , COALESCE (tmpOut.IncomeSumm, 0)              AS InSumm
+                             -- , COALESCE (tmpOut.IncomeSumm, 0)              AS InSumm
+                             , COALESCE (tmpOut.IncomeSumm, 0) - COALESCE (tmpOut.outSumm_virt, 0) AS InSumm
                              , COALESCE (tmpOut.outSumm_ZP, 0)              AS outSumm_ZP
+                             , COALESCE (tmpOut.outSumm_ZP_pl, 0)           AS outSumm_ZP_pl
                              , COALESCE (tmpOut.outSumm_Zatraty, 0)         AS outSumm_Zatraty
                              , COALESCE (tmpOut.outSumm_Kompensaciya, 0)    AS outSumm_Kompensaciya
                              , COALESCE (tmpOut.outSumm_Juridical, 0)       AS outSumm_Juridical
@@ -312,6 +323,7 @@ BEGIN
                           , SUM (tmpData.OutAmount)    AS OutAmount
                           , SUM (tmpData.InSumm)       AS InSumm
                           , SUM (tmpData.outSumm_ZP)           AS outSumm_ZP
+                          , SUM (tmpData.outSumm_ZP_pl)        AS outSumm_ZP_pl
                           , SUM (tmpData.outSumm_Zatraty)      AS outSumm_Zatraty
                           , SUM (tmpData.outSumm_Kompensaciya) AS outSumm_Kompensaciya
                           , SUM (tmpData.outSumm_Juridical)    AS outSumm_Juridical
@@ -350,6 +362,7 @@ BEGIN
                          OR SUM (tmpData.OutAmount)    <> 0
                          OR SUM (tmpData.InSumm)       <> 0
                          OR SUM (tmpData.outSumm_ZP)       <> 0
+                         OR SUM (tmpData.outSumm_ZP_pl)    <> 0
                          OR SUM (tmpData.outSumm_Zatraty)  <> 0
                          OR SUM (tmpData.outSumm_Kompensaciya) <> 0
                          OR SUM (tmpData.outSumm_Juridical)    <> 0
@@ -382,11 +395,13 @@ BEGIN
              , tmpData.StartSumm             ::TFloat
              , tmpData.InSumm                ::TFloat
              , (COALESCE (tmpData.outSumm_ZP, 0)           + COALESCE (tmpData.outSumm_Zatraty, 0)
+              + COALESCE (tmpData.outSumm_ZP_pl, 0)
               + COALESCE (tmpData.outSumm_Kompensaciya, 0) + COALESCE (tmpData.outSumm_Juridical, 0)
               + COALESCE (tmpData.outSumm_Transport, 0)
                ) ::TFloat AS OutSumm
              , tmpData.EndSumm               ::TFloat
              , tmpData.outSumm_ZP            ::TFloat
+             , (1 * tmpData.outSumm_ZP_pl)  ::TFloat
              , tmpData.outSumm_Zatraty       ::TFloat
              , tmpData.outSumm_Kompensaciya  ::TFloat
              , tmpData.outSumm_Juridical     ::TFloat

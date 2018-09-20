@@ -150,7 +150,7 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         item
           Format = ',0.00'
           Kind = skSum
-          Column = TotalSummIncome
+          Column = OutSumm
         end
         item
           Format = ',0.00'
@@ -161,6 +161,11 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
           Format = ',0.00'
           Kind = skSum
           Column = outSumm_virt
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = outSumm_ZP_pl
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -276,7 +281,7 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         item
           Format = ',0.00'
           Kind = skSum
-          Column = TotalSummIncome
+          Column = OutSumm
         end
         item
           Format = ',0.00'
@@ -287,6 +292,11 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
           Format = ',0.00'
           Kind = skSum
           Column = outSumm_virt
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = outSumm_ZP_pl
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -301,6 +311,14 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object FromName: TcxGridDBColumn
+        Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+        DataBinding.FieldName = 'FromName'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 102
+      end
       object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
@@ -404,6 +422,16 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object OutSumm: TcxGridDBColumn
+        Caption = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' '#1048#1058#1054#1043#1054
+        DataBinding.FieldName = 'OutSumm'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
       object OutAmount: TcxGridDBColumn
         Caption = #1056#1072#1089#1093#1086#1076' '#1082#1086#1083'. '#1048#1058#1054#1043#1054
         DataBinding.FieldName = 'OutAmount'
@@ -412,17 +440,6 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object TotalSummIncome: TcxGridDBColumn
-        Caption = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' '#1048#1058#1054#1043#1054
-        DataBinding.FieldName = 'OutSumm'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' ('#1087#1091#1090#1077#1074#1086#1081')'
         Width = 80
       end
       object outSumm_ZP: TcxGridDBColumn
@@ -479,6 +496,16 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         HeaderHint = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072' ('#1087#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090')'
         Width = 80
       end
+      object outSumm_ZP_pl: TcxGridDBColumn
+        Caption = #1040#1084#1086#1088#1090#1080#1079#1072#1094#1080#1103' ('#1047#1055')'
+        DataBinding.FieldName = 'outSumm_ZP_pl'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
       object EndAmount: TcxGridDBColumn
         Caption = #1050#1086#1085'. '#1086#1089#1090'. '#1082#1086#1083'.'
         DataBinding.FieldName = 'EndAmount'
@@ -498,14 +525,6 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
-      end
-      object FromName: TcxGridDBColumn
-        Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
-        DataBinding.FieldName = 'FromName'
-        GroupSummaryAlignment = taCenter
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 102
       end
     end
     object cxGridLevel: TcxGridLevel

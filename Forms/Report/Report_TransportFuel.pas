@@ -87,6 +87,7 @@ type
     actPrintDetail: TdsdPrintAction;
     bbPrintDetail: TdxBarButton;
     outSumm_virt: TcxGridDBColumn;
+    outSumm_ZP_pl: TcxGridDBColumn;
   private
   public
   end;
