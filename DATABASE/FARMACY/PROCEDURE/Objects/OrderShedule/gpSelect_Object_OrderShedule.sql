@@ -49,7 +49,7 @@ BEGIN
                            INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                  ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                                AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
+                                                AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId --
                         WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                         ),
    tmpObject AS (SELECT Object_OrderShedule.Id                           AS Id
