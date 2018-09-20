@@ -91,6 +91,7 @@ type
     mactInsertUpdateMISignNoList: TMultiAction;
     bbInsertUpdateMISignYesList: TdxBarButton;
     bbInsertUpdateMISignNoList: TdxBarButton;
+    MemberName: TcxGridDBColumn;
   private
     { Private declarations }
   public

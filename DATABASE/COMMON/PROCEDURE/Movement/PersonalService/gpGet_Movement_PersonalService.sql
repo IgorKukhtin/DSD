@@ -16,6 +16,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , isAuto Boolean
              , strSign          TVarChar    -- ФИО пользователей. - есть эл. подпись
              , strSignNo        TVarChar    -- ФИО пользователей. - ожидается эл. подпись
+             , MemberId         Integer     --
+             , MemberName       TVarChar    -- ФИО (пользователь) - ведомость начисления
               )
 AS
 $BODY$
@@ -46,6 +48,8 @@ BEGIN
              , False                    AS isAuto
              , NULL::TVarChar           AS strSign
              , NULL::TVarChar           AS strSignNo
+             , 0                        AS MemberId
+             , NULL::TVarChar           AS MemberName
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -67,6 +71,8 @@ BEGIN
            , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
            , tmpSign.strSign
            , tmpSign.strSignNo
+           , Object_Member.Id                     AS MemberId
+           , Object_Member.ValueData              AS MemberName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -93,6 +99,11 @@ BEGIN
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
 
             LEFT JOIN lpSelect_MI_PersonalService_Sign (inMovementId:= Movement.Id) AS tmpSign ON tmpSign.Id = Movement.Id   -- эл.подписи  --
+            
+            LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
+                                 ON ObjectLink_PersonalServiceList_Member.ObjectId = Object_PersonalServiceList.Id 
+                                AND ObjectLink_PersonalServiceList_Member.DescId = zc_ObjectLink_PersonalServiceList_Member()
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_PersonalServiceList_Member.ChildObjectId
        WHERE Movement.Id =  inMovementId;
 
        END IF;
@@ -106,6 +117,7 @@ ALTER FUNCTION gpGet_Movement_PersonalService (Integer, TDateTime, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.09.18         *
  21.06.16         *
  01.10.14         * add Juridical
  11.09.14         *

@@ -5,7 +5,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1237
-  ExplicitHeight = 439
+  ExplicitHeight = 442
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -365,6 +365,15 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
+          end
+          object MemberName: TcxGridDBColumn
+            Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100') ('#1074#1077#1076'.)'
+            DataBinding.FieldName = 'MemberName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100')('#1074#1077#1076#1086#1084#1086#1089#1090#1100')'
+            Options.Editing = False
+            Width = 100
           end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086

@@ -113,7 +113,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 97
+        Width = 115
       end
       object MemberHeadManagerName: TcxGridDBColumn
         Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1080#1089#1087'. '#1076#1080#1088#1077#1082#1090#1086#1088') '
@@ -128,7 +128,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 96
+        Width = 106
       end
       object MemberManagerName: TcxGridDBColumn
         Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1076#1080#1088#1077#1082#1090#1086#1088') '
@@ -143,7 +143,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 97
+        Width = 86
       end
       object MemberBookkeeperName: TcxGridDBColumn
         Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088') '
@@ -158,7 +158,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 96
+        Width = 86
       end
       object isSecond: TcxGridDBColumn
         Caption = #1042#1090#1086#1088#1072#1103' '#1092#1086#1088#1084#1072
@@ -166,7 +166,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 62
+        Width = 55
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -434,6 +434,21 @@ object PersonalServiceListForm: TPersonalServiceListForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MemberId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MemberName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

@@ -153,6 +153,21 @@ type
     macUpdateSummNalogRet: TMultiAction;
     bb: TdxBarButton;
     actRefreshMaster: TdsdDataSetRefresh;
+    cxLabel5: TcxLabel;
+    edMember: TcxButtonEdit;
+    GuidesMember: TdsdGuides;
+    MessageDCS: TClientDataSet;
+    MessageDS: TDataSource;
+    cxGrid2: TcxGrid;
+    cxGridDBTableView2: TcxGridDBTableView;
+    UserName: TcxGridDBColumn;
+    chComment: TcxGridDBColumn;
+    clIsErased: TcxGridDBColumn;
+    cxGridLevel3: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    spSelectMIMessage: TdsdStoredProc;
+    spInsertUpdateMIMessage: TdsdStoredProc;
+    dsdUpdateDataSet1: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

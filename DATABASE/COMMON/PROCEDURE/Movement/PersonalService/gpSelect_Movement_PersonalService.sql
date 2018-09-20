@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isAuto Boolean
              , strSign        TVarChar -- ФИО пользователей. - есть эл. подпись
              , strSignNo      TVarChar -- ФИО пользователей. - ожидается эл. подпись
+             , MemberName     TVarChar
               )
 AS
 $BODY$
@@ -51,7 +52,7 @@ BEGIN
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
         , tmpMemberPersonalServiceList
-                     AS (SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+                     AS (SELECT Object_PersonalServiceList.Id                       AS PersonalServiceListId
                          FROM ObjectLink AS ObjectLink_User_Member
                               INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
                                                     ON ObjectLink_MemberPersonalServiceList.ChildObjectId = ObjectLink_User_Member.ChildObjectId
@@ -87,7 +88,8 @@ BEGIN
                          UNION SELECT zc_Enum_Process_AccessKey_PersonalServiceZaporozhye() FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId and AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceSbit() GROUP BY AccessKeyId_PersonalService
                               )
 
-        , tmpMovement AS (SELECT Movement.Id, MovementLinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
+        , tmpMovement AS (SELECT Movement.Id
+                               , MovementLinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
                           FROM tmpStatus
                                INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_PersonalService() AND Movement.StatusId = tmpStatus.StatusId
                                LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
@@ -98,7 +100,8 @@ BEGIN
                           WHERE inIsServiceDate = FALSE
                             AND (tmpRoleAccessKey.AccessKeyId > 0 OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
                          UNION ALL
-                          SELECT MovementDate_ServiceDate.MovementId  AS Id, MovementLinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
+                          SELECT MovementDate_ServiceDate.MovementId             AS Id
+                               , MovementLinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
                           FROM MovementDate AS MovementDate_ServiceDate
                                JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId AND Movement.DescId = zc_Movement_PersonalService()
                                JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
@@ -119,6 +122,13 @@ BEGIN
                       FROM tmpMovement
                            LEFT JOIN lpSelect_MI_PersonalService_Sign (inMovementId:= tmpMovement.Id ) AS tmpSign ON tmpSign.Id = tmpMovement.Id 
                       )
+        , tmpMember AS (SELECT tmp.PersonalServiceListId 
+                             , ObjectLink_PersonalServiceList_Member.ChildObjectId AS MemberId
+                        FROM (SELECT DISTINCT tmpMovement.PersonalServiceListId FROM tmpMovement) AS tmp
+                             LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
+                                                  ON ObjectLink_PersonalServiceList_Member.ObjectId = tmp.PersonalServiceListId 
+                                                 AND ObjectLink_PersonalServiceList_Member.DescId = zc_ObjectLink_PersonalServiceList_Member()
+                       )
                          
        SELECT
              Movement.Id                                AS Id
@@ -175,7 +185,9 @@ BEGIN
            , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
 
            , tmpSign.strSign
-           , tmpSign.strSignNo  
+           , tmpSign.strSignNo 
+           
+           , Object_Member.ValueData                    AS MemberName 
 
        FROM tmpMovement
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
@@ -282,6 +294,9 @@ BEGIN
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = tmpMovement.PersonalServiceListId
+            LEFT JOIN tmpMember ON tmpMember.PersonalServiceListId = tmpMovement.PersonalServiceListId
+
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpMember.MemberId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                          ON MovementLinkObject_Juridical.MovementId = Movement.Id
@@ -303,6 +318,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.09.18         *
  25.06.18         * add TotalSummAddOth,
                         TotalSummAddOthRecalc
  05.01.18         * add TotalSummNalogRet
