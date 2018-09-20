@@ -263,8 +263,9 @@ BEGIN
                            , COALESCE (MIFloat_SummMinusExt.ValueData, 0)     AS SummMinusExt
 
                            , COALESCE (MIFloat_SummTransportAdd.ValueData, 0) + COALESCE (MIFloat_SummTransportAddLong.ValueData, 0) AS SummTransportAdd
-                           , COALESCE (MIFloat_SummTransport.ValueData, 0)    AS SummTransport
-                           , COALESCE (MIFloat_SummPhone.ValueData, 0)        AS SummPhone
+                           , COALESCE (MIFloat_SummTransport.ValueData, 0)     AS SummTransport
+                           , COALESCE (MIFloat_SummTransportTaxi.ValueData, 0) AS SummTransportTaxi
+                           , COALESCE (MIFloat_SummPhone.ValueData, 0)         AS SummPhone
 
                            , MIString_Comment.ValueData         AS Comment
 
@@ -336,6 +337,9 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_SummTransport
                                                        ON MIFloat_SummTransport.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummTransport.DescId = zc_MIFloat_SummTransport()
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummTransportTaxi
+                                                       ON MIFloat_SummTransportTaxi.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummTransportTaxi.DescId = zc_MIFloat_SummTransportTaxi()
                            LEFT JOIN MovementItemFloat AS MIFloat_SummPhone
                                                        ON MIFloat_SummPhone.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummPhone.DescId = zc_MIFloat_SummPhone()
@@ -387,9 +391,11 @@ BEGIN
                            , SUM (tmpMI_all.SummChild)        AS SummChild
                            , SUM (tmpMI_all.SummMinusExt)     AS SummMinusExt
 
-                           , SUM (tmpMI_all.SummTransportAdd) AS SummTransportAdd
-                           , SUM (tmpMI_all.SummTransport)    AS SummTransport
-                           , SUM (tmpMI_all.SummPhone)        AS SummPhone
+                           , SUM (tmpMI_all.SummTransportAdd)  AS SummTransportAdd
+                           , SUM (tmpMI_all.SummTransport)     AS SummTransport
+                           , SUM (tmpMI_all.SummTransportTaxi) AS SummTransportTaxi
+                           , SUM (tmpMI_all.SummPhone)         AS SummPhone
+                           
 
                       FROM tmpMI_all As tmpMI_all_find
                            LEFT JOIN tmpMI_all ON tmpMI_all.MemberId = tmpMI_all_find.MemberId
@@ -428,9 +434,10 @@ BEGIN
                            , SUM (tmpMI_all.SummChild)        AS SummChild
                            , SUM (tmpMI_all.SummMinusExt)     AS SummMinusExt
 
-                           , SUM (tmpMI_all.SummTransportAdd) AS SummTransportAdd
-                           , SUM (tmpMI_all.SummTransport)    AS SummTransport
-                           , SUM (tmpMI_all.SummPhone)        AS SummPhone
+                           , SUM (tmpMI_all.SummTransportAdd)  AS SummTransportAdd
+                           , SUM (tmpMI_all.SummTransport)     AS SummTransport
+                           , SUM (tmpMI_all.SummTransportTaxi) AS SummTransportTaxi
+                           , SUM (tmpMI_all.SummPhone)         AS SummPhone
 
                       FROM tmpMI_all
                       WHERE inisShowAll = TRUE
@@ -489,6 +496,7 @@ BEGIN
 
                             , tmpMI.SummTransportAdd
                             , tmpMI.SummTransport
+                            , tmpMI.SummTransportTaxi
                             , tmpMI.SummPhone
                        FROM tmpMI
                       UNION ALL
@@ -513,6 +521,7 @@ BEGIN
 
                             , 0 AS SummTransportAdd
                             , 0 AS SummTransport
+                            , 0 AS SummTransportTaxi
                             , 0 AS SummPhone
                         FROM tmpPersonal
                         WHERE tmpPersonal.Ord = 1
@@ -602,6 +611,7 @@ BEGIN
 
             , tmpAll.SummTransportAdd       :: TFloat AS SummTransportAdd
             , tmpAll.SummTransport          :: TFloat AS SummTransport
+            , tmpAll.SummTransportTaxi      :: TFloat AS SummTransportTaxi
             , tmpAll.SummPhone              :: TFloat AS SummPhone
 
             , tmpMIContainer_pay.Amount_avance :: TFloat AS Amount_avance
@@ -647,6 +657,7 @@ BEGIN
           OR 0 <> tmpAll.SummMinus
           OR 0 <> tmpAll.SummTransportAdd
           OR 0 <> tmpAll.SummTransport
+          OR 0 <> tmpAll.SummTransportTaxi
           OR 0 <> tmpAll.SummPhone
           OR 0 <> tmpAll.SummCardSecond
           OR 0 <> tmpAll.SummAdd
