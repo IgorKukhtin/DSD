@@ -24,6 +24,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , BarCode_Main TVarChar
              , Weight TFloat
              , PartionGoodsDate TDateTime, PartionGoodsName TVarChar, AssetToName TVarChar
+             , DriverName TVarChar, UnitName_to TVarChar
 
              , CountReal        TFloat  -- остаток текущий
              , CountReal_sh     TFloat  -- остаток текущий
@@ -218,7 +219,12 @@ BEGIN
     -- группа товаров или товар или все товары из проводок
     IF inGoodsGroupId <> 0 AND COALESCE (inGoodsId, 0) = 0
     THEN
-        WITH tmpGoods AS (SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup)
+        WITH tmpObjectGoods AS (SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup
+                               )
+           , tmpGoods AS (SELECT tmpObjectGoods.GoodsId FROM tmpObjectGoods
+                         UNION ALL
+                          SELECT DISTINCT ObjectLink.ChildObjectId FROM ObjectLink INNER JOIN tmpObjectGoods ON tmpObjectGoods.GoodsId = ObjectLink.ObjectId WHERE ObjectLink.DescId = zc_ObjectLink_Goods_Fuel() AND ObjectLink.ChildObjectId > 0
+                         )
            , tmpAccount AS (SELECT View_Account.AccountGroupId, View_Account.AccountId
                             FROM (SELECT inAccountGroupId              AS AccountGroupId WHERE inAccountGroupId <> 0
                             UNION SELECT zc_Enum_AccountGroup_10000()  AS AccountGroupId WHERE inAccountGroupId = 0
@@ -266,9 +272,13 @@ BEGIN
           ;
     ELSE IF inGoodsId <> 0
          THEN
-             WITH tmpContainer AS (SELECT CLO_Goods.ContainerId FROM ContainerLinkObject AS CLO_Goods WHERE CLO_Goods.ObjectId = inGoodsId AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()
-                                 UNION
-                                   SELECT Container.Id FROM Container WHERE Container.ObjectId = inGoodsId AND Container.DescId = zc_Container_Count()
+        WITH tmpGoods AS (SELECT inGoodsId AS GoodsId
+                         UNION ALL
+                          SELECT DISTINCT ObjectLink.ChildObjectId AS GoodsId FROM ObjectLink WHERE ObjectLink.DescId = zc_ObjectLink_Goods_Fuel() AND ObjectLink.ChildObjectId > 0 AND ObjectLink.ObjectId = inGoodsId
+                         )
+                , tmpContainer AS (SELECT CLO_Goods.ContainerId FROM ContainerLinkObject AS CLO_Goods WHERE CLO_Goods.ObjectId IN (SELECT tmpGoods.GoodsId FROM tmpGoods) AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()
+                                  UNION
+                                   SELECT Container.Id FROM Container WHERE Container.ObjectId IN (SELECT tmpGoods.GoodsId FROM tmpGoods) AND Container.DescId = zc_Container_Count()
                                   )
                 , tmpAccount AS (SELECT View_Account.AccountGroupId, View_Account.AccountId
                                  FROM (SELECT inAccountGroupId              AS AccountGroupId WHERE inAccountGroupId <> 0
@@ -1040,6 +1050,11 @@ BEGIN
                                ) AS tmp
                           GROUP BY tmp.GoodsId, tmp.GoodsKindId
                          )
+      , tmpPersonal AS (SELECT lfSelect.MemberId
+                             , lfSelect.UnitId
+                             , lfSelect.PositionId
+                        FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                       )
 
      -- !!!–≈«”Ћ№“ј“!!!
      SELECT View_Account.AccountGroupName, View_Account.AccountDirectionName
@@ -1069,6 +1084,9 @@ BEGIN
         , CASE WHEN tmpResult.PartionGoodsDate = zc_DateStart() THEN NULL ELSE tmpResult.PartionGoodsDate END :: TDateTime AS PartionGoodsDate
         , tmpResult.PartionGoodsName :: TVarChar  AS PartionGoodsName
         , Object_AssetTo.ValueData       AS AssetToName
+
+        , Object_Personal_Driver.ValueData AS DriverName
+        , Object_Unit_to.ValueData         AS UnitName_to
 
         , tmpResult.CountReal :: TFloat AS CountReal
         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.CountReal ELSE 0 END :: TFloat AS CountReal_sh
@@ -1249,12 +1267,12 @@ BEGIN
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsId
         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId
         LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = tmpResult.GoodsKindId_complete
-        LEFT JOIN Object AS Object_Location_find ON Object_Location_find.Id = NULL
-        LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Location_find.DescId
-        LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = NULL
-                                                   AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
+        -- LEFT JOIN Object AS Object_Location_find ON Object_Location_find.Id = NULL
+        -- LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = NULL
+        --                                           AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
         LEFT JOIN Object AS Object_Location ON Object_Location.Id = tmpResult.LocationId
         LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpResult.LocationId
+        LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Location.DescId -- Object_Location_find.DescId
 
         LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                              ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
@@ -1281,6 +1299,17 @@ BEGIN
 
         LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpResult.GoodsId
                                                     AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpResult.GoodsKindId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Car_PersonalDriver
+                             ON ObjectLink_Car_PersonalDriver.ObjectId = Object_Location.Id
+                            AND ObjectLink_Car_PersonalDriver.DescId   = zc_ObjectLink_Car_PersonalDriver()
+        LEFT JOIN Object AS Object_Personal_Driver ON Object_Personal_Driver.Id = ObjectLink_Car_PersonalDriver.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = Object_Location.Id
+                                                   AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
+        LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = Object_Location.Id
+        LEFT JOIN Object AS Object_Unit_to ON Object_Unit_to.Id = COALESCE (tmpPersonal.UnitId, ObjectLink_Car_Unit.ChildObjectId)
+
         WHERE tmpResult.CountReal <> 0
            OR tmpResult.SummReal <> 0
 
@@ -1316,4 +1345,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * from gpReport_GoodsBalance_Server (inStartDate:= '01.09.2017', inEndDate:= '01.09.2017', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inIsInfoMoney:= TRUE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := '5');
+-- SELECT * FROM gpReport_GoodsBalance_Server (inStartDate:= '01.09.2018', inEndDate:= '01.09.2018', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inIsInfoMoney:= TRUE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := '5');
+-- SELECT * FROM gpReport_GoodsBalance_Server(inStartDate := ('20.09.2018')::TDateTime , inEndDate := ('20.09.2018')::TDateTime , inAccountGroupId := 9015 , inUnitGroupId := 0 , inLocationId := 0 , inGoodsGroupId := 0 , inGoodsId := 0 , inIsInfoMoney := 'False' , inIsAllMO := 'True' , inIsAllAuto := 'True' ,  inSession := '5');

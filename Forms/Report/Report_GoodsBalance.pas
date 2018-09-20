@@ -185,6 +185,8 @@ type
     cbAllAuto: TcxCheckBox;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
+    UnitName_to: TcxGridDBColumn;
+    DriverName: TcxGridDBColumn;
   private
   public
   end;

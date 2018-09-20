@@ -583,6 +583,24 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Options.Editing = False
         Width = 55
       end
+      object UnitName_to: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1080#1085#1092'.)'
+        DataBinding.FieldName = 'UnitName_to'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' - '#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086
+        Options.Editing = False
+        Width = 80
+      end
+      object DriverName: TcxGridDBColumn
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1074#1086#1076#1080#1090#1077#1083#1100')'
+        DataBinding.FieldName = 'DriverName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1074#1086#1076#1080#1090#1077#1083#1100') - '#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086
+        Options.Editing = False
+        Width = 70
+      end
       object GoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
         DataBinding.FieldName = 'GoodsGroupNameFull'
@@ -1496,7 +1514,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
     object deStart: TcxDateEdit
       Left = 60
       Top = 5
-      EditValue = 42005d
+      EditValue = 43101d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 2
@@ -1505,7 +1523,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
     object deEnd: TcxDateEdit
       Left = 60
       Top = 30
-      EditValue = 42005d
+      EditValue = 43101d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 4
