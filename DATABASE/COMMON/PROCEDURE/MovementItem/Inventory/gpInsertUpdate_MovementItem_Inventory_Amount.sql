@@ -11,6 +11,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
+   DECLARE vbCLODescId Integer;
    DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -25,6 +26,11 @@ BEGIN
                                    AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()    
      WHERE Movement.Id = inMovementId;
 
+     vbCLODescId = (SELECT CASE WHEN Object.DescId = zc_Object_Unit() THEN zc_ContainerLinkObject_Unit()
+                                WHEN Object.DescId = zc_Object_Car()  THEN zc_ContainerLinkObject_Car()
+                                WHEN Object.DescId = zc_Object_Member() THEN zc_ContainerLinkObject_Member()
+                           END
+                    FROM Object WHERE Object.Id = vbUnitId);
      -- сохранили
      PERFORM lpInsertUpdate_MovementItem_Inventory (ioId                 := COALESCE (tmp.MovementItemId, 0)
                                                   , inMovementId         := inMovementId
@@ -71,7 +77,7 @@ BEGIN
                                                             ON MIContainer.ContainerId = Container.Id
                                                            AND MIContainer.OperDate > vbOperDate -- т.к. остаток на Дата + 1
                        WHERE CLO_Unit.ObjectId = vbUnitId
-                         AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                         AND CLO_Unit.DescId = vbCLODescId
                          AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                       GROUP BY Container.Id
                               , Container.ObjectId
@@ -145,6 +151,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.09.18         * vbContainerDescId
  06.08.17         *
  26.04.15                                        * all
  24.04.15         *
