@@ -1,32 +1,39 @@
 inherited ListGoodsForm: TListGoodsForm
   BorderIcons = [biSystemMenu]
   Caption = #1055#1086#1076#1073#1086#1088' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1086#1074
-  ClientHeight = 365
+  ClientHeight = 422
   ClientWidth = 528
   OnCreate = ParentFormCreate
   OnKeyDown = ParentFormKeyDown
   ExplicitWidth = 544
-  ExplicitHeight = 404
+  ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   object ListGoodsGrid: TcxGrid [0]
     Left = 0
     Top = 25
     Width = 528
-    Height = 340
+    Height = 262
     Align = alClient
     TabOrder = 1
     object ListGoodsGridDBTableView: TcxGridDBTableView
       OnDblClick = ListGoodsGridDBTableViewDblClick
       Navigator.Buttons.CustomButtons = <>
+      OnFocusedRecordChanged = ListGoodsGridDBTableViewFocusedRecordChanged
       DataController.DataSource = ListGoodsDS
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = colGoodsName
+        end>
       DataController.Summary.SummaryGroups = <>
       OptionsData.CancelOnExit = False
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
+      OptionsView.Footer = True
       OptionsView.GridLineColor = clBtnFace
       OptionsView.GroupByBox = False
       OptionsView.Indicator = True
@@ -92,6 +99,117 @@ inherited ListGoodsForm: TListGoodsForm
       Visible = False
     end
   end
+  object ListDiffGrid: TcxGrid [2]
+    Left = 0
+    Top = 287
+    Width = 528
+    Height = 135
+    Align = alBottom
+    TabOrder = 2
+    object ListDiffGridDBTableView: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = ListDiffDS
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = colName
+        end
+        item
+          Format = ',0.###'
+          Kind = skSum
+          Column = colAmount
+        end>
+      DataController.Summary.SummaryGroups = <>
+      OptionsData.CancelOnExit = False
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Inserting = False
+      OptionsView.Footer = True
+      OptionsView.GridLineColor = clBtnFace
+      OptionsView.GroupByBox = False
+      OptionsView.Indicator = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object colIsSend: TcxGridDBColumn
+        Caption = #1054#1090#1087'.'
+        DataBinding.FieldName = 'IsSend'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 35
+      end
+      object colCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+      end
+      object colName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 244
+      end
+      object colAmount: TcxGridDBColumn
+        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+        DataBinding.FieldName = 'Amount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.000'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 77
+      end
+      object cxGridDBColumn1: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072
+        DataBinding.FieldName = 'Price'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 73
+      end
+      object colComment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        PropertiesClassName = 'TcxBlobEditProperties'
+        Properties.BlobEditKind = bekMemo
+        Properties.BlobPaintStyle = bpsText
+        Properties.PictureGraphicClassName = 'TIcon'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 154
+      end
+      object colDateInput: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1074#1074#1086#1076#1072
+        DataBinding.FieldName = 'DateInput'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 136
+      end
+      object colUserName: TcxGridDBColumn
+        Caption = #1050#1090#1086' '#1074#1074#1077#1083
+        DataBinding.FieldName = 'UserName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 150
+      end
+    end
+    object ListDiffGridLevel: TcxGridLevel
+      Caption = #1040#1083#1100#1090' (24 '#1087#1086#1079') "*"'
+      GridView = ListDiffGridDBTableView
+    end
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
     Top = 304
@@ -131,5 +249,20 @@ inherited ListGoodsForm: TListGoodsForm
     OnTimer = Timer1Timer
     Left = 432
     Top = 80
+  end
+  object ListDiffDS: TDataSource
+    DataSet = ListDiffCDS
+    Left = 440
+    Top = 296
+  end
+  object ListDiffCDS: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <>
+    IndexDefs = <>
+    IndexFieldNames = 'Name'
+    Params = <>
+    StoreDefs = True
+    Left = 368
+    Top = 296
   end
 end

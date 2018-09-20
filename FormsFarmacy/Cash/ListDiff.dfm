@@ -3,9 +3,7 @@ inherited ListDiffForm: TListDiffForm
   Caption = #1051#1080#1089#1090' '#1086#1090#1082#1072#1079#1086#1074
   ClientHeight = 361
   ClientWidth = 619
-  OnClose = ParentFormClose
   OnCreate = ParentFormCreate
-  OnDestroy = ParentFormDestroy
   ExplicitWidth = 635
   ExplicitHeight = 400
   PixelsPerInch = 96
@@ -21,16 +19,31 @@ inherited ListDiffForm: TListDiffForm
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ListDiffDS
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = colName
+        end>
       DataController.Summary.SummaryGroups = <>
       OptionsData.CancelOnExit = False
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
+      OptionsView.Footer = True
       OptionsView.GridLineColor = clBtnFace
       OptionsView.GroupByBox = False
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object colIsSend: TcxGridDBColumn
+        Caption = #1054#1090#1087'.'
+        DataBinding.FieldName = 'IsSend'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 35
+      end
       object colCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
@@ -54,6 +67,7 @@ inherited ListDiffForm: TListDiffForm
         Properties.DisplayFormat = ',0.000'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 77
       end
       object colPrice: TcxGridDBColumn
@@ -66,7 +80,7 @@ inherited ListDiffForm: TListDiffForm
         Options.Editing = False
         Width = 86
       end
-      object ListDiffGridDBTableViewColumn1: TcxGridDBColumn
+      object colComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         PropertiesClassName = 'TcxBlobEditProperties'
@@ -75,7 +89,24 @@ inherited ListDiffForm: TListDiffForm
         Properties.PictureGraphicClassName = 'TIcon'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 113
+        Options.Editing = False
+        Width = 154
+      end
+      object colDateInput: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1074#1074#1086#1076#1072
+        DataBinding.FieldName = 'DateInput'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 136
+      end
+      object colUserName: TcxGridDBColumn
+        Caption = #1050#1090#1086' '#1074#1074#1077#1083
+        DataBinding.FieldName = 'UserName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 150
       end
     end
     object ListDiffGridLevel: TcxGridLevel
@@ -88,20 +119,13 @@ inherited ListDiffForm: TListDiffForm
     Top = 304
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 248
+    Left = 320
     Top = 304
   end
   inherited ActionList: TActionList
     Images = dmMain.ImageList
     Left = 183
     Top = 303
-    object actDelete: TAction
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1079#1072#1087#1080#1089#1100' '#1080#1079' '#1083#1080#1089#1090#1072' '#1086#1090#1082#1072#1079#1086#1074
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1079#1072#1087#1080#1089#1100' '#1080#1079' '#1083#1080#1089#1090#1072' '#1086#1090#1082#1072#1079#1086#1074
-      ImageIndex = 52
-      ShortCut = 46
-      OnExecute = actDeleteExecute
-    end
     object actSend: TAction
       Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1074#1089#1077' '#1074#1074#1077#1076#1077#1085#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1074#1089#1077' '#1074#1074#1077#1076#1077#1085#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
@@ -121,8 +145,6 @@ inherited ListDiffForm: TListDiffForm
     IndexFieldNames = 'Name'
     Params = <>
     StoreDefs = True
-    BeforePost = ListDiffCDSBeforePost
-    AfterPost = ListDiffCDSAfterPost
     Left = 360
     Top = 136
   end
@@ -168,10 +190,6 @@ inherited ListDiffForm: TListDiffForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
@@ -185,8 +203,12 @@ inherited ListDiffForm: TListDiffForm
       WholeRow = False
     end
     object dxBarButton1: TdxBarButton
-      Action = actDelete
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1079#1072#1087#1080#1089#1100' '#1080#1079' '#1083#1080#1089#1090#1072' '#1086#1090#1082#1072#1079#1086#1074
       Category = 0
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1079#1072#1087#1080#1089#1100' '#1080#1079' '#1083#1080#1089#1090#1072' '#1086#1090#1082#1072#1079#1086#1074
+      Visible = ivAlways
+      ImageIndex = 52
+      ShortCut = 46
     end
     object cxBarEditItem1: TcxBarEditItem
       Caption = 'New Item'
@@ -259,6 +281,23 @@ inherited ListDiffForm: TListDiffForm
       item
         Name = 'inContractId'
         Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateInput'
+        Value = 'NULL'
+        Component = ListDiffCDS
+        ComponentItem = 'DateInput'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserId'
+        Value = Null
+        Component = ListDiffCDS
+        ComponentItem = 'UserID'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
