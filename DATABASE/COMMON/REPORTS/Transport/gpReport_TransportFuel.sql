@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpReport_TransportFuel(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (CarModelName TVarChar, CarId Integer, CarCode Integer, CarName TVarChar
-             , FuelCode Integer, FuelName TVarChar
+             , FuelId Integer, FuelCode Integer, FuelName TVarChar
              , BranchId Integer, BranchName TVarChar
              , FromId Integer, FromName TVarChar
              , PersonalId Integer, PersonalName TVarChar
@@ -287,7 +287,8 @@ BEGIN
                              , tmpRemains.StartSumm AS StartSumm
                              , tmpRemains.EndSumm
 
-                             , tmpOut.FromId
+                             , COALESCE (tmpOut.FromId, 0)                  AS FromId
+                             , COALESCE (tmpOut.MovementId, 0)              AS MovementId
                              , COALESCE (tmpOut.IncomeCount, 0)             AS InAmount
                              , COALESCE (tmpOut.OutCount, 0) + COALESCE (tmpTransport.outCount_Transport, 0) AS OutAmount
                              -- , COALESCE (tmpOut.IncomeSumm, 0)              AS InSumm
@@ -298,8 +299,6 @@ BEGIN
                              , COALESCE (tmpOut.outSumm_Kompensaciya, 0)    AS outSumm_Kompensaciya
                              , COALESCE (tmpOut.outSumm_Juridical, 0)       AS outSumm_Juridical
                              , COALESCE (tmpOut.outSumm_virt, 0)            AS outSumm_virt
-                             
-                             , tmpOut.MovementId
                              , COALESCE (tmpTransport.outSumm_Transport, 0) AS outSumm_Transport
                         FROM tmpRemains
                              LEFT JOIN tmpOut       ON tmpOut.ContainerId_main       = tmpRemains.ContainerId_main
@@ -351,9 +350,9 @@ BEGIN
                        AND ((COALESCE (tmpCar.BranchId, tmpPersonal.BranchId,0) = inBranchId OR inBranchId = 0) OR (inBranchId = zc_Branch_Basis() AND COALESCE (tmpCar.BranchId, tmpPersonal.BranchId,0) = 0))
                      GROUP BY tmpData.ObjectId
                             , tmpData.FromId
+                            , tmpData.MovementId
                             , CASE WHEN inIsCar = TRUE THEN ContainerLinkObject_Car.ObjectId ELSE 0 END
                             , CASE WHEN inIsCar = TRUE THEN COALESCE (ContainerLinkObject_Unit.ObjectId, ContainerLinkObject_Juridical.ObjectId) ELSE 0 END
-                            , tmpData.MovementId
                      HAVING SUM (tmpData.StartAmount)  <> 0
                          OR SUM (tmpData.EndAmount)    <> 0
                          OR SUM (tmpData.StartSumm)    <> 0
@@ -372,20 +371,22 @@ BEGIN
 
        -- результат
         SELECT Object_CarModel.ValueData AS CarModelName
-             , Object_Car.Id             AS CarId
+             , tmpData.CarId             AS CarId
              , Object_Car.ObjectCode     AS CarCode
              , Object_Car.ValueData      AS CarName
              -- , tmpData.MovementId :: TVarChar AS CarName
+
+             , tmpData.ObjectId          AS FuelId
              , Object_Fuel.ObjectCode    AS FuelCode
              , Object_Fuel.ValueData     AS FuelName
 
              , Object_Branch.Id          AS BranchId
              , Object_Branch.ValueData   AS BranchName
 
-             , Object_From.Id            AS FromId
+             , tmpData.FromId            AS FromId
              , Object_From.ValueData     AS FromName
 
-             , Object_Personal.Id          AS PersonalId
+             , COALESCE (tmpData.PersonalId, ObjectLink_Car_PersonalDriver.ChildObjectId) :: Integer AS PersonalId
              , Object_Personal.ValueData   AS PersonalName
 
              , tmpData.StartAmount           ::TFloat

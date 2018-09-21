@@ -22,7 +22,7 @@ $BODY$
    DECLARE er Text;
 BEGIN
      -- *** Временная таблица для сбора результата
-     CREATE TEMP TABLE _tmpResult (RowData TVarChar, errStr TVarChar) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpResult (NPP Integer, RowData TVarChar, errStr TVarChar) ON COMMIT DROP;
 
 
      -- определили БАНК
@@ -49,7 +49,7 @@ BEGIN
                )
      THEN
 	-- Шапка файла
-	INSERT INTO _tmpResult (RowData) VALUES ('Счет;ИНН;Сумма в копейках;Фамилия;Имя;Отчество');
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-1, 'Счет;ИНН;Сумма в копейках;Фамилия;Имя;Отчество');
 
 	-- Строчный вывод
 	i           := 0; -- обнуляем автонумерацию
@@ -63,7 +63,7 @@ BEGIN
 	          GROUP BY COALESCE (gpSelect.CardSecond, ''), UPPER (COALESCE (gpSelect.PersonalName, '')), COALESCE (gpSelect.INN, '')
 	         )
 	LOOP
-            -- Итого сумма - 
+            -- Итого сумма -
             vbTotalSumm:= vbTotalSumm + r.SummCardSecondRecalc;
             --
             IF   CHAR_LENGTH (r.personalname) = 0
@@ -74,16 +74,16 @@ BEGIN
                 er := concat(er, e);
             ELSE
                 -- Номер карточного счета ф2; ИНН; Сумма - ПЕРЕВОДИМ в копейки; Фамилия; Имя; Отчество
-                INSERT INTO _tmpResult (RowData) VALUES (''||r.CardSecond||';'||r.inn||';'|| r.SummCardSecondRecalc || ';' || LEFT(REPLACE(REPLACE(r.personalname, ' ', ';'), chr(39), ''), 80) );
+                INSERT INTO _tmpResult (NPP, RowData) VALUES (i, ''||r.CardSecond||';'||r.inn||';'|| r.SummCardSecondRecalc || ';' || LEFT(REPLACE(REPLACE(r.personalname, ' ', ';'), chr(39), ''), 80) );
                 i := i + 1; -- увеличиваем значение автонумерации
             END IF;
 
         END LOOP;
 
 	-- Пустая строка
-	INSERT INTO _tmpResult (RowData) VALUES ('');
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (i + 1, '');
         -- Сумма зачисления
-	INSERT INTO _tmpResult (RowData) VALUES (';;' || vbTotalSumm);
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (i + 2, ';;' || vbTotalSumm);
 
      END IF;
 
@@ -92,31 +92,31 @@ BEGIN
      THEN
 	-- *** Шапка файла
 	-- Тип документа (из ТЗ)
-	INSERT INTO _tmpResult (RowData) VALUES ('Content-Type=doc/pay_sheet');
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-100, 'Content-Type=doc/pay_sheet');
 	-- Пустая строка
-	INSERT INTO _tmpResult (RowData) VALUES ('');
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-95, '');
 	-- Дата документа
-	INSERT INTO _tmpResult (RowData) VALUES ('DATE_DOC='||TO_CHAR(NOW(), 'dd.mm.yyyy'));
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-90, 'DATE_DOC='||TO_CHAR(NOW(), 'dd.mm.yyyy'));
 	-- Дата валютирования
-	INSERT INTO _tmpResult (RowData) VALUES ('VALUE_DATE='||TO_CHAR(NOW(), 'dd.mm.yyyy'));
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-85, 'VALUE_DATE='||TO_CHAR(NOW(), 'dd.mm.yyyy'));
 	-- Номер документа
-	INSERT INTO _tmpResult (RowData) VALUES ('NUM_DOC='||inInvNumber);
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-80, 'NUM_DOC='||inInvNumber);
 	-- МФО банка плтельщика
-	INSERT INTO _tmpResult (RowData) VALUES ('PAYER_BANK_MFO=307123');
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-75, 'PAYER_BANK_MFO=307123');
 	-- Счет списания
-	INSERT INTO _tmpResult (RowData) VALUES ('PAYER_ACCOUNT=26007010192834');
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-70, 'PAYER_ACCOUNT=26007010192834');
 	-- Сумма зачисления
-	INSERT INTO _tmpResult (RowData) VALUES ('AMOUNT='||ROUND(inAmount::numeric, 2));
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-65, 'AMOUNT='||ROUND(inAmount::numeric, 2));
 	-- Счет банка плательщика
-	INSERT INTO _tmpResult (RowData) VALUES ('PAYER_BANK_ACCOUNT=29244006');
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-60, 'PAYER_BANK_ACCOUNT=29244006');
 	-- Тип документа импорта
-	INSERT INTO _tmpResult (RowData) VALUES ('ONFLOW_TYPE=Виплата заробітної плати');
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-55, 'ONFLOW_TYPE=Виплата заробітної плати');
 	-- Наименование клиента
-	INSERT INTO _tmpResult (RowData) VALUES ('CLN_NAME=ТОВ "АЛАН"');
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-50, 'CLN_NAME=ТОВ "АЛАН"');
 	-- Код ЕГРПОУ клиента
-	INSERT INTO _tmpResult (RowData) VALUES ('CLN_OKPO=24447183');
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-45, 'CLN_OKPO=24447183');
 	-- Период начисления
-	INSERT INTO _tmpResult (RowData) VALUES ('PERIOD='||TO_CHAR(NOW(), 'TMMonth yyyy'));
+	INSERT INTO _tmpResult (NPP, RowData) VALUES (-40, 'PERIOD='||TO_CHAR(NOW(), 'TMMonth yyyy'));
 
 	-- *** Строчный вывод
 	i := 0; -- обнуляем автонумерацию
@@ -134,14 +134,15 @@ BEGIN
 		ELSE
 		BEGIN
 			-- Номер карточного счета
-			INSERT INTO _tmpResult (RowData) VALUES ('CARD_HOLDERS.'||i::TVarChar||'.CARD_NUM='||r.card);
+			INSERT INTO _tmpResult (NPP, RowData) VALUES (i * 10 + 1, 'CARD_HOLDERS.'||i::TVarChar||'.CARD_NUM='||r.card);
 			-- ФИО держателя карты
-			INSERT INTO _tmpResult (RowData) VALUES ('CARD_HOLDERS.'||i::TVarChar||'.CARD_HOLDER='||LEFT(REPLACE(r.personalname, chr(39), ''), 80));
+			INSERT INTO _tmpResult (NPP, RowData) VALUES (i * 10 + 2, 'CARD_HOLDERS.'||i::TVarChar||'.CARD_HOLDER='||LEFT(REPLACE(r.personalname, chr(39), ''), 80));
 			-- ИНН держателя карты
-			INSERT INTO _tmpResult (RowData) VALUES ('CARD_HOLDERS.'||i::TVarChar||'.CARD_HOLDER_INN='||r.inn);
+			INSERT INTO _tmpResult (NPP, RowData) VALUES (i * 10 + 3, 'CARD_HOLDERS.'||i::TVarChar||'.CARD_HOLDER_INN='||r.inn);
 			-- Сумма зачисления
-			INSERT INTO _tmpResult (RowData) VALUES ('CARD_HOLDERS.'||i::TVarChar||'.AMOUNT='||ROUND(r.SummCardRecalc::numeric, 2));
-			i := i + 1; -- увеличиваем значение автонумерации
+			INSERT INTO _tmpResult (NPP, RowData) VALUES (i * 10 + 4, 'CARD_HOLDERS.'||i::TVarChar||'.AMOUNT='||ROUND(r.SummCardRecalc::numeric, 2));
+                        -- следующий
+			i := i + 1;
 		END;
 		END IF;
 
@@ -155,12 +156,13 @@ BEGIN
      THEN
 
          -- первые строчки XML
-         INSERT INTO _tmpResult (RowData) VALUES ('<?xml version="1.0" encoding="windows-1251"?>');
-         INSERT INTO _tmpResult (RowData) VALUES ('<DATAPACKET Version="2.0">');
+         INSERT INTO _tmpResult (NPP, RowData) VALUES (-40, '<?xml version="1.0" encoding="windows-1251"?>');
+         INSERT INTO _tmpResult (NPP, RowData) VALUES (-30, '<DATAPACKET Version="2.0">');
 
          -- Шапка
-         INSERT INTO _tmpResult(RowData)
-            SELECT '<SCHEDULEINFO SHEDULE_DATE="' || TO_CHAR (NOW(), 'dd/mm/yyyy') || '"'   -- Дата зарплатной ведомости в формате ДД/ММ/ГГГГ
+         INSERT INTO _tmpResult(NPP, RowData)
+            SELECT -20
+                 , '<SCHEDULEINFO SHEDULE_DATE="' || TO_CHAR (NOW(), 'dd/mm/yyyy') || '"'   -- Дата зарплатной ведомости в формате ДД/ММ/ГГГГ
                      ||       ' SHEDULE_NUMBER="' || inInvNumber || '"'                     -- Номер зарплатной ведомости
                      ||  ' PAYER_BANK_BRANCHID="' || '300528' || '"'                        -- МФО банка, в котором открыт счёт плательщика
                   -- || ' PAYER_BANK_ACCOUNTNO="' || '00002' || '"'                         -- Счёт плательщика в банке (транзитный). Примечание. Если администратор выполнил настройку системы таким образом, что транзитный счет будет определяться автоматически, то данное поле будет необязательным для заполнения
@@ -172,10 +174,11 @@ BEGIN
 
 
            -- Строчная часть
-           INSERT INTO _tmpResult(RowData) VALUES ('<EMPLOYEES>');
+           INSERT INTO _tmpResult(NPP, RowData) VALUES (-10, '<EMPLOYEES>');
            --
-           INSERT INTO _tmpResult (RowData)
-                   SELECT '<EMPLOYEE IDENTIFYCODE="' || gpSelect.inn || '"'                              -- Идентификационный код сотрудника
+           INSERT INTO _tmpResult (NPP, RowData)
+                   SELECT ROW_NUMBER() OVER (ORDER BY gpSelect.card) AS NPP
+                        , '<EMPLOYEE IDENTIFYCODE="' || gpSelect.inn || '"'                              -- Идентификационный код сотрудника
                                || ' CARDACCOUNTNO="' || gpSelect.card || '"'                             -- Номер карточного (или другого) счёта
                                ||        ' AMOUNT="' || REPLACE (CAST (gpSelect.SummCardRecalc AS NUMERIC (16, 2)) :: TVarChar, '.', ',') || '"' -- Сумма для зачисления на счёт сотрудника в формате ГРН,КОП
                                || '/>'
@@ -188,9 +191,9 @@ BEGIN
                   ;
 
            -- последние строчки XML
-           INSERT INTO _tmpResult(RowData) VALUES ('</EMPLOYEES>');
-           INSERT INTO _tmpResult(RowData) VALUES ('</SCHEDULEINFO>');
-           INSERT INTO _tmpResult(RowData) VALUES ('</DATAPACKET>');
+           INSERT INTO _tmpResult (NPP, RowData) VALUES ((SELECT COUNT(*) FROM _tmpResult) + 1, '</EMPLOYEES>');
+           INSERT INTO _tmpResult (NPP, RowData) VALUES ((SELECT COUNT(*) FROM _tmpResult) + 1, '</SCHEDULEINFO>');
+           INSERT INTO _tmpResult (NPP, RowData) VALUES ((SELECT COUNT(*) FROM _tmpResult) + 1, '</DATAPACKET>');
 
      END IF; -- if vbBankId = 76970 -- ПАТ "ОТП БАНК"
 
@@ -204,7 +207,7 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-        SELECT _tmpResult.RowData FROM _tmpResult;
+        SELECT _tmpResult.RowData FROM _tmpResult ORDER BY NPP;
 
 END;
 $BODY$
