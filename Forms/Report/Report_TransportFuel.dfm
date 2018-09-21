@@ -635,6 +635,14 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
       Width = 112
     end
   end
+  object cbPrice: TcxCheckBox
+    Left = 76
+    Top = 87
+    Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1094#1077#1085#1091
+    Properties.ReadOnly = False
+    TabOrder = 6
+    Width = 101
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 136
@@ -763,6 +771,14 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
           ItemName = 'dxBarStatic'
         end
         item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbToExcel'
@@ -798,6 +814,13 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
     object bbPrintDetail: TdxBarButton
       Action = actPrintDetail
       Category = 0
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cbPrice
     end
   end
   object ActionList: TActionList
@@ -889,6 +912,13 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
           Component = cbCar
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPrice'
+          Value = Null
+          Component = cbPrice
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1043#1057#1052
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1043#1057#1052
@@ -929,6 +959,13 @@ object Report_TransportFuelForm: TReport_TransportFuelForm
         item
           Name = 'isDetail'
           Value = 'False'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPrice'
+          Value = Null
+          Component = cbPrice
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1043#1057#1052

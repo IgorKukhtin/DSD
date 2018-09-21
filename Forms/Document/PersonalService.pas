@@ -160,14 +160,19 @@ type
     MessageDS: TDataSource;
     cxGrid2: TcxGrid;
     cxGridDBTableView2: TcxGridDBTableView;
-    UserName: TcxGridDBColumn;
-    chComment: TcxGridDBColumn;
-    clIsErased: TcxGridDBColumn;
+    msUserName: TcxGridDBColumn;
     cxGridLevel3: TcxGridLevel;
     cxSplitter1: TcxSplitter;
     spSelectMIMessage: TdsdStoredProc;
     spInsertUpdateMIMessage: TdsdStoredProc;
-    dsdUpdateDataSet1: TdsdUpdateDataSet;
+    actUpdateDataSetMessage: TdsdUpdateDataSet;
+    actRefresh_Message: TdsdDataSetRefresh;
+    msOrd: TcxGridDBColumn;
+    msisQuestion: TcxGridDBColumn;
+    msisAnswer: TcxGridDBColumn;
+    msisQuestionRead: TcxGridDBColumn;
+    msisAnswerRead: TcxGridDBColumn;
+    actUserChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public
