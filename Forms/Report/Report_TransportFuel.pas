@@ -23,7 +23,8 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, dsdGuides,
-  cxButtonEdit, ChoicePeriod, cxLabel, frxClass, frxDBSet, cxCheckBox;
+  cxButtonEdit, ChoicePeriod, cxLabel, frxClass, frxDBSet, cxCheckBox,
+  dxBarExtItems;
 
 type
   TReport_TransportFuelForm = class(TParentForm)
@@ -88,6 +89,8 @@ type
     bbPrintDetail: TdxBarButton;
     outSumm_virt: TcxGridDBColumn;
     outSumm_ZP_pl: TcxGridDBColumn;
+    cbPrice: TcxCheckBox;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
   private
   public
   end;
