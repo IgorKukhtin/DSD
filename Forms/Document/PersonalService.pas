@@ -167,7 +167,9 @@ type
     cxSplitter1: TcxSplitter;
     spSelectMIMessage: TdsdStoredProc;
     spInsertUpdateMIMessage: TdsdStoredProc;
-    dsdUpdateDataSet1: TdsdUpdateDataSet;
+    actUpdateDataSetMessage: TdsdUpdateDataSet;
+    OperDate: TcxGridDBColumn;
+    actRefresh_Message: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

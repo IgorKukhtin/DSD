@@ -10,10 +10,14 @@ CREATE OR REPLACE FUNCTION zc_MI_Sign() RETURNS Integer AS $BODY$BEGIN RETURN (S
 INSERT INTO MovementItemDesc (Code, ItemName)
   SELECT 'zc_MI_Sign', 'Элемент Электронная подпись' WHERE NOT EXISTS (SELECT * FROM MovementItemDesc WHERE Code = 'zc_MI_Sign');
 
-
+CREATE OR REPLACE FUNCTION zc_MI_Message() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDesc WHERE Code = 'zc_MI_Message'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDesc (Code, ItemName)
+  SELECT 'zc_MI_Message', 'Элемент чата' WHERE NOT EXISTS (SELECT * FROM MovementItemDesc WHERE Code = 'zc_MI_Message');
+  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.09.18         * zc_MI_Message
  23.08.16         * add zc_MI_Sign
  12.07.13                                        * НОВАЯ СХЕМА2
  30.06.13                                        * rename zc_MI...

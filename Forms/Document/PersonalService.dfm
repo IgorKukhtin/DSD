@@ -1261,6 +1261,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object UserName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'UserName'
@@ -1554,7 +1562,20 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Top = 224
   end
   inherited ActionList: TActionList
-    object actRefresh_Sign: TdsdDataSetRefresh [0]
+    object actRefresh_Message: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectMIMessage
+      StoredProcList = <
+        item
+          StoredProc = spSelectMIMessage
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = True
+    end
+    object actRefresh_Sign: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet
@@ -1568,10 +1589,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
-      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object actRefreshMaster: TdsdDataSetRefresh [1]
+    object actRefreshMaster: TdsdDataSetRefresh [2]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -1616,7 +1636,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spUnErasedMIMaster
         end>
     end
-    object actUpdateIsMain: TdsdExecStoredProc [9]
+    object actUpdateIsMain: TdsdExecStoredProc [10]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1635,7 +1655,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spInsertUpdateMIMaster
         end>
     end
-    object actPrint_All: TdsdPrintAction [11]
+    object actPrint_All: TdsdPrintAction [12]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint_All
@@ -2055,7 +2075,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1076#1083#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 52
     end
-    object dsdUpdateDataSet1: TdsdUpdateDataSet
+    object actUpdateDataSetMessage: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2063,6 +2083,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMIMessage
+        end
+        item
+          StoredProc = spSelectMIMessage
         end>
       Caption = 'actUpdateDataSetMessage'
       DataSource = MessageDS
@@ -3487,19 +3510,19 @@ inherited PersonalServiceForm: TPersonalServiceForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'ioId'
         Value = Null
         Component = MessageDCS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -3509,14 +3532,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outUserName'
-        Value = Null
-        Component = MessageDCS
-        ComponentItem = 'UserName'
-        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
