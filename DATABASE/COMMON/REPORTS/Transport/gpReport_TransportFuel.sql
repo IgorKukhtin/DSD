@@ -416,7 +416,7 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_CardFuel_Juridical
                                   ON ObjectLink_CardFuel_Juridical.ObjectId = tmpData.FromId
                                  AND ObjectLink_CardFuel_Juridical.DescId   = zc_ObjectLink_CardFuel_Juridical()
-             LEFT JOIN Object AS Object_From ON Object_From.Id = ObjectLink_CardFuel_Juridical.ChildObjectId
+             LEFT JOIN Object AS Object_From ON Object_From.Id = COALESCE (ObjectLink_CardFuel_Juridical.ChildObjectId, tmpData.FromId)
 
              LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel
                                   ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
