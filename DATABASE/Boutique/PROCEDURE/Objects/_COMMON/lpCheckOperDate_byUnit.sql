@@ -15,10 +15,10 @@ $BODY$
 BEGIN
 
      -- Проверка - Дата - !!!ТОЛЬКО!!! для Подразделения для User
-     IF inUnitId_by > 0 AND inOperDate < DATE_TRUNC ('DAY', CURRENT_TIMESTAMP - INTERVAL '16 HOUR')
+     IF inUnitId_by > 0 AND inOperDate < DATE_TRUNC ('DAY', CURRENT_TIMESTAMP - INTERVAL '17 HOUR')
      -- IF inUnitId_by > 0 AND inOperDate < DATE_TRUNC ('DAY', CURRENT_TIMESTAMP - INTERVAL '1 HOUR')
      THEN
-         RAISE EXCEPTION 'Ошибка.Для <%> изменение данных возможно только с <%>', lfGet_Object_ValueData_sh (inUnitId_by), zfConvert_DateToString (DATE_TRUNC ('DAY', CURRENT_TIMESTAMP - INTERVAL '1 HOUR'));
+         RAISE EXCEPTION 'Ошибка.Для <%> изменение данных возможно только с <%>', lfGet_Object_ValueData_sh (inUnitId_by), zfConvert_DateToString (DATE_TRUNC ('DAY', CURRENT_TIMESTAMP - INTERVAL '17 HOUR'));
      END IF;
 
 

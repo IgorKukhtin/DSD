@@ -172,19 +172,20 @@ BEGIN
      -- данные по «ѕ
      IF EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId = zc_Object_PersonalServiceList())
      THEN
+         -- сохранили еще и у Movement (временно)
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_ServiceDate(), ioId, inServiceDate);
          -- сохранили свойство <ћес€ц начислений> - 1-ое число мес€ца
-         IF EXTRACT (DAY FROM CURRENT_DATE) < 17
+         /*IF EXTRACT (DAY FROM CURRENT_DATE) < 17
          THEN
              PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_ServiceDate(), ioId, DATE_TRUNC ('MONTH', inOperDate - INTERVAL '1 MONTH'));
          ELSE
              PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_ServiceDate(), ioId, DATE_TRUNC ('MONTH', inOperDate));
-         END IF;
-
+         END IF;*/
      ELSE
           -- обнулили св€зь с документом <Ќачисление зарплаты>
           PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Child(), ioId, NULL);
           -- обнулили свойство <ћес€ц начислений>
-          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_ServiceDate(), ioId, NULL);
+          -- PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_ServiceDate(), ioId, NULL);
           --
           IF EXISTS (SELECT MovementItem.MovementId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE)
           THEN

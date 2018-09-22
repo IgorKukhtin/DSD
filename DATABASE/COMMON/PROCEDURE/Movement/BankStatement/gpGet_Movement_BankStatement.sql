@@ -23,7 +23,12 @@ BEGIN
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
-           , CURRENT_DATE           :: TDateTime AS ServiceDate
+           , CASE WHEN EXTRACT (DAY FROM Movement.OperDate) < 15
+             THEN
+                 DATE_TRUNC ('MONTH', Movement.OperDate - INTERVAL '1 MONTH')
+             ELSE
+                 DATE_TRUNC ('MONTH', Movement.OperDate)
+             END :: TDateTime AS ServiceDate
 
            , Object_BankAccount_View.Id          AS BankAccountId
            , Object_BankAccount_View.Name        AS BankAccountName

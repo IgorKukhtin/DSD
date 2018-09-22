@@ -12,7 +12,7 @@ INSERT INTO MovementItemDesc (Code, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_MI_Message() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDesc WHERE Code = 'zc_MI_Message'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemDesc (Code, ItemName)
-  SELECT 'zc_MI_Message', 'Элемент чата' WHERE NOT EXISTS (SELECT * FROM MovementItemDesc WHERE Code = 'zc_MI_Message');
+  SELECT 'zc_MI_Message', 'Элемент Сообщение' WHERE NOT EXISTS (SELECT * FROM MovementItemDesc WHERE Code = 'zc_MI_Message');
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

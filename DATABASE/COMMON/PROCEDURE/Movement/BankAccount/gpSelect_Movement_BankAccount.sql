@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, BankSI
              , StatusCode Integer, StatusName TVarChar
              , AmountIn TFloat
              , AmountOut TFloat
-             , AmountSumm TFloat 
+             , AmountSumm TFloat
              , AmountCurrency TFloat
              , Comment TVarChar
              , BankAccountName TVarChar, BankName TVarChar, MFO TVarChar
@@ -43,7 +43,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
-     RETURN QUERY 
+     RETURN QUERY
        WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
                          UNION
                           SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -79,7 +79,7 @@ BEGIN
            , Object_BankAccount_View.MFO       AS MFO
            , Object_BankAccount_View.JuridicalName  AS JuridicalName
            , View_JuridicalDetails_BankAccount.OKPO AS OKPO_BankAccount
-           , Object_MoneyPlace.Id              AS MoneyPlaceId 
+           , Object_MoneyPlace.Id              AS MoneyPlaceId
            , Object_MoneyPlace.ObjectCode      AS MoneyPlaceCode
            , (Object_MoneyPlace.ValueData || COALESCE (' * '|| Object_Bank.ValueData, '')) :: TVarChar AS MoneyPlaceName
            , ObjectDesc.ItemName
@@ -95,7 +95,7 @@ BEGIN
            , Object_Contract_InvNumber_View.ContractTagName
            , Object_Unit.ObjectCode            AS UnitCode
            , Object_Unit.ValueData             AS UnitName
-           , Object_Currency.ValueData         AS CurrencyName 
+           , Object_Currency.ValueData         AS CurrencyName
            , MovementFloat_CurrencyValue.ValueData             AS CurrencyValue
            , MovementFloat_ParValue.ValueData                  AS ParValue
            , MovementFloat_CurrencyPartnerValue.ValueData      AS CurrencyPartnerValue
@@ -160,12 +160,12 @@ BEGIN
             LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = MovementItem.ObjectId
             LEFT JOIN ObjectHistory_JuridicalDetails_View AS View_JuridicalDetails_BankAccount ON View_JuridicalDetails_BankAccount.JuridicalId = Object_BankAccount_View.JuridicalId
 
-            LEFT JOIN MovementItemString AS MIString_Comment 
+            LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id AND MIString_Comment.DescId = zc_MIString_Comment()
-            
+
             LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
                                              ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+                                            AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
             LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_MoneyPlace.DescId
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_MoneyPlace.Id
@@ -202,13 +202,12 @@ BEGIN
 
             LEFT JOIN MovementItemDate AS MIDate_ServiceDate
                                        ON MIDate_ServiceDate.MovementItemId = MovementItem.Id
-                                      AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
-                                      -- так в кассе 
-                                      --AND MILinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_60101() -- Заработная плата + Заработная плата
-                                      --AND MILinkObject_MoneyPlace.ObjectId > 0
+                                      AND MIDate_ServiceDate.DescId         = zc_MIDate_ServiceDate()
+                                      AND MILinkObject_InfoMoney.ObjectId   = zc_Enum_InfoMoney_60101() -- Заработная плата + Заработная плата
+                                      -- AND MILinkObject_MoneyPlace.ObjectId > 0
             ;
 
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -226,7 +225,7 @@ $BODY$
  18.03.14                                        * add zc_ObjectLink_BankAccount_Bank
  03.02.14                                        * add inIsErased
  29.01.14                                        * add InvNumber_Parent
- 15.01.14                         * 
+ 15.01.14                         *
  */
 
 -- тест

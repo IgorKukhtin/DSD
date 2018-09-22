@@ -142,14 +142,15 @@ BEGIN
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
-            LEFT JOIN MovementDate AS MovementDate_ServiceDate
-                                   ON MovementDate_ServiceDate.MovementId = Movement.Id
-                                  AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_InfoMoney
                                          ON MovementLinkObject_InfoMoney.MovementId = Movement.Id
                                         AND MovementLinkObject_InfoMoney.DescId = zc_MovementLinkObject_InfoMoney()
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MovementLinkObject_InfoMoney.ObjectId
+
+            LEFT JOIN MovementDate AS MovementDate_ServiceDate
+                                   ON MovementDate_ServiceDate.MovementId   = Movement.Id
+                                  AND MovementDate_ServiceDate.DescId       = zc_MovementDate_ServiceDate()
+                                  AND MovementLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_60101() -- Заработная плата + Заработная плата
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id

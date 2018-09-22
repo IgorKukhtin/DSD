@@ -68,6 +68,7 @@ BEGIN
      PERFORM lpInsertUpdate_Movement_BankAccount(ioId                   := COALESCE (Movement_BankAccount.Id, 0)
                                                , inInvNumber            := Movement.InvNumber
                                                , inOperDate             := Movement.OperDate
+                                               , inServiceDate          := MovementDate_ServiceDate.ValueData
                                                , inAmount               := MovementFloat_Amount.ValueData
                                                , inAmountSumm           := MovementFloat_Amount_BankAccount.ValueData -- !!!значение при перезаливки не меняется!!!
                                                , inAmountCurrency       := MovementFloat_AmountCurrency.ValueData
@@ -89,12 +90,16 @@ BEGIN
                                                 )
        FROM Movement
             LEFT JOIN Movement AS Movement_BankAccount 
-                              ON Movement_BankAccount.ParentId = Movement.Id
-                             AND Movement_BankAccount.DescId = zc_Movement_BankAccount()
-                             AND Movement_BankAccount.StatusId = zc_Enum_Status_UnComplete()
+                               ON Movement_BankAccount.ParentId = Movement.Id
+                              AND Movement_BankAccount.DescId = zc_Movement_BankAccount()
+                              AND Movement_BankAccount.StatusId = zc_Enum_Status_UnComplete()
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             
+            LEFT JOIN MovementDate AS MovementDate_ServiceDate
+                                   ON MovementDate_ServiceDate.MovementId = Movement.ParentId
+                                  AND MovementDate_ServiceDate.DescId     = zc_MovementDate_ServiceDate()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount
                                          ON MovementLinkObject_BankAccount.MovementId = Movement.ParentId
                                         AND MovementLinkObject_BankAccount.DescId = zc_MovementLinkObject_BankAccount()
