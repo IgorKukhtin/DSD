@@ -3595,7 +3595,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Top = 592
   end
   object spSelectMIMessage: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_PersonalService_Message'
+    StoredProcName = 'gpSelect_MI_Message'
     DataSet = MessageDCS
     DataSets = <
       item
@@ -3622,7 +3622,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Top = 600
   end
   object spInsertUpdateMIMessage: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_PersonalService_Message'
+    StoredProcName = 'gpInsertUpdate_MI_Message'
     DataSets = <>
     OutputType = otResult
     Params = <
