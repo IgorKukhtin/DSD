@@ -608,7 +608,8 @@ uses
   MarginCategoryJournal2 in '..\..\FormsFarmacy\Document\MarginCategoryJournal2.pas' {MarginCategoryJournal2Form: TParentForm},
   Report_TestingUser in '..\..\FormsFarmacy\Report\Report_TestingUser.pas' {Report_TestingUserForm: TParentForm},
   ListDiffJournal in '..\..\FormsFarmacy\Document\ListDiffJournal.pas' {ListDiffJournalForm: TParentForm},
-  ListDiff in '..\..\FormsFarmacy\Document\ListDiff.pas' {ListDiffForm: TParentForm};
+  ListDiff in '..\..\FormsFarmacy\Document\ListDiff.pas' {ListDiffForm: TParentForm},
+  PriceListLoad_Add in '..\..\FormsFarmacy\Load\PriceListLoad_Add.pas' {PriceListLoad_AddForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -625,7 +626,7 @@ begin
 
   if FindCmdLineSwitch('realfarmacy', true)
   then gc_AdminPassword := 'Админ1234'
-  else gc_AdminPassword := 'Админ1111';
+  else gc_AdminPassword := 'Админ1234';
 
   gc_ProgramName := 'Farmacy.exe';
 
