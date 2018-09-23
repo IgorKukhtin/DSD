@@ -1037,7 +1037,8 @@ uses
   Report_Income_Olap in '..\..\Forms\Report\Report_Income_Olap.pas' {Report_Income_OlapForm: TParentForm},
   Report_Income_OlapDialog in '..\..\Forms\Report\Report_Income_OlapDialog.pas' {Report_Income_OlapDialogForm: TParentForm},
   Report_Branch_App7_Full in '..\..\Forms\Report\Report_Branch_App7_Full.pas' {Report_Branch_App7_FullForm: TParentForm},
-  Report_Branch_App1_Full in '..\..\Forms\Report\Report_Branch_App1_Full.pas' {Report_Branch_App1_FullForm: TParentForm};
+  Report_Branch_App1_Full in '..\..\Forms\Report\Report_Branch_App1_Full.pas' {Report_Branch_App1_FullForm: TParentForm},
+  User_byMessage in '..\..\Forms\Guides\User_byMessage.pas' {User_byMessageForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

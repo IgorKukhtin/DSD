@@ -48,8 +48,8 @@ BEGIN
           , MIDate_Insert.ValueData    AS InsertDate
           , MIDate_Update.ValueData    AS UpdateDate
           , MIDate_OperDate.ValueData  AS OperDate
-          , CASE WHEN MovementItem.Amount = 1 THEN TRUE ELSE FALSE END AS isQuestion
-          , CASE WHEN MovementItem.Amount = 2 THEN TRUE ELSE FALSE END AS isAnswer
+          , CASE WHEN MovementItem.Amount = 1 OR MovementItem.Amount = 3 THEN TRUE ELSE FALSE END AS isQuestion
+          , CASE WHEN MovementItem.Amount = 2 OR MovementItem.Amount = 4 THEN TRUE ELSE FALSE END AS isAnswer
           , CASE WHEN MovementItem.Amount = 3 THEN TRUE ELSE FALSE END AS isQuestionRead
           , CASE WHEN MovementItem.Amount = 4 THEN TRUE ELSE FALSE END AS isAnswerRead
           , MovementItem.isErased      AS isErased
