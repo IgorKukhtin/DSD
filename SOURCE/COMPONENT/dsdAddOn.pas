@@ -261,6 +261,7 @@ type
     FFocusedItemChanged: TcxGridFocusedItemChangedEvent;
     FDataSet: TDataSet;
     FCreateColumnList: TList;
+    FNoCrossColorColumn : boolean;
     procedure onEditing(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
          var AAllow: Boolean);
     procedure onBeforeOpen(DataSet: TDataSet);
@@ -281,6 +282,8 @@ type
     property HeaderColumnName: String read FHeaderColumnName write FHeaderColumnName;
     // Шаблон для Cross колонок
     property TemplateColumn: TcxGridColumn read FTemplateColumn write FTemplateColumn;
+    // Колонки цвкета не размножать (один цвет на все колонки)
+    property NoCrossColorColumn : boolean read FNoCrossColorColumn write FNoCrossColorColumn default False;
   end;
 
   TPivotAddOn = class(TCustomDBControlAddOn)
@@ -2032,8 +2035,9 @@ begin
 end;
 
 procedure TCrossDBViewAddOn.onBeforeOpen(DataSet: TDataSet);
-var NewColumnIndex: integer;
+var NewColumnIndex, I: integer;
     Column: TcxGridColumn;
+    TemplateColorRule, ColorRule: TColorRule;
 begin
   if Assigned(FBeforeOpen) then
      FBeforeOpen(DataSet);
@@ -2045,11 +2049,22 @@ begin
             raise Exception.Create('HeaderDataSet не имеет поля ' + HeaderColumnName);
          if not Assigned(TemplateColumn) then
             raise Exception.Create('TemplateColumn не установлен ');
+         TemplateColorRule := Nil;
+         for I := 0 to ColorRuleList.Count - 1 do
+           if TColorRule(ColorRuleList.Items[I]).ColorColumn = TemplateColumn then
+         begin
+           TemplateColorRule := TColorRule(ColorRuleList.Items[I]);
+           Break;
+         end;
+
          HeaderDataSet.First;
          NewColumnIndex := 1;
          while not HeaderDataSet.Eof do begin
            Column := View.CreateColumn;
-//           Column.Name:=TcxGridDBColumn(TemplateColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+           if TemplateColumn is TcxGridDBBandedColumn then
+             Column.Name:= View.Name + TcxGridDBBandedColumn(TemplateColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+           if TemplateColumn is TcxGridDBColumn then
+             Column.Name:= View.Name + TcxGridDBColumn(TemplateColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
            FCreateColumnList.Add(Column);
            with Column do begin
              Assign(TemplateColumn);
@@ -2061,6 +2076,76 @@ begin
              if Column is TcxGridDBColumn then
                 TcxGridDBColumn(Column).DataBinding.FieldName := TcxGridDBColumn(TemplateColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
            end;
+
+           if Assigned(TemplateColorRule) then
+           begin
+             ColorRule:= TColorRule.Create(FColorRuleList);
+             ColorRule.Assign(TemplateColorRule);
+             ColorRule.ColorColumn := Column;
+             if not NoCrossColorColumn then
+             begin
+               if Assigned(TemplateColorRule.BackGroundValueColumn) then
+               begin
+                 Column := View.CreateColumn;
+                 if TemplateColorRule.BackGroundValueColumn is TcxGridDBBandedColumn then
+                   Column.Name:= View.Name + TcxGridDBBandedColumn(TemplateColorRule.BackGroundValueColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                 if TemplateColorRule.BackGroundValueColumn is TcxGridDBColumn then
+                   Column.Name:= View.Name + TcxGridDBColumn(TemplateColorRule.BackGroundValueColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                 FCreateColumnList.Add(Column);
+                 with Column do begin
+                   Assign(TemplateColorRule.BackGroundValueColumn);
+                   Visible := False;
+                   if (Column is TcxGridDBBandedColumn) and (TemplateColorRule.BackGroundValueColumn is TcxGridDBBandedColumn) then
+                      TcxGridDBBandedColumn(Column).DataBinding.FieldName := TcxGridDBBandedColumn(TemplateColorRule.BackGroundValueColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                   if (Column is TcxGridDBColumn) and (TemplateColorRule.BackGroundValueColumn is TcxGridDBColumn) then
+                      TcxGridDBColumn(Column).DataBinding.FieldName := TcxGridDBColumn(TemplateColorRule.BackGroundValueColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                 end;
+                 ColorRule.BackGroundValueColumn := Column;
+               end;
+               if Assigned(TemplateColorRule.ValueBoldColumn) then
+               begin
+                 Column := View.CreateColumn;
+                 if TemplateColorRule.ValueBoldColumn is TcxGridDBBandedColumn then
+                   Column.Name:= View.Name + TcxGridDBBandedColumn(TemplateColorRule.ValueBoldColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                 if TemplateColorRule.ValueBoldColumn is TcxGridDBColumn then
+                   Column.Name:= View.Name + TcxGridDBColumn(TemplateColorRule.ValueBoldColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                 FCreateColumnList.Add(Column);
+                 with Column do begin
+                   Assign(TemplateColorRule.ValueBoldColumn);
+                   Visible := False;
+                   if (Column is TcxGridDBBandedColumn) and (TemplateColorRule.ValueBoldColumn is TcxGridDBBandedColumn) then
+                      TcxGridDBBandedColumn(Column).DataBinding.FieldName := TcxGridDBBandedColumn(TemplateColorRule.ValueBoldColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                   if (Column is TcxGridDBColumn) and (TemplateColorRule.ValueBoldColumn is TcxGridDBColumn) then
+                      TcxGridDBColumn(Column).DataBinding.FieldName := TcxGridDBColumn(TemplateColorRule.ValueBoldColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                 end;
+                 ColorRule.ValueBoldColumn := Column;
+               end;
+               if Assigned(TemplateColorRule.ValueColumn) then
+               begin
+                 Column := View.CreateColumn;
+                 if TemplateColorRule.ValueColumn is TcxGridDBBandedColumn then
+                   Column.Name:= View.Name + TcxGridDBBandedColumn(TemplateColorRule.ValueColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                 if TemplateColorRule.ValueColumn is TcxGridDBColumn then
+                   Column.Name:= View.Name + TcxGridDBColumn(TemplateColorRule.ValueColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                 FCreateColumnList.Add(Column);
+                 with Column do begin
+                   Assign(TemplateColorRule.ValueColumn);
+                   Visible := False;
+                   if (Column is TcxGridDBBandedColumn) and (TemplateColorRule.ValueColumn is TcxGridDBBandedColumn) then
+                      TcxGridDBBandedColumn(Column).DataBinding.FieldName := TcxGridDBBandedColumn(TemplateColorRule.ValueColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                   if (Column is TcxGridDBColumn) and (TemplateColorRule.ValueColumn is TcxGridDBColumn) then
+                      TcxGridDBColumn(Column).DataBinding.FieldName := TcxGridDBColumn(TemplateColorRule.ValueColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                 end;
+                 ColorRule.ValueColumn := Column;
+               end;
+             end else
+             begin
+               ColorRule.BackGroundValueColumn := TemplateColorRule.BackGroundValueColumn;
+               ColorRule.ValueBoldColumn := TemplateColorRule.ValueBoldColumn;
+               ColorRule.ValueColumn := TemplateColorRule.ValueColumn;
+             end;
+           end;
+
            inc(NewColumnIndex);
            HeaderDataSet.Next;
          end;
