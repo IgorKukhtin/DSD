@@ -1,30 +1,33 @@
 inherited PromoForm: TPromoForm
   ActiveControl = edOperDate
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
-  ClientHeight = 599
+  ClientHeight = 659
   ClientWidth = 1204
+  ExplicitLeft = -118
+  ExplicitTop = -20
   ExplicitWidth = 1220
-  ExplicitHeight = 634
+  ExplicitHeight = 697
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 139
     Width = 1204
-    Height = 460
+    Height = 437
     ExplicitTop = 139
     ExplicitWidth = 1204
-    ExplicitHeight = 460
-    ClientRectBottom = 460
+    ExplicitHeight = 520
+    ClientRectBottom = 437
     ClientRectRight = 1204
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
       ExplicitWidth = 1204
-      ExplicitHeight = 436
+      ExplicitHeight = 496
       inherited cxGrid: TcxGrid
         Width = 1204
-        Height = 255
+        Height = 224
+        ExplicitLeft = -1
         ExplicitWidth = 1204
-        ExplicitHeight = 255
+        ExplicitHeight = 169
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -506,11 +509,12 @@ inherited PromoForm: TPromoForm
       end
       object Panel1: TPanel
         Left = 0
-        Top = 263
+        Top = 232
         Width = 1204
         Height = 173
         Align = alBottom
         TabOrder = 1
+        ExplicitTop = 195
         object cxSplitter1: TcxSplitter
           Left = 660
           Top = 1
@@ -529,6 +533,7 @@ inherited PromoForm: TPromoForm
           TabOrder = 1
           Properties.ActivePage = tsPartner
           Properties.CustomButtons.Buttons = <>
+          ExplicitLeft = -5
           ClientRectBottom = 171
           ClientRectRight = 659
           ClientRectTop = 24
@@ -688,9 +693,6 @@ inherited PromoForm: TPromoForm
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -978,30 +980,40 @@ inherited PromoForm: TPromoForm
           Control = cxPageControl3
         end
       end
-      object cxSplitter2: TcxSplitter
+      object cxSplitter4: TcxSplitter
         Left = 0
-        Top = 255
+        Top = 224
         Width = 1204
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel1
+        ExplicitTop = -8
+      end
+      object cxSplitter2: TcxSplitter
+        Left = 0
+        Top = 405
+        Width = 1204
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        Control = cxGrid2
+        ExplicitTop = 568
       end
     end
     object cxTabSheetCalc: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitHeight = 496
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0
         Width = 1204
-        Height = 436
+        Height = 413
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitHeight = 496
         object cxGridDBTableViewCalc: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CalcDS
@@ -1249,17 +1261,16 @@ inherited PromoForm: TPromoForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitHeight = 496
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
         Width = 1204
-        Height = 436
+        Height = 413
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitHeight = 496
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -1345,17 +1356,16 @@ inherited PromoForm: TPromoForm
     object cxTabSheetPlan: TcxTabSheet
       Caption = #1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080
       ImageIndex = 4
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitHeight = 496
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
         Width = 1204
-        Height = 436
+        Height = 413
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitHeight = 496
         object cxGridDBTableViewPlan: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PlanDS
@@ -1935,6 +1945,153 @@ inherited PromoForm: TPromoForm
     Top = 74
     Caption = #1054#1078#1080#1076#1072#1077#1090#1089#1103' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
   end
+  object cxGrid2: TcxGrid [8]
+    Left = 0
+    Top = 576
+    Width = 1204
+    Height = 83
+    Align = alBottom
+    PopupMenu = PopupMenu
+    TabOrder = 12
+    ExplicitLeft = -8
+    ExplicitTop = 568
+    object cxGridDBTableView2: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = MessageDS
+      DataController.Filter.Options = [fcoCaseInsensitive]
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      Images = dmMain.SortImageList
+      OptionsBehavior.GoToNextCellOnEnter = True
+      OptionsBehavior.IncSearch = True
+      OptionsBehavior.FocusCellOnCycle = True
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsCustomize.DataRowSizing = True
+      OptionsData.CancelOnExit = False
+      OptionsData.DeletingConfirmation = False
+      OptionsView.GroupByBox = False
+      OptionsView.GroupSummaryLayout = gslAlignWithColumns
+      OptionsView.HeaderAutoHeight = True
+      OptionsView.Indicator = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object msOrd: TcxGridDBColumn
+        Caption = #8470' '#1087'.'#1087'.'
+        DataBinding.FieldName = 'Ord'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 25
+      end
+      object msisQuestion: TcxGridDBColumn
+        Caption = #1054#1090#1087#1088'. '#1074#1086#1087#1088#1086#1089
+        DataBinding.FieldName = 'isQuestion'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1074#1086#1087#1088#1086#1089
+        Width = 43
+      end
+      object msisAnswer: TcxGridDBColumn
+        Caption = #1054#1090#1087#1088'. '#1086#1090#1074#1077#1090
+        DataBinding.FieldName = 'isAnswer'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1086#1090#1074#1077#1090
+        Width = 42
+      end
+      object msisQuestionRead: TcxGridDBColumn
+        Caption = #1055#1088#1086#1095'. '#1074#1086#1087#1088#1086#1089
+        DataBinding.FieldName = 'isQuestionRead'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1086#1095#1080#1090#1072#1085' '#1074#1086#1087#1088#1086#1089
+        Width = 43
+      end
+      object msisAnswerRead: TcxGridDBColumn
+        Caption = #1055#1088#1086#1095'. '#1086#1090#1074#1077#1090
+        DataBinding.FieldName = 'isAnswerRead'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1086#1095#1080#1090#1072#1085' '#1086#1090#1074#1077#1090
+        Width = 42
+      end
+      object msOperDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1087#1088#1086#1095#1080#1090#1072#1085#1086')'
+        DataBinding.FieldName = 'OperDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 79
+      end
+      object msUserName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1084#1091')'
+        DataBinding.FieldName = 'UserName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actUserChoice
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 114
+      end
+      object msComment: TcxGridDBColumn
+        Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 602
+      end
+      object msInsertName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+        DataBinding.FieldName = 'InsertName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 97
+      end
+      object msUpdateName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
+        DataBinding.FieldName = 'UpdateName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 97
+      end
+      object msUpdateDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.)'
+        DataBinding.FieldName = 'UpdateDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 67
+      end
+      object msInsertDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+        DataBinding.FieldName = 'InsertDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 67
+      end
+      object msIsErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'IsErased'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 294
+      end
+    end
+    object cxGridLevel3: TcxGridLevel
+      GridView = cxGridDBTableView2
+    end
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Top = 312
   end
@@ -2046,6 +2203,9 @@ inherited PromoForm: TPromoForm
         end
         item
           StoredProc = spSelectPlan
+        end
+        item
+          StoredProc = spSelectMIMessage
         end>
     end
     object mactInsertUpdateMISignNo: TMultiAction [6]
@@ -2062,7 +2222,22 @@ inherited PromoForm: TPromoForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1076#1083#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 52
     end
-    object InsertRecord: TInsertRecord [8]
+    object actUpdateDataSetMessage: TdsdUpdateDataSet [7]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIMessage
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMessage
+        end
+        item
+          StoredProc = spSelectMIMessage
+        end>
+      Caption = 'actUpdateDataSetMessage'
+      DataSource = MessageDS
+    end
+    object InsertRecord: TInsertRecord [9]
       Category = 'Goods'
       TabSheet = tsMain
       MoveParams = <>
@@ -2074,7 +2249,7 @@ inherited PromoForm: TPromoForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ImageIndex = 0
     end
-    object actUpdateCalcDS: TdsdUpdateDataSet [9]
+    object actUpdateCalcDS: TdsdUpdateDataSet [10]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2102,7 +2277,7 @@ inherited PromoForm: TPromoForm
       ShortCut = 0
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1058#1086#1074#1072#1088'> ?'
     end
-    object actPrint_Calc: TdsdPrintAction [11]
+    object actPrint_Calc: TdsdPrintAction [12]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
@@ -2158,7 +2333,7 @@ inherited PromoForm: TPromoForm
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ShortCut = 0
     end
-    object UpdateConditionDS: TdsdUpdateDataSet [13]
+    object UpdateConditionDS: TdsdUpdateDataSet [14]
       Category = 'Condition'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2185,7 +2360,7 @@ inherited PromoForm: TPromoForm
           StoredProc = spSelect_MovementItem_PromoCondition
         end>
     end
-    object macInsertUpdate_MI_Param: TMultiAction [16]
+    object macInsertUpdate_MI_Param: TMultiAction [17]
       Category = 'Update_MI_Param'
       TabSheet = tsMain
       MoveParams = <>
@@ -2210,7 +2385,7 @@ inherited PromoForm: TPromoForm
         item
         end>
     end
-    object actInsertUpdate_MI_Param: TdsdExecStoredProc [19]
+    object actInsertUpdate_MI_Param: TdsdExecStoredProc [20]
       Category = 'Update_MI_Param'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2260,7 +2435,7 @@ inherited PromoForm: TPromoForm
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
     end
-    object actPartnerProtocolOpenForm: TdsdOpenForm [26]
+    object actPartnerProtocolOpenForm: TdsdOpenForm [27]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -2291,7 +2466,7 @@ inherited PromoForm: TPromoForm
         end>
       isShowModal = False
     end
-    object actConditionPromoProtocolOpenForm: TdsdOpenForm [27]
+    object actConditionPromoProtocolOpenForm: TdsdOpenForm [28]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -2322,7 +2497,7 @@ inherited PromoForm: TPromoForm
         end>
       isShowModal = False
     end
-    object actAdvertisingProtocolOpenForm: TdsdOpenForm [28]
+    object actAdvertisingProtocolOpenForm: TdsdOpenForm [29]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -2982,7 +3157,7 @@ inherited PromoForm: TPromoForm
         item
           Name = 'inUnitId'
           Value = 'Null'
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'Key'
           ParamType = ptUnknown
           MultiSelectSeparator = ','
@@ -2990,7 +3165,7 @@ inherited PromoForm: TPromoForm
         item
           Name = 'inUnitName'
           Value = Null
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'Key'
           DataType = ftString
           ParamType = ptUnknown
@@ -3022,6 +3197,48 @@ inherited PromoForm: TPromoForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actUserChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'User_byMessageForm'
+      FormName = 'TUser_byMessageForm'
+      FormNameParam.Value = 'TUser_byMessageForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MessageDCS
+          ComponentItem = 'UserId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MessageDCS
+          ComponentItem = 'UserName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isQuestion'
+          Value = Null
+          Component = MessageDCS
+          ComponentItem = 'isAnswer'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -3478,7 +3695,7 @@ inherited PromoForm: TPromoForm
       item
         Name = 'PromoKindName'
         Value = Null
-        Component = PromoKindGuides
+        Component = GuidesPromoKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3486,14 +3703,14 @@ inherited PromoForm: TPromoForm
       item
         Name = 'PriceListId'
         Value = Null
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PriceListName'
         Value = Null
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3582,14 +3799,14 @@ inherited PromoForm: TPromoForm
       item
         Name = 'UnitId'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3597,14 +3814,14 @@ inherited PromoForm: TPromoForm
       item
         Name = 'PersonalTradeId'
         Value = Null
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalTradeName'
         Value = Null
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3612,7 +3829,7 @@ inherited PromoForm: TPromoForm
       item
         Name = 'PersonalId'
         Value = Null
-        Component = PersonalGuides
+        Component = GuidesPersonal
         ComponentItem = 'Key'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3620,7 +3837,7 @@ inherited PromoForm: TPromoForm
       item
         Name = 'PersonalName'
         Value = Null
-        Component = PersonalGuides
+        Component = GuidesPersonal
         ComponentItem = 'TextValue'
         MultiSelectSeparator = ','
       end
@@ -3699,7 +3916,7 @@ inherited PromoForm: TPromoForm
       item
         Name = 'inPromoKindId'
         Value = Null
-        Component = PromoKindGuides
+        Component = GuidesPromoKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3707,7 +3924,7 @@ inherited PromoForm: TPromoForm
       item
         Name = 'inPriceListId'
         Value = Null
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3827,7 +4044,7 @@ inherited PromoForm: TPromoForm
       item
         Name = 'inUnitId'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3835,7 +4052,7 @@ inherited PromoForm: TPromoForm
       item
         Name = 'inPersonalTradeId'
         Value = Null
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3843,7 +4060,7 @@ inherited PromoForm: TPromoForm
       item
         Name = 'inPersonalId'
         Value = Null
-        Component = PersonalGuides
+        Component = GuidesPersonal
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4091,14 +4308,14 @@ inherited PromoForm: TPromoForm
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     Left = 432
-    Top = 328
+    Top = 272
   end
   inherited spGetTotalSumm: TdsdStoredProc
     StoredProcName = ''
     Left = 876
     Top = 196
   end
-  object PriceListGuides: TdsdGuides
+  object GuidesPriceList: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
     FormNameParam.Value = 'TPriceList_ObjectForm'
@@ -4110,7 +4327,7 @@ inherited PromoForm: TPromoForm
       item
         Name = 'Key'
         Value = ''
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -4119,7 +4336,7 @@ inherited PromoForm: TPromoForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -4128,7 +4345,7 @@ inherited PromoForm: TPromoForm
     Left = 748
     Top = 48
   end
-  object PromoKindGuides: TdsdGuides
+  object GuidesPromoKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPromoKind
     FormNameParam.Value = 'TPromoKindForm'
@@ -4140,7 +4357,7 @@ inherited PromoForm: TPromoForm
       item
         Name = 'Key'
         Value = ''
-        Component = PromoKindGuides
+        Component = GuidesPromoKind
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -4149,7 +4366,7 @@ inherited PromoForm: TPromoForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PromoKindGuides
+        Component = GuidesPromoKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -4158,7 +4375,7 @@ inherited PromoForm: TPromoForm
     Left = 516
     Top = 8
   end
-  object PersonalTradeGuides: TdsdGuides
+  object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalTrade
     FormNameParam.Value = 'TPersonalForm'
@@ -4170,7 +4387,7 @@ inherited PromoForm: TPromoForm
       item
         Name = 'Key'
         Value = ''
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -4179,7 +4396,7 @@ inherited PromoForm: TPromoForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -4188,7 +4405,7 @@ inherited PromoForm: TPromoForm
     Left = 148
     Top = 64
   end
-  object PersonalGuides: TdsdGuides
+  object GuidesPersonal: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonal
     FormNameParam.Value = 'TPersonalForm'
@@ -4200,7 +4417,7 @@ inherited PromoForm: TPromoForm
       item
         Name = 'Key'
         Value = ''
-        Component = PersonalGuides
+        Component = GuidesPersonal
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -4209,7 +4426,7 @@ inherited PromoForm: TPromoForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PersonalGuides
+        Component = GuidesPersonal
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -4218,7 +4435,7 @@ inherited PromoForm: TPromoForm
     Left = 460
     Top = 80
   end
-  object UnitGuides: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
     Key = 'Null'
@@ -4231,7 +4448,7 @@ inherited PromoForm: TPromoForm
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -4240,7 +4457,7 @@ inherited PromoForm: TPromoForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -4396,14 +4613,14 @@ inherited PromoForm: TPromoForm
       item
         Name = 'outPriceListId'
         Value = Null
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'outPriceListName'
         Value = Null
-        Component = PriceListGuides
+        Component = GuidesPriceList
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -4411,14 +4628,14 @@ inherited PromoForm: TPromoForm
       item
         Name = 'outPersonalMarketingId'
         Value = Null
-        Component = PersonalGuides
+        Component = GuidesPersonal
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'outPersonalMarketingName'
         Value = Null
-        Component = PersonalGuides
+        Component = GuidesPersonal
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -4426,14 +4643,14 @@ inherited PromoForm: TPromoForm
       item
         Name = 'outPersonalTradeId'
         Value = Null
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'outPersonalTradeName'
         Value = Null
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -5000,8 +5217,8 @@ inherited PromoForm: TPromoForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 976
-    Top = 203
+    Left = 944
+    Top = 211
   end
   object SignCDS: TClientDataSet
     Aggregates = <>
@@ -5395,5 +5612,130 @@ inherited PromoForm: TPromoForm
     SummaryItemList = <>
     Left = 1008
     Top = 487
+  end
+  object MessageDS: TDataSource
+    DataSet = MessageDCS
+    Left = 864
+    Top = 592
+  end
+  object MessageDCS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 800
+    Top = 568
+  end
+  object spInsertUpdateMIMessage: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_Message'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MessageDCS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserId_Top'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioUserId'
+        Value = Null
+        Component = MessageDCS
+        ComponentItem = 'UserId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisQuestion'
+        Value = Null
+        Component = MessageDCS
+        ComponentItem = 'isQuestion'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAnswer'
+        Value = Null
+        Component = MessageDCS
+        ComponentItem = 'isAnswer'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisQuestionRead'
+        Value = Null
+        Component = MessageDCS
+        ComponentItem = 'isQuestionRead'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAnswerRead'
+        Value = Null
+        Component = MessageDCS
+        ComponentItem = 'isAnswerRead'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MessageDCS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 552
+    Top = 603
+  end
+  object spSelectMIMessage: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_Message'
+    DataSet = MessageDCS
+    DataSets = <
+      item
+        DataSet = MessageDCS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 600
   end
 end

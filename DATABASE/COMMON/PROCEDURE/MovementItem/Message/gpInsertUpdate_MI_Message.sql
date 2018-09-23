@@ -90,13 +90,18 @@ BEGIN
                           ORDER BY MovementItem.Id DESC
                           LIMIT 1);
          ELSE
-             
              ioUserId := COALESCE ((SELECT ObjectLink_User_Member.ObjectId AS UserId
-                                    FROM ObjectLink AS ObjectLink_User_Member
-                                    WHERE ObjectLink_User_Member.ChildObjectId = inUserId_Top 
-                                      AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member())
-                                    , 0);
-             
+                                    FROM (SELECT CASE WHEN Object.DescId = zc_Object_Member() THEN Object.Id ELSE ObjectLink_Personal_Member.ChildObjectId END AS MemberId
+                                          FROM Object
+                                               LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                                    ON ObjectLink_Personal_Member.ObjectId = Object.Id
+                                                                   AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                                          WHERE Object.Id = inUserId_Top
+                                          ) AS tmp
+                                          LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                                 ON ObjectLink_User_Member.ChildObjectId = tmp.MemberId --inUserId_Top 
+                                                AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                    ), 0);
          END IF;
      END IF;
 
@@ -127,6 +132,9 @@ BEGIN
      THEN
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_OperDate(), ioId, CURRENT_TIMESTAMP);
+     ELSE
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_OperDate(), ioId, NULL); 
      END IF;
 
 

@@ -979,7 +979,6 @@ uses
   OrderInternalPackRemains in '..\..\Forms\Document\OrderInternalPackRemains.pas' {OrderInternalPackRemainsForm: TParentForm},
   GoodsReportSale in '..\..\Forms\Guides\GoodsReportSale.pas' {GoodsReportSaleForm: TParentForm},
   Report_Wage in '..\..\Forms\Report\Report_Wage.pas' {Report_WageForm: TParentForm},
-  Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm},
   Report_PromoPlan in '..\..\Forms\Report\Report_PromoPlan.pas' {Report_PromoPlanForm: TParentForm},
   EDIJournal in '..\..\Forms\EDI\EDIJournal.pas' {EDIJournalForm: TParentForm},
   Report_GoodsBalance in '..\..\Forms\Report\Report_GoodsBalance.pas' {Report_GoodsBalanceForm: TParentForm},
@@ -1038,7 +1037,8 @@ uses
   Report_Income_OlapDialog in '..\..\Forms\Report\Report_Income_OlapDialog.pas' {Report_Income_OlapDialogForm: TParentForm},
   Report_Branch_App7_Full in '..\..\Forms\Report\Report_Branch_App7_Full.pas' {Report_Branch_App7_FullForm: TParentForm},
   Report_Branch_App1_Full in '..\..\Forms\Report\Report_Branch_App1_Full.pas' {Report_Branch_App1_FullForm: TParentForm},
-  User_byMessage in '..\..\Forms\Guides\User_byMessage.pas' {User_byMessageForm: TParentForm};
+  User_byMessage in '..\..\Forms\Guides\User_byMessage.pas' {User_byMessageForm: TParentForm},
+  Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
