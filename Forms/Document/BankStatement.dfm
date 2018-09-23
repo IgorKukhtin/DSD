@@ -999,7 +999,7 @@ inherited BankStatementForm: TBankStatementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioServiceDate'
+        Name = 'inServiceDate'
         Value = 'NULL'
         Component = edServiceDate
         DataType = ftDateTime
@@ -1007,7 +1007,7 @@ inherited BankStatementForm: TBankStatementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioServiceDate'
+        Name = 'outServiceDate'
         Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'ServiceDate'
