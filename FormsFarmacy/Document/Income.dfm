@@ -59,6 +59,11 @@
               Format = ',0.###'
               Kind = skSum
               Column = OrderAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SampleSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -113,6 +118,11 @@
               Format = ',0.###'
               Kind = skSum
               Column = OrderAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SampleSumm
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -228,6 +238,27 @@
             HeaderHint = #1062#1077#1085#1072' c/c '#1089' '#1053#1044#1057
             Options.Editing = False
             Width = 70
+          end
+          object SamplePrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1057#1045#1052#1055#1051
+            DataBinding.FieldName = 'SamplePrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object SampleSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1057#1045#1052#1055#1051
+            DataBinding.FieldName = 'SampleSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object PriceOptSP: TcxGridDBColumn
             Caption = #1052#1072#1082#1089'. '#1094#1077#1085#1072' '#1087#1086#1089#1090'-'#1082#1072' '#1087#1086' '#1057#1055' ('#1073#1077#1079' '#1053#1044#1057')'
@@ -2628,6 +2659,15 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inSamplePrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SamplePrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPrintCount'
         Value = Null
         Component = MasterCDS
@@ -2661,12 +2701,6 @@
         ComponentItem = 'Measure'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -2960,8 +2994,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 264
-    Top = 296
+    Left = 304
+    Top = 288
   end
   object spCalculateSalePrice: TdsdStoredProc
     StoredProcName = 'gpUpdate_MovementItem_Income_SendPrice'

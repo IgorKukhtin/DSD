@@ -377,9 +377,14 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_BranchCode() RETURNS Integer AS $BOD
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_BranchCode', 'Код Филиала' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_BranchCode');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummSample() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummSample'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSummSample', 'Итого сумма (СЕМПЛ)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummSample');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 24.09.18         * zc_MovementFloat_TotalSummSample
  29.06.18                                                                                     * zc_MovementFloat_ManualDiscount
  25.06.18         * zc_MovementFloat_TotalSummAddOth
                     zc_MovementFloat_TotalSummAddOthRecalc

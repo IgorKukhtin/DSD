@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income(Integer, Integer, Int
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income(Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income(Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена
     IN inSalePrice           TFloat    , -- Цена реализации
+    IN inSamplePrice         TFloat    , -- Цена СЕМПЛ
     IN inPrintCount          TFloat    , -- кол-во печатаемых стикеров
     IN inisPrint             Boolean   , -- Печатать стикер
     IN inFEA                 TVarChar  , -- УК ВЭД
@@ -36,6 +38,8 @@ BEGIN
      ioId := lpInsertUpdate_MovementItem_Income (ioId, inMovementId, inGoodsId, Null, inAmount, inPrice, inFEA, inMeasure, vbUserId);
 
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), ioId, inSalePrice);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSample(), ioId, inSamplePrice);
      -- кол-во печатаемых стикеров
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PrintCount(), ioId, inPrintCount);
      -- Печатать стикер
@@ -45,6 +49,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
      PERFORM lpInsertUpdate_MovementFloat_TotalSummSale (inMovementId);
+     
+     PERFORM lpInsertUpdate_MovementFloat_TotalSummSample (inMovementId);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
@@ -57,6 +63,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 24.09.18         *
  11.05.18                                                                      * 
  27.01.17         *
  16.04.15                        *

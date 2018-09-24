@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Income(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSumm TFloat
+             , TotalSummSample TFloat
              , PriceWithVAT Boolean
              , FromId Integer, FromName TVarChar, FromOKPO TVarChar
              , ToId Integer, ToName TVarChar, JuridicalName TVarChar
@@ -157,6 +158,7 @@ BEGIN
              , MovementFloat_TotalCount.ValueData         AS TotalCount
              , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
              , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+             , MovementFloat_TotalSummSample.ValueData    AS TotalSummSample
              , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
              , Object_From.Id                             AS FromId
              , Object_From.ValueData                      AS FromName
@@ -213,10 +215,14 @@ BEGIN
                                 ON MovementFloat_TotalSummSale.MovementId = Movement_Income.Id
                                AND MovementFloat_TotalSummSale.DescId = zc_MovementFloat_TotalSummSale()
 
+        LEFT JOIN MovementFloat AS MovementFloat_TotalSummSample
+                                ON MovementFloat_TotalSummSample.MovementId = Movement_Income.Id
+                               AND MovementFloat_TotalSummSample.DescId = zc_MovementFloat_TotalSummSample()
+
         LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                 ON MovementFloat_TotalSummMVAT.MovementId = Movement_Income.Id
                                AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
-        
+
         LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
                                      ON MovementLinkObject_NDSKind.MovementId = Movement_Income.Id
                                     AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
@@ -312,7 +318,8 @@ BEGIN
                , Object_Status.ValueData               
                , MovementFloat_TotalCount.ValueData    
                , MovementFloat_TotalSummMVAT.ValueData 
-               , MovementFloat_TotalSumm.ValueData     
+               , MovementFloat_TotalSumm.ValueData 
+               , MovementFloat_TotalSummSample.ValueData    
                , MovementBoolean_PriceWithVAT.ValueData
                , Object_From.Id      
                , Object_From.ValueData                  
@@ -354,6 +361,7 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 24.09.18         *
  05.01.18         * add NDS
  15.01.17         * без вьюх
  18.10.16         * add isRegistered
