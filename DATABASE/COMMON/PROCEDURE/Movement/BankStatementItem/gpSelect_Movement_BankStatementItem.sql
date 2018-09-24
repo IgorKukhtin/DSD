@@ -150,8 +150,10 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_ServiceDate
                                    ON MovementDate_ServiceDate.MovementId   = Movement.Id
                                   AND MovementDate_ServiceDate.DescId       = zc_MovementDate_ServiceDate()
-                                  AND MovementLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_60101() -- Заработная плата + Заработная плата
-
+                                  AND MovementLinkObject_InfoMoney.ObjectId IN (zc_Enum_InfoMoney_60101() -- Заработная плата + Заработная плата
+                                                                              , zc_Enum_InfoMoney_60102() -- Заработная плата + Алименты
+                                                                               )
+                                  
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()

@@ -203,7 +203,9 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_ServiceDate
                                        ON MIDate_ServiceDate.MovementItemId = MovementItem.Id
                                       AND MIDate_ServiceDate.DescId         = zc_MIDate_ServiceDate()
-                                      AND MILinkObject_InfoMoney.ObjectId   = zc_Enum_InfoMoney_60101() -- Заработная плата + Заработная плата
+                                      AND MILinkObject_InfoMoney.ObjectId   IN (zc_Enum_InfoMoney_60101() -- Заработная плата + Заработная плата
+                                                                              , zc_Enum_InfoMoney_60102() -- Заработная плата + Алименты
+                                                                               )
                                       -- AND MILinkObject_MoneyPlace.ObjectId > 0
             ;
 

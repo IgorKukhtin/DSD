@@ -96,9 +96,6 @@ BEGIN
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             
-            LEFT JOIN MovementDate AS MovementDate_ServiceDate
-                                   ON MovementDate_ServiceDate.MovementId = Movement.ParentId
-                                  AND MovementDate_ServiceDate.DescId     = zc_MovementDate_ServiceDate()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount
                                          ON MovementLinkObject_BankAccount.MovementId = Movement.ParentId
@@ -116,6 +113,9 @@ BEGIN
                                      ON MovementString_BankName.MovementId =  Movement.Id
                                     AND MovementString_BankName.DescId = zc_MovementString_BankName()
 
+            LEFT JOIN MovementDate AS MovementDate_ServiceDate
+                                   ON MovementDate_ServiceDate.MovementId = Movement.Id
+                                  AND MovementDate_ServiceDate.DescId     = zc_MovementDate_ServiceDate()
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId =  Movement.Id

@@ -35,8 +35,15 @@ BEGIN
         inUnitId := NULL;
      END IF; 
 
-     -- всегда 1-ое число месяца
-     ioServiceDate := DATE_TRUNC ('month', ioServiceDate);
+     IF inInfoMoneyId IN (zc_Enum_InfoMoney_60101() -- Заработная плата + Заработная плата
+                        , zc_Enum_InfoMoney_60102() -- Заработная плата + Алименты
+                         )
+     THEN
+         -- всегда 1-ое число месяца
+         ioServiceDate := DATE_TRUNC ('MONTH', ioServiceDate);
+     ELSE
+         ioServiceDate := NULL;
+     END IF;
      
      -- проверили статус
      PERFORM lpInsertUpdate_Movement (ioId:= Id, inDescId:= DescId, inInvNumber:= InvNumber, inOperDate:= OperDate, inParentId:= ParentId, inAccessKeyId:= AccessKeyId)
