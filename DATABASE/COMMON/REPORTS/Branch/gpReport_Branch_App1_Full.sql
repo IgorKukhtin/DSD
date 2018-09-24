@@ -76,7 +76,7 @@ BEGIN
                         )
        , tmpObject_Account_View AS (SELECT *
                                    FROM Object_Account_View
-                                   WHERE Object_Account_View.AccountDirectionId IN (/*zc_Enum_AccountDirection_20700(), */zc_Enum_AccountDirection_60200())
+                                   WHERE Object_Account_View.AccountDirectionId IN (zc_Enum_AccountDirection_20700(), zc_Enum_AccountDirection_60200())
                                    )
      
        , tmpContainerListSum AS (SELECT tmpUnitList.BranchId, tmpUnitList.Id AS UnitId, tmpUnitList.isUnit_Vz, Container.Id AS ContainerId, Object_Account_View.AccountDirectionId, Container.*
