@@ -1,8 +1,9 @@
--- Function: gpSelect_MI_PersonalService_Message (Integer, Boolean, Boolean, TVarChar)
+-- Function: gpSelect_MI_Message (Integer, Boolean, Boolean, TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_MI_PersonalService_Message (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MI_Message (Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MI_PersonalService_Message(
+CREATE OR REPLACE FUNCTION gpSelect_MI_Message(
     IN inMovementId  Integer      , -- ключ Документа
     IN inIsErased    Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
@@ -111,5 +112,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_PersonalService_Message (inMovementId:= 4135607, inIsErased:= TRUE,  inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_MI_PersonalService_Message (inMovementId:= 4135607, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MI_Message (inMovementId:= 4135607, inIsErased:= TRUE,  inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MI_Message (inMovementId:= 4135607, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

@@ -3265,10 +3265,6 @@
 				<Form>Report_WageForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Promo.pas">
-				<Form>PromoForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_PromoPlan.pas">
 				<Form>Report_PromoPlanForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -3496,6 +3492,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Branch_App1_Full.pas">
 				<Form>Report_Branch_App1_FullForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\User_byMessage.pas">
+				<Form>User_byMessageForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Promo.pas">
+				<Form>PromoForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

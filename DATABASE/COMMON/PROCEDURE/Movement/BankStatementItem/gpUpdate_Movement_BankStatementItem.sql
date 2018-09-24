@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_BankStatementItem(
     IN inContractId          Integer   , -- Договор  
     IN inUnitId              Integer   , -- Подразделение
     IN inMovementId_Invoice  Integer   , -- документ счет
- INOUT ioServiceDate         TDateTime , --
+    IN inServiceDate         TDateTime , --
+   OUT outServiceDate        TDateTime , --
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS RECORD AS
@@ -44,6 +45,7 @@ BEGIN
      ELSE
          ioServiceDate := NULL;
      END IF;
+
      
      -- проверили статус
      PERFORM lpInsertUpdate_Movement (ioId:= Id, inDescId:= DescId, inInvNumber:= InvNumber, inOperDate:= OperDate, inParentId:= ParentId, inAccessKeyId:= AccessKeyId)
@@ -103,7 +105,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), ioId, inMovementId_Invoice);
 
      -- формируются свойство <Месяц начислений>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_ServiceDate(), ioId, ioServiceDate);
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_ServiceDate(), ioId, outServiceDate);
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
@@ -115,7 +117,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 12.09.18         * add ioServiceDate
+ 12.09.18         * add ServiceDate
  21.07.16         * zc_MovementLinkMovement_Invoice
  07.03.14                                        * add zc_Enum_InfoMoney_21419
  18.03.14                                        * lpInsertUpdate_Movement

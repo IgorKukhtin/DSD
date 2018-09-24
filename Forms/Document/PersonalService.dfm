@@ -2,8 +2,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 681
   ClientWidth = 1307
-  ExplicitLeft = -236
-  ExplicitTop = -42
   ExplicitWidth = 1323
   ExplicitHeight = 719
   PixelsPerInch = 96
@@ -867,14 +865,12 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 243
+        Top = 237
         Width = 1307
         Height = 161
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitLeft = -3
-        ExplicitTop = 333
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDs
@@ -1377,14 +1373,13 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 237
+        Top = 398
         Width = 1307
         Height = 6
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = cxGrid2
-        ExplicitTop = 398
       end
     end
     object cxTabSheetSign: TcxTabSheet
@@ -1857,9 +1852,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'User_ObjectForm'
-      FormName = 'TUser_ObjectForm'
-      FormNameParam.Value = 'TUser_ObjectForm'
+      Caption = 'User_byMessageForm'
+      FormName = 'TUser_byMessageForm'
+      FormNameParam.Value = 'TUser_byMessageForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1876,6 +1871,21 @@ inherited PersonalServiceForm: TPersonalServiceForm
           Component = MessageDCS
           ComponentItem = 'UserName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isQuestion'
+          Value = Null
+          Component = MessageDCS
+          ComponentItem = 'isAnswer'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -3585,7 +3595,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Top = 592
   end
   object spSelectMIMessage: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_PersonalService_Message'
+    StoredProcName = 'gpSelect_MI_Message'
     DataSet = MessageDCS
     DataSets = <
       item
@@ -3612,7 +3622,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Top = 600
   end
   object spInsertUpdateMIMessage: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_PersonalService_Message'
+    StoredProcName = 'gpInsertUpdate_MI_Message'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -3633,11 +3643,19 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUserId'
+        Name = 'inUserId_Top'
+        Value = Null
+        Component = GuidesMember
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioUserId'
         Value = Null
         Component = MessageDCS
         ComponentItem = 'UserId'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

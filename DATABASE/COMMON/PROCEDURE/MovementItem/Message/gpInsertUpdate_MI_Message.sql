@@ -1,10 +1,9 @@
 -- Function: gpInsertUpdate_MI_PersonalService_Message()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Message (Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Message (Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Message (Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Message (Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PersonalService_Message(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Message(
  INOUT ioId                  Integer   , -- 
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inUserId_Top          Integer   ,
@@ -91,13 +90,18 @@ BEGIN
                           ORDER BY MovementItem.Id DESC
                           LIMIT 1);
          ELSE
-             
              ioUserId := COALESCE ((SELECT ObjectLink_User_Member.ObjectId AS UserId
-                                    FROM ObjectLink AS ObjectLink_User_Member
-                                    WHERE ObjectLink_User_Member.ChildObjectId = inUserId_Top 
-                                      AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member())
-                                    , 0);
-             
+                                    FROM (SELECT CASE WHEN Object.DescId = zc_Object_Member() THEN Object.Id ELSE ObjectLink_Personal_Member.ChildObjectId END AS MemberId
+                                          FROM Object
+                                               LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                                    ON ObjectLink_Personal_Member.ObjectId = Object.Id
+                                                                   AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                                          WHERE Object.Id = inUserId_Top
+                                          ) AS tmp
+                                          LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                                 ON ObjectLink_User_Member.ChildObjectId = tmp.MemberId --inUserId_Top 
+                                                AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                    ), 0);
          END IF;
      END IF;
 
@@ -128,6 +132,9 @@ BEGIN
      THEN
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_OperDate(), ioId, CURRENT_TIMESTAMP);
+     ELSE
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_OperDate(), ioId, NULL); 
      END IF;
 
 
@@ -145,4 +152,4 @@ $BODY$
 */
 
 -- тест
---select * from gpInsertUpdate_MI_PersonalService_Message(ioId := 0 , inMovementId := 5285316 , inUserId := 0 , inisQuestion := 'False' , inisAnswer := 'False' , inisQuestionRead := 'False' , inisAnswerRead := 'False' , inComment := 'зшрошгпопмго' ,  inSession := '5');
+--select * from gpInsertUpdate_MI_Message(ioId := 0 , inMovementId := 5285316 , inUserId := 0 , inisQuestion := 'False' , inisAnswer := 'False' , inisQuestionRead := 'False' , inisAnswerRead := 'False' , inComment := 'зшрошгпопмго' ,  inSession := '5');

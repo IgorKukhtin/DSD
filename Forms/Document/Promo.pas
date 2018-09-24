@@ -28,10 +28,10 @@ uses
 
 type
   TPromoForm = class(TAncestorDocumentForm)
-    PriceListGuides: TdsdGuides;
+    GuidesPriceList: TdsdGuides;
     edPriceList: TcxButtonEdit;
     cxLabel11: TcxLabel;
-    PromoKindGuides: TdsdGuides;
+    GuidesPromoKind: TdsdGuides;
     cxLabel4: TcxLabel;
     edPromoKind: TcxButtonEdit;
     cxLabel5: TcxLabel;
@@ -50,13 +50,13 @@ type
     cxLabel12: TcxLabel;
     cxLabel13: TcxLabel;
     edComment: TcxTextEdit;
-    PersonalTradeGuides: TdsdGuides;
+    GuidesPersonalTrade: TdsdGuides;
     cxLabel14: TcxLabel;
     edPersonalTrade: TcxButtonEdit;
     cxLabel16: TcxLabel;
     edPersonal: TcxButtonEdit;
-    PersonalGuides: TdsdGuides;
-    UnitGuides: TdsdGuides;
+    GuidesPersonal: TdsdGuides;
+    GuidesUnit: TdsdGuides;
     edUnit: TcxButtonEdit;
     cxLabel17: TcxLabel;
     GoodsCode: TcxGridDBColumn;
@@ -97,7 +97,6 @@ type
     dsdUpdateDSPartner: TdsdUpdateDataSet;
     Panel1: TPanel;
     cxSplitter1: TcxSplitter;
-    cxSplitter2: TcxSplitter;
     cxPageControl1: TcxPageControl;
     tsPartner: TcxTabSheet;
     cxPageControl2: TcxPageControl;
@@ -295,6 +294,30 @@ type
     plGoodsKindName_List: TcxGridDBColumn;
     GoodsKindCompleteChoiceForm: TOpenChoiceForm;
     PriceTender: TcxGridDBColumn;
+    MessageDS: TDataSource;
+    MessageDCS: TClientDataSet;
+    cxGrid2: TcxGrid;
+    cxGridDBTableView2: TcxGridDBTableView;
+    msOrd: TcxGridDBColumn;
+    msisQuestion: TcxGridDBColumn;
+    msisAnswer: TcxGridDBColumn;
+    msisQuestionRead: TcxGridDBColumn;
+    msisAnswerRead: TcxGridDBColumn;
+    msOperDate: TcxGridDBColumn;
+    msUserName: TcxGridDBColumn;
+    msComment: TcxGridDBColumn;
+    msInsertName: TcxGridDBColumn;
+    msUpdateName: TcxGridDBColumn;
+    msUpdateDate: TcxGridDBColumn;
+    msInsertDate: TcxGridDBColumn;
+    msIsErased: TcxGridDBColumn;
+    cxGridLevel3: TcxGridLevel;
+    cxSplitter4: TcxSplitter;
+    cxSplitter2: TcxSplitter;
+    spInsertUpdateMIMessage: TdsdStoredProc;
+    spSelectMIMessage: TdsdStoredProc;
+    actUserChoice: TOpenChoiceForm;
+    actUpdateDataSetMessage: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

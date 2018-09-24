@@ -845,10 +845,11 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataTimeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDataTimeDialogForm');
   // exit;
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDataDialogForm');
 
@@ -870,6 +871,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
   exit;
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUser_byMessageForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUser_byMessageForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUser_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUser_ObjectForm');
 
@@ -878,10 +883,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProtocolForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TObjectDescForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFormsForm'));
