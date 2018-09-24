@@ -67,13 +67,14 @@ inherited PriceListLoad_AddForm: TPriceListLoad_AddForm
             HeaderAlignmentVert = vaCenter
             Width = 152
           end
-          object NDSinPrice: TcxGridDBColumn
-            Caption = #1053#1044#1057' '#1074' '#1094#1077#1085#1077
-            DataBinding.FieldName = 'NDSinPrice'
+          object MemberName: TcxGridDBColumn
+            Caption = #1054#1090#1074'. '#1079#1072' '#1087#1088#1072#1081#1089
+            DataBinding.FieldName = 'MemberName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1087#1088#1072#1081#1089
             Options.Editing = False
-            Width = 88
+            Width = 87
           end
           object IsMoved: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1085#1077#1089#1077#1085#1086
@@ -82,6 +83,14 @@ inherited PriceListLoad_AddForm: TPriceListLoad_AddForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 81
+          end
+          object NDSinPrice: TcxGridDBColumn
+            Caption = #1053#1044#1057' '#1074' '#1094#1077#1085#1077
+            DataBinding.FieldName = 'NDSinPrice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
           end
           object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'

@@ -548,11 +548,11 @@ procedure TLoadFormTest.LoadLoadFormTest;
 begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListLoad_AddForm'));
     TdsdFormStorageFactory.GetStorage.Load('TPriceListLoad_AddForm');
-    exit;
-  {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListLoadForm'));
     TdsdFormStorageFactory.GetStorage.Load('TPriceListLoadForm');
-
+    exit;
+   {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemsLoadForm'));
     TdsdFormStorageFactory.GetStorage.Load('TPriceListItemsLoadForm');
 

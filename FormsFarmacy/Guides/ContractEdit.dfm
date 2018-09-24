@@ -1,32 +1,32 @@
 inherited ContractEditForm: TContractEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1075#1086#1074#1086#1088
-  ClientHeight = 486
+  ClientHeight = 529
   ClientWidth = 366
   ExplicitWidth = 372
-  ExplicitHeight = 514
+  ExplicitHeight = 557
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 60
-    Top = 451
-    ExplicitLeft = 60
-    ExplicitTop = 451
+    Left = 63
+    Top = 500
+    ExplicitLeft = 63
+    ExplicitTop = 500
   end
   inherited bbCancel: TcxButton
-    Left = 204
-    Top = 451
-    ExplicitLeft = 204
-    ExplicitTop = 451
+    Left = 207
+    Top = 500
+    ExplicitLeft = 207
+    ExplicitTop = 500
   end
   object cxLabel2: TcxLabel [2]
-    Left = 8
-    Top = 405
+    Left = 11
+    Top = 454
     Caption = #1050#1086#1076
     Visible = False
   end
   object edCode: TcxCurrencyEdit [3]
-    Left = 8
-    Top = 421
+    Left = 11
+    Top = 470
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
@@ -64,12 +64,12 @@ inherited ContractEditForm: TContractEditForm
   end
   object cxLabel3: TcxLabel [8]
     Left = 10
-    Top = 398
+    Top = 447
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit [9]
     Left = 10
-    Top = 418
+    Top = 467
     TabOrder = 7
     Width = 337
   end
@@ -262,21 +262,38 @@ inherited ContractEditForm: TContractEditForm
     TabOrder = 37
     Width = 166
   end
+  object cxLabel19: TcxLabel [38]
+    Left = 10
+    Top = 403
+    Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1087#1088#1072#1081#1089
+  end
+  object edMember: TcxButtonEdit [39]
+    Left = 10
+    Top = 423
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 39
+    Width = 337
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 291
     Top = 118
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 304
-    Top = 402
+    Left = 307
+    Top = 451
   end
   inherited ActionList: TActionList
-    Left = 23
-    Top = 181
+    Left = 39
+    Top = 173
   end
   inherited FormParams: TdsdFormParams
-    Left = 160
-    Top = 410
+    Left = 163
+    Top = 459
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Contract'
@@ -332,6 +349,14 @@ inherited ContractEditForm: TContractEditForm
         Name = 'inBankAccountId'
         Value = Null
         Component = BankAccountGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberId'
+        Value = Null
+        Component = GuidesMember
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -592,6 +617,21 @@ inherited ContractEditForm: TContractEditForm
         Component = ceOrderTime
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberId'
+        Value = Null
+        Component = GuidesMember
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName'
+        Value = Null
+        Component = GuidesMember
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 226
     Top = 222
@@ -718,5 +758,34 @@ inherited ContractEditForm: TContractEditForm
       end>
     Left = 128
     Top = 251
+  end
+  object GuidesMember: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMember
+    FormNameParam.Value = 'TMemberForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMemberForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMember
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMember
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 168
+    Top = 408
   end
 end

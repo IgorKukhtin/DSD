@@ -9,6 +9,7 @@ RETURNS TABLE (Id Integer, OperDate TDateTime
              , JuridicalId Integer, JuridicalName TVarChar
              , AreaId Integer, AreaName TVarChar
              , ContractId Integer, ContractName TVarChar
+             , MemberId Integer, MemberName TVarChar       -- отв. за прайс
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , isAllGoodsConcat Boolean, NDSinPrice Boolean
@@ -46,7 +47,10 @@ BEGIN
            , Object_Area.ValueData          AS AreaName
            , Object_Contract.Id             AS ContractId
            , Object_Contract.ValueData      AS ContractName
-           
+
+           , Object_Member.Id               AS MemberId
+           , Object_Member.ValueData        AS MemberName
+
            , Object_User_Insert.ValueData   AS InsertName
            , LoadPriceList.Date_Insert      AS InsertDate
 
@@ -71,6 +75,11 @@ BEGIN
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = LoadPriceList.AreaId  
             
             LEFT JOIN tmpLoadPriceListItem ON tmpLoadPriceListItem.LoadPriceListId = LoadPriceList.Id
+
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_Member
+                                 ON ObjectLink_Contract_Member.ObjectId = LoadPriceList.ContractId
+                                AND ObjectLink_Contract_Member.DescId = zc_ObjectLink_Contract_Member()
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_Contract_Member.ChildObjectId
 
        ORDER BY LoadPriceList.Date_Insert ASC, LoadPriceList.Id ASC
       ;

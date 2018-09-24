@@ -117,6 +117,15 @@ inherited ContractForm: TContractForm
             Options.Editing = False
             Width = 98
           end
+          object MemberName: TcxGridDBColumn
+            Caption = #1054#1090#1074'. '#1079#1072' '#1087#1088#1072#1081#1089
+            DataBinding.FieldName = 'MemberName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1087#1088#1072#1081#1089
+            Options.Editing = False
+            Width = 89
+          end
           object isReport: TcxGridDBColumn
             Caption = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1086#1090#1095#1077#1090#1077
             DataBinding.FieldName = 'isReport'

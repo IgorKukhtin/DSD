@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                JuridicalId Integer, JuridicalName TVarChar,
                GroupMemberSPId Integer, GroupMemberSPName TVarChar,
                BankAccountId Integer, BankAccountName TVarChar, BankName TVarChar, 
+               MemberId Integer, MemberName TVarChar,
                Deferment Integer, Percent TFloat, PercentSP TFloat,
                TotalSumm TFloat,
                OrderSumm TFloat, OrderSummComment TVarChar, OrderTime TVarChar,
@@ -42,6 +43,9 @@ BEGIN
            , CAST (0 as Integer)   AS BankAccountId
            , CAST ('' as TVarChar) AS BankAccountName
            , CAST ('' as TVarChar) AS BankName
+
+           , CAST (0 as Integer)   AS MemberId
+           , CAST ('' as TVarChar) AS MemberName
 
            , 0                     AS Deferment
            , CAST (0 AS TFloat)    AS Percent
@@ -79,6 +83,9 @@ BEGIN
            , Object_Contract_View.BankAccountId
            , Object_Contract_View.BankAccountName
            , Object_Bank.ValueData AS BankName
+
+           , Object_Contract_View.MemberId
+           , Object_Contract_View.MemberName 
 
            , Object_Contract_View.Deferment
            , Object_Contract_View.Percent
@@ -143,6 +150,7 @@ ALTER FUNCTION gpGet_Object_Contract (integer, TVarChar) OWNER TO postgres;
 /*
  ÈÑÒÎĞÈß ĞÀÇĞÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎĞ
                Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 24.09.18         * Member
  20.08.18         * TotalSumm
  14.02.18         *
  08.08.17         *
