@@ -56,12 +56,28 @@ object ProfitLossForm: TProfitLossForm
         HeaderAlignmentVert = vaCenter
         Width = 57
       end
+      object ProfitLossGroupCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' ('#1075#1088#1091#1087#1087#1072')'
+        DataBinding.FieldName = 'ProfitLossGroupCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object ProfitLossGroupName: TcxGridDBColumn
         Caption = #1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'ProfitLossGroupName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 155
+      end
+      object ProfitLossDirectionCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' ('#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077')'
+        DataBinding.FieldName = 'ProfitLossDirectionCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object ProfitLossDirectionName: TcxGridDBColumn
         Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077

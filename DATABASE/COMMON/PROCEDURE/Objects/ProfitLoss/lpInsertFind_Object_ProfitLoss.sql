@@ -23,7 +23,7 @@ BEGIN
    -- Проверки
    IF COALESCE (inUserId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка.Невозможно определить Пользователя : <%>, <%>, <%>, <%>', inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Ошибка.Невозможно определить Пользователя : <%>, <%>, <%>, <%>', inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyDestinationId, lfGet_Object_ProfitLoss_byInfoMoneyDestination (inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyDestinationId);
    END IF;
 
    IF COALESCE (inProfitLossGroupId, 0) = 0

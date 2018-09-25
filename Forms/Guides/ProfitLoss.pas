@@ -61,6 +61,8 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     InfoMoneyGroupName: TcxGridDBColumn;
     OnComplete: TcxGridDBColumn;
+    ProfitLossGroupCode: TcxGridDBColumn;
+    ProfitLossDirectionCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

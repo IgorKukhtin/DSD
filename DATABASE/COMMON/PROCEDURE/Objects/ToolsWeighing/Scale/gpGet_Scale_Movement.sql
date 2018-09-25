@@ -81,6 +81,10 @@ BEGIN
                                               ON MovementLinkObject_User.MovementId = Movement.Id
                                              AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
                                              AND MovementLinkObject_User.ObjectId = vbUserId
+                                      INNER JOIN MovementFloat AS MovementFloat_BranchCode
+                                                               ON MovementFloat_BranchCode.MovementId =  Movement.Id
+                                                              AND MovementFloat_BranchCode.DescId     = zc_MovementFloat_BranchCode()
+                                                              AND MovementFloat_BranchCode.ValueData < 1000
                                 UNION
                                  -- или "следующий" не закрытый
                                  SELECT Movement.Id AS Id
@@ -94,6 +98,10 @@ BEGIN
                                               ON MovementLinkObject_User.MovementId = Movement.Id
                                              AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
                                              AND MovementLinkObject_User.ObjectId = vbUserId
+                                      INNER JOIN MovementFloat AS MovementFloat_BranchCode
+                                                               ON MovementFloat_BranchCode.MovementId =  Movement.Id
+                                                              AND MovementFloat_BranchCode.DescId     = zc_MovementFloat_BranchCode()
+                                                              AND MovementFloat_BranchCode.ValueData < 1000
                                  WHERE Movement.Id <> inMovementId
                                  -- LIMIT 2 -- если больше 1-ого то типа ошибка
                                 UNION

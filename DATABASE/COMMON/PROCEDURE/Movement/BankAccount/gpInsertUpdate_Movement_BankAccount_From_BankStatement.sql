@@ -210,7 +210,7 @@ BEGIN
 
 if inSession = '5'
 then
-    RAISE EXCEPTION 'inSession ';
+    RAISE EXCEPTION 'inSession = 5';
     -- 'Повторите действие через 3 мин.'
 end if;
 
