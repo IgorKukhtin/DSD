@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDialog, Vcl.ActnList, dsdAction,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDialog, Vcl.ActnList, dsdAction, System.DateUtils,
   cxClasses, cxPropertiesStore, dsdAddOn, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus,
   Vcl.StdCtrls, cxButtons, cxTextEdit, Vcl.ExtCtrls, dsdGuides, dsdDB,
@@ -42,6 +42,13 @@ type
     colDateInput: TcxGridDBColumn;
     colUserName: TcxGridDBColumn;
     ListDiffGridLevel: TcxGridLevel;
+    colAmoutDay: TcxGridDBColumn;
+    colAmountYesterday: TcxGridDBColumn;
+    ListAllDiffCDS: TClientDataSet;
+    colId: TcxGridDBColumn;
+    ListAllDiffCDSID: TIntegerField;
+    ListAllDiffCDSAmoutDay: TCurrencyField;
+    ListAllDiffCDSAmountYesterday: TCurrencyField;
     procedure ParentFormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure edt1Exit(Sender: TObject);
@@ -57,12 +64,17 @@ type
       Sender: TcxCustomGridTableView; APrevFocusedRecord,
       AFocusedRecord: TcxCustomGridRecord;
       ANewItemRecordFocusingChanged: Boolean);
+    procedure colAmoutDayGetDisplayText(Sender: TcxCustomGridTableItem;
+      ARecord: TcxCustomGridRecord; var AText: string);
+    procedure colAmountYesterdayGetDisplayText(Sender: TcxCustomGridTableItem;
+      ARecord: TcxCustomGridRecord; var AText: string);
   private
     { Private declarations }
     FOldStr : String;
     procedure FilterRecord(DataSet: TDataSet; var Accept: Boolean);
   public
     procedure SetFilter(AText : string);
+    procedure FillingListAllDiffCDS;
   end;
 
   var MutexGoods: THandle;
@@ -120,14 +132,34 @@ begin
 
   WaitForSingleObject(MutexDiffCDS, INFINITE);
   try
+    ListDiffCDS.Filtered := False;
     if FileExists(ListDiff_lcl) then LoadLocalData(ListDiffCDS, ListDiff_lcl);
     if not ListDiffCDS.Active then ListDiffCDS.Open;
+    FillingListAllDiffCDS;
   finally
     ReleaseMutex(MutexDiffCDS);
   end;
 
   ListDiffCDS.Filter := 'Id = ' + ListGoodsCDS.FieldByName('Id').AsString;
   ListDiffCDS.Filtered := True;
+end;
+
+procedure TListGoodsForm.colAmountYesterdayGetDisplayText(
+  Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AText: string);
+begin
+  if ListAllDiffCDS.Locate('Id', ARecord.Values[colId.Index], []) and
+    (ListAllDiffCDS.FieldByName('AmountYesterday').AsCurrency <> 0) then
+    AText := FormatCurr('0.000', ListAllDiffCDS.FieldByName('AmountYesterday').AsCurrency);
+end;
+
+procedure TListGoodsForm.colAmoutDayGetDisplayText(
+  Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AText: string);
+begin
+  if ListAllDiffCDS.Locate('Id', ARecord.Values[colId.Index], []) and
+    (ListAllDiffCDS.FieldByName('AmoutDay').AsCurrency <> 0) then
+    AText := FormatCurr('0.000', ListAllDiffCDS.FieldByName('AmoutDay').AsCurrency);
 end;
 
 procedure TListGoodsForm.colGoodsNameCustomDrawCell(
@@ -205,8 +237,10 @@ begin
 
   WaitForSingleObject(MutexDiffCDS, INFINITE);
   try
+    ListDiffCDS.Filtered := False;
     if FileExists(ListDiff_lcl) then LoadLocalData(ListDiffCDS, ListDiff_lcl);
     if not ListDiffCDS.Active then ListDiffCDS.Open;
+    FillingListAllDiffCDS;
   finally
     ReleaseMutex(MutexDiffCDS);
   end;
@@ -239,6 +273,28 @@ begin
   edt1.SelStart := Length(AText);
 end;
 
+procedure TListGoodsForm.FillingListAllDiffCDS;
+begin
+  while ListAllDiffCDS.RecordCount > 0 do ListAllDiffCDS.Delete;
+  ListDiffCDS.First;
+  while not ListDiffCDS.Eof do
+  begin
+    if not ListAllDiffCDS.Locate('Id', ListDiffCDS.FieldByName('Id').AsInteger, []) then
+    begin
+       ListAllDiffCDS.Append;
+       ListAllDiffCDS.FieldByName('Id').AsInteger := ListDiffCDS.FieldByName('Id').AsInteger;
+       ListAllDiffCDS.FieldByName('AmoutDay').AsCurrency := 0;
+       ListAllDiffCDS.FieldByName('AmountYesterday').AsCurrency := 0;
+    end else ListAllDiffCDS.Edit;
+
+    if StartOfTheDay(ListDiffCDS.FieldByName('DateInput').AsDateTime) = Date then
+       ListAllDiffCDS.FieldByName('AmoutDay').AsCurrency := ListAllDiffCDS.FieldByName('AmoutDay').AsCurrency + ListDiffCDS.FieldByName('Amount').AsInteger
+    else ListAllDiffCDS.FieldByName('AmountYesterday').AsCurrency := ListAllDiffCDS.FieldByName('AmountYesterday').AsCurrency + ListDiffCDS.FieldByName('Amount').AsInteger;
+
+    ListAllDiffCDS.Post;
+    ListDiffCDS.Next;
+  end;
+end;
 
 procedure TListGoodsForm.Timer1Timer(Sender: TObject);
 begin

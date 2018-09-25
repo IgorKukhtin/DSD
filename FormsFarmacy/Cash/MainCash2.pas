@@ -3713,7 +3713,7 @@ begin
                   end;
                   if (Disc <> 0) and (PosDisc = RecNo) then
                   begin
-                    if Assigned(Cash) then Cash.DiscountGoods(Disc);
+                    if Assigned(Cash) and not Cash.AlwaysSold then Cash.DiscountGoods(Disc);
                     Disc := 0;
                   end;
               end;
