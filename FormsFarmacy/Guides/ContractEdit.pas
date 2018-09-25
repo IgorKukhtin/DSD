@@ -64,6 +64,9 @@ type
     cxLabel17: TcxLabel;
     cxLabel18: TcxLabel;
     ceTotalSumm: TcxCurrencyEdit;
+    cxLabel19: TcxLabel;
+    edMember: TcxButtonEdit;
+    GuidesMember: TdsdGuides;
   private
     { Private declarations }
   public

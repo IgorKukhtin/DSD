@@ -77,6 +77,11 @@ inherited IncomeJournalForm: TIncomeJournalForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = TotalSummMVAT
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = TotalSummSample
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -135,6 +140,11 @@ inherited IncomeJournalForm: TIncomeJournalForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = ToName
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = TotalSummSample
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -228,6 +238,17 @@ inherited IncomeJournalForm: TIncomeJournalForm
           object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 109
+          end
+          object TotalSummSample: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1057#1045#1052#1055#1051
+            DataBinding.FieldName = 'TotalSummSample'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -651,6 +672,9 @@ inherited IncomeJournalForm: TIncomeJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintSticker_notPrice: TdsdPrintAction [26]
       Category = 'DSDLib'
@@ -717,6 +741,9 @@ inherited IncomeJournalForm: TIncomeJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -765,6 +792,9 @@ inherited IncomeJournalForm: TIncomeJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintReestr: TdsdPrintAction
       Category = 'DSDLib'
@@ -828,6 +858,9 @@ inherited IncomeJournalForm: TIncomeJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actUpdateMovementCheckPrint: TdsdExecStoredProc
       Category = 'DSDLib'

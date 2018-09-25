@@ -9,7 +9,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                JuridicalBasisId Integer, JuridicalBasisName TVarChar,
                JuridicalId Integer, JuridicalName TVarChar,
                GroupMemberSPId Integer, GroupMemberSPName TVarChar,
-               BankAccountId Integer, BankAccountName TVarChar, BankName TVarChar, 
+               BankAccountId Integer, BankAccountName TVarChar, BankName TVarChar,
+               MemberId Integer, MemberName TVarChar,
                Percent_Juridical TFloat,
                Deferment Integer, Percent TFloat, PercentSP TFloat,
                TotalSumm TFloat,
@@ -42,6 +43,9 @@ BEGIN
            , Object_Contract_View.BankAccountId
            , Object_Contract_View.BankAccountName
            , Object_Bank.ValueData AS BankName
+
+           , Object_Contract_View.MemberId
+           , Object_Contract_View.MemberName 
 
            , ObjectFloat_Percent.ValueData  AS Percent_Juridical
            , Object_Contract_View.Deferment
@@ -113,6 +117,7 @@ ALTER FUNCTION gpSelect_Object_Contract(TVarChar) OWNER TO postgres;
 /*
  ÈÑÒÎĞÈß ĞÀÇĞÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎĞ
                Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 24.09.18         * Member
  20.08.18         * TotalSumm
  14.02.18         *
  08.08.17         * add OrderTime_inf

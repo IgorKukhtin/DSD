@@ -15,8 +15,6 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
            , ''::TVarChar                 AS ContractKindName
            , 0::Integer                   AS ContractStateKindCode
            
-           , ObjectDate_Signing.ValueData  AS SigningDate
-           
            , NULL::TDateTime              AS startdate
            , NULL::TDateTime              AS enddate
 
@@ -42,6 +40,9 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
            , 0 AS InfoMoneyId
            , 0 AS Contractstatekindid           
 
+           , Object_Member.Id         AS MemberId
+           , Object_Member.ValueData  AS MemberName
+
        FROM Object AS Object_Contract
            LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
                                 ON ObjectLink_Contract_JuridicalBasis.ObjectId = Object_Contract.Id
@@ -62,6 +63,11 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
                                 ON ObjectLink_Contract_BankAccount.ObjectId = Object_Contract.Id
                                AND ObjectLink_Contract_BankAccount.DescId = zc_ObjectLink_Contract_BankAccount()
            LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_Contract_BankAccount.ChildObjectId    
+
+           LEFT JOIN ObjectLink AS ObjectLink_Contract_Member
+                                ON ObjectLink_Contract_Member.ObjectId = Object_Contract.Id
+                               AND ObjectLink_Contract_Member.DescId = zc_ObjectLink_Contract_Member()
+           LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_Contract_Member.ChildObjectId  
 
            LEFT JOIN ObjectString AS ObjectString_Comment 
                                   ON ObjectString_Comment.ObjectId = Object_Contract.Id
@@ -88,6 +94,7 @@ ALTER TABLE Object_Contract_View
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.09.18         * add MemberId
  16.03.17         * add PercentSP
  05.03.17         * GroupMemberSP
  08.12.16         * add PercentCorr
