@@ -335,18 +335,15 @@ inherited ListDiffJournalForm: TListDiffJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsCurrentData'
-        Value = 'TRUE'
-        DataType = ftBoolean
-        ParamType = ptInput
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outOperDate'
-        Value = 'NULL'
-        Component = MasterCDS
-        ComponentItem = 'OperDate'
-        DataType = ftDateTime
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 80
