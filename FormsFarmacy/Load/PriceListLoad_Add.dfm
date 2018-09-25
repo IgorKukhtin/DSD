@@ -23,11 +23,42 @@ inherited PriceListLoad_AddForm: TPriceListLoad_AddForm
         ExplicitWidth = 788
         ExplicitHeight = 373
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_all
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_tied
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_untied
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = JuridicalName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_all
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_tied
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_untied
             end>
           OptionsBehavior.IncSearch = True
           OptionsData.CancelOnExit = True
