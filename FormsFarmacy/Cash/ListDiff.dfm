@@ -5,7 +5,7 @@ inherited ListDiffForm: TListDiffForm
   ClientWidth = 619
   OnCreate = ParentFormCreate
   ExplicitWidth = 635
-  ExplicitHeight = 400
+  ExplicitHeight = 396
   PixelsPerInch = 96
   TextHeight = 13
   object ListDiffGrid: TcxGrid [0]
@@ -233,10 +233,16 @@ inherited ListDiffForm: TListDiffForm
     end
   end
   object spSendListDiff: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_ListDiff '
+    StoredProcName = 'gpInsertUpdate_MovementItem_ListDiff_cash'
     DataSets = <>
     OutputType = otResult
     Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inGoodsId'
         Value = Null

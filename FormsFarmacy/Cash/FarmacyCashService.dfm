@@ -586,7 +586,7 @@ object MainCashForm2: TMainCashForm2
     Left = 432
     Top = 16
     Bitmap = {
-      494C010107003400240180008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101070034002C0180008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000000200000001000001002000000000000000
       0800000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -17500,10 +17500,16 @@ object MainCashForm2: TMainCashForm2
     Top = 88
   end
   object spSendListDiff: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_ListDiff '
+    StoredProcName = 'gpInsertUpdate_MovementItem_ListDiff_cash'
     DataSets = <>
     OutputType = otResult
     Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inGoodsId'
         Value = Null
