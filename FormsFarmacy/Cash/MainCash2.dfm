@@ -2364,6 +2364,7 @@ inherited MainCashForm2: TMainCashForm2
       Caption = #1051#1080#1089#1090' '#1086#1090#1082#1072#1079#1072
       object N16: TMenuItem
         Action = actListDiffAddGoods
+        ShortCut = 121
       end
       object N19: TMenuItem
         Action = actListGoods

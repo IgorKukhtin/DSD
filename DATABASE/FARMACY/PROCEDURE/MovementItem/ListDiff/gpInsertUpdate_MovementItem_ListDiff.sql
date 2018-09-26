@@ -10,11 +10,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ListDiff(
     IN inContractId          Integer   , -- 
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена
-   OUT outSumma              TFloat    , -- Сумма
     IN inComment             TVarChar  , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS RECORD AS
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
@@ -55,7 +54,7 @@ BEGIN
          PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), ioId, CURRENT_TIMESTAMP);
      END IF;
        
-     outSumma := inAmount * inPrice;
+--     outSumma := inAmount * inPrice;
 
      -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
@@ -74,4 +73,3 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- 
