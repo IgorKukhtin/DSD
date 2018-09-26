@@ -501,6 +501,32 @@ inherited OrderInternalForm: TOrderInternalForm
           inherited colIsErased: TcxGridDBColumn
             VisibleForCustomization = False
           end
+          object AVGPrice: TcxGridDBColumn
+            Caption = #1057#1088'. '#1094#1077#1085#1072' '#1079#1072' '#1084#1077#1089#1103#1094
+            DataBinding.FieldName = 'AVGPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 81
+          end
+          object AVGPriceWarning: TcxGridDBColumn
+            AlternateCaption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1073#1086#1083#1077#1077' 25 %'
+            Caption = '>25%'
+            DataBinding.FieldName = 'AVGPriceWarning'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = '> 25%'
+                ImageIndex = 10
+                Value = True
+              end>
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1073#1086#1083#1077#1077' 25 %'
+            Options.Editing = False
+            Width = 47
+          end
           object InvNumberPromo: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1073#1086#1085#1091#1089#1085'. '#1082#1086#1085#1090#1088#1072#1082#1090#1072
             DataBinding.FieldName = 'InvNumberPromo'

@@ -28,6 +28,9 @@ $BODY$
 
   DECLARE vbAreaId_find Integer;
 
+  DECLARE vbAVGDateStart TDateTime; --ƒата нач. расчета ср. цены
+  DECLARE vbAVGDateEnd TDateTime;   --ƒата окон. расчета ср. цены 
+
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
 BEGIN
@@ -62,13 +65,16 @@ BEGIN
       AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
 
     -- определим дату документа
-    SELECT date_trunc('day', Movement.OperDate)  INTO vbOperDate
+    SELECT date_trunc('day', Movement.OperDate)  
+    INTO vbOperDate
     FROM Movement
     WHERE Movement.Id = inMovementId;
 
     vbOperDateEnd := vbOperDate + INTERVAL '1 DAY';
     vbDate180 := CURRENT_DATE + INTERVAL '180 DAY';
 
+    vbAVGDateStart := vbOperDate - INTERVAL '30 day';
+    vbAVGDateEnd   := vbOperDate;
 
     -- таблица –егион поставщика
     CREATE TEMP TABLE tmpJuridicalArea (UnitId Integer, JuridicalId Integer, AreaId Integer, AreaName TVarChar, isDefault Boolean) ON COMMIT DROP;
@@ -472,6 +478,25 @@ BEGIN
                             GROUP BY tmpMI.MIMasterId
                             )
 
+      --средн€€ цена по заказам за мес€ц
+      , AVGOrder AS (SELECT MovementItem.ObjectId
+                          , AVG(MIFloat_Price.ValueData) ::TFloat AS AVGPrice
+                     FROM Movement
+                          JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                           AND MovementItem.DescId = zc_MI_Master()
+                                           AND MovementItem.isErased = FALSE
+                                           AND MovementItem.Amount > 0
+                          JOIN MovementItemFloat AS MIFloat_Price
+                                                 ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                     WHERE Movement.DescId = zc_Movement_OrderInternal()
+                       AND Movement.StatusId = zc_Enum_Status_Complete()
+                       AND Movement.Id <> inMovementId
+                       AND Movement.OperDate >= vbAVGDateStart
+                       AND Movement.OperDate <= vbAVGDateEnd
+                     GROUP BY MovementItem.ObjectId
+                    )
+
        -- –езультат 1
        SELECT
              tmpMI.MovementItemId                                   AS Id
@@ -568,6 +593,12 @@ BEGIN
                   ELSE zc_Color_White()
              END  AS OrderShedule_Color
 
+           , AVGOrder.AVGPrice
+           , CASE WHEN (ABS(AVGOrder.AVGPrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) > 0.25
+                     THEN TRUE
+                  ELSE FALSE
+             END AS AVGPriceWarning
+
 
            /*
            , CASE WHEN COALESCE (tmpOrderLast_2days.Amount, 0) > 1 THEN 16777134   -- цвет фона - голубой подр€зд 2 дн€ заказ;
@@ -618,6 +649,8 @@ BEGIN
                                  ON ObjectLink_Goods_Area.ObjectId = tmpMI.PartnerGoodsId
                                 AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
+            
+            LEFT JOIN AVGOrder ON AVGOrder.ObjectId = tmpMI.GoodsId
            ;
 
      RETURN NEXT Cursor1;
@@ -1977,6 +2010,24 @@ BEGIN
                     GROUP BY MovementItem.ObjectId
                     )
 
+   --средн€€ цена по заказам за мес€ц
+   , AVGOrder AS (SELECT MovementItem.ObjectId
+                       , AVG(MIFloat_Price.ValueData) ::TFloat AS AVGPrice
+                  FROM Movement
+                       JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                        AND MovementItem.DescId = zc_MI_Master()
+                                        AND MovementItem.isErased = FALSE
+                                        AND MovementItem.Amount > 0
+                       JOIN MovementItemFloat AS MIFloat_Price
+                                              ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                  WHERE Movement.DescId = zc_Movement_OrderInternal()
+                    AND Movement.StatusId = zc_Enum_Status_Complete()
+                    AND Movement.Id <> inMovementId
+                    AND Movement.OperDate >= vbAVGDateStart
+                    AND Movement.OperDate <= vbAVGDateEnd
+                  GROUP BY MovementItem.ObjectId
+                 )
 
        -- –езультат 1
        SELECT
@@ -2068,6 +2119,12 @@ BEGIN
                   --WHEN COALESCE (tmpOrderLast_10.Amount, 0)     > 9 THEN 167472630     -- цвет фона - розовый подр€зд 10 заказов нет прив€зки к товару поставщика;
                   ELSE zc_Color_White()
              END  AS OrderShedule_Color
+             
+           , AVGOrder.AVGPrice
+           , CASE WHEN (ABS(AVGOrder.AVGPrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.25
+                     THEN TRUE
+                  ELSE FALSE
+             END AS AVGPriceWarning
 
            /*
            , CASE WHEN COALESCE (tmpOrderLast_2days.Amount, 0) > 1 THEN 16777134   -- цвет фона - голубой подр€зд 2 дн€ заказ;
@@ -2113,7 +2170,9 @@ BEGIN
                                   ON ObjectLink_Object.ObjectId = tmpMI.GoodsId
                                  AND ObjectLink_Object.DescId = zc_ObjectLink_Goods_Object()
             LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Object.ChildObjectId
-
+            --средн€€ цена
+            LEFT JOIN AVGOrder ON AVGOrder.ObjectId = tmpMI.GoodsId
+            
 /*            LEFT JOIN tmpObjectLink_Area AS ObjectLink_Goods_Area
                                  ON ObjectLink_Goods_Area.ObjectId = tmpMI.PartnerGoodsId
                                 AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
