@@ -479,7 +479,7 @@ BEGIN
                             )
 
       --средн€€ цена по заказам за мес€ц
-      , AVGOrder AS (SELECT MovementItem.ObjectId
+      /*, AVGOrder AS (SELECT MovementItem.ObjectId
                           , AVG(MIFloat_Price.ValueData) ::TFloat AS AVGPrice
                      FROM Movement
                           JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -495,7 +495,37 @@ BEGIN
                        AND Movement.OperDate >= vbAVGDateStart
                        AND Movement.OperDate <= vbAVGDateEnd
                      GROUP BY MovementItem.ObjectId
-                    )
+                    )*/
+          , AVGIncome AS (SELECT MI_Income.ObjectId
+                               , AVG(CASE WHEN MovementBoolean_PriceWithVAT.ValueData  = TRUE
+                                          THEN (MIFloat_Price.ValueData * 100 / (100 + ObjectFloat_NDSKind_NDS.ValueData))
+                                          ELSE MIFloat_Price.ValueData
+                                     END)                               ::TFloat AS AVGIncomePrice
+                          FROM Movement AS Movement_Income
+                              JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                                   ON MovementBoolean_PriceWithVAT.MovementId =  Movement_Income.Id
+                                                  AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                              JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                                      ON MovementLinkObject_NDSKind.MovementId = Movement_Income.Id
+                                                     AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                              JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                               ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
+                                              AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+
+                              JOIN MovementItem AS MI_Income
+                                                ON MI_Income.MovementId = Movement_Income.Id
+                                               AND MI_Income.DescId = zc_MI_Master()
+                                               AND MI_Income.isErased = FALSE
+                                               AND MI_Income.Amount > 0
+                              JOIN MovementItemFloat AS MIFloat_Price
+                                                     ON MIFloat_Price.MovementItemId = MI_Income.Id
+                                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                          WHERE Movement_Income.DescId = zc_Movement_Income()
+                            AND Movement_Income.StatusId = zc_Enum_Status_Complete()
+                            AND Movement_Income.OperDate >= vbAVGDateStart
+                            AND Movement_Income.OperDate <= vbAVGDateEnd
+                          GROUP BY MI_Income.ObjectId
+                         )
 
        -- –езультат 1
        SELECT
@@ -593,12 +623,16 @@ BEGIN
                   ELSE zc_Color_White()
              END  AS OrderShedule_Color
 
-           , AVGOrder.AVGPrice
-           , CASE WHEN (ABS(AVGOrder.AVGPrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) > 0.25
+           , AVGIncome.AVGIncomePrice    AS AVGPrice
+/*           , CASE WHEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) > 0.10
                      THEN TRUE
                   ELSE FALSE
+             END AS AVGPriceWarning   */
+           , CASE WHEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) > 0.10
+                     THEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) * 100
+                  WHEN COALESCE (AVGIncome.AVGIncomePrice, 0) = 0 THEN 100
+                  ELSE 0
              END AS AVGPriceWarning
-
 
            /*
            , CASE WHEN COALESCE (tmpOrderLast_2days.Amount, 0) > 1 THEN 16777134   -- цвет фона - голубой подр€зд 2 дн€ заказ;
@@ -650,7 +684,7 @@ BEGIN
                                 AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
             
-            LEFT JOIN AVGOrder ON AVGOrder.ObjectId = tmpMI.GoodsId
+            LEFT JOIN AVGIncome ON AVGIncome.ObjectId = tmpMI.GoodsId
            ;
 
      RETURN NEXT Cursor1;
@@ -2010,24 +2044,37 @@ BEGIN
                     GROUP BY MovementItem.ObjectId
                     )
 
-   --средн€€ цена по заказам за мес€ц
-   , AVGOrder AS (SELECT MovementItem.ObjectId
-                       , AVG(MIFloat_Price.ValueData) ::TFloat AS AVGPrice
-                  FROM Movement
-                       JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                        AND MovementItem.DescId = zc_MI_Master()
-                                        AND MovementItem.isErased = FALSE
-                                        AND MovementItem.Amount > 0
+   --средн€€ цена по приходам за мес€ц
+   , AVGIncome AS (SELECT MI_Income.ObjectId
+                        , AVG(CASE WHEN MovementBoolean_PriceWithVAT.ValueData  = TRUE
+                                   THEN (MIFloat_Price.ValueData * 100 / (100 + ObjectFloat_NDSKind_NDS.ValueData))
+                                   ELSE MIFloat_Price.ValueData
+                              END)                               ::TFloat AS AVGIncomePrice
+                   FROM Movement AS Movement_Income
+                       JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                            ON MovementBoolean_PriceWithVAT.MovementId =  Movement_Income.Id
+                                           AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                       JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                               ON MovementLinkObject_NDSKind.MovementId = Movement_Income.Id
+                                              AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                       JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                        ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
+                                       AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+
+                       JOIN MovementItem AS MI_Income
+                                         ON MI_Income.MovementId = Movement_Income.Id
+                                        AND MI_Income.DescId = zc_MI_Master()
+                                        AND MI_Income.isErased = FALSE
+                                        AND MI_Income.Amount > 0
                        JOIN MovementItemFloat AS MIFloat_Price
-                                              ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                              ON MIFloat_Price.MovementItemId = MI_Income.Id
                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                  WHERE Movement.DescId = zc_Movement_OrderInternal()
-                    AND Movement.StatusId = zc_Enum_Status_Complete()
-                    AND Movement.Id <> inMovementId
-                    AND Movement.OperDate >= vbAVGDateStart
-                    AND Movement.OperDate <= vbAVGDateEnd
-                  GROUP BY MovementItem.ObjectId
-                 )
+                   WHERE Movement_Income.DescId = zc_Movement_Income()
+                     AND Movement_Income.StatusId = zc_Enum_Status_Complete()
+                     AND Movement_Income.OperDate >= vbAVGDateStart
+                     AND Movement_Income.OperDate <= vbAVGDateEnd
+                   GROUP BY MI_Income.ObjectId
+                  )
 
        -- –езультат 1
        SELECT
@@ -2120,10 +2167,15 @@ BEGIN
                   ELSE zc_Color_White()
              END  AS OrderShedule_Color
              
-           , AVGOrder.AVGPrice
-           , CASE WHEN (ABS(AVGOrder.AVGPrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.25
+           , AVGIncome.AVGIncomePrice    AS AVGPrice
+/*           , CASE WHEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10
                      THEN TRUE
                   ELSE FALSE
+             END AS AVGPriceWarning*/
+           , CASE WHEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10
+                     THEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) * 100
+                  WHEN COALESCE (AVGIncome.AVGIncomePrice, 0) = 0 THEN 100
+                  ELSE 0
              END AS AVGPriceWarning
 
            /*
@@ -2171,7 +2223,7 @@ BEGIN
                                  AND ObjectLink_Object.DescId = zc_ObjectLink_Goods_Object()
             LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Object.ChildObjectId
             --средн€€ цена
-            LEFT JOIN AVGOrder ON AVGOrder.ObjectId = tmpMI.GoodsId
+            LEFT JOIN AVGIncome ON AVGIncome.ObjectId = tmpMI.GoodsId
             
 /*            LEFT JOIN tmpObjectLink_Area AS ObjectLink_Goods_Area
                                  ON ObjectLink_Goods_Area.ObjectId = tmpMI.PartnerGoodsId

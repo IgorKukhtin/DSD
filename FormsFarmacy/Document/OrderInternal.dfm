@@ -2,6 +2,7 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 529
   ClientWidth = 1229
+  ExplicitLeft = -180
   ExplicitWidth = 1245
   ExplicitHeight = 567
   PixelsPerInch = 96
@@ -502,28 +503,23 @@ inherited OrderInternalForm: TOrderInternalForm
             VisibleForCustomization = False
           end
           object AVGPrice: TcxGridDBColumn
-            Caption = #1057#1088'. '#1094#1077#1085#1072' '#1079#1072' '#1084#1077#1089#1103#1094
+            Caption = #1057#1088'. '#1094#1077#1085#1072' '#1087#1088#1080#1093'. '#1079#1072' '#1084#1077#1089#1103#1094
             DataBinding.FieldName = 'AVGPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1088'. '#1094#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057' '#1087#1088#1080#1093'. '#1079#1072' '#1084#1077#1089#1103#1094
             Options.Editing = False
             Width = 81
           end
           object AVGPriceWarning: TcxGridDBColumn
-            AlternateCaption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1073#1086#1083#1077#1077' 25 %'
-            Caption = '>25%'
+            AlternateCaption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1073#1086#1083#1077#1077' 10 %'
+            Caption = '>10%'
             DataBinding.FieldName = 'AVGPriceWarning'
-            PropertiesClassName = 'TcxImageComboBoxProperties'
-            Properties.Images = dmMain.ImageList
-            Properties.Items = <
-              item
-                Description = '> 25%'
-                ImageIndex = 10
-                Value = True
-              end>
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1073#1086#1083#1077#1077' 25 %'
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1073#1086#1083#1077#1077' 10 %'
             Options.Editing = False
             Width = 47
           end

@@ -162,7 +162,7 @@ BEGIN
              , CASE WHEN MovementBoolean_PriceWithVAT.ValueData
                     THEN (MovementFloat_TotalSummSample.ValueData *100 / (100 + ObjectFloat_NDSKind_NDS.ValueData))
                     ELSE MovementFloat_TotalSummSample.ValueData
-               END                               ::TFloat AS TotalSummSampleWithVAT
+               END                               ::TFloat AS TotalSummSample
              , CASE WHEN MovementBoolean_PriceWithVAT.ValueData
                    THEN MovementFloat_TotalSummSample.ValueData
                    ELSE (MovementFloat_TotalSummSample.ValueData * (1 + ObjectFloat_NDSKind_NDS.ValueData/100))
