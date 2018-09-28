@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Object_PriceChange (Integer, TFloat, Integer, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceChange (Integer, Integer, Integer, TDateTime, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceChange (Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PriceChange(
  INOUT ioId                       Integer   ,    -- ключ объекта < Цена >
     IN inGoodsId                  Integer   ,    -- Товар
-    IN inRetailId                 Integer   ,    -- подразделение
+    IN inRetailId                 Integer   ,    -- торг. сеть
+    IN inUnitId                   Integer   ,    -- подразделение
  INOUT ioStartDate                TDateTime , 
    OUT outDateChange              TDateTime ,    -- Дата изменения цены
    OUT outStartDate               TDateTime ,    -- Дата
@@ -36,9 +38,13 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Цена <%> должна быть больше 0.', inPriceChange;
     END IF;
 */
-    
+    -- проверка
+    IF COALESCE (inRetailId, 0) <> 0 AND COALESCE (inUnitId, 0) <> 0
+    THEN
+         RAISE EXCEPTION 'Ошибка.ДОлжен быть выбран один из параметров торг.сеть или подразделение';
+    END IF;
 
-    -- Если такая запись есть - достаем её ключу торг.сеть - товар
+    -- Если такая запись есть - достаем её ключу торг.сеть - товар или подразделение - товар
     SELECT Id, 
            PriceChange, 
            FixValue, 
@@ -62,10 +68,12 @@ BEGIN
                                                      ON PriceChange_Goods.ObjectId = Object_PriceChange.Id
                                                     AND PriceChange_Goods.DescId = zc_ObjectLink_PriceChange_Goods()
                                                     AND PriceChange_Goods.ChildObjectId = inGoodsId
-                               INNER JOIN ObjectLink AS ObjectLink_Retail
-                                                     ON ObjectLink_Retail.ObjectId = Object_PriceChange.Id
-                                                    AND ObjectLink_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
-                                                    AND ObjectLink_Retail.ChildObjectId = inRetailId
+                               LEFT JOIN ObjectLink AS ObjectLink_Retail
+                                                    ON ObjectLink_Retail.ObjectId = Object_PriceChange.Id
+                                                   AND ObjectLink_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
+                               LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                    ON ObjectLink_Unit.ObjectId = Object_PriceChange.Id
+                                                   AND ObjectLink_Unit.DescId = zc_ObjectLink_PriceChange_Unit()
                                LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                      ON ObjectFloat_Value.ObjectId = Object_PriceChange.Id
                                                     AND ObjectFloat_Value.DescId = zc_ObjectFloat_PriceChange_Value()
@@ -78,7 +86,11 @@ BEGIN
                                LEFT JOIN ObjectDate AS ObjectDate_DateChange
                                                     ON ObjectDate_DateChange.ObjectId = Object_PriceChange.Id
                                                    AND ObjectDate_DateChange.DescId = zc_ObjectDate_PriceChange_DateChange()
-                           WHERE Object_PriceChange.DescId = zc_Object_PriceChange())
+                           WHERE Object_PriceChange.DescId = zc_Object_PriceChange()
+                             AND ((ObjectLink_Retail.ChildObjectId = inRetailId AND inRetailId <> 0)
+                               OR (ObjectLink_Unit.ChildObjectId = inUnitId AND inUnitId <> 0)
+                                 )
+                       )
           -- 
           SELECT * FROM tmp1
          ) AS tmp;
@@ -117,8 +129,17 @@ BEGIN
         -- сохранили связь с <товар>
         PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PriceChange_Goods(), ioId, inGoodsId);
 
-        -- сохранили связь с <Торговая сеть >
-        PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PriceChange_Retail(), ioId, inRetailId);
+        -- сохраняем одно из свойств 
+        IF COALESCE(inRetailId, 0) <> 0
+        THEN
+            -- сохранили связь с <Торговая сеть >
+            PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PriceChange_Retail(), ioId, inRetailId);
+        END IF;
+        IF COALESCE(inUnitId, 0) <> 0
+        THEN
+            -- сохранили связь с <Подразделение>
+            PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PriceChange_Unit(), ioId, inUnitId);
+        END IF;
     END IF;
     
     -- сохранили св-во <расчетная цена>

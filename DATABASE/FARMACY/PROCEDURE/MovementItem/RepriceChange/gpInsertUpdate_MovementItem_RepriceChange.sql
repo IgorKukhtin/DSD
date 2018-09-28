@@ -6,8 +6,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_RepriceChange (Integer, Inte
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_RepriceChange(
  INOUT ioId                  Integer   , -- Ключ записи
     IN inGoodsId             Integer   , -- Товары
-    IN inRetailId            Integer   , -- подразделение
-    IN inRetailId_Forwarding Integer   , -- Подразделения(основание для равенства цен)
+    IN inRetailId            Integer   , -- торг.сеть
+    IN inRetailId_Forwarding Integer   , -- торг.сеть (основание для равенства цен)
     IN inTax                 TFloat    , -- % +/-
     IN inJuridicalId         Integer   , -- поставщик
     IN inContractId          Integer   , -- Договор
@@ -82,6 +82,7 @@ BEGIN
     -- переоценить товар
     PERFORM lpInsertUpdate_Object_PriceChange(inGoodsId     := inGoodsId,
                                               inRetailId    := inRetailId,
+                                              inUnitId      := 0,
                                               inPriceChange := inPriceNew,
                                               inDate        := CURRENT_DATE::TDateTime,
                                               inUserId      := vbUserId);
@@ -111,6 +112,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.09.18         *
  20.08.18         *
 */
 -- SELECT COUNT(*) FROM Log_RepriceChange

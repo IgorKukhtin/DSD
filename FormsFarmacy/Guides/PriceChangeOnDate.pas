@@ -79,6 +79,10 @@ type
     ExecuteDialog: TExecuteDialog;
     StartDate: TcxGridDBColumn;
     SummaRemains: TcxGridDBColumn;
+    cxLabel4: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

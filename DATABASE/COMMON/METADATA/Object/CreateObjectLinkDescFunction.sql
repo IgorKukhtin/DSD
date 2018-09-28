@@ -1879,6 +1879,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_PriceChange_Retail() RETURNS Integer AS
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
  SELECT 'zc_ObjectLink_PriceChange_Retail', 'Торговая сеть', zc_Object_PriceChange(), zc_Object_Retail() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PriceChange_Retail');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PriceChange_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PriceChange_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+ SELECT 'zc_ObjectLink_PriceChange_Unit', 'Подразделение', zc_Object_PriceChange(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PriceChange_Unit');
+
 CREATE OR REPLACE FUNCTION zc_Object_Accommodation_Unit() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_Object_Accommodation_Unit'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_Object_Accommodation_Unit', 'Связь размещения с подразделением', zc_Object_Unit(), zc_Object_Accommodation() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_Object_Accommodation_Unit');
@@ -1974,6 +1978,7 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 27.09.18         * zc_ObjectLink_PriceChange_Unit
  17.08.18                                                                                      * zc_Object_Accommodation_Unit, zc_Object_Accommodation_Goods
  16.08.18         * zc_ObjectLink_PriceChange_Goods
                     zc_ObjectLink_PriceChange_Retail

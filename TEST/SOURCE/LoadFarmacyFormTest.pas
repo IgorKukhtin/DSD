@@ -1369,8 +1369,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceChangeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceChangeDialogForm');
 
-  TdsdFormStorageFactory.GetStorage.Save
-    (GetForm('TPriceChangeGoodsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceChangeGoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceChangeGoodsDialogForm');
 end;
 

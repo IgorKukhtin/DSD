@@ -84,6 +84,9 @@ type
     bb: TdxBarButton;
     macUpdate_CheckPriceList: TMultiAction;
     macUpdate_CheckPrice: TMultiAction;
+    cxLabel4: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
   private
     { Private declarations }
   public

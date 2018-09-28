@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_PriceChange (TVarChar)
 DROP FUNCTION IF EXISTS gpSelect_Object_PriceChange(Integer, Integer, Boolean,Boolean,TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_PriceChange(Integer, Integer, Integer, Boolean,Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_PriceChange(
-    IN inRetailId    Integer,       -- подразделение
+    IN inRetailId    Integer,       -- торг.сеть
+    IN inUnitId      Integer,       -- подразделение
     IN inGoodsId     Integer,       -- Товар
     IN inisShowAll   Boolean,       -- True - показать все товары, False - показать только с ценами
     IN inisShowDel   Boolean,       -- True - показать так же удаленные, False - показать только рабочие
@@ -46,10 +48,15 @@ BEGIN
                                     ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                    AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                                    AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
-          WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();
+          WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+             AND inUnitId = 0
+          UNION
+          SELECT inUnitId AS UnitId
+          WHERE inUnitId <> 0
+          ;
 
     -- Результат
-    IF COALESCE (inRetailId, 0) = 0
+    IF COALESCE (inRetailId, 0) = 0 AND COALESCE (inUnitId, 0) = 0
     THEN
         RETURN QUERY
             SELECT
@@ -114,6 +121,36 @@ BEGIN
                                                      AND PriceChange_PercentMarkup.DescId = zc_ObjectFloat_PriceChange_PercentMarkup()
                            WHERE ObjectLink_PriceChange_Retail.DescId        = zc_ObjectLink_PriceChange_Retail()
                              AND ObjectLink_PriceChange_Retail.ChildObjectId = inRetailId
+                             AND inUnitId = 0
+                          UNION
+                           SELECT Object_PriceChange.Id                              AS Id
+                                , ObjectLink_PriceChange_Goods.ChildObjectId         AS GoodsId
+                                , ROUND (PriceChange_Value.ValueData, 2) :: TFloat   AS PriceChange
+                                , ObjectFloat_FixValue.ValueData                     AS FixValue
+                                , COALESCE (PriceChange_PercentMarkup.ValueData, 0) :: TFloat AS PercentMarkup
+                                , PriceChange_DateChange.ValueData                   AS DateChange
+                           FROM ObjectLink AS ObjectLink_PriceChange_Unit
+                                INNER JOIN ObjectLink AS ObjectLink_PriceChange_Goods
+                                                      ON ObjectLink_PriceChange_Goods.ObjectId       = ObjectLink_PriceChange_Unit.ObjectId
+                                                     AND ObjectLink_PriceChange_Goods.DescId         = zc_ObjectLink_PriceChange_Goods()
+                                                     AND (ObjectLink_PriceChange_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)
+                                INNER JOIN Object AS Object_PriceChange ON Object_PriceChange.Id       = ObjectLink_PriceChange_Unit.ObjectId
+                                                                       AND (Object_PriceChange.isErased = FALSE OR inisShowDel = TRUE)
+                                LEFT JOIN ObjectFloat AS PriceChange_Value
+                                                      ON PriceChange_Value.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                     AND PriceChange_Value.DescId = zc_ObjectFloat_PriceChange_Value()
+                                LEFT JOIN ObjectDate AS PriceChange_DateChange
+                                                     ON PriceChange_DateChange.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                    AND PriceChange_DateChange.DescId = zc_ObjectDate_PriceChange_DateChange()
+                                LEFT JOIN ObjectFloat AS ObjectFloat_FixValue
+                                                      ON ObjectFloat_FixValue.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                     AND ObjectFloat_FixValue.DescId = zc_ObjectFloat_PriceChange_FixValue()
+                                LEFT JOIN ObjectFloat AS PriceChange_PercentMarkup
+                                                      ON PriceChange_PercentMarkup.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                     AND PriceChange_PercentMarkup.DescId = zc_ObjectFloat_PriceChange_PercentMarkup()
+                           WHERE ObjectLink_PriceChange_Unit.DescId        = zc_ObjectLink_PriceChange_Unit()
+                             AND ObjectLink_PriceChange_Unit.ChildObjectId = inUnitId
+                             AND inUnitId <> 0
                           )
       , tmpContainerRemains AS (SELECT Container.ObjectId
                                      , SUM (COALESCE (Container.Amount, 0)) :: TFloat AS Remains
@@ -153,21 +190,21 @@ BEGIN
                        GROUP BY tmp.ObjectId
                       )
      -- Штрих-коды производителя
-   , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
-                              , Object_Goods_BarCode.ValueData        AS BarCode
-                         FROM ObjectLink AS ObjectLink_Main_BarCode
-                              JOIN ObjectLink AS ObjectLink_Child_BarCode
-                                              ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
-                                             AND ObjectLink_Child_BarCode.DescId = zc_ObjectLink_LinkGoods_Goods()
-                              JOIN ObjectLink AS ObjectLink_Goods_Object_BarCode
-                                              ON ObjectLink_Goods_Object_BarCode.ObjectId = ObjectLink_Child_BarCode.ChildObjectId
-                                             AND ObjectLink_Goods_Object_BarCode.DescId = zc_ObjectLink_Goods_Object()
-                                             AND ObjectLink_Goods_Object_BarCode.ChildObjectId = zc_Enum_GlobalConst_BarCode()
-                              LEFT JOIN Object AS Object_Goods_BarCode ON Object_Goods_BarCode.Id = ObjectLink_Goods_Object_BarCode.ObjectId
-                         WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                           AND ObjectLink_Main_BarCode.ChildObjectId > 0
-                           AND TRIM (Object_Goods_BarCode.ValueData) <> ''
-                        )
+      , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
+                                 , Object_Goods_BarCode.ValueData        AS BarCode
+                            FROM ObjectLink AS ObjectLink_Main_BarCode
+                                 JOIN ObjectLink AS ObjectLink_Child_BarCode
+                                                 ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
+                                                AND ObjectLink_Child_BarCode.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                 JOIN ObjectLink AS ObjectLink_Goods_Object_BarCode
+                                                 ON ObjectLink_Goods_Object_BarCode.ObjectId = ObjectLink_Child_BarCode.ChildObjectId
+                                                AND ObjectLink_Goods_Object_BarCode.DescId = zc_ObjectLink_Goods_Object()
+                                                AND ObjectLink_Goods_Object_BarCode.ChildObjectId = zc_Enum_GlobalConst_BarCode()
+                                 LEFT JOIN Object AS Object_Goods_BarCode ON Object_Goods_BarCode.Id = ObjectLink_Goods_Object_BarCode.ObjectId
+                            WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                              AND ObjectLink_Main_BarCode.ChildObjectId > 0
+                              AND TRIM (Object_Goods_BarCode.ValueData) <> ''
+                           )
       , tmpOH_PriceChange AS (SELECT ObjectHistory_PriceChange.*
                               FROM ObjectHistory AS ObjectHistory_PriceChange
                               WHERE ObjectHistory_PriceChange.DescId = zc_ObjectHistory_PriceChange()
@@ -252,6 +289,20 @@ BEGIN
                                                                         AND (Object_PriceChange.isErased = FALSE OR inisShowDel = TRUE)
                             WHERE ObjectLink_PriceChange_Retail.ChildObjectId = inRetailId
                               AND ObjectLink_PriceChange_Retail.DescId        = zc_ObjectLink_PriceChange_Retail()
+                              AND inUnitId = 0
+                          UNION
+                           SELECT Object_PriceChange.Id                              AS Id
+                                , ObjectLink_PriceChange_Goods.ChildObjectId         AS GoodsId
+                           FROM ObjectLink AS ObjectLink_PriceChange_Unit
+                                INNER JOIN ObjectLink AS ObjectLink_PriceChange_Goods
+                                                      ON ObjectLink_PriceChange_Goods.ObjectId       = ObjectLink_PriceChange_Unit.ObjectId
+                                                     AND ObjectLink_PriceChange_Goods.DescId         = zc_ObjectLink_PriceChange_Goods()
+                                                     AND (ObjectLink_PriceChange_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)
+                                INNER JOIN Object AS Object_PriceChange ON Object_PriceChange.Id       = ObjectLink_PriceChange_Unit.ObjectId
+                                                                       AND (Object_PriceChange.isErased = FALSE OR inisShowDel = TRUE)
+                           WHERE ObjectLink_PriceChange_Unit.DescId        = zc_ObjectLink_PriceChange_Unit()
+                             AND ObjectLink_PriceChange_Unit.ChildObjectId = inUnitId
+                             AND inUnitId <> 0
                            )
 
       , tmpPriceChange AS (SELECT tmpPriceChange.Id                             AS Id
@@ -508,9 +559,10 @@ $BODY$
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.+
+ 27.09.18         * add inUnitId
  16.08.18         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_PriceChange (inRetailId:= 4, inGoodsId:= 0, inisShowAll:= FALSE, inisShowDel:= FALSE, inSession:= '3');
+-- SELECT * FROM gpSelect_Object_PriceChange (inRetailId:= 4, inUnitId:= 0, inGoodsId:= 0, inisShowAll:= FALSE, inisShowDel:= FALSE, inSession:= '3');
