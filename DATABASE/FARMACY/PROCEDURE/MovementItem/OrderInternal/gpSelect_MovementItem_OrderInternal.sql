@@ -630,7 +630,7 @@ BEGIN
              END AS AVGPriceWarning   */
            , CASE WHEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) > 0.10
                      THEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) * 100
-                  WHEN COALESCE (AVGIncome.AVGIncomePrice, 0) = 0 THEN 100
+                  WHEN COALESCE (AVGIncome.AVGIncomePrice, 0) = 0 THEN 5000
                   ELSE 0
              END AS AVGPriceWarning
 
@@ -2174,7 +2174,7 @@ BEGIN
              END AS AVGPriceWarning*/
            , CASE WHEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10
                      THEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) * 100
-                  WHEN COALESCE (AVGIncome.AVGIncomePrice, 0) = 0 THEN 100
+                  WHEN COALESCE (AVGIncome.AVGIncomePrice, 0) = 0 THEN 5000
                   ELSE 0
              END AS AVGPriceWarning
 

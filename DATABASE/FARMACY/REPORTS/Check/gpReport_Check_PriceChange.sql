@@ -75,7 +75,7 @@ BEGIN
                   AND inisUnitList = TRUE
              )
    -- товары имеющие цену со скидкой
-  , tmpPriceChange AS (SELECT DISTINCT
+  /*, tmpPriceChange AS (SELECT DISTINCT
                               ObjectLink_PriceChange_Retail.ChildObjectId                                    AS RetailId
                             , ObjectLink_PriceChange_Goods.ChildObjectId                                     AS GoodsId
                             , ROUND (COALESCE (ObjectHistoryFloat_PriceChange.ValueData, 0), 2) :: TFloat    AS PriceChange
@@ -118,7 +118,60 @@ BEGIN
                                                         AND ObjectHistoryFloat_PercentMarkup.DescId = zc_ObjectHistoryFloat_PriceChange_PercentMarkup()
                        WHERE ObjectLink_PriceChange_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
                          AND COALESCE (ObjectHistoryFloat_PriceChange.ValueData, 0) <> 0
-                      )
+                      )*/
+
+  , tmpPriceChange AS (SELECT ObjectLink_PriceChange_Retail.ChildObjectId                                    AS RetailId
+                            , ObjectLink_PriceChange_Unit.ChildObjectId                                      AS UnitId
+                            , ObjectLink_PriceChange_Goods.ChildObjectId                                     AS GoodsId
+                            , ROUND (COALESCE (ObjectHistoryFloat_PriceChange.ValueData, 0), 2) :: TFloat    AS PriceChange
+                            , COALESCE (ObjectHistoryFloat_FixValue.ValueData, 0)               :: TFloat    AS FixValue
+                            , COALESCE (ObjectHistoryFloat_PercentMarkup.ValueData, 0)          :: TFloat    AS PercentMarkupStart
+                            , ObjectHistory_PriceChange.StartDate
+                            , ObjectHistory_PriceChange.EndDate
+                       FROM Object AS Object_PriceChange
+                            LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Retail 
+                                                 ON ObjectLink_PriceChange_Retail.ObjectId = Object_PriceChange.Id
+                                                AND ObjectLink_PriceChange_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
+                                                AND ObjectLink_PriceChange_Retail.ChildObjectId IN (SELECT DISTINCT tmpUnit.RetailId FROM tmpUnit)
+
+                            LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Unit 
+                                                 ON ObjectLink_PriceChange_Unit.ObjectId = Object_PriceChange.Id
+                                                AND ObjectLink_PriceChange_Unit.DescId = zc_ObjectLink_PriceChange_Unit()
+                                                AND ObjectLink_PriceChange_Unit.ChildObjectId IN (SELECT DISTINCT tmpUnit.UnitId FROM tmpUnit)
+
+                            LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Goods
+                                                 ON ObjectLink_PriceChange_Goods.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                                AND ObjectLink_PriceChange_Goods.DescId = zc_ObjectLink_PriceChange_Goods()
+
+                            LEFT JOIN ObjectFloat AS PriceChange_Value
+                                                  ON PriceChange_Value.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                                 AND PriceChange_Value.DescId = zc_ObjectFloat_PriceChange_Value()
+
+                            -- получаем значения цены из истории значений на начало дня                                                          
+                            LEFT JOIN ObjectHistory AS ObjectHistory_PriceChange
+                                                    ON ObjectHistory_PriceChange.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                                   AND ObjectHistory_PriceChange.DescId = zc_ObjectHistory_PriceChange()
+                                                  -- AND DATE_TRUNC ('DAY', inStartDate) >= ObjectHistory_PriceChange.StartDate AND DATE_TRUNC ('DAY', inStartDate) < ObjectHistory_PriceChange.EndDate
+
+                            -- получаем значения расчетная цена из истории значений на дату
+                            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceChange
+                                                         ON ObjectHistoryFloat_PriceChange.ObjectHistoryId = ObjectHistory_PriceChange.Id
+                                                        AND ObjectHistoryFloat_PriceChange.DescId = zc_ObjectHistoryFloat_PriceChange_Value()
+
+                            -- получаем значения фиксированная цена из истории значений на дату
+                            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_FixValue
+                                                         ON ObjectHistoryFloat_FixValue.ObjectHistoryId = ObjectHistory_PriceChange.Id
+                                                        AND ObjectHistoryFloat_FixValue.DescId = zc_ObjectHistoryFloat_PriceChange_FixValue()                
+
+                            -- получаем значения % наценки из истории значений на дату
+                            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PercentMarkup
+                                                         ON ObjectHistoryFloat_PercentMarkup.ObjectHistoryId = ObjectHistory_PriceChange.Id
+                                                        AND ObjectHistoryFloat_PercentMarkup.DescId = zc_ObjectHistoryFloat_PriceChange_PercentMarkup()
+                       WHERE Object_PriceChange.DescId = zc_Object_PriceChange()
+                         AND Object_PriceChange.isErased = FALSE
+                         AND COALESCE (ObjectHistoryFloat_PriceChange.ValueData, 0) <> 0
+                       )
+
   , tmpGoodsPriceChange AS (SELECT DISTINCT tmpPriceChange.GoodsId
                             FROM tmpPriceChange
                            )
@@ -189,7 +242,7 @@ BEGIN
                         , SUM (CASE WHEN COALESCE (tmpPriceChange.PriceChange, 0) = tmpData.Price THEN tmpData.SummaSale ELSE 0 END)  AS SummaChange
                         , SUM (CASE WHEN COALESCE (tmpPriceChange.PriceChange, 0) < tmpData.Price THEN tmpData.SummaSale ELSE 0 END)  AS SummaSale
                    FROM tmpData
-                        LEFT JOIN tmpPriceChange ON tmpPriceChange.RetailId = tmpData.RetailId
+                        LEFT JOIN tmpPriceChange ON (tmpPriceChange.RetailId = tmpData.RetailId OR tmpPriceChange.UnitId = tmpData.UnitId)
                                                 AND tmpPriceChange.GoodsId = tmpData.GoodsId
                                                 AND tmpData.OperDate >= tmpPriceChange.StartDate AND tmpData.OperDate < tmpPriceChange.EndDate
                                                 AND COALESCE (tmpPriceChange.PriceChange, 0) <> 0
