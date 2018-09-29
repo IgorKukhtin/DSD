@@ -8,6 +8,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, Boolean, Boolean, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -25,6 +26,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inPercentMarkup	     TFloat    ,    -- % наценки
     IN inMorionCode          Integer   ,    -- Код Мориона
     IN inBarCode             TVarChar  ,    -- Штрих-код производителя
+    IN inNameUkr             TVarChar  ,    -- Название украинское
+    IN inCodeUKTZED          TVarChar  ,    -- Код УКТЗЭД
+    IN inExchangeId          Integer   ,    -- Од:
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS Integer
@@ -121,6 +125,9 @@ BEGIN
                                                , inIsClose       := inIsClose
                                                , inTOP           := inTOP
                                                , inPercentMarkup := inPercentMarkup
+                                               , inNameUkr       := inNameUkr
+                                               , inCodeUKTZED    := inCodeUKTZED
+                                               , inExchangeId    := inExchangeId
                                                , inObjectId      := Object_Retail.Id
                                                , inUserId        := vbUserId
                                                 )
@@ -236,7 +243,8 @@ $BODY$
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.   Шаблий О.В.
+ 28.09.18                                                                      *
  19.05.17                                                       * MorionCode, BarCode
  25.03.16                                        *
  10.06.15                        *

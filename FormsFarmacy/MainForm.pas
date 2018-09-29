@@ -449,6 +449,10 @@ type
     actPriceListLoad_Add: TdsdOpenForm;
     miPriceListLoad_Add: TMenuItem;
     N170: TMenuItem;
+    actClientsByBank: TdsdOpenForm;
+    N169: TMenuItem;
+    actUnnamedEnterprises: TdsdOpenForm;
+    N171: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

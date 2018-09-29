@@ -4,7 +4,7 @@
   ClientHeight = 392
   ClientWidth = 890
   ExplicitWidth = 896
-  ExplicitHeight = 420
+  ExplicitHeight = 421
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -435,7 +435,7 @@
     Left = 8
     Top = 306
     Caption = #1080#1089#1082#1083#1102#1095#1077#1085#1080#1077' - '#1079#1072#1082#1072#1079' '#1074#1089#1077#1075#1076#1072' "'#1054#1090#1083#1086#1078#1077#1085'"'
-    TabOrder = 17
+    TabOrder = 16
     Width = 270
   end
   object cxLabel4: TcxLabel [16]

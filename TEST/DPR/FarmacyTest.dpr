@@ -609,7 +609,13 @@ uses
   Report_TestingUser in '..\..\FormsFarmacy\Report\Report_TestingUser.pas' {Report_TestingUserForm: TParentForm},
   ListDiffJournal in '..\..\FormsFarmacy\Document\ListDiffJournal.pas' {ListDiffJournalForm: TParentForm},
   ListDiff in '..\..\FormsFarmacy\Document\ListDiff.pas' {ListDiffForm: TParentForm},
-  PriceListLoad_Add in '..\..\FormsFarmacy\Load\PriceListLoad_Add.pas' {PriceListLoad_AddForm: TParentForm};
+  PriceListLoad_Add in '..\..\FormsFarmacy\Load\PriceListLoad_Add.pas' {PriceListLoad_AddForm: TParentForm},
+  Exchange in '..\..\Forms\Exchange.pas' {ExchangeForm: TParentForm},
+  ExchangeEdit in '..\..\Forms\ExchangeEdit.pas' {ExchangeEditForm: TParentForm},
+  ClientsByBank in '..\..\FormsFarmacy\Guides\ClientsByBank.pas' {ClientsByBankForm: TParentForm},
+  ClientsByBankEdit in '..\..\FormsFarmacy\Guides\ClientsByBankEdit.pas' {ClientsByBankEditForm: TParentForm},
+  UnnamedEnterprises in '..\..\FormsFarmacy\Document\UnnamedEnterprises.pas' {UnnamedEnterprisesForm: TParentForm},
+  UnnamedEnterprisesJournal in '..\..\FormsFarmacy\Document\UnnamedEnterprisesJournal.pas' {UnnamedEnterprisesJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -626,7 +632,7 @@ begin
 
   if FindCmdLineSwitch('realfarmacy', true)
   then gc_AdminPassword := 'Админ1234'
-  else gc_AdminPassword := 'Админ1234';
+  else gc_AdminPassword := 'Админ1111';
 
   gc_ProgramName := 'Farmacy.exe';
 

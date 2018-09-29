@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isTOP boolean, PercentMarkup TFloat,  isUpload Boolean,
                isFirst boolean, isSecond boolean, 
                MorionCode Integer, BarCode TVarChar,
+               NameUkr TVarChar, CodeUKTZED TVarChar, ExchangeId Integer, ExchangeName TVarChar,
                isErased boolean
                ) AS
 $BODY$
@@ -55,6 +56,10 @@ BEGIN
                   , false         AS isSecond
                   , 0::Integer    AS MorionCode
                   , ''::TVarChar  AS BarCode
+                  , ''::TVarChar  AS NameUkr
+                  , ''::TVarChar  AS CodeUKTZED
+                  , 0::Integer    AS ExchangeId
+                  , 0::TVarChar   AS ExchangeName
                   , CAST (NULL AS Boolean) AS isErased
 
              FROM (SELECT lfGet_ObjectCode_byRetail (vbObjectId, 0, zc_Object_Goods()) AS GoodsCodeIntNew) AS Object_Goods
@@ -135,6 +140,12 @@ BEGIN
                   , tmpGoodsMorion.MorionCode
                   , tmpGoodsBarCode.BarCode
 
+                  , ObjectString_Goods_NameUkr.ValueData     AS NameUkr
+                  , ObjectString_Goods_CodeUKTZED.ValueData  AS CodeUKTZED
+
+                  , Object_Exchange.Id               AS ExchangeId
+                  , Object_Exchange.ValueData        AS ExchangeName
+
                   , Object_Goods_View.isErased       AS isErased
                   
              FROM Object_Goods_View
@@ -150,6 +161,19 @@ BEGIN
                   LEFT JOIN tmpGoodsMorion ON tmpGoodsMorion.GoodsMainId = tmpGoodsMain.GoodsMainId
                   -- определяем штрих-код производителя
                   LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = tmpGoodsMain.GoodsMainId
+
+                  LEFT JOIN ObjectString AS ObjectString_Goods_NameUkr
+                                         ON ObjectString_Goods_NameUkr.ObjectId = Object_Goods_View.Id 
+                                        AND ObjectString_Goods_NameUkr.DescId = zc_ObjectString_Goods_NameUkr()   
+                                        
+                  LEFT JOIN ObjectString AS ObjectString_Goods_CodeUKTZED
+                                         ON ObjectString_Goods_CodeUKTZED.ObjectId = Object_Goods_View.Id 
+                                        AND ObjectString_Goods_CodeUKTZED.DescId = zc_ObjectString_Goods_CodeUKTZED()   
+
+                  LEFT JOIN ObjectLink AS ObjectLink_Goods_Exchange
+                                       ON ObjectLink_Goods_Exchange.ObjectId = Object_Goods_View.Id
+                                      AND ObjectLink_Goods_Exchange.DescId = zc_ObjectLink_Goods_Exchange()
+                  LEFT JOIN Object AS Object_Exchange ON Object_Exchange.Id = ObjectLink_Goods_Exchange.ChildObjectId
              WHERE Object_Goods_View.Id = inId;
 
      END IF;
@@ -159,10 +183,11 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Object_Goods(integer, TVarChar) OWNER TO postgres;
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.   Шаблий О.В.
+ 28.09.18                                                                      * NameUkr, CodeUKTZED, ExchangeId, ExchangeName
  19.05.17                                                       * MorionCode, BarCode
  12.04.16         *
  25.03.16                                        *

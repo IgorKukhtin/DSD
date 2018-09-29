@@ -2146,7 +2146,7 @@ inherited MainCashForm2: TMainCashForm2
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1088#1077#1087#1072#1088#1072#1090' '#1074' '#1083#1080#1089#1090' '#1086#1090#1082#1072#1079#1086#1074
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1088#1077#1087#1072#1088#1072#1090' '#1085#1072' '#1082#1086#1090#1086#1088#1086#1084' '#1095#1090#1086#1080#1090' '#1082#1091#1088#1089#1086#1088' '#1074' '#1083#1080#1089#1090' '#1086#1090#1082#1072#1079#1086#1074
-      ShortCut = 122
+      ShortCut = 121
       OnExecute = actListDiffAddGoodsExecute
     end
     object actShowListDiff: TAction
@@ -2364,7 +2364,6 @@ inherited MainCashForm2: TMainCashForm2
       Caption = #1051#1080#1089#1090' '#1086#1090#1082#1072#1079#1072
       object N16: TMenuItem
         Action = actListDiffAddGoods
-        ShortCut = 121
       end
       object N19: TMenuItem
         Action = actListGoods

@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_Goods_Retail()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods_Retail (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods_Retail (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods_Retail(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -16,6 +17,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods_Retail(
     IN inIsClose             Boolean   ,    -- Код закрыт
     IN inTOP                 Boolean   ,    -- ТОП - позиция
     IN inPercentMarkup	     TFloat    ,    -- % наценки
+    IN inNameUkr             TVarChar  ,    -- Название украинское
+    IN inCodeUKTZED          TVarChar  ,    -- Код УКТЗЭД
+    IN inExchangeId          Integer   ,    -- Од:
     IN inObjectId            Integer   ,    -- 
     IN inUserId              Integer        -- Пользователь
 )
@@ -32,7 +36,8 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Товар Торговой сети>
-     ioId:= lpInsertUpdate_Object_Goods (ioId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, inObjectId, inUserId, 0, ''
+     ioId:= lpInsertUpdate_Object_Goods (ioId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, inObjectId, inUserId, 0, '',
+                                         True, 0, inNameUkr, inCodeUKTZED, inExchangeId   
                                        --, CASE WHEN inUserId = 3 THEN FALSE ELSE TRUE END -- !!!только когда руками новую сеть!!!
                                         );
 
@@ -78,11 +83,12 @@ BEGIN
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_Object_Goods_Retail (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, Integer, Integer) OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_Object_Goods_Retail (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer) OWNER TO postgres;
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 28.09.18                                                       *
  13.07.16         * protocol
  25.03.16                                        *
 */

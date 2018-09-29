@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -16,7 +17,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods(
     IN inMakerId             Integer   ,    -- Производитель
     IN inMakerName           TVarChar  ,    -- Производитель
     IN inCheckName           Boolean  DEFAULT true ,
-    IN inAreaId              Integer  DEFAULT 0    -- 
+    IN inAreaId              Integer  DEFAULT 0,      -- 
+    IN inNameUkr             TVarChar DEFAULT '',     -- Название украинское
+    IN inCodeUKTZED          TVarChar  DEFAULT '',    -- Код УКТЗЭД
+    IN inExchangeId          Integer  DEFAULT 0       -- Од:
 )
 RETURNS Integer
 AS
@@ -113,6 +117,12 @@ BEGIN
    -- сохранили свойство <Производитель>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Maker(), ioId, inMakerName);
 
+   -- сохранили свойство <Название украинское>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_NameUkr(), ioId, inNameUkr);
+   -- сохранили свойство <Код УКТЗЭД>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_CodeUKTZED(), ioId, inCodeUKTZED);
+   -- сохранили свойство <Од>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Exchange(), ioId, inExchangeId);
 
    -- сохранили протокол - !!!только для "общего справочника"!!!
    IF COALESCE (inObjectId, 0) = 0
@@ -124,11 +134,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Integer) OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Integer, TVarChar, TVarChar, Integer) OWNER TO postgres;
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 28.09.18                                                       *
  22.10.14                        *
  29.07.14                        *
  26.06.14                        *
