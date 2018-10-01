@@ -31,6 +31,7 @@ $BODY$
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
    DECLARE vbObjectId Integer;
+   DECLARE vbRetailId Integer;
 BEGIN
 -- if inSession = '3' then return; end if;
 
@@ -42,6 +43,14 @@ BEGIN
        vbUnitKey := '0';
     END IF;
     vbUnitId := vbUnitKey::Integer;
+
+    vbRetailId := (SELECT ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
+                   FROM ObjectLink AS ObjectLink_Unit_Juridical
+                        INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                              ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                   WHERE ObjectLink_Unit_Juridical.ObjectId = vbUnitId
+                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical());
 
     -- для Теста
     -- IF inSession = '3' then vbUnitId:= 1781716; END IF;
@@ -308,32 +317,69 @@ BEGIN
                                WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
                               )
                 -- Цена со скидкой            
-              , tmpPriceChange AS (SELECT PriceChange_Goods.ChildObjectId                 AS GoodsId
+              , tmpPriceChange AS (SELECT DISTINCT ObjectLink_PriceChange_Goods.ChildObjectId                             AS GoodsId
+                                        , COALESCE (PriceChange_Value_Unit.ValueData, PriceChange_Value_Retail.ValueData) AS PriceChange
+                                   FROM Object AS Object_PriceChange
+                                        -- скидка по подразд
+                                        LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Unit 
+                                                             ON ObjectLink_PriceChange_Unit.ObjectId = Object_PriceChange.Id
+                                                            AND ObjectLink_PriceChange_Unit.DescId = zc_ObjectLink_PriceChange_Unit()
+                                                            AND ObjectLink_PriceChange_Unit.ChildObjectId = vbUnitId
+                                        -- цена со скидкой по подразд.
+                                        LEFT JOIN ObjectFloat AS PriceChange_Value_Unit
+                                                              ON PriceChange_Value_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                             AND PriceChange_Value_Unit.DescId = zc_ObjectFloat_PriceChange_Value()
+                                                             AND COALESCE (PriceChange_Value_Unit.ValueData, 0) <> 0
+                                        -- скидка по сети
+                                        LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Retail 
+                                                             ON ObjectLink_PriceChange_Retail.ObjectId = Object_PriceChange.Id
+                                                            AND ObjectLink_PriceChange_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
+                                                            AND ObjectLink_PriceChange_Retail.ChildObjectId = vbRetailId
+                                        -- цена со скидкой по сети
+                                        LEFT JOIN ObjectFloat AS PriceChange_Value_Retail
+                                                              ON PriceChange_Value_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                                             AND PriceChange_Value_Retail.DescId = zc_ObjectFloat_PriceChange_Value()
+                                                             AND COALESCE (PriceChange_Value_Retail.ValueData, 0) <> 0
+
+                                        LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Goods
+                                                             ON ObjectLink_PriceChange_Goods.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                                            AND ObjectLink_PriceChange_Goods.DescId = zc_ObjectLink_PriceChange_Goods()
+
+                                   WHERE Object_PriceChange.DescId = zc_Object_PriceChange()
+                                     AND Object_PriceChange.isErased = FALSE
+                                     AND (COALESCE (PriceChange_Value_Retail.ValueData, 0) <> 0 OR COALESCE (PriceChange_Value_Unit.ValueData, 0) <> 0) -- выбираем только цены <> 0
+
+                                 /*SELECT PriceChange_Goods.ChildObjectId                 AS GoodsId
                                         , ROUND(PriceChange_Value.ValueData,2)  ::TFloat  AS PriceChange 
                                    FROM ObjectLink AS ObjectLink_Unit_Juridical
                                        INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                              ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                                            
-                                       INNER JOIN ObjectLink AS ObjectLink_PriceChange_Retail
-                                                             ON ObjectLink_PriceChange_Retail.ChildObjectId = ObjectLink_Juridical_Retail.ChildObjectId
-                                                            AND ObjectLink_PriceChange_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
+                                       LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Retail
+                                                            ON ObjectLink_PriceChange_Retail.ChildObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                                                           AND ObjectLink_PriceChange_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
+
+                                       LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Unit
+                                                            ON ObjectLink_PriceChange_Unit.ChildObjectId = ObjectLink_Unit_Juridical.ObjectId
+                                                           AND ObjectLink_PriceChange_Unit.DescId = zc_ObjectLink_PriceChange_Unit()
 
                                        INNER JOIN ObjectLink AS PriceChange_Goods
-                                                             ON PriceChange_Goods.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
+                                                             ON PriceChange_Goods.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
                                                             AND PriceChange_Goods.DescId = zc_ObjectLink_PriceChange_Goods()
                                        INNER JOIN ObjectFloat AS PriceChange_Value
-                                                              ON PriceChange_Value.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
+                                                              ON PriceChange_Value.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
                                                              AND PriceChange_Value.DescId = zc_ObjectFloat_PriceChange_Value()
                                                              AND ROUND(PriceChange_Value.ValueData,2) > 0
                                    WHERE ObjectLink_Unit_Juridical.ObjectId = vbUnitId
-                                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical())
+                                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                                   */)
 
         -- Результат
         SELECT
             Goods.Id,
             ObjectLink_Main.ChildObjectId AS GoodsId_main,
-            Object_GoodsGroup.ValueData  AS GoodsGroupName,
+            Object_GoodsGroup.ValueData   AS GoodsGroupName,
             Goods.ValueData,
             Goods.ObjectCode,
             CashSessionSnapShot.Remains,
@@ -614,6 +660,7 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.
+ 01.10.18         * tmpPriceChange - учет скидки подразделения
  21.06.17         *
  09.06.17         *
  24.05.17                                                                                      * MorionCode
