@@ -106,14 +106,6 @@ inherited ClientsByBankForm: TClientsByBankForm
           ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Mail'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Mail'
-          DataType = ftString
-          MultiSelectSeparator = ','
         end>
     end
   end

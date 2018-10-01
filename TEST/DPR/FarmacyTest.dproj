@@ -2075,12 +2075,12 @@
 				<Form>ClientsByBankEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Document\UnnamedEnterprises.pas">
-				<Form>UnnamedEnterprisesForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\UnnamedEnterprisesJournal.pas">
 				<Form>UnnamedEnterprisesJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\UnnamedEnterprises.pas">
+				<Form>UnnamedEnterprisesForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -614,8 +614,8 @@ uses
   ExchangeEdit in '..\..\Forms\ExchangeEdit.pas' {ExchangeEditForm: TParentForm},
   ClientsByBank in '..\..\FormsFarmacy\Guides\ClientsByBank.pas' {ClientsByBankForm: TParentForm},
   ClientsByBankEdit in '..\..\FormsFarmacy\Guides\ClientsByBankEdit.pas' {ClientsByBankEditForm: TParentForm},
-  UnnamedEnterprises in '..\..\FormsFarmacy\Document\UnnamedEnterprises.pas' {UnnamedEnterprisesForm: TParentForm},
-  UnnamedEnterprisesJournal in '..\..\FormsFarmacy\Document\UnnamedEnterprisesJournal.pas' {UnnamedEnterprisesJournalForm: TParentForm};
+  UnnamedEnterprisesJournal in '..\..\FormsFarmacy\Document\UnnamedEnterprisesJournal.pas' {UnnamedEnterprisesJournalForm: TParentForm},
+  UnnamedEnterprises in '..\..\FormsFarmacy\Document\UnnamedEnterprises.pas' {UnnamedEnterprisesForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
