@@ -19,10 +19,13 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
     DECLARE vbUnitId Integer;
+    DECLARE vbObjectId Integer;
+    DECLARE vbMarginCategoryId_site Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_UnnamedEnterprises());
     vbUserId:= lpGetUserBySession (inSession);
+    vbObjectId := COALESCE (lpGet_DefaultValue ('zc_Object_Retail', vbUserId), '0');
 
     -- определяется подразделение
     SELECT MovementLinkObject_Unit.ObjectId
@@ -33,6 +36,66 @@ BEGIN
 
     -- Результат
     IF inShowAll THEN
+
+      -- поиск категории для сайта
+      vbMarginCategoryId_site:= (SELECT ObjectBoolean.ObjectId
+                                 FROM ObjectBoolean
+                                 WHERE ObjectBoolean.ValueData = TRUE
+                                   AND ObjectBoolean.DescId = zc_ObjectBoolean_MarginCategory_Site()
+                                 LIMIT 1
+                                );
+
+      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpgoodsminprice_list')
+      THEN
+          -- таблица
+          CREATE TEMP TABLE _tmpGoodsMinPrice_List (GoodsId Integer, GoodsId_retail Integer) ON COMMIT DROP;
+      ELSE
+          DELETE FROM _tmpGoodsMinPrice_List;
+      END IF;
+
+      INSERT INTO _tmpGoodsMinPrice_List (GoodsId, GoodsId_retail)
+      SELECT DISTINCT LinkGoodsObject.GoodsId
+                   ,  LoadPriceListItem.GoodsId
+                            FROM LoadPriceList
+
+                               INNER JOIN LoadPriceListItem ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
+
+                               LEFT JOIN (SELECT DISTINCT JuridicalId, ContractId, isPriceClose
+                                         FROM lpSelect_Object_JuridicalSettingsRetail (vbObjectId)) AS JuridicalSettings
+                                                                                                    ON JuridicalSettings.JuridicalId = LoadPriceList.JuridicalId
+                                                                                                   AND JuridicalSettings.ContractId = LoadPriceList.ContractId
+
+                               LEFT JOIN Object_Goods_Main_View AS Object_Goods ON Object_Goods.Id = LoadPriceListItem.GoodsId
+
+                               LEFT JOIN Object_LinkGoods_View AS LinkGoodsObject ON LinkGoodsObject.GoodsMainId = Object_Goods.Id
+                                                              AND LinkGoodsObject.ObjectId = vbObjectId
+
+                            WHERE COALESCE(JuridicalSettings.isPriceClose, FALSE) <> TRUE
+                              AND (LoadPriceList.AreaId = 0 OR LoadPriceList.AreaId =
+                                  COALESCE ((SELECT OL_Unit_Area.ChildObjectId FROM ObjectLink AS OL_Unit_Area
+                                             WHERE OL_Unit_Area.ObjectId = vbUnitId
+                                               AND OL_Unit_Area.DescId   = zc_ObjectLink_Unit_Area()), zc_Area_Basis()));
+
+
+      -- еще оптимизируем -tmpMinPrice_List
+      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpMinPrice_List'))
+      THEN
+          -- таблица
+          CREATE TEMP TABLE tmpMinPrice_List (GoodsId            Integer,
+                                              Price              TFloat
+                                             ) ON COMMIT DROP;
+      ELSE
+          DELETE FROM tmpMinPrice_List;
+      END IF;
+
+      INSERT INTO tmpMinPrice_List (GoodsId, Price)
+      SELECT tmp.GoodsId, tmp.Price
+      FROM lpSelectMinPrice_List (inUnitId  := 0          -- !!!т.к. не зависит от UnitId, хотя ...!!!
+                                , inObjectId:= vbObjectId
+                                , inUserId  := vbUserId
+                                 ) AS tmp
+      WHERE tmp.AreaId = zc_Area_Basis();
+
         -- Результат такой
         RETURN QUERY
             WITH
@@ -63,18 +126,59 @@ BEGIN
                                        AND MovementItem.DescId = zc_MI_Master()
                                        AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
                                     )
-             , tmpPrice AS (SELECT Price_Goods.ChildObjectId               AS GoodsId
-                                 , ROUND(Price_Value.ValueData, 2) ::TFloat AS Price
-                            FROM ObjectLink AS ObjectLink_Price_Unit
-                                LEFT JOIN ObjectFloat AS Price_Value
-                                                      ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                                     AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
-                                LEFT JOIN ObjectLink AS Price_Goods
-                                                     ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                                    AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                            WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                              AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
-                            )
+             , MarginCategory_Unit AS (SELECT tmp.UnitId
+                                            , tmp.MarginCategoryId
+                                       FROM (SELECT tmpList.UnitId
+                                                  , ObjectLink_MarginCategory.ChildObjectId AS MarginCategoryId
+                                                  , ROW_NUMBER() OVER (PARTITION BY tmpList.UnitId, ObjectLink_MarginCategory.ChildObjectId
+                                                    ORDER BY tmpList.UnitId, ObjectLink_MarginCategory.ChildObjectId) AS Ord
+                                             FROM (select vbUnitId as UnitId) AS tmpList
+                                                 INNER JOIN ObjectLink AS ObjectLink_MarginCategoryLink_Unit
+                                                                       ON ObjectLink_MarginCategoryLink_Unit.ChildObjectId = tmpList.UnitId
+                                                                      AND ObjectLink_MarginCategoryLink_Unit.DescId        = zc_ObjectLink_MarginCategoryLink_Unit()
+                                                 LEFT JOIN ObjectLink AS ObjectLink_MarginCategory
+                                                                      ON ObjectLink_MarginCategory.ObjectId = ObjectLink_MarginCategoryLink_Unit.ObjectId
+                                                                     AND ObjectLink_MarginCategory.DescId   = zc_ObjectLink_MarginCategoryLink_MarginCategory()
+                                                 LEFT JOIN ObjectFloat AS ObjectFloat_Percent
+                                                                       ON ObjectFloat_Percent.ObjectId = ObjectLink_MarginCategory.ChildObjectId
+                                                                      AND ObjectFloat_Percent.DescId   = zc_ObjectFloat_MarginCategory_Percent()
+                                             WHERE COALESCE (ObjectFloat_Percent.ValueData, 0) = 0 -- !!!вот так криво!!!
+                                             ) AS tmp
+                                       WHERE tmp.Ord = 1 -- !!!только одна категория!!!
+                                       )
+             , MarginCategory_all AS (SELECT DISTINCT
+                                         tmp.UnitId
+                                       , tmp.MarginCategoryId
+                                       , ObjectFloat_MarginPercent.ValueData AS MarginPercent
+                                       , ObjectFloat_MinPrice.ValueData      AS MinPrice
+                                       , ROW_NUMBER() OVER (PARTITION BY tmp.UnitId, tmp.MarginCategoryId
+                                         ORDER BY tmp.UnitId, tmp.MarginCategoryId, ObjectFloat_MinPrice.ValueData) AS ORD
+                                      FROM (SELECT MarginCategory_Unit.UnitId, MarginCategory_Unit.MarginCategoryId FROM MarginCategory_Unit
+                                      UNION ALL
+                                      SELECT 0 AS UnitId, vbMarginCategoryId_site AS MarginCategoryId) AS tmp
+                                        INNER JOIN ObjectLink AS ObjectLink_MarginCategoryItem_MarginCategory
+                                                              ON ObjectLink_MarginCategoryItem_MarginCategory.ChildObjectId = tmp.MarginCategoryId
+                                                             AND ObjectLink_MarginCategoryItem_MarginCategory.DescId = zc_ObjectLink_MarginCategoryItem_MarginCategory()
+                                        INNER JOIN Object ON Object.Id = ObjectLink_MarginCategoryItem_MarginCategory.ObjectId
+                                                         AND Object.isErased = FALSE
+                                        LEFT JOIN ObjectFloat AS ObjectFloat_MinPrice
+                                                              ON ObjectFloat_MinPrice.ObjectId =ObjectLink_MarginCategoryItem_MarginCategory.ObjectId
+                                                             AND ObjectFloat_MinPrice.DescId = zc_ObjectFloat_MarginCategoryItem_MinPrice()
+                                        LEFT JOIN ObjectFloat AS ObjectFloat_MarginPercent
+                                                              ON ObjectFloat_MarginPercent.ObjectId = ObjectLink_MarginCategoryItem_MarginCategory.ObjectId
+                                                             AND ObjectFloat_MarginPercent.DescId = zc_ObjectFloat_MarginCategoryItem_MarginPercent()
+
+                                      )
+             , MarginCategory_site AS (SELECT DISTINCT
+                                              MarginCategory_all.MarginPercent
+                                            , MarginCategory_all.MinPrice
+                                            , COALESCE (MarginCategory_all_next.MinPrice, 1000000) AS MaxPrice
+                                       FROM MarginCategory_all
+                                             LEFT JOIN MarginCategory_all AS MarginCategory_all_next
+                                                                          ON MarginCategory_all_next.MarginCategoryId = MarginCategory_all.MarginCategoryId
+                                                                         AND MarginCategory_all_next.ORD = MarginCategory_all.ORD + 1
+                                       WHERE MarginCategory_all.MarginCategoryId = vbMarginCategoryId_site
+                                       )
 
             SELECT COALESCE(MovementItem_UnnamedEnterprises.Id,0)       AS Id
                  , Object_Goods.Id                                      AS GoodsId
@@ -89,7 +193,9 @@ BEGIN
                  , MovementItem_UnnamedEnterprises.Amount               AS Amount
                  , tmpRemains.Amount::TFloat                            AS AmountRemains
                  , NULL::TFloat                                         AS AmountOrder
-                 , COALESCE(MovementItem_UnnamedEnterprises.Price, tmpPrice.Price)    AS Price
+                 , COALESCE(MovementItem_UnnamedEnterprises.Price,
+                   ROUND (tmpPrice.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) *
+                   (1 + COALESCE (MarginCategory_site.MarginPercent, 0) / 100), 1) :: TFloat)    AS Price
                  , MovementItem_UnnamedEnterprises.Summ                 AS Summ
 
                  , ObjectString_Goods_CodeUKTZED.ValueData              AS CodeUKTZED
@@ -99,15 +205,21 @@ BEGIN
                  , Object_Exchange.ValueData                            AS ExchangeName
 
                  , COALESCE(MovementItem_UnnamedEnterprises.IsErased,FALSE)           AS isErased
-            FROM tmpRemains
-                FULL OUTER JOIN MovementItem_UnnamedEnterprises ON tmpRemains.GoodsId = MovementItem_UnnamedEnterprises.GoodsId
+            FROM _tmpGoodsMinPrice_List as tmpGoods
 
-                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE(MovementItem_UnnamedEnterprises.GoodsId,tmpRemains.GoodsId)
+                FULL OUTER JOIN MovementItem_UnnamedEnterprises ON tmpGoods.GoodsId = MovementItem_UnnamedEnterprises.GoodsId
+
+                LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpGoods.GoodsId
+
+                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsId
 
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
                                      ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
                                     AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
                 LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+                LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                      ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
+                                     AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
 
                 LEFT JOIN ObjectString AS ObjectString_Goods_NameUkr
                                        ON ObjectString_Goods_NameUkr.ObjectId = Object_Goods.Id
@@ -122,8 +234,9 @@ BEGIN
                                     AND ObjectLink_Goods_Exchange.DescId = zc_ObjectLink_Goods_Exchange()
                 LEFT JOIN Object AS Object_Exchange ON Object_Exchange.Id = ObjectLink_Goods_Exchange.ChildObjectId
 
-                LEFT JOIN tmpPrice ON tmpPrice.GoodsId =  COALESCE(MovementItem_UnnamedEnterprises.GoodsId,tmpRemains.GoodsId)
+                LEFT JOIN tmpMinPrice_List AS tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
 
+                LEFT JOIN MarginCategory_site ON tmpPrice.Price >= MarginCategory_site.MinPrice AND tmpPrice.Price < MarginCategory_site.MaxPrice
             WHERE Object_Goods.isErased = FALSE
                OR MovementItem_UnnamedEnterprises.id is not null;
     ELSE
@@ -214,4 +327,4 @@ $BODY$
                Шаблий О.В.
  30.09.18         *
 */
--- select * from gpSelect_MovementItem_UnnamedEnterprises(inMovementId := 0 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_UnnamedEnterprises(inMovementId := 10582538  , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');

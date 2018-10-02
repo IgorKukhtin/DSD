@@ -118,7 +118,6 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
           end
           object Summ: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
