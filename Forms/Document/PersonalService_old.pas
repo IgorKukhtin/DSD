@@ -151,31 +151,8 @@ type
     actUpdateSummNalogRet: TdsdExecStoredProc;
     macUpdateNalogRetSimpl: TMultiAction;
     macUpdateSummNalogRet: TMultiAction;
-    bbUpdateSummNalogRet: TdxBarButton;
+    bb: TdxBarButton;
     actRefreshMaster: TdsdDataSetRefresh;
-    cxLabel5: TcxLabel;
-    edMember: TcxButtonEdit;
-    GuidesMember: TdsdGuides;
-    MessageDCS: TClientDataSet;
-    MessageDS: TDataSource;
-    cxGrid2: TcxGrid;
-    cxGridDBTableView2: TcxGridDBTableView;
-    msUserName: TcxGridDBColumn;
-    cxGridLevel3: TcxGridLevel;
-    cxSplitter1: TcxSplitter;
-    spSelectMIMessage: TdsdStoredProc;
-    spInsertUpdateMIMessage: TdsdStoredProc;
-    actUpdateDataSetMessage: TdsdUpdateDataSet;
-    actRefresh_Message: TdsdDataSetRefresh;
-    msOrd: TcxGridDBColumn;
-    msisQuestion: TcxGridDBColumn;
-    msisAnswer: TcxGridDBColumn;
-    msisQuestionRead: TcxGridDBColumn;
-    msisAnswerRead: TcxGridDBColumn;
-    actUserChoice: TOpenChoiceForm;
-    spSelectPrintDetail: TdsdStoredProc;
-    actPrint_Detail: TdsdPrintAction;
-    bbPrint_Child: TdxBarButton;
   private
     { Private declarations }
   public
