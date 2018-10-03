@@ -321,6 +321,14 @@ object PriceListItemForm: TPriceListItemForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertUpdate_Separate'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -384,6 +392,11 @@ object PriceListItemForm: TPriceListItemForm
       Action = actPrint
       Category = 0
       ImageIndex = 3
+    end
+    object bbInsertUpdate_Separate: TdxBarButton
+      Action = actInsertUpdate_Separate
+      Category = 0
+      ImageIndex = 27
     end
   end
   object ActionList: TActionList
@@ -590,6 +603,23 @@ object PriceListItemForm: TPriceListItemForm
       ReportNameParam.Value = 'PrintObjectHistory_PriceListItem'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actInsertUpdate_Separate: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_Separate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_Separate
+        end>
+      Caption = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072
+      Hint = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072
+      QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072'?'
+      InfoAfterExecute = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072' '#1086#1082#1086#1085#1095#1077#1085
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -805,5 +835,14 @@ object PriceListItemForm: TPriceListItemForm
     Params = <>
     Left = 708
     Top = 270
+  end
+  object spInsertUpdate_Separate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_ObjectHistory_PriceListItem_Separate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 656
+    Top = 136
   end
 end
