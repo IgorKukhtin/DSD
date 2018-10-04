@@ -30,41 +30,41 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Должен быть выбран один из параметров торг.сеть или подразделение';
     END IF;
 
-   -- Если такая запись есть - достаем её ключу торг.сеть-товар или подр.-товар
-   SELECT ObjectLink_PriceChange_Retail.ObjectId        AS Id
-        , ROUND(PriceChange_Value.ValueData,2)::TFloat  AS PriceChange
-        , PriceChange_DateChange.valuedata              AS DateChange
-        , ObjectFloat_FixValue.ValueData                AS FixValue
-        , ObjectFloat_PercentMarkup.ValueData           AS PercentMarkup
-          INTO vbId
-             , vbPriceChange
-             , vbDateChange
-             , vbFixValue
-             , vbPercentMarkup
-   FROM ObjectLink AS PriceChange_Goods
-        LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Retail
-                             ON ObjectLink_PriceChange_Retail.ObjectId = PriceChange_Goods.ObjectId
-                            AND ObjectLink_PriceChange_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
-        LEFT JOIN ObjectLink AS ObjectLink_Unit
-                             ON ObjectLink_Unit.ObjectId = PriceChange_Goods.ObjectId
-                            AND ObjectLink_Unit.DescId = zc_ObjectLink_PriceChange_Unit()
-        LEFT JOIN ObjectFloat AS PriceChange_Value
-                              ON PriceChange_Value.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
-                             AND PriceChange_Value.DescId   = zc_ObjectFloat_PriceChange_Value()
-        LEFT JOIN ObjectDate AS PriceChange_DateChange
-                             ON PriceChange_DateChange.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
-                            AND PriceChange_DateChange.DescId   = zc_ObjectDate_PriceChange_DateChange()
-        LEFT JOIN ObjectFloat AS ObjectFloat_FixValue
-                              ON ObjectFloat_FixValue.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
-                             AND ObjectFloat_FixValue.DescId   = zc_ObjectFloat_PriceChange_FixValue()
-        LEFT JOIN ObjectFloat AS ObjectFloat_PercentMarkup
-                              ON ObjectFloat_PercentMarkup.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
-                             AND ObjectFloat_PercentMarkup.DescId   = zc_ObjectFloat_PriceChange_PercentMarkup()
-   WHERE PriceChange_Goods.DescId        = zc_ObjectLink_PriceChange_Goods()
-     AND PriceChange_Goods.ChildObjectId = inGoodsId
-     AND ((ObjectLink_Retail.ChildObjectId = inRetailId AND inRetailId <> 0)
-       OR (ObjectLink_Unit.ChildObjectId = inUnitId AND inUnitId <> 0)
-         )
+    -- Если такая запись есть - достаем её ключу торг.сеть-товар или подр.-товар
+    SELECT ObjectLink_Retail.ObjectId                    AS Id
+         , ROUND(PriceChange_Value.ValueData,2)::TFloat  AS PriceChange
+         , PriceChange_DateChange.valuedata              AS DateChange
+         , ObjectFloat_FixValue.ValueData                AS FixValue
+         , ObjectFloat_PercentMarkup.ValueData           AS PercentMarkup
+           INTO vbId
+              , vbPriceChange
+              , vbDateChange
+              , vbFixValue
+              , vbPercentMarkup
+    FROM ObjectLink AS ObjectLink_Goods
+         LEFT JOIN ObjectLink AS ObjectLink_Retail
+                              ON ObjectLink_Retail.ObjectId = ObjectLink_Goods.ObjectId
+                             AND ObjectLink_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
+         LEFT JOIN ObjectLink AS ObjectLink_Unit
+                              ON ObjectLink_Unit.ObjectId = ObjectLink_Goods.ObjectId
+                             AND ObjectLink_Unit.DescId = zc_ObjectLink_PriceChange_Unit()
+         LEFT JOIN ObjectFloat AS PriceChange_Value
+                               ON PriceChange_Value.ObjectId = ObjectLink_Goods.ObjectId
+                              AND PriceChange_Value.DescId   = zc_ObjectFloat_PriceChange_Value()
+         LEFT JOIN ObjectDate AS PriceChange_DateChange
+                              ON PriceChange_DateChange.ObjectId = ObjectLink_Goods.ObjectId
+                             AND PriceChange_DateChange.DescId   = zc_ObjectDate_PriceChange_DateChange()
+         LEFT JOIN ObjectFloat AS ObjectFloat_FixValue
+                               ON ObjectFloat_FixValue.ObjectId = ObjectLink_Goods.ObjectId
+                              AND ObjectFloat_FixValue.DescId   = zc_ObjectFloat_PriceChange_FixValue()
+         LEFT JOIN ObjectFloat AS ObjectFloat_PercentMarkup
+                               ON ObjectFloat_PercentMarkup.ObjectId = ObjectLink_Goods.ObjectId
+                              AND ObjectFloat_PercentMarkup.DescId   = zc_ObjectFloat_PriceChange_PercentMarkup()
+    WHERE ObjectLink_Goods.DescId = zc_ObjectLink_PriceChange_Goods()
+      AND ObjectLink_Goods.ChildObjectId = inGoodsId
+      AND ((ObjectLink_Retail.ChildObjectId = inRetailId AND inRetailId <> 0)
+        OR (ObjectLink_Unit.ChildObjectId = inUnitId AND inUnitId <> 0)
+          )
      ;
 
 

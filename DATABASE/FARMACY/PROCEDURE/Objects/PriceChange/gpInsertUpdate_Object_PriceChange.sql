@@ -60,36 +60,36 @@ BEGIN
                              , ROUND(ObjectFloat_Value.ValueData,2)::TFloat AS PriceChange
                              , ObjectFloat_FixValue.ValueData               AS FixValue
                              , PriceChange_Goods.ChildObjectId              AS GoodsId
-                             , ObjectLink_Retail.ChildObjectId  AS RetailId
+                             , ObjectLink_Retail.ChildObjectId              AS RetailId
                              , ObjectDate_DateChange.valuedata             AS DateChange
                              , COALESCE(ObjectFloat_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
-                           FROM Object AS Object_PriceChange
-                               INNER JOIN ObjectLink AS PriceChange_Goods
-                                                     ON PriceChange_Goods.ObjectId = Object_PriceChange.Id
-                                                    AND PriceChange_Goods.DescId = zc_ObjectLink_PriceChange_Goods()
-                                                    AND PriceChange_Goods.ChildObjectId = inGoodsId
-                               LEFT JOIN ObjectLink AS ObjectLink_Retail
-                                                    ON ObjectLink_Retail.ObjectId = Object_PriceChange.Id
-                                                   AND ObjectLink_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
-                               LEFT JOIN ObjectLink AS ObjectLink_Unit
-                                                    ON ObjectLink_Unit.ObjectId = Object_PriceChange.Id
-                                                   AND ObjectLink_Unit.DescId = zc_ObjectLink_PriceChange_Unit()
-                               LEFT JOIN ObjectFloat AS ObjectFloat_Value
-                                                     ON ObjectFloat_Value.ObjectId = Object_PriceChange.Id
-                                                    AND ObjectFloat_Value.DescId = zc_ObjectFloat_PriceChange_Value()
-                               LEFT JOIN ObjectFloat AS ObjectFloat_FixValue
-                                                     ON ObjectFloat_FixValue.ObjectId = Object_PriceChange.Id
-                                                    AND ObjectFloat_FixValue.DescId = zc_ObjectFloat_PriceChange_FixValue()
-                               LEFT JOIN ObjectFloat AS ObjectFloat_PercentMarkup
-                                                     ON ObjectFloat_PercentMarkup.ObjectId = Object_PriceChange.Id
-                                                    AND ObjectFloat_PercentMarkup.DescId = zc_ObjectFloat_PriceChange_PercentMarkup()
-                               LEFT JOIN ObjectDate AS ObjectDate_DateChange
-                                                    ON ObjectDate_DateChange.ObjectId = Object_PriceChange.Id
-                                                   AND ObjectDate_DateChange.DescId = zc_ObjectDate_PriceChange_DateChange()
-                           WHERE Object_PriceChange.DescId = zc_Object_PriceChange()
-                             AND ((ObjectLink_Retail.ChildObjectId = inRetailId AND inRetailId <> 0)
-                               OR (ObjectLink_Unit.ChildObjectId = inUnitId AND inUnitId <> 0)
-                                 )
+                        FROM Object AS Object_PriceChange
+                            INNER JOIN ObjectLink AS PriceChange_Goods
+                                                  ON PriceChange_Goods.ObjectId = Object_PriceChange.Id
+                                                 AND PriceChange_Goods.DescId = zc_ObjectLink_PriceChange_Goods()
+                                                 AND PriceChange_Goods.ChildObjectId = inGoodsId
+                            LEFT JOIN ObjectLink AS ObjectLink_Retail
+                                                 ON ObjectLink_Retail.ObjectId = Object_PriceChange.Id
+                                                AND ObjectLink_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
+                            LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                 ON ObjectLink_Unit.ObjectId = Object_PriceChange.Id
+                                                AND ObjectLink_Unit.DescId = zc_ObjectLink_PriceChange_Unit()
+                            LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                                  ON ObjectFloat_Value.ObjectId = Object_PriceChange.Id
+                                                 AND ObjectFloat_Value.DescId = zc_ObjectFloat_PriceChange_Value()
+                            LEFT JOIN ObjectFloat AS ObjectFloat_FixValue
+                                                  ON ObjectFloat_FixValue.ObjectId = Object_PriceChange.Id
+                                                 AND ObjectFloat_FixValue.DescId = zc_ObjectFloat_PriceChange_FixValue()
+                            LEFT JOIN ObjectFloat AS ObjectFloat_PercentMarkup
+                                                  ON ObjectFloat_PercentMarkup.ObjectId = Object_PriceChange.Id
+                                                 AND ObjectFloat_PercentMarkup.DescId = zc_ObjectFloat_PriceChange_PercentMarkup()
+                            LEFT JOIN ObjectDate AS ObjectDate_DateChange
+                                                 ON ObjectDate_DateChange.ObjectId = Object_PriceChange.Id
+                                                AND ObjectDate_DateChange.DescId = zc_ObjectDate_PriceChange_DateChange()
+                        WHERE Object_PriceChange.DescId = zc_Object_PriceChange()
+                          AND ((ObjectLink_Retail.ChildObjectId = inRetailId AND inRetailId <> 0)
+                            OR (ObjectLink_Unit.ChildObjectId = inUnitId AND inUnitId <> 0)
+                              )
                        )
           -- 
           SELECT * FROM tmp1
