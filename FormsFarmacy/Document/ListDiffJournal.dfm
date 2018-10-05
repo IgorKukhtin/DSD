@@ -1,29 +1,29 @@
 inherited ListDiffJournalForm: TListDiffJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1051#1080#1089#1090' '#1086#1090#1082#1072#1079#1086#1074'>'
   ClientHeight = 535
-  ClientWidth = 821
+  ClientWidth = 861
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.AddOnFormRefresh.SelfList = 'Loss'
   AddOnFormData.AddOnFormRefresh.DataSet = MasterCDS
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
-  ExplicitWidth = 837
+  ExplicitWidth = 877
   ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 821
+    Width = 861
     Height = 478
     TabOrder = 3
     ExplicitWidth = 821
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 821
+    ClientRectRight = 861
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 821
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 821
+        Width = 861
         Height = 478
         ExplicitWidth = 821
         ExplicitHeight = 478
@@ -88,22 +88,18 @@ inherited ListDiffJournalForm: TListDiffJournalForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
-            Width = 102
+            Width = 92
           end
           object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.00'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 97
           end
         end
@@ -111,7 +107,7 @@ inherited ListDiffJournalForm: TListDiffJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 821
+    Width = 861
     ExplicitWidth = 821
     inherited deStart: TcxDateEdit
       EditValue = 42005d
