@@ -615,7 +615,8 @@ uses
   ClientsByBank in '..\..\FormsFarmacy\Guides\ClientsByBank.pas' {ClientsByBankForm: TParentForm},
   ClientsByBankEdit in '..\..\FormsFarmacy\Guides\ClientsByBankEdit.pas' {ClientsByBankEditForm: TParentForm},
   UnnamedEnterprisesJournal in '..\..\FormsFarmacy\Document\UnnamedEnterprisesJournal.pas' {UnnamedEnterprisesJournalForm: TParentForm},
-  UnnamedEnterprises in '..\..\FormsFarmacy\Document\UnnamedEnterprises.pas' {UnnamedEnterprisesForm: TParentForm};
+  UnnamedEnterprises in '..\..\FormsFarmacy\Document\UnnamedEnterprises.pas' {UnnamedEnterprisesForm: TParentForm},
+  Report_KPU in '..\..\FormsFarmacy\Report\Report_KPU.pas' {Report_KPUForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

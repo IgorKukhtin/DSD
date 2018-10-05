@@ -576,7 +576,7 @@ inherited Report_LiquidityForm: TReport_LiquidityForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'StartDate'
+          Name = 'inOperDate'
           Value = 42491d
           Component = deStart
           DataType = ftDateTime
