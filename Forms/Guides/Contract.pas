@@ -219,6 +219,7 @@ type
     CurrencyName: TcxGridDBColumn;
     JuridicalInvoiceName: TcxGridDBColumn;
     JuridicalInvoiceChoiceForm: TOpenChoiceForm;
+    clPartnerCode: TcxGridDBColumn;
 
   private
     { Private declarations }

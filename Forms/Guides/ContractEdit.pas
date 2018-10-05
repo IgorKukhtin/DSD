@@ -184,6 +184,8 @@ type
     cxLabel34: TcxLabel;
     edJuridicalInvoice: TcxButtonEdit;
     JuridicalInvoiceGuides: TdsdGuides;
+    cxLabel35: TcxLabel;
+    edPartnerCode: TcxTextEdit;
   private
     { Private declarations }
   public

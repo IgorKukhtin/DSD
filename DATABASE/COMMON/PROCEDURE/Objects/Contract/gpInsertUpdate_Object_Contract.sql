@@ -8,7 +8,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarCh
                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                       , Boolean, Boolean, Boolean, Boolean, Integer, Integer, TDateTime, TDateTime, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tfloat, Tfloat, TDateTime, TDateTime, TDateTime
+                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                      , Boolean, Boolean, Boolean, Boolean, Integer, Integer, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
  INOUT ioId                  Integer,       -- Ключ объекта <Договор>
@@ -18,6 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inComment             TVarChar,      -- Примечание
     IN inBankAccountExternal TVarChar,      -- р.счет (исх.платеж)
     IN inGLNCode             TVarChar,      -- Код GLN  
+    IN inPartnerCode         TVarChar,      -- Код поставщика
     IN inTerm                Tfloat  ,      -- Период пролонгации
     IN inDayTaxSummary       Tfloat  ,      -- Кол-во дней для сводной налоговой, если значение = 0, тогда будет за 1 месяц
 
@@ -279,6 +283,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_BankAccount(), ioId, inBankAccountExternal);
    -- сохранили свойство <Код GLN>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_GLNCode(), ioId, inGLNCode);
+   -- сохранили свойство <Код поставщика>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_PartnerCode(), ioId, inPartnerCode);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Contract_Term(), ioId, inTerm);
@@ -378,6 +384,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.10.18         * add PartnerCode
  30.03.17         * inJuridicalInvoiceId
  03.03.17         * inDayTaxSummary
  13.04.16         *

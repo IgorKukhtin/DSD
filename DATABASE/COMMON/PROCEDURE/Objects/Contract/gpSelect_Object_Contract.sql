@@ -15,7 +15,8 @@ RETURNS TABLE (Id Integer, Code Integer
              , ContractKeyId Integer, ContractId_Key Integer, Code_Key Integer
              , InvNumber_Key TVarChar, ContractStateKindCode_Key Integer
 
-             , Comment TVarChar, BankAccountExternal TVarChar, GLNCode TVarChar
+             , Comment TVarChar, BankAccountExternal TVarChar
+             , GLNCode TVarChar, PartnerCode TVarChar
              , Term TFloat, EndDate_Term TDateTime
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
                          
@@ -133,7 +134,8 @@ BEGIN
 
        , ObjectString_Comment.ValueData            AS Comment 
        , ObjectString_BankAccount.ValueData        AS BankAccountExternal
-       , ObjectString_GLNCode.ValueData            AS GLNCode 
+       , ObjectString_GLNCode.ValueData            AS GLNCode
+       , ObjectString_PartnerCode.ValueData        AS PartnerCode
        , Object_Contract_View.Term
        , CASE WHEN Object_Contract_View.ContractTermKindId > 0 THEN Object_Contract_View.EndDate_Term ELSE NULL END ::TDateTime AS EndDate_Term
 
@@ -282,6 +284,9 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_GLNCode
                                ON ObjectString_GLNCode.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_GLNCode.DescId = zc_objectString_Contract_GLNCode()
+        LEFT JOIN ObjectString AS ObjectString_PartnerCode
+                               ON ObjectString_PartnerCode.ObjectId = Object_Contract_View.ContractId
+                              AND ObjectString_PartnerCode.DescId = zc_objectString_Contract_PartnerCode() 
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
                                 ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
@@ -437,6 +442,7 @@ ALTER FUNCTION gpSelect_Object_Contract (TDateTime, TDateTime, Boolean, Boolean,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.10.18         * add PartnerCode
  30.06.17         * add JuridicalInvoice
  03.03.17         * DayTaxSummary
  13.04.16         * Currency
