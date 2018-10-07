@@ -1,4 +1,4 @@
-unit CheckVIP;
+unit CheckVIP_Search;
 
 interface
 
@@ -15,7 +15,7 @@ uses
   cxCurrencyEdit, cxButtonEdit, cxSplitter;
 
 type
-  TCheckVIPForm = class(TAncestorDBGridForm)
+  TCheckVIP_SearchForm = class(TAncestorDBGridForm)
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     cxGridLevel1: TcxGridLevel;
@@ -65,17 +65,12 @@ type
     MedicSP: TcxGridDBColumn;
     SPKindName: TcxGridDBColumn;
     SPTax: TcxGridDBColumn;
-    spUpdateMovementItemAmount: TdsdStoredProc;
-    actUpdateMovementItemAmount: TdsdUpdateDataSet;
     cxSplitter1: TcxSplitter;
   private
     { Private declarations }
   public
     { Public declarations }
   end;
-
-var
-  CheckVIPForm: TCheckVIPForm;
 
 implementation
 
@@ -84,6 +79,6 @@ implementation
 uses DataModul;
 
 initialization
-  RegisterClass(TCheckVIPForm)
+  RegisterClass(TCheckVIP_SearchForm)
 
 end.

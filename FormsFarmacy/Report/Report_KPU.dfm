@@ -48,6 +48,7 @@ inherited Report_KPUForm: TReport_KPUForm
           Navigator.Buttons.SaveBookmark.Visible = True
           Navigator.Buttons.GotoBookmark.Visible = True
           Navigator.Buttons.Filter.Visible = True
+          DataController.DataSource = MasterDS
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
@@ -73,6 +74,9 @@ inherited Report_KPUForm: TReport_KPUForm
             item
               Caption = #1042#1099#1087#1086#1083#1085#1077#1085#1080#1077' '#1087#1083#1072#1085#1072' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091
               Width = 256
+            end
+            item
+              Caption = #1057#1088#1077#1076#1085#1080#1081' '#1095#1077#1082
             end>
           object UserCode: TcxGridDBBandedColumn
             Caption = #1050#1086#1076
@@ -117,8 +121,6 @@ inherited Report_KPUForm: TReport_KPUForm
           object KPU: TcxGridDBBandedColumn
             Caption = #1050#1055#1059
             DataBinding.FieldName = 'KPU'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -132,6 +134,7 @@ inherited Report_KPUForm: TReport_KPUForm
             DataBinding.FieldName = 'FactOfManDays'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 58
             Position.BandIndex = 1
             Position.ColIndex = 0
@@ -165,13 +168,46 @@ inherited Report_KPUForm: TReport_KPUForm
             Position.RowIndex = 0
           end
           object MarkRatio: TcxGridDBBandedColumn
-            Caption = ' '#1050#1086#1101#1092#1092'.'
+            Caption = #1050#1086#1101#1092#1092'.'
             DataBinding.FieldName = 'MarkRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taRightJustify
             Width = 45
             Position.BandIndex = 1
             Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object cxGridDBBandedTableView1Column1: TcxGridDBBandedColumn
+            Caption = #1087#1088#1086#1096#1083#1099#1081' '#1084#1077#1089#1103#1094
+            DataBinding.FieldName = 'PrevAverageCheck'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Position.BandIndex = 2
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object cxGridDBBandedTableView1Column2: TcxGridDBBandedColumn
+            Caption = #1090#1077#1082#1091#1097#1080#1081' '#1084#1077#1089#1103#1094
+            DataBinding.FieldName = 'AverageCheck'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Position.BandIndex = 2
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object cxGridDBBandedTableView1Column3: TcxGridDBBandedColumn
+            Caption = ' '#1050#1086#1101#1092#1092'.'
+            DataBinding.FieldName = 'AverageCheckRatio'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 48
+            Position.BandIndex = 2
+            Position.ColIndex = 2
             Position.RowIndex = 0
           end
         end
@@ -193,20 +229,31 @@ inherited Report_KPUForm: TReport_KPUForm
       Width = 116
     end
     inherited deEnd: TcxDateEdit
-      Left = 359
+      Left = 535
+      Top = 6
       EditValue = 42736d
       TabOrder = 0
       Visible = False
-      ExplicitLeft = 359
+      ExplicitLeft = 535
+      ExplicitTop = 6
     end
     inherited cxLabel1: TcxLabel
       Caption = #1056#1077#1079#1091#1083#1100#1090#1072#1090' '#1079#1072':'
       ExplicitWidth = 75
     end
     inherited cxLabel2: TcxLabel
-      Left = 243
+      Left = 419
+      Top = 7
       Visible = False
-      ExplicitLeft = 243
+      ExplicitLeft = 419
+      ExplicitTop = 7
+    end
+    object edRecount: TcxCheckBox
+      Left = 243
+      Top = 5
+      Caption = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1076#1072#1085#1085#1099#1077
+      TabOrder = 4
+      Width = 142
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -291,6 +338,18 @@ inherited Report_KPUForm: TReport_KPUForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actUpdateMainDS: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMovementItem
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovementItem
+        end>
+      Caption = 'actUpdateMainDS'
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 96
@@ -308,6 +367,14 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = 'NULL'
         Component = deStart
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRecount'
+        Value = Null
+        Component = edRecount
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -374,5 +441,47 @@ inherited Report_KPUForm: TReport_KPUForm
   inherited RefreshDispatcher: TRefreshDispatcher
     Left = 176
     Top = 152
+  end
+  object spInsertUpdateMovementItem: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_KPU'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ID'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outKPU'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'KPU'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMarkRatio'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MarkRatio'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAverageCheckRatio'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AverageCheckRatio'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'ioId'
+    Left = 338
+    Top = 96
   end
 end

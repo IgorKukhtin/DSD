@@ -616,7 +616,8 @@ uses
   ClientsByBankEdit in '..\..\FormsFarmacy\Guides\ClientsByBankEdit.pas' {ClientsByBankEditForm: TParentForm},
   UnnamedEnterprisesJournal in '..\..\FormsFarmacy\Document\UnnamedEnterprisesJournal.pas' {UnnamedEnterprisesJournalForm: TParentForm},
   UnnamedEnterprises in '..\..\FormsFarmacy\Document\UnnamedEnterprises.pas' {UnnamedEnterprisesForm: TParentForm},
-  Report_KPU in '..\..\FormsFarmacy\Report\Report_KPU.pas' {Report_KPUForm: TParentForm};
+  Report_KPU in '..\..\FormsFarmacy\Report\Report_KPU.pas' {Report_KPUForm: TParentForm},
+  CheckVIP_Search in '..\..\FormsFarmacy\Document\CheckVIP_Search.pas' {CheckVIP_SearchForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -633,7 +634,7 @@ begin
 
   if FindCmdLineSwitch('realfarmacy', true)
   then gc_AdminPassword := 'Админ1234'
-  else gc_AdminPassword := 'Админ1234';
+  else gc_AdminPassword := 'Админ1111';
 
   gc_ProgramName := 'Farmacy.exe';
 

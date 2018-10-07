@@ -1413,6 +1413,9 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckVIP_ErrorForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckVIP_ErrorForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckVIP_SearchForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckVIP_SearchForm');
 end;
 
 procedure TLoadFormTest.LoadOverFormTest;
