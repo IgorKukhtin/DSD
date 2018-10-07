@@ -32,18 +32,18 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Новая цена должна быть больше 0.';
     END IF;
     
-    ioPriceChangeUnitTo := inPriceChangeNew;
+    ioPriceChange := inPriceChangeNew;
         
     --переоценить товар
-    PERFORM lpInsertUpdate_Object_PriceChange(inGoodsId := inGoodsId,
-                                        inUnitId  := inUnitId,
-                                        inPriceChange   := ioPriceChangeUnitTo,
-                                        inDate    := CURRENT_DATE::TDateTime,
-                                        inUserId  := vbUserId);
-                                        
-                                            
+    PERFORM lpInsertUpdate_Object_PriceChange(inGoodsId       := inGoodsId,
+                                              inRetailId      := inRetailId,
+                                              inUnitId        := 0,
+                                              inPriceChange   := ioPriceChange,
+                                              inDate          := CURRENT_DATE::TDateTime,
+                                              inUserId        := vbUserId);
+
     --Посчитали сумму
-    outSummaUnitTo := ROUND(inAmount * ioPriceChangeUnitTo, 2); 
+    outSumma := ROUND(inAmount * ioPriceChange, 2); 
 
 END;
 $BODY$

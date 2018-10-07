@@ -228,7 +228,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 41
           end
-          object Juridical: TcxGridDBColumn
+          object MoneyPlaceName: TcxGridDBColumn
             Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
             DataBinding.FieldName = 'MoneyPlaceName'
             HeaderAlignmentHorz = taCenter
@@ -562,6 +562,62 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           MultiSelectSeparator = ','
         end>
     end
+    object actChoiceContract: TOpenChoiceForm [16]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ContractChoice'
+      ImageIndex = 24
+      FormName = 'TContractChoiceForm'
+      FormNameParam.Value = 'TContractChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MasterJuridicalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MoneyPlaceId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MoneyPlaceName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ContractName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actUpdateContract: TdsdDataSetRefresh [17]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdateContract
+      StoredProcList = <
+        item
+          StoredProc = spUpdateContract
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 24
+      RefreshOnTabSetChanges = True
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -891,6 +947,22 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object macUpdateContract: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actChoiceContract
+        end
+        item
+          Action = actUpdateContract
+        end>
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'?'
+      InfoAfterExecute = #1044#1086#1075#1086#1074#1086#1088' '#1080#1079#1084#1077#1085#1077#1085
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
+      ImageIndex = 43
+    end
   end
   inherited MasterDS: TDataSource
     Top = 115
@@ -1006,6 +1078,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -1060,6 +1140,10 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     end
     object bbisCopy: TdxBarButton
       Action = mactIsCopy
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macUpdateContract
       Category = 0
     end
   end
@@ -1290,5 +1374,38 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     PackSize = 1
     Left = 824
     Top = 48
+  end
+  object spUpdateContract: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_BankAccount_Contract'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId '
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outContractName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractInvNumber'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 904
+    Top = 169
   end
 end

@@ -482,15 +482,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 60
           end
-          object isPromo: TcxGridDBColumn [38]
-            Caption = #1041#1086#1085#1091#1089#1085'. '#1082#1086#1085#1090#1088#1072#1082#1090' ('#1076#1072'/'#1085#1077#1090')'
-            DataBinding.FieldName = 'isPromo'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 50
-          end
-          object OperDatePromo: TcxGridDBColumn [39]
+          object OperDatePromo: TcxGridDBColumn [38]
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1073#1086#1085#1091#1089#1085' .'#1082#1086#1085#1090#1088#1072#1082#1090#1072
             DataBinding.FieldName = 'OperDatePromo'
             HeaderAlignmentHorz = taCenter
@@ -498,8 +490,47 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 80
           end
+          object isPromo: TcxGridDBColumn [39]
+            Caption = #1041#1086#1085#1091#1089#1085'. '#1082#1086#1085#1090#1088#1072#1082#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1086#1085#1091#1089#1085'. '#1082#1086#1085#1090#1088#1072#1082#1090'  '#1087#1086#1089#1090#1072#1074#1097#1080#1082' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 50
+          end
+          object isPromoAll: TcxGridDBColumn [40]
+            Caption = #1052#1072#1088#1082#1077#1090'. '#1082#1086#1085#1090#1088#1072#1082#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPromoAll'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 50
+          end
           inherited colIsErased: TcxGridDBColumn
             VisibleForCustomization = False
+          end
+          object AVGPrice: TcxGridDBColumn
+            Caption = #1057#1088'. '#1094#1077#1085#1072' '#1087#1088#1080#1093'. '#1079#1072' '#1084#1077#1089#1103#1094
+            DataBinding.FieldName = 'AVGPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1088'. '#1094#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057' '#1087#1088#1080#1093'. '#1079#1072' '#1084#1077#1089#1103#1094
+            Options.Editing = False
+            Width = 81
+          end
+          object AVGPriceWarning: TcxGridDBColumn
+            AlternateCaption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1073#1086#1083#1077#1077' 10 %'
+            Caption = '>10%'
+            DataBinding.FieldName = 'AVGPriceWarning'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1073#1086#1083#1077#1077' 10 %'
+            Options.Editing = False
+            Width = 47
           end
           object InvNumberPromo: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1073#1086#1085#1091#1089#1085'. '#1082#1086#1085#1090#1088#1072#1082#1090#1072

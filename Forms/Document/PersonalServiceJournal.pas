@@ -92,6 +92,9 @@ type
     bbInsertUpdateMISignYesList: TdxBarButton;
     bbInsertUpdateMISignNoList: TdxBarButton;
     MemberName: TcxGridDBColumn;
+    spSelectPrint_Detail: TdsdStoredProc;
+    actPrint_Detail: TdsdPrintAction;
+    bbPrint_Detail: TdxBarButton;
   private
     { Private declarations }
   public

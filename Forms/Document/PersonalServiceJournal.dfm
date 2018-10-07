@@ -798,71 +798,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object actPrint_All: TdsdPrintAction [23]
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrint_All
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint_All
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1042#1089#1077' '#1076#1086#1083#1078#1085#1086#1089#1090#1080')>'
-      Hint = #1055#1077#1095#1072#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1042#1089#1077' '#1076#1086#1083#1078#1085#1086#1089#1090#1080')>'
-      ImageIndex = 3
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_PersonalService'
-      ReportNameParam.Name = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
-      ReportNameParam.Value = 'PrintMovement_PersonalService'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actInsertUpdateMISignYes: TdsdExecStoredProc [24]
-      Category = 'Sign'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMISign_Yes
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMISign_Yes
-        end
-        item
-        end>
-      Caption = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
-      Hint = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
-    end
-    object actPrint: TdsdPrintAction
+    object actPrint: TdsdPrintAction [21]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -912,6 +848,122 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_All: TdsdPrintAction [22]
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_All
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_All
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1042#1089#1077' '#1076#1086#1083#1078#1085#1086#1089#1090#1080')>'
+      Hint = #1055#1077#1095#1072#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099' ('#1042#1089#1077' '#1076#1086#1083#1078#1085#1086#1089#1090#1080')>'
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_PersonalService'
+      ReportNameParam.Name = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+      ReportNameParam.Value = 'PrintMovement_PersonalService'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_Detail: TdsdPrintAction [23]
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_Detail
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Detail
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' <'#1056#1072#1089#1096#1080#1092#1088#1086#1074#1082#1072' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
+      Hint = #1055#1077#1095#1072#1090#1100' <'#1056#1072#1089#1096#1080#1092#1088#1086#1074#1082#1072' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
+      ImageIndex = 22
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'PersonalName;PositionName;ModelServiceName;PositionLevelName;Sta' +
+            'ffListSummKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_PersonalServiceDetail'
+      ReportNameParam.Value = 'PrintMovement_PersonalServiceDetail'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actInsertUpdateMISignYes: TdsdExecStoredProc [26]
+      Category = 'Sign'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMISign_Yes
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMISign_Yes
+        end
+        item
+        end>
+      Caption = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      Hint = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
     end
     object actIsServiceDate: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -1234,6 +1286,14 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Detail'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -1304,6 +1364,10 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     end
     object bbInsertUpdateMISignNoList: TdxBarButton
       Action = mactInsertUpdateMISignNoList
+      Category = 0
+    end
+    object bbPrint_Detail: TdxBarButton
+      Action = actPrint_Detail
       Category = 0
     end
   end
@@ -1683,5 +1747,36 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     PackSize = 1
     Left = 824
     Top = 227
+  end
+  object spSelectPrint_Detail: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_PersonalService_DetailPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowAll'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 527
+    Top = 201
   end
 end

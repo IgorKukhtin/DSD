@@ -1385,6 +1385,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -1730,7 +1733,48 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spInsertUpdateMIMaster
         end>
     end
-    object actPrint_All: TdsdPrintAction [12]
+    object actPrint_Detail: TdsdPrintAction [12]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintDetail
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintDetail
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' <'#1056#1072#1089#1096#1080#1092#1088#1086#1074#1082#1072' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
+      Hint = #1055#1077#1095#1072#1090#1100' <'#1056#1072#1089#1096#1080#1092#1088#1086#1074#1082#1072' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
+      ImageIndex = 22
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'PersonalName;PositionName;ModelServiceName;PositionLevelName;Sta' +
+            'ffListSummKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_PersonalServiceDetail'
+      ReportNameParam.Name = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+      ReportNameParam.Value = 'PrintMovement_PersonalServiceDetail'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_All: TdsdPrintAction [13]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint_All
@@ -2328,6 +2372,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Child'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbLoadExcel'
         end
         item
@@ -2352,7 +2404,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbUpdateSummNalogRet'
         end
         item
           Visible = True
@@ -2438,8 +2490,12 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Category = 0
       ImageIndex = 19
     end
-    object bb: TdxBarButton
+    object bbUpdateSummNalogRet: TdxBarButton
       Action = macUpdateSummNalogRet
+      Category = 0
+    end
+    object bbPrint_Child: TdxBarButton
+      Action = actPrint_Detail
       Category = 0
     end
   end
@@ -3085,14 +3141,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 500
-    Top = 249
+    Left = 468
+    Top = 217
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 548
-    Top = 262
+    Left = 516
+    Top = 230
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PersonalService_Print'
@@ -3357,8 +3413,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 688
-    Top = 392
+    Left = 640
+    Top = 336
   end
   object spUpdate_SetNULL: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_PersonalService_NULL'
@@ -3706,5 +3762,36 @@ inherited PersonalServiceForm: TPersonalServiceForm
     PackSize = 1
     Left = 552
     Top = 603
+  end
+  object spSelectPrintDetail: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_PersonalService_DetailPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowAll'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 407
+    Top = 192
   end
 end

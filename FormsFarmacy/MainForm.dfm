@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 229
+  ExplicitHeight = 230
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -2386,6 +2386,28 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actClientsByBank: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1050#1083#1080#1077#1085#1090#1099' '#1087#1086' '#1073#1077#1079#1085#1072#1083#1091
+      FormName = 'TClientsByBankForm'
+      FormNameParam.Value = 'TClientsByBankForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actUnnamedEnterprises: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1041#1077#1079#1085#1072#1083' '#1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1081
+      FormName = 'TUnnamedEnterprisesJournalForm'
+      FormNameParam.Value = 'TUnnamedEnterprisesJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -2534,6 +2556,9 @@ inherited MainForm: TMainForm
       end
       object miContactPerson: TMenuItem
         Action = actContactPerson
+      end
+      object N169: TMenuItem
+        Action = actClientsByBank
       end
       object N64: TMenuItem
         Action = actMaker
@@ -2688,6 +2713,9 @@ inherited MainForm: TMainForm
       end
       object N168: TMenuItem
         Action = actListDiff
+      end
+      object N171: TMenuItem
+        Action = actUnnamedEnterprises
       end
       object N33: TMenuItem
         Caption = '-'

@@ -8,7 +8,7 @@ uses
   cxPropertiesStore, dsdAddOn, dsdGuides, dsdDB, dsdAction, System.Classes,
   Vcl.ActnList, cxMaskEdit, cxButtonEdit, cxCurrencyEdit, Vcl.StdCtrls,
   cxButtons, cxLabel, Vcl.Controls, cxTextEdit, cxCheckBox, dxSkinsCore,
-  dxSkinsDefaultPainters;
+  dxSkinsDefaultPainters, cxDBEdit;
 
 type
   TGoodsEditForm = class(TAncestorEditDialogForm)
@@ -43,6 +43,13 @@ type
     ceMorionCode: TcxCurrencyEdit;
     cxLabel11: TcxLabel;
     ceBarCode: TcxTextEdit;
+    edNameUkr: TcxTextEdit;
+    cxLabel12: TcxLabel;
+    cxLabel13: TcxLabel;
+    ceExchange: TcxButtonEdit;
+    cxLabel14: TcxLabel;
+    ceCodeUKTZED: TcxTextEdit;
+    dsdExchangeGuides: TdsdGuides;
   private
     { Private declarations }
   public

@@ -20,7 +20,7 @@ type
   TBankAccountJournalForm = class(TAncestorJournalForm)
     BankName: TcxGridDBColumn;
     BankAccountName: TcxGridDBColumn;
-    Juridical: TcxGridDBColumn;
+    MoneyPlaceName: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
     Contract: TcxGridDBColumn;
@@ -77,6 +77,11 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    spUpdateContract: TdsdStoredProc;
+    macUpdateContract: TMultiAction;
+    actUpdateContract: TdsdDataSetRefresh;
+    bb: TdxBarButton;
+    actChoiceContract: TOpenChoiceForm;
   private
     { Private declarations }
   public

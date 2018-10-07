@@ -581,7 +581,16 @@ object ContractForm: TContractForm
         DataBinding.FieldName = 'GLNCode'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 30
+        Width = 45
+      end
+      object clPartnerCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1087#1086#1089#1090'.'
+        DataBinding.FieldName = 'PartnerCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1076' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+        Options.Editing = False
+        Width = 60
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077

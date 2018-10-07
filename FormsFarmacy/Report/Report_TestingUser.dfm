@@ -10,17 +10,17 @@ inherited Report_TestingUserForm: TReport_TestingUserForm
   inherited PageControl: TcxPageControl
     Width = 731
     Height = 447
-    ExplicitWidth = 717
+    ExplicitWidth = 731
     ExplicitHeight = 447
     ClientRectBottom = 447
     ClientRectRight = 731
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 717
+      ExplicitWidth = 731
       ExplicitHeight = 447
       inherited cxGrid: TcxGrid
         Width = 731
         Height = 447
-        ExplicitWidth = 717
+        ExplicitWidth = 731
         ExplicitHeight = 447
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -95,7 +95,7 @@ inherited Report_TestingUserForm: TReport_TestingUserForm
   end
   inherited Panel: TPanel
     Width = 731
-    ExplicitWidth = 717
+    ExplicitWidth = 731
     inherited deStart: TcxDateEdit
       Left = 129
       EditValue = 42491d
@@ -190,7 +190,7 @@ inherited Report_TestingUserForm: TReport_TestingUserForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'StartDate'
+          Name = 'inOperDate'
           Value = 42491d
           Component = deStart
           DataType = ftDateTime

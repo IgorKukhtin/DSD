@@ -11,6 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ListDiff(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , UnitId Integer, UnitName TVarChar
+             , TotalCount TFloat
+             , TotalSumm TFloat
               )
 
 AS
@@ -49,6 +51,10 @@ BEGIN
            , Object_Status.ValueData            AS StatusName
            , Object_Unit.Id                     AS UnitId
            , Object_Unit.ValueData              AS UnitName
+
+           , MovementFloat_TotalCount.ValueData AS TotalCount
+           , MovementFloat_TotalSumm.ValueData  AS TotalSumm
+
        FROM (SELECT Movement.*
                   , MovementLinkObject_Unit.ObjectId AS UnitId
              FROM tmpStatus
@@ -61,6 +67,13 @@ BEGIN
                   INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
 
             ) AS Movement
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
+                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement.UnitId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId

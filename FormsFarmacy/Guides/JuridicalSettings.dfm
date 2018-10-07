@@ -274,6 +274,54 @@
         end>
       isShowModal = False
     end
+    object spUpdateisisPriceCloseNo: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isPriceClose_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isPriceClose_No
+        end>
+      Caption = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' - '#1053#1077#1090
+      Hint = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1053#1077#1090
+    end
+    object spUpdateisisPriceCloseYes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isPriceClose_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isPriceClose_Yes
+        end>
+      Caption = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' - '#1044#1072
+      Hint = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' - '#1044#1072
+    end
+    object macUpdateisisPriceCloseNo: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateisisPriceCloseNo
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' - '#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' - '#1053#1077#1090
+      ImageIndex = 58
+    end
+    object macUpdateisisPriceCloseYes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateisisPriceCloseYes
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' - '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' - '#1044#1072
+      ImageIndex = 52
+    end
   end
   inherited MasterDS: TDataSource
     Left = 88
@@ -297,8 +345,8 @@
     Top = 64
   end
   inherited BarManager: TdxBarManager
-    Left = 352
-    Top = 8
+    Left = 384
+    Top = 72
     DockControlHeights = (
       0
       0
@@ -344,6 +392,18 @@
         end
         item
           Visible = True
+          ItemName = 'bbUpdateisisPriceCloseYes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateisisPriceCloseNo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpen'
         end
         item
@@ -373,6 +433,14 @@
     end
     object bbProtocolOpen: TdxBarButton
       Action = actProtocolOpenForm
+      Category = 0
+    end
+    object bbUpdateisisPriceCloseYes: TdxBarButton
+      Action = macUpdateisisPriceCloseYes
+      Category = 0
+    end
+    object bbUpdateisisPriceCloseNo: TdxBarButton
+      Action = macUpdateisisPriceCloseNo
       Category = 0
     end
   end
@@ -538,5 +606,69 @@
     PackSize = 1
     Left = 264
     Top = 152
+  end
+  object spUpdate_isPriceClose_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_JuridicalSettings_isPriceClose'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPriceClose'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisPriceClose'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPriceClose'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 672
+    Top = 115
+  end
+  object spUpdate_isPriceClose_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_JuridicalSettings_isPriceClose'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPriceClose'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisPriceClose'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPriceClose'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 672
+    Top = 171
   end
 end

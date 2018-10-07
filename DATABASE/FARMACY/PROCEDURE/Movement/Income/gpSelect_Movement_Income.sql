@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Income(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSumm TFloat
-             , TotalSummSample TFloat
+             , TotalSummSample TFloat, TotalSummSampleWithVAT TFloat
              , PriceWithVAT Boolean
              , FromId Integer, FromName TVarChar, FromOKPO TVarChar
              , ToId Integer, ToName TVarChar, JuridicalName TVarChar
@@ -149,7 +149,7 @@ BEGIN
                                                        AND Container.KeyValue like '%,'||MovementLinkObject_Juridical.ObjectId||';%'
                                WHERE Object.Id IS NULL
                               )
-       
+ 
         SELECT Movement_Income.Id
              , Movement_Income.InvNumber
              , Movement_Income.OperDate
@@ -158,7 +158,15 @@ BEGIN
              , MovementFloat_TotalCount.ValueData         AS TotalCount
              , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
              , MovementFloat_TotalSumm.ValueData          AS TotalSumm
-             , MovementFloat_TotalSummSample.ValueData    AS TotalSummSample
+             --, MovementFloat_TotalSummSample.ValueData    AS TotalSummSample
+             , CASE WHEN MovementBoolean_PriceWithVAT.ValueData
+                    THEN (MovementFloat_TotalSummSample.ValueData *100 / (100 + ObjectFloat_NDSKind_NDS.ValueData))
+                    ELSE MovementFloat_TotalSummSample.ValueData
+               END                               ::TFloat AS TotalSummSample
+             , CASE WHEN MovementBoolean_PriceWithVAT.ValueData
+                   THEN MovementFloat_TotalSummSample.ValueData
+                   ELSE (MovementFloat_TotalSummSample.ValueData * (1 + ObjectFloat_NDSKind_NDS.ValueData/100))
+               END                               ::TFloat AS TotalSummSampleWithVAT
              , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
              , Object_From.Id                             AS FromId
              , Object_From.ValueData                      AS FromName
@@ -352,6 +360,7 @@ BEGIN
                , Object_MemberIncomeCheck.ValueData
                , MovementDate_Check.ValueData
 ;
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

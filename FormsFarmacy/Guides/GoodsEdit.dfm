@@ -1,40 +1,40 @@
 ﻿inherited GoodsEditForm: TGoodsEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-  ClientHeight = 434
+  ClientHeight = 446
   ClientWidth = 351
   ExplicitWidth = 357
-  ExplicitHeight = 463
+  ExplicitHeight = 475
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Top = 393
+    Top = 409
     TabOrder = 11
-    ExplicitTop = 393
+    ExplicitTop = 409
   end
   inherited bbCancel: TcxButton
-    Top = 393
+    Top = 409
     TabOrder = 12
-    ExplicitTop = 393
+    ExplicitTop = 409
   end
   object edName: TcxTextEdit [2]
     Left = 9
-    Top = 80
+    Top = 66
     TabOrder = 1
     Width = 332
   end
   object cxLabel1: TcxLabel [3]
     Left = 9
-    Top = 57
+    Top = 47
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxLabel2: TcxLabel [4]
     Left = 9
-    Top = 104
+    Top = 86
     Caption = #1043#1088#1091#1087#1087#1072' '#1088#1086#1076#1080#1090#1077#1083#1100
   end
   object ceCode: TcxCurrencyEdit [5]
     Left = 9
-    Top = 28
+    Top = 24
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 0
@@ -47,7 +47,7 @@
   end
   object ceParentGroup: TcxButtonEdit [7]
     Left = 9
-    Top = 125
+    Top = 107
     Properties.Buttons = <
       item
         Default = True
@@ -59,12 +59,12 @@
   end
   object cxLabel4: TcxLabel [8]
     Left = 128
-    Top = 153
+    Top = 130
     Caption = #1045#1076'. '#1080#1079#1084#1077#1088#1077#1085#1080#1103':'
   end
   object ceMeasure: TcxButtonEdit [9]
     Left = 128
-    Top = 176
+    Top = 150
     Properties.Buttons = <
       item
         Default = True
@@ -76,12 +76,12 @@
   end
   object cxLabel6: TcxLabel [10]
     Left = 227
-    Top = 153
+    Top = 130
     Caption = #1042#1080#1076' '#1053#1044#1057':'
   end
   object ceNDSKind: TcxButtonEdit [11]
     Left = 227
-    Top = 176
+    Top = 150
     Properties.Buttons = <
       item
         Default = True
@@ -93,7 +93,7 @@
   end
   object edMinimumLot: TcxCurrencyEdit [12]
     Left = 9
-    Top = 176
+    Top = 150
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 3
@@ -101,17 +101,17 @@
   end
   object cxLabel3: TcxLabel [13]
     Left = 9
-    Top = 153
+    Top = 130
     Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100':'
   end
   object cxLabel5: TcxLabel [14]
     Left = 128
-    Top = 203
+    Top = 172
     Caption = #1062#1077#1085#1072' '#1057#1055':'
   end
   object ceReferPrice: TcxCurrencyEdit [15]
     Left = 124
-    Top = 226
+    Top = 191
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 7
@@ -119,12 +119,12 @@
   end
   object cxLabel7: TcxLabel [16]
     Left = 9
-    Top = 203
+    Top = 172
     Caption = #1050#1086#1076' '#1057#1055':'
   end
   object ceReferCode: TcxCurrencyEdit [17]
     Left = 9
-    Top = 226
+    Top = 191
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 6
@@ -132,19 +132,19 @@
   end
   object cbIsClose: TcxCheckBox [18]
     Left = 250
-    Top = 273
+    Top = 232
     Caption = #1047#1072#1082#1088#1099#1090
     TabOrder = 8
     Width = 76
   end
   object cxLabel8: TcxLabel [19]
     Left = 9
-    Top = 250
+    Top = 213
     Caption = '% '#1085#1072#1094#1077#1085#1082#1080
   end
   object cePercentMarkup: TcxCurrencyEdit [20]
     Left = 9
-    Top = 273
+    Top = 232
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 10
@@ -152,19 +152,19 @@
   end
   object cbIsTop: TcxCheckBox [21]
     Left = 250
-    Top = 226
+    Top = 191
     Caption = #1058#1054#1055
     TabOrder = 9
     Width = 76
   end
   object cxLabel9: TcxLabel [22]
     Left = 128
-    Top = 250
+    Top = 213
     Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
   end
   object ceSalePrice: TcxCurrencyEdit [23]
     Left = 128
-    Top = 273
+    Top = 232
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 23
@@ -172,7 +172,7 @@
   end
   object cbIsFirst: TcxCheckBox [24]
     Left = 9
-    Top = 305
+    Top = 255
     Caption = '1-'#1074#1099#1073#1086#1088
     Properties.ReadOnly = True
     TabOrder = 24
@@ -180,7 +180,7 @@
   end
   object cbIsSecond: TcxCheckBox [25]
     Left = 128
-    Top = 305
+    Top = 255
     Caption = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088
     Properties.ReadOnly = True
     TabOrder = 25
@@ -193,7 +193,7 @@
   end
   object ceMorionCode: TcxCurrencyEdit [27]
     Left = 183
-    Top = 28
+    Top = 24
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
@@ -202,14 +202,53 @@
   end
   object cxLabel11: TcxLabel [28]
     Left = 9
-    Top = 333
+    Top = 275
     Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076' ('#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100')'
   end
   object ceBarCode: TcxTextEdit [29]
     Left = 9
-    Top = 356
+    Top = 295
     TabOrder = 29
     Width = 332
+  end
+  object edNameUkr: TcxTextEdit [30]
+    Left = 8
+    Top = 336
+    TabOrder = 30
+    Width = 332
+  end
+  object cxLabel12: TcxLabel [31]
+    Left = 8
+    Top = 317
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091#1082#1088#1072#1080#1085#1089#1082#1086#1077
+  end
+  object cxLabel13: TcxLabel [32]
+    Left = 8
+    Top = 359
+    Caption = #1050#1086#1076' '#1059#1050#1058#1047#1069#1044
+  end
+  object ceExchange: TcxButtonEdit [33]
+    Left = 248
+    Top = 378
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 33
+    Width = 92
+  end
+  object cxLabel14: TcxLabel [34]
+    Left = 248
+    Top = 359
+    Caption = #1054#1076':'
+  end
+  object ceCodeUKTZED: TcxTextEdit [35]
+    Left = 9
+    Top = 378
+    TabOrder = 35
+    Width = 212
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 155
@@ -345,6 +384,30 @@
         Value = Null
         Component = ceBarCode
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNameUkr'
+        Value = Null
+        Component = edNameUkr
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCodeUKTZED'
+        Value = Null
+        Component = ceCodeUKTZED
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inExchangeId'
+        Value = Null
+        Component = dsdExchangeGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -492,6 +555,34 @@
         Component = ceBarCode
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NameUkr'
+        Value = Null
+        Component = edNameUkr
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CodeUKTZED'
+        Value = Null
+        Component = ceCodeUKTZED
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ExchangeId'
+        Value = Null
+        Component = dsdExchangeGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ExchangeName'
+        Value = Null
+        Component = dsdExchangeGuides
+        ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end>
     Left = 288
     Top = 233
@@ -576,5 +667,32 @@
       end>
     Left = 232
     Top = 169
+  end
+  object dsdExchangeGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceExchange
+    FormNameParam.Value = 'TExchangeForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TExchangeForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = dsdExchangeGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = dsdExchangeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 272
+    Top = 321
   end
 end

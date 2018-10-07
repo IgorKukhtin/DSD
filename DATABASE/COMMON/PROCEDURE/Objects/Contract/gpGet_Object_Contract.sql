@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Contract(
 )
 RETURNS TABLE (Id Integer, Code Integer
              , InvNumber TVarChar, InvNumberArchive TVarChar
-             , Comment TVarChar, BankAccountExternal TVarChar, GLNCode TVarChar
+             , Comment TVarChar, BankAccountExternal TVarChar
+             , GLNCode TVarChar, PartnerCode TVarChar
              , Term TFloat, DayTaxSummary TFloat
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
              
@@ -67,6 +68,7 @@ BEGIN
            , '' :: TVarChar   AS Comment
            , '' :: TVarChar   AS BankAccountExternal
            , '' :: TVarChar   AS GLNCode
+           , '' :: TVarChar   AS PartnerCode
 
            , CAST (0 as Tfloat)        AS Term
            , CAST (0 as Tfloat)        AS DayTaxSummary 
@@ -164,6 +166,7 @@ BEGIN
            , ObjectString_Comment.ValueData          AS Comment
            , ObjectString_BankAccount.ValueData      AS BankAccountExternal
            , ObjectString_GLNCode.ValueData          AS GLNCode
+           , ObjectString_PartnerCode.ValueData      AS PartnerCode
            , ObjectFloat_Term.ValueData              AS Term
            , ObjectFloat_DayTaxSummary.ValueData     AS DayTaxSummary                      
 
@@ -275,6 +278,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_GLNCode
                                    ON ObjectString_GLNCode.ObjectId = Object_Contract_View.ContractId
                                   AND ObjectString_GLNCode.DescId = zc_objectString_Contract_GLNCode()                                  
+            LEFT JOIN ObjectString AS ObjectString_PartnerCode
+                                   ON ObjectString_PartnerCode.ObjectId = Object_Contract_View.ContractId
+                                  AND ObjectString_PartnerCode.DescId = zc_objectString_Contract_PartnerCode()  
     
             LEFT JOIN ObjectFloat AS ObjectFloat_DayTaxSummary
                                   ON ObjectFloat_DayTaxSummary.ObjectId = Object_Contract_View.ContractId
@@ -401,6 +407,7 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 05.10.18         * add PartnerCode
  30.06.17         * add JuridicalInvoice
  03.03.17         * DayTaxSummary
  20.01.16         *

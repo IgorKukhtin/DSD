@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_PriceChange(
 RETURNS TABLE (Id Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , RetailId Integer, RetailCode Integer, RetailName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , DateChange tdatetime
              , PriceChange TFloat, FixValue TFloat, PercentMarkup TFloat
              , isErased boolean
@@ -31,6 +32,10 @@ BEGIN
           , CAST (0 as Integer)      AS RetailCode
           , CAST ('' as TVarChar)    AS RetailName
 
+          , CAST (0 as Integer)      AS UnitId
+          , CAST (0 as Integer)      AS UnitCode
+          , CAST ('' as TVarChar)    AS UnitName
+
           , CAST (Null as TDateTime) AS DateChange
 
           , CAST (0 as TFloat)       AS PriceChange
@@ -50,6 +55,10 @@ BEGIN
              , Object_Retail.ObjectCode                AS RetailCode
              , Object_Retail.ValueData                 AS RetailName
 
+             , Object_Unit.Id                          AS UnitId
+             , Object_Unit.ObjectCode                  AS UnitCode
+             , Object_Unit.ValueData                   AS UnitName
+
              , ObjectDate_DateChange.valuedata         AS DateChange
 
              , ROUND(ObjectFloat_Value.ValueData,2)::TFloat  AS PriceChange
@@ -62,6 +71,11 @@ BEGIN
                                     ON ObjectLink_Retail.ObjectId = Object_PriceChange.Id
                                    AND ObjectLink_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
                LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Retail.ChildObjectId
+
+               LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                    ON ObjectLink_Unit.ObjectId = Object_PriceChange.Id
+                                   AND ObjectLink_Unit.DescId = zc_ObjectLink_PriceChange_Unit()
+               LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
 
                LEFT JOIN ObjectLink AS ObjectLink_Goods
                                     ON ObjectLink_Goods.ObjectId = Object_PriceChange.Id
@@ -92,7 +106,8 @@ $BODY$
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.09.18         * add zc_ObjectLink_PriceChange_Unit
  16.08.18         *
 */
 

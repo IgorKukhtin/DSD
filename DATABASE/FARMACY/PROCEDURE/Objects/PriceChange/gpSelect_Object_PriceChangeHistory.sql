@@ -1,9 +1,11 @@
 -- Function: gpSelect_Object_PriceChangeHistory (TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_PriceChangeHistory(Integer, TDateTime, Boolean,Boolean,TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_PriceChangeHistory(Integer, Integer, TDateTime, Boolean,Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_PriceChangeHistory(
-    IN inRetailId    Integer,       -- подразделение
+    IN inRetailId    Integer,       -- торг.сеть
+    IN inUnitId      Integer,       -- подразделение
     IN inStartDate   TDateTime ,    -- Дата действия
     IN inisShowAll   Boolean,        --True - показать все товары, False - показать только с ценами
     IN inisShowDel   Boolean,       --True - показать так же удаленные, False - показать только рабочие
@@ -43,7 +45,11 @@ BEGIN
                                     ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                    AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                                    AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
-          WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();
+          WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+            AND inUnitId = 0
+          UNION
+          SELECT inUnitId AS UnitId
+          WHERE inUnitId <> 0;
 
     IF inRetailId is null
     THEN
@@ -52,7 +58,7 @@ BEGIN
 
 
     -- Результат
-    IF COALESCE(inRetailId,0) = 0
+    IF COALESCE(inRetailId,0) = 0 AND COALESCE (inUnitId, 0) = 0
     THEN
         RETURN QUERY
             SELECT 
@@ -98,7 +104,7 @@ BEGIN
                                                                    ON MIContainer.ContainerId = Container.Id
                                                                   AND MIContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate)
                               WHERE Container.descid = zc_Container_Count()
-and 1=0
+                        and 1=0
                               GROUP BY Container.ObjectId,COALESCE(Container.Amount,0), Container.Id
                              ) AS tmp
                         GROUP BY tmp.ObjectId
@@ -131,6 +137,35 @@ and 1=0
 
                            WHERE ObjectLink_PriceChange_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
                              AND ObjectLink_PriceChange_Retail.ChildObjectId = inRetailId
+                             AND inUnitId = 0
+                          UNION
+                           SELECT ObjectLink_PriceChange_Unit.ObjectId               AS Id
+                                , ROUND(PriceChange_Value.ValueData,2)::TFloat  AS PriceChange 
+                                , ObjectFloat_FixValue.ValueData                AS FixValue 
+                                , PriceChange_Goods.ChildObjectId               AS GoodsId
+                                , PriceChange_datechange.valuedata              AS DateChange 
+                                , COALESCE(PriceChange_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup 
+                           FROM ObjectLink AS ObjectLink_PriceChange_Unit
+                               LEFT JOIN ObjectLink AS PriceChange_Goods
+                                                    ON PriceChange_Goods.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                   AND PriceChange_Goods.DescId = zc_ObjectLink_PriceChange_Goods()
+                               LEFT JOIN ObjectFloat AS PriceChange_Value
+                                                     ON PriceChange_Value.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                    AND PriceChange_Value.DescId = zc_ObjectFloat_PriceChange_Value()
+                               LEFT JOIN ObjectFloat AS PriceChange_PercentMarkup
+                                                     ON PriceChange_PercentMarkup.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                    AND PriceChange_PercentMarkup.DescId = zc_ObjectFloat_PriceChange_PercentMarkup()
+
+                               LEFT JOIN ObjectDate AS PriceChange_DateChange
+                                                    ON PriceChange_DateChange.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                   AND PriceChange_DateChange.DescId = zc_ObjectDate_PriceChange_DateChange()
+
+                               LEFT JOIN ObjectFloat AS ObjectFloat_FixValue
+                                                     ON ObjectFloat_FixValue.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                    AND ObjectFloat_FixValue.DescId = zc_ObjectFloat_PriceChange_FixValue()
+                           WHERE ObjectLink_PriceChange_Unit.DescId        = zc_ObjectLink_PriceChange_Unit()
+                             AND ObjectLink_PriceChange_Unit.ChildObjectId = inUnitId
+                             AND inUnitId <> 0
                            )
         
             SELECT tmpPriceChange.Id                                                              AS Id
@@ -267,6 +302,35 @@ and 1=0
 
                            WHERE ObjectLink_PriceChange_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
                              AND ObjectLink_PriceChange_Retail.ChildObjectId = inRetailId
+                             AND inUnitId = 0
+                          UNION
+                           SELECT ObjectLink_PriceChange_Unit.ObjectId          AS Id
+                                , ROUND(PriceChange_Value.ValueData,2)::TFloat  AS PriceChange 
+                                , ObjectFloat_FixValue.ValueData                AS FixValue 
+                                , PriceChange_Goods.ChildObjectId               AS GoodsId
+                                , PriceChange_datechange.valuedata              AS DateChange 
+                                , COALESCE(PriceChange_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup 
+                           FROM ObjectLink AS ObjectLink_PriceChange_Unit
+                               LEFT JOIN ObjectLink AS PriceChange_Goods
+                                                    ON PriceChange_Goods.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                   AND PriceChange_Goods.DescId = zc_ObjectLink_PriceChange_Goods()
+                               LEFT JOIN ObjectFloat AS PriceChange_Value
+                                                     ON PriceChange_Value.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                    AND PriceChange_Value.DescId = zc_ObjectFloat_PriceChange_Value()
+                               LEFT JOIN ObjectFloat AS PriceChange_PercentMarkup
+                                                     ON PriceChange_PercentMarkup.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                    AND PriceChange_PercentMarkup.DescId = zc_ObjectFloat_PriceChange_PercentMarkup()
+
+                               LEFT JOIN ObjectDate AS PriceChange_DateChange
+                                                    ON PriceChange_DateChange.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                   AND PriceChange_DateChange.DescId = zc_ObjectDate_PriceChange_DateChange()
+
+                               LEFT JOIN ObjectFloat AS ObjectFloat_FixValue
+                                                     ON ObjectFloat_FixValue.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                    AND ObjectFloat_FixValue.DescId = zc_ObjectFloat_PriceChange_FixValue()
+                           WHERE ObjectLink_PriceChange_Unit.DescId        = zc_ObjectLink_PriceChange_Unit()
+                             AND ObjectLink_PriceChange_Unit.ChildObjectId = inUnitId
+                             AND inUnitId <> 0
                            )
         
             SELECT tmpPriceChange.Id                                                              AS Id
@@ -359,8 +423,9 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.09.18         * add inUnitId
  16.08.18         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_PriceChangeHistory(inRetailId:= 0, inStartDate:= '01.01.2018' ::TDateTime, inisShowAll := 'true' :: Boolean, inisShowDel := 'FALSE' :: Boolean, inSession := '3' :: TVarChar);
+-- SELECT * FROM gpSelect_Object_PriceChangeHistory(inRetailId:= 4, inUnitId:= 0, inStartDate:= '01.01.2018' ::TDateTime, inisShowAll := 'true' :: Boolean, inisShowDel := 'FALSE' :: Boolean, inSession := '3' :: TVarChar);

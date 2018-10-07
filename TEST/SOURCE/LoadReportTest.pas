@@ -208,10 +208,10 @@ begin
   LoadReportFromFile('Отчет по остаткам товара (выход ГП)', ReportPath + '\Отчеты (товарные)\Отчет по остаткам товара (выход ГП).fr3');
   LoadReportFromFile('Отчет по остаткам товара (процент списания)', ReportPath + '\Отчеты (товарные)\Отчет по остаткам товара (процент списания).fr3');
   LoadReportFromFile('Отчет по остаткам товара (штрихкод)', ReportPath + '\Отчеты (товарные)\Отчет по остаткам товара (штрихкод).fr3');
-  }
+
   LoadReportFromFile('Отчет по остаткам товара (по МО или Авто)', ReportPath + '\Отчеты (товарные)\Отчет по остаткам товара (по МО или Авто).fr3');
   exit;
-  {
+
   LoadReportFromFile('Отчет по товару (продажа по покупателям)', ReportPath + '\Отчеты (Отчеты (товарные)\Отчет по товару (продажа по покупателям).fr3');
   LoadReportFromFile('Отчет по товару (приход от поставщика)', ReportPath + '\Отчеты (товарные)\Отчет по товару (приход от поставщика).fr3');
   LoadReportFromFile('Отчет по товару (внутренний)', ReportPath + '\Отчеты (товарные)\Отчет по товару (внутренний).fr3');
@@ -243,9 +243,9 @@ begin
   LoadReportFromFile('Плановая Прибыль (цена себестоимость сравнение)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (цена себестоимость сравнение).fr3');
   LoadReportFromFile('Плановая Прибыль (сравнение цен)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (сравнение цен).fr3');
   LoadReportFromFile('Плановая Прибыль (сравнение цен себестоимости)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (сравнение цен себестоимости).fr3');
-  }
+
   LoadReportFromFile('Плановая Прибыль (чистая прибыль)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (чистая прибыль).fr3');
-  {
+
   LoadReportFromFile('Производство План и Факт расход сырья', ReportPath + '\Отчеты (производство)\Производство План и Факт расход сырья.fr3');
   LoadReportFromFile('Производство План и Факт запас цен', ReportPath + '\Отчеты (производство)\Производство План и Факт запас цен.fr3');
 
@@ -371,7 +371,10 @@ begin
   LoadReportFromFile('PrintMovement_ProductionUnion', ReportPath + '\Товарный Учет\PrintMovement_ProductionUnion.fr3');
 
   LoadReportFromFile('PrintMovement_PersonalService', ReportPath + '\Персонал\PrintMovement_PersonalService.fr3');
-
+  }
+  LoadReportFromFile('PrintMovement_PersonalServiceDetail', ReportPath + '\Персонал\PrintMovement_PersonalServiceDetail.fr3');
+  exit;
+  {
   LoadReportFromFile('Приложение7', ReportPath + '\Отчеты(филиалы)\Приложение7.fr3');
   LoadReportFromFile('Приложение7 Новое', ReportPath + '\Отчеты(филиалы)\Приложение7 Новое.fr3');
   LoadReportFromFile('Приложение1', ReportPath + '\Отчеты(филиалы)\Приложение1.fr3');

@@ -88,32 +88,31 @@ BEGIN
 
        FROM Object AS Object_Goods
           
-        LEFT JOIN (SELECT
-             ObjectHistory_PriceListItem.Id AS PriceListItemId
-           , ObjectHistory_PriceListItem.ObjectId  AS PriceListItemObjectId
-           , ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
-           
-           , ObjectHistory_PriceListItem.StartDate
-           , ObjectHistory_PriceListItem.EndDate
-           , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
-
-       FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
-            LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
-                                 ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
-                                AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
-       
-            LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
-                                    ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
-                                   AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
-                                   AND inOperDate >= ObjectHistory_PriceListItem.StartDate AND inOperDate < ObjectHistory_PriceListItem.EndDate
-            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
-                                         ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
-                                        AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
-
-       WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
-         AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
-         AND (ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0 OR ObjectHistory_PriceListItem.StartDate <> zc_DateStart())
-         )  as tmpPrice on tmpPrice.GoodsId= Object_Goods.Id
+        LEFT JOIN (SELECT ObjectHistory_PriceListItem.Id AS PriceListItemId
+                        , ObjectHistory_PriceListItem.ObjectId  AS PriceListItemObjectId
+                        , ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
+                        
+                        , ObjectHistory_PriceListItem.StartDate
+                        , ObjectHistory_PriceListItem.EndDate
+                        , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
+             
+                   FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
+                        LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
+                                             ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                            AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+                   
+                        LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                               AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
+                                               AND inOperDate >= ObjectHistory_PriceListItem.StartDate AND inOperDate < ObjectHistory_PriceListItem.EndDate
+                        LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                     ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                    AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+            
+                   WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
+                     AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
+                     AND (ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0 OR ObjectHistory_PriceListItem.StartDate <> zc_DateStart())
+                     )  as tmpPrice on tmpPrice.GoodsId= Object_Goods.Id
          
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id

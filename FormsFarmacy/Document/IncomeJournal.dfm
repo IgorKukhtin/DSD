@@ -82,6 +82,11 @@ inherited IncomeJournalForm: TIncomeJournalForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = TotalSummSample
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = TotalSummSampleWithVAT
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -145,6 +150,11 @@ inherited IncomeJournalForm: TIncomeJournalForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = TotalSummSample
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = TotalSummSampleWithVAT
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -247,7 +257,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Width = 109
           end
           object TotalSummSample: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1057#1045#1052#1055#1051
+            Caption = #1057#1091#1084#1084#1072' '#1057#1045#1052#1055#1051' '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummSample'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -256,6 +266,17 @@ inherited IncomeJournalForm: TIncomeJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 109
+          end
+          object TotalSummSampleWithVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1057#1045#1052#1055#1051' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'TotalSummSampleWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 94
           end
           object NDS: TcxGridDBColumn
             Caption = #1053#1044#1057

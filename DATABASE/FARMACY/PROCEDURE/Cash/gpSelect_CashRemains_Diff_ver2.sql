@@ -130,7 +130,7 @@ BEGIN
                                                AND MovementLinkObject_Unit.ObjectId = vbUnitId
                 WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
                   AND MovementBoolean_Deferred.ValueData = TRUE
-               UNION
+               UNION ALL
                 SELECT Movement.Id
                 FROM MovementString AS MovementString_CommentError
                   INNER JOIN Movement ON Movement.Id     = MovementString_CommentError.MovementId
@@ -165,11 +165,11 @@ BEGIN
                     FROM CashSessionSnapShot
                     WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
                    )
-       , tmpGoods AS (SELECT tmpContainer.ObjectId FROM tmpContainer
-                     UNION
+       , tmpGoods AS (SELECT DISTINCT ObjectId FROM (SELECT tmpContainer.ObjectId FROM tmpContainer
+                     UNION ALL
                       SELECT SESSIONDATA.ObjectId FROM SESSIONDATA
-                     UNION
-                      SELECT RESERVE.GoodsId FROM RESERVE
+                     UNION ALL
+                      SELECT RESERVE.GoodsId FROM RESERVE) AS GID
                      )
        , tmpObjPrice AS (SELECT tmpGoods.ObjectId, ObjectLink_Goods.ObjectId AS PriceId
                       FROM tmpGoods

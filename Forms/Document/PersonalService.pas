@@ -151,7 +151,7 @@ type
     actUpdateSummNalogRet: TdsdExecStoredProc;
     macUpdateNalogRetSimpl: TMultiAction;
     macUpdateSummNalogRet: TMultiAction;
-    bb: TdxBarButton;
+    bbUpdateSummNalogRet: TdxBarButton;
     actRefreshMaster: TdsdDataSetRefresh;
     cxLabel5: TcxLabel;
     edMember: TcxButtonEdit;
@@ -173,6 +173,9 @@ type
     msisQuestionRead: TcxGridDBColumn;
     msisAnswerRead: TcxGridDBColumn;
     actUserChoice: TOpenChoiceForm;
+    spSelectPrintDetail: TdsdStoredProc;
+    actPrint_Detail: TdsdPrintAction;
+    bbPrint_Child: TdxBarButton;
   private
     { Private declarations }
   public

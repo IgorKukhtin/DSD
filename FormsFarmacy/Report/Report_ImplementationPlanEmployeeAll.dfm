@@ -10,17 +10,17 @@ inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEm
   inherited PageControl: TcxPageControl
     Width = 920
     Height = 447
-    ExplicitWidth = 817
+    ExplicitWidth = 920
     ExplicitHeight = 447
     ClientRectBottom = 447
     ClientRectRight = 920
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 817
+      ExplicitWidth = 920
       ExplicitHeight = 447
       inherited cxGrid: TcxGrid
         Width = 920
         Height = 447
-        ExplicitWidth = 817
+        ExplicitWidth = 920
         ExplicitHeight = 447
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -143,24 +143,30 @@ inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEm
   end
   inherited Panel: TPanel
     Width = 920
-    ExplicitWidth = 817
+    ExplicitWidth = 920
     inherited deStart: TcxDateEdit
-      EditValue = 42491d
+      EditValue = 43344d
+      Properties.DisplayFormat = 'mmmm yyyy'
+      Properties.EditFormat = 'dd.mm.yyyy'
       TabOrder = 1
+      ExplicitWidth = 115
+      Width = 115
     end
     inherited deEnd: TcxDateEdit
-      Left = 316
+      Left = 334
       EditValue = 42491d
       TabOrder = 0
       Visible = False
-      ExplicitLeft = 316
+      ExplicitLeft = 334
     end
     inherited cxLabel1: TcxLabel
       Caption = #1052#1077#1089#1103#1094' '#1088#1072#1089#1095#1077#1090#1072':'
       ExplicitWidth = 83
     end
     inherited cxLabel2: TcxLabel
+      Left = 218
       Visible = False
+      ExplicitLeft = 218
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -234,7 +240,7 @@ inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'StartDate'
+          Name = 'inOperDate'
           Value = 42491d
           Component = deStart
           DataType = ftDateTime

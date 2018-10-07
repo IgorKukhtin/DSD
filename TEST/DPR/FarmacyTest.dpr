@@ -609,7 +609,14 @@ uses
   Report_TestingUser in '..\..\FormsFarmacy\Report\Report_TestingUser.pas' {Report_TestingUserForm: TParentForm},
   ListDiffJournal in '..\..\FormsFarmacy\Document\ListDiffJournal.pas' {ListDiffJournalForm: TParentForm},
   ListDiff in '..\..\FormsFarmacy\Document\ListDiff.pas' {ListDiffForm: TParentForm},
-  PriceListLoad_Add in '..\..\FormsFarmacy\Load\PriceListLoad_Add.pas' {PriceListLoad_AddForm: TParentForm};
+  PriceListLoad_Add in '..\..\FormsFarmacy\Load\PriceListLoad_Add.pas' {PriceListLoad_AddForm: TParentForm},
+  Exchange in '..\..\Forms\Exchange.pas' {ExchangeForm: TParentForm},
+  ExchangeEdit in '..\..\Forms\ExchangeEdit.pas' {ExchangeEditForm: TParentForm},
+  ClientsByBank in '..\..\FormsFarmacy\Guides\ClientsByBank.pas' {ClientsByBankForm: TParentForm},
+  ClientsByBankEdit in '..\..\FormsFarmacy\Guides\ClientsByBankEdit.pas' {ClientsByBankEditForm: TParentForm},
+  UnnamedEnterprisesJournal in '..\..\FormsFarmacy\Document\UnnamedEnterprisesJournal.pas' {UnnamedEnterprisesJournalForm: TParentForm},
+  UnnamedEnterprises in '..\..\FormsFarmacy\Document\UnnamedEnterprises.pas' {UnnamedEnterprisesForm: TParentForm},
+  Report_KPU in '..\..\FormsFarmacy\Report\Report_KPU.pas' {Report_KPUForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

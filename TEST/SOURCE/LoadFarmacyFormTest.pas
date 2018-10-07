@@ -35,6 +35,7 @@ type
     procedure LoadCheckVIPFormTest;
     procedure LoadConditionsKeepFormTest;
     procedure LoadContactPersonFormTest;
+    procedure LoadClientsByBankFormTest;
     procedure LoadContractFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadCreateOrderFromMCSFormTest;
@@ -112,6 +113,7 @@ type
     procedure LoadSheetWorkTimeFormTest;
     procedure LoadUnitFormTest;
     procedure LoadUnionFormTest;
+    procedure LoadUnnamedEnterprisesFormTest;
     procedure FormTest;
   end;
 
@@ -327,6 +329,15 @@ begin
   // TdsdFormStorageFactory.GetStorage.Load('TContactPersonKindEditForm');
 end;
 
+procedure TLoadFormTest.LoadClientsByBankFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TClientsByBankForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TClientsByBankForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TClientsByBankEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TClientsByBankEditForm');
+end;
+
 procedure TLoadFormTest.LoadContractFormTest;
 begin
 
@@ -399,13 +410,19 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_NDS_diffForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoods_NDS_diffForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
 
-  {
+  }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TExchangeForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TExchangeForm');
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TExchangeEditForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TExchangeEditForm');
 
     exit;
     {
@@ -1020,6 +1037,16 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_Unit_ObjectForm');
 end;
 
+procedure TLoadFormTest.LoadUnnamedEnterprisesFormTest;
+begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnnamedEnterprisesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnnamedEnterprisesForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnnamedEnterprisesJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnnamedEnterprisesJournalForm');
+end;
+
 procedure TLoadFormTest.LoadEnumFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TNDSKindForm'));
@@ -1369,8 +1396,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceChangeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceChangeDialogForm');
 
-  TdsdFormStorageFactory.GetStorage.Save
-    (GetForm('TPriceChangeGoodsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceChangeGoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceChangeGoodsDialogForm');
 end;
 
@@ -1527,6 +1553,10 @@ end;
 
 procedure TLoadFormTest.LoadSheetWorkTimeFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_KPUForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_KPUForm');
+
+  Exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeForm'));

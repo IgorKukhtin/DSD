@@ -304,9 +304,20 @@ CREATE OR REPLACE FUNCTION zc_Movement_ListDiff() RETURNS Integer AS $BODY$BEGIN
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_ListDiff', 'Лист отказов' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_ListDiff');
 
+CREATE OR REPLACE FUNCTION zc_Movement_UnnamedEnterprises() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_UnnamedEnterprises'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_UnnamedEnterprises', 'Безнал Предприятий' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_UnnamedEnterprises');
+
+CREATE OR REPLACE FUNCTION zc_Movement_KPU() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_KPU'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_KPU', 'Данные для ртчета по КПУ' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_KPU');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 04.10.18                                                                                     *  zc_Movement_KPU
+ 30.09.18                                                                                     *  zc_Movement_UnnamedEnterprises
  15.09.18         * zc_Movement_ListDiff
  11.09.18                                                                                     * zc_Movement_TestingUser
  10.09.18         * zc_Movement_MarginCategoryUnit

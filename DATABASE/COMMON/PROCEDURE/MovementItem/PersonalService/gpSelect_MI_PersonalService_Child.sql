@@ -106,13 +106,13 @@ BEGIN
 
        FROM tmpMI
             LEFT JOIN MovementItemFloat AS MIFloat_MemberCount
-                                        ON MIFloat_MemberCount.MovementItemId = tmpMI .MovementItemId
+                                        ON MIFloat_MemberCount.MovementItemId = tmpMI.MovementItemId
                                        AND MIFloat_MemberCount.DescId = zc_MIFloat_MemberCount()
             LEFT JOIN MovementItemFloat AS MIFloat_DayCount
                                         ON MIFloat_DayCount.MovementItemId = tmpMI .MovementItemId
                                        AND MIFloat_DayCount.DescId = zc_MIFloat_DayCount()
             LEFT JOIN MovementItemFloat AS MIFloat_WorkTimeHoursOne
-                                        ON MIFloat_WorkTimeHoursOne.MovementItemId = tmpMI .MovementItemId
+                                        ON MIFloat_WorkTimeHoursOne.MovementItemId = tmpMI.MovementItemId
                                        AND MIFloat_WorkTimeHoursOne.DescId = zc_MIFloat_WorkTimeHoursOne()
 
             LEFT JOIN MovementItemFloat AS MIFloat_WorkTimeHours
