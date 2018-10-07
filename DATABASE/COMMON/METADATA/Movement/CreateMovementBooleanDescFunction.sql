@@ -100,6 +100,10 @@ INSERT INTO MovementBooleanDesc (Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_MovementBoolean_RoundingTo10() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_RoundingTo10'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_RoundingTo10', 'Округление до 10 коп.'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_RoundingTo10');
+
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_Calculated() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_Calculated'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_Calculated', 'Расчет на основании Товары в Производстве-разделении'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Calculated');
   
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Аптека
 
@@ -130,6 +134,7 @@ INSERT INTO MovementBooleanDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 07.10.18         * zc_MovementBoolean_Calculated
  12.09.18                                                                                    * zc_MovementBoolean_BuySite
  22.07.18                                                                                    * zc_MovementBoolean_RoundingTo10
  27.10.17         * zc_MovementBoolean_Remains

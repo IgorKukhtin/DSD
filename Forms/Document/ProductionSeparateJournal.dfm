@@ -5,7 +5,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1089
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -118,6 +118,15 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 140
+          end
+          object IsCalculated: TcxGridDBColumn
+            Caption = #1056#1072#1089#1089#1095#1080#1090#1099#1074#1072#1077#1090#1089#1103' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isCalculated'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1088#1072#1089#1095#1077#1090' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077'-'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080'> ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 113
           end
         end
       end
@@ -235,6 +244,9 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Ceh: TdsdPrintAction
       Category = 'DSDLib'
@@ -287,6 +299,9 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'

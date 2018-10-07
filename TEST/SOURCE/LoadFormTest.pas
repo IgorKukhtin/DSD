@@ -1234,7 +1234,6 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateStorageLineForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateStorageLineForm');
-  exit;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateForm');

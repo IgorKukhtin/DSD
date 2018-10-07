@@ -12,7 +12,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionSeparate(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
                , TotalCount TFloat, TotalCountChild TFloat, PartionGoods TVarChar
-               , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar)
+               , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+               , isCalculated Boolean
+               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -30,21 +32,21 @@ BEGIN
                          UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                               )
 
-     SELECT
-             Movement.Id                        AS Id
-           , Movement.InvNumber                 AS InvNumber
-           , Movement.OperDate                  AS OperDate
-         , Object_Status.ObjectCode             AS StatusCode
-         , Object_Status.ValueData              AS StatusName
+     SELECT Movement.Id                          AS Id
+          , Movement.InvNumber                   AS InvNumber
+          , Movement.OperDate                    AS OperDate
+          , Object_Status.ObjectCode             AS StatusCode
+          , Object_Status.ValueData              AS StatusName
 
-         , MovementFloat_TotalCount.ValueData   AS TotalCount
-         , MovementFloat_TotalCountChild.ValueData   AS TotalCountChild
-         , MovementString_PartionGoods.ValueData AS PartionGoods
+          , MovementFloat_TotalCount.ValueData       AS TotalCount
+          , MovementFloat_TotalCountChild.ValueData  AS TotalCountChild
+          , MovementString_PartionGoods.ValueData    AS PartionGoods
 
-         , Object_From.Id                       AS FromId
-         , Object_From.ValueData                AS FromName
-         , Object_To.Id                         AS ToId
-         , Object_To.ValueData                  AS ToName
+          , Object_From.Id                       AS FromId
+          , Object_From.ValueData                AS FromName
+          , Object_To.Id                         AS ToId
+          , Object_To.ValueData                  AS ToName
+          , COALESCE (MovementBoolean_Calculated.ValueData, FALSE) :: Boolean AS isCalculated
 
      FROM (SELECT Movement.id
              FROM tmpStatus
@@ -57,16 +59,20 @@ BEGIN
           LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
           LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                  ON MovementFloat_TotalCount.MovementId =  Movement.Id
+                                  ON MovementFloat_TotalCount.MovementId = Movement.Id
                                  AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
 
           LEFT JOIN MovementFloat AS MovementFloat_TotalCountChild
-                                  ON MovementFloat_TotalCountChild.MovementId =  Movement.Id
+                                  ON MovementFloat_TotalCountChild.MovementId = Movement.Id
                                  AND MovementFloat_TotalCountChild.DescId = zc_MovementFloat_TotalCountChild()
 
           LEFT JOIN MovementString AS MovementString_PartionGoods
-                                   ON MovementString_PartionGoods.MovementId =  Movement.Id
+                                   ON MovementString_PartionGoods.MovementId = Movement.Id
                                   AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
+
+          LEFT JOIN MovementBoolean AS MovementBoolean_Calculated
+                                    ON MovementBoolean_Calculated.MovementId = Movement.Id
+                                   AND MovementBoolean_Calculated.DescId = zc_MovementBoolean_Calculated()
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
@@ -88,6 +94,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 07.10.18         * add isCalculated
  05.10.16         * add inJuridicalBasisId
  03.06.14                                                        *
  28.05.14                                                        *
