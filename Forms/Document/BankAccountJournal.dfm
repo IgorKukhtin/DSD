@@ -5,7 +5,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1044
-  ExplicitHeight = 394
+  ExplicitHeight = 391
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -446,10 +446,10 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Width = 1028
     ExplicitWidth = 1028
     inherited deStart: TcxDateEdit
-      EditValue = 42736d
+      EditValue = 43101d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42736d
+      EditValue = 43101d
     end
   end
   object cxLabel27: TcxLabel [2]
@@ -613,8 +613,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         item
           StoredProc = spUpdateContract
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = 'actUpdateContract'
       ImageIndex = 24
       RefreshOnTabSetChanges = True
     end
@@ -957,8 +956,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         item
           Action = actUpdateContract
         end>
-      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'?'
-      InfoAfterExecute = #1044#1086#1075#1086#1074#1086#1088' '#1080#1079#1084#1077#1085#1077#1085
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
       ImageIndex = 43
