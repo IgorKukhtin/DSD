@@ -6,34 +6,34 @@ DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integ
 DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalCollation(
-    IN inStartDate          TDateTime , -- 
+    IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
-    IN inJuridicalId        Integer,    -- Юридическое лицо  
-    IN inPartnerId          Integer,    -- 
+    IN inJuridicalId        Integer,    -- Юридическое лицо
+    IN inPartnerId          Integer,    --
     IN inContractId         Integer,    -- Договор
-    IN inAccountId          Integer,    -- Счет 
+    IN inAccountId          Integer,    -- Счет
     IN inPaidKindId         Integer   , --
-    IN inInfoMoneyId        Integer,    -- Управленческая статья 
-    IN inCurrencyId         Integer   , -- Валюта 
+    IN inInfoMoneyId        Integer,    -- Управленческая статья
+    IN inCurrencyId         Integer   , -- Валюта
     IN inMovementId_Partion Integer   , -- Ключ документа
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (MovementSumm TFloat, 
-               StartRemains TFloat, 
-               EndRemains TFloat, 
-               Debet TFloat, 
-               Kredit TFloat, 
-               MovementSumm_Currency TFloat, 
-               StartRemains_Currency TFloat, 
-               EndRemains_Currency TFloat, 
-               Debet_Currency TFloat, 
-               Kredit_Currency TFloat, 
-               OperDate TDateTime, 
+RETURNS TABLE (MovementSumm TFloat,
+               StartRemains TFloat,
+               EndRemains TFloat,
+               Debet TFloat,
+               Kredit TFloat,
+               MovementSumm_Currency TFloat,
+               StartRemains_Currency TFloat,
+               EndRemains_Currency TFloat,
+               Debet_Currency TFloat,
+               Kredit_Currency TFloat,
+               OperDate TDateTime,
                InvNumber TVarChar, InvNumberPartner TVarChar,
                MovementComment TVarChar,
                AccountCode Integer,
                AccountName TVarChar,
-               ContractCode Integer, 
+               ContractCode Integer,
                ContractName TVarChar,
                ContractTagName TVarChar,
                ContractStateKindCode Integer, ContractComment TVarChar,
@@ -44,7 +44,7 @@ RETURNS TABLE (MovementSumm TFloat,
                InfoMoneyDestinationName TVarChar,
                InfoMoneyCode Integer,
                InfoMoneyName TVarChar,
-               MovementId Integer, 
+               MovementId Integer,
                ItemName TVarChar,
                OperationSort Integer,
                FromName TVarChar,
@@ -54,7 +54,9 @@ RETURNS TABLE (MovementSumm TFloat,
                InvNumber_Transport TVarChar,
                OperDate_Transport TDateTime,
                CarName TVarChar,
-               PersonalDriverName TVarChar)
+               PersonalDriverName TVarChar, 
+               ContainerId Integer
+              )
 AS
 $BODY$
   DECLARE vbPartionMovementId Integer;
@@ -62,16 +64,21 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
 
-     -- Партия 
+     -- Партия
      IF inMovementId_Partion <> 0
      THEN vbPartionMovementId:= COALESCE ((SELECT ObjectId FROM ObjectFloat WHERE ValueData = inMovementId_Partion AND DescId = zc_ObjectFloat_PartionMovement_MovementId()), -1);
      END IF;
 
-  -- Один запрос, который считает остаток и движение. 
-  RETURN QUERY  
+  -- Один запрос, который считает остаток и движение.
+  RETURN QUERY
      WITH Object_Account_View AS (SELECT Object_Account_View.AccountCode, Object_Account_View.AccountName_all, Object_Account_View.AccountId FROM Object_Account_View)
-        , tmpContract AS (SELECT COALESCE (View_Contract_ContractKey_find.ContractId, View_Contract_ContractKey.ContractId) AS ContractId
+        , tmpContract AS (SELECT -- это ObjectId - объединение
+                                 View_Contract_ContractKey.ContractKeyId
+                                 -- это все ContractId
+                               , COALESCE (View_Contract_ContractKey_find.ContractId, View_Contract_ContractKey.ContractId) AS ContractId
+                                 -- это "главный" ContractId
                                , View_Contract_ContractKey.ContractId_Key
+
                           FROM Object_Contract_ContractKey_View AS View_Contract_ContractKey
                                LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey_find ON View_Contract_ContractKey_find.ContractKeyId = View_Contract_ContractKey.ContractKeyId
                           WHERE View_Contract_ContractKey.ContractId = inContractId
@@ -80,8 +87,10 @@ BEGIN
                                 , Container_Currency.Id                   AS ContainerId_Currency
                                 , Container.ObjectId                      AS AccountId
                                 , CLO_InfoMoney.ObjectId                  AS InfoMoneyId
+                                  -- "оригинал"
                                 , CLO_Contract.ObjectId                   AS ContractId
-                                , tmpContract.ContractId_Key              AS ContractId_Key
+                                  -- подставили "главный", если есть
+                                , COALESCE (tmpContract.ContractId_Key, CLO_Contract.ObjectId) AS ContractId_Key
                                 , CLO_PaidKind.ObjectId                   AS PaidKindId
                                 , COALESCE (CLO_PartionMovement.ObjectId, 0) AS PartionMovementId
                                 , COALESCE (CLO_Currency.ObjectId, 0)     AS CurrencyId
@@ -111,7 +120,7 @@ BEGIN
                                 LEFT JOIN Container AS Container_Currency ON Container_Currency.ParentId = CLO_Juridical.ContainerId AND Container_Currency.DescId = zc_Container_SummCurrency()
 
                            WHERE CLO_Juridical.ObjectId = inJuridicalId AND inJuridicalId <> 0
-                             AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical() 
+                             AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                              AND (CLO_Partner.ObjectId = inPartnerId OR COALESCE (inPartnerId, 0) = 0)
                              AND (Container.ObjectId = inAccountId OR COALESCE (inAccountId, 0) = 0)
                              AND (CLO_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
@@ -121,8 +130,9 @@ BEGIN
                              AND (CLO_Currency.ObjectId = inCurrencyId OR COALESCE (inCurrencyId, 0) = 0 OR COALESCE (inCurrencyId, 0) = zc_Enum_Currency_Basis())
                           )
 
-        , tmpContainer_All AS (-- 1.1. движение в валюте баланса
-                               SELECT tmpContainer.AccountId,
+        , tmpContainer_All AS (-- 1.1. сумма даижения в валюте баланса
+                               SELECT tmpContainer.ContainerId,
+                                      tmpContainer.AccountId,
                                       tmpContainer.InfoMoneyId,
                                       tmpContainer.ContractId,
                                       tmpContainer.PaidKindId,
@@ -131,7 +141,7 @@ BEGIN
                                       MIContainer.MovementId,
                                       MIContainer.OperDate,
                                       MAX (MIContainer.MovementItemId) AS MovementItemId,
-               
+
                                       SUM (MIContainer.Amount) AS MovementSumm,
                                       0                        AS MovementSumm_Currency
                                FROM tmpContainer
@@ -140,10 +150,13 @@ BEGIN
                                                                     AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                GROUP BY tmpContainer.AccountId, tmpContainer.InfoMoneyId, tmpContainer.ContractId, tmpContainer.PaidKindId, tmpContainer.PartionMovementId, tmpContainer.CurrencyId
                                       , MIContainer.MovementId, MIContainer.OperDate
+                                      , tmpContainer.ContainerId
+
                                HAVING SUM (MIContainer.Amount) <> 0
                               UNION ALL
-                               -- 1.2. движение в валюте операции
-                               SELECT tmpContainer.AccountId,
+                               -- 1.2. сумма даижения в валюте операции - Currency
+                               SELECT tmpContainer.ContainerId,
+                                      tmpContainer.AccountId,
                                       tmpContainer.InfoMoneyId,
                                       tmpContainer.ContractId,
                                       tmpContainer.PaidKindId,
@@ -152,7 +165,7 @@ BEGIN
                                       MIContainer.MovementId,
                                       MIContainer.OperDate,
                                       MAX (MIContainer.MovementItemId) AS MovementItemId,
-               
+
                                       0                        AS MovementSumm,
                                       SUM (MIContainer.Amount) AS MovementSumm_Currency
                                FROM tmpContainer
@@ -162,13 +175,17 @@ BEGIN
                                WHERE tmpContainer.ContainerId_Currency > 0
                                GROUP BY tmpContainer.AccountId, tmpContainer.InfoMoneyId, tmpContainer.ContractId, tmpContainer.PaidKindId, tmpContainer.PartionMovementId, tmpContainer.CurrencyId
                                       , MIContainer.MovementId, MIContainer.OperDate
+                                      , tmpContainer.ContainerId
                                HAVING SUM (MIContainer.Amount) <> 0
                               )
         , tmpRemains AS (-- 2.1. остаток в валюте баланса
-                         SELECT tmpContainer.ContainerId, 
+                         SELECT tmpContainer.ContainerId,
                                 tmpContainer.AccountId,
                                 tmpContainer.InfoMoneyId,
+                                -- объединили по "главному"
                                 tmpContainer.ContractId_Key AS ContractId,
+                                -- оставили "оригинал"
+                                -- tmpContainer.ContractId AS ContractId,
                                 tmpContainer.PaidKindId,
                                 tmpContainer.PartionMovementId,
                                 tmpContainer.CurrencyId,
@@ -177,17 +194,22 @@ BEGIN
                                 0 AS StartSumm_Currency,
                                 0 AS EndSumm_Currency
                          FROM tmpContainer
-                              LEFT JOIN MovementItemContainer AS MIContainer 
+                              LEFT JOIN MovementItemContainer AS MIContainer
                                                               ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                              AND MIContainer.OperDate >= inStartDate
-                         GROUP BY tmpContainer.AccountId, tmpContainer.InfoMoneyId, tmpContainer.ContractId_Key, tmpContainer.PaidKindId, tmpContainer.PartionMovementId, tmpContainer.CurrencyId
+                         GROUP BY tmpContainer.AccountId, tmpContainer.InfoMoneyId, tmpContainer.PaidKindId, tmpContainer.PartionMovementId, tmpContainer.CurrencyId
                                 , tmpContainer.ContainerId, tmpContainer.Amount
+                                , tmpContainer.ContractId_Key
+                                -- , tmpContainer.ContractId
                         UNION ALL
-                         -- 2.2. остаток в валюте операции
-                         SELECT tmpContainer.ContainerId, 
+                         -- 2.2. остаток в валюте операции - Currency
+                         SELECT tmpContainer.ContainerId,
                                 tmpContainer.AccountId,
                                 tmpContainer.InfoMoneyId,
+                                -- объединили по "главному"
                                 tmpContainer.ContractId_Key AS ContractId,
+                                -- оставили "оригинал"
+                                -- tmpContainer.ContractId AS ContractId,
                                 tmpContainer.PaidKindId,
                                 tmpContainer.PartionMovementId,
                                 tmpContainer.CurrencyId,
@@ -196,15 +218,20 @@ BEGIN
                                 tmpContainer.Amount_Currency - COALESCE (SUM (MIContainer.Amount), 0)                                                            AS StartSumm_Currency,
                                 tmpContainer.Amount_Currency - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndSumm_Currency
                          FROM tmpContainer
-                              LEFT JOIN MovementItemContainer AS MIContainer 
+                              LEFT JOIN MovementItemContainer AS MIContainer
                                                               ON MIContainer.ContainerId = tmpContainer.ContainerId_Currency
                                                              AND MIContainer.OperDate >= inStartDate
                          WHERE tmpContainer.ContainerId_Currency > 0
-                         GROUP BY tmpContainer.AccountId, tmpContainer.InfoMoneyId, tmpContainer.ContractId_Key, tmpContainer.PaidKindId, tmpContainer.PartionMovementId, tmpContainer.CurrencyId
+                         GROUP BY tmpContainer.AccountId, tmpContainer.InfoMoneyId, tmpContainer.PaidKindId, tmpContainer.PartionMovementId, tmpContainer.CurrencyId
                                 , tmpContainer.ContainerId, tmpContainer.ContainerId_Currency, tmpContainer.Amount_Currency
+                                , tmpContainer.ContractId_Key
+                                -- , tmpContainer.ContractId
                         )
-        , Operation AS (SELECT tmpContainer.AccountId,
+        , Operation AS (SELECT -- tmpContainer.ContainerId,
+                               0 AS ContainerId,
+                               tmpContainer.AccountId,
                                tmpContainer.InfoMoneyId,
+                               -- оставили "оригинал"
                                tmpContainer.ContractId,
                                tmpContainer.PaidKindId,
                                tmpContainer.PartionMovementId,
@@ -212,7 +239,7 @@ BEGIN
                                tmpContainer.MovementId,
                                tmpContainer.OperDate,
                                tmpContainer.MovementItemId,
-             
+
                                SUM (tmpContainer.MovementSumm) AS MovementSumm,
                                SUM (tmpContainer.MovementSumm_Currency) AS MovementSumm_Currency,
                                0 AS StartSumm,
@@ -230,11 +257,15 @@ BEGIN
                                  tmpContainer.MovementId,
                                  tmpContainer.OperDate,
                                  tmpContainer.MovementItemId
+                               -- , tmpContainer.ContainerId
                        UNION ALL
-                        SELECT tmpRemains.AccountId, 
-                               tmpRemains.InfoMoneyId, 
-                               tmpRemains.ContractId, 
-                               tmpRemains.PaidKindId, 
+                        SELECT -- tmpRemains.ContainerId,
+                               0 AS ContainerId,
+                               tmpRemains.AccountId,
+                               tmpRemains.InfoMoneyId,
+                               -- "главноый" или "оригинал"
+                               tmpRemains.ContractId,
+                               tmpRemains.PaidKindId,
                                tmpRemains.PartionMovementId,
                                tmpRemains.CurrencyId,
                                0 AS MovementId,
@@ -248,19 +279,20 @@ BEGIN
                                SUM (tmpRemains.EndSumm_Currency) AS EndSumm_Currency,
                                -1 AS OperationSort
                         FROM tmpRemains
-                        GROUP BY tmpRemains.AccountId, tmpRemains.InfoMoneyId, tmpRemains.ContractId, tmpRemains.PaidKindId, tmpRemains.PartionMovementId, tmpRemains.CurrencyId -- tmpRemains.ContainerId, 
+                        GROUP BY tmpRemains.AccountId, tmpRemains.InfoMoneyId, tmpRemains.ContractId, tmpRemains.PaidKindId, tmpRemains.PartionMovementId, tmpRemains.CurrencyId
+                               -- , tmpRemains.ContainerId
                         HAVING SUM (tmpRemains.StartSumm) <> 0 OR SUM (tmpRemains.EndSumm) <> 0
                        )
 
    -- результат
-   SELECT 
+   SELECT
           CASE WHEN Operation.OperationSort = 0
                      THEN Operation.MovementSumm
                ELSE 0
           END :: TFloat AS MovementSumm,
 
           Operation.StartSumm :: TFloat AS StartRemains,
-          Operation.EndSumm :: TFloat AS EndRemains,     
+          Operation.EndSumm :: TFloat AS EndRemains,
 
           CASE WHEN Operation.OperationSort = 0 AND Operation.MovementSumm > 0
                     THEN Operation.MovementSumm
@@ -311,24 +343,26 @@ BEGIN
           Object_InfoMoney_View.InfoMoneyDestinationName,
           Object_InfoMoney_View.InfoMoneyCode,
           Object_InfoMoney_View.InfoMoneyName,
-          Movement.Id               AS MovementId, 
+          Movement.Id               AS MovementId,
           CASE WHEN Operation.OperationSort = -1
                     THEN ' Долг:'
                ELSE MovementDesc.ItemName
-          END::TVarChar  AS ItemName,     
-          Operation.OperationSort, 
-          (Object_From.ValueData || CASE WHEN Object_From.DescId = zc_Object_BankAccount() THEN ' * ' || Object_Bank.ValueData ELSE '' END) :: TVarChar AS FromName, 
+          END::TVarChar  AS ItemName,
+          Operation.OperationSort,
+          (Object_From.ValueData || CASE WHEN Object_From.DescId = zc_Object_BankAccount() THEN ' * ' || Object_Bank.ValueData ELSE '' END) :: TVarChar AS FromName,
           (Object_To.ValueData || CASE WHEN Object_To.DescId = zc_Object_BankAccount() THEN ' * ' || Object_Bank.ValueData ELSE '' END) :: TVarChar AS ToName
           --, Operation.MovementItemId :: Integer AS MovementItemId
 
         , Object_PartionMovement.ValueData AS PartionMovementName
         , ObjectDate_PartionMovement_Payment.ValueData AS PaymentDate
-        
+
         , Movement_Transport.InvNumber     :: TVarChar  AS InvNumber_Transport
         , Movement_Transport.OperDate      :: TDateTime AS OperDate_Transport
         , Object_Car.ValueData             :: TVarChar  AS CarName
-        , Object_PersonalDriver.ValueData) :: TVarChar  AS PersonalDriverName
-          
+        , Object_PersonalDriver.ValueData  :: TVarChar  AS PersonalDriverName
+
+        , Operation.ContainerId :: Integer AS ContainerId
+
     FROM Operation
 
       LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = Operation.ContractId
@@ -359,7 +393,7 @@ BEGIN
                                       AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
 
       LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                   ON MovementLinkObject_From.MovementId = Movement.Id 
+                                   ON MovementLinkObject_From.MovementId = Movement.Id
                                   AND MovementLinkObject_From.DescId = CASE WHEN Movement.DescId IN (zc_Movement_TransportService())
                                                                                THEN zc_MovementLinkObject_UnitForwarding()
                                                                             WHEN Movement.DescId IN (zc_Movement_PersonalAccount())
@@ -370,14 +404,14 @@ BEGIN
                                                                                  THEN zc_MovementLinkObject_From()
                                                                        END
       LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                   ON MovementLinkObject_To.MovementId = Movement.Id 
+                                   ON MovementLinkObject_To.MovementId = Movement.Id
                                   AND MovementLinkObject_To.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_TransferDebtOut())
                                                                                THEN zc_MovementLinkObject_To()
                                                                           WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
                                                                                THEN zc_MovementLinkObject_To()
                                                                      END
       LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
-                                   ON MovementLinkObject_Partner.MovementId = Movement.Id 
+                                   ON MovementLinkObject_Partner.MovementId = Movement.Id
                                   AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
 
       LEFT JOIN Object AS Object_PartionMovement ON Object_PartionMovement.Id = Operation.PartionMovementId
@@ -399,16 +433,16 @@ BEGIN
                                                            ELSE COALESCE (MovementLinkObject_To.ObjectId, COALESCE (CASE WHEN Operation.MovementSumm > 0 THEN MILinkObject_MoneyPlace.ObjectId ELSE MovementItem_by.ObjectId END, MILinkObject_Unit.ObjectId))
                                                       END
       LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Operation.PaidKindId
-      
+
       -- путевой из реестра
       -- реестр
        LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                ON MovementFloat_MovementItemId.MovementId = Operation.MovementId
                               AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
-       LEFT JOIN MovementItem AS MI_reestr 
+       LEFT JOIN MovementItem AS MI_reestr
                               ON MI_reestr.Id       = MovementFloat_MovementItemId.ValueData :: Integer
                              AND MI_reestr.isErased = FALSE
-       
+
        -- П/л (реестр)
        LEFT JOIN MovementLinkMovement AS MLM_Transport_reestr
                                       ON MLM_Transport_reestr.MovementId = MI_reestr.MovementId
@@ -419,8 +453,8 @@ BEGIN
       LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                      ON MovementLinkMovement_Transport.MovementId = Operation.MovementId
                                     AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
-                                    
-      LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = COALESCE. (MLM_Transport_reestr.MovementChildId, MovementLinkMovement_Transport.MovementChildId)
+
+      LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = COALESCE (MLM_Transport_reestr.MovementChildId, MovementLinkMovement_Transport.MovementChildId)
 
       LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                    ON MovementLinkObject_Car.MovementId = Movement_Transport.Id
@@ -436,7 +470,7 @@ BEGIN
          , MovementDesc.Id
          , Operation.OperDate
           ;
-                                  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -454,11 +488,11 @@ ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integ
  05.05.14                                        * add inPaidKindId
  04.05.14                                        * add PaidKindName
  26.04.14                                        * add Object_Contract_ContractKey_View
- 17.04.14                        * 
- 26.03.14                        * 
- 18.02.14                        * add WITH для ускорения запроса. 
- 25.01.14                        * 
- 15.01.14                        * 
+ 17.04.14                        *
+ 26.03.14                        *
+ 18.02.14                        * add WITH для ускорения запроса.
+ 25.01.14                        *
+ 15.01.14                        *
 */
 
 -- тест

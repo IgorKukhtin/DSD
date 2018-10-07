@@ -51,9 +51,11 @@ RETURNS TABLE (Id              Integer
              , Delivery5 Boolean, Delivery6 Boolean, Delivery7 Boolean
 
              , PersonalName TVarChar
-             , BranchName TVarChar
-             , UnitName TVarChar
+             , BranchName   TVarChar
+             , UnitName     TVarChar
              , PositionName TVarChar
+
+             , ContainerId  Integer
               )
 AS
 $BODY$
@@ -123,6 +125,8 @@ BEGIN
                , Object_PersonalTrade.BranchName
                , Object_PersonalTrade.UnitName
                , Object_PersonalTrade.PositionName
+
+               , gpSelect.ContainerId
 
           FROM gpSelectMobile_Object_Partner (zc_DateStart(), vbUserId_Mobile :: TVarChar) AS gpSelect
 

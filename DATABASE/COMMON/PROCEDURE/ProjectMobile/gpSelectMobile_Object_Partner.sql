@@ -32,6 +32,7 @@ RETURNS TABLE (Id               Integer
              , PaidKindId       Integer  -- Договор - все возможные договора...
              , PriceListId      Integer  -- Прайс-лист - по каким ценам будет формироваться заказ
              , PriceListId_ret  Integer  -- Прайс-лист Возврата - по каким ценам будет формироваться возврат
+             , ContainerId      Integer
              , isErased         Boolean  -- Удаленный ли элемент
              , isSync           Boolean  -- Синхронизируется (да/нет)
               )
@@ -55,21 +56,36 @@ BEGIN
                                       , lfSelect.JuridicalId AS JuridicalId
                                  FROM lfSelectMobile_Object_Partner (FALSE, inSession) AS lfSelect
                                 )
+           , tmpContract_Key AS (SELECT -- это ObjectId - объединение
+                                        View_Contract_ContractKey.ContractKeyId
+                                        -- это все ContractId
+                                      , COALESCE (View_Contract_ContractKey_find.ContractId, View_Contract_ContractKey.ContractId) AS ContractId
+                                        -- это "главный" ContractId
+                                      , View_Contract_ContractKey.ContractId_Key
+
+                                  FROM Object_Contract_ContractKey_View AS View_Contract_ContractKey
+                                       LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey_find ON View_Contract_ContractKey_find.ContractKeyId = View_Contract_ContractKey.ContractKeyId
+                                 )
                 , tmpContract AS (SELECT tmpPartner.PartnerId                        AS PartnerId
+                                         -- "оригинал"
                                        , ObjectLink_Contract_Juridical.ObjectId      AS ContractId
+                                         -- подставили "главный", если есть
+                                       , COALESCE (tmpContract_Key.ContractId_Key, ObjectLink_Contract_Juridical.ObjectId) AS ContractId_Key
+
                                        , tmpPartner.JuridicalId                      AS JuridicalId
                                        , ObjectLink_Contract_PriceList.ChildObjectId AS PriceListId
                                   FROM tmpPartner
                                        JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                                        ON ObjectLink_Contract_Juridical.ChildObjectId = tmpPartner.JuridicalId
                                                       AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
+                                       LEFT JOIN tmpContract_Key ON tmpContract_Key.ContractId = ObjectLink_Contract_Juridical.ObjectId
                                        -- нашли прайс
                                        LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
                                                             ON ObjectLink_Contract_PriceList.ObjectId = ObjectLink_Contract_Juridical.ObjectId
                                                            AND ObjectLink_Contract_PriceList.DescId   = zc_ObjectLink_Contract_PriceList()
                                        -- убрали Удаленные
                                        JOIN Object AS Object_Contract
-                                                   ON Object_Contract.Id       = ObjectLink_Contract_Juridical.ObjectId
+                                                   ON Object_Contract.Id       = COALESCE (tmpContract_Key.ContractId_Key, ObjectLink_Contract_Juridical.ObjectId)
                                                   AND Object_Contract.isErased = FALSE
                                        -- убрали Закрытые
                                        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
@@ -83,6 +99,7 @@ BEGIN
                                                             AND ObjectLink_Contract_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
                                                                                                               , zc_Enum_InfoMoney_30102() -- Доходы + Тушенка   + Тушенка
                                                                                                                )
+                                  -- убрали Закрытые
                                   WHERE ObjectLink_Contract_ContractStateKind.ChildObjectId IS NULL
                                  )
                 , tmpDayInfo AS (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId              AS ContractId
@@ -92,7 +109,10 @@ BEGIN
                                                                    , MIN (ObjectFloat_ContractCondition_Value.ValueData)::Integer
                                                                    , CURRENT_DATE)::Date AS ContractDate
                                  FROM ObjectLink AS ObjectLink_ContractCondition_Contract
+                                      -- выбрали оригинал"
                                       JOIN tmpContract ON tmpContract.ContractId = ObjectLink_ContractCondition_Contract.ChildObjectId
+                                      -- выбрали по "главному"
+                                      -- JOIN tmpContract ON tmpContract.ContractId_Key = ObjectLink_ContractCondition_Contract.ChildObjectId
                                       -- выбираем только ДВА условия
                                       JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                                                       ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
@@ -114,11 +134,15 @@ BEGIN
                                         , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId
                                         , tmpContract.PartnerId
                                 )
-                , tmpContainer AS (SELECT Container_Summ.Id      AS ContainerId
-                                        , CLO_Partner.ObjectId   AS PartnerId
-                                        , CLO_Contract.ObjectId  AS ContractId
-                                        , CLO_PaidKind.ObjectId  AS PaidKindId
-                                        , Container_Summ.Amount
+                , tmpContainer AS (SELECT Container_Summ.Id          AS ContainerId
+                                        , CLO_Partner.ObjectId       AS PartnerId
+                                         -- "оригинал"               
+                                        , CLO_Contract.ObjectId      AS ContractId
+                                         -- подставили "главный", если есть
+                                        , tmpContract.ContractId_Key AS ContractId_Key
+
+                                        , CLO_PaidKind.ObjectId      AS PaidKindId
+                                        , Container_Summ.Amount      AS Amount
                                         , COALESCE (tmpDayInfo.ContractDate, CURRENT_DATE) :: TDateTime AS ContractDate
                                    FROM Container AS Container_Summ
                                         JOIN ObjectLink AS ObjectLink_Account_AccountGroup
@@ -131,14 +155,17 @@ BEGIN
                                         JOIN ContainerLinkObject AS CLO_Contract
                                                                  ON CLO_Contract.ContainerId = Container_Summ.Id
                                                                 AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
-                                        JOIN tmpContract ON tmpContract.PartnerId = CLO_Partner.ObjectId
+                                        JOIN tmpContract ON tmpContract.PartnerId  = CLO_Partner.ObjectId
                                                         AND tmpContract.ContractId = CLO_Contract.ObjectId
                                         JOIN ContainerLinkObject AS CLO_PaidKind
                                                                  ON CLO_PaidKind.ContainerId = Container_Summ.Id
                                                                 AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                                                                 AND CLO_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() -- !!!ограничение - только Нал!!!
-                                        LEFT JOIN tmpDayInfo ON tmpDayInfo.PartnerId = CLO_Partner.ObjectId
+                                        LEFT JOIN tmpDayInfo ON tmpDayInfo.PartnerId  = CLO_Partner.ObjectId
+                                                            -- выбрали оригинал"
                                                             AND tmpDayInfo.ContractId = CLO_Contract.ObjectId
+                                                            -- выбрали по "главному"
+                                                            -- AND tmpDayInfo.ContractId = tmpContract.ContractId_Key
                                    WHERE Container_Summ.DescId = zc_Container_Summ()
                                      AND Container_Summ.Amount <> 0.0
                                   )
@@ -147,8 +174,10 @@ BEGIN
                                      FROM MovementItemContainer
                                           JOIN tmpContainer ON tmpContainer.ContainerId = MovementItemContainer.ContainerId
                                      WHERE MovementItemContainer.DescId = zc_MIContainer_Summ()
-                                       AND (MovementItemContainer.MovementDescId = zc_Movement_Sale()
-                                        OR (MovementItemContainer.MovementDescId = zc_Movement_TransferDebtOut() AND MovementItemContainer.isActive))
+                                       AND (MovementItemContainer.MovementDescId  = zc_Movement_Sale()
+                                         OR (MovementItemContainer.MovementDescId = zc_Movement_TransferDebtOut()
+                                         AND MovementItemContainer.isActive = TRUE)
+                                           )
                                        AND MovementItemContainer.OperDate > tmpContainer.ContractDate
                                        AND MovementItemContainer.OperDate < CURRENT_DATE
                                      GROUP BY MovementItemContainer.ContainerId
@@ -164,6 +193,7 @@ BEGIN
                 , tmpDebtAll AS (SELECT tmpContainer.ContainerId
                                       , tmpContainer.PartnerId
                                       , tmpContainer.ContractId
+                                      , tmpContainer.ContractId_Key
                                       , tmpContainer.PaidKindId
                                       , (tmpContainer.Amount - COALESCE (tmpMIContainerNow.Summ, 0.0)::TFloat) AS DebtSum
                                       , (tmpContainer.Amount - COALESCE (tmpMIContainerNow.Summ, 0.0)::TFloat - COALESCE (tmpMIContainer.Summ, 0.0)::TFloat) AS OverSum
@@ -174,8 +204,12 @@ BEGIN
                                       LEFT JOIN tmpMIContainer ON tmpContainer.ContainerId = tmpMIContainer.ContainerId
                                       LEFT JOIN tmpMIContainerNow ON tmpContainer.ContainerId = tmpMIContainerNow.ContainerId
                                 )
-                , tmpDebt AS (SELECT tmpDebtAll.PartnerId
-                                   , tmpDebtAll.ContractId
+                , tmpDebt AS (SELECT CASE WHEN 1=0 /*inSession = '489010'*/ THEN tmpDebtAll.ContainerId ELSE 0 END AS ContainerId
+                                   , tmpDebtAll.PartnerId
+                                     -- объединили по "главному"
+                                   , tmpDebtAll.ContractId_Key AS ContractId
+                                     -- оставили "оригинал"
+                                   -- , tmpDebtAll.ContractId
                                    , tmpDebtAll.PaidKindId
                                    , SUM (tmpDebtAll.DebtSum)::TFloat AS DebtSum
                                    , SUM (tmpDebtAll.OverSum)::TFloat AS OverSum
@@ -183,8 +217,10 @@ BEGIN
                                    -- , MAX (tmpDebtAll.OverDays2)       AS OverDays2
                               FROM tmpDebtAll
                               WHERE tmpDebtAll.ResortSum <> 0.0
-                              GROUP BY tmpDebtAll.PartnerId
-                                     , tmpDebtAll.ContractId
+                              GROUP BY CASE WHEN 1=0 /*inSession = '489010'*/ THEN tmpDebtAll.ContainerId ELSE 0 END
+                                     , tmpDebtAll.PartnerId
+                                     , tmpDebtAll.ContractId_Key
+                                     -- , tmpDebtAll.ContractId
                                      , tmpDebtAll.PaidKindId
                              )
                 , tmpStoreRealDoc AS (SELECT SR.PartnerId, SR.StoreRealId, SR.OperDate
@@ -203,7 +239,8 @@ BEGIN
                                       WHERE SR.RowNum = 1
                                      )
              -- Результат
-             SELECT Object_Partner.Id
+             SELECT DISTINCT
+                    Object_Partner.Id
                   , Object_Partner.ObjectCode
                   , Object_Partner.ValueData
                   , ObjectString_Partner_GUID.ValueData      AS GUID
@@ -226,7 +263,10 @@ BEGIN
                   , COALESCE (ObjectBoolean_Retail_OperDateOrder.ValueData, FALSE)::Boolean AS isOperDateOrder
                   , tmpContract.JuridicalId
                   , ObjectLink_Partner_Route.ChildObjectId   AS RouteId
-                  , tmpContract.ContractId
+                    -- объединили по "главному"
+                  , tmpContract.ContractId_Key AS ContractId
+                    -- оставили "оригинал"
+                  -- , tmpContract.ContractId
                   , COALESCE (tmpDebt.PaidKindId, ObjectLink_Contract_PaidKind.ChildObjectId) :: Integer AS PaidKindId
 
                     -- в следующем порядке: 1.1) ---акционный у контрагента 1.2) ---акционный у договора 1.3) ---акционный у юр.лица 2.1) обычный у контрагента 2.2) обычный у договора 2.3) обычный у юр.лица 3) zc_PriceList_Basis
@@ -238,14 +278,17 @@ BEGIN
                     -- так для возвратов ГП по "старым ценам" - 1) обычный у контрагента 2) обычный у юр.лица 3) zc_PriceList_BasisPrior
                   , COALESCE (ObjectLink_Partner_PriceListPrior.ChildObjectId, COALESCE (ObjectLink_Juridical_PriceListPrior.ChildObjectId, zc_PriceList_Basis() /*zc_PriceList_BasisPrior()*/)) AS PriceListId_ret
 
+                  , tmpDebt.ContainerId :: Integer AS ContainerId
                   , Object_Partner.isErased
                   , TRUE :: Boolean AS isSync
              FROM Object AS Object_Partner
                   JOIN tmpContract ON tmpContract.PartnerId = Object_Partner.Id
                   LEFT JOIN tmpDebt ON tmpDebt.PartnerId  = Object_Partner.Id
-                                   AND tmpDebt.ContractId = tmpContract.ContractId
+                                   -- AND tmpDebt.ContractId = tmpContract.ContractId
+                                   AND tmpDebt.ContractId = tmpContract.ContractId_Key
                   LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
-                                       ON ObjectLink_Contract_PaidKind.ObjectId = tmpContract.ContractId
+                                    -- ON ObjectLink_Contract_PaidKind.ObjectId = tmpContract.ContractId
+                                       ON ObjectLink_Contract_PaidKind.ObjectId = tmpContract.ContractId_Key
                                       AND ObjectLink_Contract_PaidKind.DescId   = zc_ObjectLink_Contract_PaidKind()
 
                   LEFT JOIN tmpStoreRealDoc ON tmpStoreRealDoc.PartnerId = Object_Partner.Id
