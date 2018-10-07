@@ -386,6 +386,7 @@ BEGIN
            , View_Contract.InvNumber        		AS ContractName
            , ObjectDate_Signing.ValueData               AS ContractSigningDate
            , View_Contract.ContractKindName             AS ContractKind
+           , COALESCE (ObjectString_PartnerCode.ValueData, '') :: TVarChar AS PartnerCode
 
            , Object_RouteSorting.ValueData 	        AS RouteSortingName
 
@@ -632,14 +633,14 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_PlaceOf
                                    ON ObjectString_PlaceOf.ObjectId = COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
                                   AND ObjectString_PlaceOf.DescId = zc_objectString_Branch_PlaceOf()
-        LEFT JOIN ObjectLink AS ObjectLink_Branch_Personal
-                             ON ObjectLink_Branch_Personal.ObjectId = ObjectLink_Unit_Branch.ChildObjectId
-                            AND ObjectLink_Branch_Personal.DescId = zc_ObjectLink_Branch_Personal()
-        LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Branch_Personal.ChildObjectId
-        LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalStore
-                             ON ObjectLink_Branch_PersonalStore.ObjectId = ObjectLink_Unit_Branch.ChildObjectId
-                            AND ObjectLink_Branch_PersonalStore.DescId = zc_ObjectLink_Branch_PersonalStore()
-        LEFT JOIN Object_Personal_View AS Object_PersonalStore_View ON Object_PersonalStore_View.PersonalId = ObjectLink_Branch_PersonalStore.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Branch_Personal
+                                 ON ObjectLink_Branch_Personal.ObjectId = ObjectLink_Unit_Branch.ChildObjectId
+                                AND ObjectLink_Branch_Personal.DescId = zc_ObjectLink_Branch_Personal()
+            LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Branch_Personal.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Branch_PersonalStore
+                                 ON ObjectLink_Branch_PersonalStore.ObjectId = ObjectLink_Unit_Branch.ChildObjectId
+                                AND ObjectLink_Branch_PersonalStore.DescId = zc_ObjectLink_Branch_PersonalStore()
+            LEFT JOIN Object_Personal_View AS Object_PersonalStore_View ON Object_PersonalStore_View.PersonalId = ObjectLink_Branch_PersonalStore.ChildObjectId
 
 
 
@@ -688,6 +689,10 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalInvoice
                                  ON ObjectLink_Contract_JuridicalInvoice.ObjectId = View_Contract.ContractId
                                 AND ObjectLink_Contract_JuridicalInvoice.DescId = zc_ObjectLink_Contract_JuridicalInvoice()
+            -- код поставщика
+            LEFT JOIN ObjectString AS ObjectString_PartnerCode
+                                   ON ObjectString_PartnerCode.ObjectId = View_Contract.ContractId
+                                  AND ObjectString_PartnerCode.DescId = zc_objectString_Contract_PartnerCode()
 
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = NULL
 
