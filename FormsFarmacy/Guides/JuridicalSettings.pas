@@ -49,6 +49,14 @@ type
     actProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpen: TdxBarButton;
     AreaName: TcxGridDBColumn;
+    spUpdate_isPriceClose_Yes: TdsdStoredProc;
+    spUpdate_isPriceClose_No: TdsdStoredProc;
+    spUpdateisisPriceCloseNo: TdsdExecStoredProc;
+    spUpdateisisPriceCloseYes: TdsdExecStoredProc;
+    macUpdateisisPriceCloseNo: TMultiAction;
+    macUpdateisisPriceCloseYes: TMultiAction;
+    bbUpdateisisPriceCloseYes: TdxBarButton;
+    bbUpdateisisPriceCloseNo: TdxBarButton;
   private
     { Private declarations }
   public
