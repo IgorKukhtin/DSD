@@ -1038,7 +1038,9 @@ uses
   Report_Branch_App7_Full in '..\..\Forms\Report\Report_Branch_App7_Full.pas' {Report_Branch_App7_FullForm: TParentForm},
   Report_Branch_App1_Full in '..\..\Forms\Report\Report_Branch_App1_Full.pas' {Report_Branch_App1_FullForm: TParentForm},
   User_byMessage in '..\..\Forms\Guides\User_byMessage.pas' {User_byMessageForm: TParentForm},
-  Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm};
+  Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm},
+  GoodsSeparate in '..\..\Forms\Guides\GoodsSeparate.pas' {GoodsSeparateForm: TParentForm},
+  GoodsSeparateEdit in '..\..\Forms\Guides\GoodsSeparateEdit.pas' {GoodsSeparateEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

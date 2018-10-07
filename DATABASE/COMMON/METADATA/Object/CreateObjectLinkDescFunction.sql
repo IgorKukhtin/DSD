@@ -1583,6 +1583,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_MemberPersonalServiceList_Member() RETU
  INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
  SELECT 'zc_ObjectLink_MemberPersonalServiceList_Member', 'Физ.лицо', zc_Object_MemberPersonalServiceList(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MemberPersonalServiceList_Member');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsSeparate_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsSeparate_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_GoodsSeparate_Goods', 'Товары', zc_Object_GoodsSeparate(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsSeparate_Goods');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsSeparate_GoodsKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsSeparate_GoodsKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_GoodsSeparate_GoodsKind', 'Виды товаров', zc_Object_GoodsSeparate(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsSeparate_GoodsKind');
+
 
 --!!! АПТЕКА
 

@@ -978,6 +978,8 @@ type
     miReport_Branch_App1_Full: TMenuItem;
     miReport_Branch_App7_Full: TMenuItem;
     N196: TMenuItem;
+    actGoodsSeparate: TdsdOpenForm;
+    miGoodsSeparate: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

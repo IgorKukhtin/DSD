@@ -1063,6 +1063,9 @@ CREATE OR REPLACE FUNCTION zc_Object_ClientsByBank() RETURNS Integer AS $BODY$BE
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_ClientsByBank', 'Клиенты по безналу' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ClientsByBank');
 
+CREATE OR REPLACE FUNCTION zc_Object_GoodsSeparate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsSeparate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_GoodsSeparate', 'Товары в Производстве-разделении' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsSeparate');
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
@@ -1080,6 +1083,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 07.10.18         * zc_Object_GoodsSeparate
  28.09.18                                                                                        * zc_Object_Exchange, zc_Object_ClientsByBank  
  27.08.18                                                                                        * zc_Object_Overdraft  
  17.08.18                                                                                        * zc_Object_Accommodation  
