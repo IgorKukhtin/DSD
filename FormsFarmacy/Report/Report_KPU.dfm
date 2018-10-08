@@ -1,26 +1,26 @@
 inherited Report_KPUForm: TReport_KPUForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1050#1055#1059
   ClientHeight = 504
-  ClientWidth = 920
+  ClientWidth = 940
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 936
+  ExplicitWidth = 956
   ExplicitHeight = 543
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 920
+    Width = 940
     Height = 447
-    ExplicitWidth = 920
+    ExplicitWidth = 940
     ExplicitHeight = 447
     ClientRectBottom = 447
-    ClientRectRight = 920
+    ClientRectRight = 940
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 920
+      ExplicitWidth = 940
       ExplicitHeight = 447
       inherited cxGrid: TcxGrid
-        Width = 920
+        Width = 940
         Height = 447
-        ExplicitWidth = 920
+        ExplicitWidth = 940
         ExplicitHeight = 447
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Editing = False
@@ -64,6 +64,7 @@ inherited Report_KPUForm: TReport_KPUForm
               Column = UserName
             end>
           DataController.Summary.SummaryGroups = <>
+          OptionsBehavior.IncSearch = True
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
           Bands = <
@@ -113,7 +114,7 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 236
+            Width = 224
             Position.BandIndex = 0
             Position.ColIndex = 2
             Position.RowIndex = 0
@@ -121,10 +122,13 @@ inherited Report_KPUForm: TReport_KPUForm
           object KPU: TcxGridDBBandedColumn
             Caption = #1050#1055#1059
             DataBinding.FieldName = 'KPU'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 36
+            Width = 48
             Position.BandIndex = 0
             Position.ColIndex = 3
             Position.RowIndex = 0
@@ -203,6 +207,9 @@ inherited Report_KPUForm: TReport_KPUForm
           object cxGridDBBandedTableView1Column3: TcxGridDBBandedColumn
             Caption = ' '#1050#1086#1101#1092#1092'.'
             DataBinding.FieldName = 'AverageCheckRatio'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 1
+            Properties.DisplayFormat = ',0.0'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 48
@@ -218,8 +225,8 @@ inherited Report_KPUForm: TReport_KPUForm
     end
   end
   inherited Panel: TPanel
-    Width = 920
-    ExplicitWidth = 920
+    Width = 940
+    ExplicitWidth = 940
     inherited deStart: TcxDateEdit
       EditValue = 42736d
       Properties.DisplayFormat = 'mmmm yyyy'
@@ -460,6 +467,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'KPU'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
@@ -475,6 +483,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AverageCheckRatio'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

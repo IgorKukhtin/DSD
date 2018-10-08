@@ -1,12 +1,13 @@
 -- Function: gpInsertUpdate_MovementItem_KPU()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_KPU (Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_KPU (Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_KPU(
  INOUT ioId                    Integer    , -- Ключ объекта <Докумен>
-   OUT outKPU                  Integer    , -- КПУ
+   OUT outKPU                  TFloat     , -- КПУ
     IN inMarkRatio             Integer    , -- Коеффициент выполнение плана по маркетингу
-    IN inAverageCheckRatio     Integer    , -- Коеффициент за средний чек
+    IN inAverageCheckRatio     TFloat     , -- Коеффициент за средний чек
     IN inSession               TVarChar     -- сессия пользователя
 )
 RETURNS Record AS

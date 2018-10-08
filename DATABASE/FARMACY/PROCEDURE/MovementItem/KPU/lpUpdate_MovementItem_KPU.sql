@@ -1,5 +1,3 @@
--- Function: lpUpdate_MovementItem_KPU (Integer)
-
 DROP FUNCTION IF EXISTS lpUpdate_MovementItem_KPU (Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_MovementItem_KPU(
@@ -7,7 +5,7 @@ CREATE OR REPLACE FUNCTION lpUpdate_MovementItem_KPU(
 )
   RETURNS VOID AS
 $BODY$
-  DECLARE vbKPU         Integer;
+  DECLARE vbKPU         TFloat;
 BEGIN
   IF COALESCE (inMovementId, 0) = 0
   THEN
@@ -18,12 +16,14 @@ BEGIN
 
   SELECT
     vbKPU
-    +  COALESCE (MIFloat_MarkRatio.ValueData::Integer,
-              CASE WHEN COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) <= COALESCE (MIFloat_BonusAmountTab.ValueData, 0)
-              THEN 1 ELSE -1 END::Integer)
-    +  COALESCE (MIFloat_AverageCheckRatio.ValueData::Integer,
-            CASE WHEN COALESCE (MIFloat_PrevAverageCheck.ValueData, 0) <= COALESCE (MIFloat_AverageCheck.ValueData, 0)
-            THEN 1 ELSE -1 END::Integer)
+        + COALESCE (MIFloat_MarkRatio.ValueData,
+            CASE WHEN COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) = COALESCE (MIFloat_BonusAmountTab.ValueData, 0)
+            THEN 0 ELSE CASE WHEN COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) <= COALESCE (MIFloat_BonusAmountTab.ValueData, 0)
+            THEN 1 ELSE -1 END END)
+        + COALESCE (MIFloat_AverageCheckRatio.ValueData,
+            CASE WHEN COALESCE (MIFloat_PrevAverageCheck.ValueData, 0) = 0
+            THEN 0 ELSE ROUND(COALESCE (MIFloat_AverageCheck.ValueData, 0) / COALESCE (MIFloat_PrevAverageCheck.ValueData, 0) - 1, 1)
+            END)
   INTO
     vbKPU
   FROM MovementItem
