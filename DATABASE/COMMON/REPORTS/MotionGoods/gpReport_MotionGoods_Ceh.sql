@@ -733,14 +733,14 @@ BEGIN
                    + tmpMIContainer_all.CountSendIn
                    + tmpMIContainer_all.CountSendOnPriceIn
                    + tmpMIContainer_all.CountReturnIn
-                   - tmpMIContainer_all.CountReturnIn_40208
+                   + tmpMIContainer_all.CountReturnIn_40208
                    + tmpMIContainer_all.CountProductionIn)   AS CountTotalIn
               , SUM (tmpMIContainer_all.CountReturnOut
                    + tmpMIContainer_all.CountSendOut
                    + tmpMIContainer_all.CountSendOnPriceOut
                    + tmpMIContainer_all.CountSale
                    + tmpMIContainer_all.CountSale_10500
-                   - tmpMIContainer_all.CountSale_40208
+                   + tmpMIContainer_all.CountSale_40208
                    + tmpMIContainer_all.CountLoss
                    + tmpMIContainer_all.CountProductionOut)  AS CountTotalOut
 
@@ -769,14 +769,14 @@ BEGIN
                    + tmpMIContainer_all.SummSendIn
                    + tmpMIContainer_all.SummSendOnPriceIn
                    + tmpMIContainer_all.SummReturnIn
-                   - tmpMIContainer_all.SummReturnIn_40208
+                   + tmpMIContainer_all.SummReturnIn_40208
                    + tmpMIContainer_all.SummProductionIn)    AS SummTotalIn
               , SUM (tmpMIContainer_all.SummReturnOut
                    + tmpMIContainer_all.SummSendOut
                    + tmpMIContainer_all.SummSendOnPriceOut
                    + tmpMIContainer_all.SummSale
                    + tmpMIContainer_all.SummSale_10500
-                   - tmpMIContainer_all.SummSale_40208
+                   + tmpMIContainer_all.SummSale_40208
                    + tmpMIContainer_all.SummLoss
                    + tmpMIContainer_all.SummProductionOut)   AS SummTotalOut
 

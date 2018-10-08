@@ -33,6 +33,15 @@ BEGIN
       INSERT INTO Object_GoodsItem (GoodsId, GoodsSizeId)
                   VALUES (inGoodsId, inGoodsSizeId) RETURNING Id INTO ioId;
    ELSE
+       -- !!!проверка - нельзя менять ТОВАР!!!
+       IF EXISTS (SELECT 1 FROM Object_PartionGoods WHERE Object_PartionGoods.GoodsItemId = ioId AND GoodsId <> inGoodsId)
+       THEN
+           RAISE EXCEPTION 'Ошибка.Нельзя менять <Товар>';
+       END IF;
+
+       -- !!!меняем у остальных партий - ЭТИ св-ва!!!
+       UPDATE Object_PartionGoods SET GoodsId = inGoodsId, GoodsSizeId = inGoodsSizeId WHERE Object_PartionGoods.GoodsItemId = ioId;
+
        -- изменили элемент справочника по значению <Ключ объекта>
        UPDATE Object_GoodsItem SET GoodsId = inGoodsId, GoodsSizeId = inGoodsSizeId WHERE Id = ioId ;
 

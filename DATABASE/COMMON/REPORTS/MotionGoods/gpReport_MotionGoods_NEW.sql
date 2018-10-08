@@ -1327,14 +1327,14 @@ BEGIN
                    + tmpMIContainer_all.CountSendIn
                    + tmpMIContainer_all.CountSendOnPriceIn
                    + tmpMIContainer_all.CountReturnIn
-                   - tmpMIContainer_all.CountReturnIn_40208
+                   + tmpMIContainer_all.CountReturnIn_40208
                    + tmpMIContainer_all.CountProductionIn)   AS CountTotalIn
               , SUM (tmpMIContainer_all.CountReturnOut
                    + tmpMIContainer_all.CountSendOut
                    + tmpMIContainer_all.CountSendOnPriceOut
                    + tmpMIContainer_all.CountSale
                    + tmpMIContainer_all.CountSale_10500
-                   - tmpMIContainer_all.CountSale_40208
+                   + tmpMIContainer_all.CountSale_40208
                    + tmpMIContainer_all.CountLoss
                    + tmpMIContainer_all.CountProductionOut)  AS CountTotalOut
 
@@ -1361,14 +1361,14 @@ BEGIN
                    + tmpMIContainer_all.SummSendIn
                    + tmpMIContainer_all.SummSendOnPriceIn
                    + tmpMIContainer_all.SummReturnIn
-                   - tmpMIContainer_all.SummReturnIn_40208
+                   + tmpMIContainer_all.SummReturnIn_40208
                    + tmpMIContainer_all.SummProductionIn)    AS SummTotalIn
               , SUM (tmpMIContainer_all.SummReturnOut
                    + tmpMIContainer_all.SummSendOut
                    + tmpMIContainer_all.SummSendOnPriceOut
                    + tmpMIContainer_all.SummSale
                    + tmpMIContainer_all.SummSale_10500
-                   - tmpMIContainer_all.SummSale_40208
+                   + tmpMIContainer_all.SummSale_40208
                    + tmpMIContainer_all.SummLoss
                    + tmpMIContainer_all.SummProductionOut)   AS SummTotalOut
 
@@ -1497,4 +1497,4 @@ ALTER FUNCTION gpReport_MotionGoods_NEW (TDateTime, TDateTime, Integer, Integer,
 
 -- тест
 -- SELECT * FROM gpReport_MotionGoods_NEW (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inAccountGroupId:= 0, inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 0, inUnitGroupId_by:=0, inLocationId_by:= 0, inIsInfoMoney:= FALSE, inSession:= zfCalc_UserAdmin() :: Integer)
--- SELECT * FROM gpReport_MotionGoods_NEW (inStartDate:= '01.06.2015', inEndDate:= '30.06.2015', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inUnitGroupId_by:=0, inLocationId_by:= 0, inIsInfoMoney:= TRUE, inSession := zfCalc_UserAdmin() :: Integer);
+-- SELECT * FROM gpReport_MotionGoods_NEW (inStartDate:= '01.06.2018', inEndDate:= '30.06.2018', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inUnitGroupId_by:=0, inLocationId_by:= 0, inIsInfoMoney:= TRUE, inSession := zfCalc_UserAdmin() :: Integer);

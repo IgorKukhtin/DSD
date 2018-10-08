@@ -114,24 +114,27 @@ BEGIN
     WHILE SPLIT_PART (inGoodsId_list, ',', vbIndex) <> '' LOOP
         -- добавляем то что нашли
         INSERT INTO _tmpGoodsMinPrice_List (GoodsId, GoodsId_retail)
-           SELECT tmp.GoodsId
-                , ObjectLink_Child_ALL.ChildObjectId AS GoodsId_retail
-           FROM (SELECT SPLIT_PART (inGoodsId_list, ',', vbIndex) :: Integer AS GoodsId
-                ) AS tmp
-                                    INNER JOIN ObjectLink AS ObjectLink_Child
-                                                          ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
-                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    INNER JOIN ObjectLink AS ObjectLink_Main_ALL ON ObjectLink_Main_ALL.ChildObjectId = ObjectLink_Main.ChildObjectId
-                                                                                AND ObjectLink_Main_ALL.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    INNER JOIN ObjectLink AS ObjectLink_Child_ALL ON ObjectLink_Child_ALL.ObjectId = ObjectLink_Main_ALL.ObjectId
-                                                                                 AND ObjectLink_Child_ALL.DescId   = zc_ObjectLink_LinkGoods_Goods()
-                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_ALL.ChildObjectId
-                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                                    INNER JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Goods_Object.ChildObjectId
-                                                                      AND Object_Retail.DescId = zc_Object_Retail()
+           WITH tmp AS (SELECT SPLIT_PART (inGoodsId_list, ',', vbIndex) :: Integer AS GoodsId)
+              , tmpRes AS (SELECT tmp.GoodsId
+                                , ObjectLink_Child_ALL.ChildObjectId AS GoodsId_retail
+                                , Object_Retail.DescId
+                           FROM tmp
+                                INNER JOIN ObjectLink AS ObjectLink_Child
+                                                      ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
+                                                     AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                         AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                INNER JOIN ObjectLink AS ObjectLink_Main_ALL ON ObjectLink_Main_ALL.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                            AND ObjectLink_Main_ALL.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                INNER JOIN ObjectLink AS ObjectLink_Child_ALL ON ObjectLink_Child_ALL.ObjectId = ObjectLink_Main_ALL.ObjectId
+                                                                             AND ObjectLink_Child_ALL.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                      ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_ALL.ChildObjectId
+                                                     AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                INNER JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Goods_Object.ChildObjectId
+                                                                -- AND Object_Retail.DescId = zc_Object_Retail()
+                          )
+              SELECT tmpRes.GoodsId, tmpRes.GoodsId_retail FROM tmpRes WHERE tmpRes.DescId = zc_Object_Retail()
           ;
         -- теперь следуюющий
         vbIndex := vbIndex + 1;
@@ -232,31 +235,39 @@ BEGIN
     --
     INSERT INTO _tmpList (UnitId, AreaId, GoodsId, GoodsId_retail)
                 -- SELECT DISTINCT _tmpContainerCount.UnitId, _tmpContainerCount.GoodsId, _tmpContainerCount.GoodsId_retail FROM _tmpContainerCount;
+                /*WITH tmp AS (SELECT DISTINCT 
+                                    _tmpUnitMinPrice_List.UnitId
+                                  , _tmpUnitMinPrice_List.AreaId
+                                  , _tmpGoodsMinPrice_List.GoodsId
+                             FROM _tmpGoodsMinPrice_List
+                                  CROSS JOIN _tmpUnitMinPrice_List -- ON 1=1
+                            )*/
                 SELECT DISTINCT 
                        _tmpUnitMinPrice_List.UnitId
                      , _tmpUnitMinPrice_List.AreaId
                      , _tmpGoodsMinPrice_List.GoodsId
                      , ObjectLink_Child_R.ChildObjectId AS GoodsId_retail
                 FROM _tmpGoodsMinPrice_List
-                     LEFT JOIN _tmpUnitMinPrice_List ON 1=1
+                     CROSS JOIN _tmpUnitMinPrice_List -- ON 1=1
                      LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                           ON ObjectLink_Unit_Juridical.ObjectId = _tmpUnitMinPrice_List.UnitId
                                          AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                     LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                                                        AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
-                                    INNER JOIN ObjectLink AS ObjectLink_Child
-                                                          ON ObjectLink_Child.ChildObjectId = _tmpGoodsMinPrice_List.GoodsId
-                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    INNER JOIN ObjectLink AS ObjectLink_Main_R ON ObjectLink_Main_R.ChildObjectId = ObjectLink_Main.ChildObjectId
-                                                                              AND ObjectLink_Main_R.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    INNER JOIN ObjectLink AS ObjectLink_Child_R ON ObjectLink_Child_R.ObjectId = ObjectLink_Main_R.ObjectId
-                                                                               AND ObjectLink_Child_R.DescId   = zc_ObjectLink_LinkGoods_Goods()
-                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_R.ChildObjectId
-                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                                                         AND ObjectLink_Goods_Object.ChildObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                     LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                          ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                         AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
+                     INNER JOIN ObjectLink AS ObjectLink_Child
+                                           ON ObjectLink_Child.ChildObjectId = _tmpGoodsMinPrice_List.GoodsId
+                                          AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                     INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                              AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                     INNER JOIN ObjectLink AS ObjectLink_Main_R ON ObjectLink_Main_R.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                               AND ObjectLink_Main_R.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                     INNER JOIN ObjectLink AS ObjectLink_Child_R ON ObjectLink_Child_R.ObjectId = ObjectLink_Main_R.ObjectId
+                                                                AND ObjectLink_Child_R.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                     INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                           ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_R.ChildObjectId
+                                          AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                          AND ObjectLink_Goods_Object.ChildObjectId = ObjectLink_Juridical_Retail.ChildObjectId
                 ;
     INSERT INTO _tmpList (UnitId, AreaId, GoodsId, GoodsId_retail)
                 SELECT DISTINCT 
@@ -265,7 +276,7 @@ BEGIN
                      , _tmpGoodsMinPrice_List.GoodsId
                      , _tmpGoodsMinPrice_List.GoodsId AS GoodsId_retail
                 FROM _tmpGoodsMinPrice_List
-                     LEFT JOIN _tmpUnitMinPrice_List ON 1=1
+                     CROSS JOIN _tmpUnitMinPrice_List -- ON 1=1
                      LEFT JOIN _tmpList ON _tmpList.UnitId = _tmpUnitMinPrice_List.UnitId
                                        AND _tmpList.GoodsId = _tmpGoodsMinPrice_List.GoodsId
                 WHERE _tmpList.GoodsId IS NULL;
