@@ -351,11 +351,12 @@ BEGIN
     UPDATE LoadPriceListItem
     SET GoodsName = inGoodsName, CommonCode = inCommonCode, BarCode = COALESCE(inBarCode, ''), CodeUKTZED = COALESCE(inCodeUKTZED, ''), GoodsNDS = inGoodsNDS, GoodsId = tblJSON.GoodsId,
         Price = inPrice, PriceOriginal = tblJSON.PriceOriginal, ExpirationDate = inExpirationDate, PackCount = COALESCE(inPackCount, ''), ProducerName = COALESCE(inProducerName, '')
+      , Remains = tblJSON.inRemains
     FROM tblJSON 
     WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode AND COALESCE (inPrice, 0) <> 0;
     
     -- добавляем новое
-    INSERT INTO LoadPriceListItem (LoadPriceListId, CommonCode, BarCode, CodeUKTZED, GoodsCode, GoodsName, GoodsNDS, GoodsId, Price, PriceOriginal, ExpirationDate, PackCount, ProducerName)
+    INSERT INTO LoadPriceListItem (LoadPriceListId, CommonCode, BarCode, CodeUKTZED, GoodsCode, GoodsName, GoodsNDS, GoodsId, Price, PriceOriginal, ExpirationDate, PackCount, ProducerName, Remains)
     /*
     SELECT LoadPriceListId, inCommonCode, inBarCode, inCodeUKTZED, inGoodsCode, inGoodsName, inGoodsNDS, GoodsId, inPrice, PriceOriginal, inExpirationDate, inPackCount, inProducerName
     FROM
@@ -372,6 +373,7 @@ BEGIN
     SELECT 
         vbLoadPriceListId as LoadPriceListId, inCommonCode, COALESCE(inBarCode, '') as inBarCode, COALESCE(inCodeUKTZED, '') as inCodeUKTZED, inGoodsCode, inGoodsName, inGoodsNDS, GoodsId, 
         inPrice, PriceOriginal, inExpirationDate, COALESCE(inPackCount, '') as inPackCount, COALESCE(inProducerName, '') as inProducerName
+      , tblJSON.inRemains
     FROM tblJSON
     WHERE COALESCE (inPrice, 0) <> 0 AND NOT EXISTS(SELECT * FROM LoadPriceListItem WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode);    
     
