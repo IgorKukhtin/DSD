@@ -48,6 +48,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Default = True
           Kind = bkEllipsis
         end>
+      Style.Color = clWhite
       TabOrder = 0
       Width = 278
     end
