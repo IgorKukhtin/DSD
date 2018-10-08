@@ -332,7 +332,7 @@ implementation
 {$R *.dfm}
 uses UnilWin,DMMainScaleCeh, DMMainScale, UtilConst, DialogMovementDesc, UtilPrint
     ,GuideMovementCeh, DialogNumberValue,DialogStringValue, DialogDateValue, DialogPrint, DialogMessage
-    ,GuideWorkProgress,GuideArticleLoss
+    ,GuideWorkProgress, GuideArticleLoss, GuideGoodsLine
     ,IdIPWatch, LookAndFillSettings;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -1380,11 +1380,46 @@ begin
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditGoodsCodeKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
+var execParams:TParams;
+    GoodsCode_int:Integer;
 begin
      fEnterKey13:=false;
      if Key = 13 then
      begin
           fEnterKey13:=true;
+          //
+          if (trim (EditGoodsCode.Text) = '')or(trim (EditGoodsCode.Text) = '0') or (Shift = [ssShift])
+          then begin
+               Create_ParamsGoodsLine(execParams);
+               execParams.ParamByName('GoodsId').AsInteger:=0;
+               execParams.ParamByName('GoodsCode').AsInteger:=0;
+               //
+               if ParamsMI.ParamByName('GoodsId').AsInteger >0 then
+               begin
+                   execParams.ParamByName('GoodsId').AsInteger  := ParamsMI.ParamByName('GoodsId').AsInteger;
+                   execParams.ParamByName('GoodsCode').AsInteger:= ParamsMI.ParamByName('GoodsCode').AsInteger;
+               end
+               else begin
+                   try GoodsCode_int:= StrToInt(EditGoodsCode.Text);
+                   except
+                    GoodsCode_int:= 0;
+                   end;
+                   if GoodsCode_int > 0 then
+                     if DMMainScaleCehForm.gpGet_Scale_Goods(ParamsMI,IntToStr(GoodsCode_int)) = TRUE
+                     then begin
+                         execParams.ParamByName('GoodsId').AsInteger  := ParamsMI.ParamByName('GoodsId').AsInteger;
+                         execParams.ParamByName('GoodsCode').AsInteger:= ParamsMI.ParamByName('GoodsCode').AsInteger;
+                     end;
+               end;
+               //
+               if GuideGoodsLineForm.Execute(execParams)
+               then begin
+                         EditGoodsCode.Text:= execParams.ParamByName('GoodsCode').AsString;
+               end;
+               //
+               execParams.Free;
+          end;
+          //
           if PanelGoodsKind.Visible then ActiveControl:=EditGoodsKindCode
           else if PanelPartionGoods.Visible then ActiveControl:=EditPartionGoods
                else ActiveControl:=EditCount;

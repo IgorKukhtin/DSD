@@ -84,7 +84,8 @@ uses
   LookAndFillSettings in '..\SOURCE\LookAndFillSettings.pas' {LookAndFillSettingsForm},
   DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm},
   GuideArticleLoss in '..\ScaleCeh\GuideArticleLoss.pas' {GuideArticleLossForm},
-  dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas';
+  dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas',
+  GuideGoodsLine in '..\ScaleCeh\GuideGoodsLine.pas' {GuideGoodsLineForm};
 
 {$R *.res}
 
@@ -106,9 +107,7 @@ begin
          if gpCheck_BranchCode = FALSE then exit;
          //
          Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TDMMainScaleCehForm, DMMainScaleCehForm);
-  Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
-  Application.CreateForm(TGuideArticleLossForm, GuideArticleLossForm);
+         Application.CreateForm(TDMMainScaleCehForm, DMMainScaleCehForm);
   // !!!важно первым!!!
   Application.CreateForm(TMainCehForm, MainCehForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
@@ -122,6 +121,7 @@ begin
          Application.CreateForm(TDialogMessageForm, DialogMessageForm);
          Application.CreateForm(TGuideWorkProgressForm, GuideWorkProgressForm);
          Application.CreateForm(TGuideArticleLossForm, GuideArticleLossForm);
+         Application.CreateForm(TGuideGoodsLineForm, GuideGoodsLineForm);
   end
   else
 
@@ -151,6 +151,7 @@ begin
          Application.CreateForm(TDialogMessageForm, DialogMessageForm);
          Application.CreateForm(TGuideWorkProgressForm, GuideWorkProgressForm);
          Application.CreateForm(TGuideArticleLossForm, GuideArticleLossForm);
+         Application.CreateForm(TGuideGoodsLineForm, GuideGoodsLineForm);
 
   end;
   //

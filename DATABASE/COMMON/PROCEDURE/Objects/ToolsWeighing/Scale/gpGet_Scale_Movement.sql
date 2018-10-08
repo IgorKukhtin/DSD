@@ -1,13 +1,13 @@
 -- Function: gpGet_Scale_Movement()
 
--- DROP FUNCTION IF EXISTS gpGet_Scale_Movement (TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Scale_Movement (Integer, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Scale_Movement (Integer, TDateTime, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_Scale_Movement (Integer, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Scale_Movement (Integer, TDateTime, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Scale_Movement(
     IN inMovementId            Integer     , --
     IN inOperDate              TDateTime   , --
     IN inIsNext                Boolean     , --
+    IN inBranchCode            Integer  , --
     IN inSession               TVarChar      -- сессия пользователя
 )
 RETURNS TABLE (MovementId       Integer
@@ -84,7 +84,7 @@ BEGIN
                                       INNER JOIN MovementFloat AS MovementFloat_BranchCode
                                                                ON MovementFloat_BranchCode.MovementId =  Movement.Id
                                                               AND MovementFloat_BranchCode.DescId     = zc_MovementFloat_BranchCode()
-                                                              AND MovementFloat_BranchCode.ValueData < 1000
+                                                              AND MovementFloat_BranchCode.ValueData  = inBranchCode
                                 UNION
                                  -- или "следующий" не закрытый
                                  SELECT Movement.Id AS Id
@@ -101,7 +101,7 @@ BEGIN
                                       INNER JOIN MovementFloat AS MovementFloat_BranchCode
                                                                ON MovementFloat_BranchCode.MovementId =  Movement.Id
                                                               AND MovementFloat_BranchCode.DescId     = zc_MovementFloat_BranchCode()
-                                                              AND MovementFloat_BranchCode.ValueData < 1000
+                                                              AND MovementFloat_BranchCode.ValueData  = inBranchCode
                                  WHERE Movement.Id <> inMovementId
                                  -- LIMIT 2 -- если больше 1-ого то типа ошибка
                                 UNION
@@ -368,5 +368,5 @@ ALTER FUNCTION gpGet_Scale_Movement (Integer, TDateTime, Boolean, TVarChar) OWNE
 */
 
 -- тест
--- SELECT * FROM gpGet_Scale_Movement (0, CURRENT_TIMESTAMP, TRUE, zfCalc_UserAdmin())
--- SELECT * FROM gpGet_Scale_Movement (0, CURRENT_TIMESTAMP, FALSE, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_Movement (0, CURRENT_TIMESTAMP, TRUE,  1, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Scale_Movement (0, CURRENT_TIMESTAMP, FALSE, 1, zfCalc_UserAdmin())

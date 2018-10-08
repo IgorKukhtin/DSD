@@ -106,9 +106,11 @@ BEGIN
          MarginCondition AS (SELECT MarginPercent, MinPrice, 
                                     COALESCE((SELECT MIN(FF.minprice) FROM DD AS FF WHERE FF.MinPrice > DD.MinPrice), 1000000) AS MaxPrice 
                                FROM DD),
-         MovementItem_Income AS (SELECT SUM(PriceWithVAT * Amount) / SUM(Amount) AS PriceWithVAT, MovementItem_Income_View.GoodsId
-                                  FROM MovementItem_Income_View WHERE MovementId = inMovementId
-                               GROUP BY MovementItem_Income_View.GoodsId),
+         MovementItem_Income AS (SELECT SUM (CASE WHEN PriceSampleWithVAT > 0 THEN PriceSampleWithVAT ELSE PriceWithVAT END * Amount) / SUM (Amount) AS PriceWithVAT
+                                      , MovementItem_Income_View.GoodsId
+                                 FROM MovementItem_Income_View WHERE MovementId = inMovementId
+                                 GROUP BY MovementItem_Income_View.GoodsId
+                                ),
 
          tmpPrice_View AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
                                 , Price_Goods.ChildObjectId               AS GoodsId

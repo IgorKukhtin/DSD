@@ -84,6 +84,7 @@ type
   procedure Create_ParamsPersonalComplete(var Params:TParams);
   procedure Create_ParamsWorkProgress(var Params:TParams);
   procedure Create_ParamsArticleLoss(var Params:TParams);
+  procedure Create_ParamsGoodsLine(var Params:TParams);
 
   // создает TParam с названием поля _Name и типом _DataType и добавляет к TParams
   procedure ParamAdd(var execParams:TParams;_Name:String;_DataType:TFieldType);
@@ -396,6 +397,17 @@ begin
      ParamAdd(Params,'MeasureName',ftString);        //
      ParamAdd(Params,'MovementItemId',ftInteger);    //
      ParamAdd(Params,'MovementInfo',ftString);       //
+end;
+{------------------------------------------------------------------------}
+procedure Create_ParamsGoodsLine(var Params:TParams);
+begin
+     Params:=nil;
+     ParamAdd(Params,'GoodsId',ftInteger);           // Товары
+     ParamAdd(Params,'GoodsCode',ftInteger);         // Товары
+     ParamAdd(Params,'GoodsName',ftString);          // Товары
+     ParamAdd(Params,'MeasureId',ftInteger);         //
+     ParamAdd(Params,'MeasureCode',ftInteger);       //
+     ParamAdd(Params,'MeasureName',ftString);        //
 end;
 {------------------------------------------------------------------------}
 {------------------------------------------------------------------------}

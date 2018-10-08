@@ -45,7 +45,7 @@ BEGIN
           , COALESCE (MovementFloat_VATPercent.ValueData, 0)         AS VATPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END  AS ExtraChargesPercent
-          , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId), MovementLinkObject_From.ObjectId) AS GoodsPropertyId
+          , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId), COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId)) AS GoodsPropertyId
           , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)      AS GoodsPropertyId_basis
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0)       AS ContractId
           , COALESCE (MovementLinkObject_Retail.ObjectId, 0)         AS RetailId
@@ -74,14 +74,25 @@ BEGIN
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                       ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                      AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+                                      AND Object_From.DescId = zc_Object_Unit()
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                               ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                               ON ObjectLink_Partner_Juridical.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_From.ObjectId)
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
      WHERE Movement.Id = inMovementId;
      
+
+-- if inSession = '5'
+-- then
+--     RAISE EXCEPTION '<%>', lfGet_Object_ValueData(vbGoodsPropertyId);
+-- end if;
+
      -- очень важная проверка
      IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
      THEN

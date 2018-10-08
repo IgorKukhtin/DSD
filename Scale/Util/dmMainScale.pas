@@ -110,6 +110,7 @@ begin
        else Params.AddParam('inMovementId', ftInteger, ptInput, 0);
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
        Params.AddParam('inIsNext', ftBoolean, ptInput, isNext);
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
 
        //try
          Execute;

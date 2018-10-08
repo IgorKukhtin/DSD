@@ -3,8 +3,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
   ClientHeight = 481
   ClientWidth = 896
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -123
+  ExplicitTop = -59
   ExplicitWidth = 912
-  ExplicitHeight = 519
+  ExplicitHeight = 516
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -257,7 +259,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Width = 109
           end
           object TotalSummSample: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1057#1045#1052#1055#1051' '#1073#1077#1079' '#1053#1044#1057
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' '#1076#1083#1103' '#1057#1045#1052#1055#1051' '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummSample'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -265,10 +267,11 @@ inherited IncomeJournalForm: TIncomeJournalForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1076#1083#1103' '#1057#1045#1052#1055#1051' '#1073#1077#1079' '#1053#1044#1057
             Width = 109
           end
           object TotalSummSampleWithVAT: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1057#1045#1052#1055#1051' '#1089' '#1053#1044#1057
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' '#1076#1083#1103' '#1057#1045#1052#1055#1051' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummSampleWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -276,6 +279,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1076#1083#1103' '#1057#1045#1052#1055#1051' '#1089' '#1053#1044#1057
             Width = 94
           end
           object NDS: TcxGridDBColumn
