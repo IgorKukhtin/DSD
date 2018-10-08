@@ -5,7 +5,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 260
+  ExplicitHeight = 257
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -6383,6 +6383,9 @@ inherited MainForm: TMainForm
       object miProductionUnion: TMenuItem
         Action = actProductionUnion
       end
+      object miGoodsSeparate: TMenuItem
+        Action = actGoodsSeparate
+      end
       object N45: TMenuItem
         Caption = '-'
       end
@@ -7619,10 +7622,7 @@ inherited MainForm: TMainForm
         object N165: TMenuItem [17]
           Action = actGoodsListIncome
         end
-        object miGoodsSeparate: TMenuItem [18]
-          Action = actGoodsSeparate
-        end
-        object miSubMobile: TMenuItem [19]
+        object miSubMobile: TMenuItem [18]
           Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099' ('#1087#1077#1088#1074#1072#1103' '#1074#1077#1088#1089#1080#1103')'
           object miMobileTariff_old: TMenuItem
             Action = actMobileTariff_old
@@ -7636,10 +7636,10 @@ inherited MainForm: TMainForm
             Action = actReport_MobileKS_old
           end
         end
-        object N132: TMenuItem [20]
+        object N132: TMenuItem [19]
           Caption = '-'
         end
-        object N40: TMenuItem [21]
+        object N40: TMenuItem [20]
           Action = actGlobalConst
         end
       end
