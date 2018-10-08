@@ -1,28 +1,31 @@
-inherited CheckVIPForm: TCheckVIPForm
-  Caption = 'VIP '#1095#1077#1082#1080
-  ClientHeight = 382
+inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
+  Caption = #1055#1086#1080#1089#1082' '#1074' VIP '#1095#1077#1082#1080#1072#1093' '#1090#1086#1074#1072#1088#1086#1074
+  ClientHeight = 405
   ClientWidth = 668
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 684
-  ExplicitHeight = 421
+  ExplicitHeight = 444
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 668
-    Height = 356
+    Height = 379
     ExplicitWidth = 668
-    ExplicitHeight = 356
-    ClientRectBottom = 356
+    ExplicitHeight = 379
+    ClientRectBottom = 379
     ClientRectRight = 668
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 668
-      ExplicitHeight = 356
+      ExplicitHeight = 379
       inherited cxGrid: TcxGrid
-        Width = 273
-        Height = 356
-        Align = alLeft
-        ExplicitWidth = 273
-        ExplicitHeight = 356
+        Left = 328
+        Width = 340
+        Height = 379
+        Align = alRight
+        TabOrder = 1
+        ExplicitLeft = 328
+        ExplicitWidth = 340
+        ExplicitHeight = 379
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -167,13 +170,14 @@ inherited CheckVIPForm: TCheckVIPForm
         end
       end
       object cxGrid1: TcxGrid
-        Left = 281
+        Left = 0
         Top = 0
-        Width = 387
-        Height = 356
+        Width = 320
+        Height = 379
         Align = alClient
         PopupMenu = PopupMenu
-        TabOrder = 1
+        TabOrder = 0
+        ExplicitLeft = 2
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource1
@@ -222,10 +226,11 @@ inherited CheckVIPForm: TCheckVIPForm
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 47
           end
           object Price: TcxGridDBColumn
@@ -295,11 +300,12 @@ inherited CheckVIPForm: TCheckVIPForm
         end
       end
       object cxSplitter1: TcxSplitter
-        Left = 273
+        Left = 320
         Top = 0
         Width = 8
-        Height = 356
+        Height = 379
         HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salRight
         Control = cxGrid
       end
     end
@@ -546,24 +552,16 @@ inherited CheckVIPForm: TCheckVIPForm
       Category = 'DSDLib'
       MoveParams = <>
     end
-    object actUpdateMovementItemAmount: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdateMovementItemAmount
-      StoredProcList = <
-        item
-          StoredProc = spUpdateMovementItemAmount
-        end>
-      Caption = 'actUpdateMovementItemAmount'
-      DataSource = DataSource1
-    end
   end
   inherited MasterDS: TDataSource
     Left = 40
     Top = 88
   end
   inherited MasterCDS: TClientDataSet
+    IndexFieldNames = 'Id'
+    MasterFields = 'MovementId'
+    MasterSource = DataSource1
+    PacketRecords = 0
     Left = 8
     Top = 88
   end
@@ -696,10 +694,7 @@ inherited CheckVIPForm: TCheckVIPForm
   object ClientDataSet1: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
-    IndexFieldNames = 'MovementId'
-    MasterFields = 'Id'
-    MasterSource = MasterDS
-    PacketRecords = 0
+    IndexFieldNames = 'GoodsName'
     Params = <>
     Left = 344
     Top = 56
@@ -839,57 +834,5 @@ inherited CheckVIPForm: TCheckVIPForm
     PackSize = 1
     Left = 528
     Top = 168
-  end
-  object spUpdateMovementItemAmount: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MovementItem_Check_Amount'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = ClientDataSet1
-        ComponentItem = 'ID'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = ClientDataSet1
-        ComponentItem = 'MovementId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = ClientDataSet1
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmount'
-        Value = Null
-        Component = ClientDataSet1
-        ComponentItem = 'Amount'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalSumm'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TotalSumm'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    NeedResetData = True
-    ParamKeyField = 'inId'
-    Left = 440
-    Top = 112
   end
 end

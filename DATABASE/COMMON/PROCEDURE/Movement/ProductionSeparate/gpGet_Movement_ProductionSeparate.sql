@@ -14,7 +14,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              --, TotalCount TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
-             , PartionGoods TVarChar)
+             , PartionGoods TVarChar
+             , isCalculated Boolean
+             )
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -39,6 +41,8 @@ BEGIN
              , CAST ('' AS TVarChar) 				            AS ToName
              , CAST ('' AS TVarChar) 				            AS PartionGoods
 
+             , COALESCE (MovementBoolean_Calculated.ValueData, FALSE) :: Boolean AS isCalculated
+
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
      RETURN QUERY
@@ -54,7 +58,7 @@ BEGIN
          , Object_To.Id                                         AS ToId
          , Object_To.ValueData                                  AS ToName
          , MovementString_PartionGoods.ValueData                AS PartionGoods
-
+         , COALESCE (MovementBoolean_Calculated.ValueData, FALSE) :: Boolean AS isCalculated
      FROM Movement
           LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 /*
@@ -76,6 +80,10 @@ BEGIN
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
+          LEFT JOIN MovementBoolean AS MovementBoolean_Calculated
+                                    ON MovementBoolean_Calculated.MovementId = Movement.Id
+                                   AND MovementBoolean_Calculated.DescId = zc_MovementBoolean_Calculated()
+
      WHERE Movement.Id = inMovementId
        AND Movement.DescId = zc_Movement_ProductionSeparate();
 
@@ -90,6 +98,7 @@ ALTER FUNCTION gpGet_Movement_ProductionSeparate (Integer, TDateTime, TVarChar) 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 07.10.18         *
  28.05.14                                                        *
  16.07.13         *
 

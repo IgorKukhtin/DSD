@@ -152,6 +152,15 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
+          object IsCalculated: TcxGridDBColumn
+            Caption = #1056#1072#1089#1089#1095#1080#1090#1099#1074#1072#1077#1090#1089#1103' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isCalculated'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1088#1072#1089#1089#1095#1080#1090#1099#1074#1072#1077#1090#1089#1103' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 66
+          end
         end
       end
       inherited cxGridChild: TcxGrid
@@ -314,6 +323,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       Left = 214
       Top = 43
       Caption = #1055#1072#1088#1090#1080#1103' '#1089#1099#1088#1100#1103
+    end
+    object cbCalculated: TcxCheckBox
+      Left = 490
+      Top = 61
+      Caption = #1088#1072#1089#1095#1077#1090' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077'-'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080'>'
+      Properties.ReadOnly = True
+      TabOrder = 12
+      Width = 335
     end
   end
   inherited ActionList: TActionList
@@ -526,6 +543,32 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         end>
       isShowModal = True
     end
+    object actUpdate_MI_Calculated: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_Calculated
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_Calculated
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1090#1086#1074#1072#1088#1072' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1090#1086#1074#1072#1088#1072' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 76
+    end
+    object actCalculated: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCalculated
+      StoredProcList = <
+        item
+          StoredProc = spCalculated
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1088#1072#1089#1095#1077#1090' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1088#1072#1089#1095#1077#1090' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 77
+    end
   end
   inherited MasterCDS: TClientDataSet
     Left = 656
@@ -601,6 +644,22 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_MI_Calculated'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCalculated'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -649,6 +708,15 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     end
     object bbPrint_Ceh: TdxBarButton
       Action = actPrint_Ceh
+      Category = 0
+    end
+    object bbCalculated: TdxBarButton
+      Action = actCalculated
+      Category = 0
+    end
+    object bbUpdate_MI_Calculated: TdxBarButton
+      Action = actUpdate_MI_Calculated
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1083#1103' '#1090#1086#1074#1072#1088#1072' "'#1088#1072#1089#1089#1095#1080#1090#1099#1074#1072#1077#1090#1089#1103' '#1044#1072'/'#1053#1077#1090'"'
       Category = 0
     end
   end
@@ -757,8 +825,10 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'isCalculated'
         Value = Null
-        ParamType = ptUnknown
+        Component = cbCalculated
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 288
@@ -1221,5 +1291,56 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     Params = <>
     Left = 612
     Top = 174
+  end
+  object spCalculated: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Calculated'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId '
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisCalculated'
+        Value = Null
+        Component = cbCalculated
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 336
+    Top = 419
+  end
+  object spUpdate_MI_Calculated: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_ProductionSeparate_Calculated'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId '
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisCalculated'
+        Value = 'False'
+        Component = MasterCDS
+        ComponentItem = 'isCalculated'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 392
+    Top = 451
   end
 end

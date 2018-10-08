@@ -23,7 +23,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxCheckBox;
 
 type
   TProductionSeparateForm = class(TAncestorDocumentMCForm)
@@ -50,6 +51,13 @@ type
     actStorageLine: TOpenChoiceForm;
     actStorageLineChild: TOpenChoiceForm;
     PrintItemsTwoCDS: TClientDataSet;
+    cbCalculated: TcxCheckBox;
+    spCalculated: TdsdStoredProc;
+    actCalculated: TdsdExecStoredProc;
+    bbCalculated: TdxBarButton;
+    spUpdate_MI_Calculated: TdsdStoredProc;
+    actUpdate_MI_Calculated: TdsdExecStoredProc;
+    bbUpdate_MI_Calculated: TdxBarButton;
   private
     { Private declarations }
   public

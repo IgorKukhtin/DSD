@@ -15,7 +15,7 @@ uses
   Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod, cxDropDownEdit, cxCalendar,
   dsdGuides, dxBarBuiltInMenu, cxNavigator, dxSkinsCore, dxSkinsDefaultPainters,
   dxSkinscxPCPainter, dxSkinsdxBarPainter, cxGridBandedTableView,
-  cxGridDBBandedTableView;
+  cxGridDBBandedTableView, cxCheckBox;
 
 type
   TReport_KPUForm = class(TAncestorReportForm)
@@ -30,6 +30,12 @@ type
     FactOfManDays: TcxGridDBBandedColumn;
     cxGridDBBandedTableView1: TcxGridDBBandedTableView;
     MarkRatio: TcxGridDBBandedColumn;
+    spInsertUpdateMovementItem: TdsdStoredProc;
+    actUpdateMainDS: TdsdUpdateDataSet;
+    edRecount: TcxCheckBox;
+    cxGridDBBandedTableView1Column1: TcxGridDBBandedColumn;
+    cxGridDBBandedTableView1Column2: TcxGridDBBandedColumn;
+    cxGridDBBandedTableView1Column3: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public
