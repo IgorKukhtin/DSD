@@ -33,9 +33,21 @@ type
     spInsertUpdateMovementItem: TdsdStoredProc;
     actUpdateMainDS: TdsdUpdateDataSet;
     edRecount: TcxCheckBox;
-    cxGridDBBandedTableView1Column1: TcxGridDBBandedColumn;
-    cxGridDBBandedTableView1Column2: TcxGridDBBandedColumn;
-    cxGridDBBandedTableView1Column3: TcxGridDBBandedColumn;
+    PrevAverageCheck: TcxGridDBBandedColumn;
+    AverageCheck: TcxGridDBBandedColumn;
+    AverageCheckRatio: TcxGridDBBandedColumn;
+    PositionName: TcxGridDBBandedColumn;
+    DateIn: TcxGridDBBandedColumn;
+    LateTimeRatio: TcxGridDBBandedColumn;
+    CorrectAnswers: TcxGridDBBandedColumn;
+    NumberAttempts: TcxGridDBBandedColumn;
+    ExamPercentage: TcxGridDBBandedColumn;
+    IT_ExamRatio: TcxGridDBBandedColumn;
+    ExamResult: TcxGridDBBandedColumn;
+    ComplaintsRatio: TcxGridDBBandedColumn;
+    ComplaintsNote: TcxGridDBBandedColumn;
+    DirectorRatio: TcxGridDBBandedColumn;
+    DirectorNote: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

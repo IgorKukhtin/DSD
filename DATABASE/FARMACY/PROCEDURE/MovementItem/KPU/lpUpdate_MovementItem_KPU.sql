@@ -1,3 +1,5 @@
+-- Function: lpUpdate_MovementItem_KPU (Integer)
+
 DROP FUNCTION IF EXISTS lpUpdate_MovementItem_KPU (Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_MovementItem_KPU(
@@ -22,8 +24,13 @@ BEGIN
             THEN 1 ELSE -1 END END)
         + COALESCE (MIFloat_AverageCheckRatio.ValueData,
             CASE WHEN COALESCE (MIFloat_PrevAverageCheck.ValueData, 0) = 0
-            THEN 0 ELSE ROUND(COALESCE (MIFloat_AverageCheck.ValueData, 0) / COALESCE (MIFloat_PrevAverageCheck.ValueData, 0) - 1, 1)
+            THEN 0 ELSE ROUND((COALESCE (MIFloat_AverageCheck.ValueData, 0) / COALESCE (MIFloat_PrevAverageCheck.ValueData, 0) - 1) * 100, 1)
             END)
+        + COALESCE (MIFloat_LateTimeRatio.ValueData, 0)
+        + COALESCE (MIFloat_IT_ExamRatio.ValueData, 0)
+        + COALESCE (MIFloat_ComplaintsRatio.ValueData, 0)
+        + COALESCE (MIFloat_DirectorRatio.ValueData, 0)
+
   INTO
     vbKPU
   FROM MovementItem
@@ -51,6 +58,22 @@ BEGIN
        LEFT JOIN MovementItemFloat AS MIFloat_AverageCheckRatio
                                    ON MIFloat_AverageCheckRatio.MovementItemId = MovementItem.Id
                                   AND MIFloat_AverageCheckRatio.DescId = zc_MIFloat_AverageCheckRatio()
+
+       LEFT JOIN MovementItemFloat AS MIFloat_LateTimeRatio
+                                   ON MIFloat_LateTimeRatio.MovementItemId = MovementItem.Id
+                                  AND MIFloat_LateTimeRatio.DescId = zc_MIFloat_LateTimeRatio()
+
+       LEFT JOIN MovementItemFloat AS MIFloat_IT_ExamRatio
+                                   ON MIFloat_IT_ExamRatio.MovementItemId = MovementItem.Id
+                                  AND MIFloat_IT_ExamRatio.DescId = zc_MIFloat_IT_ExamRatio()
+
+       LEFT JOIN MovementItemFloat AS MIFloat_ComplaintsRatio
+                                   ON MIFloat_ComplaintsRatio.MovementItemId = MovementItem.Id
+                                  AND MIFloat_ComplaintsRatio.DescId = zc_MIFloat_ComplaintsRatio()
+
+       LEFT JOIN MovementItemFloat AS MIFloat_DirectorRatio
+                                   ON MIFloat_DirectorRatio.MovementItemId = MovementItem.Id
+                                  AND MIFloat_DirectorRatio.DescId = zc_MIFloat_DirectorRatio()
 
   WHERE MovementItem.Id = inMovementId
     AND MovementItem.isErased = false;
