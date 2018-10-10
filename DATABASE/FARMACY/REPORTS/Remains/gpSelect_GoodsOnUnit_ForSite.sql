@@ -115,13 +115,14 @@ BEGIN
         -- добавляем то что нашли
         INSERT INTO _tmpGoodsMinPrice_List (GoodsId, GoodsId_retail)
            WITH tmp AS (SELECT SPLIT_PART (inGoodsId_list, ',', vbIndex) :: Integer AS GoodsId)
-              , tmpRes AS (SELECT tmp.GoodsId
+              , tmpRes AS (SELECT ObjectLink_Child.ChildObjectId      AS GoodsId
                                 , ObjectLink_Child_ALL.ChildObjectId AS GoodsId_retail
                                 , Object_Retail.DescId
-                           FROM tmp
-                                INNER JOIN ObjectLink AS ObjectLink_Child
-                                                      ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
-                                                     AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                           -- FROM tmp
+                           --      INNER JOIN ObjectLink AS ObjectLink_Child
+                           --                            ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
+                           --                           AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                           FROM ObjectLink AS ObjectLink_Child
                                 INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                                          AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
                                 INNER JOIN ObjectLink AS ObjectLink_Main_ALL ON ObjectLink_Main_ALL.ChildObjectId = ObjectLink_Main.ChildObjectId
@@ -133,6 +134,8 @@ BEGIN
                                                      AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                 INNER JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Goods_Object.ChildObjectId
                                                                 -- AND Object_Retail.DescId = zc_Object_Retail()
+                           WHERE ObjectLink_Child.ChildObjectId IN (SELECT tmp.GoodsId FROM tmp)
+                             AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
                           )
               SELECT tmpRes.GoodsId, tmpRes.GoodsId_retail FROM tmpRes WHERE tmpRes.DescId = zc_Object_Retail()
           ;

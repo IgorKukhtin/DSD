@@ -75,7 +75,8 @@ BEGIN
                             INNER JOIN Object_Unit_View ON Object_Unit_View.BranchId = _tmpBranch.BranchId
                         )
      
-  , tmpContainerListSum AS (SELECT tmpUnitList.BranchId, tmpUnitList.Id AS UnitId, tmpUnitList.isUnit_Vz, Container.Id AS ContainerId, Object_Account_View.AccountDirectionId, Container.*
+  , tmpContainerListSum AS (SELECT tmpUnitList.BranchId, tmpUnitList.Id AS UnitId, tmpUnitList.isUnit_Vz, Container.Id AS ContainerId
+                                 , Container.*
                          FROM tmpUnitList 
                              INNER JOIN ContainerLinkObject AS CLO_Unit
                                                 ON CLO_Unit.ObjectId = tmpUnitList.Id
@@ -85,17 +86,24 @@ BEGIN
                              INNER JOIN Object_Account_View ON Object_Account_View.AccountId = Container.ObjectId
                                                            AND Object_Account_View.AccountDirectionId = zc_Enum_AccountDirection_20700() 
                         )
-, tmpContainerList AS (SELECT tmpUnitList.BranchId, tmpUnitList.Id AS UnitId, tmpUnitList.isUnit_Vz, Container.Id AS ContainerId, Object_Account_View.AccountDirectionId, Container.*
+, tmpContainerList AS (SELECT tmpUnitList.BranchId, tmpUnitList.Id AS UnitId, tmpUnitList.isUnit_Vz, Container.Id AS ContainerId
+                            , Container.*
                          FROM tmpUnitList 
-                             INNER JOIN ContainerLinkObject AS CLO_Unit
-                                                ON CLO_Unit.ObjectId = tmpUnitList.Id
-                                               AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit() 
-                             INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId
-                                                 AND Container.DescId = zc_Container_Count()    
-                             LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Container.ObjectId
-                        
+                              INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                             ON CLO_Unit.ObjectId = tmpUnitList.Id
+                                                            AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit() 
+                              INNER JOIN Container ON Container.Id     = CLO_Unit.ContainerId
+                                                  AND Container.DescId = zc_Container_Count()    
+                              INNER JOIN Object ON Object.Id     = Container.ObjectId
+                                               AND Object.DescId = zc_Object_Goods()    
+                              LEFT JOIN ContainerLinkObject AS CLO_Member
+                                                            ON CLO_Member.ContainerId = Container.Id
+                                                           AND CLO_Member.DescId      = zc_ContainerLinkObject_Member() 
+                              LEFT JOIN ContainerLinkObject AS CLO_Car
+                                                            ON CLO_Car.ContainerId = Container.Id
+                                                           AND CLO_Car.DescId      = zc_ContainerLinkObject_Car() 
+                         WHERE CLO_Member.ContainerId IS NULL AND CLO_Car.ContainerId IS NULL
                         )
-                        
       , tmpGoodsSumm AS (SELECT tmpContainerListSum.BranchId
                           , CASE WHEN tmpContainerListSum.isUnit_Vz = FALSE
                                  THEN tmpContainerListSum.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) 
@@ -437,7 +445,7 @@ BEGIN
                                       ELSE 0 END) AS CountInventory_RePrice_Vz
                      FROM tmpContainerList
                           LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = tmpContainerList.ContainerId
-                                                                      AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                                                                      AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
                           LEFT JOIN MovementItemContainer AS MIContainer 
                                                           ON MIContainer.ContainerId = tmpContainerList.ContainerId 
                                                          AND MIContainer.OperDate >= inStartDate 
@@ -448,6 +456,7 @@ BEGIN
                     
     , tmpGoodsWeight AS (
                    SELECT tmpGoodsCount.BranchId 
+                          -- CASE WHEN inSession = '5' THEN tmpGoodsCount.GoodsId ELSE tmpGoodsCount.BranchId END AS BranchId
                         , CAST (tmpGoodsCount.CountStart * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                   AS TFloat) AS CountStart
                         , CAST (tmpGoodsCount.CountEnd * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                     AS TFloat) AS CountEnd
                         , CAST (tmpGoodsCount.CountIn * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END                      AS TFloat) AS CountIn
@@ -669,32 +678,32 @@ BEGIN
                         , 0 AS SummInventory_Vz
                         , 0 AS SummInventory_RePrice_Vz
 
-                        , CAST (SUM (tmpGoodsWeight.CountStart) AS NUMERIC (16, 2))   AS CountStart
-                        , CAST (SUM (tmpGoodsWeight.CountEnd) AS NUMERIC (16, 2))     AS CountEnd
-                        , CAST (SUM (tmpGoodsWeight.CountIn) AS NUMERIC (16, 2))      AS CountIn
-                        , CAST (SUM (tmpGoodsWeight.CountOut) AS NUMERIC (16, 2))     AS CountOut
-                        , CAST (SUM (tmpGoodsWeight.CountSale) AS NUMERIC (16, 2))           AS CountSale
-                        , CAST (SUM (tmpGoodsWeight.CountSaleReal) AS NUMERIC (16, 2))       AS CountSaleReal
-                        , CAST (SUM (tmpGoodsWeight.CountReturnIn) AS NUMERIC (16, 2))       AS CountReturnIn
-                        , CAST (SUM (tmpGoodsWeight.CountSendOnPriceIn) AS NUMERIC (16, 2))  AS CountSendOnPriceIn
-                        , CAST (SUM (tmpGoodsWeight.CountLoss) AS NUMERIC (16, 2))           AS CountLoss    
-                        , CAST (SUM (tmpGoodsWeight.CountSendOnPriceOut) AS NUMERIC (16, 2)) AS CountSendOnPriceOut  
-                        , CAST (SUM (tmpGoodsWeight.CountPeresortIn) AS NUMERIC (16, 2))     AS CountPeresortIn 
-                        , CAST (SUM (tmpGoodsWeight.CountPeresortOut) AS NUMERIC (16, 2))    AS CountPeresortOut    
-                        , CAST (SUM (tmpGoodsWeight.CountInventory) AS NUMERIC (16, 2))      AS CountInventory
-                        , CAST (SUM (tmpGoodsWeight.CountSale_40208) AS NUMERIC (16, 2))     AS CountSale_40208
-                        , CAST (SUM (tmpGoodsWeight.CountSale_10500) AS NUMERIC (16, 2))     AS CountSale_10500
-                        , CAST (SUM (tmpGoodsWeight.CountInventory_RePrice) AS NUMERIC (16, 2)) AS CountInventory_RePrice
+                        , CAST (SUM (tmpGoodsWeight.CountStart) AS NUMERIC (16, 4))   AS CountStart
+                        , CAST (SUM (tmpGoodsWeight.CountEnd) AS NUMERIC (16, 4))     AS CountEnd
+                        , CAST (SUM (tmpGoodsWeight.CountIn) AS NUMERIC (16, 4))      AS CountIn
+                        , CAST (SUM (tmpGoodsWeight.CountOut) AS NUMERIC (16, 4))     AS CountOut
+                        , CAST (SUM (tmpGoodsWeight.CountSale) AS NUMERIC (16, 4))           AS CountSale
+                        , CAST (SUM (tmpGoodsWeight.CountSaleReal) AS NUMERIC (16, 4))       AS CountSaleReal
+                        , CAST (SUM (tmpGoodsWeight.CountReturnIn) AS NUMERIC (16, 4))       AS CountReturnIn
+                        , CAST (SUM (tmpGoodsWeight.CountSendOnPriceIn) AS NUMERIC (16, 4))  AS CountSendOnPriceIn
+                        , CAST (SUM (tmpGoodsWeight.CountLoss) AS NUMERIC (16, 4))           AS CountLoss    
+                        , CAST (SUM (tmpGoodsWeight.CountSendOnPriceOut) AS NUMERIC (16, 4)) AS CountSendOnPriceOut  
+                        , CAST (SUM (tmpGoodsWeight.CountPeresortIn) AS NUMERIC (16, 4))     AS CountPeresortIn 
+                        , CAST (SUM (tmpGoodsWeight.CountPeresortOut) AS NUMERIC (16, 4))    AS CountPeresortOut    
+                        , CAST (SUM (tmpGoodsWeight.CountInventory) AS NUMERIC (16, 4))      AS CountInventory
+                        , CAST (SUM (tmpGoodsWeight.CountSale_40208) AS NUMERIC (16, 4))     AS CountSale_40208
+                        , CAST (SUM (tmpGoodsWeight.CountSale_10500) AS NUMERIC (16, 4))     AS CountSale_10500
+                        , CAST (SUM (tmpGoodsWeight.CountInventory_RePrice) AS NUMERIC (16, 4)) AS CountInventory_RePrice
 
-                        , CAST (SUM (tmpGoodsWeight.CountStart_Vz) AS NUMERIC (16, 2))          AS CountStart_Vz
-                        , CAST (SUM (tmpGoodsWeight.CountEnd_Vz) AS NUMERIC (16, 2))            AS CountEnd_Vz
-                        , CAST (SUM (tmpGoodsWeight.CountReturnIn_Vz) AS NUMERIC (16, 2))       AS CountReturnIn_Vz
-                        , CAST (SUM (tmpGoodsWeight.CountPeresortIn_Vz) AS NUMERIC (16, 2))     AS CountPeresortIn_Vz    
-                        , CAST (SUM (tmpGoodsWeight.CountPeresortOut_Vz) AS NUMERIC (16, 2))    AS CountPeresortOut_Vz  
-                        , CAST (SUM (tmpGoodsWeight.CountSendOnPriceOut_Vz) AS NUMERIC (16, 2)) AS CountSendOnPriceOut_Vz  
-                        , CAST (SUM (tmpGoodsWeight.CountLoss_Vz) AS NUMERIC (16, 2))           AS CountLoss_Vz
-                        , CAST (SUM (tmpGoodsWeight.CountInventory_Vz) AS NUMERIC (16, 2))      AS CountInventory_Vz
-                        , CAST (SUM (tmpGoodsWeight.CountInventory_RePrice_Vz) AS NUMERIC (16, 2)) AS CountInventory_RePrice_Vz
+                        , CAST (SUM (tmpGoodsWeight.CountStart_Vz) AS NUMERIC (16, 4))          AS CountStart_Vz
+                        , CAST (SUM (tmpGoodsWeight.CountEnd_Vz) AS NUMERIC (16, 4))            AS CountEnd_Vz
+                        , CAST (SUM (tmpGoodsWeight.CountReturnIn_Vz) AS NUMERIC (16, 4))       AS CountReturnIn_Vz
+                        , CAST (SUM (tmpGoodsWeight.CountPeresortIn_Vz) AS NUMERIC (16, 4))     AS CountPeresortIn_Vz    
+                        , CAST (SUM (tmpGoodsWeight.CountPeresortOut_Vz) AS NUMERIC (16, 4))    AS CountPeresortOut_Vz  
+                        , CAST (SUM (tmpGoodsWeight.CountSendOnPriceOut_Vz) AS NUMERIC (16, 4)) AS CountSendOnPriceOut_Vz  
+                        , CAST (SUM (tmpGoodsWeight.CountLoss_Vz) AS NUMERIC (16, 4))           AS CountLoss_Vz
+                        , CAST (SUM (tmpGoodsWeight.CountInventory_Vz) AS NUMERIC (16, 4))      AS CountInventory_Vz
+                        , CAST (SUM (tmpGoodsWeight.CountInventory_RePrice_Vz) AS NUMERIC (16, 4)) AS CountInventory_RePrice_Vz
                    FROM tmpGoodsWeight
                    GROUP BY tmpGoodsWeight.BranchId
                 ) AS tmpAll

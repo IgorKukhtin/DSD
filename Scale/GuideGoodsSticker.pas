@@ -132,6 +132,7 @@ type
     fCloseOK : Boolean;
     fModeSave : Boolean;
     fStartWrite : Boolean;
+    fEnterId:Boolean;
     fEnterGoodsCode:Boolean;
     fEnterGoodsName:Boolean;
     fEnterGoodsKindCode:Boolean;
@@ -140,6 +141,7 @@ type
     fStickerFileName : String;
     fStartShowReport : Boolean;
 
+    Id_FilterValue:String;
     GoodsCode_FilterValue:String;
     GoodsName_FilterValue:String;
 
@@ -466,6 +468,8 @@ begin
      fModeSave:= isModeSave;
      fCloseOK:=false;
 
+     Id_FilterValue:='';
+     fEnterId:=false;
      fEnterGoodsCode:=false;
      fEnterGoodsName:=false;
      fEnterGoodsKindCode:=false;
@@ -617,6 +621,14 @@ begin
      else try GoodsKindCode:=StrToInt(EditGoodsKindCode.Text) except GoodsKindCode:=0;end;
      //
      //
+
+     if (fEnterId) and (Id_FilterValue<>'')
+     then begin
+       if  (Id_FilterValue=DataSet.FieldByName('Id').AsString)
+       then Accept:=true
+       else Accept:=false
+     end
+     else
      if fEnterGoodsCode
      then
        if  (EditGoodsCode.Text=DataSet.FieldByName('GoodsCode').AsString)
@@ -1132,6 +1144,10 @@ begin
                 fEnterGoodsName:= false;
           end;
      //
+     fEnterId:= true;
+     Id_FilterValue := CDS.FieldByName('Id').AsString;
+
+     //
      fEnterGoodsKindCode:=true;
      if rgGoodsKind.Items.Count>1
      then EditGoodsKindCode.Text:=CDS.FieldByName('GoodsKindCode').AsString;
@@ -1139,6 +1155,11 @@ begin
 
      //
      ActiveControl:=EditWeightValue;
+     //
+
+     fEnterId:= false;
+     Id_FilterValue := '';
+
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.actExitExecute(Sender: TObject);
