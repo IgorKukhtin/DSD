@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Currency(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , Amount TFloat, ParValue TFloat
+             , Amount_Currency TFloat
              , Comment TVarChar
              , CurrencyFromName TVarChar
              , CurrencyToName TVarChar
@@ -34,6 +35,21 @@ BEGIN
                          UNION
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          )
+          , tmpMovement AS (SELECT Movement.*
+                            FROM tmpStatus
+                                 JOIN Movement ON Movement.DescId = zc_Movement_Currency()
+                                              AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                              AND Movement.StatusId = tmpStatus.StatusId
+                           )
+          , tmpMIContainer AS (SELECT MIContainer.MovementId
+                                    , SUM (MIContainer.Amount) AS Amount_Currency
+                               FROM tmpMovement
+                                    LEFT JOIN MovementItemContainer AS MIContainer
+                                                                    ON MIContainer.MovementId = tmpMovement.Id
+                                                                   AND MIContainer.AccountId = zc_Enum_Account_100301()
+                               GROUP BY MIContainer.MovementId
+                               )
+
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -43,7 +59,8 @@ BEGIN
 
 
            , MovementItem.Amount             AS Amount
-           , MIFloat_ParValue.ValueData   AS ParValue
+           , MIFloat_ParValue.ValueData      AS ParValue
+           , COALESCE (tmpMIContainer.Amount_Currency, 0) :: TFloat AS Amount_Currency
 
            , MIString_Comment.ValueData      AS Comment
 
@@ -53,10 +70,7 @@ BEGIN
 
            , Object_PaidKind.ValueData       AS PaidKindName
 
-       FROM tmpStatus
-            JOIN Movement ON Movement.DescId = zc_Movement_Currency()
-                         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                         AND Movement.StatusId = tmpStatus.StatusId
+       FROM tmpMovement AS Movement
            -- JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -80,6 +94,8 @@ BEGIN
                                          ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                         AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
+            
+            LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementId = Movement.Id
       ;
   
 END;

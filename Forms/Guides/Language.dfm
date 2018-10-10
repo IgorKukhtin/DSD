@@ -43,7 +43,6 @@ object LanguageForm: TLanguageForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.CellAutoHeight = True
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
@@ -78,6 +77,110 @@ object LanguageForm: TLanguageForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 59
+      end
+      object Value1: TcxGridDBColumn
+        Caption = #1058#1077#1082#1089#1090' 1'
+        DataBinding.FieldName = 'Value1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object Value2: TcxGridDBColumn
+        Caption = #1058#1077#1082#1089#1090' 2'
+        DataBinding.FieldName = 'Value2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object Value3: TcxGridDBColumn
+        Caption = #1058#1077#1082#1089#1090' 3'
+        DataBinding.FieldName = 'Value3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object Value4: TcxGridDBColumn
+        Caption = #1058#1077#1082#1089#1090' 4'
+        DataBinding.FieldName = 'Value4'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object Value5: TcxGridDBColumn
+        Caption = #1058#1077#1082#1089#1090' 5'
+        DataBinding.FieldName = 'Value5'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object Value6: TcxGridDBColumn
+        Caption = #1058#1077#1082#1089#1090' 6'
+        DataBinding.FieldName = 'Value6'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object Value7: TcxGridDBColumn
+        Caption = #1058#1077#1082#1089#1090' 7'
+        DataBinding.FieldName = 'Value7'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object Value8: TcxGridDBColumn
+        Caption = #1058#1077#1082#1089#1090' 8'
+        DataBinding.FieldName = 'Value8'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object Value9: TcxGridDBColumn
+        Caption = #1058#1077#1082#1089#1090' 9'
+        DataBinding.FieldName = 'Value9'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object Value10: TcxGridDBColumn
+        Caption = #1058#1077#1082#1089#1090' 10'
+        DataBinding.FieldName = 'Value10'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object Value11: TcxGridDBColumn
+        Caption = #1058#1077#1082#1089#1090' 11'
+        DataBinding.FieldName = 'Value11'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object Value12: TcxGridDBColumn
+        Caption = #1058#1077#1082#1089#1090' 12'
+        DataBinding.FieldName = 'Value12'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object Value13: TcxGridDBColumn
+        Caption = #1058#1077#1082#1089#1090' 13'
+        DataBinding.FieldName = 'Value13'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
       end
     end
     object cxGridLevel: TcxGridLevel

@@ -1,12 +1,26 @@
  -- Function: gpInsertUpdate_Object_Language()
 
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Language (Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Language (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Language(
    INOUT ioId                       Integer,     -- ид
       IN incode                     Integer,     -- код 
       IN inName                     TVarChar,    -- наименование 
       IN inComment                  TVarChar,    -- Примечание
+      IN inValue1                   TVarChar, 
+      IN inValue2                   TVarChar, 
+      IN inValue3                   TVarChar, 
+      IN inValue4                   TVarChar, 
+      IN inValue5                   TVarChar, 
+      IN inValue6                   TVarChar, 
+      IN inValue7                   TVarChar, 
+      IN inValue8                   TVarChar, 
+      IN inValue9                   TVarChar, 
+      IN inValue10                  TVarChar, 
+      IN inValue11                  TVarChar, 
+      IN inValue12                  TVarChar, 
+      IN inValue13                  TVarChar, 
       IN inSession                  TVarChar     -- Пользователь
       )
   RETURNS Integer AS
@@ -34,6 +48,33 @@ BEGIN
    
    -- сохранили св-во <Примечание>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Comment(), ioId, inComment);
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Value1(), ioId, inValue1);
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Value2(), ioId, inValue2);
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Value3(), ioId, inValue3);
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Value4(), ioId, inValue4);
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Value5(), ioId, inValue5);
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Value6(), ioId, inValue6);
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Value7(), ioId, inValue7);
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Value8(), ioId, inValue8);
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Value9(), ioId, inValue9);
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Value10(), ioId, inValue10);
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Value11(), ioId, inValue11);
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Value12(), ioId, inValue12);
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Value13(), ioId, inValue13);
+
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -45,6 +86,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.10.18         *
  23.10.17         *
 */
 

@@ -2,9 +2,8 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 516
   ClientWidth = 1054
-  ExplicitLeft = -281
   ExplicitWidth = 1070
-  ExplicitHeight = 551
+  ExplicitHeight = 554
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -241,25 +240,25 @@
             Width = 70
           end
           object SamplePrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1076#1083#1103' '#1057#1045#1052#1055#1051
+            Caption = #1062#1077#1085#1072' '#1057#1069#1052#1055#1051' '#1074'  '#1087#1088#1072#1081#1089'. '#1094#1077#1085#1072#1093' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'SamplePrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1076#1083#1103' '#1057#1045#1052#1055#1051
+            HeaderHint = #1062#1077#1085#1072' '#1057#1069#1052#1055#1051' '#1074'  '#1087#1088#1072#1081#1089'. '#1094#1077#1085#1072#1093' '#1089' '#1053#1044#1057
             Width = 75
           end
           object SampleSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' '#1076#1083#1103' '#1057#1045#1052#1055#1051
+            Caption = #1057#1091#1084#1084#1072' '#1057#1069#1052#1055#1051' '#1074' '#1087#1088#1072#1081#1089'. '#1094#1077#1085#1072#1093' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'SampleSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1072#1081#1089' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1076#1083#1103' '#1057#1045#1052#1055#1051
+            HeaderHint = #1057#1091#1084#1084#1072' '#1057#1069#1052#1055#1051' '#1074' '#1087#1088#1072#1081#1089'. '#1094#1077#1085#1072#1093' '#1089' '#1053#1044#1057
             Options.Editing = False
             Width = 75
           end

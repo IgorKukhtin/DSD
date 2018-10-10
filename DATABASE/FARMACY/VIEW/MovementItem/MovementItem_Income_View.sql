@@ -17,11 +17,11 @@ CREATE OR REPLACE VIEW MovementItem_Income_View AS
                  WHEN Movement_Income.PriceWithVAT THEN  MIFloat_Price.ValueData
                                      ELSE (MIFloat_Price.ValueData * (1 + Movement_Income.NDS/100))::TFloat
              END AS PriceWithVAT
+             
            , COALESCE(MIFloat_PriceSample.ValueData,0)::TFloat      AS PriceSample
-           , CASE 
-                 WHEN Movement_Income.PriceWithVAT THEN  MIFloat_PriceSample.ValueData
-                                     ELSE (MIFloat_PriceSample.ValueData * (1 + Movement_Income.NDS/100))::TFloat
-             END AS PriceSampleWithVAT
+           
+           , COALESCE(MIFloat_PriceSample.ValueData,0)::TFloat      AS PriceSampleWithVAT
+             
            , COALESCE(MIFloat_PriceSale.ValueData,0)::TFloat        AS PriceSale
            
            , (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat AS AmountSumm

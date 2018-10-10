@@ -2451,6 +2451,7 @@ end;
 
 procedure TLoadFormTest.LoadStickerFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSticker_ListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSticker_ListForm');
 
@@ -2511,6 +2512,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TStickerSkinForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerSkinEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerSkinEditForm');
+  }
   //Language
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLanguageForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLanguageForm');
