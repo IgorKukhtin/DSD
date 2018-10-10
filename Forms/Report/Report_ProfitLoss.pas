@@ -61,9 +61,9 @@ type
     clInfoMoneyCode: TcxDBPivotGridField;
     clInfoMoneyGroupName: TcxDBPivotGridField;
     clInfoMoneyDestinationName: TcxDBPivotGridField;
-    MultiAction1: TMultiAction;
-    dsdOpenForm1: TdsdOpenForm;
-    dsdExecStoredProc1: TdsdExecStoredProc;
+    macReport_Account: TMultiAction;
+    actOpenReport_Account: TdsdOpenForm;
+    actGetProfitLostParam: TdsdExecStoredProc;
     spGetProfitLostParam: TdsdStoredProc;
     PivotAddOn: TPivotAddOn;
     PeriodChoice: TPeriodChoice;
@@ -77,6 +77,10 @@ type
     PL_GroupName_original: TcxDBPivotGridField;
     PL_DirectionName_original: TcxDBPivotGridField;
     PL_Name_original: TcxDBPivotGridField;
+    bbReport_Account: TdxBarButton;
+    actOpenReport_AccountMotion: TdsdOpenForm;
+    macReport_AccountMotion: TMultiAction;
+    bbReport_AccountMotion: TdxBarButton;
   private
   public
   end;

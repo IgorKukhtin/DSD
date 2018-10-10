@@ -61,7 +61,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     Align = alClient
     DataSource = DataSource
     Groups = <>
-    TabOrder = 3
+    TabOrder = 2
     object clProfitLossGroupName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 0
@@ -325,6 +325,22 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_Account'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_AccountMotion'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -383,6 +399,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       Visible = ivAlways
       Control = cbTotal
     end
+    object bbReport_Account: TdxBarButton
+      Action = macReport_Account
+      Category = 0
+    end
+    object bbReport_AccountMotion: TdxBarButton
+      Action = macReport_AccountMotion
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -411,22 +435,213 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object MultiAction1: TMultiAction
+    object macReport_AccountMotion: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = dsdExecStoredProc1
+          Action = actGetProfitLostParam
         end
         item
-          Action = dsdOpenForm1
+          Action = actOpenReport_AccountMotion
         end>
-      Caption = 'MultiAction1'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
+      ImageIndex = 26
     end
-    object dsdOpenForm1: TdsdOpenForm
+    object macReport_Account: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'dsdOpenForm1'
+      ActionList = <
+        item
+          Action = actGetProfitLostParam
+        end
+        item
+          Action = actOpenReport_Account
+        end>
+      Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091'>'
+      ImageIndex = 25
+    end
+    object actOpenReport_AccountMotion: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
+      FormName = 'TReport_AccountMotionForm'
+      FormNameParam.Value = 'TReport_AccountMotionForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountId'
+          Value = '9210'
+          Component = FormParams
+          ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountName'
+          Value = '100301 '#1055#1088#1080#1073#1099#1083#1100' '#1090#1077#1082#1091#1097#1077#1075#1086' '#1087#1077#1088#1080#1086#1076#1072
+          Component = FormParams
+          ComponentItem = 'AccountName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountGroupId'
+          Value = '9023'
+          Component = FormParams
+          ComponentItem = 'AccountGroupId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountGroupName'
+          Value = '100000 '#1057#1086#1073#1089#1090#1074#1077#1085#1085#1099#1081' '#1082#1072#1087#1080#1090#1072#1083
+          Component = FormParams
+          ComponentItem = 'AccountGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountDirectionId'
+          Value = '9072'
+          Component = FormParams
+          ComponentItem = 'AccountDirectionId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountDirectionName'
+          Value = '100300 '#1055#1088#1080#1073#1099#1083#1100' '#1090#1077#1082#1091#1097#1077#1075#1086' '#1087#1077#1088#1080#1086#1076#1072
+          Component = FormParams
+          ComponentItem = 'AccountDirectionName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BusinessId'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'BusinessId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BusinessName'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'BusinessName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProfitLossGroupId'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'ProfitLossGroupId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProfitLossGroupName'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'ProfitLossGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProfitLossDirectionId'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'ProfitLossDirectionId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProfitLossDirectionName'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'ProfitLossDirectionName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProfitLossId'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'ProfitLossId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProfitLossName'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'ProfitLossName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchId'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'BranchId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'BranchName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementDescId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementDescName'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenReport_Account: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actOpenReport_Account'
+      Hint = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091'>'
       FormName = 'TReport_AccountForm'
       FormNameParam.Value = 'TReport_AccountForm'
       FormNameParam.DataType = ftString
@@ -583,7 +798,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         end>
       isShowModal = False
     end
-    object dsdExecStoredProc1: TdsdExecStoredProc
+    object actGetProfitLostParam: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -592,7 +807,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         item
           StoredProc = spGetProfitLostParam
         end>
-      Caption = 'dsdExecStoredProc1'
+      Caption = 'actGetProfitLostParam'
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -703,6 +918,9 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -920,13 +1138,10 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
   object PivotAddOn: TPivotAddOn
     ErasedFieldName = 'isErased'
     PivotGrid = cxDBPivotGrid
-    OnDblClickActionList = <
-      item
-        Action = MultiAction1
-      end>
+    OnDblClickActionList = <>
     ActionItemList = <
       item
-        Action = MultiAction1
+        Action = macReport_Account
         ShortCut = 13
       end>
     Left = 424
