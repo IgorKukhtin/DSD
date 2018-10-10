@@ -4,10 +4,8 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
   ClientWidth = 921
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -194
-  ExplicitTop = -195
   ExplicitWidth = 937
-  ExplicitHeight = 688
+  ExplicitHeight = 687
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -94,6 +92,17 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object Amount_Currency: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1050#1091#1088#1089'. '#1088#1072#1079#1085'.'
+            DataBinding.FieldName = 'Amount_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077

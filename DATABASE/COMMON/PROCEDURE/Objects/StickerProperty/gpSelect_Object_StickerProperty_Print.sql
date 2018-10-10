@@ -180,6 +180,64 @@ BEGIN
 
      -- Результат
      RETURN QUERY
+       WITH 
+       tmpLanguageParam AS (SELECT ObjectString_Value1.ValueData  AS Value1
+                                 , ObjectString_Value2.ValueData  AS Value2
+                                 , ObjectString_Value3.ValueData  AS Value3
+                                 , ObjectString_Value4.ValueData  AS Value4
+                                 , ObjectString_Value5.ValueData  AS Value5
+                                 , ObjectString_Value6.ValueData  AS Value6
+                                 , ObjectString_Value7.ValueData  AS Value7
+                                 , ObjectString_Value8.ValueData  AS Value8
+                                 , ObjectString_Value9.ValueData  AS Value9
+                                 , ObjectString_Value10.ValueData AS Value10
+                                 , ObjectString_Value11.ValueData AS Value11
+                                 , ObjectString_Value12.ValueData AS Value12
+                                 , ObjectString_Value13.ValueData AS Value13
+                            FROM ObjectLink AS ObjectLink_StickerFile_Language
+                                 LEFT JOIN ObjectString AS ObjectString_Value1
+                                                        ON ObjectString_Value1.ObjectId = ObjectLink_StickerFile_Language.ChildObjectId
+                                                       AND ObjectString_Value1.DescId = zc_ObjectString_Language_Value1()
+                                 LEFT JOIN ObjectString AS ObjectString_Value2
+                                                        ON ObjectString_Value2.ObjectId = ObjectLink_StickerFile_Language.ChildObjectId
+                                                       AND ObjectString_Value2.DescId = zc_ObjectString_Language_Value2()
+                                 LEFT JOIN ObjectString AS ObjectString_Value3
+                                                        ON ObjectString_Value3.ObjectId = ObjectLink_StickerFile_Language.ChildObjectId
+                                                       AND ObjectString_Value3.DescId = zc_ObjectString_Language_Value3()
+                                 LEFT JOIN ObjectString AS ObjectString_Value4
+                                                        ON ObjectString_Value4.ObjectId = ObjectLink_StickerFile_Language.ChildObjectId
+                                                       AND ObjectString_Value4.DescId = zc_ObjectString_Language_Value4()
+                                 LEFT JOIN ObjectString AS ObjectString_Value5
+                                                        ON ObjectString_Value5.ObjectId = ObjectLink_StickerFile_Language.ChildObjectId
+                                                       AND ObjectString_Value5.DescId = zc_ObjectString_Language_Value5()
+                                 LEFT JOIN ObjectString AS ObjectString_Value6
+                                                        ON ObjectString_Value6.ObjectId = ObjectLink_StickerFile_Language.ChildObjectId
+                                                       AND ObjectString_Value6.DescId = zc_ObjectString_Language_Value6()
+                                 LEFT JOIN ObjectString AS ObjectString_Value7
+                                                        ON ObjectString_Value7.ObjectId = ObjectLink_StickerFile_Language.ChildObjectId
+                                                       AND ObjectString_Value7.DescId = zc_ObjectString_Language_Value7()
+                                 LEFT JOIN ObjectString AS ObjectString_Value8
+                                                        ON ObjectString_Value8.ObjectId = ObjectLink_StickerFile_Language.ChildObjectId
+                                                       AND ObjectString_Value8.DescId = zc_ObjectString_Language_Value8()
+                                 LEFT JOIN ObjectString AS ObjectString_Value9
+                                                        ON ObjectString_Value9.ObjectId = ObjectLink_StickerFile_Language.ChildObjectId
+                                                       AND ObjectString_Value9.DescId = zc_ObjectString_Language_Value9()
+                                 LEFT JOIN ObjectString AS ObjectString_Value10
+                                                        ON ObjectString_Value10.ObjectId = ObjectLink_StickerFile_Language.ChildObjectId
+                                                       AND ObjectString_Value10.DescId = zc_ObjectString_Language_Value10()
+                                 LEFT JOIN ObjectString AS ObjectString_Value11
+                                                        ON ObjectString_Value11.ObjectId = ObjectLink_StickerFile_Language.ChildObjectId
+                                                       AND ObjectString_Value11.DescId = zc_ObjectString_Language_Value11()
+                                 LEFT JOIN ObjectString AS ObjectString_Value12
+                                                        ON ObjectString_Value12.ObjectId = ObjectLink_StickerFile_Language.ChildObjectId
+                                                       AND ObjectString_Value12.DescId = zc_ObjectString_Language_Value12()
+                                 LEFT JOIN ObjectString AS ObjectString_Value13
+                                                        ON ObjectString_Value13.ObjectId = ObjectLink_StickerFile_Language.ChildObjectId
+                                                       AND ObjectString_Value13.DescId = zc_ObjectString_Language_Value13()
+                            WHERE ObjectLink_StickerFile_Language.ObjectId = vbStickerFileId
+                              AND ObjectLink_StickerFile_Language.DescId = zc_ObjectLink_StickerFile_Language()
+                           )
+
        SELECT Object_StickerProperty.Id          AS Id
             , Object_StickerProperty.ObjectCode  AS Code
             , Object_StickerProperty.ValueData   AS Comment
@@ -281,20 +339,20 @@ BEGIN
                                        ELSE 0
                                  END
                                -- , 'СКЛАД:'
-                               , 'Склад:'
+                               , tmpLanguageParam.Value1 ||': '
                               || ObjectBlob_Info.ValueData
                               -- || 'УМОВИ ТА ТЕРМІН ЗБЕРІГАННЯ:' || COALESCE (Object_StickerPack.ValueData, '') || ':'
-                              || 'Умови та термін зберігання:' || COALESCE (Object_StickerPack.ValueData, '') || ':'
-                                  || 'за відносної вологості повітря від ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value1.ValueData, 0)) || '% '
-                                  ||                                ' до ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value2.ValueData, 0)) || '% '
-                                  ||               ', за температури від ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value3.ValueData, 0)) || 'С'
-                                  ||                                ' до ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value4.ValueData, 0)) || 'С'
-                                  ||                      ' не більш ніж ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value5.ValueData, 0)) || 'діб.'
+                              || tmpLanguageParam.Value2 ||': ' || COALESCE (Object_StickerPack.ValueData, '') || ': '
+                              || tmpLanguageParam.Value3 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value1.ValueData, 0)) || '% '
+                              || tmpLanguageParam.Value4 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value2.ValueData, 0)) || '% , '
+                              || tmpLanguageParam.Value5 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value3.ValueData, 0)) || 'С '
+                              || tmpLanguageParam.Value6 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value4.ValueData, 0)) || 'С '
+                              || tmpLanguageParam.Value7 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value5.ValueData, 0)) || 'діб. '
                               -- || 'ПОЖИВНА ЦІННІСТЬ ТА КАЛОРІЙНІСТЬ В 100ГР.ПРОДУКТА:'
-                              || 'Поживна цінність та калорійність В 100гр.продукта:'
-                                  ||  ' білки не менше ' || zfConvert_FloatToString (COALESCE (Sticker_Value2.ValueData, 0)) || 'гр'
-                                  || ', жири не більше ' || zfConvert_FloatToString (COALESCE (Sticker_Value3.ValueData, 0)) || 'гр'
-                                  ||                ', ' || zfConvert_FloatToString (COALESCE (Sticker_Value4.ValueData, 0)) || 'кКал'
+                              || tmpLanguageParam.Value8 ||': '
+                              ||tmpLanguageParam.Value9  ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value2.ValueData, 0)) || tmpLanguageParam.Value10 ||', '
+                              ||tmpLanguageParam.Value11 ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value3.ValueData, 0)) || tmpLanguageParam.Value12 ||''
+                              ||                    ', ' || zfConvert_FloatToString (COALESCE (Sticker_Value4.ValueData, 0)) ||  tmpLanguageParam.Value13
                                , inIsLength
                                , FALSE -- теперь НЕ используется
                                 ) AS Info
@@ -317,6 +375,8 @@ BEGIN
        FROM Object AS Object_StickerProperty
              LEFT JOIN Object AS Object_StickerFile ON Object_StickerFile.Id = vbStickerFileId
 
+             LEFT JOIN tmpLanguageParam ON 1 = 1
+             
              LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_Sticker
                                   ON ObjectLink_StickerProperty_Sticker.ObjectId = Object_StickerProperty.Id
                                  AND ObjectLink_StickerProperty_Sticker.DescId = zc_ObjectLink_StickerProperty_Sticker()

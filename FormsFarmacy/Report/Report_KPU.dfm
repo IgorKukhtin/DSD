@@ -1,26 +1,26 @@
 inherited Report_KPUForm: TReport_KPUForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1050#1055#1059
   ClientHeight = 504
-  ClientWidth = 920
+  ClientWidth = 940
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 936
+  ExplicitWidth = 956
   ExplicitHeight = 543
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 920
+    Width = 940
     Height = 447
-    ExplicitWidth = 920
+    ExplicitWidth = 940
     ExplicitHeight = 447
     ClientRectBottom = 447
-    ClientRectRight = 920
+    ClientRectRight = 940
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 920
+      ExplicitWidth = 940
       ExplicitHeight = 447
       inherited cxGrid: TcxGrid
-        Width = 920
+        Width = 940
         Height = 447
-        ExplicitWidth = 920
+        ExplicitWidth = 940
         ExplicitHeight = 447
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Editing = False
@@ -64,8 +64,10 @@ inherited Report_KPUForm: TReport_KPUForm
               Column = UserName
             end>
           DataController.Summary.SummaryGroups = <>
+          OptionsBehavior.IncSearch = True
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
           Bands = <
             item
               Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
@@ -77,6 +79,20 @@ inherited Report_KPUForm: TReport_KPUForm
             end
             item
               Caption = #1057#1088#1077#1076#1085#1080#1081' '#1095#1077#1082
+            end
+            item
+              Caption = #1042#1088#1077#1084#1103
+              Width = 66
+            end
+            item
+              Caption = #1069#1082#1079#1072#1084#1077#1085' IT'
+            end
+            item
+              Caption = #1046#1072#1083#1086#1073#1099' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1086#1074
+              Width = 223
+            end
+            item
+              Caption = #1044#1080#1088#1077#1082#1090#1086#1088
             end>
           object UserCode: TcxGridDBBandedColumn
             Caption = #1050#1086#1076
@@ -91,7 +107,7 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 36
+            Width = 28
             Position.BandIndex = 0
             Position.ColIndex = 0
             Position.RowIndex = 0
@@ -102,9 +118,31 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 173
+            Width = 137
             Position.BandIndex = 0
             Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object PositionName: TcxGridDBBandedColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'PositionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+            Position.BandIndex = 0
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object DateIn: TcxGridDBBandedColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
+            DataBinding.FieldName = 'DateIn'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 69
+            Position.BandIndex = 0
+            Position.ColIndex = 3
             Position.RowIndex = 0
           end
           object UnitName: TcxGridDBBandedColumn
@@ -113,20 +151,23 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 236
+            Width = 148
             Position.BandIndex = 0
-            Position.ColIndex = 2
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object KPU: TcxGridDBBandedColumn
             Caption = #1050#1055#1059
             DataBinding.FieldName = 'KPU'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 36
+            Width = 32
             Position.BandIndex = 0
-            Position.ColIndex = 3
+            Position.ColIndex = 5
             Position.RowIndex = 0
           end
           object FactOfManDays: TcxGridDBBandedColumn
@@ -178,7 +219,7 @@ inherited Report_KPUForm: TReport_KPUForm
             Position.ColIndex = 3
             Position.RowIndex = 0
           end
-          object cxGridDBBandedTableView1Column1: TcxGridDBBandedColumn
+          object PrevAverageCheck: TcxGridDBBandedColumn
             Caption = #1087#1088#1086#1096#1083#1099#1081' '#1084#1077#1089#1103#1094
             DataBinding.FieldName = 'PrevAverageCheck'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -189,25 +230,133 @@ inherited Report_KPUForm: TReport_KPUForm
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
-          object cxGridDBBandedTableView1Column2: TcxGridDBBandedColumn
+          object AverageCheck: TcxGridDBBandedColumn
             Caption = #1090#1077#1082#1091#1097#1080#1081' '#1084#1077#1089#1103#1094
             DataBinding.FieldName = 'AverageCheck'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Position.BandIndex = 2
             Position.ColIndex = 1
             Position.RowIndex = 0
           end
-          object cxGridDBBandedTableView1Column3: TcxGridDBBandedColumn
-            Caption = ' '#1050#1086#1101#1092#1092'.'
+          object AverageCheckRatio: TcxGridDBBandedColumn
+            Caption = #1050#1086#1101#1092#1092'.'
             DataBinding.FieldName = 'AverageCheckRatio'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 1
+            Properties.DisplayFormat = ',0.0'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 48
             Position.BandIndex = 2
             Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object LateTimeRatio: TcxGridDBBandedColumn
+            Caption = #1086#1087#1086#1079#1076#1072#1085#1080#1103
+            DataBinding.FieldName = 'LateTimeRatio'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 61
+            Position.BandIndex = 3
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object CorrectAnswers: TcxGridDBBandedColumn
+            Caption = #1055#1088#1072#1074'. '#1086#1090#1074#1077#1090#1086#1074
+            DataBinding.FieldName = 'CorrectAnswers'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 52
+            Position.BandIndex = 4
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object ExamPercentage: TcxGridDBBandedColumn
+            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1087#1088#1072#1074#1077#1083#1085'.'
+            DataBinding.FieldName = 'ExamPercentage'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
+            Position.BandIndex = 4
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object NumberAttempts: TcxGridDBBandedColumn
+            Caption = #1050#1086#1083#1074#1086' '#1087#1086#1087#1099#1090#1086#1082
+            DataBinding.FieldName = 'NumberAttempts'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+            Position.BandIndex = 4
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object ExamResult: TcxGridDBBandedColumn
+            Caption = #1056#1077#1079#1091#1083#1100#1090#1072#1090' '#1101#1082#1079#1072#1084'.'
+            DataBinding.FieldName = 'ExamResult'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 59
+            Position.BandIndex = 4
+            Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object IT_ExamRatio: TcxGridDBBandedColumn
+            Caption = #1050#1086#1101#1092#1092'.'
+            DataBinding.FieldName = 'IT_ExamRatio'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 46
+            Position.BandIndex = 4
+            Position.ColIndex = 4
+            Position.RowIndex = 0
+          end
+          object ComplaintsRatio: TcxGridDBBandedColumn
+            Caption = #1050#1086#1101#1092#1092'.'
+            DataBinding.FieldName = 'ComplaintsRatio'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 48
+            Position.BandIndex = 5
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object ComplaintsNote: TcxGridDBBandedColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'ComplaintsNote'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 174
+            Position.BandIndex = 5
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object DirectorRatio: TcxGridDBBandedColumn
+            Caption = #1050#1086#1101#1092#1092'.'
+            DataBinding.FieldName = 'DirectorRatio'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 52
+            Position.BandIndex = 6
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object DirectorNote: TcxGridDBBandedColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'DirectorNote'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 178
+            Position.BandIndex = 6
+            Position.ColIndex = 1
             Position.RowIndex = 0
           end
         end
@@ -218,8 +367,8 @@ inherited Report_KPUForm: TReport_KPUForm
     end
   end
   inherited Panel: TPanel
-    Width = 920
-    ExplicitWidth = 920
+    Width = 940
+    ExplicitWidth = 940
     inherited deStart: TcxDateEdit
       EditValue = 42736d
       Properties.DisplayFormat = 'mmmm yyyy'
@@ -460,6 +609,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'KPU'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
@@ -475,6 +625,57 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AverageCheckRatio'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLateTimeRatio'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'LateTimeRatio'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIT_ExamRatio'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IT_ExamRatio'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComplaintsRatio'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ComplaintsRatio'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComplaintsNote'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ComplaintsNote'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDirectorRatio'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DirectorRatio'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDirectorNote'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DirectorNote'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

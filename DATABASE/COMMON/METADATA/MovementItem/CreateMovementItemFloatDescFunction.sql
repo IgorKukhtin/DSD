@@ -902,11 +902,27 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_AverageCheckRatio() RETURNS Integer AS $BO
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_AverageCheckRatio', 'Коэффициент за средний чек' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AverageCheckRatio');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_LateTimeRatio() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_LateTimeRatio'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_LateTimeRatio', 'Коэффициент за время опоздания' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_LateTimeRatio');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_IT_ExamRatio() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_IT_ExamRatio'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_IT_ExamRatio', 'Коэффициент за экзамен IT' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_IT_ExamRatio');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_ComplaintsRatio() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_ComplaintsRatio'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_ComplaintsRatio', 'Коэффициент за жалобы от клиентов' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_ComplaintsRatio');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_DirectorRatio() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_DirectorRatio'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_DirectorRatio', 'Коэффициент от директора' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_DirectorRatio');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 09.10.18                                                                                                     * 
  08.10.18                                                                                                     * 
  05.10.18                                                                                                     * zc_MIFloat_PriceSample
  24.09.18         * zc_MIFloat_PriceSample

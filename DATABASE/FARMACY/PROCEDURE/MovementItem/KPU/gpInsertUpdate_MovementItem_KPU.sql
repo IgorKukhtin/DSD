@@ -1,12 +1,21 @@
 -- Function: gpInsertUpdate_MovementItem_KPU()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_KPU (Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_KPU (Integer, Integer, TFloat, Integer, Integer, Integer, TVarChar, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_KPU(
  INOUT ioId                    Integer    , -- Ключ объекта <Докумен>
-   OUT outKPU                  Integer    , -- КПУ
+   OUT outKPU                  TFloat     , -- КПУ
     IN inMarkRatio             Integer    , -- Коеффициент выполнение плана по маркетингу
-    IN inAverageCheckRatio     Integer    , -- Коеффициент за средний чек
+    IN inAverageCheckRatio     TFloat     , -- Коеффициент за средний чек
+    IN inLateTimeRatio         Integer,
+    IN inIT_ExamRatio          Integer,
+
+    IN inComplaintsRatio       Integer,
+    IN inComplaintsNote        TVarChar,
+
+    IN inDirectorRatio         Integer,
+    IN inDirectorNote          TVarChar,
+
     IN inSession               TVarChar     -- сессия пользователя
 )
 RETURNS Record AS
@@ -30,6 +39,18 @@ BEGIN
   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MarkRatio(), ioId, inMarkRatio);
 
   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AverageCheckRatio(), ioId, inAverageCheckRatio);
+
+  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_LateTimeRatio(), ioId, inLateTimeRatio);
+
+  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_IT_ExamRatio(), ioId, inIT_ExamRatio);
+
+  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ComplaintsRatio(), ioId, inComplaintsRatio);
+
+  PERFORM lpInsertUpdate_MovementItemString (zc_MIString_ComplaintsNote(), ioId, inComplaintsNote);
+
+  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_DirectorRatio(), ioId, inDirectorRatio);
+
+  PERFORM lpInsertUpdate_MovementItemString (zc_MIString_DirectorNote(), ioId, inDirectorNote);
 
   PERFORM lpUpdate_MovementItem_KPU (ioId);
 

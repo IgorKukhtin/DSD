@@ -27,9 +27,10 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
         ExplicitWidth = 340
         ExplicitHeight = 379
         inherited cxGridDBTableView: TcxGridDBTableView
+          OptionsBehavior.IncSearch = True
+          OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -58,22 +59,26 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
                 Value = 3
               end>
             HeaderHint = #1059#1076#1072#1083#1077#1085
+            Options.Editing = False
             Width = 20
           end
           object ConfirmedKindName: TcxGridDBColumn
             Caption = #1057#1090#1072#1090'. '#1079'.'
             DataBinding.FieldName = 'ConfirmedKindName'
             HeaderHint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1089#1072#1081#1090')'
+            Options.Editing = False
             Width = 55
           end
           object CashMember: TcxGridDBColumn
             Caption = #1052#1077#1085#1077#1076#1078#1077#1088
             DataBinding.FieldName = 'CashMember'
+            Options.Editing = False
             Width = 83
           end
           object Bayer: TcxGridDBColumn
             Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'Bayer'
+            Options.Editing = False
             Width = 77
           end
           object OperDate: TcxGridDBColumn
@@ -84,11 +89,13 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
           object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'TotalSumm'
+            Options.Editing = False
             Width = 50
           end
           object CashRegisterName: TcxGridDBColumn
             Caption = #1050#1072#1089#1089#1072
             DataBinding.FieldName = 'CashRegisterName'
+            Options.Editing = False
             Width = 57
           end
           object InvNumber: TcxGridDBColumn
@@ -96,22 +103,26 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
             HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            Options.Editing = False
             Width = 50
           end
           object NumberOrder: TcxGridDBColumn
             Caption = #8470' '#1079'.'
             DataBinding.FieldName = 'InvNumberOrder'
             HeaderHint = #8470' '#1079#1072#1082#1072#1079#1072' ('#1089#1072#1081#1090')'
+            Options.Editing = False
             Width = 45
           end
           object UnitName: TcxGridDBColumn
             Caption = #1040#1087#1090#1077#1082#1072
             DataBinding.FieldName = 'UnitName'
+            Options.Editing = False
             Width = 55
           end
           object BayerPhone: TcxGridDBColumn
             Caption = #1058#1077#1083'. '#1087#1086#1082'.'
             DataBinding.FieldName = 'BayerPhone'
+            Options.Editing = False
             Width = 65
           end
           object ConfirmedKindClientName: TcxGridDBColumn
@@ -124,11 +135,13 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
           object DiscountCardNumber: TcxGridDBColumn
             Caption = #8470' '#1082#1072#1088#1090#1099
             DataBinding.FieldName = 'DiscountCardNumber'
+            Options.Editing = False
             Width = 70
           end
           object DiscountExternalName: TcxGridDBColumn
             Caption = #1055#1088#1086#1077#1082#1090
             DataBinding.FieldName = 'DiscountExternalName'
+            Options.Editing = False
             Width = 70
           end
           object InvNumberSP: TcxGridDBColumn
@@ -136,6 +149,7 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
             DataBinding.FieldName = 'InvNumberSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object MedicSP: TcxGridDBColumn
@@ -143,6 +157,7 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
             DataBinding.FieldName = 'MedicSP'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object SPKindName: TcxGridDBColumn
@@ -164,6 +179,7 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
           object Color_CalcDoc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_CalcDoc'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 30
           end
@@ -177,7 +193,6 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitLeft = 2
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource1
@@ -187,6 +202,7 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
@@ -199,6 +215,11 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
+          Styles.Content = dmMain.cxContentStyle
+          Styles.Inactive = dmMain.cxSelection
+          Styles.Selection = dmMain.cxSelection
+          Styles.Footer = dmMain.cxFooterStyle
+          Styles.Header = dmMain.cxHeaderStyle
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -211,15 +232,9 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
           object GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 150
           end
           object Amount: TcxGridDBColumn
@@ -731,6 +746,7 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    SearchAsFilter = False
     Left = 544
     Top = 256
   end

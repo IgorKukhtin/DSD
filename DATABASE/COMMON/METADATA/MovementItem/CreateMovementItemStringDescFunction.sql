@@ -88,9 +88,18 @@ CREATE OR REPLACE FUNCTION zc_MIString_Pack() RETURNS Integer AS $BODY$BEGIN RET
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_Pack', 'Сила дії/Дозування (Соц. проект)(5)' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Pack');
 
+CREATE OR REPLACE FUNCTION zc_MIString_ComplaintsNote() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_ComplaintsNote'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_ComplaintsNote', 'Примечание к жалобам от клиентов' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_ComplaintsNote');
+
+CREATE OR REPLACE FUNCTION zc_MIString_DirectorNote() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_DirectorNote'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_DirectorNote', 'Примечание к коэффициенту директора' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_DirectorNote');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 09.10.18                                                                                      * 
  13.08.18         * for GoodsSP
  13.12.17         * zc_MIString_Bayer
                     zc_MIString_BayerEmail

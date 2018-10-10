@@ -10,7 +10,8 @@ uses
   Vcl.StdActns, cxCurrencyEdit, cxCheckBox,
   Data.DB, Datasnap.DBClient, cxMaskEdit, cxDropDownEdit,
   cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, ParentForm, dsdGuides,
-  dsdDB, dsdAction, cxButtonEdit, dsdAddOn, dxSkinsCore, dxSkinsDefaultPainters;
+  dsdDB, dsdAction, cxButtonEdit, dsdAddOn, dxSkinsCore, dxSkinsDefaultPainters,
+  cxGroupBox;
 
 type
   TLanguageEditForm = class(TParentForm)
@@ -31,6 +32,33 @@ type
     edComment: TcxTextEdit;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
+    cxLabel3: TcxLabel;
+    edValue1: TcxTextEdit;
+    cxLabel4: TcxLabel;
+    edValue2: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    edValue3: TcxTextEdit;
+    cxLabel6: TcxLabel;
+    edValue4: TcxTextEdit;
+    cxLabel7: TcxLabel;
+    edValue6: TcxTextEdit;
+    cxGroupBox1: TcxGroupBox;
+    cxLabel8: TcxLabel;
+    edValue5: TcxTextEdit;
+    cxLabel9: TcxLabel;
+    edValue7: TcxTextEdit;
+    cxLabel10: TcxLabel;
+    edValue8: TcxTextEdit;
+    cxLabel11: TcxLabel;
+    edValue9: TcxTextEdit;
+    cxLabel12: TcxLabel;
+    edValue10: TcxTextEdit;
+    cxLabel13: TcxLabel;
+    edValue11: TcxTextEdit;
+    cxLabel14: TcxLabel;
+    edValue12: TcxTextEdit;
+    edValue13: TcxTextEdit;
+    cxLabel15: TcxLabel;
   private
     { Private declarations }
   public
