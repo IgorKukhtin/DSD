@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1071#1079#1099#1082'>'
-  ClientHeight = 494
-  ClientWidth = 346
+  ClientHeight = 569
+  ClientWidth = 453
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,27 +17,27 @@
   PixelsPerInch = 96
   TextHeight = 13
   object cxGroupBox1: TcxGroupBox
-    Left = 24
-    Top = 149
+    Left = 20
+    Top = 101
     Caption = #1055#1077#1088#1077#1074#1086#1076' :'
     TabOrder = 18
-    Height = 304
-    Width = 314
+    Height = 404
+    Width = 409
   end
   object edName: TcxTextEdit
-    Left = 40
-    Top = 71
+    Left = 134
+    Top = 26
     TabOrder = 0
     Width = 273
   end
   object cxLabel1: TcxLabel
-    Left = 40
-    Top = 48
+    Left = 134
+    Top = 5
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 64
-    Top = 459
+    Left = 72
+    Top = 531
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -46,8 +46,8 @@
     TabOrder = 1
   end
   object cxButton2: TcxButton
-    Left = 208
-    Top = 459
+    Left = 216
+    Top = 531
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -58,7 +58,7 @@
   end
   object Код: TcxLabel
     Left = 40
-    Top = 3
+    Top = 5
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit
@@ -66,96 +66,96 @@
     Top = 26
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 4
-    Width = 273
+    TabOrder = 3
+    Width = 81
   end
   object cxLabel2: TcxLabel
     Left = 40
-    Top = 102
+    Top = 54
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
     Left = 40
-    Top = 123
-    TabOrder = 6
-    Width = 273
+    Top = 74
+    TabOrder = 5
+    Width = 367
   end
   object cxLabel3: TcxLabel
     Left = 40
-    Top = 167
+    Top = 133
     Caption = #1057#1082#1083#1072#1076
   end
   object edValue1: TcxTextEdit
     Left = 40
-    Top = 185
-    TabOrder = 8
-    Width = 99
+    Top = 155
+    TabOrder = 7
+    Width = 174
   end
   object cxLabel4: TcxLabel
-    Left = 145
-    Top = 167
+    Left = 226
+    Top = 133
     Caption = #1059#1084#1086#1074#1080' '#1090#1072' '#1090#1077#1088#1084#1110#1085' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103
   end
   object edValue2: TcxTextEdit
-    Left = 145
-    Top = 185
-    TabOrder = 10
-    Width = 174
+    Left = 226
+    Top = 155
+    TabOrder = 9
+    Width = 181
   end
   object cxLabel5: TcxLabel
-    Left = 145
-    Top = 206
+    Left = 40
+    Top = 181
     Caption = #1079#1072' '#1074#1110#1076#1085#1086#1089#1085#1086#1111' '#1074#1086#1083#1086#1075#1086#1089#1090#1110' '#1087#1086#1074#1110#1090#1088#1103' '#1074#1110#1076
   end
   object edValue3: TcxTextEdit
-    Left = 145
-    Top = 224
-    TabOrder = 12
+    Left = 40
+    Top = 202
+    TabOrder = 11
     Width = 174
   end
   object cxLabel6: TcxLabel
-    Left = 40
-    Top = 206
+    Left = 232
+    Top = 181
     Caption = #1076#1086
   end
   object edValue4: TcxTextEdit
-    Left = 40
-    Top = 224
-    TabOrder = 14
-    Width = 99
+    Left = 226
+    Top = 202
+    TabOrder = 13
+    Width = 181
   end
   object cxLabel7: TcxLabel
-    Left = 40
-    Top = 245
+    Left = 232
+    Top = 232
     Caption = #1076#1086
   end
   object edValue6: TcxTextEdit
-    Left = 40
-    Top = 261
-    TabOrder = 16
-    Width = 99
+    Left = 226
+    Top = 253
+    TabOrder = 15
+    Width = 181
   end
   object cxLabel8: TcxLabel
-    Left = 145
-    Top = 245
+    Left = 40
+    Top = 232
     Caption = #1079#1072' '#1090#1077#1084#1087#1077#1088#1072#1090#1091#1088#1080' '#1074#1110#1076
   end
   object edValue5: TcxTextEdit
-    Left = 145
-    Top = 261
+    Left = 40
+    Top = 253
     TabOrder = 20
     Width = 174
   end
   object cxLabel9: TcxLabel
     Left = 40
-    Top = 282
+    Top = 280
     Caption = #1085#1077' '#1073#1110#1083#1100#1096' '#1085#1110#1078
   end
   object edValue7: TcxTextEdit
     Left = 40
     Top = 300
     TabOrder = 22
-    Width = 99
+    Width = 174
   end
   object cxLabel10: TcxLabel
     Left = 40
@@ -166,66 +166,65 @@
     Left = 40
     Top = 342
     TabOrder = 24
-    Width = 279
+    Width = 367
   end
   object cxLabel11: TcxLabel
-    Left = 145
-    Top = 282
+    Left = 40
+    Top = 367
     Caption = #1073#1110#1083#1082#1080' '#1085#1077' '#1084#1077#1085#1096#1077
   end
   object edValue9: TcxTextEdit
-    Left = 145
-    Top = 300
+    Left = 40
+    Top = 387
     TabOrder = 26
     Width = 174
   end
   object cxLabel12: TcxLabel
-    Left = 40
-    Top = 364
+    Left = 220
+    Top = 369
     Caption = #1075#1088
   end
   object edValue10: TcxTextEdit
-    Left = 40
-    Top = 382
+    Left = 220
+    Top = 387
     TabOrder = 28
-    Width = 99
+    Width = 187
   end
   object cxLabel13: TcxLabel
-    Left = 145
-    Top = 364
+    Left = 40
+    Top = 410
     Caption = #1078#1080#1088#1080' '#1085#1077' '#1073#1110#1083#1100#1096#1077
   end
   object edValue11: TcxTextEdit
-    Left = 145
-    Top = 382
+    Left = 40
+    Top = 428
     TabOrder = 30
     Width = 174
   end
   object cxLabel14: TcxLabel
-    Left = 40
-    Top = 403
+    Left = 220
+    Top = 410
     Caption = #1075#1088
   end
   object edValue12: TcxTextEdit
-    Left = 40
-    Top = 421
+    Left = 220
+    Top = 428
     TabOrder = 32
-    Width = 99
+    Width = 187
   end
   object edValue13: TcxTextEdit
-    Left = 145
-    Top = 421
+    Left = 40
+    Top = 473
     TabOrder = 33
     Width = 174
   end
   object cxLabel15: TcxLabel
-    Left = 145
-    Top = 403
+    Left = 40
+    Top = 455
     Caption = #1082#1050#1072#1083
   end
   object ActionList: TActionList
-    Left = 304
-    Top = 56
+    Left = 336
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -543,12 +542,12 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 160
-    Top = 448
+    Left = 256
+    Top = 464
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 248
-    Top = 432
+    Left = 360
+    Top = 464
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -562,7 +561,7 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 296
-    Top = 392
+    Left = 424
+    Top = 40
   end
 end

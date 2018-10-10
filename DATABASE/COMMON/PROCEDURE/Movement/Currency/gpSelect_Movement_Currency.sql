@@ -43,12 +43,32 @@ BEGIN
                            )
           , tmpMIContainer AS (SELECT MIContainer.MovementId
                                     , SUM (MIContainer.Amount) AS Amount_Currency
-                               FROM tmpMovement
-                                    LEFT JOIN MovementItemContainer AS MIContainer
-                                                                    ON MIContainer.MovementId = tmpMovement.Id
-                                                                   AND MIContainer.AccountId = zc_Enum_Account_100301()
+                               FROM MovementItemContainer AS MIContainer
+                               WHERE MIContainer.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
+                                 AND MIContainer.AccountId = zc_Enum_Account_100301()
                                GROUP BY MIContainer.MovementId
                                )
+          , tmpMI AS (SELECT MovementItem.*
+                      FROM tmpMovement AS Movement
+                           LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                 AND MovementItem.DescId = zc_MI_Master()
+                      )
+
+          , tmpMIFloat AS (SELECT MIFloat_ParValue.*
+                            FROM MovementItemFloat AS MIFloat_ParValue
+                            WHERE MIFloat_ParValue.MovementItemId IN ( SELECT tmpMI.Id FROM tmpMI)
+                              AND MIFloat_ParValue.DescId = zc_MIFloat_ParValue()
+                            )
+          , tmpMIString AS (SELECT MIString_Comment.*
+                            FROM MovementItemString AS MIString_Comment 
+                            WHERE MIString_Comment.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI)
+                              AND MIString_Comment.DescId = zc_MIString_Comment()
+                            )
+          , tmpMILinkObject AS (SELECT MovementItemLinkObject.*
+                                FROM MovementItemLinkObject 
+                                WHERE MovementItemLinkObject.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI)
+                                  AND MovementItemLinkObject.DescId IN ( zc_MILinkObject_Currency(), zc_MILinkObject_PaidKind())
+                                 )
 
        SELECT
              Movement.Id
@@ -75,24 +95,22 @@ BEGIN
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+            LEFT JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
+            
             LEFT JOIN Object AS Object_CurrencyFrom ON Object_CurrencyFrom.Id = MovementItem.ObjectId
 
-            LEFT JOIN MovementItemFloat AS MIFloat_ParValue
-                                        ON MIFloat_ParValue.MovementItemId = MovementItem.Id
-                                       AND MIFloat_ParValue.DescId = zc_MIFloat_ParValue()
-            LEFT JOIN MovementItemString AS MIString_Comment 
-                                         ON MIString_Comment.MovementItemId = MovementItem.Id
-                                        AND MIString_Comment.DescId = zc_MIString_Comment()
+            LEFT JOIN tmpMIFloat AS MIFloat_ParValue ON MIFloat_ParValue.MovementItemId = MovementItem.Id
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_CurrencyTo
-                                             ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_CurrencyTo.DescId = zc_MILinkObject_Currency()
+            LEFT JOIN tmpMIString AS MIString_Comment ON MIString_Comment.MovementItemId = MovementItem.Id
+
+            LEFT JOIN tmpMILinkObject AS MILinkObject_CurrencyTo
+                                      ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
+                                     AND MILinkObject_CurrencyTo.DescId = zc_MILinkObject_Currency()
             LEFT JOIN Object AS Object_CurrencyTo ON Object_CurrencyTo.Id = MILinkObject_CurrencyTo.ObjectId
           
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
-                                         ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
-                                        AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+            LEFT JOIN tmpMILinkObject AS MILinkObject_PaidKind
+                                      ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                     AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
             
             LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementId = Movement.Id
@@ -106,10 +124,11 @@ ALTER FUNCTION gpSelect_Movement_Currency (TDateTime, TDateTime, Integer, Boolea
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 10.10.18         *
  06.10.16         * add inJuridicalBasisId
  10.11.14                                        * add ParValue
  28.07.14         *
 */
 
 -- ÚÂÒÚ
---  SELECT * FROM gpSelect_Movement_Currency (inStartDate:= '01.01.2016', inEndDate:= '31.12.2016', inJuridicalBasisId:= 0, inIsErased:= false, inSession:= zfCalc_UserAdmin())
+--  SELECT * FROM gpSelect_Movement_Currency (inStartDate:= '01.09.2018', inEndDate:= '30.09.2018', inJuridicalBasisId:= 0, inIsErased:= false, inSession:= zfCalc_UserAdmin())

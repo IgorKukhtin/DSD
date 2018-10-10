@@ -4,6 +4,7 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
   ClientWidth = 921
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -86
   ExplicitWidth = 937
   ExplicitHeight = 687
   PixelsPerInch = 96
@@ -25,11 +26,22 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
         ExplicitWidth = 921
         ExplicitHeight = 592
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Currency
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Currency
+            end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
-          OptionsView.Footer = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
