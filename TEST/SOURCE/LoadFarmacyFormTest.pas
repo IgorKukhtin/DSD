@@ -614,6 +614,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeSampleForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeSampleForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeSampleDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeSampleDialogForm');
+    exit;
     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TestingUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_TestingUserForm');
