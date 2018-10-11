@@ -536,13 +536,13 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Width = 260
     end
     object ceComment: TcxTextEdit
-      Left = 488
+      Left = 628
       Top = 108
       TabOrder = 23
-      Width = 336
+      Width = 196
     end
     object cxLabel22: TcxLabel
-      Left = 488
+      Left = 628
       Top = 90
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
@@ -563,6 +563,14 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Properties.ReadOnly = True
       TabOrder = 26
       Width = 200
+    end
+    object edIsChecked: TcxCheckBox
+      Left = 488
+      Top = 108
+      Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 27
+      Width = 118
     end
   end
   object cbCalcAmountPartner: TcxCheckBox [2]
@@ -1743,9 +1751,16 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Component = FormParams
         ComponentItem = 'MovementId_TransportGoods'
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Checked'
+        Value = Null
+        Component = edIsChecked
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 216
-    Top = 248
+    Top = 272
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_SendOnPrice'

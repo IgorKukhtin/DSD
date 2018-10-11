@@ -522,6 +522,29 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
             Options.Editing = False
             Width = 60
           end
+          object Checked: TcxGridDBColumn
+            Caption = #1055#1088#1086#1074#1077#1088#1077#1085
+            DataBinding.FieldName = 'Checked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 46
+          end
+          object CheckedDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1088#1086#1074#1077#1088#1077#1085')'
+            DataBinding.FieldName = 'CheckedDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1088#1086#1074#1077#1088#1077#1085' '#1076#1072'/ '#1085#1077#1090')'
+            Width = 90
+          end
+          object CheckedName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079'. ('#1087#1088#1086#1074#1077#1088#1077#1085')'
+            DataBinding.FieldName = 'CheckedName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1088#1086#1074#1077#1088#1077#1085' '#1076#1072'/'#1085#1077#1090')'
+            Width = 130
+          end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
