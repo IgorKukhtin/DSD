@@ -453,6 +453,8 @@ type
     N169: TMenuItem;
     actUnnamedEnterprises: TdsdOpenForm;
     N171: TMenuItem;
+    actReport_IncomeSample: TdsdOpenForm;
+    miReport_IncomeSample: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

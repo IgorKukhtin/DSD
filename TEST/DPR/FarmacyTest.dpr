@@ -617,7 +617,9 @@ uses
   UnnamedEnterprisesJournal in '..\..\FormsFarmacy\Document\UnnamedEnterprisesJournal.pas' {UnnamedEnterprisesJournalForm: TParentForm},
   UnnamedEnterprises in '..\..\FormsFarmacy\Document\UnnamedEnterprises.pas' {UnnamedEnterprisesForm: TParentForm},
   Report_KPU in '..\..\FormsFarmacy\Report\Report_KPU.pas' {Report_KPUForm: TParentForm},
-  CheckVIP_Search in '..\..\FormsFarmacy\Document\CheckVIP_Search.pas' {CheckVIP_SearchForm: TParentForm};
+  CheckVIP_Search in '..\..\FormsFarmacy\Document\CheckVIP_Search.pas' {CheckVIP_SearchForm: TParentForm},
+  Report_IncomeSample in '..\..\FormsFarmacy\Report\Report_IncomeSample.pas' {Report_IncomeSampleForm: TParentForm},
+  Report_IncomeSampleDialog in '..\..\FormsFarmacy\Report\Report_IncomeSampleDialog.pas' {Report_IncomeSampleDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

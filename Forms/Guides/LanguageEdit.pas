@@ -59,6 +59,8 @@ type
     edValue12: TcxTextEdit;
     edValue13: TcxTextEdit;
     cxLabel15: TcxLabel;
+    cxLabel16: TcxLabel;
+    edValue14: TcxTextEdit;
   private
     { Private declarations }
   public

@@ -14,7 +14,7 @@ $BODY$
    DECLARE vbInventoryDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := inSession; -- lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
+     vbUserId :=  lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
 
     SELECT MovementLinkObject_Unit.ObjectId, OperDate INTO vbUnitID,vbInventoryDate
     FROM Movement

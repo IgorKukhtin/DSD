@@ -25,7 +25,6 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
     Height = 384
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 1189
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -539,7 +538,6 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
     Height = 111
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 1189
     object deStart: TcxDateEdit
       Left = 10
       Top = 29

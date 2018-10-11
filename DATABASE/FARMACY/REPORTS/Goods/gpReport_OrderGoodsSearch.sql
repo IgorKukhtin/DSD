@@ -24,6 +24,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,JuridicalName TVarChar  --Юр. лицо
               ,Price TFloat            --Цена в документе
               ,PriceWithVAT TFloat     --Цена прихода с НДС
+              ,PriceSample  TFloat     --Цена СЭМПЛ в  прайс. ценах с НДС
               ,StatusName TVarChar     --Состояние документа
               ,PriceSale TFloat        --Цена продажи
               ,OrderKindId Integer     --ИД вида заказа
@@ -106,6 +107,7 @@ BEGIN
             ,Object_From.ValueData                    AS JuridicalName
             ,CASE WHEN Movement.DescId = zc_Movement_Check() THEN 0 ELSE MIFloat_Price.ValueData END ::TFloat AS Price
             ,MI_Income_View.PriceWithVAT   ::TFloat
+            ,COALESCE (MIFloat_PriceSample.ValueData, 0) ::TFloat AS PriceSample
             ,Status.ValueData                         AS STatusNAme
             ,CASE WHEN Movement.DescId = zc_Movement_Check() THEN MIFloat_Price.ValueData ELSE MIFloat_PriceSale.ValueData END ::TFloat AS PriceSale
             ,Object_OrderKind.Id                      AS OrderKindId
@@ -217,6 +219,11 @@ BEGIN
         LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
                                     ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                                    AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+
+        LEFT JOIN MovementItemFloat AS MIFloat_PriceSample
+                                    ON MIFloat_PriceSample.MovementItemId = MovementItem.Id
+                                   AND MIFloat_PriceSample.DescId = zc_MIFloat_PriceSample()
+
 
     WHERE Movement.DescId in (zc_Movement_OrderInternal(), zc_Movement_OrderExternal(), zc_Movement_Income(), zc_Movement_Send(), zc_Movement_Check())
       AND Movement.OperDate >= inStartDate AND Movement.OperDate <inEndDate + INTERVAL '1 DAY'

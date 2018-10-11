@@ -2906,7 +2906,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 464
+    Left = 480
+    Top = 8
   end
   object NDSKindGuides: TdsdGuides
     KeyField = 'Id'

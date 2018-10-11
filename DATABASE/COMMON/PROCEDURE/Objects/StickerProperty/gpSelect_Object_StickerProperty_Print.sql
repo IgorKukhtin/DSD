@@ -194,6 +194,7 @@ BEGIN
                                  , ObjectString_Value11.ValueData AS Value11
                                  , ObjectString_Value12.ValueData AS Value12
                                  , ObjectString_Value13.ValueData AS Value13
+                                 , ObjectString_Value14.ValueData AS Value14
                             FROM ObjectLink AS ObjectLink_StickerFile_Language
                                  LEFT JOIN ObjectString AS ObjectString_Value1
                                                         ON ObjectString_Value1.ObjectId = ObjectLink_StickerFile_Language.ChildObjectId
@@ -234,6 +235,9 @@ BEGIN
                                  LEFT JOIN ObjectString AS ObjectString_Value13
                                                         ON ObjectString_Value13.ObjectId = ObjectLink_StickerFile_Language.ChildObjectId
                                                        AND ObjectString_Value13.DescId = zc_ObjectString_Language_Value13()
+                                 LEFT JOIN ObjectString AS ObjectString_Value14
+                                                        ON ObjectString_Value14.ObjectId = ObjectLink_StickerFile_Language.ChildObjectId
+                                                       AND ObjectString_Value14.DescId = zc_ObjectString_Language_Value14()
                             WHERE ObjectLink_StickerFile_Language.ObjectId = vbStickerFileId
                               AND ObjectLink_StickerFile_Language.DescId = zc_ObjectLink_StickerFile_Language()
                            )
@@ -347,7 +351,7 @@ BEGIN
                               || tmpLanguageParam.Value4 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value2.ValueData, 0)) || '% , '
                               || tmpLanguageParam.Value5 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value3.ValueData, 0)) || '— '
                               || tmpLanguageParam.Value6 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value4.ValueData, 0)) || '— '
-                              || tmpLanguageParam.Value7 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value5.ValueData, 0)) || '‰≥·. '
+                              || tmpLanguageParam.Value7 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value5.ValueData, 0)) || tmpLanguageParam.Value14 ||'. '
                               -- || 'œŒ∆»¬Õ¿ ÷≤ÕÕ≤—“‹ “¿  ¿ÀŒ–≤…Õ≤—“‹ ¬ 100√–.œ–Œƒ” “¿:'
                               || tmpLanguageParam.Value8 ||': '
                               ||tmpLanguageParam.Value9  ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value2.ValueData, 0)) || tmpLanguageParam.Value10 ||', '

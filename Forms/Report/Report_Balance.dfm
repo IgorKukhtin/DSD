@@ -62,7 +62,7 @@ object Report_BalanceForm: TReport_BalanceForm
     Align = alClient
     DataSource = DataSource
     Groups = <>
-    TabOrder = 4
+    TabOrder = 3
     object pvRootName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 0
@@ -387,6 +387,22 @@ object Report_BalanceForm: TReport_BalanceForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReport_AccountMotion'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -403,7 +419,7 @@ object Report_BalanceForm: TReport_BalanceForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbcbTotal'
         end
         item
           Visible = True
@@ -449,12 +465,21 @@ object Report_BalanceForm: TReport_BalanceForm
       Category = 0
       ImageIndex = 16
     end
-    object bb: TdxBarControlContainerItem
+    object bbcbTotal: TdxBarControlContainerItem
       Caption = 'New Item'
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
       Control = cbTotal
+    end
+    object bbOpenReport_AccountMotion: TdxBarButton
+      Action = macReport_AccountMotion
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macReport_Account
+      Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091'>'
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -484,10 +509,11 @@ object Report_BalanceForm: TReport_BalanceForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object dsdOpenForm1: TdsdOpenForm
+    object actOpenReport_Account: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'dsdOpenForm1'
+      Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091'>'
       FormName = 'TReport_AccountForm'
       FormNameParam.Value = 'TReport_AccountForm'
       FormNameParam.DataType = ftString
@@ -584,19 +610,162 @@ object Report_BalanceForm: TReport_BalanceForm
         end>
       isShowModal = False
     end
-    object MultiAction1: TMultiAction
+    object actOpenReport_AccountMotion: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
+      ImageIndex = 26
+      FormName = 'TReport_AccountMotionForm'
+      FormNameParam.Value = 'TReport_AccountMotionForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = ''
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = ''
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountGroupId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountGroupId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountGroupName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountGroupName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountDirectionId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountDirectionId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountDirectionName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountDirectionName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = 42370d
+          Component = FormParams
+          ComponentItem = 'InfoMoneyId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BusinessId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BusinessId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BusinessName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BusinessName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementDescId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementDescName'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object macReport_AccountMotion: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = dsdExecStoredProc1
+          Action = actGetBalanceParam
         end
         item
-          Action = dsdOpenForm1
+          Action = actOpenReport_AccountMotion
         end>
-      Caption = 'MultiAction1'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
+      ImageIndex = 26
     end
-    object dsdExecStoredProc1: TdsdExecStoredProc
+    object macReport_Account: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetBalanceParam
+        end
+        item
+          Action = actOpenReport_Account
+        end>
+      Caption = 'macReport_Account'
+      Hint = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091'>'
+      ImageIndex = 25
+    end
+    object actGetBalanceParam: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -605,7 +774,7 @@ object Report_BalanceForm: TReport_BalanceForm
         item
           StoredProc = spGetBalanceParam
         end>
-      Caption = 'dsdExecStoredProc1'
+      Caption = 'actGetBalanceParam'
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -712,6 +881,9 @@ object Report_BalanceForm: TReport_BalanceForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -787,6 +959,9 @@ object Report_BalanceForm: TReport_BalanceForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -840,13 +1015,10 @@ object Report_BalanceForm: TReport_BalanceForm
   object PivotAddOn: TPivotAddOn
     ErasedFieldName = 'isErased'
     PivotGrid = cxDBPivotGrid
-    OnDblClickActionList = <
-      item
-        Action = MultiAction1
-      end>
+    OnDblClickActionList = <>
     ActionItemList = <
       item
-        Action = MultiAction1
+        Action = macReport_Account
         ShortCut = 13
       end>
     Left = 392

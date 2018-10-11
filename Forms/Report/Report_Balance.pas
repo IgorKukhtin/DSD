@@ -65,9 +65,9 @@ type
     PivotAddOn: TPivotAddOn;
     spGetBalanceParam: TdsdStoredProc;
     FormParams: TdsdFormParams;
-    dsdOpenForm1: TdsdOpenForm;
-    MultiAction1: TMultiAction;
-    dsdExecStoredProc1: TdsdExecStoredProc;
+    actOpenReport_Account: TdsdOpenForm;
+    macReport_Account: TMultiAction;
+    actGetBalanceParam: TdsdExecStoredProc;
     bbStaticText: TdxBarButton;
     pvPaidKindName: TcxDBPivotGridField;
     ExecuteDialog: TExecuteDialog;
@@ -83,7 +83,11 @@ type
     actPrint2: TdsdPrintAction;
     bbPrint2: TdxBarButton;
     cbTotal: TcxCheckBox;
-    bb: TdxBarControlContainerItem;
+    bbcbTotal: TdxBarControlContainerItem;
+    actOpenReport_AccountMotion: TdsdOpenForm;
+    bbOpenReport_AccountMotion: TdxBarButton;
+    macReport_AccountMotion: TMultiAction;
+    bb: TdxBarButton;
   private
   public
   end;
