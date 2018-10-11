@@ -120,6 +120,8 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+  LoadReportFromFile('PrintMovementGoodsBarCode', ReportPath + '\Товарный Учет\PrintMovementGoodsBarCode.fr3');
+  exit;
   {
   LoadReportFromFile('Пароли подтверждения в Scale', ReportPath + '\Справочники\Пароли подтверждения в Scale.fr3');
   exit;

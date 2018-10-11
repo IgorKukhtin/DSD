@@ -726,8 +726,8 @@ inherited MovementGoodsBarCodeForm: TMovementGoodsBarCodeForm
           UserName = 'frxDBDMaster'
         end>
       Params = <>
-      ReportName = 'PrintObject_ReportCollation'
-      ReportNameParam.Value = 'PrintObject_ReportCollation'
+      ReportName = 'PrintMovementGoodsBarCode'
+      ReportNameParam.Value = 'PrintMovementGoodsBarCode'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -841,6 +841,9 @@ inherited MovementGoodsBarCodeForm: TMovementGoodsBarCodeForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+      end>
     ActionItemList = <
       item
         Action = actUpdateDataSource
@@ -925,7 +928,7 @@ inherited MovementGoodsBarCodeForm: TMovementGoodsBarCodeForm
     Top = 426
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_ReportCollationErased'
+    StoredProcName = 'gpUpdate_MovementGoodsBarCode_UnChecked'
     Params = <
       item
         Name = 'inid'
@@ -1109,7 +1112,7 @@ inherited MovementGoodsBarCodeForm: TMovementGoodsBarCodeForm
     Top = 323
   end
   object spSetErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_ReportCollationErased'
+    StoredProcName = 'gpUpdate_MovementGoodsBarCode_UnChecked'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1138,7 +1141,7 @@ inherited MovementGoodsBarCodeForm: TMovementGoodsBarCodeForm
     Top = 302
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ReportCollation_Print'
+    StoredProcName = 'gpSelect_MovementGoodsBarCode_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
