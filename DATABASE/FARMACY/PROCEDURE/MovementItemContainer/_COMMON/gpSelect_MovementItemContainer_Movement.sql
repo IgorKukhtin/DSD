@@ -37,8 +37,8 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MIContainer_Movement());
-     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MIContainer_Movement());
+     --vbUserId:= lpGetUserBySession (inSession);
 
      -- Менется признак
      inIsDestination:= inIsDestination OR inIsParentDetail OR inIsInfoMoneyDetail;

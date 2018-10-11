@@ -29,7 +29,7 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Inventory());
     -- inShowAll:= TRUE;
-    vbUserId:= lpGetUserBySession (inSession);
+    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_InventoryPartion());
     --vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
   
         RETURN QUERY
