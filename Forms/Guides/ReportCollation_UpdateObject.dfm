@@ -6,7 +6,7 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1017
-  ExplicitHeight = 462
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -146,7 +146,23 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          inherited colOperDate: TcxGridDBColumn [0]
+          object isDiff: TcxGridDBColumn [0]
+            Caption = #1054#1096#1080#1073#1082#1072' '#1074' '#1087#1077#1088#1080#1086#1076#1077
+            DataBinding.FieldName = 'isDiff'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 64
+          end
+          object ObjectCode: TcxGridDBColumn [1]
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'ObjectCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          inherited colOperDate: TcxGridDBColumn [2]
             Caption = #1044#1072#1090#1072' ('#1088#1077#1077#1089#1090#1088')'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -160,7 +176,7 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
             VisibleForCustomization = False
             Width = 77
           end
-          inherited colStatus: TcxGridDBColumn [2]
+          inherited colStatus: TcxGridDBColumn [4]
             Caption = #1057#1090#1072#1090#1091#1089' ('#1088#1077#1077#1089#1090#1088')'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -441,7 +457,7 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
     inherited deStart: TcxDateEdit
       Left = 271
       Top = 22
-      EditValue = 42667d
+      EditValue = 43101d
       ExplicitLeft = 271
       ExplicitTop = 22
       ExplicitWidth = 91
@@ -450,7 +466,7 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
     inherited deEnd: TcxDateEdit
       Left = 376
       Top = 22
-      EditValue = 42667d
+      EditValue = 43101d
       ExplicitLeft = 376
       ExplicitTop = 22
       ExplicitWidth = 94
@@ -772,6 +788,9 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -924,8 +943,8 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
       item
         Component = ReestrKindGuides
       end>
-    Left = 800
-    Top = 240
+    Left = 376
+    Top = 216
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement'

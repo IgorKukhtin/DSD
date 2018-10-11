@@ -55,6 +55,22 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object isDiff: TcxGridDBColumn
+        Caption = #1054#1096#1080#1073#1082#1072' '#1074' '#1087#1077#1088#1080#1086#1076#1077
+        DataBinding.FieldName = 'isDiff'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 64
+      end
+      object ObjectCode: TcxGridDBColumn
+        Caption = #8470' '#1087'/'#1087
+        DataBinding.FieldName = 'ObjectCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 45
+      end
       object StartDate: TcxGridDBColumn
         Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072
         DataBinding.FieldName = 'StartDate'
@@ -192,7 +208,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 42736d
+      EditValue = 43101d
       Properties.DateButtons = [btnClear, btnToday]
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -212,7 +228,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
     object deEnd: TcxDateEdit
       Left = 313
       Top = 5
-      EditValue = 42766d
+      EditValue = 43101d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 2
@@ -440,11 +456,11 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
     Left = 48
     Top = 216
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 168
     Top = 160
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
@@ -469,5 +485,22 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
     SummaryItemList = <>
     Left = 328
     Top = 264
+  end
+  object PeriodChoice: TPeriodChoice
+    DateStart = deStart
+    DateEnd = deEnd
+    Left = 248
+    Top = 208
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end>
+    Left = 376
+    Top = 216
   end
 end

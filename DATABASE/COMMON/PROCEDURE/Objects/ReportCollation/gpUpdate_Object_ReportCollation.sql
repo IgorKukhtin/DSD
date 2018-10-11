@@ -1,5 +1,6 @@
 -- Function: gpUpdate_Object_ReportCollation(Integer,Integer,TVarChar,Integer,Integer,Integer,TVarChar)
 
+DROP FUNCTION IF EXISTS gpUpdate_Object_ReportCollation_Buh (TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_ReportCollation (TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_ReportCollation(
@@ -56,7 +57,7 @@ BEGIN
      -- сохранили свойство <Пользователь (Сдали в бухгалтерию)>
      PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReportCollation_Buh(), vbId, vbMemberId_user);
      -- сохранили свойство <Сдали в бухгалтерию>
-     PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReportCollation_Buh(), vbId, True);
+     PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReportCollation_Buh(), vbId, TRUE);
     
    
 END;$BODY$

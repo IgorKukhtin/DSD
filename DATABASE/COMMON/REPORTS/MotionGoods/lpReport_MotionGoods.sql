@@ -101,6 +101,12 @@ BEGIN
     vbIsCLO_Member:= EXISTS (SELECT 1 FROM _tmpLocation WHERE DescId <> zc_ContainerLinkObject_Unit());
 
 
+    IF inStartDate < inEndDate - INTERVAL '2 MONTH'
+    THEN
+        RAISE EXCEPTION 'Ошибка. Заданный период не может быть больше чем 2 мес.';
+    END IF;
+
+
     IF NOT EXISTS (SELECT 1 FROM _tmpLocation)
     THEN
     -- группа подразделений или подразделение или место учета (МО, Авто)

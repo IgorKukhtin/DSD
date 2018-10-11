@@ -59,6 +59,8 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    ObjectCode: TcxGridDBColumn;
+    isDiff: TcxGridDBColumn;
   private
     { Private declarations }
   public

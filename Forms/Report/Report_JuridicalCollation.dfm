@@ -1,30 +1,30 @@
 inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
-  ClientHeight = 410
+  ClientHeight = 423
   ClientWidth = 1015
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1031
-  ExplicitHeight = 448
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
     Width = 1015
-    Height = 330
+    Height = 343
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1015
-    ExplicitHeight = 330
-    ClientRectBottom = 330
+    ExplicitHeight = 343
+    ClientRectBottom = 343
     ClientRectRight = 1015
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1015
-      ExplicitHeight = 330
+      ExplicitHeight = 343
       inherited cxGrid: TcxGrid
         Width = 1015
-        Height = 330
+        Height = 343
         ExplicitWidth = 1015
-        ExplicitHeight = 330
+        ExplicitHeight = 343
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -534,13 +534,25 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           end
         end
       end
-      object cbisInsert: TcxCheckBox
+      object cbIsInsert: TcxCheckBox
         Left = 85
         Top = 13
-        Hint = #1055#1077#1095#1072#1090#1072#1077#1084' '#1076#1083#1103' '#1074#1080#1079#1099' "'#1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102'"'
-        Caption = #1055#1077#1095#1072#1090#1072#1077#1084' '#1076#1083#1103' '#1074#1080#1079#1099' "'#1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102'"'
+        Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1074#1080#1079#1099' "'#1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102'"'
+        Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1088#1077#1077#1089#1090#1088#1072' "'#1040#1082#1090#1099' '#1089#1074#1077#1088#1086#1082'"'
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 1
-        Width = 260
+        Width = 212
+      end
+      object cbIsUpdate: TcxCheckBox
+        Left = 351
+        Top = 13
+        Hint = #1044#1054#1041#1040#1042#1048#1058#1068' '#1074#1080#1079#1091' "'#1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102'"'
+        Caption = '+ '#1074#1080#1079#1091' "'#1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102'"'
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 2
+        Width = 191
       end
     end
   end
@@ -551,14 +563,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
-      EditValue = 41640d
+      EditValue = 43101d
       Properties.SaveTime = False
       ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 29
-      EditValue = 41640d
+      EditValue = 43101d
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 29
@@ -1802,44 +1814,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end>
       Caption = 'actSPSavePrintState'
     end
-    object macPrintPopupMenu: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSPSaveObject_Buh
-        end
-        item
-          Action = actPrint
-        end
-        item
-          Action = actSaveReportCollationState
-        end>
-      Caption = 'macPrintPopupMenu'
-      ImageIndex = 3
-    end
-    object actSPSaveObject_Buh: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spSavePrintObject_Buh
-      StoredProcList = <
-        item
-          StoredProc = spSavePrintObject_Buh
-        end>
-      Caption = 'actSPSavePrintState'
-    end
-    object actSaveReportCollationState: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spSaveReportCollationState
-      StoredProcList = <
-        item
-          StoredProc = spSaveReportCollationState
-        end>
-      Caption = 'actSaveReportCollationState'
-    end
   end
   inherited MasterDS: TDataSource
     Top = 164
@@ -1974,7 +1948,11 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Visible = True
-          ItemName = 'bbisInsert'
+          ItemName = 'bbIsInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbIsUpdate'
         end
         item
           Visible = True
@@ -2045,11 +2023,19 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Action = ExecuteDialog
       Category = 0
     end
-    object bbisInsert: TdxBarControlContainerItem
+    object bbIsInsert: TdxBarControlContainerItem
+      Caption = 'bbIsInsert'
       Category = 0
       Hint = #1047#1072#1087#1080#1089#1072#1090#1100' '#1086#1073#1098#1077#1082#1090
       Visible = ivAlways
-      Control = cbisInsert
+      Control = cbIsInsert
+    end
+    object bbIsUpdate: TdxBarControlContainerItem
+      Caption = 'bbIsUpdate'
+      Category = 0
+      Hint = 'bbIsUpdate'
+      Visible = ivAlways
+      Control = cbIsUpdate
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -2062,16 +2048,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Action = actOpenDocument
         ShortCut = 13
       end>
-  end
-  inherited PopupMenu: TPopupMenu
-    object N2: TMenuItem
-      Caption = '-'
-    end
-    object macPrintPopupMenu1: TMenuItem
-      Action = macPrintPopupMenu
-      Caption = #1055#1077#1095#1072#1090#1100' + '#1091#1089#1090'. '#1074#1080#1079#1091' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1073#1091#1093#1075'.'
-      Hint = #1055#1077#1095#1072#1090#1100' + '#1091#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1080#1079#1091' '#1087#1086#1083#1091#1095#1077#1085#1086' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1077#1081
-    end
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 24
@@ -2636,8 +2612,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 720
-    Top = 29
+    Left = 768
+    Top = 13
   end
   object CurrencyGuides: TdsdGuides
     KeyField = 'Id'
@@ -2768,9 +2744,17 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisInsert'
+        Name = 'inIsInsert'
         Value = Null
-        Component = cbisInsert
+        Component = cbIsInsert
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsUpdate'
+        Value = Null
+        Component = cbIsUpdate
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2791,97 +2775,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 624
-    Top = 200
-  end
-  object spSaveReportCollationState: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_ReportCollation_Buh'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inBarCode'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'BarCodeId'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 800
-    Top = 192
-  end
-  object spSavePrintObject_Buh: TdsdStoredProc
-    StoredProcName = 'gpInsert_Object_ReportCollation'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalId'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPartnerId'
-        Value = ''
-        Component = PartnerGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inContractId'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPaidKindId'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisInsert'
-        Value = 'TRUE'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outBarCode'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'BarCodeId'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 800
-    Top = 240
+    Left = 496
+    Top = 184
   end
 end

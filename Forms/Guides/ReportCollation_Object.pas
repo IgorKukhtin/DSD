@@ -22,7 +22,8 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
   DataModul, cxButtonEdit, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
-  cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls;
+  cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls,
+  ChoicePeriod;
 
 type
   TReportCollation_ObjectForm = class(TParentForm)
@@ -44,10 +45,10 @@ type
     actRefresh: TdsdDataSetRefresh;
     dsdGridToExcel: TdsdGridToExcel;
     spSelect: TdsdStoredProc;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     isErased: TcxGridDBColumn;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
+    DBViewAddOn: TdsdDBViewAddOn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     Panel1: TPanel;
@@ -65,6 +66,10 @@ type
     BuhDate: TcxGridDBColumn;
     isBuh: TcxGridDBColumn;
     idBarCode: TcxGridDBColumn;
+    ObjectCode: TcxGridDBColumn;
+    PeriodChoice: TPeriodChoice;
+    RefreshDispatcher: TRefreshDispatcher;
+    isDiff: TcxGridDBColumn;
   private
     { Private declarations }
   public

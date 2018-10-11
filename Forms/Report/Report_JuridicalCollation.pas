@@ -103,18 +103,13 @@ type
     macPrint: TMultiAction;
     actSPSaveObject: TdsdExecStoredProc;
     spSavePrintObject: TdsdStoredProc;
-    cbisInsert: TcxCheckBox;
-    bbisInsert: TdxBarControlContainerItem;
+    cbIsInsert: TcxCheckBox;
+    bbIsInsert: TdxBarControlContainerItem;
     macPrintOfficial: TMultiAction;
     macPrintCurrency: TMultiAction;
-    macPrintPopupMenu: TMultiAction;
-    macPrintPopupMenu1: TMenuItem;
-    N2: TMenuItem;
-    spSaveReportCollationState: TdsdStoredProc;
-    actSaveReportCollationState: TdsdExecStoredProc;
-    spSavePrintObject_Buh: TdsdStoredProc;
-    actSPSaveObject_Buh: TdsdExecStoredProc;
     InvNumber_Transport: TcxGridDBColumn;
+    bbIsUpdate: TdxBarControlContainerItem;
+    cbIsUpdate: TcxCheckBox;
   private
     { Private declarations }
   public

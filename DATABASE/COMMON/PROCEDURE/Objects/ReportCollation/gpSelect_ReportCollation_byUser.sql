@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ReportCollation_byUser(
     IN inEndDate        TDateTime , --
     IN inSession        TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, idBarCode TVarChar
+RETURNS TABLE (Id Integer, ObjectCode Integer, idBarCode TVarChar
              , StartDate  TDateTime
              , EndDate    TDateTime
              , JuridicalName TVarChar
@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, idBarCode TVarChar
              , InsertDate TDateTime
              , BuhName TVarChar
              , BuhDate TDateTime
+             , isDiff Boolean
              , isBuh Boolean
               )
 AS
@@ -58,70 +59,104 @@ BEGIN
                    WHERE ObjectDate_Buh.DescId = zc_ObjectDate_ReportCollation_Buh()
                      AND ObjectDate_Buh.ValueData >= inStartDate AND ObjectDate_Buh.ValueData < inEndDate + INTERVAL '1 DAY'
                    )
-   -- Результат
-   SELECT
-         tmpReport.Id
-       , zfFormat_BarCode (zc_BarCodePref_Object(), tmpReport.Id) ::TVarChar AS idBarCode
-       , ObjectDate_Start.ValueData      AS StartDate
-       , ObjectDate_End.ValueData        AS EndDate
-       , Object_Juridical.ValueData      AS JuridicalName
-       , Object_Partner.ValueData        AS PartnerName
-       , Object_Contract.ValueData       AS ContractName
-       , Object_PaidKind.ValueData       AS PaidKindName
+      , tmpData AS (SELECT
+                          tmpReport.Id
+                        , Object_ReportCollation.ObjectCode
+                        , zfFormat_BarCode (zc_BarCodePref_Object(), tmpReport.Id) ::TVarChar AS idBarCode
+                        , ObjectDate_Start.ValueData      AS StartDate
+                        , ObjectDate_End.ValueData        AS EndDate
+                        , Object_Juridical.ValueData      AS JuridicalName
+                        , Object_Partner.ValueData        AS PartnerName
+                        , Object_Contract.ValueData       AS ContractName
+                        , Object_PaidKind.ValueData       AS PaidKindName
+                 
+                        , Object_Insert.ValueData         AS InsertName
+                        , ObjectDate_Insert.ValueData     AS InsertDate
+                 
+                        , Object_Buh.ValueData            AS BuhName
+                        , tmpReport.BuhDate
+                 
+                        , COALESCE (ObjectBoolean_Buh.ValueData, FALSE) ::Boolean  AS isBuh
+                        
+                        , COALESCE (ObjectLink_ReportCollation_PaidKind.ChildObjectId , 0) AS PaidKindId
+                        , COALESCE (ObjectLink_ReportCollation_Contract.ChildObjectId,  0) AS ContractId
+                        , COALESCE (ObjectLink_ReportCollation_Partner.ChildObjectId,   0) AS PartnerId
+                        , COALESCE (ObjectLink_ReportCollation_Juridical.ChildObjectId, 0) AS JuridicalId
 
-       , Object_Insert.ValueData         AS InsertName
-       , ObjectDate_Insert.ValueData     AS InsertDate
+                    FROM tmpReport
+                       LEFT JOIN Object AS Object_ReportCollation ON Object_ReportCollation.Id = tmpReport.Id
+                       LEFT JOIN ObjectDate AS ObjectDate_Start
+                                            ON ObjectDate_Start.ObjectId = tmpReport.Id
+                                           AND ObjectDate_Start.DescId = zc_ObjectDate_ReportCollation_Start()
+                       LEFT JOIN ObjectDate AS ObjectDate_End
+                                             ON ObjectDate_End.ObjectId = tmpReport.Id
+                                            AND ObjectDate_End.DescId = zc_ObjectDate_ReportCollation_End()
+                  
+                       LEFT JOIN ObjectDate AS ObjectDate_Insert
+                                            ON ObjectDate_Insert.ObjectId = tmpReport.Id
+                                           AND ObjectDate_Insert.DescId = zc_ObjectDate_ReportCollation_Insert()
+                 
+                       LEFT JOIN ObjectBoolean AS ObjectBoolean_Buh
+                                               ON ObjectBoolean_Buh.ObjectId = tmpReport.Id
+                                              AND ObjectBoolean_Buh.DescId = zc_ObjectBoolean_ReportCollation_Buh()
+                 
+                       LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_PaidKind
+                                            ON ObjectLink_ReportCollation_PaidKind.ObjectId = tmpReport.Id
+                                           AND ObjectLink_ReportCollation_PaidKind.DescId = zc_ObjectLink_ReportCollation_PaidKind()
+                       LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_ReportCollation_PaidKind.ChildObjectId
+                       
+                       LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_Juridical
+                                            ON ObjectLink_ReportCollation_Juridical.ObjectId = tmpReport.Id
+                                           AND ObjectLink_ReportCollation_Juridical.DescId = zc_ObjectLink_ReportCollation_Juridical()
+                       LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_ReportCollation_Juridical.ChildObjectId
+                       
+                       LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_Partner
+                                            ON ObjectLink_ReportCollation_Partner.ObjectId = tmpReport.Id
+                                           AND ObjectLink_ReportCollation_Partner.DescId = zc_ObjectLink_ReportCollation_Partner()
+                       LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_ReportCollation_Partner.ChildObjectId
+                 
+                       LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_Contract
+                                            ON ObjectLink_ReportCollation_Contract.ObjectId = tmpReport.Id
+                                           AND ObjectLink_ReportCollation_Contract.DescId = zc_ObjectLink_ReportCollation_Contract()
+                       LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = ObjectLink_ReportCollation_Contract.ChildObjectId
+                 
+                       LEFT JOIN ObjectLink AS ObjectLink_Insert
+                                            ON ObjectLink_Insert.ObjectId = tmpReport.Id
+                                           AND ObjectLink_Insert.DescId = zc_ObjectLink_ReportCollation_Insert()
+                       LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId   
+                 
+                       LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = tmpReport.BuhId
+                 
+                  -- WHERE Object_ReportCollation.DescId = zc_Object_ReportCollation()
+                   )
+      -- Результат
+      SELECT tmpData.Id
+           , tmpData.ObjectCode
+           , tmpData.idBarCode
+           , tmpData.StartDate
+           , tmpData.EndDate
+           , tmpData.JuridicalName
+           , tmpData.PartnerName
+           , tmpData.ContractName
+           , tmpData.PaidKindName
 
-       , Object_Buh.ValueData            AS BuhName
-       , tmpReport.BuhDate
+           , tmpData.InsertName
+           , tmpData.InsertDate
 
-       , COALESCE (ObjectBoolean_Buh.ValueData, False) ::Boolean  AS isBuh
-       
-   FROM tmpReport
-      LEFT JOIN ObjectDate AS ObjectDate_Start
-                           ON ObjectDate_Start.ObjectId = tmpReport.Id
-                          AND ObjectDate_Start.DescId = zc_ObjectDate_ReportCollation_Start()
-      LEFT JOIN ObjectDate AS ObjectDate_End
-                            ON ObjectDate_End.ObjectId = tmpReport.Id
-                           AND ObjectDate_End.DescId = zc_ObjectDate_ReportCollation_End()
- 
-      LEFT JOIN ObjectDate AS ObjectDate_Insert
-                           ON ObjectDate_Insert.ObjectId = tmpReport.Id
-                          AND ObjectDate_Insert.DescId = zc_ObjectDate_ReportCollation_Insert()
+           , tmpData.BuhName
+           , tmpData.BuhDate
 
-      LEFT JOIN ObjectBoolean AS ObjectBoolean_Buh
-                              ON ObjectBoolean_Buh.ObjectId = tmpReport.Id
-                             AND ObjectBoolean_Buh.DescId = zc_ObjectBoolean_ReportCollation_Buh()
+           , tmpData.isBuh
 
-      LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_PaidKind
-                           ON ObjectLink_ReportCollation_PaidKind.ObjectId = tmpReport.Id
-                          AND ObjectLink_ReportCollation_PaidKind.DescId = zc_ObjectLink_ReportCollation_PaidKind()
-      LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_ReportCollation_PaidKind.ChildObjectId
-      
-      LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_Juridical
-                           ON ObjectLink_ReportCollation_Juridical.ObjectId = tmpReport.Id
-                          AND ObjectLink_ReportCollation_Juridical.DescId = zc_ObjectLink_ReportCollation_Juridical()
-      LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_ReportCollation_Juridical.ChildObjectId
-      
-      LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_Partner
-                           ON ObjectLink_ReportCollation_Partner.ObjectId = tmpReport.Id
-                          AND ObjectLink_ReportCollation_Partner.DescId = zc_ObjectLink_ReportCollation_Partner()
-      LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_ReportCollation_Partner.ChildObjectId
-
-      LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_Contract
-                           ON ObjectLink_ReportCollation_Contract.ObjectId = tmpReport.Id
-                          AND ObjectLink_ReportCollation_Contract.DescId = zc_ObjectLink_ReportCollation_Contract()
-      LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = ObjectLink_ReportCollation_Contract.ChildObjectId
-
-      LEFT JOIN ObjectLink AS ObjectLink_Insert
-                           ON ObjectLink_Insert.ObjectId = tmpReport.Id
-                          AND ObjectLink_Insert.DescId = zc_ObjectLink_ReportCollation_Insert()
-      LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId   
-
-      LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = tmpReport.BuhId
-
- -- WHERE Object_ReportCollation.DescId = zc_Object_ReportCollation()
-   ;
+           , CASE WHEN tmpData.ObjectCode > 1 AND tmpData_old.EndDate <> tmpData.StartDate - INTERVAL '1 DAY' THEN TRUE ELSE FALSE END :: Boolean AS isDiff
+           
+      FROM tmpData
+           LEFT JOIN tmpData AS	 tmpData_old ON tmpData_old.PaidKindId  = tmpData.PaidKindId
+                                            AND tmpData_old.ContractId  = tmpData.ContractId
+                                            AND tmpData_old.PartnerId   = tmpData.PartnerId
+                                            AND tmpData_old.JuridicalId = tmpData.JuridicalId
+                                            AND tmpData_old.ObjectCode  = tmpData.ObjectCode - 1
+     ;
   
 END;
 $BODY$
