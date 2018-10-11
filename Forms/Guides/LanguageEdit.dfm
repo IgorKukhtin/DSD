@@ -77,7 +77,7 @@
   object edComment: TcxTextEdit
     Left = 40
     Top = 74
-    TabOrder = 5
+    TabOrder = 4
     Width = 367
   end
   object cxLabel3: TcxLabel
@@ -88,7 +88,7 @@
   object edValue1: TcxTextEdit
     Left = 40
     Top = 155
-    TabOrder = 7
+    TabOrder = 6
     Width = 174
   end
   object cxLabel4: TcxLabel
@@ -99,7 +99,7 @@
   object edValue2: TcxTextEdit
     Left = 226
     Top = 155
-    TabOrder = 9
+    TabOrder = 8
     Width = 181
   end
   object cxLabel5: TcxLabel
@@ -110,7 +110,7 @@
   object edValue3: TcxTextEdit
     Left = 40
     Top = 202
-    TabOrder = 11
+    TabOrder = 10
     Width = 174
   end
   object cxLabel6: TcxLabel
@@ -121,7 +121,7 @@
   object edValue4: TcxTextEdit
     Left = 226
     Top = 202
-    TabOrder = 13
+    TabOrder = 12
     Width = 181
   end
   object cxLabel7: TcxLabel
@@ -132,7 +132,7 @@
   object edValue6: TcxTextEdit
     Left = 226
     Top = 253
-    TabOrder = 15
+    TabOrder = 14
     Width = 181
   end
   object cxLabel8: TcxLabel
@@ -180,15 +180,15 @@
     Width = 174
   end
   object cxLabel12: TcxLabel
-    Left = 220
+    Left = 226
     Top = 369
     Caption = #1075#1088
   end
   object edValue10: TcxTextEdit
-    Left = 220
+    Left = 226
     Top = 387
     TabOrder = 28
-    Width = 187
+    Width = 181
   end
   object cxLabel13: TcxLabel
     Left = 40
@@ -202,15 +202,15 @@
     Width = 174
   end
   object cxLabel14: TcxLabel
-    Left = 220
+    Left = 226
     Top = 410
     Caption = #1075#1088
   end
   object edValue12: TcxTextEdit
-    Left = 220
+    Left = 226
     Top = 428
     TabOrder = 32
-    Width = 187
+    Width = 181
   end
   object edValue13: TcxTextEdit
     Left = 40
@@ -222,6 +222,17 @@
     Left = 40
     Top = 455
     Caption = #1082#1050#1072#1083
+  end
+  object cxLabel16: TcxLabel
+    Left = 226
+    Top = 455
+    Caption = #1076#1110#1073
+  end
+  object edValue14: TcxTextEdit
+    Left = 226
+    Top = 473
+    TabOrder = 36
+    Width = 181
   end
   object ActionList: TActionList
     Left = 336
@@ -394,6 +405,14 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue14'
+        Value = Null
+        Component = edValue14
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 168
@@ -538,6 +557,13 @@
         Name = 'Value13'
         Value = Null
         Component = edValue13
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value14'
+        Value = Null
+        Component = edValue14
         DataType = ftString
         MultiSelectSeparator = ','
       end>

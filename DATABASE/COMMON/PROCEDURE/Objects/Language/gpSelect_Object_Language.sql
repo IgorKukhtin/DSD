@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Value11 TVarChar
              , Value12 TVarChar
              , Value13 TVarChar
+             , Value14 TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -53,6 +54,7 @@ BEGIN
            , ObjectString_Value11.ValueData AS Value11
            , ObjectString_Value12.ValueData AS Value12
            , ObjectString_Value13.ValueData AS Value13
+           , ObjectString_Value14.ValueData AS Value14
 
            , Object_Language.isErased    AS isErased
 
@@ -104,6 +106,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Value13
                                    ON ObjectString_Value13.ObjectId = Object_Language.Id
                                   AND ObjectString_Value13.DescId = zc_ObjectString_Language_Value13()
+            LEFT JOIN ObjectString AS ObjectString_Value14
+                                   ON ObjectString_Value14.ObjectId = Object_Language.Id
+                                  AND ObjectString_Value14.DescId = zc_ObjectString_Language_Value14()
        ORDER BY Object_Language.ObjectCode
     ;
 

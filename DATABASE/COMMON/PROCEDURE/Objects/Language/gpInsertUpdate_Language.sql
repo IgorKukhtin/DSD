@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Language (Integer, Integer, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Language (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Language (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Language(
    INOUT ioId                       Integer,     -- ид
@@ -21,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Language(
       IN inValue11                  TVarChar, 
       IN inValue12                  TVarChar, 
       IN inValue13                  TVarChar, 
+      IN inValue14                  TVarChar,
       IN inSession                  TVarChar     -- Пользователь
       )
   RETURNS Integer AS
@@ -74,6 +76,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Value12(), ioId, inValue12);
    -- сохранили св-во <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Value13(), ioId, inValue13);
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Language_Value14(), ioId, inValue14);
 
 
    -- сохранили протокол
