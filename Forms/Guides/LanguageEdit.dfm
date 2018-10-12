@@ -88,7 +88,7 @@
   object edValue1: TcxTextEdit
     Left = 40
     Top = 155
-    TabOrder = 6
+    TabOrder = 5
     Width = 174
   end
   object cxLabel4: TcxLabel
@@ -99,7 +99,7 @@
   object edValue2: TcxTextEdit
     Left = 226
     Top = 155
-    TabOrder = 8
+    TabOrder = 7
     Width = 181
   end
   object cxLabel5: TcxLabel
@@ -110,7 +110,7 @@
   object edValue3: TcxTextEdit
     Left = 40
     Top = 202
-    TabOrder = 10
+    TabOrder = 9
     Width = 174
   end
   object cxLabel6: TcxLabel
@@ -121,7 +121,7 @@
   object edValue4: TcxTextEdit
     Left = 226
     Top = 202
-    TabOrder = 12
+    TabOrder = 11
     Width = 181
   end
   object cxLabel7: TcxLabel
@@ -132,7 +132,7 @@
   object edValue6: TcxTextEdit
     Left = 226
     Top = 253
-    TabOrder = 14
+    TabOrder = 13
     Width = 181
   end
   object cxLabel8: TcxLabel
@@ -225,12 +225,12 @@
   end
   object cxLabel16: TcxLabel
     Left = 226
-    Top = 455
+    Top = 282
     Caption = #1076#1110#1073
   end
   object edValue14: TcxTextEdit
     Left = 226
-    Top = 473
+    Top = 300
     TabOrder = 36
     Width = 181
   end
