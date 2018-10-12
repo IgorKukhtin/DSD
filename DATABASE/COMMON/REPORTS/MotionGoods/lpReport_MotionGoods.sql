@@ -98,51 +98,68 @@ $BODY$
    DECLARE vbIsAssetTo Boolean;
    DECLARE vbIsCLO_Member Boolean;
 BEGIN
+    -- !!!ДЛЯ ТЕСТА!!!
+    /*IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpLocation'))
+    THEN
+        CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
+        CREATE TEMP TABLE _tmpLocation_by (LocationId Integer) ON COMMIT DROP;
+        --
+        INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
+           SELECT 8425 AS LocationId -- Склад ГП ф.Харьков
+                , zc_ContainerLinkObject_Unit()       AS DescId
+                , tmpDesc.ContainerDescId
+           FROM (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId) AS tmpDesc
+          ;
+    END IF;*/
+    -- !!!ДЛЯ ТЕСТА!!!
+
+
     vbIsCLO_Member:= EXISTS (SELECT 1 FROM _tmpLocation WHERE DescId <> zc_ContainerLinkObject_Unit());
 
 
-    IF inStartDate < inEndDate - INTERVAL '2 MONTH'
+    IF inStartDate < inEndDate - INTERVAL '2 MONTH' AND inUserId <> 5
     THEN
         RAISE EXCEPTION 'Ошибка. Заданный период не может быть больше чем 2 мес.';
     END IF;
 
 
+
     IF NOT EXISTS (SELECT 1 FROM _tmpLocation)
     THEN
-    -- группа подразделений или подразделение или место учета (МО, Авто)
-    IF inUnitGroupId <> 0 AND COALESCE (inLocationId, 0) = 0
-    THEN
-        INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
-           SELECT lfSelect_Object_Unit_byGroup.UnitId AS LocationId
-                , zc_ContainerLinkObject_Unit()       AS DescId
-                , tmpDesc.ContainerDescId
-           FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect_Object_Unit_byGroup
-                LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE inUserId = zfCalc_UserAdmin() :: Integer) AS tmpDesc ON 1 = 1
-          ;
-    ELSE
-        IF inLocationId <> 0
+        -- группа подразделений или подразделение или место учета (МО, Авто)
+        IF inUnitGroupId <> 0 AND COALESCE (inLocationId, 0) = 0
         THEN
             INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
-               SELECT Object.Id AS LocationId
-                    , CASE WHEN Object.DescId = zc_Object_Unit()   THEN zc_ContainerLinkObject_Unit() 
-                           WHEN Object.DescId = zc_Object_Car()    THEN zc_ContainerLinkObject_Car() 
-                           WHEN Object.DescId = zc_Object_Member() THEN zc_ContainerLinkObject_Member()
-                      END AS DescId
+               SELECT lfSelect_Object_Unit_byGroup.UnitId AS LocationId
+                    , zc_ContainerLinkObject_Unit()       AS DescId
                     , tmpDesc.ContainerDescId
-               FROM Object
-                    -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
+               FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect_Object_Unit_byGroup
                     LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE inUserId = zfCalc_UserAdmin() :: Integer) AS tmpDesc ON 1 = 1
-               WHERE Object.Id = inLocationId
-             /*UNION
-               SELECT lfSelect.UnitId               AS LocationId
-                    , zc_ContainerLinkObject_Unit() AS DescId
-                    , tmpDesc.ContainerDescId
-               FROM lfSelect_Object_Unit_byGroup (inLocationId) AS lfSelect
-                    -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
-                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1*/
               ;
+        ELSE
+            IF inLocationId <> 0
+            THEN
+                INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
+                   SELECT Object.Id AS LocationId
+                        , CASE WHEN Object.DescId = zc_Object_Unit()   THEN zc_ContainerLinkObject_Unit() 
+                               WHEN Object.DescId = zc_Object_Car()    THEN zc_ContainerLinkObject_Car() 
+                               WHEN Object.DescId = zc_Object_Member() THEN zc_ContainerLinkObject_Member()
+                          END AS DescId
+                        , tmpDesc.ContainerDescId
+                   FROM Object
+                        -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
+                        LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE inUserId = zfCalc_UserAdmin() :: Integer) AS tmpDesc ON 1 = 1
+                   WHERE Object.Id = inLocationId
+                 /*UNION
+                   SELECT lfSelect.UnitId               AS LocationId
+                        , zc_ContainerLinkObject_Unit() AS DescId
+                        , tmpDesc.ContainerDescId
+                   FROM lfSelect_Object_Unit_byGroup (inLocationId) AS lfSelect
+                        -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
+                        LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1*/
+                  ;
+            END IF;
         END IF;
-    END IF;
     END IF;
 
 
@@ -876,8 +893,6 @@ BEGIN
                                        LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
                                                                  ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
                                                                 AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
-                         
-                                  WHERE MovementBoolean_Peresort.MovementId IS NULL -- !!!убрали Пересортицу!!!
                                   GROUP BY _tmpContainer.ContainerDescId
                                          , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_count ELSE 0 END
                                          , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_begin ELSE 0 END
@@ -1489,6 +1504,4 @@ ALTER FUNCTION lpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 */
 
 -- тест
--- SELECT * FROM lpReport_MotionGoods (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inAccountGroupId:= 0, inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 1832, inGoodsId:= 0, inIsInfoMoney:= FALSE, inUserId:= zfCalc_UserAdmin() :: Integer);
--- CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
--- SELECT * from lpReport_MotionGoods (inStartDate:= '01.12.2017', inEndDate:= '31.12.2017', inAccountGroupId:= 0, inUnitGroupId := 0 , inLocationId := 256716  , inGoodsGroupId := 0 , inGoodsId := 3538,  inIsInfoMoney:= FALSE, inUserId := zfCalc_UserAdmin() :: Integer);
+-- SELECT * FROM lpReport_MotionGoods (inStartDate:= '01.08.2018', inEndDate:= '31.08.2018', inAccountGroupId:= 9015, inUnitGroupId := 0 , inLocationId := 8425 , inGoodsGroupId := 0 , inGoodsId := 0,  inIsInfoMoney:= FALSE, inUserId := zfCalc_UserAdmin() :: Integer);

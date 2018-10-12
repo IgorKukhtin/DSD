@@ -1334,7 +1334,7 @@ BEGIN
                    + tmpMIContainer_all.CountSendOnPriceOut
                    + tmpMIContainer_all.CountSale
                    + tmpMIContainer_all.CountSale_10500
-                   + tmpMIContainer_all.CountSale_40208
+                   - tmpMIContainer_all.CountSale_40208
                    + tmpMIContainer_all.CountLoss
                    + tmpMIContainer_all.CountProductionOut)  AS CountTotalOut
 
@@ -1368,7 +1368,7 @@ BEGIN
                    + tmpMIContainer_all.SummSendOnPriceOut
                    + tmpMIContainer_all.SummSale
                    + tmpMIContainer_all.SummSale_10500
-                   + tmpMIContainer_all.SummSale_40208
+                   - tmpMIContainer_all.SummSale_40208
                    + tmpMIContainer_all.SummLoss
                    + tmpMIContainer_all.SummProductionOut)   AS SummTotalOut
 

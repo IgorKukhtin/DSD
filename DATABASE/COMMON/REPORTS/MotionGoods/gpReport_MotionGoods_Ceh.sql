@@ -274,6 +274,8 @@ BEGIN
                                  LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
                                                            ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
                                                           AND MovementBoolean_Peresort.DescId     = zc_MovementBoolean_Peresort()
+                            -- !!!убрали ѕересортицу!!!
+                            WHERE MovementBoolean_Peresort.MovementId IS NULL
                             GROUP BY MIContainer.AnalyzerId
                                    , MIContainer.ObjectId_Analyzer
                                    , COALESCE (MILinkObject_Receipt.ObjectId, 0)
@@ -713,7 +715,7 @@ BEGIN
                    + tmpMIContainer_all.CountReturnOut
                    + tmpMIContainer_all.CountSale
                    + tmpMIContainer_all.CountSale_10500
-                   + tmpMIContainer_all.CountSale_40208
+                   - tmpMIContainer_all.CountSale_40208
                    + tmpMIContainer_all.CountLoss
                     ) AS CountOtherOut_by -- расход другой
               , SUM (CASE WHEN (_tmpLocation.LocationId IS NULL AND _tmpLocation_by.LocationId IS NULL) OR tmpMIContainer_all.LocationId_by = -1 THEN tmpMIContainer_all.SummProductionOut ELSE 0 END
@@ -725,7 +727,7 @@ BEGIN
                    + tmpMIContainer_all.SummReturnOut
                    + tmpMIContainer_all.SummSale
                    + tmpMIContainer_all.SummSale_10500
-                   + tmpMIContainer_all.SummSale_40208
+                   - tmpMIContainer_all.SummSale_40208
                    + tmpMIContainer_all.SummLoss
                     ) AS SummOtherOut_by -- расход другой
 
@@ -740,7 +742,7 @@ BEGIN
                    + tmpMIContainer_all.CountSendOnPriceOut
                    + tmpMIContainer_all.CountSale
                    + tmpMIContainer_all.CountSale_10500
-                   + tmpMIContainer_all.CountSale_40208
+                   - tmpMIContainer_all.CountSale_40208
                    + tmpMIContainer_all.CountLoss
                    + tmpMIContainer_all.CountProductionOut)  AS CountTotalOut
 
@@ -776,7 +778,7 @@ BEGIN
                    + tmpMIContainer_all.SummSendOnPriceOut
                    + tmpMIContainer_all.SummSale
                    + tmpMIContainer_all.SummSale_10500
-                   + tmpMIContainer_all.SummSale_40208
+                   - tmpMIContainer_all.SummSale_40208
                    + tmpMIContainer_all.SummLoss
                    + tmpMIContainer_all.SummProductionOut)   AS SummTotalOut
 

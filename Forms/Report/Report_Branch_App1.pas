@@ -64,6 +64,8 @@ type
     ReturnInRealSumm_P: TcxGridDBColumn;
     SaleRealSumm_A: TcxGridDBColumn;
     SaleRealSumm_P: TcxGridDBColumn;
+    SaleSumm_Vz: TcxGridDBColumn;
+    SaleWeight_Vz: TcxGridDBColumn;
   private
     { Private declarations }
   public
