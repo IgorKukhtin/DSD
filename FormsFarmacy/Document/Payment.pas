@@ -84,6 +84,10 @@ type
     ContractStartDate: TcxGridDBColumn;
     ContractEndDate: TcxGridDBColumn;
     actRefreshLite: TdsdDataSetRefresh;
+    spUpdateMI_NeedPay: TdsdStoredProc;
+    actUpdateMI_NeedPay: TdsdExecStoredProc;
+    macUpdateMI_NeedPay: TMultiAction;
+    bbUpdateMI_NeedPay: TdxBarButton;
   private
     { Private declarations }
   public

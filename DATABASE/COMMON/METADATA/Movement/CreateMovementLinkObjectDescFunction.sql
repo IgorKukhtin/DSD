@@ -283,6 +283,10 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_MemberExp() RETURNS Integer AS 
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_MemberExp', 'Экспедитор' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MemberExp');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Checked() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Checked'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_Checked', 'Пользователь, кот. сканировал и поставил/убрал галку Проверен' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Checked');
+
 
 --!!!!!!!!!!!  Аптека
 CREATE OR REPLACE FUNCTION zc_MovementLinkObject_CheckMember() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_CheckMember'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -377,6 +381,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 11.10.18         * zc_MovementLinkObject_Checked
  30.09.18                                                                                      * zc_MovementLinkObject_ClientsByBank
  20.08.18         * zc_MovementLinkObject_RetailForwarding
  28.05.18                                                                                      * zc_MovementLinkObject_LegalAddress, zc_MovementLinkObject_ActualAddress

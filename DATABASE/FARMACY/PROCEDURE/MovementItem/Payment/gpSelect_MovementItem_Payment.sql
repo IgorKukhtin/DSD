@@ -11,33 +11,33 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Payment(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id                    Integer
-              , IncomeId             Integer
-              , Income_InvNumber     TVarChar
-              , Income_OperDate      TDateTime
-              , Income_PaymentDate   TDateTime
-              , Income_StatusName    TVarChar
-              , Income_JuridicalId   Integer
-              , Income_JuridicalName TVarChar
-              , Income_PayOrder      TFloat
-              , Income_UnitId        Integer
-              , Income_UnitName      TVarChar
-              , Income_NDSKindName   TVarChar
-              , Income_NDS           TFloat
-              , Income_ContractName  TVarChar
-              , Income_TotalSumm     TFloat
-              , Income_PaySumm       TFloat
-              , SummaCorrBonus       TFloat
-              , SummaCorrReturnOut   TFloat
-              , SummaCorrOther       TFloat
-              , SummaPay             TFloat
-              , BankAccountId        Integer
-              , BankAccountName      TVarChar
-              , BankName             TVarChar
-              , isErased             Boolean
-              , NeedPay              Boolean
-              , ContractNumber       TVarChar
-              , ContractStartDate    TDateTime
-              , ContractEndDate      TDateTime
+             , IncomeId             Integer
+             , Income_InvNumber     TVarChar
+             , Income_OperDate      TDateTime
+             , Income_PaymentDate   TDateTime
+             , Income_StatusName    TVarChar
+             , Income_JuridicalId   Integer
+             , Income_JuridicalName TVarChar
+             , Income_PayOrder      TFloat
+             , Income_UnitId        Integer
+             , Income_UnitName      TVarChar
+             , Income_NDSKindName   TVarChar
+             , Income_NDS           TFloat
+             , Income_ContractName  TVarChar
+             , Income_TotalSumm     TFloat
+             , Income_PaySumm       TFloat
+             , SummaCorrBonus       TFloat
+             , SummaCorrReturnOut   TFloat
+             , SummaCorrOther       TFloat
+             , SummaPay             TFloat
+             , BankAccountId        Integer
+             , BankAccountName      TVarChar
+             , BankName             TVarChar
+             , isErased             Boolean
+             , NeedPay              Boolean
+             , ContractNumber       TVarChar
+             , ContractStartDate    TDateTime
+             , ContractEndDate      TDateTime
               )
 AS
 $BODY$

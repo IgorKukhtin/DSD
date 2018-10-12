@@ -3,7 +3,7 @@ inherited LossForm: TLossForm
   ClientHeight = 668
   ClientWidth = 984
   ExplicitWidth = 1000
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -463,6 +463,9 @@ inherited LossForm: TLossForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint_Loss

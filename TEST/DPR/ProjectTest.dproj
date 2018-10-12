@@ -3510,6 +3510,10 @@
 				<Form>GoodsSeparateEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\MovementGoodsBarCode.pas">
+				<Form>MovementGoodsBarCodeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

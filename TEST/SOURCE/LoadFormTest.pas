@@ -2790,6 +2790,9 @@ end;
 
 procedure TLoadFormTest.LoadMovementFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementGoodsBarCodeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementGoodsBarCodeForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementGoodsJournalForm'));

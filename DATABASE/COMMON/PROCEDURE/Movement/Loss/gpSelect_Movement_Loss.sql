@@ -15,7 +15,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ToId Integer, ToName TVarChar, ItemName_to TVarChar
              , ArticleLossId Integer, ArticleLossName TVarChar
              , Comment TVarChar
-             , Checked Boolean
+             , CheckedName   TVarChar
+             , CheckedDate   TDateTime
+             , Checked       Boolean
               )
 
 AS
@@ -54,7 +56,13 @@ BEGIN
            , Object_ArticleLoss.ValueData       AS ArticleLossName
 
            , MovementString_Comment.ValueData   AS Comment
+           
+           , Object_Checked.ValueData           AS CheckedName
+           , MovementDate_Checked.ValueData     AS CheckedDate
+
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE) AS Checked
+           
+            
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -78,6 +86,10 @@ BEGIN
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
+            LEFT JOIN MovementDate AS MovementDate_Checked 
+                                   ON MovementDate_Checked.MovementId = Movement.Id
+                                  AND MovementDate_Checked.DescId = zc_MovementDate_Checked()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -94,6 +106,11 @@ BEGIN
                                          ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
                                         AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
             LEFT JOIN Object AS Object_ArticleLoss ON Object_ArticleLoss.Id = MovementLinkObject_ArticleLoss.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Checked
+                                         ON MovementLinkObject_Checked.MovementId = Movement.Id
+                                        AND MovementLinkObject_Checked.DescId = zc_MovementLinkObject_Checked()
+            LEFT JOIN Object AS Object_Checked ON Object_Checked.Id = MovementLinkObject_Checked.ObjectId
 
        -- огр. просмотра - Рибалко Вікторія Віталіївна 
        WHERE vbUserId <> 300550
@@ -116,6 +133,10 @@ BEGIN
            , Object_ArticleLoss.ValueData       AS ArticleLossName
 
            , MovementString_Comment.ValueData   AS Comment
+
+           , Object_Checked.ValueData           AS CheckedName
+           , MovementDate_Checked.ValueData     AS CheckedDate
+
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE) AS Checked
 
        FROM (SELECT Movement.id
@@ -140,6 +161,10 @@ BEGIN
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
+            LEFT JOIN MovementDate AS MovementDate_Checked 
+                                   ON MovementDate_Checked.MovementId = Movement.Id
+                                  AND MovementDate_Checked.DescId = zc_MovementDate_Checked()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -157,6 +182,11 @@ BEGIN
                                         AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
             LEFT JOIN Object AS Object_ArticleLoss ON Object_ArticleLoss.Id = MovementLinkObject_ArticleLoss.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Checked
+                                         ON MovementLinkObject_Checked.MovementId = Movement.Id
+                                        AND MovementLinkObject_Checked.DescId = zc_MovementLinkObject_Checked()
+            LEFT JOIN Object AS Object_Checked ON Object_Checked.Id = MovementLinkObject_Checked.ObjectId
+
        -- огр. просмотра - Рибалко Вікторія Віталіївна 
        WHERE vbUserId = 300550
           AND Object_From.Id in (8447   -- цех колбасный
@@ -172,6 +202,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.10.18         *
  27.03.17         * 
  05.10.16         * add inJuridicalBasisId
  02.09.14                                                        *

@@ -110,6 +110,7 @@ type
     spSelectPrint_SaleOrderTax: TdsdStoredProc;
     actPrintSaleOrderTax: TdsdPrintAction;
     bbPrintSaleOrderTax: TdxBarButton;
+    edIsChecked: TcxCheckBox;
   private
     { Private declarations }
   public

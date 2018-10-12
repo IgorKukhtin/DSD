@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementId_TransportGoods Integer
              , InvNumber_TransportGoods TVarChar
              , OperDate_TransportGoods TDateTime
+             , Checked Boolean
               )
 AS
 $BODY$
@@ -66,6 +67,7 @@ BEGIN
              , 0                   			  AS MovementId_TransportGoods 
              , '' :: TVarChar                     	  AS InvNumber_TransportGoods 
              , inOperDate                                 AS OperDate_TransportGoods
+             , CAST (FALSE AS Boolean)         		  AS Checked
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
@@ -120,6 +122,7 @@ BEGIN
            , Movement_TransportGoods.Id                     AS MovementId_TransportGoods
            , Movement_TransportGoods.InvNumber              AS InvNumber_TransportGoods
            , COALESCE (Movement_TransportGoods.OperDate, Movement.OperDate) AS OperDate_TransportGoods
+           , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -131,6 +134,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Checked
+                                      ON MovementBoolean_Checked.MovementId = Movement.Id
+                                     AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
 
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id

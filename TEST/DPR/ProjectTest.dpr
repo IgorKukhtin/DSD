@@ -1040,7 +1040,8 @@ uses
   User_byMessage in '..\..\Forms\Guides\User_byMessage.pas' {User_byMessageForm: TParentForm},
   Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm},
   GoodsSeparate in '..\..\Forms\Guides\GoodsSeparate.pas' {GoodsSeparateForm: TParentForm},
-  GoodsSeparateEdit in '..\..\Forms\Guides\GoodsSeparateEdit.pas' {GoodsSeparateEditForm: TParentForm};
+  GoodsSeparateEdit in '..\..\Forms\Guides\GoodsSeparateEdit.pas' {GoodsSeparateEditForm: TParentForm},
+  MovementGoodsBarCode in '..\..\Forms\Document\MovementGoodsBarCode.pas' {MovementGoodsBarCodeForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

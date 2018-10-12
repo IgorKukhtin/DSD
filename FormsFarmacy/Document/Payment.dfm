@@ -619,6 +619,24 @@ inherited PaymentForm: TPaymentForm
       ReportName = #1054#1087#1083#1072#1090#1099
       ReportNameParam.Value = #1054#1087#1083#1072#1090#1099
     end
+    inherited MovementItemProtocolOpenForm: TdsdOpenForm
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Component = MasterCDS
+          ComponentItem = 'Income_InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
     object actOpenBankAccount: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -687,6 +705,30 @@ inherited PaymentForm: TPaymentForm
       Caption = #1042#1099#1076#1077#1083#1080#1090#1100' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1076#1083#1103' '#1086#1087#1083#1072#1090#1099
       Hint = #1042#1099#1076#1077#1083#1080#1090#1100' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1076#1083#1103' '#1086#1087#1083#1072#1090#1099
       ImageIndex = 28
+    end
+    object macUpdateMI_NeedPay: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMI_NeedPay
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1057#1085#1103#1090#1100' '#1086#1090#1084#1077#1090#1082#1091' '#1086#1073' '#1086#1087#1083#1072#1090#1077' '#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1086#1087#1083#1072#1090#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1086#1087#1083#1072#1090#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      ImageIndex = 58
+    end
+    object actUpdateMI_NeedPay: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMI_NeedPay
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMI_NeedPay
+        end>
+      Caption = 'UpdateMI_NeedPay'
     end
     object actInsertUpdate_MovementItem_Payment_NeedPay: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -878,6 +920,14 @@ inherited PaymentForm: TPaymentForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateMI_NeedPay'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     inherited dxBarStatic: TdxBarStatic
@@ -910,6 +960,13 @@ inherited PaymentForm: TPaymentForm
       Action = actSelectAllAndRefresh
       Category = 0
     end
+    object bbUpdateMI_NeedPay: TdxBarButton
+      Action = macUpdateMI_NeedPay
+      Category = 0
+    end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    Top = 201
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -1118,8 +1175,8 @@ inherited PaymentForm: TPaymentForm
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
-    Left = 282
-    Top = 272
+    Left = 250
+    Top = 280
   end
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
@@ -1135,6 +1192,7 @@ inherited PaymentForm: TPaymentForm
       item
         Action = actRefresh
       end>
+    Top = 200
   end
   inherited HeaderSaver: THeaderSaver
     ControlList = <
@@ -1574,5 +1632,47 @@ inherited PaymentForm: TPaymentForm
     DataSet = PaymentCorrSummCDS
     Left = 760
     Top = 408
+  end
+  object spUpdateMI_NeedPay: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Payment_NeedPay'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNeedPay'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outNeedPay'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NeedPay'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 208
+    Top = 376
   end
 end

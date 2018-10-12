@@ -980,6 +980,8 @@ type
     N196: TMenuItem;
     actGoodsSeparate: TdsdOpenForm;
     miGoodsSeparate: TMenuItem;
+    actMovementGoodsBarCode: TdsdOpenForm;
+    miMovementGoodsBarCode: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
