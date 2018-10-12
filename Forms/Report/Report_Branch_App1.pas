@@ -13,7 +13,7 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxCheckBox;
 
 type
   TReport_Branch_App1Form = class(TAncestorReportForm)
@@ -66,6 +66,8 @@ type
     SaleRealSumm_P: TcxGridDBColumn;
     SaleSumm_Vz: TcxGridDBColumn;
     SaleWeight_Vz: TcxGridDBColumn;
+    sbIsUnit: TcxCheckBox;
+    UnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public

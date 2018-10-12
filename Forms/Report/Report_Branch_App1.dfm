@@ -5,9 +5,8 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -283
   ExplicitWidth = 1089
-  ExplicitHeight = 439
+  ExplicitHeight = 442
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -648,7 +647,14 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             DataBinding.FieldName = 'BranchName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 148
+            Width = 111
+          end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 127
           end
           object SummStart: TcxGridDBColumn
             Caption = #1053#1072#1095'.'#1086#1089#1090'. '#1085#1072' '#1089#1082#1083#1072#1076#1077' ('#1075#1088#1085')'
@@ -946,6 +952,16 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object SaleRealSumm_Vz: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072' '#1089#1091#1084#1084#1072' '#1087#1086#1082'.  ('#1075#1088#1085') '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'SaleRealSumm_Vz'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           object SendOnPriceOutSumm: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1075#1088#1085')'
             DataBinding.FieldName = 'SendOnPriceOutSumm'
@@ -1001,9 +1017,31 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Options.Editing = False
             Width = 66
           end
+          object Sale_40208_Summ_Vz: TcxGridDBColumn
+            Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' ('#1087#1088#1080' '#1087#1088#1086#1076'.) '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'Sale_40208_Summ_Vz'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
           object Sale_40208_Weight: TcxGridDBColumn
             Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1074#1077#1089' ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
             DataBinding.FieldName = 'Sale_40208_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 73
+          end
+          object Sale_40208_Weight_Vz: TcxGridDBColumn
+            Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1074#1077#1089' ('#1087#1088#1080' '#1087#1088#1086#1076'.) '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'Sale_40208_Weight_Vz'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -1023,9 +1061,31 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Options.Editing = False
             Width = 60
           end
+          object Sale_10500_Summ_Vz: TcxGridDBColumn
+            Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1082#1080#1076#1082#1072' 1% ('#1075#1088#1085') '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'Sale_10500_Summ_Vz'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object Sale_10500_Weight: TcxGridDBColumn
             Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1082#1080#1076#1082#1072' 1% ('#1074#1077#1089')'
             DataBinding.FieldName = 'Sale_10500_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object Sale_10500_Weight_Vz: TcxGridDBColumn
+            Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1089#1082#1080#1076#1082#1072' 1% ('#1074#1077#1089') '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'Sale_10500_Weight_Vz'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -1056,9 +1116,20 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             Options.Editing = False
             Width = 60
           end
-          object LossSumm: TcxGridDBColumn
-            Caption = #1057#1087#1080#1089#1072#1085#1080#1077' ('#1075#1088#1085')'
-            DataBinding.FieldName = 'LossSumm'
+          object Sale_10300_Summ_Vz: TcxGridDBColumn
+            Caption = #1057#1082#1080#1076#1082#1072' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085'. ('#1075#1088#1085') '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'Sale_10300_Summ_Vz'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object Sale_10200_Summ_Vz: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1072#1082#1094#1080#1080'  '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'Sale_10200_Summ_Vz'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -1091,6 +1162,17 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           object ReturnIn_10200_Summ: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1072#1082#1094#1080#1080'  '#1074#1086#1079#1074#1088#1072#1090
             DataBinding.FieldName = 'ReturnIn_10200_Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object LossSumm: TcxGridDBColumn
+            Caption = #1057#1087#1080#1089#1072#1085#1080#1077' ('#1075#1088#1085')'
+            DataBinding.FieldName = 'LossSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -1238,6 +1320,26 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object SaleRealSumm_A_Vz: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100' ('#1075#1088#1085', '#1090#1088'.+) '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'SaleRealSumm_A_Vz'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SaleRealSumm_P_Vz: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100' ('#1075#1088#1085', '#1090#1088'.-) '#1089#1082#1083'.'#1042#1086#1079#1074#1088#1072#1090#1086#1074
+            DataBinding.FieldName = 'SaleRealSumm_P_Vz'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
         end
       end
     end
@@ -1281,6 +1383,13 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
       Properties.ReadOnly = True
       TabOrder = 5
       Width = 251
+    end
+    object sbIsUnit: TcxCheckBox
+      Left = 713
+      Top = 5
+      Caption = #1088#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      TabOrder = 6
+      Width = 188
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1344,6 +1453,14 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
           Component = BranchGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsUnit'
+          Value = Null
+          Component = sbIsUnit
+          DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1429,6 +1546,14 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
         Value = Null
         Component = BranchGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsUnit'
+        Value = Null
+        Component = sbIsUnit
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
