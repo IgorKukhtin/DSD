@@ -1041,7 +1041,8 @@ uses
   Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm},
   GoodsSeparate in '..\..\Forms\Guides\GoodsSeparate.pas' {GoodsSeparateForm: TParentForm},
   GoodsSeparateEdit in '..\..\Forms\Guides\GoodsSeparateEdit.pas' {GoodsSeparateEditForm: TParentForm},
-  MovementGoodsBarCode in '..\..\Forms\Document\MovementGoodsBarCode.pas' {MovementGoodsBarCodeForm: TParentForm};
+  MovementGoodsBarCode in '..\..\Forms\Document\MovementGoodsBarCode.pas' {MovementGoodsBarCodeForm: TParentForm},
+  Report_Branch_App1_New in '..\..\Forms\Report\Report_Branch_App1_New.pas' {Report_Branch_App1_NewForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
