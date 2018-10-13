@@ -6,7 +6,7 @@ inherited Report_Branch_App1_NewForm: TReport_Branch_App1_NewForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1089
-  ExplicitHeight = 442
+  ExplicitHeight = 439
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1423,6 +1423,7 @@ inherited Report_Branch_App1_NewForm: TReport_Branch_App1_NewForm
       Caption = #1088#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
       Hint = #1088#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object ExecuteDialog: TExecuteDialog
@@ -1485,8 +1486,8 @@ inherited Report_Branch_App1_NewForm: TReport_Branch_App1_NewForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' <'#1055#1088#1080#1083#1086#1078#1077#1085#1080#1077' 1>'
-      Hint = #1055#1077#1095#1072#1090#1100' <'#1055#1088#1080#1083#1086#1078#1077#1085#1080#1077' 1>'
+      Caption = #1055#1077#1095#1072#1090#1100' <'#1055#1088#1080#1083#1086#1078#1077#1085#1080#1077' 1>-test'
+      Hint = #1055#1077#1095#1072#1090#1100' <'#1055#1088#1080#1083#1086#1078#1077#1085#1080#1077' 1>-test'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -1518,8 +1519,8 @@ inherited Report_Branch_App1_NewForm: TReport_Branch_App1_NewForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = #1055#1088#1080#1083#1086#1078#1077#1085#1080#1077'1'
-      ReportNameParam.Value = #1055#1088#1080#1083#1086#1078#1077#1085#1080#1077'1'
+      ReportName = #1055#1088#1080#1083#1086#1078#1077#1085#1080#1077'1_test'
+      ReportNameParam.Value = #1055#1088#1080#1083#1086#1078#1077#1085#1080#1077'1_test'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
