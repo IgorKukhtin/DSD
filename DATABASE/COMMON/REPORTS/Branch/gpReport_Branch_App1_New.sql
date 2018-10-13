@@ -1,9 +1,8 @@
 -- Function: gpReport_Branch_App1()
 
-DROP FUNCTION IF EXISTS gpReport_Branch_App1 (TDateTime, TDateTime,  Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Branch_App1 (TDateTime, TDateTime,  Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Branch_App1_New (TDateTime, TDateTime,  Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_Branch_App1(
+CREATE OR REPLACE FUNCTION gpReport_Branch_App1_New(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
     IN inBranchId           Integer,    -- Филиал
@@ -909,5 +908,5 @@ $BODY$
 */
 
 -- тест
---  SELECT * FROM gpReport_Branch_App1 (inStartDate:= '01.02.2018'::TDateTime, inEndDate:= '28.02.2018'::TDateTime, inBranchId:= 8374, inIsUnit := FALSE, inSession:= zfCalc_UserAdmin()) -- филиал Одесса
---  SELECT * FROM gpReport_Branch_App1 (inStartDate:= '01.02.2018'::TDateTime, inEndDate:= '28.02.2018'::TDateTime, inBranchId:= 8374, inIsUnit := TRUE, inSession:= zfCalc_UserAdmin())  -- филиал Одесса
+--  SELECT * FROM gpReport_Branch_App1_New (inStartDate:= '01.02.2018'::TDateTime, inEndDate:= '28.02.2018'::TDateTime, inBranchId:= 8374, inIsUnit := FALSE, inSession:= zfCalc_UserAdmin()) -- филиал Одесса
+--  SELECT * FROM gpReport_Branch_App1_New (inStartDate:= '01.02.2018'::TDateTime, inEndDate:= '28.02.2018'::TDateTime, inBranchId:= 8374, inIsUnit := TRUE, inSession:= zfCalc_UserAdmin())  -- филиал Одесса

@@ -324,6 +324,11 @@ type
     N18: TMenuItem;
     actListGoods: TAction;
     N19: TMenuItem;
+    actOpenCheckVIP_Search: TOpenChoiceForm;
+    actLoadVIP_Search: TMultiAction;
+    pm_OpenVIP: TPopupMenu;
+    pm_VIP1: TMenuItem;
+    pm_VIP2: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -401,7 +406,8 @@ type
     procedure actExpirationDateFilterExecute(Sender: TObject);
     procedure actListDiffAddGoodsExecute(Sender: TObject);
     procedure actShowListDiffExecute(Sender: TObject);
-    procedure actListGoodsExecute(Sender: TObject); //***12.02.18
+    procedure actListGoodsExecute(Sender: TObject);
+    procedure pm_VIP1Click(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -473,6 +479,8 @@ type
     procedure Add_Check_History;
     // Очистка фильтров
     procedure ClearFilterAll;
+    // Загружает VIP чек
+    procedure LoadVIPCheck;
 
   public
     procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String; var AOperDateSP : TDateTime);
@@ -681,7 +689,9 @@ end;
 procedure TMainCashForm2.actAddDiffMemdataExecute(Sender: TObject);  // только 2 форма
 begin
 //  ShowMessage('memdat-begin');
+  Add_Log('Ждем заполнения Memdata');
   WaitForSingleObject(MutexDBFDiff, INFINITE);
+  Add_Log('Начало заполнения Memdata');
   try
     FLocalDataBaseDiff.Open;
     if not MemData.Active then
@@ -712,6 +722,7 @@ begin
     MemData.EnableControls;
   finally
     ReleaseMutex(MutexDBFDiff);
+    Add_Log('Конец заполнения Memdata');
   end;
 // ShowMessage('memdat-end');
 // ShowMessage(inttostr(MemData.RecordCount));
@@ -864,8 +875,161 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.LoadVIPCheck;
+  var lMsg: String; nRecNo : integer; APoint : TPoint;
+begin
+  inherited;
+
+  //обновим "нужные" параметры-Main ***20.07.16
+  DiscountServiceForm.pGetDiscountExternal (FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
+  // ***20.07.16
+  if FormParams.ParamByName('DiscountExternalId').Value > 0 then
+  begin
+       //проверка карты + сохраним "текущие" параметры-Main
+       if not DiscountServiceForm.fCheckCard (lMsg
+                                             ,DiscountServiceForm.gURL
+                                             ,DiscountServiceForm.gService
+                                             ,DiscountServiceForm.gPort
+                                             ,DiscountServiceForm.gUserName
+                                             ,DiscountServiceForm.gPassword
+                                             ,FormParams.ParamByName('DiscountCardNumber').Value
+                                             ,FormParams.ParamByName('DiscountExternalId').Value
+                                             )
+       then begin
+          // обнулим, пусть фармацевт начнет заново
+          FormParams.ParamByName('DiscountExternalId').Value:= 0;
+          // обнулим "нужные" параметры-Item
+          //DiscountServiceForm.pSetParamItemNull;
+       end;
+
+  end;
+  //
+  if FormParams.ParamByName('InvNumberSP').Value = ''
+  then begin
+      // Update Дисконт в CDS - по всем "обновим" Дисконт
+      DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
+      //
+      CalcTotalSumm;
+  end;
+
+  //***20.07.16
+  lblDiscountExternalName.Caption:= '  ' + FormParams.ParamByName('DiscountExternalName').Value + '  ';
+  lblDiscountCardNumber.Caption  := '  ' + FormParams.ParamByName('DiscountCardNumber').Value + '  ';
+  pnlDiscount.Visible            := FormParams.ParamByName('DiscountExternalId').Value > 0;
+
+  lblPartnerMedicalName.Caption:= '  ' + FormParams.ParamByName('PartnerMedicalName').Value; // + '  /  № амб. ' + FormParams.ParamByName('Ambulance').Value;
+  lblMedicSP.Caption:= '  ' + FormParams.ParamByName('MedicSP').Value + '  /  № '+FormParams.ParamByName('InvNumberSP').Value+'  от ' + DateToStr(FormParams.ParamByName('OperDateSP').Value);
+  if FormParams.ParamByName('SPTax').Value <> 0 then lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FloatToStr(FormParams.ParamByName('SPTax').Value) + '% : ' + FormParams.ParamByName('SPKindName').Value
+  else lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FormParams.ParamByName('SPKindName').Value;
+  pnlSP.Visible:= FormParams.ParamByName('InvNumberSP').Value <> '';
+
+  lblCashMember.Caption := FormParams.ParamByName('ManagerName').AsString;
+  if (FormParams.ParamByName('ConfirmedKindName').AsString <> '')
+  then lblCashMember.Caption := lblCashMember.Caption + ' * ' + FormParams.ParamByName('ConfirmedKindName').AsString;
+  if (FormParams.ParamByName('InvNumberOrder').AsString <> '')
+  then lblCashMember.Caption := lblCashMember.Caption + ' * ' + '№ ' + FormParams.ParamByName('InvNumberOrder').AsString;
+
+  lblBayer.Caption := FormParams.ParamByName('BayerName').AsString;
+  if (FormParams.ParamByName('BayerPhone').AsString <> '')
+  then lblBayer.Caption := lblBayer.Caption + ' * ' + FormParams.ParamByName('BayerPhone').AsString;
+
+  //***30.06.18
+  if FormParams.ParamByName('ManualDiscount').Value > 0 then
+  begin
+    pnlManualDiscount.Visible := True;
+    edManualDiscount.Value := FormParams.ParamByName('ManualDiscount').Value;
+
+    CheckCDS.DisableControls;
+    CheckCDS.Filtered := False;
+    nRecNo := CheckCDS.RecNo;
+    try
+
+      CheckCDS.First;
+      while not CheckCDS.Eof do
+      begin
+
+        if checkCDS.FieldByName('ChangePercent').asCurrency <> FormParams.ParamByName('ManualDiscount').Value then
+        begin
+          checkCDS.Edit;
+          checkCDS.FieldByName('Price').asCurrency    := GetPrice(checkCDS.FieldByName('PriceSale').asCurrency,
+                                                                  Self.FormParams.ParamByName('ManualDiscount').Value);
+          checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('ManualDiscount').Value;
+          CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency);
+          checkCDS.FieldByName('SummChangePercent').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+              CheckCDS.FieldByName('PriceSale').asCurrency) - CheckCDS.FieldByName('Summ').asCurrency;
+          checkCDS.Post;
+        end;
+        CheckCDS.Next;
+      end;
+    finally
+      CheckCDS.RecNo := nRecNo;
+      CheckCDS.Filtered := True;
+      CheckCDS.EnableControls;
+    end;
+
+    CalcTotalSumm;
+  end;
+
+          //***04.09.18
+  CheckCDS.DisableControls;
+  CheckCDS.Filtered := False;
+  RemainsCDS.DisableControls;
+  RemainsCDS.Filtered := False;
+  nRecNo := RemainsCDS.RecNo;
+  try
+
+    CheckCDS.First;
+    while not CheckCDS.Eof do
+    begin
+
+      if RemainsCDS.Locate('GoodsCode', checkCDS.FieldByName('GoodsCode').AsInteger,[]) and
+        ((checkCDS.FieldByName('Amount').asCurrency + checkCDS.FieldByName('Remains').asCurrency) <>
+        RemainsCDS.FieldByName('Remains').asCurrency) then
+      begin
+        checkCDS.Edit;
+        checkCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency +
+          checkCDS.FieldByName('Amount').asCurrency;
+        checkCDS.Post;
+      end;
+      CheckCDS.Next;
+    end;
+    CheckCDS.First;
+  finally
+    RemainsCDS.RecNo := nRecNo;
+    CheckCDS.Filtered := True;
+    CheckCDS.EnableControls;
+    RemainsCDS.Filtered := True;
+    RemainsCDS.EnableControls;
+  end;
+
+  pnlVIP.Visible := true;
+end;
+
+procedure TMainCashForm2.pm_VIP1Click(Sender: TObject);
+begin
+  inherited;
+  case TMenuItem(Sender).Tag of
+    0 : if actLoadVIP.Execute then LoadVIPCheck;
+    1 : if actLoadVIP_Search.Execute then LoadVIPCheck;
+  end;
+
+  //
+  SetBlinkVIP(true);
+  //
+  if not gc_User.Local then
+  Begin
+    WaitForSingleObject(MutexVip, INFINITE);
+    try
+      SaveLocalData(VIPCDS,vip_lcl);
+      SaveLocalData(VIPListCDS,vipList_lcl);
+    finally
+      ReleaseMutex(MutexVip);
+    end;
+  End;
+end;
+
 procedure TMainCashForm2.actExecuteLoadVIPExecute(Sender: TObject);
-  var lMsg: String; nRecNo : integer;
+  var lMsg: String; nRecNo : integer; APoint : TPoint;
 begin
   inherited;
 
@@ -884,6 +1048,9 @@ begin
       ReleaseMutex(MutexVip);
     end;
   End;
+  APoint := btnVIP.ClientToScreen(Point(0, btnVIP.ClientHeight));
+  pm_OpenVIP.Popup(APoint.X, APoint.Y);
+  Exit;
   if actLoadVIP.Execute then
   Begin
     //обновим "нужные" параметры-Main ***20.07.16
@@ -1735,7 +1902,9 @@ end;
 procedure TMainCashForm2.actSetMemdataFromDBFExecute(Sender: TObject); // только 2 форма
 begin
 //  ShowMessage('actSetMemdataFromDBFExecute-begin');
+  Add_Log('Ожидание заполнения Memdata');
   WaitForSingleObject(MutexDBF, INFINITE);
+  Add_Log('Начало заполнения Memdata');
   try
     FLocalDataBaseBody.Open;
     FLocalDataBaseHead.Open;
@@ -1787,6 +1956,7 @@ begin
     MemData.EnableControls;
   finally
     ReleaseMutex(MutexDBF);
+    Add_Log('Конец заполнения Memdata');
   end;
 
 //  ShowMessage('actSetMemdataFromDBFExecute-end');
@@ -1950,6 +2120,7 @@ var
   oldFiltered:Boolean;
 begin
 //  ShowMessage('actSetRimainsFromMemdataExecute - begin');
+  Add_Log('Начало заполнения с Memdata');
   AlternativeCDS.DisableControls;
   RemainsCDS.AfterScroll := Nil;
   RemainsCDS.DisableControls;
@@ -2048,6 +2219,7 @@ begin
     CheckCDS.Filter := oldFilter;
     CheckCDS.Filtered:= oldFiltered;
     difUpdate:=true;
+    Add_Log('Конец заполнения с Memdata');
   end;
 
 //  ShowMessage('actSetRimainsFromMemdataExecute - end');
@@ -2063,6 +2235,7 @@ var
   oldFiltered:Boolean;
 begin
 //  ShowMessage('actSetUpdateFromMemdataExecute - begin');
+  Add_Log('Начало обновления с Memdata');
   AlternativeCDS.DisableControls;
   RemainsCDS.AfterScroll := Nil;
   RemainsCDS.DisableControls;
@@ -2159,6 +2332,7 @@ begin
     CheckCDS.Filter := oldFilter;
     CheckCDS.Filtered:= oldFiltered;
     difUpdate:=true;
+    Add_Log('Конец обновления с Memdata');
   end;
 
 //  ShowMessage('actSetUpdateFromMemdataExecute - end');
@@ -2419,6 +2593,11 @@ var
   UID: String;
 begin
  // ShowMessage('actSetVIPExecute');
+   if CheckCDS.IsEmpty then
+   Begin
+    ShowMessage('Текущий чек пустой!');
+    exit;
+   End;
   if not VIPDialogExecute(ManagerID,ManagerName,BayerName) then exit;
   //
   FormParams.ParamByName('ManagerId').Value   := ManagerId;
@@ -2467,6 +2646,12 @@ end;
 procedure TMainCashForm2.actShowListDiffExecute(Sender: TObject);
 begin
   inherited;
+  if not FileExists(ListDiff_lcl) then
+  begin
+    ShowMessage('Данных для просмотра нет...');
+    Exit;
+  end;
+
   with TListDiffForm.Create(nil) do
   try
     ShowModal
@@ -2660,7 +2845,7 @@ begin
   SaveExcelDialog.FileName := 'Список товаров.xls';
   if not SaveExcelDialog.Execute then Exit;
   try
-    RemainsCDS.Filtered := false;
+    if not pnlExpirationDateFilter.Visible then RemainsCDS.Filtered := false;
     ExportGridToExcel(SaveExcelDialog.FileName, MainGrid);
   finally
     RemainsCDS.Filtered := true;
@@ -3149,6 +3334,7 @@ begin
     exit;
   //отключаем реакции
 
+  Add_Log('Начало обновления остатков');
   AlternativeCDS.DisableControls;
   RemainsCDS.AfterScroll := Nil;
   RemainsCDS.DisableControls;
@@ -3243,6 +3429,7 @@ begin
     CheckCDS.EnableControls;
     CheckCDS.Filter := oldFilter;
     CheckCDS.Filtered:= oldFiltered;
+    Add_Log('Конец обновления остатков');
   end;
 end;
 
@@ -3341,6 +3528,20 @@ var
 begin
 
   actSetFilterExecute(nil); // Установка фильтров для товара
+
+  if not RemainsCDS.IsEmpty then
+  begin
+    edAmount.Style.Color := RemainsCDS.FieldByName('Color_calc').AsInteger;
+    edAmount.StyleDisabled.Color := RemainsCDS.FieldByName('Color_calc').AsInteger;
+    edAmount.StyleFocused.Color := RemainsCDS.FieldByName('Color_calc').AsInteger;
+    edAmount.StyleHot.Color := RemainsCDS.FieldByName('Color_calc').AsInteger;
+  end else
+  begin
+    edAmount.Style.Color := clWindow;
+    edAmount.StyleDisabled.Color := clBtnFace;
+    edAmount.StyleFocused.Color := clWindow;
+    edAmount.StyleHot.Color := clWindow;
+  end;
 
   if MainGrid.IsFocused then exit;
 
@@ -3742,7 +3943,6 @@ begin
      +#10+#13+'</Head>'
              );
 end;
-
 
 //Находится "ИТОГО" кол-во - сколько уже набрали в продаже и к нему плюсуется или минусуется "новое" кол-во
 function TMainCashForm2.fGetCheckAmountTotal(AGoodsId: Integer = 0; AAmount: Currency = 0) : Currency;

@@ -2162,6 +2162,210 @@ inherited MainCashForm2: TMainCashForm2
       ShortCut = 123
       OnExecute = actListGoodsExecute
     end
+    object actOpenCheckVIP_Search: TOpenChoiceForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenCheckVIP_Search'
+      FormName = 'TCheckVIP_SearchForm'
+      FormNameParam.Value = 'TCheckVIP_SearchForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'CheckId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BayerName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CashMemberId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ManagerId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CashMember'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ManagerName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountExternalId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DiscountExternalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountExternalName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DiscountExternalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountCardNumber'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DiscountCardNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ConfirmedKindName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ConfirmedKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BayerPhone'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BayerPhone'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberOrder'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InvNumberOrder'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ConfirmedKindClientName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ConfirmedKindClientName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerMedicalId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PartnerMedicalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerMedicalName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PartnerMedicalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Ambulance'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Ambulance'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MedicSP'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MedicSP'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberSP'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InvNumberSP'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDateSP'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'OperDateSP'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SPTax'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SPTax'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SPKindId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SPKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SPKindName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SPKindName'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ManualDiscount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ManualDiscount'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actLoadVIP_Search: TMultiAction
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenCheckVIP_Search
+        end
+        item
+          Action = actSelectCheck
+        end
+        item
+          Action = actSelectLocalVIPCheck
+        end
+        item
+          Action = actRefreshLite
+        end
+        item
+          Action = actUpdateRemains
+        end
+        item
+          Action = actCalcTotalSumm
+        end
+        item
+          Action = actSetFocus
+        end>
+      Caption = 'actLoadVIP_Search'
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2840,8 +3044,8 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 224
-    Top = 112
+    Left = 240
+    Top = 96
   end
   object spGet_User_IsAdmin: TdsdStoredProc
     StoredProcName = 'gpGet_User_IsAdmin'
@@ -3296,5 +3500,18 @@ inherited MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 56
     Top = 219
+  end
+  object pm_OpenVIP: TPopupMenu
+    Left = 472
+    Top = 384
+    object pm_VIP1: TMenuItem
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1095#1077#1082#1086#1074
+      OnClick = pm_VIP1Click
+    end
+    object pm_VIP2: TMenuItem
+      Tag = 1
+      Caption = #1055#1086#1080#1089#1082' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1086#1074' '#1074' VIP '#1095#1077#1082#1072#1093
+      OnClick = pm_VIP1Click
+    end
   end
 end

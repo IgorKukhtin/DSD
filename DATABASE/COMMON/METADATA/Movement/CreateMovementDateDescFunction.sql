@@ -154,10 +154,19 @@ CREATE OR REPLACE FUNCTION zc_MovementDate_Checked() RETURNS Integer AS $BODY$BE
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_Checked', 'Дата когда поставлена/убрана галка Проверен' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Checked');
 
+CREATE OR REPLACE FUNCTION zc_MovementDate_Checked() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Checked'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_Checked', 'Дата когда поставлена/убрана галка Проверен' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Checked');
+
+CREATE OR REPLACE FUNCTION zc_MovementDate_UserConfirmedKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_UserConfirmedKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_UserConfirmedKind', 'Дата когда поставлена/убрана галка Подтвержден' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_UserConfirmedKind');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 12.10.18                                                                                                        * zc_MovementDate_UserConfirmedKind
  11.10.18         * zc_MovementDate_Checked
  01.10.18                                                                                                        * zc_MovementDate_DatePayment
  28.05.18                                                                                                        * 

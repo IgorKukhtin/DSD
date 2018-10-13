@@ -375,12 +375,17 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_ClientsByBank() RETURNS Integer
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_ClientsByBank', 'Клиенты по безналу' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_ClientsByBank');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_UserConfirmedKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_UserConfirmedKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_UserConfirmedKind', 'Кто поставил/убрал галка Подтвержден' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_UserConfirmedKind');
+
 /*-------------------------------------------------------------------------------
 
                   РАСПОЛАГАЙТЕ ДЕСКИ ПО АЛФАВИТУ  !!!!!!!!!!!!!!!!!!!
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 12.10.18                                                                                      * zc_MovementLinkObject_UserConfirmedKind
  11.10.18         * zc_MovementLinkObject_Checked
  30.09.18                                                                                      * zc_MovementLinkObject_ClientsByBank
  20.08.18         * zc_MovementLinkObject_RetailForwarding

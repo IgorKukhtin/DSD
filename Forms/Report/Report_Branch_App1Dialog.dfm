@@ -3,7 +3,7 @@ object Report_Branch_App1DialogForm: TReport_Branch_App1DialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1088#1080#1083#1086#1078#1077#1085#1080#1077' 1 '#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1043#1055'>'
-  ClientHeight = 181
+  ClientHeight = 186
   ClientWidth = 330
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_Branch_App1DialogForm: TReport_Branch_App1DialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 50
-    Top = 135
+    Top = 147
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_Branch_App1DialogForm: TReport_Branch_App1DialogForm
   end
   object cxButton2: TcxButton
     Left = 224
-    Top = 135
+    Top = 147
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -79,11 +79,18 @@ object Report_Branch_App1DialogForm: TReport_Branch_App1DialogForm
     Top = 7
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
+  object sbIsUnit: TcxCheckBox
+    Left = 8
+    Top = 110
+    Caption = #1088#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+    TabOrder = 8
+    Width = 188
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
     Left = 176
-    Top = 120
+    Top = 132
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 215
@@ -110,6 +117,7 @@ object Report_Branch_App1DialogForm: TReport_Branch_App1DialogForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
@@ -117,6 +125,7 @@ object Report_Branch_App1DialogForm: TReport_Branch_App1DialogForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchId'
@@ -124,6 +133,7 @@ object Report_Branch_App1DialogForm: TReport_Branch_App1DialogForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchName'
@@ -132,15 +142,25 @@ object Report_Branch_App1DialogForm: TReport_Branch_App1DialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsUnit'
+        Value = Null
+        Component = sbIsUnit
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 23
-    Top = 102
+    Left = 263
+    Top = 90
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBranch
     FormNameParam.Value = 'TBranch_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranch_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -151,6 +171,7 @@ object Report_Branch_App1DialogForm: TReport_Branch_App1DialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -159,6 +180,7 @@ object Report_Branch_App1DialogForm: TReport_Branch_App1DialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 87
     Top = 70

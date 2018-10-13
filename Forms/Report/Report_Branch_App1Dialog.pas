@@ -26,6 +26,7 @@ type
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
     UnitGuides: TdsdGuides;
+    sbIsUnit: TcxCheckBox;
   private
     { Private declarations }
   public

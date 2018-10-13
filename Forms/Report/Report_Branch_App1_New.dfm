@@ -1,5 +1,5 @@
-inherited Report_Branch_App1Form: TReport_Branch_App1Form
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1083#1086#1078#1077#1085#1080#1077' 1 '#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1043#1055'>'
+inherited Report_Branch_App1_NewForm: TReport_Branch_App1_NewForm
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1083#1086#1078#1077#1085#1080#1077' 1 '#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1043#1055'> (test)'
   ClientHeight = 404
   ClientWidth = 1073
   AddOnFormData.isSingle = False
@@ -1349,13 +1349,13 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
     ExplicitWidth = 1073
     inherited deStart: TcxDateEdit
       Left = 97
-      EditValue = 42309d
+      EditValue = 43405d
       Properties.SaveTime = False
       ExplicitLeft = 97
     end
     inherited deEnd: TcxDateEdit
       Left = 300
-      EditValue = 42309d
+      EditValue = 43405d
       Properties.SaveTime = False
       ExplicitLeft = 300
     end
@@ -1412,6 +1412,19 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
       end>
   end
   inherited ActionList: TActionList
+    object actRefreshUnit: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1088#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      Hint = #1088#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
@@ -1513,19 +1526,6 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actRefreshUnit: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1088#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
-      Hint = #1088#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
-      ImageIndex = 4
-      RefreshOnTabSetChanges = False
-    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -1536,7 +1536,7 @@ inherited Report_Branch_App1Form: TReport_Branch_App1Form
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Branch_App1'
+    StoredProcName = 'gpReport_Branch_App1_New'
     Params = <
       item
         Name = 'inStartDate'

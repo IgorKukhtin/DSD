@@ -1,4 +1,4 @@
-unit Report_Branch_App1;
+unit Report_Branch_App1_New;
 
 interface
 
@@ -16,7 +16,7 @@ uses
   dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxCheckBox;
 
 type
-  TReport_Branch_App1Form = class(TAncestorReportForm)
+  TReport_Branch_App1_NewForm = class(TAncestorReportForm)
     PeresortInWeight: TcxGridDBColumn;
     SaleWeight: TcxGridDBColumn;
     Sale_40208_Summ: TcxGridDBColumn;
@@ -79,6 +79,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TReport_Branch_App1Form);
+  RegisterClass(TReport_Branch_App1_NewForm);
 
 end.
