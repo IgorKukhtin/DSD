@@ -380,8 +380,11 @@ begin
 
   LoadReportFromFile('Приложение7', ReportPath + '\Отчеты(филиалы)\Приложение7.fr3');
   LoadReportFromFile('Приложение7 Новое', ReportPath + '\Отчеты(филиалы)\Приложение7 Новое.fr3');
-  }
+
   LoadReportFromFile('Приложение1', ReportPath + '\Отчеты(филиалы)\Приложение1.fr3');
+  exit;
+  }
+  LoadReportFromFile('Приложение1_test', ReportPath + '\Отчеты(филиалы)\Приложение1_test.fr3');
   exit;
   {
   LoadReportFromFile('Касса филиалы', ReportPath + '\Отчеты(филиалы)\Касса Филиалы.fr3');

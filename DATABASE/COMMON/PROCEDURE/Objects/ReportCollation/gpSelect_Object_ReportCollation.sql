@@ -25,6 +25,8 @@ RETURNS TABLE (Id Integer, ObjectCode Integer, idBarCode TVarChar
              , EndRemains TFloat
              , StartRemainsCalc TFloat
              , EndRemainsCalc TFloat
+             , isStartRemainsRep Boolean
+             , isEndRemainsRep Boolean
              , isBuh Boolean
              , isDiff Boolean
              , isErased Boolean
@@ -169,6 +171,9 @@ BEGIN
            , tmpData.StartRemainsCalc :: TFloat  AS StartRemainsCalc
            , tmpData.EndRemainsCalc   :: TFloat  AS EndRemainsCalc
 
+           , CASE WHEN tmpData.StartRemainsCalc <> tmpData.StartRemainsRep THEN TRUE ELSE FALSE END :: Boolean AS isStartRemainsRep
+           , CASE WHEN tmpData.EndRemainsCalc <> tmpData.EndRemainsRep THEN TRUE ELSE FALSE END     :: Boolean AS isEndRemainsRep
+           
            , tmpData.isBuh
 
            , CASE WHEN tmpData.ObjectCode > 1 AND tmpData_old.EndDate <> tmpData.StartDate - INTERVAL '1 DAY' THEN TRUE ELSE FALSE END :: Boolean AS isDiff
