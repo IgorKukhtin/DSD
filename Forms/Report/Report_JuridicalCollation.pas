@@ -37,7 +37,7 @@ type
     bbPrintOfficial: TdxBarButton;
     cxLabel6: TcxLabel;
     edJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
+    GuidesJuridical: TdsdGuides;
     getMovementForm: TdsdStoredProc;
     FormParams: TdsdFormParams;
     actOpenForm: TdsdOpenForm;
@@ -55,15 +55,15 @@ type
     spJuridicalBalance: TdsdStoredProc;
     cxLabel3: TcxLabel;
     edPartner: TcxButtonEdit;
-    PartnerGuides: TdsdGuides;
+    GuidesPartner: TdsdGuides;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     cxLabel4: TcxLabel;
     edAccount: TcxButtonEdit;
-    AccountGuides: TdsdGuides;
+    GuidesAccount: TdsdGuides;
     cxLabel8: TcxLabel;
     ceContract: TcxButtonEdit;
-    ContractGuides: TdsdGuides;
+    GuidesContract: TdsdGuides;
     StartRemains: TcxGridDBColumn;
     EndRemains: TcxGridDBColumn;
     FromName: TcxGridDBColumn;
@@ -71,10 +71,10 @@ type
     ToName: TcxGridDBColumn;
     cxLabel5: TcxLabel;
     edPaidKind: TcxButtonEdit;
-    PaidKindGuides: TdsdGuides;
+    GuidesPaidKind: TdsdGuides;
     cxLabel7: TcxLabel;
     ceInfoMoney: TcxButtonEdit;
-    InfoMoneyGuides: TdsdGuides;
+    GuidesInfoMoney: TdsdGuides;
     actPrintTurnover: TdsdPrintAction;
     bbPrintTurnover: TdxBarButton;
     MovementSumm: TcxGridDBColumn;
@@ -83,7 +83,7 @@ type
     ContractComment: TcxGridDBColumn;
     cxLabel10: TcxLabel;
     edCurrency: TcxButtonEdit;
-    CurrencyGuides: TdsdGuides;
+    GuidesCurrency: TdsdGuides;
     Debet_Currency: TcxGridDBColumn;
     Kredit_Currency: TcxGridDBColumn;
     StartRemains_Currency: TcxGridDBColumn;
@@ -93,7 +93,7 @@ type
     actPrintCurrency: TdsdPrintAction;
     bbPrintCurrency: TdxBarButton;
     cxLabel9: TcxLabel;
-    SaleChoiceGuides: TdsdGuides;
+    GuidesSaleChoice: TdsdGuides;
     edInvNumberSale: TcxButtonEdit;
     PartionMovementName: TcxGridDBColumn;
     PaymentDate: TcxGridDBColumn;

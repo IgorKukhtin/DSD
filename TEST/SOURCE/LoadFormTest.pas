@@ -1671,7 +1671,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsBalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsBalanceDialogForm');
  exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceDialogForm'));
@@ -1681,7 +1681,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossDialogForm');
-  {exit;
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HistoryCostForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_HistoryCostForm');
@@ -1777,7 +1777,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSoldDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalCollationForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationDialogForm'));
@@ -1788,8 +1788,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportCollation_UpdateObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportCollation_UpdateObjectForm');
-
   exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_IncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_IncomeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_IncomeDialogForm'));

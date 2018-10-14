@@ -19,6 +19,14 @@ RETURNS TABLE (Id Integer, ObjectCode Integer, idBarCode TVarChar
              , InsertDate TDateTime
              , BuhName TVarChar
              , BuhDate TDateTime
+             , StartRemainsRep TFloat
+             , EndRemainsRep TFloat
+             , StartRemains TFloat
+             , EndRemains TFloat
+             , StartRemainsCalc TFloat
+             , EndRemainsCalc TFloat
+             , isStartRemainsRep Boolean
+             , isEndRemainsRep Boolean
              , isBuh Boolean
              , isDiff Boolean
              , isErased Boolean
@@ -58,6 +66,13 @@ BEGIN
                         , COALESCE (ObjectLink_ReportCollation_Contract.ChildObjectId,  0) AS ContractId
                         , COALESCE (ObjectLink_ReportCollation_Partner.ChildObjectId,   0) AS PartnerId
                         , COALESCE (ObjectLink_ReportCollation_Juridical.ChildObjectId, 0) AS JuridicalId
+                        
+                        , COALESCE (ObjectFloat_StartRemainsRep.ValueData, 0)     AS StartRemainsRep
+                        , COALESCE (ObjectFloat_EndRemainsRep.ValueData, 0)       AS EndRemainsRep
+                        , COALESCE (ObjectFloat_StartRemains.ValueData, 0)        AS StartRemains
+                        , COALESCE (ObjectFloat_EndRemains.ValueData, 0)          AS EndRemains
+                        , COALESCE (ObjectFloat_StartRemainsCalc.ValueData, 0)    AS StartRemainsCalc
+                        , COALESCE (ObjectFloat_EndRemainsCalc.ValueData, 0)      AS EndRemainsCalc
 
                     FROM Object AS Object_ReportCollation
                        LEFT JOIN ObjectDate AS ObjectDate_Start
@@ -79,6 +94,25 @@ BEGIN
                                                ON ObjectBoolean_Buh.ObjectId = Object_ReportCollation.Id
                                               AND ObjectBoolean_Buh.DescId = zc_ObjectBoolean_ReportCollation_Buh()
 
+                       LEFT JOIN ObjectFloat AS ObjectFloat_StartRemainsRep
+                                             ON ObjectFloat_StartRemainsRep.ObjectId = Object_ReportCollation.Id
+                                            AND ObjectFloat_StartRemainsRep.DescId = zc_ObjectFloat_ReportCollation_StartRemainsRep()
+                       LEFT JOIN ObjectFloat AS ObjectFloat_EndRemainsRep
+                                             ON ObjectFloat_EndRemainsRep.ObjectId = Object_ReportCollation.Id
+                                            AND ObjectFloat_EndRemainsRep.DescId = zc_ObjectFloat_ReportCollation_EndRemainsRep()
+                       LEFT JOIN ObjectFloat AS ObjectFloat_StartRemains
+                                             ON ObjectFloat_StartRemains.ObjectId = Object_ReportCollation.Id
+                                            AND ObjectFloat_StartRemains.DescId = zc_ObjectFloat_ReportCollation_StartRemains()
+                       LEFT JOIN ObjectFloat AS ObjectFloat_EndRemains
+                                             ON ObjectFloat_EndRemains.ObjectId = Object_ReportCollation.Id
+                                            AND ObjectFloat_EndRemains.DescId = zc_ObjectFloat_ReportCollation_EndRemains()
+                       LEFT JOIN ObjectFloat AS ObjectFloat_StartRemainsCalc
+                                             ON ObjectFloat_StartRemainsCalc.ObjectId = Object_ReportCollation.Id
+                                            AND ObjectFloat_StartRemainsCalc.DescId = zc_ObjectFloat_ReportCollation_StartRemainsCalc()
+                       LEFT JOIN ObjectFloat AS ObjectFloat_EndRemainsCalc
+                                             ON ObjectFloat_EndRemainsCalc.ObjectId = Object_ReportCollation.Id
+                                            AND ObjectFloat_EndRemainsCalc.DescId = zc_ObjectFloat_ReportCollation_EndRemainsCalc()
+                                  
                        LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_PaidKind
                                             ON ObjectLink_ReportCollation_PaidKind.ObjectId = Object_ReportCollation.Id
                                            AND ObjectLink_ReportCollation_PaidKind.DescId = zc_ObjectLink_ReportCollation_PaidKind()
@@ -113,6 +147,7 @@ BEGIN
                      AND ObjectDate_Start.ValueData >= inStartDate
                      AND ObjectDate_End.ValueData <= inEndDate
                    )
+                   
       SELECT tmpData.Id
            , tmpData.ObjectCode
            , tmpData.idBarCode
@@ -129,6 +164,16 @@ BEGIN
            , tmpData.BuhName
            , tmpData.BuhDate
 
+           , tmpData.StartRemainsRep  :: TFloat  AS StartRemainsRep
+           , tmpData.EndRemainsRep    :: TFloat  AS EndRemainsRep
+           , tmpData.StartRemains     :: TFloat  AS StartRemains
+           , tmpData.EndRemains       :: TFloat  AS EndRemains
+           , tmpData.StartRemainsCalc :: TFloat  AS StartRemainsCalc
+           , tmpData.EndRemainsCalc   :: TFloat  AS EndRemainsCalc
+
+           , CASE WHEN tmpData.StartRemainsCalc <> tmpData.StartRemainsRep THEN TRUE ELSE FALSE END :: Boolean AS isStartRemainsRep
+           , CASE WHEN tmpData.EndRemainsCalc <> tmpData.EndRemainsRep THEN TRUE ELSE FALSE END     :: Boolean AS isEndRemainsRep
+           
            , tmpData.isBuh
 
            , CASE WHEN tmpData.ObjectCode > 1 AND tmpData_old.EndDate <> tmpData.StartDate - INTERVAL '1 DAY' THEN TRUE ELSE FALSE END :: Boolean AS isDiff
@@ -151,6 +196,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.10.18         * 
  20.01.17         *
 */
 

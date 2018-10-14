@@ -2,6 +2,8 @@
 
 -- DROP FUNCTION IF EXISTS gpInsert_Object_ReportCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_Object_ReportCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Object_ReportCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat,TFloat,TFloat Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Object_ReportCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Object_ReportCollation(
     IN inStartDate           TDateTime,    --
@@ -10,11 +12,16 @@ CREATE OR REPLACE FUNCTION gpInsert_Object_ReportCollation(
     IN inPartnerId           Integer,      --
     IN inContractId          Integer,      --
     IN inPaidKindId          Integer,      --
+    IN inAccountId           Integer,      --
+    IN InInfoMoneyId         Integer,      --
+    IN inCurrencyId          Integer,      --
+    IN inMovementId_Partion  Integer,      --
     IN inIsInsert            Boolean,      -- для реестра "Акты сверок"
     IN inIsUpdate            Boolean,      -- добавить визу "Сдали в бухгалтерию"
    OUT outBarCode            TVarChar,     -- штрихкод акта сверки
     IN inSession             TVarChar
 )
+
 RETURNS TVarChar
 AS
 $BODY$
@@ -124,12 +131,20 @@ BEGIN
              PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReportCollation_Start(), vbId, inStartDate);
              -- сохранили свойство <Дата окончания периода>
              PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReportCollation_End(), vbId, inEndDate);
-    
+
+
+             -- сохранили свойства <>
+             PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReportCollation_StartRemainsRep(), vbId, tmp.StartRemains)
+                   , lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReportCollation_EndRemainsRep(), vbId, tmp.EndRemains)
+             FROM gpReport_JuridicalCollation(inStartDate, inEndDate, inJuridicalId, inPartnerId, inContractId, inAccountId, inPaidKindId, InInfoMoneyId, inCurrencyId, inMovementId_Partion, inSession) AS tmp;
+
              -- сохранили свойство <Дата создания>
              PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReportCollation_Insert(), vbId, CURRENT_TIMESTAMP);
              -- сохранили свойство <Пользователь (создание)>
              PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReportCollation_Insert(), vbId, vbUserId);
           
+
+
         
              -- перенумеровываем начиная со "следующего"
              UPDATE Object SET ObjectCode = COALESCE (vbCode_old, 0) + tmp.Ord + 1
@@ -191,6 +206,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.10.18         *
  20.01.17         *
 
 */

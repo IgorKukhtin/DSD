@@ -23,7 +23,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
   DataModul, cxButtonEdit, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls,
-  ChoicePeriod;
+  ChoicePeriod, cxCurrencyEdit;
 
 type
   TReportCollation_ObjectForm = class(TParentForm)
@@ -70,6 +70,7 @@ type
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
     isDiff: TcxGridDBColumn;
+    StartRemainsRep: TcxGridDBColumn;
   private
     { Private declarations }
   public
