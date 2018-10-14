@@ -143,6 +143,69 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 55
       end
+      object StartRemainsRep: TcxGridDBColumn
+        Caption = #1085#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1054#1090#1095#1077#1090')'
+        DataBinding.FieldName = 'StartRemainsRep'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1085#1072#1095'. '#1089#1072#1083#1100#1076#1086' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1054#1090#1095#1077#1090#1072
+        Options.Editing = False
+        Width = 70
+      end
+      object EndRemainsRep: TcxGridDBColumn
+        Caption = #1082#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1054#1090#1095#1077#1090')'
+        DataBinding.FieldName = 'EndRemainsRep'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1082#1086#1085'. '#1089#1072#1083#1100#1076#1086' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1054#1090#1095#1077#1090#1072
+        Options.Editing = False
+        Width = 70
+      end
+      object EndRemains: TcxGridDBColumn
+        Caption = #1082#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090')'
+        DataBinding.FieldName = 'EndRemains'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1082#1086#1085'. '#1089#1072#1083#1100#1076#1086' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+        Width = 70
+      end
+      object StartRemains: TcxGridDBColumn
+        Caption = #1085#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090')'
+        DataBinding.FieldName = 'StartRemains'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = ' '#9#1085#1072#1095'. '#1089#1072#1083#1100#1076#1086' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+        Width = 70
+      end
+      object EndRemainsCalc: TcxGridDBColumn
+        Caption = #1082#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1088#1072#1089#1095'.)'
+        DataBinding.FieldName = 'EndRemainsCalc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1082#1086#1085'. '#1089#1072#1083#1100#1076#1086' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1054#1090#1095#1077#1090#1072' ('#1088#1072#1089#1095#1077#1090')'
+        Width = 70
+      end
+      object StartRemainsCalc: TcxGridDBColumn
+        Caption = #1085#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1088#1072#1089#1095'.)'
+        DataBinding.FieldName = 'StartRemainsCalc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1085#1072#1095'. '#1089#1072#1083#1100#1076#1086' '#1087#1086' '#1076#1072#1085#1085#1099#1084' '#1054#1090#1095#1077#1090#1072' ('#1088#1072#1089#1095#1077#1090')'
+        Options.Editing = False
+        Width = 70
+      end
       object InsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertName'

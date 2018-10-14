@@ -920,6 +920,31 @@ INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_WorkTimeKind_Tax', zc_Object_WorkTimeKind(), '% изменения рабочих часов' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_WorkTimeKind_Tax');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReportCollation_StartRemainsRep() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReportCollation_StartRemainsRep'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_ReportCollation_StartRemainsRep', zc_Object_ReportCollation(), 'нач. сальдо по данным Отчета' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReportCollation_StartRemainsRep');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReportCollation_EndRemainsRep() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReportCollation_EndRemainsRep'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_ReportCollation_EndRemainsRep', zc_Object_ReportCollation(), 'кон. сальдо по данным Отчета' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReportCollation_EndRemainsRep');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReportCollation_StartRemains() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReportCollation_StartRemains'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_ReportCollation_StartRemains', zc_Object_ReportCollation(), 'нач. сальдо по данным Контрагента' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReportCollation_StartRemains');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReportCollation_EndRemains() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReportCollation_EndRemains'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_ReportCollation_EndRemains', zc_Object_ReportCollation(), 'кон. сальдо по данным Контрагента' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReportCollation_EndRemains');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReportCollation_StartRemainsCalc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReportCollation_StartRemainsCalc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_ReportCollation_StartRemainsCalc', zc_Object_ReportCollation(), 'нач. сальдо по данным Отчета' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReportCollation_StartRemainsCalc');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReportCollation_EndRemainsCalc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReportCollation_EndRemainsCalc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_ReportCollation_EndRemainsCalc', zc_Object_ReportCollation(), 'кон. сальдо по данным Отчета' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReportCollation_EndRemainsCalc');
+
+
 --!!! АПТЕКА
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Contract_Deferment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Contract_Deferment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1145,6 +1170,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 14.10.18         *zc_ObjectFloat_ReportCollation_...
  27.08.18                                                                                     * zc_ObjectFloat_Overdraft_Summa
  20.08.18         * zc_ObjectFloat_Contract_TotalSumm
  16.08.18         * zc_ObjectFloat_PriceChange_Value

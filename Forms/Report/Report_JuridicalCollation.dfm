@@ -1,27 +1,28 @@
 inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
   ClientHeight = 423
-  ClientWidth = 1015
+  ClientWidth = 1156
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1031
-  ExplicitHeight = 458
+  ExplicitLeft = -45
+  ExplicitWidth = 1172
+  ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1015
+    Width = 1156
     Height = 343
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1015
     ExplicitHeight = 343
     ClientRectBottom = 343
-    ClientRectRight = 1015
+    ClientRectRight = 1156
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1015
       ExplicitHeight = 343
       inherited cxGrid: TcxGrid
-        Width = 1015
+        Width = 1156
         Height = 343
         ExplicitWidth = 1015
         ExplicitHeight = 343
@@ -557,7 +558,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     end
   end
   inherited Panel: TPanel
-    Width = 1015
+    Width = 1156
     Height = 54
     ExplicitWidth = 1015
     ExplicitHeight = 54
@@ -725,19 +726,19 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = AccountGuides
+        Component = GuidesAccount
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = ContractGuides
+        Component = GuidesContract
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -753,31 +754,31 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           'Date')
       end
       item
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = PartnerGuides
+        Component = GuidesPartner
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = SaleChoiceGuides
+        Component = GuidesSaleChoice
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -884,7 +885,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'AccountName'
           Value = ''
-          Component = AccountGuides
+          Component = GuidesAccount
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -893,7 +894,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'PaidKindName'
           Value = ''
-          Component = PaidKindGuides
+          Component = GuidesPaidKind
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1027,7 +1028,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'InfoMoneyName'
           Value = Null
-          Component = InfoMoneyGuides
+          Component = GuidesInfoMoney
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1102,7 +1103,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'AccountName'
           Value = ''
-          Component = AccountGuides
+          Component = GuidesAccount
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1111,7 +1112,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'PaidKindName'
           Value = ''
-          Component = PaidKindGuides
+          Component = GuidesPaidKind
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1310,7 +1311,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'AccountName'
           Value = ''
-          Component = AccountGuides
+          Component = GuidesAccount
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1319,7 +1320,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'PaidKindName'
           Value = ''
-          Component = PaidKindGuides
+          Component = GuidesPaidKind
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1522,7 +1523,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'AccountName'
           Value = ''
-          Component = AccountGuides
+          Component = GuidesAccount
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1531,7 +1532,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'PaidKindName'
           Value = ''
-          Component = PaidKindGuides
+          Component = GuidesPaidKind
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1700,7 +1701,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'AccountId'
           Value = ''
-          Component = AccountGuides
+          Component = GuidesAccount
           ComponentItem = 'Key'
           DataType = ftString
           ParamType = ptInput
@@ -1709,7 +1710,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'AccountName'
           Value = ''
-          Component = AccountGuides
+          Component = GuidesAccount
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1718,7 +1719,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'InfoMoneyId'
           Value = ''
-          Component = InfoMoneyGuides
+          Component = GuidesInfoMoney
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1726,7 +1727,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'InfoMoneyName'
           Value = ''
-          Component = InfoMoneyGuides
+          Component = GuidesInfoMoney
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1735,7 +1736,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'JuridicalId'
           Value = ''
-          Component = JuridicalGuides
+          Component = GuidesJuridical
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1743,7 +1744,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'JuridicalName'
           Value = ''
-          Component = JuridicalGuides
+          Component = GuidesJuridical
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1752,7 +1753,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'PartnerId'
           Value = ''
-          Component = PartnerGuides
+          Component = GuidesPartner
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1760,7 +1761,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'PartnerName'
           Value = ''
-          Component = PartnerGuides
+          Component = GuidesPartner
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1769,7 +1770,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'PaidKindId'
           Value = ''
-          Component = PaidKindGuides
+          Component = GuidesPaidKind
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1777,7 +1778,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'PaidKindName'
           Value = ''
-          Component = PaidKindGuides
+          Component = GuidesPaidKind
           ComponentItem = 'TextValue'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1785,7 +1786,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'ContractId'
           Value = ''
-          Component = ContractGuides
+          Component = GuidesContract
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1793,7 +1794,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Name = 'ContractName'
           Value = ''
-          Component = ContractGuides
+          Component = GuidesContract
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1844,7 +1845,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inJuridicalId'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1852,7 +1853,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inPartnerId'
         Value = Null
-        Component = PartnerGuides
+        Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1860,7 +1861,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inContractId'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1868,7 +1869,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inAccountId'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1876,7 +1877,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inPaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1884,7 +1885,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inInfoMoneyId'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1892,7 +1893,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inCurrencyId'
         Value = Null
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1900,7 +1901,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inMovementId_Partion'
         Value = Null
-        Component = SaleChoiceGuides
+        Component = GuidesSaleChoice
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2059,33 +2060,33 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = PeriodChoice
       end
       item
-        Component = JuridicalGuides
+        Component = GuidesJuridical
       end
       item
-        Component = PartnerGuides
+        Component = GuidesPartner
       end
       item
-        Component = AccountGuides
+        Component = GuidesAccount
       end
       item
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
       end
       item
-        Component = ContractGuides
+        Component = GuidesContract
       end
       item
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
       end
       item
-        Component = CurrencyGuides
+        Component = GuidesCurrency
       end
       item
-        Component = SaleChoiceGuides
+        Component = GuidesSaleChoice
       end>
     Left = 408
     Top = 72
   end
-  object JuridicalGuides: TdsdGuides
+  object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
@@ -2097,7 +2098,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'Key'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2105,7 +2106,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2114,7 +2115,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'ContractId'
         Value = Null
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2122,7 +2123,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'ContractName'
         Value = Null
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2131,7 +2132,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'PartnerId'
         Value = Null
-        Component = PartnerGuides
+        Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2139,7 +2140,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'PartnerName'
         Value = Null
-        Component = PartnerGuides
+        Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2206,7 +2207,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inJuridicalId'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2214,7 +2215,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inPartnerId'
         Value = Null
-        Component = PartnerGuides
+        Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2222,7 +2223,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inContractId'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2230,7 +2231,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inAccountId'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2238,7 +2239,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inPaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2246,7 +2247,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inInfoMoneyId'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2254,7 +2255,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inCurrencyId'
         Value = Null
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2375,7 +2376,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Left = 296
     Top = 240
   end
-  object PartnerGuides: TdsdGuides
+  object GuidesPartner: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPartner
     FormNameParam.Value = 'TPartner_ObjectForm'
@@ -2387,7 +2388,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'Key'
         Value = ''
-        Component = PartnerGuides
+        Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2395,7 +2396,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PartnerGuides
+        Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2404,7 +2405,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'JuridicalId'
         Value = Null
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2412,7 +2413,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'JuridicalName'
         Value = Null
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2421,14 +2422,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'MasterJuridicalId'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2436,7 +2437,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Left = 440
     Top = 24
   end
-  object AccountGuides: TdsdGuides
+  object GuidesAccount: TdsdGuides
     KeyField = 'Id'
     LookupControl = edAccount
     FormNameParam.Value = 'TAccount_ObjectForm'
@@ -2448,7 +2449,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'Key'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2456,7 +2457,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'TextValueAll'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2465,7 +2466,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Left = 720
     Top = 65528
   end
-  object ContractGuides: TdsdGuides
+  object GuidesContract: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceContract
     FormNameParam.Value = 'TContractChoiceForm'
@@ -2477,7 +2478,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2485,7 +2486,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2494,7 +2495,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'JuridicalId'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2502,7 +2503,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'JuridicalName'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2511,7 +2512,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'InfoMoneyId'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2519,7 +2520,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'InfoMoneyName'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2528,7 +2529,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'PaidKindId'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2536,7 +2537,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'PaidKindName'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2544,21 +2545,21 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'MasterJuridicalId'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         MultiSelectSeparator = ','
       end>
     Left = 944
     Top = 65534
   end
-  object PaidKindGuides: TdsdGuides
+  object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
@@ -2570,7 +2571,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'Key'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2579,7 +2580,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2588,7 +2589,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Left = 952
     Top = 40
   end
-  object InfoMoneyGuides: TdsdGuides
+  object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
@@ -2600,14 +2601,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'Key'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = InfoMoneyGuides
+        Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2615,7 +2616,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Left = 768
     Top = 13
   end
-  object CurrencyGuides: TdsdGuides
+  object GuidesCurrency: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCurrency
     FormNameParam.Value = 'TCurrency_ObjectForm'
@@ -2627,7 +2628,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'Key'
         Value = ''
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2636,7 +2637,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2645,7 +2646,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Left = 1120
     Top = 48
   end
-  object SaleChoiceGuides: TdsdGuides
+  object GuidesSaleChoice: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInvNumberSale
     Key = '0'
@@ -2658,7 +2659,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'Key'
         Value = '0'
-        Component = SaleChoiceGuides
+        Component = GuidesSaleChoice
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2667,7 +2668,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'InvNumber_Full'
         Value = ''
-        Component = SaleChoiceGuides
+        Component = GuidesSaleChoice
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2676,14 +2677,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'PartnerId'
         Value = ''
-        Component = PartnerGuides
+        Component = GuidesPartner
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
         Value = ''
-        Component = PartnerGuides
+        Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2714,7 +2715,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inJuridicalId'
         Value = Null
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2722,7 +2723,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inPartnerId'
         Value = Null
-        Component = PartnerGuides
+        Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2730,7 +2731,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inContractId'
         Value = Null
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2738,7 +2739,39 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inPaidKindId'
         Value = Null
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAccountId'
+        Value = Null
+        Component = GuidesAccount
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InInfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyId'
+        Value = Null
+        Component = GuidesCurrency
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Partion'
+        Value = Null
+        Component = GuidesSaleChoice
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
