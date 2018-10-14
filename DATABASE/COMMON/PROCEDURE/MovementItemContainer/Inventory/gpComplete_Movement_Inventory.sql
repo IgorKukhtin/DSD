@@ -220,8 +220,24 @@ BEGIN
                 WHERE tmp.ProfitLossGroupId = zc_Enum_ProfitLossGroup_40000()) -- 40000; "Расходы на сбыт"
      THEN
          -- такие для Автомобиля/Подразделения (по филиалу)
-         vbProfitLossGroupId := zc_Enum_ProfitLossGroup_40000(); -- Расходы на сбыт
+         vbProfitLossGroupId     := zc_Enum_ProfitLossGroup_40000();     -- Расходы на сбыт
          vbProfitLossDirectionId := zc_Enum_ProfitLossDirection_40400(); -- Прочие потери (Списание+инвентаризация)
+
+     ELSEIF vbMemberId > 0
+     THEN
+         -- такие для Физ Лицо
+         WITH tmpMember AS (SELECT lfSelect.UnitId
+                            FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                            WHERE lfSelect.Ord = 1
+                              AND lfSelect.MemberId = vbMemberId
+                           )
+         SELECT lfSelect.ProfitLossGroupId
+              , lfSelect.ProfitLossDirectionId
+                INTO vbProfitLossGroupId, vbProfitLossDirectionId
+         FROM lfSelect_Object_Unit_byProfitLossDirection() AS lfSelect
+         WHERE lfSelect.UnitId = (SELECT tmpMember.UnitId FROM tmpMember);
+
+
      ELSE
          -- такие для Автомобиля/Сотрудника/Подразделения (не филиал)
          vbProfitLossGroupId := zc_Enum_ProfitLossGroup_20000(); -- Общепроизводственные расходы
@@ -254,6 +270,137 @@ BEGIN
                          , UnitId_Item, StorageId_Item, UnitId_Partion, Price_Partion
                          , isPartionCount, isPartionSumm
                          , PartionGoodsId)
+        WITH tmpMI AS (SELECT MovementItem.Id AS MovementItemId
+         
+                            , COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, MovementItem.ObjectId, 0) AS GoodsId
+                            , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция
+                                        THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+         
+                                   WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                                    AND vbIsPartionGoodsKind_Unit = TRUE
+                                        THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+         
+                                   ELSE 0
+                              END AS GoodsKindId
+                            , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId_complete
+         
+                            , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
+                            , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId_Item
+                            , COALESCE (MILinkObject_Storage.ObjectId, 0) AS StorageId_Item
+                            , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
+                            , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
+         
+                            , COALESCE (MIFloat_ContainerId.ValueData, 0) AS ContainerId
+         
+                            , MovementItem.Amount AS OperCount
+                            , CASE WHEN vbOperDate = '30.06.2015' AND MovementItem.Amount <> 0 THEN CAST (COALESCE (MIFloat_Summ.ValueData, 0) / MovementItem.Amount AS NUMERIC (16, 4)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END AS Price_Partion
+                            , COALESCE (MIFloat_Summ.ValueData, 0) AS OperSumm
+         
+                              -- Управленческие назначения
+                           , CASE WHEN Object.DescId = zc_Object_Fuel() THEN COALESCE (View_InfoMoney_Fuel.InfoMoneyDestinationId, 0)
+                                  ELSE COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0)
+                             END AS InfoMoneyDestinationId
+                              -- Статьи назначения
+                           , CASE WHEN Object.DescId = zc_Object_Fuel() THEN COALESCE (View_InfoMoney_Fuel.InfoMoneyId, 0)
+                                  ELSE COALESCE (View_InfoMoney.InfoMoneyId, 0)
+                             END AS InfoMoneyId
+         
+                             -- Бизнес из Товара нужен только если не <Вид топлива>
+                           , CASE WHEN Object.DescId = zc_Object_Fuel() THEN 0
+                                  ELSE COALESCE (ObjectLink_Goods_Business.ChildObjectId, 0)
+                             END AS BusinessId
+         
+                           , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)      AS isPartionCount
+                           , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)       AS isPartionSumm
+         
+                       FROM Movement
+                            JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
+                            LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId = MovementItem.ObjectId
+         
+                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel
+                                                 ON ObjectLink_Goods_Fuel.ObjectId = MovementItem.ObjectId
+                                                AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
+                                                AND vbCarId <> 0
+                            LEFT JOIN Object ON Object.Id = COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, MovementItem.ObjectId)
+         
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                                             ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage
+                                                             ON MILinkObject_Storage.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_Storage.DescId = zc_MILinkObject_Storage()
+         
+                            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                            LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                                        ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+         
+                            LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                        ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+         
+                            LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                         ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                            LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                                       ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
+                                                      AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+         
+                            LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
+                                                    ON ObjectBoolean_PartionCount.ObjectId = MovementItem.ObjectId
+                                                   AND ObjectBoolean_PartionCount.DescId = zc_ObjectBoolean_Goods_PartionCount()
+                            LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionSumm
+                                                    ON ObjectBoolean_PartionSumm.ObjectId = MovementItem.ObjectId
+                                                   AND ObjectBoolean_PartionSumm.DescId = zc_ObjectBoolean_Goods_PartionSumm()
+         
+                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Business
+                                                 ON ObjectLink_Goods_Business.ObjectId = MovementItem.ObjectId
+                                                AND ObjectLink_Goods_Business.DescId = zc_ObjectLink_Goods_Business()
+                            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                 ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                                             AND Object.DescId <> zc_Object_Fuel()
+                            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Fuel ON View_InfoMoney_Fuel.InfoMoneyId = zc_Enum_InfoMoney_20401()
+                                                                                  AND Object.DescId = zc_Object_Fuel()
+                       WHERE Movement.Id = inMovementId
+                         AND Movement.DescId = zc_Movement_Inventory()
+                         AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+                         AND (_tmpGoods_Complete_Inventory.GoodsId > 0 OR vbIsGoodsGroup = FALSE)
+                      )
+           , tmpContainer_all AS (SELECT tmpMI.MovementItemId
+                                       , ROW_NUMBER() OVER (PARTITION BY tmpMI.MovementItemId ORDER BY Container.Amount DESC) AS Ord -- !!!Надо отловить ПОСЛЕДНИЙ!!!
+                                         -- !!!пустая партия!!!
+                                       , -1 AS PartionGoodsId
+                                  FROM tmpMI
+                                       INNER JOIN Container ON Container.ObjectId = tmpMI.GoodsId
+                                                           AND Container.DescId   = zc_Container_Count()
+                                                           AND Container.Amount   > 0
+                                       INNER JOIN ContainerLinkObject AS CLO_Member
+                                                                      ON CLO_Member.ContainerId = Container.Id
+                                                                     AND CLO_Member.DescId      = zc_ContainerLinkObject_Member()
+                                                                     AND CLO_Member.ObjectId    = vbMemberId
+                                       INNER JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                                      ON CLO_PartionGoods.ContainerId = Container.Id
+                                                                     AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                                                                     AND CLO_PartionGoods.ObjectId    = 0
+                                  WHERE tmpMI.PartionGoodsDate = zc_DateEnd()
+                                    AND tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                                       , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                                       , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                        )
+                                 )
         SELECT (_tmp.MovementItemId) AS MovementItemId
 
              , (_tmp.ContainerId) AS ContainerId_Goods -- !!!
@@ -283,122 +430,19 @@ BEGIN
 
              , _tmp.isPartionCount
              , _tmp.isPartionSumm 
-               -- Партии товара, сформируем позже
-             , 0 AS PartionGoodsId
-        FROM 
-             (SELECT MovementItem.Id AS MovementItemId
-
-                   , COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, MovementItem.ObjectId, 0) AS GoodsId
-                   , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция
-                               THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-
-                          WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
-                           AND vbIsPartionGoodsKind_Unit = TRUE
-                               THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-
-                          ELSE 0
-                     END AS GoodsKindId
-                   , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId_complete
-
-                   , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
-                   , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId_Item
-                   , COALESCE (MILinkObject_Storage.ObjectId, 0) AS StorageId_Item
-                   , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
-                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
-
-                   , COALESCE (MIFloat_ContainerId.ValueData, 0) AS ContainerId
-
-                   , MovementItem.Amount AS OperCount
-                   , CASE WHEN vbOperDate = '30.06.2015' AND MovementItem.Amount <> 0 THEN CAST (COALESCE (MIFloat_Summ.ValueData, 0) / MovementItem.Amount AS NUMERIC (16, 4)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END AS Price_Partion
-                   , COALESCE (MIFloat_Summ.ValueData, 0) AS OperSumm
-
-                     -- Управленческие назначения
-                  , CASE WHEN Object.DescId = zc_Object_Fuel() THEN COALESCE (View_InfoMoney_Fuel.InfoMoneyDestinationId, 0)
-                         ELSE COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0)
-                    END AS InfoMoneyDestinationId
-                     -- Статьи назначения
-                  , CASE WHEN Object.DescId = zc_Object_Fuel() THEN COALESCE (View_InfoMoney_Fuel.InfoMoneyId, 0)
-                         ELSE COALESCE (View_InfoMoney.InfoMoneyId, 0)
-                    END AS InfoMoneyId
-
-                    -- Бизнес из Товара нужен только если не <Вид топлива>
-                  , CASE WHEN Object.DescId = zc_Object_Fuel() THEN 0
-                         ELSE COALESCE (ObjectLink_Goods_Business.ChildObjectId, 0)
-                    END AS BusinessId
-
-                  , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)      AS isPartionCount
-                  , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)       AS isPartionSumm
-
-              FROM Movement
-                   JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
-                   LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId = MovementItem.ObjectId
-
-                   LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel
-                                        ON ObjectLink_Goods_Fuel.ObjectId = MovementItem.ObjectId
-                                       AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
-                                       AND vbCarId <> 0
-                   LEFT JOIN Object ON Object.Id = COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, MovementItem.ObjectId)
-
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
-                                                    ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
-                                                    ON MILinkObject_Asset.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                    ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage
-                                                    ON MILinkObject_Storage.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_Storage.DescId = zc_MILinkObject_Storage()
-
-                   LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                   LEFT JOIN MovementItemFloat AS MIFloat_Summ
-                                               ON MIFloat_Summ.MovementItemId = MovementItem.Id
-                                              AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
-
-                   LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
-                                               ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
-                                              AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
-
-                   LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                                ON MIString_PartionGoods.MovementItemId = MovementItem.Id
-                                               AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
-                                              ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
-                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
-
-                   LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
-                                           ON ObjectBoolean_PartionCount.ObjectId = MovementItem.ObjectId
-                                          AND ObjectBoolean_PartionCount.DescId = zc_ObjectBoolean_Goods_PartionCount()
-                   LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionSumm
-                                           ON ObjectBoolean_PartionSumm.ObjectId = MovementItem.ObjectId
-                                          AND ObjectBoolean_PartionSumm.DescId = zc_ObjectBoolean_Goods_PartionSumm()
-
-                   LEFT JOIN ObjectLink AS ObjectLink_Goods_Business
-                                        ON ObjectLink_Goods_Business.ObjectId = MovementItem.ObjectId
-                                       AND ObjectLink_Goods_Business.DescId = zc_ObjectLink_Goods_Business()
-                   LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                        ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
-                                       AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                   LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-                                                                    AND Object.DescId <> zc_Object_Fuel()
-                   LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Fuel ON View_InfoMoney_Fuel.InfoMoneyId = zc_Enum_InfoMoney_20401()
-                                                                         AND Object.DescId = zc_Object_Fuel()
-              WHERE Movement.Id = inMovementId
-                AND Movement.DescId = zc_Movement_Inventory()
-                AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
-                AND (_tmpGoods_Complete_Inventory.GoodsId > 0 OR vbIsGoodsGroup = FALSE)
-             ) AS _tmp
+               -- Партии товара, сформируем позже, ИЛИ !!!ЕСТЬ остаток с пустой партией!!!
+             , COALESCE (tmpContainer_all.PartionGoodsId, 0) AS PartionGoodsId
+        FROM tmpMI AS _tmp
+             LEFT JOIN tmpContainer_all ON tmpContainer_all.MovementItemId = _tmp.MovementItemId
+                                       AND tmpContainer_all.Ord            = 1 -- на всякий случай - № п/п
               ;
 
      -- формируются Партии товара, ЕСЛИ надо ...
-     UPDATE _tmpItem SET PartionGoodsId = CASE WHEN vbOperDate >= zc_DateStart_PartionGoods()
+     UPDATE _tmpItem SET PartionGoodsId = CASE -- 
+                                               WHEN _tmpItem.PartionGoodsId = -1
+                                                   THEN 0
+
+                                               WHEN vbOperDate >= zc_DateStart_PartionGoods()
                                                 AND vbAccountDirectionId = zc_Enum_AccountDirection_20200() -- Запасы + на складах
                                                 AND (_tmpItem.isPartionCount = TRUE OR _tmpItem.isPartionSumm = TRUE)
                                                    THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoods)

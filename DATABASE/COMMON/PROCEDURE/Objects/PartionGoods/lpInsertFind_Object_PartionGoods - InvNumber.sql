@@ -37,7 +37,7 @@ BEGIN
      -- проверка
      IF inOperDate IS NULL OR inOperDate IN (zc_DateStart(), zc_DateEnd())
      THEN
-         RAISE EXCEPTION 'Ошибка.В партии Не определена <Дата перемещения>.';
+         RAISE EXCEPTION 'Ошибка.В партии для <%> Не определена <Дата перемещения>.', lfGet_Object_ValueData (inGoodsId);
      END IF;
 
      -- меняем параметр

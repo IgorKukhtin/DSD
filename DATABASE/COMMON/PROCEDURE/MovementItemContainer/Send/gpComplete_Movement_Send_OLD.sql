@@ -47,7 +47,7 @@ BEGIN
      PERFORM lpComplete_Movement_Send_CreateTemp();
 
      -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItem (MovementItemId, MovementId, OperDate, UnitId_From, MemberId_From, CarId_From, BranchId_From, UnitId_To, MemberId_To, CarId_To, BranchId_To
+     INSERT INTO _tmpItem (MovementItemId, MovementId, OperDate, UnitId_From, MemberId_From, BranchId_From, UnitId_To, MemberId_To, BranchId_To
                          , MIContainerId_To, ContainerId_GoodsFrom, ContainerId_GoodsTo, ObjectDescId, GoodsId, GoodsKindId, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate_From, PartionGoodsDate_To
                          , OperCount
                          , AccountDirectionId_From, AccountDirectionId_To, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
@@ -64,15 +64,12 @@ BEGIN
            , tmpMI AS (SELECT MovementItem.Id AS MovementItemId
                             , MovementItem.MovementId
                             , Movement.OperDate
-                            , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit()   THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS UnitId_From
+                            , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS UnitId_From
                             , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Member() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS MemberId_From
-                            , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Car()    THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS CarId_From
-                            , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit()   THEN ObjectLink_UnitFrom_Branch.ChildObjectId ELSE 0 END, 0) AS BranchId_From
-
-                            , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit()   THEN MovementLinkObject_To.ObjectId ELSE 0 END, 0) AS UnitId_To
+                            , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Branch.ChildObjectId ELSE 0 END, 0) AS BranchId_From
+                            , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN MovementLinkObject_To.ObjectId ELSE 0 END, 0) AS UnitId_To
                             , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Member() THEN MovementLinkObject_To.ObjectId ELSE 0 END, 0) AS MemberId_To
-                            , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Car()    THEN MovementLinkObject_To.ObjectId ELSE 0 END, 0) AS CarId_To
-                            , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit()   THEN ObjectLink_UnitTo_Branch.ChildObjectId ELSE 0 END, 0) AS BranchId_To
+                            , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Branch.ChildObjectId ELSE 0 END, 0) AS BranchId_To
 
                             , Object_Goods.DescId AS ObjectDescId
                             , MovementItem.ObjectId AS GoodsId
@@ -95,7 +92,6 @@ BEGIN
                             , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit()
                                                  THEN ObjectLink_UnitFrom_AccountDirection.ChildObjectId
                                              WHEN Object_From.DescId = zc_Object_Member()
-                                               OR Object_From.DescId = zc_Object_Car()
                                                  THEN CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- "Основное сырье"; 10100; "Мясное сырье"
                                                                                                         , zc_Enum_InfoMoneyDestination_20700() -- "Общефирменные"; 20700; "Товары"
                                                                                                         , zc_Enum_InfoMoneyDestination_20900() -- "Общефирменные"; 20900; "Ирна"
@@ -112,7 +108,6 @@ BEGIN
                             , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit()
                                                  THEN ObjectLink_UnitTo_AccountDirection.ChildObjectId
                                              WHEN Object_To.DescId = zc_Object_Member()
-                                               OR Object_To.DescId = zc_Object_Car()
                                                  THEN CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- "Основное сырье"; 10100; "Мясное сырье"
                                                                                                         , zc_Enum_InfoMoneyDestination_20700() -- "Общефирменные"; 20700; "Товары"
                                                                                                         , zc_Enum_InfoMoneyDestination_20900() -- "Общефирменные"; 20900; "Ирна"
@@ -146,7 +141,7 @@ BEGIN
                               -- Группы ОПиУ - криво захардкодил
                             , CASE WHEN Movement.OperDate >= '01.05.2017'
                                     AND Object_From.Id IN (8455 , 8456) -- Склад специй + Склад запчастей
-                                    AND Object_To_find.DescId IN (zc_Object_Member()) -- , zc_Object_Car()
+                                    AND Object_To_find.DescId = zc_Object_Member()
                                     AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты
                                                                                 , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                                                 , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
@@ -192,8 +187,7 @@ BEGIN
                              LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_from
                                                   ON ObjectLink_Personal_Member_from.ObjectId = ObjectLink_Car_PersonalDriver_from.ChildObjectId
                                                  AND ObjectLink_Personal_Member_from.DescId = zc_ObjectLink_Personal_Member()
-                             -- LEFT JOIN Object AS Object_From ON Object_From.Id = COALESCE (ObjectLink_Personal_Member_from.ChildObjectId, MovementLinkObject_From.ObjectId)
-                             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+                             LEFT JOIN Object AS Object_From ON Object_From.Id = COALESCE (ObjectLink_Personal_Member_from.ChildObjectId, MovementLinkObject_From.ObjectId)
 
                              LEFT JOIN ObjectLink AS ObjectLink_UnitFrom_Branch
                                                   ON ObjectLink_UnitFrom_Branch.ObjectId = MovementLinkObject_From.ObjectId
@@ -213,8 +207,7 @@ BEGIN
                              LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_to
                                                   ON ObjectLink_Personal_Member_to.ObjectId = ObjectLink_Car_PersonalDriver_to.ChildObjectId
                                                  AND ObjectLink_Personal_Member_to.DescId = zc_ObjectLink_Personal_Member()
-                             -- LEFT JOIN Object AS Object_To ON Object_To.Id = COALESCE (ObjectLink_Personal_Member_to.ChildObjectId, MovementLinkObject_To.ObjectId)
-                             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+                             LEFT JOIN Object AS Object_To ON Object_To.Id = COALESCE (ObjectLink_Personal_Member_to.ChildObjectId, MovementLinkObject_To.ObjectId)
                              LEFT JOIN Object AS Object_To_find ON Object_To_find.Id = MovementLinkObject_To.ObjectId
 
                              -- для затрат
@@ -327,12 +320,9 @@ BEGIN
             , _tmp.OperDate
             , _tmp.UnitId_From
             , _tmp.MemberId_From
-            , _tmp.CarId_From
             , _tmp.BranchId_From
-
             , _tmp.UnitId_To
             , _tmp.MemberId_To
-            , _tmp.CarId_To
             , _tmp.BranchId_To
 
               -- сформируем позже
@@ -440,47 +430,10 @@ BEGIN
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
                                                           )
-                                                         AND (_tmpItem.MemberId_From > 0
-                                                           OR _tmpItem.CarId_From    > 0
-                                                             )
+                                                         AND _tmpItem.MemberId_From > 0
                                                          )
 
-                                                         THEN (SELECT tmp.PartionGoodsId
-                                                               FROM
-                                                              (SELECT CASE WHEN CLO_PartionGoods.ObjectId         = ObjectLink_Goods.ObjectId
-                                                                            AND COALESCE (CLO_Member.ObjectId, 0) = _tmpItem.CarId_From
-                                                                            AND Container.Amount > 0
-                                                                            AND _tmpItem.ObjectDescId <> zc_Object_Asset()
-                                                                                -- !!!была ошибка в проводках!!!
-                                                                                THEN -1 * Container.Id
-                                                                           ELSE CLO_PartionGoods.ObjectId -- ObjectLink_Goods.ObjectId
-                                                                      END AS PartionGoodsId
-                                                                    , CASE WHEN CLO_PartionGoods.ObjectId         = ObjectLink_Goods.ObjectId
-                                                                              AND COALESCE (CLO_Unit.ObjectId, 0)   = _tmpItem.UnitId_From
-                                                                              AND COALESCE (CLO_Member.ObjectId, 0) = _tmpItem.MemberId_From
-                                                                              AND Container.Amount > 0
-                                                                                  THEN 1
-                                                                             WHEN CLO_PartionGoods.ObjectId         = ObjectLink_Goods.ObjectId
-                                                                              AND COALESCE (CLO_Car.ObjectId, 0)    = _tmpItem.CarId_From
-                                                                              AND Container.Amount > 0
-                                                                                  THEN 2
-                                                                             -- !!!была ошибка в проводках!!!
-                                                                             WHEN CLO_PartionGoods.ObjectId         = ObjectLink_Goods.ObjectId
-                                                                              AND COALESCE (CLO_Member.ObjectId, 0) = _tmpItem.CarId_From
-                                                                              AND Container.Amount > 0
-                                                                              AND _tmpItem.ObjectDescId <> zc_Object_Asset()
-                                                                                  THEN 3
-
-                                                                             WHEN COALESCE (CLO_Car.ObjectId, 0)    = _tmpItem.CarId_From
-                                                                                  THEN 211
-                                                                             WHEN COALESCE (CLO_Member.ObjectId, 0) = _tmpItem.CarId_From
-                                                                                  THEN 212
-                                                                             WHEN COALESCE (CLO_Unit.ObjectId, 0)   = _tmpItem.UnitId_From
-                                                                              AND COALESCE (CLO_Member.ObjectId, 0) = _tmpItem.MemberId_From
-                                                                                  THEN 213
-                                                                             ELSE 301
-                                                                        END AS NPP
-                                                                      , Container.Amount
+                                                         THEN (SELECT CLO_PartionGoods.ObjectId -- ObjectLink_Goods.ObjectId
                                                                FROM ObjectLink AS ObjectLink_Goods
                                                                     INNER JOIN ObjectLink AS ObjectLink_Unit
                                                                                           ON ObjectLink_Unit.ObjectId = ObjectLink_Goods.ObjectId
@@ -496,35 +449,22 @@ BEGIN
                                                                     LEFT JOIN ContainerLinkObject AS CLO_Member
                                                                                                   ON CLO_Member.ContainerId = Container.Id
                                                                                                  AND CLO_Member.DescId      = zc_ContainerLinkObject_Member()
-                                                                    LEFT JOIN ContainerLinkObject AS CLO_Car
-                                                                                                  ON CLO_Car.ContainerId = Container.Id
-                                                                                                 AND CLO_Car.DescId      = zc_ContainerLinkObject_Car()
                                                                     LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                                                                                   ON CLO_PartionGoods.ContainerId = Container.Id
                                                                                                  AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                                                                WHERE ObjectLink_Goods.DescId        = zc_ObjectLink_PartionGoods_Goods()
                                                                  AND ObjectLink_Goods.ChildObjectId = _tmpItem.GoodsId
-                                                              UNION ALL
-                                                               -- еще ошибка - пустая партия + в CLO_Member = CarId_From
-                                                               SELECT -1 * Container.Id AS PartionGoodsId -- !!!была ошибка в проводках!!!
-                                                                    , 101 AS NPP
-                                                                    , Container.Amount
-                                                               FROM Container 
-                                                                    INNER JOIN ContainerLinkObject AS CLO_Member
-                                                                                                   ON CLO_Member.ContainerId = Container.Id
-                                                                                                  AND CLO_Member.DescId      = zc_ContainerLinkObject_Member()
-                                                                                                  AND CLO_Member.ObjectId    = _tmpItem.CarId_From
-                                                                    /*INNER JOIN ContainerLinkObject AS CLO_PartionGoods
-                                                                                                   ON CLO_PartionGoods.ContainerId = Container.Id
-                                                                                                  AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
-                                                                                                  AND CLO_PartionGoods.ObjectId    = 0*/
-                                                               WHERE Container.ObjectId  = _tmpItem.GoodsId
-                                                                 AND Container.DescId    = zc_Container_Count()
-                                                                 AND Container.Amount    > 0
-                                                                 AND _tmpItem.CarId_From > 0
-                                                              ) AS tmp
-                                                               ORDER BY tmp.NPP ASC
-                                                                      , tmp.Amount DESC
+                                                               ORDER BY CASE WHEN CLO_PartionGoods.ObjectId = ObjectLink_Goods.ObjectId
+                                                                              AND COALESCE (CLO_Unit.ObjectId, 0)   = _tmpItem.UnitId_From
+                                                                              AND COALESCE (CLO_Member.ObjectId, 0) = _tmpItem.MemberId_From
+                                                                              AND Container.Amount > 0
+                                                                                  THEN 1
+                                                                             WHEN COALESCE (CLO_Unit.ObjectId, 0)   = _tmpItem.UnitId_From
+                                                                              AND COALESCE (CLO_Member.ObjectId, 0) = _tmpItem.MemberId_From
+                                                                                  THEN 2
+                                                                             ELSE 3
+                                                                        END ASC
+                                                                      , Container.Amount DESC
                                                                LIMIT 1
                                                               )
                                                     WHEN _tmpItem.OperDate >= zc_DateStart_PartionGoods()
@@ -568,11 +508,8 @@ BEGIN
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
                                                           )
-                                                         AND (_tmpItem.MemberId_From > 0
-                                                           OR _tmpItem.CarId_From    > 0
-                                                             )
+                                                         AND _tmpItem.MemberId_From > 0
                                                          AND _tmpItem.UnitId_To     = 0
-                                                         -- AND _tmpItem.CarId_To      = 0
                                                          )
                                                          THEN (SELECT CLO_PartionGoods.ObjectId -- ObjectLink_Goods.ObjectId
                                                                FROM ObjectLink AS ObjectLink_Goods
@@ -590,37 +527,20 @@ BEGIN
                                                                     LEFT JOIN ContainerLinkObject AS CLO_Member
                                                                                                   ON CLO_Member.ContainerId = Container.Id
                                                                                                  AND CLO_Member.DescId      = zc_ContainerLinkObject_Member()
-                                                                    LEFT JOIN ContainerLinkObject AS CLO_Car
-                                                                                                  ON CLO_Car.ContainerId = Container.Id
-                                                                                                 AND CLO_Car.DescId      = zc_ContainerLinkObject_Car()
                                                                     LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                                                                                   ON CLO_PartionGoods.ContainerId = Container.Id
                                                                                                  AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                                                                WHERE ObjectLink_Goods.DescId        = zc_ObjectLink_PartionGoods_Goods()
                                                                  AND ObjectLink_Goods.ChildObjectId = _tmpItem.GoodsId
-                                                               ORDER BY CASE WHEN CLO_PartionGoods.ObjectId         = ObjectLink_Goods.ObjectId
+                                                               ORDER BY CASE WHEN CLO_PartionGoods.ObjectId = ObjectLink_Goods.ObjectId
                                                                               AND COALESCE (CLO_Unit.ObjectId, 0)   = _tmpItem.UnitId_From
                                                                               AND COALESCE (CLO_Member.ObjectId, 0) = _tmpItem.MemberId_From
                                                                               AND Container.Amount > 0
                                                                                   THEN 1
-                                                                             WHEN CLO_PartionGoods.ObjectId         = ObjectLink_Goods.ObjectId
-                                                                              AND COALESCE (CLO_Car.ObjectId, 0)    = _tmpItem.CarId_From
-                                                                              AND Container.Amount > 0
-                                                                                  THEN 2
-                                                                             -- !!!была ошибка в проводках!!!
-                                                                             WHEN CLO_PartionGoods.ObjectId         = ObjectLink_Goods.ObjectId
-                                                                              AND COALESCE (CLO_Member.ObjectId, 0) = _tmpItem.CarId_From
-                                                                              AND Container.Amount > 0
-                                                                                  THEN 3
-
-                                                                             WHEN COALESCE (CLO_Car.ObjectId, 0)    = _tmpItem.CarId_From
-                                                                                  THEN 11
-                                                                             WHEN COALESCE (CLO_Member.ObjectId, 0) = _tmpItem.CarId_From
-                                                                                  THEN 12
                                                                              WHEN COALESCE (CLO_Unit.ObjectId, 0)   = _tmpItem.UnitId_From
                                                                               AND COALESCE (CLO_Member.ObjectId, 0) = _tmpItem.MemberId_From
-                                                                                  THEN 13
-                                                                             ELSE 21
+                                                                                  THEN 2
+                                                                             ELSE 3
                                                                         END ASC
                                                                       , Container.Amount DESC
                                                                LIMIT 1
@@ -662,7 +582,7 @@ BEGIN
                                                                                                             , inOperDate      := (SELECT OD.ValueData  FROM ObjectDate  AS OD  WHERE OD.ObjectId  = _tmpItem.PartionGoodsId_Item AND OD.DescId  = zc_ObjectDate_PartionGoods_Value())
                                                                                                             , inPrice         := (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = _tmpItem.PartionGoodsId_Item AND OFl.DescId = zc_ObjectFloat_PartionGoods_Price())
                                                                                                              )
-                                                                  WHEN _tmpItem.UnitId_To <> 0 OR _tmpItem.CarId_To <> 0
+                                                                  WHEN _tmpItem.UnitId_To <> 0
                                                                        THEN -- !!!если вернулось на склад - будет ПУСТАЯ Партия
                                                                             0
                                                                             
@@ -688,14 +608,10 @@ BEGIN
 --
 -- end if;
      -- определили
-     vbWhereObjectId_Analyzer_From:= CASE WHEN (SELECT DISTINCT UnitId_From   FROM _tmpItem) <> 0 THEN (SELECT DISTINCT UnitId_From   FROM _tmpItem)
-                                          WHEN (SELECT DISTINCT MemberId_From FROM _tmpItem) <> 0 THEN (SELECT DISTINCT MemberId_From FROM _tmpItem)
-                                          WHEN (SELECT DISTINCT CarId_From    FROM _tmpItem) <> 0 THEN (SELECT DISTINCT CarId_From    FROM _tmpItem)
-                                     END;
-     vbWhereObjectId_Analyzer_To:= CASE WHEN (SELECT DISTINCT UnitId_To   FROM _tmpItem) <> 0 THEN (SELECT DISTINCT UnitId_To   FROM _tmpItem)
-                                        WHEN (SELECT DISTINCT MemberId_To FROM _tmpItem) <> 0 THEN (SELECT DISTINCT MemberId_To FROM _tmpItem)
-                                        WHEN (SELECT DISTINCT CarId_To    FROM _tmpItem) <> 0 THEN (SELECT DISTINCT CarId_To    FROM _tmpItem)
-                                   END;
+     vbWhereObjectId_Analyzer_From:= CASE WHEN (SELECT DISTINCT UnitId_From   FROM _tmpItem)   <> 0 THEN (SELECT DISTINCT UnitId_From   FROM _tmpItem)
+                                          WHEN (SELECT DISTINCT MemberId_From FROM _tmpItem) <> 0 THEN (SELECT DISTINCT MemberId_From FROM _tmpItem) END;
+     vbWhereObjectId_Analyzer_To:= CASE WHEN (SELECT DISTINCT UnitId_To   FROM _tmpItem)   <> 0 THEN (SELECT DISTINCT UnitId_To   FROM _tmpItem)
+                                        WHEN (SELECT DISTINCT MemberId_To FROM _tmpItem) <> 0 THEN (SELECT DISTINCT MemberId_To FROM _tmpItem) END;
 
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -704,12 +620,11 @@ BEGIN
 
 
      -- 1.1.1. определяется для количественного учета
-     UPDATE _tmpItem SET ContainerId_GoodsFrom = CASE WHEN _tmpItem.PartionGoodsId_From   < 0 THEN -1 * _tmpItem.PartionGoodsId_From -- !!!была ошибка в проводках!!!
-                                                      WHEN _tmpItem.ContainerId_GoodsFrom > 0 THEN _tmpItem.ContainerId_GoodsFrom
+     UPDATE _tmpItem SET ContainerId_GoodsFrom = CASE WHEN _tmpItem.ContainerId_GoodsFrom > 0 THEN _tmpItem.ContainerId_GoodsFrom
                                                   ELSE
                                                  lpInsertUpdate_ContainerCount_Goods (inOperDate               := _tmpItem.OperDate
                                                                                     , inUnitId                 := CASE WHEN _tmpItem.MemberId_From <> 0 THEN 0 /*_tmpItem.UnitId_Item*/ ELSE _tmpItem.UnitId_From END
-                                                                                    , inCarId                  := _tmpItem.CarId_From
+                                                                                    , inCarId                  := NULL
                                                                                     , inMemberId               := _tmpItem.MemberId_From
                                                                                     , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                     , inGoodsId                := _tmpItem.GoodsId
@@ -740,7 +655,7 @@ BEGIN
                                                  END
                        , ContainerId_GoodsTo   = lpInsertUpdate_ContainerCount_Goods (inOperDate               := _tmpItem.OperDate
                                                                                     , inUnitId                 := CASE WHEN _tmpItem.MemberId_To <> 0 THEN 0 /*_tmpItem.UnitId_Item*/ ELSE _tmpItem.UnitId_To END
-                                                                                    , inCarId                  := _tmpItem.CarId_To
+                                                                                    , inCarId                  := NULL
                                                                                     , inMemberId               := _tmpItem.MemberId_To
                                                                                     , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                     , inGoodsId                := _tmpItem.GoodsId
@@ -887,7 +802,7 @@ BEGIN
                                END
                            , ContainerId_To = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := _tmpItem.OperDate
                                                                                 , inUnitId                 := CASE WHEN _tmpItem.MemberId_To <> 0 THEN 0 /*_tmpItem.UnitId_Item*/ ELSE _tmpItem.UnitId_To END
-                                                                                , inCarId                  := _tmpItem.CarId_To
+                                                                                , inCarId                  := NULL
                                                                                 , inMemberId               := _tmpItem.MemberId_To
                                                                                 , inBranchId               := _tmpItem.BranchId_To
                                                                                 , inJuridicalId_basis      := _tmpItem.JuridicalId_Basis_To

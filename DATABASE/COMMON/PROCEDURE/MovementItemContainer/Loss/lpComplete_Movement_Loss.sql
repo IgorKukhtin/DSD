@@ -16,8 +16,9 @@ $BODY$
   DECLARE vbAnalyzerId Integer;
 
   DECLARE vbOperDate TDateTime;
-  DECLARE vbUnitId Integer;
+  DECLARE vbUnitId   Integer;
   DECLARE vbMemberId Integer;
+  DECLARE vbCarId    Integer;
   DECLARE vbBranchId_Unit Integer;
   DECLARE vbAccountDirectionId Integer;
   DECLARE vbIsPartionDate_Unit Boolean;
@@ -45,13 +46,13 @@ BEGIN
                         WHERE lfSelect.Ord = 1
                        )
      SELECT _tmp.MovementDescId, _tmp.OperDate
-          , _tmp.UnitId, _tmp.MemberId, _tmp.BranchId_Unit, _tmp.AccountDirectionId, _tmp.isPartionDate_Unit, _tmp.isPartionGoodsKind_Unit
+          , _tmp.UnitId, _tmp.MemberId, _tmp.CarId, _tmp.BranchId_Unit, _tmp.AccountDirectionId, _tmp.isPartionDate_Unit, _tmp.isPartionGoodsKind_Unit
           , _tmp.InfoMoneyId_ArticleLoss, _tmp.BranchId_ProfitLoss
           , _tmp.ProfitLossGroupId, _tmp.ProfitLossDirectionId
           , _tmp.JuridicalId_Basis, _tmp.BusinessId_ProfitLoss, _tmp.UnitId_ProfitLoss
           , _tmp.ObjectExtId_Analyzer, _tmp.AnalyzerId
             INTO vbMovementDescId, vbOperDate
-               , vbUnitId, vbMemberId, vbBranchId_Unit, vbAccountDirectionId, vbIsPartionDate_Unit, vbIsPartionGoodsKind_Unit
+               , vbUnitId, vbMemberId, vbCarId, vbBranchId_Unit, vbAccountDirectionId, vbIsPartionDate_Unit, vbIsPartionGoodsKind_Unit
                , vbInfoMoneyId_ArticleLoss, vbBranchId_Unit_ProfitLoss
                , vbProfitLossGroupId, vbProfitLossDirectionId
                , vbJuridicalId_Basis, vbBusinessId_ProfitLoss, vbUnitId_ProfitLoss
@@ -59,8 +60,9 @@ BEGIN
 
      FROM (SELECT Movement.DescId AS MovementDescId
                 , Movement.OperDate
-                , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN Object_From.Id ELSE 0 END, 0) AS UnitId
+                , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit()   THEN Object_From.Id ELSE 0 END, 0) AS UnitId
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Member() THEN Object_From.Id ELSE 0 END, 0) AS MemberId
+                , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Car()    THEN Object_From.Id ELSE 0 END, 0) AS CarId
                 , COALESCE (ObjectLink_UnitFrom_Branch.ChildObjectId, 0) AS BranchId_Unit -- это филиал по подразделнию от кого (нужен для товарных остатков)
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit()
                                       THEN ObjectLink_UnitFrom_AccountDirection.ChildObjectId
@@ -375,7 +377,7 @@ BEGIN
      ;
 
      -- определили
-     vbWhereObjectId_Analyzer:= CASE WHEN vbUnitId <> 0 THEN vbUnitId WHEN vbMemberId <> 0 THEN vbMemberId END;
+     vbWhereObjectId_Analyzer:= CASE WHEN vbUnitId <> 0 THEN vbUnitId WHEN vbMemberId <> 0 THEN vbMemberId WHEN vbCarId <> 0 THEN vbCarId END;
 
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -387,7 +389,7 @@ BEGIN
                                                   ELSE
                                              lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
                                                                                 , inUnitId                 := vbUnitId
-                                                                                , inCarId                  := NULL
+                                                                                , inCarId                  := vbCarId
                                                                                 , inMemberId               := vbMemberId
                                                                                 , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                 , inGoodsId                := _tmpItem.GoodsId
