@@ -2377,10 +2377,6 @@
 				<Form>Report_Branch_CashDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_Branch_App1.pas">
-				<Form>Report_Branch_App1Form</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Branch_App7_New.pas">
 				<Form>Report_Branch_App7_NewForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -3514,8 +3510,8 @@
 				<Form>MovementGoodsBarCodeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_Branch_App1_New.pas">
-				<Form>Report_Branch_App1_NewForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_Branch_App1.pas">
+				<Form>Report_Branch_App1Form</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

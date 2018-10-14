@@ -757,7 +757,6 @@ uses
   Unit_SheetWorkTime in '..\..\Forms\Guides\Unit_SheetWorkTime.pas' {Unit_SheetWorkTimeForm: TParentForm},
   Report_Branch_Cash in '..\..\Forms\Report\Report_Branch_Cash.pas' {Report_Branch_CashForm: TParentForm},
   Report_Branch_CashDialog in '..\..\Forms\Report\Report_Branch_CashDialog.pas' {Report_Branch_CashDialogForm: TParentForm},
-  Report_Branch_App1 in '..\..\Forms\Report\Report_Branch_App1.pas' {Report_Branch_App1Form: TParentForm},
   Report_Branch_App7_New in '..\..\Forms\Report\Report_Branch_App7_New.pas' {Report_Branch_App7_NewForm: TParentForm},
   Report_Promo in '..\..\Forms\Report\Report_Promo.pas' {Report_PromoForm: TParentForm},
   Report_PromoDialog in '..\..\Forms\Report\Report_PromoDialog.pas' {Report_PromoDialogForm: TParentForm},
@@ -1042,7 +1041,7 @@ uses
   GoodsSeparate in '..\..\Forms\Guides\GoodsSeparate.pas' {GoodsSeparateForm: TParentForm},
   GoodsSeparateEdit in '..\..\Forms\Guides\GoodsSeparateEdit.pas' {GoodsSeparateEditForm: TParentForm},
   MovementGoodsBarCode in '..\..\Forms\Document\MovementGoodsBarCode.pas' {MovementGoodsBarCodeForm: TParentForm},
-  Report_Branch_App1_New in '..\..\Forms\Report\Report_Branch_App1_New.pas' {Report_Branch_App1_NewForm: TParentForm};
+  Report_Branch_App1 in '..\..\Forms\Report\Report_Branch_App1.pas' {Report_Branch_App1Form: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
