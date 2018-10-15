@@ -12,10 +12,11 @@ CREATE OR REPLACE FUNCTION gpInsert_Object_ReportCollation(
     IN inPartnerId           Integer,      --
     IN inContractId          Integer,      --
     IN inPaidKindId          Integer,      --
-    IN inAccountId           Integer,      --
+/*    IN inAccountId           Integer,      --
     IN InInfoMoneyId         Integer,      --
     IN inCurrencyId          Integer,      --
     IN inMovementId_Partion  Integer,      --
+    */
     IN inIsInsert            Boolean,      -- для реестра "Акты сверок"
     IN inIsUpdate            Boolean,      -- добавить визу "Сдали в бухгалтерию"
    OUT outBarCode            TVarChar,     -- штрихкод акта сверки
@@ -136,7 +137,7 @@ BEGIN
              -- сохранили свойства <>
              PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReportCollation_StartRemainsRep(), vbId, tmp.StartRemains)
                    , lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReportCollation_EndRemainsRep(), vbId, tmp.EndRemains)
-             FROM gpReport_JuridicalCollation(inStartDate, inEndDate, inJuridicalId, inPartnerId, inContractId, inAccountId, inPaidKindId, InInfoMoneyId, inCurrencyId, inMovementId_Partion, inSession) AS tmp;
+             FROM gpReport_JuridicalCollation(inStartDate, inEndDate, inJuridicalId, inPartnerId, inContractId, inAccountId := 0, inPaidKindId, InInfoMoneyId := 0, inCurrencyId := 0, inMovementId_Partion := 0, inSession) AS tmp;
 
              -- сохранили свойство <Дата создания>
              PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReportCollation_Insert(), vbId, CURRENT_TIMESTAMP);
@@ -198,6 +199,8 @@ BEGIN
    -- Результат
    outBarCode := (SELECT zfFormat_BarCode (zc_BarCodePref_Object(), vbId));
 
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectProtocol (inObjectId:= vbId, inUserId:= vbUserId, inIsUpdate:= inIsUpdate);
   
 END;$BODY$
  LANGUAGE plpgsql VOLATILE;

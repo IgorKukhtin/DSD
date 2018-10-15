@@ -1,17 +1,24 @@
 -- Function: gpSelect_Object_Contract()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ReportCollation (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ReportCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ReportCollation(
-    IN inStartDate      TDateTime , --
-    IN inEndDate        TDateTime , --dfsdfsdfsdfsdf
-    IN inSession        TVarChar       -- сессия пользователя
+    IN inStartDate           TDateTime , --
+    IN inEndDate             TDateTime , --
+    IN inJuridicalId         Integer,      --
+    IN inPartnerId           Integer,      --
+    IN inContractId          Integer,      --
+    IN inPaidKindId          Integer,      --
+    IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, ObjectCode Integer, idBarCode TVarChar
              , StartDate  TDateTime
              , EndDate    TDateTime
              , JuridicalName TVarChar
+             , OKPO TVarChar
+             , PersonalName TVarChar
              , PartnerName TVarChar
              , ContractName TVarChar
              , PaidKindName TVarChar
@@ -42,8 +49,10 @@ BEGIN
 
    -- Результат
    RETURN QUERY
-   WITH tmpData AS (SELECT
-                          Object_ReportCollation.Id
+   WITH 
+       tmpJuridicalDetails AS (SELECT * FROM ObjectHistory_JuridicalDetails_View)
+
+     , tmpData AS (SELECT Object_ReportCollation.Id
                         , Object_ReportCollation.ObjectCode
                         , zfFormat_BarCode (zc_BarCodePref_Object(), Object_ReportCollation.Id) ::TVarChar AS idBarCode
                         , ObjectDate_Start.ValueData      AS StartDate
@@ -146,6 +155,10 @@ BEGIN
                    WHERE Object_ReportCollation.DescId = zc_Object_ReportCollation()
                      AND ObjectDate_Start.ValueData >= inStartDate
                      AND ObjectDate_End.ValueData <= inEndDate
+                     AND (COALESCE (ObjectLink_ReportCollation_Juridical.ChildObjectId, 0) = inJuridicalId OR inJuridicalId = 0)
+                     AND (COALESCE (ObjectLink_ReportCollation_Partner.ChildObjectId, 0)   = inPartnerId  OR inPartnerId = 0)
+                     AND (COALESCE (ObjectLink_ReportCollation_Contract.ChildObjectId, 0)  = inContractId OR inContractId = 0)
+                     AND (COALESCE (ObjectLink_ReportCollation_PaidKind.ChildObjectId, 0)  = inPaidKindId OR inPaidKindId = 0)
                    )
                    
       SELECT tmpData.Id
@@ -154,6 +167,8 @@ BEGIN
            , tmpData.StartDate
            , tmpData.EndDate
            , tmpData.JuridicalName
+           , tmpJuridicalDetails.OKPO    AS OKPO
+           , Object_Personal.ValueData   AS PersonalName  -- ответственный за договор
            , tmpData.PartnerName
            , tmpData.ContractName
            , tmpData.PaidKindName
@@ -171,8 +186,8 @@ BEGIN
            , tmpData.StartRemainsCalc :: TFloat  AS StartRemainsCalc
            , tmpData.EndRemainsCalc   :: TFloat  AS EndRemainsCalc
 
-           , CASE WHEN tmpData.StartRemainsCalc <> tmpData.StartRemainsRep THEN TRUE ELSE FALSE END :: Boolean AS isStartRemainsRep
-           , CASE WHEN tmpData.EndRemainsCalc <> tmpData.EndRemainsRep THEN TRUE ELSE FALSE END     :: Boolean AS isEndRemainsRep
+           , CASE WHEN COALESCE (tmpData.StartRemainsRep, 0) <> 0 AND tmpData.StartRemainsCalc <> tmpData.StartRemainsRep THEN TRUE ELSE FALSE END :: Boolean AS isStartRemainsRep
+           , CASE WHEN COALESCE (tmpData.EndRemainsRep, 0) <> 0   AND tmpData.EndRemainsCalc <> tmpData.EndRemainsRep THEN TRUE ELSE FALSE END     :: Boolean AS isEndRemainsRep
            
            , tmpData.isBuh
 
@@ -186,6 +201,13 @@ BEGIN
                                             AND tmpData_old.PartnerId   = tmpData.PartnerId
                                             AND tmpData_old.JuridicalId = tmpData.JuridicalId
                                             AND tmpData_old.ObjectCode  = tmpData.ObjectCode - 1
+           LEFT JOIN tmpJuridicalDetails ON tmpJuridicalDetails.JuridicalId = tmpData.JuridicalId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
+                                ON ObjectLink_Contract_Personal.ObjectId = tmpData.ContractId
+                               AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+           LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId 
+
      ;
 
 END;
@@ -201,4 +223,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ReportCollation (inStartDate:= NULL, inEndDate:= NULL, inSession := zfCalc_UserAdmin())
+-- select * from gpSelect_Object_ReportCollation(inStartDate := ('01.01.2018')::TDateTime , inEndDate := ('01.01.2018')::TDateTime , inJuridicalId := 0 , inPartnerId := 0 , inContractId := 0 , inPaidKindId := 0 ,  inSession := '5');

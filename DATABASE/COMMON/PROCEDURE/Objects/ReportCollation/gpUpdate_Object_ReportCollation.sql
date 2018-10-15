@@ -58,7 +58,9 @@ BEGIN
      PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReportCollation_Buh(), vbId, vbMemberId_user);
      -- сохранили свойство <Сдали в бухгалтерию>
      PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReportCollation_Buh(), vbId, TRUE);
-    
+
+     -- сохранили протокол
+     PERFORM lpInsert_ObjectProtocol (inObjectId:= vbId, inUserId:= vbUserId, inIsUpdate:= FALSE);
    
 END;$BODY$
  LANGUAGE plpgsql VOLATILE;
