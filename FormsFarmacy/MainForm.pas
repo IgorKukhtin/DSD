@@ -455,6 +455,8 @@ type
     N171: TMenuItem;
     actReport_IncomeSample: TdsdOpenForm;
     miReport_IncomeSample: TMenuItem;
+    actReport_KPU: TdsdOpenForm;
+    N172: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

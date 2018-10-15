@@ -389,10 +389,24 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_AmountPayment() RETURNS Integer AS $
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_AmountPayment', 'Сумма оплаты' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountPayment');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TestingUser_Version() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TestingUser_Version'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TestingUser_Version', 'Версия опроса' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TestingUser_Version');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TestingUser_Question() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TestingUser_Question'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TestingUser_Question', 'Количество вопросов' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TestingUser_Question');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TestingUser_MaxAttempts() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TestingUser_MaxAttempts'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TestingUser_MaxAttempts', 'Количество попыток' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TestingUser_MaxAttempts');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 15.10.18                                                                                     * 
  01.10.18                                                                                     * zc_MovementFloat_AmountAccount, zc_MovementFloat_AmountPayment 
  24.09.18         * zc_MovementFloat_TotalSummSample
  29.06.18                                                                                     * zc_MovementFloat_ManualDiscount

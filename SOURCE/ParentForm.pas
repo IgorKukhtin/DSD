@@ -291,21 +291,39 @@ procedure TParentForm.InitcxEditRepository;
   var C: TComponent;
 begin
   for C in Self do
+  begin
     //Находим гриды и им присваиваем наше контекстное меню
     if C is TcxGridDBColumn then
       if (C as TcxGridDBColumn).Properties is TcxMemoProperties then
         if not Assigned((C as TcxGridDBColumn).OnGetProperties) then
-  begin
-    if not Assigned(FcxEditRepository) then
     begin
-      FcxEditRepository := TcxEditRepository.Create(Self);
-      FcxEditRepository.CreateItem(TcxEditRepositoryBlobItem);
-      TcxEditRepositoryBlobItem(FcxEditRepository.Items[0]).Properties.BlobEditKind := bekMemo;
-      TcxEditRepositoryBlobItem(FcxEditRepository.Items[0]).Properties.BlobPaintStyle := bpsText;
+      if not Assigned(FcxEditRepository) then
+      begin
+        FcxEditRepository := TcxEditRepository.Create(Self);
+        FcxEditRepository.CreateItem(TcxEditRepositoryBlobItem);
+        TcxEditRepositoryBlobItem(FcxEditRepository.Items[0]).Properties.BlobEditKind := bekMemo;
+        TcxEditRepositoryBlobItem(FcxEditRepository.Items[0]).Properties.BlobPaintStyle := bpsText;
+      end;
+
+      (C as TcxGridDBColumn).OnGetProperties := cxGridDBTableViewTextGetProperties;
     end;
 
-    (C as TcxGridDBColumn).OnGetProperties := cxGridDBTableViewTextGetProperties;
+    if C is TcxGridDBBandedColumn then
+        if (C as TcxGridDBBandedColumn).Properties is TcxMemoProperties then
+          if not Assigned((C as TcxGridDBBandedColumn).OnGetProperties) then
+    begin
+      if not Assigned(FcxEditRepository) then
+      begin
+        FcxEditRepository := TcxEditRepository.Create(Self);
+        FcxEditRepository.CreateItem(TcxEditRepositoryBlobItem);
+        TcxEditRepositoryBlobItem(FcxEditRepository.Items[0]).Properties.BlobEditKind := bekMemo;
+        TcxEditRepositoryBlobItem(FcxEditRepository.Items[0]).Properties.BlobPaintStyle := bpsText;
+      end;
+
+      (C as TcxGridDBBandedColumn).OnGetProperties := cxGridDBTableViewTextGetProperties;
+    end;
   end;
+
 end;
 
 procedure TParentForm.Loaded;

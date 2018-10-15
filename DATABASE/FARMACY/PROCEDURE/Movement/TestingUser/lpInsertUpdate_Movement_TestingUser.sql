@@ -1,10 +1,14 @@
 -- Function: lpInsertUpdate_Movement_TestingUser()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TestingUser (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TestingUser (Integer, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_TestingUser(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inOperDate            TDateTime , -- Дата документа
+    IN inVersion             Integer   , -- Версия опроса
+    IN inQuestion            Integer   , -- Количество вопросов
+    IN inMaxAttempts         Integer   , -- Количество попыток
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -36,6 +40,15 @@ BEGIN
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_TestingUser(), NULL, inOperDate, NULL);
 
+     -- сохранили свойство <Версия опроса>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TestingUser_Version(), ioId, inVersion);
+
+     -- сохранили свойство <Количество вопросов>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TestingUser_Question(), ioId, inQuestion);
+
+     -- сохранили свойство <Количество попыток>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TestingUser_MaxAttempts(), ioId, inMaxAttempts);
+
      -- !!!протокол через свойства конкретного объекта!!!
      IF vbIsInsert = TRUE
      THEN
@@ -55,7 +68,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.
- 11.09.18         *                                               *
+ 15.10.18        *
+ 11.09.18        *
 */
 
 -- тест

@@ -8,25 +8,26 @@ inherited Report_TestingUserForm: TReport_TestingUserForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 59
     Width = 731
-    Height = 447
+    Height = 445
     ExplicitWidth = 731
     ExplicitHeight = 447
-    ClientRectBottom = 447
+    ClientRectBottom = 445
     ClientRectRight = 731
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 731
       ExplicitHeight = 447
       inherited cxGrid: TcxGrid
         Width = 731
-        Height = 447
+        Height = 445
         ExplicitWidth = 731
         ExplicitHeight = 447
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
-              Column = Total
+              Column = Result
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -62,7 +63,7 @@ inherited Report_TestingUserForm: TReport_TestingUserForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 221
+            Width = 208
           end
           object UnitName: TcxGridDBColumn
             Caption = #1040#1087#1090#1077#1082#1072
@@ -70,19 +71,39 @@ inherited Report_TestingUserForm: TReport_TestingUserForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 247
+            Width = 160
           end
-          object Total: TcxGridDBColumn
-            Caption = #1056#1077#1079#1091#1083#1100#1090#1072#1090' '#1090#1072#1089#1090#1072
+          object Result: TcxGridDBColumn
+            Caption = #1055#1088#1072#1074'. '#1086#1090#1074#1077#1090#1086#1074
             DataBinding.FieldName = 'Result'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 62
+          end
+          object ExamPercentage: TcxGridDBColumn
+            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1087#1088#1072#1074#1077#1083#1085'.'
+            DataBinding.FieldName = 'ExamPercentage'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 82
           end
-          object cxGridDBTableViewColumn1: TcxGridDBColumn
+          object Attempts: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1087#1099#1090#1086#1082
+            DataBinding.FieldName = 'Attempts'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 63
+          end
+          object Status: TcxGridDBColumn
+            Caption = #1056#1077#1079#1091#1083#1100#1090'. '#1101#1082#1079#1072#1084'.'
+            DataBinding.FieldName = 'Status'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 58
+          end
+          object DateTimeTest: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103
             DataBinding.FieldName = 'DateTimeTest'
             HeaderAlignmentHorz = taCenter
@@ -95,7 +116,9 @@ inherited Report_TestingUserForm: TReport_TestingUserForm
   end
   inherited Panel: TPanel
     Width = 731
+    Height = 33
     ExplicitWidth = 731
+    ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 129
       EditValue = 42491d
@@ -103,20 +126,60 @@ inherited Report_TestingUserForm: TReport_TestingUserForm
       ExplicitLeft = 129
     end
     inherited deEnd: TcxDateEdit
-      Left = 344
+      Left = 129
+      Top = 32
       EditValue = 42491d
       TabOrder = 0
       Visible = False
-      ExplicitLeft = 344
+      ExplicitLeft = 129
+      ExplicitTop = 32
     end
     inherited cxLabel1: TcxLabel
       Caption = #1052#1077#1089#1103#1094' '#1090#1077#1089#1090#1080#1088#1086#1074#1072#1085#1080#1103':'
       ExplicitWidth = 113
     end
     inherited cxLabel2: TcxLabel
-      Left = 228
+      Left = 13
+      Top = 33
       Visible = False
-      ExplicitLeft = 228
+      ExplicitLeft = 13
+      ExplicitTop = 33
+    end
+    object edVersion: TcxTextEdit
+      Left = 277
+      Top = 5
+      Properties.ReadOnly = True
+      TabOrder = 4
+      Width = 41
+    end
+    object cxLabel16: TcxLabel
+      Left = 232
+      Top = 6
+      Caption = #1042#1077#1088#1089#1080#1103
+    end
+    object edQuestion: TcxTextEdit
+      Left = 448
+      Top = 5
+      Properties.ReadOnly = True
+      TabOrder = 6
+      Width = 41
+    end
+    object cxLabel3: TcxLabel
+      Left = 328
+      Top = 6
+      Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074#1086#1087#1088#1086#1089#1086#1074
+    end
+    object edMaxAttempts: TcxTextEdit
+      Left = 549
+      Top = 5
+      Properties.ReadOnly = True
+      TabOrder = 8
+      Width = 41
+    end
+    object cxLabel4: TcxLabel
+      Left = 495
+      Top = 6
+      Caption = #1087#1086#1087#1099#1090#1086#1082
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -130,6 +193,16 @@ inherited Report_TestingUserForm: TReport_TestingUserForm
   inherited ActionList: TActionList
     Left = 135
     Top = 191
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProc = spGet_Movement
+      StoredProcList = <
+        item
+          StoredProc = spGet_Movement
+        end
+        item
+          StoredProc = spSelect
+        end>
+    end
     object actRefreshSearch: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -290,5 +363,37 @@ inherited Report_TestingUserForm: TReport_TestingUserForm
       end>
     Left = 136
     Top = 136
+  end
+  object spGet_Movement: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_TestingUser'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42491d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Version'
+        Component = edVersion
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Question'
+        Component = edQuestion
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MaxAttempts'
+        Component = edMaxAttempts
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 264
+    Top = 88
   end
 end
