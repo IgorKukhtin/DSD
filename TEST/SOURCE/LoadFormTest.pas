@@ -1788,6 +1788,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportCollation_UpdateObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportCollation_UpdateObjectForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportCollation_UpdateObjectDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReportCollation_UpdateObjectDialogForm');
   exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_IncomeForm'));

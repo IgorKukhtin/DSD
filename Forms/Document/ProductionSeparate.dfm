@@ -152,15 +152,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object IsCalculated: TcxGridDBColumn
-            Caption = #1056#1072#1089#1089#1095#1080#1090#1099#1074#1072#1077#1090#1089#1103' ('#1076#1072'/'#1085#1077#1090')'
-            DataBinding.FieldName = 'isCalculated'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1088#1072#1089#1089#1095#1080#1090#1099#1074#1072#1077#1090#1089#1103' ('#1076#1072'/'#1085#1077#1090')'
-            Options.Editing = False
-            Width = 66
-          end
         end
       end
       inherited cxGridChild: TcxGrid
@@ -294,6 +285,15 @@ inherited ProductionSeparateForm: TProductionSeparateForm
           inherited colChildIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+          end
+          object IsCalculated: TcxGridDBColumn
+            Caption = #1056#1072#1089#1089#1095#1080#1090#1099#1074#1072#1077#1090#1089#1103' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isCalculated'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1088#1072#1089#1089#1095#1080#1090#1099#1074#1072#1077#1090#1089#1103' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 66
           end
         end
       end
@@ -1325,7 +1325,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       item
         Name = 'inId '
         Value = Null
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1333,7 +1333,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       item
         Name = 'ioisCalculated'
         Value = 'False'
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'isCalculated'
         DataType = ftBoolean
         ParamType = ptInputOutput

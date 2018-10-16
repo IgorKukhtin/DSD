@@ -1987,9 +1987,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_Exchange() RETURNS Integer AS $BO
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Goods_Exchange', 'Связь товаров с одиницей виміру', zc_Object_Goods(), zc_Object_Exchange() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_Exchange');
 	
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Protocol_ReCalc() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Protocol_ReCalc'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Protocol_ReCalc', 'Пользователь (пересчет)', zc_Object_Contract(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Protocol_ReCalc');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 16.10.18         * zc_ObjectLink_Protocol_ReCalc
  28.09.18                                                                                      * zc_ObjectLink_Goods_Exchange 
  27.09.18         * zc_ObjectLink_PriceChange_Unit
  17.08.18                                                                                      * zc_Object_Accommodation_Unit, zc_Object_Accommodation_Goods

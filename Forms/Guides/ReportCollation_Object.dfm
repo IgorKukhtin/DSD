@@ -27,9 +27,6 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 56
-    ExplicitWidth = 835
-    ExplicitHeight = 481
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -293,6 +290,22 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         HeaderHint = #1044#1072#1090#1072' ('#1089#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102')'
         Options.Editing = False
         Width = 87
+      end
+      object ReCalcDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' ('#1087#1077#1088#1077#1089#1095#1077#1090#1072')'
+        DataBinding.FieldName = 'ReCalcDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 96
+      end
+      object ReCalcName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1077#1088#1077#1089#1095#1077#1090#1072')'
+        DataBinding.FieldName = 'ReCalcName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -776,6 +789,171 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 20
+      DataSets = <
+        item
+          UserName = 'DataSet'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 43101d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43101d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = GuidesPaidKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartBalance'
+          Value = Null
+          ComponentItem = 'StartBalance'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartBalanceCurrency'
+          Value = Null
+          ComponentItem = 'StartBalanceCurrency'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalShortName'
+          Value = Null
+          ComponentItem = 'JuridicalShortName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          ComponentItem = 'CurrencyName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionMovementName'
+          Value = Null
+          ComponentItem = 'PartionMovementName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccounterName'
+          Value = Null
+          ComponentItem = 'AccounterName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContracNumber'
+          Value = Null
+          ComponentItem = 'ContracNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractTagName'
+          Value = Null
+          ComponentItem = 'ContractTagName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractSigningDate'
+          Value = 42005d
+          ComponentItem = 'ContractSigningDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName_Basis'
+          Value = Null
+          ComponentItem = 'JuridicalName_Basis'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalShortName_Basis'
+          Value = Null
+          ComponentItem = 'JuridicalShortName_Basis'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccounterName_Basis'
+          Value = Null
+          ComponentItem = 'AccounterName_Basis'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1056#1077
+      ReportNameParam.Value = #1056#1077
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   object spSelect: TdsdStoredProc

@@ -180,6 +180,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_GoodsReportSaleInf_End() RETURNS Intege
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_GoodsReportSaleInf(), 'zc_ObjectDate_GoodsReportSaleInf_End', 'Конечная Дата' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_GoodsReportSaleInf_End');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Protocol_ReCalc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Protocol_ReCalc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Contract(), 'zc_ObjectDate_Protocol_ReCalc', 'Дата/время пересчета' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Protocol_ReCalc');
+
 
 --!!!FARMACY
 
@@ -316,6 +320,7 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 16,10,18         * zc_ObjectDate_Protocol_ReCalc
  16.08.18         * zc_ObjectDate_PriceChange_DateChange
  20.06.18         * zc_ObjectDate_ReplServer_...
  14.05.18                                                                                     * zc_ObjectFloat_Unit_NormOfManDays, zc_ObjectFloat_UnitCategory_PenaltyNonMinPlan

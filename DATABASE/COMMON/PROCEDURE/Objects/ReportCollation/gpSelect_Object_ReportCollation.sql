@@ -37,6 +37,9 @@ RETURNS TABLE (Id Integer, ObjectCode Integer, idBarCode TVarChar
              , isBuh Boolean
              , isDiff Boolean
              , isErased Boolean
+
+             , ReCalcName TVarChar
+             , ReCalcDate TDateTime
               )
 AS
 $BODY$
@@ -195,6 +198,9 @@ BEGIN
            
            , tmpData.isErased
 
+           , Object_ReCalc.ValueData              AS ReCalcName
+           , ObjectDate_Protocol_ReCalc.ValueData AS ReCalcDate
+          
       FROM tmpData
            LEFT JOIN tmpData AS	 tmpData_old ON tmpData_old.PaidKindId  = tmpData.PaidKindId
                                             AND tmpData_old.ContractId  = tmpData.ContractId
@@ -207,6 +213,15 @@ BEGIN
                                 ON ObjectLink_Contract_Personal.ObjectId = tmpData.ContractId
                                AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId 
+
+           LEFT JOIN ObjectDate AS ObjectDate_Protocol_ReCalc
+                                ON ObjectDate_Protocol_ReCalc.ObjectId = tmpData.Id
+                               AND ObjectDate_Protocol_ReCalc.DescId = zc_ObjectDate_Protocol_ReCalc()
+ 
+           LEFT JOIN ObjectLink AS ObjectLink_ReCalc
+                                ON ObjectLink_ReCalc.ObjectId = tmpData.Id
+                               AND ObjectLink_ReCalc.DescId = zc_ObjectLink_Protocol_ReCalc()
+           LEFT JOIN Object AS Object_ReCalc ON Object_ReCalc.Id = ObjectLink_ReCalc.ChildObjectId
 
      ;
 

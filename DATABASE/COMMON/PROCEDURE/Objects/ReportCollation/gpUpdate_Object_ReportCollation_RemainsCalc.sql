@@ -23,6 +23,9 @@ BEGIN
    -- находим элементы по вх. параметрам и расчитываем остатки
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReportCollation_StartRemainsCalc(), tmpObject.Id, SUM (tmpreport.StartRemains))
          , lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReportCollation_EndRemainsCalc(), tmpObject.Id, SUM (tmpreport.EndRemains)) 
+         , lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_ReCalc(), tmpObject.Id, CURRENT_TIMESTAMP)                -- сохранили свойство <Дата>
+         , lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_ReCalc(), tmpObject.Id, vbUserId)                         -- сохранили свойство <Пользователь>
+      
          , lpInsert_ObjectProtocol (inObjectId:= tmpObject.Id, inUserId:= vbUserId, inIsUpdate:= FALSE)
    FROM (SELECT Object_ReportCollation.Id
               , Object_ReportCollation.ObjectCode
@@ -72,6 +75,8 @@ BEGIN
          LEFT JOIN gpReport_JuridicalCollation(tmpObject.StartDate, tmpObject.EndDate, tmpObject.JuridicalId, tmpObject.PartnerId, tmpObject.ContractId, 0, tmpObject.PaidKindId,  0,  0,  0, inSession) AS tmpreport ON 1 = 1
    GROUP BY tmpObject.Id;
 
+  
+   
   
 END;$BODY$
  LANGUAGE plpgsql VOLATILE;

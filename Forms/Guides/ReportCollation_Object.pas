@@ -97,6 +97,7 @@ type
     actUpdateRemainsByRep: TdsdExecStoredProc;
     isStartRemainsRep: TcxGridDBColumn;
     isEndRemainsRep: TcxGridDBColumn;
+    actPrint: TdsdPrintAction;
   private
     { Private declarations }
   public
