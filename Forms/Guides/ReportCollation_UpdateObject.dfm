@@ -807,6 +807,7 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
           Component = MasterCDS
           ComponentItem = 'IsBuh'
           DataType = ftBoolean
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end
         item
@@ -815,13 +816,7 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
           Component = MasterCDS
           ComponentItem = 'BuhDate'
           DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -832,13 +827,10 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
       MoveParams = <>
       ActionList = <
         item
-          Action = OpenChoiceForm1
+          Action = actUpdateBuhDialog
         end
         item
           Action = actUpdateReportCollation_Buh
-        end
-        item
-          Action = actRefresh
         end>
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1080#1079#1085#1072#1082' '#1080' '#1044#1072#1090#1091' '#1089#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075'.'
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1080#1079#1085#1072#1082' '#1080' '#1044#1072#1090#1091' '#1089#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075'.'
@@ -968,6 +960,10 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateBuh'
         end
         item
           Visible = True
@@ -1154,7 +1150,7 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 496
+    Left = 464
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement'
@@ -1386,8 +1382,8 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
       item
         Name = 'inBuhDate'
         Value = 'NULL'
-        Component = FormParams
-        ComponentItem = 'inBuhDate'
+        Component = MasterCDS
+        ComponentItem = 'BuhDate'
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1395,8 +1391,8 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
       item
         Name = 'inIsBuh'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'inIsBuh'
+        Component = MasterCDS
+        ComponentItem = 'IsBuh'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

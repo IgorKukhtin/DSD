@@ -83,7 +83,7 @@ object ReportCollation_UpdateObjectDialogForm: TReportCollation_UpdateObjectDial
         Value = 0
         Component = deBuhDate
         DataType = ftDateTime
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -91,21 +91,7 @@ object ReportCollation_UpdateObjectDialogForm: TReportCollation_UpdateObjectDial
         Value = 42156d
         Component = edIsBuh
         DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsBuh'
-        Value = Null
-        Component = edIsBuh
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBuhDate'
-        Value = 'NULL'
-        Component = deBuhDate
-        DataType = ftDateTime
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     Left = 112
