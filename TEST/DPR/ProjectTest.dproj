@@ -3518,6 +3518,10 @@
 				<Form>ReportCollation_UpdateObjectDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PriceListItem_Separate.pas">
+				<Form>PriceListItem_SeparateForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
