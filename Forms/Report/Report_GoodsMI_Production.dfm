@@ -5,9 +5,8 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -366
   ExplicitWidth = 1036
-  ExplicitHeight = 383
+  ExplicitHeight = 382
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -208,6 +207,15 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
+          end
+          object IsCalculated: TcxGridDBColumn
+            Caption = #1056#1072#1089#1089#1095#1080#1090#1099#1074#1072#1077#1090#1089#1103' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isCalculated'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1088#1072#1089#1089#1095#1080#1090#1099#1074#1072#1077#1090#1089#1103' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 66
           end
           object Amount_Sh: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'.'

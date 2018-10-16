@@ -23,6 +23,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Summ_zavod TFloat, Summ_branch TFloat, Summ_60000 TFloat
              , Price_zavod TFloat, Price_branch TFloat
              , OperDate TDateTime
+             , isCalculated Boolean
              )
 AS
 $BODY$
@@ -99,6 +100,7 @@ BEGIN
          , CASE WHEN tmpOperationGroup.Amount <> 0 THEN tmpOperationGroup.Summ_branch / tmpOperationGroup.Amount ELSE 0 END :: TFloat AS Price_branch
 
          , tmpOperationGroup.OperDate
+         , tmpOperationGroup.isCalculated
 
      FROM (SELECT tmpContainer.UnitId
                 , tmpContainer.UnitId_by
@@ -112,6 +114,7 @@ BEGIN
                 , SUM (tmpContainer.Summ) AS Summ_zavod
                 , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.Summ ELSE 0 END) AS Summ_branch
                 , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpContainer.Summ ELSE 0 END) AS Summ_60000
+                , tmpContainer.isCalculated
 
            FROM (SELECT CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END AS ContainerId
                       , MIContainer.WhereObjectId_analyzer AS UnitId
@@ -122,12 +125,16 @@ BEGIN
                       , COALESCE (MIContainer.AccountId, 0)  AS AccountId
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END * CASE WHEN MIContainer.isActive = TRUE THEN 1 ELSE -1 END) AS Amount
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN MIContainer.Amount ELSE 0 END * CASE WHEN MIContainer.isActive = TRUE THEN 1 ELSE -1 END) AS Summ
+                      , COALESCE (MIBoolean_Calculated.ValueData, FALSE) ::Boolean AS isCalculated
                  FROM _tmpUnit
                       INNER JOIN MovementItemContainer AS MIContainer
                                                        ON MIContainer.WhereObjectId_analyzer = _tmpUnit.UnitId
                                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                       AND MIContainer.isActive = inIsActive
                                                       AND MIContainer.MovementDescId = inDescId
+                      LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                    ON MIBoolean_Calculated.MovementItemId = MIContainer.MovementItemId
+                                                   AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
                       -- LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
                  -- WHERE _tmpGoods.GoodsId > 0 OR inGoodsGroupId = 0
                  GROUP BY CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END
@@ -137,6 +144,7 @@ BEGIN
                         , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ObjectIntId_Analyzer END
                         , CASE WHEN vbIsGroup = TRUE THEN zc_DateStart() ELSE MIContainer.OperDate END
                         , COALESCE (MIContainer.AccountId, 0)
+                        , COALESCE (MIBoolean_Calculated.ValueData, FALSE)
                ) AS tmpContainer
                INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpContainer.GoodsId
                LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
@@ -149,6 +157,7 @@ BEGIN
                   , tmpContainer.GoodsKindId
                   , tmpContainer.OperDate
                   , CLO_PartionGoods.ObjectId
+                  , tmpContainer.isCalculated
 
           ) AS tmpOperationGroup
 
