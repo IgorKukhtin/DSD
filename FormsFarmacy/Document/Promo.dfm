@@ -4,7 +4,7 @@ inherited PromoForm: TPromoForm
   ClientWidth = 979
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
   ExplicitWidth = 995
-  ExplicitHeight = 602
+  ExplicitHeight = 603
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -278,6 +278,19 @@ inherited PromoForm: TPromoForm
       Properties.ReadOnly = False
       TabOrder = 15
       Width = 287
+    end
+    object edPrescribe: TcxTextEdit
+      Left = 844
+      Top = 23
+      TabStop = False
+      Properties.ReadOnly = True
+      TabOrder = 16
+      Width = 117
+    end
+    object cxLabel10: TcxLabel
+      Left = 844
+      Top = 5
+      Caption = #1057#1090#1072#1090#1091#1089' '#1087#1088#1086#1087#1080#1089#1080
     end
   end
   object edStartPromo: TcxDateEdit [2]
@@ -622,6 +635,24 @@ inherited PromoForm: TPromoForm
       ReportName = #1055#1088#1086#1076#1072#1078#1072
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072
     end
+    inherited actUnCompleteMovement: TChangeGuidesStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+          StoredProc = spGet
+        end>
+    end
+    inherited actCompleteMovement: TChangeGuidesStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+          StoredProc = spGet
+        end>
+    end
     object actOpenReportMinPrice_All: TdsdOpenForm
       Category = 'DSDLib'
       TabSheet = tsMain
@@ -649,6 +680,7 @@ inherited PromoForm: TPromoForm
         end
         item
           Name = 'inOperDate'
+          Value = 'NULL'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -858,6 +890,24 @@ inherited PromoForm: TPromoForm
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084#1080' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
       ImageIndex = 27
     end
+    object actUpdateMovementItemContainer: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MovementItemContainer
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MovementItemContainer
+        end
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1055#1088#1086#1087#1080#1089#1072#1090#1100' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090' '#1074' '#1087#1088#1080#1093#1086#1076#1099' '#1080' '#1095#1077#1082#1080
+      Hint = #1055#1088#1086#1087#1080#1089#1072#1090#1100' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090' '#1074' '#1087#1088#1080#1093#1086#1076#1099' '#1080' '#1095#1077#1082#1080
+      ImageIndex = 43
+      QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1088#1086#1087#1080#1089#1100' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1086#1075#1086' '#1082#1086#1085#1090#1088#1072#1082#1090#1072' '#1074' '#1087#1088#1080#1093#1086#1076#1099' '#1080' '#1095#1077#1082#1080
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Promo'
@@ -985,6 +1035,10 @@ inherited PromoForm: TPromoForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1049,6 +1103,10 @@ inherited PromoForm: TPromoForm
     end
     object bbOpenReportMinPrice_All: TdxBarButton
       Action = actOpenReportMinPrice_All
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actUpdateMovementItemContainer
       Category = 0
     end
   end
@@ -1235,6 +1293,13 @@ inherited PromoForm: TPromoForm
         Value = Null
         Component = edAmount
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Prescribe'
+        Value = Null
+        Component = edPrescribe
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 72
@@ -1945,5 +2010,24 @@ inherited PromoForm: TPromoForm
     ParamKeyField = 'inMovementId'
     Left = 352
     Top = 496
+  end
+  object spUpdate_MovementItemContainer: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItemContainer_Promo'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'ioId'
+    Left = 562
+    Top = 288
   end
 end

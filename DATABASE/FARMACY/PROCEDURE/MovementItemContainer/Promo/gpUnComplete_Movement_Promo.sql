@@ -18,6 +18,9 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
 
 
+  /*
+     16.10.18 вынес в отдельную функцию: gpUpdate_MovementItemContainer_Promo
+
     -- 1. поставим ObjectIntId_analyzer = NULL, для zc_MIContainer_Count() + zc_MIContainer_Summ()
     UPDATE MovementItemContainer SET ObjectIntId_analyzer = NULL
     FROM MovementItem
@@ -27,7 +30,10 @@ BEGIN
       AND MovementItemContainer.ObjectIntId_analyzer = MovementItem.Id
       AND MovementItemContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_Check())
      ;
+  */
 
+    -- сохранили <Статус надо прописать ObjectIntId_analyzer>
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Promo_Prescribe(), inMovementId, TRUE);
 
     -- Распроводим Документ
     PERFORM lpUnComplete_Movement (inMovementId := inMovementId
@@ -38,6 +44,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А   Шаблий О.В.
+ 16.10.18                                                                       *
  25.04.16         *
 */

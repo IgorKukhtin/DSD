@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS lpReComplete_Movement_Promo_All (Integer, Integer);
 CREATE OR REPLACE FUNCTION lpReComplete_Movement_Promo_All(
     IN inMovementId        Integer  , -- ключ Документа
     IN inUserId            Integer    -- Пользователь
-)                              
+)
 RETURNS VOID
 AS
 $BODY$
@@ -75,7 +75,7 @@ BEGIN
     FROM _tmpItem_income
     WHERE MovementItemContainer.MovementId     = _tmpItem_income.MovementId_income
       AND MovementItemContainer.MovementItemId = _tmpItem_income.MovementItemId_income
-      -- AND COALESCE (MovementItemContainer.ObjectIntId_analyzer, 0)   <>  _tmpItem_income.MovementItemId_promo
+      AND COALESCE (MovementItemContainer.ObjectIntId_analyzer, 0)   <>  _tmpItem_income.MovementItemId_promo
       AND MovementItemContainer.DescId IN (zc_MIContainer_Count(), zc_MIContainer_Summ())
      ;
 
@@ -84,17 +84,18 @@ BEGIN
     UPDATE MovementItemContainer SET ObjectIntId_analyzer = _tmpItem_income.MovementItemId_promo
     FROM _tmpItem_income
     WHERE MovementItemContainer.AnalyzerId = _tmpItem_income.MovementItemId_income
-      -- AND COALESCE (MovementItemContainer.ObjectIntId_analyzer, 0)   <>  _tmpItem_income.MovementItemId_promo
+      AND COALESCE (MovementItemContainer.ObjectIntId_analyzer, 0)   <>  _tmpItem_income.MovementItemId_promo
       AND MovementItemContainer.MovementDescId IN (zc_Movement_Check())
      ;
-    
-    
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
- 11.01.17         * 
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.  Шаблий О.В.
+ 16.10.18                                                                       *
+ 11.01.17         *
 */
