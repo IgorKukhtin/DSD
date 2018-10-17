@@ -39,10 +39,16 @@ BEGIN
 
      -- по штрих коду Акт сверки
      vbId:= (SELECT Object.Id
-             FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS Id) AS tmp
+             FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS Id WHERE CHAR_LENGTH (inBarCode) >= 13) AS tmp
                  INNER JOIN Object ON Object.Id = tmp.Id
                                   AND Object.DescId = zc_Object_ReportCollation()
                                   AND Object.isErased = False
+            UNION
+             SELECT Object.Id
+             FROM (SELECT inBarCode :: Integer AS BarCode WHERE CHAR_LENGTH (inBarCode) > 0 AND CHAR_LENGTH (inBarCode) < 13) AS tmp
+                  INNER JOIN Object ON Object.ObjectCode = tmp.BarCode
+                                   AND Object.DescId = zc_Object_ReportCollation()
+                                   AND Object.isErased = FALSE
              );
 
      -- Проверка
