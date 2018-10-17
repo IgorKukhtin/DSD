@@ -179,6 +179,11 @@ BEGIN
      END IF;
 
      -- проверка
+     IF inSummAdd > 50 THEN
+        RAISE EXCEPTION 'Ошибка.Сумма <Доплата, грн> не может быть больше 50 грн.';
+     END IF;
+
+     -- проверка
      IF (COALESCE (ioAmount, 0) = 0) THEN
         RAISE EXCEPTION 'Ошибка.Сумма не рассчитана.Проверьте условия в договоре.';
      END IF;

@@ -1,6 +1,7 @@
 with tmpRes as (
 SELECT *
   , ROW_NUMBER() OVER (PARTITION BY PaidKindId, ContractId, PartnerId, JuridicalId ORDER BY StartDate ASC, ObjectId ASC) AS Ord
+  , ROW_NUMBER() OVER (ORDER BY ObjectId ASC) AS Ord2
 from (
 SELECT ObjectDate_Start.ObjectId
 , ObjectDate_Start.ValueData as StartDate
@@ -32,7 +33,7 @@ SELECT ObjectDate_Start.ObjectId
 )
 -- update Object set ObjectCode = Ord from tmpRes where Object.Id = tmpRes.ObjectId
 
-select tmpRes_old.StartDate , tmpRes_old.EndDate , tmpRes.StartDate, tmpRes.EndDate ,  tmpRes.Ord,  * 
+select tmpRes_old.StartDate , tmpRes_old.EndDate , tmpRes.StartDate, tmpRes.EndDate ,  tmpRes.Ord, tmpRes.Ord2,  * 
 from tmpRes
 inner join tmpRes as tmpRes_old on tmpRes_old.PaidKindId = tmpRes.PaidKindId
                               and tmpRes_old.ContractId = tmpRes.ContractId

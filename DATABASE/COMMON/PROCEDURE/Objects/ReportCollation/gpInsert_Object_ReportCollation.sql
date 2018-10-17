@@ -28,7 +28,7 @@ AS
 $BODY$
   DECLARE vbId       Integer;
   DECLARE vbUserId   Integer;
-  DECLARE vbCode_old Integer;
+  -- DECLARE vbCode_old Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    IF inIsInsert = TRUE 
@@ -86,7 +86,7 @@ BEGIN
 
 
          -- поиск "предыдущего" №п/п
-         vbCode_old:= (SELECT MAX (Object_ReportCollation.ObjectCode)
+         /*vbCode_old:= (SELECT MAX (Object_ReportCollation.ObjectCode)
                        FROM ObjectDate AS ObjectDate_End 
                           INNER JOIN Object AS Object_ReportCollation ON Object_ReportCollation.Id = ObjectDate_End.ObjectId
                                                                      AND Object_ReportCollation.isErased = FALSE
@@ -111,13 +111,16 @@ BEGIN
                                                AND (ObjectLink_ReportCollation_Contract.ChildObjectId = COALESCE (inContractId,0) OR COALESCE (inContractId,0)=0)
                       WHERE ObjectDate_End.DescId    = zc_ObjectDate_ReportCollation_End()
                         AND ObjectDate_End.ValueData < inStartDate
-                     );
+                     );*/
 
 
          IF COALESCE (vbId, 0) = 0 OR inIsUpdate = FALSE
          THEN
-             -- сохранили <Объект>
-             vbId := lpInsertUpdate_Object( COALESCE (vbId, 0), zc_Object_ReportCollation(), COALESCE (vbCode_old, 0) + 1, '');
+             IF COALESCE (vbId, 0) = 0
+             THEN
+                 -- сохранили <Объект>
+                 vbId := lpInsertUpdate_Object( COALESCE (vbId, 0), zc_Object_ReportCollation(), NEXTVAL ('Object_ReportCollation_seq'), '');
+             END IF;
     
              --
              PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ReportCollation_Juridical(), vbId, COALESCE (inJuridicalId,0));
@@ -148,7 +151,7 @@ BEGIN
 
         
              -- перенумеровываем начиная со "следующего"
-             UPDATE Object SET ObjectCode = COALESCE (vbCode_old, 0) + tmp.Ord + 1
+             /*UPDATE Object SET ObjectCode = COALESCE (vbCode_old, 0) + tmp.Ord + 1
              FROM (SELECT Object_ReportCollation.Id
                         , ROW_NUMBER() OVER (PARTITION BY COALESCE (ObjectLink_ReportCollation_PaidKind.ChildObjectId , 0)
                                                         , COALESCE (ObjectLink_ReportCollation_Contract.ChildObjectId, 0)
@@ -183,7 +186,8 @@ BEGIN
                    WHERE ObjectDate_Start.DescId = zc_ObjectDate_ReportCollation_Start()
                      AND ObjectDate_Start.ValueData > inStartDate
                   ) AS tmp
-             WHERE tmp.Id = Object.Id;
+             WHERE tmp.Id = Object.Id;*/
+
          END IF;
 
          IF inIsUpdate = TRUE

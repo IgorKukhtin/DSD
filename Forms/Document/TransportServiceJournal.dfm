@@ -4,9 +4,8 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
   ClientWidth = 1212
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -276
   ExplicitWidth = 1228
-  ExplicitHeight = 375
+  ExplicitHeight = 371
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -102,6 +101,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
