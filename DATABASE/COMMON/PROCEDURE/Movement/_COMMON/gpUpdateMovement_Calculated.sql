@@ -44,7 +44,7 @@ BEGIN
                             AND MovementItem.DescId     = zc_MI_Child()
                          )
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_PartionGoods(), tmpMIChild.Id
-                                          , CASE -- если снимается - снимаем у всех
+                                          , CASE -- если снимается для Movement - снимаем у всех MI
                                                  WHEN ioisCalculated = FALSE THEN FALSE
                                                  -- если уже поставили в ручном режиме - оставляем
                                                  WHEN EXISTS (SELECT 1 FROM tmpMIChild AS tmpMIChild_find WHERE tmpMIChild_find.isCalculated = TRUE) THEN tmpMIChild.isCalculated
