@@ -3,31 +3,30 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
     #1054#1090#1095#1077#1090' <'#1055#1088#1080#1093#1086#1076'/'#1056#1072#1089#1093#1086#1076' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077') ('#1084#1072#1089#1090#1077#1088'-'#1076#1077#1090#1072#1083#1100#1085#1086')' +
     '>'
   ClientHeight = 623
-  ClientWidth = 1020
+  ClientWidth = 1095
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -383
-  ExplicitTop = -169
-  ExplicitWidth = 1036
-  ExplicitHeight = 662
+  ExplicitLeft = -23
+  ExplicitWidth = 1111
+  ExplicitHeight = 661
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 99
-    Width = 1020
+    Width = 1095
     Height = 524
     TabOrder = 3
     ExplicitTop = 99
     ExplicitWidth = 1020
     ExplicitHeight = 524
     ClientRectBottom = 524
-    ClientRectRight = 1020
+    ClientRectRight = 1095
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 524
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1095
         Height = 228
         ExplicitWidth = 1020
         ExplicitHeight = 228
@@ -230,11 +229,12 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 228
-        Width = 1020
+        Width = 1095
         Height = 296
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 1020
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -411,7 +411,7 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 1095
     Height = 73
     ExplicitWidth = 1020
     ExplicitHeight = 73
@@ -643,6 +643,9 @@ inherited Report_GoodsMI_ProductionUnionMDForm: TReport_GoodsMI_ProductionUnionM
       ReportNameParam.Value = #1054#1090#1095#1077#1090'_'#1055#1088#1080#1093#1086#1076'_'#1056#1072#1089#1093#1086#1076'_'#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'_'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'_'#1087#1086'_'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'_1'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'

@@ -40,7 +40,6 @@ BEGIN
            , CAST (NULL AS TFloat)                  AS LiveWeight
            , CAST (NULL AS TFloat)                  AS HeadCount
            
-           , FALSE                                  AS isCalculated
            , FALSE                                  AS isErased
 
        FROM (SELECT Object_Goods.Id           AS GoodsId
@@ -88,7 +87,7 @@ BEGIN
            , MovementItem.Amount                    AS Amount
            , MIFloat_LiveWeight.ValueData           AS LiveWeight
            , MIFloat_HeadCount.ValueData            AS HeadCount
-           , COALESCE (MIBoolean_Calculated.ValueData, FALSE) ::Boolean AS isCalculated
+
            , MovementItem.isErased                  AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -123,9 +122,6 @@ BEGIN
                                             AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
             LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = MILinkObject_StorageLine.ObjectId
 
-            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
-                                          ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
-                                         AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
        ORDER BY 2--MovementItem.Id
             ;
     RETURN NEXT Cursor1;
@@ -150,7 +146,6 @@ BEGIN
            , MovementItem.Amount			 AS Amount
            , MIFloat_LiveWeight.ValueData                AS LiveWeight
            , MIFloat_HeadCount.ValueData 		 AS HeadCount
-           , COALESCE (MIBoolean_Calculated.ValueData, FALSE) ::Boolean AS isCalculated
            , MovementItem.isErased                       AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -185,9 +180,6 @@ BEGIN
                                             AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
             LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = MILinkObject_StorageLine.ObjectId
 
-            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
-                                          ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
-                                         AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
        ORDER BY MovementItem.Id
             ;
     RETURN NEXT Cursor1;
@@ -215,6 +207,7 @@ BEGIN
            , MovementItem.Amount			 AS Amount
            , MIFloat_LiveWeight.ValueData                AS LiveWeight
            , MIFloat_HeadCount.ValueData 		 AS HeadCount
+           , COALESCE (MIBoolean_Calculated.ValueData, FALSE) ::Boolean AS isCalculated
            , MovementItem.isErased                       AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -249,6 +242,10 @@ BEGIN
                                             AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
             LEFT JOIN Object AS Object_StorageLine ON Object_StorageLine.Id = MILinkObject_StorageLine.ObjectId
 
+            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                          ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
+                                         
        ORDER BY MovementItem.Id
             ;
     RETURN NEXT Cursor2;

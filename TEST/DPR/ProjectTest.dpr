@@ -1041,7 +1041,9 @@ uses
   GoodsSeparate in '..\..\Forms\Guides\GoodsSeparate.pas' {GoodsSeparateForm: TParentForm},
   GoodsSeparateEdit in '..\..\Forms\Guides\GoodsSeparateEdit.pas' {GoodsSeparateEditForm: TParentForm},
   MovementGoodsBarCode in '..\..\Forms\Document\MovementGoodsBarCode.pas' {MovementGoodsBarCodeForm: TParentForm},
-  Report_Branch_App1 in '..\..\Forms\Report\Report_Branch_App1.pas' {Report_Branch_App1Form: TParentForm};
+  Report_Branch_App1 in '..\..\Forms\Report\Report_Branch_App1.pas' {Report_Branch_App1Form: TParentForm},
+  ReportCollation_UpdateObjectDialog in '..\..\Forms\Guides\ReportCollation_UpdateObjectDialog.pas' {ReportCollation_UpdateObjectDialogForm: TParentForm},
+  PriceListItem_Separate in '..\..\Forms\Guides\PriceListItem_Separate.pas' {PriceListItem_SeparateForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -109,6 +109,11 @@ type
     bbReportMinPriceForm: TdxBarButton;
     actOpenReportMinPrice_All: TdsdOpenForm;
     bbOpenReportMinPrice_All: TdxBarButton;
+    actUpdateMovementItemContainer: TdsdExecStoredProc;
+    spUpdate_MovementItemContainer: TdsdStoredProc;
+    dxBarButton1: TdxBarButton;
+    edPrescribe: TcxTextEdit;
+    cxLabel10: TcxLabel;
   private
     { Private declarations }
   public

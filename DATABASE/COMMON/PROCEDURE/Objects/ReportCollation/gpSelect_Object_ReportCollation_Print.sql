@@ -67,22 +67,23 @@ BEGIN
 
      SELECT
          tmpReport.Id
+       , Object_ReportCollation.ObjectCode AS Code
        , zfFormat_BarCode (zc_BarCodePref_Object(), tmpReport.Id) ::TVarChar AS idBarCode
-       , ObjectDate_Start.ValueData      AS StartDate
-       , ObjectDate_End.ValueData        AS EndDate
-       , Object_Juridical.ValueData      AS JuridicalName
-       , Object_Partner.ValueData        AS PartnerName
-       , Object_Contract.ValueData       AS ContractName
-       , Object_PaidKind.ValueData       AS PaidKindName
+       , ObjectDate_Start.ValueData        AS StartDate
+       , ObjectDate_End.ValueData          AS EndDate
+       , Object_Juridical.ValueData        AS JuridicalName
+       , Object_Partner.ValueData          AS PartnerName
+       , Object_Contract.ValueData         AS ContractName
+       , Object_PaidKind.ValueData         AS PaidKindName
 
-       , Object_Insert.ValueData         AS InsertName
-       , ObjectDate_Insert.ValueData     AS InsertDate
+       , Object_Insert.ValueData           AS InsertName
+       , ObjectDate_Insert.ValueData       AS InsertDate
 
-       , Object_Buh.ValueData            AS BuhName
+       , Object_Buh.ValueData              AS BuhName
        , tmpReport.BuhDate
 
        , COALESCE (ObjectBoolean_Buh.ValueData, False) ::Boolean  AS isBuh
-       
+
    FROM tmpReport
       LEFT JOIN ObjectDate AS ObjectDate_Start
                            ON ObjectDate_Start.ObjectId = tmpReport.Id
@@ -126,12 +127,14 @@ BEGIN
 
       LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = tmpReport.BuhId
 
-         ORDER BY Object_Juridical.ValueData  
-                , Object_Partner.ValueData  
-                , Object_Contract.ValueData 
-                , Object_PaidKind.ValueData 
-                , ObjectDate_Start.ValueData 
-                , ObjectDate_End.ValueData
+      LEFT JOIN Object AS Object_ReportCollation ON Object_ReportCollation.Id = tmpReport.Id
+      
+   ORDER BY Object_Juridical.ValueData  
+          , Object_Partner.ValueData  
+          , Object_Contract.ValueData 
+          , Object_PaidKind.ValueData 
+          , ObjectDate_Start.ValueData 
+          , ObjectDate_End.ValueData
          ;
 
     RETURN NEXT Cursor2;

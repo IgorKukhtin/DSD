@@ -3,7 +3,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   ClientHeight = 423
   ClientWidth = 1156
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -45
   ExplicitWidth = 1172
   ExplicitHeight = 461
   PixelsPerInch = 96
@@ -14,17 +13,17 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Height = 343
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1015
+    ExplicitWidth = 1156
     ExplicitHeight = 343
     ClientRectBottom = 343
     ClientRectRight = 1156
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1015
+      ExplicitWidth = 1156
       ExplicitHeight = 343
       inherited cxGrid: TcxGrid
         Width = 1156
         Height = 343
-        ExplicitWidth = 1015
+        ExplicitWidth = 1156
         ExplicitHeight = 343
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -560,7 +559,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   inherited Panel: TPanel
     Width = 1156
     Height = 54
-    ExplicitWidth = 1015
+    ExplicitWidth = 1156
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -2083,8 +2082,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Component = GuidesSaleChoice
       end>
-    Left = 408
-    Top = 72
+    Left = 384
+    Top = 184
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
@@ -2745,38 +2744,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAccountId'
-        Value = Null
-        Component = GuidesAccount
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InInfoMoneyId'
-        Value = Null
-        Component = GuidesInfoMoney
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCurrencyId'
-        Value = Null
-        Component = GuidesCurrency
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId_Partion'
-        Value = Null
-        Component = GuidesSaleChoice
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inIsInsert'
         Value = Null
         Component = cbIsInsert
@@ -2805,6 +2772,34 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        Component = GuidesAccount
+        ComponentItem = 'Key'
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        Component = GuidesCurrency
+        ComponentItem = 'Key'
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        Component = GuidesSaleChoice
+        ComponentItem = 'Key'
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1

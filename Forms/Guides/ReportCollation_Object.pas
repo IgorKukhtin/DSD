@@ -23,7 +23,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
   DataModul, cxButtonEdit, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls,
-  ChoicePeriod, cxCurrencyEdit;
+  ChoicePeriod, cxCurrencyEdit, dsdGuides;
 
 type
   TReportCollation_ObjectForm = class(TParentForm)
@@ -71,6 +71,33 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     isDiff: TcxGridDBColumn;
     StartRemainsRep: TcxGridDBColumn;
+    spUpdateRemains: TdsdStoredProc;
+    actUpdateRemains: TdsdUpdateDataSet;
+    spUpdateRemainsCalc: TdsdStoredProc;
+    bbUpdateRemainsCalc: TdxBarButton;
+    macUpdateRemainsCalc: TMultiAction;
+    actUpdateRemainsCalc: TdsdExecStoredProc;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
+    bbUpdateRemainsByRep: TdxBarButton;
+    spUpdateRemainsByRep: TdsdStoredProc;
+    cxLabel6: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
+    cxLabel3: TcxLabel;
+    edPartner: TcxButtonEdit;
+    GuidesPartner: TdsdGuides;
+    cxLabel8: TcxLabel;
+    ceContract: TcxButtonEdit;
+    GuidesContract: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    GuidesPaidKind: TdsdGuides;
+    macUpdateRemainsByRep: TMultiAction;
+    actUpdateRemainsByRep: TdsdExecStoredProc;
+    isStartRemainsRep: TcxGridDBColumn;
+    isEndRemainsRep: TcxGridDBColumn;
+    actPrint: TdsdPrintAction;
   private
     { Private declarations }
   public

@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 229
+  ExplicitHeight = 230
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -2419,6 +2419,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_KPU: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1050#1055#1059
+      FormName = 'TReport_KPUForm'
+      FormNameParam.Value = 'TReport_KPUForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -2676,6 +2687,12 @@ inherited MainForm: TMainForm
       end
       object N86: TMenuItem
         Action = actReport_Wage
+      end
+      object N167: TMenuItem
+        Action = actReport_TestingUser
+      end
+      object N172: TMenuItem
+        Action = actReport_KPU
       end
     end
     object miLoad: TMenuItem [2]
@@ -2989,10 +3006,6 @@ inherited MainForm: TMainForm
       end
       object N124: TMenuItem
         Action = actReport_Check_Rating
-      end
-      object N167: TMenuItem
-        Action = actReport_TestingUser
-        Visible = False
       end
       object N133: TMenuItem
         Caption = '-'

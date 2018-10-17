@@ -15,7 +15,7 @@ uses
   Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod, cxDropDownEdit, cxCalendar,
   dsdGuides, dxBarBuiltInMenu, cxNavigator, dxSkinsCore, dxSkinsDefaultPainters,
   dxSkinscxPCPainter, dxSkinsdxBarPainter, cxGridBandedTableView,
-  cxGridDBBandedTableView, cxCheckBox;
+  cxGridDBBandedTableView, cxCheckBox, cxBlobEdit, cxMemo;
 
 type
   TReport_KPUForm = class(TAncestorReportForm)
@@ -48,6 +48,20 @@ type
     ComplaintsNote: TcxGridDBBandedColumn;
     DirectorRatio: TcxGridDBBandedColumn;
     DirectorNote: TcxGridDBBandedColumn;
+    FinancPlan: TcxGridDBBandedColumn;
+    FinancPlanFact: TcxGridDBBandedColumn;
+    FinancPlanRatio: TcxGridDBBandedColumn;
+    YuriIT: TcxGridDBBandedColumn;
+    OlegIT: TcxGridDBBandedColumn;
+    MaximIT: TcxGridDBBandedColumn;
+    CollegeITRatio: TcxGridDBBandedColumn;
+    CollegeITNote: TcxGridDBBandedColumn;
+    VIPDepartRatio: TcxGridDBBandedColumn;
+    VIPDepartRatioNote: TcxGridDBBandedColumn;
+    Romanova: TcxGridDBBandedColumn;
+    Golovko: TcxGridDBBandedColumn;
+    ControlRGRatio: TcxGridDBBandedColumn;
+    ControlRGNote: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

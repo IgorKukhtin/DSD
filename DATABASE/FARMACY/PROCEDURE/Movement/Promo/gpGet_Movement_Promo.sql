@@ -22,7 +22,8 @@ RETURNS TABLE (Id Integer
              , MakerName TVarChar
              , PersonalId Integer
              , PersonalName TVarChar
-             , Comment TVarChar)
+             , Comment TVarChar
+             , Prescribe TVarChar)
 AS
 $BODY$
 BEGIN
@@ -50,6 +51,7 @@ BEGIN
           , NULL::Integer                                    AS PersonalId
           , NULL::TVarChar                                   AS PersonalName
           , NULL::TVarChar                                   AS Comment
+          , NULL::TVarChar                                   AS Prescribe
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
   
    ELSE
@@ -72,6 +74,9 @@ BEGIN
           , MovementLinkObject_Personal.ObjectId                           AS PersonalId  
           , Object_Personal.ValueData                                      AS PersonalName 
           , MovementString_Comment.ValueData                               AS Comment
+          , CASE WHEN COALESCE(MovementBoolean_Prescribe.ValueData, FALSE)
+            THEN 'Ожидает прописи'
+            ELSE 'Прописано' END::TVarChar                                 AS Prescribe
      FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -111,6 +116,10 @@ BEGIN
                                  ON MovementString_Comment.MovementId = Movement.Id
                                 AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
+        LEFT JOIN MovementBoolean AS MovementBoolean_Prescribe
+                                  ON MovementBoolean_Prescribe.MovementId =  Movement.Id
+                                 AND MovementBoolean_Prescribe.DescId = zc_MovementBoolean_Promo_Prescribe()
+
      WHERE Movement.Id =  inMovementId;
 
     END IF;
@@ -121,7 +130,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В.
+ 16.10.18                                                                                    *
  24.04.16         *
 */
 

@@ -21,10 +21,20 @@ type
     Code: TcxGridDBColumn;
     UserName: TcxGridDBColumn;
     actRefreshSearch: TdsdExecStoredProc;
-    Total: TcxGridDBColumn;
+    Result: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    DateTimeTest: TcxGridDBColumn;
+    Attempts: TcxGridDBColumn;
+    ExamPercentage: TcxGridDBColumn;
+    Status: TcxGridDBColumn;
+    edVersion: TcxTextEdit;
+    cxLabel16: TcxLabel;
+    edQuestion: TcxTextEdit;
+    cxLabel3: TcxLabel;
+    edMaxAttempts: TcxTextEdit;
+    cxLabel4: TcxLabel;
+    spGet_Movement: TdsdStoredProc;
   private
     { Private declarations }
   public

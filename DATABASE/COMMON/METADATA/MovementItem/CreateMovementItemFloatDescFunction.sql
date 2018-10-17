@@ -918,10 +918,15 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_DirectorRatio() RETURNS Integer AS $BODY$B
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_DirectorRatio', 'Коэффициент от директора' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_DirectorRatio');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_TestingUser_Attempts() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_TestingUser_Attempts'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_TestingUser_Attempts', 'Количество попыток' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_TestingUser_Attempts');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 15.10.18                                                                                                     * zc_MIFloat_TestingUser_Attempts
  09.10.18                                                                                                     * 
  08.10.18                                                                                                     * 
  05.10.18                                                                                                     * zc_MIFloat_PriceSample

@@ -61,6 +61,12 @@ type
     bbPrint: TdxBarButton;
     ObjectCode: TcxGridDBColumn;
     isDiff: TcxGridDBColumn;
+    actUpdateBuhDialog: TExecuteDialog;
+    macUpdateBuh: TMultiAction;
+    spUpdateReportCollation_Buh: TdsdStoredProc;
+    bbUpdateBuh: TdxBarButton;
+    actUpdateReportCollation_Buh: TdsdExecStoredProc;
+    OpenChoiceForm1: TOpenChoiceForm;
   private
     { Private declarations }
   public

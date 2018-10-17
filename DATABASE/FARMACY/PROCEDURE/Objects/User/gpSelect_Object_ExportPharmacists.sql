@@ -9,13 +9,49 @@ RETURNS TABLE (RowData TBlob)
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbMovementId Integer;
 BEGIN
 
    CREATE EXTENSION IF NOT EXISTS pgcrypto;
    CREATE TEMP TABLE _Result(RowData TBlob) ON COMMIT DROP;
+   
+   SELECT Movement.Id
+   INTO vbMovementId
+   FROM Movement 
+   WHERE Movement.DescId = zc_Movement_TestingUser()
+   ORDER BY Movement.OperDate DESC
+   LIMIT 1;
     
     --ÿ‡ÔÍ‡
    INSERT INTO _Result(RowData) Values ('<?xml version="1.0" encoding="utf-8"?>');
+
+   INSERT INTO _Result(RowData) Values ('<Headers>');
+
+   INSERT INTO _Result(RowData)
+   SELECT 
+        '<Header Version="'||CASE WHEN MovementFloat_Version.ValueData IS NULL THEN 'Null' ELSE MovementFloat_Version.ValueData::Integer::Text END||
+             '" Question="'||CASE WHEN MovementFloat_Question.ValueData IS NULL THEN 'Null' ELSE MovementFloat_Question.ValueData::Integer::Text END||
+             '" MaxAttempts="'||CASE WHEN MovementFloat_MaxAttempts.ValueData IS NULL THEN 'Null' ELSE MovementFloat_MaxAttempts.ValueData::Integer::Text END||
+             '" DateTest="'||CASE WHEN Movement.OperDate IS NULL THEN 'Null' ELSE to_char(Movement.OperDate, 'DD.MM.YYYY') END||'" />'
+   FROM Movement
+
+        INNER JOIN MovementFloat AS MovementFloat_Version
+                                 ON MovementFloat_Version.MovementId = Movement.Id
+                                AND MovementFloat_Version.DescId = zc_MovementFloat_TestingUser_Version()
+                                
+        INNER JOIN MovementFloat AS MovementFloat_Question
+                                 ON MovementFloat_Question.MovementId = Movement.Id
+                                AND MovementFloat_Question.DescId = zc_MovementFloat_TestingUser_Question()
+
+        INNER JOIN MovementFloat AS MovementFloat_MaxAttempts
+                                 ON MovementFloat_MaxAttempts.MovementId = Movement.Id
+                                AND MovementFloat_MaxAttempts.DescId = zc_MovementFloat_TestingUser_MaxAttempts()
+
+   WHERE Movement.Id = vbMovementId;
+
+   INSERT INTO _Result(RowData) Values ('</Headers>');
+
+    -- —Ó‰ÂÊËÏÓÂ
    INSERT INTO _Result(RowData) Values ('<Offers>');
     --“ÂÎÓ
 
@@ -27,20 +63,31 @@ BEGIN
                         GROUP BY View_Personal.MemberId
                        ),
         tmpResult AS (SELECT 
-                             MovementItem.ObjectId         AS UserID
-                           , MovementItem.Amount           AS Result       
-                           , MovementItemDate.ValueData    AS DateTimeTest                              
+                             MovementItem.ObjectId                     AS UserID
+                           , MovementItem.Amount::Integer              AS Result       
+                           , MovementItemFloat.ValueData::Integer      AS Attempts
+                           , MovementItemDate.ValueData                AS DateTimeTest                              
                       FROM Movement 
+
                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
                                                   AND MovementItem.DescId = zc_MI_Master()
+
                            INNER JOIN MovementItemDate ON MovementItemDate.MovementItemId = MovementItem.Id
                                                       AND MovementItemDate.DescId = zc_MIDate_TestingUser()
-                      WHERE Movement.DescId = zc_Movement_TestingUser() 
-                        AND Movement.OperDate = date_trunc('month', CURRENT_TIMESTAMP::TDateTime))
+
+                           INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
+                                                       AND MovementItemFloat.DescId = zc_MIFloat_TestingUser_Attempts()
+
+                      WHERE Movement.Id = vbMovementId)
                        
    INSERT INTO _Result(RowData)
    SELECT
-        '<Offer Code="'||CAST(Object_User.ObjectCode AS TVarChar)||'" Name="'||replace(replace(replace(Object_User.ValueData, '"', ''),'&','&amp;'),'''','')||'" Password="'||digest(ObjectString_User_.ValueData::Text, 'md5')||'" Result="'||CASE WHEN tmpResult.Result IS NULL THEN 'Null' ELSE tmpResult.Result::Text END||'" DateTimeTest="'||CASE WHEN tmpResult.DateTimeTest IS NULL THEN 'Null' ELSE to_char(tmpResult.DateTimeTest, 'DD.MM.YYYY HH:MI:SS') END||'" />'
+        '<Offer Code="'||CAST(Object_User.ObjectCode AS TVarChar)||
+             '" Name="'||replace(replace(replace(Object_User.ValueData, '"', ''),'&','&amp;'),'''','')||
+             '" Password="'||digest(ObjectString_User_.ValueData::Text, 'md5')||
+             '" Result="'||CASE WHEN tmpResult.Result IS NULL THEN 'Null' ELSE tmpResult.Result::Text END||
+             '" Attempts="'||CASE WHEN tmpResult.Attempts IS NULL THEN 'Null' ELSE tmpResult.Attempts::Text END||
+             '" DateTimeTest="'||CASE WHEN tmpResult.DateTimeTest IS NULL THEN 'Null' ELSE to_char(tmpResult.DateTimeTest, 'DD.MM.YYYY HH24:MI:SS') END||'" />'
    
    FROM Object AS Object_User
 
@@ -78,6 +125,7 @@ ALTER FUNCTION gpSelect_Object_ExportPharmacists (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ÿ‡·ÎËÈ Œ.¬.
+ 15.10.18         *
  07.09.18         *
 */
 

@@ -168,6 +168,15 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
             HeaderAlignmentVert = vaCenter
             Width = 71
           end
+          object IsCalculated: TcxGridDBColumn
+            Caption = #1056#1072#1089#1089#1095#1080#1090#1099#1074#1072#1077#1090#1089#1103' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isCalculated'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077' '#1088#1072#1089#1089#1095#1080#1090#1099#1074#1072#1077#1090#1089#1103' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 66
+          end
           object ChildAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'ChildAmount'
@@ -318,7 +327,7 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
     end
     object cbGroupPartion: TcxCheckBox
       Left = 962
-      Top = 26
+      Top = 29
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1087#1072#1088#1090#1080#1080
       TabOrder = 12
       Width = 145
@@ -357,11 +366,18 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       Width = 147
     end
     object cbStorageLine: TcxCheckBox
-      Left = 962
-      Top = 48
+      Left = 1113
+      Top = 5
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1051#1080#1085#1080#1102' '#1087#1088'-'#1074#1072
       TabOrder = 17
       Width = 144
+    end
+    object cbCalculated: TcxCheckBox
+      Left = 1113
+      Top = 29
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' "'#1056#1072#1089#1095#1080#1090#1099#1074#1072#1102#1090#1089#1103'"'
+      TabOrder = 18
+      Width = 178
     end
   end
   object cxLabel7: TcxLabel [2]
@@ -511,6 +527,9 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       ReportNameParam.Value = #1054#1090#1095#1077#1090'_'#1055#1088#1080#1093#1086#1076'_'#1056#1072#1089#1093#1086#1076'_'#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'_'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'_'#1048#1090#1086#1075
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -593,6 +612,9 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
       ReportNameParam.Value = #1054#1090#1095#1077#1090'_'#1055#1088#1080#1093#1086#1076'_'#1056#1072#1089#1093#1086#1076'_'#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'_'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -738,6 +760,14 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
           DataType = ftBoolean
           ParamType = ptInputOutput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCalculated'
+          Value = Null
+          Component = cbCalculated
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -791,6 +821,14 @@ inherited Report_GoodsMI_ProductionSeparateForm: TReport_GoodsMI_ProductionSepar
         Name = 'inIsStorageLine'
         Value = Null
         Component = cbStorageLine
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCalculated'
+        Value = Null
+        Component = cbCalculated
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

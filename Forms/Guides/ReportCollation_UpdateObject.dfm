@@ -6,7 +6,7 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1017
-  ExplicitHeight = 458
+  ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -792,6 +792,106 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actUpdateBuhDialog: TExecuteDialog
+      Category = 'Buh'
+      MoveParams = <>
+      Caption = 'actReportCollation_BuhDialog'
+      FormName = 'TReportCollation_UpdateObjectDialogForm'
+      FormNameParam.Value = 'TReportCollation_UpdateObjectDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'IsBuh'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'IsBuh'
+          DataType = ftBoolean
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BuhDate'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'BuhDate'
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macUpdateBuh: TMultiAction
+      Category = 'Buh'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateBuhDialog
+        end
+        item
+          Action = actUpdateReportCollation_Buh
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1080#1079#1085#1072#1082' '#1080' '#1044#1072#1090#1091' '#1089#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075'.'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1080#1079#1085#1072#1082' '#1080' '#1044#1072#1090#1091' '#1089#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075'.'
+      ImageIndex = 43
+    end
+    object actUpdateReportCollation_Buh: TdsdExecStoredProc
+      Category = 'Buh'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateReportCollation_Buh
+      StoredProcList = <
+        item
+          StoredProc = spUpdateReportCollation_Buh
+        end>
+      Caption = 'actUpdateReportCollation_Buh'
+    end
+    object OpenChoiceForm1: TOpenChoiceForm
+      Category = 'Buh'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ContractChoice'
+      ImageIndex = 24
+      FormName = 'TReportCollation_UpdateObjectDialogForm'
+      FormNameParam.Value = 'TReportCollation_UpdateObjectDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'isBuh'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'isBuh'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BuhDate'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'BuhDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisBuh'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'inisBuh'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBuhDate'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'inBuhDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 248
@@ -863,6 +963,14 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateBuh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -894,6 +1002,10 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbUpdateBuh: TdxBarButton
+      Action = macUpdateBuh
       Category = 0
     end
   end
@@ -1023,8 +1135,22 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
         DataType = ftString
         ParamType = ptUnknown
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisBuh'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBuhDate'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 496
+    Left = 464
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement'
@@ -1239,5 +1365,40 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
     PackSize = 1
     Left = 584
     Top = 304
+  end
+  object spUpdateReportCollation_Buh: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_ReportCollation_Buh'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBuhDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'BuhDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsBuh'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IsBuh'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 568
+    Top = 224
   end
 end
