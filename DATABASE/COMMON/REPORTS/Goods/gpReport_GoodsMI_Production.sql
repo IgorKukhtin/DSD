@@ -70,7 +70,9 @@ BEGIN
           )
     , _tmpUnit AS
           (-- подразделение
-           SELECT lfSelect.UnitId AS UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect
+           SELECT lfSelect.UnitId AS UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect WHERE inUnitId > 0
+          UNION
+           SELECT Object.Id AS UnitId FROM Object WHERE inUnitId = 0 AND Object.DescId = zc_Object_Unit()
           )
     -- Результат
     SELECT Object_GoodsGroup.ValueData                AS GoodsGroupName

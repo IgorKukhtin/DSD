@@ -27,6 +27,7 @@ $BODY$
   DECLARE vbAccountDirectionId_From Integer;
   DECLARE vbIsPartionDate_Unit_From Boolean;
   DECLARE vbIsPartionGoodsKind_Unit_From Boolean;
+  DECLARE vbIsCalculated Boolean;
   DECLARE vbJuridicalId_Basis_From Integer;
   DECLARE vbBusinessId_From Integer;
 
@@ -73,19 +74,25 @@ BEGIN
           , COALESCE (ObjectBoolean_PartionGoodsKind_To.ValueData, TRUE) AS isPartionGoodsKind_Unit_To
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Juridical.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Juridical.ChildObjectId ELSE 0 END, 0) AS JuridicalId_Basis_To
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Business.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Business.ChildObjectId ELSE 0 END, 0) AS BusinessId_To
+          
+          , COALESCE (MovementBoolean_Calculated.ValueData, FALSE)       AS isCalculated
 
             INTO vbMovementDescId, vbOperDate, vbUnitId_From, vbMemberId_From, vbBranchId_From, vbAccountDirectionId_From, vbIsPartionDate_Unit_From, vbIsPartionGoodsKind_Unit_From, vbJuridicalId_Basis_From, vbBusinessId_From
                , vbUnitId_To, vbMemberId_To, vbBranchId_To, vbAccountDirectionId_To, vbIsPartionDate_Unit_To, vbIsPartionGoodsKind_Unit_To, vbJuridicalId_Basis_To, vbBusinessId_To
+               , vbIsCalculated
      FROM Movement
+          LEFT JOIN MovementBoolean AS MovementBoolean_Calculated
+                                    ON MovementBoolean_Calculated.MovementId = Movement.Id
+                                   AND MovementBoolean_Calculated.DescId     = zc_MovementBoolean_Calculated()
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                   ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
-                  AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                                    ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
+                                   AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
           LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                   ON MovementFloat_VATPercent.MovementId = Movement.Id
-                  AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+                                  ON MovementFloat_VATPercent.MovementId = Movement.Id
+                                 AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                 ON MovementFloat_ChangePercent.MovementId = Movement.Id
-                AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                                  ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                 AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
@@ -192,8 +199,8 @@ BEGIN
      WHERE Movement.Id = inMovementId
        AND Movement.DescId = zc_Movement_ProductionSeparate()
        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
-
-
+       
+  
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_ProductionSeparate_CreateTemp();
 

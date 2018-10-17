@@ -74,5 +74,5 @@ ALTER FUNCTION gpSelect_CashGoods (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_CashGoods (inSession:= '308120')
+-- SELECT * FROM gpSelect_CashGoods (inSession:= '308120') 
 
