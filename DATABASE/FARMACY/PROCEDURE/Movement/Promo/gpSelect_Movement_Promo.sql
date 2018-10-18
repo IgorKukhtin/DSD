@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer
              , PersonalId Integer
              , PersonalName TVarChar
              , Comment TVarChar
+             , Prescribe TVarChar
               )
 
 AS
@@ -55,6 +56,9 @@ BEGIN
           , MovementLinkObject_Personal.ObjectId                           AS PersonalId  
           , Object_Personal.ValueData                                      AS PersonalName 
           , MovementString_Comment.ValueData                               AS Comment
+          , CASE WHEN COALESCE(MovementBoolean_Prescribe.ValueData, FALSE)
+            THEN 'Ожидает прописи'
+            ELSE 'Прописано' END::TVarChar                                 AS Prescribe
      FROM Movement 
         INNER JOIN tmpStatus ON Movement.StatusId = tmpStatus.StatusId
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -95,6 +99,10 @@ BEGIN
                                  ON MovementString_Comment.MovementId = Movement.Id
                                 AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
+        LEFT JOIN MovementBoolean AS MovementBoolean_Prescribe
+                                  ON MovementBoolean_Prescribe.MovementId =  Movement.Id
+                                 AND MovementBoolean_Prescribe.DescId = zc_MovementBoolean_Promo_Prescribe()
+
      WHERE Movement.DescId = zc_Movement_Promo()
        AND Movement.OperDate BETWEEN inStartDate AND inEndDate
      ORDER BY InvNumber;
@@ -107,7 +115,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 17.10.16                                                                                      *
  24.04.16         *
 */
 --select * from gpSelect_Movement_Promo(inStartDate := ('13.03.2016')::TDateTime ,inEndDate := ('13.03.2016')::TDateTime , inIsErased:= true, inSession := '3');
