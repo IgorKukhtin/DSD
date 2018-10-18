@@ -3,10 +3,8 @@ inherited InventoryForm: TInventoryForm
   ClientHeight = 643
   ClientWidth = 878
   AddOnFormData.RefreshAction = actRefreshStart
-  ExplicitLeft = -210
-  ExplicitTop = -189
   ExplicitWidth = 894
-  ExplicitHeight = 682
+  ExplicitHeight = 681
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
