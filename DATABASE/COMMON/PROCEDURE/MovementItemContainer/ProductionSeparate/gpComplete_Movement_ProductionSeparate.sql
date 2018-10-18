@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_ProductionSeparate(
     IN inMovementId        Integer              , -- ключ Документа
     IN inIsLastComplete    Boolean DEFAULT False, -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
-)                              
+)
 RETURNS VOID
 AS
 $BODY$
@@ -19,7 +19,8 @@ $BODY$
 
   DECLARE vbTotalSummChild     TFloat;
   DECLARE vbTotalSummChild_fix TFloat;
-  DECLARE vbOperSumm TFloat;
+  DECLARE vbTotalSummMaster    TFloat;
+  -- DECLARE vbOperSumm TFloat;
 
   DECLARE vbOperDate TDateTime;
   DECLARE vbUnitId_From Integer;
@@ -48,7 +49,7 @@ BEGIN
      ELSE vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ProductionSeparate());
      END IF;
 
-     -- Эти параметры нужны для 
+     -- Эти параметры нужны для
      inIsLastComplete:= TRUE;
 
 
@@ -75,7 +76,7 @@ BEGIN
           , COALESCE (ObjectBoolean_PartionGoodsKind_To.ValueData, TRUE) AS isPartionGoodsKind_Unit_To
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Juridical.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Juridical.ChildObjectId ELSE 0 END, 0) AS JuridicalId_Basis_To
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Business.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Business.ChildObjectId ELSE 0 END, 0) AS BusinessId_To
-          
+
           , COALESCE (MovementBoolean_Calculated.ValueData, FALSE)       AS isCalculated
 
             INTO vbMovementDescId, vbOperDate, vbUnitId_From, vbMemberId_From, vbBranchId_From, vbAccountDirectionId_From, vbIsPartionDate_Unit_From, vbIsPartionGoodsKind_Unit_From, vbJuridicalId_Basis_From, vbBusinessId_From
@@ -200,8 +201,8 @@ BEGIN
      WHERE Movement.Id = inMovementId
        AND Movement.DescId = zc_Movement_ProductionSeparate()
        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
-       
-  
+
+
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_ProductionSeparate_CreateTemp();
 
@@ -241,7 +242,7 @@ BEGIN
              , _tmp.isCalculated
                -- Партии товара, сформируем позже
              , 0 AS PartionGoodsId
-        FROM 
+        FROM
              (WITH tmpPriceSeparate AS (SELECT * FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_ProductionSeparate(),     inOperDate:= vbOperDate)
                                        )
              , tmpPriceSeparateHist AS (SELECT * FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_ProductionSeparateHist(), inOperDate:= vbOperDate)
@@ -282,7 +283,7 @@ BEGIN
                   , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE) AS isPartionCount
                   , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)  AS isPartionSumm
 
-                    
+
                   , CASE WHEN vbIsCalculated = FALSE
                          -- !!!НЕ фиксированная сумма!!!
                          THEN TRUE
@@ -376,7 +377,7 @@ BEGIN
              , _tmp.isPartionSumm
                -- Партии товара, сформируем позже
              , 0 AS PartionGoodsId
-        FROM 
+        FROM
              (SELECT MovementItem.Id AS MovementItemId
 
                    , MovementItem.ObjectId AS GoodsId
@@ -597,22 +598,79 @@ BEGIN
      vbTotalSummChild    := (SELECT SUM (tmpOperSumm) FROM _tmpItemChild WHERE _tmpItemChild.isCalculated = TRUE);
      -- Расчет !!!фиксированной!!! Итоговой суммы по !!!виртуальному!!! Прайсу для Child(приход)-элементы документа
      vbTotalSummChild_fix:= (SELECT SUM (tmpOperSumm) FROM _tmpItemChild WHERE _tmpItemChild.isCalculated = FALSE);
+     -- !!!Расчет!!!
+     vbTotalSummMaster:= (SELECT SUM (OperSumm) FROM _tmpItemSumm);
 
      -- Распределяем сумму по Факту по Child-элементам документа, и формируем их для каждого Master-элемента (т.е. получится как ProductionUnion)
      INSERT INTO _tmpItemSummChild (MovementItemId_Parent, ContainerId_From, MovementItemId, MIContainerId_To, ContainerId_To, AccountId_To, InfoMoneyId_Detail_To, OperSumm)
-        SELECT _tmpItemSumm.MovementItemId
-             , _tmpItemSumm.ContainerId_From
+        WITH -- фикс суммы = распределили по ContainerId_From
+             tmpFix AS (SELECT _tmpItemSumm.MovementItemId          AS MovementItemId_Parent
+                             , _tmpItemSumm.ContainerId_From        AS ContainerId_From
+                             , _tmpItemSumm.InfoMoneyId_Detail_From AS InfoMoneyId_Detail_From
+                             , _tmpItemChild.MovementItemId         AS MovementItemId
+                               -- распределяем Сумму на выходе
+                             , _tmpItemChild.tmpOperSumm * _tmpItemSumm.OperSumm / vbTotalSummMaster AS OperSumm
+                        FROM _tmpItemChild
+                             CROSS JOIN _tmpItemSumm -- !!!каждый элемент прихода будет привязан к каждому элементу расхода!!!
+                        WHERE _tmpItemChild.tmpOperSumm  <> 0    -- только для существующих сумм
+                          AND _tmpItemChild.isCalculated = FALSE -- только для !!!фиксированных!!! сумм
+                       )
+        -- ВЫЧИТАЕМ фикс суммы
+      , tmpItemSumm AS (SELECT _tmpItemSumm.MovementItemId
+                             , _tmpItemSumm.ContainerId_From
+                             , _tmpItemSumm.InfoMoneyId_Detail_From
+                             , _tmpItemSumm.OperSumm - COALESCE (tmpFix_sum.OperSumm, 0) AS OperSumm
+                        FROM _tmpItemSumm
+                             LEFT JOIN (SELECT tmpFix.MovementItemId_Parent
+                                             , tmpFix.ContainerId_From
+                                        FROM tmpFix
+                                        GROUP BY tmpFix.MovementItemId_Parent
+                                               , tmpFix.ContainerId_From
+                                       ) AS tmpFix_sum ON tmpFix_sum.MovementItemId_Parent = _tmpItemSumm.MovementItemId
+                                                      AND tmpFix_sum.ContainerId_From      = _tmpItemSumm.ContainerId_From
+                       )
+        SELECT tmpItemSumm.MovementItemId
+             , tmpItemSumm.ContainerId_From
              , _tmpItemChild.MovementItemId
              , 0 AS MIContainerId_To
              , 0 AS ContainerId_To
              , 0 AS AccountId_To
-             , _tmpItemSumm.InfoMoneyId_Detail_From
-             , CASE WHEN vbTotalSummChild <> 0 THEN _tmpItemSumm.OperSumm * _tmpItemChild.tmpOperSumm / vbTotalSummChild ELSE 0 END
+             , tmpItemSumm.InfoMoneyId_Detail_From
+             , CASE -- распределяем "оставшуюся" Сумму на входе
+                    WHEN vbTotalSummChild <> 0 THEN tmpItemSumm.OperSumm * _tmpItemChild.tmpOperSumm / vbTotalSummChild
+                    ELSE 0
+               END
         FROM _tmpItemChild
-             JOIN _tmpItemSumm ON 1 = 1 -- !!!каждый элемент прихода будет привязан к каждому элементу расхода!!!
+             CROSS JOIN tmpItemSumm -- !!!каждый элемент прихода будет привязан к каждому элементу расхода!!!
         WHERE _tmpItemChild.tmpOperSumm  <> 0   -- только для существующих сумм
           AND _tmpItemChild.isCalculated = TRUE -- только для НЕ !!!фиксированных!!! сумм
+
+       UNION ALL
+        SELECT tmpFix.MovementItemId_Parent
+             , tmpFix.ContainerId_From
+             , tmpFix.MovementItemId
+             , 0 AS MIContainerId_To
+             , 0 AS ContainerId_To
+             , 0 AS AccountId_To
+             , tmpFix.InfoMoneyId_Detail_From
+             , tmpFix.OperSumm
+        FROM tmpFix
         ;
+
+/*if inSession = '5'
+then
+    RAISE EXCEPTION '<%>   %  % %'
+    , (select sum (_tmpItemSumm.OperSumm) from _tmpItemSumm)
+    , (select sum (_tmpItemChild.tmpOperSumm) from _tmpItemChild)
+    , (select  sum (_tmpItemSummChild.OperSumm) from _tmpItemSummChild)
+    , (select  sum (_tmpItemSummChild.OperSumm) from _tmpItemSummChild JOIN _tmpItemChild ON _tmpItemChild.MovementItemId = _tmpItemSummChild.MovementItemId
+ WHERE _tmpItemChild.isCalculated = FALSE
+-- WHERE _tmpItemChild.isCalculated = true
+    )
+   ;
+end if;*/
+
+
 
      -- После распределения группируем итоговые суммы по Факту для Child(приход)-элементы документа
      INSERT INTO _tmpItemSummChildTotal (MovementItemId_Parent, ContainerId_From, OperSumm)
@@ -643,15 +701,17 @@ BEGIN
                           -- Выбираем Максимальные MovementItemId в разрезе Максимальных сумм и ContainerId_From
                     JOIN (SELECT MAX (_tmpItemSummChild.MovementItemId) AS MovementItemId, _tmpItemSummChild.MovementItemId_Parent, _tmpItemSummChild.ContainerId_From
                           FROM _tmpItemSummChild
+                               JOIN _tmpItemChild ON _tmpItemChild.MovementItemId = _tmpItemSummChild.MovementItemId
                                       -- Выбираем Максимальные суммы в разрезе MovementItemId_Parent и ContainerId_From
                                JOIN (SELECT MAX (_tmpItemSummChild.OperSumm) AS OperSumm, _tmpItemSummChild.MovementItemId_Parent, _tmpItemSummChild.ContainerId_From
                                      FROM _tmpItemSummChild
-                                     WHERE _tmpItemSummChild.isCalculated = TRUE -- !!!НЕ фиксированная сумма!!!
+                                           JOIN _tmpItemChild ON _tmpItemChild.MovementItemId = _tmpItemSummChild.MovementItemId
+                                     WHERE _tmpItemChild.isCalculated = TRUE -- !!!НЕ фиксированная сумма!!!
                                      GROUP BY _tmpItemSummChild.MovementItemId_Parent, _tmpItemSummChild.ContainerId_From
                                     ) AS _tmp_MaxSumm ON _tmp_MaxSumm.MovementItemId_Parent = _tmpItemSummChild.MovementItemId_Parent
                                                      AND _tmp_MaxSumm.ContainerId_From      = _tmpItemSummChild.ContainerId_From
                                                      AND _tmp_MaxSumm.OperSumm              = _tmpItemSummChild.OperSumm
-                          WHERE _tmpItemSummChild.isCalculated = TRUE -- !!!НЕ фиксированная сумма!!!
+                          WHERE _tmpItemChild.isCalculated = TRUE -- !!!НЕ фиксированная сумма!!!
                           GROUP BY _tmpItemSummChild.MovementItemId_Parent, _tmpItemSummChild.ContainerId_From
                          ) AS _tmp_Find ON _tmp_Find.MovementItemId_Parent = _tmpItemSumm.MovementItemId
                                        AND _tmp_Find.ContainerId_From      = _tmpItemSumm.ContainerId_From
@@ -660,9 +720,22 @@ BEGIN
          WHERE _tmpItemSummChild.MovementItemId        = _tmp_Total.MovementItemId
            AND _tmpItemSummChild.MovementItemId_Parent = _tmp_Total.MovementItemId_Parent
            AND _tmpItemSummChild.ContainerId_From      = _tmp_Total.ContainerId_From
-           AND _tmpItemSummChild.isCalculated          = TRUE -- !!!НЕ фиксированная сумма!!!
         ;
      END IF;
+
+
+     -- Проверка Отрицательных сумм
+     IF vbIsCalculated = TRUE
+        AND EXISTS (SELECT 1 FROM _tmpItemSummChild WHERE _tmpItemSummChild.OperSumm < 0)
+     THEN
+          RAISE EXCEPTION 'Ошибка. Сумма по фиксированным ценам = <%> больше чем сумма для распределения. Для товара <%> расчетная сумма = % < 0'
+                        , (SELECT SUM (_tmpItemSummChild.OperSumm) FROM _tmpItemSummChild JOIN _tmpItemChild ON _tmpItemChild.MovementItemId = _tmpItemSummChild.MovementItemId WHERE _tmpItemChild.isCalculated = TRUE)
+                        , lfGet_Object_ValueData ((SELECT _tmpItemChild.GoodsId FROM _tmpItemSummChild JOIN _tmpItemChild ON _tmpItemChild.MovementItemId = _tmpItemSummChild.MovementItemId WHERE _tmpItemSummChild.OperSumm < 0 ORDER BY _tmpItemChild.GoodsId LIMIT 1))
+                        , (SELECT SUM (_tmpItemSummChild.OperSumm) FROM _tmpItemSummChild JOIN _tmpItemChild ON _tmpItemChild.MovementItemId = _tmpItemSummChild.MovementItemId WHERE _tmpItemSummChild.OperSumm < 0 AND _tmpItemChild.GoodsId
+                                                = (SELECT _tmpItemChild.GoodsId FROM _tmpItemSummChild JOIN _tmpItemChild ON _tmpItemChild.MovementItemId = _tmpItemSummChild.MovementItemId WHERE _tmpItemSummChild.OperSumm < 0 ORDER BY _tmpItemChild.GoodsId LIMIT 1)
+                          );
+     END IF;
+
 
 
      -- для теста - Master - Summ
@@ -912,7 +985,7 @@ BEGIN
               FROM _tmpItem
                    JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
                    JOIN _tmpItemSummChild ON _tmpItemSummChild.MovementItemId_Parent = _tmpItemSumm.MovementItemId
-                   JOIN 
+                   JOIN
              (SELECT tmpMIReport.ContainerId_To
                    , tmpMIReport.ContainerId_From
                    , tmpMIReport.AccountId_To

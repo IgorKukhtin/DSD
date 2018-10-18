@@ -36,7 +36,7 @@ BEGIN
                                                      END
                                                     )
          FROM (WITH tmpGoodsSeparate AS (SELECT DISTINCT
-                                              , ObjectLink_GoodsSeparate_Goods.ChildObjectId AS GoodsId
+                                                ObjectLink_GoodsSeparate_Goods.ChildObjectId AS GoodsId
                                               , ObjectBoolean_Calculated.ValueData           AS isCalculated
                                          FROM Object AS Object_GoodsSeparate
                                               INNER JOIN ObjectBoolean AS ObjectBoolean_Calculated

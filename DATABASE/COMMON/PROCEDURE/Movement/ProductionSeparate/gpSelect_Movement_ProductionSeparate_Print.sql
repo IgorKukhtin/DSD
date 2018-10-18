@@ -272,14 +272,14 @@ BEGIN
 
 
       -- разделение - кол-во приход товаров (если не головы)
-     , tmpSeparateS AS (SELECT MAX (MIContainer.ObjectId_analyzer)  AS GoodsId
+     , tmpSeparateS AS (SELECT MIN (MIContainer.ObjectId_analyzer)  AS GoodsId
                              , SUM (MIContainer.Amount)    AS Amount_count
                         FROM MovementItemContainer AS MIContainer
                              LEFT JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
                         WHERE MIContainer.DescId   = zc_MIContainer_Count()
                           AND MIContainer.isActive = TRUE
                           AND MIContainer.MovementId IN (SELECT DISTINCT tmpSeparate.MovementId FROM tmpSeparate)
-                          AND tmpGoods.GoodsId IS NULL
+                          AND tmpGoods.GoodsId IS NOT NULL
                        )
       -- Результат
       SELECT tmpMovement.InvNumber
