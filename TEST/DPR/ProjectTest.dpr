@@ -1043,7 +1043,9 @@ uses
   MovementGoodsBarCode in '..\..\Forms\Document\MovementGoodsBarCode.pas' {MovementGoodsBarCodeForm: TParentForm},
   Report_Branch_App1 in '..\..\Forms\Report\Report_Branch_App1.pas' {Report_Branch_App1Form: TParentForm},
   ReportCollation_UpdateObjectDialog in '..\..\Forms\Guides\ReportCollation_UpdateObjectDialog.pas' {ReportCollation_UpdateObjectDialogForm: TParentForm},
-  PriceListItem_Separate in '..\..\Forms\Guides\PriceListItem_Separate.pas' {PriceListItem_SeparateForm: TParentForm};
+  PriceListItem_Separate in '..\..\Forms\Guides\PriceListItem_Separate.pas' {PriceListItem_SeparateForm: TParentForm},
+  ReportCollation_ObjectDialog in '..\..\Forms\Guides\ReportCollation_ObjectDialog.pas' {ReportCollation_ObjectDialogForm: TParentForm},
+  DatePeriodDialog in '..\..\Forms\Guides\DatePeriodDialog.pas' {DatePeriodDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

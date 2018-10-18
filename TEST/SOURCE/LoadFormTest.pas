@@ -446,9 +446,11 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTreeForm'));
@@ -855,6 +857,9 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDatePeriodDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDatePeriodDialogForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataTimeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDataTimeDialogForm');
@@ -1788,6 +1793,8 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportCollation_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportCollation_ObjectForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportCollation_ObjectDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReportCollation_ObjectDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportCollation_UpdateObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportCollation_UpdateObjectForm');

@@ -82,8 +82,14 @@ type
     actUpdateisPartionSumm: TdsdExecStoredProc;
     bbisPartionSumm: TdxBarButton;
     spUpdateisPartionSumm: TdsdStoredProc;
-    IncomeDate: TcxGridDBColumn;
-    PartnerName: TcxGridDBColumn;
+    InDate: TcxGridDBColumn;
+    PartnerInName: TcxGridDBColumn;
+    spUpdateGoods_In: TdsdStoredProc;
+    actDatePeriodDialog: TExecuteDialog;
+    actUpdateGoods_In: TdsdExecStoredProc;
+    macUpdateGoods_In: TMultiAction;
+    bbUpdateGoods_In: TdxBarButton;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public
