@@ -4,8 +4,9 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
   ClientWidth = 1073
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -300
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -120,13 +121,13 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
             Width = 140
           end
           object IsCalculated: TcxGridDBColumn
-            Caption = #1056#1072#1089#1089#1095#1080#1090#1099#1074#1072#1077#1090#1089#1103' ('#1076#1072'/'#1085#1077#1090')'
+            Caption = #1088#1072#1089#1095#1077#1090
             DataBinding.FieldName = 'isCalculated'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1088#1072#1089#1095#1077#1090' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077'-'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080'> ('#1076#1072'/'#1085#1077#1090')'
+            HeaderHint = #1088#1072#1089#1095#1077#1090' '#1090#1086#1083#1100#1082#1086' '#1076#1083#1103' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077'-'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080'> ('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
-            Width = 113
+            Width = 55
           end
         end
       end

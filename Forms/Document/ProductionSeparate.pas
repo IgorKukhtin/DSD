@@ -58,6 +58,10 @@ type
     spUpdate_MI_Calculated: TdsdStoredProc;
     actUpdate_MI_Calculated: TdsdExecStoredProc;
     bbUpdate_MI_Calculated: TdxBarButton;
+    PriceIn: TcxGridDBColumn;
+    SummIn: TcxGridDBColumn;
+    chPriceIn: TcxGridDBColumn;
+    chSummIn: TcxGridDBColumn;
   private
     { Private declarations }
   public

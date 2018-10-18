@@ -10,15 +10,32 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_ProductionSeparate(
 )
 RETURNS SETOF refcursor AS
 $BODY$
-  DECLARE Cursor1 refcursor;
-  DECLARE Cursor2 refcursor;
-  DECLARE vbisCalculated Boolean;
+   DECLARE vbUserId Integer;
+
+   DECLARE Cursor1 refcursor;
+   DECLARE Cursor2 refcursor;
+
+   DECLARE vbIsSummIn Boolean;
 BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId:= lpGetUserBySession (inSession);
 
 
-   --PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_MovementItem_ProductionSeparate());
-   IF inShowAll THEN
-    OPEN Cursor1 FOR
+   vbIsSummIn:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin());
+
+
+   IF inShowAll = TRUE
+   THEN
+       OPEN Cursor1 FOR
+       WITH -- себестоимость 
+            tmpSummIn AS (SELECT MIContainer.MovementItemId, -1 * SUM (MIContainer.Amount) AS SummIn
+                             FROM MovementItemContainer AS MIContainer
+                             WHERE MIContainer.MovementId = inMovementId
+                               AND MIContainer.DescId     = zc_MIContainer_Summ()
+                               AND MIContainer.isActive   = FALSE
+                               AND vbIsSummIn             = TRUE
+                             GROUP BY MIContainer.MovementItemId
+                             )
        SELECT
              0                                      AS Id
            , 0                                      AS LineNum
@@ -37,6 +54,8 @@ BEGIN
 
 
            , CAST (NULL AS TFloat)                  AS Amount
+           , 0                            :: TFloat AS PriceIn
+           , 0                            :: TFloat AS SummIn
            , CAST (NULL AS TFloat)                  AS LiveWeight
            , CAST (NULL AS TFloat)                  AS HeadCount
            
@@ -85,6 +104,8 @@ BEGIN
            , Object_StorageLine.ValueData           AS StorageLineName
 
            , MovementItem.Amount                    AS Amount
+           , CASE WHEN MovementItem.Amount <> 0 THEN tmpSummIn.SummIn / MovementItem.Amount ELSE 0 END :: TFloat AS PriceIn
+           , tmpSummIn.SummIn             :: TFloat AS SummIn
            , MIFloat_LiveWeight.ValueData           AS LiveWeight
            , MIFloat_HeadCount.ValueData            AS HeadCount
 
@@ -95,6 +116,8 @@ BEGIN
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+            LEFT JOIN tmpSummIn ON tmpSummIn.MovementItemId = MovementItem.Id
 
             LEFT JOIN MovementItemFloat AS MIFloat_LiveWeight
                                         ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
@@ -125,8 +148,20 @@ BEGIN
        ORDER BY 2--MovementItem.Id
             ;
     RETURN NEXT Cursor1;
+
+
    ELSE
+
     OPEN Cursor1 FOR
+       WITH -- себестоимость 
+            tmpSummIn AS (SELECT MIContainer.MovementItemId, -1 * SUM (MIContainer.Amount) AS SummIn
+                             FROM MovementItemContainer AS MIContainer
+                             WHERE MIContainer.MovementId = inMovementId
+                               AND MIContainer.DescId     = zc_MIContainer_Summ()
+                               AND MIContainer.isActive   = FALSE
+                               AND vbIsSummIn             = TRUE
+                             GROUP BY MIContainer.MovementItemId
+                             )
        SELECT
              MovementItem.Id					AS Id
            , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS INTEGER) AS  LineNum
@@ -144,6 +179,8 @@ BEGIN
            , Object_StorageLine.ValueData                AS StorageLineName
 
            , MovementItem.Amount			 AS Amount
+           , CASE WHEN MovementItem.Amount <> 0 THEN tmpSummIn.SummIn / MovementItem.Amount ELSE 0 END :: TFloat AS PriceIn
+           , tmpSummIn.SummIn                  :: TFloat AS SummIn
            , MIFloat_LiveWeight.ValueData                AS LiveWeight
            , MIFloat_HeadCount.ValueData 		 AS HeadCount
            , MovementItem.isErased                       AS isErased
@@ -153,6 +190,8 @@ BEGIN
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+            LEFT JOIN tmpSummIn ON tmpSummIn.MovementItemId = MovementItem.Id
 
             LEFT JOIN MovementItemFloat AS MIFloat_LiveWeight
                                         ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
@@ -185,8 +224,18 @@ BEGIN
     RETURN NEXT Cursor1;
    END IF;
 
-    OPEN Cursor2 FOR
 
+
+    OPEN Cursor2 FOR
+       WITH -- себестоимость 
+            tmpSummIn AS (SELECT MIContainer.MovementItemId, 1 * SUM (MIContainer.Amount) AS SummIn
+                             FROM MovementItemContainer AS MIContainer
+                             WHERE MIContainer.MovementId = inMovementId
+                               AND MIContainer.DescId     = zc_MIContainer_Summ()
+                               AND MIContainer.isActive   = TRUE
+                               AND vbIsSummIn             = TRUE
+                             GROUP BY MIContainer.MovementItemId
+                             )
        SELECT
              MovementItem.Id			         AS Id
            , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS INTEGER) AS  LineNum
@@ -205,6 +254,8 @@ BEGIN
            , Object_StorageLine.ValueData                AS StorageLineName
 
            , MovementItem.Amount			 AS Amount
+           , CASE WHEN MovementItem.Amount <> 0 THEN tmpSummIn.SummIn / MovementItem.Amount ELSE 0 END :: TFloat AS PriceIn
+           , tmpSummIn.SummIn :: TFloat                  AS SummIn
            , MIFloat_LiveWeight.ValueData                AS LiveWeight
            , MIFloat_HeadCount.ValueData 		 AS HeadCount
            , COALESCE (MIBoolean_Calculated.ValueData, FALSE) ::Boolean AS isCalculated
@@ -215,6 +266,8 @@ BEGIN
                              AND MovementItem.DescId     = zc_MI_Child()
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+            LEFT JOIN tmpSummIn ON tmpSummIn.MovementItemId = MovementItem.Id
 
             LEFT JOIN MovementItemFloat AS MIFloat_LiveWeight
                                         ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
