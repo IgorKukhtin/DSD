@@ -619,7 +619,9 @@ uses
   Report_KPU in '..\..\FormsFarmacy\Report\Report_KPU.pas' {Report_KPUForm: TParentForm},
   CheckVIP_Search in '..\..\FormsFarmacy\Document\CheckVIP_Search.pas' {CheckVIP_SearchForm: TParentForm},
   Report_IncomeSample in '..\..\FormsFarmacy\Report\Report_IncomeSample.pas' {Report_IncomeSampleForm: TParentForm},
-  Report_IncomeSampleDialog in '..\..\FormsFarmacy\Report\Report_IncomeSampleDialog.pas' {Report_IncomeSampleDialogForm: TParentForm};
+  Report_IncomeSampleDialog in '..\..\FormsFarmacy\Report\Report_IncomeSampleDialog.pas' {Report_IncomeSampleDialogForm: TParentForm},
+  Report_Check_GoodsPriceChange in '..\..\FormsFarmacy\Report\Report_Check_GoodsPriceChange.pas' {Report_Check_GoodsPriceChangeForm: TParentForm},
+  Report_Check_GoodsPriceChangeDialog in '..\..\FormsFarmacy\Report\Report_Check_GoodsPriceChangeDialog.pas' {Report_Check_GoodsPriceChangeDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -636,7 +638,7 @@ begin
 
   if FindCmdLineSwitch('realfarmacy', true)
   then gc_AdminPassword := 'Админ1234'
-  else gc_AdminPassword := 'Админ1111';
+  else gc_AdminPassword := 'Админ1234';
 
   gc_ProgramName := 'Farmacy.exe';
 

@@ -457,6 +457,8 @@ type
     miReport_IncomeSample: TMenuItem;
     actReport_KPU: TdsdOpenForm;
     N172: TMenuItem;
+    actReport_Check_GoodsPriceChange: TdsdOpenForm;
+    miReport_Check_GoodsPriceChange: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

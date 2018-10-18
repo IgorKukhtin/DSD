@@ -614,6 +614,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_GoodsPriceChangeForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_Check_GoodsPriceChangeForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_GoodsPriceChangeDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_Check_GoodsPriceChangeDialogForm');
+    exit;
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeSampleForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeSampleForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeSampleDialogForm'));
