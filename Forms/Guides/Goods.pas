@@ -82,6 +82,8 @@ type
     actUpdateisPartionSumm: TdsdExecStoredProc;
     bbisPartionSumm: TdxBarButton;
     spUpdateisPartionSumm: TdsdStoredProc;
+    IncomeDate: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
   private
     { Private declarations }
   public

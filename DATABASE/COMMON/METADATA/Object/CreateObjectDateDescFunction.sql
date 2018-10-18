@@ -184,6 +184,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Protocol_ReCalc() RETURNS Integer AS $B
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Contract(), 'zc_ObjectDate_Protocol_ReCalc', 'Дата/время пересчета' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Protocol_ReCalc');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Goods_In() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_In'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectDate_Goods_In', 'Дата прихода от поставщика' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Goods_In');
 
 --!!!FARMACY
 
@@ -320,6 +323,7 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 18.10.18         * zc_ObjectDate_Goods_In
  16,10,18         * zc_ObjectDate_Protocol_ReCalc
  16.08.18         * zc_ObjectDate_PriceChange_DateChange
  20.06.18         * zc_ObjectDate_ReplServer_...

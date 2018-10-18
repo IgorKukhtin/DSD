@@ -195,6 +195,23 @@ object GoodsForm: TGoodsForm
         HeaderAlignmentVert = vaCenter
         Width = 40
       end
+      object IncomeDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1088'. '#1086#1090' '#1087#1086#1089#1090'.'
+        DataBinding.FieldName = 'IncomeDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+        Options.Editing = False
+        Width = 80
+      end
+      object PartnerName: TcxGridDBColumn
+        Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+        DataBinding.FieldName = 'PartnerName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -659,7 +676,7 @@ object GoodsForm: TGoodsForm
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 40
-    Top = 152
+    Top = 192
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_Goods'
@@ -675,8 +692,8 @@ object GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 160
-    Top = 152
+    Left = 200
+    Top = 144
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

@@ -18,7 +18,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyId Integer
              , BusinessName TVarChar
              , FuelName TVarChar
-             , Weight TFloat, isPartionCount Boolean, isPartionSumm Boolean, isErased Boolean
+             , InDate TDateTime
+             , PartnerInName TVarChar
+             , Weight TFloat, isPartionCount Boolean, isPartionSumm Boolean
+             , isErased Boolean
               )
 AS
 $BODY$
@@ -63,9 +66,11 @@ BEGIN
             , Object_InfoMoney_View.InfoMoneyName
             , Object_InfoMoney_View.InfoMoneyId
 
-            , Object_Business.ValueData  AS BusinessName
+            , Object_Business.ValueData   AS BusinessName
+            , Object_Fuel.ValueData       AS FuelName
 
-            , Object_Fuel.ValueData    AS FuelName
+            , ObjectDate_In.ValueData       :: TDateTime AS InDate
+            , Object_PartnerIn.ValueData    :: TVarChar  AS PartnerInName
 
             , ObjectFloat_Weight.ValueData AS Weight
             , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE) AS isPartionCount
@@ -133,6 +138,15 @@ BEGIN
                                      ON ObjectBoolean_PartionSumm.ObjectId = Object_Goods.Id
                                     AND ObjectBoolean_PartionSumm.DescId = zc_ObjectBoolean_Goods_PartionSumm()
 
+             LEFT JOIN ObjectDate AS ObjectDate_In
+                                  ON ObjectDate_In.ObjectId = Object_Goods.Id
+                                 AND ObjectDate_In.DescId = zc_ObjectDate_Goods_In()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_PartnerIn
+                                  ON ObjectLink_Goods_PartnerIn.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_PartnerIn.DescId = zc_ObjectLink_Goods_PartnerIn()
+             LEFT JOIN Object AS Object_PartnerIn ON Object_PartnerIn.Id = ObjectLink_Goods_PartnerIn.ChildObjectId
+
              LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                   ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -184,6 +198,9 @@ BEGIN
 
             , ''                  :: TVarChar AS FuelName
 
+            , NULL                ::TDateTime AS InDate
+            , ''                  :: TVarChar AS PartnerInName
+
             , 0                   :: TFloat   AS Weight
             , FALSE                           AS isPartionCount
             , FALSE                           AS isPartionSumm
@@ -199,6 +216,7 @@ ALTER FUNCTION gpSelect_Object_Goods (Boolean, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 18.10.18         *
  15.04.15         * add GoodsPlatform
  23.02.15         * add inShowAll
  24.11.14         * add GoodsGroupAnalyst

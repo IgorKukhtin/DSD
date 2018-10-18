@@ -57,6 +57,14 @@ type
     macUpdateisisPriceCloseYes: TMultiAction;
     bbUpdateisisPriceCloseYes: TdxBarButton;
     bbUpdateisisPriceCloseNo: TdxBarButton;
+    spUpdate_isRePriceClose_Yes: TdsdStoredProc;
+    spUpdate_isRePriceClose_No: TdsdStoredProc;
+    spUpdateisRePriceCloseNo: TdsdExecStoredProc;
+    spUpdateisRePriceCloseYes: TdsdExecStoredProc;
+    macUpdateisRePriceCloseNo: TMultiAction;
+    macUpdateisRePriceCloseYes: TMultiAction;
+    bbUpdateisRePriceCloseYes: TdxBarButton;
+    bbUpdateisRePriceCloseNo: TdxBarButton;
   private
     { Private declarations }
   public
