@@ -17,7 +17,8 @@ $BODY$
 
   DECLARE vbMovementDescId Integer;
 
-  DECLARE vbTotalSummChild TFloat;
+  DECLARE vbTotalSummChild     TFloat;
+  DECLARE vbTotalSummChild_fix TFloat;
   DECLARE vbOperSumm TFloat;
 
   DECLARE vbOperDate TDateTime;
@@ -204,6 +205,7 @@ BEGIN
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_ProductionSeparate_CreateTemp();
 
+
      -- заполняем таблицу - количественные Child(приход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItemChild (MovementItemId
                               , ContainerId_GoodsTo, GoodsId, GoodsKindId, AssetId, PartionGoods, PartionGoodsDate
@@ -211,7 +213,7 @@ BEGIN
                               , InfoMoneyDestinationId, InfoMoneyId
                               , BusinessId_To
                               , UnitId_Item, StorageId_Item
-                              , isPartionCount, isPartionSumm
+                              , isPartionCount, isPartionSumm, isCalculated
                               , PartionGoodsId)
         SELECT _tmp.MovementItemId
 
@@ -236,10 +238,18 @@ BEGIN
              , 0 AS UnitId_Item, 0 AS StorageId_Item
              , _tmp.isPartionCount
              , _tmp.isPartionSumm
+             , _tmp.isCalculated
                -- Партии товара, сформируем позже
              , 0 AS PartionGoodsId
         FROM 
-             (SELECT MovementItem.Id AS MovementItemId
+             (WITH tmpPriceSeparate AS (SELECT * FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_ProductionSeparate(),     inOperDate:= vbOperDate)
+                                       )
+             , tmpPriceSeparateHist AS (SELECT * FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_ProductionSeparateHist(), inOperDate:= vbOperDate)
+                                        WHERE vbIsCalculated = TRUE
+                                       )
+                     , tmpInfoMoney AS (SELECT * FROM Object_InfoMoney_View AS View_InfoMoney)
+              -- Результат
+              SELECT MovementItem.Id AS MovementItemId
 
                    , MovementItem.ObjectId AS GoodsId
                    , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция
@@ -254,7 +264,12 @@ BEGIN
                    , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
 
                    , MovementItem.Amount AS OperCount
-                   , COALESCE (MovementItem.Amount * lfObjectHistory_PriceListItem.ValuePrice, 0) AS tmpOperSumm
+                   , MovementItem.Amount * CASE -- если Надо по "остальным" - фиксированная цена из прайса zc_PriceList_ProductionSeparateHist
+                                                WHEN vbIsCalculated = TRUE AND COALESCE (MIBoolean_Calculated.ValueData, FALSE) = FALSE
+                                                     THEN COALESCE (tmpPriceSeparateHist.ValuePrice, 0)
+                                                -- обычная схема - "распределение"
+                                                ELSE COALESCE (tmpPriceSeparate.ValuePrice, 0)
+                                           END AS tmpOperSumm
 
                     -- Управленческие назначения
                   , COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
@@ -266,6 +281,15 @@ BEGIN
 
                   , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE) AS isPartionCount
                   , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)  AS isPartionSumm
+
+                    
+                  , CASE WHEN vbIsCalculated = FALSE
+                         -- !!!НЕ фиксированная сумма!!!
+                         THEN TRUE
+                         -- !!!если отметили - НЕ фиксированная сумма, иначе константа из zc_PriceList_ProductionSeparateHist!!!
+                         ELSE COALESCE (MIBoolean_Calculated.ValueData, FALSE)
+
+                    END AS isCalculated
 
               FROM Movement
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE
@@ -293,19 +317,30 @@ BEGIN
 
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_Business
                                         ON ObjectLink_Goods_Business.ObjectId = MovementItem.ObjectId
-                                       AND ObjectLink_Goods_Business.DescId = zc_ObjectLink_Goods_Business()
+                                       AND ObjectLink_Goods_Business.DescId   = zc_ObjectLink_Goods_Business()
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                         ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
-                                       AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                   LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                       AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                   LEFT JOIN tmpInfoMoney AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-                   LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_ProductionSeparate(), inOperDate:= vbOperDate)
-                          AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = MovementItem.ObjectId
+                   LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                 ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
+                                                AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+
+                   LEFT JOIN tmpPriceSeparate     ON tmpPriceSeparate.GoodsId       = MovementItem.ObjectId
+                   LEFT JOIN tmpPriceSeparateHist ON tmpPriceSeparateHist.GoodsId   = MovementItem.ObjectId
 
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_ProductionSeparate()
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              ) AS _tmp;
+
+     -- Проверка - должен был проставиться хотя бы один признак
+     IF vbIsCalculated = TRUE
+        AND NOT EXISTS (SELECT 1 FROM _tmpItemChild WHERE _tmpItemChild.isCalculated = TRUE)
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе не найден товар с признаком <расчет только для <Товары в Производстве-разделении> = да>';
+     END IF;
 
 
      -- заполняем таблицу - количественные Master(расход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -401,8 +436,8 @@ BEGIN
                                        AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                    LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-              WHERE Movement.Id = inMovementId
-                AND Movement.DescId = zc_Movement_ProductionSeparate()
+              WHERE Movement.Id       = inMovementId
+                AND Movement.DescId   = zc_Movement_ProductionSeparate()
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              ) AS _tmp;
 
@@ -559,7 +594,9 @@ BEGIN
 
 
      -- Расчет Итоговой суммы по !!!виртуальному!!! Прайсу для Child(приход)-элементы документа
-     SELECT SUM (tmpOperSumm) INTO vbTotalSummChild FROM _tmpItemChild;
+     vbTotalSummChild    := (SELECT SUM (tmpOperSumm) FROM _tmpItemChild WHERE _tmpItemChild.isCalculated = TRUE);
+     -- Расчет !!!фиксированной!!! Итоговой суммы по !!!виртуальному!!! Прайсу для Child(приход)-элементы документа
+     vbTotalSummChild_fix:= (SELECT SUM (tmpOperSumm) FROM _tmpItemChild WHERE _tmpItemChild.isCalculated = FALSE);
 
      -- Распределяем сумму по Факту по Child-элементам документа, и формируем их для каждого Master-элемента (т.е. получится как ProductionUnion)
      INSERT INTO _tmpItemSummChild (MovementItemId_Parent, ContainerId_From, MovementItemId, MIContainerId_To, ContainerId_To, AccountId_To, InfoMoneyId_Detail_To, OperSumm)
@@ -573,12 +610,15 @@ BEGIN
              , CASE WHEN vbTotalSummChild <> 0 THEN _tmpItemSumm.OperSumm * _tmpItemChild.tmpOperSumm / vbTotalSummChild ELSE 0 END
         FROM _tmpItemChild
              JOIN _tmpItemSumm ON 1 = 1 -- !!!каждый элемент прихода будет привязан к каждому элементу расхода!!!
-        WHERE _tmpItemChild.tmpOperSumm <> 0 -- только для существующих сумм
+        WHERE _tmpItemChild.tmpOperSumm  <> 0   -- только для существующих сумм
+          AND _tmpItemChild.isCalculated = TRUE -- только для НЕ !!!фиксированных!!! сумм
         ;
 
      -- После распределения группируем итоговые суммы по Факту для Child(приход)-элементы документа
      INSERT INTO _tmpItemSummChildTotal (MovementItemId_Parent, ContainerId_From, OperSumm)
-        SELECT _tmpItemSummChild.MovementItemId_Parent, _tmpItemSummChild.ContainerId_From, SUM (_tmpItemSummChild.OperSumm) FROM _tmpItemSummChild GROUP BY _tmpItemSummChild.MovementItemId_Parent, _tmpItemSummChild.ContainerId_From;
+        SELECT _tmpItemSummChild.MovementItemId_Parent, _tmpItemSummChild.ContainerId_From, SUM (_tmpItemSummChild.OperSumm)
+        FROM _tmpItemSummChild
+        GROUP BY _tmpItemSummChild.MovementItemId_Parent, _tmpItemSummChild.ContainerId_From;
 
      -- если не равны ДВЕ суммы, причем !!!обязательно!!! в разрезе MovementItemId_Parent и ContainerId_From
      IF EXISTS (SELECT _tmpItemSumm.OperSumm
@@ -606,10 +646,12 @@ BEGIN
                                       -- Выбираем Максимальные суммы в разрезе MovementItemId_Parent и ContainerId_From
                                JOIN (SELECT MAX (_tmpItemSummChild.OperSumm) AS OperSumm, _tmpItemSummChild.MovementItemId_Parent, _tmpItemSummChild.ContainerId_From
                                      FROM _tmpItemSummChild
+                                     WHERE _tmpItemSummChild.isCalculated = TRUE -- !!!НЕ фиксированная сумма!!!
                                      GROUP BY _tmpItemSummChild.MovementItemId_Parent, _tmpItemSummChild.ContainerId_From
                                     ) AS _tmp_MaxSumm ON _tmp_MaxSumm.MovementItemId_Parent = _tmpItemSummChild.MovementItemId_Parent
                                                      AND _tmp_MaxSumm.ContainerId_From      = _tmpItemSummChild.ContainerId_From
                                                      AND _tmp_MaxSumm.OperSumm              = _tmpItemSummChild.OperSumm
+                          WHERE _tmpItemSummChild.isCalculated = TRUE -- !!!НЕ фиксированная сумма!!!
                           GROUP BY _tmpItemSummChild.MovementItemId_Parent, _tmpItemSummChild.ContainerId_From
                          ) AS _tmp_Find ON _tmp_Find.MovementItemId_Parent = _tmpItemSumm.MovementItemId
                                        AND _tmp_Find.ContainerId_From      = _tmpItemSumm.ContainerId_From
@@ -618,6 +660,7 @@ BEGIN
          WHERE _tmpItemSummChild.MovementItemId        = _tmp_Total.MovementItemId
            AND _tmpItemSummChild.MovementItemId_Parent = _tmp_Total.MovementItemId_Parent
            AND _tmpItemSummChild.ContainerId_From      = _tmp_Total.ContainerId_From
+           AND _tmpItemSummChild.isCalculated          = TRUE -- !!!НЕ фиксированная сумма!!!
         ;
      END IF;
 

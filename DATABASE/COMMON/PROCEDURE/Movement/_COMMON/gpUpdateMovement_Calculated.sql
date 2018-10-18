@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpUpdateMovement_Calculated (Integer, Boolean, TVarChar)
 
 CREATE OR REPLACE FUNCTION gpUpdateMovement_Calculated(
     IN inId                  Integer   , -- Ключ объекта <Документ>
- INOUT ioisCalculated        Boolean   , -- 
+ INOUT ioIsCalculated        Boolean   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Boolean 
@@ -12,49 +12,69 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
 BEGIN
-     -- проверка
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= inSession;
 
      -- определили признак
-     ioisCalculated:= NOT ioisCalculated;
+     ioIsCalculated:= NOT ioIsCalculated;
 
      -- сохранили свойство
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Calculated(), inId, ioisCalculated);
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Calculated(), inId, ioIsCalculated);
 
      -- обновили поле в строчной части
-     WITH tmpGoodsSeparate AS (SELECT DISTINCT ObjectLink_GoodsSeparate_Goods.ChildObjectId AS GoodsId
-                               FROM Object AS Object_GoodsSeparate
-                                    INNER JOIN ObjectBoolean AS ObjectBoolean_Calculated
-                                                             ON ObjectBoolean_Calculated.ObjectId  = Object_GoodsSeparate.ObjectId
-                                                            AND ObjectBoolean_Calculated.DescId    = zc_ObjectBoolean_GoodsSeparate_Calculated()
-                                                            AND ObjectBoolean_Calculated.ValueData = TRUE
-                                    LEFT JOIN ObjectLink AS ObjectLink_GoodsSeparate_Goods
-                                                         ON ObjectLink_GoodsSeparate_Goods.ObjectId = Object_GoodsSeparate.ObjectId
-                                                        AND ObjectLink_GoodsSeparate_Goods.DescId   = zc_ObjectLink_GoodsSeparate_Goods()
-                               WHERE Object_GoodsSeparate.DescId   = zc_Object_GoodsSeparate()
-                                 AND Object_GoodsSeparate.isErased = FALSE
-                              )
-         , tmpMIChild AS (SELECT MovementItem.Id, MovementItem.ObjectId AS GoodsId, COALESCE (MIBoolean_Calculated.ValueData, FALSE) AS isCalculated
-                          FROM MovementItem
-                               LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
-                                                             ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
-                                                            AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
-                          WHERE MovementItem.MovementId = inId
-                            AND MovementItem.DescId     = zc_MI_Child()
-                         )
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_PartionGoods(), tmpMIChild.Id
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_PartionGoods(), tmp.Id
                                           , CASE -- если снимается для Movement - снимаем у всех MI
-                                                 WHEN ioisCalculated = FALSE THEN FALSE
+                                                 WHEN ioIsCalculated = FALSE THEN FALSE
                                                  -- если уже поставили в ручном режиме - оставляем
-                                                 WHEN EXISTS (SELECT 1 FROM tmpMIChild AS tmpMIChild_find WHERE tmpMIChild_find.isCalculated = TRUE) THEN tmpMIChild.isCalculated
+                                                 WHEN tmp.isCalculated_exists = TRUE THEN tmp.isCalculated_mi
                                                  -- иначе - по справочнику
-                                                 ELSE COALESCE (tmpGoodsSeparate.isCalculated, FALSE)
+                                                 ELSE tmp.isCalculated_goods
                                             END
                                            )
-     FROM tmpMIChild
-          LEFT JOIN tmpGoodsSeparate ON tmpGoodsSeparate.GoodsId = tmpMIChild.GoodsId
+     FROM (WITH tmpGoodsSeparate AS (SELECT DISTINCT ObjectLink_GoodsSeparate_Goods.ChildObjectId AS GoodsId
+                                     FROM Object AS Object_GoodsSeparate
+                                          INNER JOIN ObjectBoolean AS ObjectBoolean_Calculated
+                                                                   ON ObjectBoolean_Calculated.ObjectId  = Object_GoodsSeparate.ObjectId
+                                                                  AND ObjectBoolean_Calculated.DescId    = zc_ObjectBoolean_GoodsSeparate_Calculated()
+                                                                  AND ObjectBoolean_Calculated.ValueData = TRUE
+                                          LEFT JOIN ObjectLink AS ObjectLink_GoodsSeparate_Goods
+                                                               ON ObjectLink_GoodsSeparate_Goods.ObjectId = Object_GoodsSeparate.ObjectId
+                                                              AND ObjectLink_GoodsSeparate_Goods.DescId   = zc_ObjectLink_GoodsSeparate_Goods()
+                                     WHERE Object_GoodsSeparate.DescId   = zc_Object_GoodsSeparate()
+                                       AND Object_GoodsSeparate.isErased = FALSE
+                                    )
+               , tmpMIChild AS (SELECT MovementItem.Id, MovementItem.ObjectId AS GoodsId, COALESCE (MIBoolean_Calculated.ValueData, FALSE) AS isCalculated
+                                FROM MovementItem
+                                     LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                                   ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
+                                                                  AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+                                WHERE MovementItem.MovementId = inId
+                                  AND MovementItem.DescId     = zc_MI_Child()
+                               )
+           SELECT tmpMIChild.Id
+                , tmpMIChild.isCalculated AS isCalculated_mi
+                , COALESCE (tmpGoodsSeparate.isCalculated, FALSE) AS isCalculated_goods
+                , EXISTS (SELECT 1 FROM tmpMIChild AS tmpMIChild_find WHERE tmpMIChild_find.isCalculated = TRUE) AS isCalculated_exists
+           FROM tmpMIChild
+                LEFT JOIN tmpGoodsSeparate ON tmpGoodsSeparate.GoodsId = tmpMIChild.GoodsId
+          ) AS tmp
      ;
+
+
+     -- Проверка - должен был проставиться хотя бы один признак
+     IF ioIsCalculated = TRUE
+        AND NOT EXISTS (SELECT 1
+                        FROM MovementItem
+                             INNER JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                            ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
+                                                           AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+                                                           AND MIBoolean_Calculated.ValueData      = TRUE
+                        WHERE MovementItem.MovementId = inId
+                          AND MovementItem.isErased   = FALSE
+                          AND MovementItem.DescId     = zc_MI_Child())
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе не найден товар с признаком <расчет только для <Товары в Производстве-разделении> = да>';
+     END IF;
 
 
      -- сохранили протокол
@@ -72,4 +92,4 @@ $BODY$
 
 
 -- тест
--- SELECT * FROM gpUpdateMovement_Calculated (inId:= 275079, ioisCalculated:= 'False', inSession:= '2')
+-- SELECT * FROM gpUpdateMovement_Calculated (inId:= 275079, ioIsCalculated:= 'False', inSession:= '2')

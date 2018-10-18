@@ -31,7 +31,7 @@ $BODY$
   -- DECLARE vbCode_old Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   IF inIsInsert = TRUE 
+   IF inIsInsert = TRUE
    THEN vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ReportCollation());
    ELSE vbUserId := lpGetUserBySession (inSession);
    END IF;
@@ -50,7 +50,7 @@ BEGIN
        -- поиск существующего акта сверки: период, юр.лицо, контрагент, договор, форма оплаты
        vbId:= (SELECT ObjectDate_Start.ObjectId
                FROM ObjectDate AS ObjectDate_Start
-                  INNER JOIN ObjectDate AS ObjectDate_End 
+                  INNER JOIN ObjectDate AS ObjectDate_End
                                         ON ObjectDate_End.ObjectId  = ObjectDate_Start.ObjectId
                                        AND ObjectDate_End.DescId    = zc_ObjectDate_ReportCollation_End()
                                        AND ObjectDate_End.ValueData = inEndDate
@@ -78,7 +78,7 @@ BEGIN
               WHERE ObjectDate_Start.DescId = zc_ObjectDate_ReportCollation_Start()
                 AND ObjectDate_Start.ValueData= inStartDate
              );
-             
+
          IF inIsUpdate = TRUE AND COALESCE (vbId, 0) = 0
          THEN
               RAISE EXCEPTION 'Ошибка.Виза <Сдали в бухгалтерию> ставится после <Печать для реестра Акты сверок>';
@@ -87,24 +87,24 @@ BEGIN
 
          -- поиск "предыдущего" №п/п
          /*vbCode_old:= (SELECT MAX (Object_ReportCollation.ObjectCode)
-                       FROM ObjectDate AS ObjectDate_End 
+                       FROM ObjectDate AS ObjectDate_End
                           INNER JOIN Object AS Object_ReportCollation ON Object_ReportCollation.Id = ObjectDate_End.ObjectId
                                                                      AND Object_ReportCollation.isErased = FALSE
                           INNER JOIN ObjectLink AS ObjectLink_ReportCollation_PaidKind
                                                ON ObjectLink_ReportCollation_PaidKind.ObjectId = ObjectDate_End.ObjectId
                                               AND ObjectLink_ReportCollation_PaidKind.DescId = zc_ObjectLink_ReportCollation_PaidKind()
                                               AND (ObjectLink_ReportCollation_PaidKind.ChildObjectId = COALESCE (inPaidKindId,0) OR COALESCE (inPaidKindId,0)=0)
-        
+
                           INNER JOIN ObjectLink AS ObjectLink_ReportCollation_Juridical
                                                 ON ObjectLink_ReportCollation_Juridical.ObjectId = ObjectDate_End.ObjectId
                                                AND ObjectLink_ReportCollation_Juridical.DescId = zc_ObjectLink_ReportCollation_Juridical()
                                                AND (ObjectLink_ReportCollation_Juridical.ChildObjectId = COALESCE (inJuridicalId,0) OR COALESCE (inJuridicalId,0)=0)
-        
+
                           INNER JOIN ObjectLink AS ObjectLink_ReportCollation_Partner
                                                 ON ObjectLink_ReportCollation_Partner.ObjectId = ObjectDate_End.ObjectId
                                                AND ObjectLink_ReportCollation_Partner.DescId = zc_ObjectLink_ReportCollation_Partner()
                                                AND (ObjectLink_ReportCollation_Partner.ChildObjectId = COALESCE (inPartnerId,0) OR COALESCE (inPartnerId,0)=0)
-        
+
                           INNER JOIN ObjectLink AS ObjectLink_ReportCollation_Contract
                                                 ON ObjectLink_ReportCollation_Contract.ObjectId = ObjectDate_End.ObjectId
                                                AND ObjectLink_ReportCollation_Contract.DescId = zc_ObjectLink_ReportCollation_Contract()
@@ -121,7 +121,7 @@ BEGIN
                  -- сохранили <Объект>
                  vbId := lpInsertUpdate_Object( COALESCE (vbId, 0), zc_Object_ReportCollation(), NEXTVAL ('Object_ReportCollation_seq'), '');
              END IF;
-    
+
              --
              PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ReportCollation_Juridical(), vbId, COALESCE (inJuridicalId,0));
              --
@@ -130,7 +130,7 @@ BEGIN
              PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ReportCollation_Contract(), vbId, COALESCE (inContractId,0));
              --
              PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ReportCollation_PaidKind(), vbId, COALESCE (inPaidKindId,0));
-    
+
              -- сохранили свойство <Дата начала периода>
              PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReportCollation_Start(), vbId, inStartDate);
              -- сохранили свойство <Дата окончания периода>
@@ -146,10 +146,10 @@ BEGIN
              PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReportCollation_Insert(), vbId, CURRENT_TIMESTAMP);
              -- сохранили свойство <Пользователь (создание)>
              PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReportCollation_Insert(), vbId, vbUserId);
-          
 
 
-        
+
+
              -- перенумеровываем начиная со "следующего"
              /*UPDATE Object SET ObjectCode = COALESCE (vbCode_old, 0) + tmp.Ord + 1
              FROM (SELECT Object_ReportCollation.Id
@@ -157,28 +157,28 @@ BEGIN
                                                         , COALESCE (ObjectLink_ReportCollation_Contract.ChildObjectId, 0)
                                                         , COALESCE (ObjectLink_ReportCollation_Partner.ChildObjectId, 0)
                                                         , COALESCE (ObjectLink_ReportCollation_Juridical.ChildObjectId, 0)
-    
+
                                              ORDER BY ObjectDate_Start.ValueData ASC
                                                     , ObjectDate_Start.ObjectId ASC
                                             ) AS Ord
-                   FROM ObjectDate AS ObjectDate_Start 
+                   FROM ObjectDate AS ObjectDate_Start
                         INNER JOIN Object AS Object_ReportCollation ON Object_ReportCollation.Id = ObjectDate_Start.ObjectId
                                                                    AND Object_ReportCollation.isErased = FALSE
                         INNER JOIN ObjectLink AS ObjectLink_ReportCollation_PaidKind
                                              ON ObjectLink_ReportCollation_PaidKind.ObjectId = ObjectDate_Start.ObjectId
                                             AND ObjectLink_ReportCollation_PaidKind.DescId = zc_ObjectLink_ReportCollation_PaidKind()
                                             AND (ObjectLink_ReportCollation_PaidKind.ChildObjectId = COALESCE (inPaidKindId,0) OR COALESCE (inPaidKindId,0)=0)
-             
+
                         INNER JOIN ObjectLink AS ObjectLink_ReportCollation_Juridical
                                               ON ObjectLink_ReportCollation_Juridical.ObjectId = ObjectDate_Start.ObjectId
                                              AND ObjectLink_ReportCollation_Juridical.DescId = zc_ObjectLink_ReportCollation_Juridical()
                                              AND (ObjectLink_ReportCollation_Juridical.ChildObjectId = COALESCE (inJuridicalId,0) OR COALESCE (inJuridicalId,0)=0)
-             
+
                         INNER JOIN ObjectLink AS ObjectLink_ReportCollation_Partner
                                               ON ObjectLink_ReportCollation_Partner.ObjectId = ObjectDate_Start.ObjectId
                                              AND ObjectLink_ReportCollation_Partner.DescId = zc_ObjectLink_ReportCollation_Partner()
                                              AND (ObjectLink_ReportCollation_Partner.ChildObjectId = COALESCE (inPartnerId,0) OR COALESCE (inPartnerId,0)=0)
-             
+
                         INNER JOIN ObjectLink AS ObjectLink_ReportCollation_Contract
                                               ON ObjectLink_ReportCollation_Contract.ObjectId = ObjectDate_Start.ObjectId
                                              AND ObjectLink_ReportCollation_Contract.DescId = zc_ObjectLink_ReportCollation_Contract()
@@ -198,14 +198,16 @@ BEGIN
          END IF;
 
 
+         -- сохранили протокол
+         PERFORM lpInsert_ObjectProtocol (inObjectId:= vbId, inUserId:= vbUserId, inIsUpdate:= inIsUpdate);
+
+         -- Результат
+         outBarCode := (SELECT zfFormat_BarCode (zc_BarCodePref_Object(), vbId));
+
    END IF;
 
-   -- Результат
-   outBarCode := (SELECT zfFormat_BarCode (zc_BarCodePref_Object(), vbId));
 
-   -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (inObjectId:= vbId, inUserId:= vbUserId, inIsUpdate:= inIsUpdate);
-  
+
 END;$BODY$
  LANGUAGE plpgsql VOLATILE;
 
@@ -215,5 +217,4 @@ END;$BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  14.10.18         *
  20.01.17         *
-
 */
