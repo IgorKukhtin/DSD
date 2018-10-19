@@ -26,6 +26,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar, GoodsKindName_complete TVarChar
              , MeasureName TVarChar
              , Weight TFloat
+             , InDate TDateTime, PartnerInName TVarChar
              , PartionGoodsId Integer, PartionGoodsName TVarChar
              , InvNumber_Partion  TVarChar
              , OperDate_Partion TDateTime
@@ -376,6 +377,9 @@ BEGIN
         , Object_Measure.ValueData       AS MeasureName
         , ObjectFloat_Weight.ValueData   AS Weight
 
+        , ObjectDate_In.ValueData       :: TDateTime AS InDate
+        , Object_PartnerIn.ValueData    :: TVarChar  AS PartnerInName
+           
         , CAST (COALESCE(Object_PartionGoods.Id, 0) AS Integer)           AS PartionGoodsId
         , CASE WHEN ObjectLink_Goods.ChildObjectId <> 0 AND ObjectLink_Unit.ChildObjectId <> 0 AND Object_PartionGoods.ObjectCode > 0
                     THEN zfCalc_PartionGoodsName_Asset (inMovementId      := Object_PartionGoods.ObjectCode          -- 
@@ -795,6 +799,15 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_Weight ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                              AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
+        LEFT JOIN ObjectDate AS ObjectDate_In
+                             ON ObjectDate_In.ObjectId = tmpMIContainer_group.GoodsId
+                            AND ObjectDate_In.DescId = zc_ObjectDate_Goods_In()
+
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_PartnerIn
+                             ON ObjectLink_Goods_PartnerIn.ObjectId = tmpMIContainer_group.GoodsId
+                            AND ObjectLink_Goods_PartnerIn.DescId = zc_ObjectLink_Goods_PartnerIn()
+        LEFT JOIN Object AS Object_PartnerIn ON Object_PartnerIn.Id = ObjectLink_Goods_PartnerIn.ChildObjectId
+
         LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
                              ON ObjectLink_GoodsKindComplete.ObjectId = tmpMIContainer_group.PartionGoodsId
                             AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
@@ -836,6 +849,7 @@ ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 19.10.18         *
  11.07.15                                        * add GoodsKindName_complete
  09.05.15                                        *
 */
