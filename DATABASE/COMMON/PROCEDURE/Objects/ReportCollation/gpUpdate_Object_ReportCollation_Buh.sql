@@ -1,10 +1,10 @@
 -- Function: gpUpdate_Object_ReportCollation_Buh (Integer, TDateTime, Boolean TVarChar);
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_ReportCollation_Buh (Integer, TDateTime, Boolean , TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_ReportCollation_Buh (Integer, Boolean , TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_ReportCollation_Buh(
     In inId                 Integer   ,
-    IN inBuhDate            TDateTime , -- 
     IN inIsBuh              Boolean   ,
     IN inSession            TVarChar
 )
@@ -22,12 +22,17 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Акт сверки не сохранен.';
      END IF;
 
-                     
-     -- сохранили свойство <Дата Сдали в бухгалтерию>
-     PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReportCollation_Buh(), inId, inBuhDate);
+        
      -- сохранили свойство <Сдали в бухгалтерию>
      PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReportCollation_Buh(), inId, inIsBuh);
-
+     
+     -- если признак сдали в бух = True , тогда записіваем дату
+     IF inIsBuh = TRUE     
+     THEN                     
+         -- сохранили свойство <Дата Сдали в бухгалтерию>
+         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReportCollation_Buh(), inId, CURRENT_TIMESTAMP);
+     END IF;
+     
      -- сохранили протокол
      PERFORM lpInsert_ObjectProtocol (inObjectId:= inId, inUserId:= vbUserId, inIsUpdate:= FALSE);
    

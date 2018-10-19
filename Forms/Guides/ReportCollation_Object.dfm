@@ -486,7 +486,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 48
+    Left = 104
     Top = 160
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -556,7 +556,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 152
-    Top = 168
+    Top = 232
     DockControlHeights = (
       0
       0
@@ -613,6 +613,22 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         item
           Visible = True
           ItemName = 'bbUpdateRemainsByRep'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Buh_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Buh_No'
         end
         item
           Visible = True
@@ -679,11 +695,19 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       Action = ExecuteDialog
       Category = 0
     end
+    object bbUpdate_Buh_Yes: TdxBarButton
+      Action = actUpdate_Buh_Yes
+      Category = 0
+    end
+    object bbUpdate_Buh_No: TdxBarButton
+      Action = actUpdate_Buh_No
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 288
-    Top = 160
+    Left = 312
+    Top = 384
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1124,6 +1148,66 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actUpdate_Buh_No: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Buh_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Buh_No
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102' - '#1053#1077#1090
+      Hint = #1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102' - '#1053#1077#1090
+      ImageIndex = 58
+    end
+    object actUpdate_Buh_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Buh_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Buh_Yes
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102' - '#1053#1077#1090
+      Hint = #1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102' - '#1053#1077#1090
+      ImageIndex = 76
+    end
+    object macUpdate_Buh_No: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Buh_No
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102' - '#1053#1077#1090
+      Hint = #1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102' - '#1053#1077#1090
+      ImageIndex = 58
+    end
+    object macUpdate_Buh_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Buh_Yes
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102' - '#1044#1072
+      Hint = #1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102' - '#1044#1072
+      ImageIndex = 76
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReportCollation'
@@ -1218,8 +1302,8 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 248
-    Top = 208
+    Left = 240
+    Top = 264
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1240,12 +1324,6 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       end
       item
         Component = GuidesPartner
-      end
-      item
-        Component = deEnd
-      end
-      item
-        Component = deStart
       end>
     Left = 376
     Top = 216
@@ -1293,8 +1371,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       item
         Name = 'inStartDate'
         Value = 'NULL'
-        Component = ClientDataSet
-        ComponentItem = 'StartDate'
+        Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1302,8 +1379,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       item
         Name = 'inEndDate'
         Value = 'NULL'
-        Component = ClientDataSet
-        ComponentItem = 'EndDate'
+        Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1666,5 +1742,53 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       end>
     Left = 851
     Top = 36
+  end
+  object spUpdate_Buh_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_ReportCollation_Buh'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsBuh'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 680
+    Top = 208
+  end
+  object spUpdate_Buh_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_ReportCollation_Buh'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsBuh'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 680
+    Top = 264
   end
 end

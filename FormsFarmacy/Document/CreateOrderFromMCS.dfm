@@ -6,18 +6,10 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    ExplicitTop = 28
-    ExplicitHeight = 280
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 4
-      ExplicitWidth = 567
-      ExplicitHeight = 272
+      ExplicitWidth = 575
+      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
-        Width = 567
-        Height = 272
-        ExplicitWidth = 567
-        ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.ShowEditButtons = gsebAlways
           Styles.Content = nil
@@ -204,12 +196,12 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
     Top = 96
   end
   inherited BarManager: TdxBarManager
-    Left = 136
-    Top = 96
+    Left = 176
+    Top = 80
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -281,8 +273,8 @@ inherited CreateOrderFromMCSForm: TCreateOrderFromMCSForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 184
-    Top = 96
+    Left = 240
+    Top = 104
   end
   object spGet_MovementId_OrderInternal_Auto: TdsdStoredProc
     StoredProcName = 'gpGet_MovementId_OrderInternal_Auto'

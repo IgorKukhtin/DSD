@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, ContainerId Integer, GoodsId Integer, GoodsCode Integ
              , PartionGoodsDate TDateTime, PartionGoods TVarChar
              , GoodsKindId Integer, GoodsKindName  TVarChar
              , GoodsKindId_Complete Integer, GoodsKindName_Complete  TVarChar
+             , InDate TDateTime, PartnerInName TVarChar
              , AssetId Integer, AssetName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , isErased Boolean
@@ -179,6 +180,10 @@ BEGIN
            , Object_GoodsKind.ValueData AS GoodsKindName
            , CAST (NULL AS Integer)     AS GoodsKindId_Complete
            , CAST (NULL AS TVarchar)    AS GoodsKindName_Complete
+
+           , ObjectDate_In.ValueData       :: TDateTime AS InDate
+           , Object_PartnerIn.ValueData    :: TVarChar  AS PartnerInName
+
            , 0 ::Integer                AS AssetId
            , CAST (NULL AS TVarChar)    AS AssetName
            , Object_InfoMoney_View.InfoMoneyCode
@@ -203,6 +208,16 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+            LEFT JOIN ObjectDate AS ObjectDate_In
+                                 ON ObjectDate_In.ObjectId = tmpGoods.GoodsId
+                                AND ObjectDate_In.DescId = zc_ObjectDate_Goods_In()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_PartnerIn
+                                 ON ObjectLink_Goods_PartnerIn.ObjectId = tmpGoods.GoodsId
+                                AND ObjectLink_Goods_PartnerIn.DescId = zc_ObjectLink_Goods_PartnerIn()
+            LEFT JOIN Object AS Object_PartnerIn ON Object_PartnerIn.Id = ObjectLink_Goods_PartnerIn.ChildObjectId
+
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpGoods.GoodsId
                                 AND tmpRemains.GoodsKindId = CASE WHEN tmpGoods.InfoMoneyId IN (zc_Enum_InfoMoney_20901() -- Ирна
                                                                                               , zc_Enum_InfoMoney_30101() -- Готовая продукция
@@ -235,6 +250,10 @@ BEGIN
            , Object_GoodsKind.ValueData         AS GoodsKindName
            , Object_GoodsKindComplete.Id           AS GoodsKindId_Complete
            , Object_GoodsKindComplete.ValueData    AS GoodsKindName_Complete
+
+           , ObjectDate_In.ValueData       :: TDateTime AS InDate
+           , Object_PartnerIn.ValueData    :: TVarChar  AS PartnerInName
+
            , Object_Asset.Id                    AS AssetId
            , Object_Asset.ValueData             AS AssetName
            , Object_InfoMoney_View.InfoMoneyCode
@@ -263,6 +282,15 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+            LEFT JOIN ObjectDate AS ObjectDate_In
+                                 ON ObjectDate_In.ObjectId = tmpMI.GoodsId
+                                AND ObjectDate_In.DescId = zc_ObjectDate_Goods_In()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_PartnerIn
+                                 ON ObjectLink_Goods_PartnerIn.ObjectId = tmpMI.GoodsId
+                                AND ObjectLink_Goods_PartnerIn.DescId = zc_ObjectLink_Goods_PartnerIn()
+            LEFT JOIN Object AS Object_PartnerIn ON Object_PartnerIn.Id = ObjectLink_Goods_PartnerIn.ChildObjectId
 
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI.GoodsId
                                 AND tmpRemains.GoodsKindId = CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
@@ -337,6 +365,10 @@ BEGIN
            , Object_GoodsKind.ValueData         AS GoodsKindName
            , Object_GoodsKindComplete.Id           AS GoodsKindId_Complete
            , Object_GoodsKindComplete.ValueData    AS GoodsKindName_Complete
+           
+           , ObjectDate_In.ValueData       :: TDateTime AS InDate
+           , Object_PartnerIn.ValueData    :: TVarChar  AS PartnerInName
+           
            , Object_Asset.Id                    AS AssetId
            , Object_Asset.ValueData             AS AssetName
            , Object_InfoMoney_View.InfoMoneyCode
@@ -396,6 +428,15 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+            LEFT JOIN ObjectDate AS ObjectDate_In
+                                 ON ObjectDate_In.ObjectId = MovementItem.ObjectId
+                                AND ObjectDate_In.DescId = zc_ObjectDate_Goods_In()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_PartnerIn
+                                 ON ObjectLink_Goods_PartnerIn.ObjectId = MovementItem.ObjectId
+                                AND ObjectLink_Goods_PartnerIn.DescId = zc_ObjectLink_Goods_PartnerIn()
+            LEFT JOIN Object AS Object_PartnerIn ON Object_PartnerIn.Id = ObjectLink_Goods_PartnerIn.ChildObjectId
+
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = Object_Goods.Id
                                 AND tmpRemains.GoodsKindId = CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
                                                                                                                   , zc_Enum_InfoMoney_30101() -- Готовая продукция
@@ -419,6 +460,7 @@ ALTER FUNCTION gpSelect_MovementItem_Loss (Integer, Boolean, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.10.18         *
  28.07.16         *
  31.03.15         * add GoodsGroupNameFull, MeasureName
  17.10.14         * add св-ва PartionGoods

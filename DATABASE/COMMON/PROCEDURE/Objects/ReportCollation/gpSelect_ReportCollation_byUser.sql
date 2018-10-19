@@ -18,8 +18,9 @@ RETURNS TABLE (Id Integer, ObjectCode Integer, idBarCode TVarChar
              , InsertDate TDateTime
              , BuhName TVarChar
              , BuhDate TDateTime
-             , isDiff Boolean
              , isBuh Boolean
+             , isDiff Boolean
+
               )
 AS
 $BODY$

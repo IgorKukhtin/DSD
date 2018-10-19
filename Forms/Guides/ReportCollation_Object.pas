@@ -105,6 +105,14 @@ type
     ContractTagGuides: TdsdGuides;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    spUpdate_Buh_Yes: TdsdStoredProc;
+    spUpdate_Buh_No: TdsdStoredProc;
+    actUpdate_Buh_Yes: TdsdExecStoredProc;
+    actUpdate_Buh_No: TdsdExecStoredProc;
+    bbUpdate_Buh_Yes: TdxBarButton;
+    bbUpdate_Buh_No: TdxBarButton;
+    macUpdate_Buh_Yes: TMultiAction;
+    macUpdate_Buh_No: TMultiAction;
   private
     { Private declarations }
   public

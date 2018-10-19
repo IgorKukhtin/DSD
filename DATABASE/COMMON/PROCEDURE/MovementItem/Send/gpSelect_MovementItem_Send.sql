@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , PartionGoods TVarChar
              , GoodsKindId Integer, GoodsKindName  TVarChar
              , GoodsKindId_Complete Integer, GoodsKindName_Complete  TVarChar
+             , InDate TDateTime, PartnerInName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , UnitName TVarChar
              , StorageName TVarChar
@@ -126,6 +127,8 @@ BEGIN
            , Object_GoodsKind.ValueData AS GoodsKindName
            , CAST (NULL AS Integer)     AS GoodsKindId_Complete
            , CAST (NULL AS TVarchar)    AS GoodsKindName_Complete
+           , ObjectDate_In.ValueData       :: TDateTime AS InDate
+           , Object_PartnerIn.ValueData    :: TVarChar  AS PartnerInName
            , Object_InfoMoney_View.InfoMoneyCode
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
@@ -191,6 +194,15 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+            LEFT JOIN ObjectDate AS ObjectDate_In
+                                 ON ObjectDate_In.ObjectId = tmpGoods.GoodsId
+                                AND ObjectDate_In.DescId = zc_ObjectDate_Goods_In()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_PartnerIn
+                                 ON ObjectLink_Goods_PartnerIn.ObjectId = tmpGoods.GoodsId
+                                AND ObjectLink_Goods_PartnerIn.DescId = zc_ObjectLink_Goods_PartnerIn()
+            LEFT JOIN Object AS Object_PartnerIn ON Object_PartnerIn.Id = ObjectLink_Goods_PartnerIn.ChildObjectId
+
        WHERE tmpMI.GoodsId IS NULL
 
       UNION ALL
@@ -211,6 +223,8 @@ BEGIN
            , Object_GoodsKind.ValueData            AS GoodsKindName
            , Object_GoodsKindComplete.Id           AS GoodsKindId_Complete
            , Object_GoodsKindComplete.ValueData    AS GoodsKindName_Complete
+           , ObjectDate_In.ValueData       :: TDateTime AS InDate
+           , Object_PartnerIn.ValueData    :: TVarChar  AS PartnerInName
            , Object_InfoMoney_View.InfoMoneyCode
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
@@ -276,6 +290,15 @@ BEGIN
 
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem.ObjectId
                                 AND tmpRemains.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+
+            LEFT JOIN ObjectDate AS ObjectDate_In
+                                 ON ObjectDate_In.ObjectId = MovementItem.ObjectId
+                                AND ObjectDate_In.DescId = zc_ObjectDate_Goods_In()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_PartnerIn
+                                 ON ObjectLink_Goods_PartnerIn.ObjectId = MovementItem.ObjectId
+                                AND ObjectLink_Goods_PartnerIn.DescId = zc_ObjectLink_Goods_PartnerIn()
+            LEFT JOIN Object AS Object_PartnerIn ON Object_PartnerIn.Id = ObjectLink_Goods_PartnerIn.ChildObjectId
             ;
 
 
@@ -400,6 +423,8 @@ BEGIN
            , Object_GoodsKind.ValueData         AS GoodsKindName
            , Object_GoodsKindComplete.Id        AS GoodsKindId_Complete
            , Object_GoodsKindComplete.ValueData AS GoodsKindName_Complete
+           , ObjectDate_In.ValueData       :: TDateTime AS InDate
+           , Object_PartnerIn.ValueData    :: TVarChar  AS PartnerInName
            , Object_InfoMoney_View.InfoMoneyCode
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
@@ -439,6 +464,14 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+            LEFT JOIN ObjectDate AS ObjectDate_In
+                                 ON ObjectDate_In.ObjectId = tmpMI_Goods.GoodsId
+                                AND ObjectDate_In.DescId = zc_ObjectDate_Goods_In()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_PartnerIn
+                                 ON ObjectLink_Goods_PartnerIn.ObjectId = tmpMI_Goods.GoodsId
+                                AND ObjectLink_Goods_PartnerIn.DescId = zc_ObjectLink_Goods_PartnerIn()
+            LEFT JOIN Object AS Object_PartnerIn ON Object_PartnerIn.Id = ObjectLink_Goods_PartnerIn.ChildObjectId
             ;
 
      END IF;
@@ -452,6 +485,7 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 19.10.18         *
  02.08.17         * add GoodsKindId_Complete
  15.10.14         * add Price, Storage_Partion
  04.08.14                                        * add Object_InfoMoney_View

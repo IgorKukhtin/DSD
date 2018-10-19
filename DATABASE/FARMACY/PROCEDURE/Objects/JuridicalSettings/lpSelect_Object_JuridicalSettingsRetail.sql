@@ -7,7 +7,9 @@ CREATE OR REPLACE FUNCTION lpSelect_Object_JuridicalSettingsRetail(
     IN inRetailId   Integer       -- сессия пользователя
 )
 RETURNS TABLE (JuridicalId Integer, MainJuridicalId Integer, ContractId Integer
-             , isPriceClose boolean, isSite Boolean
+             , isPriceClose boolean
+             , isPriceCloseOrder boolean
+             , isSite Boolean
              , Bonus TFloat, PriceLimit TFloat
 ) AS
 $BODY$
@@ -21,6 +23,7 @@ BEGIN
                , ObjectLink_JuridicalSettings_MainJuridical.ChildObjectId          AS MainJuridicalId
                , COALESCE (ObjectLink_JuridicalSettings_Contract.ChildObjectId, 0) AS ContractId
                , COALESCE (ObjectBoolean_isPriceClose.ValueData, FALSE)            AS isPriceClose 
+               , COALESCE (ObjectBoolean_isPriceCloseOrder.ValueData, FALSE)       AS isPriceCloseOrder
                , COALESCE (ObjectBoolean_Site.ValueData, FALSE)                    AS isSite
                , ObjectFloat_Bonus.ValueData                                       AS Bonus
                , COALESCE (ObjectFloat_PriceLimit.ValueData,0) :: TFloat           AS PriceLimit
@@ -39,8 +42,13 @@ BEGIN
                                      AND ObjectLink_JuridicalSettings_Contract.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId 
 
                  LEFT JOIN ObjectBoolean AS ObjectBoolean_isPriceClose
-                                  ON ObjectBoolean_isPriceClose.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
-                                 AND ObjectBoolean_isPriceClose.DescId = zc_ObjectBoolean_JuridicalSettings_isPriceClose()
+                                         ON ObjectBoolean_isPriceClose.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                        AND ObjectBoolean_isPriceClose.DescId = zc_ObjectBoolean_JuridicalSettings_isPriceClose()
+
+                 LEFT JOIN ObjectBoolean AS ObjectBoolean_isPriceCloseOrder
+                                         ON ObjectBoolean_isPriceCloseOrder.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                        AND ObjectBoolean_isPriceCloseOrder.DescId = zc_ObjectBoolean_JuridicalSettings_isPriceCloseOrder()
+
                  LEFT JOIN ObjectBoolean AS ObjectBoolean_Site 	
                                          ON ObjectBoolean_Site.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
                                         AND ObjectBoolean_Site.DescId = zc_ObjectBoolean_JuridicalSettings_Site()
@@ -65,6 +73,7 @@ ALTER FUNCTION lpSelect_Object_JuridicalSettingsRetail(Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.10.18         * isPriceCloseOrder
  17.02.15                         *
  21.01.15                         *
  13.10.14                         *
