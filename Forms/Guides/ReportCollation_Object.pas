@@ -98,6 +98,13 @@ type
     isStartRemainsRep: TcxGridDBColumn;
     isEndRemainsRep: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
+    UnitName: TcxGridDBColumn;
+    PositionName: TcxGridDBColumn;
+    cxLabel20: TcxLabel;
+    edContractTag: TcxButtonEdit;
+    ContractTagGuides: TdsdGuides;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

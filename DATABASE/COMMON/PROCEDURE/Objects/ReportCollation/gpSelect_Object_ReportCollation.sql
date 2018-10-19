@@ -19,6 +19,8 @@ RETURNS TABLE (Id Integer, ObjectCode Integer, idBarCode TVarChar
              , JuridicalName TVarChar
              , OKPO TVarChar
              , PersonalName TVarChar
+             , UnitName     TVarChar
+             , PositionName TVarChar
              , PartnerName TVarChar
              , ContractName TVarChar
              , PaidKindName TVarChar
@@ -154,7 +156,7 @@ BEGIN
                                             ON ObjectLink_Buh.ObjectId = Object_ReportCollation.Id
                                            AND ObjectLink_Buh.DescId = zc_ObjectLink_ReportCollation_Buh()
                        LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = ObjectLink_Buh.ChildObjectId
-
+      
                    WHERE Object_ReportCollation.DescId = zc_Object_ReportCollation()
                      AND ObjectDate_Start.ValueData >= inStartDate
                      AND ObjectDate_End.ValueData <= inEndDate
@@ -172,6 +174,8 @@ BEGIN
            , tmpData.JuridicalName
            , tmpJuridicalDetails.OKPO    AS OKPO
            , Object_Personal.ValueData   AS PersonalName  -- ответственный за договор
+           , Object_Unit.ValueData       AS UnitName      -- подразделение ответственный за договор
+           , Object_Position.ValueData   AS PositionName  -- должность ответственный за договор
            , tmpData.PartnerName
            , tmpData.ContractName
            , tmpData.PaidKindName
@@ -213,6 +217,16 @@ BEGIN
                                 ON ObjectLink_Contract_Personal.ObjectId = tmpData.ContractId
                                AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Contract_Personal.ChildObjectId 
+
+           LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Contract_Personal.ChildObjectId
+                               AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+           LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Contract_Personal.ChildObjectId
+                               AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
 
            LEFT JOIN ObjectDate AS ObjectDate_Protocol_ReCalc
                                 ON ObjectDate_Protocol_ReCalc.ObjectId = tmpData.Id

@@ -119,7 +119,7 @@ BEGIN
              IF COALESCE (vbId, 0) = 0
              THEN
                  -- сохранили <Объект>
-                 vbId := lpInsertUpdate_Object( COALESCE (vbId, 0), zc_Object_ReportCollation(), NEXTVAL ('Object_ReportCollation_seq'), '');
+                 vbId := lpInsertUpdate_Object( COALESCE (vbId, 0), zc_Object_ReportCollation(), NEXTVAL ('Object_ReportCollation_seq')::Integer, ''::TVarChar);
              END IF;
 
              --
@@ -138,9 +138,9 @@ BEGIN
 
 
              -- сохранили свойства <>
-             PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReportCollation_StartRemainsRep(), vbId, tmp.StartRemains)
-                   , lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReportCollation_EndRemainsRep(), vbId, tmp.EndRemains)
-             FROM gpReport_JuridicalCollation(inStartDate, inEndDate, inJuridicalId, inPartnerId, inContractId, inAccountId := 0, inPaidKindId, InInfoMoneyId := 0, inCurrencyId := 0, inMovementId_Partion := 0, inSession) AS tmp;
+             PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReportCollation_StartRemainsRep(), vbId, SUM (tmp.StartRemains))
+                   , lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReportCollation_EndRemainsRep(), vbId, SUM (tmp.EndRemains))
+             FROM gpReport_JuridicalCollation(inStartDate:=inStartDate, inEndDate:=inEndDate, inJuridicalId:=inJuridicalId, inPartnerId:=inPartnerId, inContractId:=inContractId, inAccountId := 0, inPaidKindId:=inPaidKindId, InInfoMoneyId := 0, inCurrencyId := 0, inMovementId_Partion := 0, inSession:=inSession) AS tmp;
 
              -- сохранили свойство <Дата создания>
              PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReportCollation_Insert(), vbId, CURRENT_TIMESTAMP);
@@ -205,7 +205,6 @@ BEGIN
          outBarCode := (SELECT zfFormat_BarCode (zc_BarCodePref_Object(), vbId));
 
    END IF;
-
 
 
 END;$BODY$

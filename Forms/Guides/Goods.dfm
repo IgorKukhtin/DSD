@@ -15,6 +15,7 @@ object GoodsForm: TGoodsForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -195,6 +196,23 @@ object GoodsForm: TGoodsForm
         HeaderAlignmentVert = vaCenter
         Width = 40
       end
+      object InDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1088'. '#1086#1090' '#1087#1086#1089#1090'.'
+        DataBinding.FieldName = 'InDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+        Options.Editing = False
+        Width = 80
+      end
+      object PartnerInName: TcxGridDBColumn
+        Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+        DataBinding.FieldName = 'PartnerInName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -301,6 +319,14 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateGoods_In'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowAll'
         end
         item
@@ -393,6 +419,10 @@ object GoodsForm: TGoodsForm
     end
     object bbisPartionSumm: TdxBarButton
       Action = actUpdateisPartionSumm
+      Category = 0
+    end
+    object bbUpdateGoods_In: TdxBarButton
+      Action = macUpdateGoods_In
       Category = 0
     end
   end
@@ -636,6 +666,62 @@ object GoodsForm: TGoodsForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1072#1088#1090#1080#1103' '#1082#1086#1083'-'#1074#1086' ('#1076#1072'/'#1085#1077#1090')"'
       ImageIndex = 58
     end
+    object actDatePeriodDialog: TExecuteDialog
+      Category = 'Calc'
+      MoveParams = <>
+      Caption = 'actDatePeriodDialog'
+      FormName = 'TDatePeriodDialogForm'
+      FormNameParam.Value = 'TDatePeriodDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inStartDate'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'inStartDate'
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'inEndDate'
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdateGoods_In: TdsdExecStoredProc
+      Category = 'Calc'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateGoods_In
+      StoredProcList = <
+        item
+          StoredProc = spUpdateGoods_In
+        end>
+      Caption = 'actUpdateGoods_In'
+      Hint = #1054#1087#1088#1077#1076#1077#1083#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1086#1089#1083'. '#1087#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097'.  '#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+    end
+    object macUpdateGoods_In: TMultiAction
+      Category = 'Calc'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDatePeriodDialog
+        end
+        item
+          Action = actUpdateGoods_In
+        end>
+      Caption = #1054#1087#1088#1077#1076#1077#1083#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1086#1089#1083'. '#1087#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097'.  '#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Hint = #1054#1087#1088#1077#1076#1077#1083#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1086#1089#1083'. '#1087#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097'.  '#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      ImageIndex = 43
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods'
@@ -659,7 +745,7 @@ object GoodsForm: TGoodsForm
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 40
-    Top = 152
+    Top = 192
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_Goods'
@@ -675,8 +761,8 @@ object GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 160
-    Top = 152
+    Left = 200
+    Top = 144
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -756,5 +842,37 @@ object GoodsForm: TGoodsForm
     PackSize = 1
     Left = 184
     Top = 267
+  end
+  object spUpdateGoods_In: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Goods_In'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'inStartDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'inEndDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 768
+    Top = 208
+  end
+  object FormParams: TdsdFormParams
+    Params = <>
+    Left = 464
+    Top = 232
   end
 end

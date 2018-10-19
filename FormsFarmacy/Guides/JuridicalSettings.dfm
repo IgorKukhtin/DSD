@@ -274,6 +274,30 @@
         end>
       isShowModal = False
     end
+    object spUpdateisRePriceCloseNo: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isRePriceClose_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isRePriceClose_No
+        end>
+      Caption = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072') - '#1053#1077#1090
+      Hint = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072') - '#1053#1077#1090
+    end
+    object spUpdateisRePriceCloseYes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isRePriceClose_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isRePriceClose_Yes
+        end>
+      Caption = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072') - '#1044#1072
+      Hint = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072') - '#1044#1072
+    end
     object spUpdateisisPriceCloseNo: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -297,6 +321,30 @@
         end>
       Caption = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' - '#1044#1072
       Hint = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' - '#1044#1072
+    end
+    object macUpdateisRePriceCloseNo: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateisRePriceCloseNo
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072') - '#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072') - '#1053#1077#1090
+      ImageIndex = 77
+    end
+    object macUpdateisRePriceCloseYes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateisRePriceCloseYes
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072') - '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072') - '#1044#1072
+      ImageIndex = 76
     end
     object macUpdateisisPriceCloseNo: TMultiAction
       Category = 'DSDLib'
@@ -404,6 +452,18 @@
         end
         item
           Visible = True
+          ItemName = 'bbUpdateisRePriceCloseYes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateisRePriceCloseNo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpen'
         end
         item
@@ -441,6 +501,14 @@
     end
     object bbUpdateisisPriceCloseNo: TdxBarButton
       Action = macUpdateisisPriceCloseNo
+      Category = 0
+    end
+    object bbUpdateisRePriceCloseYes: TdxBarButton
+      Action = macUpdateisRePriceCloseYes
+      Category = 0
+    end
+    object bbUpdateisRePriceCloseNo: TdxBarButton
+      Action = macUpdateisRePriceCloseNo
       Category = 0
     end
   end
@@ -670,5 +738,69 @@
     PackSize = 1
     Left = 672
     Top = 171
+  end
+  object spUpdate_isRePriceClose_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_JuridicalSettings_isRePriceClose'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPriceClose'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisPriceClose'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPriceClose'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 107
+  end
+  object spUpdate_isRePriceClose_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_JuridicalSettings_isRePriceClose'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPriceClose'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisPriceClose'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPriceClose'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 163
   end
 end
