@@ -1371,8 +1371,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       item
         Name = 'inStartDate'
         Value = 'NULL'
-        Component = ClientDataSet
-        ComponentItem = 'StartDate'
+        Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1380,8 +1379,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       item
         Name = 'inEndDate'
         Value = 'NULL'
-        Component = ClientDataSet
-        ComponentItem = 'EndDate'
+        Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
