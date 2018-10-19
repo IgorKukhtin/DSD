@@ -1764,14 +1764,6 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsBuh'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'IsBuh'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 680
@@ -1795,14 +1787,6 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         Value = 'FALSE'
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsBuh'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'IsBuh'
-        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
