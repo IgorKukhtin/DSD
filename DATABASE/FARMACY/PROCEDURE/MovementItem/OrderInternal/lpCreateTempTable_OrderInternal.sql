@@ -293,7 +293,7 @@ BEGIN
                     LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId     = MovementItemOrder.ObjectId
                                         AND GoodsPromo.JuridicalId = MovementItemLastPriceList_View.JuridicalId
         
-               WHERE  COALESCE(JuridicalSettings.isPriceClose, FALSE) <> TRUE 
+               WHERE  COALESCE(JuridicalSettings.isPriceCloseOrder, FALSE) <> TRUE 
        ) AS ddd
    
        LEFT JOIN PriceSettings    ON ddd.MinPrice BETWEEN PriceSettings.MinPrice    AND PriceSettings.MaxPrice
@@ -308,6 +308,7 @@ ALTER FUNCTION lpCreateTempTable_OrderInternal (Integer, Integer, Integer, Integ
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.10.18         * isPriceClose заменила на isPriceCloseOrder
  23.03.15                         *  
  17.02.15                         *  JuridicalSettings с бонусом и закрытием прайсов
  21.01.15                         *  учитываем наше юрлицо в закрытии прайсов

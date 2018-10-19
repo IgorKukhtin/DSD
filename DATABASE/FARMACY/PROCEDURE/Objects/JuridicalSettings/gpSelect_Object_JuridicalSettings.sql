@@ -7,7 +7,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_JuridicalSettings(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Name TVarChar, JuridicalId Integer, JuridicalName TVarChar, 
-               isBonusVirtual Boolean, isPriceClose Boolean, isRePriceClose Boolean, isSite Boolean,  
+               isBonusVirtual Boolean,
+               isPriceClose Boolean, isPriceCloseOrder Boolean,
+               isSite Boolean,  
                Bonus TFloat, PriceLimit TFloat, ConditionalPercent TFloat,
                ContractId Integer, ContractName TVarChar, 
                MainJuridicalId Integer, MainJuridicalName TVarChar,
@@ -67,7 +69,7 @@ BEGIN
            , Object_Juridical.ValueData                         AS JuridicalName
            , COALESCE (JuridicalSettings.isBonusVirtual, FALSE) AS isBonusVirtual
            , COALESCE (JuridicalSettings.isPriceClose, TRUE)    AS isPriceClose
-           , COALESCE (JuridicalSettings.isRePriceClose, TRUE)  AS isRePriceClose
+           , COALESCE (JuridicalSettings.isPriceCloseOrder, TRUE)  AS isPriceCloseOrder
            , COALESCE (JuridicalSettings.isSite, FALSE)         AS isSite 
            , JuridicalSettings.Bonus
            , JuridicalSettings.PriceLimit             :: TFloat AS PriceLimit
@@ -119,7 +121,7 @@ BEGIN
                       , COALESCE (ObjectLink_JuridicalSettings_Contract.ChildObjectId, 0) AS ContractId 
                       , COALESCE (ObjectBoolean_isBonusVirtual.ValueData, FALSE)  AS isBonusVirtual
                       , COALESCE (ObjectBoolean_isPriceClose.ValueData, FALSE)    AS isPriceClose 
-                      , COALESCE (ObjectBoolean_isRePriceClose.ValueData, FALSE)  AS isRePriceClose
+                      , COALESCE (ObjectBoolean_isPriceCloseOrder.ValueData, FALSE)  AS isPriceCloseOrder
                       , COALESCE (ObjectBoolean_Site.ValueData, FALSE)            AS isSite
                       , ObjectFloat_Bonus.ValueData                               AS Bonus 
                       , COALESCE (ObjectFloat_PriceLimit.ValueData,0) :: TFloat   AS PriceLimit  
@@ -146,9 +148,9 @@ BEGIN
                                               ON ObjectBoolean_isPriceClose.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
                                              AND ObjectBoolean_isPriceClose.DescId = zc_ObjectBoolean_JuridicalSettings_isPriceClose()
 
-                      LEFT JOIN ObjectBoolean AS ObjectBoolean_isRePriceClose
-                                              ON ObjectBoolean_isRePriceClose.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
-                                             AND ObjectBoolean_isRePriceClose.DescId = zc_ObjectBoolean_JuridicalSettings_isRePriceClose()
+                      LEFT JOIN ObjectBoolean AS ObjectBoolean_isPriceCloseOrder
+                                              ON ObjectBoolean_isPriceCloseOrder.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                             AND ObjectBoolean_isPriceCloseOrder.DescId = zc_ObjectBoolean_JuridicalSettings_isPriceCloseOrder()
 
                       LEFT JOIN ObjectFloat AS ObjectFloat_Bonus 
                                             ON ObjectFloat_Bonus.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
@@ -198,7 +200,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 18.10.18         * isRePriceClose
+ 18.10.18         * isPriceCloseOrder
  10.05.18         *
  21.03.18         *
  15.02.18         *

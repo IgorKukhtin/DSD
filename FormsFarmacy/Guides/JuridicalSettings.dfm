@@ -80,6 +80,15 @@
             HeaderAlignmentVert = vaCenter
             Width = 108
           end
+          object isPriceCloseOrder: TcxGridDBColumn
+            Caption = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
+            DataBinding.FieldName = 'isPriceCloseOrder'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 108
+          end
           object Bonus: TcxGridDBColumn
             Caption = #1041#1086#1085#1091#1089
             DataBinding.FieldName = 'Bonus'
@@ -274,29 +283,29 @@
         end>
       isShowModal = False
     end
-    object spUpdateisRePriceCloseNo: TdsdExecStoredProc
+    object spUpdateisPriceCloseOrderNo: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_isRePriceClose_No
+      StoredProc = spUpdate_isPriceCloseOrder_No
       StoredProcList = <
         item
-          StoredProc = spUpdate_isRePriceClose_No
+          StoredProc = spUpdate_isPriceCloseOrder_No
         end>
-      Caption = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072') - '#1053#1077#1090
-      Hint = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072') - '#1053#1077#1090
+      Caption = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1079#1072#1082#1072#1079') - '#1053#1077#1090
+      Hint = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1079#1072#1082#1072#1079') - '#1053#1077#1090
     end
-    object spUpdateisRePriceCloseYes: TdsdExecStoredProc
+    object spUpdateisPriceCloseOrderYes: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_isRePriceClose_Yes
+      StoredProc = spUpdate_isPriceCloseOrder_Yes
       StoredProcList = <
         item
-          StoredProc = spUpdate_isRePriceClose_Yes
+          StoredProc = spUpdate_isPriceCloseOrder_Yes
         end>
-      Caption = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072') - '#1044#1072
-      Hint = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072') - '#1044#1072
+      Caption = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1079#1072#1082#1072#1079') - '#1044#1072
+      Hint = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1079#1072#1082#1072#1079') - '#1044#1072
     end
     object spUpdateisisPriceCloseNo: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -308,7 +317,7 @@
           StoredProc = spUpdate_isPriceClose_No
         end>
       Caption = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' - '#1053#1077#1090
-      Hint = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1053#1077#1090
+      Hint = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' - '#1053#1077#1090
     end
     object spUpdateisisPriceCloseYes: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -322,29 +331,57 @@
       Caption = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' - '#1044#1072
       Hint = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' - '#1044#1072
     end
-    object macUpdateisRePriceCloseNo: TMultiAction
+    object macUpdateisPriceCloseOrderYes: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = spUpdateisRePriceCloseNo
+          Action = spUpdateisPriceCloseOrderYes
         end>
       View = cxGridDBTableView
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072') - '#1053#1077#1090
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072') - '#1053#1077#1090
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1079#1072#1082#1072#1079') - '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1079#1072#1082#1072#1079') - '#1044#1072
+      ImageIndex = 76
+    end
+    object macUpdateisPriceCloseOrder_No: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateisPriceCloseOrderNo
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1079#1072#1082#1072#1079') - '#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1079#1072#1082#1072#1079') - '#1053#1077#1090
       ImageIndex = 77
     end
-    object macUpdateisRePriceCloseYes: TMultiAction
+    object macUpdateisPriceCloseOrder_Yes: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = spUpdateisRePriceCloseYes
+          Action = macUpdateisPriceCloseOrderYes
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1079#1072#1082#1072#1079') - '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1079#1072#1082#1072#1079') - '#1044#1072
+      ImageIndex = 76
+    end
+    object macUpdateisPriceCloseOrderNo: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateisPriceCloseOrderNo
         end>
       View = cxGridDBTableView
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072') - '#1044#1072
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072') - '#1044#1072
-      ImageIndex = 76
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1079#1072#1082#1072#1079') - '#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1079#1072#1082#1072#1079') - '#1053#1077#1090
+      ImageIndex = 77
     end
     object macUpdateisisPriceCloseNo: TMultiAction
       Category = 'DSDLib'
@@ -504,11 +541,11 @@
       Category = 0
     end
     object bbUpdateisRePriceCloseYes: TdxBarButton
-      Action = macUpdateisRePriceCloseYes
+      Action = macUpdateisPriceCloseOrder_Yes
       Category = 0
     end
     object bbUpdateisRePriceCloseNo: TdxBarButton
-      Action = macUpdateisRePriceCloseNo
+      Action = macUpdateisPriceCloseOrder_No
       Category = 0
     end
   end
@@ -739,8 +776,8 @@
     Left = 672
     Top = 171
   end
-  object spUpdate_isRePriceClose_Yes: TdsdStoredProc
-    StoredProcName = 'gpUpdate_JuridicalSettings_isRePriceClose'
+  object spUpdate_isPriceCloseOrder_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_JuridicalSettings_isPriceCloseOrder'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -753,26 +790,18 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPriceClose'
-        Value = 'FALSE'
+        Name = 'inisPriceCloseOrder'
+        Value = 'TRUE'
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outisPriceClose'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isPriceClose'
-        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 824
     Top = 107
   end
-  object spUpdate_isRePriceClose_No: TdsdStoredProc
-    StoredProcName = 'gpUpdate_JuridicalSettings_isRePriceClose'
+  object spUpdate_isPriceCloseOrder_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_JuridicalSettings_isPriceCloseOrder'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -785,18 +814,10 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisPriceClose'
-        Value = 'TRUE'
+        Name = 'inisPriceCloseOrder'
+        Value = 'FALSE'
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outisPriceClose'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isPriceClose'
-        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
