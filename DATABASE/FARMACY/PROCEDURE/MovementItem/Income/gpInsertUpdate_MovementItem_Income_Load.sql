@@ -251,6 +251,19 @@ BEGIN
        IF COALESCE(vbNDSKindId, 0) = 0 THEN 
 
        END IF;
+       
+
+       -- меняем договор - отсрочка/факт - если больше 4 ДНЕЙ
+       IF vbContractId = 183275 -- Бадм Факт
+          AND inOperDate + INTERVAL '4 DAY' < inPaymentDate
+       THEN vbContractId:= 183257; -- Бадм отсрочка
+       END IF;
+       -- меняем договор - отсрочка/факт - если больше 4 ДНЕЙ
+       IF vbContractId = 183338 -- Оптима Факт
+          AND inOperDate + INTERVAL '4 DAY' < inPaymentDate
+       THEN vbContractId:= 183358; -- Оптима отсрочка
+       END IF;
+
 
        vbMovementId := lpInsertUpdate_Movement_Income (ioId          := vbMovementId
                                                      , inInvNumber   := inInvNumber

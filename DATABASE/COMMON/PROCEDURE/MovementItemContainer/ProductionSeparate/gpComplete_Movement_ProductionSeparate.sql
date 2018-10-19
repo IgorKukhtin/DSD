@@ -623,6 +623,7 @@ BEGIN
                         FROM _tmpItemSumm
                              LEFT JOIN (SELECT tmpFix.MovementItemId_Parent
                                              , tmpFix.ContainerId_From
+                                             , SUM (tmpFix.OperSumm) AS OperSumm
                                         FROM tmpFix
                                         GROUP BY tmpFix.MovementItemId_Parent
                                                , tmpFix.ContainerId_From

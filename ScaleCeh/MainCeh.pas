@@ -300,6 +300,7 @@ type
   private
     oldGoodsId, oldGoodsCode : Integer;
     fEnterKey13:Boolean;
+    fSaveAll:Boolean;
 
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
@@ -523,6 +524,9 @@ var execParams:TParams;
 begin
      Result:=false;
      //
+     try
+     fSaveAll:= true;
+
      OperDateEdit.Text:=DateToStr(DMMainScaleCehForm.gpGet_Scale_OperDate(ParamsMovement));
      //
      // проверка
@@ -606,6 +610,11 @@ begin
           RefreshDataSet;
           WriteParamsMovement;
      end;
+
+     finally
+     fSaveAll:= false;
+     end;
+
 end;
 //------------------------------------------------------------------------------------------------
 function TMainCehForm.Save_MI:Boolean;
@@ -1384,7 +1393,7 @@ var execParams:TParams;
     GoodsCode_int:Integer;
 begin
      fEnterKey13:=false;
-     if Key = 13 then
+     if (Key = 13) and (fSaveAll= false) then
      begin
           fEnterKey13:=true;
           //
@@ -1635,6 +1644,8 @@ end;
 {------------------------------------------------------------------------------}
 procedure TMainCehForm.FormCreate(Sender: TObject);
 begin
+  fSaveAll:= false;
+
   // определили IP
   with TIdIPWatch.Create(nil) do
   begin
