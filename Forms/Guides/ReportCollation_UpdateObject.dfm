@@ -840,57 +840,10 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
       Category = 'Buh'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdateReportCollation_Buh
       StoredProcList = <
         item
-          StoredProc = spUpdateReportCollation_Buh
         end>
       Caption = 'actUpdateReportCollation_Buh'
-    end
-    object OpenChoiceForm1: TOpenChoiceForm
-      Category = 'Buh'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'ContractChoice'
-      ImageIndex = 24
-      FormName = 'TReportCollation_UpdateObjectDialogForm'
-      FormNameParam.Value = 'TReportCollation_UpdateObjectDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'isBuh'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'isBuh'
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'BuhDate'
-          Value = 'NULL'
-          Component = MasterCDS
-          ComponentItem = 'BuhDate'
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inisBuh'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'inisBuh'
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inBuhDate'
-          Value = 'NULL'
-          Component = FormParams
-          ComponentItem = 'inBuhDate'
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -956,14 +909,6 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
         item
           Visible = True
           ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateBuh'
         end
         item
           Visible = True
@@ -1365,40 +1310,5 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
     PackSize = 1
     Left = 584
     Top = 304
-  end
-  object spUpdateReportCollation_Buh: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_ReportCollation_Buh'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBuhDate'
-        Value = 'NULL'
-        Component = MasterCDS
-        ComponentItem = 'BuhDate'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsBuh'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'IsBuh'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 568
-    Top = 224
   end
 end
