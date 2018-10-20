@@ -1639,6 +1639,19 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actChecked: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spChecked
+      StoredProcList = <
+        item
+          StoredProc = spChecked
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1740,6 +1753,14 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChecked'
         end
         item
           Visible = True
@@ -1896,6 +1917,10 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     end
     object bbPrintSaleOrderTax: TdxBarButton
       Action = actPrintSaleOrderTax
+      Category = 0
+    end
+    object bbChecked: TdxBarButton
+      Action = actChecked
       Category = 0
     end
   end
@@ -2498,5 +2523,47 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     PackSize = 1
     Left = 535
     Top = 184
+  end
+  object spChecked: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_CheckedProtocol'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId '
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioChecked'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Checked'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCheckedDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'CheckedDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCheckedName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CheckedName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 400
+    Top = 283
   end
 end

@@ -762,12 +762,12 @@ inherited LossJournalForm: TLossJournalForm
     Top = 214
   end
   object spChecked: TdsdStoredProc
-    StoredProcName = 'gpUpdateMovement_Checked'
+    StoredProcName = 'gpUpdateMovement_CheckedProtocol'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId '
+        Name = 'inId '
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
@@ -775,12 +775,28 @@ inherited LossJournalForm: TLossJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inChecked'
+        Name = 'ioChecked'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Checked'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCheckedDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'CheckedDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCheckedName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CheckedName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1

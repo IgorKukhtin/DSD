@@ -1448,12 +1448,12 @@ inherited LossForm: TLossForm
     Top = 152
   end
   object spChecked: TdsdStoredProc
-    StoredProcName = 'gpUpdateMovement_Checked'
+    StoredProcName = 'gpUpdateMovement_CheckedProtocol'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId '
+        Name = 'inId '
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
@@ -1461,7 +1461,7 @@ inherited LossForm: TLossForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inChecked'
+        Name = 'ioChecked'
         Value = Null
         Component = edIsChecked
         DataType = ftBoolean
