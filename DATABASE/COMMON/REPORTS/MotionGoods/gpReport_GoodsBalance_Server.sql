@@ -23,6 +23,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, MeasureName TVarChar
              , BarCode_Main TVarChar
              , Weight TFloat
+             , InDate TDateTime, PartnerInName TVarChar
              , PartionGoodsDate TDateTime, PartionGoodsName TVarChar, AssetToName TVarChar
              , DriverName TVarChar, UnitName_to TVarChar
 
@@ -1081,6 +1082,10 @@ BEGIN
         , CASE WHEN tmpObject_GoodsPropertyValue_basis.BarCode <> '' THEN tmpObject_GoodsPropertyValue_basis.BarCode ELSE '0000000000000' END :: TVarChar AS BarCode_Main
 
         , ObjectFloat_Weight.ValueData   AS Weight
+        
+        , ObjectDate_In.ValueData       :: TDateTime AS InDate
+        , Object_PartnerIn.ValueData    :: TVarChar  AS PartnerInName
+
         , CASE WHEN tmpResult.PartionGoodsDate = zc_DateStart() THEN NULL ELSE tmpResult.PartionGoodsDate END :: TDateTime AS PartionGoodsDate
         , tmpResult.PartionGoodsName :: TVarChar  AS PartionGoodsName
         , Object_AssetTo.ValueData       AS AssetToName
@@ -1290,6 +1295,15 @@ BEGIN
                               ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                              AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
+        LEFT JOIN ObjectDate AS ObjectDate_In
+                             ON ObjectDate_In.ObjectId = tmpResult.GoodsId
+                            AND ObjectDate_In.DescId = zc_ObjectDate_Goods_In()
+
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_PartnerIn
+                             ON ObjectLink_Goods_PartnerIn.ObjectId = tmpResult.GoodsId
+                            AND ObjectLink_Goods_PartnerIn.DescId = zc_ObjectLink_Goods_PartnerIn()
+        LEFT JOIN Object AS Object_PartnerIn ON Object_PartnerIn.Id = ObjectLink_Goods_PartnerIn.ChildObjectId
+
         LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = NULL
 
         LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = NULL
@@ -1339,6 +1353,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 20.10.18         *
  29.07.16         * add tmpObject_GoodsPropertyValue_basis
  01.07.15         *
  02.05.15         * 
