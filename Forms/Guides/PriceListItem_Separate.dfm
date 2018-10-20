@@ -179,7 +179,7 @@ object PriceListItem_SeparateForm: TPriceListItem_SeparateForm
     object edShowDate: TcxDateEdit
       Left = 433
       Top = 9
-      EditValue = 42370d
+      EditValue = 43101d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 2
@@ -199,7 +199,7 @@ object PriceListItem_SeparateForm: TPriceListItem_SeparateForm
   object edOperDate: TcxDateEdit
     Left = 679
     Top = 35
-    EditValue = 42370d
+    EditValue = 43101d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 4
@@ -570,6 +570,7 @@ object PriceListItem_SeparateForm: TPriceListItem_SeparateForm
     object PriceListTaxDialoglOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080
       Hint = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080
       ImageIndex = 74
@@ -877,7 +878,15 @@ object PriceListItem_SeparateForm: TPriceListItem_SeparateForm
     StoredProcName = 'gpInsertUpdate_ObjectHistory_PriceListItem_Separate'
     DataSets = <>
     OutputType = otResult
-    Params = <>
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = edShowDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 656
     Top = 136

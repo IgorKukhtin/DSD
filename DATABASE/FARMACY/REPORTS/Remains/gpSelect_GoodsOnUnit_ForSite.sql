@@ -62,7 +62,16 @@ $BODY$
    DECLARE vbIndex Integer;
    -- DECLARE vbMarginCategoryId Integer;
    DECLARE vbMarginCategoryId_site Integer;
+
+   DECLARE vbOperDate_Begin1 TDateTime;
+   DECLARE vbOperDate_Begin2 TDateTime;
+   DECLARE vbOperDate_Begin3 TDateTime;
+   DECLARE vbOperDate_Begin4 TDateTime;
 BEGIN
+     -- сразу запомнили время начала выполнения Проц.
+     vbOperDate_Begin1:= CLOCK_TIMESTAMP();
+
+
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
@@ -308,44 +317,53 @@ BEGIN
     ELSE
         DELETE FROM _tmpMinPrice_List;
     END IF;
+
+
+    -- запомнили время перед lpSelectMinPrice_List
+    vbOperDate_Begin2:= CLOCK_TIMESTAMP();
+
     --
-             INSERT INTO _tmpMinPrice_List (GoodsId            ,
-                                            GoodsCode ,
-                                            GoodsName          ,
-                                            PartionGoodsDate   ,
-                                            Partner_GoodsId    ,
-                                            Partner_GoodsCode  ,
-                                            Partner_GoodsName  ,
-                                            MakerName          ,
-                                            ContractId         ,
-                                            AreaId             ,
-                                            JuridicalId        ,
-                                            JuridicalName      ,
-                                            Price              ,
-                                            SuperFinalPrice    ,
-                                            isTop              ,
-                                            isOneJuridical)
-                                     SELECT tmp.GoodsId            ,
-                                            tmp.GoodsCode ,
-                                            tmp.GoodsName          ,
-                                            tmp.PartionGoodsDate   ,
-                                            tmp.Partner_GoodsId    ,
-                                            tmp.Partner_GoodsCode  ,
-                                            tmp.Partner_GoodsName  ,
-                                            tmp.MakerName          ,
-                                            tmp.ContractId         ,
-                                            tmp.AreaId             ,
-                                            tmp.JuridicalId        ,
-                                            tmp.JuridicalName      ,
-                                            tmp.Price              ,
-                                            tmp.SuperFinalPrice    ,
-                                            tmp.isTop              ,
-                                            tmp.isOneJuridical
-                FROM lpSelectMinPrice_List (inUnitId  := 0          -- !!!т.к. не зависит от UnitId, хотя ...!!!
-                                          , inObjectId:= vbObjectId
-                                          , inUserId  := vbUserId
-                                           ) AS tmp
-               ;
+    INSERT INTO _tmpMinPrice_List (GoodsId            ,
+                                   GoodsCode          ,
+                                   GoodsName          ,
+                                   PartionGoodsDate   ,
+                                   Partner_GoodsId    ,
+                                   Partner_GoodsCode  ,
+                                   Partner_GoodsName  ,
+                                   MakerName          ,
+                                   ContractId         ,
+                                   AreaId             ,
+                                   JuridicalId        ,
+                                   JuridicalName      ,
+                                   Price              ,
+                                   SuperFinalPrice    ,
+                                   isTop              ,
+                                   isOneJuridical)
+       SELECT tmp.GoodsId            ,
+              tmp.GoodsCode          ,
+              tmp.GoodsName          ,
+              tmp.PartionGoodsDate   ,
+              tmp.Partner_GoodsId    ,
+              tmp.Partner_GoodsCode  ,
+              tmp.Partner_GoodsName  ,
+              tmp.MakerName          ,
+              tmp.ContractId         ,
+              tmp.AreaId             ,
+              tmp.JuridicalId        ,
+              tmp.JuridicalName      ,
+              tmp.Price              ,
+              tmp.SuperFinalPrice    ,
+              tmp.isTop              ,
+              tmp.isOneJuridical
+       FROM lpSelectMinPrice_List (inUnitId  := 0          -- !!!т.к. не зависит от UnitId, хотя ...!!!
+                                 , inObjectId:= vbObjectId
+                                 , inUserId  := vbUserId
+                                  ) AS tmp
+      ;
+
+
+    -- запомнили время после lpSelectMinPrice_List
+    vbOperDate_Begin3:= CLOCK_TIMESTAMP();
 
 
     -- поиск категории для сайта
@@ -599,6 +617,47 @@ BEGIN
         ORDER BY Price_Unit.Price
        ;
 
+     -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
+     INSERT INTO ResourseProtocol (UserId
+                                 , OperDate
+                                 , Value1
+                                 , Value2
+                                 , Value3
+                                 , Value4
+                                 , Value5
+                                 , Time1
+                                 , Time2
+                                 , Time3
+                                 , Time4
+                                 , Time5
+                                 , ProcName
+                                 , ProtocolData
+                                  )
+        WITH tmp_pg AS (SELECT * FROM pg_stat_activity WHERE state = 'active')
+        SELECT vbUserId
+               -- во сколько началась
+             , CURRENT_TIMESTAMP
+             , (SELECT COUNT (*) FROM tmp_pg)                                   AS Value1
+             , (SELECT COUNT (*) FROM tmp_pg WHERE client_addr =  '172.17.2.4') AS Value2
+             , (SELECT COUNT (*) FROM tmp_pg WHERE client_addr <> '172.17.2.4') AS Value3
+             , 0 AS Value4
+             , 0 AS Value5
+               -- сколько всего выполнялась проц
+             , (CLOCK_TIMESTAMP() - vbOperDate_Begin1) :: INTERVAL AS Time1
+               -- сколько всего выполнялась проц ДО lpSelectMinPrice_List
+             , (vbOperDate_Begin2 - vbOperDate_Begin1) :: INTERVAL AS Time2
+               -- сколько всего выполнялась проц lpSelectMinPrice_List
+             , (vbOperDate_Begin3 - vbOperDate_Begin2) :: INTERVAL AS Time3
+               -- сколько всего выполнялась проц ПОСЛЕ lpSelectMinPrice_List
+             , (CLOCK_TIMESTAMP() - vbOperDate_Begin3) :: INTERVAL AS Time4
+               -- во сколько закончилась
+             , CLOCK_TIMESTAMP() AS Time5
+               -- ProcName
+             , 'gpSelect_GoodsOnUnit_ForSite'
+               -- ProtocolData
+             , CHR (39) || inUnitId_list || CHR (39) || ' , ' || CHR (39) || inGoodsId_list || CHR (39)
+              ;
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -610,6 +669,7 @@ $BODY$
 */
 
 -- тест
+-- SELECT * FROM ResourseProtocol ORDER BY Id DESC LIMIT 4000
 -- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '1781716', inGoodsId_list:= '47761', inSession:= zfCalc_UserSite()) ORDER BY 1;
 -- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '377613,183292', inGoodsId_list:= '331,951,16876,40618', inSession:= zfCalc_UserSite()) ORDER BY 1;
 -- SELECT p.id, p.id_site, p.name, p.name_site, p.article, p.article, p.unitid, p.juridicalid, p.juridicalname, p.contractid, p.contractname, p.expirationdate, p.manufacturer, p.remains, p.price_unit, p.price_mino, p.price_mino, p.price_min, p.price_mind FROM gpSelect_GoodsOnUnit_ForSite('183292,183288,377605,375627,394426,472116,494882,1529734,1781716,377606,377595,183290,183289,183294,377613,377574,377594,377610,183293,375626,183291', '508,517,520,526,523,511,544,538,553,559,562,565,571,547,1642,1654,1714,1867,1933,2059,2095,2230,2257,2275,2323,2341,2344,2320,2509,2515', zfCalc_UserSite()) AS p ORDER BY p.price_unit

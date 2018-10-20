@@ -379,6 +379,7 @@ type
 
     procedure pLoadFillSoldTable;
     procedure pLoadGoodsListSale;
+    procedure pLoadFillAuto;
 
     // Guides :
     procedure pLoadGuide_Measure;
@@ -20519,6 +20520,35 @@ begin
      if (not cbFillSoldTable.Checked)or(not cbFillSoldTable.Enabled) then exit;
      //
      fOpenSqToQuery ('select * from FillSoldTable('+FormatToVarCharServer_isSpace(StartDateEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateEdit.Text)+',zfCalc_UserAdmin())')
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadFillAuto;
+begin
+     if (not cbFillSoldTable.Checked)or(not cbFillSoldTable.Enabled) then exit;
+     //
+     fOpenSqToQuery ('select * from gpUpdate_Object_Goods_In (DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE - INTERVAL ' + chr(39) + '15 MONTH' + chr(39) + ')'
+                                                         + ', CURRENT_DATE'
+                                                         + ', zfCalc_UserAdmin())');
+     //
+     //
+     fOpenSqToQuery ('select * from gpUpdate_Object_ReportCollation_RemainsCalc'
+                                                         + ' (DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE - INTERVAL ' + chr(39) + '15 MONTH' + chr(39) + ')'
+                                                         + ', CURRENT_DATE'
+                                                         + ', 0' // inJuridicalId
+                                                         + ', 0' // inPartnerId
+                                                         + ', 0' // inContractId
+                                                         + ', 0' // inPaidKindId
+                                                         + ', zfCalc_UserAdmin())');
+     //
+     //
+     fOpenSqToQuery ('select * from gpUpdate_Object_ReportCollation_RemainsCalc'
+                                                         + ' (DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE - INTERVAL ' + chr(39) + '15 MONTH' + chr(39) + ')'
+                                                         + ', CURRENT_DATE'
+                                                         + ', 0' // inJuridicalId
+                                                         + ', 0' // inPartnerId
+                                                         + ', 0' // inContractId
+                                                         + ', 0' // inPaidKindId
+                                                         + ', zfCalc_UserAdmin())');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_List(isBefoHistoryCost,isPartion,isDiff:Boolean);

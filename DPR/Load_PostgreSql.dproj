@@ -148,6 +148,7 @@
 			<DCCReference Include="..\SOURCE\EDI\RecadvXML.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201009.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201209.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdPivotGrid.pas"/>
 			<None Include="Load_PostgreSql.todo"/>
 			<BuildConfiguration Include="Debug">
 				<Key>Cfg_2</Key>

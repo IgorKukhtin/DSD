@@ -26,7 +26,7 @@ BEGIN
          , lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_ReCalc(), tmpObject.Id, CURRENT_TIMESTAMP)                -- сохранили свойство <Дата>
          , lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_ReCalc(), tmpObject.Id, vbUserId)                         -- сохранили свойство <Пользователь>
       
-         , lpInsert_ObjectProtocol (inObjectId:= tmpObject.Id, inUserId:= vbUserId, inIsUpdate:= FALSE)
+         -- , lpInsert_ObjectProtocol (inObjectId:= tmpObject.Id, inUserId:= vbUserId, inIsUpdate:= FALSE)
    FROM (SELECT Object_ReportCollation.Id
               , Object_ReportCollation.ObjectCode
               , ObjectDate_Start.ValueData      AS StartDate

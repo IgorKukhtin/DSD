@@ -31,7 +31,7 @@ BEGIN
             
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (inObjectId:= inId, inUserId:= vbUserId, inIsUpdate:= FALSE);
+   PERFORM lpInsert_ObjectProtocol (inObjectId:= inId, inUserId:= vbUserId, inIsUpdate:= TRUE);
   
 END;$BODY$
  LANGUAGE plpgsql VOLATILE;

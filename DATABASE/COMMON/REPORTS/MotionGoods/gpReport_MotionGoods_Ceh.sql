@@ -274,6 +274,7 @@ BEGIN
                                  LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
                                                            ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
                                                           AND MovementBoolean_Peresort.DescId     = zc_MovementBoolean_Peresort()
+                                                          AND MovementBoolean_Peresort.ValueData  = TRUE
                             -- !!!убрали Пересортицу!!!
                             WHERE MovementBoolean_Peresort.MovementId IS NULL
                             GROUP BY MIContainer.AnalyzerId

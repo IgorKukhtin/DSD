@@ -55,7 +55,8 @@ uses
   dsdException in '..\SOURCE\dsdException.pas',
   RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
   IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas',
-  IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas';
+  IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
+  dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas';
 
 {$R *.res}
 

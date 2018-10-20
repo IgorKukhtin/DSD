@@ -179,7 +179,7 @@ object PriceListItemForm: TPriceListItemForm
     object edShowDate: TcxDateEdit
       Left = 433
       Top = 9
-      EditValue = 42370d
+      EditValue = 43101d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 2
@@ -199,7 +199,7 @@ object PriceListItemForm: TPriceListItemForm
   object edOperDate: TcxDateEdit
     Left = 679
     Top = 35
-    EditValue = 42370d
+    EditValue = 43101d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 7
@@ -610,6 +610,7 @@ object PriceListItemForm: TPriceListItemForm
     object actInsertUpdate_Separate: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate_Separate
       StoredProcList = <
@@ -840,7 +841,15 @@ object PriceListItemForm: TPriceListItemForm
     StoredProcName = 'gpInsertUpdate_ObjectHistory_PriceListItem_Separate'
     DataSets = <>
     OutputType = otResult
-    Params = <>
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = edShowDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 656
     Top = 136

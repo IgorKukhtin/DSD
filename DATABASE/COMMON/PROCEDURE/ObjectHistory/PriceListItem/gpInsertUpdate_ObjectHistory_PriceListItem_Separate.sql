@@ -1,9 +1,11 @@
 -- Function: gpInsertUpdate_ObjectHistory_PriceListItem_Separate()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItem_Separate (TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItem_Separate (TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListItem_Separate(
-    IN inSession     TVarChar    -- сессия пользователя
+    IN inOperDate   TDateTime
+    IN inSession    TVarChar    -- сессия пользователя
 )
   RETURNS VOID AS
 $BODY$
@@ -18,8 +20,16 @@ BEGIN
    vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_ProductionSeparateH());
 
    -- определяем даты для расчета цен - с 1 числа тек. месяца по вчерашний день,
-   vbStartDate := DATE_TRUNC ('MONTH' , CURRENT_DATE);
-   vbEndDate   := CASE WHEN DATE_TRUNC ('MONTH' , CURRENT_DATE) = CURRENT_DATE THEN CURRENT_DATE ELSE CURRENT_DATE - INTERVAL '1 DAY' END;
+   vbStartDate := DATE_TRUNC ('MONTH' , inOperDate);
+   vbEndDate   := CASE -- если "прошлый" месяц - тогда последнее число
+                       WHEN DATE_TRUNC ('MONTH' , inOperDate) < DATE_TRUNC ('MONTH' , CURRENT_DATE)
+                            THEN DATE_TRUNC ('MONTH' , inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
+                       -- если "дата" первое число - тогда пусть будет за 1 день
+                       WHEN DATE_TRUNC ('MONTH' , inOperDate) = CURRENT_DATE
+                            THEN DATE_TRUNC ('MONTH' , inOperDate)
+                       -- иначе на 1 день меньше
+                       ELSE CURRENT_DATE - INTERVAL '1 DAY'
+                  END;
    
 
    -- Получаем ссылку на объект цен
@@ -100,4 +110,6 @@ END;$BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  03.10.18         *
 */
-select gpInsertUpdate_ObjectHistory_PriceListItem_Separate ('5')
+
+-- тест
+-- SELECT * FROM gpInsertUpdate_ObjectHistory_PriceListItem_Separate (CURRENT_DATE, zfCalc_UserAdmin())

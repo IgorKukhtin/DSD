@@ -254,12 +254,16 @@ BEGIN
        
 
        -- меняем договор - отсрочка/факт - если больше 4 ДНЕЙ
-       IF vbContractId = 183275 -- Бадм Факт
+       IF (vbContractId IN (183275)  -- Бадм Факт
+        OR inJuridicalId_from = 59610 -- БаДМ
+          )
           AND inOperDate + INTERVAL '4 DAY' < inPaymentDate
        THEN vbContractId:= 183257; -- Бадм отсрочка
        END IF;
        -- меняем договор - отсрочка/факт - если больше 4 ДНЕЙ
-       IF vbContractId = 183338 -- Оптима Факт
+       IF (vbContractId IN (183338, 9035881) -- Оптима Факт + Оптима Предоплата
+        OR inJuridicalId_from = 59611 -- СП "Оптима-Фарм, ЛТД"
+          )
           AND inOperDate + INTERVAL '4 DAY' < inPaymentDate
        THEN vbContractId:= 183358; -- Оптима отсрочка
        END IF;
