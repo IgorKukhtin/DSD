@@ -66,11 +66,11 @@ BEGIN
          WHERE Object_ReportCollation.DescId = zc_Object_ReportCollation()
            AND Object_ReportCollation.isErased = FALSE
            AND ObjectDate_Start.ValueData >= inStartDate
-                     AND ObjectDate_End.ValueData <= inEndDate
-                     AND (COALESCE (ObjectLink_ReportCollation_Juridical.ChildObjectId, 0) = inJuridicalId OR inJuridicalId = 0)
-                     AND (COALESCE (ObjectLink_ReportCollation_Partner.ChildObjectId, 0)   = inPartnerId  OR inPartnerId = 0)
-                     AND (COALESCE (ObjectLink_ReportCollation_Contract.ChildObjectId, 0)  = inContractId OR inContractId = 0)
-                     AND (COALESCE (ObjectLink_ReportCollation_PaidKind.ChildObjectId, 0)  = inPaidKindId OR inPaidKindId = 0)
+           AND ObjectDate_End.ValueData <= inEndDate
+           AND (COALESCE (ObjectLink_ReportCollation_Juridical.ChildObjectId, 0) = inJuridicalId OR inJuridicalId = 0)
+           AND (COALESCE (ObjectLink_ReportCollation_Partner.ChildObjectId, 0)   = inPartnerId  OR inPartnerId = 0)
+           AND (COALESCE (ObjectLink_ReportCollation_Contract.ChildObjectId, 0)  = inContractId OR inContractId = 0)
+           AND (COALESCE (ObjectLink_ReportCollation_PaidKind.ChildObjectId, 0)  = inPaidKindId OR inPaidKindId = 0)
          ) AS tmpObject
          LEFT JOIN gpReport_JuridicalCollation(tmpObject.StartDate, tmpObject.EndDate, tmpObject.JuridicalId, tmpObject.PartnerId, tmpObject.ContractId, 0, tmpObject.PaidKindId,  0,  0,  0, inSession) AS tmpreport ON 1 = 1
    GROUP BY tmpObject.Id;
