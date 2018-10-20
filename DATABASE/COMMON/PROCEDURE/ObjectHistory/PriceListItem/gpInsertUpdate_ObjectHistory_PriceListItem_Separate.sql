@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItem_Separate (TVa
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItem_Separate (TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListItem_Separate(
-    IN inOperDate   TDateTime
+    IN inOperDate   TDateTime,
     IN inSession    TVarChar    -- сессия пользователя
 )
   RETURNS VOID AS
@@ -27,8 +27,11 @@ BEGIN
                        -- если "дата" первое число - тогда пусть будет за 1 день
                        WHEN DATE_TRUNC ('MONTH' , inOperDate) = CURRENT_DATE
                             THEN DATE_TRUNC ('MONTH' , inOperDate)
-                       -- иначе на 1 день меньше
-                       ELSE CURRENT_DATE - INTERVAL '1 DAY'
+                       -- если "дата" второе число - тогда пусть будет за 1 день
+                       WHEN DATE_TRUNC ('MONTH' , inOperDate) = CURRENT_DATE - INTERVAL '1 DAY'
+                            THEN DATE_TRUNC ('MONTH' , inOperDate)
+                       -- иначе на 2 дня меньше
+                       ELSE CURRENT_DATE - INTERVAL '2 DAY'
                   END;
    
 

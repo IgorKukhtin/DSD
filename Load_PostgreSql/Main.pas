@@ -203,6 +203,7 @@ type
     cbOnlyTwo: TCheckBox;
     cbPromo: TCheckBox;
     PanelErr: TPanel;
+    cbFillAuto: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1695,6 +1696,9 @@ begin
                // !!!этот пересчет - всегда!!!
                cbGoodsListSale.Checked:=true;
 
+               // !!!этот пересчет - всегда!!!
+               cbFillAuto.Checked:=true;
+
                // !!!за "текущий" - не надо!!! + или надо ...
                if  ((EndDateEdit.Text <> DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime))
                  or (ParamStr(3)='++'))
@@ -2001,6 +2005,8 @@ begin
      if not fStop then pLoadGoodsListSale;
      //
      if not fStop then pLoadFillSoldTable;
+     //
+     if not fStop then pLoadFillAuto;
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
@@ -20523,14 +20529,19 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadFillAuto;
+var
+  Present: TDateTime;
+  Year, Month, Day, Hour, Min, Sec, MSec: Word;
+  calcSec,calcSec2:LongInt;
 begin
-     if (not cbFillSoldTable.Checked)or(not cbFillSoldTable.Enabled) then exit;
+     if (not cbFillAuto.Checked)or(not cbFillAuto.Enabled) then exit;
      //
+     // 15 MONTH
      fOpenSqToQuery ('select * from gpUpdate_Object_Goods_In (DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE - INTERVAL ' + chr(39) + '15 MONTH' + chr(39) + ')'
                                                          + ', CURRENT_DATE'
                                                          + ', zfCalc_UserAdmin())');
      //
-     //
+     // 15 MONTH
      fOpenSqToQuery ('select * from gpUpdate_Object_ReportCollation_RemainsCalc'
                                                          + ' (DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE - INTERVAL ' + chr(39) + '15 MONTH' + chr(39) + ')'
                                                          + ', CURRENT_DATE'
@@ -20541,13 +20552,16 @@ begin
                                                          + ', zfCalc_UserAdmin())');
      //
      //
-     fOpenSqToQuery ('select * from gpUpdate_Object_ReportCollation_RemainsCalc'
-                                                         + ' (DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE - INTERVAL ' + chr(39) + '15 MONTH' + chr(39) + ')'
-                                                         + ', CURRENT_DATE'
-                                                         + ', 0' // inJuridicalId
-                                                         + ', 0' // inPartnerId
-                                                         + ', 0' // inContractId
-                                                         + ', 0' // inPaidKindId
+     Present:=Now;
+     DecodeDate(Present, Year, Month, Day);
+     if Day < 15 then
+     // 15 DAY
+     fOpenSqToQuery ('select * from gpInsertUpdate_ObjectHistory_PriceListItem_Separate'
+                                                         + ' (CURRENT_DATE -INTERVAL ' + chr(39) + '15 DAY' + chr(39)
+                                                         + ', zfCalc_UserAdmin())');
+     //CURRENT_DATE
+     fOpenSqToQuery ('select * from gpInsertUpdate_ObjectHistory_PriceListItem_Separate'
+                                                         + ' (CURRENT_DATE'
                                                          + ', zfCalc_UserAdmin())');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------

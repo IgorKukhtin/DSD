@@ -1418,7 +1418,7 @@ object MainForm: TMainForm
     object cbFillSoldTable: TCheckBox
       Left = 3
       Top = 541
-      Width = 215
+      Width = 104
       Height = 17
       Caption = 'FillSoldTable'
       Font.Charset = DEFAULT_CHARSET
@@ -1489,6 +1489,20 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 49
+    end
+    object cbFillAuto: TCheckBox
+      Left = 113
+      Top = 541
+      Width = 105
+      Height = 17
+      Caption = 'FillAuto 1+2+3'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 50
     end
   end
   object CompleteDocumentPanel: TPanel
