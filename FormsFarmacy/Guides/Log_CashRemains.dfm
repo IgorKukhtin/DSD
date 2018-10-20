@@ -1,48 +1,45 @@
-inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEmployeeAllForm
-  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1102' '#1087#1083#1072#1085#1072' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
-  ClientHeight = 504
-  ClientWidth = 824
+inherited Log_CashRemainsForm: TLog_CashRemainsForm
+  Caption = 'GUID '#1082#1072#1089#1089' '#1080' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
+  ClientHeight = 463
+  ClientWidth = 725
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 840
-  ExplicitHeight = 543
+  ExplicitWidth = 741
+  ExplicitHeight = 502
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 824
-    Height = 447
-    ExplicitWidth = 920
-    ExplicitHeight = 447
-    ClientRectBottom = 447
-    ClientRectRight = 824
+    Width = 725
+    Height = 406
+    ExplicitWidth = 725
+    ExplicitHeight = 406
+    ClientRectBottom = 406
+    ClientRectRight = 725
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 920
-      ExplicitHeight = 447
+      ExplicitWidth = 725
+      ExplicitHeight = 406
       inherited cxGrid: TcxGrid
-        Width = 824
-        Height = 447
-        ExplicitWidth = 920
-        ExplicitHeight = 447
+        Width = 725
+        Height = 269
+        ExplicitWidth = 725
+        ExplicitHeight = 269
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
-              Column = Total
             end
             item
               Kind = skSum
               Position = spFooter
-              Column = Total
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Total
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = UserName
+              Column = CashSessionId
             end>
           OptionsData.Editing = False
           Styles.Content = nil
@@ -50,107 +47,116 @@ inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object ID: TcxGridDBColumn
-            Caption = #8470' '#1087'/'#1087
-            DataBinding.FieldName = 'Orders'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Caption = 'mactChoiceGoodsForm'
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
+          object CashSessionId: TcxGridDBColumn
+            Caption = 'GUID'
+            DataBinding.FieldName = 'CashSessionId'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 39
+            Width = 257
+          end
+          object UnitName: TcxGridDBColumn
+            Caption = #1040#1087#1090#1077#1082#1072
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 229
           end
           object UserName: TcxGridDBColumn
-            Caption = #1060#1072#1084#1080#1083#1080#1103' '#1048'.'#1054'.'
+            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
             DataBinding.FieldName = 'UserName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 188
+            Width = 194
           end
-          object UnitName: TcxGridDBColumn
-            Caption = #1040#1087#1090#1077#1082#1072' ('#1086#1089#1085#1086#1074#1085#1072#1103')'
+        end
+      end
+      object cxGridDouble: TcxGrid
+        Left = 0
+        Top = 277
+        Width = 725
+        Height = 129
+        Align = alBottom
+        PopupMenu = PopupMenu
+        TabOrder = 1
+        object cxGridDBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = DoubleDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = DoubleCashSessionId
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object DoubleCashSessionId: TcxGridDBColumn
+            Caption = #1044#1091#1073#1083#1080' GUID'
+            DataBinding.FieldName = 'CashSessionId'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 263
+          end
+          object DoubleUnitName: TcxGridDBColumn
+            Caption = #1040#1087#1090#1077#1082#1072
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 220
           end
-          object NormOfManDays: TcxGridDBColumn
-            Caption = #1053#1086#1088#1084#1072' '#1095#1077#1083#1086#1074#1077#1082#1086#1076#1085#1077#1081
-            DataBinding.FieldName = 'NormOfManDays'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object FactOfManDays: TcxGridDBColumn
-            Caption = #1060#1072#1082#1090' '#1095#1077#1083#1086#1074#1077#1082#1086#1076#1085#1077#1081
-            DataBinding.FieldName = 'FactOfManDays'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object TotalExecutionLine: TcxGridDBColumn
-            Caption = #1054#1073#1097#1080#1081' % '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103'  '#1087#1086#1089#1090#1088#1086#1095#1085#1086
-            DataBinding.FieldName = 'TotalExecutionLine'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 89
-          end
-          object AmountTheFineTab: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072
-            DataBinding.FieldName = 'AmountTheFineTab'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Options.Editing = False
-            Width = 72
-          end
-          object BonusAmountTab: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1077#1084#1080#1080
-            DataBinding.FieldName = 'BonusAmountTab'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 84
-          end
-          object Total: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086
-            DataBinding.FieldName = 'Total'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 76
-          end
         end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBTableView1
+        end
+      end
+      object cxSplitter1: TcxSplitter
+        Left = 0
+        Top = 269
+        Width = 725
+        Height = 8
+        AlignSplitter = salBottom
+        Control = cxGridDouble
       end
     end
   end
   inherited Panel: TPanel
-    Width = 824
-    ExplicitWidth = 920
+    Width = 725
+    ExplicitWidth = 725
     inherited deStart: TcxDateEdit
       EditValue = 43344d
-      Properties.DisplayFormat = 'mmmm yyyy'
-      Properties.EditFormat = 'dd.mm.yyyy'
+      Properties.AssignedValues.DisplayFormat = True
+      Properties.AssignedValues.EditFormat = True
       TabOrder = 1
-      ExplicitWidth = 115
-      Width = 115
     end
     inherited deEnd: TcxDateEdit
       Left = 334
@@ -160,8 +166,8 @@ inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEm
       ExplicitLeft = 334
     end
     inherited cxLabel1: TcxLabel
-      Caption = #1052#1077#1089#1103#1094' '#1088#1072#1089#1095#1077#1090#1072':'
-      ExplicitWidth = 83
+      Caption = #1044#1072#1090#1072' '#1074#1099#1073#1086#1088#1082#1080':'
+      ExplicitWidth = 81
     end
     inherited cxLabel2: TcxLabel
       Left = 218
@@ -174,11 +180,11 @@ inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEm
     Top = 192
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 48
-    Top = 240
+    Left = 8
+    Top = 232
   end
   inherited ActionList: TActionList
-    Left = 103
+    Left = 87
     Top = 191
     object actRefreshSearch: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -261,7 +267,15 @@ inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEm
     Top = 88
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_ImplementationPlanEmployeeAll'
+    StoredProcName = 'gpSelect_Log_CashRemains'
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end
+      item
+        DataSet = DoubleCDS
+      end>
+    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inStartDate'
@@ -338,6 +352,18 @@ inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEm
       item
       end>
     Left = 104
+    Top = 136
+  end
+  object DoubleCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 248
+    Top = 136
+  end
+  object DoubleDS: TDataSource
+    DataSet = DoubleCDS
+    Left = 336
     Top = 136
   end
 end

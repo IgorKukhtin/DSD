@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 229
+  ExplicitHeight = 230
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -2442,6 +2442,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actLog_CashRemains: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = 'GUID '#1082#1072#1089#1089' '#1080' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
+      FormName = 'TLog_CashRemainsForm'
+      FormNameParam.Value = 'TLog_CashRemainsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3160,10 +3171,13 @@ inherited MainForm: TMainForm
       object N85: TMenuItem [4]
         Action = actRoleUnion
       end
-      object miSetDefault: TMenuItem [5]
+      object GUID1: TMenuItem [5]
+        Action = actLog_CashRemains
+      end
+      object miSetDefault: TMenuItem [6]
         Action = actSetDefault
       end
-      object N92: TMenuItem [6]
+      object N92: TMenuItem [7]
         Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1055#1086#1095#1090#1099
         object N93: TMenuItem
           Action = actEmailSettings
@@ -3178,60 +3192,60 @@ inherited MainForm: TMainForm
           Action = actEmail
         end
       end
-      object miGoodsCommon: TMenuItem [7]
+      object miGoodsCommon: TMenuItem [8]
         Action = actGoodsMain
       end
-      object N61: TMenuItem [8]
+      object N61: TMenuItem [9]
         Action = actGoodsOnUnit_ForSite
       end
-      object N98: TMenuItem [9]
+      object N98: TMenuItem [10]
         Action = actConfirmedKind
       end
-      object ID1: TMenuItem [10]
+      object ID1: TMenuItem [11]
         Action = actReport_GoodsRemains_AnotherRetail
       end
-      object N7: TMenuItem [11]
+      object N7: TMenuItem [12]
         Caption = '-'
       end
-      object miSaveData: TMenuItem [12]
+      object miSaveData: TMenuItem [13]
         Action = actSaveData
       end
-      object miPriceGroupSettings: TMenuItem [13]
+      object miPriceGroupSettings: TMenuItem [14]
         Action = actPriceGroupSettings
       end
-      object N102: TMenuItem [14]
+      object N102: TMenuItem [15]
         Action = actPriceGroupSettingsTOP
       end
-      object miJuridicalSettings: TMenuItem [15]
+      object miJuridicalSettings: TMenuItem [16]
         Action = actJuridicalSettings
       end
-      object N9: TMenuItem [16]
+      object N9: TMenuItem [17]
         Caption = '-'
       end
-      object miImportType: TMenuItem [17]
+      object miImportType: TMenuItem [18]
         Action = actImportType
       end
-      object miImportSettings: TMenuItem [18]
+      object miImportSettings: TMenuItem [19]
         Action = actImportSettings
       end
-      object miImportExportLink: TMenuItem [19]
+      object miImportExportLink: TMenuItem [20]
         Action = actImportExportLink
       end
-      object FarmacyCash1: TMenuItem [21]
+      object FarmacyCash1: TMenuItem [22]
         Action = actUnitForFarmacyCash
       end
-      object N10: TMenuItem [23]
+      object N10: TMenuItem [24]
         Caption = '-'
       end
-      object miReprice: TMenuItem [24]
+      object miReprice: TMenuItem [25]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072
         OnClick = miRepriceClick
       end
-      object miRepriceChange: TMenuItem [25]
+      object miRepriceChange: TMenuItem [26]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1094#1077#1085' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
         OnClick = miRepriceChangeClick
       end
-      object miExportSalesForSupp: TMenuItem [26]
+      object miExportSalesForSupp: TMenuItem [27]
         Action = actExportSalesForSuppClick
       end
     end
