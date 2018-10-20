@@ -111,6 +111,9 @@ type
     actPrintSaleOrderTax: TdsdPrintAction;
     bbPrintSaleOrderTax: TdxBarButton;
     edIsChecked: TcxCheckBox;
+    spChecked: TdsdStoredProc;
+    actChecked: TdsdExecStoredProc;
+    bbChecked: TdxBarButton;
   private
     { Private declarations }
   public

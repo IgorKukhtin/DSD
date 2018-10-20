@@ -121,6 +121,9 @@ type
     spSelectPrint_SaleOrderTax: TdsdStoredProc;
     actPrintSaleOrderTax: TdsdPrintAction;
     bbPrintSaleOrderTax: TdxBarButton;
+    spChecked: TdsdStoredProc;
+    actChecked: TdsdExecStoredProc;
+    bbChecked: TdxBarButton;
   private
     { Private declarations }
   public
