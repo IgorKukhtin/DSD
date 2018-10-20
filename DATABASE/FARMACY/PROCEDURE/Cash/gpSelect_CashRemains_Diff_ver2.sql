@@ -46,6 +46,10 @@ BEGIN
     END IF;
     vbUnitId := vbUnitKey::Integer;
 
+    -- ƒобавл€ем в лог обновлений остатков
+--    INSERT INTO Log_CashRemains (CashSessionId, DateStart, FullRemains, UserId, UnitId, RetailId)
+--      VALUES (inCashSessionId, CURRENT_TIMESTAMP, False, vbUserId, vbUnitId, Null);
+
     -- ќбновили дату последнего обращени€ по сессии
     PERFORM lpInsertUpdate_CashSession (inCashSessionId := inCashSessionId
                                       , inDateConnect   := CURRENT_TIMESTAMP :: TDateTime

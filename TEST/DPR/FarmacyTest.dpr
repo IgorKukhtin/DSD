@@ -621,7 +621,8 @@ uses
   Report_IncomeSample in '..\..\FormsFarmacy\Report\Report_IncomeSample.pas' {Report_IncomeSampleForm: TParentForm},
   Report_IncomeSampleDialog in '..\..\FormsFarmacy\Report\Report_IncomeSampleDialog.pas' {Report_IncomeSampleDialogForm: TParentForm},
   Report_Check_GoodsPriceChange in '..\..\FormsFarmacy\Report\Report_Check_GoodsPriceChange.pas' {Report_Check_GoodsPriceChangeForm: TParentForm},
-  Report_Check_GoodsPriceChangeDialog in '..\..\FormsFarmacy\Report\Report_Check_GoodsPriceChangeDialog.pas' {Report_Check_GoodsPriceChangeDialogForm: TParentForm};
+  Report_Check_GoodsPriceChangeDialog in '..\..\FormsFarmacy\Report\Report_Check_GoodsPriceChangeDialog.pas' {Report_Check_GoodsPriceChangeDialogForm: TParentForm},
+  Log_CashRemains in '..\..\FormsFarmacy\Guides\Log_CashRemains.pas' {Log_CashRemainsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
