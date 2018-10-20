@@ -66,7 +66,7 @@ BEGIN
                                  INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                                ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                               AND MovementLinkObject_Unit.DescId     = zc_MovementLinkObject_Unit()
-                                                              AND MovementLinkObject_Unit.ObjectId   = 183292
+                                                              AND MovementLinkObject_Unit.ObjectId   = vbUnitId
                                  INNER JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
                                                                ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
                                                               AND MovementLinkObject_ConfirmedKind.DescId     = zc_MovementLinkObject_ConfirmedKind()
@@ -114,6 +114,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 20.10.18                                                                     *
  31.08.18                                                                     *
  18.08.16                                        *
 */
