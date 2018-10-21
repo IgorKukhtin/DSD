@@ -281,6 +281,7 @@ inherited Report_KPUForm: TReport_KPUForm
           end
           object FinancPlan: TcxGridDBBandedColumn
             Caption = #1055#1083#1072#1085
+            DataBinding.FieldName = 'FinancPlan'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -291,6 +292,7 @@ inherited Report_KPUForm: TReport_KPUForm
           end
           object FinancPlanFact: TcxGridDBBandedColumn
             Caption = #1060#1072#1082#1090
+            DataBinding.FieldName = 'FinancPlanFact'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -301,6 +303,7 @@ inherited Report_KPUForm: TReport_KPUForm
           end
           object FinancPlanRatio: TcxGridDBBandedColumn
             Caption = #1050#1086#1101#1092'.'
+            DataBinding.FieldName = 'FinancPlanRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 37
@@ -408,6 +411,7 @@ inherited Report_KPUForm: TReport_KPUForm
           end
           object YuriIT: TcxGridDBBandedColumn
             Caption = #1070#1088#1080#1081' IT'
+            DataBinding.FieldName = 'YuriIT'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 36
@@ -417,6 +421,7 @@ inherited Report_KPUForm: TReport_KPUForm
           end
           object OlegIT: TcxGridDBBandedColumn
             Caption = #1054#1083#1077#1075' IT'
+            DataBinding.FieldName = 'OlegIT'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 34
@@ -426,6 +431,7 @@ inherited Report_KPUForm: TReport_KPUForm
           end
           object MaximIT: TcxGridDBBandedColumn
             Caption = #1052#1072#1082#1089#1080#1084' IT'
+            DataBinding.FieldName = 'MaximIT'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 40
@@ -435,6 +441,7 @@ inherited Report_KPUForm: TReport_KPUForm
           end
           object CollegeITRatio: TcxGridDBBandedColumn
             Caption = #1050#1086#1101#1092'.'
+            DataBinding.FieldName = 'CollegeITRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 36
@@ -444,6 +451,7 @@ inherited Report_KPUForm: TReport_KPUForm
           end
           object CollegeITNote: TcxGridDBBandedColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+            DataBinding.FieldName = 'CollegeITNote'
             PropertiesClassName = 'TcxMemoProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -454,6 +462,7 @@ inherited Report_KPUForm: TReport_KPUForm
           end
           object VIPDepartRatio: TcxGridDBBandedColumn
             Caption = #1050#1086#1101#1092'.'
+            DataBinding.FieldName = 'VIPDepartRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 38
@@ -463,6 +472,7 @@ inherited Report_KPUForm: TReport_KPUForm
           end
           object VIPDepartRatioNote: TcxGridDBBandedColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+            DataBinding.FieldName = 'VIPDepartRatioNote'
             PropertiesClassName = 'TcxMemoProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -473,6 +483,7 @@ inherited Report_KPUForm: TReport_KPUForm
           end
           object Romanova: TcxGridDBBandedColumn
             Caption = #1056#1086#1084#1072#1085#1086#1074#1072' '#1058'.'#1042'.'
+            DataBinding.FieldName = 'Romanova'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -482,6 +493,7 @@ inherited Report_KPUForm: TReport_KPUForm
           end
           object Golovko: TcxGridDBBandedColumn
             Caption = #1043#1086#1083#1086#1074#1082#1086' '#1058'.'#1040'.'
+            DataBinding.FieldName = 'Golovko'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -491,6 +503,7 @@ inherited Report_KPUForm: TReport_KPUForm
           end
           object ControlRGRatio: TcxGridDBBandedColumn
             Caption = #1050#1086#1101#1092'.'
+            DataBinding.FieldName = 'ControlRGRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 46
@@ -500,6 +513,7 @@ inherited Report_KPUForm: TReport_KPUForm
           end
           object ControlRGNote: TcxGridDBBandedColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+            DataBinding.FieldName = 'ControlRGNote'
             PropertiesClassName = 'TcxMemoProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -787,6 +801,14 @@ inherited Report_KPUForm: TReport_KPUForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inFinancPlanRatio'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'FinancPlanRatio'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIT_ExamRatio'
         Value = Null
         Component = MasterCDS
@@ -825,6 +847,94 @@ inherited Report_KPUForm: TReport_KPUForm
         Component = MasterCDS
         ComponentItem = 'DirectorNote'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inYuriIT'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'YuriIT'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOlegIT'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OlegIT'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMaximIT'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MaximIT'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCollegeITRatio'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CollegeITRatio'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCollegeITNote'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CollegeITNote'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVIPDepartRatio'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'VIPDepartRatio'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVIPDepartRatioNote'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'VIPDepartRatioNote'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRomanova'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Romanova'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGolovko'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Golovko'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inControlRGRatio'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ControlRGRatio'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inControlRGNote'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ControlRGNote'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

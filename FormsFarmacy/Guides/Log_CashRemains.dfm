@@ -1,25 +1,26 @@
 inherited Log_CashRemainsForm: TLog_CashRemainsForm
   Caption = 'GUID '#1082#1072#1089#1089' '#1080' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
   ClientHeight = 463
-  ClientWidth = 725
+  ClientWidth = 734
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 741
+  ExplicitWidth = 750
   ExplicitHeight = 502
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 725
+    Width = 734
     Height = 406
     ExplicitWidth = 725
     ExplicitHeight = 406
     ClientRectBottom = 406
-    ClientRectRight = 725
+    ClientRectRight = 734
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 725
       ExplicitHeight = 406
       inherited cxGrid: TcxGrid
-        Width = 725
+        Width = 734
         Height = 269
+        ExplicitTop = 2
         ExplicitWidth = 725
         ExplicitHeight = 269
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -61,25 +62,31 @@ inherited Log_CashRemainsForm: TLog_CashRemainsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 229
+            Width = 223
           end
           object UserName: TcxGridDBColumn
             Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
             DataBinding.FieldName = 'UserName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 194
+            Width = 134
+          end
+          object LoginTime: TcxGridDBColumn
+            Caption = #1042#1088#1077#1084#1103' '#1074#1093#1086#1076#1072
+            DataBinding.FieldName = 'LoginTime'
+            Width = 82
           end
         end
       end
       object cxGridDouble: TcxGrid
         Left = 0
         Top = 277
-        Width = 725
+        Width = 734
         Height = 129
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 725
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DoubleDS
@@ -142,15 +149,16 @@ inherited Log_CashRemainsForm: TLog_CashRemainsForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 269
-        Width = 725
+        Width = 734
         Height = 8
         AlignSplitter = salBottom
         Control = cxGridDouble
+        ExplicitWidth = 725
       end
     end
   end
   inherited Panel: TPanel
-    Width = 725
+    Width = 734
     ExplicitWidth = 725
     inherited deStart: TcxDateEdit
       EditValue = 43344d
