@@ -28,12 +28,14 @@ BEGIN
                                        ON ObjectLink_Contract.ObjectId = ObjectLink_MainJuridical.ObjectId
                                       AND ObjectLink_Contract.DescId = zc_ObjectLink_ContractSettings_Contract()
                                       AND ObjectLink_Contract.ChildObjectId = inContractId
-                 INNER JOIN ObjectLink AS ObjectLink_Area
+                 LEFT JOIN ObjectLink AS ObjectLink_Area                                                     -- поставила left и перенесла условие в WHERE, т.к. если не был сохранен регион записывается по новой и задваивается
                                        ON ObjectLink_Area.ObjectId = ObjectLink_MainJuridical.ObjectId
                                       AND ObjectLink_Area.DescId = zc_ObjectLink_ContractSettings_Area()
-                                      AND (COALESCE (ObjectLink_Area.ChildObjectId, 0) = inAreaId)
+                                      --AND (COALESCE (ObjectLink_Area.ChildObjectId, 0) = inAreaId)
             WHERE ObjectLink_MainJuridical.DescId = zc_ObjectLink_ContractSettings_MainJuridical()
               AND ObjectLink_MainJuridical.ChildObjectId = inMainJuridicalId
+              AND (COALESCE (ObjectLink_Area.ChildObjectId, 0) = inAreaId)
+            LIMIT 1 -- вдруг задвоится                                 
             );
 
    IF COALESCE (vbId, 0) = 0 -- если связи не существует, тогда создаем ее

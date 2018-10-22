@@ -81,10 +81,10 @@ BEGIN
            , tmpPrice.EndDate
            , COALESCE(tmpPrice.ValuePrice, NULL) ::TFloat  AS ValuePrice
 
-         , Object_Insert.ValueData   AS InsertName
-         , Object_Update.ValueData   AS UpdateName
-         , ObjectDate_Protocol_Insert.ValueData AS InsertDate
-         , ObjectDate_Protocol_Update.ValueData AS UpdateDate
+           , Object_Insert.ValueData   AS InsertName
+           , Object_Update.ValueData   AS UpdateName
+           , ObjectDate_Protocol_Insert.ValueData AS InsertDate
+           , ObjectDate_Protocol_Update.ValueData AS UpdateDate
 
        FROM Object AS Object_Goods
           
@@ -122,7 +122,6 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
 
           LEFT JOIN ObjectDate AS ObjectDate_Protocol_Insert
                              ON ObjectDate_Protocol_Insert.ObjectId = tmpPrice.PriceListItemObjectId

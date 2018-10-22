@@ -1686,10 +1686,11 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceGroupSettingsTopForm'));
     TdsdFormStorageFactory.GetStorage.Load('TPriceGroupSettingsTopForm');
-
+     }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalSettingsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TJuridicalSettingsForm');
-
+     exit;
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));
     TdsdFormStorageFactory.GetStorage.Load('TActionForm');
 
