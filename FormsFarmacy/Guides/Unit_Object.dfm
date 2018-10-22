@@ -1,26 +1,26 @@
 inherited Unit_ObjectForm: TUnit_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
-  ClientHeight = 420
-  ClientWidth = 926
-  ExplicitWidth = 942
-  ExplicitHeight = 458
+  ClientHeight = 477
+  ClientWidth = 955
+  ExplicitWidth = 971
+  ExplicitHeight = 515
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 926
-    Height = 394
+    Width = 955
+    Height = 451
     ExplicitWidth = 926
-    ExplicitHeight = 394
-    ClientRectBottom = 394
-    ClientRectRight = 926
+    ExplicitHeight = 451
+    ClientRectBottom = 451
+    ClientRectRight = 955
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 926
-      ExplicitHeight = 394
+      ExplicitHeight = 451
       inherited cxGrid: TcxGrid
-        Width = 926
-        Height = 394
+        Width = 955
+        Height = 451
         ExplicitWidth = 926
-        ExplicitHeight = 394
+        ExplicitHeight = 451
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -241,6 +241,22 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object UnitRePriceName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076'. '#1076#1083#1103' '#1091#1088#1072#1074#1085'. '#1094#1077#1085' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094'.'
+            DataBinding.FieldName = 'UnitRePriceName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceUnit
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1076#1088#1072#1079#1076'. '#1076#1083#1103' '#1091#1088#1072#1074#1085#1080#1074#1072#1085#1080#1103' '#1094#1077#1085' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
+            Width = 95
+          end
         end
       end
     end
@@ -456,6 +472,33 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AreaName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actChoiceUnit: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TUserForm'
+      FormName = 'TUnitTreeForm'
+      FormNameParam.Value = 'TUnitTreeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitRePriceId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitRePriceName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -915,6 +958,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AreaId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitRePriceId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitRePriceId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

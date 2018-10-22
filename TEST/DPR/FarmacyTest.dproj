@@ -1530,10 +1530,6 @@
 				<Form>Unit_byReportBadmForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\Unit_Object.pas">
-				<Form>Unit_ObjectForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\DataTimeDialog.pas">
 				<Form>DataTimeDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -2114,6 +2110,8 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\ConnectWithOld\RepriceUnitSheduler.pas">
 				<Form>RepriceUnitShedulerForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Unit_Object.pas">
+				<Form>Unit_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

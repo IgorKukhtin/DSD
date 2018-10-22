@@ -153,7 +153,7 @@ BEGIN
                               , tmp.Amount4
                               , tmp.TotalAmount
                               , tmp.SummaSale
-                              , MovementLinkObject_From_Income.ObjectId AS JuridicalId_Income
+                              , MovementLinkObject_From_Income.ObjectId :: Integer AS JuridicalId_Income
                          FROM tmpMIContainer AS tmp
                               INNER JOIN MovementItem AS MI_Income ON MI_Income.Id = tmp.MovementItemId_Income
                               INNER JOIN Movement AS Movement_Income ON Movement_Income.Id = MI_Income.MovementId
@@ -163,66 +163,139 @@ BEGIN
                                                            AND MovementLinkObject_From_Income.DescId     = zc_MovementLinkObject_From()
                          ) 
            -- 
-           , tmpData AS (SELECT tmpData_all.MovementId_Check
-                              , tmpData_all.UnitId
-                              , tmpData_all.JuridicalId_Income
-                              , tmpData_all.GoodsId
-                              , MIString_PartionGoods.ValueData          AS PartionGoods
-                              , MIDate_ExpirationDate.ValueData          AS ExpirationDate
-                              , SUM (tmpData_all.TotalAmount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))  AS Summa
-                              , SUM (tmpData_all.TotalAmount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))    AS SummaWithVAT
-                              , SUM (tmpData_all.Amount)      AS Amount
-                              , SUM (tmpData_all.SummaSale)   AS SummaSale
-                              , SUM (tmpData_all.Amount2)     AS Amount2
-                              , SUM (tmpData_all.Amount3)     AS Amount3
-                              , SUM (tmpData_all.Amount4)     AS Amount4
-                              , SUM (tmpData_all.TotalAmount) AS TotalAmount
-                         FROM tmpData_all
-                              -- цена с учетом НДС, для элемента прихода от поставщика (или NULL)
-                              LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
-                                                          ON MIFloat_JuridicalPrice.MovementItemId = tmpData_all.MovementItemId_Income
-                                                         AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
-                              -- цена с учетом НДС, для элемента прихода от поставщика без % корректировки  (или NULL)
-                              LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
-                                                          ON MIFloat_PriceWithVAT.MovementItemId = tmpData_all.MovementItemId_Income
-                                                         AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
-                              -- № партии препарата
-                              LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                                           ON MIString_PartionGoods.MovementItemId = tmpData_all.MovementItemId_Income
-                                                          AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-                              -- Срок годности
-                              LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
-                                                         ON MIDate_ExpirationDate.MovementItemId = tmpData_all.MovementItemId_Income
-                                                        AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
-                       
-                         GROUP BY tmpData_all.JuridicalId_Income
-                                , tmpData_all.MovementId_Check
-                                , tmpData_all.GoodsId
-                                , tmpData_all.UnitId
-                                , MIString_PartionGoods.ValueData
-                                , MIDate_ExpirationDate.ValueData
-                        )
+       , tmpMovementItemFloat AS (SELECT MovementItemFloat.*
+                                  FROM MovementItemFloat
+                                  WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpData_all.MovementItemId_Income FROM tmpData_all)
+                                    AND MovementItemFloat.DescId IN (zc_MIFloat_JuridicalPrice(), zc_MIFloat_PriceWithVAT())
+                                  )
+       , tmpMovementItemString AS (SELECT MovementItemString.*
+                                   FROM MovementItemString
+                                   WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpData_all.MovementItemId_Income FROM tmpData_all)
+                                     AND MovementItemString.DescId = zc_MIString_PartionGoods()
+                                  )
+       , tmpMovementItemDate AS (SELECT MovementItemDate.*
+                                 FROM MovementItemDate
+                                 WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpData_all.MovementItemId_Income FROM tmpData_all)
+                                   AND MovementItemDate.DescId = zc_MIDate_PartionGoods()
+                                 )
+
+       , tmpData AS (SELECT tmpData_all.MovementId_Check
+                          , tmpData_all.UnitId
+                          , tmpData_all.JuridicalId_Income
+                          , tmpData_all.GoodsId
+                          , MIString_PartionGoods.ValueData          AS PartionGoods
+                          , MIDate_ExpirationDate.ValueData          AS ExpirationDate
+                          , SUM (tmpData_all.TotalAmount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))  AS Summa
+                          , SUM (tmpData_all.TotalAmount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))    AS SummaWithVAT
+                          , SUM (tmpData_all.Amount)      AS Amount
+                          , SUM (tmpData_all.SummaSale)   AS SummaSale
+                          , SUM (tmpData_all.Amount2)     AS Amount2
+                          , SUM (tmpData_all.Amount3)     AS Amount3
+                          , SUM (tmpData_all.Amount4)     AS Amount4
+                          , SUM (tmpData_all.TotalAmount) AS TotalAmount
+                     FROM tmpData_all
+                          -- цена с учетом НДС, для элемента прихода от поставщика (или NULL)
+                          LEFT JOIN tmpMovementItemFloat AS MIFloat_JuridicalPrice
+                                                         ON MIFloat_JuridicalPrice.MovementItemId = tmpData_all.MovementItemId_Income
+                                                        AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
+                          -- цена с учетом НДС, для элемента прихода от поставщика без % корректировки  (или NULL)
+                          LEFT JOIN tmpMovementItemFloat AS MIFloat_PriceWithVAT
+                                                         ON MIFloat_PriceWithVAT.MovementItemId = tmpData_all.MovementItemId_Income
+                                                        AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+                          -- № партии препарата
+                          LEFT JOIN tmpMovementItemString AS MIString_PartionGoods
+                                                          ON MIString_PartionGoods.MovementItemId = tmpData_all.MovementItemId_Income
+                                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                          -- Срок годности
+                          LEFT JOIN tmpMovementItemDate AS MIDate_ExpirationDate
+                                                        ON MIDate_ExpirationDate.MovementItemId = tmpData_all.MovementItemId_Income
+                                                       AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                   
+                     GROUP BY tmpData_all.JuridicalId_Income
+                            , tmpData_all.MovementId_Check
+                            , tmpData_all.GoodsId
+                            , tmpData_all.UnitId
+                            , MIString_PartionGoods.ValueData
+                            , MIDate_ExpirationDate.ValueData
+                    )
 
       
+       , tmpMovementDate AS (SELECT MovementDate.*
+                             FROM MovementDate
+                             WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpData.MovementId_Check FROM tmpData)
+                               AND MovementDate.DescId = zc_MovementDate_Insert()
+                             )
+
+       , tmpMovementString AS (SELECT MovementString.*
+                               FROM MovementString
+                               WHERE MovementString.MovementId IN (SELECT DISTINCT tmpData.MovementId_Check FROM tmpData)
+                                 AND MovementString.DescId = zc_MovementString_Comment()
+                               )
+      
+       , tmpStatus AS ( SELECT * FROM Object WHERE descid = zc_Object_Status())
+       
+       , tmpMovement AS (SELECT Movement.*
+                              , Object_Status.ValueData  AS StatusName
+                         FROM Movement
+                              LEFT JOIN tmpStatus AS Object_Status ON Object_Status.Id = Movement.StatusId-- and Object_Status.descid = zc_Object_Status()
+                         WHERE Movement.Id IN (SELECT DISTINCT tmpData.MovementId_Check FROM tmpData )
+                        )
+                        
+       , tmpGoodsParam AS (SELECT ObjectLink_Goods_NDSKind.ObjectId      AS GoodsId
+                                , Object.ObjectCode                      AS Code
+                                , Object.ValueData                       AS Name
+                                , ObjectLink_Goods_NDSKind.ChildObjectId AS NDSKindId
+                                , Object_NDSKind.ValueData               AS NDSKindName
+                                , ObjectFloat_NDSKind_NDS.ValueData      AS NDS
+                           FROM ObjectLink AS ObjectLink_Goods_NDSKind
+                                LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                                      ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
+                                                     AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+
+                                LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+                                LEFT JOIN Object ON Object.Id = ObjectLink_Goods_NDSKind.ObjectId
+                           WHERE ObjectLink_Goods_NDSKind.ObjectId IN (SELECT DISTINCT tmpData.GoodsId FROM tmpData)
+                             AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+                              )
+      
+       , tmpUnitParam AS (SELECT Object_Unit.Id                           AS UnitId
+                               , Object_Unit.ValueData                    AS UnitName
+                               , Object_MainJuridical.ValueData           AS MainJuridicalName
+                               , Object_Retail.ValueData                  AS RetailName 
+                          FROM ObjectLink AS ObjectLink_Unit_Juridical
+                               LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit_Juridical.ObjectId
+                               LEFT JOIN Object AS Object_MainJuridical ON Object_MainJuridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+                               
+                               LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                    ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                   AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                               LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+                                       
+                          WHERE ObjectLink_Unit_Juridical.ObjectId IN (SELECT DISTINCT tmpData.UnitId FROM tmpData)
+                                  AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                         )
+
+
       -- Результат
       SELECT Movement.Id                              AS MovementId
             ,'Продажи касс'               :: TVarChar AS ItemName
             ,tmpData.Amount               :: TFloat   AS Amount
             ,tmpData.Amount2              :: TFloat   AS Amount2
             ,tmpData.Amount3              :: TFloat   AS Amount3
+
             ,tmpData.Amount4              :: TFloat   AS Amount4
             ,tmpData.TotalAmount          :: TFloat   AS TotalAmount
-            ,Object.ObjectCode                        AS Code
-            ,Object.ValueData                         AS Name
-            ,Object_NDSKind.ValueData                 AS NDSKindName
-            ,ObjectFloat_NDSKind_NDS.ValueData        AS NDS
+            ,tmpGoodsParam.Code                       AS Code
+            ,tmpGoodsParam.Name                       AS Name
+            ,tmpGoodsParam.NDSKindName                AS NDSKindName
+            ,tmpGoodsParam.NDS                        AS NDS
             ,Movement.OperDate                        AS OperDate
             ,Movement.InvNumber                       AS InvNumber
-            ,Object_Status.ValueData                  AS StatusName
-            ,Object_Unit.ValueData                    AS UnitName
-            ,Object_MainJuridical.ValueData           AS MainJuridicalName
+            ,Movement.StatusName                      AS StatusName
+            ,tmpUnitParam.UnitName                    AS UnitName
+            ,tmpUnitParam.MainJuridicalName           AS MainJuridicalName
             ,Object_From.ValueData                    AS JuridicalName
-            ,Object_Retail.ValueData                  AS RetailName 
+            ,tmpUnitParam.RetailName                  AS RetailName 
             ,CASE WHEN tmpData.TotalAmount <> 0 THEN tmpData.Summa / tmpData.TotalAmount ELSE 0 END        :: TFloat AS Price
             ,CASE WHEN tmpData.TotalAmount <> 0 THEN tmpData.SummaWithVAT / tmpData.TotalAmount ELSE 0 END :: TFloat AS PriceWithVAT
 
@@ -232,49 +305,28 @@ BEGIN
             ,tmpData.SummaWithVAT :: TFloat
             ,tmpData.SummaSale    :: TFloat
 
-            ,MovementString_Comment.ValueData  :: TVarChar        AS Comment
+            ,MovementString_Comment.ValueData  :: TVarChar AS Comment
 
             ,tmpData.PartionGoods
             ,tmpData.ExpirationDate
            
-            ,MovementDate_Insert.ValueData            AS InsertDate
+            ,MovementDate_Insert.ValueData                 AS InsertDate
 
-      FROM tmpData 
-        LEFT JOIN Movement ON Movement.Id = tmpData.MovementId_Check
-        LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId 
-                   
-        LEFT JOIN MovementDate AS MovementDate_Insert
-                               ON MovementDate_Insert.MovementId = tmpData.MovementId_Check
-                              AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
-
-        LEFT JOIN Object ON Object.Id = tmpData.GoodsId
-
-        LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                             ON ObjectLink_Goods_NDSKind.ObjectId = Object.Id
-                            AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
-        LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
-
-        LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                              ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
-                             AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
-
-        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
-        LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
-                             ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
-                            AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-        LEFT JOIN Object AS Object_MainJuridical ON Object_MainJuridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
-
-        LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                             ON ObjectLink_Juridical_Retail.ObjectId = Object_MainJuridical.Id
-                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-        LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
-
+     FROM tmpData 
+        LEFT JOIN tmpMovement AS Movement ON Movement.Id = tmpData.MovementId_Check
+        LEFT JOIN tmpUnitParam ON tmpUnitParam.UnitId = tmpData.UnitId
+    
         LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.JuridicalId_Income
 
-        LEFT JOIN MovementString AS MovementString_Comment
-                                 ON MovementString_Comment.DescId = zc_MovementString_Comment()
-                                AND MovementString_Comment.MovementId = tmpData.MovementId_Check
-  -- WHERE (tmpData.Amount+ tmpData.Amount2+tmpData.Amount3) <> 0
+        LEFT JOIN tmpMovementString AS MovementString_Comment
+                                    ON MovementString_Comment.DescId = zc_MovementString_Comment()
+                                   AND MovementString_Comment.MovementId = tmpData.MovementId_Check
+                   
+        LEFT JOIN tmpMovementDate AS MovementDate_Insert
+                                  ON MovementDate_Insert.MovementId = tmpData.MovementId_Check
+                                 AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+        
+        LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = tmpData.GoodsId
      ;
 
 END;
@@ -284,6 +336,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 22.10.18         *
  07.01.18         *
  23.03.17         *
  09.01.17         * на проводках

@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 431
+  ClientHeight = 478
   ClientWidth = 488
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 72
-    Top = 398
+    Top = 445
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 266
-    Top = 398
+    Top = 445
     Width = 75
     Height = 25
     Action = FormClose
@@ -309,6 +309,23 @@
     TabOrder = 38
     Width = 209
   end
+  object cxLabel18: TcxLabel
+    Left = 17
+    Top = 402
+    Caption = #1055#1086#1076#1088#1072#1079#1076'. '#1076#1083#1103' '#1091#1088#1072#1074#1085#1080#1074#1072#1085#1080#1103' '#1094#1077#1085' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
+  end
+  object edUnitRePrice: TcxButtonEdit
+    Left = 17
+    Top = 418
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 40
+    Width = 448
+  end
   object ActionList: TActionList
     Left = 356
     Top = 358
@@ -503,6 +520,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inUnitRePriceId'
+        Value = Null
+        Component = GuidesUnitRePrice
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inNormOfManDays'
         Value = Null
         Component = ceNormOfManDays
@@ -510,8 +535,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 180
-    Top = 374
+    Left = 196
+    Top = 342
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -723,10 +748,25 @@
         Value = Null
         Component = ceNormOfManDays
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitRePriceId'
+        Value = Null
+        Component = GuidesUnitRePrice
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitRePriceName'
+        Value = Null
+        Component = GuidesUnitRePrice
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 28
-    Top = 374
+    Left = 84
+    Top = 350
   end
   object ParentGuides: TdsdGuides
     KeyField = 'Id'
@@ -930,5 +970,34 @@
       end>
     Left = 376
     Top = 104
+  end
+  object GuidesUnitRePrice: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitRePrice
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnitRePrice
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnitRePrice
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 241
+    Top = 392
   end
 end

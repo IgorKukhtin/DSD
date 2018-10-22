@@ -65,6 +65,8 @@ type
     AreaName: TcxGridDBColumn;
     actOpenAreaForm: TOpenChoiceForm;
     Phone: TcxGridDBColumn;
+    actChoiceUnit: TOpenChoiceForm;
+    UnitRePriceName: TcxGridDBColumn;
   private
     { Private declarations }
   public
