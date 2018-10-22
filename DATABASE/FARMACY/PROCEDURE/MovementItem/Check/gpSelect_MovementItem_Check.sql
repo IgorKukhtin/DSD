@@ -24,6 +24,8 @@ RETURNS TABLE (Id Integer, ParentId integer
              , isErased Boolean
              , isSp Boolean
              , Remains TFloat
+             , Color_calc integer
+             , Color_ExpirationDate integer             
               )
 AS
 $BODY$
@@ -80,6 +82,8 @@ BEGIN
            , MovementItem.isErased
            , CASE WHEN COALESCE (vbMovementId_SP,0) = 0 THEN False ELSE TRUE END AS isSp
            , MovementItem.Amount
+           , zc_Color_White()                                                    AS Color_calc
+           , zc_Color_Black()                                                    AS Color_ExpirationDate
        FROM MovementItem_Check_View AS MovementItem 
             -- получаем GoodsMainId
             LEFT JOIN  ObjectLink AS ObjectLink_Child 
@@ -103,7 +107,8 @@ ALTER FUNCTION gpSelect_MovementItem_Check (Integer, TVarChar) OWNER TO postgres
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А. Воробкало А.А
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А. Воробкало А.А   Шаблий О.В.
+ 21.10.18                                                                                   *
  21.04.17         *
  10.08.16                                                                      * + MovementItem.LIST_UID
  03.08.16         *

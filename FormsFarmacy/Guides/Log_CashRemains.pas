@@ -31,6 +31,7 @@ type
     DoubleUnitName: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
+    LoginTime: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -29,6 +29,7 @@ BEGIN
          , OUnit.valuedata    AS UnitName
          , OUser.objectcode   AS UserCode
          , OUser.valuedata    AS UserName
+         , to_char(MIN(Log_CashRemains.DateStart), 'HH24:MI:SS') AS LoginTime
     FROM Log_CashRemains
          INNER JOIN Object AS OUnit ON OUnit.id = Log_CashRemains.UnitId
          INNER JOIN Object AS OUser ON OUser.id = Log_CashRemains.UserId
