@@ -473,6 +473,7 @@ uses
   Contract_Object in '..\..\FormsFarmacy\Guides\Contract_Object.pas' {Contract_ObjectForm: TParentForm},
   Report_Badm in '..\..\FormsFarmacy\Report\Report_Badm.pas' {Report_BadmForm: TParentForm},
   Unit_byReportBadm in '..\..\FormsFarmacy\Guides\Unit_byReportBadm.pas' {Unit_byReportBadmForm: TParentForm},
+  Unit_Object in '..\..\FormsFarmacy\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm},
   DataTimeDialog in '..\..\FormsFarmacy\Document\DataTimeDialog.pas' {DataTimeDialogForm: TParentForm},
   MarginCategory_Cross in '..\..\FormsFarmacy\Object\MarginCategory_Cross.pas' {MarginCategory_CrossForm: TParentForm},
   MarginCategory_Total in '..\..\FormsFarmacy\Object\MarginCategory_Total.pas' {MarginCategory_TotalForm: TParentForm},
@@ -623,7 +624,6 @@ uses
   Report_Check_GoodsPriceChangeDialog in '..\..\FormsFarmacy\Report\Report_Check_GoodsPriceChangeDialog.pas' {Report_Check_GoodsPriceChangeDialogForm: TParentForm},
   Log_CashRemains in '..\..\FormsFarmacy\Guides\Log_CashRemains.pas' {Log_CashRemainsForm: TParentForm},
   RepriceUnitSheduler in '..\..\FormsFarmacy\ConnectWithOld\RepriceUnitSheduler.pas' {RepriceUnitShedulerForm: TParentForm};
-  Unit_Object in '..\..\FormsFarmacy\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
