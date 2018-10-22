@@ -25,6 +25,7 @@ BEGIN
 
        SELECT
              Movement.Id                                        AS Id
+           , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
            , Movement.InvNumber                                 AS InvNumber
            , Movement.OperDate                                  AS OperDate
            , Object_Status.ObjectCode                           AS StatusCode
@@ -154,6 +155,7 @@ ALTER FUNCTION gpSelect_Movement_Loss_Print (Integer,TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.10.18         * IdBarCode
  19.11.14                                                       *
 */
 
