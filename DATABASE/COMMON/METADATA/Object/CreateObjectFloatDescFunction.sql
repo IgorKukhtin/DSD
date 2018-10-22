@@ -1167,9 +1167,31 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_PriceChange_PercentMarkup() RETURNS In
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_PriceChange(), 'zc_ObjectFloat_PriceChange_PercentMarkup', 'Расчетная цена' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceChange_PercentMarkup');
 
+  CREATE OR REPLACE FUNCTION zc_ObjectFloat_RepriceUnitSheduler_PercentDifference() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RepriceUnitSheduler_PercentDifference'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_RepriceUnitSheduler(), 'zc_ObjectFloat_RepriceUnitSheduler_PercentDifference', '% разницы цен' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RepriceUnitSheduler_PercentDifference');
+
+  CREATE OR REPLACE FUNCTION zc_ObjectFloat_RepriceUnitSheduler_PercentRepriceMax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RepriceUnitSheduler_PercentRepriceMax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_RepriceUnitSheduler(), 'zc_ObjectFloat_RepriceUnitSheduler_PercentRepriceMax', 'Переоц. с % не более' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RepriceUnitSheduler_PercentRepriceMax');
+
+  CREATE OR REPLACE FUNCTION zc_ObjectFloat_RepriceUnitSheduler_PercentRepriceMin() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RepriceUnitSheduler_PercentRepriceMin'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_RepriceUnitSheduler(), 'zc_ObjectFloat_RepriceUnitSheduler_PercentRepriceMin', 'Переоц. с % не менее' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RepriceUnitSheduler_PercentRepriceMin');
+
+  CREATE OR REPLACE FUNCTION zc_ObjectFloat_RepriceUnitSheduler_EqualRepriceMax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RepriceUnitSheduler_EqualRepriceMax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_RepriceUnitSheduler(), 'zc_ObjectFloat_RepriceUnitSheduler_EqualRepriceMax', 'Уравн. с % не более' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RepriceUnitSheduler_EqualRepriceMax');
+
+  CREATE OR REPLACE FUNCTION zc_ObjectFloat_RepriceUnitSheduler_EqualRepriceMin() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RepriceUnitSheduler_EqualRepriceMin'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_RepriceUnitSheduler(), 'zc_ObjectFloat_RepriceUnitSheduler_EqualRepriceMin', 'Уравн. с % не менее' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RepriceUnitSheduler_EqualRepriceMin');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 22.10.18                                                                                     * zc_ObjectFloat_RepriceUnitSheduler_ ...
  14.10.18         *zc_ObjectFloat_ReportCollation_...
  27.08.18                                                                                     * zc_ObjectFloat_Overdraft_Summa
  20.08.18         * zc_ObjectFloat_Contract_TotalSumm

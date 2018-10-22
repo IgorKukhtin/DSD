@@ -32,6 +32,7 @@ inherited MainCashForm2: TMainCashForm2
       TabOrder = 0
       object CheckGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
+        OnFocusedRecordChanged = CheckGridDBTableViewFocusedRecordChanged
         DataController.DataSource = CheckDS
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
@@ -111,6 +112,14 @@ inherited MainCashForm2: TMainCashForm2
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           Width = 45
+        end
+        object CheckGridColor_calc: TcxGridDBColumn
+          DataBinding.FieldName = 'Color_calc'
+          Visible = False
+        end
+        object CheckGridColor_ExpirationDate: TcxGridDBColumn
+          DataBinding.FieldName = 'Color_ExpirationDate'
+          Visible = False
         end
       end
       object CheckGridLevel: TcxGridLevel
@@ -2914,6 +2923,14 @@ inherited MainCashForm2: TMainCashForm2
       item
         Name = 'Remains'
         DataType = ftFloat
+      end
+      item
+        Name = 'Color_calc'
+        DataType = ftInteger
+      end
+      item
+        Name = 'Color_ExpirationDate'
+        DataType = ftInteger
       end>
     IndexDefs = <>
     Params = <>
@@ -2936,7 +2953,61 @@ inherited MainCashForm2: TMainCashForm2
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = CheckGridColCode
+        ValueColumn = CheckGridColor_ExpirationDate
+        BackGroundValueColumn = CheckGridColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CheckGridColName
+        ValueColumn = CheckGridColor_ExpirationDate
+        BackGroundValueColumn = CheckGridColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CheckGridColAmount
+        ValueColumn = CheckGridColor_ExpirationDate
+        BackGroundValueColumn = CheckGridColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CheckGridColAmount
+        ValueColumn = CheckGridColor_ExpirationDate
+        BackGroundValueColumn = CheckGridColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CheckGridColPrice
+        ValueColumn = CheckGridColor_ExpirationDate
+        BackGroundValueColumn = CheckGridColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CheckGridColSumm
+        ValueColumn = CheckGridColor_ExpirationDate
+        BackGroundValueColumn = CheckGridColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CheckGridColPriceSale
+        ValueColumn = CheckGridColor_ExpirationDate
+        BackGroundValueColumn = CheckGridColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CheckGridColChangePercent
+        ValueColumn = CheckGridColor_ExpirationDate
+        BackGroundValueColumn = CheckGridColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CheckGridColAmountOrder
+        ValueColumn = CheckGridColor_ExpirationDate
+        BackGroundValueColumn = CheckGridColor_calc
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>

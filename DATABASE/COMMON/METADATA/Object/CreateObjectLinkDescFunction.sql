@@ -1995,9 +1995,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Protocol_ReCalc() RETURNS Integer AS $B
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Protocol_ReCalc', 'Пользователь (пересчет)', zc_Object_Contract(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Protocol_ReCalc');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_RepriceUnitSheduler_Juridical() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_RepriceUnitSheduler_Juridical'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_RepriceUnitSheduler_Juridical', 'Наше юр. лицо', zc_Object_RepriceUnitSheduler(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_RepriceUnitSheduler_Juridical');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 22.10.18                                                                                      * zc_ObjectLink_RepriceUnitSheduler_Juridical
  18.10.18         * zc_ObjectLink_Goods_PartnerIn
  16.10.18         * zc_ObjectLink_Protocol_ReCalc
  28.09.18                                                                                      * zc_ObjectLink_Goods_Exchange 
