@@ -2453,6 +2453,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actRepriceUnitSheduler: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1097#1080#1082' '#1087#1077#1088#1077#1086#1094#1077#1085#1086#1082
+      Hint = #1055#1083#1072#1085#1080#1088#1086#1074#1097#1080#1082' '#1087#1077#1088#1077#1086#1094#1077#1085#1086#1082
+      FormName = 'TRepriceUnitShedulerForm'
+      FormNameParam.Value = 'TRepriceUnitShedulerForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3247,6 +3259,9 @@ inherited MainForm: TMainForm
       end
       object miExportSalesForSupp: TMenuItem [27]
         Action = actExportSalesForSuppClick
+      end
+      object N173: TMenuItem [28]
+        Action = actRepriceUnitSheduler
       end
     end
   end

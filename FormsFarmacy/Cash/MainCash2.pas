@@ -329,6 +329,8 @@ type
     pm_OpenVIP: TPopupMenu;
     pm_VIP1: TMenuItem;
     pm_VIP2: TMenuItem;
+    CheckGridColor_calc: TcxGridDBColumn;
+    CheckGridColor_ExpirationDate: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -408,6 +410,10 @@ type
     procedure actShowListDiffExecute(Sender: TObject);
     procedure actListGoodsExecute(Sender: TObject);
     procedure pm_VIP1Click(Sender: TObject);
+    procedure CheckGridDBTableViewFocusedRecordChanged(
+      Sender: TcxCustomGridTableView; APrevFocusedRecord,
+      AFocusedRecord: TcxCustomGridRecord;
+      ANewItemRecordFocusingChanged: Boolean);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -983,12 +989,16 @@ begin
     begin
 
       if RemainsCDS.Locate('GoodsCode', checkCDS.FieldByName('GoodsCode').AsInteger,[]) and
-        ((checkCDS.FieldByName('Amount').asCurrency + checkCDS.FieldByName('Remains').asCurrency) <>
-        RemainsCDS.FieldByName('Remains').asCurrency) then
+        (((checkCDS.FieldByName('Amount').asCurrency + checkCDS.FieldByName('Remains').asCurrency) <>
+        RemainsCDS.FieldByName('Remains').asCurrency) or
+        (checkCDS.FieldByName('Color_calc').AsInteger <> RemainsCDS.FieldByName('Color_calc').asInteger) or
+        (checkCDS.FieldByName('Color_ExpirationDate').AsInteger <> RemainsCDS.FieldByName('Color_ExpirationDate').asInteger)) then
       begin
         checkCDS.Edit;
         checkCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency +
           checkCDS.FieldByName('Amount').asCurrency;
+        checkCDS.FieldByName('Color_calc').AsInteger:=RemainsCDS.FieldByName('Color_calc').asInteger;
+        checkCDS.FieldByName('Color_ExpirationDate').AsInteger:=RemainsCDS.FieldByName('Color_ExpirationDate').asInteger;
         checkCDS.Post;
       end;
       CheckCDS.Next;
@@ -1050,146 +1060,6 @@ begin
   End;
   APoint := btnVIP.ClientToScreen(Point(0, btnVIP.ClientHeight));
   pm_OpenVIP.Popup(APoint.X, APoint.Y);
-  Exit;
-  if actLoadVIP.Execute then
-  Begin
-    //обновим "нужные" параметры-Main ***20.07.16
-    DiscountServiceForm.pGetDiscountExternal (FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
-    // ***20.07.16
-    if FormParams.ParamByName('DiscountExternalId').Value > 0 then
-    begin
-         //проверка карты + сохраним "текущие" параметры-Main
-         if not DiscountServiceForm.fCheckCard (lMsg
-                                               ,DiscountServiceForm.gURL
-                                               ,DiscountServiceForm.gService
-                                               ,DiscountServiceForm.gPort
-                                               ,DiscountServiceForm.gUserName
-                                               ,DiscountServiceForm.gPassword
-                                               ,FormParams.ParamByName('DiscountCardNumber').Value
-                                               ,FormParams.ParamByName('DiscountExternalId').Value
-                                               )
-         then begin
-            // обнулим, пусть фармацевт начнет заново
-            FormParams.ParamByName('DiscountExternalId').Value:= 0;
-            // обнулим "нужные" параметры-Item
-            //DiscountServiceForm.pSetParamItemNull;
-         end;
-
-    end;
-    //
-    if FormParams.ParamByName('InvNumberSP').Value = ''
-    then begin
-        // Update Дисконт в CDS - по всем "обновим" Дисконт
-        DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
-        //
-        CalcTotalSumm;
-    end;
-
-    //***20.07.16
-    lblDiscountExternalName.Caption:= '  ' + FormParams.ParamByName('DiscountExternalName').Value + '  ';
-    lblDiscountCardNumber.Caption  := '  ' + FormParams.ParamByName('DiscountCardNumber').Value + '  ';
-    pnlDiscount.Visible            := FormParams.ParamByName('DiscountExternalId').Value > 0;
-
-    lblPartnerMedicalName.Caption:= '  ' + FormParams.ParamByName('PartnerMedicalName').Value; // + '  /  № амб. ' + FormParams.ParamByName('Ambulance').Value;
-    lblMedicSP.Caption:= '  ' + FormParams.ParamByName('MedicSP').Value + '  /  № '+FormParams.ParamByName('InvNumberSP').Value+'  от ' + DateToStr(FormParams.ParamByName('OperDateSP').Value);
-    if FormParams.ParamByName('SPTax').Value <> 0 then lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FloatToStr(FormParams.ParamByName('SPTax').Value) + '% : ' + FormParams.ParamByName('SPKindName').Value
-    else lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FormParams.ParamByName('SPKindName').Value;
-    pnlSP.Visible:= FormParams.ParamByName('InvNumberSP').Value <> '';
-
-    lblCashMember.Caption := FormParams.ParamByName('ManagerName').AsString;
-    if (FormParams.ParamByName('ConfirmedKindName').AsString <> '')
-    then lblCashMember.Caption := lblCashMember.Caption + ' * ' + FormParams.ParamByName('ConfirmedKindName').AsString;
-    if (FormParams.ParamByName('InvNumberOrder').AsString <> '')
-    then lblCashMember.Caption := lblCashMember.Caption + ' * ' + '№ ' + FormParams.ParamByName('InvNumberOrder').AsString;
-
-    lblBayer.Caption := FormParams.ParamByName('BayerName').AsString;
-    if (FormParams.ParamByName('BayerPhone').AsString <> '')
-    then lblBayer.Caption := lblBayer.Caption + ' * ' + FormParams.ParamByName('BayerPhone').AsString;
-
-    //***30.06.18
-    if FormParams.ParamByName('ManualDiscount').Value > 0 then
-    begin
-      pnlManualDiscount.Visible := True;
-      edManualDiscount.Value := FormParams.ParamByName('ManualDiscount').Value;
-
-      CheckCDS.DisableControls;
-      CheckCDS.Filtered := False;
-      nRecNo := CheckCDS.RecNo;
-      try
-
-        CheckCDS.First;
-        while not CheckCDS.Eof do
-        begin
-
-          if checkCDS.FieldByName('ChangePercent').asCurrency <> FormParams.ParamByName('ManualDiscount').Value then
-          begin
-            checkCDS.Edit;
-            checkCDS.FieldByName('Price').asCurrency    := GetPrice(checkCDS.FieldByName('PriceSale').asCurrency,
-                                                                    Self.FormParams.ParamByName('ManualDiscount').Value);
-            checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('ManualDiscount').Value;
-            CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency);
-            checkCDS.FieldByName('SummChangePercent').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
-                CheckCDS.FieldByName('PriceSale').asCurrency) - CheckCDS.FieldByName('Summ').asCurrency;
-            checkCDS.Post;
-          end;
-          CheckCDS.Next;
-        end;
-      finally
-        CheckCDS.RecNo := nRecNo;
-        CheckCDS.Filtered := True;
-        CheckCDS.EnableControls;
-      end;
-
-      CalcTotalSumm;
-    end;
-
-            //***04.09.18
-    CheckCDS.DisableControls;
-    CheckCDS.Filtered := False;
-    RemainsCDS.DisableControls;
-    RemainsCDS.Filtered := False;
-    nRecNo := RemainsCDS.RecNo;
-    try
-
-      CheckCDS.First;
-      while not CheckCDS.Eof do
-      begin
-
-        if RemainsCDS.Locate('GoodsCode', checkCDS.FieldByName('GoodsCode').AsInteger,[]) and
-          ((checkCDS.FieldByName('Amount').asCurrency + checkCDS.FieldByName('Remains').asCurrency) <>
-          RemainsCDS.FieldByName('Remains').asCurrency) then
-        begin
-          checkCDS.Edit;
-          checkCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency +
-            checkCDS.FieldByName('Amount').asCurrency;
-          checkCDS.Post;
-        end;
-        CheckCDS.Next;
-      end;
-      CheckCDS.First;
-    finally
-      RemainsCDS.RecNo := nRecNo;
-      CheckCDS.Filtered := True;
-      CheckCDS.EnableControls;
-      RemainsCDS.Filtered := True;
-      RemainsCDS.EnableControls;
-    end;
-
-    pnlVIP.Visible := true;
-  End;
-  //
-  SetBlinkVIP(true);
-  //
-  if not gc_User.Local then
-  Begin
-    WaitForSingleObject(MutexVip, INFINITE);
-    try
-      SaveLocalData(VIPCDS,vip_lcl);
-      SaveLocalData(VIPListCDS,vipList_lcl);
-    finally
-      ReleaseMutex(MutexVip);
-    end;
-  End;
 end;
 
 procedure TMainCashForm2.ClearFilterAll;
@@ -1745,7 +1615,7 @@ end;
 
 procedure TMainCashForm2.actSelectLocalVIPCheckExecute(Sender: TObject);
 var
-  vip,vipList: TClientDataSet;
+  vip,vipList: TClientDataSet; nRecNo : integer;
 begin
   inherited;
   vip := TClientDataSet.Create(Nil);
@@ -1783,7 +1653,27 @@ begin
         checkCDS.FieldByName('AmountOrder').asCurrency :=VipList.FieldByName('AmountOrder').asCurrency;
         //***10.08.16
         checkCDS.FieldByName('List_UID').AsString := VipList.FieldByName('List_UID').AsString;
-
+        //***21.10.18
+        RemainsCDS.DisableControls;
+        RemainsCDS.Filtered := False;
+        nRecNo := RemainsCDS.RecNo;
+        try
+          if RemainsCDS.Locate('GoodsCode', checkCDS.FieldByName('GoodsCode').AsInteger,[]) then
+          begin
+            checkCDS.FieldByName('Remains').asCurrency:=SourceClientDataSet.FieldByName('Remains').asCurrency;
+            checkCDS.FieldByName('Color_calc').AsInteger:=RemainsCDS.FieldByName('Color_calc').asInteger;
+            checkCDS.FieldByName('Color_ExpirationDate').AsInteger:=RemainsCDS.FieldByName('Color_ExpirationDate').asInteger;
+          end else
+          begin
+            checkCDS.FieldByName('Remains').asCurrency:=0;
+            checkCDS.FieldByName('Color_calc').AsInteger := clWindow;
+            checkCDS.FieldByName('Color_ExpirationDate').AsInteger := clWindowText;
+          end;
+        finally
+          RemainsCDS.RecNo := nRecNo;
+          RemainsCDS.Filtered := True;
+          RemainsCDS.EnableControls;
+        end;
         CheckCDS.Post;
         Add_Log('Id - '+ VipList.FieldByName('Id').AsString +
                 ' GoodsCode - ' + VipList.FieldByName('GoodsCode').AsString +
@@ -2796,6 +2686,28 @@ begin
     DataSet.FieldByName('List_UID').AsString := GenerateGUID;
 end;
 
+procedure TMainCashForm2.CheckGridDBTableViewFocusedRecordChanged(
+  Sender: TcxCustomGridTableView; APrevFocusedRecord,
+  AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
+begin
+  inherited;
+
+  if not CheckCDS.IsEmpty then
+  begin
+    edAmount.Style.Color := CheckCDS.FieldByName('Color_calc').AsInteger;
+    edAmount.StyleDisabled.Color := CheckCDS.FieldByName('Color_calc').AsInteger;
+    edAmount.StyleFocused.Color := CheckCDS.FieldByName('Color_calc').AsInteger;
+    edAmount.StyleHot.Color := CheckCDS.FieldByName('Color_calc').AsInteger;
+  end else
+  begin
+    edAmount.Style.Color := clWindow;
+    edAmount.StyleDisabled.Color := clBtnFace;
+    edAmount.StyleFocused.Color := clWindow;
+    edAmount.StyleHot.Color := clWindow;
+  end;
+
+end;
+
 procedure TMainCashForm2.ConnectionModeChange(var Msg: TMessage);
 begin
   SetWorkMode(gc_User.Local);
@@ -2984,7 +2896,7 @@ end;
 procedure TMainCashForm2.InsertUpdateBillCheckItems;
 var lQuantity, lPrice, lPriceSale, lChangePercent, lSummChangePercent, nAmount : Currency;
     lMsg : String;
-    lGoodsId_bySoldRegim : Integer;
+    lGoodsId_bySoldRegim, nRecNo : Integer;
     lPriceSale_bySoldRegim, lPrice_bySoldRegim : Currency;
 begin
 
@@ -3266,6 +3178,32 @@ begin
         checkCDS.FieldByName('List_UID').AsString := GenerateGUID;
         //***04.09.18
         checkCDS.FieldByName('Remains').asCurrency:=SourceClientDataSet.FieldByName('Remains').asCurrency;
+        //***21.10.18
+        if not Assigned(SourceClientDataSet.FindField('Color_calc')) then
+        begin
+          RemainsCDS.DisableControls;
+          RemainsCDS.Filtered := False;
+          nRecNo := RemainsCDS.RecNo;
+          try
+            if RemainsCDS.Locate('GoodsCode', checkCDS.FieldByName('GoodsCode').AsInteger,[]) then
+            begin
+              checkCDS.FieldByName('Color_calc').AsInteger:=RemainsCDS.FieldByName('Color_calc').asInteger;
+              checkCDS.FieldByName('Color_ExpirationDate').AsInteger:=RemainsCDS.FieldByName('Color_ExpirationDate').asInteger;
+            end else
+            begin
+              checkCDS.FieldByName('Color_calc').AsInteger := clWindow;
+              checkCDS.FieldByName('Color_ExpirationDate').AsInteger := clWindowText;
+            end;
+          finally
+            RemainsCDS.RecNo := nRecNo;
+            RemainsCDS.Filtered := True;
+            RemainsCDS.EnableControls;
+          end;
+        end else
+        begin
+          checkCDS.FieldByName('Color_calc').AsInteger:=SourceClientDataSet.FieldByName('Color_calc').asInteger;
+          checkCDS.FieldByName('Color_ExpirationDate').AsInteger:=SourceClientDataSet.FieldByName('Color_ExpirationDate').asInteger
+        end;
         checkCDS.Post;
 
         if (FormParams.ParamByName('DiscountExternalId').Value > 0) and

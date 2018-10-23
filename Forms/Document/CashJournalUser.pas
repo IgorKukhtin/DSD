@@ -55,6 +55,10 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    actPrint_byElements: TdsdPrintAction;
+    actPrint_byElements_byComments: TdsdPrintAction;
+    bbPrint_byElements: TdxBarButton;
+    bbPrint_byElements_byComments: TdxBarButton;
   private
     { Private declarations }
   public

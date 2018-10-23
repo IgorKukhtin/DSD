@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpUpdate_Unit_Params(Integer, TDateTime, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Unit_Params(Integer, TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Unit_Params(Integer, TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Unit_Params(
     IN inId                  Integer   ,    -- ключ объекта <Подразделение>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Unit_Params(
  INOUT ioCloseDate           TDateTime ,    -- дата закрытия точки
     IN inUserManagerId       Integer   ,    -- ссылка на менеджер
     IN inAreaId              Integer   ,    -- регион
+    IN inUnitRePriceId       Integer   ,    -- ссылка на подразделение 
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS RECORD
@@ -42,6 +44,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_UserManager(), inId, inUserManagerId);
    -- сохранили связь с <Регион>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Area(), inId, inAreaId);
+   
+   -- сохранили связь с подразделением
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_UnitRePrice(), inId, inUnitRePriceId);
    
    IF (ioCreateDate is not NULL) OR (vbCreateDate is not NULL)
    THEN

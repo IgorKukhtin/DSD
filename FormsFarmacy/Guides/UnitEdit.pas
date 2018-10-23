@@ -77,6 +77,9 @@ type
     cxLabel16: TcxLabel;
     cxLabel17: TcxLabel;
     edPhone: TcxTextEdit;
+    cxLabel18: TcxLabel;
+    edUnitRePrice: TcxButtonEdit;
+    GuidesUnitRePrice: TdsdGuides;
   private
     { Private declarations }
   public

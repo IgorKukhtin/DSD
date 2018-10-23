@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , RouteId integer, RouteName TVarChar
              , RouteSortingId integer, RouteSortingName TVarChar
              , AreaId Integer, AreaName TVarChar
+             , UnitRePriceId Integer, UnitRePriceName TVarChar
              , TaxService TFloat, TaxServiceNigth TFloat
              , StartServiceNigth TDateTime, EndServiceNigth TDateTime
              , CreateDate TDateTime, CloseDate TDateTime
@@ -69,6 +70,9 @@ BEGIN
 
       , Object_Area.Id                                       AS AreaId
       , Object_Area.ValueData                                AS AreaName
+      
+      , COALESCE (Object_UnitRePrice.Id,0)          ::Integer  AS UnitRePriceId
+      , COALESCE (Object_UnitRePrice.ValueData, '') ::TVarChar AS UnitRePriceName
            
       , ObjectFloat_TaxService.ValueData                     AS TaxService
       , ObjectFloat_TaxServiceNigth.ValueData                AS TaxServiceNigth
@@ -121,7 +125,12 @@ BEGIN
                              ON ObjectLink_Unit_Area.ObjectId = Object_Unit.Id 
                             AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
         LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Unit_Area.ChildObjectId
-                
+
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_UnitRePrice
+                             ON ObjectLink_Unit_UnitRePrice.ObjectId = Object_Unit.Id 
+                            AND ObjectLink_Unit_UnitRePrice.DescId = zc_ObjectLink_Unit_UnitRePrice()
+        LEFT JOIN Object AS Object_UnitRePrice ON Object_UnitRePrice.Id = ObjectLink_Unit_UnitRePrice.ChildObjectId
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
                                 ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()
@@ -188,6 +197,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.10.18         *
  29.08.18         * Phone
  15.09.17         * add inisShowAll
  09.08.17         * add isReport

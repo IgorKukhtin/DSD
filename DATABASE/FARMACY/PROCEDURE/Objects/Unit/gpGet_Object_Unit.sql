@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                MarginCategoryId Integer, MarginCategoryName TVarChar,
                AreaId Integer, AreaName TVarChar,
                UnitCategoryId Integer, UnitCategoryName TVarChar,
+               UnitRePriceId Integer, UnitRePriceName TVarChar,
                isLeaf boolean, 
                TaxService TFloat, TaxServiceNigth TFloat,
                StartServiceNigth TDateTime, EndServiceNigth TDateTime,
@@ -57,6 +58,9 @@ BEGIN
            
            , CAST (0 as Integer)   AS UnitCategoryId
            , CAST ('' as TVarChar) AS UnitCategoryName
+
+           , CAST (0 as Integer)   AS UnitRePriceId
+           , CAST ('' as TVarChar) AS UnitRePriceName
            
            , false                 AS isLeaf
            , CAST (0 as TFloat)    AS TaxService
@@ -99,9 +103,12 @@ BEGIN
       , Object_Area.Id                                     AS AreaId
       , Object_Area.ValueData                              AS AreaName
       
-      , Object_UnitCategory.Id                                     AS UnitCategoryId
-      , Object_UnitCategory.ValueData                              AS UnitCategoryName
-      
+      , Object_UnitCategory.Id                             AS UnitCategoryId
+      , Object_UnitCategory.ValueData                      AS UnitCategoryName
+
+      , COALESCE (Object_UnitRePrice.Id,0)          ::Integer  AS UnitRePriceId
+      , COALESCE (Object_UnitRePrice.ValueData, '') ::TVarChar AS UnitRePriceName
+
       , ObjectBoolean_isLeaf.ValueData                     AS isLeaf
 
       , ObjectFloat_TaxService.ValueData                   AS TaxService
@@ -158,6 +165,11 @@ BEGIN
                              ON ObjectLink_Unit_Category.ObjectId = Object_Unit.Id 
                             AND ObjectLink_Unit_Category.DescId = zc_ObjectLink_Unit_Category()
         LEFT JOIN Object AS Object_UnitCategory ON Object_UnitCategory.Id = ObjectLink_Unit_Category.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_UnitRePrice
+                             ON ObjectLink_Unit_UnitRePrice.ObjectId = Object_Unit.Id 
+                            AND ObjectLink_Unit_UnitRePrice.DescId = zc_ObjectLink_Unit_UnitRePrice()
+        LEFT JOIN Object AS Object_UnitRePrice ON Object_UnitRePrice.Id = ObjectLink_Unit_UnitRePrice.ChildObjectId
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
                                 ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
@@ -217,6 +229,7 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 22.10.18         *
  29.08.18         * Phone
  14.05.18                                                        * add NormOfManDays
  05.05.18                                                        * add UnitCategory

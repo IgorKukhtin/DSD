@@ -461,6 +461,8 @@ type
     miReport_Check_GoodsPriceChange: TMenuItem;
     actLog_CashRemains: TdsdOpenForm;
     GUID1: TMenuItem;
+    actRepriceUnitSheduler: TdsdOpenForm;
+    N173: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

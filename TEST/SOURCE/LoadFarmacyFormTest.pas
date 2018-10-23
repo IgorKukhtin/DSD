@@ -913,10 +913,12 @@ end;
 
 procedure TLoadFormTest.LoadRepriceFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRepriceJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRepriceUnitShedulerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRepriceUnitShedulerForm');
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRepriceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRepriceJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRepriceForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TRepriceForm');
+  TdsdFormStorageFactory.GetStorage.Load('TRepriceForm');}
 end;
 
 procedure TLoadFormTest.LoadRepriceChangeFormTest;
@@ -1686,10 +1688,11 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceGroupSettingsTopForm'));
     TdsdFormStorageFactory.GetStorage.Load('TPriceGroupSettingsTopForm');
-
+     }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalSettingsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TJuridicalSettingsForm');
-
+     exit;
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));
     TdsdFormStorageFactory.GetStorage.Load('TActionForm');
 

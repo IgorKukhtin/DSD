@@ -1041,6 +1041,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReportCollationCode'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ReportCollationCode'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
@@ -1248,6 +1256,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = FormParams
           ComponentItem = 'BarCodeId'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReportCollationCode'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ReportCollationCode'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1465,6 +1481,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = FormParams
           ComponentItem = 'BarCodeId'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReportCollationCode'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ReportCollationCode'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -2369,6 +2393,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = FormParams
         ComponentItem = 'AccounterName_Basis'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outReportCollationCode'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportCollationCode'
         MultiSelectSeparator = ','
       end>
     PackSize = 1

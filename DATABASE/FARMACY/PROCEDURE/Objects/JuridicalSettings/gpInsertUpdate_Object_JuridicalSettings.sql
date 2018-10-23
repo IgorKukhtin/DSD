@@ -6,6 +6,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarCha
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarChar, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarChar, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarChar, Integer, Integer, Integer, Boolean, Boolean, Boolean, TFloat, TFloat, TFloat, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarChar, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, TFloat, TDateTime, TDateTime, TVarChar);
 
 
 
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalSettings(
     IN inContractId              Integer   ,    -- Договор
     IN inisBonusVirtual          Boolean   ,    -- Виртуальный бонус
     IN inisPriceClose            Boolean   ,    -- Закрыт прайс
+    IN inisPriceCloseOrder       Boolean   ,    -- Закрыт прайс для заказа
     IN inisSite                  Boolean   ,    -- для сайта
     IN inBonus                   TFloat    ,    -- % бонусирования
     IN inPriceLimit              TFloat    ,    -- Цена до
@@ -50,8 +52,10 @@ BEGIN
    -- сохранили связь с <Договор>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalSettings_Contract(), ioId, inContractId);
 
-   -- % бонусирования
+   -- прайс закрыт
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_JuridicalSettings_isPriceClose(), ioId, inisPriceClose);
+   -- прайс закрыт для заказа
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_JuridicalSettings_isPriceCloseOrder(), ioId, inisPriceCloseOrder);
 
    -- % бонусирования
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_JuridicalSettings_Bonus(), ioId, inBonus);
@@ -85,6 +89,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.10.18         *
  14.11.16         * add BonusVirtual
  13.04.16         *
  18.02.16         *

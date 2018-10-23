@@ -30,6 +30,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalBalance(
    OUT outJuridicalName_Basis         TVarChar,
    OUT outJuridicalShortName_Basis    TVarChar,
    OUT outAccounterName_Basis         TVarChar,
+   OUT outReportCollationCode         Integer,
     IN inSession                      TVarChar    -- сессия пользователя
 )
 AS
@@ -104,24 +105,67 @@ BEGIN
         , tmpSumm AS (SELECT SUM (Amount) AS Amount FROM tmpSummContract)
         , tmpSummCurrency AS (SELECT SUM (Amount) AS Amount FROM tmpSummContractCurrency)
 
+        -- находим сохраненный Акт сверки, последний если есть
+        , tmpObject_ReportCollation AS (SELECT MAX (Object_ReportCollation.ObjectCode)              AS Code
+                                             /*, ObjectLink_ReportCollation_PaidKind.ChildObjectId  AS PaidKindId
+                                             , ObjectLink_ReportCollation_Juridical.ChildObjectId AS JuridicalId
+                                             , ObjectLink_ReportCollation_Partner.ChildObjectId   AS PartnerId 
+                                             , ObjectLink_ReportCollation_Contract.ChildObjectId  AS ContractId*/
+                                        FROM Object AS Object_ReportCollation
+                                           INNER JOIN ObjectDate AS ObjectDate_Start
+                                                                ON ObjectDate_Start.ObjectId = Object_ReportCollation.Id
+                                                               AND ObjectDate_Start.DescId = zc_ObjectDate_ReportCollation_Start()
+                                                               AND ObjectDate_Start.ValueData = '01.09.2017' 
+                                           INNER JOIN ObjectDate AS ObjectDate_End
+                                                                 ON ObjectDate_End.ObjectId = Object_ReportCollation.Id
+                                                                AND ObjectDate_End.DescId = zc_ObjectDate_ReportCollation_End()
+                                                                AND ObjectDate_End.ValueData = '30.09.2017'
+
+                                           LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_PaidKind
+                                                                ON ObjectLink_ReportCollation_PaidKind.ObjectId = Object_ReportCollation.Id
+                                                               AND ObjectLink_ReportCollation_PaidKind.DescId = zc_ObjectLink_ReportCollation_PaidKind()
+
+                                           LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_Juridical
+                                                                ON ObjectLink_ReportCollation_Juridical.ObjectId = Object_ReportCollation.Id
+                                                               AND ObjectLink_ReportCollation_Juridical.DescId = zc_ObjectLink_ReportCollation_Juridical()
+
+                                           LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_Partner
+                                                                ON ObjectLink_ReportCollation_Partner.ObjectId = Object_ReportCollation.Id
+                                                               AND ObjectLink_ReportCollation_Partner.DescId = zc_ObjectLink_ReportCollation_Partner()
+
+                                           LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_Contract
+                                                                ON ObjectLink_ReportCollation_Contract.ObjectId = Object_ReportCollation.Id
+                                                               AND ObjectLink_ReportCollation_Contract.DescId = zc_ObjectLink_ReportCollation_Contract()
+
+                                        WHERE Object_ReportCollation.DescId = zc_Object_ReportCollation()
+                                          AND Object_ReportCollation.isErased = FALSE
+                                          AND (COALESCE (ObjectLink_ReportCollation_Juridical.ChildObjectId, 0) = inJuridicalId)
+                                          AND (COALESCE (ObjectLink_ReportCollation_Contract.ChildObjectId, 0)  = inContractId)
+                                          AND (COALESCE (ObjectLink_ReportCollation_PaidKind.ChildObjectId, 0)  = inPaidKindId)
+                                          AND (COALESCE (ObjectLink_ReportCollation_Partner.ChildObjectId, 0)   = inPartnerId)
+                                        )
+
+     -- результат
      SELECT COALESCE (tmpSumm.Amount, 0) :: TFloat         AS StartBalance
           , COALESCE (tmpSummCurrency.Amount, 0) :: TFloat AS StartBalanceCurrency
-          , OHS_FullName.ValueData        AS JuridicalName
-          , Object_Juridical.ValueData    AS JuridicalShortName
+          , OHS_FullName.ValueData                  AS JuridicalName
+          , Object_Juridical.ValueData              AS JuridicalShortName
           , COALESCE (Object_Partner.ValueData, OHS_FullName.ValueData) AS PartnerName
-          , Object_Currency_View.Name         AS CurrencyName
-          , Object_Currency_View.InternalName AS InternalCurrencyName
-          , OHS_AccounterName.ValueData   AS AccounterName
-          , View_Contract.InvNumber       AS ContracNumber
-          , View_Contract.ContractTagName AS ContractTagName
-          , DATE (ObjectDate_Signing.ValueData)  AS ContractSigningDate
+          , Object_Currency_View.Name               AS CurrencyName
+          , Object_Currency_View.InternalName       AS InternalCurrencyName
+          , OHS_AccounterName.ValueData             AS AccounterName
+          , View_Contract.InvNumber                 AS ContracNumber
+          , View_Contract.ContractTagName           AS ContractTagName
+          , DATE (ObjectDate_Signing.ValueData)     AS ContractSigningDate
           , OHS_FullName_Basis.ValueData            AS JuridicalShortName_Basis
           , Object_Juridical_Basis.ValueData        AS JuridicalName_Basis
           , 'Рудiк Н.В.' /*OHS_AccounterName_Basis.ValueData*/   AS AccounterName_Basis
+          , tmpObject_ReportCollation.Code :: Integer AS ReportCollationCode
             INTO outStartBalance, outStartBalanceCurrency
                , outJuridicalName, outJuridicalShortName, outPartnerName, outCurrencyName, outInternalCurrencyName, outAccounterName
                , outContracNumber, outContractTagName, outContractSigningDate
                , outJuridicalName_Basis, outJuridicalShortName_Basis, outAccounterName_Basis
+               , outReportCollationCode
      FROM tmpSumm
           LEFT JOIN tmpSummCurrency ON 1 = 1 -- tmpSummCurrency.ContainerId = tmpSumm.ContainerId -- inCurrencyId <> 0
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = inJuridicalId
@@ -154,6 +198,8 @@ BEGIN
           LEFT JOIN ObjectHistoryString AS OHS_AccounterName_Basis
                                         ON OHS_AccounterName_Basis.ObjectHistoryId = ViewHistory_JuridicalDetails_Basis.ObjectHistoryId
                                        AND OHS_AccounterName_Basis.DescId = zc_ObjectHistoryString_JuridicalDetails_AccounterName()
+
+          LEFT JOIN tmpObject_ReportCollation ON 1 = 1
     ;
             
 END;

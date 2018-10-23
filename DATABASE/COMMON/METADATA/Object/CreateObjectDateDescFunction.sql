@@ -321,8 +321,13 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_PriceChange_DateChange() RETURNS Intege
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_PriceChange(), 'zc_ObjectDate_PriceChange_DateChange', 'Дата, время изменения цены или % наценки' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PriceChange_DateChange');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_RepriceUnitSheduler_DataStartLast() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_RepriceUnitSheduler_DataStartLast'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_RepriceUnitSheduler(), 'zc_ObjectDate_RepriceUnitSheduler_DataStartLast', 'Старт последней переоценкии' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_RepriceUnitSheduler_DataStartLast');
+
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 22.10.18                                                                                     * zc_ObjectDate_RepriceUnitSheduler_DataStartLast 
  18.10.18         * zc_ObjectDate_Goods_In
  16,10,18         * zc_ObjectDate_Protocol_ReCalc
  16.08.18         * zc_ObjectDate_PriceChange_DateChange
