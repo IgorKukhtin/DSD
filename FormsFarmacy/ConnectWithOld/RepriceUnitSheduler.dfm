@@ -1,28 +1,28 @@
 inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
   Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1097#1080#1082' '#1087#1077#1088#1077#1086#1094#1077#1085#1086#1082
   ClientHeight = 339
-  ClientWidth = 714
+  ClientWidth = 767
   AddOnFormData.isAlwaysRefresh = False
-  ExplicitWidth = 730
+  ExplicitWidth = 783
   ExplicitHeight = 378
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 714
+    Width = 767
     Height = 313
-    ExplicitWidth = 689
+    ExplicitWidth = 714
     ExplicitHeight = 313
     ClientRectBottom = 313
-    ClientRectRight = 714
+    ClientRectRight = 767
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 689
+      ExplicitWidth = 714
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Left = 3
-        Width = 711
+        Width = 764
         Height = 313
         ExplicitLeft = 3
-        ExplicitWidth = 686
+        ExplicitWidth = 711
         ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -35,21 +35,21 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object JuridicalCode: TcxGridDBColumn
+          object UnitCode: TcxGridDBColumn
             Caption = #1050#1086#1076
-            DataBinding.FieldName = 'JuridicalCode'
+            DataBinding.FieldName = 'UnitCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 34
           end
-          object JuridicalName: TcxGridDBColumn
-            Caption = #1053#1072#1096#1077' '#1102#1088'. '#1083#1080#1094#1086
-            DataBinding.FieldName = 'JuridicalName'
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actOpenJuridical
+                Action = actOpenUnit
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -96,6 +96,13 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
             DataBinding.FieldName = 'EqualRepriceMin'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+          end
+          object isEqual: TcxGridDBColumn
+            Caption = #1044#1083#1103' '#1091#1088#1072#1074#1085#1080' '#1074#1072#1085#1080#1080#1103
+            DataBinding.FieldName = 'isEqual'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 56
           end
           object DataStartLast: TcxGridDBColumn
             Caption = #1057#1090#1072#1088#1090' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1080#1080
@@ -189,13 +196,13 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
       isSetErased = False
       DataSource = MasterDS
     end
-    object actOpenJuridical: TOpenChoiceForm
+    object actOpenUnit: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'actOpenJuridical'
-      FormName = 'TJuridical_ObjectForm'
-      FormNameParam.Value = 'TJuridical_ObjectForm'
+      Caption = 'actOpenUnit'
+      FormName = 'TUnitTreeForm'
+      FormNameParam.Value = 'TUnitTreeForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -203,14 +210,14 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'JuridicalId'
+          ComponentItem = 'UnitId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'JuridicalName'
+          ComponentItem = 'UnitName'
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -226,7 +233,7 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_RepriceUnitSheduler'
-    Left = 104
+    Left = 112
     Top = 64
   end
   inherited BarManager: TdxBarManager
@@ -332,10 +339,10 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inJuridicalId'
+        Name = 'inUnitId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'JuridicalId'
+        ComponentItem = 'UnitId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -385,6 +392,15 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'EqualRepriceMin'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisEqual'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isEqual'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

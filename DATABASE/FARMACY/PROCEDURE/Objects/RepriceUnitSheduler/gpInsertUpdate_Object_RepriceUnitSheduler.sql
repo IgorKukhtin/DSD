@@ -1,14 +1,16 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_RepriceUnitSheduler (Integer, Integer, Integer, Boolean, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_RepriceUnitSheduler (Integer, Integer, Integer, Boolean, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_RepriceUnitSheduler(
  INOUT ioId                 Integer,    -- ИД
-    IN inJuridicalId        Integer, 
+    IN inUnitId             Integer, 
     IN inPercentDifference  Integer, 
     IN inVAT20              Boolean,
     IN inPercentRepriceMax  Integer, 
     IN inPercentRepriceMin  Integer, 
     IN inEqualRepriceMax    Integer, 
     IN inEqualRepriceMin    Integer, 
+    IN inisEqual            Boolean,
     IN inSession            TVarChar   -- Сессия
 )
 AS
@@ -22,17 +24,17 @@ BEGIN
     -- Если такая запись есть
     IF COALESCE (ioId, 0) = 0
     THEN
-      IF EXISTS(SELECT * FROM ObjectLink WHERE DescId = zc_ObjectLink_RepriceUnitSheduler_Juridical() 
-                                           AND ChildObjectId = inJuridicalId)
+      IF EXISTS(SELECT * FROM ObjectLink WHERE DescId = zc_ObjectLink_RepriceUnitSheduler_Unit() 
+                                           AND ChildObjectId = inUnitId)
       THEN
-        RAISE EXCEPTION 'Ошибка.По нашему юр. лицу <%> задание уже создано', (SELECT ValueData FROM Object WHERE Id = inJuridicalId);
+        RAISE EXCEPTION 'Ошибка.По подразделению <%> задание уже создано', (SELECT ValueData FROM Object WHERE Id = inUnitId);
       END IF;
     ELSE
-      IF EXISTS(SELECT * FROM ObjectLink WHERE DescId = zc_ObjectLink_RepriceUnitSheduler_Juridical() 
+      IF EXISTS(SELECT * FROM ObjectLink WHERE DescId = zc_ObjectLink_RepriceUnitSheduler_Unit() 
                                            AND ObjectId <> ioId
-                                           AND ChildObjectId = inJuridicalId)
+                                           AND ChildObjectId = inUnitId)
       THEN
-        RAISE EXCEPTION 'Ошибка.По нашему юр. лицу <%> задание уже создано', (SELECT ValueData FROM Object WHERE Id = inJuridicalId);
+        RAISE EXCEPTION 'Ошибка.По подразделению <%> задание уже создано', (SELECT ValueData FROM Object WHERE Id = inUnitId);
       END IF;    
     END IF;
         
@@ -40,7 +42,7 @@ BEGIN
     ioId := lpInsertUpdate_Object (ioId, zc_Object_RepriceUnitSheduler(), 0, '');
 
     -- сохранили связь с <Наше юр. лицо>
-    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_RepriceUnitSheduler_Juridical(), ioId, inJuridicalId);
+    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_RepriceUnitSheduler_Unit(), ioId, inUnitId);
         
     --сохранили 
     PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_RepriceUnitSheduler_PercentDifference(), ioId, inPercentDifference);
@@ -60,13 +62,17 @@ BEGIN
     --сохранили 
     PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_RepriceUnitSheduler_EqualRepriceMin(), ioId, inEqualRepriceMin);
         
+    --сохранили 
+    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_RepriceUnitSheduler_Equal(), ioId, inisEqual);
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_RepriceUnitSheduler (Integer, Integer, Integer, Boolean, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_RepriceUnitSheduler (Integer, Integer, Integer, Boolean, Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.
+ 23.10.18        *
  22.10.18        *
  */

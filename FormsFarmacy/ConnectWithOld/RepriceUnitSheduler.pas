@@ -16,9 +16,8 @@ uses
 
 type
   TRepriceUnitShedulerForm = class(TAncestorDBGridForm)
-    JuridicalCode: TcxGridDBColumn;
     PercentDifference: TcxGridDBColumn;
-    JuridicalName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
     spInsertUpdateRepriceUnitSheduler: TdsdStoredProc;
     dsdUpdateMaster: TdsdUpdateDataSet;
@@ -37,7 +36,8 @@ type
     EqualRepriceMax: TcxGridDBColumn;
     EqualRepriceMin: TcxGridDBColumn;
     DataStartLast: TcxGridDBColumn;
-    actOpenJuridical: TOpenChoiceForm;
+    actOpenUnit: TOpenChoiceForm;
+    isEqual: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -47,6 +47,7 @@ type
 implementation
 
 {$R *.dfm}
+
 initialization
   RegisterClass(TRepriceUnitShedulerForm);
 

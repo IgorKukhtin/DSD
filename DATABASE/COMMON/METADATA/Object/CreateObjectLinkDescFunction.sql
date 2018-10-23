@@ -2002,10 +2002,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_RepriceUnitSheduler_Juridical() RETURNS
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_RepriceUnitSheduler_Juridical', 'Наше юр. лицо', zc_Object_RepriceUnitSheduler(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_RepriceUnitSheduler_Juridical');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_RepriceUnitSheduler_Unit() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_RepriceUnitSheduler_Unit'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_RepriceUnitSheduler_Unit', 'Связь с Подразделением', zc_Object_RepriceUnitSheduler(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_RepriceUnitSheduler_Unit');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 23.10.18                                                                                      * zc_ObjectLink_RepriceUnitSheduler_Unit
  22.10.18                                                                                      * zc_ObjectLink_RepriceUnitSheduler_Juridical
  22.10.18         * zc_ObjectLink_Unit_UnitRePrice
  18.10.18         * zc_ObjectLink_Goods_PartnerIn
