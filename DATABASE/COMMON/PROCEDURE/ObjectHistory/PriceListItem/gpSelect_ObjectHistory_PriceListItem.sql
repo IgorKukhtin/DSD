@@ -31,8 +31,8 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
      -- определ€ем период , цены за мес€ц
-     vbStartDate := inOperDate - INTERVAL '1 MONTH' ; --DATE_TRUNC ('MONTH', inOperDate);
-     vbEndDate := inOperDate + INTERVAL '1 Day'; --vbStartDate + INTERVAL '1 MONTH';
+     vbStartDate := CASE WHEN inOperDate + INTERVAL '1 Day'  =  DATE_TRUNC ('MONTH', inOperDate + INTERVAL '1 Day') THEN DATE_TRUNC ('MONTH', inOperDate) ELSE inOperDate - INTERVAL '1 MONTH' END; --DATE_TRUNC ('MONTH', inOperDate);
+     vbEndDate   := inOperDate ; --vbStartDate + INTERVAL '1 MONTH';
 
    -- ќграничение - если роль Ѕухгалтер ѕј¬»Ћ№ќЌџ
    /*IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 80548 AND UserId = vbUserId)
@@ -95,7 +95,7 @@ BEGIN
                    WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
                      AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
                      AND ObjectHistory_PriceListItem.StartDate >= vbStartDate
-                     AND ObjectHistory_PriceListItem.StartDate < vbEndDate
+                     AND ObjectHistory_PriceListItem.StartDate <= vbEndDate
                    GROUP BY ObjectLink_PriceListItem_Goods.ChildObjectId
                    )
                  
@@ -215,7 +215,9 @@ BEGIN
                    WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
                      AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
                      AND ObjectHistory_PriceListItem.StartDate >= vbStartDate
-                     AND ObjectHistory_PriceListItem.StartDate < vbEndDate
+                     AND ObjectHistory_PriceListItem.StartDate <= vbEndDate
+                     --AND ObjectHistory_PriceListItem.EndDate >= vbStartDate
+                     --AND ObjectHistory_PriceListItem.StartDate <= vbEndDate
                    GROUP BY ObjectLink_PriceListItem_Goods.ChildObjectId
                    )
       
@@ -236,15 +238,15 @@ BEGIN
 
            , COALESCE (tmpMinMax.ValuePrice_min, 0) :: TFloat AS ValuePrice_min
            , COALESCE (tmpMinMax.ValuePrice_max, 0) :: TFloat AS ValuePrice_max
-           , CASE WHEN COALESCE (tmpMinMax.ValuePrice_min, 0) <> 0 AND COALESCE(ObjectHistoryFloat_PriceListItem_Value.ValueData, 0)<> 0 THEN (COALESCE(ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) - COALESCE (tmpMinMax.ValuePrice_min, 0)) * 100 / COALESCE (tmpMinMax.ValuePrice_min, 0) 
-                  WHEN COALESCE (tmpMinMax.ValuePrice_min, 0) <> 0 AND COALESCE(ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) = 0 THEN 100
-                  ELSE 0
-             END  :: TFloat AS Diff_min
+           , CAST (CASE WHEN COALESCE (tmpMinMax.ValuePrice_min, 0) <> 0 AND COALESCE(ObjectHistoryFloat_PriceListItem_Value.ValueData, 0)<> 0 THEN (COALESCE(ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) - COALESCE (tmpMinMax.ValuePrice_min, 0)) * 100 / COALESCE (tmpMinMax.ValuePrice_min, 0) 
+                        WHEN COALESCE (tmpMinMax.ValuePrice_min, 0) <> 0 AND COALESCE(ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) = 0 THEN 100
+                        ELSE 0
+                   END  AS NUMERIC (16,0))  :: TFloat AS Diff_min
 
-           , CASE WHEN COALESCE (tmpMinMax.ValuePrice_max, 0) <> 0 AND COALESCE(ObjectHistoryFloat_PriceListItem_Value.ValueData, 0)<> 0 THEN (COALESCE(ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) - COALESCE (tmpMinMax.ValuePrice_max, 0)) * 100 / COALESCE (tmpMinMax.ValuePrice_min, 0) 
-                  WHEN COALESCE (tmpMinMax.ValuePrice_max, 0) <> 0 AND COALESCE(ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) = 0 THEN 100
-                  ELSE 0
-             END  :: TFloat AS Diff_max
+           , CAST (CASE WHEN COALESCE (tmpMinMax.ValuePrice_max, 0) <> 0 AND COALESCE(ObjectHistoryFloat_PriceListItem_Value.ValueData, 0)<> 0 THEN (COALESCE(ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) - COALESCE (tmpMinMax.ValuePrice_max, 0)) * 100 / COALESCE (tmpMinMax.ValuePrice_min, 0) 
+                        WHEN COALESCE (tmpMinMax.ValuePrice_max, 0) <> 0 AND COALESCE(ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) = 0 THEN 100
+                        ELSE 0
+                   END  AS NUMERIC (16,0)) :: TFloat AS Diff_max
 
            , Object_Insert.ValueData   AS InsertName
            , Object_Update.ValueData   AS UpdateName

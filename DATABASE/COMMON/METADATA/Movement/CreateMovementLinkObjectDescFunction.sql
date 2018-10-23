@@ -287,6 +287,9 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Checked() RETURNS Integer AS $B
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_Checked', 'Пользователь, кот. сканировал и поставил/убрал галку Проверен' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Checked');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Union() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Union'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_Union', 'Пользователь, кот. объединил документы' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Union');
 
 --!!!!!!!!!!!  Аптека
 CREATE OR REPLACE FUNCTION zc_MovementLinkObject_CheckMember() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_CheckMember'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -385,6 +388,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 23.10.18         * zc_MovementLinkObject_Union
  12.10.18                                                                                      * zc_MovementLinkObject_UserConfirmedKind
  11.10.18         * zc_MovementLinkObject_Checked
  30.09.18                                                                                      * zc_MovementLinkObject_ClientsByBank

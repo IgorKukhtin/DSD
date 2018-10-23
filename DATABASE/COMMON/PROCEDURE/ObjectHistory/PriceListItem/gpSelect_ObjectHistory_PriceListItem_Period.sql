@@ -26,8 +26,10 @@ BEGIN
      END IF;
 
      -- определ€ем период , цены за мес€ц
-     vbStartDate := inOperDate - INTERVAL '1 MONTH' ; --DATE_TRUNC ('MONTH', inOperDate);
-     vbEndDate := inOperDate + INTERVAL '1 Day'; --vbStartDate + INTERVAL '1 MONTH';
+     --vbStartDate := inOperDate - INTERVAL '1 MONTH' ; --DATE_TRUNC ('MONTH', inOperDate);
+     --vbEndDate := inOperDate + INTERVAL '1 Day'; --vbStartDate + INTERVAL '1 MONTH';
+     vbStartDate := CASE WHEN inOperDate + INTERVAL '1 Day'  =  DATE_TRUNC ('MONTH', inOperDate + INTERVAL '1 Day') THEN DATE_TRUNC ('MONTH', inOperDate) ELSE inOperDate - INTERVAL '1 MONTH' END; --DATE_TRUNC ('MONTH', inOperDate);
+     vbEndDate   := inOperDate ; --vbStartDate + INTERVAL '1 MONTH';
 
      -- ¬ыбираем данные
      RETURN QUERY 
@@ -50,7 +52,9 @@ BEGIN
        WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
          AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
          AND ObjectHistory_PriceListItem.StartDate >= vbStartDate
-         AND ObjectHistory_PriceListItem.StartDate < vbEndDate
+         AND ObjectHistory_PriceListItem.StartDate <= vbEndDate
+         --AND ObjectHistory_PriceListItem.EndDate >= vbStartDate
+         --AND ObjectHistory_PriceListItem.StartDate <= vbEndDate
        ORDER BY /* ObjectLink_PriceListItem_Goods.ChildObjectId ,*/ ObjectHistory_PriceListItem.StartDate;
 
 END;
