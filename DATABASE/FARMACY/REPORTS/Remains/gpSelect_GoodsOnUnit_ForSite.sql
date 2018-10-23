@@ -74,10 +74,11 @@ BEGIN
 
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
-    vbUserId:= lpGetUserBySession (inSession);
+    -- vbUserId:= lpGetUserBySession (inSession);
+    vbUserId:= inSession :: Integer;
 
     -- определяется <Торговая сеть>
-    vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
+    vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', ABS (vbUserId));
 
 
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpgoodsminprice_list')
@@ -357,7 +358,7 @@ BEGIN
               tmp.isOneJuridical
        FROM lpSelectMinPrice_List (inUnitId  := 0          -- !!!т.к. не зависит от UnitId, хотя ...!!!
                                  , inObjectId:= vbObjectId
-                                 , inUserId  := vbUserId
+                                 , inUserId  := ABS (vbUserId)
                                   ) AS tmp
       ;
 
@@ -656,7 +657,8 @@ BEGIN
              , 'gpSelect_GoodsOnUnit_ForSite'
                -- ProtocolData
              , CHR (39) || inUnitId_list || CHR (39) || ' , ' || CHR (39) || inGoodsId_list || CHR (39)
-              ;
+        WHERE vbUserId > 0
+        ;
 
 END;
 $BODY$
