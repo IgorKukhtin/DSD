@@ -14,6 +14,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
                , TotalCount TFloat, TotalCountChild TFloat, PartionGoods TVarChar
                , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
                , isCalculated Boolean
+               , UnionName TVarChar
+               , UnionDate TDateTime
                )
 AS
 $BODY$
@@ -47,6 +49,9 @@ BEGIN
           , Object_To.Id                         AS ToId
           , Object_To.ValueData                  AS ToName
           , COALESCE (MovementBoolean_Calculated.ValueData, FALSE) :: Boolean AS isCalculated
+
+          , Object_Union.ValueData               AS UnionName
+          , MovementDate_Union.ValueData         AS UnionDate
 
      FROM (SELECT Movement.id
              FROM tmpStatus
@@ -83,6 +88,16 @@ BEGIN
                                        ON MovementLinkObject_To.MovementId = Movement.Id
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_Union
+                                       ON MovementLinkObject_Union.MovementId = Movement.Id
+                                      AND MovementLinkObject_Union.DescId = zc_MovementLinkObject_Union()
+          LEFT JOIN Object AS Object_Union ON Object_Union.Id = MovementLinkObject_Union.ObjectId
+
+          LEFT JOIN MovementDate AS MovementDate_Union 
+                                 ON MovementDate_Union.MovementId = Movement.Id
+                                AND MovementDate_Union.DescId = zc_MovementDate_Union()
+
           ;
 
 

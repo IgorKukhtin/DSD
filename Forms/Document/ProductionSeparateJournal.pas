@@ -48,6 +48,15 @@ type
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     PrintItemsTwoCDS: TClientDataSet;
+    spInsert_LockUnique: TdsdStoredProc;
+    spDelete_LockUnique: TdsdStoredProc;
+    spInsertUnion: TdsdStoredProc;
+    actDelete_LockUnique: TdsdExecStoredProc;
+    actInsert_LockUnique: TdsdExecStoredProc;
+    macInsert_LockUnique: TMultiAction;
+    macUnionDoc: TMultiAction;
+    bbUnionDoc: TdxBarButton;
+    actInsertUnion: TdsdExecStoredProc;
   private
     { Private declarations }
   public

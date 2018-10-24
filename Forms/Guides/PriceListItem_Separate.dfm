@@ -104,7 +104,7 @@ object PriceListItem_SeparateForm: TPriceListItem_SeparateForm
         DataBinding.FieldName = 'ValuePrice_min'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1052#1080#1085'. '#1062#1077#1085#1072' '#1079#1072' '#1084#1077#1089#1103#1094
@@ -116,31 +116,31 @@ object PriceListItem_SeparateForm: TPriceListItem_SeparateForm
         DataBinding.FieldName = 'ValuePrice_max'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##'
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1052#1072#1082#1089'. '#1062#1077#1085#1072' '#1079#1072' '#1084#1077#1089#1103#1094
         Options.Editing = False
-        Width = 59
+        Width = 57
       end
       object Diff_min: TcxGridDBColumn
         Caption = '% '#1086#1090#1082#1083'. '#1086#1090' '#1084#1080#1085'. '#1094#1077#1085#1099
         DataBinding.FieldName = 'Diff_min'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.;-,0.'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1086#1090' '#1084#1080#1085'.'#1094#1077#1085#1099
         Options.Editing = False
-        Width = 60
+        Width = 61
       end
       object Diff_max: TcxGridDBColumn
         Caption = '% '#1086#1090#1082#1083'. '#1086#1090' '#1084#1072#1082#1089'. '#1094#1077#1085#1099
         DataBinding.FieldName = 'Diff_max'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.;-,0.'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1086#1090' '#1084#1072#1082#1089'. '#1094#1077#1085#1099
@@ -175,7 +175,7 @@ object PriceListItem_SeparateForm: TPriceListItem_SeparateForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 77
+        Width = 78
       end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'

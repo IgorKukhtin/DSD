@@ -4,9 +4,8 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
   ClientWidth = 1073
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -300
   ExplicitWidth = 1089
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -66,15 +65,31 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object UnionDate: TcxGridDBColumn [0]
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1086#1073#1098#1077#1076#1080#1085#1077#1085')'
+            DataBinding.FieldName = 'UnionDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1086#1073#1098#1077#1076#1080#1085#1077#1085')'
+            Width = 90
+          end
+          object UnionName: TcxGridDBColumn [1]
+            Caption = #1055#1086#1083#1100#1079'. ('#1086#1073#1098#1077#1076#1080#1085#1077#1085')'
+            DataBinding.FieldName = 'UnionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1086#1073#1098#1077#1076#1080#1085#1077#1085')'
+            Width = 130
+          end
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             Width = 100
           end
-          inherited colOperDate: TcxGridDBColumn [1]
+          inherited colOperDate: TcxGridDBColumn [3]
             HeaderAlignmentHorz = taCenter
             Width = 70
           end
-          inherited colInvNumber: TcxGridDBColumn [2]
+          inherited colInvNumber: TcxGridDBColumn [4]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Width = 70
@@ -169,6 +184,17 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
   end
   inherited ActionList: TActionList
     Left = 471
+    object actInsertUnion: TdsdExecStoredProc [0]
+      Category = 'Union'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUnion
+      StoredProcList = <
+        item
+          StoredProc = spInsertUnion
+        end>
+      Caption = 'actInsertUnion'
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TProductionSeparateForm'
     end
@@ -351,6 +377,85 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actDelete_LockUnique: TdsdExecStoredProc
+      Category = 'Union'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelete_LockUnique
+      StoredProcList = <
+        item
+          StoredProc = spDelete_LockUnique
+        end>
+      Caption = 'actDelete_LockUnique'
+    end
+    object actInsert_LockUnique: TdsdExecStoredProc
+      Category = 'Union'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_LockUnique
+      StoredProcList = <
+        item
+          StoredProc = spInsert_LockUnique
+        end>
+      Caption = 'spInsert_LockUnique'
+    end
+    object macInsert_LockUnique: TMultiAction
+      Category = 'Union'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actInsert_LockUnique
+        end>
+      View = cxGridDBTableView
+      Caption = #1043#1088#1091#1087#1087#1072' '#1076#1086#1082'. '#1076#1083#1103' '#1086#1073#1098#1077#1076#1080#1085#1077#1085#1080#1103
+      Hint = #1043#1088#1091#1087#1087#1072' '#1076#1086#1082'. '#1076#1083#1103' '#1086#1073#1098#1077#1076#1080#1085#1077#1085#1080#1103
+      ImageIndex = 51
+    end
+    object macUnionDoc: TMultiAction
+      Category = 'Union'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actDelete_LockUnique
+        end
+        item
+          Action = macInsert_LockUnique
+        end
+        item
+          Action = actInsertUnion
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1054#1073#1098#1077#1076#1080#1085#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1074' '#1086#1076#1080#1085'?'
+      Caption = #1054#1073#1098#1077#1076#1080#1085#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1074' '#1086#1076#1080#1085
+      Hint = #1054#1073#1098#1077#1076#1080#1085#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1074' '#1086#1076#1080#1085
+      ImageIndex = 51
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -451,6 +556,14 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbUnionDoc'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -499,6 +612,10 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
     end
     object bbPrint_Ceh: TdxBarButton
       Action = actPrint_Ceh
+      Category = 0
+    end
+    object bbUnionDoc: TdxBarButton
+      Action = macUnionDoc
       Category = 0
     end
   end
@@ -743,5 +860,58 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
     Params = <>
     Left = 692
     Top = 70
+  end
+  object spInsert_LockUnique: TdsdStoredProc
+    StoredProcName = 'gpInsert_LockUnique_byPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 999
+    Top = 304
+  end
+  object spDelete_LockUnique: TdsdStoredProc
+    StoredProcName = 'gpDelete_LockUnique_byPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+      end>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 991
+    Top = 264
+  end
+  object spInsertUnion: TdsdStoredProc
+    StoredProcName = 'gpInsert_ProductionSeparate_Union'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 991
+    Top = 208
   end
 end
