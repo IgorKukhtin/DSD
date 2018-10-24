@@ -56,6 +56,17 @@ BEGIN
                                        JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                                        ON ObjectLink_Contract_Juridical.ChildObjectId = tmpJuridical.JuridicalId
                                                       AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
+                                       -- убрали Удаленные
+                                       JOIN Object AS Object_Contract
+                                                   ON Object_Contract.Id       = ObjectLink_Contract_Juridical.ObjectId
+                                                  AND Object_Contract.isErased = FALSE
+                                       -- убрали Закрытые
+                                       LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
+                                                            ON ObjectLink_Contract_ContractStateKind.ObjectId      = ObjectLink_Contract_Juridical.ObjectId
+                                                           AND ObjectLink_Contract_ContractStateKind.DescId        = zc_ObjectLink_Contract_ContractStateKind()
+                                                           AND ObjectLink_Contract_ContractStateKind.ChildObjectId = zc_Enum_ContractStateKind_Close()
+                                  -- убрали Закрытые
+                                  WHERE ObjectLink_Contract_ContractStateKind.ChildObjectId IS NULL
                                  )
                 , tmpFilter AS (SELECT tmpProtocol.ContractId FROM tmpProtocol
                                 UNION

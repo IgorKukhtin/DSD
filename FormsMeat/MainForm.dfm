@@ -5,7 +5,7 @@
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 260
+  ExplicitHeight = 257
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -6569,9 +6569,6 @@
       object miPersonalReport: TMenuItem
         Action = actPersonalReport
       end
-      object N112: TMenuItem
-        Action = actInvoice
-      end
       object N12: TMenuItem
         Caption = '-'
       end
@@ -6680,6 +6677,12 @@
       end
       object N133: TMenuItem
         Action = actEntryAsset
+      end
+      object N112: TMenuItem
+        Action = actInvoice
+      end
+      object N124: TMenuItem
+        Action = actReport_Invoice
       end
       object N131: TMenuItem
         Caption = '-'
@@ -7218,9 +7221,6 @@
       end
       object N125: TMenuItem
         Caption = '-'
-      end
-      object N124: TMenuItem
-        Action = actReport_Invoice
       end
     end
     object miReportMain: TMenuItem [13]

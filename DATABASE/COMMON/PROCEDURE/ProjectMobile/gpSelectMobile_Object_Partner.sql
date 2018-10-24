@@ -66,7 +66,8 @@ BEGIN
                                   FROM Object_Contract_ContractKey_View AS View_Contract_ContractKey
                                        LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey_find ON View_Contract_ContractKey_find.ContractKeyId = View_Contract_ContractKey.ContractKeyId
                                  )
-                , tmpContract AS (SELECT tmpPartner.PartnerId                        AS PartnerId
+                , tmpContract AS (SELECT DISTINCT
+                                         tmpPartner.PartnerId                        AS PartnerId
                                          -- "оригинал"
                                        , ObjectLink_Contract_Juridical.ObjectId      AS ContractId
                                          -- подставили "главный", если есть
@@ -74,6 +75,9 @@ BEGIN
 
                                        , tmpPartner.JuridicalId                      AS JuridicalId
                                        , ObjectLink_Contract_PriceList.ChildObjectId AS PriceListId
+
+                                         -- потом уберем Закрытые
+                                       , COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) AS ContractStateKindId
                                   FROM tmpPartner
                                        JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                                        ON ObjectLink_Contract_Juridical.ChildObjectId = tmpPartner.JuridicalId
@@ -87,11 +91,12 @@ BEGIN
                                        JOIN Object AS Object_Contract
                                                    ON Object_Contract.Id       = COALESCE (tmpContract_Key.ContractId_Key, ObjectLink_Contract_Juridical.ObjectId)
                                                   AND Object_Contract.isErased = FALSE
-                                       -- убрали Закрытые
+                                       -- НЕ убрали Закрытые
                                        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
-                                                            ON ObjectLink_Contract_ContractStateKind.ObjectId      = Object_Contract.Id
+                                                         -- ON ObjectLink_Contract_ContractStateKind.ObjectId      = Object_Contract.Id
+                                                            ON ObjectLink_Contract_ContractStateKind.ObjectId      = ObjectLink_Contract_Juridical.ObjectId
                                                            AND ObjectLink_Contract_ContractStateKind.DescId        = zc_ObjectLink_Contract_ContractStateKind()
-                                                           AND ObjectLink_Contract_ContractStateKind.ChildObjectId = zc_Enum_ContractStateKind_Close()
+                                                           -- AND ObjectLink_Contract_ContractStateKind.ChildObjectId = zc_Enum_ContractStateKind_Close()
                                        -- Ограничим - ТОЛЬКО если ГП
                                        INNER JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
                                                              ON ObjectLink_Contract_InfoMoney.ObjectId = ObjectLink_Contract_Juridical.ObjectId
@@ -99,9 +104,38 @@ BEGIN
                                                             AND ObjectLink_Contract_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
                                                                                                               , zc_Enum_InfoMoney_30102() -- Доходы + Тушенка   + Тушенка
                                                                                                                )
-                                  -- убрали Закрытые
-                                  WHERE ObjectLink_Contract_ContractStateKind.ChildObjectId IS NULL
+                                  -- НЕ убрали Закрытые
+                                  -- WHERE ObjectLink_Contract_ContractStateKind.ChildObjectId IS NULL
                                  )
+          , tmpContract_state AS (SELECT tmpContract_find.PartnerId
+                                       , tmpContract_find.ContractId_Key
+                                       , tmpContract_find.ContractId_Key_calc
+                                  FROM (SELECT
+                                               tmpContract.PartnerId
+                                               -- подставили "главный", если есть
+                                             , tmpContract.ContractId_Key            AS ContractId_Key
+                                               -- подставим "оригинал" - если "главный" - ЗАКРЫТ
+                                             , tmpContract.ContractId                AS ContractId_Key_calc
+                                               -- № п/п
+                                             , ROW_NUMBER() OVER (PARTITION BY tmpContract.ContractId_Key, tmpContract.PartnerId
+                                                                  ORDER BY CASE -- если "главный" НЕ ЗАКРЫТ - он и будет "первым"
+                                                                                WHEN tmpContract.ContractId_Key = tmpContract.ContractId AND tmpContract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                                                                     THEN 1
+                                                                                WHEN tmpContract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                                                                     THEN 2
+                                                                                ELSE 3
+                                                                           END ASC
+                                                                         , tmpContract.ContractId DESC
+                                                                 ) AS Ord
+                                               -- потом уберем Закрытые
+                                             , tmpContract.ContractStateKindId
+                                        FROM tmpContract
+                                       ) AS tmpContract_find
+                                  -- выбрали по возможности - "главный" и НЕ ЗАКРЫТ или последний НЕ ЗАКРЫТ
+                                  WHERE tmpContract_find.Ord = 1
+                                    AND tmpContract_find.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                 )
+
                 , tmpDayInfo AS (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId              AS ContractId
                                       , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId AS ContractConditionKindId
                                       , tmpContract.PartnerId
@@ -264,9 +298,10 @@ BEGIN
                   , tmpContract.JuridicalId
                   , ObjectLink_Partner_Route.ChildObjectId   AS RouteId
                     -- объединили по "главному"
-                  , tmpContract.ContractId_Key AS ContractId
+                  , tmpContract_state.ContractId_Key_calc AS ContractId
+               -- , tmpContract.ContractId_Key            AS ContractId
                     -- оставили "оригинал"
-                  -- , tmpContract.ContractId
+              -- , tmpContract.ContractId
                   , COALESCE (tmpDebt.PaidKindId, ObjectLink_Contract_PaidKind.ChildObjectId) :: Integer AS PaidKindId
 
                     -- в следующем порядке: 1.1) ---акционный у контрагента 1.2) ---акционный у договора 1.3) ---акционный у юр.лица 2.1) обычный у контрагента 2.2) обычный у договора 2.3) обычный у юр.лица 3) zc_PriceList_Basis
@@ -282,7 +317,11 @@ BEGIN
                   , Object_Partner.isErased
                   , TRUE :: Boolean AS isSync
              FROM Object AS Object_Partner
-                  JOIN tmpContract ON tmpContract.PartnerId = Object_Partner.Id
+                  -- убрали Закрытые
+                  JOIN tmpContract_state ON tmpContract_state.PartnerId = Object_Partner.Id
+                  --
+                  JOIN tmpContract ON tmpContract.ContractId = tmpContract_state.ContractId_Key_calc
+                  
                   LEFT JOIN tmpDebt ON tmpDebt.PartnerId  = Object_Partner.Id
                                    -- AND tmpDebt.ContractId = tmpContract.ContractId
                                    AND tmpDebt.ContractId = tmpContract.ContractId_Key
