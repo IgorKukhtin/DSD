@@ -198,6 +198,45 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TProductionSeparateForm'
     end
+    object actUpdateUnion: TdsdInsertUpdateAction [4]
+      Category = 'Union'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TProductionSeparateForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MovementId_Union'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42736d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TProductionSeparateForm'
       GuiParams = <
@@ -450,11 +489,19 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         end
         item
           Action = actRefresh
+        end
+        item
+          Action = actUpdateUnion
         end>
       QuestionBeforeExecute = #1054#1073#1098#1077#1076#1080#1085#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1074' '#1086#1076#1080#1085'?'
+      InfoAfterExecute = #1054#1073#1098#1077#1076#1080#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1074#1099#1087#1086#1083#1085#1077#1085#1086
       Caption = #1054#1073#1098#1077#1076#1080#1085#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1074' '#1086#1076#1080#1085
       Hint = #1054#1073#1098#1077#1076#1080#1085#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1074' '#1086#1076#1080#1085
       ImageIndex = 51
+    end
+    object actShowMessage: TShowMessageAction
+      Category = 'Union'
+      MoveParams = <>
     end
   end
   inherited MasterDS: TDataSource
@@ -862,7 +909,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
     Top = 70
   end
   object spInsert_LockUnique: TdsdStoredProc
-    StoredProcName = 'gpInsert_LockUnique_byPrint'
+    StoredProcName = 'gpInsert_LockUnique_byUnion'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -882,13 +929,21 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 999
     Top = 304
   end
   object spDelete_LockUnique: TdsdStoredProc
-    StoredProcName = 'gpDelete_LockUnique_byPrint'
+    StoredProcName = 'gpDelete_LockUnique_byUnion'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -909,7 +964,14 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
     StoredProcName = 'gpInsert_ProductionSeparate_Union'
     DataSets = <>
     OutputType = otResult
-    Params = <>
+    Params = <
+      item
+        Name = 'outMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_Union'
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 991
     Top = 208

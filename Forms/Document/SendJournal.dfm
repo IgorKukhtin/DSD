@@ -4,9 +4,8 @@ inherited SendJournalForm: TSendJournalForm
   ClientWidth = 761
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -96
   ExplicitWidth = 777
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -258,6 +257,22 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 39
           end
+          object UnionDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1086#1073#1098#1077#1076#1080#1085#1077#1085')'
+            DataBinding.FieldName = 'UnionDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1086#1073#1098#1077#1076#1080#1085#1077#1085')'
+            Width = 90
+          end
+          object UnionName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079'. ('#1086#1073#1098#1077#1076#1080#1085#1077#1085')'
+            DataBinding.FieldName = 'UnionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1086#1073#1098#1077#1076#1080#1085#1077#1085')'
+            Width = 130
+          end
         end
       end
     end
@@ -390,6 +405,9 @@ inherited SendJournalForm: TSendJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
