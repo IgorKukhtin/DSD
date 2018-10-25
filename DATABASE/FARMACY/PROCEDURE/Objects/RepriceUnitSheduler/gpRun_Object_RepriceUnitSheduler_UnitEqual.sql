@@ -150,6 +150,29 @@ BEGIN
     AND PriceDiff_to <= vbEqualRepriceMax
     AND PriceDiff_to >= - vbEqualRepriceMin;
 
+  PERFORM gpInsertUpdate_MovementItem_Reprice_Clipped(
+    ioID := 0 ,
+    inGoodsId := tmpAllGoodsPrice.Id,
+    inUnitId := vbUnitID,
+    inUnitId_Forwarding := inUnitId_to,
+    inTax := 0 ,
+    inJuridicalId := COALESCE (tmpAllGoodsPrice.JuridicalId, 0),
+    inContractId := COALESCE (tmpAllGoodsPrice.ContractId, 0),
+    inExpirationDate := tmpAllGoodsPrice.ExpirationDate,
+    inMinExpirationDate := tmpAllGoodsPrice.MinExpirationDate,
+    inAmount := COALESCE (tmpAllGoodsPrice.RemainsCount, 0),
+    inPriceOld := COALESCE (tmpAllGoodsPrice.LastPrice, 0),
+    inPriceNew := COALESCE (tmpAllGoodsPrice.NewPrice_to, 0),
+    inJuridical_Price := COALESCE (tmpAllGoodsPrice.Juridical_Price, 0),
+    inJuridical_Percent := COALESCE (tmpAllGoodsPrice.Juridical_Percent, 0),
+    inContract_Percent := COALESCE (tmpAllGoodsPrice.Contract_Percent, 0),
+    inGUID := vbGUID,
+    inSession := inSession)
+  FROM tmpAllGoodsPrice
+  WHERE Reprice = True
+    AND (PriceDiff_to > vbEqualRepriceMax
+    OR PriceDiff_to < - vbEqualRepriceMin);
+
 --  raise notice 'All: %', (select Count(*) from tmpAllGoodsPrice);
 --  raise notice 'All: %', (select Count(*) from tmpAllGoodsPrice where Reprice = True);
 --  raise notice 'All: %', (select Count(*) from tmpAllGoodsPrice where Reprice = True

@@ -25,9 +25,13 @@ BEGIN
                       LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
                                                   ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
                                                  AND MIFloat_PriceSale.DescId         = zc_MIFloat_PriceSale()
+                      LEFT JOIN MovementItemBoolean AS MIBoolean_ClippedReprice
+                                                    ON MIBoolean_ClippedReprice.MovementItemId = MovementItem.Id
+                                                   AND MIBoolean_ClippedReprice.DescId         = zc_MIBoolean_ClippedReprice()
                   WHERE MovementItem.MovementId = inMovementId
                     AND MovementItem.DescId     = zc_MI_Master()
                     AND MovementItem.isErased   = FALSE
+                    AND COALESCE (MIBoolean_ClippedReprice.ValueData, FALSE) = FALSE
                  );
 
     -- Сохранили свойство <Итого Сумма>
@@ -37,9 +41,10 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий О.В.
+25.10.18                                                                        *  
 27.11.15                                                              *
 */

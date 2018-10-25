@@ -126,7 +126,7 @@ BEGIN
     inVAT20 := vbVAT20, inTaxTo := 0, inPriceMaxTo := 0,  inSession := inSession);
 
   -- сохранили свойство <Дата начала переоценки>
-  PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_RepriceUnitSheduler_DataStartLast(), inID, CURRENT_TIMESTAMP);
+  PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_RepriceUnitSheduler_DataStartLast(), inID, clock_timestamp());
 
   PERFORM gpInsertUpdate_MovementItem_Reprice(
     ioID := 0 ,
@@ -150,6 +150,29 @@ BEGIN
   WHERE Reprice = True
     AND PriceDiff <= vbPercentRepriceMax
     AND PriceDiff >= - vbPercentRepriceMin;
+
+  PERFORM gpInsertUpdate_MovementItem_Reprice_Clipped(
+    ioID := 0 ,
+    inGoodsId := tmpAllGoodsPrice.Id,
+    inUnitId := vbUnitID,
+    inUnitId_Forwarding := 0 ,
+    inTax := 0 ,
+    inJuridicalId := COALESCE (tmpAllGoodsPrice.JuridicalId, 0),
+    inContractId := COALESCE (tmpAllGoodsPrice.ContractId, 0),
+    inExpirationDate := tmpAllGoodsPrice.ExpirationDate,
+    inMinExpirationDate := tmpAllGoodsPrice.MinExpirationDate,
+    inAmount := COALESCE (tmpAllGoodsPrice.RemainsCount, 0),
+    inPriceOld := COALESCE (tmpAllGoodsPrice.LastPrice, 0),
+    inPriceNew := COALESCE (tmpAllGoodsPrice.NewPrice, 0),
+    inJuridical_Price := COALESCE (tmpAllGoodsPrice.Juridical_Price, 0),
+    inJuridical_Percent := COALESCE (tmpAllGoodsPrice.Juridical_Percent, 0),
+    inContract_Percent := COALESCE (tmpAllGoodsPrice.Contract_Percent, 0),
+    inGUID := vbGUID,
+    inSession := inSession)
+  FROM tmpAllGoodsPrice
+  WHERE Reprice = True
+    AND (PriceDiff > vbPercentRepriceMax
+     OR PriceDiff < - vbPercentRepriceMin);
 
 --  raise notice 'All: %', (select Count(*) from tmpAllGoodsPrice);
 --  raise notice 'All: %', (select Count(*) from tmpAllGoodsPrice where Reprice = True);

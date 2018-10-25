@@ -41,6 +41,7 @@ type
     UnitForwardingGuides: TdsdGuides;
     cxLabel8: TcxLabel;
     edChangePercent: TcxCurrencyEdit;
+    Color_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -2,22 +2,25 @@ inherited RepriceForm: TRepriceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1086#1094#1077#1085#1082#1072'>'
   ClientWidth = 1040
   ExplicitWidth = 1056
-  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 76
     Width = 1040
     Height = 340
+    ExplicitTop = 76
     ExplicitWidth = 1040
+    ExplicitHeight = 340
     ClientRectBottom = 340
     ClientRectRight = 1040
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1040
+      ExplicitHeight = 316
       inherited cxGrid: TcxGrid
         Width = 1040
         Height = 316
         ExplicitWidth = 1040
+        ExplicitHeight = 316
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -189,6 +192,10 @@ inherited RepriceForm: TRepriceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
+          end
+          object Color_calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_calc'
+            Visible = False
           end
         end
       end
@@ -469,6 +476,11 @@ inherited RepriceForm: TRepriceForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end>
     SummaryItemList = <
       item
         Param.Value = Null
