@@ -675,7 +675,7 @@ BEGIN
             , tmpAll.SummTransport          :: TFloat AS SummTransport
             , tmpAll.SummTransportTaxi      :: TFloat AS SummTransportTaxi
             , tmpAll.SummPhone              :: TFloat AS SummPhone
-            , (tmpAll.SummService + COALESCE (tmpAll.SummAdd, 0) + COALESCE (tmpAll.SummNalogRet, 0) - COALESCE (tmpAll.SummMinus, 0) - COALESCE (tmpAll.SummNalog, 0)) :: TFloat AS TotalSumm
+            , (tmpAll.SummService + COALESCE (tmpAll.SummAdd, 0) + COALESCE (tmpAll.SummNalogRet, 0) + COALESCE ( tmpAll.SummHoliday, 0) - COALESCE (tmpAll.SummMinus, 0) - COALESCE (tmpAll.SummNalog, 0)) :: TFloat AS TotalSumm
             -- קאיכה
             , Object_PositionLevel.Id                  AS PositionLevelId
             , Object_PositionLevel.ValueData           AS PositionLevelName
