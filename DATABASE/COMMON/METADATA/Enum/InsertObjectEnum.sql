@@ -381,10 +381,14 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportOneTrip10(), inDescId:= zc_Object_ContractConditionKind(), inCode:= 119, inName:= 'Ставка за маршрут 10т., грн' ,                inEnumName:= 'zc_Enum_ContractConditionKind_TransportOneTrip10');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportOneTrip20(), inDescId:= zc_Object_ContractConditionKind(), inCode:= 120, inName:= 'Ставка за маршрут 20т., грн' ,                inEnumName:= 'zc_Enum_ContractConditionKind_TransportOneTrip20');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportRoundTrip(), inDescId:= zc_Object_ContractConditionKind(), inCode:= 122, inName:= 'Ставка за маршрут в обе стороны, грн',        inEnumName:= 'zc_Enum_ContractConditionKind_TransportRoundTrip');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportOneDay(),    inDescId:= zc_Object_ContractConditionKind(), inCode:= 123, inName:= 'Ставка за маршрут в день, грн',               inEnumName:= 'zc_Enum_ContractConditionKind_TransportOneDay');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportOneDayCon(), inDescId:= zc_Object_ContractConditionKind(), inCode:= 124, inName:= 'Ставка за маршрут в день + кондиционер, грн', inEnumName:= 'zc_Enum_ContractConditionKind_TransportOneDayCon');
+
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportPoint()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 131, inName:= 'Ставка за точку, грн',                        inEnumName:= 'zc_Enum_ContractConditionKind_TransportPoint');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportWeight()   , inDescId:= zc_Object_ContractConditionKind(), inCode:= 132, inName:= 'Ставка за вывоз, грн/кг',                     inEnumName:= 'zc_Enum_ContractConditionKind_TransportWeight');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportForward()  , inDescId:= zc_Object_ContractConditionKind(), inCode:= 133, inName:= 'доплата за экспедитора, грн/месяц',           inEnumName:= 'zc_Enum_ContractConditionKind_TransportForward');
      
+
      -- !!! Типы пролонгаций договоров
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractTermKind_Long(), inDescId:= zc_Object_ContractTermKind(), inCode:= 1, inName:= 'Бессрочный' , inEnumName:= 'zc_Enum_ContractTermKind_Long');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractTermKind_Month(), inDescId:= zc_Object_ContractTermKind(), inCode:= 2, inName:= 'На период в месяцах' , inEnumName:= 'zc_Enum_ContractTermKind_Month');

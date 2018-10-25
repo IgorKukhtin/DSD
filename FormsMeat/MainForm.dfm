@@ -6177,6 +6177,74 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actProductionUnionTechTu: TdsdOpenForm
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      MoveParams = <>
+      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1062#1045#1061' '#1058#1091#1096#1077#1085#1082#1080
+      Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1062#1045#1061' '#1058#1091#1096#1077#1085#1082#1080
+      FormName = 'TProductionUnionTechJournalForm'
+      FormNameParam.Value = 'TProductionUnionTechJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'FromId'
+          Value = '2790412'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = #1062#1045#1061' '#1058#1091#1096#1077#1085#1082#1072
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToId'
+          Value = '2790412'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = #1062#1045#1061' '#1058#1091#1096#1077#1085#1082#1072
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actProductionUnionTechReceiptTu: TdsdOpenForm
+      Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+      MoveParams = <>
+      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1062#1045#1061' '#1058#1091#1096#1077#1085#1082#1080' ('#1088#1077#1094#1077#1087#1090#1091#1088#1099') '
+      Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1062#1045#1061' '#1058#1091#1096#1077#1085#1082#1080' ('#1088#1077#1094#1077#1087#1090#1091#1088#1099') '
+      FormName = 'TProductionUnionTechReceiptJournalForm'
+      FormNameParam.Value = 'TProductionUnionTechReceiptJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'FromId'
+          Value = '2790412'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = #1062#1045#1061' '#1058#1091#1096#1077#1085#1082#1072
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToId'
+          Value = '2790412'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = #1062#1045#1061' '#1058#1091#1096#1077#1085#1082#1072
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Active = False
@@ -6390,6 +6458,9 @@
       object miProductionUnionTechSiryo: TMenuItem
         Action = actProductionUnionTechSiryo
       end
+      object miProductionUnionTechTu: TMenuItem
+        Action = actProductionUnionTechTu
+      end
       object miProductionUnionTechReceipt: TMenuItem
         Action = actProductionUnionTechReceipt
       end
@@ -6401,6 +6472,9 @@
       end
       object miProductionUnionTechReceiptSiryo: TMenuItem
         Action = actProductionUnionTechReceiptSiryo
+      end
+      object miProductionUnionTechReceiptTu: TMenuItem
+        Action = actProductionUnionTechReceiptTu
       end
       object N44: TMenuItem
         Caption = '-'

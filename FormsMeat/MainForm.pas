@@ -985,6 +985,10 @@ type
     actPriceListItem_Separate: TdsdOpenForm;
     üøPriceListItem_Separate: TMenuItem;
     N197: TMenuItem;
+    actProductionUnionTechTu: TdsdOpenForm;
+    actProductionUnionTechReceiptTu: TdsdOpenForm;
+    miProductionUnionTechTu: TMenuItem;
+    miProductionUnionTechReceiptTu: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

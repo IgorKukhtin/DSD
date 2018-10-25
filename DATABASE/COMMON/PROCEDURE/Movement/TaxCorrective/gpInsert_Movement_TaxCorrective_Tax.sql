@@ -81,8 +81,8 @@ BEGIN
                                                       , inMovementId         := vbMovementId_to
                                                       , inGoodsId            := MovementItem.ObjectId
                                                       , inAmount             := MovementItem.Amount
-                                                      , inPrice              := MIFloat_Price.ValueData
-                                                      , ioCountForPrice      := MIFloat_CountForPrice.ValueData
+                                                      , inPrice              := COALESCE (MIFloat_Price.ValueData, 0)
+                                                      , ioCountForPrice      := COALESCE (MIFloat_CountForPrice.ValueData, 0)
                                                       , inGoodsKindId        := MILinkObject_GoodsKind.ObjectId
                                                       , inUserId             := vbUserId
                                                        ) AS tmp
@@ -99,6 +99,7 @@ BEGIN
      WHERE MovementItem.MovementId = inMovementId_from
        AND MovementItem.DescId     = zc_MI_Master()
        AND MovementItem.isErased   = FALSE
+       AND MovementItem.Amount     <> 0
      ;
 
 
