@@ -69,6 +69,7 @@ type
     cxLabel2: TcxLabel;
     deOperDate: TcxDateEdit;
     RefreshDispatcher: TRefreshDispatcher;
+    DepartmentName: TcxGridDBColumn;
   private
     { Private declarations }
   public

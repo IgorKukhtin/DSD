@@ -21,8 +21,10 @@ RETURNS TABLE (Id Integer
              , CurrencyId Integer, CurrencyName TVarChar
              , AmountDebet TFloat, AmountKredit TFloat
              , SummDebet TFloat, SummKredit TFloat
+             , Summ_100301 TFloat
              , ContainerId TFloat
-             , CurrencyPartnerValue TFloat, ParPartnerValue TFloat, AmountCurrencyDebet TFloat, AmountCurrencyKredit TFloat
+             , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
+             , AmountCurrencyDebet TFloat, AmountCurrencyKredit TFloat
              , isCalculated Boolean
              , isErased Boolean
               )
@@ -38,6 +40,14 @@ BEGIN
 
      -- –ÂÁÛÎ¸Ú‡Ú
      RETURN QUERY 
+     WITH 
+     tmpMIContainer AS (SELECT MIContainer.MovementItemId
+                             , SUM (MIContainer.Amount) AS Summ_100301
+                        FROM MovementItemContainer AS MIContainer
+                        WHERE MIContainer.MovementId = inMovementId
+                          AND MIContainer.AccountId = zc_Enum_Account_100301()
+                        GROUP BY MIContainer.MovementItemId
+                        )
 
        SELECT 0  :: Integer                            AS Id
 
@@ -73,13 +83,16 @@ BEGIN
            , 0   :: TFloat                    AS AmountKredit
            , 0   :: TFloat                    AS SummDebet
            , 0   :: TFloat                    AS SummKredit
+           , 0   :: TFloat                    AS Summ_100301
                                               
+           , 0   :: TFloat                    AS ContainerId
+
            , 0   :: TFloat                    AS CurrencyPartnerValue
            , 0   :: TFloat                    AS ParPartnerValue
            , 0   :: TFloat                    AS AmountCurrencyDebet
            , 0   :: TFloat                    AS AmountCurrencyKredit
                                               
-           , 0   :: TFloat                    AS ContainerId
+
                                             
            , TRUE                             AS isCalculated
            , FALSE                            AS isErased
@@ -174,6 +187,8 @@ BEGIN
                   ELSE 0
              END                                     :: TFloat AS SummKredit
 
+            , tmpMIContainer.Summ_100301             :: TFloat AS Summ_100301
+
             , MIFloat_ContainerId.ValueData          :: TFloat AS ContainerId
 
             , MIFloat_CurrencyPartnerValue.ValueData :: TFloat AS CurrencyPartnerValue
@@ -262,12 +277,22 @@ BEGIN
                                              ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
+            
+            LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = MovementItem.Id
       ;
 
      ELSE
 
      -- –ÂÁÛÎ¸Ú‡Ú
      RETURN QUERY 
+     WITH 
+     tmpMIContainer AS (SELECT MIContainer.MovementItemId
+                             , SUM (MIContainer.Amount) AS Summ_100301
+                        FROM MovementItemContainer AS MIContainer
+                        WHERE MIContainer.MovementId = inMovementId
+                          AND MIContainer.AccountId = zc_Enum_Account_100301()
+                        GROUP BY MIContainer.MovementItemId
+                        )
        SELECT MovementItem.Id
 
             , View_InfoMoney.InfoMoneyGroupName
@@ -315,6 +340,8 @@ BEGIN
                        THEN -1 * MIFloat_Summ.ValueData
                   ELSE 0
              END                                     :: TFloat AS SummKredit
+
+            , tmpMIContainer.Summ_100301             :: TFloat AS Summ_100301
 
             , MIFloat_ContainerId.ValueData          :: TFloat AS ContainerId
             
@@ -409,6 +436,8 @@ BEGIN
                                              ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
+
+            LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = MovementItem.Id
       ;
      END IF;
 
@@ -420,6 +449,7 @@ ALTER FUNCTION gpSelect_MovementItem_LossDebt (Integer, Boolean, Boolean, TVarCh
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 24.10.18         *
  31.07.17         *
  19.14.16         *
  07.09.14                                        * add Branch...

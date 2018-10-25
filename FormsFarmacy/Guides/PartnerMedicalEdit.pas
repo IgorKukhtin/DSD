@@ -31,10 +31,13 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     cxLabel4: TcxLabel;
-    JuridicalGuides: TdsdGuides;
+    GuidesJuridical: TdsdGuides;
     ceJuridical: TcxButtonEdit;
     cxLabel2: TcxLabel;
     edFIO: TcxTextEdit;
+    cxLabel3: TcxLabel;
+    edDepartment: TcxButtonEdit;
+    GuidesDepartment: TdsdGuides;
   private
     { Private declarations }
   public

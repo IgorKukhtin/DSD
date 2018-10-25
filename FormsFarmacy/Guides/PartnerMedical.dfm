@@ -3,7 +3,7 @@ object PartnerMedicalForm: TPartnerMedicalForm
   Top = 0
   Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077
   ClientHeight = 279
-  ClientWidth = 598
+  ClientWidth = 620
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,14 +20,14 @@ object PartnerMedicalForm: TPartnerMedicalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 598
+    Width = 620
     Height = 253
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitHeight = 256
+    ExplicitWidth = 598
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -46,7 +46,6 @@ object PartnerMedicalForm: TPartnerMedicalForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -55,20 +54,20 @@ object PartnerMedicalForm: TPartnerMedicalForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 103
+        Width = 72
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 279
+        Width = 196
       end
       object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 147
+        Width = 103
       end
       object MedicFIO: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1075#1083#1072#1074'.'#1074#1088#1072#1095#1072
@@ -76,16 +75,25 @@ object PartnerMedicalForm: TPartnerMedicalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 90
+        Width = 99
+      end
+      object DepartmentName: TcxGridDBColumn
+        Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' '#1086#1093#1088#1072#1085#1099' '#1079#1076#1086#1088#1086#1074#1100#1103
+        DataBinding.FieldName = 'DepartmentName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 123
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 32
       end
     end
     object cxGridLevel: TcxGridLevel
