@@ -1,5 +1,4 @@
-DROP FUNCTION IF EXISTS gpUpdate_MovementItem_Income_SendPrice 
-          (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MovementItem_Income_SendPrice (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_Income_SendPrice(
     IN inMovementId          Integer   , -- 
@@ -17,6 +16,7 @@ $BODY$
    DECLARE vbJuridicalPercent TFloat;
    DECLARE vbToId             Integer;
    DECLARE vbInvNumberPoint   TVarChar;
+   DECLARE vbRetailId         Integer;
 BEGIN
      
      -- определяем <Статус>
@@ -49,6 +49,65 @@ BEGIN
      THEN 
          RAISE EXCEPTION 'У "%" не совпадает тип НДС с документом', lfGet_Object_ValueData (vbGoodsId);
      END IF;
+   
+     -- проверка привязки товара
+     vbRetailId := (SELECT ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
+                    FROM MovementLinkObject AS MovementLinkObject_Juridical
+                         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                              ON ObjectLink_Juridical_Retail.ObjectId = MovementLinkObject_Juridical.ObjectId
+                                             AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
+                    WHERE MovementLinkObject_Juridical.MovementId = inMovementId
+                      AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+                    );
+     vbGoodsId :=0;
+     vbGoodsId := (WITH
+                   tmpMI AS (SELECT MILinkObject_Goods.ObjectId  AS PartnerGoodsId
+                             FROM MovementItem 
+                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                                   ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                                  AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                             WHERE MovementItem.MovementId = inMovementId
+                               AND MovementItem.isErased   = FALSE
+                               AND MovementItem.DescId     = zc_MI_Master()
+                             )
+
+                 , tmpLink AS (SELECT tmpMI.PartnerGoodsId
+                                    , ObjectLink_LinkGoods_Goods_find.ChildObjectId AS GoodsId
+                               FROM tmpMI
+                                    LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                                         ON ObjectLink_LinkGoods_Goods.ChildObjectId = tmpMI.PartnerGoodsId
+                                                        AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                    LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                                         ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+                                                        AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain_find
+                                                         ON ObjectLink_LinkGoods_GoodsMain_find.ChildObjectId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
+                                                        AND ObjectLink_LinkGoods_GoodsMain_find.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods_find
+                                                         ON ObjectLink_LinkGoods_Goods_find.ObjectId = ObjectLink_LinkGoods_GoodsMain_find.ObjectId
+                                                        AND ObjectLink_LinkGoods_Goods_find.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                    LEFT JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                         ON ObjectLink_Goods_Object.ObjectId = ObjectLink_LinkGoods_Goods_find.ChildObjectId
+                                                        AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                    INNER JOIN Object AS Object_Retail 
+                                                      ON Object_Retail.Id = ObjectLink_Goods_Object.ChildObjectId
+                                                     AND Object_Retail.DescId = zc_Object_Retail()
+                               WHERE ObjectLink_Goods_Object.ChildObjectId = vbRetailId
+                               )
+
+                   SELECT tmpMI.PartnerGoodsId
+                   FROM tmpMI
+                       LEFT JOIN tmpLink ON tmpLink.PartnerGoodsId = tmpMI.PartnerGoodsId
+                   WHERE tmpLink.GoodsId IS NULL
+                   LIMIT 1
+                   );
+                   
+     IF vbGoodsId <> 0
+     THEN 
+         RAISE EXCEPTION 'У "%" нет привязки к товару сети', lfGet_Object_ValueData (vbGoodsId);
+     END IF;
+   
    
      -- определяем Категорию расчета
      SELECT Object_MarginCategoryLink.MarginCategoryId  INTO vbMarginCategoryId
@@ -185,10 +244,11 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 25.10.18         * проверка привязки товара поставщика к товару сети
  12.06.17         *
  09.12.16         * add ObjectFloat_Contract_Percent
  13.05.15                        *   
  26.01.15                        *   
 */
--- select * from gpUpdate_MovementItem_Income_SendPrice (inMovementId := 2524720 ,  inSession := '3');  
+-- select * from gpUpdate_MovementItem_Income_SendPrice (inMovementId := 11459485  ,  inSession := '3');  
 -- vbJuridicalId = 183312
