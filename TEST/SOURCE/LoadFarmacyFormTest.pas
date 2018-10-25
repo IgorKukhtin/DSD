@@ -1236,13 +1236,13 @@ end;
 
 procedure TLoadFormTest.LoadOrderExternalFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
-
-  TdsdFormStorageFactory.GetStorage.Save
-    (GetForm('TOrderExternalJournalChoiceForm'));
+ }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalChoiceForm');
 end;
 

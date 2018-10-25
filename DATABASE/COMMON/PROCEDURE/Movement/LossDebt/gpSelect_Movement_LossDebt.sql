@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_LossDebt(
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalSumm TFloat
+             , TotalSumm_100301 TFloat
              , JuridicalBasisName TVarChar
              , BusinessName TVarChar
              , AccountName TVarChar
@@ -28,6 +29,18 @@ BEGIN
 
      -- –ÂÁÛÎ¸Ú‡Ú
      RETURN QUERY 
+     WITH tmpMovement AS (SELECT Movement.*
+                          FROM Movement 
+                          WHERE Movement.DescId = zc_Movement_LossDebt()
+                            AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                         )
+        , tmpMIContainer AS (SELECT MIContainer.MovementId
+                                  , SUM (MIContainer.Amount) AS Summ_100301
+                             FROM MovementItemContainer AS MIContainer
+                             WHERE MIContainer.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
+                               AND MIContainer.AccountId = zc_Enum_Account_100301()
+                             GROUP BY MIContainer.MovementId
+                             )
        SELECT
              Movement.Id
            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
@@ -36,13 +49,14 @@ BEGIN
            , Object_Status.ValueData    AS StatusName
 
            , MovementFloat_TotalSumm.ValueData AS TotalSumm
+           , COALESCE (tmpMIContainer.Summ_100301, 0) :: TFloat AS TotalSumm_100301
                       
            , Object_JuridicalBasis.ValueData AS JuridicalBasisName
            , Object_Business.ValueData       AS BusinessName
            , View_Account.AccountName_all    AS AccountName
            , Object_PaidKind.ValueData       AS PaidKindName
            , COALESCE (MovementBoolean_List.ValueData, False) :: Boolean AS isList
-       FROM Movement
+       FROM tmpMovement AS Movement
             -- JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -73,9 +87,9 @@ BEGIN
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
-            
-      WHERE Movement.DescId = zc_Movement_LossDebt()
-        AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
+
+            LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementId = Movement.Id
+       ;
   
 END;
 $BODY$
@@ -85,6 +99,7 @@ ALTER FUNCTION gpSelect_Movement_LossDebt (TDateTime, TDateTime, Integer, TVarCh
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 24.10.18         *
  06.10.16         * add inJuridicalBasisId
  18.04.16         *
  24.03.14                                        * add Object_Account_View

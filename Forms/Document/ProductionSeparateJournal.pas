@@ -57,6 +57,8 @@ type
     macUnionDoc: TMultiAction;
     bbUnionDoc: TdxBarButton;
     actInsertUnion: TdsdExecStoredProc;
+    actUpdateUnion: TdsdInsertUpdateAction;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

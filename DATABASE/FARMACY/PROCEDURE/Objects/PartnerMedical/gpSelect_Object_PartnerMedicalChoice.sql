@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , MedicFIO TVarChar
              , MedicSPId Integer, MedicSPName TVarChar
+             , DepartmentId Integer, DepartmentName TVarChar
              , isErased boolean
              ) AS
 $BODY$BEGIN
@@ -58,6 +59,9 @@ $BODY$BEGIN
          
           , 0                                 AS MedicSPId
           , '' :: TVarChar                    AS MedicSPName
+
+          , Object_Department.Id              AS DepartmentId
+          , Object_Department.ValueData       AS DepartmentName
           
           , Object_PartnerMedical.isErased AS isErased
      FROM tmpData
@@ -65,8 +69,13 @@ $BODY$BEGIN
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
    
           LEFT JOIN ObjectString AS ObjectString_PartnerMedical_FIO
-                                     ON ObjectString_PartnerMedical_FIO.ObjectId = Object_PartnerMedical.Id
-                                    AND ObjectString_PartnerMedical_FIO.DescId = zc_ObjectString_PartnerMedical_FIO()
+                                 ON ObjectString_PartnerMedical_FIO.ObjectId = Object_PartnerMedical.Id
+                                AND ObjectString_PartnerMedical_FIO.DescId = zc_ObjectString_PartnerMedical_FIO()
+
+          LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Department
+                               ON ObjectLink_PartnerMedical_Department.ObjectId = Object_PartnerMedical.Id
+                              AND ObjectLink_PartnerMedical_Department.DescId = zc_ObjectLink_PartnerMedical_Department()
+          LEFT JOIN Object AS Object_Department ON Object_Department.Id = ObjectLink_PartnerMedical_Department.ChildObjectId
    ;
   
 END;
@@ -78,6 +87,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.10.18         *
  25.01.18         *
 */
 

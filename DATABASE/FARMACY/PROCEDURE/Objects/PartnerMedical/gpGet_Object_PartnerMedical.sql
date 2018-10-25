@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_PartnerMedical(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
+             , DepartmentId Integer, DepartmentName TVarChar
              , MedicFIO TVarChar
              , isErased boolean
              ) AS
@@ -25,10 +26,14 @@ BEGIN
            , lfGet_ObjectCode(0, zc_Object_PartnerMedical()) AS Code
            , CAST ('' as TVarChar)  AS NAME
            
-           , CAST (0 as Integer)   AS JuridicalId
-           , CAST (0 as Integer)   AS JuridicalCode
-           , CAST ('' as TVarChar) AS JuridicalName
-           , CAST ('' as TVarChar) AS MedicFIO
+           , CAST (0 as Integer)    AS JuridicalId
+           , CAST (0 as Integer)    AS JuridicalCode
+           , CAST ('' as TVarChar)  AS JuridicalName
+
+           , CAST (0 as Integer)    AS DepartmentId
+           , CAST ('' as TVarChar)  AS DepartmentName
+
+           , CAST ('' as TVarChar)  AS MedicFIO
 
            , CAST (NULL AS Boolean) AS isErased
 ;
@@ -39,13 +44,16 @@ BEGIN
            , Object_PartnerMedical.ObjectCode  AS Code
            , Object_PartnerMedical.ValueData   AS Name
            
-           , Object_Juridical.Id    AS JuridicalId
-           , Object_Juridical.ObjectCode  AS JuridicalCode
-           , Object_Juridical.ValueData   AS JuridicalName
+           , Object_Juridical.Id               AS JuridicalId
+           , Object_Juridical.ObjectCode       AS JuridicalCode
+           , Object_Juridical.ValueData        AS JuridicalName
+
+           , Object_Department.Id              AS DepartmentId
+           , Object_Department.ValueData       AS DepartmentName
 
            , ObjectString_PartnerMedical_FIO.ValueData  AS MedicFIO
 
-           , Object_PartnerMedical.isErased AS isErased
+           , Object_PartnerMedical.isErased    AS isErased
            
        FROM Object AS Object_PartnerMedical
        
@@ -57,6 +65,11 @@ BEGIN
                                 ON ObjectLink_PartnerMedical_Juridical.ObjectId = Object_PartnerMedical.Id 
                                AND ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_PartnerMedical_Juridical.ChildObjectId              
+
+           LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Department 
+                                ON ObjectLink_PartnerMedical_Department.ObjectId = Object_PartnerMedical.Id 
+                               AND ObjectLink_PartnerMedical_Department.DescId = zc_ObjectLink_PartnerMedical_Department()
+           LEFT JOIN Object AS Object_Department ON Object_Department.Id = ObjectLink_PartnerMedical_Department.ChildObjectId      
 
        WHERE Object_PartnerMedical.Id = inId;
       
@@ -71,6 +84,7 @@ ALTER FUNCTION gpGet_Object_PartnerMedical(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.10.18         *
  16.02.17         * FIO
  22.12.16         * 
 

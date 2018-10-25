@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1053#1086#1074#1086#1077' '#1052#1077#1076'. '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077
-  ClientHeight = 246
+  ClientHeight = 298
   ClientWidth = 386
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 71
-    Top = 212
+    Left = 79
+    Top = 262
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 221
-    Top = 212
+    Left = 229
+    Top = 262
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -74,6 +74,7 @@
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 7
     Width = 296
   end
@@ -86,6 +87,23 @@
     Left = 40
     Top = 168
     TabOrder = 9
+    Width = 296
+  end
+  object cxLabel3: TcxLabel
+    Left = 40
+    Top = 197
+    Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' '#1086#1093#1088#1072#1085#1099' '#1079#1076#1086#1088#1086#1074#1100#1103
+  end
+  object edDepartment: TcxButtonEdit
+    Left = 40
+    Top = 217
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
     Width = 296
   end
   object ActionList: TActionList
@@ -160,7 +178,15 @@
       item
         Name = 'inJuridicalId'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDepartmentId'
+        Value = Null
+        Component = GuidesDepartment
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -209,14 +235,14 @@
       item
         Name = 'JuridicalId'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -225,6 +251,21 @@
         Name = 'MedicFIO'
         Value = Null
         Component = edFIO
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DepartmentId'
+        Value = Null
+        Component = GuidesDepartment
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DepartmentName'
+        Value = Null
+        Component = GuidesDepartment
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -251,7 +292,7 @@
     Left = 344
     Top = 64
   end
-  object JuridicalGuides: TdsdGuides
+  object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
@@ -263,7 +304,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -271,7 +312,7 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -279,5 +320,34 @@
       end>
     Left = 160
     Top = 108
+  end
+  object GuidesDepartment: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edDepartment
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesDepartment
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesDepartment
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 232
+    Top = 196
   end
 end

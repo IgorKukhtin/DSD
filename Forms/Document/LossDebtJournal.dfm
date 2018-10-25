@@ -104,6 +104,11 @@ object LossDebtJournalForm: TLossDebtJournalForm
         item
           Format = ',0.###;-,0.###; ;'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm_100301
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -134,6 +139,11 @@ object LossDebtJournalForm: TLossDebtJournalForm
         item
           Format = ',0.00'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm_100301
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -173,35 +183,35 @@ object LossDebtJournalForm: TLossDebtJournalForm
           end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 139
+        Width = 123
       end
       object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 88
       end
       object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 121
+        Width = 107
       end
       object JuridicalBasisName: TcxGridDBColumn
         Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalBasisName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 204
+        Width = 180
       end
       object PaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 65
+        Width = 58
       end
       object BusinessName: TcxGridDBColumn
         Caption = #1041#1080#1079#1085#1077#1089
@@ -216,7 +226,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
         DataBinding.FieldName = 'AccountName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 121
+        Width = 106
       end
       object TotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072
@@ -226,7 +236,17 @@ object LossDebtJournalForm: TLossDebtJournalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 123
+        Width = 109
+      end
+      object TotalSumm_100301: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1079#1072#1090#1088#1072#1090
+        DataBinding.FieldName = 'TotalSumm_100301'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 65
       end
       object isList: TcxGridDBColumn
         Caption = #1044#1083#1103' '#1089#1087#1080#1089#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
@@ -234,7 +254,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 58
+        Width = 95
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -892,8 +912,8 @@ object LossDebtJournalForm: TLossDebtJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 861
-    Top = 20
+    Left = 709
+    Top = 4
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'
@@ -916,7 +936,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 824
-    Top = 48
+    Left = 648
+    Top = 120
   end
 end

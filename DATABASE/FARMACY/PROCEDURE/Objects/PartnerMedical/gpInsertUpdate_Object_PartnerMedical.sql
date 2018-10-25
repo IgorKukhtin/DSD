@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PartnerMedical (Integer,Integer,TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PartnerMedical (Integer,Integer,TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PartnerMedical (Integer,Integer,TVarChar, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PartnerMedical(
  INOUT ioId              Integer   ,    -- ключ объекта < Медицинское учреждение>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PartnerMedical(
     IN inName            TVarChar  ,    -- Название объекта <>
     IN inFIO             TVarChar  ,    -- Главврач
     IN inJuridicalId     Integer   ,    -- Юридические лица 	
+    IN inDepartmentId    Integer   ,    -- Департамент охраны здоровья
     IN inSession         TVarChar       -- сессия пользователя
 )
  RETURNS Integer AS
@@ -33,6 +35,8 @@ BEGIN
 
     -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PartnerMedical_Juridical(), ioId, inJuridicalId);
+    -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PartnerMedical_Department(), ioId, inDepartmentId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_PartnerMedical_FIO(), ioId, inFIO);
 
@@ -46,6 +50,7 @@ $BODY$ LANGUAGE plpgsql;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.10.18         *
  16.02.17         * inFIO
  22.12.16         *  
  

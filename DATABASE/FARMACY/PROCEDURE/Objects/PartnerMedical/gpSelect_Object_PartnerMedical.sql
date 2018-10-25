@@ -9,6 +9,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , MedicFIO TVarChar
              , MedicSPId Integer, MedicSPName TVarChar
+             , DepartmentId Integer, DepartmentName TVarChar
              , isErased boolean
              ) AS
 $BODY$BEGIN
@@ -28,7 +29,10 @@ $BODY$BEGIN
           
            , 0                                 AS MedicSPId
            , '' :: TVarChar                    AS MedicSPName
-           
+
+           , Object_Department.Id              AS DepartmentId
+           , Object_Department.ValueData       AS DepartmentName
+
            , Object_PartnerMedical.isErased AS isErased
            
        FROM Object AS Object_PartnerMedical
@@ -42,6 +46,10 @@ $BODY$BEGIN
                                AND ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_PartnerMedical_Juridical.ChildObjectId              
 
+           LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Department 
+                                ON ObjectLink_PartnerMedical_Department.ObjectId = Object_PartnerMedical.Id 
+                               AND ObjectLink_PartnerMedical_Department.DescId = zc_ObjectLink_PartnerMedical_Department()
+           LEFT JOIN Object AS Object_Department ON Object_Department.Id = ObjectLink_PartnerMedical_Department.ChildObjectId      
      WHERE Object_PartnerMedical.DescId = zc_Object_PartnerMedical();
   
 END;
@@ -55,6 +63,7 @@ ALTER FUNCTION gpSelect_Object_PartnerMedical(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.10.18         *
  16.02.17         * FIO
  22.12.16         *
 */

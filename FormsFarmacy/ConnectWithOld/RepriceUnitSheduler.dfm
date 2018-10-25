@@ -10,19 +10,19 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
   inherited PageControl: TcxPageControl
     Width = 767
     Height = 313
-    ExplicitWidth = 714
+    ExplicitWidth = 767
     ExplicitHeight = 313
     ClientRectBottom = 313
     ClientRectRight = 767
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 714
+      ExplicitWidth = 767
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Left = 3
         Width = 764
         Height = 313
         ExplicitLeft = 3
-        ExplicitWidth = 711
+        ExplicitWidth = 764
         ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -85,6 +85,13 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
             HeaderAlignmentVert = vaCenter
             Width = 63
           end
+          object isEqual: TcxGridDBColumn
+            Caption = #1059#1088#1072#1074#1085#1080'- '#1074#1072#1090#1100' '#1094#1077#1085#1099
+            DataBinding.FieldName = 'isEqual'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 56
+          end
           object EqualRepriceMax: TcxGridDBColumn
             Caption = #1059#1088#1072#1074#1085'. '#1089' % '#1085#1077' '#1073#1086#1083#1077#1077
             DataBinding.FieldName = 'EqualRepriceMax'
@@ -96,13 +103,6 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
             DataBinding.FieldName = 'EqualRepriceMin'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-          end
-          object isEqual: TcxGridDBColumn
-            Caption = #1044#1083#1103' '#1091#1088#1072#1074#1085#1080' '#1074#1072#1085#1080#1080#1103
-            DataBinding.FieldName = 'isEqual'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 56
           end
           object DataStartLast: TcxGridDBColumn
             Caption = #1057#1090#1072#1088#1090' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1080#1080

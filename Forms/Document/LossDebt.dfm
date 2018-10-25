@@ -212,6 +212,11 @@ object LossDebtForm: TLossDebtForm
               Format = ',0.####'
               Kind = skSum
               Column = SummDebet
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_100301
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -248,6 +253,11 @@ object LossDebtForm: TLossDebtForm
               Format = ',0.####'
               Kind = skSum
               Column = SummDebet
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_100301
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -424,6 +434,17 @@ object LossDebtForm: TLossDebtForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object Summ_100301: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1079#1072#1090#1088#1072#1090
+            DataBinding.FieldName = 'Summ_100301'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object AmountCurrencyDebet: TcxGridDBColumn
@@ -951,6 +972,9 @@ object LossDebtForm: TLossDebtForm
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -1803,8 +1827,8 @@ object LossDebtForm: TLossDebtForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 443
-    Top = 225
+    Left = 499
+    Top = 217
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
