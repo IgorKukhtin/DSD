@@ -997,8 +997,15 @@ begin
         checkCDS.Edit;
         checkCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency +
           checkCDS.FieldByName('Amount').asCurrency;
-        checkCDS.FieldByName('Color_calc').AsInteger:=RemainsCDS.FieldByName('Color_calc').asInteger;
-        checkCDS.FieldByName('Color_ExpirationDate').AsInteger:=RemainsCDS.FieldByName('Color_ExpirationDate').asInteger;
+        if RemainsCDS.FieldByName('Color_calc').asInteger <> 0 then
+        begin
+          checkCDS.FieldByName('Color_calc').AsInteger:=RemainsCDS.FieldByName('Color_calc').asInteger;
+          checkCDS.FieldByName('Color_ExpirationDate').AsInteger:=RemainsCDS.FieldByName('Color_ExpirationDate').asInteger;
+        end else
+        begin
+          checkCDS.FieldByName('Color_calc').AsInteger:=clWhite;
+          checkCDS.FieldByName('Color_ExpirationDate').AsInteger:=clBlack;
+        end;
         checkCDS.Post;
       end;
       CheckCDS.Next;
@@ -1347,6 +1354,14 @@ var
   dsdSave: TdsdStoredProc;
 begin
   if CheckCDS.RecordCount = 0 then exit;
+
+  if (FormParams.ParamByName('CheckId').Value <> 0) and
+    (FormParams.ParamByName('ConfirmedKindName').AsString = 'Не подтвержден') then
+  begin
+    ShowMessage('Ошибка.VIP-чек <Не подтвержден>.');
+    Exit;
+  end;
+
   Add_Log('PutCheckToCash');
   PaidType:=ptMoney;
   //спросили сумму и тип оплаты
@@ -1666,8 +1681,8 @@ begin
           end else
           begin
             checkCDS.FieldByName('Remains').asCurrency:=0;
-            checkCDS.FieldByName('Color_calc').AsInteger := clWindow;
-            checkCDS.FieldByName('Color_ExpirationDate').AsInteger := clWindowText;
+            checkCDS.FieldByName('Color_calc').AsInteger := clWhite;
+            checkCDS.FieldByName('Color_ExpirationDate').AsInteger := clBlack;
           end;
         finally
           RemainsCDS.RecNo := nRecNo;
@@ -2692,18 +2707,21 @@ procedure TMainCashForm2.CheckGridDBTableViewFocusedRecordChanged(
 begin
   inherited;
 
-  if not CheckCDS.IsEmpty then
+  if CheckGrid.IsFocused then
   begin
-    edAmount.Style.Color := CheckCDS.FieldByName('Color_calc').AsInteger;
-    edAmount.StyleDisabled.Color := CheckCDS.FieldByName('Color_calc').AsInteger;
-    edAmount.StyleFocused.Color := CheckCDS.FieldByName('Color_calc').AsInteger;
-    edAmount.StyleHot.Color := CheckCDS.FieldByName('Color_calc').AsInteger;
-  end else
-  begin
-    edAmount.Style.Color := clWindow;
-    edAmount.StyleDisabled.Color := clBtnFace;
-    edAmount.StyleFocused.Color := clWindow;
-    edAmount.StyleHot.Color := clWindow;
+    if not CheckCDS.IsEmpty then
+    begin
+      edAmount.Style.Color := CheckCDS.FieldByName('Color_calc').AsInteger;
+      edAmount.StyleDisabled.Color := CheckCDS.FieldByName('Color_calc').AsInteger;
+      edAmount.StyleFocused.Color := CheckCDS.FieldByName('Color_calc').AsInteger;
+      edAmount.StyleHot.Color := CheckCDS.FieldByName('Color_calc').AsInteger;
+    end else
+    begin
+      edAmount.Style.Color := clWhite;
+      edAmount.StyleDisabled.Color := clBtnFace;
+      edAmount.StyleFocused.Color := clWhite;
+      edAmount.StyleHot.Color := clWhite;
+    end;
   end;
 
 end;
@@ -3185,14 +3203,15 @@ begin
           RemainsCDS.Filtered := False;
           nRecNo := RemainsCDS.RecNo;
           try
-            if RemainsCDS.Locate('GoodsCode', checkCDS.FieldByName('GoodsCode').AsInteger,[]) then
+            if RemainsCDS.Locate('GoodsCode', checkCDS.FieldByName('GoodsCode').AsInteger,[]) and
+              (RemainsCDS.FieldByName('Color_calc').asInteger  <> 0) then
             begin
               checkCDS.FieldByName('Color_calc').AsInteger:=RemainsCDS.FieldByName('Color_calc').asInteger;
               checkCDS.FieldByName('Color_ExpirationDate').AsInteger:=RemainsCDS.FieldByName('Color_ExpirationDate').asInteger;
             end else
             begin
-              checkCDS.FieldByName('Color_calc').AsInteger := clWindow;
-              checkCDS.FieldByName('Color_ExpirationDate').AsInteger := clWindowText;
+              checkCDS.FieldByName('Color_calc').AsInteger := clWhite;
+              checkCDS.FieldByName('Color_ExpirationDate').AsInteger := clBlack;
             end;
           finally
             RemainsCDS.RecNo := nRecNo;
@@ -3201,8 +3220,15 @@ begin
           end;
         end else
         begin
-          checkCDS.FieldByName('Color_calc').AsInteger:=SourceClientDataSet.FieldByName('Color_calc').asInteger;
-          checkCDS.FieldByName('Color_ExpirationDate').AsInteger:=SourceClientDataSet.FieldByName('Color_ExpirationDate').asInteger
+          if SourceClientDataSet.FieldByName('Color_calc').asInteger <> 0 then
+          begin
+            checkCDS.FieldByName('Color_calc').AsInteger:=SourceClientDataSet.FieldByName('Color_calc').asInteger;
+            checkCDS.FieldByName('Color_ExpirationDate').AsInteger:=SourceClientDataSet.FieldByName('Color_ExpirationDate').asInteger;
+          end else
+          begin
+            checkCDS.FieldByName('Color_calc').AsInteger:=clWhite;
+            checkCDS.FieldByName('Color_ExpirationDate').AsInteger:=clBlack;
+          end;
         end;
         checkCDS.Post;
 
@@ -3467,18 +3493,21 @@ begin
 
   actSetFilterExecute(nil); // Установка фильтров для товара
 
-  if not RemainsCDS.IsEmpty then
+  if MainGrid.IsFocused or lcName.IsFocused then
   begin
-    edAmount.Style.Color := RemainsCDS.FieldByName('Color_calc').AsInteger;
-    edAmount.StyleDisabled.Color := RemainsCDS.FieldByName('Color_calc').AsInteger;
-    edAmount.StyleFocused.Color := RemainsCDS.FieldByName('Color_calc').AsInteger;
-    edAmount.StyleHot.Color := RemainsCDS.FieldByName('Color_calc').AsInteger;
-  end else
-  begin
-    edAmount.Style.Color := clWindow;
-    edAmount.StyleDisabled.Color := clBtnFace;
-    edAmount.StyleFocused.Color := clWindow;
-    edAmount.StyleHot.Color := clWindow;
+    if not RemainsCDS.IsEmpty and (RemainsCDS.FieldByName('Color_calc').AsInteger <> 0) then
+    begin
+      edAmount.Style.Color := RemainsCDS.FieldByName('Color_calc').AsInteger;
+      edAmount.StyleDisabled.Color := RemainsCDS.FieldByName('Color_calc').AsInteger;
+      edAmount.StyleFocused.Color := RemainsCDS.FieldByName('Color_calc').AsInteger;
+      edAmount.StyleHot.Color := RemainsCDS.FieldByName('Color_calc').AsInteger;
+    end else
+    begin
+      edAmount.Style.Color := clWhite;
+      edAmount.StyleDisabled.Color := clBtnFace;
+      edAmount.StyleFocused.Color := clWhite;
+      edAmount.StyleHot.Color := clWhite;
+    end;
   end;
 
   if MainGrid.IsFocused then exit;
