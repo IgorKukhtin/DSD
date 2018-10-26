@@ -1,17 +1,17 @@
--- Function: gpSelect_AllGoodsPriceChange()
+-- Function: gpSelect_AllGoodsPrice()
 
--- DROP FUNCTION IF EXISTS gpSelect_AllGoodsPriceChange (Integer, Integer, TFloat, Boolean, TVarChar);
--- DROP FUNCTION IF EXISTS gpSelect_AllGoodsPriceChange (Integer, Integer, TFloat, Boolean, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_AllGoodsPriceChange (Integer, Integer, TFloat, Boolean, TFloat, TFloat, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_AllGoodsPrice (Integer, Integer, TFloat, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_AllGoodsPrice (Integer, Integer, TFloat, Boolean, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_AllGoodsPrice (Integer, Integer, TFloat, Boolean, TFloat, TFloat, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_AllGoodsPriceChange(
---  IN inGoodsCode     Integer    -- поиск товаров
-    IN inUnitId        Integer     -- Торговая сеть
-  , IN inUnitId_to     Integer     -- Торговая сеть (с которым есть сравнение цен)
+CREATE OR REPLACE FUNCTION gpSelect_AllGoodsPrice(
+    -- IN inGoodsCode     Integer    -- поиск товаров
+    IN inUnitId        Integer     -- Подразделение
+  , IN inUnitId_to     Integer     -- Подразделение (с которым есть сравнение цен)
   , IN inMinPercent    TFloat      -- Минимальный % для подразделений, у которых категория переоценки не установлена
   , IN inVAT20         Boolean     -- Переоценивать товары с 20% НДС
-  , IN inTaxTo         TFloat      -- % отклонения ТОЛЬКО при уравнивании цен
-  , IN inPriceMaxTo    TFloat      -- Цена до ТОЛЬКО при уравнивании цен
+  , IN inTaxTo         TFloat      -- Минимальный % для подразделений, у которых категория переоценки не установлена
+  , IN inPriceMaxTo    TFloat      -- Минимальный % для подразделений, у которых категория переоценки не установлена
   , IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
@@ -39,7 +39,7 @@ RETURNS TABLE (
     ProducerName        TVarChar,   -- производитель
     ContractId          Integer,    -- договор Ид
     ContractName        TVarChar,   -- договор
-    AreaId              Integer,    -- регион ИД
+    AreaId              Integer,    -- ренгион ИД
     AreaName            TVarChar,   -- регион
     Juridical_Percent   TFloat,     -- % Корректировки наценки Поставщика
     Contract_Percent    TFloat,     -- % Корректировки наценки Договора
@@ -416,7 +416,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_AllGoodsPriceChange (Integer,  Integer,  TFloat, Boolean, TFloat, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_AllGoodsPrice (Integer,  Integer,  TFloat, Boolean, TFloat, TFloat, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -435,4 +435,4 @@ ALTER FUNCTION gpSelect_AllGoodsPriceChange (Integer,  Integer,  TFloat, Boolean
 */
 
 -- тест
--- SELECT * FROM gpSelect_AllGoodsPriceChange (183292, 0, 30, True, 0, 0, '3')  -- Аптека_1 пр_Правды_6
+-- SELECT * FROM gpSelect_AllGoodsPrice (183292, 0, 30, True, 0, 0, '3')  -- Аптека_1 пр_Правды_6
