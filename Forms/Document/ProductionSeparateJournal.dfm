@@ -150,6 +150,8 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
   end
   inherited Panel: TPanel
     Width = 1073
+    ExplicitLeft = -32
+    ExplicitTop = 1
     ExplicitWidth = 1073
     inherited deStart: TcxDateEdit
       EditValue = 42736d

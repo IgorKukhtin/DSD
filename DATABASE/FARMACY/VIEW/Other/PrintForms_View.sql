@@ -20,6 +20,22 @@ AS
                                         , 4212299        -- "Комунальний заклад "ДЦПМСД №11""
                                         , 4474558        -- КНП Кам’янської міської ради "ЦПМСД N3"
                                          )
+
+    UNION
+      -- доп. соглашения для департаментов здоровья
+      SELECT CAST ('Report_Check_SP' AS TVarChar)        AS ReportType
+           , CAST ('01.01.2000' AS TDateTime)            AS StartDate
+           , CAST ('01.01.2200' AS TDateTime)            AS EndDate
+           , CAST (0            AS Integer)              AS JuridicalId
+           , CAST (Object_Department.Id AS Integer)      AS PartnerMedicalId
+           , CAST ('PrintReport_CheckSP_' || Object_Department.Id AS TVarChar)     AS PrintFormName
+      FROM Object AS Object_Department 
+      WHERE Object_Department.DescId = zc_Object_Juridical()
+        AND Object_Department.Id IN  (8513005       -- "Управління охорони здоров'я Кам'янської міської ради"
+                                    , 9102200        -- "Відділ охорони здоров'я Павлоградської міської ради"
+                                    , 9089478        -- ""Відділ охорони здоров'я Нікопольскої міської ради"
+                                                     -- Днепр
+                                     )
       ;
 
 ALTER TABLE PrintForms_View OWNER TO postgres;
@@ -33,6 +49,8 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM PrintForms_View 
+
+SELECT * FROM Object WHERE Object.DescId = zc_Object_Juridical() ;
 
 /*
 CREATE OR REPLACE VIEW PrintForms_View

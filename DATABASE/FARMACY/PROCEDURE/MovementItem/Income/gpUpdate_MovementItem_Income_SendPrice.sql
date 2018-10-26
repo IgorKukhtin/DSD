@@ -2,9 +2,11 @@ DROP FUNCTION IF EXISTS gpUpdate_MovementItem_Income_SendPrice (Integer, TVarCha
 
 CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_Income_SendPrice(
     IN inMovementId          Integer   , -- 
+   OUT outMessageText        Text      ,
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS VOID AS
+RETURNS Text
+AS
 $BODY$
    DECLARE vbUserId           Integer;
    DECLARE vbObjectId         Integer;
@@ -59,55 +61,54 @@ BEGIN
                     WHERE MovementLinkObject_Juridical.MovementId = inMovementId
                       AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
                     );
-     vbGoodsId :=0;
-     vbGoodsId := (WITH
-                   tmpMI AS (SELECT MILinkObject_Goods.ObjectId  AS PartnerGoodsId
-                             FROM MovementItem 
-                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
-                                                                   ON MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                                                  AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                             WHERE MovementItem.MovementId = inMovementId
-                               AND MovementItem.isErased   = FALSE
-                               AND MovementItem.DescId     = zc_MI_Master()
-                             )
-
-                 , tmpLink AS (SELECT tmpMI.PartnerGoodsId
-                                    , ObjectLink_LinkGoods_Goods_find.ChildObjectId AS GoodsId
-                               FROM tmpMI
-                                    LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                                                         ON ObjectLink_LinkGoods_Goods.ChildObjectId = tmpMI.PartnerGoodsId
-                                                        AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
-                                    LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-                                                         ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
-                                                        AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-
-                                    LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain_find
-                                                         ON ObjectLink_LinkGoods_GoodsMain_find.ChildObjectId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
-                                                        AND ObjectLink_LinkGoods_GoodsMain_find.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods_find
-                                                         ON ObjectLink_LinkGoods_Goods_find.ObjectId = ObjectLink_LinkGoods_GoodsMain_find.ObjectId
-                                                        AND ObjectLink_LinkGoods_Goods_find.DescId = zc_ObjectLink_LinkGoods_Goods()
-                                    LEFT JOIN ObjectLink AS ObjectLink_Goods_Object
-                                                         ON ObjectLink_Goods_Object.ObjectId = ObjectLink_LinkGoods_Goods_find.ChildObjectId
-                                                        AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                                    INNER JOIN Object AS Object_Retail 
-                                                      ON Object_Retail.Id = ObjectLink_Goods_Object.ChildObjectId
-                                                     AND Object_Retail.DescId = zc_Object_Retail()
-                               WHERE ObjectLink_Goods_Object.ChildObjectId = vbRetailId
-                               )
-
-                   SELECT tmpMI.PartnerGoodsId
-                   FROM tmpMI
-                       LEFT JOIN tmpLink ON tmpLink.PartnerGoodsId = tmpMI.PartnerGoodsId
-                   WHERE tmpLink.GoodsId IS NULL
-                   LIMIT 1
-                   );
-                   
-     IF vbGoodsId <> 0
+     outMessageText := 'Проверьте привязку товаров поставщика '|| 
+                       (WITH
+                        tmpMI AS (SELECT MILinkObject_Goods.ObjectId  AS PartnerGoodsId
+                                  FROM MovementItem 
+                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                                        ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                                       AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                                  WHERE MovementItem.MovementId = inMovementId
+                                    AND MovementItem.isErased   = FALSE
+                                    AND MovementItem.DescId     = zc_MI_Master()
+                                  )
+     
+                      , tmpLink AS (SELECT tmpMI.PartnerGoodsId
+                                         , ObjectLink_LinkGoods_Goods_find.ChildObjectId AS GoodsId
+                                    FROM tmpMI
+                                         LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                                              ON ObjectLink_LinkGoods_Goods.ChildObjectId = tmpMI.PartnerGoodsId
+                                                             AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                         LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                                              ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+                                                             AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+     
+                                         LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain_find
+                                                              ON ObjectLink_LinkGoods_GoodsMain_find.ChildObjectId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
+                                                             AND ObjectLink_LinkGoods_GoodsMain_find.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                         LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods_find
+                                                              ON ObjectLink_LinkGoods_Goods_find.ObjectId = ObjectLink_LinkGoods_GoodsMain_find.ObjectId
+                                                             AND ObjectLink_LinkGoods_Goods_find.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                         LEFT JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                              ON ObjectLink_Goods_Object.ObjectId = ObjectLink_LinkGoods_Goods_find.ChildObjectId
+                                                             AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                         INNER JOIN Object AS Object_Retail 
+                                                           ON Object_Retail.Id = ObjectLink_Goods_Object.ChildObjectId
+                                                          AND Object_Retail.DescId = zc_Object_Retail()
+                                    WHERE ObjectLink_Goods_Object.ChildObjectId = vbRetailId
+                                    )
+     
+                        SELECT string_agg (lfGet_Object_ValueData (tmpMI.PartnerGoodsId ), ';') --tmpMI.PartnerGoodsId
+                        FROM tmpMI
+                            LEFT JOIN tmpLink ON tmpLink.PartnerGoodsId = tmpMI.PartnerGoodsId
+                        WHERE tmpLink.GoodsId IS NULL
+                        );
+                        
+    /* IF vbGoodsId <> 0
      THEN 
          RAISE EXCEPTION 'У "%" нет привязки к товару сети', lfGet_Object_ValueData (vbGoodsId);
      END IF;
-   
+    */
    
      -- определяем Категорию расчета
      SELECT Object_MarginCategoryLink.MarginCategoryId  INTO vbMarginCategoryId

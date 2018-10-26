@@ -44,7 +44,7 @@ type
     cxLabel5: TcxLabel;
     ceHospital: TcxButtonEdit;
     HospitalGuides: TdsdGuides;
-    actPrint1: TdsdPrintAction;
+    actPrint_152: TdsdPrintAction;
     bbPrint1: TdxBarButton;
     OperDate: TcxGridDBColumn;
     InvNumberSP: TcxGridDBColumn;
@@ -73,6 +73,19 @@ type
     JuridicalId: TcxGridDBColumn;
     isPrintLast: TcxGridDBColumn;
     HospitalId: TcxGridDBColumn;
+    actPrintDepartment: TdsdPrintAction;
+    actPrintDepartment_152: TdsdPrintAction;
+    macPrintInvoiceDepartment: TMultiAction;
+    actPrintInvoiceDepartment: TdsdPrintAction;
+    bbPrintDepartment: TdxBarButton;
+    bbPrintDepartment_152: TdxBarButton;
+    bbPrintInvoiceDepartment: TdxBarButton;
+    actPrintPactDepartment: TdsdPrintAction;
+    mactPrint_PactDepartment: TMultiAction;
+    bbPrint_PactDepartment: TdxBarButton;
+    actGetReportNameSPDepartmen: TdsdExecStoredProc;
+    spGetReporNameSPDepartment: TdsdStoredProc;
+    DepartmentId: TcxGridDBColumn;
   private
     { Private declarations }
   public

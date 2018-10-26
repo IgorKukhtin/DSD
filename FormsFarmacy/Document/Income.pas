@@ -159,6 +159,7 @@ type
     spUpdate_OrderExternal_Deferred: TdsdStoredProc;
     RetailName: TcxGridDBColumn;
     AreaName: TcxGridDBColumn;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

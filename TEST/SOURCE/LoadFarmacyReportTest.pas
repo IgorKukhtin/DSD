@@ -59,10 +59,11 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-  {
-end;
   //доп. соглащения Соц. проект
-  {LoadReportFromFile('PrintReport_CheckSP_4474509', ReportPath + '\PrintReport_CheckSP_4474509.fr3');
+  LoadReportFromFile('PrintReport_CheckSP_8513005', ReportPath + '\PrintReport_CheckSP_8513005.fr3');
+  exit;
+  {
+  LoadReportFromFile('PrintReport_CheckSP_4474509', ReportPath + '\PrintReport_CheckSP_4474509.fr3');
   LoadReportFromFile('PrintReport_CheckSP_4474508', ReportPath + '\PrintReport_CheckSP_4474508.fr3');
   LoadReportFromFile('PrintReport_CheckSP_4474307', ReportPath + '\PrintReport_CheckSP_4474307.fr3');
   LoadReportFromFile('PrintReport_CheckSP_4474556', ReportPath + '\PrintReport_CheckSP_4474556.fr3');

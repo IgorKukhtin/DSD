@@ -320,6 +320,36 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
           Format = ',0.####'
           Kind = skSum
           Column = CountTotalOut_Weight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummSendOnPrice_10500
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSendOnPrice_10500
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSendOnPrice_10500_Weight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummSendOnPrice_40200
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSendOnPriceIn_40200
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSendOnPriceIn_40200_Weight
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -611,6 +641,36 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
           Format = ',0.####'
           Kind = skSum
           Column = CountTotalOut_Weight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummSendOnPrice_10500
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSendOnPrice_10500
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSendOnPrice_10500_Weight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummSendOnPrice_40200
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSendOnPriceIn_40200
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSendOnPriceIn_40200_Weight
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -1063,6 +1123,72 @@ object Report_MotionGoodsUpakForm: TReport_MotionGoodsUpakForm
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object SummSendOnPrice_10500: TcxGridDBColumn
+        Caption = #1057#1082#1080#1076#1082#1072' '#1089#1091#1084#1084#1072' ('#1087#1088#1080' '#1087#1077#1088#1077#1084'. '#1085#1072' '#1092#1080#1083'.)'
+        DataBinding.FieldName = 'SummSendOnPrice_10500'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object CountSendOnPrice_10500: TcxGridDBColumn
+        Caption = #1057#1082#1080#1076#1082#1072' '#1082#1086#1083'. ('#1087#1088#1080' '#1087#1077#1088#1077#1084'. '#1085#1072' '#1092#1080#1083'.)'
+        DataBinding.FieldName = 'CountSendOnPrice_10500'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object CountSendOnPrice_10500_Weight: TcxGridDBColumn
+        Caption = #1057#1082#1080#1076#1082#1072' '#1074#1077#1089' ('#1087#1088#1080' '#1087#1077#1088#1077#1084'. '#1085#1072' '#1092#1080#1083'.)'
+        DataBinding.FieldName = 'CountSendOnPrice_10500_Weight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object SummSendOnPrice_40200: TcxGridDBColumn
+        Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1089#1091#1084#1084#1072'  ('#1087#1088#1080' '#1087#1077#1088#1077#1084'. '#1085#1072' '#1092#1080#1083'.)'
+        DataBinding.FieldName = 'SummSendOnPrice_40200'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object CountSendOnPriceIn_40200: TcxGridDBColumn
+        Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084' '#1082#1086#1083'. ('#1087#1088#1080' '#1087#1077#1088#1077#1084'. '#1085#1072' '#1092#1080#1083'.)'
+        DataBinding.FieldName = 'CountSendOnPrice_40200'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object CountSendOnPriceIn_40200_Weight: TcxGridDBColumn
+        Caption = '(-)'#1055#1086#1090#1077#1088#1080' (+)'#1069#1082#1086#1085#1086#1084'  '#1074#1077#1089'  ('#1087#1088#1080' '#1087#1077#1088#1077#1084'. '#1085#1072' '#1092#1080#1083'.)'
+        DataBinding.FieldName = 'CountSendOnPrice_40200_Weight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False

@@ -699,6 +699,8 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Caption = #1050#1086#1083'. '#1088#1077#1094#1077#1087#1090#1086#1074
             DataBinding.FieldName = 'CountInvNumberSP'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
@@ -706,6 +708,8 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Caption = #1048#1090#1086#1075#1086' '#1087#1086' '#1076#1086#1075'.'
             DataBinding.FieldName = 'TotalSumm_Invoice'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1048#1090#1086#1075#1086' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091' '#1089' '#1085#1072#1095#1072#1083#1072' '#1075#1086#1076#1072
             Options.Editing = False
             VisibleForCustomization = False
@@ -723,6 +727,130 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Visible = False
             VisibleForCustomization = False
             Width = 30
+          end
+          object DepartmentId: TcxGridDBColumn
+            DataBinding.FieldName = 'DepartmentId'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 70
+          end
+          object Department_FullName: TcxGridDBColumn
+            Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' '#1086#1093#1086#1088#1086#1085#1080' '#1079#1076#1086#1088#1086#1074'`'#1103' ('#1087#1086#1074#1085#1072' '#1085#1072#1079#1074#1072')'
+            DataBinding.FieldName = 'Department_FullName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 155
+          end
+          object Department_JuridicalAddress: TcxGridDBColumn
+            Caption = #1070#1088'. '#1072#1076#1088#1077#1089#1072' ('#1044#1054#1047')'
+            DataBinding.FieldName = 'Department_JuridicalAddress'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1070#1088'. '#1072#1076#1088#1077#1089#1072' ('#1047#1054#1047')'
+            Options.Editing = False
+            Width = 155
+          end
+          object Department_Phone: TcxGridDBColumn
+            Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1044#1054#1047')'
+            DataBinding.FieldName = 'Department_Phone'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1077#1083#1077#1092#1086#1085' ('#1047#1054#1047')'
+            Options.Editing = False
+            Width = 155
+          end
+          object ContractName_Department: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088' ('#1044#1054#1047')'
+            DataBinding.FieldName = 'ContractName_Department'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Contract_SigningDate_Department: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086#1076#1087'. '#1076#1086#1075'. ('#1044#1054#1047')'
+            DataBinding.FieldName = 'Contract_SigningDate_Department'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1087#1086#1076#1087#1080#1089#1072#1085#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Options.Editing = False
+            Width = 74
+          end
+          object Contract_StartDate_Department: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1075#1086#1074#1086#1088#1091' ('#1044#1054#1047')'
+            DataBinding.FieldName = 'Contract_StartDate_Department'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object Department_MainName: TcxGridDBColumn
+            Caption = #1043#1083'.'#1074#1088#1072#1095' ('#1044#1054#1047')'
+            DataBinding.FieldName = 'Department_MainName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object Department_MainName_Cut: TcxGridDBColumn
+            Caption = #1043#1083'.'#1074#1088#1072#1095' ('#1044#1054#1047')'
+            DataBinding.FieldName = 'Department_MainName_Cut'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 155
+          end
+          object Department_OKPO: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054' ('#1044#1054#1047')'
+            DataBinding.FieldName = 'Department_OKPO'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1050#1055#1054' ('#1047#1054#1047')'
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 155
+          end
+          object Department_BankAccount: TcxGridDBColumn
+            Caption = #1056'/'#1088' ('#1044#1054#1047')'
+            DataBinding.FieldName = 'Department_BankAccount'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056'/'#1088' ('#1047#1054#1047')'
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 155
+          end
+          object Department_BankName: TcxGridDBColumn
+            Caption = #1041#1072#1085#1082' ('#1044#1054#1047')'
+            DataBinding.FieldName = 'Department_BankName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1072#1085#1082' ('#1047#1054#1047')'
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 155
+          end
+          object Department_MFO: TcxGridDBColumn
+            Caption = #1052#1060#1054' ('#1044#1054#1047')'
+            DataBinding.FieldName = 'Department_MFO'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1060#1054' ('#1047#1054#1047')'
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 155
           end
         end
       end
@@ -844,6 +972,74 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
     Width = 230
   end
   inherited ActionList: TActionList
+    object actGetReportNameSPDepartmen: TdsdExecStoredProc
+      Category = 'Print'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporNameSPDepartment
+      StoredProcList = <
+        item
+          StoredProc = spGetReporNameSPDepartment
+        end>
+      Caption = 'actGetReportNameSP'
+    end
+    object mactPrint_PactDepartment: TMultiAction
+      Category = 'Print'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetReportNameSPDepartmen
+        end
+        item
+          Action = actPrintPactDepartment
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1044#1086#1087'. '#1089#1086#1075#1083#1072#1096#1077#1085#1080#1077'  ('#1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1044#1086#1087'. '#1089#1086#1075#1083#1072#1096#1077#1085#1080#1077'  ('#1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090')'
+      ImageIndex = 17
+    end
+    object actPrintPactDepartment: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1044#1086#1087'. '#1089#1086#1075#1083#1072#1096#1077#1085#1080#1077' ('#1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1044#1086#1087'. '#1089#1086#1075#1083#1072#1096#1077#1085#1080#1077' ('#1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090')'
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDepartment'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'ReportNameSP'
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSP'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -975,7 +1171,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    object actPrint1: TdsdPrintAction
+    object actPrint_152: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
@@ -1009,6 +1205,13 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
           Component = edInvoice
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDepartment'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072'('#1087#1086#1089#1090'.152)'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072'('#1087#1086#1089#1090'.152)'
@@ -1022,7 +1225,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072
       Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072
       ImageIndex = 3
       ShortCut = 16464
@@ -1046,9 +1249,71 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDepartment'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintInvoiceDepartment: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072
+      ImageIndex = 3
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'JuridicalName;HospitalName;ContractName;'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Invoice'
+          Value = '0'
+          Component = edInvoice
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DateInvoice'
+          Value = 42736d
+          Component = edDateInvoice
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDepartment'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1057#1095#1077#1090' '#1089#1086#1094'.'#1087#1088#1086#1077#1082#1090
+      ReportNameParam.Value = #1057#1095#1077#1090' '#1089#1086#1094'.'#1087#1088#1086#1077#1082#1090
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -1096,6 +1361,12 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
           Component = edDateInvoice
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDepartment'
+          Value = 'FALSE'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1057#1095#1077#1090' '#1089#1086#1094'.'#1087#1088#1086#1077#1082#1090
       ReportNameParam.Value = #1057#1095#1077#1090' '#1089#1086#1094'.'#1087#1088#1086#1077#1082#1090
@@ -1124,10 +1395,116 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
           Action = actSaveMovement
         end
         item
-          Action = actPrintInvoice
+          Action = actPrintInvoiceDepartment
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072
       Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 15
+    end
+    object actPrintDepartment: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072' ('#1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072' ('#1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090')'
+      ImageIndex = 3
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'HospitalName;UnitName;isPrintLast;IntenalSPName;OperDate'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDepartment'
+          Value = 'True'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintDepartment_152: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090' ('#1087#1086#1089#1090'.152)'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090' ('#1087#1086#1089#1090'.152)'
+      ImageIndex = 16
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'HospitalName;isPrintLast;NumLine'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Invoice'
+          Value = '0'
+          Component = edInvoice
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDepartment'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072'('#1087#1086#1089#1090'.152)'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072'('#1087#1086#1089#1090'.152)'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object macPrintInvoiceDepartment: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSaveMovement
+        end
+        item
+          Action = actPrintInvoice
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' C'#1095#1077#1090#1072' ('#1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090')'
+      Hint = #1055#1077#1095#1072#1090#1100' C'#1095#1077#1090#1072' ('#1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090')'
       ImageIndex = 15
     end
     object actGetReportNameSP: TdsdExecStoredProc
@@ -1153,7 +1530,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1044#1086#1087'. '#1089#1086#1075#1083#1072#1096#1077#1085#1080#1077
       Hint = #1055#1077#1095#1072#1090#1100' '#1044#1086#1087'. '#1089#1086#1075#1083#1072#1096#1077#1085#1080#1077
-      ImageIndex = 3
+      ImageIndex = 17
     end
     object actPrintPact: TdsdPrintAction
       Category = 'Print'
@@ -1179,6 +1556,12 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
           Value = 'NULL'
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDepartment'
+          Value = 'FALSE'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       ReportName = 'ReportNameSP'
@@ -1318,6 +1701,26 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintDepartment'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintDepartment_152'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintInvoiceDepartment'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_PactDepartment'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1341,7 +1744,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       Category = 0
     end
     object bbPrint1: TdxBarButton
-      Action = actPrint1
+      Action = actPrint_152
       Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086#1089#1090'.152'
       Category = 0
     end
@@ -1359,7 +1762,22 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
     object bbPrint_Pact: TdxBarButton
       Action = mactPrint_Pact
       Category = 0
-      ImageIndex = 17
+    end
+    object bbPrintDepartment: TdxBarButton
+      Action = actPrintDepartment
+      Category = 0
+    end
+    object bbPrintDepartment_152: TdxBarButton
+      Action = actPrintDepartment_152
+      Category = 0
+    end
+    object bbPrintInvoiceDepartment: TdxBarButton
+      Action = macPrintInvoiceDepartment
+      Category = 0
+    end
+    object bbPrint_PactDepartment: TdxBarButton
+      Action = mactPrint_PactDepartment
+      Category = 0
     end
   end
   inherited PeriodChoice: TPeriodChoice
@@ -1585,5 +2003,38 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
     PackSize = 1
     Left = 704
     Top = 296
+  end
+  object spGetReporNameSPDepartment: TdsdStoredProc
+    StoredProcName = 'gpGet_ReportNameSP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inJuridicalId'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerMedicalId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'DepartmentId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_ReportNameSP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameSP'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 848
+    Top = 272
   end
 end

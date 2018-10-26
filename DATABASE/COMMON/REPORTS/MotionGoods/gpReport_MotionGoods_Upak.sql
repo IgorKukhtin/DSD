@@ -46,6 +46,11 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , CountSendOnPriceOut TFloat
              , CountSendOnPriceOut_Weight TFloat
 
+             , CountSendOnPrice_10500 TFloat
+             , CountSendOnPrice_10500_Weight TFloat
+             , CountSendOnPrice_40200 TFloat
+             , CountSendOnPrice_40200_Weight TFloat
+
              , CountSale TFloat
              , CountSale_Weight TFloat
              , CountSale_10500 TFloat
@@ -82,6 +87,8 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , SummSendOut TFloat
              , SummSendOnPriceIn TFloat
              , SummSendOnPriceOut TFloat
+             , SummSendOnPrice_10500  TFloat
+             , SummSendOnPrice_40200  TFloat
              , SummSale TFloat
              , SummSale_10500 TFloat
              , SummSale_40208 TFloat
@@ -282,6 +289,11 @@ BEGIN
         , CAST (tmpMIContainer_group.CountSendOnPriceOut AS TFloat) AS CountSendOnPriceOut
         , CAST (tmpMIContainer_group.CountSendOnPriceOut * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END AS TFloat) AS CountSendOnPriceOut_Weight
 
+        , CAST (tmpMIContainer_group.CountSendOnPrice_10500  AS TFloat) AS CountSendOnPrice_10500
+        , CAST (tmpMIContainer_group.CountSendOnPrice_10500 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END  AS TFloat) AS CountSendOnPrice_10500_Weight
+        , CAST (tmpMIContainer_group.CountSendOnPrice_40200  AS TFloat) AS CountSendOnPrice_40200
+        , CAST (tmpMIContainer_group.CountSendOnPrice_40200 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END  AS TFloat) AS CountSendOnPrice_40200_Weight
+
         , CAST (tmpMIContainer_group.CountSale           AS TFloat) AS CountSale
         , CAST (tmpMIContainer_group.CountSale * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END           AS TFloat) AS CountSale_Weight
         , CAST (tmpMIContainer_group.CountSale_10500     AS TFloat) AS CountSale_10500
@@ -318,6 +330,8 @@ BEGIN
         , CAST (tmpMIContainer_group.SummSendOut          AS TFloat) AS SummSendOut
         , CAST (tmpMIContainer_group.SummSendOnPriceIn    AS TFloat) AS SummSendOnPriceIn
         , CAST (tmpMIContainer_group.SummSendOnPriceOut   AS TFloat) AS SummSendOnPriceOut
+        , CAST (tmpMIContainer_group.SummSendOnPrice_10500       AS TFloat) AS SummSendOnPrice_10500
+        , CAST (tmpMIContainer_group.SummSendOnPrice_40200       AS TFloat) AS SummSendOnPrice_40200
         , CAST (tmpMIContainer_group.SummSale             AS TFloat) AS SummSale
         , CAST (tmpMIContainer_group.SummSale_10500       AS TFloat) AS SummSale_10500
         , CAST (tmpMIContainer_group.SummSale_40208       AS TFloat) AS SummSale_40208
@@ -469,6 +483,9 @@ BEGIN
               , SUM (tmpMIContainer_all.CountSendOnPriceIn)  AS CountSendOnPriceIn
               , SUM (tmpMIContainer_all.CountSendOnPriceOut) AS CountSendOnPriceOut
 
+              , SUM (tmpMIContainer_all.CountSendOnPrice_10500)   AS CountSendOnPrice_10500
+              , SUM (tmpMIContainer_all.CountSendOnPrice_40200)   AS CountSendOnPrice_40200
+
               , SUM (tmpMIContainer_all.CountSale)           AS CountSale
               , SUM (tmpMIContainer_all.CountSale_10500)     AS CountSale_10500
               , SUM (tmpMIContainer_all.CountSale_40208)     AS CountSale_40208
@@ -597,6 +614,8 @@ BEGIN
               , SUM (tmpMIContainer_all.SummSendOut)         AS SummSendOut
               , SUM (tmpMIContainer_all.SummSendOnPriceIn)   AS SummSendOnPriceIn
               , SUM (tmpMIContainer_all.SummSendOnPriceOut)  AS SummSendOnPriceOut
+              , SUM (tmpMIContainer_all.SummSendOnPrice_10500)   AS SummSendOnPrice_10500
+              , SUM (tmpMIContainer_all.SummSendOnPrice_40200)   AS SummSendOnPrice_40200
               , SUM (tmpMIContainer_all.SummSale)            AS SummSale
               , SUM (tmpMIContainer_all.SummSale_10500)      AS SummSale_10500
               , SUM (tmpMIContainer_all.SummSale_40208)      AS SummSale_40208
@@ -690,6 +709,7 @@ ALTER FUNCTION gpReport_MotionGoods_Upak (TDateTime, TDateTime, Integer, Integer
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 26.10.18         *
  11.07.15                                        * add GoodsKindName_complete
  13.05.15         *
 */

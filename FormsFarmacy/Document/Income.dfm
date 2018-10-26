@@ -1592,6 +1592,10 @@
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1076#1085#1080#1084' '#1095#1080#1089#1083#1086#1084
       ImageIndex = 12
     end
+    object actShowMessage: TShowMessageAction
+      Category = 'Union'
+      MoveParams = <>
+    end
   end
   inherited MasterDS: TDataSource
     Top = 448
@@ -3011,6 +3015,14 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1

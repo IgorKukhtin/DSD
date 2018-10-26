@@ -46,6 +46,11 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , CountSendOnPriceOut TFloat
              , CountSendOnPriceOut_Weight TFloat
 
+             , CountSendOnPrice_10500 TFloat
+             , CountSendOnPrice_10500_Weight TFloat
+             , CountSendOnPrice_40200 TFloat
+             , CountSendOnPrice_40200_Weight TFloat
+
              , CountSale TFloat
              , CountSale_Weight TFloat
              , CountSale_10500 TFloat
@@ -82,6 +87,8 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , SummSendOut TFloat
              , SummSendOnPriceIn TFloat
              , SummSendOnPriceOut TFloat
+             , SummSendOnPrice_10500  TFloat
+             , SummSendOnPrice_40200  TFloat
              , SummSale TFloat
              , SummSale_10500 TFloat
              , SummSale_40208 TFloat
@@ -377,6 +384,11 @@ BEGIN
         , CAST (tmpMIContainer_group.CountSendOnPriceOut AS TFloat) AS CountSendOnPriceOut
         , CAST (tmpMIContainer_group.CountSendOnPriceOut * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END AS TFloat) AS CountSendOnPriceOut_Weight
 
+        , CAST (tmpMIContainer_group.CountSendOnPrice_10500  AS TFloat) AS CountSendOnPrice_10500
+        , CAST (tmpMIContainer_group.CountSendOnPrice_10500 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END  AS TFloat) AS CountSendOnPrice_10500_Weight
+        , CAST (tmpMIContainer_group.CountSendOnPrice_40200  AS TFloat) AS CountSendOnPrice_40200
+        , CAST (tmpMIContainer_group.CountSendOnPrice_40200 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END  AS TFloat) AS CountSendOnPrice_40200_Weight
+        
         , CAST (tmpMIContainer_group.CountSale           AS TFloat) AS CountSale
         , CAST (tmpMIContainer_group.CountSale * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END           AS TFloat) AS CountSale_Weight
         , CAST (tmpMIContainer_group.CountSale_10500     AS TFloat) AS CountSale_10500
@@ -413,6 +425,8 @@ BEGIN
         , CAST (tmpMIContainer_group.SummSendOut          AS TFloat) AS SummSendOut
         , CAST (tmpMIContainer_group.SummSendOnPriceIn    AS TFloat) AS SummSendOnPriceIn
         , CAST (tmpMIContainer_group.SummSendOnPriceOut   AS TFloat) AS SummSendOnPriceOut
+        , CAST (tmpMIContainer_group.SummSendOnPrice_10500       AS TFloat) AS SummSendOnPrice_10500
+        , CAST (tmpMIContainer_group.SummSendOnPrice_40200       AS TFloat) AS SummSendOnPrice_40200
         , CAST (tmpMIContainer_group.SummSale             AS TFloat) AS SummSale
         , CAST (tmpMIContainer_group.SummSale_10500       AS TFloat) AS SummSale_10500
         , CAST (tmpMIContainer_group.SummSale_40208       AS TFloat) AS SummSale_40208
@@ -561,63 +575,67 @@ BEGIN
               , SUM (tmp.CountSendIn) AS CountSendIn
               , SUM (tmp.CountSendOut) AS CountSendOut
 
-              , SUM (tmp.CountSendOnPriceIn) AS CountSendOnPriceIn
-              , SUM (tmp.CountSendOnPriceOut) AS CountSendOnPriceOut
-
+              , SUM (tmp.CountSendOnPriceIn)     AS CountSendOnPriceIn
+              , SUM (tmp.CountSendOnPriceOut)    AS CountSendOnPriceOut
+              , SUM (tmp.CountSendOnPrice_10500) AS CountSendOnPrice_10500
+              , SUM (tmp.CountSendOnPrice_40200) AS CountSendOnPrice_40200
+              
               , SUM (tmp.CountSale) AS CountSale
               , SUM (tmp.CountSale_10500) AS CountSale_10500
               , SUM (tmp.CountSale_40208) AS CountSale_40208
 
-              , SUM (tmp.CountReturnIn) AS CountReturnIn
+              , SUM (tmp.CountReturnIn)       AS CountReturnIn
               , SUM (tmp.CountReturnIn_40208) AS CountReturnIn_40208
 
-              , SUM (tmp.CountLoss) AS CountLoss
+              , SUM (tmp.CountLoss)      AS CountLoss
               , SUM (tmp.CountInventory) AS CountInventory
 
-              , SUM (tmp.CountProductionIn) AS CountProductionIn
+              , SUM (tmp.CountProductionIn)  AS CountProductionIn
               , SUM (tmp.CountProductionOut) AS CountProductionOut
 
               , SUM (tmp.CountProductionIn_by) AS CountProductionIn_by
-              , SUM (tmp.SummProductionIn_by) AS SummProductionIn_by
+              , SUM (tmp.SummProductionIn_by)  AS SummProductionIn_by
 
               , SUM (tmp.CountIn_by) AS CountIn_by
-              , SUM (tmp.SummIn_by) AS SummIn_by
+              , SUM (tmp.SummIn_by)  AS SummIn_by
 
               , SUM (tmp.CountOtherIn_by) AS CountOtherIn_by
-              , SUM (tmp.SummOtherIn_by) AS SummOtherIn_by
+              , SUM (tmp.SummOtherIn_by)  AS SummOtherIn_by
 
               , SUM (tmp.CountOut_by) AS CountOut_by
-              , SUM (tmp.SummOut_by) AS SummOut_by
+              , SUM (tmp.SummOut_by)  AS SummOut_by
 
               , SUM (tmp.CountOtherOut_by) AS CountOtherOut_by
-              , SUM (tmp.SummOtherOut_by) AS SummOtherOut_by
+              , SUM (tmp.SummOtherOut_by)  AS SummOtherOut_by
 
-              , SUM (tmp.CountTotalIn) AS CountTotalIn
+              , SUM (tmp.CountTotalIn)  AS CountTotalIn
               , SUM (tmp.CountTotalOut) AS CountTotalOut
 
-              , SUM (tmp.SummStart) AS SummStart
-              , SUM (tmp.SummEnd) AS SummEnd
-              , SUM (tmp.SummEnd_calc) AS SummEnd_calc
+              , SUM (tmp.SummStart)     AS SummStart
+              , SUM (tmp.SummEnd)       AS SummEnd
+              , SUM (tmp.SummEnd_calc)  AS SummEnd_calc
 
-              , SUM (tmp.SummIncome) AS SummIncome
-              , SUM (tmp.SummReturnOut) AS SummReturnOut
-              , SUM (tmp.SummSendIn) AS SummSendIn
-              , SUM (tmp.SummSendOut) AS SummSendOut
-              , SUM (tmp.SummSendOnPriceIn) AS SummSendOnPriceIn
-              , SUM (tmp.SummSendOnPriceOut) AS SummSendOnPriceOut
-              , SUM (tmp.SummSale) AS SummSale
-              , SUM (tmp.SummSale_10500) AS SummSale_10500
-              , SUM (tmp.SummSale_40208) AS SummSale_40208
-              , SUM (tmp.SummReturnIn) AS SummReturnIn
-              , SUM (tmp.SummReturnIn_40208) AS SummReturnIn_40208
-              , SUM (tmp.SummLoss) AS SummLoss
-              , SUM (tmp.SummInventory) AS SummInventory
-              , SUM (tmp.SummInventory_RePrice) AS SummInventory_RePrice
-              , SUM (tmp.SummProductionIn) AS SummProductionIn
-              , SUM (tmp.SummProductionOut) AS SummProductionOut
+              , SUM (tmp.SummIncome)              AS SummIncome
+              , SUM (tmp.SummReturnOut)           AS SummReturnOut
+              , SUM (tmp.SummSendIn)              AS SummSendIn
+              , SUM (tmp.SummSendOut)             AS SummSendOut
+              , SUM (tmp.SummSendOnPriceIn)       AS SummSendOnPriceIn
+              , SUM (tmp.SummSendOnPriceOut)      AS SummSendOnPriceOut
+              , SUM (tmp.SummSendOnPrice_10500)   AS SummSendOnPrice_10500
+              , SUM (tmp.SummSendOnPrice_40200)   AS SummSendOnPrice_40200
+              , SUM (tmp.SummSale)                AS SummSale
+              , SUM (tmp.SummSale_10500)          AS SummSale_10500
+              , SUM (tmp.SummSale_40208)          AS SummSale_40208
+              , SUM (tmp.SummReturnIn)            AS SummReturnIn
+              , SUM (tmp.SummReturnIn_40208)      AS SummReturnIn_40208
+              , SUM (tmp.SummLoss)                AS SummLoss
+              , SUM (tmp.SummInventory)           AS SummInventory
+              , SUM (tmp.SummInventory_RePrice)   AS SummInventory_RePrice
+              , SUM (tmp.SummProductionIn)        AS SummProductionIn
+              , SUM (tmp.SummProductionOut)       AS SummProductionOut
 
-              , SUM (tmp.SummTotalIn) AS SummTotalIn
-              , SUM (tmp.SummTotalOut) AS SummTotalOut
+              , SUM (tmp.SummTotalIn)             AS SummTotalIn
+              , SUM (tmp.SummTotalOut)            AS SummTotalOut
 
               , SUM (tmp.CountProductionOut_norm) AS CountProductionOut_norm
          FROM
@@ -641,6 +659,9 @@ BEGIN
 
               , SUM (tmpMIContainer_all.CountSendOnPriceIn)  AS CountSendOnPriceIn
               , SUM (tmpMIContainer_all.CountSendOnPriceOut) AS CountSendOnPriceOut
+
+              , SUM (tmpMIContainer_all.CountSendOnPrice_10500)  AS CountSendOnPrice_10500
+              , SUM (tmpMIContainer_all.CountSendOnPrice_40200)  AS CountSendOnPrice_40200
 
               , SUM (tmpMIContainer_all.CountSale)           AS CountSale
               , SUM (tmpMIContainer_all.CountSale_10500)     AS CountSale_10500
@@ -768,6 +789,9 @@ BEGIN
               , SUM (CASE WHEN tmpMIContainer_all.LocationId_by = -1 THEN 0 ELSE tmpMIContainer_all.SummProductionIn  END) AS SummProductionIn   -- íå ïåðåñîðò
               , SUM (CASE WHEN tmpMIContainer_all.LocationId_by = -1 THEN 0 ELSE tmpMIContainer_all.SummProductionOut END) AS SummProductionOut  -- íå ïåðåñîðò
 
+              , SUM (tmpMIContainer_all.SummSendOnPrice_10500)      AS SummSendOnPrice_10500
+              , SUM (tmpMIContainer_all.SummSendOnPrice_40200)      AS SummSendOnPrice_40200
+
               , SUM (tmpMIContainer_all.SummIncome
                    + tmpMIContainer_all.SummSendIn
                    + tmpMIContainer_all.SummSendOnPriceIn
@@ -816,6 +840,9 @@ BEGIN
 
               , 0 AS CountSendOnPriceIn
               , 0 AS CountSendOnPriceOut
+
+              , 0 AS CountSendOnPrice_10500
+              , 0 AS CountSendOnPrice_40200
 
               , 0 AS CountSale
               , 0 AS CountSale_10500
@@ -868,6 +895,9 @@ BEGIN
               , 0 AS SummInventory_RePrice
               , 0 AS SummProductionIn
               , 0 AS SummProductionOut
+
+              , 0 AS SummSendOnPrice_10500
+              , 0 AS SummSendOnPrice_40200
 
               , 0 AS SummTotalIn
               , 0 AS SummTotalOut
@@ -936,6 +966,7 @@ ALTER FUNCTION gpReport_MotionGoods_Ceh (TDateTime, TDateTime, Integer, Integer,
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 26.10.18         *
  11.07.15                                        * add GoodsKindName_complete
  13.05.15         *
 */
