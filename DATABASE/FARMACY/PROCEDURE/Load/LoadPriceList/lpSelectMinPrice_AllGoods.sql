@@ -50,6 +50,11 @@ BEGIN
 
     -- !!!ОПТИМИЗАЦИЯ!!!
     ANALYZE ObjectLink;
+    
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpminprice_remains'))
+    THEN
+      DROP TABLE _tmpMinPrice_Remains;
+    END IF;
 
     -- Остатки - оптимизация
     CREATE TEMP TABLE _tmpMinPrice_Remains ON COMMIT DROP AS
@@ -104,6 +109,11 @@ BEGIN
        );
 
     ANALYZE _tmpMinPrice_Remains;       
+
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpminprice_remainslist'))
+    THEN
+      DROP TABLE _tmpMinPrice_RemainsList;
+    END IF;
 
 -- RAISE EXCEPTION '<%>', (select count(*) from Remains);
 

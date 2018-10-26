@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , MakerName TVarChar
              , Juridical_Percent TFloat, Contract_Percent TFloat
              , MarginPercent TFloat
+             , Color_calc Integer
              )
 AS
 $BODY$
@@ -92,6 +93,7 @@ BEGIN
                          THEN (COALESCE (MarginCondition.MarginPercent,0) + COALESCE (MIFloat_ContractPercent.valuedata, 0)) 
                     ELSE (COALESCE (MarginCondition.MarginPercent,0) + COALESCE (MIFloat_JuridicalPercent.valuedata, 0)) 
                END ::TFloat AS MarginPercent
+             , CASE WHEN COALESCE(MIBoolean_ClippedReprice.ValueData, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_calc
         FROM  MovementItem
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -162,6 +164,11 @@ BEGIN
 
             LEFT JOIN MarginCondition ON MarginCondition.MarginCategoryId = COALESCE (Object_MarginCategoryLink_unit.MarginCategoryId, Object_MarginCategoryLink_all.MarginCategoryId)
                                     AND (MIFloat_PriceSale.ValueData  * (100 + ObjectFloat_NDSKind_NDS.ValueData  )/100)::TFloat BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
+                                    
+            LEFT JOIN MovementItemBoolean AS MIBoolean_ClippedReprice
+                                          ON MIBoolean_ClippedReprice.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_ClippedReprice.DescId         = zc_MIBoolean_ClippedReprice()
+
                                                                                                         
          WHERE MovementItem.DescId = zc_MI_Master()
            AND MovementItem.MovementId = inMovementId
@@ -175,10 +182,11 @@ ALTER FUNCTION gpSelect_MovementItem_Reprice (Integer, TVarChar) OWNER TO postgr
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.   Шаблий О.В.
+ 25.10.18                                                                          * 
  17.02.16         * 
  27.11.15                                                          *
 */
 
 --ТЕСТ
--- SELECT * FROM gpSelect_MovementItem_Reprice (inMovementId:= 507851,  inSession:= '3')
+--select * from gpSelect_MovementItem_Reprice(inMovementId := 10582592 ,  inSession := '3');
