@@ -261,6 +261,7 @@ type
     FFocusedItemChanged: TcxGridFocusedItemChangedEvent;
     FDataSet: TDataSet;
     FCreateColumnList: TList;
+    FCreateColorRuleList: TList;
     FNoCrossColorColumn : boolean;
     procedure onEditing(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
          var AAllow: Boolean);
@@ -876,7 +877,7 @@ procedure TdsdDBViewAddOn.OnGetContentStyle(Sender: TcxCustomGridTableView;
   ARecord: TcxCustomGridRecord; AItem: TcxCustomGridTableItem;
   out AStyle: TcxStyle);
 var Column: TcxGridColumn;
-    i: integer;
+    i, j: integer;
     isBold_calc:Boolean;
 begin
   if Assigned(FOnGetContentStyleEvent) then
@@ -894,7 +895,8 @@ begin
             AStyle := FErasedStyle;
 
   // Работаем с условиями
-  for i := 0 to ColorRuleList.Count - 1 do
+  try
+    for i := 0 to ColorRuleList.Count - 1 do
       with TColorRule(ColorRuleList.Items[i]) do begin
         if Assigned(ColorColumn) then
         begin
@@ -905,15 +907,18 @@ begin
               if not VarIsNull(ARecord.Values[ValueBoldColumn.Index]) then
               isBold_calc:= AnsiUpperCase(ARecord.Values[ValueBoldColumn.Index]) = AnsiUpperCase('true');}
            //
-           if Assigned(ValueColumn) then
+           if Assigned(ValueColumn) and (ARecord.ValueCount > ValueColumn.Index) then
               if not VarIsNull(ARecord.Values[ValueColumn.Index]) then begin
                  FStyle.TextColor := ARecord.Values[ValueColumn.Index];
                  // if isBold_calc = true then FStyle.Font.Style:= [fsBold] else if Assigned(FStyle.Font) then FStyle.Font.Style:= [];
                  AStyle := FStyle
               end;
-           if Assigned(BackGroundValueColumn) then
+           if Assigned(BackGroundValueColumn) and (ARecord.ValueCount > BackGroundValueColumn.Index) then
               if not VarIsNull(ARecord.Values[BackGroundValueColumn.Index]) then begin
-                 FStyle.Color := ARecord.Values[BackGroundValueColumn.Index];
+              begin
+                j := BackGroundValueColumn.Index;
+                FStyle.Color := ARecord.Values[BackGroundValueColumn.Index];
+              end;
                  AStyle := FStyle
               end;
            end;
@@ -938,6 +943,10 @@ begin
               end;
         end;
       end;
+  except
+    on E: Exception do ShowMessage(E.Message + ' ' +IntToStr(ARecord.ValueCount)  + ' ' +  IntToStr(J));
+  end;
+
 end;
 
 
@@ -1981,10 +1990,12 @@ constructor TCrossDBViewAddOn.Create(AOwner: TComponent);
 begin
   inherited;
   FCreateColumnList := TList.Create;
+  FCreateColorRuleList := TList.Create;
 end;
 
 destructor TCrossDBViewAddOn.Destroy;
 begin
+  FreeAndNil(FCreateColorRuleList);
   FreeAndNil(FCreateColumnList);
   inherited;
 end;
@@ -2028,6 +2039,11 @@ begin
   if Assigned(FAfterClose) then
      FAfterClose(DataSet);
 
+  for i := 0 to FCreateColorRuleList.Count - 1 do
+    TColorRule(FCreateColorRuleList.Items[I]).Free;
+
+  FCreateColorRuleList.Clear;
+
   for i := 0 to FCreateColumnList.Count - 1 do
     View.Columns[View.ColumnCount - 1].Free;
 
@@ -2062,9 +2078,9 @@ begin
          while not HeaderDataSet.Eof do begin
            Column := View.CreateColumn;
            if TemplateColumn is TcxGridDBBandedColumn then
-             Column.Name:= View.Name + TcxGridDBBandedColumn(TemplateColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+             Column.Name:= View.Name + TcxGridDBBandedColumn(TemplateColumn).DataBinding.FieldName + IntToStr(Column.index);
            if TemplateColumn is TcxGridDBColumn then
-             Column.Name:= View.Name + TcxGridDBColumn(TemplateColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+             Column.Name:= View.Name + TcxGridDBColumn(TemplateColumn).DataBinding.FieldName + IntToStr(Column.index);
            FCreateColumnList.Add(Column);
            with Column do begin
              Assign(TemplateColumn);
@@ -2088,9 +2104,9 @@ begin
                begin
                  Column := View.CreateColumn;
                  if TemplateColorRule.BackGroundValueColumn is TcxGridDBBandedColumn then
-                   Column.Name:= View.Name + TcxGridDBBandedColumn(TemplateColorRule.BackGroundValueColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                   Column.Name:= View.Name + TcxGridDBBandedColumn(TemplateColorRule.BackGroundValueColumn).DataBinding.FieldName + IntToStr(Column.index);
                  if TemplateColorRule.BackGroundValueColumn is TcxGridDBColumn then
-                   Column.Name:= View.Name + TcxGridDBColumn(TemplateColorRule.BackGroundValueColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                   Column.Name:= View.Name + TcxGridDBColumn(TemplateColorRule.BackGroundValueColumn).DataBinding.FieldName + IntToStr(Column.index);
                  FCreateColumnList.Add(Column);
                  with Column do begin
                    Assign(TemplateColorRule.BackGroundValueColumn);
@@ -2106,9 +2122,9 @@ begin
                begin
                  Column := View.CreateColumn;
                  if TemplateColorRule.ValueBoldColumn is TcxGridDBBandedColumn then
-                   Column.Name:= View.Name + TcxGridDBBandedColumn(TemplateColorRule.ValueBoldColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                   Column.Name:= View.Name + TcxGridDBBandedColumn(TemplateColorRule.ValueBoldColumn).DataBinding.FieldName + IntToStr(Column.index);
                  if TemplateColorRule.ValueBoldColumn is TcxGridDBColumn then
-                   Column.Name:= View.Name + TcxGridDBColumn(TemplateColorRule.ValueBoldColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                   Column.Name:= View.Name + TcxGridDBColumn(TemplateColorRule.ValueBoldColumn).DataBinding.FieldName + IntToStr(Column.index);
                  FCreateColumnList.Add(Column);
                  with Column do begin
                    Assign(TemplateColorRule.ValueBoldColumn);
@@ -2124,9 +2140,9 @@ begin
                begin
                  Column := View.CreateColumn;
                  if TemplateColorRule.ValueColumn is TcxGridDBBandedColumn then
-                   Column.Name:= View.Name + TcxGridDBBandedColumn(TemplateColorRule.ValueColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                   Column.Name:= View.Name + TcxGridDBBandedColumn(TemplateColorRule.ValueColumn).DataBinding.FieldName + IntToStr(Column.index);
                  if TemplateColorRule.ValueColumn is TcxGridDBColumn then
-                   Column.Name:= View.Name + TcxGridDBColumn(TemplateColorRule.ValueColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+                   Column.Name:= View.Name + TcxGridDBColumn(TemplateColorRule.ValueColumn).DataBinding.FieldName + IntToStr(Column.index);
                  FCreateColumnList.Add(Column);
                  with Column do begin
                    Assign(TemplateColorRule.ValueColumn);
@@ -2144,6 +2160,7 @@ begin
                ColorRule.ValueBoldColumn := TemplateColorRule.ValueBoldColumn;
                ColorRule.ValueColumn := TemplateColorRule.ValueColumn;
              end;
+             FCreateColorRuleList.Add(ColorRule);
            end;
 
            inc(NewColumnIndex);
