@@ -31,10 +31,10 @@ AS
            , CAST ('PrintReport_CheckSP_' || Object_Department.Id AS TVarChar)     AS PrintFormName
       FROM Object AS Object_Department 
       WHERE Object_Department.DescId = zc_Object_Juridical()
-        AND Object_Department.Id IN  (8513005       -- "Управління охорони здоров'я Кам'янської міської ради"
+        AND Object_Department.Id IN  (8513005        -- "Управління охорони здоров'я Кам'янської міської ради"
                                     , 9102200        -- "Відділ охорони здоров'я Павлоградської міської ради"
-                                    , 9089478        -- ""Відділ охорони здоров'я Нікопольскої міської ради"
-                                                     -- Днепр
+                                    , 9089478        -- "Відділ охорони здоров'я Нікопольскої міської ради"
+                                    , 9126996        -- "Департамент охорони здоров’я населення Дніпровської міської ради "
                                      )
       ;
 
@@ -43,14 +43,15 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.10.18         *
  07.02.18         *
 */
 
 -- тест
 -- SELECT * FROM PrintForms_View 
 
-SELECT * FROM Object WHERE Object.DescId = zc_Object_Juridical() ;
+--SELECT * FROM Object WHERE Object.DescId = zc_Object_Juridical() ;
 
 /*
 CREATE OR REPLACE VIEW PrintForms_View
