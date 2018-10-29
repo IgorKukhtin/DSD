@@ -348,7 +348,7 @@ BEGIN
         -- CASE WHEN ResultSet.isTop_calc = TRUE THEN ResultSet.isTop_calc ELSE ResultSet.IsTop END :: Boolean AS IsTop,
         ResultSet.IsTop_Goods,
         ResultSet.IsPromo,
-        CASE WHEN ResultSet.IsTop = FALSE AND ResultSet.MinExpirationDate < (CURRENT_DATE + Interval '6 MONTH')
+        CASE WHEN COALESCE (ResultSet.IsTop_Goods, FALSE) = FALSE AND ResultSet.MinExpirationDate < (CURRENT_DATE + Interval '6 MONTH')
                   THEN FALSE
              WHEN COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isPriceFix = TRUE OR ResultSet.PriceFix_Goods <> 0)
                   THEN TRUE
