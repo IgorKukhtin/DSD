@@ -51,10 +51,10 @@ BEGIN
 
        WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
          AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
-         AND ObjectHistory_PriceListItem.StartDate >= vbStartDate
-         AND ObjectHistory_PriceListItem.StartDate <= vbEndDate
-         --AND ObjectHistory_PriceListItem.EndDate >= vbStartDate
+         --AND ObjectHistory_PriceListItem.StartDate >= vbStartDate
          --AND ObjectHistory_PriceListItem.StartDate <= vbEndDate
+         AND ObjectHistory_PriceListItem.EndDate >= vbStartDate
+         AND ObjectHistory_PriceListItem.StartDate <= vbEndDate
        ORDER BY /* ObjectLink_PriceListItem_Goods.ChildObjectId ,*/ ObjectHistory_PriceListItem.StartDate;
 
 END;
