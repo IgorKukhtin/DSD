@@ -198,11 +198,15 @@ BEGIN
                                 AND ObjectLink_Main_Morion.ChildObjectId > 0
                               GROUP BY ObjectLink_Main_Morion.ChildObjectId
                              )
-         , tmpGoodsBarCode AS (SELECT DISTINCT 
-                                      ObjectLink_Main_BarCode.ChildObjectId    AS GoodsMainId
-                                    , Object_Goods_BarCode.ValueData           AS BarCode
-                                   -- , MAX (Object_Goods_BarCode.ValueData)::TVarChar AS BarCode
-                                    , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Main_BarCode.ChildObjectId ORDER BY ObjectLink_Main_BarCode.ChildObjectId DESC) AS Ord
+         , tmpGoodsBarCode AS (SELECT
+                                      T1.GoodsMainId
+                                    , T1.BarCode
+                                    , T1.Ord
+                               FROM (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
+                                 -- , MAX (Object_Goods_BarCode.ValueData)  AS BarCode
+                                    , Object_Goods_BarCode.ValueData        AS BarCode
+                                    , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Main_BarCode.ChildObjectId
+                                                         ORDER BY ObjectLink_Main_BarCode.ChildObjectId, ObjectLink_Main_BarCode.ObjectId DESC) AS Ord
                                FROM ObjectLink AS ObjectLink_Main_BarCode
                                     JOIN ObjectLink AS ObjectLink_Child_BarCode
                                                     ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
@@ -212,10 +216,12 @@ BEGIN
                                                    AND ObjectLink_Goods_Object_BarCode.DescId = zc_ObjectLink_Goods_Object()
                                                    AND ObjectLink_Goods_Object_BarCode.ChildObjectId = zc_Enum_GlobalConst_BarCode()
                                     LEFT JOIN Object AS Object_Goods_BarCode ON Object_Goods_BarCode.Id = ObjectLink_Goods_Object_BarCode.ObjectId
-                               WHERE ObjectLink_Main_BarCode.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                               WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
                                  AND ObjectLink_Main_BarCode.ChildObjectId > 0
                                  AND TRIM (Object_Goods_BarCode.ValueData) <> ''
-                               --GROUP BY ObjectLink_Main_BarCode.ChildObjectId
+                               -- GROUP BY ObjectLink_Main_BarCode.ChildObjectId
+                                 ) AS T1
+                               WHERE T1.Ord = 1
                               )  
          -- вытягиваем из LoadPriceListItem.GoodsNDS по входящему Договору поставщика (inContractId)
          , tmpPricelistItems AS (SELECT tmp.GoodsMainId

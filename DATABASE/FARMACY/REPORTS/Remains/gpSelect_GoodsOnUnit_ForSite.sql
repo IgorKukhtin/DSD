@@ -340,7 +340,34 @@ BEGIN
                                    SuperFinalPrice    ,
                                    isTop              ,
                                    isOneJuridical)
-       SELECT tmp.GoodsId            ,
+
+          WITH
+            GoodsList_all AS
+             (SELECT Distinct _tmpGoodsMinPrice_List.GoodsId  AS GoodsId
+              FROM _tmpGoodsMinPrice_List
+             )
+
+          SELECT
+              MinPriceList.GoodsId,
+              MinPriceList.GoodsCode,
+              MinPriceList.GoodsName,
+              MinPriceList.PartionGoodsDate,
+              MinPriceList.Partner_GoodsId,
+              MinPriceList.Partner_GoodsCode,
+              MinPriceList.Partner_GoodsName,
+              MinPriceList.MakerName,
+              MinPriceList.ContractId,
+              MinPriceList.AreaId,
+              MinPriceList.JuridicalId,
+              MinPriceList.JuridicalName,
+              MinPriceList.Price,
+              MinPriceList.SuperFinalPrice,
+              MinPriceList.isTop,
+              MinPriceList.isOneJuridical
+          FROM GoodsList_all
+               INNER JOIN MinPrice_ForSite AS MinPriceList
+                                           ON GoodsList_all.GoodsId = MinPriceList.GoodsId
+/*       SELECT tmp.GoodsId            ,
               tmp.GoodsCode          ,
               tmp.GoodsName          ,
               tmp.PartionGoodsDate   ,
@@ -359,7 +386,7 @@ BEGIN
        FROM lpSelectMinPrice_List (inUnitId  := 0          -- !!!т.к. не зависит от UnitId, хотя ...!!!
                                  , inObjectId:= vbObjectId
                                  , inUserId  := ABS (vbUserId)
-                                  ) AS tmp
+                                  ) AS tmp */
       ;
 
 
