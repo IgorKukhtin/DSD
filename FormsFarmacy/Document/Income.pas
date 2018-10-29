@@ -160,6 +160,8 @@ type
     RetailName: TcxGridDBColumn;
     AreaName: TcxGridDBColumn;
     actShowMessage: TShowMessageAction;
+    spLinkCheck: TdsdStoredProc;
+    actLinkCheck: TdsdExecStoredProc;
   private
     { Private declarations }
   public
