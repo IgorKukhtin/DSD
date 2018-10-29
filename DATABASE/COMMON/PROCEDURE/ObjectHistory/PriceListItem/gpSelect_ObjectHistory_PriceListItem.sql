@@ -121,10 +121,10 @@ BEGIN
                   ELSE 0
              END  :: TFloat AS Diff_min
 
-           , CASE WHEN COALESCE (tmpMinMax.ValuePrice_max, 0) <> 0 AND COALESCE(tmpPrice.ValuePrice, 0)<> 0 THEN (COALESCE (tmpMinMax.ValuePrice_max, 0) - COALESCE(tmpPrice.ValuePrice, 0)) * 100 / COALESCE (tmpMinMax.ValuePrice_min, 0) 
+           , CASE WHEN COALESCE (tmpMinMax.ValuePrice_max, 0) <> 0 AND COALESCE(tmpPrice.ValuePrice, 0)<> 0 THEN (COALESCE (tmpMinMax.ValuePrice_max, 0) - COALESCE(tmpPrice.ValuePrice, 0)) * 100 / COALESCE (tmpMinMax.ValuePrice_max, 0) 
                   WHEN COALESCE (tmpMinMax.ValuePrice_max, 0) <> 0 AND COALESCE(tmpPrice.ValuePrice, 0) = 0 THEN 100
                   ELSE 0
-             END  :: TFloat AS Diff_max
+             END  :: TFloat AS Diff_max 
 
            , Object_Insert.ValueData   AS InsertName
            , Object_Update.ValueData   AS UpdateName
@@ -214,10 +214,10 @@ BEGIN
             
                    WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
                      AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
-                     AND ObjectHistory_PriceListItem.StartDate >= vbStartDate
-                     AND ObjectHistory_PriceListItem.StartDate <= vbEndDate
-                     --AND ObjectHistory_PriceListItem.EndDate >= vbStartDate
+                     --AND ObjectHistory_PriceListItem.StartDate >= vbStartDate
                      --AND ObjectHistory_PriceListItem.StartDate <= vbEndDate
+                     AND ObjectHistory_PriceListItem.EndDate >= vbStartDate
+                     AND ObjectHistory_PriceListItem.StartDate <= vbEndDate
                    GROUP BY ObjectLink_PriceListItem_Goods.ChildObjectId
                    )
       
@@ -243,7 +243,7 @@ BEGIN
                         ELSE 0
                    END  AS NUMERIC (16,0))  :: TFloat AS Diff_min
 
-           , CAST (CASE WHEN COALESCE (tmpMinMax.ValuePrice_max, 0) <> 0 AND COALESCE(ObjectHistoryFloat_PriceListItem_Value.ValueData, 0)<> 0 THEN (COALESCE(ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) - COALESCE (tmpMinMax.ValuePrice_max, 0)) * 100 / COALESCE (tmpMinMax.ValuePrice_min, 0) 
+           , CAST (CASE WHEN COALESCE (tmpMinMax.ValuePrice_max, 0) <> 0 AND COALESCE(ObjectHistoryFloat_PriceListItem_Value.ValueData, 0)<> 0 THEN (COALESCE(ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) - COALESCE (tmpMinMax.ValuePrice_max, 0)) * 100 / COALESCE (tmpMinMax.ValuePrice_max, 0) 
                         WHEN COALESCE (tmpMinMax.ValuePrice_max, 0) <> 0 AND COALESCE(ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) = 0 THEN 100
                         ELSE 0
                    END  AS NUMERIC (16,0)) :: TFloat AS Diff_max
