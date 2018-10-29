@@ -59,6 +59,7 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+  LoadReportFromFile('Счет соц.проект', ReportPath + '\Счет соц.проект.fr3');
   //доп. соглащения Соц. проект
   LoadReportFromFile('PrintReport_CheckSP_8513005', ReportPath + '\PrintReport_CheckSP_8513005.fr3');
   LoadReportFromFile('PrintReport_CheckSP_9102200', ReportPath + '\PrintReport_CheckSP_9102200.fr3');
@@ -78,7 +79,6 @@ begin
   LoadReportFromFile('Pеестр по постановлению 1303', ReportPath + '\Pеестр по постановлению 1303.fr3');
   }
   LoadReportFromFile('Отчет по продажам Соц.проекта', ReportPath + '\Отчет по продажам Соц.проекта.fr3');
-  LoadReportFromFile('Счет соц.проект', ReportPath + '\Счет соц.проект.fr3');
   LoadReportFromFile('Отчет по продажам Соц.проекта(пост.152)', ReportPath + '\Отчет по продажам Соц.проекта(пост.152).fr3');
   LoadReportFromFile('PrintReport_CheckSP_4474558', ReportPath + '\PrintReport_CheckSP_4474558.fr3');
   exit;

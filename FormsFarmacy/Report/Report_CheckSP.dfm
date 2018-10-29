@@ -23,6 +23,8 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       inherited cxGrid: TcxGrid
         Width = 1077
         Height = 394
+        ExplicitLeft = -3
+        ExplicitTop = 32
         ExplicitWidth = 1077
         ExplicitHeight = 394
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1395,7 +1397,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
           Action = actSaveMovement
         end
         item
-          Action = actPrintInvoiceDepartment
+          Action = actPrintInvoice
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072
       Hint = #1055#1077#1095#1072#1090#1100
@@ -1501,7 +1503,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
           Action = actSaveMovement
         end
         item
-          Action = actPrintInvoice
+          Action = actPrintInvoiceDepartment
         end>
       Caption = #1055#1077#1095#1072#1090#1100' C'#1095#1077#1090#1072' ('#1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090')'
       Hint = #1055#1077#1095#1072#1090#1100' C'#1095#1077#1090#1072' ('#1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090')'
