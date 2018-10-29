@@ -35,6 +35,13 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object Ord: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'Ord'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 36
+          end
           object UnitCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'UnitCode'
@@ -56,6 +63,27 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 177
+          end
+          object AreaName: TcxGridDBColumn
+            Caption = #1056#1077#1075#1080#1086#1085
+            DataBinding.FieldName = 'AreaName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 78
+          end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 95
+          end
+          object ProvinceCityName: TcxGridDBColumn
+            Caption = #1056#1072#1081#1086#1085
+            DataBinding.FieldName = 'ProvinceCityName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 81
           end
           object PercentDifference: TcxGridDBColumn
             Caption = '% '#1088#1072#1079#1085#1080#1094#1099' '#1094#1077#1085

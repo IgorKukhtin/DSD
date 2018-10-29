@@ -38,6 +38,10 @@ type
     DataStartLast: TcxGridDBColumn;
     actOpenUnit: TOpenChoiceForm;
     isEqual: TcxGridDBColumn;
+    Ord: TcxGridDBColumn;
+    AreaName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    ProvinceCityName: TcxGridDBColumn;
   private
     { Private declarations }
   public

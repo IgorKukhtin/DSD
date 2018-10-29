@@ -193,6 +193,13 @@ inherited RepriceForm: TRepriceForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
+          object IsTop_Goods: TcxGridDBColumn
+            Caption = #1058#1086#1087' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'IsTop_Goods'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 44
+          end
           object Color_calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_calc'
             Visible = False

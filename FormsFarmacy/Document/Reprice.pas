@@ -42,6 +42,7 @@ type
     cxLabel8: TcxLabel;
     edChangePercent: TcxCurrencyEdit;
     Color_calc: TcxGridDBColumn;
+    IsTop_Goods: TcxGridDBColumn;
   private
     { Private declarations }
   public

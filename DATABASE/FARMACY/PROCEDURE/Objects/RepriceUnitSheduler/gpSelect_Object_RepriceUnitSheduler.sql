@@ -5,8 +5,9 @@ DROP FUNCTION IF EXISTS gpSelect_Object_RepriceUnitSheduler(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_RepriceUnitSheduler(
     IN inSession     TVarChar       -- ñåññèÿ ïîëüçîâàòåëÿ
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Ord Integer, ID Integer, Code Integer, Name TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
+             , AreaName TVarChar, JuridicalName TVarChar, ProvinceCityName TVarChar
 
              , PercentDifference Integer
              , VAT20 Boolean
@@ -24,12 +25,17 @@ BEGIN
 
    RETURN QUERY
        SELECT
-             Object_RepriceUnitSheduler.Id                    AS Id
+             ROW_NUMBER() OVER (ORDER BY Object_RepriceUnitSheduler.Id)::Integer as Ord
+           , Object_RepriceUnitSheduler.Id                    AS Id
            , Object_RepriceUnitSheduler.ObjectCode            AS Code
            , Object_RepriceUnitSheduler.ValueData             AS Name
            , Object_Unit.Id                                   AS UnitId
            , Object_Unit.ObjectCode                           AS UnitCode
            , Object_Unit.ValueData                            AS UnitName
+           , Object_Area.ValueData                            AS AreaName
+           , Object_Juridical.ValueData                       AS JuridicalName
+           , Object_ProvinceCity.ValueData                    AS ProvinceCityName
+
            , ObjectFloat_PercentDifference.ValueData::Integer AS PercentDifference
            , ObjectBoolean_VAT20.ValueData                    AS VAT20
            , ObjectFloat_PercentRepriceMax.ValueData::Integer AS PercentRepriceMax
@@ -46,6 +52,23 @@ BEGIN
                                 AND ObjectLink_Unit.DescId = zc_ObjectLink_RepriceUnitSheduler_Unit()
            LEFT JOIN Object AS Object_Unit
                              ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                ON ObjectLink_Unit_Juridical.ObjectId = ObjectLink_Unit.ChildObjectId
+                               AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()  
+           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
+                                ON ObjectLink_Unit_Area.ObjectId = ObjectLink_Unit_Juridical.ObjectId
+                               AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
+           LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Unit_Area.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Unit_ProvinceCity
+                                ON ObjectLink_Unit_ProvinceCity.ObjectId = ObjectLink_Unit_Juridical.ObjectId
+                               AND ObjectLink_Unit_ProvinceCity.DescId = zc_ObjectLink_Unit_ProvinceCity()
+           LEFT JOIN Object AS Object_ProvinceCity ON Object_ProvinceCity.Id = ObjectLink_Unit_ProvinceCity.ChildObjectId
+
+
 
            LEFT JOIN ObjectFloat AS ObjectFloat_PercentDifference
                                  ON ObjectFloat_PercentDifference.ObjectId = Object_RepriceUnitSheduler.Id
@@ -90,9 +113,11 @@ ALTER FUNCTION gpSelect_Object_RepriceUnitSheduler(TVarChar) OWNER TO postgres;
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Øàáëèé Î.Â.
+ 29.10.18        *
  23.10.18        *
  22.10.18        *
 */
 
 -- òåñò
+-- 
 -- SELECT * FROM gpSelect_Object_RepriceUnitSheduler ('3')
