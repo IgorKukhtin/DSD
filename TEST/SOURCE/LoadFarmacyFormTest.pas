@@ -1671,6 +1671,9 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnionDescForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUnionDescForm');
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserNickForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TUserNickForm');
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));

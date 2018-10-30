@@ -1,5 +1,6 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_RepriceUnitSheduler (Integer, Integer, Integer, Boolean, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_RepriceUnitSheduler (Integer, Integer, Integer, Boolean, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_RepriceUnitSheduler (Integer, Integer, Integer, Boolean, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_RepriceUnitSheduler(
  INOUT ioId                 Integer,    -- ИД
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_RepriceUnitSheduler(
     IN inEqualRepriceMax    Integer, 
     IN inEqualRepriceMin    Integer, 
     IN inisEqual            Boolean,
+    IN inUserId             Integer, 
     IN inSession            TVarChar   -- Сессия
 )
 AS
@@ -65,14 +67,18 @@ BEGIN
     --сохранили 
     PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_RepriceUnitSheduler_Equal(), ioId, inisEqual);
 
+    -- сохранили связь с <Сотрудником>
+    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_RepriceUnitSheduler_User(), ioId, inUserId);
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_RepriceUnitSheduler (Integer, Integer, Integer, Boolean, Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_RepriceUnitSheduler (Integer, Integer, Integer, Boolean, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.
+ 30.10.18        *
  23.10.18        *
  22.10.18        *
  */

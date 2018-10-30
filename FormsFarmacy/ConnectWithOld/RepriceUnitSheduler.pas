@@ -42,6 +42,9 @@ type
     AreaName: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
     ProvinceCityName: TcxGridDBColumn;
+    UnitRePriceName: TcxGridDBColumn;
+    UserName: TcxGridDBColumn;
+    actOpenUser: TOpenChoiceForm;
   private
     { Private declarations }
   public
