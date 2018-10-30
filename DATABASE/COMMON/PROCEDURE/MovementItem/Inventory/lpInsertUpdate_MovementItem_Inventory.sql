@@ -28,7 +28,7 @@ BEGIN
       -- !!!Проверка inPartionGoodsDate!!!
      IF inPartionGoodsDate IS NOT NULL
      -- Склад Реализации + Склад База ГП
-     AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MILinkObject_From() AND MLO.ObjectId IN (8459, 8458))
+     AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (8459, 8458))
      -- Кладовщик Днепр
      AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (428382))
       THEN
@@ -39,10 +39,11 @@ BEGIN
                           ;
       END IF;
 
-      -- !!!Проверка что элемент один!!!
-     IF inAmount <> 0 -- AND inGoodsKindId <> 0
+     -- !!!НЕТ - Проверка что элемент один!!!
+     IF 1=0
+     AND inAmount <> 0 -- AND inGoodsKindId <> 0
      -- Склад Реализации + Склад База ГП
-     AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MILinkObject_From() AND MLO.ObjectId IN (8459, 8458))
+     AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (8459, 8458))
      -- Кладовщик Днепр
      AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (428382))
      -- Проверка

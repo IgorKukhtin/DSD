@@ -1664,6 +1664,7 @@ WHERE Movement.Id = MovementId
   AND Movement.Id = 1902144
 */
 -- тест
+-- SELECT * FROM gpReComplete_Movement_Inventory (inMovementId:= 10774526, inSession:= '5')
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 29207, inSession:= '2')
 -- SELECT * FROM gpComplete_Movement_Inventory (inMovementId:= 1902144, inIsLastComplete:= FALSE, inSession:= zc_Enum_Process_Auto_PrimeCost() :: TVarChar)
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 29207, inSession:= '2')
