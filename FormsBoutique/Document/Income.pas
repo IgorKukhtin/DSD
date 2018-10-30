@@ -34,7 +34,7 @@ type
     dxBarManagerBar: TdxBar;
     bbRefresh: TdxBarButton;
     cxPropertiesStore: TcxPropertiesStore;
-    ActionList: TActionList;
+    l: TActionList;
     actRefresh: TdsdDataSetRefresh;
     MasterDS: TDataSource;
     MasterCDS: TClientDataSet;
@@ -168,6 +168,11 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     PriceTax: TcxGridDBColumn;
     Color_Calc: TcxGridDBColumn;
+    spUpdatePrice: TdsdStoredProc;
+    macUpdatePrice: TMultiAction;
+    actUpdatePrice: TdsdExecStoredProc;
+    bbUpdatePrice: TdxBarButton;
+    actIncomeItemPriceDialog: TdsdOpenForm;
   private
   public
   end;

@@ -1071,6 +1071,10 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdPivotGrid.pas"/>
+			<DCCReference Include="..\..\FormsBoutique\Document\IncomeItemPriceDialog.pas">
+				<Form>IncomeItemPriceDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

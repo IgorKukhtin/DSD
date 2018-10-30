@@ -1183,6 +1183,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeItemEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeItemEditForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeItemPriceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeItemPriceDialogForm');
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyJournalForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyJournalForm');
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalChoiceForm'));
