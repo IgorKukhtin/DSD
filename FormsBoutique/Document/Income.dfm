@@ -758,6 +758,14 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdatePrice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -900,6 +908,11 @@ object IncomeForm: TIncomeForm
       Action = macUpdateAll
       Category = 0
     end
+    object bbUpdatePrice: TdxBarButton
+      Action = macUpdatePrice
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1093'. '#1080' '#1087#1088#1086#1076#1072#1078#1080
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -916,7 +929,7 @@ object IncomeForm: TIncomeForm
     Left = 81
     Top = 232
   end
-  object ActionList: TActionList
+  object l: TActionList
     Images = dmMain.ImageList
     Left = 51
     Top = 231
@@ -999,11 +1012,6 @@ object IncomeForm: TIncomeForm
         end
         item
           StoredProc = spGetTotalSumm
-        end
-        item
-          StoredProc = spSelectMI
-        end
-        item
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1865,6 +1873,81 @@ object IncomeForm: TIncomeForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091
       ImageIndex = 74
     end
+    object actUpdatePrice: TdsdExecStoredProc
+      Category = 'UpdatePrice'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdatePrice
+      StoredProcList = <
+        item
+          StoredProc = spUpdatePrice
+        end>
+      Caption = #1080#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1093' '#1080' '#1087#1088#1086#1076#1072#1078#1080
+      Hint = #1080#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1093' '#1080' '#1087#1088#1086#1076#1072#1078#1080
+      ImageIndex = 45
+    end
+    object macUpdatePrice: TMultiAction
+      Category = 'UpdatePrice'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actIncomeItemPriceDialog
+        end
+        item
+          Action = actRefreshMI
+        end>
+      QuestionBeforeExecute = 
+        #1041#1091#1076#1091#1090' '#1080#1079#1084#1077#1085#1077#1085#1099' '#1094#1077#1085#1099' '#1074#1093'. '#1080' '#1087#1088#1086#1076#1072#1078#1080', '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1099'  '#1087#1086' '#1101 +
+        #1090#1080#1084' '#1087#1072#1088#1090#1080#1103#1084', '#1087#1088#1086#1076#1086#1083#1078#1080#1090#1100'?'
+      InfoAfterExecute = #1062#1077#1085#1099' '#1074#1093'. '#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1080#1079#1084#1077#1085#1077#1085#1099
+      Caption = #1080#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1093' '#1080' '#1087#1088#1086#1076#1072#1078#1080
+      Hint = #1080#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1093' '#1080' '#1087#1088#1086#1076#1072#1078#1080
+      ImageIndex = 45
+    end
+    object actIncomeItemPriceDialog: TdsdOpenForm
+      Category = 'UpdatePrice'
+      MoveParams = <>
+      Caption = #1080#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1093' '#1080' '#1087#1088#1086#1076#1072#1078#1080
+      Hint = #1080#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1093' '#1080' '#1087#1088#1086#1076#1072#1078#1080
+      FormName = 'TIncomeItemPriceDialogForm'
+      FormNameParam.Value = 'TIncomeItemPriceDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperPrice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperPrice'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperPriceList'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperPriceList'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1962,7 +2045,7 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 190
+    Left = 182
     Top = 287
   end
   object MasterViewAddOn: TdsdDBViewAddOn
@@ -2900,5 +2983,48 @@ object IncomeForm: TIncomeForm
       end>
     Left = 184
     Top = 360
+  end
+  object spUpdatePrice: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Income_Price'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPrice'
+        Value = 0.000000000000000000
+        Component = FormParams
+        ComponentItem = 'outOperPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPriceList'
+        Value = 0.000000000000000000
+        Component = FormParams
+        ComponentItem = 'outOperPriceList'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 44
+    Top = 376
   end
 end

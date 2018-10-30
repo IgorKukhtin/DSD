@@ -55,10 +55,18 @@ BEGIN
    RETURN QUERY
    WITH
    tmpUnit AS (SELECT inUnitId AS UnitId
-               WHERE COALESCE (inUnitId, 0) <> 0 
-                 AND inisUnitList = FALSE
+                    , ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
+                FROM ObjectLink AS ObjectLink_Unit_Juridical
+                     LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                          ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                         AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                WHERE COALESCE (inUnitId, 0) <> 0 
+                  AND inisUnitList = FALSE
+                  AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                  AND ObjectLink_Unit_Juridical.ObjectId = inUnitId
               UNION 
-               SELECT ObjectLink_Unit_Juridical.ObjectId     AS UnitId
+               SELECT ObjectLink_Unit_Juridical.ObjectId        AS UnitId
+                    , ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
                FROM ObjectLink AS ObjectLink_Unit_Juridical
                     INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                           ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
@@ -69,55 +77,65 @@ BEGIN
                  AND (ObjectLink_Unit_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
                  AND inisUnitList = FALSE
               UNION
-               SELECT ObjectBoolean_Report.ObjectId          AS UnitId
-               FROM ObjectBoolean AS ObjectBoolean_Report
-               WHERE ObjectBoolean_Report.DescId = zc_ObjectBoolean_Unit_Report()
-                 AND ObjectBoolean_Report.ValueData = TRUE
-                 AND inisUnitList = TRUE
+                SELECT ObjectBoolean_Report.ObjectId             AS UnitId
+                     , ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
+                FROM ObjectBoolean AS ObjectBoolean_Report
+                     LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                          ON ObjectLink_Unit_Juridical.ObjectId = ObjectBoolean_Report.ObjectId
+                                         AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                     LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                          ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                         AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                WHERE ObjectBoolean_Report.DescId = zc_ObjectBoolean_Unit_Report()
+                  AND ObjectBoolean_Report.ValueData = TRUE
+                  AND inisUnitList = TRUE
             )
-             
-
 
     -- Товары PriceChange
- , tmpGoodsPriceChange AS (SELECT DISTINCT ObjectLink_PriceChange_Goods.ChildObjectId AS GoodsId
-                           FROM ObjectLink AS ObjectLink_PriceChange_Goods
-                                INNER JOIN Object AS Object_PriceChange ON Object_PriceChange.Id       = ObjectLink_PriceChange_Goods.ObjectId
-                                                                       AND Object_PriceChange.isErased = FALSE
-                                /*LEFT JOIN ObjectFloat AS PriceChange_Value
-                                                      ON PriceChange_Value.ObjectId = ObjectLink_PriceChange_Goods.ObjectId
-                                                     AND PriceChange_Value.DescId = zc_ObjectFloat_PriceChange_Value()
-                                                     AND COALESCE (PriceChange_Value.ValueData, 0) <> 0*/
-                           WHERE ObjectLink_PriceChange_Goods.DescId = zc_ObjectLink_PriceChange_Goods() 
-                          )
+ , tmpPriceChange AS (SELECT ObjectLink_PriceChange_Retail.ObjectId        AS Id
+                           , PriceChange_Goods.ChildObjectId               AS GoodsId
+                      FROM ObjectLink AS ObjectLink_PriceChange_Retail
+                          INNER JOIN tmpUnit ON tmpUnit.RetailId = ObjectLink_PriceChange_Retail.ChildObjectId
+                          LEFT JOIN ObjectLink AS PriceChange_Goods
+                                               ON PriceChange_Goods.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
+                                              AND PriceChange_Goods.DescId = zc_ObjectLink_PriceChange_Goods()
+                      WHERE ObjectLink_PriceChange_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
+                     UNION
+                      SELECT ObjectLink_PriceChange_Unit.ObjectId          AS Id
+                           , PriceChange_Goods.ChildObjectId               AS GoodsId
+                      FROM ObjectLink AS ObjectLink_PriceChange_Unit
+                          INNER JOIN tmpUnit ON tmpUnit.RetailId = ObjectLink_PriceChange_Unit.ChildObjectId
+                          LEFT JOIN ObjectLink AS PriceChange_Goods
+                                               ON PriceChange_Goods.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                              AND PriceChange_Goods.DescId = zc_ObjectLink_PriceChange_Goods()
+                      WHERE ObjectLink_PriceChange_Unit.DescId        = zc_ObjectLink_PriceChange_Unit()
+                      )
 
-  -- цены аптеки
- , tmpPrice AS (SELECT tmpGoodsPriceChange.GoodsId                   AS GoodsId
-                      , ObjectLink_Unit.ChildObjectId                 AS UnitId
-                      , COALESCE (ObjectHistoryFloat_Price.ValueData, 0) :: TFloat  AS Price
-                      , ObjectHistory_Price.StartDate
-                      , ObjectHistory_Price.EndDate
-                FROM tmpGoodsPriceChange
-                     INNER JOIN ObjectLink AS ObjectLink_Goods
-                                           ON ObjectLink_Goods.ChildObjectId = tmpGoodsPriceChange.GoodsId
-                                          AND ObjectLink_Goods.DescId        = zc_ObjectLink_Price_Goods()
-                     LEFT JOIN ObjectLink AS ObjectLink_Unit
-                                          ON ObjectLink_Unit.ObjectId      = ObjectLink_Goods.ObjectId
-                                         AND ObjectLink_Unit.DescId        = zc_ObjectLink_Price_Unit()
-                     INNER JOIN tmpUnit ON tmpUnit.UnitId = ObjectLink_Unit.ChildObjectId
+ , tmpGoodsPriceChange AS (SELECT DISTINCT tmpPriceChange.GoodsId
+                           FROM tmpPriceChange
+                               -- получаем значения цены из истории                                                           
+                               LEFT JOIN ObjectHistory AS ObjectHistory_PriceChange
+                                                       ON ObjectHistory_PriceChange.ObjectId = tmpPriceChange.Id 
+                                                      AND ObjectHistory_PriceChange.DescId = zc_ObjectHistory_PriceChange()
+                                                      AND inEndDate >= ObjectHistory_PriceChange.StartDate AND inStartDate < ObjectHistory_PriceChange.EndDate
+                                                   --AND '31.10.2018' >= ObjectHistory_PriceChange.StartDate AND '30.10.2018' <= ObjectHistory_PriceChange.EndDate
 
-                     -- получаем значения цены и НТЗ из истории значений на начало дня                                                          
-                     LEFT JOIN ObjectHistory AS ObjectHistory_Price
-                                             ON ObjectHistory_Price.ObjectId = ObjectLink_Goods.ObjectId 
-                                            AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
-                                            AND inEndDate + INTERVAL '1 DAY' >= ObjectHistory_Price.StartDate AND inStartDate <= ObjectHistory_Price.EndDate
-                     LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
-                                                  ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
-                                                 AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
-               )
+                               LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceChange
+                                                            ON ObjectHistoryFloat_PriceChange.ObjectHistoryId = ObjectHistory_PriceChange.Id
+                                                           AND ObjectHistoryFloat_PriceChange.DescId = zc_ObjectHistoryFloat_PriceChange_Value()
+
+                               LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_FixValue
+                                                            ON ObjectHistoryFloat_FixValue.ObjectHistoryId = ObjectHistory_PriceChange.Id
+                                                           AND ObjectHistoryFloat_FixValue.DescId = zc_ObjectHistoryFloat_PriceChange_FixValue()                
+
+                           WHERE COALESCE (ObjectHistoryFloat_PriceChange.ValueData, 0)  <> 0
+                              OR COALESCE (ObjectHistoryFloat_FixValue.ValueData, 0) <> 0
+                           )
 
  , tmpData_Container AS (SELECT COALESCE (MIContainer.AnalyzerId,0)         AS MovementItemId_Income
                               , MIContainer.OperDate                        AS OperDate
                               , MIContainer.WhereObjectId_analyzer          AS UnitId
+                              , MIContainer.MovementItemId                  AS MI_Id
                               , MIContainer.ObjectId_analyzer               AS GoodsId
                               , COALESCE (MIContainer.Price,0)              AS PriceSale
                               , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount
@@ -134,26 +152,33 @@ BEGIN
                                 , MIContainer.OperDate
                                 , MIContainer.WhereObjectId_analyzer
                                 , COALESCE (MIContainer.Price,0)
+                                , MIContainer.MovementItemId
                          HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                          )
-              
+
+  -- плоучаем цену без скидки из док. продажи
+ , tmpMI_FLoat AS (SELECT MovementItemFloat.*
+                   FROM MovementItemFloat
+                   WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpData_Container.MI_Id FROM tmpData_Container)
+                     AND MovementItemFloat.DescId = zc_MIFloat_PriceSale()
+                   )
+  
  , tmpData_ AS (SELECT tmpData_Container.UnitId 
                      , tmpData_Container.GoodsId
                      , tmpData_Container.MovementItemId_Income
                      , tmpData_Container.PriceSale
+                     , tmpMI_FLoat.ValueData                           AS PriceReal
                      , SUM (tmpData_Container.Amount)                  AS Amount
                      , SUM (tmpData_Container.SummaSale)               AS SummaSale
-                     , SUM (tmpData_Container.Amount * tmpPrice.Price) AS SummaReal
+                     , SUM (tmpData_Container.Amount * tmpMI_FLoat.ValueData) AS SummaReal
                 FROM tmpData_Container
-                     LEFT JOIN tmpPrice ON tmpPrice.UnitId = tmpData_Container.UnitId
-                                       AND tmpPrice.GoodsId = tmpData_Container.GoodsId
-                                       AND tmpData_Container.OperDate >= tmpPrice.StartDate AND tmpData_Container.OperDate < tmpPrice.EndDate
-                                       AND COALESCE (tmpPrice.Price, 0) <> 0
+                     LEFT JOIN tmpMI_FLoat ON tmpMI_FLoat.MovementItemId = tmpData_Container.MI_Id
                 GROUP BY tmpData_Container.MovementItemId_Income
                        , tmpData_Container.UnitId 
                        , tmpData_Container.GoodsId
                        , tmpData_Container.MovementItemId_Income
                        , tmpData_Container.PriceSale
+                       , tmpMI_FLoat.ValueData
                )
          
  , tmpData_all AS (SELECT MI_Income.MovementId      AS MovementId_Income
@@ -162,6 +187,7 @@ BEGIN
                         , tmpData_Container.UnitId
                         , tmpData_Container.GoodsId
                         , tmpData_Container.PriceSale
+                        , tmpData_Container.PriceReal
                         , SUM (COALESCE (tmpData_Container.Amount, 0))    AS Amount
                         , SUM (COALESCE (tmpData_Container.SummaSale, 0)) AS SummaSale
                         , SUM (COALESCE (tmpData_Container.SummaReal, 0)) AS SummaReal
@@ -182,6 +208,7 @@ BEGIN
                          , tmpData_Container.GoodsId
                          , tmpData_Container.UnitId
                          , tmpData_Container.PriceSale
+                         , tmpData_Container.PriceReal
                   )
 
  , tmpData AS (SELECT tmpData_all.MovementId_Income               AS MovementId_Income
@@ -190,6 +217,7 @@ BEGIN
                     , tmpData_all.UnitId
                     , tmpData_all.GoodsId
                     , tmpData_all.PriceSale
+                    , tmpData_all.PriceReal
                     , SUM (tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))  AS Summa
                     , SUM (tmpData_all.Amount * COALESCE (MIFloat_PriceWithOutVAT.ValueData, 0)) AS SummaWithOutVAT
                     , SUM (tmpData_all.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))    AS SummaWithVAT
@@ -237,6 +265,7 @@ BEGIN
                       , MovementLinkObject_Juridical_Income.ObjectId
                       , MovementLinkObject_To.ObjectId
                       , tmpData_all.PriceSale
+                      , tmpData_all.PriceReal
               )
 
  , tmpDataRez AS (SELECT tmpData.MovementId_Income
@@ -245,6 +274,7 @@ BEGIN
                        , tmpData.UnitId
                        , tmpData.GoodsId
                        , tmpData.PriceSale
+                       , tmpData.PriceReal
                        , SUM (tmpData.Summa)           AS Summa
                        , SUM (tmpData.SummaWithOutVAT) AS SummaWithOutVAT
                        , SUM (tmpData.SummaWithVAT)    AS SummaWithVAT
@@ -262,6 +292,7 @@ BEGIN
                          , tmpData.ToId_Income
                          , tmpData.UnitId
                          , tmpData.PriceSale
+                         , tmpData.PriceReal
                   )
 
 
@@ -284,7 +315,7 @@ BEGIN
              , tmpData.PriceSale :: TFloat
              , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithVAT    / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithVAT      --Цена прихода (с НДС) +
              , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithOutVAT / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithOutVAT 
-             , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaReal       / tmpData.Amount ELSE 0 END :: TFloat AS PriceReal
+             , tmpData.PriceReal :: TFloat        --, CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaReal       / tmpData.Amount ELSE 0 END :: TFloat AS PriceReal
 
              , tmpData.Summa           :: TFloat AS Summa        
              , tmpData.SummaSale       :: TFloat AS SummaSale
@@ -363,6 +394,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.10.18         *
  17.10.18         *
 */
 
