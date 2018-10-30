@@ -91,7 +91,7 @@ BEGIN
                           )
 
   -- цены аптеки
- , tmpPrice AS (SELECT tmpGoodsPriceChange.GoodsId                   AS GoodsId
+ /*, tmpPrice AS (SELECT tmpGoodsPriceChange.GoodsId                   AS GoodsId
                       , ObjectLink_Unit.ChildObjectId                 AS UnitId
                       , COALESCE (ObjectHistoryFloat_Price.ValueData, 0) :: TFloat  AS Price
                       , ObjectHistory_Price.StartDate
@@ -113,11 +113,12 @@ BEGIN
                      LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
                                                   ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
                                                  AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
-               )
+               )*/
 
  , tmpData_Container AS (SELECT COALESCE (MIContainer.AnalyzerId,0)         AS MovementItemId_Income
                               , MIContainer.OperDate                        AS OperDate
                               , MIContainer.WhereObjectId_analyzer          AS UnitId
+                              , MIContainer.MovementItemId                  AS MI_Id
                               , MIContainer.ObjectId_analyzer               AS GoodsId
                               , COALESCE (MIContainer.Price,0)              AS PriceSale
                               , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount
@@ -134,26 +135,32 @@ BEGIN
                                 , MIContainer.OperDate
                                 , MIContainer.WhereObjectId_analyzer
                                 , COALESCE (MIContainer.Price,0)
+                                , MIContainer.MovementItemId
                          HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                          )
-              
+  -- плоучаем цену без скидки из док. продажи
+ , tmpMI_FLoat AS (SELECT MovementItemFloat.*
+                   FROM MovementItemFloat
+                   WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpData_Container.MI_Id FROM tmpData_Container)
+                     AND MovementItemFloat.DescId = zc_MIFloat_PriceSale()
+                   )
+  
  , tmpData_ AS (SELECT tmpData_Container.UnitId 
                      , tmpData_Container.GoodsId
                      , tmpData_Container.MovementItemId_Income
                      , tmpData_Container.PriceSale
+                     , tmpMI_FLoat.ValueData                           AS PriceReal
                      , SUM (tmpData_Container.Amount)                  AS Amount
                      , SUM (tmpData_Container.SummaSale)               AS SummaSale
-                     , SUM (tmpData_Container.Amount * tmpPrice.Price) AS SummaReal
+                     , SUM (tmpData_Container.Amount * tmpMI_FLoat.ValueData) AS SummaReal
                 FROM tmpData_Container
-                     LEFT JOIN tmpPrice ON tmpPrice.UnitId = tmpData_Container.UnitId
-                                       AND tmpPrice.GoodsId = tmpData_Container.GoodsId
-                                       AND tmpData_Container.OperDate >= tmpPrice.StartDate AND tmpData_Container.OperDate < tmpPrice.EndDate
-                                       AND COALESCE (tmpPrice.Price, 0) <> 0
+                     LEFT JOIN tmpMI_FLoat ON tmpMI_FLoat.MovementItemId = tmpData_Container.MI_Id
                 GROUP BY tmpData_Container.MovementItemId_Income
                        , tmpData_Container.UnitId 
                        , tmpData_Container.GoodsId
                        , tmpData_Container.MovementItemId_Income
                        , tmpData_Container.PriceSale
+                       , tmpMI_FLoat.ValueData
                )
          
  , tmpData_all AS (SELECT MI_Income.MovementId      AS MovementId_Income
@@ -162,6 +169,7 @@ BEGIN
                         , tmpData_Container.UnitId
                         , tmpData_Container.GoodsId
                         , tmpData_Container.PriceSale
+                        , tmpData_Container.PriceReal
                         , SUM (COALESCE (tmpData_Container.Amount, 0))    AS Amount
                         , SUM (COALESCE (tmpData_Container.SummaSale, 0)) AS SummaSale
                         , SUM (COALESCE (tmpData_Container.SummaReal, 0)) AS SummaReal
@@ -182,6 +190,7 @@ BEGIN
                          , tmpData_Container.GoodsId
                          , tmpData_Container.UnitId
                          , tmpData_Container.PriceSale
+                         , tmpData_Container.PriceReal
                   )
 
  , tmpData AS (SELECT tmpData_all.MovementId_Income               AS MovementId_Income
@@ -190,6 +199,7 @@ BEGIN
                     , tmpData_all.UnitId
                     , tmpData_all.GoodsId
                     , tmpData_all.PriceSale
+                    , tmpData_all.PriceReal
                     , SUM (tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))  AS Summa
                     , SUM (tmpData_all.Amount * COALESCE (MIFloat_PriceWithOutVAT.ValueData, 0)) AS SummaWithOutVAT
                     , SUM (tmpData_all.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))    AS SummaWithVAT
@@ -237,6 +247,7 @@ BEGIN
                       , MovementLinkObject_Juridical_Income.ObjectId
                       , MovementLinkObject_To.ObjectId
                       , tmpData_all.PriceSale
+                      , tmpData_all.PriceReal
               )
 
  , tmpDataRez AS (SELECT tmpData.MovementId_Income
@@ -245,6 +256,7 @@ BEGIN
                        , tmpData.UnitId
                        , tmpData.GoodsId
                        , tmpData.PriceSale
+                       , tmpData.PriceReal
                        , SUM (tmpData.Summa)           AS Summa
                        , SUM (tmpData.SummaWithOutVAT) AS SummaWithOutVAT
                        , SUM (tmpData.SummaWithVAT)    AS SummaWithVAT
@@ -262,6 +274,7 @@ BEGIN
                          , tmpData.ToId_Income
                          , tmpData.UnitId
                          , tmpData.PriceSale
+                         , tmpData.PriceReal
                   )
 
 
@@ -284,7 +297,7 @@ BEGIN
              , tmpData.PriceSale :: TFloat
              , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithVAT    / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithVAT      --Цена прихода (с НДС) +
              , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithOutVAT / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithOutVAT 
-             , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaReal       / tmpData.Amount ELSE 0 END :: TFloat AS PriceReal
+             , tmpData.PriceReal :: TFloat        --, CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaReal       / tmpData.Amount ELSE 0 END :: TFloat AS PriceReal
 
              , tmpData.Summa           :: TFloat AS Summa        
              , tmpData.SummaSale       :: TFloat AS SummaSale
