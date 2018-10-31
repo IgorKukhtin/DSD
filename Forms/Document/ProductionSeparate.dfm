@@ -2,9 +2,8 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
   ClientHeight = 678
   ClientWidth = 903
-  ExplicitLeft = -130
   ExplicitWidth = 919
-  ExplicitHeight = 713
+  ExplicitHeight = 716
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -620,6 +619,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       StoredProcList = <
         item
           StoredProc = spUpdate_MI_Calculated
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = 
         #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072'/'#1085#1077#1090' '#1076#1083#1103' '#1069#1083#1077#1084#1077#1085#1090#1072' '#1087#1088#1080#1093#1086#1076#1072' - '#1088#1072#1089#1095#1077#1090' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1055#1088#1086#1080#1079#1074#1086#1076 +
@@ -769,6 +771,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         item
           Visible = True
           ItemName = 'bbMIMasterProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIChildProtocol'
         end
         item
           Visible = True
@@ -1386,11 +1396,11 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioisCalculated'
+        Name = 'inisCalculated'
         Value = Null
         Component = cbCalculated
         DataType = ftBoolean
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -1416,7 +1426,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Component = ChildCDS
         ComponentItem = 'isCalculated'
         DataType = ftBoolean
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
