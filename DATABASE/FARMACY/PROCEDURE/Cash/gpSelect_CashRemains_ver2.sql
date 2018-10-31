@@ -264,8 +264,7 @@ BEGIN
                              )
            -- Штрих-коды производителя
          , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
-                                 -- , MAX (Object_Goods_BarCode.ValueData)  AS BarCode
-                                    , Object_Goods_BarCode.ValueData        AS BarCode
+                                    , string_agg(Object_Goods_BarCode.ValueData, ',' ORDER BY Object_Goods_BarCode.ID desc)           AS BarCode
                                FROM ObjectLink AS ObjectLink_Main_BarCode
                                     JOIN ObjectLink AS ObjectLink_Child_BarCode
                                                     ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
@@ -278,7 +277,7 @@ BEGIN
                                WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
                                  AND ObjectLink_Main_BarCode.ChildObjectId > 0
                                  AND TRIM (Object_Goods_BarCode.ValueData) <> ''
-                               -- GROUP BY ObjectLink_Main_BarCode.ChildObjectId
+                               GROUP BY ObjectLink_Main_BarCode.ChildObjectId
                               )
               -- данные из прайса
               , tmpObject_Price AS (SELECT ObjectLink_Price_Unit.ObjectId                                AS Id
@@ -664,7 +663,8 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 30.10.18                                                                                                    *
  01.10.18         * tmpPriceChange - учет скидки подразделения
  21.06.17         *
  09.06.17         *
@@ -684,4 +684,4 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO 
 
 -- тест
 -- SELECT * FROM gpSelect_CashRemains (inSession:= '308120')
--- SELECT * FROM gpSelect_CashRemains_ver2(inMovementId := 0 , inCashSessionId := '{1590AD6F-681A-4B34-992A-87AEABB4D33F}' ,  inSession := '308120');
+-- SELECT * FROM gpSelect_CashRemains_ver2(inMovementId := 0 , inCashSessionId := '{0B05C610-B172-4F81-99B8-25BF5385ADD6}' ,  inSession := '3354092');

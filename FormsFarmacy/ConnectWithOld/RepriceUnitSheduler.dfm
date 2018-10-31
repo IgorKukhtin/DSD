@@ -1,25 +1,25 @@
 inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
   Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1097#1080#1082' '#1087#1077#1088#1077#1086#1094#1077#1085#1086#1082
   ClientHeight = 339
-  ClientWidth = 767
+  ClientWidth = 737
   AddOnFormData.isAlwaysRefresh = False
-  ExplicitWidth = 783
+  ExplicitWidth = 753
   ExplicitHeight = 378
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 767
+    Width = 737
     Height = 313
     ExplicitWidth = 767
     ExplicitHeight = 313
     ClientRectBottom = 313
-    ClientRectRight = 767
+    ClientRectRight = 737
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 767
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Left = 3
-        Width = 764
+        Width = 734
         Height = 313
         ExplicitLeft = 3
         ExplicitWidth = 764
@@ -120,6 +120,13 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
             HeaderAlignmentVert = vaCenter
             Width = 56
           end
+          object UnitRePriceName: TcxGridDBColumn
+            Caption = #1059#1088#1072#1074#1085#1080#1074#1072#1090#1100' '#1087#1086
+            DataBinding.FieldName = 'UnitRePriceName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 121
+          end
           object EqualRepriceMax: TcxGridDBColumn
             Caption = #1059#1088#1072#1074#1085'. '#1089' % '#1085#1077' '#1073#1086#1083#1077#1077
             DataBinding.FieldName = 'EqualRepriceMax'
@@ -131,6 +138,20 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
             DataBinding.FieldName = 'EqualRepriceMin'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+          end
+          object UserName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+            DataBinding.FieldName = 'UserName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOpenUser
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 113
           end
           object DataStartLast: TcxGridDBColumn
             Caption = #1057#1090#1072#1088#1090' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1080#1080
@@ -246,6 +267,33 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitName'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenUser: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenUser'
+      FormName = 'TUserNickForm'
+      FormNameParam.Value = 'TUserNickForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UserID'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UserName'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -429,6 +477,14 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
         Component = MasterCDS
         ComponentItem = 'isEqual'
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UserId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

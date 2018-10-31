@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_RepriceUnitSheduler(
 )
 RETURNS TABLE (Ord Integer, ID Integer, Code Integer, Name TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
-             , AreaName TVarChar, JuridicalName TVarChar, ProvinceCityName TVarChar
+             , AreaName TVarChar, JuridicalId Integer, JuridicalName TVarChar, ProvinceCityName TVarChar
 
              , PercentDifference Integer
              , VAT20 Boolean
@@ -16,6 +16,10 @@ RETURNS TABLE (Ord Integer, ID Integer, Code Integer, Name TVarChar
              , EqualRepriceMax Integer
              , EqualRepriceMin Integer
              , isEqual Boolean
+             , UnitRePriceId Integer
+             , UnitRePriceName TVarChar
+             , UserId Integer
+             , UserName TVarChar
              , DataStartLast TDateTime
              , isErased boolean) AS
 $BODY$
@@ -33,6 +37,7 @@ BEGIN
            , Object_Unit.ObjectCode                           AS UnitCode
            , Object_Unit.ValueData                            AS UnitName
            , Object_Area.ValueData                            AS AreaName
+           , Object_Juridical.Id                              AS JuridicalID
            , Object_Juridical.ValueData                       AS JuridicalName
            , Object_ProvinceCity.ValueData                    AS ProvinceCityName
 
@@ -43,6 +48,10 @@ BEGIN
            , ObjectFloat_EqualRepriceMax.ValueData::Integer   AS EqualRepriceMax
            , ObjectFloat_EqualRepriceMin.ValueData::Integer   AS EqualRepriceMin
            , ObjectBoolean_Equal.ValueData                    AS isEqual
+           , COALESCE (Object_UnitRePrice.Id,0)          ::Integer  AS UnitRePriceId
+           , COALESCE (Object_UnitRePrice.ValueData, '') ::TVarChar AS UnitRePriceName
+           , Object_User.Id                                   AS UnitId
+           , Object_User.ValueData                            AS UnitName
            , ObjectDate_DataStartLast.ValueData               AS DataStartLast
            , Object_RepriceUnitSheduler.isErased              AS isErased
 
@@ -97,6 +106,17 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Equal
                                    ON ObjectBoolean_Equal.ObjectId = Object_RepriceUnitSheduler.Id
                                   AND ObjectBoolean_Equal.DescId = zc_ObjectBoolean_RepriceUnitSheduler_Equal()
+                                  
+           LEFT JOIN ObjectLink AS ObjectLink_Unit_UnitRePrice
+                                ON ObjectLink_Unit_UnitRePrice.ObjectId = Object_Unit.Id 
+                               AND ObjectLink_Unit_UnitRePrice.DescId = zc_ObjectLink_Unit_UnitRePrice()
+           LEFT JOIN Object AS Object_UnitRePrice ON Object_UnitRePrice.Id = ObjectLink_Unit_UnitRePrice.ChildObjectId
+                                  
+           LEFT JOIN ObjectLink AS ObjectLink_User
+                                 ON ObjectLink_User.ObjectId = Object_RepriceUnitSheduler.Id
+                                AND ObjectLink_User.DescId = zc_ObjectLink_RepriceUnitSheduler_User()
+           LEFT JOIN Object AS Object_User
+                             ON Object_User.Id = ObjectLink_User.ChildObjectId
 
            LEFT JOIN ObjectDate AS ObjectDate_DataStartLast
                                 ON ObjectDate_DataStartLast.ObjectId = Object_RepriceUnitSheduler.Id
@@ -113,6 +133,7 @@ ALTER FUNCTION gpSelect_Object_RepriceUnitSheduler(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ÿ‡·ÎËÈ Œ.¬.
+ 30.10.18        *
  29.10.18        *
  23.10.18        *
  22.10.18        *
