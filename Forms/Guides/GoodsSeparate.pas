@@ -36,6 +36,7 @@ type
     GoodsKindName: TcxGridDBColumn;
     GoodsKindCode: TcxGridDBColumn;
     isCalculated: TcxGridDBColumn;
+    actInsert_New: TdsdInsertUpdateAction;
   private
     { Private declarations }
   public
