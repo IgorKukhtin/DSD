@@ -46,6 +46,11 @@ BEGIN
      -- проверяем регион пользователя
      vbAreaId:= (SELECT outAreaId FROM gpGet_Area_byUser(inSession));
      
+     if COALESCE (vbAreaId, 0) = 0
+     THEN
+       vbAreaId:= (SELECT AreaId FROM gpGet_User_AreaId(inSession));
+     END IF;
+     
      IF (COALESCE (vbAreaId, 0) <> 0) AND (vbAreaId <> inAreaId)
      THEN
          RAISE EXCEPTION 'Не достаточно прав доступа на изменение региона';
