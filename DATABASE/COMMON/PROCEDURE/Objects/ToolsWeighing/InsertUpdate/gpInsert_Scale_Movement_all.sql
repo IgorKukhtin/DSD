@@ -1217,9 +1217,24 @@ end if;*/
                       SELECT tmpMI.MovementItemId
                            , tmpMI.GoodsId
                            , tmpMI.GoodsKindId
-                           , tmpMI.BoxId
-                           , tmpMI.PartionGoodsDate
-                           , tmpMI.PartionGoods
+                           , CASE WHEN vbMovementDescId = zc_Movement_Inventory()
+                                       -- Склад Реализации + Склад База ГП
+                                   AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (8459, 8458))
+                                       THEN 0
+                                  ELSE tmpMI.BoxId
+                             END AS BoxId
+                           , CASE WHEN vbMovementDescId = zc_Movement_Inventory()
+                                       -- Склад Реализации + Склад База ГП
+                                   AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (8459, 8458))
+                                       THEN NULL
+                                  ELSE tmpMI.PartionGoodsDate
+                             END AS PartionGoodsDate
+                           , CASE WHEN vbMovementDescId = zc_Movement_Inventory()
+                                       -- Склад Реализации + Склад База ГП
+                                   AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (8459, 8458))
+                                       THEN ''
+                                  ELSE tmpMI.PartionGoods
+                             END AS PartionGoods
 
                            , tmpMI.Amount
                            , tmpMI.AmountChangePercent
