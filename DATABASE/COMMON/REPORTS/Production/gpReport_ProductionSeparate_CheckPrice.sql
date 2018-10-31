@@ -15,9 +15,18 @@ RETURNS TABLE  (Id Integer, InvNumber TVarChar, OperDate TDateTime
               , FromId Integer, FromName TVarChar
               , ToId Integer, ToName TVarChar
               , GoodsGroupName TVarChar
-              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
-              , Amount TFloat, PriceIn TFloat, Price TFloat
-              , SummaIn TFloat, Summa TFloat
+              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+              , GoodsKindName TVarChar
+              , Amount          TFloat
+              , PriceIn         TFloat
+              , Price           TFloat
+              , SummaIn         TFloat
+              , Summa           TFloat
+              , ValuePrice_min  TFloat
+              , ValuePrice_max  TFloat
+              , Diff_in         TFloat
+              , Diff_max        TFloat
+              , Diff            TFloat
               )  
 AS
 $BODY$
@@ -42,16 +51,17 @@ BEGIN
                                                           AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
 
                          WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
-                           AND ObjectLink_PriceListItem_PriceList.ChildObjectId = 2707438  -- inPriceListId
+                           AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId --2707438  --
                            AND ObjectHistory_PriceListItem.StartDate <= inEndDate
                            AND ObjectHistory_PriceListItem.EndDate > inStartDate
                          )
-   , tmpMinMax AS (SELECT tmpPiceSeparate.GoodsId
-                        , MIN (tmpPiceSeparate.Price) :: tfloat  AS Price_min
-                        , MAX (tmpPiceSeparate.Price) :: tfloat  AS Price_max
+   /*, tmpMinMax AS (SELECT tmpPiceSeparate.GoodsId
+                        , MIN (tmpPiceSeparate.Price) :: tfloat  AS ValuePrice_min
+                        , MAX (tmpPiceSeparate.Price) :: tfloat  AS ValuePrice_max
                    FROM tmpPiceSeparate            
                    GROUP BY tmpPiceSeparate.GoodsId
                    )
+   */
 
    , tmpMovement AS (SELECT Movement.*
                           , MovementLinkObject_From.ObjectId AS FromId
@@ -111,9 +121,15 @@ BEGIN
                                              AND tmpSummIn.MovementItemId = tmpMI.Id
                           LEFT JOIN tmpPiceSeparate ON tmpPiceSeparate.GoodsId = tmpMI.ObjectId
                                                    AND tmpPiceSeparate.StartDate <= tmpMI.OperDate
-                                                   AND tmpPiceSeparate.EndDate >= tmpMI.OperDate
+                                                   AND tmpPiceSeparate.EndDate > tmpMI.OperDate
                         )
- 
+   , tmpMinMax AS (SELECT tmpData_All.GoodsId
+                        , MIN (tmpData_All.PriceIn) :: tfloat  AS ValuePrice_min
+                        , MAX (tmpData_All.PriceIn) :: tfloat  AS ValuePrice_max
+                   FROM tmpData_All            
+                   GROUP BY tmpData_All.GoodsId
+                   )
+
    , tmpData AS (SELECT *
                  FROM (SELECT tmpData.MovementId
                             , tmpData.OperDate
@@ -150,10 +166,33 @@ BEGIN
           , Object_Goods.ValueData      AS GoodsName
           , Object_GoodsKind.ValueData  AS GoodsKindName
           , tmpData.Amount  :: TFloat   AS Amount
-          , tmpData.PriceIn :: TFloat   AS PriceIn
-          , tmpData.Price   :: TFloat   AS Price
-          , tmpData.SummIn  :: TFloat   AS SummaIn
-          , (tmpData.Amount * tmpData.Price) :: TFloat AS Summa
+          , CAST (tmpData.PriceIn AS NUMERIC (16,2))  :: TFloat AS PriceIn
+          , CAST (tmpData.Price AS NUMERIC (16,2))    :: TFloat AS Price
+          , tmpData.SummIn                            :: TFloat AS SummaIn
+          , (tmpData.Amount * tmpData.Price)          :: TFloat AS Summa
+
+          , CAST (COALESCE (tmpMinMax.ValuePrice_min, 0) AS NUMERIC (16,2)) :: TFloat AS ValuePrice_min
+          , CAST (COALESCE (tmpMinMax.ValuePrice_max, 0) AS NUMERIC (16,2)) :: TFloat AS ValuePrice_max
+          , CAST (CASE WHEN COALESCE (tmpMinMax.ValuePrice_min, 0) <> 0 AND COALESCE(tmpData.PriceIn, 0) <> 0 
+                            THEN (COALESCE(tmpData.PriceIn, 0) - COALESCE (tmpMinMax.ValuePrice_min, 0)) * 100 / COALESCE (tmpMinMax.ValuePrice_min, 0) 
+                       WHEN COALESCE (tmpMinMax.ValuePrice_min, 0) <> 0 AND COALESCE(tmpData.PriceIn, 0) = 0 
+                            THEN 100
+                       ELSE 0
+                  END  AS NUMERIC (16,0))  :: TFloat AS Diff_in
+
+          , CAST (CASE WHEN COALESCE (tmpMinMax.ValuePrice_max, 0) <> 0 AND COALESCE(tmpMinMax.ValuePrice_min, 0)<> 0 
+                           THEN (COALESCE (tmpMinMax.ValuePrice_max, 0) - COALESCE(tmpMinMax.ValuePrice_min, 0)) * 100 / COALESCE (tmpMinMax.ValuePrice_min, 0) 
+                       WHEN COALESCE (tmpMinMax.ValuePrice_max, 0) = 0 AND COALESCE(tmpMinMax.ValuePrice_min, 0) <> 0
+                           THEN 100
+                       ELSE 0
+                  END  AS NUMERIC (16,0)) :: TFloat AS Diff_max
+                  
+          , CAST (CASE WHEN COALESCE (tmpData.Price, 0) <> 0 AND COALESCE(tmpMinMax.ValuePrice_min, 0) <> 0 
+                           THEN (COALESCE (tmpData.Price, 0) - COALESCE(tmpMinMax.ValuePrice_min, 0)) * 100 / COALESCE (tmpMinMax.ValuePrice_min, 0) 
+                       WHEN COALESCE (tmpData.Price, 0) <> 0 AND COALESCE(tmpMinMax.ValuePrice_min, 0) = 0
+                           THEN 100
+                       ELSE 0
+                  END  AS NUMERIC (16,0)):: TFloat AS Diff
           
      FROM tmpData
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
@@ -170,6 +209,8 @@ BEGIN
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpData.GoodsId
                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+          LEFT JOIN tmpMinMax ON tmpMinMax.GoodsId = tmpData.GoodsId
      ;
     
         

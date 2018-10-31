@@ -800,8 +800,8 @@ object PriceListItem_SeparateForm: TPriceListItem_SeparateForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 224
-    Top = 16
+    Left = 192
+    Top = 24
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_ObjectHistory_PriceListItemLast'

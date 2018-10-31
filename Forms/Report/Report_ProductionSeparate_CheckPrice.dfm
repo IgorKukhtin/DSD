@@ -129,7 +129,7 @@
             Width = 65
           end
           object PriceIn: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' ('#1076#1086#1082'.)'
+            Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'PriceIn'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -143,11 +143,12 @@
             Width = 47
           end
           object SummaIn: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' ('#1076#1086#1082'.)'
+            Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'SummaIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 69
@@ -158,9 +159,70 @@
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 66
+          end
+          object ValuePrice_min: TcxGridDBColumn
+            Caption = #1052#1080#1085'. '#1062#1077#1085#1072
+            DataBinding.FieldName = 'ValuePrice_min'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1080#1085'. '#1062#1077#1085#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 60
+          end
+          object ValuePrice_max: TcxGridDBColumn
+            Caption = #1052#1072#1082#1089'. '#1062#1077#1085#1072
+            DataBinding.FieldName = 'ValuePrice_max'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1072#1082#1089'. '#1062#1077#1085#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 57
+          end
+          object Diff: TcxGridDBColumn
+            Caption = '% '#1076#1083#1103' '#1094#1077#1085#1099' '#1087#1088#1072#1081#1089
+            DataBinding.FieldName = 'Diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '+,0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1086#1090#1082#1083'. '#1094#1077#1085#1099' '#1087#1088#1072#1081#1089#1072' '#1086#1090' '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1086#1081
+            Options.Editing = False
+            Width = 86
+          end
+          object Diff_in: TcxGridDBColumn
+            Caption = '% '#1076#1083#1103' '#1090#1077#1082'. '#1094#1077#1085#1099
+            DataBinding.FieldName = 'Diff_in'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '+,0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1086#1090#1082#1083'. '#1094#1077#1085#1099' '#1090#1077#1082#1091#1097#1077#1081' '#1086#1090' '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1086#1081
+            Options.Editing = False
+            Width = 86
+          end
+          object Diff_max: TcxGridDBColumn
+            Caption = '% '#1076#1083#1103' '#1084#1072#1082#1089' '#1094#1077#1085#1099
+            DataBinding.FieldName = 'Diff_max'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '+,0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1086#1090#1082#1083'. '#1094#1077#1085#1099' '#1084#1072#1082#1089#1080#1084#1072#1083#1100#1085#1086#1081' '#1086#1090' '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1086#1081
+            Options.Editing = False
+            Width = 79
           end
         end
       end
@@ -252,6 +314,7 @@
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -282,6 +345,17 @@
         Component = GuidesTo
         Properties.Strings = (
           'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesPriceList
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = cePersent
+        Properties.Strings = (
           'TextValue')
       end>
   end
@@ -668,18 +742,20 @@
         Component = PeriodChoice
       end
       item
-      end
-      item
-      end
-      item
-      end
-      item
+        Component = GuidesPriceList
       end
       item
         Component = GuidesFrom
       end
       item
         Component = GuidesTo
+      end
+      item
+        Component = cePersent
+      end
+      item
+      end
+      item
       end
       item
       end
@@ -773,7 +849,8 @@
   object GuidesPriceList: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
-    Key = '0'
+    Key = '2707438'
+    TextValue = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072
     FormNameParam.Value = 'TPriceList_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -782,7 +859,7 @@
     Params = <
       item
         Name = 'Key'
-        Value = '0'
+        Value = '2707438'
         Component = GuidesPriceList
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -790,7 +867,7 @@
       end
       item
         Name = 'TextValue'
-        Value = ''
+        Value = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072
         Component = GuidesPriceList
         ComponentItem = 'TextValue'
         DataType = ftString

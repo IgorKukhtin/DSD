@@ -102,10 +102,12 @@
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
     TabOrder = 10
+    Text = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072
     Width = 308
   end
   object cxLabel3: TcxLabel
@@ -133,8 +135,8 @@
     Left = 88
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 240
-    Top = 154
+    Left = 256
+    Top = 130
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -294,7 +296,8 @@
   object GuidesPriceList: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
-    Key = '0'
+    Key = '2707438'
+    TextValue = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072
     FormNameParam.Value = 'TPriceList_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -303,6 +306,7 @@
     Params = <
       item
         Name = 'Key'
+        Value = '2707438'
         Component = GuidesPriceList
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -310,13 +314,14 @@
       end
       item
         Name = 'TextValue'
+        Value = #1088#1072#1089#1095#1077#1090' '#1094#1077#1085' '#1087#1086' '#1076#1085#1103#1084' - '#1086#1073#1074#1072#1083#1082#1072
         Component = GuidesPriceList
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 144
-    Top = 179
+    Left = 208
+    Top = 171
   end
 end
