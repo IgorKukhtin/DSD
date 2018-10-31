@@ -1579,6 +1579,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItem_SeparateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItem_SeparateForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListForm');
