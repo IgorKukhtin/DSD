@@ -422,7 +422,7 @@ BEGIN
                                                          ON CLO_PartionMI.ContainerId = Container.Id
                                                         AND CLO_PartionMI.DescId      = zc_ContainerLinkObject_PartionMI()
                           INNER JOIN Object AS Object_PartionMI ON Object_PartionMI.Id         = CLO_PartionMI.ObjectId
-                                                               AND Object_PartionMI.ObjectCode IN (SELECT DISTINCT tmpData_MI.MI_Id FROM tmpData_MI)
+                                                             --  AND Object_PartionMI.ObjectCode IN (SELECT DISTINCT tmpData_MI.MI_Id FROM tmpData_MI)
                           INNER JOIN ContainerLinkObject AS CLO_Unit
                                                          ON CLO_Unit.ContainerId = Container.Id
                                                         AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
@@ -526,7 +526,7 @@ BEGIN
                                 LEFT JOIN tmpDebt ON tmpDebt.PartionId = tmp.PartionId
                                                  AND tmpDebt.ClientId  = tmp.ClientId
                                                  AND tmpDebt.GoodsId   = tmp.GoodsId
-                                                 AND tmpDebt.MI_Id     = tmp.MI_Id
+                                                 --AND tmpDebt.MI_Id     = tmp.MI_Id
                            WHERE COALESCE (tmp.TotalPay, 0) <> 0 OR tmp.SummChangePercent <> 0
                        UNION ALL
                            SELECT tmp.MovementId
@@ -748,3 +748,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_GoodsMI_Account (inStartDate:= '01.04.2018', inEndDate:= '01.04.2018', inUnitId:= 506, inIsShowAll:= TRUE, inIsCurrency:= True, inSession:= zfCalc_UserAdmin()) -- WHERE ClientName like '%Шуваев%'
+--select * from gpReport_GoodsMI_Account(inStartDate := ('25.10.2018')::TDateTime , inEndDate := ('01.11.2018')::TDateTime , inUnitId := 1531 , inIsShowAll := 'False' , inIsCurrency := 'False' ,  inSession := '8') as tt
+--where tt.clientName like '%Капустин%'
