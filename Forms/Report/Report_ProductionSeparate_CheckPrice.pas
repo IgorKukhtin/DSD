@@ -55,6 +55,8 @@ type
     cxLabel4: TcxLabel;
     edPriceList: TcxButtonEdit;
     GuidesPriceList: TdsdGuides;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
   private
     { Private declarations }
   public

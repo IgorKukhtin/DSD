@@ -64,6 +64,7 @@ type
     bbOpenReportForm: TdxBarButton;
     AmountDiff: TcxGridDBColumn;
     MovementDescName: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
