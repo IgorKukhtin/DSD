@@ -2606,7 +2606,8 @@ procedure TMainCashForm2.ceScanerKeyPress(Sender: TObject; var Key: Char);
 const zc_BarCodePref_Object : String = '20100';
 var isFind : Boolean;
     Key2 : Word;
-    str_add : String;
+    str_add, str_old : String;
+    nID : integer;
 begin
    isFind:= false;
    isScaner:= true;
@@ -2615,17 +2616,35 @@ begin
    begin
        //
        RemainsCDS.AfterScroll := nil;
-       RemainsCDS.DisableConstraints;
+       RemainsCDS.DisableControls;
        try
            // ЭТО Ш/К - ПРОИЗВОДИТЕЛЯ
            if zc_BarCodePref_Object <> Copy(ceScaner.Text,1, LengTh(zc_BarCodePref_Object))
            then begin
-                 //потом покажем
-                 str_add:= '(произв)';
-                 //нашли
-                 isFind:= RemainsCDS.Locate('BarCode', trim(ceScaner.Text), []);
-                 //еще проверили что равно...
-                 isFind:= (isFind) and (RemainsCDS.FieldByName('BarCode').AsString = trim(ceScaner.Text));
+
+              //потом покажем
+              str_add:= '(произв)';
+
+              str_old := RemainsCDS.Filter;
+              nID := RemainsCDS.FieldByName('ID').AsInteger;
+              RemainsCDS.Filtered := False;
+              try
+                try
+                  if str_old <> '' then RemainsCDS.Filter := '(' + str_old + ')';
+                  RemainsCDS.Filter := RemainsCDS.Filter + ' and BarCode like ''%' + trim(ceScaner.Text) + '%''';
+                  RemainsCDS.Filtered := True;
+                  RemainsCDS.First;
+                   //проверили что равно...
+                  isFind:= Pos(trim(ceScaner.Text), RemainsCDS.FieldByName('BarCode').AsString) > 0;
+                  if isFind then nID := RemainsCDS.FieldByName('ID').AsInteger;
+                except
+                end;
+              finally
+                RemainsCDS.Filtered := False;
+                RemainsCDS.Filter := str_old;
+                RemainsCDS.Filtered := True;
+                RemainsCDS.Locate('ID', nID, []);
+              end;
            end
 
            // ЭТО Ш/К - НАШ ID
@@ -2663,7 +2682,7 @@ begin
             lbScaner.Caption:='Ошибка в Ш/К';
        end;
        //
-       RemainsCDS.EnableConstraints;
+       RemainsCDS.EnableControls;
 
    end;
 

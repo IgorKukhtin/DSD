@@ -36,7 +36,6 @@ object PriceListItem_SeparateForm: TPriceListItem_SeparateForm
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -124,28 +123,28 @@ object PriceListItem_SeparateForm: TPriceListItem_SeparateForm
         Width = 57
       end
       object Diff_min: TcxGridDBColumn
-        Caption = '% '#1086#1090#1082#1083'. '#1086#1090' '#1084#1080#1085'. '#1094#1077#1085#1099
+        Caption = '% '#1076#1083#1103' '#1084#1080#1085' '#1094#1077#1085#1099
         DataBinding.FieldName = 'Diff_min'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.DisplayFormat = '+,0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1086#1090' '#1084#1080#1085'.'#1094#1077#1085#1099
+        HeaderHint = '% '#1086#1090#1082#1083'. '#1094#1077#1085#1099' '#1090#1077#1082#1091#1097#1077#1081' '#1086#1090' '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1086#1081
         Options.Editing = False
-        Width = 61
+        Width = 86
       end
       object Diff_max: TcxGridDBColumn
-        Caption = '% '#1086#1090#1082#1083'. '#1086#1090' '#1084#1072#1082#1089'. '#1094#1077#1085#1099
+        Caption = '% '#1076#1083#1103' '#1084#1072#1082#1089' '#1094#1077#1085#1099
         DataBinding.FieldName = 'Diff_max'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Properties.DisplayFormat = '+,0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1086#1090' '#1084#1072#1082#1089'. '#1094#1077#1085#1099
+        HeaderHint = '% '#1086#1090#1082#1083'. '#1094#1077#1085#1099' '#1090#1077#1082#1091#1097#1077#1081' '#1086#1090' '#1084#1072#1082#1089#1080#1084#1072#1083#1100#1085#1086#1081
         Options.Editing = False
-        Width = 44
+        Width = 79
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -167,7 +166,7 @@ object PriceListItem_SeparateForm: TPriceListItem_SeparateForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 47
+        Width = 57
       end
       object UpdateName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
@@ -175,7 +174,7 @@ object PriceListItem_SeparateForm: TPriceListItem_SeparateForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 78
+        Width = 68
       end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
@@ -801,8 +800,8 @@ object PriceListItem_SeparateForm: TPriceListItem_SeparateForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 224
-    Top = 16
+    Left = 192
+    Top = 24
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_ObjectHistory_PriceListItemLast'

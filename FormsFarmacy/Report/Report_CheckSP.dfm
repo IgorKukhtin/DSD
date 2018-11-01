@@ -23,8 +23,6 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       inherited cxGrid: TcxGrid
         Width = 1077
         Height = 394
-        ExplicitLeft = -3
-        ExplicitTop = 32
         ExplicitWidth = 1077
         ExplicitHeight = 394
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1671,27 +1669,11 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrintInvoice'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbPrint1'
         end
         item
           Visible = True
@@ -1703,15 +1685,15 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintDepartment'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintDepartment_152'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'bbPrintInvoiceDepartment'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintDepartment_152'
         end
         item
           Visible = True

@@ -1074,6 +1074,7 @@ begin
 end;
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
@@ -1105,7 +1106,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_ReturnInToSaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_ReturnInToSaleDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_ReturnInToSaleDialogForm');
-
+  }
   //Отчет Проверка количества в привязке возврата к продажам
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckAmount_ReturnInToSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckAmount_ReturnInToSaleForm');
@@ -1241,10 +1242,10 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateStorageLineForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateStorageLineForm');
-  //
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateJournalForm');
 
@@ -1579,6 +1580,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItem_SeparateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItem_SeparateForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListForm');
@@ -1614,7 +1616,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-{
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionSeparate_CheckPriceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionSeparate_CheckPriceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionSeparate_CheckPriceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionSeparate_CheckPriceDialogForm');
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Income_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Income_OlapForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Income_OlapDialogForm'));

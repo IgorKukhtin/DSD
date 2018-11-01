@@ -217,10 +217,39 @@ inherited GoodsSeparateForm: TGoodsSeparateForm
   inherited ActionList: TActionList
     Left = 143
     Top = 255
+    object actInsert_New: TdsdInsertUpdateAction [2]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actInsert_New'
+      ImageIndex = 0
+      FormName = 'TGoodsSeparateEditForm'
+      FormNameParam.Value = 'TGoodsSeparateEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
     inherited actInsert: TInsertUpdateChoiceAction
+      Category = ''
       ShortCut = 0
       FormName = 'TGoodsSeparateEditForm'
       FormNameParam.Value = 'TGoodsSeparateEditForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      DataSource = nil
     end
     inherited actUpdate: TdsdInsertUpdateAction
       ShortCut = 0
@@ -520,6 +549,9 @@ inherited GoodsSeparateForm: TGoodsSeparateForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited bbInsert: TdxBarButton
+      Action = actInsert_New
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll

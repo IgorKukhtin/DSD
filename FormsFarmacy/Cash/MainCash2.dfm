@@ -1209,7 +1209,7 @@ inherited MainCashForm2: TMainCashForm2
       ParentFont = False
     end
     object Label11: TLabel
-      Left = 241
+      Left = 379
       Top = 3
       Width = 50
       Height = 13
@@ -1231,9 +1231,9 @@ inherited MainCashForm2: TMainCashForm2
       Width = 146
     end
     object PanelMCSAuto: TPanel
-      Left = 391
+      Left = 521
       Top = 1
-      Width = 392
+      Width = 262
       Height = 19
       Align = alRight
       BevelOuter = bvNone
@@ -1267,7 +1267,7 @@ inherited MainCashForm2: TMainCashForm2
       end
     end
     object edPromoCode: TcxTextEdit
-      Left = 297
+      Left = 435
       Top = -1
       Properties.MaxLength = 8
       TabOrder = 2

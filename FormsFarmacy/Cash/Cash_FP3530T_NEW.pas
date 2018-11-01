@@ -223,7 +223,7 @@ begin
     Exit;
   end;
 
-  ProgrammingGoods(GoodsCode, Copy(GoodsName, 1, 20) , Price, NDS);
+  ProgrammingGoods(GoodsCode, Copy(GoodsName, 1, 40) , Price, NDS);
   result := SoldCode(GoodsCode, Amount, Price);
 end;
 

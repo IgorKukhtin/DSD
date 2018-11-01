@@ -1045,7 +1045,9 @@ uses
   ReportCollation_UpdateObjectDialog in '..\..\Forms\Guides\ReportCollation_UpdateObjectDialog.pas' {ReportCollation_UpdateObjectDialogForm: TParentForm},
   PriceListItem_Separate in '..\..\Forms\Guides\PriceListItem_Separate.pas' {PriceListItem_SeparateForm: TParentForm},
   ReportCollation_ObjectDialog in '..\..\Forms\Guides\ReportCollation_ObjectDialog.pas' {ReportCollation_ObjectDialogForm: TParentForm},
-  DatePeriodDialog in '..\..\Forms\Guides\DatePeriodDialog.pas' {DatePeriodDialogForm: TParentForm};
+  DatePeriodDialog in '..\..\Forms\Guides\DatePeriodDialog.pas' {DatePeriodDialogForm: TParentForm},
+  Report_ProductionSeparate_CheckPrice in '..\..\Forms\Report\Report_ProductionSeparate_CheckPrice.pas' {Report_ProductionSeparate_CheckPriceForm: TParentForm},
+  Report_ProductionSeparate_CheckPriceDialog in '..\..\Forms\Report\Report_ProductionSeparate_CheckPriceDialog.pas' {Report_ProductionSeparate_CheckPriceDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

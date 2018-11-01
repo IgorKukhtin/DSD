@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAreaId     Integer;
 BEGIN
 
 -- inStartDate:= '01.01.2013';
@@ -28,6 +29,9 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PriceList());
 --     vbUserId:= lpGetUserBySession (inSession);
 
+     -- проверяем регион пользователя
+     vbAreaId:= (SELECT T.AreaId FROM gpGet_User_AreaId(inSession) AS T);
+     
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -85,7 +89,8 @@ BEGIN
                                    AND COALESCE (LoadPriceList.AreaId, 0) = COALESCE (Object_Area.Id, 0)
             
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate  
-       AND Movement.DescId = zc_Movement_PriceList();
+       AND Movement.DescId = zc_Movement_PriceList()
+       AND (vbAreaId = 0 OR Object_Area.Id = 0 OR Object_Area.Id = vbAreaId);
 
 END;
 $BODY$

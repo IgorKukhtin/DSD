@@ -157,7 +157,7 @@ object GoodsSeparateEditForm: TGoodsSeparateEditForm
       item
         Name = 'Id'
         Value = Null
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 240
@@ -169,7 +169,7 @@ object GoodsSeparateEditForm: TGoodsSeparateEditForm
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
