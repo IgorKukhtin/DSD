@@ -18,8 +18,8 @@ BEGIN
      vbUserId := inSession;
 
      -- строки заказа
-     CREATE TEMP TABLE _tmp_MI (Id integer, GoodsId Integer, ListDiffAmount TFloat) ON COMMIT DROP;
-       INSERT INTO _tmp_MI (Id, GoodsId, ListDiffAmount)
+     CREATE TEMP TABLE _tmp_MI (Id integer, GoodsId Integer, ListDiffAmount TFloat, AmountManual TFloat) ON COMMIT DROP;
+       INSERT INTO _tmp_MI (Id, GoodsId, ListDiffAmount, AmountManual)
              WITH
                   tmpMI AS (SELECT MovementItem.Id
                                  , MovementItem.ObjectId AS GoodsId
@@ -35,11 +35,22 @@ BEGIN
                                             AND MovementItemFloat.DescId = zc_MIFloat_ListDiff()
                                             AND COALESCE (MovementItemFloat.ValueData, 0) <> 0 
                                           )
+                  -- сохраненные данные <Ручное количество>
+                , tmpMIFloat_AmountManual AS (SELECT MovementItemFloat.*
+                                              FROM MovementItemFloat
+                                              WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                                AND MovementItemFloat.DescId = zc_MIFloat_AmountManual()
+                                                AND COALESCE (MovementItemFloat.ValueData, 0) <> 0 
+                                              )
+                
              SELECT tmpMI.Id
                   , tmpMI.GoodsId
-                  , COALESCE (MIFloat_ListDiff.ValueData, 0) AS ListDiffAmount
+                  , COALESCE (MIFloat_ListDiff.ValueData, 0)        AS ListDiffAmount
+                  , COALESCE (tmpMIFloat_AmountManual.ValueData, 0) AS AmountManual
              FROM tmpMI
-                  LEFT JOIN tmpMIFloat_ListDiff AS MIFloat_ListDiff ON MIFloat_ListDiff.MovementItemId = tmpMI.Id;
+                  LEFT JOIN tmpMIFloat_ListDiff     AS MIFloat_ListDiff     ON MIFloat_ListDiff.MovementItemId = tmpMI.Id
+                  LEFT JOIN tmpMIFloat_AmountManual AS MIFloat_AmountManual ON MIFloat_AmountManual.MovementItemId = tmpMI.Id
+                  ;
 
      -- Данные из док. отказ
      CREATE TEMP TABLE _tmpListDiff_MI (Id integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
@@ -63,7 +74,7 @@ BEGIN
                                                                      AND MovementItem.DescId     = zc_MI_Master()
                                                                      AND MovementItem.isErased   = FALSE
                                               --ограничиваем товаром заказа
-                                              INNER JOIN _tmp_MI ON _tmp_MI.GoodsId = MovementItem.ObjectId
+                                              --INNER JOIN _tmp_MI ON _tmp_MI.GoodsId = MovementItem.ObjectId
                                      )
                   -- свойство строк <Id док. заказа>
                 , tmpMI_MovementId AS (SELECT MovementItemFloat.*
@@ -80,14 +91,16 @@ BEGIN
                      LEFT JOIN tmpMI_MovementId ON tmpMI_MovementId.MovementItemId = tmpListDiff_MI_All.Id
                 WHERE tmpMI_MovementId.ValueData IS NULL;
            
-     -- сохраняем свойства
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ListDiff(), _tmp_MI.Id, COALESCE (_tmp_MI.ListDiffAmount,0) + COALESCE (tmpListDiff_MI.Amount, 0) )   -- -- сохранили свойство кол-во отказ
-           , lpInsert_MovementItemProtocol (_tmp_MI.Id, vbUserId, FALSE)                                                                                        -- -- сохранили протокол
+     -- сохраняем свойства, если такого товара нет в заказе дописываем
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ListDiff(), COALESCE (_tmp_MI.Id, 0), COALESCE (_tmp_MI.ListDiffAmount,0) + COALESCE (tmpListDiff_MI.Amount, 0) )   -- сохранили свойство кол-во отказ
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountManual(), COALESCE (_tmp_MI.Id, 0), COALESCE (_tmp_MI.AmountManual,0) + COALESCE (tmpListDiff_MI.Amount, 0) ) -- сохранили свойство <Ручное количество>
+           , lpInsert_MovementItemProtocol (_tmp_MI.Id, vbUserId, FALSE)                                                                                                      -- сохранили протокол
      FROM _tmp_MI
-          INNER JOIN (SELECT _tmpListDiff_MI.GoodsId, SUM (_tmpListDiff_MI.Amount) AS Amount 
-                      FROM _tmpListDiff_MI
-                      GROUP BY _tmpListDiff_MI.GoodsId
-                      ) AS tmpListDiff_MI ON tmpListDiff_MI.GoodsId = _tmp_MI.GoodsId
+          FULL JOIN (SELECT _tmpListDiff_MI.GoodsId      AS GoodsId
+                          , SUM (_tmpListDiff_MI.Amount) AS Amount 
+                     FROM _tmpListDiff_MI
+                     GROUP BY _tmpListDiff_MI.GoodsId
+                     ) AS tmpListDiff_MI ON tmpListDiff_MI.GoodsId = _tmp_MI.GoodsId
      ;
      
      --записываем Ид заказа в строки док. отказа

@@ -64,9 +64,9 @@ BEGIN
              , inContractName     AS ioContractName
              , (CEIL (MovementItem.Amount / COALESCE (vbMinimumLot, 1)) * COALESCE (vbMinimumLot, 1) * inPrice) :: TFloat AS outSumm
              , (CEIL (MovementItem.Amount / COALESCE (vbMinimumLot, 1)) * COALESCE (vbMinimumLot, 1))           :: TFloat AS outCalcAmount
-             , (COALESCE (MIFloat_AmountManual.ValueData, (CEIL ((MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData,0)) / COALESCE (vbMinimumLot, 1)) * COALESCE (vbMinimumLot, 1))) * inPrice) :: TFloat AS outSummAll
-             , (MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0)) :: TFloat AS outAmountAll
-             , COALESCE (MIFloat_AmountManual.ValueData, (CEIL ((MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))) :: TFloat AS outCalcAmountAll
+             , (COALESCE (MIFloat_AmountManual.ValueData, (CEIL ((MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0) ) / COALESCE (vbMinimumLot, 1)) * COALESCE (vbMinimumLot, 1))) * inPrice) :: TFloat AS outSummAll
+             , (MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0) ) :: TFloat AS outAmountAll
+             , COALESCE (MIFloat_AmountManual.ValueData, (CEIL ((MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0) ) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))) :: TFloat AS outCalcAmountAll
 
              , MovementItem.Amount            AS outAmount
              , ('Ошибка.' || CHR (13) || 'Для товара <' || lfGet_Object_ValueData (MovementItem.ObjectId) || '> уже сформировано кол-во заказа = <' || MovementItem.Amount :: TVarChar || '>.' || CHR (13) || 'Информация обновлена.') :: TVarChar AS outMessageText 
@@ -82,7 +82,10 @@ BEGIN
                                                ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                                               AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
                                               AND MIFloat_AmountManual.ValueData <> 0
-                                         
+             LEFT OUTER JOIN MovementItemFloat AS MIFloat_ListDiff
+                                               ON MIFloat_ListDiff.MovementItemId = MovementItem.Id
+                                              AND MIFloat_ListDiff.DescId = zc_MIFloat_ListDiff()
+
              LEFT JOIN MovementItemString AS MIString_Maker 
                                           ON MIString_Maker.MovementItemId = MovementItem.Id
                                          AND MIString_Maker.DescId = zc_MIString_Maker()
@@ -132,8 +135,8 @@ BEGIN
     FROM Object_Goods_View WHERE Id = inGoodsId;
     
     SELECT
-        (CEIL((Amount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1)),
-        COALESCE(MIFloat_AmountManual.ValueData,(CEIL((Amount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1)))::TFloat
+        (CEIL((Amount + COALESCE(MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0) ) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1)),
+        COALESCE(MIFloat_AmountManual.ValueData,(CEIL((Amount + COALESCE(MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0) ) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1)))::TFloat
     INTO
         vbCalcAmount,
         vbCalcAmountAll
@@ -145,6 +148,9 @@ BEGIN
         LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountManual
                                           ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                                          AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+        LEFT OUTER JOIN MovementItemFloat AS MIFloat_ListDiff
+                                          ON MIFloat_ListDiff.MovementItemId = MovementItem.Id
+                                         AND MIFloat_ListDiff.DescId = zc_MIFloat_ListDiff()
     WHERE MovementItem.Id = inId;
     
     IF (coalesce(vbCalcAmount,0) <> coalesce(inAmountManual,0)) or (COALESCE(vbCalcAmountAll,0) <> COALESCE(inAmountManual,0))
@@ -183,9 +189,9 @@ BEGIN
     SELECT
          (CEIL(inAmount / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))::TFloat
        , (CEIL(inAmount / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1) * inPrice)::TFloat
-       , inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)
-       , COALESCE (MIFloat_AmountManual.ValueData,(CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1)))::TFloat
-       , COALESCE (MIFloat_AmountManual.ValueData,(CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))) * inPrice::TFloat
+       , inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0)
+       , COALESCE (MIFloat_AmountManual.ValueData,(CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0) ) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1)))           ::TFloat
+       , COALESCE (MIFloat_AmountManual.ValueData,(CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0) ) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))) * inPrice ::TFloat
 
        , COALESCE (MIString_Maker.ValueData, vbMakerName)              :: TVarChar    AS outMakerName
        , COALESCE (Object_Contract.ValueData, inContractName)          :: TVarChar    AS ioContractName     
@@ -207,7 +213,10 @@ BEGIN
         LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountManual
                                           ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                                          AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
-                                         
+        LEFT OUTER JOIN MovementItemFloat AS MIFloat_ListDiff
+                                          ON MIFloat_ListDiff.MovementItemId = MovementItem.Id
+                                         AND MIFloat_ListDiff.DescId = zc_MIFloat_ListDiff()
+
         LEFT JOIN MovementItemString AS MIString_Maker 
                                      ON MIString_Maker.MovementItemId = MovementItem.Id
                                     AND MIString_Maker.DescId = zc_MIString_Maker()
@@ -252,6 +261,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.11.18         * add ListDiff
  30.08.17         *
  30.03.16                                        * add ошибка лайт
  06.02.15                         *

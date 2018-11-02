@@ -592,13 +592,16 @@ BEGIN
            , tmpMI.Income                                           AS Income_Amount
            , MIFloat_AmountSecond.ValueData                         AS AmountSecond
 
-           , tmpMI.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0) ::TFloat  AS AmountAll
-           , NULLIF(COALESCE(MIFloat_AmountManual.ValueData,
-                         CEIL((tmpMI.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(tmpMI.MinimumLot, 1))
-                           * COALESCE(tmpMI.MinimumLot, 1)     ),0)   ::TFloat   AS CalcAmountAll
-           , (COALESCE (MIFloat_Price.ValueData,0) * COALESCE(MIFloat_AmountManual.ValueData,
-                         CEIL((tmpMI.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(tmpMI.MinimumLot, 1))
-                           * COALESCE(tmpMI.MinimumLot, 1)     ) ) ::TFloat  AS SummAll
+           , tmpMI.Amount + COALESCE (MIFloat_AmountSecond.ValueData,0) ::TFloat  AS AmountAll
+           , NULLIF (COALESCE (MIFloat_AmountManual.ValueData,
+                               CEIL ((tmpMI.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) + COALESCE (tmpMI.ListDiffAmount, 0) ) / COALESCE(tmpMI.MinimumLot, 1)) * COALESCE(tmpMI.MinimumLot, 1)     
+                               ), 0)   ::TFloat   AS CalcAmountAll
+
+           , (COALESCE (MIFloat_Price.ValueData,0)
+                       * COALESCE (MIFloat_AmountManual.ValueData, 
+                                   CEIL ((tmpMI.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) + COALESCE (tmpMI.ListDiffAmount, 0)) / COALESCE(tmpMI.MinimumLot, 1)) * COALESCE(tmpMI.MinimumLot, 1)    
+                                   )
+             )                                          ::TFloat    AS SummAll
 
            , tmpMI.CheckAmount                                      AS CheckAmount
            , tmpMI.SendAmount                                       AS SendAmount
@@ -1590,8 +1593,8 @@ BEGIN
                        --, MovementItem.Goods_isTOP
                        , MovementItem.Price_isTOP
                        , MIFloat_AmountSecond.ValueData                                   AS AmountSecond
-                       , MovementItem.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0)   AS AmountAll
-                       , CEIL((MovementItem.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(MovementItem.MinimumLot, 1))
+                       , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) AS AmountAll
+                       , CEIL ((MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) + COALESCE (MIFloat_ListDiff.ValueData, 0) ) / COALESCE(MovementItem.MinimumLot, 1))
                           * COALESCE(MovementItem.MinimumLot, 1)                          AS CalcAmountAll
                        , MIFloat_AmountManual.ValueData                                   AS AmountManual
                        , MIFloat_ListDiff.ValueData                                       AS ListDiffAmount
