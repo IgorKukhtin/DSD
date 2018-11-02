@@ -603,6 +603,7 @@ BEGIN
            , tmpMI.CheckAmount                                      AS CheckAmount
            , tmpMI.SendAmount                                       AS SendAmount
            , tmpMI.AmountDeferred                                   AS AmountDeferred
+           , tmpMI.ListDiffAmount                       ::TFloat    AS ListDiffAmount
            , tmpMI.CountPrice
            , COALESCE (tmpOneJuridical.isOneJuridical, TRUE) :: Boolean AS isOneJuridical
 
@@ -1504,7 +1505,10 @@ BEGIN
                                 FROM tmpMIF
                                 WHERE tmpMIF.DescId = zc_MIFloat_AmountManual()
                                 )
-
+      , tmpMIF_ListDiff AS (SELECT tmpMIF.*
+                            FROM tmpMIF
+                            WHERE tmpMIF.DescId = zc_MIFloat_ListDiff()
+                           )
       , tmpMILinkObject AS (SELECT MILinkObject.*
                             FROM MovementItemLinkObject AS MILinkObject
 --                              INNER JOIN  (SELECT tmpMI_Master.Id from tmpMI_Master) AS test ON test.ID = MILinkObject.MovementItemId
@@ -1590,6 +1594,7 @@ BEGIN
                        , CEIL((MovementItem.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(MovementItem.MinimumLot, 1))
                           * COALESCE(MovementItem.MinimumLot, 1)                          AS CalcAmountAll
                        , MIFloat_AmountManual.ValueData                                   AS AmountManual
+                       , MIFloat_ListDiff.ValueData                                       AS ListDiffAmount
                        , MovementItem.isErased
 
                        , COALESCE (PriceList.GoodsId, MinPrice.GoodsId)                   AS GoodsId_MinLot
@@ -1627,6 +1632,7 @@ BEGIN
                        LEFT JOIN tmpMIF_Summ AS MIFloat_Summ ON MIFloat_Summ.MovementItemId = MovementItem.Id
                        LEFT JOIN tmpMIF_AmountSecond AS MIFloat_AmountSecond ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                        LEFT JOIN tmpMIF_AmountManual AS MIFloat_AmountManual ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                       LEFT JOIN tmpMIF_ListDiff     AS MIFloat_ListDiff     ON MIFloat_ListDiff.MovementItemId    = MovementItem.Id
 --LIMIT 2
                   )
 
@@ -1663,6 +1669,7 @@ BEGIN
                        , tmpMI_all_MinLot.AmountAll
                        , tmpMI_all_MinLot.CalcAmountAll
                        , tmpMI_all_MinLot.AmountManual
+                       , tmpMI_all_MinLot.ListDiffAmount
                        , tmpMI_all_MinLot.isErased
                   FROM tmpMI_all_MinLot
 
@@ -1741,6 +1748,7 @@ BEGIN
                          , NULLIF(tmpMI.AmountAll,0)                               AS AmountAll
                          , NULLIF(COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll),0)      AS CalcAmountAll
                          , tmpMI.Price * COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll)  AS SummAll
+                         , tmpMI.ListDiffAmount
                     FROM tmpGoods
                          FULL JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
                    )
@@ -2151,8 +2159,9 @@ BEGIN
            , tmpSend.Amount                                     ::TFloat     AS SendAmount
 
            , tmpDeferred.AmountDeferred                                      AS AmountDeferred
+           , tmpMI.ListDiffAmount                               ::TFloat     AS ListDiffAmount
 
-           , COALESCE (tmpGoodsMain.CountPrice,0)               ::TFloat AS CountPrice
+           , COALESCE (tmpGoodsMain.CountPrice,0)               ::TFloat     AS CountPrice
 
            , COALESCE (SelectMinPrice_AllGoods.isOneJuridical, TRUE) :: Boolean AS isOneJuridical
 

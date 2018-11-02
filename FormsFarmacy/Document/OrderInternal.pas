@@ -114,7 +114,7 @@ type
     SendAmount: TcxGridDBColumn;
     InsertRecord: TInsertRecord;
     actGoodsChoiceForm: TOpenChoiceForm;
-    bb: TdxBarButton;
+    bbInsertRecord: TdxBarButton;
     AmountDeferred: TcxGridDBColumn;
     isPriceDiff: TcxGridDBColumn;
     OrderShedule_Color: TcxGridDBColumn;
@@ -124,6 +124,9 @@ type
     AreaName: TcxGridDBColumn;
     isDefault: TcxGridDBColumn;
     NDSKindName: TcxGridDBColumn;
+    spUpdateListDiff: TdsdStoredProc;
+    actUpdateListDiff: TdsdExecStoredProc;
+    bbUpdateListDiff: TdxBarButton;
   private
     { Private declarations }
   public

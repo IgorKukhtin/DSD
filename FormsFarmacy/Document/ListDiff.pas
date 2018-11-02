@@ -51,6 +51,7 @@ type
     ContractName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     actContractChoice: TOpenChoiceForm;
+    OrderInvNumber_full: TcxGridDBColumn;
   private
     { Private declarations }
   public
