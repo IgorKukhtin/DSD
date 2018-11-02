@@ -553,8 +553,8 @@ BEGIN
                , ObjectDate_CheckPrice.ValueData       AS CheckPriceDate
                
                , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE THEN 25088 --zc_Color_GreenL()
-                      WHEN Object_Remains.MinExpirationDate < CURRENT_DATE  + zc_Interval_ExpirationDate() THEN zc_Color_Blue() 
-                      WHEN (tmpPrice_View.isTop = TRUE OR Object_Goods_View.isTop = TRUE) THEN 15993821 -- розовый
+                      WHEN Object_Remains.MinExpirationDate < CURRENT_DATE  + zc_Interval_ExpirationDate() THEN zc_Color_Red() --zc_Color_Blue() 
+                      WHEN (tmpPrice_View.isTop = TRUE OR Object_Goods_View.isTop = TRUE) THEN zc_Color_Blue() --15993821 -- розовый
                       ELSE zc_Color_Black() 
                  END     AS Color_ExpirationDate                --vbAVGDateEnd
 
@@ -1282,8 +1282,8 @@ BEGIN
                , tmpPrice_All.CheckPrice               AS CheckPriceDate
 
                , CASE WHEN tmpGoodsMainParam.isSP = TRUE THEN 25088 --zc_Color_GreenL()
-                      WHEN tmpPrice_All.MinExpirationDate < CURRENT_DATE  + zc_Interval_ExpirationDate() THEN zc_Color_Blue() 
-                      WHEN (tmpPrice_All.isTop = TRUE OR Object_Goods_View.isTop = TRUE) THEN 15993821 -- розовый
+                      WHEN tmpPrice_All.MinExpirationDate < CURRENT_DATE  + zc_Interval_ExpirationDate() THEN zc_Color_Red() -- zc_Color_Blue() 
+                      WHEN (tmpPrice_All.isTop = TRUE OR Object_Goods_View.isTop = TRUE) THEN zc_Color_Blue()  --15993821 -- розовый
                       ELSE zc_Color_Black() 
                  END      AS Color_ExpirationDate                --vbAVGDateEnd
                
