@@ -129,6 +129,7 @@ type
     function fBeginXLS  : Boolean; // обработка всех XLS
     function fBeginXLS_ONE  (inUserName : String; inImportSettingsId, inAreaId : Integer) : Boolean; // обработка XLS - ОДНОГО ImportSettingsId
     function fBeginMMO (inUserName:String;inImportSettingsId:Integer;msgDate:TDateTime)  : Boolean; // обработка MMO
+    function fBeginMMO_all   : Boolean; // обработка MMO
     function fBeginMove : Boolean; // перенос цен
     function fRefreshMovementItemLastPriceList_View : Boolean; // оптимизация если была загрузка XLS
   public
@@ -1045,7 +1046,7 @@ begin
                                ;
                       except on E: Exception do //а здесь уже ошибка
                         begin
-                             AddToLog('Exception: '+ E.Message);
+                             AddToLog('Exception (fBeginMMO): '+ E.Message);
                              fError_SendEmail(FieldByName('Id').AsInteger
                                             , FieldByName('ContactPersonId').AsInteger
                                             , msgDate
@@ -1059,6 +1060,108 @@ begin
            //
            Application.ProcessMessages;
         end;
+     end;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fBeginMMO_all : Boolean;
+var
+ searchResult : TSearchRec;
+ mailFolder,StrCopyFolder: ansistring;
+begin
+     //
+     if vbIsBegin = true then exit;
+     //
+     try
+     // запущена обработка
+     vbIsBegin:= true;
+     //
+     //
+     with ClientDataSet do begin
+        GaugeLoadXLS.Progress:=0;
+        GaugeLoadXLS.MaxValue:=RecordCount;
+        Application.ProcessMessages;
+        //
+        First;
+        while not EOF do begin
+
+           //2.только для zc_Enum_EmailKind_IncomeMMO!!!
+           if (FieldByName('EmailKindId').asInteger = FieldByName('zc_Enum_EmailKind_IncomeMMO').asInteger)
+              //and (FieldByName('Id').asInteger = inImportSettingsId)
+              //and (FieldByName('UserName').asString = inUserName)
+           then begin
+                 PanelLoadXLS.Caption:= 'Load MMO : ('+FieldByName('Id').AsString + ') ' + FieldByName('Name').AsString + ' - ' + FieldByName('ContactPersonName').AsString;
+                 Application.ProcessMessages;
+                 Sleep(50);
+                 //Загружаем если есть откуда
+                 if FieldByName('DirectoryImport').asString <> ''
+                 then try
+                          //поиск файла MMO
+                          if System.SysUtils.FindFirst(FieldByName('DirectoryImport').asString + '\*.mmo', faAnyFile, searchResult) = 0 then
+                          begin
+                               //НЕ ошибка - найден НЕ ОДИН файл MMO для загрузки
+                               if (1=1 )
+                               then
+                               begin
+                                   AddToLog('Начало загрузки (all): '+ FieldByName('DirectoryImport').asString);
+                                   // выполняется загрузка
+                                   actExecuteImportSettings.ExternalParams.ParamByName('Directory_add').Value:= '';
+                                   // выполняется загрузка
+                                   mactExecuteImportSettings.Execute;
+                                   if actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value <> '' then
+                                   begin
+                                     PanelError.Caption := actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value;
+                                     PanelError.Repaint;
+                                   end;
+                                   AddToLog('Окончание загрузки (all)' + FieldByName('DirectoryImport').asString);
+                               end
+                               else //ошибка - найден НЕ ОДИН файл MMO для загрузки
+                               begin
+                                   AddToLog('Ошибка: найден НЕ ОДИН файл MMO для загрузки');
+                               end;
+                               if actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value <> ''
+                               then begin
+                                    //current directory to store the email files
+                                    mailFolder:= FieldByName('DirectoryImport').AsString+'\ОШИБКА\';
+                                    //создали папку для ... если таковой нет
+                                    ForceDirectories(mailFolder);
+
+                                    //переносим ВСЕ файлики с ошибками в папку "ОШИБКА"
+                                    StrCopyFolder:='cmd.exe /c move ' + chr(34) + FieldByName('DirectoryImport').AsString + '\*.mmo' + chr(34) + ' ' + chr(34) + mailFolder + chr(34);
+                                    WinExec(PAnsiChar(StrCopyFolder), SW_HIDE);
+
+                                    //а здесь уже ошибка
+                                    fError_SendEmail(FieldByName('Id').AsInteger
+                                                   , FieldByName('ContactPersonId').AsInteger
+                                                   , now
+                                                   , FieldByName('JuridicalMail').AsString + ' * ' + FieldByName('Mail').AsString
+                                                   , actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value);
+                                end;
+
+                          end
+                          else //ошибка - не найден файл MMO для загрузки
+                               //та не, все нормально :)
+                               ;
+                      except on E: Exception do //а здесь уже ошибка
+                        begin
+                             AddToLog('Exception (fBeginMMO_all): '+ E.Message);
+                             fError_SendEmail(FieldByName('Id').AsInteger
+                                            , FieldByName('ContactPersonId').AsInteger
+                                            , now
+                                            , FieldByName('JuridicalMail').AsString + ' * ' + FieldByName('Mail').AsString
+                                            , '???'+actExecuteImportSettings.ExternalParams.ParamByName('outMsgText').Value);
+                        end;
+                      end;
+           end;//2.if ... !!!только для zc_Enum_EmailKind_IncomeMMO!!!
+
+           Next;
+           //
+           Application.ProcessMessages;
+        end;
+     end;
+
+     finally
+       // завершена обработка
+       vbIsBegin:= false;
      end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1125,9 +1228,16 @@ begin
 
        //инициализируем данные по всем поставщикам
        try fInitArray; except PanelHost.Caption:= '!!! ERROR - fInitArray - exit !!!'; isErr_exit:= true; exit; end;
+       //
+       //
+       // !!!обработка ВСЕХ - MMO!!!
+       if vbEmailKindDesc= 'zc_Enum_EmailKind_IncomeMMO' then fBeginMMO_all;
+       //
        // обработка всей почты
        try
-        isErr:= true; fBeginMail; isErr:= false;
+        isErr:= true;
+        fBeginMail;
+        isErr:= false;
        except on E: Exception do
         begin
           vbIsBegin:= false;

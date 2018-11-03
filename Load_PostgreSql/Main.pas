@@ -1696,8 +1696,9 @@ begin
                // !!!этот пересчет - всегда!!!
                cbGoodsListSale.Checked:=true;
 
-               // !!!этот пересчет - всегда!!!
-               cbFillAuto.Checked:=true;
+               // !!!этот пересчет - ночью!!!
+               if (ParamStr(2)='autoFillSoldTable')
+               then cbFillAuto.Checked:=true;
 
                // !!!за "текущий" - не надо!!! + или надо ...
                if  ((EndDateEdit.Text <> DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime))

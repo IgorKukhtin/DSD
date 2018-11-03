@@ -48,7 +48,8 @@ BEGIN
    
                                    WHERE Movement.Id = vbMovementId
                                      AND Movement.DescId = zc_Movement_ProductionSeparate()
-                                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                                     -- AND Movement.StatusId = zc_Enum_Status_Complete()
+                                     AND Movement.StatusId <> zc_Enum_Status_Erased()
                                    ) AS tmp                                                --данные по уже записанному документу
                                     LEFT JOIN (SELECT DISTINCT
                                                       Movement.OperDate
@@ -68,7 +69,8 @@ BEGIN
                                                                    AND MovementItem.isErased   = FALSE 
                                                WHERE Movement.Id = inMovementId
                                                  AND Movement.DescId = zc_Movement_ProductionSeparate()
-                                                 AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                 -- AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
                                                  ) AS tmpNew ON 1 = 1                                          --данные по новому документу               
                             WHERE tmp.FromId <> tmpNew.FromId
                                OR tmp.PartionGoods <> tmpNew.PartionGoods

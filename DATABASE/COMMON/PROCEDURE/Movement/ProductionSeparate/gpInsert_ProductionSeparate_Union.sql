@@ -33,7 +33,8 @@ BEGIN
                                   ) AS tmp
                                INNER JOIN Movement ON Movement.Id = tmp.Id
                                                   AND Movement.DescId = zc_Movement_ProductionSeparate()
-                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                  -- AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                  AND Movement.StatusId <> zc_Enum_Status_Erased()
                                LEFT JOIN MovementString AS MovementString_PartionGoods
                                                         ON MovementString_PartionGoods.MovementId = Movement.Id
                                                        AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
