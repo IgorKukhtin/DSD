@@ -588,6 +588,26 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'bbSetErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -701,6 +721,14 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
     end
     object bbUpdate_Buh_No: TdxBarButton
       Action = actUpdate_Buh_No
+      Category = 0
+    end
+    object bbSetErased: TdxBarButton
+      Action = dsdSetErased
+      Category = 0
+    end
+    object bbSetUnErased: TdxBarButton
+      Action = dsdSetUnErased
       Category = 0
     end
   end
@@ -1208,6 +1236,37 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       Hint = #1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102' - '#1044#1072
       ImageIndex = 76
     end
+    object dsdSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = DataSource
+    end
+    object dsdSetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 32776
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DataSource
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReportCollation'
@@ -1262,6 +1321,14 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         Value = Null
         Component = GuidesPaidKind
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1790,5 +1857,22 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
     PackSize = 1
     Left = 680
     Top = 264
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_ReportCollation_IsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 496
+    Top = 184
   end
 end

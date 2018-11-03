@@ -41,6 +41,7 @@ BEGIN
              , CheckAmount      TFloat
              , SendAmount       TFloat
              , AmountDeferred   TFloat
+             , ListDiffAmount   TFloat
              , isClose          Boolean
              , isFirst          Boolean
              , isSecond         Boolean
@@ -144,6 +145,10 @@ BEGIN
                                     FROM tmpMIF
                                     WHERE tmpMIF.DescId = zc_MIFloat_AmountDeferred()
                                     )
+        , tmpMIF_ListDiff AS (SELECT tmpMIF.*
+                              FROM tmpMIF
+                              WHERE tmpMIF.DescId = zc_MIFloat_ListDiff()
+                             )
         , tmpMI_LO AS (SELECT MovementItemLinkObject.*
                        FROM MovementItemLinkObject
                        WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT MovementItemOrder.Id FROM MovementItemOrder)
@@ -179,6 +184,7 @@ BEGIN
             , MIFloat_Check.ValueData              AS CheckAmount
             , MIFloat_Send.ValueData               AS SendAmount
             , MIFloat_AmountDeferred.ValueData     AS AmountDeferred
+            , MIFloat_ListDiff.ValueData           AS ListDiffAmount
 
             , COALESCE(MIBoolean_Close.ValueData, False)              AS isClose
             , COALESCE(MIBoolean_First.ValueData, False)              AS isFirst
@@ -232,6 +238,7 @@ BEGIN
               LEFT JOIN tmpMIF_Check          AS MIFloat_Check          ON MIFloat_Check.MovementItemId          = MovementItem.Id
               LEFT JOIN tmpMIF_Send           AS MIFloat_Send           ON MIFloat_Send.MovementItemId           = MovementItem.Id
               LEFT JOIN tmpMIF_AmountDeferred AS MIFloat_AmountDeferred ON MIFloat_AmountDeferred.MovementItemId = MovementItem.Id
+              LEFT JOIN tmpMIF_ListDiff       AS MIFloat_ListDiff       ON MIFloat_ListDiff.MovementItemId       = MovementItem.Id
 ;
 
 END;
@@ -242,6 +249,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.11.18         *
  31.08.18         *
  20.03.18         *
  09.04.17         * оптимизация

@@ -113,6 +113,11 @@ type
     bbUpdate_Buh_No: TdxBarButton;
     macUpdate_Buh_Yes: TMultiAction;
     macUpdate_Buh_No: TMultiAction;
+    spErasedUnErased: TdsdStoredProc;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
   private
     { Private declarations }
   public

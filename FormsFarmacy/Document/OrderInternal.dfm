@@ -93,6 +93,11 @@ inherited OrderInternalForm: TOrderInternalForm
               Format = ',0.####'
               Kind = skSum
               Column = Remains_Diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ListDiffAmount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -190,6 +195,11 @@ inherited OrderInternalForm: TOrderInternalForm
               Format = ',0.####'
               Kind = skSum
               Column = Remains_Diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ListDiffAmount
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -302,11 +312,17 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 62
           end
-          object AmountDeferred: TcxGridDBColumn [13]
-            Caption = #1047#1072#1082#1072#1079' '#1086#1090#1083#1086#1078#1077#1085
-            DataBinding.FieldName = 'AmountDeferred'
+          object ListDiffAmount: TcxGridDBColumn [13]
+            Caption = #1054#1090#1082#1072#1079#1099
+            DataBinding.FieldName = 'ListDiffAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1082#1086#1083'-'#1074#1086' '#1086#1090#1082#1072#1079
             Options.Editing = False
-            Width = 62
+            Width = 35
           end
           object Amount: TcxGridDBColumn [14]
             Caption = #1057#1087#1077#1094#1079#1072#1082#1072#1079
@@ -346,7 +362,9 @@ inherited OrderInternalForm: TOrderInternalForm
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.####'
             Properties.Precision = 4
-            HeaderHint = '(['#1057#1087#1077#1094#1079#1072#1082#1072#1079'] + ['#1040#1074#1086#1079#1072#1082#1072#1079']) '#1089' '#1091#1095#1077#1090#1086#1084' '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1086#1075#1086' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1103
+            HeaderHint = 
+              '(['#1057#1087#1077#1094#1079#1072#1082#1072#1079'] + ['#1040#1074#1086#1079#1072#1082#1072#1079']+  ['#1054#1090#1082#1072#1079']) '#1089' '#1091#1095#1077#1090#1086#1084' '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1086#1075#1086' '#1086#1082#1088#1091#1075 +
+              #1083#1077#1085#1080#1103
             Options.IncSearch = False
           end
           object Price: TcxGridDBColumn [19]
@@ -507,6 +525,12 @@ inherited OrderInternalForm: TOrderInternalForm
             HeaderHint = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090' ('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
             Width = 50
+          end
+          object AmountDeferred: TcxGridDBColumn [41]
+            Caption = #1047#1072#1082#1072#1079' '#1086#1090#1083#1086#1078#1077#1085
+            DataBinding.FieldName = 'AmountDeferred'
+            Options.Editing = False
+            Width = 62
           end
           inherited colIsErased: TcxGridDBColumn
             VisibleForCustomization = False
@@ -1148,6 +1172,22 @@ inherited OrderInternalForm: TOrderInternalForm
       GuiParams = <>
       isShowModal = False
     end
+    object actUpdateListDiff: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateListDiff
+      StoredProcList = <
+        item
+          StoredProc = spUpdateListDiff
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1086#1090#1082#1072#1079#1072#1084
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1086#1090#1082#1072#1079#1072#1084
+      ImageIndex = 60
+    end
     object mactDeleteLink: TMultiAction
       Category = 'DeleteLink'
       MoveParams = <>
@@ -1361,7 +1401,7 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbInsertRecord'
         end
         item
           Visible = True
@@ -1386,6 +1426,14 @@ inherited OrderInternalForm: TOrderInternalForm
         item
           Visible = True
           ItemName = 'bbSelect_Link'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateListDiff'
         end
         item
           Visible = True
@@ -1498,7 +1546,7 @@ inherited OrderInternalForm: TOrderInternalForm
       Action = actMovementItemProtocolChild
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbInsertRecord: TdxBarButton
       Action = InsertRecord
       Category = 0
     end
@@ -1506,6 +1554,10 @@ inherited OrderInternalForm: TOrderInternalForm
       Action = actRefresh_Link
       Category = 0
       ShortCut = 8308
+    end
+    object bbUpdateListDiff: TdxBarButton
+      Action = actUpdateListDiff
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -2221,8 +2273,8 @@ inherited OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 944
-    Top = 240
+    Left = 776
+    Top = 216
   end
   object spDelete_Object_LinkGoodsByGoods: TdsdStoredProc
     StoredProcName = 'gpDelete_Object_LinkGoodsByGoods'
@@ -2267,8 +2319,8 @@ inherited OrderInternalForm: TOrderInternalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 680
-    Top = 104
+    Left = 728
+    Top = 144
   end
   object spSelect_Link: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_OrderInternal'
@@ -2316,5 +2368,30 @@ inherited OrderInternalForm: TOrderInternalForm
     PackSize = 1
     Left = 80
     Top = 264
+  end
+  object spUpdateListDiff: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_OrderInternal_ListDiff'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 896
+    Top = 392
   end
 end

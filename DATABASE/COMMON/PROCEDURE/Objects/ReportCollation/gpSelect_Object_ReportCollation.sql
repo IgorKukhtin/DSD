@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ReportCollation (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ReportCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ReportCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ReportCollation(
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReportCollation(
     IN inPartnerId           Integer,      --
     IN inContractId          Integer,      --
     IN inPaidKindId          Integer,      --
+    IN inIsShowAll           Boolean,  
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, ObjectCode Integer, idBarCode TVarChar
@@ -159,7 +161,8 @@ BEGIN
       
                    WHERE Object_ReportCollation.DescId = zc_Object_ReportCollation()
                      AND ObjectDate_Start.ValueData >= inStartDate
-                     AND ObjectDate_End.ValueData <= inEndDate
+                     AND ObjectDate_End.ValueData   <= inEndDate
+                     AND (Object_ReportCollation.isErased = FALSE OR inIsShowAll = TRUE)
                      AND (COALESCE (ObjectLink_ReportCollation_Juridical.ChildObjectId, 0) = inJuridicalId OR inJuridicalId = 0)
                      AND (COALESCE (ObjectLink_ReportCollation_Partner.ChildObjectId, 0)   = inPartnerId  OR inPartnerId = 0)
                      AND (COALESCE (ObjectLink_ReportCollation_Contract.ChildObjectId, 0)  = inContractId OR inContractId = 0)

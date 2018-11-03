@@ -578,8 +578,8 @@ BEGIN
 
            , COALESCE(MIBoolean_Calculated.ValueData , FALSE)       AS isCalculated--
            , CASE WHEN tmpMI.isSP = TRUE THEN 25088 --zc_Color_GreenL()   --товар соц.проекта
-                  WHEN tmpMI.PartionGoodsDate < vbDate180 THEN zc_Color_Blue() --456
-                  WHEN tmpMI.isTOP = TRUE OR tmpMI.isUnitTOP = TRUE  THEN 15993821 -- 16440317    -- для топ розовый шрифт
+                  WHEN tmpMI.PartionGoodsDate < vbDate180 THEN zc_Color_Red() --456
+                  WHEN tmpMI.isTOP = TRUE OR tmpMI.isUnitTOP = TRUE  THEN zc_Color_Blue()--15993821 -- 16440317    -- для топ розовый шрифт
                      ELSE 0
                 END                                                 AS PartionGoodsDateColor
            , tmpMI.Remains                                          AS RemainsInUnit
@@ -592,17 +592,21 @@ BEGIN
            , tmpMI.Income                                           AS Income_Amount
            , MIFloat_AmountSecond.ValueData                         AS AmountSecond
 
-           , tmpMI.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0) ::TFloat  AS AmountAll
-           , NULLIF(COALESCE(MIFloat_AmountManual.ValueData,
-                         CEIL((tmpMI.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(tmpMI.MinimumLot, 1))
-                           * COALESCE(tmpMI.MinimumLot, 1)     ),0)   ::TFloat   AS CalcAmountAll
-           , (COALESCE (MIFloat_Price.ValueData,0) * COALESCE(MIFloat_AmountManual.ValueData,
-                         CEIL((tmpMI.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(tmpMI.MinimumLot, 1))
-                           * COALESCE(tmpMI.MinimumLot, 1)     ) ) ::TFloat  AS SummAll
+           , tmpMI.Amount + COALESCE (MIFloat_AmountSecond.ValueData,0) ::TFloat  AS AmountAll
+           , NULLIF (COALESCE (MIFloat_AmountManual.ValueData,
+                               CEIL ((tmpMI.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) + COALESCE (tmpMI.ListDiffAmount, 0) ) / COALESCE(tmpMI.MinimumLot, 1)) * COALESCE(tmpMI.MinimumLot, 1)     
+                               ), 0)   ::TFloat   AS CalcAmountAll
+
+           , (COALESCE (MIFloat_Price.ValueData,0)
+                       * COALESCE (MIFloat_AmountManual.ValueData, 
+                                   CEIL ((tmpMI.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) + COALESCE (tmpMI.ListDiffAmount, 0)) / COALESCE(tmpMI.MinimumLot, 1)) * COALESCE(tmpMI.MinimumLot, 1)    
+                                   )
+             )                                          ::TFloat    AS SummAll
 
            , tmpMI.CheckAmount                                      AS CheckAmount
            , tmpMI.SendAmount                                       AS SendAmount
            , tmpMI.AmountDeferred                                   AS AmountDeferred
+           , tmpMI.ListDiffAmount                       ::TFloat    AS ListDiffAmount
            , tmpMI.CountPrice
            , COALESCE (tmpOneJuridical.isOneJuridical, TRUE) :: Boolean AS isOneJuridical
 
@@ -621,6 +625,9 @@ BEGIN
            , CASE WHEN COALESCE(OrderSheduleListToday.DOW,  0) <> 0 THEN 12910591      -- бледно желтый
                   --WHEN COALESCE (tmpOrderLast_2days.Amount, 0)  > 1 THEN 16777134      -- цвет фона - голубой подрязд 2 дня заказ;
                   --WHEN COALESCE (tmpOrderLast_10.Amount, 0)     > 9 THEN 167472630     -- цвет фона - розовый подрязд 10 заказов нет привязки к товару поставщика;
+                   -- отклонение по цене  светло - салатовая- цена подешевела, светло-розовая - подорожала
+                  WHEN ((AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) > 0.10 THEN 12319924    --светло - салатовая- цена подешевела
+                  WHEN ((AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) < - 0.10 THEN 14211071 --11315967--15781886 --16296444  ----светло красная -- светло-розовая - подорожала
                   ELSE zc_Color_White()
              END  AS OrderShedule_Color
 
@@ -1504,7 +1511,10 @@ BEGIN
                                 FROM tmpMIF
                                 WHERE tmpMIF.DescId = zc_MIFloat_AmountManual()
                                 )
-
+      , tmpMIF_ListDiff AS (SELECT tmpMIF.*
+                            FROM tmpMIF
+                            WHERE tmpMIF.DescId = zc_MIFloat_ListDiff()
+                           )
       , tmpMILinkObject AS (SELECT MILinkObject.*
                             FROM MovementItemLinkObject AS MILinkObject
 --                              INNER JOIN  (SELECT tmpMI_Master.Id from tmpMI_Master) AS test ON test.ID = MILinkObject.MovementItemId
@@ -1586,10 +1596,11 @@ BEGIN
                        --, MovementItem.Goods_isTOP
                        , MovementItem.Price_isTOP
                        , MIFloat_AmountSecond.ValueData                                   AS AmountSecond
-                       , MovementItem.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0)   AS AmountAll
-                       , CEIL((MovementItem.Amount+COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(MovementItem.MinimumLot, 1))
+                       , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) AS AmountAll
+                       , CEIL ((MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) + COALESCE (MIFloat_ListDiff.ValueData, 0) ) / COALESCE(MovementItem.MinimumLot, 1))
                           * COALESCE(MovementItem.MinimumLot, 1)                          AS CalcAmountAll
                        , MIFloat_AmountManual.ValueData                                   AS AmountManual
+                       , MIFloat_ListDiff.ValueData                                       AS ListDiffAmount
                        , MovementItem.isErased
 
                        , COALESCE (PriceList.GoodsId, MinPrice.GoodsId)                   AS GoodsId_MinLot
@@ -1627,6 +1638,7 @@ BEGIN
                        LEFT JOIN tmpMIF_Summ AS MIFloat_Summ ON MIFloat_Summ.MovementItemId = MovementItem.Id
                        LEFT JOIN tmpMIF_AmountSecond AS MIFloat_AmountSecond ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                        LEFT JOIN tmpMIF_AmountManual AS MIFloat_AmountManual ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                       LEFT JOIN tmpMIF_ListDiff     AS MIFloat_ListDiff     ON MIFloat_ListDiff.MovementItemId    = MovementItem.Id
 --LIMIT 2
                   )
 
@@ -1663,6 +1675,7 @@ BEGIN
                        , tmpMI_all_MinLot.AmountAll
                        , tmpMI_all_MinLot.CalcAmountAll
                        , tmpMI_all_MinLot.AmountManual
+                       , tmpMI_all_MinLot.ListDiffAmount
                        , tmpMI_all_MinLot.isErased
                   FROM tmpMI_all_MinLot
 
@@ -1741,6 +1754,7 @@ BEGIN
                          , NULLIF(tmpMI.AmountAll,0)                               AS AmountAll
                          , NULLIF(COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll),0)      AS CalcAmountAll
                          , tmpMI.Price * COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll)  AS SummAll
+                         , tmpMI.ListDiffAmount
                     FROM tmpGoods
                          FULL JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
                    )
@@ -2132,8 +2146,8 @@ BEGIN
            , CASE WHEN tmpGoodsMain.isSP = TRUE AND (tmpMI.Price > (COALESCE (tmpGoodsMain.PriceOptSP,0))) THEN TRUE ELSE FALSE END isPriceDiff
            , COALESCE(tmpMI.isCalculated, FALSE)                      AS isCalculated
            , CASE WHEN tmpGoodsMain.isSP = TRUE THEN 25088 --zc_Color_GreenL()   --товар соц.проекта
-                  WHEN tmpMI.PartionGoodsDate < vbDate180 THEN zc_Color_Blue() --456
-                  WHEN (tmpMI.isTOP = TRUE OR COALESCE (Object_Price_View.isTOP, FALSE)= TRUE) THEN 15993821 -- 16440317    -- для топ розовый шрифт
+                  WHEN tmpMI.PartionGoodsDate < vbDate180 THEN zc_Color_Red() --456
+                  WHEN (tmpMI.isTOP = TRUE OR COALESCE (Object_Price_View.isTOP, FALSE)= TRUE) THEN zc_Color_Blue()--15993821 -- 16440317    -- для топ розовый шрифт
                      ELSE 0
                 END AS PartionGoodsDateColor
            , Remains.Amount                                                  AS RemainsInUnit
@@ -2151,8 +2165,9 @@ BEGIN
            , tmpSend.Amount                                     ::TFloat     AS SendAmount
 
            , tmpDeferred.AmountDeferred                                      AS AmountDeferred
+           , tmpMI.ListDiffAmount                               ::TFloat     AS ListDiffAmount
 
-           , COALESCE (tmpGoodsMain.CountPrice,0)               ::TFloat AS CountPrice
+           , COALESCE (tmpGoodsMain.CountPrice,0)               ::TFloat     AS CountPrice
 
            , COALESCE (SelectMinPrice_AllGoods.isOneJuridical, TRUE) :: Boolean AS isOneJuridical
 
@@ -2171,6 +2186,8 @@ BEGIN
            , CASE WHEN COALESCE(OrderSheduleListToday.DOW,  0) <> 0 THEN 12910591      -- бледно желтый
                   --WHEN COALESCE (tmpOrderLast_2days.Amount, 0)  > 1 THEN 16777134      -- цвет фона - голубой подрязд 2 дня заказ;
                   --WHEN COALESCE (tmpOrderLast_10.Amount, 0)     > 9 THEN 167472630     -- цвет фона - розовый подрязд 10 заказов нет привязки к товару поставщика;
+                  WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10 THEN 12319924    --светло - салатовая- цена подешевела
+                  WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) < - 0.10 THEN 14211071 --11315967--15781886 --16296444  --светло красная -- светло-розовая - подорожала
                   ELSE zc_Color_White()
              END  AS OrderShedule_Color
              
@@ -2359,6 +2376,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 02.11.18         *
  19.10.18         * isPriceClose замена на isPriceCloseOrder
  10.09.18         * add Remains_Diff --не хватает с учетом отлож. чеков
  31.08.18         * add Reserved               

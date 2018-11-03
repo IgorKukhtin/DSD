@@ -197,6 +197,14 @@ inherited ListDiffForm: TListDiffForm
             Options.Editing = False
             Width = 80
           end
+          object OrderInvNumber_full: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'OrderInvNumber_full'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 130
+          end
         end
       end
     end

@@ -288,17 +288,19 @@ BEGIN
         PERFORM
             lpInsertUpdate_MovementItemFloat(inDescId         := zc_MIFloat_AmountManual()
                                             ,inMovementItemId := MovementItemSaved.Id
-                                            ,inValueData      := (CEIL((MovementItemSaved.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(Object_Goods.MinimumLot, 1)) * COALESCE(Object_Goods.MinimumLot, 1))
+                                            ,inValueData      := (CEIL((MovementItemSaved.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0) ) / COALESCE(Object_Goods.MinimumLot, 1)) * COALESCE(Object_Goods.MinimumLot, 1))
                                             )
-        FROM
-            MovementItem AS MovementItemSaved
+        FROM MovementItem AS MovementItemSaved
             INNER JOIN MovementItemFloat AS MIFloat_AmountSecond
                                          ON MIFloat_AmountSecond.MovementItemId = MovementItemSaved.Id
-                                                                AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond() 
+                                        AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond() 
+            LEFT JOIN MovementItemFloat AS MIFloat_ListDiff
+                                        ON MIFloat_ListDiff.MovementItemId = MovementItemSaved.Id
+                                       AND MIFloat_ListDiff.DescId = zc_MIFloat_ListDiff()
+
             INNER JOIN Object_Goods_View AS Object_Goods
                                          ON Object_Goods.Id = MovementItemSaved.ObjectId
-        WHERE
-            MovementItemSaved.MovementId = vbMovementId;
+        WHERE MovementItemSaved.MovementId = vbMovementId;
     END IF;
     IF EXISTS(  SELECT Movement.Id
                 FROM Movement
@@ -328,6 +330,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 02.11.18         *
  12.06.17         *
  27.12.16         * add tmpMI_OrderExternal.Amount
  15.03.16         * add Object_Goods_View.IsClose = FALSE  
