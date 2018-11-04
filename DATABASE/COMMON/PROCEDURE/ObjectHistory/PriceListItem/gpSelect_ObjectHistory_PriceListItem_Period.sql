@@ -33,27 +33,44 @@ BEGIN
 
      -- Выбираем данные
      RETURN QUERY 
-       SELECT ObjectLink_PriceListItem_Goods.ChildObjectId :: Integer AS GoodsId
-            , ObjectHistory_PriceListItem.StartDate
-            , ObjectHistoryFloat_PriceListItem_Value.ValueData :: tfloat AS ValuePrice
+     WITH
+     tmpItem_all AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
+                          , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
+                          , ObjectHistory_PriceListItem.StartDate
+                          , ObjectHistory_PriceListItem.EndDate
+                     FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
+                          LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
+                                               ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                              AND ObjectLink_PriceListItem_Goods.DescId   = zc_ObjectLink_PriceListItem_Goods()
+                          LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                  ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                 AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
+                          LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                       ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                      AND ObjectHistoryFloat_PriceListItem_Value.DescId          = zc_ObjectHistoryFloat_PriceListItem_Value()
+  
+                     WHERE ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                       AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
+                       AND ObjectHistory_PriceListItem.EndDate              >= vbStartDate
+                       AND ObjectHistory_PriceListItem.StartDate            <= vbEndDate
+                    )
+       -- Результат
+       SELECT tmp.GoodsId
+            , tmp.StartDate
+            , tmp.ValuePrice
 
-       FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
-            LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
-                                 ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
-                                AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
-
-            LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
-                                    ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
-                                   AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
-            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
-                                         ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
-                                        AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
-
-       WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
-         AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
-         AND ObjectHistory_PriceListItem.EndDate >= vbStartDate
-         AND ObjectHistory_PriceListItem.StartDate <= vbEndDate
-       ORDER BY /* ObjectLink_PriceListItem_Goods.ChildObjectId ,*/ ObjectHistory_PriceListItem.StartDate;
+       FROM (SELECT tmpItem_all.GoodsId, tmpItem_all.ValuePrice, tmpItem_all.StartDate
+             FROM tmpItem_all
+             WHERE tmpItem_all.StartDate >= vbStartDate
+            UNION ALL
+             SELECT tmpItem_all.GoodsId, tmpItem_all.ValuePrice, tmpItem_all.StartDate
+             FROM tmpItem_all
+                  LEFT JOIN tmpItem_all AS tmpItem_all_check ON tmpItem_all_check.GoodsId   = tmpItem_all.GoodsId
+                                                            AND tmpItem_all_check.StartDate = vbStartDate
+             WHERE tmpItem_all.StartDate < vbStartDate
+               AND tmpItem_all_check.GoodsId IS NULL
+            ) AS tmp
+       ORDER BY tmp.StartDate;
 
 END;
 $BODY$

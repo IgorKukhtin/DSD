@@ -57,7 +57,8 @@ uses
   Main in '..\GetEmail\Main.pas' {MainForm},
   IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas',
   IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
-  dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas';
+  dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas',
+  zLibUtil in '..\TEST\SOURCE\zLibUtil.pas';
 
 {$R *.res}
 
