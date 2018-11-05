@@ -9,7 +9,7 @@ DROP FUNCTION IF EXISTS gpComplete_Movement_Check_ver2_NoDiff (Integer,Integer, 
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Check_ver2_NoDiff (
     IN inMovementId        Integer              , -- ключ Документа
-    IN inPaidType          Integer              , --Тип оплаты 0-деньги, 1-карта
+    IN inPaidType          Integer              , --Тип оплаты 0-деньги, 1-карта, 2-Смешенная
     IN inCashRegister      TVarChar             , --№ кассового аппарата
     IN inCashSessionId     TVarChar             , --Сессия программы
     IN inUserSession	   TVarChar             , -- сессия пользователя под которой проводился чек в программе
@@ -49,6 +49,9 @@ BEGIN
         ELSEIF inPaidType = 1
         THEN
             PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_PaidType() ,inMovementId, zc_Enum_PaidType_Card());
+        ELSEIF inPaidType = 2
+        THEN
+            PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_PaidType() ,inMovementId, zc_Enum_PaidType_CardAdd());
         ELSE
             RAISE EXCEPTION 'Ошибка.Не определен тип оплаты';
         END IF;
@@ -99,7 +102,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Подмогильный В.В.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Подмогильный В.В.  Шаблий О.В
+ 02.11.18                                                                                                       * add TotalSummPayAdd
  02.08.18                                                                                       * отгрузка без формирования Diff               
  10.09.15                                                                       *  CashSession
  06.07.15                                                                       *  Добавлен тип оплаты

@@ -64,6 +64,8 @@ begin
       AddIntField(LocalDataBaseHead,  'PROMOCODE');  //Id промокода
       //***28.06.18
       AddIntField(LocalDataBaseHead,  'MANUALDISC');  //Ручная скидка
+      //***02.10.18
+      AddFloatField(LocalDataBaseHead,  'SUMMPAYADD');  //Доплата по чеку
 
       LocalDataBaseHead.CreateTable;
     end
@@ -117,6 +119,9 @@ begin
         //***28.06.18
         if FindField('MANUALDISC') = nil then
           AddIntField(LFieldDefs, 'MANUALDISC');
+        //***02.10.18
+        if FindField('SUMMPAYADD') = nil then
+          AddFloatField(LFieldDefs,  'SUMMPAYADD');
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -164,7 +169,9 @@ begin
         //***02.02.18
         (FindField('PROMOCODE') = nil) or
         //***28.06.18
-        (FindField('MANUALDISC') = nil));
+        (FindField('MANUALDISC') = nil) or
+        //***02.10.18
+        (FindField('SUMMPAYADD') = nil));
 
       Close;
 

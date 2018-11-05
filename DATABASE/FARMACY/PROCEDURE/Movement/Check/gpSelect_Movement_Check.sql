@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Check(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer
-             , TotalCount TFloat, TotalSumm TFloat, TotalSummChangePercent TFloat
+             , TotalCount TFloat, TotalSumm TFloat, TotalSummPayAdd TFloat, TotalSummChangePercent TFloat
              , UnitName TVarChar, CashRegisterName TVarChar, PaidTypeName TVarChar
              , CashMember TVarChar, Bayer TVarChar, FiscalCheckNumber TVarChar, NotMCS Boolean, IsDeferred Boolean
              , DiscountCardName TVarChar, DiscountExternalName TVarChar
@@ -79,6 +79,7 @@ BEGIN
            , Object_Status.ObjectCode                           AS StatusCode
            , MovementFloat_TotalCount.ValueData                 AS TotalCount
            , MovementFloat_TotalSumm.ValueData                  AS TotalSumm
+           , MovementFloat_TotalSummPayAdd.ValueData            AS TotalSummPatAdd
            , MovementFloat_TotalSummChangePercent.ValueData     AS TotalSummChangePercent
            , Object_Unit.ValueData                              AS UnitName
            , Object_CashRegister.ValueData                      AS CashRegisterName
@@ -169,6 +170,9 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                      ON MovementFloat_TotalSumm.MovementId =  Movement_Check.Id
                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPayAdd
+                                     ON MovementFloat_TotalSummPayAdd.MovementId =  Movement_Check.Id
+                                    AND MovementFloat_TotalSummPayAdd.DescId = zc_MovementFloat_TotalSummPayAdd()
              LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
                                      ON MovementFloat_TotalSummChangePercent.MovementId =  Movement_Check.Id
                                     AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
@@ -205,12 +209,12 @@ BEGIN
                                          AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
              LEFT JOIN Object AS Object_CashRegister ON Object_CashRegister.Id = MovementLinkObject_CashRegister.ObjectId
  
-  	     LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidType
+   	         LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidType
                                           ON MovementLinkObject_PaidType.MovementId = Movement_Check.Id
                                          AND MovementLinkObject_PaidType.DescId = zc_MovementLinkObject_PaidType()
              LEFT JOIN Object AS Object_PaidType ON Object_PaidType.Id = MovementLinkObject_PaidType.ObjectId								  
 
- 	     LEFT JOIN Object AS Object_CashMember ON Object_CashMember.Id = Movement_Check.MemberId
+ 	         LEFT JOIN Object AS Object_CashMember ON Object_CashMember.Id = Movement_Check.MemberId
 
              LEFT JOIN MovementLinkObject AS MovementLinkObject_DiscountCard
                                           ON MovementLinkObject_DiscountCard.MovementId = Movement_Check.Id
@@ -274,7 +278,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В. 
+ 02.10.18                                                                                    * add TotalSummPayAdd
  14.12.17         * add PromoCode
  11.09.17         *
  04.08.17         * без вьюхи
@@ -289,3 +294,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_Check (inStartDate:= '01.08.2017', inEndDate:= '01.08.2017', inIsErased := FALSE, inIsSP := FALSE, inIsVip := FALSE, inUnitId:= 1, inSession:= '2')
+

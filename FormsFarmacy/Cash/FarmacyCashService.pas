@@ -54,6 +54,8 @@ type
     PROMOCODE   : Integer;       //Id промокода
     //***21.06.18
     MANUALDISC  : Integer;       //Ручная скидка
+    //***02.11.18
+    SUMMPAYADD  : Currency;       //Ручная скидка
   end;
   TBodyRecord = record
     ID: Integer;            //ид записи
@@ -997,6 +999,8 @@ begin
                 PROMOCODE := FieldByName('PROMOCODE').AsInteger;
                 // ***21.06.18
                 MANUALDISC := FieldByName('MANUALDISC').AsInteger;
+                // ***02.11.18
+                SUMMPAYADD := FieldByName('SUMMPAYADD').AsCurrency;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1091,7 +1095,7 @@ begin
                     dsdSave.Execute(False, False);
                   end;
                   // сохранил шапку
-                  dsdSave.StoredProcName := 'gpInsertUpdate_Movement_Check_ver3';
+                  dsdSave.StoredProcName := 'gpInsertUpdate_Movement_Check_ver2';
                   dsdSave.OutputType := otResult;
                   dsdSave.Params.Clear;
                   dsdSave.Params.AddParam('ioId', ftInteger, ptInputOutput, Head.ID);
@@ -1121,13 +1125,15 @@ begin
                   dsdSave.Params.AddParam('inPromoCodeId', ftInteger, ptInput, Head.PROMOCODE);
                   // ***05.02.18
                   dsdSave.Params.AddParam('inManualDiscount', ftInteger, ptInput, Head.MANUALDISC);
+                  // ***02.11.17
+                  dsdSave.Params.AddParam('inSummPayAdd', ftFloat, ptInput, Head.SUMMPAYADD);
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 
-                  Add_Log('Start Execute gpInsertUpdate_Movement_Check_ver3');
+                  Add_Log('Start Execute gpInsertUpdate_Movement_Check_ver2');
                   Add_Log('      ' + Head.UID);
                   dsdSave.Execute(False, False);
-                  Add_Log('End Execute gpInsertUpdate_Movement_Check_ver3'+
+                  Add_Log('End Execute gpInsertUpdate_Movement_Check_ver2'+
                           ' ID = '+ dsdSave.Params.ParamByName('ioID').AsString);
                   // сохранили в локальной базе полученный номер
                   if Head.ID <> StrToInt(dsdSave.Params.ParamByName('ioID').AsString) then

@@ -81,6 +81,8 @@ type
     GuidesUnit: TdsdGuides;
     edManualDiscount: TcxTextEdit;
     cxLabel20: TcxLabel;
+    cxLabel21: TcxLabel;
+    edTotalSummPayAdd: TcxTextEdit;
   private
     { Private declarations }
   public

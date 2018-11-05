@@ -21,7 +21,7 @@ type
     function CashInputOutput(const Summa: double): boolean;
     function ProgrammingGoods(const GoodsCode: integer; const GoodsName: string; const Price, NDS: double): boolean;
     function ClosureFiscal: boolean;
-    function TotalSumm(Summ: double; PaidType: TPaidType): boolean;
+    function TotalSumm(Summ, SummAdd: double; PaidType: TPaidType): boolean;
     function DiscountGoods(Summ: double): boolean;
     function DeleteArticules(const GoodsCode: integer): boolean;
     function XReport: boolean;
@@ -441,7 +441,7 @@ begin
   end;
 end;
 
-function TCashFP3530T.TotalSumm(Summ: double; PaidType: TPaidType): boolean;
+function TCashFP3530T.TotalSumm(Summ, SummAdd: double; PaidType: TPaidType): boolean;
 begin
   result := true;
   try
@@ -457,6 +457,12 @@ begin
        Total(0, PrinterResults, 0, '', 'P', SimpleRoundTo(Summ, -2))
     else
        Total(0, PrinterResults, 0, '', 'D', SimpleRoundTo(Summ, -2));
+
+    while s=0 do Application.ProcessMessages;
+
+    if (PaidType = ptCardAdd) and (SummAdd <> 0) then
+       Total(0, PrinterResults, 0, '', 'P', SimpleRoundTo(SummAdd, -2));
+
     while s=0 do Application.ProcessMessages;
 
   except

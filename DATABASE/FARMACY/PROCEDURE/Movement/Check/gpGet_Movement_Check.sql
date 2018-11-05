@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Check(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat, TotalSumm TFloat
+             , TotalCount TFloat, TotalSumm TFloat, TotalSummPayAdd TFloat
              , UnitId Integer, UnitName TVarChar
              , CashRegisterName TVarChar, PaidKindName TVarChar, PaidTypeName TVarChar
              , CashMember TVarChar, Bayer TVarChar, FiscalCheckNumber TVarChar, NotMCS Boolean
@@ -48,6 +48,7 @@ BEGIN
            , Movement_Check.StatusName
            , Movement_Check.TotalCount
            , Movement_Check.TotalSumm
+           , Movement_Check.TotalSummPayAdd
            , Movement_Check.UnitId
            , Movement_Check.UnitName
            , Movement_Check.CashRegisterName
@@ -105,6 +106,7 @@ ALTER FUNCTION gpGet_Movement_Check (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 02.10.18                                                                      * add TotalSummPayAdd
  29.06.18                                                                      * add ManualDiscount
  14.12.17         * add PromoCode
  26.04.17         * add PartnerMedicalId

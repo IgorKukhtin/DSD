@@ -280,6 +280,8 @@ CREATE OR REPLACE FUNCTION zc_Enum_Account_100301() RETURNS Integer AS $BODY$BEG
 CREATE OR REPLACE FUNCTION zc_Enum_PaidType_Cash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PaidType_Cash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 -- 1. карточка
 CREATE OR REPLACE FUNCTION zc_Enum_PaidType_Card() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PaidType_Card' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- 2. Смешенная карточка + доплата наличными
+CREATE OR REPLACE FUNCTION zc_Enum_PaidType_CardADD() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PaidType_CardAdd' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 -- !!!
 -- !!! Загрузки
@@ -405,7 +407,8 @@ CREATE OR REPLACE FUNCTION zc_Enum_SPKind_1303() RETURNS integer AS $BODY$BEGIN 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Ярошенко Р.Ф.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 02.11.18                                                                                                   * zc_Enum_PaidType_CardADD
  05.06.17                                                                                    * Загрузка данных по штрих-кодам
  23.05.17         * zc_Enum_SPKind_SP, zc_Enum_SPKind_1303
  18.02.16         * add zc_Enum_ImportType_Goods_isSpecCondition, zc_Enum_ImportSetting_Goods_IsSpecCondition

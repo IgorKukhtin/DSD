@@ -7,22 +7,22 @@ inherited CheckForm: TCheckForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 181
+    Top = 182
     Width = 817
-    Height = 342
-    ExplicitTop = 181
+    Height = 341
+    ExplicitTop = 182
     ExplicitWidth = 817
-    ExplicitHeight = 342
-    ClientRectBottom = 342
+    ExplicitHeight = 341
+    ClientRectBottom = 341
     ClientRectRight = 817
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 817
-      ExplicitHeight = 318
+      ExplicitHeight = 317
       inherited cxGrid: TcxGrid
         Width = 817
-        Height = 318
+        Height = 317
         ExplicitWidth = 817
-        ExplicitHeight = 318
+        ExplicitHeight = 317
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -231,9 +231,10 @@ inherited CheckForm: TCheckForm
   end
   inherited DataPanel: TPanel
     Width = 817
-    Height = 155
+    Height = 156
+    ExplicitTop = 7
     ExplicitWidth = 817
-    ExplicitHeight = 155
+    ExplicitHeight = 156
     inherited edInvNumber: TcxTextEdit
       Left = 7
       Top = 14
@@ -345,24 +346,24 @@ inherited CheckForm: TCheckForm
       Width = 93
     end
     object chbNotMCS: TcxCheckBox
-      Left = 467
-      Top = 52
+      Left = 155
+      Top = 73
       Caption = #1053#1077' '#1076#1083#1103' '#1053#1058#1047
       Properties.ReadOnly = True
       TabOrder = 17
       Width = 82
     end
     object cxLabel7: TcxLabel
-      Left = 549
-      Top = 36
+      Left = 464
+      Top = 37
       Caption = #8470' '#1082#1072#1088#1090#1099
     end
     object edDiscountCard: TcxTextEdit
-      Left = 549
+      Left = 464
       Top = 52
       Properties.ReadOnly = True
       TabOrder = 19
-      Width = 147
+      Width = 121
     end
     object edManualDiscount: TcxTextEdit
       Left = 732
@@ -375,6 +376,19 @@ inherited CheckForm: TCheckForm
       Left = 732
       Top = 77
       Caption = #1056#1091#1095'. '#1089#1082#1080#1076#1082#1072
+    end
+    object cxLabel21: TcxLabel
+      Left = 708
+      Top = 37
+      Caption = #1057#1091#1084#1084#1072' '#1076#1086#1087#1083#1072#1090#1099
+    end
+    object edTotalSummPayAdd: TcxTextEdit
+      Left = 708
+      Top = 52
+      Properties.Alignment.Horz = taRightJustify
+      Properties.ReadOnly = True
+      TabOrder = 23
+      Width = 93
     end
   end
   object edInvNumberOrder: TcxTextEdit [2]
@@ -503,18 +517,18 @@ inherited CheckForm: TCheckForm
     Width = 117
   end
   object cxLabel19: TcxLabel [22]
-    Left = 699
-    Top = 36
+    Left = 586
+    Top = 37
     Hint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083#1080#1077#1085#1090#1091')'
     Caption = #1055#1088#1086#1084#1086' '#1082#1086#1076' ('#1076#1086#1082'.)'
   end
   object edInvNumber_PromoCode_Full: TcxTextEdit [23]
-    Left = 699
+    Left = 586
     Top = 52
     Hint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083#1080#1077#1085#1090#1091')'
     Properties.ReadOnly = True
     TabOrder = 27
-    Width = 102
+    Width = 121
   end
   object edUnitName: TcxButtonEdit [24]
     Left = 251
@@ -1349,6 +1363,12 @@ inherited CheckForm: TCheckForm
         Name = 'ManualDiscount'
         Value = Null
         Component = edManualDiscount
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSummPayAdd'
+        Component = edTotalSummPayAdd
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 112

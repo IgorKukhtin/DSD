@@ -21,7 +21,7 @@ type
     function CashInputOutput(const Summa: double): boolean;
     function ProgrammingGoods(const GoodsCode: integer; const GoodsName: string; const Price, NDS: double): boolean;
     function ClosureFiscal: boolean;
-    function TotalSumm(Summ: double; PaidType: TPaidType): boolean;
+    function TotalSumm(Summ, SummAdd: double; PaidType: TPaidType): boolean;
     function DiscountGoods(Summ: double): boolean;
     function DeleteArticules(const GoodsCode: integer): boolean;
     function XReport: boolean;
@@ -254,12 +254,21 @@ begin
   result := СообщениеКА(FPrinter.GETERROR)
 end;
 
-function TCashFP3530T_NEW.TotalSumm(Summ: double; PaidType: TPaidType): boolean;
+function TCashFP3530T_NEW.TotalSumm(Summ, SummAdd: double; PaidType: TPaidType): boolean;
 begin
   if FisFiscal then
   begin
-    FPrinter.PAYMENT[integer(PaidType), ReplaceStr(FormatFloat('0.00', Summ), FormatSettings.DecimalSeparator, '.'), Password];
+    if PaidType=ptMoney then
+      FPrinter.PAYMENT[0, ReplaceStr(FormatFloat('0.00', Summ), FormatSettings.DecimalSeparator, '.'), Password]
+    else FPrinter.PAYMENT[1, ReplaceStr(FormatFloat('0.00', Summ), FormatSettings.DecimalSeparator, '.'), Password];
     result := СообщениеКА(FPrinter.GETERROR);
+
+    if result and (PaidType=ptCardAdd) and (SummAdd <> 0) then
+    begin
+      FPrinter.PAYMENT[0, ReplaceStr(FormatFloat('0.00', SummAdd), FormatSettings.DecimalSeparator, '.'), Password];
+      result := СообщениеКА(FPrinter.GETERROR);
+    end;
+
   end else result := True;
 end;
 

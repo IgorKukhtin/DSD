@@ -90,7 +90,7 @@ BEGIN
             
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate  
        AND Movement.DescId = zc_Movement_PriceList()
-       AND (vbAreaId = 0 OR Object_Area.Id = 0 OR Object_Area.Id = vbAreaId);
+       AND (vbAreaId = 0 OR COALESCE (Object_Area.Id, 0) = 0 OR Object_Area.Id = vbAreaId);
 
 END;
 $BODY$

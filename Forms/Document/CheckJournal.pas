@@ -72,6 +72,7 @@ type
     edIsVip: TcxCheckBox;
     InvNumber_PromoCode_Full: TcxGridDBColumn;
     GUID_PromoCode: TcxGridDBColumn;
+    TotalSummPayAdd: TcxGridDBColumn;
   private
     { Private declarations }
   public

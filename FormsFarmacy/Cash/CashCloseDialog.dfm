@@ -2,22 +2,22 @@ inherited CashCloseDialogForm: TCashCloseDialogForm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = #1044#1080#1072#1083#1086#1075' '#1079#1072#1082#1088#1099#1090#1080#1103' '#1095#1077#1082#1072
-  ClientHeight = 150
+  ClientHeight = 164
   ClientWidth = 655
   GlassFrame.Bottom = 60
-  Position = poDesktopCenter
+  Position = poScreenCenter
   OnKeyDown = ParentFormKeyDown
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = nil
   AddOnFormData.Params = nil
   ExplicitWidth = 661
-  ExplicitHeight = 175
+  ExplicitHeight = 193
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 194
+    Left = 215
     Top = 104
-    ExplicitLeft = 194
+    ExplicitLeft = 215
     ExplicitTop = 104
   end
   inherited bbCancel: TcxButton
@@ -119,6 +119,10 @@ inherited CashCloseDialogForm: TCashCloseDialogForm
       item
         Caption = '[ * ] '#1054#1087#1083#1072#1090#1072' '#1082#1072#1088#1090#1086#1081
         Value = 1
+      end
+      item
+        Caption = '[ ** ] '#1057#1084#1077#1096#1077#1085#1085#1072#1103' '#1086#1087#1083#1072#1090#1072
+        Value = '2'
       end>
     Style.Font.Charset = DEFAULT_CHARSET
     Style.Font.Color = clWindowText
@@ -126,26 +130,49 @@ inherited CashCloseDialogForm: TCashCloseDialogForm
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = []
     Style.IsFontAssigned = True
-    TabOrder = 7
+    TabOrder = 8
     OnClick = edSalerCashPropertiesChange
-    Height = 73
+    Height = 105
     Width = 217
+  end
+  object cxGroupBox2: TcxGroupBox [8]
+    Left = 8
+    Top = 80
+    Caption = #1057#1091#1084#1084#1072' '#1076#1086#1087#1083#1072#1090#1099' '#1085#1072#1083#1080#1095#1085#1099#1084#1080
+    TabOrder = 3
+    Height = 73
+    Width = 201
+    object edSalerCashAdd: TcxCurrencyEdit
+      Left = 16
+      Top = 19
+      ParentFont = False
+      Properties.DisplayFormat = ',0.00'
+      Properties.OnChange = edSalerCashPropertiesChange
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -29
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = []
+      Style.IsFontAssigned = True
+      TabOrder = 0
+      Width = 177
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Active = False
-    Left = 59
-    Top = 80
+    Left = 491
+    Top = 120
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 24
-    Top = 80
+    Left = 456
+    Top = 120
   end
   inherited ActionList: TActionList
-    Left = 95
-    Top = 79
+    Left = 527
+    Top = 119
   end
   inherited FormParams: TdsdFormParams
-    Left = 136
-    Top = 80
+    Left = 568
+    Top = 120
   end
 end

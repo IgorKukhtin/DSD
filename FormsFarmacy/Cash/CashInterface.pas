@@ -2,7 +2,7 @@ unit CashInterface;
 
 interface
 type
-   TPaidType = (ptMoney, ptCard);
+   TPaidType = (ptMoney, ptCard, ptCardAdd);
 
    ICash = interface
      procedure SetAlwaysSold(Value: boolean);
@@ -18,7 +18,7 @@ type
      function CashInputOutput(const Summa: double): boolean;
      function ClosureFiscal: boolean;
      function XReport: boolean;
-     function TotalSumm(Summ: double; PaidType: TPaidType): boolean;
+     function TotalSumm(Summ, SummAdd: double; PaidType: TPaidType): boolean;
      function DiscountGoods(Summ: double): boolean;
      function DeleteArticules(const GoodsCode: integer): boolean;
      function GetLastErrorCode: integer;

@@ -423,7 +423,8 @@ type
     SoldParallel: Boolean;
     SourceClientDataSet: TClientDataSet;
     ThreadErrorMessage:String;
-    ASalerCash{,ASdacha}: Currency;
+    ASalerCash: Currency;
+    ASalerCashAdd: Currency;
     PaidType: TPaidType;
     FiscalNumber: String;
     difUpdate: Boolean;  // только 2 форма
@@ -457,7 +458,7 @@ type
     // что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА
     procedure Add_Log_XML(AMessage: String);
     // Пробивает чек через ЭККА
-    function PutCheckToCash(SalerCash: Currency; PaidType: TPaidType;
+    function PutCheckToCash(SalerCash, SalerCashAdd: Currency; PaidType: TPaidType;
       out AFiscalNumber, ACheckNumber: String; isFiscal: boolean = true): boolean;
     //подключение к локальной базе данных
     function InitLocalStorage: Boolean;
@@ -469,6 +470,7 @@ type
       APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP : String;
       AOperDateSP : TDateTime;
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
+      ASummPayAdd : Currency;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 
     //проверили что есть остаток
@@ -825,6 +827,8 @@ begin
   FormParams.ParamByName('PromoCodeChangePercent').Value    := 0.0;
   //***27.06.18
   FormParams.ParamByName('ManualDiscount').Value            := 0;
+  //***02.11.18
+  FormParams.ParamByName('SummPayAdd').Value                := 0;
 
   ClearFilterAll;
 
@@ -1367,12 +1371,14 @@ begin
   //спросили сумму и тип оплаты
   if not fShift then
   begin// если с Shift, то считаем, что дали без сдачи
-    if not CashCloseDialogExecute(FTotalSumm,ASalerCash,PaidType) then
+    if not CashCloseDialogExecute(FTotalSumm,ASalerCash,ASalerCashAdd,PaidType) then
     Begin
       if Self.ActiveControl <> edAmount then
         Self.ActiveControl := MainGrid;
       exit;
     End;
+    //***02.11.18
+    FormParams.ParamByName('SummPayAdd').Value := ASalerCashAdd;
   end
   else
     ASalerCash:=FTotalSumm;
@@ -1411,7 +1417,7 @@ begin
   //послали на печать
   try
     Add_Log('Печать чека');
-    if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.PaidType, FiscalNumber, CheckNumber) then
+    if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.ASalerCashAdd, MainCashForm.PaidType, FiscalNumber, CheckNumber) then
     Begin
       Add_Log('Печать чека завершена');
       if (FormParams.ParamByName('DiscountExternalId').Value > 0)
@@ -1452,6 +1458,8 @@ begin
                    FormParams.ParamByName('PromoCodeID').Value,
                    //***27.06.18
                    FormParams.ParamByName('ManualDiscount').Value,
+                   //***02.11.18
+                   FormParams.ParamByName('SummPayAdd').Value,
 
                    True,         // NeedComplete
                    CheckNumber,  // FiscalCheckNumber
@@ -2307,6 +2315,8 @@ begin
               ,FormParams.ParamByName('PromoCodeID').Value
               //***27.06.18
               ,FormParams.ParamByName('ManualDiscount').Value
+              //***02.11.18
+              ,FormParams.ParamByName('SummPayAdd').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -2383,6 +2393,8 @@ begin
               ,FormParams.ParamByName('PromoCodeID').Value
               //***27.06.18
               ,FormParams.ParamByName('ManualDiscount').Value
+              //***02.11.18
+              ,FormParams.ParamByName('SummPayAdd').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -2537,6 +2549,8 @@ begin
               ,FormParams.ParamByName('PromoCodeID').Value
               //***27.06.18
               ,FormParams.ParamByName('ManualDiscount').Value
+              //***02.11.18
+              ,FormParams.ParamByName('SummPayAdd').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -2785,7 +2799,7 @@ end;
 procedure TMainCashForm2.miPrintNotFiscalCheckClick(Sender: TObject);
 var CheckNumber: string;
 begin
-  PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.PaidType, FiscalNumber, CheckNumber, false);
+  PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.ASalerCashAdd, MainCashForm.PaidType, FiscalNumber, CheckNumber, false);
 end;
 
 procedure TMainCashForm2.mmSaveToExcelClick(Sender: TObject);
@@ -3585,6 +3599,8 @@ begin
   FormParams.ParamByName('PromoCodeChangePercent').Value    := 0.0;
   //***27.06.18
   FormParams.ParamByName('ManualDiscount').Value            := 0;
+  //***02.11.18
+  FormParams.ParamByName('SummPayAdd').Value            := 0;
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -3767,7 +3783,7 @@ begin
   end;
 end;
 
-function TMainCashForm2.PutCheckToCash(SalerCash: Currency;
+function TMainCashForm2.PutCheckToCash(SalerCash,SalerCashAdd: Currency;
   PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String; isFiscal: boolean = true): boolean;
 var str_log_xml : String; Disc: Currency;
     i, PosDisc : Integer;
@@ -3911,7 +3927,7 @@ begin
       begin
         if (Disc <> 0) and (PosDisc = 0) then Cash.DiscountGoods(Disc);
         Cash.SubTotal(true, true, 0, 0);
-        Cash.TotalSumm(SalerCash, PaidType);
+        Cash.TotalSumm(SalerCash, SalerCashAdd, PaidType);
         result := Cash.CloseReceiptEx(ACheckNumber); //Закрыли чек
       end;
     end;
@@ -4182,6 +4198,7 @@ function TMainCashForm2.SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AMan
       APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP : String;
       AOperDateSP : TDateTime;
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
+      ASummPayAdd : Currency;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: integer;
@@ -4353,7 +4370,9 @@ begin
                                          //***02.02.18
                                          APromoCodeID,             //Id промокода
                                          //***27.06.18
-                                         AManualDiscount           //Ручная скидка
+                                         AManualDiscount,          //Ручная скидка
+                                         //***02.11.18
+                                         ASummPayAdd               //Доплата по чеку
                                         ]);
       End
       else
@@ -4394,6 +4413,8 @@ begin
         FLocalDataBaseHead.FieldByName('PROMOCODE').Value  := APromoCodeID;  //Id промокода
         //***27.06.18
         FLocalDataBaseHead.FieldByName('MANUALDISC').Value := AManualDiscount; // Ручная скидка
+        //***02.11.18
+        FLocalDataBaseHead.FieldByName('SUMMPAYADD').Value := ASummPayAdd; // Сумма доплаты
 
         FLocalDataBaseHead.Post;
       End;
