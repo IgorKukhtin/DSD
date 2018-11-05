@@ -853,7 +853,7 @@ BEGIN
               , MIString_Maker.ValueData                      AS MakerName
               , tmpContract.ContractName
               , COALESCE(MIDate_PartionGoods.ValueData, NULL) ::TDateTime AS PartionGoodsDate
-              , CASE WHEN MIDate_PartionGoods.ValueData < vbDate180 THEN zc_Color_Blue() --456
+              , CASE WHEN MIDate_PartionGoods.ValueData < vbDate180 THEN zc_Color_Red() --zc_Color_Blue() --456
                      ELSE 0
                 END                                           AS PartionGoodsDateColor
               , tmpGoods.MinimumLot                 ::TFLoat  AS MinimumLot
@@ -2310,7 +2310,7 @@ BEGIN
                          )
         ---
         SELECT _tmpMI.*
-              , CASE WHEN PartionGoodsDate < vbDate180 THEN zc_Color_Blue() --456
+              , CASE WHEN PartionGoodsDate < vbDate180 THEN zc_Color_Red() -- zc_Color_Blue() --456
                      ELSE 0
                 END                                                          AS PartionGoodsDateColor
               , ObjectFloat_Goods_MinimumLot.ValueData                       AS MinimumLot
