@@ -228,20 +228,25 @@ BEGIN
                                                          AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId*/
                          )
       -- Штрих-коды производителя
-      , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
-                                 , Object_Goods_BarCode.ValueData        AS BarCode
-                            FROM ObjectLink AS ObjectLink_Main_BarCode
-                                 JOIN ObjectLink AS ObjectLink_Child_BarCode
-                                                 ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
-                                                AND ObjectLink_Child_BarCode.DescId = zc_ObjectLink_LinkGoods_Goods()
-                                 JOIN ObjectLink AS ObjectLink_Goods_Object_BarCode
-                                                 ON ObjectLink_Goods_Object_BarCode.ObjectId = ObjectLink_Child_BarCode.ChildObjectId
-                                                AND ObjectLink_Goods_Object_BarCode.DescId = zc_ObjectLink_Goods_Object()
-                                                AND ObjectLink_Goods_Object_BarCode.ChildObjectId = zc_Enum_GlobalConst_BarCode()
-                                 LEFT JOIN Object AS Object_Goods_BarCode ON Object_Goods_BarCode.Id = ObjectLink_Goods_Object_BarCode.ObjectId
-                            WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                              AND ObjectLink_Main_BarCode.ChildObjectId > 0
-                              AND TRIM (Object_Goods_BarCode.ValueData) <> ''
+      , tmpGoodsBarCode AS (SELECT tmp.GoodsMainId
+                                 , tmp.BarCode
+                            FROM (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
+                                       , Object_Goods_BarCode.ValueData        AS BarCode
+                                       , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Main_BarCode.ChildObjectId ORDER BY Object_Goods_BarCode.Id DESC) AS Ord
+                                  FROM ObjectLink AS ObjectLink_Main_BarCode
+                                       JOIN ObjectLink AS ObjectLink_Child_BarCode
+                                                       ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
+                                                      AND ObjectLink_Child_BarCode.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                       JOIN ObjectLink AS ObjectLink_Goods_Object_BarCode
+                                                       ON ObjectLink_Goods_Object_BarCode.ObjectId = ObjectLink_Child_BarCode.ChildObjectId
+                                                      AND ObjectLink_Goods_Object_BarCode.DescId = zc_ObjectLink_Goods_Object()
+                                                      AND ObjectLink_Goods_Object_BarCode.ChildObjectId = zc_Enum_GlobalConst_BarCode()
+                                       LEFT JOIN Object AS Object_Goods_BarCode ON Object_Goods_BarCode.Id = ObjectLink_Goods_Object_BarCode.ObjectId
+                                  WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    AND ObjectLink_Main_BarCode.ChildObjectId > 0
+                                    AND TRIM (Object_Goods_BarCode.ValueData) <> ''
+                                 ) AS tmp
+                            WHERE tmp.Ord = 1
                            )
 
         -- результат
