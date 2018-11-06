@@ -1,6 +1,6 @@
 inherited CheckJournalUserForm: TCheckJournalUserForm
   ClientHeight = 513
-  ExplicitHeight = 551
+  ExplicitHeight = 552
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -40,6 +40,11 @@ inherited CheckJournalUserForm: TCheckJournalUserForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSummChangePercent
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = TotalSummPayAdd
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -75,6 +80,15 @@ inherited CheckJournalUserForm: TCheckJournalUserForm
   inherited ActionList: TActionList
     inherited actSimpleReCompleteList: TMultiAction
       Enabled = False
+    end
+    inherited actPrint: TdsdPrintAction
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+        end
+        item
+          DataSet = PrintItemsCDS
+        end>
     end
   end
   inherited MasterDS: TDataSource

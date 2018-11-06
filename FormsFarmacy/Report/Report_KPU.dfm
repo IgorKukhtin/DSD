@@ -887,6 +887,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CollegeITNote'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -903,6 +904,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'VIPDepartRatioNote'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -935,6 +937,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ControlRGNote'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

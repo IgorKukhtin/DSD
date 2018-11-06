@@ -96,9 +96,23 @@ CREATE OR REPLACE FUNCTION zc_MIString_DirectorNote() RETURNS Integer AS $BODY$B
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_DirectorNote', 'Примечание к коэффициенту директора' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_DirectorNote');
 
+CREATE OR REPLACE FUNCTION zc_MIString_CollegeITNote() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_CollegeITNote'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_CollegeITNote', 'Примечание к Коллегии IT' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_CollegeITNote');
+
+CREATE OR REPLACE FUNCTION zc_MIString_VIPDepartRatioNote() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_VIPDepartRatioNote'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_VIPDepartRatioNote', 'Примечание VIP отдела' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_VIPDepartRatioNote');
+
+CREATE OR REPLACE FUNCTION zc_MIString_ControlRGNote() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_ControlRGNote'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_ControlRGNote', 'Примечание к Контролю Т.В. и Т.А.' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_ControlRGNote');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 05.11.18                                                                                      * 
  09.10.18                                                                                      * 
  13.08.18         * for GoodsSP
  13.12.17         * zc_MIString_Bayer

@@ -25,7 +25,8 @@ RETURNS TABLE (Id Integer, ParentId integer
              , isSp Boolean
              , Remains TFloat
              , Color_calc integer
-             , Color_ExpirationDate integer             
+             , Color_ExpirationDate integer   
+             , AccommodationName TVarChar          
               )
 AS
 $BODY$
@@ -84,6 +85,7 @@ BEGIN
            , MovementItem.Amount
            , zc_Color_White()                                                    AS Color_calc
            , zc_Color_Black()                                                    AS Color_ExpirationDate
+           , Null::TVArChar                                                      AS AccommodationName  
        FROM MovementItem_Check_View AS MovementItem 
             -- получаем GoodsMainId
             LEFT JOIN  ObjectLink AS ObjectLink_Child 
@@ -96,7 +98,6 @@ BEGIN
                                  ON ObjectLink_Goods_IntenalSP.ObjectId = ObjectLink_Main.ChildObjectId 
                                 AND ObjectLink_Goods_IntenalSP.DescId = zc_ObjectLink_Goods_IntenalSP()
             LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = ObjectLink_Goods_IntenalSP.ChildObjectId
-
        WHERE MovementItem.MovementId = inMovementId
          -- AND MovementItem.isErased   = FALSE
       ;
@@ -108,6 +109,7 @@ ALTER FUNCTION gpSelect_MovementItem_Check (Integer, TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А. Воробкало А.А   Шаблий О.В.
+ 05.11.18                                                                                   *
  21.10.18                                                                                   *
  21.04.17         *
  10.08.16                                                                      * + MovementItem.LIST_UID

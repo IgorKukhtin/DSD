@@ -53,6 +53,11 @@ inherited CheckJournalForm: TCheckJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalCount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = TotalSummPayAdd
             end>
           OptionsView.GroupByBox = True
           Styles.Content = nil

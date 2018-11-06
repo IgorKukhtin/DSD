@@ -14,7 +14,7 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxPC,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, cxCheckBox;
 
 type
   TCheckJournalUserForm = class(TCheckJournalForm)

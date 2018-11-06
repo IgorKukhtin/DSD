@@ -28,6 +28,7 @@ type
   private
     FSummaTotal: Currency;
     FPaidTypeTemp : integer;
+    FSalerCash: Currency;
     { Private declarations }
   public
     { Public declarations }
@@ -88,6 +89,14 @@ begin
     FPaidTypeTemp := rgPaidType.ItemIndex;
   end;
 
+  if (RoundTo(FSalerCash - edSalerCash.Value, -2) <> 0) and (rgPaidType.ItemIndex = 2) then
+  begin
+    if FSummaTotal > edSalerCash.Value then
+      edSalerCashAdd.Value := FSummaTotal - edSalerCash.Value
+    else edSalerCashAdd.Text := '';
+  end;
+
+  FSalerCash := edSalerCash.Value;
   tmpVal := edSalerCash.Value + edSalerCashAdd.Value;
   bbOk.Enabled := ((tmpVal - FSummaTotal)>=0) and
     ((rgPaidType.ItemIndex <> 2) or (RoundTo(edSalerCash.Value - FSummaTotal, -2) < 0));
