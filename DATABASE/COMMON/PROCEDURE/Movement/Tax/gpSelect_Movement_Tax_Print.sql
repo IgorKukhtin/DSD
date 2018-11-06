@@ -310,6 +310,11 @@ order by 4*/
 
 --           , OH_JuridicalDetails_To.JuridicalAddress    AS JuridicalAddress_To
            , OH_JuridicalDetails_To.OKPO                AS OKPO_To
+           , CASE WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) IN ('100000000000', '300000000000')
+                  THEN ''
+                  ELSE (REPEAT ('0', 10 - LENGTH (OH_JuridicalDetails_To.OKPO)) ||  OH_JuridicalDetails_To.OKPO)
+             END :: TVarChar AS OKPO_To_ifin
+
            , CASE WHEN vbCalcNDSPayer_INN <> '' THEN vbCalcNDSPayer_INN ELSE COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) END AS INN_To
            , OH_JuridicalDetails_To.NumberVAT           AS NumberVAT_To
            , OH_JuridicalDetails_To.AccounterName       AS AccounterName_To
@@ -341,7 +346,11 @@ order by 4*/
            , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
            , OH_JuridicalDetails_From.JuridicalAddress  AS JuridicalAddress_From
            , OH_JuridicalDetails_From.OKPO              AS OKPO_From
-           , (REPEAT ('0', 10 - LENGTH (OH_JuridicalDetails_From.OKPO)) ||  OH_JuridicalDetails_From.OKPO) :: TVarChar AS OKPO_From_ifin
+           , CASE WHEN OH_JuridicalDetails_From.INN IN ('100000000000', '300000000000')
+                  THEN ''
+                  ELSE (REPEAT ('0', 10 - LENGTH (OH_JuridicalDetails_From.OKPO)) ||  OH_JuridicalDetails_From.OKPO) 
+             END :: TVarChar AS OKPO_From_ifin
+
            , OH_JuridicalDetails_From.INN               AS INN_From
            , OH_JuridicalDetails_From.NumberVAT         AS NumberVAT_From
            , CASE WHEN Object_PersonalSigning.PersonalName <> ''
@@ -379,7 +388,10 @@ order by 4*/
            , CASE WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
                     OR vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                     OR vbCalcNDSPayer_INN <> ''
-                  THEN 'X' ELSE '' END                  AS NotNDSPayer
+                   THEN 'X' 
+                  WHEN Movement.OperDate >= '01.12.2018' AND vbDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_Tax(), zc_Enum_DocumentTaxKind_Prepay()) 
+                   THEN '4'
+                   ELSE '' END                  AS NotNDSPayer
 
            , CASE WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
                     OR vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
@@ -789,7 +801,12 @@ order by 4*/
                                               ELSE tmpMI.Price
                                           END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
                    AS NUMERIC (16, 2)) AS AmountSummNoVAT_12
-
+           -- Сума податку на додану вартість
+           , CAST (tmpMI.Amount * CASE WHEN vbPriceWithVAT = TRUE
+                                      THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100))) /100 * vbVATPercent 
+                                      ELSE (tmpMI.Price / 100 * vbVATPercent)
+                                  END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+                   AS NUMERIC (16, 6)) AS SummVAT
        FROM tmpMI
             LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = tmpMI.GoodsGroupId
             LEFT JOIN tmpTaxImport ON tmpTaxImport.GoodsGroupId = tmpMI.GoodsGroupId
@@ -935,6 +952,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.11.18         *
  04.03.18         * MovementString_ToINN.ValueData
  10.03.17         *
  06.01.17         * GoodsCodeUKTZED

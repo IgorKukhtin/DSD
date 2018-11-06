@@ -738,8 +738,10 @@ BEGIN
                   ELSE ''
              END :: TVarChar AS ERPN2 -- Підлягає реєстрації в ЄРПН покупцем
 
-           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
-                  THEN 'X' ELSE '' END                                      AS NotNDSPayer
+           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> '' THEN 'X'
+                  WHEN tmpMI.OperDate >= '01.12.2018' AND tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay()) THEN '4'
+                  ELSE '' 
+             END :: TVarChar AS NotNDSPayer
            , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                   THEN TRUE ELSE FALSE END :: Boolean                       AS isNotNDSPayer
            , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
@@ -753,7 +755,11 @@ BEGIN
            , OH_JuridicalDetails_To.JuridicalAddress                        AS JuridicalAddress_To
 
            , OH_JuridicalDetails_To.OKPO                                    AS OKPO_To
-           , (REPEAT ('0', 10 - LENGTH (OH_JuridicalDetails_To.OKPO)) ||  OH_JuridicalDetails_To.OKPO) :: TVarChar AS OKPO_To_ifin
+           , CASE WHEN OH_JuridicalDetails_To.INN IN ('100000000000', '300000000000')
+                  THEN ''
+                  ELSE (REPEAT ('0', 10 - LENGTH (OH_JuridicalDetails_To.OKPO)) ||  OH_JuridicalDetails_To.OKPO)
+             END :: TVarChar AS OKPO_To_ifin
+           --, (REPEAT ('0', 10 - LENGTH (OH_JuridicalDetails_To.OKPO)) ||  OH_JuridicalDetails_To.OKPO) :: TVarChar AS OKPO_To_ifin
            , OH_JuridicalDetails_To.INN                                     AS INN_To
            , OH_JuridicalDetails_To.NumberVAT                               AS NumberVAT_To
          -- , COALESCE (Object_Personal_View.PersonalName, OH_JuridicalDetails_To.AccounterName) :: TVarChar AS AccounterName_To 
@@ -799,6 +805,10 @@ BEGIN
              ELSE OH_JuridicalDetails_From.JuridicalAddress END             AS JuridicalAddress_From
 
            , OH_JuridicalDetails_From.OKPO                                  AS OKPO_From
+           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) IN ('100000000000', '300000000000')
+                  THEN ''
+                  ELSE (REPEAT ('0', 10 - LENGTH (OH_JuridicalDetails_From.OKPO)) ||  OH_JuridicalDetails_From.OKPO)
+             END :: TVarChar AS OKPO_From_ifin
            , CASE WHEN vbCalcNDSPayer_INN <> '' THEN vbCalcNDSPayer_INN ELSE COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) END AS INN_From
            , OH_JuridicalDetails_From.InvNumberBranch                       AS InvNumberBranch_From
            , OH_JuridicalDetails_From.NumberVAT                             AS NumberVAT_From

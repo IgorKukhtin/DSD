@@ -10,7 +10,7 @@ DROP FUNCTION IF EXISTS gpReport_JuridicalBalance (TDateTime, TDateTime, Integer
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalBalance(
     IN inOperDate         TDateTime , -- 
-    IN inEndDate          TDateTime
+    IN inEndDate          TDateTime ,
     IN inJuridicalId      Integer,    -- Юридическое лицо
     IN inPartnerId        Integer,    -- 
     IN inContractId       Integer,    -- Договор
@@ -151,9 +151,9 @@ BEGIN
      -- результат
      SELECT COALESCE (tmpSumm.Amount, 0) :: TFloat         AS StartBalance
           , COALESCE (tmpSummCurrency.Amount, 0) :: TFloat AS StartBalanceCurrency
-          , OHS_FullName.ValueData                  AS JuridicalName
+          , replace (OHS_FullName.ValueData, '''', '`' )   AS JuridicalName
           , Object_Juridical.ValueData              AS JuridicalShortName
-          , COALESCE (Object_Partner.ValueData, OHS_FullName.ValueData) AS PartnerName
+          , replace (COALESCE (Object_Partner.ValueData, OHS_FullName.ValueData) , '''', '`' )  AS PartnerName
           , Object_Currency_View.Name               AS CurrencyName
           , Object_Currency_View.InternalName       AS InternalCurrencyName
           , OHS_AccounterName.ValueData             AS AccounterName
