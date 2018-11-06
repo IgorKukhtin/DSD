@@ -755,9 +755,9 @@ BEGIN
                         , CAST (SUM (tmpGoodsSumm.SummSale_10200)     AS NUMERIC (16, 2)) AS SummSale_10200
                         , CAST (SUM (tmpGoodsSumm.SummSale_10250)     AS NUMERIC (16, 2)) AS SummSale_10250
                         , CAST (SUM (tmpGoodsSumm.SummSale_10300)     AS NUMERIC (16, 2)) AS SummSale_10300
-                        , CAST (SUM (tmpGoodsSumm.SummSale_10200)     AS NUMERIC (16, 2)) AS SummSale_10200_Vz
-                        , CAST (SUM (tmpGoodsSumm.SummSale_10250)     AS NUMERIC (16, 2)) AS SummSale_10250_Vz
-                        , CAST (SUM (tmpGoodsSumm.SummSale_10300)     AS NUMERIC (16, 2)) AS SummSale_10300_Vz
+                        , CAST (SUM (tmpGoodsSumm.SummSale_10200_Vz)     AS NUMERIC (16, 2)) AS SummSale_10200_Vz
+                        , CAST (SUM (tmpGoodsSumm.SummSale_10250_Vz)     AS NUMERIC (16, 2)) AS SummSale_10250_Vz
+                        , CAST (SUM (tmpGoodsSumm.SummSale_10300_Vz)     AS NUMERIC (16, 2)) AS SummSale_10300_Vz
                         , CAST (SUM (tmpGoodsSumm.SummInventory_RePrice) AS NUMERIC (16, 2)) AS SummInventory_RePrice
 
                         , CAST (SUM (tmpGoodsSumm.SummStart_Vz) AS NUMERIC (16, 2))          AS SummStart_Vz
