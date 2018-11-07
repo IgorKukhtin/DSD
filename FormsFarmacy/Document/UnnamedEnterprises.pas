@@ -49,9 +49,7 @@ type
     DetailDCS: TClientDataSet;
     DetailDS: TDataSource;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
-    spSelectPrintCheck: TdsdStoredProc;
-    actPrintCheck: TdsdPrintAction;
-    PrintDialog: TExecuteDialog;
+    actPrintScore: TdsdPrintAction;
     bbPrintCheck: TdxBarButton;
     bbGet_SP_Prior: TdxBarButton;
     AmountOrder: TcxGridDBColumn;
@@ -59,7 +57,6 @@ type
     ExchangeName: TcxGridDBColumn;
     NDSKindName: TcxGridDBColumn;
     GoodsNameUkr: TcxGridDBColumn;
-    actOpenChoiceExchange: TOpenChoiceForm;
     edAmountAccount: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
     edAmountPayment: TcxCurrencyEdit;
@@ -68,6 +65,17 @@ type
     cxLabel6: TcxLabel;
     edDatePayment: TcxDateEdit;
     cxLabel8: TcxLabel;
+    spSelectPrintScore: TdsdStoredProc;
+    dxBarButton1: TdxBarButton;
+    SummOrder: TcxGridDBColumn;
+    actAddOrderInternal: TMultiAction;
+    actExecspAddOrderInternal: TdsdExecStoredProc;
+    spAddOrderInternal: TdsdStoredProc;
+    dxBarButton2: TdxBarButton;
+    actCreateSale: TMultiAction;
+    spCreateSale: TdsdStoredProc;
+    actExecspCreateSale: TdsdExecStoredProc;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public

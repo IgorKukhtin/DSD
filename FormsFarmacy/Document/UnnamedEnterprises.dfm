@@ -40,6 +40,16 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.000'
+              Kind = skSum
+              Column = AmountOrder
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummOrder
             end>
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
@@ -101,16 +111,6 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object AmountOrder: TcxGridDBColumn
-            Caption = #1042#1089#1090#1072#1074#1082#1072' '#1074' '#1079#1072#1082#1072#1079
-            DataBinding.FieldName = 'AmountOrder'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.000'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-          end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
@@ -129,6 +129,21 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
             Options.Editing = False
             Width = 70
           end
+          object AmountOrder: TcxGridDBColumn
+            Caption = #1042#1089#1090#1072#1074#1082#1072' '#1074' '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'AmountOrder'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.000'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
+          object SummOrder: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074' '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'SummOrder'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
           object CodeUKTZED: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1050#1058#1047#1069#1044
             DataBinding.FieldName = 'CodeUKTZED'
@@ -142,7 +157,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actOpenChoiceExchange
+                Caption = 'actOpenChoiceExchange'
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -321,21 +336,21 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      ReportName = #1055#1088#1086#1076#1072#1078#1072
-      ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072
+      ReportName = #1050#1086#1084#1084#1077#1088#1095#1077#1089#1082#1086#1077' '#1087#1088#1077#1076#1083#1086#1078#1077#1085#1080#1077
+      ReportNameParam.Value = #1050#1086#1084#1084#1077#1088#1095#1077#1089#1082#1086#1077' '#1087#1088#1077#1076#1083#1086#1078#1077#1085#1080#1077
     end
-    object actPrintCheck: TdsdPrintAction
+    object actPrintScore: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrintCheck
+      StoredProc = spSelectPrintScore
       StoredProcList = <
         item
-          StoredProc = spSelectPrintCheck
+          StoredProc = spSelectPrintScore
         end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072
       ImageIndex = 3
-      ShortCut = 16464
+      ShortCut = 49232
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -369,8 +384,8 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      ReportName = #1050#1086#1087#1080#1103' '#1095#1077#1082#1072' '#1082#1083#1080#1077#1085#1090#1091'('#1087#1088#1086#1076#1072#1078#1072')'
-      ReportNameParam.Value = #1050#1086#1087#1080#1103' '#1095#1077#1082#1072' '#1082#1083#1080#1077#1085#1090#1091'('#1087#1088#1086#1076#1072#1078#1072')'
+      ReportName = #1057#1095#1077#1090' '#1082' '#1073#1077#1079#1085#1072#1083#1091' '#1087#1088#1077#1076#1087#1088#1080#1103#1090#1080#1103
+      ReportNameParam.Value = #1057#1095#1077#1090' '#1082' '#1073#1077#1079#1085#1072#1083#1091' '#1087#1088#1077#1076#1087#1088#1080#1103#1090#1080#1103
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -378,78 +393,59 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object PrintDialog: TExecuteDialog
+    object actAddOrderInternal: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      Caption = 'actCheckPrintDialog'
-      ImageIndex = 3
-      FormName = 'TCheckPrintDialogForm'
-      FormNameParam.Value = 'TCheckPrintDialogForm'
-      FormNameParam.DataType = ftDateTime
-      FormNameParam.ParamType = ptInputOutput
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
+      ActionList = <
         item
-          Name = 'inFiscalCheckNumber'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inFiscalCheckNumber'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
+          Action = actExecspAddOrderInternal
         end
         item
-          Name = 'inBayer'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inBayer'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inFiscalCheckNumber'
-          Value = ''
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inBayer'
-          Value = ''
-          DataType = ftString
-          MultiSelectSeparator = ','
+          Action = actRefresh
         end>
-      isShowModal = True
-      OpenBeforeShow = True
+      QuestionBeforeExecute = #1044#1086#1073#1072#1074#1080#1090' '#1074#1086' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1079#1072#1082#1072#1079' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1099
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1042#1089#1090#1072#1074#1082#1072' '#1074' '#1079#1072#1082#1072#1079
+      Hint = #1042#1089#1090#1072#1074#1082#1072' '#1074' '#1079#1072#1082#1072#1079
+      ImageIndex = 0
     end
-    object actOpenChoiceExchange: TOpenChoiceForm
+    object actExecspAddOrderInternal: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'actOpenChoiceExchange'
-      FormName = 'TExchangeForm'
-      FormNameParam.Value = 'TExchangeForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
+      StoredProc = spAddOrderInternal
+      StoredProcList = <
         item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ExchangeID'
-          MultiSelectSeparator = ','
+          StoredProc = spAddOrderInternal
+        end>
+      Caption = 'actExecspAddOrderInternal'
+    end
+    object actCreateSale: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecspCreateSale
         end
         item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ExchangeName'
-          DataType = ftString
-          MultiSelectSeparator = ','
+          Action = actRefresh
         end>
-      isShowModal = False
+      QuestionBeforeExecute = #1057#1086#1079#1076#1072#1090#1100' '#1087#1088#1086#1076#1072#1078#1091
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1087#1088#1086#1076#1072#1078#1091
+      Hint = #1057#1086#1079#1076#1072#1090#1100' '#1087#1088#1086#1076#1072#1078#1091
+      ImageIndex = 43
+    end
+    object actExecspCreateSale: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCreateSale
+      StoredProcList = <
+        item
+          StoredProc = spCreateSale
+        end>
+      Caption = 'actExecspCreateSale'
     end
   end
   inherited MasterDS: TDataSource
@@ -540,7 +536,19 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
         end
         item
           Visible = True
@@ -567,6 +575,18 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
       Category = 0
       Visible = ivAlways
       ImageIndex = 74
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actPrintScore
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actAddOrderInternal
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actCreateSale
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -936,6 +956,15 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountOrder'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountOrder'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPrice'
         Value = Null
         Component = MasterCDS
@@ -949,6 +978,14 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Summ'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummOrder'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummOrder'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -975,8 +1012,8 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
     Top = 280
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    Left = 448
-    Top = 320
+    Left = 352
+    Top = 336
   end
   inherited spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_UnnamedEnterprises_TotalSumm'
@@ -1062,20 +1099,20 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 431
-    Top = 232
+    Left = 415
+    Top = 248
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 500
-    Top = 238
+    Left = 484
+    Top = 246
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 484
-    Top = 281
+    Top = 297
   end
   object DetailDCS: TClientDataSet
     Aggregates = <>
@@ -1115,8 +1152,8 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
     Left = 318
     Top = 409
   end
-  object spSelectPrintCheck: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_UnnamedEnterprises_Print'
+  object spSelectPrintScore: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_UnnamedEnterprisesExactly_PrintScore'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1136,7 +1173,41 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 632
-    Top = 200
+    Left = 743
+    Top = 232
+  end
+  object spAddOrderInternal: TdsdStoredProc
+    StoredProcName = 'gpMovement_UnnamedEnterprisesExactly_AddOrderInternal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 743
+    Top = 296
+  end
+  object spCreateSale: TdsdStoredProc
+    StoredProcName = 'gpMovement_UnnamedEnterprisesExactly_CreateSale'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 743
+    Top = 352
   end
 end
