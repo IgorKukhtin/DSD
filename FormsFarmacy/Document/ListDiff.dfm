@@ -44,24 +44,12 @@ inherited ListDiffForm: TListDiffForm
               Column = Amount
             end
             item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
               Format = ',0.00'
               Kind = skSum
               Column = Summa
             end
             item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = #1057#1090#1088#1086#1082': ,0'
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
             end>
