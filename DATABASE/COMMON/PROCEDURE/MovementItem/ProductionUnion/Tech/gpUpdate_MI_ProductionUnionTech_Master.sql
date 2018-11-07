@@ -42,7 +42,8 @@ BEGIN
    vbToId  := COALESCE ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = ioMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_To())  , 0);
    IF (vbFromId <> vbToId) OR (NOT EXISTS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect WHERE lfSelect.UnitId = vbFromId)
                            -- AND vbFromId <> 951601 -- ЦЕХ упаковки мясо
-                           AND vbFromId <> 981821 -- ЦЕХ шприц. мясо
+                           AND vbFromId <> 981821   -- ЦЕХ шприц. мясо
+                           AND vbFromId <> 2790412  -- ЦЕХ Тушенка
                               )
    THEN
        RAISE EXCEPTION 'Ошибка.Изменения возможны только для подазделений <%>.', lfGet_Object_ValueData (8446);

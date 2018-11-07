@@ -179,19 +179,24 @@ begin
   vbIsBegin:= false;
   // переносить прайс в актуальные цены (а загрузка выполняется всегда)
   cbBeginMove.Checked:=false;
-  // включаем таймер
-  Timer.Interval:=1000;
-  Timer.Enabled:=true;
-  cbTimer.Checked:=Timer.Enabled;
-  cbTimer.Caption:= 'Timer ON ' + FloatToStr(Timer.Interval / 1000) + ' sec';
-  Sleep(50);
   //
   GaugeHost.Progress:=0;
   GaugeMailFrom.Progress:=0;
   GaugeParts.Progress:=0;
   GaugeLoadXLS.Progress:=0;
   GaugeMove.Progress:=0;
+  //
   AddToLog('---- Start');
+  // включаем таймер
+  Timer.Interval:=3000;
+  cbTimer.Caption:= 'Timer ON ' + FloatToStr(Timer.Interval / 1000) + ' sec';
+  AddToLog('---- Start Timer-1');
+  cbTimer.Checked:=false;
+  cbTimer.Checked:=true;
+  //Timer.Enabled:=true;
+  AddToLog('---- Start Timer-2');
+  Sleep(50);
+  AddToLog('---- Start Timer-3');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.cbTimerClick(Sender: TObject);

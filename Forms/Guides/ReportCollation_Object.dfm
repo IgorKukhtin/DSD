@@ -1247,7 +1247,6 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
@@ -1262,7 +1261,6 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 32776
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource

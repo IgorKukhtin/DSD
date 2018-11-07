@@ -1,7 +1,8 @@
  -- Function: gpInsertUpdate_MI_ProductionUnionTech()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnionTech(
     IN inMovementItemId_order Integer   , -- Ключ объекта <Элемент документа>
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnionTech(
     IN inCount	              TFloat    , -- Количество батонов или упаковок
     IN inRealWeight           TFloat    , -- Фактический вес(информативно)
     IN inCuterCount           TFloat    , -- Количество кутеров
+    IN inAmount               TFloat    , -- Кол-во шт.факт - !!!обратный расчет кол-во куттеров!!!
 
     IN inComment              TVarChar  , -- Примечание
     IN inGoodsKindId          Integer   , -- Виды товаров
@@ -48,7 +50,8 @@ BEGIN
    -- Проверка для ЦЕХ колбаса+дел-сы
    IF (inFromId <> inToId) OR (NOT EXISTS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect WHERE lfSelect.UnitId = inFromId)
                            -- AND inFromId <> 951601 -- ЦЕХ упаковки мясо
-                           AND inFromId <> 981821 -- ЦЕХ шприц. мясо
+                           AND inFromId <> 981821   -- ЦЕХ шприц. мясо
+                           AND inFromId <> 2790412  -- ЦЕХ Тушенка
                               )
    THEN
        RAISE EXCEPTION 'Ошибка.Изменения возможны только для подазделений <%>.', lfGet_Object_ValueData (8446);
@@ -65,6 +68,16 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Значение <Название рецептуры> не установлено.';
    END IF;
 
+
+   -- Расчет
+   IF EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = inGoodsId AND OL.DescId = zc_ObjectLink_Goods_Measure() AND OL.DescId = zc_ObjectLink_Goods_Measure() AND OL.ChildObjectId = zc_Measure_Sh())
+   THEN
+       -- Куттера
+       inCuterCount:= CASE WHEN COALESCE ((SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = inReceiptId AND OFl.DescId = zc_ObjectFloat_Receipt_PartionValue()), 0) > 0
+                                THEN inAmount / (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = inReceiptId AND OFl.DescId = zc_ObjectFloat_Receipt_PartionValue())
+                           ELSE 0
+                      END;
+   END IF;
 
    -- определяется
    vbGoodsId_master:= COALESCE ((SELECT inGoodsId WHERE inGoodsId IN (7129, 2328, 712542 )), 0); -- ЯЗЫК СВИН. ВАРЕН. + ГОЛОВЫ СВИН.ВАР. + МЯСО ГОЛОВ СВ в шкуре варен.
@@ -251,11 +264,19 @@ BEGIN
    FROM _tmpChild WHERE _tmpChild.isErased = TRUE;
 
 
-   -- Расчет кол-во
-   vbAmount:= CASE WHEN vbGoodsId_master > 0
-                        THEN inCuterCount * COALESCE ((SELECT ObjectFloat_Value.ValueData FROM ObjectFloat AS ObjectFloat_Value WHERE ObjectFloat_Value.ObjectId = inReceiptId AND ObjectFloat_Value.DescId = zc_ObjectFloat_Receipt_Value()), 0)
-                   ELSE (SELECT Amount_master FROM _tmpChild LIMIT 1)
-              END;
+   -- Расчет
+   IF EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = inGoodsId AND OL.DescId = zc_ObjectLink_Goods_Measure() AND OL.ChildObjectId = zc_Measure_Sh())
+   THEN
+       -- кол-во
+       vbAmount:= inAmount;
+   ELSE
+       -- кол-во
+       vbAmount:= CASE WHEN vbGoodsId_master > 0
+                            THEN inCuterCount * COALESCE ((SELECT ObjectFloat_Value.ValueData FROM ObjectFloat AS ObjectFloat_Value WHERE ObjectFloat_Value.ObjectId = inReceiptId AND ObjectFloat_Value.DescId = zc_ObjectFloat_Receipt_Value()), 0)
+                       ELSE (SELECT Amount_master FROM _tmpChild LIMIT 1)
+                  END;
+   END IF;
+
 
    -- сохранили <Главный элемент документа>
    ioMovementItemId:= lpInsertUpdate_MI_ProductionUnionTech_Master (ioId                 := ioMovementItemId

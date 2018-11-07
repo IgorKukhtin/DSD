@@ -17,11 +17,25 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 
-   DECLARE vbCode Integer;
-   DECLARE vbName TVarChar;
+   DECLARE vbMemberId Integer;
+   DECLARE vbCode     Integer;
+   DECLARE vbName     TVarChar;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Personal());
+
+
+   -- Основное место работы - только одно
+   vbMemberId:=  (SELECT View_Personal.MemberId FROM Object_Personal_View AS View_Personal WHERE View_Personal.PersonalId = inId);
+   -- Основное место работы - только одно
+   IF inIsMain = TRUE
+      AND EXISTS (SELECT 1 FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = vbMemberId AND View_Personal.isMain = TRUE AND View_Personal.PersonalId <> COALESCE(inId, 0)) THEN
+      RAISE EXCEPTION 'Значение <Основное место работы> = ДА, уже установлено для подразделения: <%> должность: <%> разряд должности: <%>. Этот признак можно установить только 1 раз.'
+                    , lfGet_Object_ValueData_sh ((SELECT View_Personal.UnitId          FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = vbMemberId AND View_Personal.isMain = TRUE ORDER BY View_Personal.PersonalId LIMIT 1))
+                    , lfGet_Object_ValueData_sh ((SELECT View_Personal.PositionId      FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = vbMemberId AND View_Personal.isMain = TRUE ORDER BY View_Personal.PersonalId LIMIT 1))
+                    , lfGet_Object_ValueData_sh ((SELECT View_Personal.PositionLevelId FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = vbMemberId AND View_Personal.isMain = TRUE ORDER BY View_Personal.PersonalId LIMIT 1))
+                     ;
+   END IF;
 
    -- сохранили связь с <должностью>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Position(), inId, inPositionId);

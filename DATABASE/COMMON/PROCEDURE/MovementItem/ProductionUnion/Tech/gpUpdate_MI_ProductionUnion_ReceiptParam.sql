@@ -31,7 +31,8 @@ BEGIN
    -- Проверка для ЦЕХ колбаса+дел-сы
    IF (inFromId <> inToId) OR (NOT EXISTS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect WHERE lfSelect.UnitId = inFromId)
                            -- AND inFromId <> 951601 -- ЦЕХ упаковки мясо
-                           AND inFromId <> 981821 -- ЦЕХ шприц. мясо
+                           AND inFromId <> 981821   -- ЦЕХ шприц. мясо
+                           AND inFromId <> 2790412  -- ЦЕХ Тушенка
                               )
    THEN
        RAISE EXCEPTION 'Ошибка.Изменения возможны только для подазделений <%>.', lfGet_Object_ValueData (8446);

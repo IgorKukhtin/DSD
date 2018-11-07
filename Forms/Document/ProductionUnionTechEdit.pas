@@ -46,6 +46,8 @@ type
     cxLabel14: TcxLabel;
     edDocumentKind: TcxButtonEdit;
     GuidesDocumentKind: TdsdGuides;
+    cxLabel15: TcxLabel;
+    ceAmount: TcxCurrencyEdit;
   private
     { Private declarations }
   public

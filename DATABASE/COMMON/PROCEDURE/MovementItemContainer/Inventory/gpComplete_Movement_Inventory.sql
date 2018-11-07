@@ -170,12 +170,18 @@ BEGIN
                                                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                                                      AND MovementLinkObject_From.ObjectId = vbUnitId
                                    WHERE Movement.OperDate > vbOperDate
-                                     AND EXTRACT (MONTH FROM Movement.OperDate) = EXTRACT (MONTH FROM vbOperDate)
+                                     AND (EXTRACT (MONTH FROM Movement.OperDate) = EXTRACT (MONTH FROM vbOperDate)
+                                       -- OR Movement.Id IN (11270863 , 11250369)
+                                         )
                                      AND Movement.DescId = zc_Movement_Inventory()
                                      AND Movement.StatusId = zc_Enum_Status_Complete()
                                   );
 
 
+     IF inMovementId IN (11270863 , 11250369)
+     THEN 
+         vbIsLastOnMonth:= FALSE;
+     END IF;
 
 
      -- !!!Ограничения по товарам!!!

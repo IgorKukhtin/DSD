@@ -154,24 +154,47 @@ BEGIN
                           )
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
-             , COALESCE (MI_Child.ObjectId, COALESCE (tmpPersonal.PersonalId, COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, MILinkObject_MoneyPlace.ObjectId))) AS ObjectId
-             , COALESCE (Object.DescId, 0) AS ObjectDescId
+             , CASE -- сразу в ОПиУ
+                    WHEN _tmpItem.CurrencyId             <> zc_Enum_Currency_Basis()
+                     AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
+                         THEN 0
+
+                    ELSE COALESCE (MI_Child.ObjectId, COALESCE (tmpPersonal.PersonalId, COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, MILinkObject_MoneyPlace.ObjectId)))
+               END AS ObjectId
+             , CASE -- сразу в ОПиУ
+                    WHEN _tmpItem.CurrencyId             <> zc_Enum_Currency_Basis()
+                     AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
+                         THEN 0
+
+                    ELSE COALESCE (Object.DescId, 0)
+               END AS ObjectDescId
+
              , CASE WHEN /*_tmpItem.CurrencyId = zc_Enum_Currency_Basis()
                      AND _tmpItem.isActive = TRUE
                      AND*/ _tmpItem.isActive = TRUE
                        AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
                          THEN -1 * COALESCE (MovementFloat_Amount.ValueData, 0)
-                    WHEN _tmpItem.CurrencyId = zc_Enum_Currency_Basis()
+
+                    WHEN _tmpItem.CurrencyId             = zc_Enum_Currency_Basis()
+                      OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы, т.е. сумма грн сразу в ОПиУ
                          THEN COALESCE (MI_Child.Amount, -1 * _tmpItem.OperSumm)
+
                     ELSE -1 * /*CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END*/ CAST (CASE WHEN MovementFloat_ParPartnerValue.ValueData <> 0 THEN _tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData ELSE 0 END AS NUMERIC (16, 2))
                END AS OperSumm
+
              , CASE WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner())
                          THEN -1 * _tmpItem.OperSumm_Currency
                     WHEN Object.DescId IN (zc_Object_BankAccount(), zc_Object_Cash())
                          THEN -1 * _tmpItem.OperSumm_Currency
                     ELSE 0
                END AS OperSumm_Currency
-             , CASE WHEN /*_tmpItem.CurrencyId = zc_Enum_Currency_Basis()
+
+             , CASE -- сразу в ОПиУ - и это НЕ курсовая разница
+                    WHEN _tmpItem.CurrencyId             <> zc_Enum_Currency_Basis()
+                     AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
+                         THEN 0
+
+                    WHEN /*_tmpItem.CurrencyId = zc_Enum_Currency_Basis()
                      AND _tmpItem.isActive = TRUE
                      AND*/ _tmpItem.isActive = TRUE
                        AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
@@ -257,15 +280,23 @@ BEGIN
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
              , zc_Enum_PaidKind_FirstForm() AS PaidKindId -- Всегда БН
 
-             , CASE WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner())
+             , CASE -- сразу в ОПиУ
+                    WHEN _tmpItem.CurrencyId             <> zc_Enum_Currency_Basis()
+                     AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
+                         THEN zc_Enum_Currency_Basis() -- !!!меняется валюта!!!
+
+                    WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner())
                      AND _tmpItem.CurrencyId <> zc_Enum_Currency_Basis()
                      /*AND _tmpItem.isActive = FALSE*/
                      AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_41000() -- Покупка/продажа валюты
                          THEN zc_Enum_Currency_Basis() -- !!!меняется валюта!!!
+
                     WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner())
                          THEN _tmpItem.CurrencyId
+
                     WHEN Object.DescId IN (zc_Object_BankAccount(), zc_Object_Cash())
                          THEN _tmpItem.CurrencyId
+
                     ELSE 0
                END AS CurrencyId
 

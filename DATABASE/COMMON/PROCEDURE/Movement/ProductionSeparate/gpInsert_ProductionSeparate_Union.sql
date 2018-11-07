@@ -20,7 +20,7 @@ BEGIN
 
 
     -- документы для объединения
-    CREATE TEMP TABLE tmpListDoc(MovementId Integer, OperDate TDateTime, FromId Integer, ToId Integer, PartionGoods TVarchar) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpListDoc (MovementId Integer, OperDate TDateTime, FromId Integer, ToId Integer, PartionGoods TVarchar) ON COMMIT DROP;
     INSERT INTO tmpListDoc(MovementId, OperDate, FromId, ToId, PartionGoods)
        WITH tmpMovement AS (SELECT Movement.Id
                                  , Movement.OperDate
@@ -203,9 +203,10 @@ BEGIN
 
 
    -- документы ПЕремещения
-   CREATE TEMP TABLE tmpListDocSend (ToId Integer, MovementId Integer) ON COMMIT DROP;
-   INSERT INTO tmpListDocSend(ToId, MovementId)
+   CREATE TEMP TABLE tmpListDocSend (ToId Integer, PartionGoods TVarChar, MovementId Integer) ON COMMIT DROP;
+   INSERT INTO tmpListDocSend(ToId, PartionGoods, MovementId)
       SELECT tmp.ToId
+           , tmp.PartionGoods
            , lpInsertUpdate_Movement_Send (ioId               := 0
                                          , inInvNumber        := CAST (NEXTVAL ('Movement_Send_seq') AS TVarChar)
                                          , inOperDate         := tmpDate.OperDate
@@ -216,7 +217,7 @@ BEGIN
                                          , inUserId           := vbUserId
                                           )
       FROM -- Кому надо Перемещать
-           (SELECT DISTINCT tmpListDoc.ToId FROM tmpListDoc WHERE tmpListDoc.ToId <> vbToId
+           (SELECT DISTINCT tmpListDoc.ToId, tmpListDoc.PartionGoods FROM tmpListDoc WHERE tmpListDoc.ToId <> vbToId
            ) AS tmp
            -- в какую дату будет Перемещение
            INNER JOIN (SELECT tmpListDoc.ToId, MIN (tmpListDoc.OperDate) AS OperDate FROM tmpListDoc WHERE tmpListDoc.ToId <> vbToId GROUP BY tmpListDoc.ToId
@@ -236,7 +237,7 @@ BEGIN
                                            , inPartionGoodsDate    := NULL                   :: TDateTime
                                            , inCount               := 0                      :: TFloat
                                            , inHeadCount           := tmpListMI.HeadCount    :: TFloat
-                                           , ioPartionGoods        := ''                     :: TVarChar
+                                           , ioPartionGoods        := tmpListDocSend.PartionGoods
                                            , inGoodsKindId         := tmpListMI.GoodsKindId  :: Integer
                                            , inGoodsKindCompleteId := 0
                                            , inAssetId             := 0

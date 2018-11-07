@@ -21,6 +21,7 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime
              , ReceiptId Integer, ReceiptName TVarChar, ReceiptCode TVarChar
              , Amount_order TFloat, CuterCount_order TFloat
              , RealWeight TFloat, CuterCount TFloat, CuterWeight TFloat, Count TFloat
+             , Amount TFloat
              , Comment TVarChar
                )
 AS
@@ -59,6 +60,7 @@ BEGIN
                , 0 :: TFloat   		           AS CuterCount
                , 0 :: TFloat   		           AS CuterWeight
                , 0 :: TFloat		           AS Count
+               , 0 :: TFloat		           AS Amount
                , '' :: TVarChar                    AS Comment
 
           FROM MovementItem
@@ -125,6 +127,7 @@ BEGIN
                , MIFloat_CuterCount.ValueData      AS CuterCount
                , MIFloat_CuterWeight.ValueData     AS CuterWeight
                , MIFloat_Count.ValueData	   AS Count
+               , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN MovementItem.Amount ELSE 0 END :: TFloat AS Amount
                , MIString_Comment.ValueData        AS Comment
 
           FROM MovementItem
@@ -153,6 +156,10 @@ BEGIN
                LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILO_GoodsKind.ObjectId
                LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
                LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = MILO_Receipt.ObjectId
+
+               LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                    ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                   AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
 
                LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
                                            ON MIFloat_CuterCount.MovementItemId = MovementItem.Id
@@ -206,6 +213,7 @@ BEGIN
                , 0 :: TFloat   		             AS CuterCount
                , 0 :: TFloat   		             AS CuterWeight
                , 0 :: TFloat		             AS Count
+               , 0 :: TFloat		             AS Amount
                , '' :: TVarChar                      AS Comment
          ;
 

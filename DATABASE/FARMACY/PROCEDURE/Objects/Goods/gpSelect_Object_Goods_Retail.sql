@@ -221,7 +221,7 @@ BEGIN
                                  AND TRIM (Object_Goods_BarCode.ValueData) <> ''
                                -- GROUP BY ObjectLink_Main_BarCode.ChildObjectId
                                  ) AS T1
-                               WHERE T1.Ord = 1
+                               -- WHERE T1.Ord = 1
                               )  
          -- вытягиваем из LoadPriceListItem.GoodsNDS по входящему Договору поставщика (inContractId)
          , tmpPricelistItems AS (SELECT tmp.GoodsMainId
