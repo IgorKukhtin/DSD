@@ -20,11 +20,15 @@ type
     lblTotalSumma: TcxLabel;
     lblSdacha: TcxLabel;
     rgPaidType: TcxRadioGroup;
+    cxGroupBox2: TcxGroupBox;
+    edSalerCashAdd: TcxCurrencyEdit;
     procedure edSalerCashPropertiesChange(Sender: TObject);
     procedure ParentFormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
   private
     FSummaTotal: Currency;
+    FPaidTypeTemp : integer;
+    FSalerCash: Currency;
     { Private declarations }
   public
     { Public declarations }
@@ -32,15 +36,15 @@ type
 
 var
   CashCloseDialogForm: TCashCloseDialogForm;
-function CashCloseDialogExecute(ASummaTotal: Currency; Var ASalerCash: Currency; var APaidType: TPaidType):Boolean;
+function CashCloseDialogExecute(ASummaTotal: Currency; Var ASalerCash, ASalerCashAdd: Currency; var APaidType: TPaidType):Boolean;
 
 implementation
 
 {$R *.dfm}
 
-uses DataModul;
+uses DataModul, Math;
 
-function CashCloseDialogExecute(ASummaTotal: Currency; Var ASalerCash: Currency; var APaidType: TPaidType):Boolean;
+function CashCloseDialogExecute(ASummaTotal: Currency; Var ASalerCash, ASalerCashAdd: Currency; var APaidType: TPaidType):Boolean;
 Begin
   if NOT assigned(CashCloseDialogForm) then
     CashCloseDialogForm := TCashCloseDialogForm.Create(Application);
@@ -48,6 +52,7 @@ Begin
   Begin
     try
       FSummaTotal := ASummaTotal;
+      FPaidTypeTemp := -1;
       lblTotalSumma.Caption := FormatCurr('0.00',ASummaTotal);
       edSalerCash.Value := ASummaTotal;
       rgPaidType.ItemIndex := Integer(APaidType);
@@ -57,6 +62,9 @@ Begin
       if Result then
       Begin
         ASalerCash := edSalerCash.Value;
+        if TPaidType(rgPaidType.ItemIndex) = ptCardAdd then
+          ASalerCashAdd := ASummaTotal - edSalerCash.Value
+        else ASalerCashAdd := 0;
         APaidType := TPaidType(rgPaidType.ItemIndex);
       End;
     Except ON E: Exception DO
@@ -69,9 +77,29 @@ procedure TCashCloseDialogForm.edSalerCashPropertiesChange(Sender: TObject);
 var
   tmpVal: Currency;
 begin
-  tmpVal := edSalerCash.Value;
-  bbOk.Enabled := ((tmpVal - FSummaTotal)>=0) or
-    (rgPaidType.ItemIndex = 1);
+  if FPaidTypeTemp <> rgPaidType.ItemIndex then
+  begin
+    cxGroupBox2.Visible := rgPaidType.ItemIndex = 2;
+    edSalerCash.Value := FSummaTotal;
+    edSalerCash.Properties.ReadOnly := rgPaidType.ItemIndex = 1;
+    edSalerCashAdd.Text := '';
+    if rgPaidType.ItemIndex = 0 then
+      cxGroupBox1.Caption := 'Сумма от покупателя'
+    else cxGroupBox1.Caption := 'Сумма от покупателя по карте';
+    FPaidTypeTemp := rgPaidType.ItemIndex;
+  end;
+
+  if (RoundTo(FSalerCash - edSalerCash.Value, -2) <> 0) and (rgPaidType.ItemIndex = 2) then
+  begin
+    if FSummaTotal > edSalerCash.Value then
+      edSalerCashAdd.Value := FSummaTotal - edSalerCash.Value
+    else edSalerCashAdd.Text := '';
+  end;
+
+  FSalerCash := edSalerCash.Value;
+  tmpVal := edSalerCash.Value + edSalerCashAdd.Value;
+  bbOk.Enabled := ((tmpVal - FSummaTotal)>=0) and
+    ((rgPaidType.ItemIndex <> 2) or (RoundTo(edSalerCash.Value - FSummaTotal, -2) < 0));
   if FSummaTotal <= tmpVal then
     lblSdacha.Caption := FormatCurr('0.00',tmpVal - FSummaTotal)
   else
@@ -85,7 +113,11 @@ begin
     rgPaidType.ItemIndex := 0
   else
   if Key = VK_MULTIPLY then
-    rgPaidType.ItemIndex := 1;
+  begin
+    if rgPaidType.ItemIndex <> 1 then
+      rgPaidType.ItemIndex := 1
+    else rgPaidType.ItemIndex := 2;
+  end;
 end;
 
 end.

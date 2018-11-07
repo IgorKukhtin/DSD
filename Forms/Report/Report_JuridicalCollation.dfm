@@ -2228,6 +2228,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inJuridicalId'
         Value = ''
         Component = GuidesJuridical

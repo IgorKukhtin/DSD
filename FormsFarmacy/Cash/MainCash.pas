@@ -362,7 +362,8 @@ type
     SoldParallel: Boolean;
     SourceClientDataSet: TClientDataSet;
     ThreadErrorMessage:String;
-    ASalerCash{,ASdacha}: Currency;
+    ASalerCash: Currency;
+    ASalerCashAdd: Currency;
     PaidType: TPaidType;
     FiscalNumber: String;
 
@@ -393,7 +394,7 @@ type
     // что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА
     procedure Add_Log_XML(AMessage: String);
     // Пробивает чек через ЭККА
-    function PutCheckToCash(SalerCash: Currency; PaidType: TPaidType;
+    function PutCheckToCash(SalerCash, SalerCashAdd: Currency; PaidType: TPaidType;
       out AFiscalNumber, ACheckNumber: String; isFiscal: boolean = true): boolean;
     //подключение к локальной базе данных
     function InitLocalStorage: Boolean;
@@ -834,10 +835,11 @@ var
 begin
   if CheckCDS.RecordCount = 0 then exit;
   PaidType:=ptMoney;
+  ASalerCashAdd:=0;
   //спросили сумму и тип оплаты
   if not fShift then
   begin// если с Shift, то считаем, что дали без сдачи
-    if not CashCloseDialogExecute(FTotalSumm,ASalerCash,PaidType) then
+    if not CashCloseDialogExecute(FTotalSumm,ASalerCash,ASalerCashAdd,PaidType) then
     Begin
       if Self.ActiveControl <> ceAmount then
         Self.ActiveControl := MainGrid;
@@ -875,7 +877,7 @@ begin
 
   //послали на печать
   try
-    if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.PaidType, FiscalNumber, CheckNumber) then
+    if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.ASalerCashAdd, MainCashForm.PaidType, FiscalNumber, CheckNumber) then
     Begin
 
       if (FormParams.ParamByName('DiscountExternalId').Value > 0)
@@ -1576,7 +1578,7 @@ end;
 procedure TMainCashForm.miPrintNotFiscalCheckClick(Sender: TObject);
 var CheckNumber: string;
 begin
-  PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.PaidType, FiscalNumber, CheckNumber, false);
+  PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.ASalerCashAdd, MainCashForm.PaidType, FiscalNumber, CheckNumber, false);
 end;
 
 procedure TMainCashForm.FormCreate(Sender: TObject);
@@ -2317,7 +2319,7 @@ begin
   end;
 end;
 
-function TMainCashForm.PutCheckToCash(SalerCash: Currency;
+function TMainCashForm.PutCheckToCash(SalerCash, SalerCashAdd: Currency;
   PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String; isFiscal: boolean = true): boolean;
 var str_log_xml : String;   Disc: Currency;
     i : Integer;
@@ -2390,7 +2392,7 @@ begin
       begin
         if Disc <> 0 then Cash.DiscountGoods(Disc);
         Cash.SubTotal(true, true, 0, 0);
-        Cash.TotalSumm(SalerCash, PaidType);
+        Cash.TotalSumm(SalerCash - SalerCashAdd, SalerCashAdd, PaidType);
         result := Cash.CloseReceiptEx(ACheckNumber); //Закрыли чек
       end;
     end;

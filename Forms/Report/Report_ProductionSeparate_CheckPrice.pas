@@ -57,6 +57,11 @@ type
     GuidesPriceList: TdsdGuides;
     FromName: TcxGridDBColumn;
     ToName: TcxGridDBColumn;
+    getMovementForm: TdsdStoredProc;
+    actMovementForm: TdsdExecStoredProc;
+    actOpenForm: TdsdOpenForm;
+    actOpenDocument: TMultiAction;
+    bbOpenDocument: TdxBarButton;
   private
     { Private declarations }
   public

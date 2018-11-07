@@ -121,6 +121,13 @@ inherited MainCashForm2: TMainCashForm2
           DataBinding.FieldName = 'Color_ExpirationDate'
           Visible = False
         end
+        object CheckGridAccommodationName: TcxGridDBColumn
+          Caption = #1050#1086#1076' '#1087#1088#1080#1074'.'
+          DataBinding.FieldName = 'AccommodationName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 57
+        end
       end
       object CheckGridLevel: TcxGridLevel
         GridView = CheckGridDBTableView
@@ -2823,6 +2830,12 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'ManualDiscount'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummPayAdd'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 32
     Top = 56
@@ -2931,6 +2944,11 @@ inherited MainCashForm2: TMainCashForm2
       item
         Name = 'Color_ExpirationDate'
         DataType = ftInteger
+      end
+      item
+        Name = 'AccommodationName'
+        DataType = ftString
+        Size = 200
       end>
     IndexDefs = <>
     Params = <>
@@ -3004,6 +3022,12 @@ inherited MainCashForm2: TMainCashForm2
       end
       item
         ColorColumn = CheckGridColAmountOrder
+        ValueColumn = CheckGridColor_ExpirationDate
+        BackGroundValueColumn = CheckGridColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = CheckGridAccommodationName
         ValueColumn = CheckGridColor_ExpirationDate
         BackGroundValueColumn = CheckGridColor_calc
         ColorValueList = <>

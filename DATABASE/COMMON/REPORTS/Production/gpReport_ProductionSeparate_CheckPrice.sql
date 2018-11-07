@@ -31,7 +31,12 @@ RETURNS TABLE  (Id Integer, InvNumber TVarChar, OperDate TDateTime
 AS
 $BODY$
 BEGIN
-
+   -- если пустое значение прайс-листа тогда  - 2707438   -- расчет цен по дням - обвалка
+   IF COALESCE (inPriceListId, 0) = 0
+   THEN 
+       inPriceListId = 2707438;
+   END IF;
+   
    RETURN QUERY
     WITH
      tmpPiceSeparate AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
@@ -113,8 +118,6 @@ BEGIN
                           , CASE WHEN tmpMI.Amount <> 0 THEN tmpSummIn.SummIn / tmpMI.Amount ELSE 0 END :: TFloat AS PriceIn
                           , tmpPiceSeparate.Price
                           , tmpSummIn.SummIn
-                          , COALESCE (tmpPiceSeparate.Price, 0) * inPersent / 100  AS Sum_diff
-                          , COALESCE (tmpPiceSeparate.Price, 0) - (CASE WHEN tmpMI.Amount <> 0 THEN tmpSummIn.SummIn / tmpMI.Amount ELSE 0 END) AS Price_diff
                         
                      FROM tmpMI
                           LEFT JOIN tmpSummIn ON tmpSummIn.MovementId = tmpMI.MovementId
@@ -130,7 +133,24 @@ BEGIN
                    GROUP BY tmpData_All.GoodsId
                    )
 
-   , tmpData AS (SELECT *
+   , tmpData AS (SELECT tmpData.MovementId
+                      , tmpData.OperDate
+                      , tmpData.Invnumber
+                      , tmpData.FromId
+                      , tmpData.ToId
+                      , tmpData.MovementItemId
+                      , tmpData.GoodsId
+                      , tmpData.Amount
+                      , tmpData.PriceIn
+                      , tmpData.Price
+                      , tmpData.SummIn
+
+                      , tmpData.ValuePrice_min
+                      , tmpData.ValuePrice_max
+                      , tmpData.Diff_in
+                      , tmpData.Diff_max
+                      , tmpData.Diff
+
                  FROM (SELECT tmpData.MovementId
                             , tmpData.OperDate
                             , tmpData.Invnumber
@@ -142,14 +162,32 @@ BEGIN
                             , COALESCE (tmpData.PriceIn, 0)  AS PriceIn
                             , tmpData.Price
                             , tmpData.SummIn
-                            , CASE WHEN (tmpData.Price_diff) >= 0 
-                                   THEN CASE WHEN tmpData.Price_diff >= Sum_diff THEN 1 ELSE 0 END
-                                   ELSE CASE WHEN (-1) * tmpData.Price_diff >= tmpData.Sum_diff THEN 1 ELSE 0 END
-                              END AS isDiff
+                            , CAST (COALESCE (tmpMinMax.ValuePrice_min, 0) AS NUMERIC (16,2))  AS ValuePrice_min
+                            , CAST (COALESCE (tmpMinMax.ValuePrice_max, 0) AS NUMERIC (16,2))  AS ValuePrice_max
+                            , CAST (CASE WHEN COALESCE (tmpMinMax.ValuePrice_min, 0) <> 0 AND COALESCE(tmpData.PriceIn, 0) <> 0 
+                                              THEN (COALESCE(tmpData.PriceIn, 0) - COALESCE (tmpMinMax.ValuePrice_min, 0)) * 100 / COALESCE (tmpMinMax.ValuePrice_min, 0) 
+                                         WHEN COALESCE (tmpMinMax.ValuePrice_min, 0) <> 0 AND COALESCE(tmpData.PriceIn, 0) = 0 
+                                              THEN 100
+                                         ELSE 0
+                                    END  AS NUMERIC (16,0))  AS Diff_in
+       
+                            , CAST (CASE WHEN COALESCE (tmpMinMax.ValuePrice_max, 0) <> 0 AND COALESCE(tmpMinMax.ValuePrice_min, 0)<> 0 
+                                             THEN (COALESCE (tmpMinMax.ValuePrice_max, 0) - COALESCE(tmpMinMax.ValuePrice_min, 0)) * 100 / COALESCE (tmpMinMax.ValuePrice_min, 0) 
+                                         WHEN COALESCE (tmpMinMax.ValuePrice_max, 0) = 0 AND COALESCE(tmpMinMax.ValuePrice_min, 0) <> 0
+                                             THEN 100
+                                         ELSE 0
+                                    END  AS NUMERIC (16,0))  AS Diff_max
+       
+                            , CAST (CASE WHEN COALESCE (tmpData.Price, 0) <> 0 AND COALESCE(tmpMinMax.ValuePrice_min, 0) <> 0 
+                                             THEN (COALESCE (tmpData.Price, 0) - COALESCE(tmpMinMax.ValuePrice_min, 0)) * 100 / COALESCE (tmpMinMax.ValuePrice_min, 0) 
+                                         WHEN COALESCE (tmpData.Price, 0) <> 0 AND COALESCE(tmpMinMax.ValuePrice_min, 0) = 0
+                                             THEN 100
+                                         ELSE 0
+                                    END  AS NUMERIC (16,0))  AS Diff
                        FROM tmpData_All AS tmpData
-                       ) AS tmpData
-                 WHERE tmpData.PriceIn = 0
-                    OR tmpData.isDiff = 1
+                            LEFT JOIN tmpMinMax ON tmpMinMax.GoodsId = tmpData.GoodsId
+                      ) AS tmpData
+                 WHERE tmpData.PriceIn = 0 OR tmpData.Diff_in >= inPersent
                  )
 
      --Результат
@@ -171,28 +209,11 @@ BEGIN
           , tmpData.SummIn                            :: TFloat AS SummaIn
           , (tmpData.Amount * tmpData.Price)          :: TFloat AS Summa
 
-          , CAST (COALESCE (tmpMinMax.ValuePrice_min, 0) AS NUMERIC (16,2)) :: TFloat AS ValuePrice_min
-          , CAST (COALESCE (tmpMinMax.ValuePrice_max, 0) AS NUMERIC (16,2)) :: TFloat AS ValuePrice_max
-          , CAST (CASE WHEN COALESCE (tmpMinMax.ValuePrice_min, 0) <> 0 AND COALESCE(tmpData.PriceIn, 0) <> 0 
-                            THEN (COALESCE(tmpData.PriceIn, 0) - COALESCE (tmpMinMax.ValuePrice_min, 0)) * 100 / COALESCE (tmpMinMax.ValuePrice_min, 0) 
-                       WHEN COALESCE (tmpMinMax.ValuePrice_min, 0) <> 0 AND COALESCE(tmpData.PriceIn, 0) = 0 
-                            THEN 100
-                       ELSE 0
-                  END  AS NUMERIC (16,0))  :: TFloat AS Diff_in
-
-          , CAST (CASE WHEN COALESCE (tmpMinMax.ValuePrice_max, 0) <> 0 AND COALESCE(tmpMinMax.ValuePrice_min, 0)<> 0 
-                           THEN (COALESCE (tmpMinMax.ValuePrice_max, 0) - COALESCE(tmpMinMax.ValuePrice_min, 0)) * 100 / COALESCE (tmpMinMax.ValuePrice_min, 0) 
-                       WHEN COALESCE (tmpMinMax.ValuePrice_max, 0) = 0 AND COALESCE(tmpMinMax.ValuePrice_min, 0) <> 0
-                           THEN 100
-                       ELSE 0
-                  END  AS NUMERIC (16,0)) :: TFloat AS Diff_max
-                  
-          , CAST (CASE WHEN COALESCE (tmpData.Price, 0) <> 0 AND COALESCE(tmpMinMax.ValuePrice_min, 0) <> 0 
-                           THEN (COALESCE (tmpData.Price, 0) - COALESCE(tmpMinMax.ValuePrice_min, 0)) * 100 / COALESCE (tmpMinMax.ValuePrice_min, 0) 
-                       WHEN COALESCE (tmpData.Price, 0) <> 0 AND COALESCE(tmpMinMax.ValuePrice_min, 0) = 0
-                           THEN 100
-                       ELSE 0
-                  END  AS NUMERIC (16,0)):: TFloat AS Diff
+          , tmpData.ValuePrice_min   :: TFloat
+          , tmpData.ValuePrice_max   :: TFloat
+          , tmpData.Diff_in          :: TFloat
+          , tmpData.Diff_max         :: TFloat
+          , tmpData.Diff             :: TFloat
           
      FROM tmpData
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
@@ -210,7 +231,7 @@ BEGIN
                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
-          LEFT JOIN tmpMinMax ON tmpMinMax.GoodsId = tmpData.GoodsId
+          --LEFT JOIN tmpMinMax ON tmpMinMax.GoodsId = tmpData.GoodsId
      ;
     
         

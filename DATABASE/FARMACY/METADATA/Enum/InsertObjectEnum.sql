@@ -354,6 +354,7 @@ BEGIN
 -- 0. Наличка
   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidType_Cash(),  inDescId:= zc_Object_PaidType(), inCode:= 1, inName:= 'Наличка', inEnumName:= 'zc_Enum_PaidType_Cash');
   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidType_Card(), inDescId:= zc_Object_PaidType(), inCode:= 2, inName:= 'Карточка', inEnumName:= 'zc_Enum_PaidType_Card');
+  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidType_CardAdd(), inDescId:= zc_Object_PaidType(), inCode:= 3, inName:= 'Смешенная', inEnumName:= 'zc_Enum_PaidType_CardAdd');
 
 -- !!! Типы аналитик для проводок
      -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SaleCount_10400(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 101, inName:= 'Кол-во, реализация, у покупателя', inEnumName:= 'zc_Enum_AnalyzerId_SaleCount_10400');
@@ -3161,7 +3162,8 @@ END $$;
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.    Воробкало А.А.  Ярошенко Р.Ф.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.    Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 02.11.18                                                                                                   * zc_Enum_PaidType_CardAdd
  25.08.18         * Загрузчик Данные по Соц.проекту в документ
  30.10.17         * Загрузчик НТЗ в zc_Object_DataExcel
  07.07.17         * Загрузка данных по штрих-кодам

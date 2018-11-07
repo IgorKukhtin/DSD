@@ -1,20 +1,14 @@
--- Function: gpInsertUpdate_Movement_Check()
+-- Function: gpInsertUpdate_Movement_Check_ver2()
 
--- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, TVarChar);
--- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
--- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
--- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar);
--- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, TVarChar, TVarChar);
--- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar, TVarChar);
-  
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ ЧЕК>
     IN inDate                TDateTime , -- Дата/время документа
     IN inCashRegister        TVarChar  , -- Серийник кассового аппарата
     IN inPaidType            Integer   , -- тип оплаты
     IN inManagerId           Integer   , -- Менеджер
-    IN inBayer               TVarChar  , -- Покупатель ВИП 
+    IN inBayer               TVarChar  , -- Покупатель ВИП
     IN inFiscalCheckNumber   TVarChar  , -- Номер фискального чека
     IN inNotMCS              Boolean   , -- Не участвует в расчете НТЗ
     IN inDiscountExternalId  Integer   , -- Проект дисконтных карт
@@ -30,6 +24,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
     IN inSPKindId            Integer   , -- Вид СП
     IN inPromoCodeId         Integer   , -- Id промокода
     IN inManualDiscount      Integer   , -- Ручная скидка
+    IN inTotalSummPayAdd     TFloat    , -- Доплата по чеку
     IN inUserSession	     TVarChar  , -- сессия пользователя под которой создан чек в программе
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -58,7 +53,7 @@ BEGIN
     vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
     IF vbUnitKey = '' THEN
         vbUnitKey := '0';
-    END IF;   
+    END IF;
     vbUnitId := vbUnitKey::Integer;
 
     IF COALESCE(vbUnitId, 0) = 0 THEN
@@ -69,30 +64,30 @@ BEGIN
     THEN
         inDate := CURRENT_TIMESTAMP::TDateTime;
     END IF;
-    
+
     -- определяем признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
     IF COALESCE(ioId,0) = 0
     THEN
-        SELECT 
-            COALESCE(MAX(zfConvert_StringToNumber(InvNumber)), 0) + 1 
-        INTO 
+        SELECT
+            COALESCE(MAX(zfConvert_StringToNumber(InvNumber)), 0) + 1
+        INTO
             vbInvNumber
-        FROM 
-            Movement_Check_View 
-        WHERE 
-            Movement_Check_View.UnitId = vbUnitId 
-            AND 
+        FROM
+            Movement_Check_View
+        WHERE
+            Movement_Check_View.UnitId = vbUnitId
+            AND
             Movement_Check_View.OperDate > CURRENT_DATE;
     ELSE
         SELECT
             InvNumber
         INTO
             vbInvNumber
-        FROM 
-            Movement_Check_View 
-        WHERE 
+        FROM
+            Movement_Check_View
+        WHERE
             Movement_Check_View.Id = ioId;
     END IF;
 
@@ -110,13 +105,13 @@ BEGIN
                                                                 inSession := inSession);
         PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_CashRegister(),ioId,vbCashRegisterId);
     END IF;
-    
+
     -- сохранили отметку <Не участвует в расчете НТЗ>
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_NotMCS(), ioId, inNotMCS);
-    
+
     -- сохранили Номер чека в кассовом аппарате
     PERFORM lpInsertUpdate_MovementString(zc_MovementString_FiscalCheckNumber(),ioId,inFiscalCheckNumber);
-    
+
     -- сохранили связь с <Тип оплаты>
     IF inPaidType <> -1
     THEN
@@ -126,11 +121,14 @@ BEGIN
         ELSEIF inPaidType = 1
         THEN
             PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidType(),ioId,zc_Enum_PaidType_Card());
+        ELSEIF inPaidType = 2
+        THEN
+            PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidType(),ioId,zc_Enum_PaidType_CardAdd());
         ELSE
             RAISE EXCEPTION 'Ошибка.Не определен тип оплаты';
         END IF;
     END IF;
-    
+
     -- сохранили связь с менеджером и покупателем + <Статус заказа (Состояние VIP-чека)>
     IF COALESCE (inManagerId,0) <> 0
     THEN
@@ -148,7 +146,7 @@ BEGIN
         END IF;
 
     END IF;
- 
+
     -- сохранили связь с <Дисконтная карта> + здесь же и сформировали <Дисконтная карта>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DiscountCard(), ioId, CASE WHEN inDiscountExternalId > 0 THEN lpInsertFind_Object_DiscountCard (inObjectId:= inDiscountExternalId, inValue:= inDiscountCardNumber, inUserId:= vbUserId) ELSE 0 END);
 
@@ -161,11 +159,13 @@ BEGIN
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberSP(), ioId, inInvNumberSP);
     -- сохранили <>
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_RoundingTo10(), ioId, True);
+    -- сохранили <>
     IF inInvNumberSP <> ''
     THEN
        -- сохранили <>
        PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateSP(), ioId, inOperDateSP);
-       
+
        -- сохранили связь с <вид соц.проекта>
        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SPKind(), ioId, inSPKindId);
     END IF;
@@ -176,6 +176,10 @@ BEGIN
     -- сохранили Ручную скидку
     IF inManualDiscount <> 0 THEN
 	   PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ManualDiscount(), ioId, inManualDiscount);
+	END IF;
+    -- сохранили Доплату по чеку
+    IF inTotalSummPayAdd <> 0 THEN
+	   PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPayAdd(), ioId, inTotalSummPayAdd);
 	END IF;
 
     IF vbIsInsert = TRUE
@@ -196,7 +200,7 @@ BEGIN
         RAISE EXCEPTION 'Тест прошел успешно для <%> <%>', inUserSession, inSession;
     END IF;
 
-    
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -204,8 +208,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Подмогильный В.В.   Шаблий О.В.
- 29.06.18                                                                                                         * add ManualDiscount              
- 05.02.18                                                                                         * add PromoCode               
+ 02.11.18                                                                                                         * add TotalSummPayAdd
+ 29.06.18                                                                                                         * add ManualDiscount
+ 05.02.18                                                                                         * add PromoCode
  23.05.17         * add zc_Enum_SPKind_SP
  06.10.16         * add сохранение св-в дата/польз. создания
  20.07.16                                        *

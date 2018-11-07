@@ -12,6 +12,7 @@ SELECT
            , Object_Status.ValueData                    AS StatusName
            , MovementFloat_TotalCount.ValueData         AS TotalCount
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+           , MovementFloat_TotalSummPayAdd.ValueData    AS TotalSummPayAdd
            , MovementFloat_TotalSummChangePercent.ValueData  AS TotalSummChangePercent
            , MovementLinkObject_Unit.ObjectId           AS UnitId
            , Object_Unit.ValueData                      AS UnitName
@@ -57,6 +58,9 @@ SELECT
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPayAdd
+                                    ON MovementFloat_TotalSummPayAdd.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummPayAdd.DescId = zc_MovementFloat_TotalSummPayAdd()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
                                     ON MovementFloat_TotalSummChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
@@ -163,6 +167,7 @@ ALTER TABLE Movement_Check_View
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 02.10.18                                                       * add TotalSummPayAdd
  29.06.18                                                       * 
  23.05.17         *
  07.04.17         *

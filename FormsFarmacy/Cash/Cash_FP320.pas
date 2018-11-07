@@ -25,7 +25,7 @@ type
     function CashInputOutput(const Summa: double): boolean;
     function ProgrammingGoods(const GoodsCode: integer; const GoodsName: string; const Price, NDS: double): boolean;
     function ClosureFiscal: boolean;
-    function TotalSumm(Summ: double; PaidType: TPaidType): boolean;
+    function TotalSumm(Summ, SummAdd: double; PaidType: TPaidType): boolean;
     function DiscountGoods(Summ: double): boolean;
     function DeleteArticules(const GoodsCode: integer): boolean;
     function XReport: boolean;
@@ -307,7 +307,7 @@ begin
   end else result := True;
 end;
 
-function TCashFP320.TotalSumm(Summ: double; PaidType: TPaidType): boolean;
+function TCashFP320.TotalSumm(Summ, SummAdd: double; PaidType: TPaidType): boolean;
 var
   SSumm: WideString;
   pData: Integer;
@@ -319,13 +319,19 @@ begin
   if FPrinter.CheckTotal then
     FPrinter.CheckTotal := False;
 
-	if PaidType = ptCard then
+	if PaidType = ptMoney then
   Begin
-    FPrinter.PrintRecTotal(Summ, Summ, '1');
+    FPrinter.PrintRecTotal(Summ, Summ, '0');
   End
   else
-    FPrinter.PrintRecTotal(Summ, Summ, '0');
+    FPrinter.PrintRecTotal(Summ, Summ, '1');
   Result := not PrinterException;
+
+  if Result and (PaidType = ptCardAdd) and (SummAdd <> 0) then
+  begin
+    FPrinter.PrintRecTotal(SummAdd, SummAdd, '0');
+    Result := not PrinterException;
+  end;
 end;
 
 function TCashFP320.DiscountGoods(Summ: double): boolean;

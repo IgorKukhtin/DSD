@@ -401,11 +401,16 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_TestingUser_MaxAttempts() RETURNS In
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TestingUser_MaxAttempts', 'Количество попыток' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TestingUser_MaxAttempts');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummPayAdd() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummPayAdd'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSummPayAdd', 'Сумма доплаты по чеку' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummPayAdd');
+
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 02.11.18                                                                                     * zc_MovementFloat_TotalSummPayAdd()
  15.10.18                                                                                     * 
  01.10.18                                                                                     * zc_MovementFloat_AmountAccount, zc_MovementFloat_AmountPayment 
  24.09.18         * zc_MovementFloat_TotalSummSample

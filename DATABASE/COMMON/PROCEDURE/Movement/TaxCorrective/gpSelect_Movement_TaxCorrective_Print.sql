@@ -637,7 +637,15 @@ BEGIN
                                                    ON ObjectString_JuridicalTo_GLNCode.ObjectId = MovementLinkObject_To.ObjectId
                                                   AND ObjectString_JuridicalTo_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
                        )
-
+/*  -- причины корректировки и кода
+1. "Зміна кількості".
+2. "Зміна ціни".
+3. "Зміна номенклатури". --zc_Enum_DocumentTaxKind_Goods
+4. "Повернення товарів або авансових платежів".
+5. "Зменшення обсягу при нульовій кількості".
+6. "Зменшення кількості при нульовому обсязі".
+7. "Усунення неоднозначностей"  --zc_Enum_DocumentTaxKind_Change
+*/ 
    , tmpData_all AS
       -- РЕЗУЛЬТАТ
      (SELECT inMovementId                                                   AS inMovementId
@@ -667,6 +675,25 @@ BEGIN
              END                            :: TVarChar AS N10_ifin
 
            , 'оплата з поточного рахунка'::TVarChar                         AS N9
+
+           , CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Goods()--, zc_Enum_DocumentTaxKind_Change())
+                       THEN 3 --Object_DocumentTaxKind.ValueData
+
+                  WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Change()
+                       THEN 7 --Object_DocumentTaxKind.ValueData
+
+                  WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                       THEN 2 --'Зміна ціни'
+                       
+                  WHEN MovementBoolean_isCopy.ValueData = TRUE
+                       THEN 4 --'ВИПРАВЛЕННЯ ПОМИЛКИ'
+
+                  WHEN tmpMI.isPartner = TRUE
+                       THEN 1 --'Зміна кількості' -- 'НЕДОВІЗ'
+
+                  ELSE 1 --'Зміна кількості' -- 'повернення товару або авансових платежів' -- 'повернення'
+             END ::integer AS KindCode
+
            , CASE WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change())
                        THEN Object_DocumentTaxKind.ValueData
 
@@ -738,8 +765,10 @@ BEGIN
                   ELSE ''
              END :: TVarChar AS ERPN2 -- Підлягає реєстрації в ЄРПН покупцем
 
-           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
-                  THEN 'X' ELSE '' END                                      AS NotNDSPayer
+           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> '' THEN 'X'
+                  WHEN tmpMI.OperDate >= '01.12.2018' AND tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay()) THEN '4'
+                  ELSE '' 
+             END :: TVarChar AS NotNDSPayer
            , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                   THEN TRUE ELSE FALSE END :: Boolean                       AS isNotNDSPayer
            , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
@@ -753,7 +782,11 @@ BEGIN
            , OH_JuridicalDetails_To.JuridicalAddress                        AS JuridicalAddress_To
 
            , OH_JuridicalDetails_To.OKPO                                    AS OKPO_To
-           , (REPEAT ('0', 10 - LENGTH (OH_JuridicalDetails_To.OKPO)) ||  OH_JuridicalDetails_To.OKPO) :: TVarChar AS OKPO_To_ifin
+           , CASE WHEN OH_JuridicalDetails_To.INN IN ('100000000000', '300000000000')
+                  THEN ''
+                  ELSE (REPEAT ('0', 10 - LENGTH (OH_JuridicalDetails_To.OKPO)) ||  OH_JuridicalDetails_To.OKPO)
+             END :: TVarChar AS OKPO_To_ifin
+           --, (REPEAT ('0', 10 - LENGTH (OH_JuridicalDetails_To.OKPO)) ||  OH_JuridicalDetails_To.OKPO) :: TVarChar AS OKPO_To_ifin
            , OH_JuridicalDetails_To.INN                                     AS INN_To
            , OH_JuridicalDetails_To.NumberVAT                               AS NumberVAT_To
          -- , COALESCE (Object_Personal_View.PersonalName, OH_JuridicalDetails_To.AccounterName) :: TVarChar AS AccounterName_To 
@@ -799,6 +832,10 @@ BEGIN
              ELSE OH_JuridicalDetails_From.JuridicalAddress END             AS JuridicalAddress_From
 
            , OH_JuridicalDetails_From.OKPO                                  AS OKPO_From
+           , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) IN ('100000000000', '300000000000')
+                  THEN ''
+                  ELSE (REPEAT ('0', 10 - LENGTH (OH_JuridicalDetails_From.OKPO)) ||  OH_JuridicalDetails_From.OKPO)
+             END :: TVarChar AS OKPO_From_ifin
            , CASE WHEN vbCalcNDSPayer_INN <> '' THEN vbCalcNDSPayer_INN ELSE COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) END AS INN_From
            , OH_JuridicalDetails_From.InvNumberBranch                       AS InvNumberBranch_From
            , OH_JuridicalDetails_From.NumberVAT                             AS NumberVAT_From
@@ -1010,6 +1047,14 @@ BEGIN
                                                          , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
                                                           )
                    AND tmpData_all.AmountTax_calc = tmpData_all.Amount
+                       THEN 4 --'Повернення товару або авансових платежів'
+                  ELSE tmpData_all.KindCode
+             END ::integer AS KindCode
+
+           , CASE WHEN tmpData_all.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                         , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
+                                                          )
+                   AND tmpData_all.AmountTax_calc = tmpData_all.Amount
                        THEN 'Повернення товару або авансових платежів'
                   ELSE tmpData_all.KindName
              END :: TVarChar AS KindName
@@ -1074,6 +1119,7 @@ BEGIN
            , tmpData_all.JuridicalAddress_From
 
            , tmpData_all.OKPO_From
+           , tmpData_all.OKPO_From_ifin
            , tmpData_all.INN_From
 
            , tmpData_all.InvNumberBranch_From
@@ -1131,6 +1177,16 @@ BEGIN
             + tmpData_all.SummTaxDiff_calc
              ) :: TFloat AS AmountSumm
 
+             -- сумма НДС
+           , ( (CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                          -- !!!Корр. цены!!!
+                          THEN (tmpData_all.Amount_for_PriceCor * -1 * (tmpData_all.PriceTax_calc - tmpData_all.Price_for_PriceCor)) :: NUMERIC (16, 2)
+
+                     WHEN tmpData_all.CountForPrice_orig > 0
+                          THEN ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
+                     ELSE ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig) :: NUMERIC (16, 2)
+                END) / 100 * tmpData_all.VATPercent ) :: TFloat AS SummVat
+
            , tmpData_all.InvNumberBranch
            , tmpData_all.InvNumberBranch_Child
 
@@ -1176,6 +1232,7 @@ BEGIN
            , tmpData_all.N10_ifin
 
            , tmpData_all.N9
+           , tmpData_all.KindCode ::integer
            , tmpData_all.KindName
            , tmpData_all.PriceWithVAT
            , tmpData_all.VATPercent
@@ -1237,6 +1294,7 @@ BEGIN
            , tmpData_all.JuridicalAddress_From
 
            , tmpData_all.OKPO_From
+           , tmpData_all.OKPO_From_ifin
            , tmpData_all.INN_From
 
            , tmpData_all.InvNumberBranch_From
@@ -1287,6 +1345,16 @@ BEGIN
                        THEN ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
                   ELSE ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig) :: NUMERIC (16, 2)
              END :: TFloat AS AmountSumm
+
+             -- сумма НДС
+           , ( (CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                          -- !!!Корр. цены!!!
+                          THEN (tmpData_all.Amount_for_PriceCor * -1 * (tmpData_all.PriceTax_calc - tmpData_all.Price_for_PriceCor)) :: NUMERIC (16, 2)
+
+                     WHEN tmpData_all.CountForPrice_orig > 0
+                          THEN ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
+                     ELSE ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig) :: NUMERIC (16, 2)
+                END) / 100 * tmpData_all.VATPercent ) :: TFloat AS SummVat
 
            , tmpData_all.InvNumberBranch
            , tmpData_all.InvNumberBranch_Child

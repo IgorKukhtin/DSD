@@ -331,6 +331,7 @@ type
     pm_VIP2: TMenuItem;
     CheckGridColor_calc: TcxGridDBColumn;
     CheckGridColor_ExpirationDate: TcxGridDBColumn;
+    CheckGridAccommodationName: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -423,7 +424,8 @@ type
     SoldParallel: Boolean;
     SourceClientDataSet: TClientDataSet;
     ThreadErrorMessage:String;
-    ASalerCash{,ASdacha}: Currency;
+    ASalerCash: Currency;
+    ASalerCashAdd: Currency;
     PaidType: TPaidType;
     FiscalNumber: String;
     difUpdate: Boolean;  // только 2 форма
@@ -457,7 +459,7 @@ type
     // что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА
     procedure Add_Log_XML(AMessage: String);
     // Пробивает чек через ЭККА
-    function PutCheckToCash(SalerCash: Currency; PaidType: TPaidType;
+    function PutCheckToCash(SalerCash, SalerCashAdd: Currency; PaidType: TPaidType;
       out AFiscalNumber, ACheckNumber: String; isFiscal: boolean = true): boolean;
     //подключение к локальной базе данных
     function InitLocalStorage: Boolean;
@@ -469,6 +471,7 @@ type
       APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP : String;
       AOperDateSP : TDateTime;
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
+      ASummPayAdd : Currency;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 
     //проверили что есть остаток
@@ -825,6 +828,8 @@ begin
   FormParams.ParamByName('PromoCodeChangePercent').Value    := 0.0;
   //***27.06.18
   FormParams.ParamByName('ManualDiscount').Value            := 0;
+  //***02.11.18
+  FormParams.ParamByName('SummPayAdd').Value                := 0;
 
   ClearFilterAll;
 
@@ -992,7 +997,8 @@ begin
         (((checkCDS.FieldByName('Amount').asCurrency + checkCDS.FieldByName('Remains').asCurrency) <>
         RemainsCDS.FieldByName('Remains').asCurrency) or
         (checkCDS.FieldByName('Color_calc').AsInteger <> RemainsCDS.FieldByName('Color_calc').asInteger) or
-        (checkCDS.FieldByName('Color_ExpirationDate').AsInteger <> RemainsCDS.FieldByName('Color_ExpirationDate').asInteger)) then
+        (checkCDS.FieldByName('Color_ExpirationDate').AsInteger <> RemainsCDS.FieldByName('Color_ExpirationDate').asInteger) or
+        (checkCDS.FieldByName('AccommodationName').AsVariant <> RemainsCDS.FieldByName('AccommodationName').AsVariant)) then
       begin
         checkCDS.Edit;
         checkCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency +
@@ -1006,6 +1012,7 @@ begin
           checkCDS.FieldByName('Color_calc').AsInteger:=clWhite;
           checkCDS.FieldByName('Color_ExpirationDate').AsInteger:=clBlack;
         end;
+        checkCDS.FieldByName('AccommodationName').AsVariant:=RemainsCDS.FieldByName('AccommodationName').AsVariant;
         checkCDS.Post;
       end;
       CheckCDS.Next;
@@ -1367,12 +1374,14 @@ begin
   //спросили сумму и тип оплаты
   if not fShift then
   begin// если с Shift, то считаем, что дали без сдачи
-    if not CashCloseDialogExecute(FTotalSumm,ASalerCash,PaidType) then
+    if not CashCloseDialogExecute(FTotalSumm,ASalerCash,ASalerCashAdd,PaidType) then
     Begin
       if Self.ActiveControl <> edAmount then
         Self.ActiveControl := MainGrid;
       exit;
     End;
+    //***02.11.18
+    FormParams.ParamByName('SummPayAdd').Value := ASalerCashAdd;
   end
   else
     ASalerCash:=FTotalSumm;
@@ -1411,7 +1420,7 @@ begin
   //послали на печать
   try
     Add_Log('Печать чека');
-    if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.PaidType, FiscalNumber, CheckNumber) then
+    if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.ASalerCashAdd, MainCashForm.PaidType, FiscalNumber, CheckNumber) then
     Begin
       Add_Log('Печать чека завершена');
       if (FormParams.ParamByName('DiscountExternalId').Value > 0)
@@ -1452,6 +1461,8 @@ begin
                    FormParams.ParamByName('PromoCodeID').Value,
                    //***27.06.18
                    FormParams.ParamByName('ManualDiscount').Value,
+                   //***02.11.18
+                   FormParams.ParamByName('SummPayAdd').Value,
 
                    True,         // NeedComplete
                    CheckNumber,  // FiscalCheckNumber
@@ -1689,6 +1700,8 @@ begin
           RemainsCDS.Filtered := True;
           RemainsCDS.EnableControls;
         end;
+        //***05.11.18
+        checkCDS.FieldByName('AccommodationName').AsVariant:=RemainsCDS.FieldByName('AccommodationName').AsVariant;
         CheckCDS.Post;
         Add_Log('Id - '+ VipList.FieldByName('Id').AsString +
                 ' GoodsCode - ' + VipList.FieldByName('GoodsCode').AsString +
@@ -2307,6 +2320,8 @@ begin
               ,FormParams.ParamByName('PromoCodeID').Value
               //***27.06.18
               ,FormParams.ParamByName('ManualDiscount').Value
+              //***02.11.18
+              ,FormParams.ParamByName('SummPayAdd').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -2383,6 +2398,8 @@ begin
               ,FormParams.ParamByName('PromoCodeID').Value
               //***27.06.18
               ,FormParams.ParamByName('ManualDiscount').Value
+              //***02.11.18
+              ,FormParams.ParamByName('SummPayAdd').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -2537,6 +2554,8 @@ begin
               ,FormParams.ParamByName('PromoCodeID').Value
               //***27.06.18
               ,FormParams.ParamByName('ManualDiscount').Value
+              //***02.11.18
+              ,FormParams.ParamByName('SummPayAdd').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -2785,7 +2804,7 @@ end;
 procedure TMainCashForm2.miPrintNotFiscalCheckClick(Sender: TObject);
 var CheckNumber: string;
 begin
-  PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.PaidType, FiscalNumber, CheckNumber, false);
+  PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.ASalerCashAdd, MainCashForm.PaidType, FiscalNumber, CheckNumber, false);
 end;
 
 procedure TMainCashForm2.mmSaveToExcelClick(Sender: TObject);
@@ -3227,6 +3246,7 @@ begin
             begin
               checkCDS.FieldByName('Color_calc').AsInteger:=RemainsCDS.FieldByName('Color_calc').asInteger;
               checkCDS.FieldByName('Color_ExpirationDate').AsInteger:=RemainsCDS.FieldByName('Color_ExpirationDate').asInteger;
+              checkCDS.FieldByName('AccommodationName').AsVariant:=SourceClientDataSet.FieldByName('AccommodationName').AsVariant;
             end else
             begin
               checkCDS.FieldByName('Color_calc').AsInteger := clWhite;
@@ -3249,6 +3269,8 @@ begin
             checkCDS.FieldByName('Color_ExpirationDate').AsInteger:=clBlack;
           end;
         end;
+        if Assigned(SourceClientDataSet.FindField('AccommodationName')) then
+          checkCDS.FieldByName('AccommodationName').AsVariant:=SourceClientDataSet.FieldByName('AccommodationName').AsVariant;
         checkCDS.Post;
 
         if (FormParams.ParamByName('DiscountExternalId').Value > 0) and
@@ -3585,6 +3607,8 @@ begin
   FormParams.ParamByName('PromoCodeChangePercent').Value    := 0.0;
   //***27.06.18
   FormParams.ParamByName('ManualDiscount').Value            := 0;
+  //***02.11.18
+  FormParams.ParamByName('SummPayAdd').Value            := 0;
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -3767,21 +3791,25 @@ begin
   end;
 end;
 
-function TMainCashForm2.PutCheckToCash(SalerCash: Currency;
+function TMainCashForm2.PutCheckToCash(SalerCash,SalerCashAdd: Currency;
   PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String; isFiscal: boolean = true): boolean;
 var str_log_xml : String; Disc: Currency;
     i, PosDisc : Integer;
 {------------------------------------------------------------------------------}
   function PutOneRecordToCash: boolean; //Продажа одного наименования
+    var сAccommodationName : string;
   begin
      // посылаем строку в кассу и если все OK, то ставим метку о продаже
      if not Assigned(Cash) or Cash.AlwaysSold then
         result := true
      else
        if not SoldParallel then
-         with CheckCDS do begin
+         with CheckCDS do
+         begin
+            if isFiscal or FieldByName('AccommodationName').IsNull then сAccommodationName := ''
+            else сAccommodationName := ' ' + FieldByName('AccommodationName').Text;
             result := Cash.SoldFromPC(FieldByName('GoodsCode').asInteger,
-                                      AnsiUpperCase(FieldByName('GoodsName').Text),
+                                      AnsiUpperCase(FieldByName('GoodsName').Text + сAccommodationName),
                                       FieldByName('Amount').asCurrency,
                                       FieldByName('Price').asCurrency,
                                       FieldByName('NDS').asCurrency);
@@ -3911,7 +3939,7 @@ begin
       begin
         if (Disc <> 0) and (PosDisc = 0) then Cash.DiscountGoods(Disc);
         Cash.SubTotal(true, true, 0, 0);
-        Cash.TotalSumm(SalerCash, PaidType);
+        Cash.TotalSumm(SalerCash, SalerCashAdd, PaidType);
         result := Cash.CloseReceiptEx(ACheckNumber); //Закрыли чек
       end;
     end;
@@ -4182,6 +4210,7 @@ function TMainCashForm2.SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AMan
       APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP : String;
       AOperDateSP : TDateTime;
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
+      ASummPayAdd : Currency;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: integer;
@@ -4353,7 +4382,9 @@ begin
                                          //***02.02.18
                                          APromoCodeID,             //Id промокода
                                          //***27.06.18
-                                         AManualDiscount           //Ручная скидка
+                                         AManualDiscount,          //Ручная скидка
+                                         //***02.11.18
+                                         ASummPayAdd               //Доплата по чеку
                                         ]);
       End
       else
@@ -4394,6 +4425,8 @@ begin
         FLocalDataBaseHead.FieldByName('PROMOCODE').Value  := APromoCodeID;  //Id промокода
         //***27.06.18
         FLocalDataBaseHead.FieldByName('MANUALDISC').Value := AManualDiscount; // Ручная скидка
+        //***02.11.18
+        FLocalDataBaseHead.FieldByName('SUMMPAYADD').Value := ASummPayAdd; // Сумма доплаты
 
         FLocalDataBaseHead.Post;
       End;
