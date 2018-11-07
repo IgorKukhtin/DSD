@@ -46,15 +46,15 @@ BEGIN
              SELECT tmpMI.Id
                   , tmpMI.GoodsId
                   , COALESCE (MIFloat_ListDiff.ValueData, 0)        AS ListDiffAmount
-                  , COALESCE (tmpMIFloat_AmountManual.ValueData, 0) AS AmountManual
+                  , COALESCE (MIFloat_AmountManual.ValueData, 0) AS AmountManual
              FROM tmpMI
                   LEFT JOIN tmpMIFloat_ListDiff     AS MIFloat_ListDiff     ON MIFloat_ListDiff.MovementItemId = tmpMI.Id
                   LEFT JOIN tmpMIFloat_AmountManual AS MIFloat_AmountManual ON MIFloat_AmountManual.MovementItemId = tmpMI.Id
                   ;
 
      -- Данные из док. отказ
-     CREATE TEMP TABLE _tmpListDiff_MI (Id integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
-       INSERT INTO _tmpListDiff_MI (Id, GoodsId, Amount)
+     CREATE TEMP TABLE _tmpListDiff_MI (Id integer, GoodsId Integer, Amount TFloat, Comment TVarChar) ON COMMIT DROP;
+       INSERT INTO _tmpListDiff_MI (Id, GoodsId, Amount, Comment)
               WITH    
                   -- документы отказа
                   tmpListDiff AS (SELECT Movement.*
@@ -65,7 +65,8 @@ BEGIN
                                                                     AND MovementLinkObject_UNit.DescId = zc_MovementLinkObject_Unit()
                                                                     AND MovementLinkObject_Unit.ObjectId = inUnitId
                                   WHERE Movement.DescId = zc_Movement_ListDiff() 
-                                    AND Movement.StatusId = zc_Enum_Status_Complete()
+                                    AND Movement.StatusId <> zc_Enum_Status_Erased() --zc_Enum_Status_Complete()
+                                    AND Movement.OperDate >= '07.11.2018'
                                  )
                   -- строки документа отказ
                 , tmpListDiff_MI_All AS (SELECT MovementItem.*
@@ -83,21 +84,34 @@ BEGIN
                                          AND MovementItemFloat.DescId = zc_MIFloat_MovementId()
                                          AND COALESCE (MovementItemFloat.ValueData, 0) <> 0 
                                       )
-          
+                , tmpMI_Comment AS (SELECT MovementItemString.*
+                                    FROM MovementItemString
+                                    WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpListDiff_MI_All.Id FROM tmpListDiff_MI_All)
+                                      AND MovementItemString.DescId = zc_MIString_Comment()
+                                    )
+                                                 
                 SELECT tmpListDiff_MI_All.Id
                      , tmpListDiff_MI_All.ObjectId     AS GoodsId
                      , tmpListDiff_MI_All.Amount       AS Amount
+                     , COALESCE (tmpMI_Comment.ValueData, '') ::TVarChar AS Comment
                 FROM tmpListDiff_MI_All
                      LEFT JOIN tmpMI_MovementId ON tmpMI_MovementId.MovementItemId = tmpListDiff_MI_All.Id
+                     LEFT JOIN tmpMI_Comment    ON tmpMI_Comment.MovementItemId    = tmpListDiff_MI_All.Id
                 WHERE tmpMI_MovementId.ValueData IS NULL;
            
      -- сохраняем свойства, если такого товара нет в заказе дописываем
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ListDiff(), COALESCE (_tmp_MI.Id, 0), COALESCE (_tmp_MI.ListDiffAmount,0) + COALESCE (tmpListDiff_MI.Amount, 0) )   -- сохранили свойство кол-во отказ
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountManual(), COALESCE (_tmp_MI.Id, 0), COALESCE (_tmp_MI.AmountManual,0) + COALESCE (tmpListDiff_MI.Amount, 0) ) -- сохранили свойство <Ручное количество>
-           , lpInsert_MovementItemProtocol (_tmp_MI.Id, vbUserId, FALSE)                                                                                                      -- сохранили протокол
+     PERFORM lpInsertUpdate_MI_OrderInternal_ListDiff (inId             := COALESCE (_tmp_MI.Id, 0)
+                                                     , inMovementId     := inMovementId
+                                                     , inGoodsId        := COALESCE ( _tmp_MI.GoodsId, tmpListDiff_MI.GoodsId)
+                                                     , inAmountManual   := (COALESCE (_tmp_MI.AmountManual,0) + COALESCE (tmpListDiff_MI.Amount, 0) ) ::TFloat
+                                                     , inListDiffAmount := (COALESCE (_tmp_MI.ListDiffAmount,0) + COALESCE (tmpListDiff_MI.Amount, 0) )::TFloat
+                                                     , inComment        := COALESCE (_tmpListDiff_MI.Comment, '') :: TVarChar
+                                                     , inUserId         := vbUserId
+                                                     )
      FROM _tmp_MI
           FULL JOIN (SELECT _tmpListDiff_MI.GoodsId      AS GoodsId
                           , SUM (_tmpListDiff_MI.Amount) AS Amount 
+                          , STRING_AGG (_tmpListDiff_MI.Comment, ';') AS Comment
                      FROM _tmpListDiff_MI
                      GROUP BY _tmpListDiff_MI.GoodsId
                      ) AS tmpListDiff_MI ON tmpListDiff_MI.GoodsId = _tmp_MI.GoodsId
@@ -105,6 +119,8 @@ BEGIN
      
      --записываем Ид заказа в строки док. отказа
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), tmp.Id, inMovementId)
+           , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_List(), tmp.Id, vbUserId)
+           , lpInsertUpdate_MovementItemDate (zc_MIDate_List(), tmp.Id, CURRENT_TIMESTAMP)
            , lpInsert_MovementItemProtocol (tmp.Id, vbUserId, FALSE)
      FROM _tmpListDiff_MI AS tmp;
 
@@ -115,8 +131,14 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.11.18         *
  01.11.18         *
 */
 
 -- тест
 --
+
+ /*lpInsertUpdate_MovementItemFloat (zc_MIFloat_ListDiff(), COALESCE (_tmp_MI.Id, 0), COALESCE (_tmp_MI.ListDiffAmount,0) + COALESCE (tmpListDiff_MI.Amount, 0) )   -- сохранили свойство кол-во отказ
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountManual(), COALESCE (_tmp_MI.Id, 0), COALESCE (_tmp_MI.AmountManual,0) + COALESCE (tmpListDiff_MI.Amount, 0) ) -- сохранили свойство <Ручное количество>
+           , lpInsert_MovementItemProtocol (_tmp_MI.Id, vbUserId, FALSE) 
+           */

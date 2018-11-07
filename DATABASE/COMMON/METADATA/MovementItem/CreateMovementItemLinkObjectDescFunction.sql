@@ -279,9 +279,15 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_KindOutSP() RETURNS Integer AS $BODY$
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_KindOutSP', 'Форма випуску (Соц. проект)(4)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_KindOutSP');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_List() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_List'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_List', 'Пользователь (лист отказов)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_List');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.11.18         * zc_MILinkObject_List
  13.08.18         * for GoodsSP
  25.05.17         * zc_MILinkObject_StorageLine
  27.09.16         * zc_MILinkObject_Region

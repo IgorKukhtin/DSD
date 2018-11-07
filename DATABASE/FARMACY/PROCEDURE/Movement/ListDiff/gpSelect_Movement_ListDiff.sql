@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ListDiff(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , UnitId Integer, UnitName TVarChar
+             , JuridicalName TVarChar
              , TotalCount TFloat
              , TotalSumm TFloat
               )
@@ -33,7 +34,8 @@ BEGIN
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
-        , tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+        , tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId      AS UnitId
+                             , ObjectLink_Unit_Juridical.ChildObjectId AS JuridicalId
                         FROM ObjectLink AS ObjectLink_Unit_Juridical
                            INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                  ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
@@ -51,12 +53,14 @@ BEGIN
            , Object_Status.ValueData            AS StatusName
            , Object_Unit.Id                     AS UnitId
            , Object_Unit.ValueData              AS UnitName
+           , Object_Juridical.ValueData         AS JuridicalName
 
            , MovementFloat_TotalCount.ValueData AS TotalCount
            , MovementFloat_TotalSumm.ValueData  AS TotalSumm
 
        FROM (SELECT Movement.*
                   , MovementLinkObject_Unit.ObjectId AS UnitId
+                  , tmpUnit.JuridicalId
              FROM tmpStatus
                   INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
                                      AND Movement.DescId = zc_Movement_ListDiff() 
@@ -77,6 +81,8 @@ BEGIN
 
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement.UnitId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Movement.JuridicalId
+            
             ;
 END;
 $BODY$

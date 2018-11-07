@@ -15,17 +15,17 @@ inherited ListDiffJournalForm: TListDiffJournalForm
     Width = 861
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 821
+    ExplicitWidth = 861
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 861
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 821
+      ExplicitWidth = 861
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 861
         Height = 478
-        ExplicitWidth = 821
+        ExplicitWidth = 861
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -82,6 +82,14 @@ inherited ListDiffJournalForm: TListDiffJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 329
           end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1063#1055
+            DataBinding.FieldName = 'JuridicalName'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 123
+          end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
@@ -108,7 +116,7 @@ inherited ListDiffJournalForm: TListDiffJournalForm
   end
   inherited Panel: TPanel
     Width = 861
-    ExplicitWidth = 821
+    ExplicitWidth = 861
     inherited deStart: TcxDateEdit
       EditValue = 42005d
     end
