@@ -63,7 +63,7 @@ BEGIN
       , tmpData AS (SELECT
                           tmpReport.Id
                         , Object_ReportCollation.ObjectCode
-                        , zfFormat_BarCode (zc_BarCodePref_Object(), tmpReport.Id) ::TVarChar AS idBarCode
+                        , (zfFormat_BarCode (zc_BarCodePref_Object(), tmpReport.Id) || '0') ::TVarChar AS idBarCode
                         , ObjectDate_Start.ValueData      AS StartDate
                         , ObjectDate_End.ValueData        AS EndDate
                         , Object_Juridical.ValueData      AS JuridicalName

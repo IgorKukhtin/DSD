@@ -33,6 +33,10 @@ BEGIN
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
 
+
+      -- RAISE EXCEPTION 'Ошибка.Нет Прав проводить расчеты с покупателем.';
+
+
       -- получаем Id документа по GUID
       SELECT MovementString_GUID.MovementId 
            , Movement_Cash.StatusId
@@ -136,38 +140,5 @@ $BODY$
 */
 
 -- тест
-/* 
-  SELECT * FROM gpInsertUpdateMobile_Movement_Cash (inGUID          := '{88E07827-BCC3-41E7-A574-E0837AD2E17A}'
-                                                  , inInvNumber     := '-30'
-                                                  , inOperDate      := CURRENT_DATE
-                                                  , inStatusId      := zc_Enum_Status_UnComplete()
-                                                  , inInsertDate    := CURRENT_TIMESTAMP
-                                                  , inAmount        := 6456.45
-                                                  , inPaidKindId    := zc_Enum_PaidKind_SecondForm()
-                                                  , inPartnerId     := 17819
-                                                  , inCashId        := 280296
-                                                  , inMemberId      := 274610
-                                                  , inContractId    := 16687
-                                                  , inComment       := 'Приход конкретный'
-                                                  , inInvNumberSale := '364957'
-                                                  , inSession       := zfCalc_UserAdmin()
-                                                   );
-*/
-/*
-  SELECT * FROM gpInsertUpdateMobile_Movement_Cash (inGUID          := '{88E07827-BCC3-41E7-A574-E0837AD2E17A}'
-                                                  , inInvNumber     := '-30'
-                                                  , inOperDate      := CURRENT_DATE
-                                                  , inStatusId      := zc_Enum_Status_UnComplete()
-                                                  , inInsertDate    := CURRENT_TIMESTAMP
-                                                  , inAmount        := 6456.45
-                                                  , inPaidKindId    := zc_Enum_PaidKind_SecondForm()
-                                                  , inPartnerId     := 298605
-                                                  , inCashId        := 280296
-                                                  , inMemberId      := 301532
-                                                  , inContractId    := 80339
-                                                  , inComment       := 'Приход конкретный'
-                                                  , inInvNumberSale := 'АЛ-0000817'
-                                                  , inSession       := '351808'
-                                                   );
-
-*/
+-- SELECT * FROM gpInsertUpdateMobile_Movement_Cash (inGUID:= '{88E07827-BCC3-41E7-A574-E0837AD2E17A}', inInvNumber:= '-30', inOperDate:= CURRENT_DATE, inStatusId:= zc_Enum_Status_UnComplete(), inInsertDate    := CURRENT_TIMESTAMP, inAmount        := 6456.45, inPaidKindId    := zc_Enum_PaidKind_SecondForm(), inPartnerId     := 17819, inCashId        := 280296, inMemberId      := 274610, inContractId    := 16687, inComment       := 'Приход конкретный', inInvNumberSale := '364957', inSession       := zfCalc_UserAdmin() );
+-- SELECT * FROM gpInsertUpdateMobile_Movement_Cash (inGUID:= '{88E07827-BCC3-41E7-A574-E0837AD2E17A}', inInvNumber:= '-30', inOperDate:= CURRENT_DATE, inStatusId:= zc_Enum_Status_UnComplete(), inInsertDate    := CURRENT_TIMESTAMP, inAmount        := 6456.45, inPaidKindId    := zc_Enum_PaidKind_SecondForm(), inPartnerId     := 298605, inCashId        := 280296, inMemberId      := 301532, inContractId    := 80339, inComment       := 'Приход конкретный', inInvNumberSale := 'АЛ-0000817', inSession       := '351808' );

@@ -50,33 +50,35 @@ BEGIN
        -- поиск существующего акта сверки: период, юр.лицо, контрагент, договор, форма оплаты
        vbId:= (SELECT ObjectDate_Start.ObjectId
                FROM ObjectDate AS ObjectDate_Start
+                  INNER JOIN Object ON Object.Id       = ObjectDate_Start.ObjectId
+                                   AND Object.isErased = FALSE
                   INNER JOIN ObjectDate AS ObjectDate_End
                                         ON ObjectDate_End.ObjectId  = ObjectDate_Start.ObjectId
                                        AND ObjectDate_End.DescId    = zc_ObjectDate_ReportCollation_End()
                                        AND ObjectDate_End.ValueData = inEndDate
 
-                  INNER JOIN ObjectLink AS ObjectLink_ReportCollation_PaidKind
+                  LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_PaidKind
                                        ON ObjectLink_ReportCollation_PaidKind.ObjectId = ObjectDate_Start.ObjectId
                                       AND ObjectLink_ReportCollation_PaidKind.DescId = zc_ObjectLink_ReportCollation_PaidKind()
-                                      AND (ObjectLink_ReportCollation_PaidKind.ChildObjectId = COALESCE (inPaidKindId,0) OR COALESCE (inPaidKindId,0)=0)
 
-                  INNER JOIN ObjectLink AS ObjectLink_ReportCollation_Juridical
-                                        ON ObjectLink_ReportCollation_Juridical.ObjectId = ObjectDate_Start.ObjectId
-                                       AND ObjectLink_ReportCollation_Juridical.DescId = zc_ObjectLink_ReportCollation_Juridical()
-                                       AND (ObjectLink_ReportCollation_Juridical.ChildObjectId = COALESCE (inJuridicalId,0) OR COALESCE (inJuridicalId,0)=0)
+                  LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_Juridical
+                                       ON ObjectLink_ReportCollation_Juridical.ObjectId = ObjectDate_Start.ObjectId
+                                      AND ObjectLink_ReportCollation_Juridical.DescId = zc_ObjectLink_ReportCollation_Juridical()
 
-                  INNER JOIN ObjectLink AS ObjectLink_ReportCollation_Partner
-                                        ON ObjectLink_ReportCollation_Partner.ObjectId = ObjectDate_Start.ObjectId
-                                       AND ObjectLink_ReportCollation_Partner.DescId = zc_ObjectLink_ReportCollation_Partner()
-                                       AND (ObjectLink_ReportCollation_Partner.ChildObjectId = COALESCE (inPartnerId,0) OR COALESCE (inPartnerId,0)=0)
+                  LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_Partner
+                                       ON ObjectLink_ReportCollation_Partner.ObjectId = ObjectDate_Start.ObjectId
+                                      AND ObjectLink_ReportCollation_Partner.DescId = zc_ObjectLink_ReportCollation_Partner()
 
-                  INNER JOIN ObjectLink AS ObjectLink_ReportCollation_Contract
-                                        ON ObjectLink_ReportCollation_Contract.ObjectId = ObjectDate_Start.ObjectId
-                                       AND ObjectLink_ReportCollation_Contract.DescId = zc_ObjectLink_ReportCollation_Contract()
-                                       AND (ObjectLink_ReportCollation_Contract.ChildObjectId = COALESCE (inContractId,0) OR COALESCE (inContractId,0)=0)
+                  LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_Contract
+                                       ON ObjectLink_ReportCollation_Contract.ObjectId = ObjectDate_Start.ObjectId
+                                      AND ObjectLink_ReportCollation_Contract.DescId = zc_ObjectLink_ReportCollation_Contract()
 
               WHERE ObjectDate_Start.DescId = zc_ObjectDate_ReportCollation_Start()
                 AND ObjectDate_Start.ValueData= inStartDate
+                AND (ObjectLink_ReportCollation_PaidKind.ChildObjectId  = COALESCE (inPaidKindId, 0)  OR COALESCE (inPaidKindId, 0)  = 0)
+                AND (ObjectLink_ReportCollation_Juridical.ChildObjectId = COALESCE (inJuridicalId, 0) OR COALESCE (inJuridicalId, 0) = 0)
+                AND (ObjectLink_ReportCollation_Partner.ChildObjectId   = COALESCE (inPartnerId, 0)   OR COALESCE (inPartnerId, 0)   = 0)
+                AND (ObjectLink_ReportCollation_Contract.ChildObjectId  = COALESCE (inContractId, 0)  OR COALESCE (inContractId, 0)  = 0)
              );
 
          IF inIsUpdate = TRUE AND COALESCE (vbId, 0) = 0
@@ -192,7 +194,7 @@ BEGIN
 
          IF inIsUpdate = TRUE
          THEN
-             PERFORM gpUpdate_Object_ReportCollation (inBarCode:= (SELECT zfFormat_BarCode (zc_BarCodePref_Object(), vbId))
+             PERFORM gpUpdate_Object_ReportCollation (inBarCode:= (SELECT zfFormat_BarCode (zc_BarCodePref_Object(), vbId) || '0')
                                                     , inSession:= inSession
                                                      );
          END IF;
@@ -202,7 +204,7 @@ BEGIN
          PERFORM lpInsert_ObjectProtocol (inObjectId:= vbId, inUserId:= vbUserId, inIsUpdate:= inIsUpdate);
 
          -- Результат
-         outBarCode := (SELECT zfFormat_BarCode (zc_BarCodePref_Object(), vbId));
+         outBarCode := (SELECT zfFormat_BarCode (zc_BarCodePref_Object(), vbId) || '0');
 
    END IF;
 

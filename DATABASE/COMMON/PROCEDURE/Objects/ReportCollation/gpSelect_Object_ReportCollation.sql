@@ -61,7 +61,7 @@ BEGIN
 
      , tmpData AS (SELECT Object_ReportCollation.Id
                         , Object_ReportCollation.ObjectCode
-                        , zfFormat_BarCode (zc_BarCodePref_Object(), Object_ReportCollation.Id) ::TVarChar AS idBarCode
+                        , (zfFormat_BarCode (zc_BarCodePref_Object(), Object_ReportCollation.Id) || '0') ::TVarChar AS idBarCode
                         , ObjectDate_Start.ValueData      AS StartDate
                         , ObjectDate_End.ValueData        AS EndDate
                         , Object_Juridical.ValueData      AS JuridicalName
@@ -255,4 +255,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Object_ReportCollation(inStartDate := ('01.01.2018')::TDateTime , inEndDate := ('01.01.2018')::TDateTime , inJuridicalId := 0 , inPartnerId := 0 , inContractId := 0 , inPaidKindId := 0 ,  inSession := '5');
+-- SELECT * FROM gpSelect_Object_ReportCollation(inStartDate := ('01.01.2018')::TDateTime , inEndDate := ('01.01.2018')::TDateTime , inJuridicalId := 0 , inPartnerId := 0 , inContractId := 0 , inPaidKindId := 0 ,  inSession := '5');

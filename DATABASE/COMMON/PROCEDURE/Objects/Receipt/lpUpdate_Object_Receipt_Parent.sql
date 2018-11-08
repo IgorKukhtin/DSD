@@ -14,7 +14,7 @@ BEGIN
 
     -- Список
     CREATE TEMP TABLE _tmpListMaster (ReceiptId Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindCompleteId Integer) ON COMMIT DROP;
-    -- Список
+    -- Список "Main"
     INSERT INTO _tmpListMaster (ReceiptId, GoodsId, GoodsKindId, GoodsKindCompleteId)
        SELECT ObjectLink_Receipt_Goods.ObjectId                                                   AS ReceiptId
             , COALESCE (ObjectLink_Receipt_Goods.ChildObjectId, 0)                                AS GoodsId

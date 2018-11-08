@@ -492,22 +492,20 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width')
-      end
-      item
-        Component = EndDate
+        Component = deEnd
         Properties.Strings = (
           'Date')
       end
       item
-        Component = StartDate
+        Component = deStart
         Properties.Strings = (
           'Date')
+      end
+      item
+        Component = GuidesContract
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end
       item
         Component = GuidesJuridical
@@ -516,7 +514,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
           'TextValue')
       end
       item
-        Component = GuidesContract
+        Component = GuidesPaidKind
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -528,10 +526,12 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
           'TextValue')
       end
       item
-        Component = GuidesPaidKind
+        Component = Owner
         Properties.Strings = (
-          'Key'
-          'TextValue')
+          'Height'
+          'Left'
+          'Top'
+          'Width')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream

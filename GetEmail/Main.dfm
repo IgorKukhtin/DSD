@@ -146,7 +146,6 @@ object MainForm: TMainForm
     Width = 984
     Height = 24
     Align = alTop
-    Caption = 'Error : '
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clRed
     Font.Height = -13

@@ -148,6 +148,7 @@ procedure AddToLog(ALogMessage: string);
 var F: TextFile;
 begin
   if not SAVE_LOG then Exit;
+  //
   if (Pos('Error', ALogMessage) = 0) and (Pos('Exception', ALogMessage) = 0) and (Pos('---- Start', ALogMessage) = 0)
     and (Pos('VACUUM', ALogMessage) = 0)
   then Exit;
@@ -190,13 +191,10 @@ begin
   // включаем таймер
   Timer.Interval:=3000;
   cbTimer.Caption:= 'Timer ON ' + FloatToStr(Timer.Interval / 1000) + ' sec';
-  AddToLog('---- Start Timer-1');
   cbTimer.Checked:=false;
   cbTimer.Checked:=true;
   //Timer.Enabled:=true;
-  AddToLog('---- Start Timer-2');
   Sleep(50);
-  AddToLog('---- Start Timer-3');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.cbTimerClick(Sender: TObject);
@@ -1248,8 +1246,8 @@ begin
      //расчет начальные дата + время
      DecodeTime(NOW, Hour_calc, Minute_calc, Second, MSec);
      //
-     if (Hour_calc >=1) and (Hour_calc <=2)
-      //or(Hour_calc >=16) and (Hour_calc <=17)
+     if (Hour_calc = 5)
+      //or(Hour_calc = 16)
      then begin
           try
               ZConnection := TConnectionFactory.GetConnection;
@@ -1260,8 +1258,6 @@ begin
                //
                AddToLog('start all VACUUM');
                //
-     if (Hour_calc >=1) and (Hour_calc <=2)
-     then begin
                // Container
                lVACUUM ('VACUUM FULL Container');
                lVACUUM ('VACUUM ANALYZE Container');
@@ -1297,7 +1293,6 @@ begin
                lVACUUM ('VACUUM ANALYZE pg_catalog.pg_index');
                lVACUUM ('VACUUM ANALYZE pg_catalog.pg_attrdef');
                lVACUUM ('VACUUM ANALYZE pg_catalog.pg_proc');
-        end;
                //
                // !!!main!!!
                lVACUUM ('VACUUM');
