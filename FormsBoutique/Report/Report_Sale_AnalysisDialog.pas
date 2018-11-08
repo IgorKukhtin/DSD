@@ -54,6 +54,21 @@ type
     GuidesEndYear: TdsdGuides;
     cbPeriodAll: TcxCheckBox;
     cbUnit: TcxCheckBox;
+    cbIsAmount: TcxCheckBox;
+    cbIsSumm: TcxCheckBox;
+    cbIsProf: TcxCheckBox;
+    cxLabel4: TcxLabel;
+    cxLabel10: TcxLabel;
+    cxLabel13: TcxLabel;
+    cxLabel11: TcxLabel;
+    cxLabel12: TcxLabel;
+    cxLabel14: TcxLabel;
+    edPresent1: TcxCurrencyEdit;
+    edPresent2: TcxCurrencyEdit;
+    edPresent1_Summ: TcxCurrencyEdit;
+    edPresent2_Summ: TcxCurrencyEdit;
+    edPresent1_Prof: TcxCurrencyEdit;
+    edPresent2_Prof: TcxCurrencyEdit;
   private
     { Private declarations }
   public

@@ -1,6 +1,7 @@
 
 -- Function:  gpReport_Sale()
 DROP FUNCTION IF EXISTS gpReport_Sale_Analysis (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Sale_Analysis (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Sale_Analysis (
     IN inStartDate        TDateTime,  -- ƒата начала
@@ -13,8 +14,15 @@ CREATE OR REPLACE FUNCTION gpReport_Sale_Analysis (
     IN inEndYear          Integer  ,
     IN inPresent1         TFloat   ,
     IN inPresent2         TFloat   ,
+    IN inPresent1_Summ    TFloat   ,
+    IN inPresent2_Summ    TFloat   ,
+    IN inPresent1_Prof    TFloat   ,
+    IN inPresent2_Prof    TFloat   ,
     IN inIsPeriodAll      Boolean  , -- ограничение за ¬есь период (ƒа/Ќет) (движение по ƒокументам)
     IN inIsUnit           Boolean  , -- по выбранным подразделени€м
+    IN inIsAmount         Boolean  , -- распредел€ть по гридам по % продаж кол-во
+    IN inIsSumm           Boolean  , -- распредел€ть по гридам по % продаж сумма
+    IN inIsProf           Boolean  , -- распредел€ть по гридам по % прибыли
     IN inSession          TVarChar   -- сесси€ пользовател€
 )
 RETURNS SETOF refcursor
@@ -34,7 +42,14 @@ BEGIN
        inEndYear:= 1000000;
     END IF;
 
-
+    -- порверка должно быть выбрано одно из распределений
+    IF (COALESCE (inIsAmount, FALSE) = TRUE AND COALESCE (inIsSumm, FALSE) = TRUE)
+    OR (COALESCE (inIsAmount, FALSE) = TRUE AND COALESCE (inIsProf, FALSE) = TRUE)
+    OR (COALESCE (inIsSumm, FALSE) = TRUE   AND COALESCE (inIsProf, FALSE) = TRUE)
+    THEN
+        RAISE EXCEPTION 'ќшибка. ƒолжен быть выбран только один вариан распределени€';
+    END IF;
+    
  CREATE TEMP TABLE _tmpData (PartionId             Integer
                            , BrandName             TVarChar
                            , PeriodName            TVarChar
@@ -434,6 +449,7 @@ BEGIN
                          THEN tmpData.Sale_Summ_10201 * 100/ tmpData.Sale_Summ_10200  -- 100
                     ELSE 0
                END :: TFloat AS Tax_Summ_10201
+               
               
         FROM tmpData
             LEFT JOIN Object AS Object_Partner          ON Object_Partner.Id          = tmpData.PartnerId
@@ -449,8 +465,10 @@ BEGIN
      SELECT _tmpData.*
           , 16744448  AS Color_Calc -- zc_Color_Aqua()
      FROM _tmpData
-     WHERE Tax_Amount >= inPresent1 ;
-     
+     WHERE (inIsAmount = TRUE AND Tax_Amount     >= inPresent1)
+        OR (inIsSumm   = TRUE AND Tax_Summ_10100 >= inPresent1_Summ)
+        OR (inIsProf   = TRUE AND Tax_Summ_prof  >= inPresent1_Prof)
+     ;
      RETURN NEXT Cursor1;
 
 
@@ -459,7 +477,10 @@ BEGIN
      SELECT _tmpData.*
           , zc_Color_Yelow() AS Color_Calc
      FROM _tmpData
-     WHERE Tax_Amount >= inPresent2 AND Tax_Amount < inPresent1;
+     WHERE (inIsAmount = TRUE AND Tax_Amount     >= inPresent2      AND Tax_Amount     < inPresent1)
+        OR (inIsSumm   = TRUE AND Tax_Summ_10100 >= inPresent2_Summ AND Tax_Summ_10100 < inPresent1_Summ)
+        OR (inIsProf   = TRUE AND Tax_Summ_prof  >= inPresent2_Prof AND Tax_Summ_prof  < inPresent1_Prof)
+     ;
      RETURN NEXT Cursor2;
 
      --продажи меньше 20% от прихода
@@ -467,7 +488,10 @@ BEGIN
      SELECT _tmpData.*
           , zc_Color_Red() AS Color_Calc
      FROM _tmpData
-     WHERE Tax_Amount < inPresent2;
+     WHERE (inIsAmount = TRUE AND Tax_Amount   < inPresent2)
+        OR (inIsSumm = TRUE AND Tax_Summ_10100 < inPresent2_Summ)
+        OR (inIsProf = TRUE AND Tax_Summ_prof  < inPresent2_Prof)
+     ;
      RETURN NEXT Cursor3;
 
  END;

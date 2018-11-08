@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxSplitter;
+  cxSplitter, Vcl.StdCtrls, cxRadioGroup;
 
 type
   TReport_Sale_AnalysisForm = class(TAncestorReportForm)
@@ -90,6 +90,18 @@ type
     Color_Calc: TcxGridDBColumn;
     cxColor_Calc: TcxGridDBColumn;
     chColor_Calc: TcxGridDBColumn;
+    dsdDBViewAddOn3: TdsdDBViewAddOn;
+    cbIsAmount: TcxCheckBox;
+    cbIsSumm: TcxCheckBox;
+    cbIsProf: TcxCheckBox;
+    cxLabel10: TcxLabel;
+    cxLabel12: TcxLabel;
+    edPresent1_Summ: TcxCurrencyEdit;
+    edPresent2_Summ: TcxCurrencyEdit;
+    cxLabel13: TcxLabel;
+    cxLabel14: TcxLabel;
+    edPresent1_Prof: TcxCurrencyEdit;
+    edPresent2_Prof: TcxCurrencyEdit;
   private
     { Private declarations }
   public
