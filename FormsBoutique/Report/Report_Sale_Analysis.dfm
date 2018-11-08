@@ -172,7 +172,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
         Width = 999
         Height = 192
         ExplicitWidth = 999
-        ExplicitHeight = 169
+        ExplicitHeight = 192
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -267,6 +267,11 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
               Format = ',0.##'
               Kind = skSum
               Column = Sale_Summ_prof_curr
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Income_Summ
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -358,6 +363,11 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = PartnerName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Income_Summ
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -459,8 +469,48 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             HeaderHint = '% '#1056#1077#1085#1090#1072#1073#1077#1083#1100#1085#1086#1089#1090#1080
             Width = 55
           end
+          object Tax_Summ_10200: TcxGridDBColumn
+            Caption = '% '#1057#1082'.'
+            DataBinding.FieldName = 'Tax_Summ_10200'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1089#1082#1080#1076#1082#1080' '#1086#1090' '#1086#1073#1097#1077#1081' '#1089#1091#1084#1084#1099' '#1087#1088#1086#1076#1072#1078#1080
+            Width = 55
+          end
+          object Tax_Summ_10100: TcxGridDBColumn
+            Caption = '% '#1055#1088#1086#1076'. ('#1089#1091#1084#1084#1099')'
+            DataBinding.FieldName = 'Tax_Summ_10100'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1055#1088#1086#1076#1072#1078#1080' '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079'. '#1091#1095'. '#1089#1082#1080#1076#1082#1080' '
+            Width = 55
+          end
+          object Tax_Summ_10201: TcxGridDBColumn
+            Caption = '% ('#1076#1086#1083#1103' '#1089#1082'.'#1089#1077#1079#1086#1085'.)'
+            DataBinding.FieldName = 'Tax_Summ_10201'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% ('#1076#1086#1083#1103' '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080')'
+            Width = 72
+          end
+          object Tax_Summ_10203: TcxGridDBColumn
+            Caption = '% ('#1076#1086#1083#1103' '#1089#1082'.'#1082#1083#1080#1077#1085#1090#1072')'
+            DataBinding.FieldName = 'Tax_Summ_10203'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% ('#1076#1086#1083#1103' '#1089#1082#1080#1076#1082#1080' '#1082#1083#1080#1077#1085#1090#1072')'
+            Width = 83
+          end
           object Tax_Amount: TcxGridDBColumn
-            Caption = '% '#1055#1088#1086#1076'.'
+            Caption = '% '#1055#1088#1086#1076'. ('#1082#1086#1083'.)'
             DataBinding.FieldName = 'Tax_Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
@@ -501,6 +551,18 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             HeaderHint = #1057'\'#1089' '#1087#1088#1086#1076#1072#1078#1080', '#1043#1056#1053
             Width = 70
           end
+          object Income_Summ: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'Income_Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1074' '#1074#1072#1083#1102#1090#1077
+            Options.Editing = False
+            Width = 74
+          end
           object Sale_Summ_curr: TcxGridDBColumn
             Caption = #1055#1088#1086#1076'. '#1074' '#1074#1072#1083'. '
             DataBinding.FieldName = 'Sale_Summ_curr'
@@ -526,6 +588,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             DataBinding.FieldName = 'Sale_Summ_prof_curr'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1080#1073#1099#1083#1080', '#1089' '#1091#1095#1077#1090#1086#1084' '#1082#1091#1088#1089#1086#1074#1086#1081' '#1088#1072#1079#1085#1080#1094#1099', '#1074' '#1074#1072#1083#1102#1090#1077
@@ -547,7 +610,6 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             DataBinding.FieldName = 'Sale_Summ_10100'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1087#1086' '#1087#1088#1072#1081#1089#1091', '#1043#1056#1053
@@ -558,6 +620,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             DataBinding.FieldName = 'Sale_Summ_10200_curr'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1082#1080#1076#1082#1072' '#1048#1058#1054#1043#1054', '#1074' '#1074#1072#1083#1102#1090#1077
@@ -568,7 +631,6 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             DataBinding.FieldName = 'Sale_Summ_10200'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1082#1080#1076#1082#1072' '#1048#1058#1054#1043#1054', '#1043#1056#1053
@@ -579,7 +641,6 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             DataBinding.FieldName = 'Sale_Summ_10201'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -589,7 +650,6 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             DataBinding.FieldName = 'Sale_Summ_10202'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -599,7 +659,6 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             DataBinding.FieldName = 'Sale_Summ_10203'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -609,7 +668,6 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             DataBinding.FieldName = 'Sale_Summ_10204'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -624,6 +682,13 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1082#1091#1088#1089#1086#1074#1086#1081' '#1088#1072#1079#1085#1080#1094#1099', '#1043#1056#1053
             Width = 70
+          end
+          object Color_Calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Calc'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 30
           end
         end
       end
@@ -992,6 +1057,46 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             HeaderHint = '% '#1056#1077#1085#1090#1072#1073#1077#1083#1100#1085#1086#1089#1090#1080
             Width = 55
           end
+          object cxTax_Summ_10200: TcxGridDBColumn
+            Caption = '% '#1057#1082'.'
+            DataBinding.FieldName = 'Tax_Summ_10200'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1089#1082#1080#1076#1082#1080' '#1086#1090' '#1086#1073#1097#1077#1081' '#1089#1091#1084#1084#1099' '#1087#1088#1086#1076#1072#1078#1080
+            Width = 55
+          end
+          object cxTax_Summ_10100: TcxGridDBColumn
+            Caption = '% '#1055#1088#1086#1076'. ('#1089#1091#1084#1084#1099')'
+            DataBinding.FieldName = 'Tax_Summ_10100'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1055#1088#1086#1076#1072#1078#1080' '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079'. '#1091#1095'. '#1089#1082#1080#1076#1082#1080' '
+            Width = 55
+          end
+          object cxTax_Summ_10201: TcxGridDBColumn
+            Caption = '% ('#1076#1086#1083#1103' '#1089#1082'.'#1089#1077#1079#1086#1085'.)'
+            DataBinding.FieldName = 'Tax_Summ_10201'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% ('#1076#1086#1083#1103' '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080')'
+            Width = 55
+          end
+          object cxTax_Summ_10203: TcxGridDBColumn
+            Caption = '% ('#1076#1086#1083#1103' '#1089#1082'.'#1082#1083#1080#1077#1085#1090#1072')'
+            DataBinding.FieldName = 'Tax_Summ_10203'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% ('#1076#1086#1083#1103' '#1089#1082#1080#1076#1082#1080' '#1082#1083#1080#1077#1085#1090#1072')'
+            Width = 55
+          end
           object cxTax_Amount: TcxGridDBColumn
             Caption = '% '#1055#1088#1086#1076'.'
             DataBinding.FieldName = 'Tax_Amount'
@@ -1033,6 +1138,18 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057'\'#1089' '#1087#1088#1086#1076#1072#1078#1080', '#1043#1056#1053
             Width = 70
+          end
+          object cxIncome_Summ: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'Income_Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1074' '#1074#1072#1083#1102#1090#1077
+            Options.Editing = False
+            Width = 74
           end
           object cxSale_Summ_curr: TcxGridDBColumn
             Caption = #1055#1088#1086#1076'. '#1074' '#1074#1072#1083'. '
@@ -1154,6 +1271,12 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             Visible = False
             Width = 50
+          end
+          object cxColor_Calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Calc'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 30
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -1525,6 +1648,46 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             HeaderHint = '% '#1056#1077#1085#1090#1072#1073#1077#1083#1100#1085#1086#1089#1090#1080
             Width = 55
           end
+          object chTax_Summ_10200: TcxGridDBColumn
+            Caption = '% '#1057#1082'.'
+            DataBinding.FieldName = 'Tax_Summ_10200'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1089#1082#1080#1076#1082#1080' '#1086#1090' '#1086#1073#1097#1077#1081' '#1089#1091#1084#1084#1099' '#1087#1088#1086#1076#1072#1078#1080
+            Width = 55
+          end
+          object chTax_Summ_10100: TcxGridDBColumn
+            Caption = '% '#1055#1088#1086#1076'. ('#1089#1091#1084#1084#1099')'
+            DataBinding.FieldName = 'Tax_Summ_10100'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1055#1088#1086#1076#1072#1078#1080' '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079'. '#1091#1095'. '#1089#1082#1080#1076#1082#1080' '
+            Width = 55
+          end
+          object chTax_Summ_10201: TcxGridDBColumn
+            Caption = '% ('#1076#1086#1083#1103' '#1089#1082'.'#1089#1077#1079#1086#1085'.)'
+            DataBinding.FieldName = 'Tax_Summ_10201'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% ('#1076#1086#1083#1103' '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080')'
+            Width = 55
+          end
+          object chTax_Summ_10203: TcxGridDBColumn
+            Caption = '% ('#1076#1086#1083#1103' '#1089#1082'.'#1082#1083#1080#1077#1085#1090#1072')'
+            DataBinding.FieldName = 'Tax_Summ_10203'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% ('#1076#1086#1083#1103' '#1089#1082#1080#1076#1082#1080' '#1082#1083#1080#1077#1085#1090#1072')'
+            Width = 55
+          end
           object chTax_Amount: TcxGridDBColumn
             Caption = '% '#1055#1088#1086#1076'.'
             DataBinding.FieldName = 'Tax_Amount'
@@ -1566,6 +1729,18 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057'\'#1089' '#1087#1088#1086#1076#1072#1078#1080', '#1043#1056#1053
             Width = 70
+          end
+          object chIncome_Summ: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'Income_Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1074' '#1074#1072#1083#1102#1090#1077
+            Options.Editing = False
+            Width = 74
           end
           object chSale_Summ_curr: TcxGridDBColumn
             Caption = #1055#1088#1086#1076'. '#1074' '#1074#1072#1083'. '
@@ -1691,6 +1866,12 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             HeaderHint = #1057#1091#1084#1084#1072' '#1082#1091#1088#1089#1086#1074#1086#1081' '#1088#1072#1079#1085#1080#1094#1099', '#1043#1056#1053
             Width = 70
           end
+          object chColor_Calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Calc'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 30
+          end
         end
         object cxGridLevel2: TcxGridLevel
           GridView = cxGridDBTableView2
@@ -1713,7 +1894,6 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
         HotZoneClassName = 'TcxMediaPlayer9Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 218
       end
     end
   end
@@ -1731,6 +1911,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
+    Style.Color = clWindow
     TabOrder = 7
     Width = 185
   end
@@ -2651,7 +2832,19 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 336
+    ColorRuleList = <
+      item
+        ColorColumn = Tax_Amount
+        BackGroundValueColumn = Color_Calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Tax_Summ_10100
+        BackGroundValueColumn = Color_Calc
+        ColorValueList = <>
+      end>
+    Left = 472
+    Top = 208
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 56
@@ -2811,7 +3004,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
         MultiSelectSeparator = ','
       end>
     Left = 782
-    Top = 74
+    Top = 138
   end
   object GuidesEndYear: TdsdGuides
     KeyField = 'Id'
@@ -2829,8 +3022,8 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
         Component = edEndYear
         MultiSelectSeparator = ','
       end>
-    Left = 838
-    Top = 74
+    Left = 854
+    Top = 138
   end
   object GuidesStartYear: TdsdGuides
     KeyField = 'Id'
@@ -2893,7 +3086,17 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = cxTax_Amount
+        BackGroundValueColumn = cxColor_Calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = cxTax_Summ_10100
+        BackGroundValueColumn = cxColor_Calc
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
@@ -2907,7 +3110,17 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = chTax_Amount
+        BackGroundValueColumn = chColor_Calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = chTax_Summ_10100
+        BackGroundValueColumn = chColor_Calc
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>

@@ -47,6 +47,7 @@ BEGIN
                            , CurrencyName          TVarChar
               
                            , Income_Amount         TFloat
+                           , Income_Summ           TFloat
               
                            , Debt_Amount           TFloat
                            , Sale_Amount           TFloat
@@ -66,8 +67,11 @@ BEGIN
                            , Sale_Summ_10200_curr  TFloat
                            , Tax_Amount            TFloat
                            , Tax_Summ_curr         TFloat
-                           , Tax_Summ_prof         TFloat               
-
+                           , Tax_Summ_prof         TFloat
+                           , Tax_Summ_10200        TFloat
+                           , Tax_Summ_10100        TFloat
+                           , Tax_Summ_10203        TFloat
+                           , Tax_Summ_10201        TFloat
                          ) ON COMMIT DROP;
                            
         INSERT INTO _tmpData (BrandName
@@ -81,6 +85,7 @@ BEGIN
                             , CurrencyName
 
                             , Income_Amount
+                            , Income_Summ
                             , Debt_Amount
                             , Sale_Amount
                             , Sale_Summ
@@ -100,6 +105,10 @@ BEGIN
                             , Tax_Amount
                             , Tax_Summ_curr
                             , Tax_Summ_prof
+                            , Tax_Summ_10200 
+                            , Tax_Summ_10100
+                            , Tax_Summ_10203
+                            , Tax_Summ_10201 
                               )
       WITH 
            tmpCurrency_all AS (SELECT Movement.Id                    AS MovementId
@@ -357,6 +366,7 @@ BEGIN
              , Object_Currency.ValueData    :: TVarChar  AS CurrencyName
              
              , tmpData.Income_Amount        :: TFloat
+             , tmpData.Income_Summ          :: TFloat
                                             
              , tmpData.Debt_Amount          :: TFloat
              , tmpData.Sale_Amount          :: TFloat
@@ -399,8 +409,32 @@ BEGIN
              , CASE WHEN tmpData.Sale_Summ_curr > 0 AND tmpData.Sale_SummCost_curr > 0
                          THEN tmpData.Sale_Summ_curr / tmpData.Sale_SummCost_curr * 100 - 100
                     ELSE 0
-               END :: TFloat AS Tax_Summ_prof             
-
+               END :: TFloat AS Tax_Summ_prof   
+                         
+               -- % сумма продажа     / сумма скидки
+             , CASE WHEN tmpData.Sale_Summ_10200 > 0 AND tmpData.Sale_Summ_10100 > 0
+                         THEN tmpData.Sale_Summ_10200 * 100 / tmpData.Sale_Summ_10100 
+                    ELSE 0
+               END :: TFloat AS Tax_Summ_10200 
+             
+               -- % сумма продажа итого    / сумма продажа с уч. скидки
+             , CASE WHEN tmpData.Sale_Summ > 0 AND tmpData.Sale_Summ_10100 > 0
+                         THEN tmpData.Sale_Summ * 100/ tmpData.Sale_Summ_10100  -- 100
+                    ELSE 0
+               END :: TFloat AS Tax_Summ_10100  
+               
+                -- % сумма скидки итого    / сумма скидки клиента
+             , CASE WHEN tmpData.Sale_Summ_10203 > 0 AND tmpData.Sale_Summ_10200 > 0
+                         THEN tmpData.Sale_Summ_10203 * 100/ tmpData.Sale_Summ_10200  -- 100
+                    ELSE 0
+               END :: TFloat AS Tax_Summ_10203
+               
+                -- % сумма скидки итого    / сумма скидки сезон
+             , CASE WHEN tmpData.Sale_Summ_10201 > 0 AND tmpData.Sale_Summ_10200 > 0
+                         THEN tmpData.Sale_Summ_10201 * 100/ tmpData.Sale_Summ_10200  -- 100
+                    ELSE 0
+               END :: TFloat AS Tax_Summ_10201
+              
         FROM tmpData
             LEFT JOIN Object AS Object_Partner          ON Object_Partner.Id          = tmpData.PartnerId
             LEFT JOIN Object AS Object_Unit             ON Object_Unit.Id             = tmpData.UnitId
@@ -412,7 +446,8 @@ BEGIN
 
      --продажи больше 50% от прихода
      OPEN Cursor1 FOR
-     SELECT *
+     SELECT _tmpData.*
+          , 16744448  AS Color_Calc -- zc_Color_Aqua()
      FROM _tmpData
      WHERE Tax_Amount >= inPresent1 ;
      
@@ -421,14 +456,16 @@ BEGIN
 
      --продажи больше 20% меньше 50% от прихода
      OPEN Cursor2 FOR
-     SELECT *
+     SELECT _tmpData.*
+          , zc_Color_Yelow() AS Color_Calc
      FROM _tmpData
      WHERE Tax_Amount >= inPresent2 AND Tax_Amount < inPresent1;
      RETURN NEXT Cursor2;
 
      --продажи меньше 20% от прихода
      OPEN Cursor3 FOR
-     SELECT *
+     SELECT _tmpData.*
+          , zc_Color_Red() AS Color_Calc
      FROM _tmpData
      WHERE Tax_Amount < inPresent2;
      RETURN NEXT Cursor3;

@@ -87,6 +87,9 @@ type
     edPresent2: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
     cxLabel11: TcxLabel;
+    Color_Calc: TcxGridDBColumn;
+    cxColor_Calc: TcxGridDBColumn;
+    chColor_Calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

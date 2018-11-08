@@ -105,13 +105,13 @@ BEGIN
                                                      , inGoodsId        := COALESCE ( _tmp_MI.GoodsId, tmpListDiff_MI.GoodsId)
                                                      , inAmountManual   := (COALESCE (_tmp_MI.AmountManual,0) + COALESCE (tmpListDiff_MI.Amount, 0) ) ::TFloat
                                                      , inListDiffAmount := (COALESCE (_tmp_MI.ListDiffAmount,0) + COALESCE (tmpListDiff_MI.Amount, 0) )::TFloat
-                                                     , inComment        := COALESCE (_tmpListDiff_MI.Comment, '') :: TVarChar
+                                                     , inComment        := COALESCE (tmpListDiff_MI.Comment, '') :: TVarChar
                                                      , inUserId         := vbUserId
                                                      )
      FROM _tmp_MI
           FULL JOIN (SELECT _tmpListDiff_MI.GoodsId      AS GoodsId
                           , SUM (_tmpListDiff_MI.Amount) AS Amount 
-                          , STRING_AGG (_tmpListDiff_MI.Comment, ';') AS Comment
+                          , STRING_AGG (_tmpListDiff_MI.Comment, ';') :: TVarChar AS Comment
                      FROM _tmpListDiff_MI
                      GROUP BY _tmpListDiff_MI.GoodsId
                      ) AS tmpListDiff_MI ON tmpListDiff_MI.GoodsId = _tmp_MI.GoodsId
