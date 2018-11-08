@@ -89,7 +89,6 @@ uses
   IncomeJournal in '..\..\FormsFarmacy\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
   PriceList in '..\..\FormsFarmacy\Document\PriceList.pas' {PriceListForm: TParentForm},
   PriceListJournal in '..\..\FormsFarmacy\Document\PriceListJournal.pas' {PriceListJournalForm: TParentForm},
-  OrderExternal in '..\..\FormsFarmacy\Document\OrderExternal.pas' {OrderExternalForm: TParentForm},
   OrderExternalJournal in '..\..\FormsFarmacy\Document\OrderExternalJournal.pas' {OrderExternalJournalForm: TParentForm},
   OrderInternalLite in '..\..\FormsFarmacy\Document\OrderInternalLite.pas' {OrderInternalLiteForm: TParentForm},
   OrderInternalJournal in '..\..\FormsFarmacy\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm},
@@ -624,7 +623,8 @@ uses
   Report_Check_GoodsPriceChangeDialog in '..\..\FormsFarmacy\Report\Report_Check_GoodsPriceChangeDialog.pas' {Report_Check_GoodsPriceChangeDialogForm: TParentForm},
   Log_CashRemains in '..\..\FormsFarmacy\Guides\Log_CashRemains.pas' {Log_CashRemainsForm: TParentForm},
   RepriceUnitSheduler in '..\..\FormsFarmacy\ConnectWithOld\RepriceUnitSheduler.pas' {RepriceUnitShedulerForm: TParentForm},
-  UserNick in '..\..\FormsFarmacy\Guides\UserNick.pas' {UserNickForm: TParentForm};
+  UserNick in '..\..\FormsFarmacy\Guides\UserNick.pas' {UserNickForm: TParentForm},
+  OrderExternal in '..\..\FormsFarmacy\Document\OrderExternal.pas' {OrderExternalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -89,7 +89,7 @@ type
     edOrderSumm: TcxTextEdit;
     cxLabel12: TcxLabel;
     edOrderTime: TcxTextEdit;
-    Calc_Color: TcxGridDBColumn;
+    PartionGoodsDateColor: TcxGridDBColumn;
     spUpdate_isDeferred_Yes: TdsdStoredProc;
     spUpdateisDeferredYes: TdsdExecStoredProc;
     cxLabel13: TcxLabel;
