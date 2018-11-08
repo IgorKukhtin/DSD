@@ -278,10 +278,6 @@
 				<Form>PriceListJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Document\OrderExternal.pas">
-				<Form>OrderExternalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\OrderExternalJournal.pas">
 				<Form>OrderExternalJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -2118,6 +2114,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\UserNick.pas">
 				<Form>UserNickForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\OrderExternal.pas">
+				<Form>OrderExternalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

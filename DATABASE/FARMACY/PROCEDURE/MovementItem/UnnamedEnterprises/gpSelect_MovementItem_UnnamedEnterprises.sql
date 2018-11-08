@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_UnnamedEnterprises(
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsNameUkr TVarChar
              , NDSKindId Integer, NDSKindCode Integer, NDSKindName TVarChar
              , Amount TFloat, AmountRemains TFloat, AmountOrder TFloat
-             , Price TFloat, Summ TFloat
+             , Price TFloat, Summ TFloat, SummOrder TFloat
              , CodeUKTZED TVarChar, ExchangeId Integer, ExchangeCode Integer, ExchangeName TVarChar
              , isErased Boolean
               )
@@ -114,14 +114,25 @@ BEGIN
                                         , MovementItem.Amount                AS Amount
                                         , MIFloat_Price.ValueData            AS Price
                                         , MIFloat_Summ.ValueData             AS Summ
-                                        , MovementItem.isErased              AS isErased
-                                     FROM  MovementItem
+                                           , MIFloat_AmountOrder.ValueData      AS AmountOrder
+                                           , MIFloat_SummOrder.ValueData        AS SummOrder
+                                           , MovementItem.isErased              AS isErased
+                                      FROM  MovementItem
                                           LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                                     
                                           LEFT JOIN MovementItemFloat AS MIFloat_Summ
                                                                       ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                                                      AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+                                                                     
+                                          LEFT JOIN MovementItemFloat AS MIFloat_AmountOrder
+                                                                      ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
+                                                                     AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
+
+                                          LEFT JOIN MovementItemFloat AS MIFloat_SummOrder
+                                                                      ON MIFloat_SummOrder.MovementItemId = MovementItem.Id
+                                                                     AND MIFloat_SummOrder.DescId = zc_MIFloat_SummOrder()
                                      WHERE MovementItem.MovementId = inMovementId
                                        AND MovementItem.DescId = zc_MI_Master()
                                        AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
@@ -192,11 +203,12 @@ BEGIN
 
                  , MovementItem_UnnamedEnterprises.Amount               AS Amount
                  , tmpRemains.Amount::TFloat                            AS AmountRemains
-                 , NULL::TFloat                                         AS AmountOrder
+                 , MovementItem_UnnamedEnterprises.AmountOrder::TFloat  AS AmountOrder
                  , COALESCE(MovementItem_UnnamedEnterprises.Price,
                    ROUND (tmpPrice.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) *
                    (1 + COALESCE (MarginCategory_site.MarginPercent, 0) / 100), 1) :: TFloat)    AS Price
                  , MovementItem_UnnamedEnterprises.Summ                 AS Summ
+                 , MovementItem_UnnamedEnterprises.SummOrder            AS SummOrder
 
                  , ObjectString_Goods_CodeUKTZED.ValueData              AS CodeUKTZED
 
@@ -257,14 +269,26 @@ BEGIN
                                            , MovementItem.Amount                AS Amount
                                            , MIFloat_Price.ValueData            AS Price
                                            , MIFloat_Summ.ValueData             AS Summ
+                                           , MIFloat_AmountOrder.ValueData      AS AmountOrder
+                                           , MIFloat_SummOrder.ValueData        AS SummOrder
                                            , MovementItem.isErased              AS isErased
                                       FROM  MovementItem
                                           LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                                     
                                           LEFT JOIN MovementItemFloat AS MIFloat_Summ
                                                                       ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                                                      AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+                                                                     
+                                          LEFT JOIN MovementItemFloat AS MIFloat_AmountOrder
+                                                                      ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
+                                                                     AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
+
+                                          LEFT JOIN MovementItemFloat AS MIFloat_SummOrder
+                                                                      ON MIFloat_SummOrder.MovementItemId = MovementItem.Id
+                                                                     AND MIFloat_SummOrder.DescId = zc_MIFloat_SummOrder()
+
                                       WHERE MovementItem.MovementId = inMovementId
                                         AND MovementItem.DescId = zc_MI_Master()
                                         AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
@@ -283,9 +307,10 @@ BEGIN
 
                  , MovementItem_UnnamedEnterprises.Amount               AS Amount
                  , tmpRemains.Amount::TFloat                            AS AmountRemains
-                 , NULL::TFloat                                         AS AmountOrder
+                 , MovementItem_UnnamedEnterprises.AmountOrder::TFloat  AS AmountOrder
                  , MovementItem_UnnamedEnterprises.Price                AS Price
                  , MovementItem_UnnamedEnterprises.Summ                 AS Summ
+                 , MovementItem_UnnamedEnterprises.SummOrder            AS SummOrder
 
                  , ObjectString_Goods_CodeUKTZED.ValueData              AS CodeUKTZED
 

@@ -44,21 +44,14 @@ inherited ListDiffForm: TListDiffForm
               Column = Amount
             end
             item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
               Format = ',0.00'
               Kind = skSum
               Column = Summa
             end
             item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -165,6 +158,23 @@ inherited ListDiffForm: TListDiffForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
           end
+          object OrderInvNumber_full: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'OrderInvNumber_full'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 140
+          end
+          object ListDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1085'. '#1079#1072#1082#1072#1079')'
+            DataBinding.FieldName = 'ListDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1077#1088#1077#1085#1077#1089#1077#1085#1086' '#1074#1086' '#1074#1085'.'#1079#1072#1082#1072#1079')'
+            Options.Editing = False
+            Width = 80
+          end
           object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
@@ -197,13 +207,14 @@ inherited ListDiffForm: TListDiffForm
             Options.Editing = False
             Width = 80
           end
-          object OrderInvNumber_full: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
-            DataBinding.FieldName = 'OrderInvNumber_full'
+          object ListName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1074#1085'. '#1079#1072#1082#1072#1079')'
+            DataBinding.FieldName = 'ListName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1077#1088#1077#1085#1077#1089#1077#1085#1086' '#1074#1086' '#1074#1085'.'#1079#1072#1082#1072#1079')'
             Options.Editing = False
-            Width = 130
+            Width = 101
           end
         end
       end

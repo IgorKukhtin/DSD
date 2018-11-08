@@ -1,15 +1,18 @@
 -- Function: gpInsertUpdate_MovementItem_UnnamedEnterprises()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_UnnamedEnterprises (Integer, Integer, Integer, TVarChar, TFloat, TFloat, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_UnnamedEnterprises (Integer, Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_UnnamedEnterprises(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
-    IN inGoodsNameUkr        TVarChar  , -- Название украинское 
+    IN inGoodsNameUkr        TVarChar  , -- Название украинское
     IN inAmount              TFloat    , -- Количество
+    IN inAmountOrder         TFloat    , -- Количество в заказ
     IN inPrice               TFloat    , -- Цена
    OUT outSumm               TFloat    , -- Сумма
+   OUT outSummOrder          TFloat    , -- Сумма в заказ
     IN inCodeUKTZED          TVarChar  , -- Код УКТЗЭД
     IN inExchangeId          Integer   , -- Од
     IN inSession             TVarChar    -- сессия пользователя
@@ -26,27 +29,30 @@ BEGIN
 
     --Посчитали сумму
     outSumm := ROUND(COALESCE(inAmount,0)*COALESCE(inPrice,0),2);
+    outSummOrder := ROUND(COALESCE(inAmountOrder,0)*COALESCE(inPrice,0),2);
 
      -- сохранили
     ioId := lpInsertUpdate_MovementItem_UnnamedEnterprises (ioId                 := ioId
                                             , inMovementId         := inMovementId
                                             , inGoodsId            := inGoodsId
                                             , inAmount             := inAmount
+                                            , inAmountOrder        := inAmountOrder
                                             , inPrice              := inPrice
                                             , inSumm               := outSumm
+                                            , inSummOrder          := outSummOrder
                                             , inUserId             := vbUserId
                                              );
 
-   IF (COALESCE (inGoodsNameUkr, '') <> '' OR COALESCE (inCodeUKTZED, '') <> '' OR COALESCE (inExchangeId, 0) <> 0) 
+   IF (COALESCE (inGoodsNameUkr, '') <> '' OR COALESCE (inCodeUKTZED, '') <> '' OR COALESCE (inExchangeId, 0) <> 0)
      AND EXISTS(SELECT Object_Goods_View.Id
                 FROM Object_Goods_View
                   LEFT JOIN ObjectString AS ObjectString_Goods_NameUkr
-                                         ON ObjectString_Goods_NameUkr.ObjectId = Object_Goods_View.Id 
-                                        AND ObjectString_Goods_NameUkr.DescId = zc_ObjectString_Goods_NameUkr()   
-                                        
+                                         ON ObjectString_Goods_NameUkr.ObjectId = Object_Goods_View.Id
+                                        AND ObjectString_Goods_NameUkr.DescId = zc_ObjectString_Goods_NameUkr()
+
                   LEFT JOIN ObjectString AS ObjectString_Goods_CodeUKTZED
-                                         ON ObjectString_Goods_CodeUKTZED.ObjectId = Object_Goods_View.Id 
-                                        AND ObjectString_Goods_CodeUKTZED.DescId = zc_ObjectString_Goods_CodeUKTZED()   
+                                         ON ObjectString_Goods_CodeUKTZED.ObjectId = Object_Goods_View.Id
+                                        AND ObjectString_Goods_CodeUKTZED.DescId = zc_ObjectString_Goods_CodeUKTZED()
 
                   LEFT JOIN ObjectLink AS ObjectLink_Goods_Exchange
                                        ON ObjectLink_Goods_Exchange.ObjectId = Object_Goods_View.Id

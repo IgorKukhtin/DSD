@@ -1066,13 +1066,13 @@
 				<Form>Report_Sale_AnalysisDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Report\Report_Sale_Analysis.pas">
-				<Form>Report_Sale_AnalysisForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdPivotGrid.pas"/>
 			<DCCReference Include="..\..\FormsBoutique\Document\IncomeItemPriceDialog.pas">
 				<Form>IncomeItemPriceDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_Sale_Analysis.pas">
+				<Form>Report_Sale_AnalysisForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

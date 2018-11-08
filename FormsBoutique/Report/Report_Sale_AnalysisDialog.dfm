@@ -3,8 +3,8 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1040#1085#1072#1083#1080#1079' '#1087#1088#1080#1093#1086#1076' / '#1087#1088#1086#1076#1072#1078#1072'>'
-  ClientHeight = 365
-  ClientWidth = 349
+  ClientHeight = 369
+  ClientWidth = 375
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,8 +17,8 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 50
-    Top = 326
+    Left = 38
+    Top = 334
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -27,8 +27,8 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 224
-    Top = 326
+    Left = 212
+    Top = 334
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -61,7 +61,7 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 4
-    Width = 223
+    Width = 273
   end
   object cxLabel3: TcxLabel
     Left = 14
@@ -93,16 +93,16 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 305
+    Width = 197
   end
   object cxLabel2: TcxLabel
-    Left = 14
-    Top = 166
+    Left = 222
+    Top = 120
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
   end
   object edPartner: TcxButtonEdit
-    Left = 14
-    Top = 185
+    Left = 222
+    Top = 139
     Properties.Buttons = <
       item
         Default = True
@@ -110,16 +110,16 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 305
+    Width = 141
   end
   object cxLabel5: TcxLabel
     Left = 14
-    Top = 212
+    Top = 172
     Caption = #1057#1077#1079#1086#1085' :'
   end
   object edPeriod: TcxButtonEdit
     Left = 14
-    Top = 231
+    Top = 191
     Properties.Buttons = <
       item
         Default = True
@@ -127,21 +127,21 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 13
-    Width = 305
+    Width = 197
   end
   object cxLabel8: TcxLabel
-    Left = 14
-    Top = 263
+    Left = 222
+    Top = 171
     Caption = #1043#1086#1076' '#1089' ...'
   end
   object cxLabel9: TcxLabel
-    Left = 158
-    Top = 263
+    Left = 298
+    Top = 171
     Caption = #1043#1086#1076' '#1087#1086' ...'
   end
   object edStartYear: TcxButtonEdit
-    Left = 14
-    Top = 283
+    Left = 222
+    Top = 191
     Properties.Buttons = <
       item
         Default = True
@@ -149,11 +149,12 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 16
-    Width = 111
+    Text = '2012'
+    Width = 65
   end
   object edEndYear: TcxButtonEdit
-    Left = 158
-    Top = 283
+    Left = 298
+    Top = 191
     Properties.Buttons = <
       item
         Default = True
@@ -161,7 +162,7 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 17
-    Width = 111
+    Width = 65
   end
   object cbPeriodAll: TcxCheckBox
     Left = 223
@@ -175,7 +176,7 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
     Width = 105
   end
   object cbUnit: TcxCheckBox
-    Left = 243
+    Left = 293
     Top = 83
     Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1087#1086' '#1057#1087#1080#1089#1082#1091
@@ -184,6 +185,134 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
     ShowHint = True
     TabOrder = 19
     Width = 76
+  end
+  object cbIsAmount: TcxCheckBox
+    Left = 14
+    Top = 237
+    Caption = #1044#1083#1103' % '#1055#1088#1086#1076'. '#1082#1086#1083'.'
+    ParentShowHint = False
+    Properties.ReadOnly = False
+    ShowHint = True
+    State = cbsChecked
+    TabOrder = 20
+    Width = 119
+  end
+  object cbIsSumm: TcxCheckBox
+    Left = 14
+    Top = 264
+    Caption = #1044#1083#1103' % '#1055#1088#1086#1076'. '#1089#1091#1084#1084'.'
+    ParentShowHint = False
+    Properties.ReadOnly = False
+    ShowHint = True
+    TabOrder = 21
+    Width = 119
+  end
+  object cbIsProf: TcxCheckBox
+    Left = 14
+    Top = 292
+    Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1044#1083#1103' % '#1055#1088#1080#1073#1099#1083#1080
+    ParentShowHint = False
+    Properties.ReadOnly = False
+    ShowHint = True
+    TabOrder = 22
+    Width = 119
+  end
+  object cxLabel4: TcxLabel
+    Left = 139
+    Top = 238
+    Caption = '% '#1087#1088#1077#1076#1077#1083' 1:'
+  end
+  object cxLabel10: TcxLabel
+    Left = 139
+    Top = 268
+    Caption = '% '#1087#1088#1077#1076#1077#1083' 1:'
+  end
+  object cxLabel13: TcxLabel
+    Left = 139
+    Top = 295
+    Caption = '% '#1087#1088#1077#1076#1077#1083' 1:'
+  end
+  object cxLabel11: TcxLabel
+    Left = 234
+    Top = 238
+    Caption = '% '#1087#1088#1077#1076#1077#1083' 2:'
+  end
+  object cxLabel12: TcxLabel
+    Left = 234
+    Top = 268
+    Caption = '% '#1087#1088#1077#1076#1077#1083' 2:'
+  end
+  object cxLabel14: TcxLabel
+    Left = 234
+    Top = 295
+    Caption = '% '#1087#1088#1077#1076#1077#1083' 2:'
+  end
+  object edPresent1: TcxCurrencyEdit
+    Left = 205
+    Top = 237
+    EditValue = '50'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 29
+    BiDiMode = bdRightToLeft
+    ParentBiDiMode = False
+    Width = 25
+  end
+  object edPresent2: TcxCurrencyEdit
+    Left = 302
+    Top = 237
+    EditValue = '20'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 30
+    BiDiMode = bdRightToLeft
+    ParentBiDiMode = False
+    Width = 25
+  end
+  object edPresent1_Summ: TcxCurrencyEdit
+    Left = 205
+    Top = 267
+    EditValue = 120.000000000000000000
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 31
+    BiDiMode = bdRightToLeft
+    ParentBiDiMode = False
+    Width = 25
+  end
+  object edPresent2_Summ: TcxCurrencyEdit
+    Left = 302
+    Top = 267
+    EditValue = 100.000000000000000000
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 32
+    BiDiMode = bdRightToLeft
+    ParentBiDiMode = False
+    Width = 25
+  end
+  object edPresent1_Prof: TcxCurrencyEdit
+    Left = 205
+    Top = 294
+    EditValue = '50'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 33
+    BiDiMode = bdRightToLeft
+    ParentBiDiMode = False
+    Width = 25
+  end
+  object edPresent2_Prof: TcxCurrencyEdit
+    Left = 302
+    Top = 294
+    EditValue = '20'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 34
+    BiDiMode = bdRightToLeft
+    ParentBiDiMode = False
+    Width = 25
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -205,8 +334,8 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 259
-    Top = 106
+    Left = 163
+    Top = 314
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -343,6 +472,62 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Present1_Prof'
+        Value = Null
+        Component = edPresent1_Prof
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Present2_Prof'
+        Value = Null
+        Component = edPresent2_Prof
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Present1_Summ'
+        Value = Null
+        Component = edPresent1_Summ
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Present2_Summ'
+        Value = Null
+        Component = edPresent2_Summ
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsAmount'
+        Value = Null
+        Component = cbIsAmount
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsProf'
+        Value = Null
+        Component = cbIsProf
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsSumm'
+        Value = Null
+        Component = cbIsSumm
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 66
     Top = 189
@@ -437,8 +622,8 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 170
-    Top = 180
+    Left = 290
+    Top = 116
   end
   object GuidesPeriod: TdsdGuides
     KeyField = 'Id'
@@ -468,8 +653,8 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 138
-    Top = 208
+    Left = 146
+    Top = 176
   end
   object GuidesStartYear: TdsdGuides
     KeyField = 'Id'
@@ -498,8 +683,8 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 94
-    Top = 281
+    Left = 238
+    Top = 161
   end
   object GuidesEndYear: TdsdGuides
     KeyField = 'Id'
@@ -528,7 +713,7 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 185
-    Top = 283
+    Left = 313
+    Top = 171
   end
 end

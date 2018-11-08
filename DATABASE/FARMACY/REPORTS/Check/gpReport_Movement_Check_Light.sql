@@ -232,7 +232,8 @@ BEGIN
                                  , tmp.BarCode
                             FROM (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
                                        , Object_Goods_BarCode.ValueData        AS BarCode
-                                       , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Main_BarCode.ChildObjectId ORDER BY Object_Goods_BarCode.Id DESC) AS Ord
+                                       --, ROW_NUMBER() OVER (PARTITION BY ObjectLink_Main_BarCode.ChildObjectId ORDER BY Object_Goods_BarCode.Id DESC) AS Ord
+                                       , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Main_BarCode.ChildObjectId ORDER BY ObjectLink_Main_BarCode.ChildObjectId, ObjectLink_Main_BarCode.ObjectId DESC) AS Ord   -- так в  gpSelect_Object_Goods_Retail спр. тов. сети (штрихкод поставщ.)
                                   FROM ObjectLink AS ObjectLink_Main_BarCode
                                        JOIN ObjectLink AS ObjectLink_Child_BarCode
                                                        ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId

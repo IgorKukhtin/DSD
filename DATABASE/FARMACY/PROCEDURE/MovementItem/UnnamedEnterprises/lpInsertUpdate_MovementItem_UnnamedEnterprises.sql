@@ -7,8 +7,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_UnnamedEnterprises(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
+    IN inAmountOrder         TFloat    , -- Количество в заказ
     IN inPrice               TFloat    , -- Цена
     IN inSumm                TFloat    , -- сумма
+    IN inSummOrder           TFloat    , -- сумма в заказ
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -21,15 +23,19 @@ BEGIN
 
     -- сохранили <Элемент документа>
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
-    
+
     -- сохранили <цену>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountOrder(), ioId, inAmountOrder);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummOrder(), ioId, inSummOrder);
 
     -- пересчитали Итоговые суммы по накладной
     PERFORM lpInsertUpdate_MovementFloat_TotalSummUnnamedEnterprisesExactly (inMovementId);
-    
+
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
