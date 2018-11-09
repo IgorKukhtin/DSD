@@ -39,6 +39,7 @@ BEGIN
    
    RETURN QUERY
     WITH
+    
      tmpPiceSeparate AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
                               , ObjectHistory_PriceListItem.StartDate
                               , ObjectHistory_PriceListItem.EndDate
@@ -60,6 +61,13 @@ BEGIN
                            AND ObjectHistory_PriceListItem.StartDate <= inEndDate
                            AND ObjectHistory_PriceListItem.EndDate > inStartDate
                          )
+   , tmpUnitFrom AS (SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (inFromId) AS tmp WHERE inFromId <> 0 
+               UNION SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Unit() AND inFromId = 0
+                     )
+   , tmpUnitTo   AS (SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (inToId) AS tmp WHERE inToId <> 0 
+               UNION SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Unit() AND inToId = 0
+                     )
+
    /*, tmpMinMax AS (SELECT tmpPiceSeparate.GoodsId
                         , MIN (tmpPiceSeparate.Price) :: tfloat  AS ValuePrice_min
                         , MAX (tmpPiceSeparate.Price) :: tfloat  AS ValuePrice_max
@@ -75,13 +83,13 @@ BEGIN
                           INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                         ON MovementLinkObject_From.MovementId = Movement.Id
                                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                       AND (MovementLinkObject_From.ObjectId = inFromId OR inFromId = 0)
+                                                       AND MovementLinkObject_From.ObjectId IN (SELECT tmpUnitFrom.UnitId FROM tmpUnitFrom)
 
                           INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                         ON MovementLinkObject_To.MovementId = Movement.Id
                                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                       AND (MovementLinkObject_To.ObjectId = inToId OR inToId = 0)
-
+                                                       AND MovementLinkObject_To.ObjectId IN (SELECT tmpUnitTo.UnitId FROM tmpUnitTo)
+                          
                      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
                        AND Movement.DescId = zc_Movement_ProductionSeparate() 
                        AND Movement.StatusId = zc_Enum_Status_Complete()
