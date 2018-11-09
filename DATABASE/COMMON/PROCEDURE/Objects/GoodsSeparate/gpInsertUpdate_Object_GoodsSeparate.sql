@@ -1,9 +1,11 @@
 -- Function: gpInsertUpdate_Object_GoodsSeparate()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSeparate (Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSeparate (Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsSeparate(
  INOUT ioId              Integer   , -- ключ объекта <Составляющие рецептур>
+    IN inGoodsMasterId   Integer   , --
     IN inGoodsId         Integer   , -- ссылка на Товары
     IN inGoodsKindId     Integer   , -- ссылка на Виды товаров
     IN inIsCalculated    Boolean   , -- Входит в осн. сырье (100 кг.)
@@ -29,7 +31,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsSeparate_Goods(), ioId, inGoodsId);
    -- сохранили связь с <Видом товаров>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsSeparate_GoodsKind(), ioId, inGoodsKindId);
-   
+
+   -- сохранили связь с <гл Товаром>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsSeparate_GoodsMaster(), ioId, inGoodsMasterId);
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsSeparate_Calculated(), ioId, inIsCalculated);
 
@@ -56,6 +61,7 @@ $BODY$
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.11.18         *
  07.10.18         *
 */
 
