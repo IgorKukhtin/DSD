@@ -501,8 +501,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 09.11.18         *
  26.07.18         *
 */
 
 -- тест
--- SELECT * FROM gpReport_Sale_Analysis
+-- select * from gpReport_Sale_Analysis(inStartDate := ('01.01.2016')::TDateTime , inEndDate := ('31.01.2016')::TDateTime , inUnitId := 1609 , inPartnerId := 0 , inBrandId := 0 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 0 , inPresent1 := 50 , inPresent2 := 20 , inPresent1_Summ := 120 , inPresent2_Summ := 100 , inPresent1_Prof := 50 , inPresent2_Prof := 20 , inIsPeriodAll := 'False' , inIsUnit := 'False' , inIsAmount := 'True' , inIsSumm := 'False' , inIsProf := 'False' ,  inSession := '8');

@@ -74,107 +74,106 @@ BEGIN
                             WHERE Object_OrderShedule.DescId = zc_Object_OrderShedule()
                               AND Object_OrderShedule.isErased = FALSE
                            )
- , tmpOrderSheduleText AS (SELECT tmpOrderShedule.UnitId
-                                , tmpOrderShedule.ContractId
-                                , (CASE WHEN tmpOrderShedule.Value1 in (1,3) THEN 'Понедельник,' ELSE '' END ||
-                                   CASE WHEN tmpOrderShedule.Value2 in (1,3) THEN 'Вторник,'     ELSE '' END ||
-                                   CASE WHEN tmpOrderShedule.Value3 in (1,3) THEN 'Среда,'       ELSE '' END ||
-                                   CASE WHEN tmpOrderShedule.Value4 in (1,3) THEN 'Четверг,'     ELSE '' END ||
-                                   CASE WHEN tmpOrderShedule.Value5 in (1,3) THEN 'Пятница,'     ELSE '' END ||
-                                   CASE WHEN tmpOrderShedule.Value6 in (1,3) THEN 'Суббота,'     ELSE '' END ||
-                                   CASE WHEN tmpOrderShedule.Value7 in (1,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar          AS Zakaz_Text   --День заказа (информативно)
-                                , (CASE WHEN tmpOrderShedule.Value1 in (2,3) THEN 'Понедельник,' ELSE '' END ||
-                                   CASE WHEN tmpOrderShedule.Value2 in (2,3) THEN 'Вторник,'     ELSE '' END ||
-                                   CASE WHEN tmpOrderShedule.Value3 in (2,3) THEN 'Среда,'       ELSE '' END ||
-                                   CASE WHEN tmpOrderShedule.Value4 in (2,3) THEN 'Четверг,'     ELSE '' END ||
-                                   CASE WHEN tmpOrderShedule.Value5 in (2,3) THEN 'Пятница,'     ELSE '' END ||
-                                   CASE WHEN tmpOrderShedule.Value6 in (2,3) THEN 'Суббота,'     ELSE '' END ||
-                                   CASE WHEN tmpOrderShedule.Value7 in (2,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar          AS Dostavka_Text   --День доставки (информативно)
-                           FROM tmpOrderShedule
-                           )
+      , tmpOrderSheduleText AS (SELECT tmpOrderShedule.UnitId
+                                     , tmpOrderShedule.ContractId
+                                     , (CASE WHEN tmpOrderShedule.Value1 in (1,3) THEN 'Понедельник,' ELSE '' END ||
+                                        CASE WHEN tmpOrderShedule.Value2 in (1,3) THEN 'Вторник,'     ELSE '' END ||
+                                        CASE WHEN tmpOrderShedule.Value3 in (1,3) THEN 'Среда,'       ELSE '' END ||
+                                        CASE WHEN tmpOrderShedule.Value4 in (1,3) THEN 'Четверг,'     ELSE '' END ||
+                                        CASE WHEN tmpOrderShedule.Value5 in (1,3) THEN 'Пятница,'     ELSE '' END ||
+                                        CASE WHEN tmpOrderShedule.Value6 in (1,3) THEN 'Суббота,'     ELSE '' END ||
+                                        CASE WHEN tmpOrderShedule.Value7 in (1,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar          AS Zakaz_Text   --День заказа (информативно)
+                                     , (CASE WHEN tmpOrderShedule.Value1 in (2,3) THEN 'Понедельник,' ELSE '' END ||
+                                        CASE WHEN tmpOrderShedule.Value2 in (2,3) THEN 'Вторник,'     ELSE '' END ||
+                                        CASE WHEN tmpOrderShedule.Value3 in (2,3) THEN 'Среда,'       ELSE '' END ||
+                                        CASE WHEN tmpOrderShedule.Value4 in (2,3) THEN 'Четверг,'     ELSE '' END ||
+                                        CASE WHEN tmpOrderShedule.Value5 in (2,3) THEN 'Пятница,'     ELSE '' END ||
+                                        CASE WHEN tmpOrderShedule.Value6 in (2,3) THEN 'Суббота,'     ELSE '' END ||
+                                        CASE WHEN tmpOrderShedule.Value7 in (2,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar          AS Dostavka_Text   --День доставки (информативно)
+                                FROM tmpOrderShedule
+                                )
 
-, tmpOrderSheduleList AS (SELECT tmp.*
-                          FROM (
-                                select tmpOrderShedule.UnitId, tmpOrderShedule.ContractId, CASE WHEN Value1 in (1,3) THEN 1 ELSE 0 END AS DoW, CASE WHEN Value1 in (2,3) THEN 1 ELSE 0 END AS DoW_D from tmpOrderShedule
-                                union select tmpOrderShedule.UnitId, tmpOrderShedule.ContractId, CASE WHEN Value2 in (1,3) THEN 2 ELSE 0 END AS DoW, CASE WHEN Value2 in (2,3) THEN 2 ELSE 0 END AS DoW_D from tmpOrderShedule
-                                union select tmpOrderShedule.UnitId, tmpOrderShedule.ContractId, CASE WHEN Value3 in (1,3) THEN 3 ELSE 0 END AS DoW, CASE WHEN Value3 in (2,3) THEN 3 ELSE 0 END AS DoW_D from tmpOrderShedule
-                                union select tmpOrderShedule.UnitId, tmpOrderShedule.ContractId, CASE WHEN Value4 in (1,3) THEN 4 ELSE 0 END AS DoW, CASE WHEN Value4 in (2,3) THEN 4 ELSE 0 END AS DoW_D from tmpOrderShedule
-                                union select tmpOrderShedule.UnitId, tmpOrderShedule.ContractId, CASE WHEN Value5 in (1,3) THEN 5 ELSE 0 END AS DoW, CASE WHEN Value5 in (2,3) THEN 5 ELSE 0 END AS DoW_D from tmpOrderShedule
-                                union select tmpOrderShedule.UnitId, tmpOrderShedule.ContractId, CASE WHEN Value6 in (1,3) THEN 6 ELSE 0 END AS DoW, CASE WHEN Value6 in (2,3) THEN 6 ELSE 0 END AS DoW_D from tmpOrderShedule
-                                union select tmpOrderShedule.UnitId, tmpOrderShedule.ContractId, CASE WHEN Value7 in (1,3) THEN 7 ELSE 0 END AS DoW, CASE WHEN Value7 in (2,3) THEN 7 ELSE 0 END AS DoW_D from tmpOrderShedule) AS tmp
-                          WHERE tmp.DoW <> 0 OR tmp.DoW_D <> 0
-                          )
-,tmpAfter AS (SELECT tmp.UnitId, tmp.ContractId, max (DoW) AS DoW, max (DoW_D) AS DoW_D
-              FROM ( 
-                    SELECT tmpOrderSheduleList.UnitId, tmpOrderSheduleList.ContractId, min (DoW) AS DoW, 0 AS DoW_D
-                    FROM tmpOrderSheduleList
-                    WHERE tmpOrderSheduleList.DoW > vbCURRENT_DOW
-                      AND tmpOrderSheduleList.DoW > 0
-                    GROUP BY tmpOrderSheduleList.UnitId, tmpOrderSheduleList.ContractId
-                    Union
-                    SELECT tmpOrderSheduleList.UnitId, tmpOrderSheduleList.ContractId, 0 AS DoW, min (DoW_D) AS DoW_D
-                    FROM tmpOrderSheduleList
-                    WHERE tmpOrderSheduleList.DoW_D > vbCURRENT_DOW
-                      AND tmpOrderSheduleList.DoW_D > 0
-                    GROUP BY tmpOrderSheduleList.UnitId, tmpOrderSheduleList.ContractId) as tmp
-              GROUP BY tmp.UnitId, tmp.ContractId
-              )
-, tmpBefore AS (SELECT tmp.UnitId, tmp.ContractId, max (DoW) AS DoW, max (DoW_D) AS DoW_D
-                FROM (
-                    SELECT tmpOrderSheduleList.UnitId, tmpOrderSheduleList.ContractId,  min (tmpOrderSheduleList.DoW) AS DoW, 0 AS DoW_D
-                    FROM tmpOrderSheduleList
-                       LEFT JOIN tmpAfter ON tmpAfter.UnitId = tmpOrderSheduleList.UnitId
-                                         AND tmpAfter.ContractId = tmpOrderSheduleList.ContractId
-                    WHERE tmpOrderSheduleList.DoW < vbCURRENT_DOW
-                      AND tmpAfter.UnitId IS NULL
-                        AND tmpOrderSheduleList.DoW<>0
-                    GROUP BY tmpOrderSheduleList.UnitId, tmpOrderSheduleList.ContractId
-                UNION 
-                    SELECT tmpOrderSheduleList.UnitId, tmpOrderSheduleList.ContractId, 0 AS DoW,  min (tmpOrderSheduleList.DoW_D) AS DoW_D
-                    FROM tmpOrderSheduleList
-                       LEFT JOIN tmpAfter ON tmpAfter.UnitId = tmpOrderSheduleList.UnitId
-                                         AND tmpAfter.ContractId = tmpOrderSheduleList.ContractId
-                    WHERE tmpOrderSheduleList.DoW_D < vbCURRENT_DOW
-                      AND tmpAfter.UnitId IS NULL
-                        AND tmpOrderSheduleList.DoW_D<>0
-                    GROUP BY tmpOrderSheduleList.UnitId, tmpOrderSheduleList.ContractId) as tmp
-                GROUP BY tmp.UnitId, tmp.ContractId
-                )
-, OrderSheduleList AS ( SELECT tmp.UnitId, tmp.ContractId
-                             , tmpDateList.OperDate         AS OperDate_Zakaz
-                             , tmpDateList_D.OperDate       AS OperDate_Dostavka
-                        FROM (SELECT *
-                              FROM tmpAfter
-                           union all 
-                              SELECT *
-                              FROM tmpBefore
-                             ) AS tmp
-                         LEFT JOIN tmpDateList ON tmpDateList.Number = tmp.DoW
-                         LEFT JOIN tmpDateList AS tmpDateList_D ON tmpDateList_D.Number = tmp.DoW_D
-                   )
-, OrderSheduleListToday AS (SELECT *
-                            FROM tmpOrderSheduleList
-                            WHERE tmpOrderSheduleList.DoW = vbCURRENT_DOW OR tmpOrderSheduleList.DoW_D = vbCURRENT_DOW 
-                           )
+      , tmpOrderSheduleList AS (SELECT tmp.*
+                                FROM (
+                                      select tmpOrderShedule.UnitId, tmpOrderShedule.ContractId, CASE WHEN Value1 in (1,3) THEN 1 ELSE 0 END AS DoW, CASE WHEN Value1 in (2,3) THEN 1 ELSE 0 END AS DoW_D from tmpOrderShedule
+                                      union select tmpOrderShedule.UnitId, tmpOrderShedule.ContractId, CASE WHEN Value2 in (1,3) THEN 2 ELSE 0 END AS DoW, CASE WHEN Value2 in (2,3) THEN 2 ELSE 0 END AS DoW_D from tmpOrderShedule
+                                      union select tmpOrderShedule.UnitId, tmpOrderShedule.ContractId, CASE WHEN Value3 in (1,3) THEN 3 ELSE 0 END AS DoW, CASE WHEN Value3 in (2,3) THEN 3 ELSE 0 END AS DoW_D from tmpOrderShedule
+                                      union select tmpOrderShedule.UnitId, tmpOrderShedule.ContractId, CASE WHEN Value4 in (1,3) THEN 4 ELSE 0 END AS DoW, CASE WHEN Value4 in (2,3) THEN 4 ELSE 0 END AS DoW_D from tmpOrderShedule
+                                      union select tmpOrderShedule.UnitId, tmpOrderShedule.ContractId, CASE WHEN Value5 in (1,3) THEN 5 ELSE 0 END AS DoW, CASE WHEN Value5 in (2,3) THEN 5 ELSE 0 END AS DoW_D from tmpOrderShedule
+                                      union select tmpOrderShedule.UnitId, tmpOrderShedule.ContractId, CASE WHEN Value6 in (1,3) THEN 6 ELSE 0 END AS DoW, CASE WHEN Value6 in (2,3) THEN 6 ELSE 0 END AS DoW_D from tmpOrderShedule
+                                      union select tmpOrderShedule.UnitId, tmpOrderShedule.ContractId, CASE WHEN Value7 in (1,3) THEN 7 ELSE 0 END AS DoW, CASE WHEN Value7 in (2,3) THEN 7 ELSE 0 END AS DoW_D from tmpOrderShedule) AS tmp
+                                WHERE tmp.DoW <> 0 OR tmp.DoW_D <> 0
+                                )
+      , tmpAfter AS (SELECT tmp.UnitId, tmp.ContractId, max (DoW) AS DoW, max (DoW_D) AS DoW_D
+                     FROM ( 
+                           SELECT tmpOrderSheduleList.UnitId, tmpOrderSheduleList.ContractId, min (DoW) AS DoW, 0 AS DoW_D
+                           FROM tmpOrderSheduleList
+                           WHERE tmpOrderSheduleList.DoW > vbCURRENT_DOW
+                             AND tmpOrderSheduleList.DoW > 0
+                           GROUP BY tmpOrderSheduleList.UnitId, tmpOrderSheduleList.ContractId
+                           Union
+                           SELECT tmpOrderSheduleList.UnitId, tmpOrderSheduleList.ContractId, 0 AS DoW, min (DoW_D) AS DoW_D
+                           FROM tmpOrderSheduleList
+                           WHERE tmpOrderSheduleList.DoW_D > vbCURRENT_DOW
+                             AND tmpOrderSheduleList.DoW_D > 0
+                           GROUP BY tmpOrderSheduleList.UnitId, tmpOrderSheduleList.ContractId) as tmp
+                     GROUP BY tmp.UnitId, tmp.ContractId
+                     )
+      , tmpBefore AS (SELECT tmp.UnitId, tmp.ContractId, max (DoW) AS DoW, max (DoW_D) AS DoW_D
+                      FROM (
+                          SELECT tmpOrderSheduleList.UnitId, tmpOrderSheduleList.ContractId,  min (tmpOrderSheduleList.DoW) AS DoW, 0 AS DoW_D
+                          FROM tmpOrderSheduleList
+                             LEFT JOIN tmpAfter ON tmpAfter.UnitId = tmpOrderSheduleList.UnitId
+                                               AND tmpAfter.ContractId = tmpOrderSheduleList.ContractId
+                          WHERE tmpOrderSheduleList.DoW < vbCURRENT_DOW
+                            AND tmpAfter.UnitId IS NULL
+                              AND tmpOrderSheduleList.DoW<>0
+                          GROUP BY tmpOrderSheduleList.UnitId, tmpOrderSheduleList.ContractId
+                      UNION 
+                          SELECT tmpOrderSheduleList.UnitId, tmpOrderSheduleList.ContractId, 0 AS DoW,  min (tmpOrderSheduleList.DoW_D) AS DoW_D
+                          FROM tmpOrderSheduleList
+                             LEFT JOIN tmpAfter ON tmpAfter.UnitId = tmpOrderSheduleList.UnitId
+                                               AND tmpAfter.ContractId = tmpOrderSheduleList.ContractId
+                          WHERE tmpOrderSheduleList.DoW_D < vbCURRENT_DOW
+                            AND tmpAfter.UnitId IS NULL
+                              AND tmpOrderSheduleList.DoW_D<>0
+                          GROUP BY tmpOrderSheduleList.UnitId, tmpOrderSheduleList.ContractId) as tmp
+                      GROUP BY tmp.UnitId, tmp.ContractId
+                      )
+      , OrderSheduleList AS ( SELECT tmp.UnitId, tmp.ContractId
+                                   , tmpDateList.OperDate         AS OperDate_Zakaz
+                                   , tmpDateList_D.OperDate       AS OperDate_Dostavka
+                              FROM (SELECT *
+                                    FROM tmpAfter
+                                 union all 
+                                    SELECT *
+                                    FROM tmpBefore
+                                   ) AS tmp
+                               LEFT JOIN tmpDateList ON tmpDateList.Number = tmp.DoW
+                               LEFT JOIN tmpDateList AS tmpDateList_D ON tmpDateList_D.Number = tmp.DoW_D
+                         )
+      , OrderSheduleListToday AS (SELECT *
+                                  FROM tmpOrderSheduleList
+                                  WHERE tmpOrderSheduleList.DoW = vbCURRENT_DOW OR tmpOrderSheduleList.DoW_D = vbCURRENT_DOW 
+                                 )
 --
 
-  , tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
-                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
-                  UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
-                  )
-, tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
+      , tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
+                      UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
+                      UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
+                      )
+      , tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
 --        , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
   --                       UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
 --                              )
-        , tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
-                        FROM ObjectLink AS ObjectLink_Unit_Juridical
-                           INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                                AND (ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId OR vbUserId = zfCalc_UserAdmin() :: Integer)
-                        WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                        )
-
+      , tmpUnit  AS (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+                     FROM ObjectLink AS ObjectLink_Unit_Juridical
+                        INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                              ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                             AND (ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId OR vbUserId = zfCalc_UserAdmin() :: Integer)
+                     WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                     )
 
        SELECT
              Movement_OrderExternal_View.Id

@@ -146,7 +146,7 @@ BEGIN
                                                        AND tmpPriceRemains.UnitId   = tmpRemains_All.UnitId
                          GROUP BY tmpRemains_All.GoodsId
                         )
-        , tmpIncomeMov AS (SELECT Movement_Income.Id
+        , tmpIncomeMov AS (/*SELECT Movement_Income.Id
                            FROM Movement AS Movement_Income
                                 INNER JOIN MovementDate AS MovementDate_Branch
                                                         ON MovementDate_Branch.MovementId = Movement_Income.Id
@@ -161,7 +161,22 @@ BEGIN
                            WHERE Movement_Income.DescId = zc_Movement_Income()
                              AND Movement_Income.StatusId = zc_Enum_Status_Complete() 
                            GROUP BY Movement_Income.Id
+                           */
+                           
+                           SELECT DISTINCT Movement_Income.Id
+                           FROM MovementDate AS MovementDate_Branch
+                                INNER JOIN Movement AS Movement_Income 
+                                                    ON Movement_Income.Id = MovementDate_Branch.MovementId
+                                                   AND Movement_Income.DescId = zc_Movement_Income()
+                                                   AND Movement_Income.StatusId = zc_Enum_Status_Complete()
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                              ON MovementLinkObject_To.MovementId = Movement_Income.Id
+                                                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_To.ObjectId
+                           WHERE MovementDate_Branch.DescId = zc_MovementDate_Branch()
+                             AND MovementDate_Branch.ValueData >= inStartDate AND MovementDate_Branch.ValueData < inEndDate + INTERVAL '1 Day'
                            ) 
+
         , tmpIncomeMI AS (SELECT MI_Income.*
                           FROM tmpIncomeMov AS Movement_Income
                                INNER JOIN MovementItem AS MI_Income 
