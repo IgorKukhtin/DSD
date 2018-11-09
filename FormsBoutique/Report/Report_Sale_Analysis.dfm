@@ -4,10 +4,8 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
   ClientWidth = 1032
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -259
-  ExplicitTop = -97
   ExplicitWidth = 1048
-  ExplicitHeight = 678
+  ExplicitHeight = 681
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]

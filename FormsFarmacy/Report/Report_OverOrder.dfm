@@ -482,10 +482,16 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
           'Date')
       end
       item
-        Component = UnitGuides
+        Component = GuidesUnit
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = GuidesRetail
+      end
+      item
+        Component = GuidesJuridical
       end>
   end
   inherited ActionList: TActionList
@@ -546,7 +552,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
         item
           Name = 'UnitId'
           Value = ''
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'Key'
           DataType = ftString
           ParamType = ptInput
@@ -555,7 +561,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
         item
           Name = 'UnitName'
           Value = ''
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -660,7 +666,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
       item
         Name = 'inUnitId'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -746,12 +752,12 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = UnitGuides
+        Component = GuidesUnit
       end>
     Left = 656
     Top = 56
   end
-  object UnitGuides: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
@@ -763,7 +769,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
       item
         Name = 'KeyList'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -772,7 +778,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
       item
         Name = 'TextValueList'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -789,14 +795,14 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
       item
         Name = 'UnitId'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','

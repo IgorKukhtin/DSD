@@ -70,6 +70,8 @@ type
     actPrint_byElements_byComments: TdsdPrintAction;
     bbPrint_byElements: TdxBarButton;
     bbPrint_byElements_byComments: TdxBarButton;
+    actPrint_byComments: TdsdPrintAction;
+    bbPrint_byComments: TdxBarButton;
   private
     { Private declarations }
   public
