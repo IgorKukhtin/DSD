@@ -12,7 +12,8 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_ListDiff());
+     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_ListDiff());
+     vbUserId := inSession;
 
      -- проверка - если <Master> Проведен, то <Ошибка>
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');

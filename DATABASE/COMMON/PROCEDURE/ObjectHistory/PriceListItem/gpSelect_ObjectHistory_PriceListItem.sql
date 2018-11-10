@@ -72,7 +72,7 @@ BEGIN
 
 
 
-   IF inShowAll THEN
+   IF inShowAll = TRUE THEN
 
     -- Выбираем данные
      RETURN QUERY
@@ -132,9 +132,9 @@ BEGIN
            , COALESCE (tmpMinMax.ValuePrice_min, 0) :: TFloat AS ValuePrice_min
            , COALESCE (tmpMinMax.ValuePrice_max, 0) :: TFloat AS ValuePrice_max
 
-           , CAST (CASE WHEN tmpMinMax.ValuePrice_min > 0 AND ObjectHistoryFloat_PriceListItem_Value.ValueData > 0
-                             THEN 100 * (ObjectHistoryFloat_PriceListItem_Value.ValueData - tmpMinMax.ValuePrice_min) / tmpMinMax.ValuePrice_min
-                        WHEN COALESCE (tmpMinMax.ValuePrice_min, 0) = 0 AND ObjectHistoryFloat_PriceListItem_Value.ValueData > 0
+           , CAST (CASE WHEN tmpMinMax.ValuePrice_min > 0 AND tmpPrice.ValuePrice > 0
+                             THEN 100 * (tmpPrice.ValuePrice - tmpMinMax.ValuePrice_min) / tmpMinMax.ValuePrice_min
+                        WHEN COALESCE (tmpMinMax.ValuePrice_min, 0) = 0 AND tmpPrice.ValuePrice > 0
                              THEN 100
                         ELSE 0
                    END  AS NUMERIC (16,0))  :: TFloat AS Diff_min

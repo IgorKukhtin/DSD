@@ -249,6 +249,12 @@ BEGIN
 
      WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0)
        AND (_tmpList.PersonalServiceListId > 0 OR vbIsList_all = TRUE)
+       AND (Operation.PersonalServiceListId NOT IN (293443 -- Ведомость Админ
+                                                  , 418967 -- Ведомость Админ ДП
+                                                  , 593890 -- Премии АП
+                                                   )
+            OR vbUserId <> 2573318 -- Любарський Георгій Олегович
+           )
      ;
 
 
