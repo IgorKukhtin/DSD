@@ -1595,6 +1595,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsSeparate_GoodsKind() RETURNS Integ
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_GoodsSeparate_GoodsKind', 'Виды товаров', zc_Object_GoodsSeparate(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsSeparate_GoodsKind');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsSeparate_GoodsMaster() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsSeparate_GoodsMaster'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_GoodsSeparate_GoodsMaster', 'товары', zc_Object_GoodsSeparate(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsSeparate_GoodsMaster');
 
 --!!! АПТЕКА
 
@@ -2018,6 +2021,7 @@ SELECT 'zc_ObjectLink_RepriceUnitSheduler_User', 'Связь с Пользователем', zc_Obj
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 09.11.18         * zc_ObjectLink_GoodsSeparate_GoodsMaster
  30.10.18                                                                                      * zc_ObjectLink_RepriceUnitSheduler_User
  23.10.18                                                                                      * zc_ObjectLink_RepriceUnitSheduler_Unit
  22.10.18                                                                                      * zc_ObjectLink_RepriceUnitSheduler_Juridical

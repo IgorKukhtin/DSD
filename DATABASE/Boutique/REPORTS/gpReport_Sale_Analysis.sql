@@ -415,14 +415,14 @@ BEGIN
                END :: TFloat AS Tax_Amount
 
                -- % сумма с/с продали / сумма с/с приход
-             , CASE WHEN tmpData.Sale_SummCost_curr > 0 AND tmpData.Income_Summ > 0
-                         THEN tmpData.Sale_SummCost_curr / tmpData.Income_Summ * 100
+             , CASE WHEN tmpData.Sale_Summ_curr > 0 AND tmpData.Income_Summ > 0
+                         THEN tmpData.Sale_Summ_curr * 100 / tmpData.Income_Summ
                     ELSE 0
                END :: TFloat AS Tax_Summ_curr
 
-               -- % сумма продажа     / сумма с/с
-             , CASE WHEN tmpData.Sale_Summ_curr > 0 AND tmpData.Sale_SummCost_curr > 0
-                         THEN tmpData.Sale_Summ_curr / tmpData.Sale_SummCost_curr * 100 - 100
+               -- %  рентабельности
+             , CASE WHEN (tmpData.Sale_Summ_curr - tmpData.Sale_SummCost_curr) > 0 AND tmpData.Sale_SummCost_curr > 0
+                         THEN (tmpData.Sale_Summ_curr- tmpData.Sale_SummCost_curr) * 100/ tmpData.Sale_SummCost_curr
                     ELSE 0
                END :: TFloat AS Tax_Summ_prof   
                          
@@ -438,15 +438,15 @@ BEGIN
                     ELSE 0
                END :: TFloat AS Tax_Summ_10100  
                
-                -- % сумма скидки итого    / сумма скидки клиента
-             , CASE WHEN tmpData.Sale_Summ_10203 > 0 AND tmpData.Sale_Summ_10200 > 0
-                         THEN tmpData.Sale_Summ_10203 * 100/ tmpData.Sale_Summ_10200  -- 100
+                -- % сумма скидки итого    / сумма скидки клиента + доп. скидка
+             , CASE WHEN (COALESCE (tmpData.Sale_Summ_10203, 0) + COALESCE (tmpData.Sale_Summ_10204, 0)) > 0 AND tmpData.Sale_Summ_10200 > 0
+                         THEN (COALESCE (tmpData.Sale_Summ_10203, 0) + COALESCE (tmpData.Sale_Summ_10204, 0)) * 100/ tmpData.Sale_Summ_10200  -- 100
                     ELSE 0
                END :: TFloat AS Tax_Summ_10203
                
-                -- % сумма скидки итого    / сумма скидки сезон
-             , CASE WHEN tmpData.Sale_Summ_10201 > 0 AND tmpData.Sale_Summ_10200 > 0
-                         THEN tmpData.Sale_Summ_10201 * 100/ tmpData.Sale_Summ_10200  -- 100
+                -- % сумма скидки итого    / сумма скидки сезон + outlet
+             , CASE WHEN COALESCE (tmpData.Sale_Summ_10201,0) + COALESCE (tmpData.Sale_Summ_10202, 0) > 0 AND tmpData.Sale_Summ_10200 > 0
+                         THEN (COALESCE (tmpData.Sale_Summ_10201,0) + COALESCE (tmpData.Sale_Summ_10202, 0)) * 100/ tmpData.Sale_Summ_10200  -- 100
                     ELSE 0
                END :: TFloat AS Tax_Summ_10201
                
@@ -463,10 +463,12 @@ BEGIN
      --продажи больше 50% от прихода
      OPEN Cursor1 FOR
      SELECT _tmpData.*
-          , 16744448  AS Color_Calc -- zc_Color_Aqua()
+          , CASE WHEN Tax_Amount    >= inPresent1      THEN 16744448 WHEN Tax_Amount    >= inPresent2      AND Tax_Amount    < inPresent1      THEN zc_Color_Yelow() WHEN Tax_Amount    < inPresent2      THEN zc_Color_Red() END AS Color_Amount
+          , CASE WHEN Tax_Summ_curr >= inPresent1_Summ THEN 16744448 WHEN Tax_Summ_curr >= inPresent2_Summ AND Tax_Summ_curr < inPresent1_Summ THEN zc_Color_Yelow() WHEN Tax_Summ_curr < inPresent2_Summ THEN zc_Color_Red() END AS Color_Sum
+          , CASE WHEN Tax_Summ_prof >= inPresent1_Prof THEN 16744448 WHEN Tax_Summ_prof >= inPresent2_Prof AND Tax_Summ_prof < inPresent1_Prof THEN zc_Color_Yelow() WHEN Tax_Summ_prof < inPresent2_Prof THEN zc_Color_Red() END AS Color_Prof
      FROM _tmpData
      WHERE (inIsAmount = TRUE AND Tax_Amount     >= inPresent1)
-        OR (inIsSumm   = TRUE AND Tax_Summ_10100 >= inPresent1_Summ)
+        OR (inIsSumm   = TRUE AND Tax_Summ_curr >= inPresent1_Summ)
         OR (inIsProf   = TRUE AND Tax_Summ_prof  >= inPresent1_Prof)
      ;
      RETURN NEXT Cursor1;
@@ -475,10 +477,12 @@ BEGIN
      --продажи больше 20% меньше 50% от прихода
      OPEN Cursor2 FOR
      SELECT _tmpData.*
-          , zc_Color_Yelow() AS Color_Calc
-     FROM _tmpData
+          , CASE WHEN Tax_Amount    >= inPresent1      THEN 16744448 WHEN Tax_Amount    >= inPresent2      AND Tax_Amount    < inPresent1      THEN zc_Color_Yelow() WHEN Tax_Amount    < inPresent2      THEN zc_Color_Red() END AS Color_Amount
+          , CASE WHEN Tax_Summ_curr >= inPresent1_Summ THEN 16744448 WHEN Tax_Summ_curr >= inPresent2_Summ AND Tax_Summ_curr < inPresent1_Summ THEN zc_Color_Yelow() WHEN Tax_Summ_curr < inPresent2_Summ THEN zc_Color_Red() END AS Color_Sum
+          , CASE WHEN Tax_Summ_prof >= inPresent1_Prof THEN 16744448 WHEN Tax_Summ_prof >= inPresent2_Prof AND Tax_Summ_prof < inPresent1_Prof THEN zc_Color_Yelow() WHEN Tax_Summ_prof < inPresent2_Prof THEN zc_Color_Red() END AS Color_Prof
+      FROM _tmpData
      WHERE (inIsAmount = TRUE AND Tax_Amount     >= inPresent2      AND Tax_Amount     < inPresent1)
-        OR (inIsSumm   = TRUE AND Tax_Summ_10100 >= inPresent2_Summ AND Tax_Summ_10100 < inPresent1_Summ)
+        OR (inIsSumm   = TRUE AND Tax_Summ_curr >= inPresent2_Summ AND Tax_Summ_curr < inPresent1_Summ)
         OR (inIsProf   = TRUE AND Tax_Summ_prof  >= inPresent2_Prof AND Tax_Summ_prof  < inPresent1_Prof)
      ;
      RETURN NEXT Cursor2;
@@ -486,10 +490,12 @@ BEGIN
      --продажи меньше 20% от прихода
      OPEN Cursor3 FOR
      SELECT _tmpData.*
-          , zc_Color_Red() AS Color_Calc
+          , CASE WHEN Tax_Amount    >= inPresent1      THEN 16744448 WHEN Tax_Amount    >= inPresent2      AND Tax_Amount    < inPresent1      THEN zc_Color_Yelow() WHEN Tax_Amount    < inPresent2      THEN zc_Color_Red() END AS Color_Amount
+          , CASE WHEN Tax_Summ_curr >= inPresent1_Summ THEN 16744448 WHEN Tax_Summ_curr >= inPresent2_Summ AND Tax_Summ_curr < inPresent1_Summ THEN zc_Color_Yelow() WHEN Tax_Summ_curr < inPresent2_Summ THEN zc_Color_Red() END AS Color_Sum
+          , CASE WHEN Tax_Summ_prof >= inPresent1_Prof THEN 16744448 WHEN Tax_Summ_prof >= inPresent2_Prof AND Tax_Summ_prof < inPresent1_Prof THEN zc_Color_Yelow() WHEN Tax_Summ_prof < inPresent2_Prof THEN zc_Color_Red() END AS Color_Prof
      FROM _tmpData
      WHERE (inIsAmount = TRUE AND Tax_Amount   < inPresent2)
-        OR (inIsSumm = TRUE AND Tax_Summ_10100 < inPresent2_Summ)
+        OR (inIsSumm = TRUE AND Tax_Summ_curr < inPresent2_Summ)
         OR (inIsProf = TRUE AND Tax_Summ_prof  < inPresent2_Prof)
      ;
      RETURN NEXT Cursor3;
@@ -501,8 +507,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 09.11.18         *
  26.07.18         *
 */
 
 -- тест
--- SELECT * FROM gpReport_Sale_Analysis
+-- select * from gpReport_Sale_Analysis(inStartDate := ('01.01.2016')::TDateTime , inEndDate := ('31.01.2016')::TDateTime , inUnitId := 1609 , inPartnerId := 0 , inBrandId := 0 , inPeriodId := 0 , inStartYear := 0 , inEndYear := 0 , inPresent1 := 50 , inPresent2 := 20 , inPresent1_Summ := 120 , inPresent2_Summ := 100 , inPresent1_Prof := 50 , inPresent2_Prof := 20 , inIsPeriodAll := 'False' , inIsUnit := 'False' , inIsAmount := 'True' , inIsSumm := 'False' , inIsProf := 'False' ,  inSession := '8');

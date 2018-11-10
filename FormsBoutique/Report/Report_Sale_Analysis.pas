@@ -86,9 +86,7 @@ type
     edPresent2: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
     cxLabel11: TcxLabel;
-    Color_Calc: TcxGridDBColumn;
-    cxColor_Calc: TcxGridDBColumn;
-    chColor_Calc: TcxGridDBColumn;
+    Color_Amount: TcxGridDBColumn;
     dsdDBViewAddOn3: TdsdDBViewAddOn;
     cbIsAmount: TcxCheckBox;
     cbIsSumm: TcxCheckBox;
@@ -101,6 +99,8 @@ type
     cxLabel14: TcxLabel;
     edPresent1_Prof: TcxCurrencyEdit;
     edPresent2_Prof: TcxCurrencyEdit;
+    Color_Sum: TcxGridDBColumn;
+    Color_Prof: TcxGridDBColumn;
   private
     { Private declarations }
   public

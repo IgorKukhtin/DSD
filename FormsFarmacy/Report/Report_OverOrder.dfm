@@ -1,5 +1,5 @@
 inherited Report_OverOrderForm: TReport_OverOrderForm
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1093#1086#1076' '#1085#1072' '#1090#1086#1095#1082#1091' '#1089#1074#1077#1088#1093' '#1079#1072#1082#1072#1079#1072'> '
+  Caption = #1054#1090#1095#1077#1090' <'#1040#1085#1072#1083#1080#1079' '#1079#1072#1082#1072#1079'/'#1087#1088#1080#1093#1086#1076'/'#1086#1090#1082#1072#1079'> '
   ClientHeight = 414
   ClientWidth = 960
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -76,6 +76,16 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = SummaOrder
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountListDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaListDiff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -132,6 +142,16 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountIncome
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountListDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaListDiff
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -155,6 +175,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object GoodsName: TcxGridDBColumn
@@ -182,6 +203,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1079#1072#1082#1072#1079#1072
+            Options.Editing = False
             Width = 70
           end
           object SummaPersent: TcxGridDBColumn
@@ -192,6 +214,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 70
           end
           object AmountPersent_Remains: TcxGridDBColumn
@@ -202,6 +225,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 70
           end
           object SummaPersent_Remains: TcxGridDBColumn
@@ -212,6 +236,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 70
           end
           object RemainsStart: TcxGridDBColumn
@@ -222,6 +247,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object SummaRemainsStart: TcxGridDBColumn
@@ -231,6 +257,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object AmountOrder: TcxGridDBColumn
@@ -241,6 +268,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object SummaOrder: TcxGridDBColumn
@@ -250,6 +278,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object AmountIncome: TcxGridDBColumn
@@ -260,6 +289,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 84
           end
           object SummaIncome: TcxGridDBColumn
@@ -269,6 +299,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object AmountSale: TcxGridDBColumn
@@ -279,6 +310,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 76
           end
           object SummaSale: TcxGridDBColumn
@@ -288,7 +320,42 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 83
+          end
+          object AmountListDiff: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1086#1090#1082#1072#1079
+            DataBinding.FieldName = 'AmountListDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Price_ListDiff: TcxGridDBColumn
+            Caption = #1089#1088'. '#1094#1077#1085#1072' '#1086#1090#1082#1072#1079
+            DataBinding.FieldName = 'Price_ListDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1088#1077#1076#1085#1103#1103' '#1094#1077#1085#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+            Options.Editing = False
+            Width = 70
+          end
+          object SummaListDiff: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1086#1090#1082#1072#1079#1072
+            DataBinding.FieldName = 'SummaListDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object RemainsEnd: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1082#1086#1083'-'#1074#1086' '#1082#1086#1085#1077#1095#1085'.'
@@ -298,6 +365,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object SummaRemainsEnd: TcxGridDBColumn
@@ -307,6 +375,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object ConditionsKeepName: TcxGridDBColumn
@@ -378,6 +447,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 60
           end
         end
@@ -482,10 +552,16 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
           'Date')
       end
       item
-        Component = UnitGuides
+        Component = GuidesUnit
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = GuidesRetail
+      end
+      item
+        Component = GuidesJuridical
       end>
   end
   inherited ActionList: TActionList
@@ -546,7 +622,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
         item
           Name = 'UnitId'
           Value = ''
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'Key'
           DataType = ftString
           ParamType = ptInput
@@ -555,7 +631,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
         item
           Name = 'UnitName'
           Value = ''
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -660,7 +736,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
       item
         Name = 'inUnitId'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -746,12 +822,12 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = UnitGuides
+        Component = GuidesUnit
       end>
-    Left = 656
-    Top = 56
+    Left = 680
+    Top = 48
   end
-  object UnitGuides: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
@@ -763,7 +839,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
       item
         Name = 'KeyList'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -772,7 +848,7 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
       item
         Name = 'TextValueList'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -789,14 +865,14 @@ inherited Report_OverOrderForm: TReport_OverOrderForm
       item
         Name = 'UnitId'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','

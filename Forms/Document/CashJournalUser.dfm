@@ -905,6 +905,91 @@ inherited CashJournalUserForm: TCashJournalUserForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrint_byComments: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103#1084#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103#1084#1080
+      ImageIndex = 16
+      DataSets = <
+        item
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'InfoMoneyName;MoneyPlaceName;Comment'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'UnitName'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BrandName'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodName'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartYear'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndYear'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isOperPrice'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = 42736d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42736d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1086' '#1082#1072#1089#1089#1077' ('#1089' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103#1084#1080')'
+      ReportNameParam.Value = #1055#1086' '#1082#1072#1089#1089#1077' ('#1089' '#1082#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103#1084#1080')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -1058,6 +1143,10 @@ inherited CashJournalUserForm: TCashJournalUserForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_byComments'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1091,6 +1180,10 @@ inherited CashJournalUserForm: TCashJournalUserForm
     end
     object bbPrint_byElements_byComments: TdxBarButton
       Action = actPrint_byElements_byComments
+      Category = 0
+    end
+    object bbPrint_byComments: TdxBarButton
+      Action = actPrint_byComments
       Category = 0
     end
   end

@@ -36,12 +36,15 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
     cxLabel5: TcxLabel;
-    GoodsGuides: TdsdGuides;
+    GuidesGoods: TdsdGuides;
     ceGoods: TcxButtonEdit;
     cxLabel3: TcxLabel;
     ceGoodsKind: TcxButtonEdit;
     GoodsKindGuides: TdsdGuides;
     cbIsCalculated: TcxCheckBox;
+    cxLabel1: TcxLabel;
+    edGoodsMaster: TcxButtonEdit;
+    GuidesGoodsMaster: TdsdGuides;
   private
     { Private declarations }
   public

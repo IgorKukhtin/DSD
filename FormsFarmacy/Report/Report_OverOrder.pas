@@ -32,7 +32,7 @@ type
     cxLabel3: TcxLabel;
     ceUnit: TcxButtonEdit;
     rdUnit: TRefreshDispatcher;
-    UnitGuides: TdsdGuides;
+    GuidesUnit: TdsdGuides;
     dxBarButton1: TdxBarButton;
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
