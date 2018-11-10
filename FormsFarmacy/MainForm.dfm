@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 230
+  ExplicitHeight = 229
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -240,7 +240,7 @@ inherited MainForm: TMainForm
     object actReport_OverOrder: TdsdOpenForm [14]
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
-      Caption = #1055#1088#1080#1093#1086#1076' '#1085#1072' '#1090#1086#1095#1082#1091' '#1089#1074#1077#1088#1093' '#1079#1072#1082#1072#1079#1072
+      Caption = #1054#1090#1095#1077#1090' '#1040#1085#1072#1083#1080#1079' '#1079#1072#1082#1072#1079'/'#1087#1088#1080#1093#1086#1076'/'#1086#1090#1082#1072#1079
       FormName = 'TReport_OverOrderForm'
       FormNameParam.Value = 'TReport_OverOrderForm'
       FormNameParam.DataType = ftString
@@ -2897,6 +2897,9 @@ inherited MainForm: TMainForm
       object N146: TMenuItem
         Action = actReport_Check_Assortment
       end
+      object N147: TMenuItem
+        Action = actReport_OverOrder
+      end
       object N106: TMenuItem
         Action = actReport_MovementCheckErrorForm
       end
@@ -2963,9 +2966,6 @@ inherited MainForm: TMainForm
       end
       object N148: TMenuItem
         Caption = '-'
-      end
-      object N147: TMenuItem
-        Action = actReport_OverOrder
       end
       object miReportMovementCheckGrowthAndFalling: TMenuItem
         Action = actReportMovementCheckGrowthAndFalling

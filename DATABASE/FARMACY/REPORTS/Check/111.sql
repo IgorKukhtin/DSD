@@ -17,6 +17,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIndex Integer;
    DECLARE vbObjectId Integer;
+  
    DECLARE Cursor1 refcursor;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
@@ -118,7 +119,7 @@ BEGIN
                                   LEFT JOIN ObjectHistory AS ObjectHistory_Price
                                                           ON ObjectHistory_Price.ObjectId = tmpPrice.PriceId 
                                                          AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
-                                                         AND inStartDate >= ObjectHistory_Price.StartDate AND inStartDate < ObjectHistory_Price.EndDate
+                                                         AND DATE_TRUNC ('DAY', inStartDate) >= ObjectHistory_Price.StartDate AND DATE_TRUNC ('DAY', inStartDate) < ObjectHistory_Price.EndDate
                                   LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
                                                                ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
                                                               AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
@@ -126,7 +127,7 @@ BEGIN
                                   LEFT JOIN ObjectHistory AS ObjectHistory_PriceEnd
                                                           ON ObjectHistory_PriceEnd.ObjectId = tmpPrice.PriceId 
                                                          AND ObjectHistory_PriceEnd.DescId = zc_ObjectHistory_Price()
-                                                         AND inEndDate >= ObjectHistory_PriceEnd.StartDate AND inEndDate < ObjectHistory_PriceEnd.EndDate
+                                                         AND DATE_TRUNC ('DAY', inEndDate) >= ObjectHistory_PriceEnd.StartDate AND DATE_TRUNC ('DAY', inEndDate) < ObjectHistory_PriceEnd.EndDate
                                   LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceEnd
                                                                ON ObjectHistoryFloat_PriceEnd.ObjectHistoryId = ObjectHistory_PriceEnd.Id
                                                               AND ObjectHistoryFloat_PriceEnd.DescId = zc_ObjectHistoryFloat_Price_Value()
@@ -141,23 +142,7 @@ BEGIN
                                                        AND tmpPriceRemains.UnitId   = tmpRemains_All.UnitId
                          GROUP BY tmpRemains_All.GoodsId
                         )
-        , tmpIncomeMov AS (/*SELECT Movement_Income.Id
-                           FROM Movement AS Movement_Income
-                                INNER JOIN MovementDate AS MovementDate_Branch
-                                                        ON MovementDate_Branch.MovementId = Movement_Income.Id
-                                                       AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
-                                                       AND MovementDate_Branch.ValueData >= inStartDate AND MovementDate_Branch.ValueData < inEndDate + INTERVAL '1 Day'
-    
-                                INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                              ON MovementLinkObject_To.MovementId = Movement_Income.Id
-                                                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_To.ObjectId
-                                
-                           WHERE Movement_Income.DescId = zc_Movement_Income()
-                             AND Movement_Income.StatusId = zc_Enum_Status_Complete() 
-                           GROUP BY Movement_Income.Id
-                           */
-                           SELECT DISTINCT Movement_Income.Id
+        , tmpIncomeMov AS (SELECT DISTINCT Movement_Income.Id
                            FROM MovementDate AS MovementDate_Branch
                                 INNER JOIN Movement AS Movement_Income 
                                                     ON Movement_Income.Id = MovementDate_Branch.MovementId
@@ -265,33 +250,6 @@ BEGIN
                       GROUP BY MI_Check.ObjectId
                       HAVING SUM(MI_Check.Amount) <> 0 
                     )
-        -- док Листы отказов
-        , tmpListDiffMov AS (SELECT Movement_ListDiff.Id
-                             FROM Movement AS Movement_ListDiff
-                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                               ON MovementLinkObject_Unit.MovementId = Movement_ListDiff.Id
-                                                              AND MovementLinkObject_UNit.DescId = zc_MovementLinkObject_Unit()
-                                  INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
-                           WHERE Movement_ListDiff.DescId = zc_Movement_ListDiff()
-                             AND Movement_ListDiff.StatusId <> zc_Enum_Status_Erased() 
-                             AND Movement_ListDiff.OperDate >= inStartDate AND Movement_ListDiff.OperDate < inEndDate + INTERVAL '1 Day'
-                           GROUP BY Movement_ListDiff.Id
-                          )                          
-        , tmpListDiffMI AS (SELECT MI_ListDiff.ObjectId                AS GoodsId
-                            , SUM (COALESCE (MI_ListDiff.Amount, 0))   AS AmountListDiff
-                            , SUM ((COALESCE (MI_ListDiff.Amount, 0) * MIFloat_Price.ValueData) ::NUMERIC (16, 2))   AS SummaListDiff   
-                            , AVG (MIFloat_Price.ValueData) ::NUMERIC (16, 2) AS Price_ListDiff 
-                       FROM tmpListDiffMov AS Movement_ListDiff
-                            INNER JOIN MovementItem AS MI_ListDiff
-                                                    ON MI_ListDiff.MovementId = Movement_ListDiff.Id
-                                                   AND MI_ListDiff.isErased   = FALSE
-
-                            LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                        ON MIFloat_Price.MovementItemId = MI_ListDiff.Id
-                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()  
-                       GROUP BY MI_ListDiff.ObjectId
-                       )  
-                       
         -- список товаров
         , tmpGoods AS (SELECT DISTINCT tmpRemains.GoodsId
                        FROM tmpRemains
@@ -304,9 +262,6 @@ BEGIN
                       UNION 
                        SELECT DISTINCT tmpIncome.GoodsId
                        FROM tmpIncome
-                      UNION 
-                       SELECT DISTINCT tmpListDiffMI.GoodsId
-                       FROM tmpListDiffMI
                       )                                                               
      
         -- Маркетинговый контракт
@@ -326,6 +281,37 @@ BEGIN
                                                    AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                                    AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId*/
                          )
+        -- свойства товаров
+        , tmpObjectLink AS (SELECT ObjectLink.*
+                            FROM ObjectLink
+                            WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpGoods.GoodsId FROM tmpGoods)
+                              AND ObjectLink.DescId IN (zc_ObjectLink_Goods_ConditionsKeep()
+                                                      , zc_ObjectLink_Goods_GoodsGroup()
+                                                      , zc_ObjectLink_Goods_NDSKind())
+                                                      
+                              and 1 = 0
+                           )
+        , tmpObjectBoolean AS (SELECT ObjectBoolean.*
+                               FROM ObjectBoolean
+                               WHERE ObjectBoolean.ObjectId IN (SELECT DISTINCT tmpGoods.GoodsId FROM tmpGoods)
+                                 AND ObjectBoolean.DescId IN (zc_ObjectBoolean_Goods_Close()
+                                                            , zc_ObjectBoolean_Goods_TOP()
+                                                            , zc_ObjectBoolean_Goods_First()
+                                                            , zc_ObjectBoolean_Goods_Second())
+                              and 1 = 0
+                              )
+        , tmpObjectFloat AS (SELECT ObjectFloat.*
+                             FROM ObjectFloat
+                             WHERE ObjectFloat.ObjectId IN (SELECT DISTINCT tmpObjectLink.ChildObjectId FROM tmpObjectLink)
+                               AND ObjectFloat.DescId = zc_ObjectFloat_NDSKind_NDS()
+                              and 1 = 0
+                            )
+        , tmpObjectDate AS (SELECT ObjectDate.*
+                            FROM ObjectDate
+                            WHERE ObjectDate.ObjectId IN (SELECT DISTINCT tmpGoods.GoodsId FROM tmpGoods)
+                              AND ObjectDate.DescId = zc_ObjectDate_Protocol_Update()
+                           )
+
         , tmpMainParam AS (SELECT ObjectLink_Child.ChildObjectId                                AS GoodsId
                                 , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
                            FROM ObjectLink AS ObjectLink_Child 
@@ -338,8 +324,9 @@ BEGIN
                                                         AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()  
                            WHERE ObjectLink_Child.ChildObjectId IN (SELECT DISTINCT tmpGoods.GoodsId FROM tmpGoods)
                              AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+                              and 1 = 0
                            )
-
+                      
         -- результат      
         SELECT Object_Goods.Id                                                   AS GoodsId
              , Object_Goods.ObjectCode                                           AS GoodsCode
@@ -347,13 +334,14 @@ BEGIN
              , Object_GoodsGroup.ValueData                                       AS GoodsGroupName
              , Object_NDSKind.ValueData                                          AS NDSKindName
              , ObjectFloat_NDSKind_NDS.ValueData                                 AS NDS
-             , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar          AS ConditionsKeepName   
+             , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar          AS ConditionsKeepName      
              , COALESCE(ObjectBoolean_Goods_Close.ValueData, False)  :: Boolean  AS isClose
              , COALESCE(ObjectDate_Update.ValueData, Null)          ::TDateTime  AS UpdateDate   
              
              , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false)    :: Boolean  AS isTOP
              , COALESCE(ObjectBoolean_Goods_First.ValueData, False)  :: Boolean  AS isFirst
              , COALESCE(ObjectBoolean_Goods_Second.ValueData, False) :: Boolean  AS isSecond
+             
              , COALESCE (tmpMainParam.isSP, False)                   :: Boolean  AS isSP
              , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
                                                                               
@@ -370,65 +358,60 @@ BEGIN
              , tmpCheck.AmountSale                                     :: TFloat AS AmountSale
              , tmpCheck.SummaSale                                      :: TFloat AS SummaSale
              
-             , tmpListDiffMI.AmountListDiff :: TFloat
-             , tmpListDiffMI.SummaListDiff  :: TFloat
-             --, CAST (CASE WHEN COALESCE (tmpListDiffMI.AmountListDiff, 0) <> 0 THEN tmpListDiffMI.SummaListDiff / tmpListDiffMI.AmountListDiff ELSE 0 END AS NUMERIC (16,2)) :: TFloat AS Price_ListDiff
-             , tmpListDiffMI.Price_ListDiff :: TFloat
-             
              , CASE WHEN COALESCE (tmpOrder.AmountOrder, 0) <> 0 THEN (tmpIncome.AmountIncome * 100 / tmpOrder.AmountOrder) - 100  ELSE 0 END                   AS AmountPersent
              , CASE WHEN COALESCE (tmpOrder.SummaOrder * (1 + ObjectFloat_NDSKind_NDS.ValueData/100)) <> 0 THEN (tmpIncome.SummaIncome * 100 / (tmpOrder.SummaOrder * (1 + ObjectFloat_NDSKind_NDS.ValueData/100))) - 100  ELSE 0 END SummaPersent
              
              , CASE WHEN COALESCE (tmpRemains.RemainsStart, 0) <> 0 THEN (tmpRemains.RemainsEnd * 100 / tmpRemains.RemainsStart) - 100 ELSE 0 END              AS AmountPersent_Remains
              , CASE WHEN COALESCE (tmpRemains.SummaRemainsStart) <> 0 THEN (tmpRemains.SummaRemainsEnd * 100 / tmpRemains.SummaRemainsStart) - 100 ELSE 0 END  AS SummaPersent_Remains
-             
+
         FROM tmpGoods
+
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsId              
              LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods.Id
 
-             LEFT JOIN tmpRemains    ON tmpRemains.GoodsId    = tmpGoods.GoodsId
-             LEFT JOIN tmpCheck      ON tmpCheck.GoodsId      = tmpGoods.GoodsId
-             LEFT JOIN tmpIncome     ON tmpIncome.GoodsId     = tmpGoods.GoodsId
-             LEFT JOIN tmpOrder      ON tmpOrder.GoodsId      = tmpGoods.GoodsId
-             LEFT JOIN tmpListDiffMI ON tmpListDiffMI.GoodsId = tmpGoods.GoodsId
-
+             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpGoods.GoodsId 
+             LEFT JOIN tmpCheck   ON tmpCheck.GoodsId   = tmpGoods.GoodsId 
+             LEFT JOIN tmpIncome  ON tmpIncome.GoodsId  = tmpGoods.GoodsId 
+             LEFT JOIN tmpOrder   ON tmpOrder.GoodsId   = tmpGoods.GoodsId 
              -- условия хранения
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+             LEFT JOIN tmpObjectLink AS ObjectLink_Goods_ConditionsKeep 
                                   ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
              LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+             LEFT JOIN tmpObjectLink AS ObjectLink_Goods_GoodsGroup
                                   ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
              LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-                                    
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
+
+             LEFT JOIN tmpObjectBoolean AS ObjectBoolean_Goods_Close
+                                     ON ObjectBoolean_Goods_Close.ObjectId = Object_Goods.Id
+                                    AND ObjectBoolean_Goods_Close.DescId = zc_ObjectBoolean_Goods_Close()  
+
+             LEFT JOIN tmpObjectLink AS ObjectLink_Goods_NDSKind
                                   ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
              LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
 
-             LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+             LEFT JOIN tmpObjectFloat AS ObjectFloat_NDSKind_NDS
                                    ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
                                   AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
-                             
-             LEFT JOIN ObjectDate AS ObjectDate_Update
+
+             LEFT JOIN tmpObjectDate AS ObjectDate_Update
                                   ON ObjectDate_Update.ObjectId = Object_Goods.Id
                                  AND ObjectDate_Update.DescId = zc_ObjectDate_Protocol_Update()  
 
-             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
-                                     ON ObjectBoolean_Goods_Close.ObjectId = Object_Goods.Id
-                                    AND ObjectBoolean_Goods_Close.DescId = zc_ObjectBoolean_Goods_Close()  
-             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+             LEFT JOIN tmpObjectBoolean AS ObjectBoolean_Goods_TOP
                                      ON ObjectBoolean_Goods_TOP.ObjectId = Object_Goods.Id
                                     AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()  
-             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_First
+             LEFT JOIN tmpObjectBoolean AS ObjectBoolean_Goods_First
                                      ON ObjectBoolean_Goods_First.ObjectId = Object_Goods.Id
                                     AND ObjectBoolean_Goods_First.DescId = zc_ObjectBoolean_Goods_First() 
-             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Second
+             LEFT JOIN tmpObjectBoolean AS ObjectBoolean_Goods_Second
                                      ON ObjectBoolean_Goods_Second.ObjectId = Object_Goods.Id
-                                    AND ObjectBoolean_Goods_Second.DescId = zc_ObjectBoolean_Goods_Second()
-     
-             LEFT JOIN tmpMainParam ON tmpMainParam.GoodsId = tmpGoods.GoodsId
+                                    AND ObjectBoolean_Goods_Second.DescId = zc_ObjectBoolean_Goods_Second() 
+
+             LEFT JOIN tmpMainParam ON tmpMainParam.GoodsId = Object_Goods.Id
     ;
     RETURN NEXT Cursor1;
   
@@ -447,6 +430,3 @@ $BODY$
 -- тест
 --select * from gpReport_OverOrder(inStartDate := ('01.08.2017')::TDateTime, inEndDate := ('01.08.2017')::TDateTime , inRetailId := 0, inJuridicalId := 0 , inUnitId := '183294,375626,389328'::TVarChar, inSession := '3'::TVarChar);
 -- FETCH ALL "<unnamed portal 14>";----
-
---select * from gpReport_OverOrder(inStartDate := ('08.11.2018')::TDateTime , inEndDate := ('09.11.2018')::TDateTime , inRetailId := 0 , inJuridicalId := 0 , inUnitId := '377606' ,  inSession := '3');
---FETCH ALL "<unnamed portal 27>";

@@ -614,6 +614,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+{
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_GoodsPriceChangeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Check_GoodsPriceChangeForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_GoodsPriceChangeDialogForm'));
@@ -625,7 +626,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeSampleDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeSampleDialogForm');
     exit;
-    {
+
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_PriceChangeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Check_PriceChangeForm');
@@ -674,13 +675,13 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_RatingDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Check_RatingDialogForm');
     //exit;
-
+    }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OverOrderForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_OverOrderForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OverOrderDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_OverOrderDialogForm');
     //exit;
-
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_AssortmentForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Check_AssortmentdForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_AssortmentDialogForm'));
