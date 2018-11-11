@@ -2167,8 +2167,8 @@ inherited MainCashForm2: TMainCashForm2
     end
     object actShowListDiff: TAction
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1083#1080#1089#1090' '#1086#1090#1082#1072#1079#1086#1074
-      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1083#1080#1089#1090' '#1086#1090#1082#1072#1079#1086#1074' '#1076#1083#1103' '#1087#1088#1086#1074#1077#1088#1082#1080' '#1080' '#1080#1079#1084#1077#1085#1077#1085#1080#1103
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1083#1080#1089#1090' '#1086#1090#1082#1072#1079#1086#1074' '#1087#1086' '#1082#1072#1089#1089#1077' '#1079#1072' '#1076#1074#1072' '#1076#1085#1103
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1083#1080#1089#1090' '#1086#1090#1082#1072#1079#1086#1074' '#1087#1086' '#1082#1072#1089#1089#1077' '#1079#1072' '#1076#1074#1072' '#1076#1085#1103
       OnExecute = actShowListDiffExecute
     end
     object actListGoods: TAction
@@ -2382,6 +2382,18 @@ inherited MainCashForm2: TMainCashForm2
         end>
       Caption = 'actLoadVIP_Search'
     end
+    object actCashListDiffPeriod: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1051#1080#1089#1090' '#1086#1090#1082#1072#1079#1086#1074' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      Hint = #1051#1080#1089#1090' '#1086#1090#1082#1072#1079#1086#1074' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      FormName = 'TReport_CashListDiffPeriodForm'
+      FormNameParam.Value = 'TReport_CashListDiffPeriodForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2590,6 +2602,9 @@ inherited MainCashForm2: TMainCashForm2
       end
       object N17: TMenuItem
         Caption = '-'
+      end
+      object N20: TMenuItem
+        Action = actCashListDiffPeriod
       end
       object N18: TMenuItem
         Action = actShowListDiff

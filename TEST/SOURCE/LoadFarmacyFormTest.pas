@@ -1420,6 +1420,9 @@ end;
 
 procedure TLoadFormTest.LoadCheckVIPFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashListDiffPeriodForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CashListDiffPeriodForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckVIPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckVIPForm');
   //

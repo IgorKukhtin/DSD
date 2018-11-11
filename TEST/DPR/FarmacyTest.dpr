@@ -624,7 +624,8 @@ uses
   Log_CashRemains in '..\..\FormsFarmacy\Guides\Log_CashRemains.pas' {Log_CashRemainsForm: TParentForm},
   RepriceUnitSheduler in '..\..\FormsFarmacy\ConnectWithOld\RepriceUnitSheduler.pas' {RepriceUnitShedulerForm: TParentForm},
   UserNick in '..\..\FormsFarmacy\Guides\UserNick.pas' {UserNickForm: TParentForm},
-  OrderExternal in '..\..\FormsFarmacy\Document\OrderExternal.pas' {OrderExternalForm: TParentForm};
+  OrderExternal in '..\..\FormsFarmacy\Document\OrderExternal.pas' {OrderExternalForm: TParentForm},
+  Report_CashListDiffPeriod in '..\..\FormsFarmacy\Report\Report_CashListDiffPeriod.pas' {Report_CashListDiffPeriodForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

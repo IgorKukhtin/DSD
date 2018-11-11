@@ -2,22 +2,23 @@ inherited ListGoodsForm: TListGoodsForm
   BorderIcons = [biSystemMenu]
   Caption = #1055#1086#1076#1073#1086#1088' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1086#1074
   ClientHeight = 422
-  ClientWidth = 601
+  ClientWidth = 653
   OnCreate = ParentFormCreate
   OnKeyDown = ParentFormKeyDown
-  ExplicitWidth = 617
+  ExplicitWidth = 669
   ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   object ListGoodsGrid: TcxGrid [0]
     Left = 0
-    Top = 25
-    Width = 601
-    Height = 262
+    Top = 52
+    Width = 653
+    Height = 235
     Align = alClient
     TabOrder = 1
-    ExplicitLeft = -1
-    ExplicitTop = 28
+    ExplicitTop = 25
+    ExplicitWidth = 601
+    ExplicitHeight = 262
     object ListGoodsGridDBTableView: TcxGridDBTableView
       OnDblClick = ListGoodsGridDBTableViewDblClick
       Navigator.Buttons.CustomButtons = <>
@@ -38,6 +39,7 @@ inherited ListGoodsForm: TListGoodsForm
       OptionsView.Footer = True
       OptionsView.GridLineColor = clBtnFace
       OptionsView.GroupByBox = False
+      OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object colGoodsCode: TcxGridDBColumn
@@ -66,29 +68,45 @@ inherited ListGoodsForm: TListGoodsForm
         Options.Editing = False
         Width = 86
       end
-      object colAmoutDay: TcxGridDBColumn
-        Caption = #1047#1072#1082#1072#1079#1072#1085#1086
+      object colAmoutDayUser: TcxGridDBColumn
+        Caption = #1053#1072#1073#1080#1090#1086' '#1074#1072#1084#1080' '#1089#1077#1075#1086#1076#1085#1103
         PropertiesClassName = 'TcxTextEditProperties'
         Properties.Alignment.Horz = taRightJustify
-        OnGetDisplayText = colAmoutDayGetDisplayText
+        OnGetDisplayText = colAmoutDayUserGetDisplayText
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
       end
-      object colAmountYesterday: TcxGridDBColumn
-        Caption = #1074#1095#1077#1088#1072
+      object colAmountDiffCalc: TcxGridDBColumn
+        Caption = #1054#1090#1082#1072#1079#1099' '#1079#1072' '#1089#1077#1075#1086#1076#1085#1103'.'
         PropertiesClassName = 'TcxTextEditProperties'
         Properties.Alignment.Horz = taRightJustify
-        OnGetDisplayText = colAmountYesterdayGetDisplayText
+        OnGetDisplayText = colAmountDiffCalcGetDisplayText
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 72
+        Width = 62
+      end
+      object colAmountDiffPrev: TcxGridDBColumn
+        Caption = #1054#1090#1082#1072#1079#1099' '#1079#1072' '#1074#1095#1077#1088#1072
+        DataBinding.FieldName = 'AmountDiffPrev'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.000'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 62
       end
       object colId: TcxGridDBColumn
         DataBinding.FieldName = 'Id'
         Visible = False
+      end
+      object colAmountDiff: TcxGridDBColumn
+        DataBinding.FieldName = 'AmountDiff'
+        Visible = False
+        Options.Editing = False
       end
     end
     object ListGoodsGridLevel: TcxGridLevel
@@ -98,16 +116,17 @@ inherited ListGoodsForm: TListGoodsForm
   end
   object pnl1: TPanel [1]
     Left = 0
-    Top = 0
-    Width = 601
+    Top = 27
+    Width = 653
     Height = 25
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 528
+    ExplicitTop = 0
+    ExplicitWidth = 601
     object edt1: TEdit
       Left = 1
       Top = 1
-      Width = 599
+      Width = 651
       Height = 23
       Align = alClient
       AutoSelect = False
@@ -116,7 +135,7 @@ inherited ListGoodsForm: TListGoodsForm
       OnExit = edt1Exit
       ExplicitLeft = 2
       ExplicitTop = -4
-      ExplicitWidth = 631
+      ExplicitWidth = 634
     end
     object ProgressBar1: TProgressBar
       Left = 535
@@ -131,11 +150,11 @@ inherited ListGoodsForm: TListGoodsForm
   object ListDiffGrid: TcxGrid [2]
     Left = 0
     Top = 287
-    Width = 601
+    Width = 653
     Height = 135
     Align = alBottom
     TabOrder = 2
-    ExplicitWidth = 528
+    ExplicitWidth = 601
     object ListDiffGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ListDiffDS
@@ -240,6 +259,23 @@ inherited ListGoodsForm: TListGoodsForm
       GridView = ListDiffGridDBTableView
     end
   end
+  object pnlLocal: TPanel [3]
+    Left = 0
+    Top = 0
+    Width = 653
+    Height = 27
+    Align = alTop
+    Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099': '#1040#1074#1090#1086#1085#1086#1084#1085#1086
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clMaroon
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 3
+    Visible = False
+    ExplicitWidth = 636
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
     Top = 304
@@ -295,7 +331,7 @@ inherited ListGoodsForm: TListGoodsForm
     Left = 368
     Top = 296
   end
-  object ListAllDiffCDS: TClientDataSet
+  object ListlDiffNoSendCDS: TClientDataSet
     Active = True
     Aggregates = <>
     FieldDefs = <
@@ -304,11 +340,11 @@ inherited ListGoodsForm: TListGoodsForm
         DataType = ftInteger
       end
       item
-        Name = 'AmoutDay'
+        Name = 'AmoutDiffUser'
         DataType = ftCurrency
       end
       item
-        Name = 'AmountYesterday'
+        Name = 'AmoutDiffNoSend'
         DataType = ftCurrency
       end>
     IndexDefs = <>
@@ -318,18 +354,39 @@ inherited ListGoodsForm: TListGoodsForm
     Left = 520
     Top = 136
     Data = {
-      760000009619E0BD010000001800000003000000000003000000760002494404
-      0001000000000008416D6F757444617908000400000001000753554254595045
-      0200490006004D6F6E6579000F416D6F756E7459657374657264617908000400
-      0000010007535542545950450200490006004D6F6E6579000000}
-    object ListAllDiffCDSID: TIntegerField
+      7B0000009619E0BD0100000018000000030000000000030000007B0002494404
+      000100000000000D416D6F757444696666557365720800040000000100075355
+      42545950450200490006004D6F6E6579000F416D6F7574446966664E6F53656E
+      64080004000000010007535542545950450200490006004D6F6E6579000000}
+    object ListlDiffNoSendCDSID: TIntegerField
       FieldName = 'ID'
     end
-    object ListAllDiffCDSAmoutDay: TCurrencyField
-      FieldName = 'AmoutDay'
+    object ListlDiffNoSendCDSAmoutDiffUser: TCurrencyField
+      FieldName = 'AmoutDiffUser'
     end
-    object ListAllDiffCDSAmountYesterday: TCurrencyField
-      FieldName = 'AmountYesterday'
+    object ListlDiffNoSendCDSAmoutDiffNoSend: TCurrencyField
+      FieldName = 'AmoutDiffNoSend'
     end
+  end
+  object spSelect_CashListDiff: TdsdStoredProc
+    StoredProcName = 'gpSelect_CashListDiff'
+    DataSet = CashListDiffCDS
+    DataSets = <
+      item
+        DataSet = CashListDiffCDS
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 64
+    Top = 104
+  end
+  object CashListDiffCDS: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <>
+    IndexDefs = <>
+    Params = <>
+    StoreDefs = True
+    Left = 64
+    Top = 160
   end
 end
