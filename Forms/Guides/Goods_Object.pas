@@ -55,6 +55,12 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     GoodsGroupNameFull: TcxGridDBColumn;
+    GoodsCode_basis: TcxGridDBColumn;
+    GoodsName_basis: TcxGridDBColumn;
+    GoodsCode_main: TcxGridDBColumn;
+    GoodsName_main: TcxGridDBColumn;
+    isCheck_basis: TcxGridDBColumn;
+    isCheck_main: TcxGridDBColumn;
   private
     { Private declarations }
   public

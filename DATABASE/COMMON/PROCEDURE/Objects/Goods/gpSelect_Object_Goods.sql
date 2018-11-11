@@ -8,6 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
     IN inSession     TVarChar       -- сесси€ пользовател€
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , GoodsCode_basis Integer, GoodsName_basis TVarChar
+             , GoodsCode_main Integer, GoodsName_main TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GroupStatId Integer, GroupStatName TVarChar
              , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
@@ -21,6 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InDate TDateTime
              , PartnerInName TVarChar
              , Weight TFloat, isPartionCount Boolean, isPartionSumm Boolean
+             , isCheck_basis Boolean, isCheck_main Boolean
              , isErased Boolean
               )
 AS
@@ -41,6 +44,11 @@ BEGIN
        SELECT Object_Goods.Id             AS Id
             , Object_Goods.ObjectCode     AS Code
             , Object_Goods.ValueData      AS Name
+
+            , Object_Goods_basis.ObjectCode     AS GoodsCode_basis
+            , Object_Goods_basis.ValueData      AS GoodsName_basis
+            , Object_Goods_main.ObjectCode      AS GoodsCode_main
+            , Object_Goods_main.ValueData       AS GoodsName_main
 
             , Object_GoodsGroup.Id        AS GoodsGroupId
             , Object_GoodsGroup.ValueData AS GoodsGroupName
@@ -73,8 +81,12 @@ BEGIN
             , Object_PartnerIn.ValueData    :: TVarChar  AS PartnerInName
 
             , ObjectFloat_Weight.ValueData AS Weight
-            , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE) AS isPartionCount
-            , COALESCE (ObjectBoolean_PartionSumm.ValueData, TRUE)   AS isPartionSumm
+            , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)   :: Boolean AS isPartionCount
+            , COALESCE (ObjectBoolean_PartionSumm.ValueData, TRUE)     :: Boolean AS isPartionSumm
+
+            , CASE WHEN Object_Goods_basis.Id > 0 AND Object_Goods_basis.Id <> COALESCE (Object_Goods_main.Id, 0) THEN TRUE ELSE FALSE END :: Boolean AS isCheck_basis
+            , CASE WHEN Object_Goods_main.Id  > 0 AND Object_Goods_main. Id <> COALESCE (Object_Goods.Id,      0) THEN TRUE ELSE FALSE END :: Boolean AS isCheck_main
+
             , Object_Goods.isErased       AS isErased
 
        FROM (/*SELECT Object_Goods.*
@@ -92,6 +104,15 @@ BEGIN
                                   ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
              LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsBasis
+                                  ON ObjectLink_Goods_GoodsBasis.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_GoodsBasis.DescId   = zc_ObjectLink_Goods_GoodsBasis()
+             LEFT JOIN Object AS Object_Goods_basis ON Object_Goods_basis.Id = ObjectLink_Goods_GoodsBasis.ChildObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsMain
+                                  ON ObjectLink_Goods_GoodsMain.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_GoodsMain.DescId   = zc_ObjectLink_Goods_GoodsMain()
+             LEFT JOIN Object AS Object_Goods_main ON Object_Goods_main.Id = ObjectLink_Goods_GoodsMain.ChildObjectId
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
                                   ON ObjectLink_Goods_GoodsGroupStat.ObjectId = Object_Goods.Id
@@ -170,6 +191,11 @@ BEGIN
             -- , 'ќчистить значение' :: TVarChar AS Name
             , '”ƒјЋ»“№ «начение'  :: TVarChar AS Name
 
+            , 0                   :: Integer  AS GoodsCode_basis
+            , ''                  :: TVarChar AS GoodsName_basis
+            , 0                   :: Integer  AS GoodsCode_main
+            , ''                  :: TVarChar AS GoodsName_main
+
             , 0                   :: Integer  AS GoodsGroupId
             , ''                  :: TVarChar AS GoodsGroupName
             , ''                  :: TVarChar AS GoodsGroupNameFull
@@ -204,6 +230,8 @@ BEGIN
             , 0                   :: TFloat   AS Weight
             , FALSE                           AS isPartionCount
             , FALSE                           AS isPartionSumm
+            , FALSE                           AS isCheck_basis
+            , FALSE                           AS isCheck_main
             , FALSE                           AS isErased
       ;
 

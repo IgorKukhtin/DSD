@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS lpUpdate_Object_Receipt_Parent (Integer, Integer, Intege
 CREATE OR REPLACE FUNCTION lpUpdate_Object_Receipt_Parent(
     IN inReceiptId                  Integer   , -- ключ объекта
     IN inGoodsId                    Integer   , -- ключ объекта
-    IN inUserId                     Integer   
+    IN inUserId                     Integer
 )
 RETURNS VOID
 AS
@@ -64,7 +64,7 @@ BEGIN
 
                         INNER JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id = ObjectLink_ReceiptChild_Receipt.ObjectId
                                                                 AND Object_ReceiptChild.isErased = FALSE
-                        INNER JOIN ObjectFloat AS ObjectFloat_Value 
+                        INNER JOIN ObjectFloat AS ObjectFloat_Value
                                                ON ObjectFloat_Value.ObjectId = ObjectLink_ReceiptChild_Receipt.ObjectId
                                               AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
                                               AND ObjectFloat_Value.ValueData <> 0
@@ -106,7 +106,7 @@ BEGIN
 
                         INNER JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id = ObjectLink_ReceiptChild_Receipt.ObjectId
                                                                 AND Object_ReceiptChild.isErased = FALSE
-                        INNER JOIN ObjectFloat AS ObjectFloat_Value 
+                        INNER JOIN ObjectFloat AS ObjectFloat_Value
                                                ON ObjectFloat_Value.ObjectId = ObjectLink_ReceiptChild_Receipt.ObjectId
                                               AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
                                               AND ObjectFloat_Value.ValueData <> 0
@@ -231,11 +231,219 @@ BEGIN
    ;
 
 
+
+   -- 1. пересчитали свойство - !!! у товара !!!
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsBasis(), tmp.Id, tmp.GoodsId_Basis)
+         , lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsMain(),  tmp.Id, tmp.GoodsId_Main)
+
+   FROM (WITH tmpFind_all AS (SELECT COALESCE (ObjectLink_Receipt_Goods.ChildObjectId,     0) AS GoodsId
+                                   , CASE WHEN ObjectLink_Receipt_GoodsKind_Parent_0.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                               THEN ObjectLink_Receipt_Parent_0.ChildObjectId
+                                          WHEN ObjectLink_Receipt_GoodsKind_Parent_1.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                               THEN ObjectLink_Receipt_Parent_1.ChildObjectId
+                                          WHEN ObjectLink_Receipt_GoodsKind_Parent_2.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                               THEN ObjectLink_Receipt_Parent_2.ChildObjectId
+                                          WHEN ObjectLink_Receipt_GoodsKind_Parent_3.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                               THEN ObjectLink_Receipt_Parent_3.ChildObjectId
+                                     END AS ReceiptId_Basis
+                                   , CASE -- !!!сразу - Парент!!!
+                                          WHEN 1=1
+                                               THEN ObjectLink_Receipt_Parent_0.ChildObjectId
+                                          -- следующий за WorkProgress
+                                          WHEN ObjectLink_Receipt_GoodsKind_Parent_0.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                               THEN ObjectLink_Receipt_Parent_0.ObjectId
+                                          WHEN ObjectLink_Receipt_GoodsKind_Parent_1.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                               THEN ObjectLink_Receipt_Parent_1.ObjectId
+                                          WHEN ObjectLink_Receipt_GoodsKind_Parent_2.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                               THEN ObjectLink_Receipt_Parent_2.ObjectId
+                                          WHEN ObjectLink_Receipt_GoodsKind_Parent_3.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                               THEN ObjectLink_Receipt_Parent_3.ObjectId
+                                     END AS ReceiptId_Main
+                              FROM ObjectLink AS ObjectLink_Receipt_Goods
+                                   INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id       = ObjectLink_Receipt_Goods.ObjectId
+                                                                      AND Object_Receipt.isErased = FALSE
+                                   INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                            ON ObjectBoolean_Main.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                                           AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+                                                           AND ObjectBoolean_Main.ValueData = TRUE
+    
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_0
+                                                        ON ObjectLink_Receipt_Parent_0.ObjectId = Object_Receipt.Id
+                                                       AND ObjectLink_Receipt_Parent_0.DescId = zc_ObjectLink_Receipt_Parent()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent_0
+                                                        ON ObjectLink_Receipt_GoodsKind_Parent_0.ObjectId = ObjectLink_Receipt_Parent_0.ChildObjectId
+                                                       AND ObjectLink_Receipt_GoodsKind_Parent_0.DescId = zc_ObjectLink_Receipt_GoodsKind()
+    
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_1
+                                                        ON ObjectLink_Receipt_Parent_1.ObjectId = ObjectLink_Receipt_Parent_0.ChildObjectId
+                                                       AND ObjectLink_Receipt_Parent_1.DescId = zc_ObjectLink_Receipt_Parent()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent_1
+                                                        ON ObjectLink_Receipt_GoodsKind_Parent_1.ObjectId = ObjectLink_Receipt_Parent_1.ChildObjectId
+                                                       AND ObjectLink_Receipt_GoodsKind_Parent_1.DescId = zc_ObjectLink_Receipt_GoodsKind()
+    
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_2
+                                                        ON ObjectLink_Receipt_Parent_2.ObjectId = ObjectLink_Receipt_Parent_1.ChildObjectId
+                                                       AND ObjectLink_Receipt_Parent_2.DescId = zc_ObjectLink_Receipt_Parent()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent_2
+                                                        ON ObjectLink_Receipt_GoodsKind_Parent_2.ObjectId = ObjectLink_Receipt_Parent_2.ChildObjectId
+                                                       AND ObjectLink_Receipt_GoodsKind_Parent_2.DescId = zc_ObjectLink_Receipt_GoodsKind()
+    
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_3
+                                                        ON ObjectLink_Receipt_Parent_3.ObjectId = ObjectLink_Receipt_Parent_2.ChildObjectId
+                                                       AND ObjectLink_Receipt_Parent_3.DescId = zc_ObjectLink_Receipt_Parent()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent_3
+                                                        ON ObjectLink_Receipt_GoodsKind_Parent_3.ObjectId = ObjectLink_Receipt_Parent_3.ChildObjectId
+                                                       AND ObjectLink_Receipt_GoodsKind_Parent_3.DescId = zc_ObjectLink_Receipt_GoodsKind()
+    
+                              WHERE  ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                             )
+                , tmpFind AS (SELECT tmpFind_all.GoodsId
+                                   , tmpFind_all.ReceiptId_Basis
+                                   , tmpFind_all.ReceiptId_Main
+                                   , ROW_NUMBER() OVER (PARTITION BY tmpFind_all.GoodsId ORDER BY COALESCE (tmpFind_all.ReceiptId_Basis, 0) DESC, COALESCE (tmpFind_all.ReceiptId_Main, 0) DESC) AS Ord
+                              FROM tmpFind_all
+                             )
+         -- Результат
+         SELECT Object.Id
+              , ObjectLink_Receipt_Goods_Basis.ChildObjectId AS GoodsId_Basis
+              , ObjectLink_Receipt_Goods_Main.ChildObjectId  AS GoodsId_Main
+         FROM Object
+              LEFT JOIN tmpFind ON tmpFind.GoodsId = Object.Id
+                               AND tmpFind.Ord     = 1
+              LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods_Basis
+                                   ON ObjectLink_Receipt_Goods_Basis.ObjectId = tmpFind.ReceiptId_Basis
+                                  AND ObjectLink_Receipt_Goods_Basis.DescId   = zc_ObjectLink_Receipt_Goods()
+              LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods_Main
+                                   ON ObjectLink_Receipt_Goods_Main.ObjectId = tmpFind.ReceiptId_Main
+                                  AND ObjectLink_Receipt_Goods_Main.DescId   = zc_ObjectLink_Receipt_Goods()
+              LEFT JOIN ObjectLink AS ObjectLink_GoodsBasis
+                                   ON ObjectLink_GoodsBasis.ObjectId = Object.Id
+                                  AND ObjectLink_GoodsBasis.DescId   = zc_ObjectLink_Goods_GoodsBasis()
+              LEFT JOIN ObjectLink AS ObjectLink_GoodsMain
+                                   ON ObjectLink_GoodsMain.ObjectId = Object.Id
+                                  AND ObjectLink_GoodsMain.DescId   = zc_ObjectLink_Goods_GoodsMain()
+         WHERE Object.DesCId = zc_Object_Goods()
+           AND (ObjectLink_GoodsBasis.ObjectId > 0
+             OR ObjectLink_GoodsMain.ObjectId  > 0
+             OR tmpFind.GoodsId                > 0
+               )
+        ) AS tmp;
+
+
+   -- 2. пересчитали свойство - !!! у GoodsByGoodsKind_View !!!
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsBasis(), tmp.Id, tmp.GoodsId_Basis)
+         , lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsMain(),  tmp.Id, tmp.GoodsId_Main)
+
+   FROM (WITH tmpFind_all AS (SELECT COALESCE (ObjectLink_Receipt_Goods.ChildObjectId,     0) AS GoodsId
+                                   , COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                                   , CASE WHEN ObjectLink_Receipt_GoodsKind_Parent_0.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                               THEN ObjectLink_Receipt_Parent_0.ChildObjectId
+                                          WHEN ObjectLink_Receipt_GoodsKind_Parent_1.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                               THEN ObjectLink_Receipt_Parent_1.ChildObjectId
+                                          WHEN ObjectLink_Receipt_GoodsKind_Parent_2.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                               THEN ObjectLink_Receipt_Parent_2.ChildObjectId
+                                          WHEN ObjectLink_Receipt_GoodsKind_Parent_3.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                               THEN ObjectLink_Receipt_Parent_3.ChildObjectId
+                                     END AS ReceiptId_Basis
+                                   , CASE -- !!!сразу - Парент!!!
+                                          WHEN 1=1
+                                               THEN ObjectLink_Receipt_Parent_0.ChildObjectId
+                                          -- следующий за WorkProgress
+                                          WHEN ObjectLink_Receipt_GoodsKind_Parent_0.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                               THEN ObjectLink_Receipt_Parent_0.ObjectId
+                                          WHEN ObjectLink_Receipt_GoodsKind_Parent_1.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                               THEN ObjectLink_Receipt_Parent_1.ObjectId
+                                          WHEN ObjectLink_Receipt_GoodsKind_Parent_2.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                               THEN ObjectLink_Receipt_Parent_2.ObjectId
+                                          WHEN ObjectLink_Receipt_GoodsKind_Parent_3.ChildObjectId = zc_GoodsKind_WorkProgress()
+                                               THEN ObjectLink_Receipt_Parent_3.ObjectId
+                                     END AS ReceiptId_Main
+                              FROM ObjectLink AS ObjectLink_Receipt_Goods
+                                   INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id       = ObjectLink_Receipt_Goods.ObjectId
+                                                                      AND Object_Receipt.isErased = FALSE
+                                   INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                            ON ObjectBoolean_Main.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                                           AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+                                                           AND ObjectBoolean_Main.ValueData = TRUE
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                                        ON ObjectLink_Receipt_GoodsKind.ObjectId = Object_Receipt.Id
+                                                       AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+    
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_0
+                                                        ON ObjectLink_Receipt_Parent_0.ObjectId = Object_Receipt.Id
+                                                       AND ObjectLink_Receipt_Parent_0.DescId = zc_ObjectLink_Receipt_Parent()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent_0
+                                                        ON ObjectLink_Receipt_GoodsKind_Parent_0.ObjectId = ObjectLink_Receipt_Parent_0.ChildObjectId
+                                                       AND ObjectLink_Receipt_GoodsKind_Parent_0.DescId = zc_ObjectLink_Receipt_GoodsKind()
+    
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_1
+                                                        ON ObjectLink_Receipt_Parent_1.ObjectId = ObjectLink_Receipt_Parent_0.ChildObjectId
+                                                       AND ObjectLink_Receipt_Parent_1.DescId = zc_ObjectLink_Receipt_Parent()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent_1
+                                                        ON ObjectLink_Receipt_GoodsKind_Parent_1.ObjectId = ObjectLink_Receipt_Parent_1.ChildObjectId
+                                                       AND ObjectLink_Receipt_GoodsKind_Parent_1.DescId = zc_ObjectLink_Receipt_GoodsKind()
+    
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_2
+                                                        ON ObjectLink_Receipt_Parent_2.ObjectId = ObjectLink_Receipt_Parent_1.ChildObjectId
+                                                       AND ObjectLink_Receipt_Parent_2.DescId = zc_ObjectLink_Receipt_Parent()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent_2
+                                                        ON ObjectLink_Receipt_GoodsKind_Parent_2.ObjectId = ObjectLink_Receipt_Parent_2.ChildObjectId
+                                                       AND ObjectLink_Receipt_GoodsKind_Parent_2.DescId = zc_ObjectLink_Receipt_GoodsKind()
+    
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_3
+                                                        ON ObjectLink_Receipt_Parent_3.ObjectId = ObjectLink_Receipt_Parent_2.ChildObjectId
+                                                       AND ObjectLink_Receipt_Parent_3.DescId = zc_ObjectLink_Receipt_Parent()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent_3
+                                                        ON ObjectLink_Receipt_GoodsKind_Parent_3.ObjectId = ObjectLink_Receipt_Parent_3.ChildObjectId
+                                                       AND ObjectLink_Receipt_GoodsKind_Parent_3.DescId = zc_ObjectLink_Receipt_GoodsKind()
+    
+                              WHERE  ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                             )
+                , tmpFind AS (SELECT tmpFind_all.GoodsId
+                                   , tmpFind_all.GoodsKindId
+                                   , tmpFind_all.ReceiptId_Basis
+                                   , tmpFind_all.ReceiptId_Main
+                                   , ROW_NUMBER() OVER (PARTITION BY tmpFind_all.GoodsId, tmpFind_all.GoodsKindId ORDER BY COALESCE (tmpFind_all.ReceiptId_Basis, 0) DESC, COALESCE (tmpFind_all.ReceiptId_Main, 0) DESC) AS Ord
+                              FROM tmpFind_all
+                             )
+         -- Результат
+         SELECT Object.Id
+              , ObjectLink_Receipt_Goods_Basis.ChildObjectId AS GoodsId_Basis
+              , ObjectLink_Receipt_Goods_Main.ChildObjectId  AS GoodsId_Main
+         FROM Object
+              LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                   ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId = Object.Id
+                                  AND ObjectLink_GoodsByGoodsKind_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
+              LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                   ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = Object.Id
+                                  AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+              LEFT JOIN tmpFind ON tmpFind.GoodsId     = ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId
+                               AND tmpFind.GoodsKindId = ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId
+                               AND tmpFind.Ord     = 1
+              LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods_Basis
+                                   ON ObjectLink_Receipt_Goods_Basis.ObjectId = tmpFind.ReceiptId_Basis
+                                  AND ObjectLink_Receipt_Goods_Basis.DescId   = zc_ObjectLink_Receipt_Goods()
+              LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods_Main
+                                   ON ObjectLink_Receipt_Goods_Main.ObjectId = tmpFind.ReceiptId_Main
+                                  AND ObjectLink_Receipt_Goods_Main.DescId   = zc_ObjectLink_Receipt_Goods()
+              LEFT JOIN ObjectLink AS ObjectLink_GoodsBasis
+                                   ON ObjectLink_GoodsBasis.ObjectId = Object.Id
+                                  AND ObjectLink_GoodsBasis.DescId   = zc_ObjectLink_Goods_GoodsBasis()
+              LEFT JOIN ObjectLink AS ObjectLink_GoodsMain
+                                   ON ObjectLink_GoodsMain.ObjectId = Object.Id
+                                  AND ObjectLink_GoodsMain.DescId   = zc_ObjectLink_Goods_GoodsMain()
+         WHERE Object.DesCId = zc_Object_GoodsByGoodsKind()
+           AND (ObjectLink_GoodsBasis.ObjectId > 0
+             OR ObjectLink_GoodsMain.ObjectId  > 0
+             OR tmpFind.GoodsId                > 0
+               )
+        ) AS tmp;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION lpUpdate_Object_Receipt_Parent (Integer, Integer, Integer) OWNER TO postgres;
-  
+
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
