@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpUpdate_MI_MarginCategory_Checked (Integer, Boolean, TV
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_MarginCategory_Checked(
     IN inId                  Integer   , --  люч объекта <Ёлемент документа>
-    IN inisChecked           Boolean  , -- 
+    IN inIsChecked           Boolean  , -- 
    OUT outisChecked          Boolean   ,
     IN inSession             TVarChar    -- сесси€ пользовател€
 )
@@ -17,11 +17,11 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- определили признак
-     outisChecked:= NOT inisChecked;
+     outisChecked:= NOT inIsChecked;
 
 
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Checked(), inId, outisChecked);
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Checked(), inId, inisChecked);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, False);
