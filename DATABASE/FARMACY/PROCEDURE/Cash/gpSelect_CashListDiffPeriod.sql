@@ -48,7 +48,7 @@ BEGIN
                SUM(CASE WHEN MILO_Insert.ObjectId = vbUserId THEN MovementItem.Amount END)::TFloat AS AmountDiffUser,
                SUM(MovementItem.Amount)::TFloat                                                    AS AmountDiff
        FROM Movement 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+            INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_UNit.DescId = zc_MovementLinkObject_Unit()
                                         AND MovementLinkObject_Unit.ObjectId = vbUnitId

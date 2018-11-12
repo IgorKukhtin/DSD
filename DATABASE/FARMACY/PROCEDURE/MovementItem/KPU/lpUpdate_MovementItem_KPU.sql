@@ -67,10 +67,10 @@ BEGIN
             CASE WHEN COALESCE (MIFloat_PrevAverageCheck.ValueData, 0) = 0
             THEN 0 ELSE ROUND((COALESCE (MIFloat_AverageCheck.ValueData, 0) / COALESCE (MIFloat_PrevAverageCheck.ValueData, 0) - 1) * 100, 1)
             END)
-        + COALESCE (MIFloat_LateTimeRatio.ValueData, 0)
+        + COALESCE (MIFloat_LateTimeRatio.ValueData, MIFloat_LateTimePenalty.ValueData, 0)
         + COALESCE (MIFloat_FinancPlanRatio.ValueData,
-            CASE WHEN COALESCE (tmpPlanAmount.PlanAmount, 0) = 0 or COALESCE (tmpFactAmount.FactAmount, 0) = 0
-            THEN 0 ELSE CASE WHEN tmpPlanAmount.PlanAmount <= tmpFactAmount.FactAmount THEN 1 ELSE -1 END
+            CASE WHEN COALESCE (MIFloat_FinancPlan.ValueData, 0) = 0 or COALESCE (MIFloat_FinancPlanFact.ValueData, 0) = 0
+            THEN 0 ELSE CASE WHEN MIFloat_FinancPlan.ValueData <= MIFloat_FinancPlanFact.ValueData THEN 1 ELSE -1 END
             END)
         + COALESCE (MIFloat_IT_ExamRatio.ValueData, 0)
         + COALESCE (MIFloat_ComplaintsRatio.ValueData, 0)
@@ -107,13 +107,22 @@ BEGIN
                                    ON MIFloat_AverageCheckRatio.MovementItemId = MovementItem.Id
                                   AND MIFloat_AverageCheckRatio.DescId = zc_MIFloat_AverageCheckRatio()
 
+       LEFT JOIN MovementItemFloat AS MIFloat_LateTimePenalty
+                                   ON MIFloat_LateTimePenalty.MovementItemId = MovementItem.Id
+                                  AND MIFloat_LateTimePenalty.DescId = zc_MIFloat_LateTimePenalty()
+
+
        LEFT JOIN MovementItemFloat AS MIFloat_LateTimeRatio
                                    ON MIFloat_LateTimeRatio.MovementItemId = MovementItem.Id
                                   AND MIFloat_LateTimeRatio.DescId = zc_MIFloat_LateTimeRatio()
 
-       LEFT JOIN tmpPlanAmount ON tmpPlanAmount.UnitID = vbUnitId
+       LEFT JOIN MovementItemFloat AS MIFloat_FinancPlan
+                                   ON MIFloat_FinancPlan.MovementItemId = MovementItem.Id
+                                  AND MIFloat_FinancPlan.DescId = zc_MIFloat_FinancPlan()
 
-       LEFT JOIN tmpFactAmount ON tmpFactAmount.UnitID = vbUnitId
+       LEFT JOIN MovementItemFloat AS MIFloat_FinancPlanFact
+                                   ON MIFloat_FinancPlanFact.MovementItemId = MovementItem.Id
+                                  AND MIFloat_FinancPlanFact.DescId = zc_MIFloat_FinancPlanFact()
 
        LEFT JOIN MovementItemFloat AS MIFloat_FinancPlanRatio
                                    ON MIFloat_FinancPlanRatio.MovementItemId = MovementItem.Id
@@ -157,6 +166,7 @@ ALTER FUNCTION lpUpdate_MovementItem_KPU (Integer) OWNER TO postgres;
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Øàáëèé Î.Â.
+ 12.11.18         *
  05.11.18         *
  05.10.18         *
 */

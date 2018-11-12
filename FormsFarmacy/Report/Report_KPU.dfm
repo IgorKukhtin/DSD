@@ -151,9 +151,9 @@ inherited Report_KPUForm: TReport_KPUForm
           object DateIn: TcxGridDBBandedColumn
             Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
             DataBinding.FieldName = 'DateIn'
+            PropertiesClassName = 'TcxDateEditProperties'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 69
             Position.BandIndex = 0
             Position.ColIndex = 3
@@ -522,6 +522,13 @@ inherited Report_KPUForm: TReport_KPUForm
             Position.ColIndex = 3
             Position.RowIndex = 0
           end
+          object Color_Calc: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_Calc'
+            Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 6
+            Position.RowIndex = 0
+          end
         end
         inherited cxGridLevel: TcxGridLevel
           GridView = cxGridDBBandedTableView1
@@ -738,8 +745,15 @@ inherited Report_KPUForm: TReport_KPUForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = ''
+    View = cxGridDBBandedTableView1
     OnDblClickActionList = <
       item
+      end>
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_Calc
+        ColorValueList = <>
       end>
   end
   inherited PopupMenu: TPopupMenu
@@ -773,6 +787,15 @@ inherited Report_KPUForm: TReport_KPUForm
         Component = MasterCDS
         ComponentItem = 'KPU'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateIn'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'DateIn'
+        DataType = ftDateTime
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item

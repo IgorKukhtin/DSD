@@ -77,6 +77,7 @@ CREATE OR REPLACE FUNCTION zc_Color_GreenL() RETURNS Integer AS $BODY$BEGIN RETU
 CREATE OR REPLACE FUNCTION zc_Color_Yelow() RETURNS Integer AS $BODY$BEGIN RETURN (8978431); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Color_White() RETURNS Integer AS $BODY$BEGIN RETURN (16777215); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Color_Blue() RETURNS Integer AS $BODY$BEGIN RETURN (14614528); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Color_Lime() RETURNS Integer AS $BODY$BEGIN RETURN (65280); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 CREATE OR REPLACE FUNCTION zc_IsLockTable() RETURNS Boolean AS $BODY$BEGIN RETURN (FALSE); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_IsLockTableCycle() RETURNS Boolean AS $BODY$BEGIN RETURN (TRUE); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -89,7 +90,8 @@ CREATE OR REPLACE FUNCTION zc_DateEnd_Role_CashReplace() RETURNS TDateTime AS $B
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.   Ярошенко Р.Ф.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 12.11.18                                                                                        *zc_Color_Lime
  29.09.15                                                        *zc_Color_Goods_Additional,zc_Color_Goods_Alternative 
  07.05.14                                        * add rem zc_PriceList_Bread
  20.10.13                                        * add rem zc_Juridical_Basis
