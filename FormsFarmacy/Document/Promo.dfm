@@ -91,14 +91,14 @@ inherited PromoForm: TPromoForm
             Width = 72
           end
           object isChecked: TcxGridDBColumn
-            Caption = #1076#1083#1103' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+            Caption = #1054#1090#1084'. '#1076#1083#1103' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
             DataBinding.FieldName = 'isChecked'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
           object isReport: TcxGridDBColumn
-            Caption = #1076#1083#1103' '#1086#1090#1095#1077#1090#1072
+            Caption = #1054#1090#1084'. '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072
             DataBinding.FieldName = 'isReport'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

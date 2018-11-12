@@ -37,6 +37,9 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,PartionGoods TVarChar   --№ серии препарата
               ,ExpirationDate TDateTime--Срок годности
               ,InsertDate TDateTime    --Дата (созд.)
+
+              , isChecked  Boolean      -- для маркетинга
+              , isReport   Boolean      -- для отчета              
               )
 AS
 $BODY$
@@ -66,6 +69,8 @@ BEGIN
                                    MI_Goods.ObjectId  AS GoodsId        -- здесь товар
                                  , MovementDate_StartPromo.ValueData  AS StartDate_Promo
                                  , MovementDate_EndPromo.ValueData    AS EndDate_Promo 
+                                 , COALESCE (MIBoolean_Checked.ValueData, FALSE)                                           ::Boolean  AS isChecked
+                                 , CASE WHEN COALESCE (MIBoolean_Checked.ValueData, FALSE) = TRUE THEN FALSE ELSE TRUE END ::Boolean  AS isReport
                             FROM Movement
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Maker
                                                             ON MovementLinkObject_Maker.MovementId = Movement.Id
@@ -80,6 +85,9 @@ BEGIN
                               INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
                                                                  AND MI_Goods.DescId = zc_MI_Master()
                                                                  AND MI_Goods.isErased = FALSE
+                              LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                                            ON MIBoolean_Checked.MovementItemId = MI_Goods.Id
+                                                           AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
                             WHERE Movement.StatusId = zc_Enum_Status_Complete()
                               AND Movement.DescId = zc_Movement_Promo()
                        )
@@ -87,6 +95,8 @@ BEGIN
    ,  tmpGoods_All AS (SELECT ObjectLink_Child_R.ChildObjectId  AS GoodsId        -- здесь товар
                             , tmpGoodsPromo.StartDate_Promo
                             , tmpGoodsPromo.EndDate_Promo 
+                            , tmpGoodsPromo.isChecked
+                            , tmpGoodsPromo.isReport
                        FROM tmpGoodsPromo
                                -- !!!
                               INNER JOIN ObjectLink AS ObjectLink_Child
@@ -104,7 +114,9 @@ BEGIN
 
     ,   tmpListGodsMarket AS (SELECT DISTINCT tmpGoods_All.GoodsId
                                    , tmpGoods_All.StartDate_Promo 
-                                   , tmpGoods_All.EndDate_Promo 
+                                   , tmpGoods_All.EndDate_Promo
+                                   , tmpGoods_All.isChecked
+                                   , tmpGoods_All.isReport
                               FROM tmpGoods_All
                               WHERE tmpGoods_All.StartDate_Promo <= inEndDate
                                 AND tmpGoods_All.EndDate_Promo >= inStartDate
@@ -115,6 +127,9 @@ BEGIN
                               , COALESCE (MIContainer.AnalyzerId,0)  AS MovementItemId_Income
                               , COALESCE (MIContainer.WhereObjectId_analyzer,0) AS UnitId
                               , MIContainer.ObjectId_analyzer AS GoodsId
+                              , tmpListGodsMarket.isChecked
+                              , tmpListGodsMarket.isReport
+
                               , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS SummaSale
                               
                               , SUM (CASE WHEN COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0 AND COALESCE (tmpListGodsMarket.GoodsId,0) <> 0 THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END ) AS Amount
@@ -139,6 +154,8 @@ BEGIN
                                 , COALESCE (MIContainer.WhereObjectId_analyzer,0)
                                 , COALESCE (MIContainer.AnalyzerId,0)
                                 , MIContainer.ObjectId_analyzer 
+                                , tmpListGodsMarket.isChecked
+                                , tmpListGodsMarket.isReport
                          HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                          )
   
@@ -147,6 +164,8 @@ BEGIN
                               , tmp.UnitId 
                               , tmp.MovementItemId_Income
                               , tmp.GoodsId
+                              , tmp.isChecked
+                              , tmp.isReport
                               , tmp.Amount
                               , tmp.Amount2
                               , tmp.Amount3
@@ -183,6 +202,8 @@ BEGIN
                           , tmpData_all.UnitId
                           , tmpData_all.JuridicalId_Income
                           , tmpData_all.GoodsId
+                          , tmpData_all.isChecked
+                          , tmpData_all.isReport
                           , MIString_PartionGoods.ValueData          AS PartionGoods
                           , MIDate_ExpirationDate.ValueData          AS ExpirationDate
                           , SUM (tmpData_all.TotalAmount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))  AS Summa
@@ -217,6 +238,8 @@ BEGIN
                             , tmpData_all.UnitId
                             , MIString_PartionGoods.ValueData
                             , MIDate_ExpirationDate.ValueData
+                            , tmpData_all.isChecked
+                            , tmpData_all.isReport
                     )
 
       
@@ -278,39 +301,41 @@ BEGIN
 
       -- Результат
       SELECT Movement.Id                              AS MovementId
-            ,'Продажи касс'               :: TVarChar AS ItemName
-            ,tmpData.Amount               :: TFloat   AS Amount
-            ,tmpData.Amount2              :: TFloat   AS Amount2
-            ,tmpData.Amount3              :: TFloat   AS Amount3
+            , 'Продажи касс'               :: TVarChar AS ItemName
+            , tmpData.Amount               :: TFloat   AS Amount
+            , tmpData.Amount2              :: TFloat   AS Amount2
+            , tmpData.Amount3              :: TFloat   AS Amount3
 
-            ,tmpData.Amount4              :: TFloat   AS Amount4
-            ,tmpData.TotalAmount          :: TFloat   AS TotalAmount
-            ,tmpGoodsParam.Code                       AS Code
-            ,tmpGoodsParam.Name                       AS Name
-            ,tmpGoodsParam.NDSKindName                AS NDSKindName
-            ,tmpGoodsParam.NDS                        AS NDS
-            ,Movement.OperDate                        AS OperDate
-            ,Movement.InvNumber                       AS InvNumber
-            ,Movement.StatusName                      AS StatusName
-            ,tmpUnitParam.UnitName                    AS UnitName
-            ,tmpUnitParam.MainJuridicalName           AS MainJuridicalName
-            ,Object_From.ValueData                    AS JuridicalName
-            ,tmpUnitParam.RetailName                  AS RetailName 
-            ,CASE WHEN tmpData.TotalAmount <> 0 THEN tmpData.Summa / tmpData.TotalAmount ELSE 0 END        :: TFloat AS Price
-            ,CASE WHEN tmpData.TotalAmount <> 0 THEN tmpData.SummaWithVAT / tmpData.TotalAmount ELSE 0 END :: TFloat AS PriceWithVAT
-            ,CASE WHEN tmpData.TotalAmount <> 0 THEN tmpData.SummaSale    / tmpData.TotalAmount ELSE 0 END :: TFloat AS PriceSale
+            , tmpData.Amount4              :: TFloat   AS Amount4
+            , tmpData.TotalAmount          :: TFloat   AS TotalAmount
+            , tmpGoodsParam.Code                       AS Code
+            , tmpGoodsParam.Name                       AS Name
+            , tmpGoodsParam.NDSKindName                AS NDSKindName
+            , tmpGoodsParam.NDS                        AS NDS
+            , Movement.OperDate                        AS OperDate
+            , Movement.InvNumber                       AS InvNumber
+            , Movement.StatusName                      AS StatusName
+            , tmpUnitParam.UnitName                    AS UnitName
+            , tmpUnitParam.MainJuridicalName           AS MainJuridicalName
+            , Object_From.ValueData                    AS JuridicalName
+            , tmpUnitParam.RetailName                  AS RetailName 
+            , CASE WHEN tmpData.TotalAmount <> 0 THEN tmpData.Summa / tmpData.TotalAmount ELSE 0 END        :: TFloat AS Price
+            , CASE WHEN tmpData.TotalAmount <> 0 THEN tmpData.SummaWithVAT / tmpData.TotalAmount ELSE 0 END :: TFloat AS PriceWithVAT
+            , CASE WHEN tmpData.TotalAmount <> 0 THEN tmpData.SummaSale    / tmpData.TotalAmount ELSE 0 END :: TFloat AS PriceSale
 
-            ,tmpData.Summa        :: TFloat
-            ,tmpData.SummaWithVAT :: TFloat
-            ,tmpData.SummaSale    :: TFloat
+            , tmpData.Summa        :: TFloat
+            , tmpData.SummaWithVAT :: TFloat
+            , tmpData.SummaSale    :: TFloat
 
-            ,MovementString_Comment.ValueData  :: TVarChar AS Comment
+            , MovementString_Comment.ValueData  :: TVarChar AS Comment
 
-            ,tmpData.PartionGoods
-            ,tmpData.ExpirationDate
+            , tmpData.PartionGoods
+            , tmpData.ExpirationDate
            
-            ,MovementDate_Insert.ValueData                 AS InsertDate
+            , MovementDate_Insert.ValueData                 AS InsertDate
 
+            , tmpData.isChecked    :: Boolean
+            , tmpData.isReport     :: Boolean
      FROM tmpData 
         LEFT JOIN tmpMovement AS Movement ON Movement.Id = tmpData.MovementId_Check
         LEFT JOIN tmpUnitParam ON tmpUnitParam.UnitId = tmpData.UnitId
@@ -334,7 +359,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.11.18         *
  22.10.18         *
  07.01.18         *
  23.03.17         *

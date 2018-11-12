@@ -9,30 +9,32 @@ CREATE OR REPLACE FUNCTION gpReport_MovementIncome_Promo(
   , IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer      --ИД Документа
-              ,ItemName TVarChar       --Название(тип) документа
-              ,StatusName TVarChar     --Состояние документа
-              ,Amount TFloat           --Кол-во товара в документе
-              ,Code Integer            --Код товара
-              ,Name TVarChar           --Наименование товара
-              ,PartnerGoodsName TVarChar  --Наименование поставщика
-              ,MakerName  TVarChar     --Производитель
-              ,NDSKindName TVarChar    --вид ндс
-              ,NDS         TFloat      -- % ндс
-              ,OperDate TDateTime      --Дата документа
-              ,InvNumber TVarChar      --№ документа
-              ,UnitName TVarChar       --Подразделение
-              ,MainJuridicalName TVarChar  --Наше Юр. лицо
-              ,JuridicalName TVarChar  --Юр. лицо
-              ,RetailName TVarChar     --Торговая сеть
-              ,Price TFloat            --Цена в документе
-              ,PriceWithVAT TFloat     --Цена прихода с НДС 
-              ,PriceSale TFloat        --Цена продажи
-              ,PartionGoods TVarChar   --№ серии препарата
-              ,ExpirationDate TDateTime--Срок годности
-              ,PaymentDate TDateTime   --Дата оплаты
-              ,InvNumberBranch TVarChar--№ накладной в аптеке
-              ,BranchDate TDateTime    --Дата накладной в аптеке
-              ,InsertDate TDateTime    --Дата (созд.)
+             , ItemName TVarChar       --Название(тип) документа
+             , StatusName TVarChar     --Состояние документа
+             , Amount TFloat           --Кол-во товара в документе
+             , Code Integer            --Код товара
+             , Name TVarChar           --Наименование товара
+             , PartnerGoodsName TVarChar  --Наименование поставщика
+             , MakerName  TVarChar     --Производитель
+             , NDSKindName TVarChar    --вид ндс
+             , NDS         TFloat      -- % ндс
+             , OperDate TDateTime      --Дата документа
+             , InvNumber TVarChar      --№ документа
+             , UnitName TVarChar       --Подразделение
+             , MainJuridicalName TVarChar  --Наше Юр. лицо
+             , JuridicalName TVarChar  --Юр. лицо
+             , RetailName TVarChar     --Торговая сеть
+             , Price TFloat            --Цена в документе
+             , PriceWithVAT TFloat     --Цена прихода с НДС 
+             , PriceSale TFloat        --Цена продажи
+             , PartionGoods TVarChar   --№ серии препарата
+             , ExpirationDate TDateTime--Срок годности
+             , PaymentDate TDateTime   --Дата оплаты
+             , InvNumberBranch TVarChar--№ накладной в аптеке
+             , BranchDate TDateTime    --Дата накладной в аптеке
+             , InsertDate TDateTime    --Дата (созд.)
+             , isChecked  Boolean      -- для маркетинга
+             , isReport   Boolean      -- для отчета
               )
 
 AS
@@ -50,7 +52,9 @@ BEGIN
     tmpMIPromo AS (SELECT DISTINCT MI_Goods.Id               AS MI_Id
                         , MI_Goods.ObjectId                  AS GoodsId
                         , MovementDate_StartPromo.ValueData  AS StartDate_Promo
-                        , MovementDate_EndPromo.ValueData    AS EndDate_Promo 
+                        , MovementDate_EndPromo.ValueData    AS EndDate_Promo
+                        , COALESCE (MIBoolean_Checked.ValueData, FALSE)                                           ::Boolean  AS isChecked
+                        , CASE WHEN COALESCE (MIBoolean_Checked.ValueData, FALSE) = TRUE THEN FALSE ELSE TRUE END ::Boolean  AS isReport
                    FROM Movement
                      INNER JOIN MovementLinkObject AS MovementLinkObject_Maker
                                                    ON MovementLinkObject_Maker.MovementId = Movement.Id
@@ -67,56 +71,62 @@ BEGIN
                      INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
                                                         AND MI_Goods.DescId = zc_MI_Master()
                                                         AND MI_Goods.isErased = FALSE
+                     LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                                   ON MIBoolean_Checked.MovementItemId = MI_Goods.Id
+                                                  AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
                    WHERE Movement.StatusId = zc_Enum_Status_Complete()
                      AND Movement.DescId = zc_Movement_Promo()
                     )
 
    -- выбираем все строки документов прихода с маркет. товарами
-  , tmpMovMIComplete_All AS (SELECT Movement.Id                                         AS MovementId
-                              , Movement.DescId                   AS DescId
-                              , Movement.StatusId                                    AS StatusId 
-                              , Movement.OperDate                                   AS OperDate
-                              , Movement.InvNumber                                  AS InvNumber
-                              , MIContainer.MovementItemId                          AS MovementItemId
-                              , MIContainer.ObjectId_analyzer                       AS GoodsId
-                              , COALESCE (MIContainer.Amount, 0)  AS Amount
-                         FROM Movement 
-                            INNER JOIN MovementItemContainer AS MIContainer 
-                                                             ON MIContainer.MovementId = Movement.Id
-                                                            AND MIContainer.DescId = zc_MIContainer_Count()
-                                                            AND MIContainer.MovementDescId = zc_Movement_Income()
-                                                            AND COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0
+  , tmpMovMIComplete_All AS (SELECT Movement.Id                       AS MovementId
+                                  , Movement.DescId                   AS DescId
+                                  , Movement.StatusId                 AS StatusId 
+                                  , Movement.OperDate                 AS OperDate
+                                  , Movement.InvNumber                AS InvNumber
+                                  , MIContainer.MovementItemId        AS MovementItemId
+                                  , MIContainer.ObjectId_analyzer     AS GoodsId
+                                  , COALESCE (MIContainer.Amount, 0)  AS Amount
+                                  , tmpMIPromo.isChecked
+                                  , tmpMIPromo.isReport
+                             FROM Movement 
+                                INNER JOIN MovementItemContainer AS MIContainer 
+                                                                 ON MIContainer.MovementId = Movement.Id
+                                                                AND MIContainer.DescId = zc_MIContainer_Count()
+                                                                AND MIContainer.MovementDescId = zc_Movement_Income()
+                                                                AND COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0
+    
+                                INNER JOIN tmpMIPromo ON tmpMIPromo.MI_Id = MIContainer.ObjectIntId_analyzer
+                               
+                             WHERE Movement.DescId = zc_Movement_Income()
+                               AND Movement.StatusId = zc_Enum_Status_Complete()
+                               AND Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate 
+                             --AND Movement.OperDate >= '01.01.2018'/*inStartDate*/ AND Movement.OperDate < '20.02.2018' /*inEndDate */
+                               AND COALESCE (inMakerId,0) <> 0
+                           )
 
-                            INNER JOIN tmpMIPromo ON tmpMIPromo.MI_Id = MIContainer.ObjectIntId_analyzer
-                           
-                         WHERE Movement.DescId = zc_Movement_Income()
-                           AND Movement.StatusId = zc_Enum_Status_Complete()
-                           AND Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate 
-                         --AND Movement.OperDate >= '01.01.2018'/*inStartDate*/ AND Movement.OperDate < '20.02.2018' /*inEndDate */
-                           AND COALESCE (inMakerId,0) <> 0
-                       )
-
-  , tmpMovMI_UnComplete_All AS (SELECT Movement.Id                            AS MovementId
-                                         , Movement.DescId                         AS DescId
-                                        , Movement.StatusId                        AS StatusId 
-                                        , Movement.OperDate                        AS OperDate
-                                        , Movement.InvNumber                       AS InvNumber
-                                        , MovementItem.Id                          AS MovementItemId
-                                        , MovementItem.ObjectId                    AS GoodsId
-                                        , COALESCE (MovementItem.Amount)  AS Amount
-                                   FROM Movement 
-                                      LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
-                                     
-                                      INNER JOIN tmpMIPromo ON tmpMIPromo.GoodsId = MovementItem.ObjectId
-                                                           AND Movement.OperDate >= StartDate_Promo
-                                                           AND Movement.OperDate <= EndDate_Promo
-                                      
-                                   WHERE Movement.DescId = zc_Movement_Income()
-                                     AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                                     AND Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate 
-                                   --AND Movement.OperDate >= '01.01.2018'/*inStartDate*/ AND Movement.OperDate < '20.02.2018' /*inEndDate */
-                                     AND COALESCE (inMakerId,0) <> 0
-                                              )
+  , tmpMovMI_UnComplete_All AS (SELECT Movement.Id                     AS MovementId
+                                     , Movement.DescId                 AS DescId
+                                     , Movement.StatusId               AS StatusId 
+                                     , Movement.OperDate               AS OperDate
+                                     , Movement.InvNumber              AS InvNumber
+                                     , MovementItem.Id                 AS MovementItemId
+                                     , MovementItem.ObjectId           AS GoodsId
+                                     , COALESCE (MovementItem.Amount)  AS Amount
+                                     , tmpMIPromo.isChecked
+                                     , tmpMIPromo.isReport
+                                FROM Movement 
+                                   LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
+                                  
+                                   INNER JOIN tmpMIPromo ON tmpMIPromo.GoodsId = MovementItem.ObjectId
+                                                        AND Movement.OperDate >= StartDate_Promo
+                                                        AND Movement.OperDate <= EndDate_Promo
+                                WHERE Movement.DescId = zc_Movement_Income()
+                                  AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                  AND Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate 
+                                --AND Movement.OperDate >= '01.01.2018'/*inStartDate*/ AND Movement.OperDate < '20.02.2018' /*inEndDate */
+                                  AND COALESCE (inMakerId,0) <> 0
+                                           )
           --
   , tmpMI_Float AS (SELECT MovementItemFloat.*
                    FROM MovementItemFloat
@@ -134,18 +144,20 @@ BEGIN
                                 , MIFloat_Price.ValueData                 ::TFloat    AS Price  
                                 , COALESCE (MIFloat_PriceSale.ValueData,0)::TFloat    AS PriceSale
                                 , COALESCE (MIFloat_AmountManual.ValueData, Movement.Amount)  AS Amount
+                                , Movement.isChecked
+                                , Movement.isReport
                            FROM tmpMovMIComplete_All AS Movement 
                               LEFT JOIN tmpMI_Float AS MIFloat_AmountManual
-                                                          ON MIFloat_AmountManual.MovementItemId = Movement.MovementItemId
-                                                         AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+                                                    ON MIFloat_AmountManual.MovementItemId = Movement.MovementItemId
+                                                   AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
                   
                               LEFT JOIN tmpMI_Float AS MIFloat_Price
-                                                          ON MIFloat_Price.MovementItemId = Movement.MovementItemId
-                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                    ON MIFloat_Price.MovementItemId = Movement.MovementItemId
+                                                   AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
                               LEFT JOIN tmpMI_Float AS MIFloat_PriceSale
-                                                          ON MIFloat_PriceSale.MovementItemId = Movement.MovementItemId
-                                                         AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+                                                    ON MIFloat_PriceSale.MovementItemId = Movement.MovementItemId
+                                                   AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
                          )
 
   , tmpMovMI_UnComplete AS (SELECT Movement.MovementId 
@@ -158,10 +170,12 @@ BEGIN
                                  , MIFloat_Price.ValueData                 ::TFloat  AS Price  
                                  , COALESCE (MIFloat_PriceSale.ValueData,0)::TFloat  AS PriceSale
                                  , COALESCE (MIFloat_AmountManual.ValueData, Movement.Amount)  AS Amount
+                                 , Movement.isChecked
+                                 , Movement.isReport
                             FROM tmpMovMI_UnComplete_All AS Movement 
                                LEFT JOIN tmpMI_Float AS MIFloat_AmountManual
-                                                           ON MIFloat_AmountManual.MovementItemId = Movement.MovementItemId
-                                                          AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+                                                     ON MIFloat_AmountManual.MovementItemId = Movement.MovementItemId
+                                                    AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
                    
                                LEFT JOIN tmpMI_Float AS MIFloat_Price
                                                            ON MIFloat_Price.MovementItemId = Movement.MovementItemId
@@ -182,6 +196,8 @@ BEGIN
                       , tmpMovMIComplete.Price  
                       , tmpMovMIComplete.PriceSale
                       , tmpMovMIComplete.Amount
+                      , tmpMovMIComplete.isChecked
+                      , tmpMovMIComplete.isReport
                  FROM tmpMovMIComplete
                UNION 
                  SELECT tmpMovMI_UnComplete.MovementId
@@ -194,6 +210,8 @@ BEGIN
                       , tmpMovMI_UnComplete.Price  
                       , tmpMovMI_UnComplete.PriceSale
                       , tmpMovMI_UnComplete.Amount
+                      , tmpMovMI_UnComplete.isChecked
+                      , tmpMovMI_UnComplete.isReport
                  FROM tmpMovMI_UnComplete
               )
 
@@ -361,6 +379,9 @@ BEGIN
             , tmpMov.InvNumberBranch
             , tmpMov.BranchDate
             , tmpMov.InsertDate
+            
+            , tmpMovMI.isChecked
+            , tmpMovMI.isReport
             
       FROM tmpMovMI 
            LEFT JOIN tmpGoods ON tmpGoods.GoodsId = tmpMovMI.GoodsId
