@@ -90,14 +90,14 @@ end;
 
 procedure ListDiffAddGoods(ListGoodsCDS : TClientDataSet);
   var  AValues: array[0..1] of string; nCount, nInput : currency;
-      ListDiffCDS : TClientDataSet;
+      ListDiffCDS : TClientDataSet; bSend : boolean;
 begin
 
   if not ListGoodsCDS.Active  then Exit;
   if ListGoodsCDS.RecordCount < 1  then Exit;
   if not CheckListDiffCDS then Exit;
 
-  AValues[0] := '1'; AValues[1] := '';
+  AValues[0] := '1'; AValues[1] := ''; bSend := False;
 
   WaitForSingleObject(MutexDiffCDS, INFINITE);
   try
@@ -173,7 +173,13 @@ begin
         ListDiffCDS.FieldByName('DateInput').AsDateTime := Now;
         ListDiffCDS.FieldByName('IsSend').AsBoolean := False;
         ListDiffCDS.Post;
-        SaveLocalData(ListDiffCDS, ListDiff_lcl);
+        WaitForSingleObject(MutexDiffCDS, INFINITE);
+        try
+          SaveLocalData(ListDiffCDS, ListDiff_lcl);
+        finally
+          ReleaseMutex(MutexDiffCDS);
+        end;
+        bSend := True;
       Except ON E:Exception do
         ShowMessage('Ошибка сохранения листа отказов:'#13#10 + E.Message);
       end;
@@ -184,7 +190,7 @@ begin
   finally
     ReleaseMutex(MutexDiffCDS);
       // отправка сообщения о необходимости отправки листа отказов
-    PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 4);
+    if bSend then PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 4);
   end;
 end;
 

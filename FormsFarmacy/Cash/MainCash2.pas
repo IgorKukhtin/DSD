@@ -332,6 +332,8 @@ type
     CheckGridColor_calc: TcxGridDBColumn;
     CheckGridColor_ExpirationDate: TcxGridDBColumn;
     CheckGridAccommodationName: TcxGridDBColumn;
+    actCashListDiffPeriod: TdsdOpenForm;
+    N20: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

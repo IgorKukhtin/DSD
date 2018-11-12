@@ -5,7 +5,7 @@ inherited ListDiffForm: TListDiffForm
   ClientWidth = 619
   OnCreate = ParentFormCreate
   ExplicitWidth = 635
-  ExplicitHeight = 396
+  ExplicitHeight = 400
   PixelsPerInch = 96
   TextHeight = 13
   object ListDiffGrid: TcxGrid [0]
