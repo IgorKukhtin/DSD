@@ -20,7 +20,10 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , LocationDescName TVarChar, LocationId Integer, LocationCode Integer, LocationName TVarChar
              , CarCode Integer, CarName TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, MeasureName TVarChar
+             , GoodsCode_basis Integer, GoodsName_basis TVarChar
+             , GoodsCode_main Integer, GoodsName_main TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsKindId Integer, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, MeasureName TVarChar
              , BarCode_Main TVarChar
              , Weight TFloat
              , InDate TDateTime, PartnerInName TVarChar
@@ -991,34 +994,34 @@ BEGIN
                                , tmpAll.PartionGoodsName
                                , tmpAll.PartionGoodsDate
                         )
-         , tmpNorm_PF AS (-- ÕÓÏ˚ œ‘ (√œ)
-                          SELECT tmp.GoodsId, tmp.GoodsKindId, tmp.GoodsKindId_complete, MAX (ObjectLink_Receipt_Goods.ObjectId) AS ReceiptId
-                          FROM (SELECT tmpResult.GoodsId, tmpResult.GoodsKindId, tmpResult.GoodsKindId_complete
-                                FROM tmpResult
-                                WHERE tmpResult.GoodsKindId = zc_GoodsKind_WorkProgress()
-                                  -- AND tmpResult.CountOut_byPF <> 0
-                                GROUP BY tmpResult.GoodsId, tmpResult.GoodsKindId, tmpResult.GoodsKindId_complete
-                               ) AS tmp
-                               INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
-                                                     ON ObjectLink_Receipt_Goods.ChildObjectId = tmp.GoodsId
-                                                    AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
-                               INNER JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
-                                                     ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_Receipt_Goods.ObjectId
-                                                    AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
-                                                    AND ObjectLink_Receipt_GoodsKind.ChildObjectId = tmp.GoodsKindId
-                               LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete
-                                                    ON ObjectLink_Receipt_GoodsKindComplete.ObjectId = ObjectLink_Receipt_Goods.ObjectId
-                                                   AND ObjectLink_Receipt_GoodsKindComplete.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
+      , tmpNorm_PF AS (-- ÕÓÏ˚ œ‘ (√œ)
+                       SELECT tmp.GoodsId, tmp.GoodsKindId, tmp.GoodsKindId_complete, MAX (ObjectLink_Receipt_Goods.ObjectId) AS ReceiptId
+                       FROM (SELECT tmpResult.GoodsId, tmpResult.GoodsKindId, tmpResult.GoodsKindId_complete
+                             FROM tmpResult
+                             WHERE tmpResult.GoodsKindId = zc_GoodsKind_WorkProgress()
+                               -- AND tmpResult.CountOut_byPF <> 0
+                             GROUP BY tmpResult.GoodsId, tmpResult.GoodsKindId, tmpResult.GoodsKindId_complete
+                            ) AS tmp
+                            INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                                  ON ObjectLink_Receipt_Goods.ChildObjectId = tmp.GoodsId
+                                                 AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                            INNER JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                                  ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                                 AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                                                 AND ObjectLink_Receipt_GoodsKind.ChildObjectId = tmp.GoodsKindId
+                            LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete
+                                                 ON ObjectLink_Receipt_GoodsKindComplete.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                                AND ObjectLink_Receipt_GoodsKindComplete.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
 
-                               INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
-                                                                  AND Object_Receipt.isErased = FALSE
-                               INNER JOIN ObjectBoolean AS ObjectBoolean_Main
-                                                        ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
-                                                       AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
-                                                       AND ObjectBoolean_Main.ValueData = TRUE
-                          WHERE COALESCE (ObjectLink_Receipt_GoodsKindComplete.ChildObjectId, zc_GoodsKind_Basis()) = tmp.GoodsKindId_complete
-                          GROUP BY tmp.GoodsId, tmp.GoodsKindId, tmp.GoodsKindId_complete
-                         )
+                            INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
+                                                               AND Object_Receipt.isErased = FALSE
+                            INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                     ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
+                                                    AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+                                                    AND ObjectBoolean_Main.ValueData = TRUE
+                       WHERE COALESCE (ObjectLink_Receipt_GoodsKindComplete.ChildObjectId, zc_GoodsKind_Basis()) = tmp.GoodsKindId_complete
+                       GROUP BY tmp.GoodsId, tmp.GoodsKindId, tmp.GoodsKindId_complete
+                      )
 
       , tmpGoods_Term AS (-- TermProduction
                           SELECT tmp.GoodsId, tmp.GoodsKindId, MIN (tmp.TermProduction) AS TermProduction
@@ -1059,6 +1062,28 @@ BEGIN
                              , lfSelect.PositionId
                         FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                        )
+
+      --
+      , tmpGoodsByGoodsKindParam AS (SELECT Object_GoodsByGoodsKind_View.GoodsId     AS GoodsId
+                                          , Object_GoodsByGoodsKind_View.GoodsKindId AS GoodsKindId
+                                          , Object_Goods_basis.ObjectCode        AS GoodsCode_basis
+                                          , Object_Goods_basis.ValueData         AS GoodsName_basis
+                                          , Object_Goods_main.ObjectCode         AS GoodsCode_main
+                                          , Object_Goods_main.ValueData          AS GoodsName_main
+                                     FROM Object_GoodsByGoodsKind_View
+                                           LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBasis
+                                                                ON ObjectLink_GoodsByGoodsKind_GoodsBasis.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                               AND ObjectLink_GoodsByGoodsKind_GoodsBasis.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsBasis()
+                                           LEFT JOIN Object AS Object_Goods_basis ON Object_Goods_basis.Id = ObjectLink_GoodsByGoodsKind_GoodsBasis.ChildObjectId
+                                           LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsMain
+                                                                ON ObjectLink_GoodsByGoodsKind_GoodsMain.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                               AND ObjectLink_GoodsByGoodsKind_GoodsMain.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsMain()
+                                           LEFT JOIN Object AS Object_Goods_main ON Object_Goods_main.Id = ObjectLink_GoodsByGoodsKind_GoodsMain.ChildObjectId
+                                     WHERE COALESCE (ObjectLink_GoodsByGoodsKind_GoodsBasis.ChildObjectId, 0) <> 0
+                                        OR COALESCE (ObjectLink_GoodsByGoodsKind_GoodsMain.ChildObjectId, 0) <> 0
+                                     )
+
+
      -- !!!–≈«”À‹“¿“!!!
      SELECT View_Account.AccountGroupName, View_Account.AccountDirectionName
         , View_Account.AccountId, View_Account.AccountCode, View_Account.AccountName, View_Account.AccountName_all
@@ -1071,6 +1096,12 @@ BEGIN
         , Object_GoodsGroup.Id           AS GoodsGroupId
         , Object_GoodsGroup.ValueData    AS GoodsGroupName
         , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+
+        , tmpGoodsByGoodsKindParam.GoodsCode_basis
+        , tmpGoodsByGoodsKindParam.GoodsName_basis
+        , tmpGoodsByGoodsKindParam.GoodsCode_main
+        , tmpGoodsByGoodsKindParam.GoodsName_main
+
         , CAST (COALESCE(Object_Goods.Id, 0) AS Integer)                 AS GoodsId
 -- , (select count(*) from tmpMIContainer_GP_all) :: Integer AS GoodsCode
         , Object_Goods.ObjectCode        AS GoodsCode
@@ -1326,26 +1357,28 @@ BEGIN
         LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = Object_Location.Id
         LEFT JOIN Object AS Object_Unit_to ON Object_Unit_to.Id = COALESCE (tmpPersonal.UnitId, ObjectLink_Car_Unit.ChildObjectId)
 
-        WHERE tmpResult.CountReal <> 0
-           OR tmpResult.SummReal <> 0
+        LEFT JOIN tmpGoodsByGoodsKindParam ON tmpGoodsByGoodsKindParam.GoodsId = tmpResult.GoodsId
+                                          AND COALESCE (tmpGoodsByGoodsKindParam.GoodsKindId, 0) = COALESCE (tmpResult.GoodsKindId, 0)
+      WHERE tmpResult.CountReal <> 0
+         OR tmpResult.SummReal <> 0
 
-           OR tmpResult.CountStart <> 0
-           OR tmpResult.SummStart <> 0
+         OR tmpResult.CountStart <> 0
+         OR tmpResult.SummStart <> 0
 
-           OR tmpResult.CountEnd <> 0
-           OR tmpResult.CountEnd_calc <> 0
-           OR tmpResult.SummEnd <> 0
+         OR tmpResult.CountEnd <> 0
+         OR tmpResult.CountEnd_calc <> 0
+         OR tmpResult.SummEnd <> 0
 
-           OR tmpResult.CountIn <> 0
-           OR tmpResult.SummIn <> 0
+         OR tmpResult.CountIn <> 0
+         OR tmpResult.SummIn <> 0
 
-           OR tmpResult.CountOut <> 0
-           OR tmpResult.SummOut <> 0
+         OR tmpResult.CountOut <> 0
+         OR tmpResult.SummOut <> 0
 
-           OR tmpResult.CountIn_calc <> 0
-           OR tmpResult.CountOut_calc <> 0
+         OR tmpResult.CountIn_calc <> 0
+         OR tmpResult.CountOut_calc <> 0
 
-           OR tmpResult.CountIn_Weight_gp <> 0
+         OR tmpResult.CountIn_Weight_gp <> 0
       ;
 
 END;
@@ -1355,6 +1388,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 12.11.18         *
  19.10.18         *
  29.07.16         * add tmpObject_GoodsPropertyValue_basis
  01.07.15         *

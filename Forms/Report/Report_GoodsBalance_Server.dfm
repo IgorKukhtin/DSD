@@ -658,6 +658,38 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
         Options.Editing = False
         Width = 70
       end
+      object GoodsCode_basis: TcxGridDBColumn
+        Caption = #1050#1086#1076' ('#1094#1077#1093')'
+        DataBinding.FieldName = 'GoodsCode_basis'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object GoodsName_basis: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1094#1077#1093')'
+        DataBinding.FieldName = 'GoodsName_basis'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
+      end
+      object GoodsCode_main: TcxGridDBColumn
+        Caption = #1050#1086#1076' ('#1085#1072' '#1091#1087#1072#1082'.)'
+        DataBinding.FieldName = 'GoodsCode_main'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object GoodsName_main: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1085#1072' '#1091#1087#1072#1082'.)'
+        DataBinding.FieldName = 'GoodsName_main'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
+      end
       object PartionGoodsDate: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
         DataBinding.FieldName = 'PartionGoodsDate'
