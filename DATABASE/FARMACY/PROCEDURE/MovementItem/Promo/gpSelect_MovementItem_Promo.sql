@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Promo(
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat
              , Price TFloat, Summ TFloat
+             , isChecked Boolean, isReport Boolean
              , isErased Boolean
               )
 AS
@@ -55,24 +56,32 @@ BEGIN
                                 , MI_Promo.Amount
                                 , MIFloat_Price.ValueData AS Price
                                 , COALESCE(MI_Promo.Amount,0) * COALESCE(MIFloat_Price.ValueData,0) AS Summ
+
+                                , COALESCE (MIBoolean_Checked.ValueData, FALSE) ::Boolean  AS isChecked
+                                
                                 , MI_Promo.IsErased
                          FROM MovementItem AS MI_Promo
                              LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                          ON MIFloat_Price.MovementItemId = MI_Promo.Id
                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                             LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                                           ON MIBoolean_Checked.MovementItemId = MI_Promo.Id
+                                                          AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
                          WHERE MI_Promo.MovementId = inMovementId
                            AND MI_Promo.DescId = zc_MI_Master()
                            AND (MI_Promo.isErased = FALSE or inIsErased = TRUE)
                          )
 
-            SELECT COALESCE(MI_Promo.Id,0)     AS Id
-                 , Object_Goods.Id                       AS GoodsId
-                 , Object_Goods.ObjectCode               AS GoodsCode
-                 , Object_Goods.ValueData                AS GoodsName
-                 , MI_Promo.Amount                       AS Amount
-                 , COALESCE(MI_Promo.Price,0) ::TFloat   AS Price
-                 , MI_Promo.Summ              ::TFloat   AS Summ
-                 , COALESCE(MI_Promo.IsErased,FALSE)     AS isErased
+            SELECT COALESCE(MI_Promo.Id,0)                AS Id
+                 , Object_Goods.Id                        AS GoodsId
+                 , Object_Goods.ObjectCode                AS GoodsCode
+                 , Object_Goods.ValueData                 AS GoodsName
+                 , MI_Promo.Amount                        AS Amount
+                 , COALESCE(MI_Promo.Price,0) ::TFloat    AS Price
+                 , MI_Promo.Summ              ::TFloat    AS Summ
+                 , COALESCE (MI_Promo.isChecked, FALSE) ::Boolean  AS isChecked
+                 , CASE WHEN COALESCE (MI_Promo.isChecked, FALSE) = TRUE THEN FALSE ELSE TRUE END ::Boolean  AS isReport  -- в одной из колонок всегда галка -
+                 , COALESCE(MI_Promo.IsErased, FALSE)     AS isErased
             FROM tmpGoods
                 FULL OUTER JOIN MI_Promo ON tmpGoods.Id = MI_Promo.GoodsId
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE(MI_Promo.GoodsId,tmpGoods.Id)
@@ -87,15 +96,24 @@ BEGIN
                 , MI_Promo.ObjectId                    AS GoodsId
                 , Object_Goods.ObjectCode              AS GoodsCode
                 , Object_Goods.ValueData               AS GoodsName
-                , MI_Promo.Amount             ::TFloat 
+                , MI_Promo.Amount             ::TFloat AS Amount
                 , MIFloat_Price.ValueData     ::TFloat AS Price
                 , (COALESCE(MI_Promo.Amount,0) * COALESCE(MIFloat_Price.ValueData,0)) ::TFloat AS Summ
+
+                , COALESCE (MIBoolean_Checked.ValueData, FALSE) ::Boolean  AS isChecked
+                , CASE WHEN COALESCE (MIBoolean_Checked.ValueData, FALSE) = TRUE THEN FALSE ELSE TRUE END ::Boolean  AS isReport  -- в одной из колонок всегда галка -
+
                 , MI_Promo.IsErased
            FROM MovementItem AS MI_Promo
               LEFT JOIN MovementItemFloat AS MIFloat_Price
                                           ON MIFloat_Price.MovementItemId = MI_Promo.Id
                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
-              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_Promo.ObjectId                                         
+              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_Promo.ObjectId    
+              
+              LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                            ON MIBoolean_Checked.MovementItemId = MI_Promo.Id
+                                           AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
+                                     
            WHERE MI_Promo.MovementId = inMovementId
              AND MI_Promo.DescId = zc_MI_Master()
              AND (MI_Promo.isErased = FALSE or inIsErased = TRUE);
@@ -109,6 +127,7 @@ ALTER FUNCTION gpSelect_MovementItem_Promo (Integer, Boolean, Boolean, TVarChar)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 12.11.18         *
  24.04.16         *
 */
 

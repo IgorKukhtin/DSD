@@ -46,14 +46,14 @@ type
     ListlDiffNoSendCDS: TClientDataSet;
     colId: TcxGridDBColumn;
     colAmountDiffPrev: TcxGridDBColumn;
-    colAmountDiffCalc: TcxGridDBColumn;
     colAmountDiff: TcxGridDBColumn;
     spSelect_CashListDiff: TdsdStoredProc;
     CashListDiffCDS: TClientDataSet;
     pnlLocal: TPanel;
     ListlDiffNoSendCDSID: TIntegerField;
     ListlDiffNoSendCDSAmoutDiffUser: TCurrencyField;
-    ListlDiffNoSendCDSAmoutDiffNoSend: TCurrencyField;
+    ListlDiffNoSendCDSAmoutDiff: TCurrencyField;
+    ListlDiffNoSendCDSAmountDiffPrev: TCurrencyField;
     procedure ParentFormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure edt1Exit(Sender: TObject);
@@ -71,7 +71,9 @@ type
       ANewItemRecordFocusingChanged: Boolean);
     procedure colAmoutDayUserGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
-    procedure colAmountDiffCalcGetDisplayText(Sender: TcxCustomGridTableItem;
+    procedure colAmountDiffGetDisplayText(Sender: TcxCustomGridTableItem;
+      ARecord: TcxCustomGridRecord; var AText: string);
+    procedure colAmountDiffPrevGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
   private
     { Private declarations }
@@ -122,6 +124,7 @@ procedure TListGoodsForm.ListGoodsGridDBTableViewFocusedRecordChanged(
   Sender: TcxCustomGridTableView; APrevFocusedRecord,
   AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
 begin
+  if not ListDiffCDS.Active then Exit;
   if not ListGoodsCDS.Eof then
     ListDiffCDS.Filter := 'Id = ' + ListGoodsCDS.FieldByName('Id').AsString
   else ListDiffCDS.Filter := 'Id = 0';
@@ -142,11 +145,14 @@ begin
     nPos := ListGoodsCDS.RecNo;
     WaitForSingleObject(MutexDiffCDS, INFINITE);
     try
-      if FileExists(ListDiff_lcl) then LoadLocalData(ListDiffCDS, ListDiff_lcl);
+      if FileExists(ListDiff_lcl) then
+      begin
+        LoadLocalData(ListDiffCDS, ListDiff_lcl);
+        if not ListDiffCDS.Active then ListDiffCDS.Open;
+      end;
     finally
       ReleaseMutex(MutexDiffCDS);
     end;
-    if not ListDiffCDS.Active then ListDiffCDS.Open;
     while ListlDiffNoSendCDS.RecordCount > 0 do ListlDiffNoSendCDS.Delete;
     FillingListGoodsCDS(True);
     FillingListlDiffNoSendCDS;
@@ -155,21 +161,29 @@ begin
     ListGoodsCDS.EnableControls;
   end;
 
-  ListDiffCDS.Filter := 'Id = ' + ListGoodsCDS.FieldByName('Id').AsString;
-  ListDiffCDS.Filtered := True;
+  if ListDiffCDS.Active then
+  begin
+    ListDiffCDS.Filter := 'Id = ' + ListGoodsCDS.FieldByName('Id').AsString;
+    ListDiffCDS.Filtered := True;
+  end;
 end;
 
-procedure TListGoodsForm.colAmountDiffCalcGetDisplayText(
+procedure TListGoodsForm.colAmountDiffGetDisplayText(
   Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AText: string);
 begin
   if ListlDiffNoSendCDS.Locate('Id', ARecord.Values[colId.Index], []) and
-    (ListlDiffNoSendCDS.FieldByName('AmoutDiffNoSend').AsCurrency <> 0) then
-  begin
-    if ARecord.Values[colAmountDiff.Index] <> Null then
-      AText := FormatCurr('0.000', ARecord.Values[colAmountDiff.Index] + ListlDiffNoSendCDS.FieldByName('AmoutDiffNoSend').AsCurrency)
-    else AText := FormatCurr('0.000', ListlDiffNoSendCDS.FieldByName('AmoutDiffNoSend').AsCurrency);
-  end else if ARecord.Values[colAmountDiff.Index] <> Null then AText := FormatCurr('0.000', ARecord.Values[colAmountDiff.Index]);
+    (ListlDiffNoSendCDS.FieldByName('AmoutDiff').AsCurrency <> 0) then
+    AText := FormatCurr('0.000', ListlDiffNoSendCDS.FieldByName('AmoutDiff').AsCurrency);
+end;
+
+procedure TListGoodsForm.colAmountDiffPrevGetDisplayText(
+  Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AText: string);
+begin
+  if ListlDiffNoSendCDS.Locate('Id', ARecord.Values[colId.Index], []) and
+    (ListlDiffNoSendCDS.FieldByName('AmountDiffPrev').AsCurrency <> 0) then
+    AText := FormatCurr('0.000', ListlDiffNoSendCDS.FieldByName('AmountDiffPrev').AsCurrency);
 end;
 
 procedure TListGoodsForm.colAmoutDayUserGetDisplayText(
@@ -247,12 +261,15 @@ end;
 procedure TListGoodsForm.ParentFormCreate(Sender: TObject);
 begin
 
-  try
-    if CashListDiffCDS.Active then CashListDiffCDS.Close;
-    spSelect_CashListDiff.Execute;
-  except
-    pnlLocal.Visible := True;
-  end;
+  if not gc_User.Local then
+  begin
+    try
+      if CashListDiffCDS.Active then CashListDiffCDS.Close;
+      spSelect_CashListDiff.Execute;
+    except
+      pnlLocal.Visible := True;
+    end;
+  end else pnlLocal.Visible := True;
 
   while ListlDiffNoSendCDS.RecordCount > 0 do ListlDiffNoSendCDS.Delete;
   WaitForSingleObject(MutexGoods, INFINITE);
@@ -263,20 +280,31 @@ begin
     ReleaseMutex(MutexGoods);
   end;
 
-  FillingListGoodsCDS(False);
+  try
+    ListGoodsCDS.DisableControls;
+    FillingListGoodsCDS(False);
+  finally
+    ListGoodsCDS.EnableControls;
+  end;
 
   WaitForSingleObject(MutexDiffCDS, INFINITE);
   try
     ListDiffCDS.Filtered := False;
-    if FileExists(ListDiff_lcl) then LoadLocalData(ListDiffCDS, ListDiff_lcl);
-    if not ListDiffCDS.Active then ListDiffCDS.Open;
+    if FileExists(ListDiff_lcl) then
+    begin
+      LoadLocalData(ListDiffCDS, ListDiff_lcl);
+      if not ListDiffCDS.Active then ListDiffCDS.Open;
+    end;
     FillingListlDiffNoSendCDS;
   finally
     ReleaseMutex(MutexDiffCDS);
   end;
 
-  ListDiffCDS.Filter := 'Id = ' + ListGoodsCDS.FieldByName('Id').AsString;
-  ListDiffCDS.Filtered := True;
+  if ListDiffCDS.Active then
+  begin
+    ListDiffCDS.Filter := 'Id = ' + ListGoodsCDS.FieldByName('Id').AsString;
+    ListDiffCDS.Filtered := True;
+  end;
 
   FOldStr := '';
 end;
@@ -304,10 +332,9 @@ begin
 end;
 
 procedure TListGoodsForm.FillingListGoodsCDS(AReLoad : boolean);
-  var bSave : boolean;
 begin
 
-  if AReLoad then
+  if AReLoad and not pnlLocal.Visible then
   try
     if CashListDiffCDS.Active then CashListDiffCDS.Close;
     spSelect_CashListDiff.Execute;
@@ -318,56 +345,33 @@ begin
 
   if not CashListDiffCDS.Active then Exit;
 
-  bSave := False;
   CashListDiffCDS.First;
   while not CashListDiffCDS.Eof do
   begin
-    if ListGoodsCDS.Locate('Id', CashListDiffCDS.FieldByName('Id').AsInteger, []) and
-      ((ListGoodsCDS.FieldByName('AmountDiff').AsVariant <> CashListDiffCDS.FieldByName('AmountDiff').AsVariant) or
-      (ListGoodsCDS.FieldByName('AmountDiffPrev').AsVariant <> CashListDiffCDS.FieldByName('AmountDiffPrev').AsVariant)) then
+
+    if not ListlDiffNoSendCDS.Locate('Id', CashListDiffCDS.FieldByName('Id').AsInteger, []) then
     begin
-       ListGoodsCDS.Edit;
-       ListGoodsCDS.FieldByName('AmountDiff').AsVariant := CashListDiffCDS.FieldByName('AmountDiff').AsVariant;
-       ListGoodsCDS.FieldByName('AmountDiffPrev').AsVariant := CashListDiffCDS.FieldByName('AmountDiffPrev').AsVariant;
-       ListGoodsCDS.Post;
-       bSave := True;
-    end;
+       ListlDiffNoSendCDS.Append;
+       ListlDiffNoSendCDS.FieldByName('Id').AsInteger := CashListDiffCDS.FieldByName('Id').AsInteger;
+    end else ListlDiffNoSendCDS.Edit;
 
-    if CashListDiffCDS.FieldByName('AmountDiffUser').AsCurrency <> 0 then
-    begin
-      if not ListlDiffNoSendCDS.Locate('Id', CashListDiffCDS.FieldByName('Id').AsInteger, []) then
-      begin
-         ListlDiffNoSendCDS.Append;
-         ListlDiffNoSendCDS.FieldByName('Id').AsInteger := CashListDiffCDS.FieldByName('Id').AsInteger;
-      end else ListlDiffNoSendCDS.Edit;
+    ListlDiffNoSendCDS.FieldByName('AmoutDiffUser').AsCurrency := ListlDiffNoSendCDS.FieldByName('AmoutDiffUser').AsCurrency + CashListDiffCDS.FieldByName('AmountDiffUser').AsCurrency;
+    ListlDiffNoSendCDS.FieldByName('AmoutDiff').AsCurrency := ListlDiffNoSendCDS.FieldByName('AmoutDiff').AsCurrency + CashListDiffCDS.FieldByName('AmountDiff').AsCurrency;
+    ListlDiffNoSendCDS.FieldByName('AmountDiffPrev').AsCurrency := ListlDiffNoSendCDS.FieldByName('AmountDiffPrev').AsCurrency + CashListDiffCDS.FieldByName('AmountDiffPrev').AsCurrency;
 
-      ListlDiffNoSendCDS.FieldByName('AmoutDiffUser').AsCurrency := ListlDiffNoSendCDS.FieldByName('AmoutDiffUser').AsCurrency + CashListDiffCDS.FieldByName('AmountDiffUser').AsCurrency;
-
-      ListlDiffNoSendCDS.Post;
-    end;
-
+    ListlDiffNoSendCDS.Post;
     CashListDiffCDS.Next;
   end;
-
-  if bSave then
-  begin
-    WaitForSingleObject(MutexGoods, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
-    try
-      SaveLocalData(ListGoodsCDS,Goods_lcl);
-    finally
-      ReleaseMutex(MutexGoods);
-    end;
-  end;
-
 end;
 
 procedure TListGoodsForm.FillingListlDiffNoSendCDS;
 begin
+  if not ListDiffCDS.Active then Exit;
   ListDiffCDS.First;
   while not ListDiffCDS.Eof do
   begin
     if (StartOfTheDay(ListDiffCDS.FieldByName('DateInput').AsDateTime) = Date) and
-      not ListDiffCDS.FieldByName('IsSend').AsBoolean then
+      (not CashListDiffCDS.Active or not ListDiffCDS.FieldByName('IsSend').AsBoolean) then
     begin
       if not ListlDiffNoSendCDS.Locate('Id', ListDiffCDS.FieldByName('Id').AsInteger, []) then
       begin
@@ -375,9 +379,12 @@ begin
          ListlDiffNoSendCDS.FieldByName('Id').AsInteger := ListDiffCDS.FieldByName('Id').AsInteger;
       end else ListlDiffNoSendCDS.Edit;
 
-      if ListDiffCDS.FieldByName('UserID').AsString = gc_User.Session then
+      if (ListDiffCDS.FieldByName('UserID').AsString = gc_User.Session) and (StartOfTheDay(ListDiffCDS.FieldByName('DateInput').AsDateTime) = Date) then
         ListlDiffNoSendCDS.FieldByName('AmoutDiffUser').AsCurrency := ListlDiffNoSendCDS.FieldByName('AmoutDiffUser').AsCurrency + ListDiffCDS.FieldByName('Amount').AsCurrency;
-      ListlDiffNoSendCDS.FieldByName('AmoutDiffNoSend').AsCurrency := ListlDiffNoSendCDS.FieldByName('AmoutDiffNoSend').AsCurrency + ListDiffCDS.FieldByName('Amount').AsCurrency;
+      if (StartOfTheDay(ListDiffCDS.FieldByName('DateInput').AsDateTime) = Date) then
+        ListlDiffNoSendCDS.FieldByName('AmoutDiff').AsCurrency := ListlDiffNoSendCDS.FieldByName('AmoutDiff').AsCurrency + ListDiffCDS.FieldByName('Amount').AsCurrency;
+      if (StartOfTheDay(ListDiffCDS.FieldByName('DateInput').AsDateTime) = IncDay(Date, - 1)) then
+        ListlDiffNoSendCDS.FieldByName('AmountDiffPrev').AsCurrency := ListlDiffNoSendCDS.FieldByName('AmountDiffPrev').AsCurrency + ListDiffCDS.FieldByName('Amount').AsCurrency;
 
       ListlDiffNoSendCDS.Post;
     end;

@@ -85,24 +85,33 @@ BEGIN
     
     RETURN QUERY
       WITH
-           -- выбираем все данные из проводок  ( цена, док маркетинга)
-             tmpData AS (SELECT Date_trunc('month', MIContainer.OperDate)::TDateTime AS OperDate
-                              , COALESCE (MIContainer.WhereObjectId_analyzer,0) AS UnitId
-                              , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS TotalAmount
-                              , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS TotalSumma
-                              , SUM (CASE WHEN COALESCE (MIContainer.ObjectIntId_analyzer,0) = 0 THEN 0 ELSE COALESCE (-1 * MIContainer.Amount, 0) END) AS AmountPromo
-                              , SUM (CASE WHEN COALESCE (MIContainer.ObjectIntId_analyzer,0) = 0 THEN 0 ELSE COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) END) AS SummaPromo
-
-                         FROM MovementItemContainer AS MIContainer
-                              INNER JOIN _tmpUnit ON _tmpUnit.UnitId = COALESCE (MIContainer.WhereObjectId_analyzer,0)
-                         WHERE MIContainer.DescId = zc_MIContainer_Count()
-                           AND MIContainer.MovementDescId = zc_Movement_Check()
-                           AND MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate
-                          -- AND MIContainer.OperDate >= '03.10.2016' AND MIContainer.OperDate < '01.12.2016'
-                         GROUP BY date_trunc('month', MIContainer.OperDate)
-                                , COALESCE (MIContainer.WhereObjectId_analyzer,0)
-                         HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
-                        )
+    -- выбираем все данные из проводок  ( цена, док маркетинга)
+     tmpData AS (SELECT Date_trunc('month', MIContainer.OperDate)::TDateTime AS OperDate
+                      , COALESCE (MIContainer.WhereObjectId_analyzer,0) AS UnitId
+                      , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS TotalAmount
+                      , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS TotalSumma
+                      
+                      /*, SUM (CASE WHEN COALESCE (MIContainer.ObjectIntId_analyzer,0) = 0 THEN 0 ELSE COALESCE (-1 * MIContainer.Amount, 0) END) AS AmountPromo
+                        , SUM (CASE WHEN COALESCE (MIContainer.ObjectIntId_analyzer,0) = 0 THEN 0 ELSE COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) END) AS SummaPromo
+                      */ 
+                      , SUM (CASE WHEN COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0 AND COALESCE (MIBoolean_Checked.ValueData, FALSE) = TRUE 
+                                    THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END)                                  AS AmountPromo
+                      , SUM (CASE WHEN COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0 AND COALESCE (MIBoolean_Checked.ValueData, FALSE) = TRUE 
+                                    THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS SummaPromo
+                 FROM MovementItemContainer AS MIContainer
+                      INNER JOIN _tmpUnit ON _tmpUnit.UnitId = COALESCE (MIContainer.WhereObjectId_analyzer,0)
+                      -- Выбираем товары с отметкой для маркетинга
+                      LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                                    ON MIBoolean_Checked.MovementItemId = COALESCE (MIContainer.ObjectIntId_analyzer, 0)
+                                                   AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
+                 WHERE MIContainer.DescId = zc_MIContainer_Count()
+                   AND MIContainer.MovementDescId = zc_Movement_Check()
+                   AND MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate
+                  -- AND MIContainer.OperDate >= '03.10.2016' AND MIContainer.OperDate < '01.12.2016'
+                 GROUP BY date_trunc('month', MIContainer.OperDate)
+                        , COALESCE (MIContainer.WhereObjectId_analyzer,0)
+                 HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
+                )
    -- выбираем планы по маркетингу
    , tmpPlanPromo AS (SELECT Object_ReportPromoParams.UnitId     AS UnitId
                            , Object_ReportPromoParams.PlanDate   AS PlanDate
@@ -115,15 +124,15 @@ BEGIN
          -- результат
          SELECT tmpData.OperDate           AS PlanDate      
               , Object_Unit.ValueData      AS UnitName
-              , tmpData.TotalAmount        :: TFloat
-              , tmpData.TotalSumma         :: TFloat
-              , tmpData.AmountPromo        :: TFloat
-              , tmpData.SummaPromo         :: TFloat
-              , (tmpData.TotalAmount - tmpData.AmountPromo)     :: TFloat AS Amount
-              , (tmpData.TotalSumma - tmpData.SummaPromo)       :: TFloat AS SummaSale
-              , CASE WHEN tmpData.TotalSumma <> 0 THEN (tmpData.SummaPromo * 100 / tmpData.TotalSumma) ELSE 0 END :: TFloat AS PercentPromo
+              , COALESCE (tmpData.TotalAmount,0)        :: TFloat
+              , COALESCE (tmpData.TotalSumma,0)         :: TFloat
+              , COALESCE (tmpData.AmountPromo,0)        :: TFloat
+              , COALESCE (tmpData.SummaPromo,0)         :: TFloat
+              , (COALESCE (tmpData.TotalAmount,0) - COALESCE (tmpData.AmountPromo,0))     :: TFloat AS Amount
+              , (COALESCE (tmpData.TotalSumma,0) - COALESCE (tmpData.SummaPromo,0))       :: TFloat AS SummaSale
+              , CASE WHEN COALESCE (tmpData.TotalSumma,0) <> 0 THEN (COALESCE (tmpData.SummaPromo,0) * 100 / tmpData.TotalSumma) ELSE 0 END :: TFloat AS PercentPromo
               , COALESCE (tmpPlanPromo.PlanAmount,0)            :: TFloat AS PlanAmount
-              , ((CASE WHEN tmpData.TotalSumma <> 0 THEN (tmpData.SummaPromo * 100 / tmpData.TotalSumma) ELSE 0 END) 
+              , ((CASE WHEN COALESCE (tmpData.TotalSumma,0) <> 0 THEN (COALESCE (tmpData.SummaPromo,0) * 100 / tmpData.TotalSumma) ELSE 0 END) 
                   - COALESCE (tmpPlanPromo.PlanAmount,0) )      :: TFloat AS DiffAmount
           FROM tmpData
                LEFT JOIN tmpPlanPromo ON tmpPlanPromo.UnitId = tmpData.UnitId 

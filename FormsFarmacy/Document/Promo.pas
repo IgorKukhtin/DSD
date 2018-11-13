@@ -114,6 +114,8 @@ type
     dxBarButton1: TdxBarButton;
     edPrescribe: TcxTextEdit;
     cxLabel10: TcxLabel;
+    isChecked: TcxGridDBColumn;
+    isReport: TcxGridDBColumn;
   private
     { Private declarations }
   public

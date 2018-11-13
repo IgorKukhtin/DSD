@@ -16,9 +16,6 @@ inherited ListGoodsForm: TListGoodsForm
     Height = 235
     Align = alClient
     TabOrder = 1
-    ExplicitTop = 25
-    ExplicitWidth = 601
-    ExplicitHeight = 262
     object ListGoodsGridDBTableView: TcxGridDBTableView
       OnDblClick = ListGoodsGridDBTableViewDblClick
       Navigator.Buttons.CustomButtons = <>
@@ -78,11 +75,11 @@ inherited ListGoodsForm: TListGoodsForm
         Options.Editing = False
         Width = 70
       end
-      object colAmountDiffCalc: TcxGridDBColumn
+      object colAmountDiff: TcxGridDBColumn
         Caption = #1054#1090#1082#1072#1079#1099' '#1079#1072' '#1089#1077#1075#1086#1076#1085#1103'.'
         PropertiesClassName = 'TcxTextEditProperties'
         Properties.Alignment.Horz = taRightJustify
-        OnGetDisplayText = colAmountDiffCalcGetDisplayText
+        OnGetDisplayText = colAmountDiffGetDisplayText
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -90,10 +87,8 @@ inherited ListGoodsForm: TListGoodsForm
       end
       object colAmountDiffPrev: TcxGridDBColumn
         Caption = #1054#1090#1082#1072#1079#1099' '#1079#1072' '#1074#1095#1077#1088#1072
-        DataBinding.FieldName = 'AmountDiffPrev'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 3
-        Properties.DisplayFormat = ',0.000'
+        PropertiesClassName = 'TcxTextEditProperties'
+        OnGetDisplayText = colAmountDiffPrevGetDisplayText
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -102,11 +97,6 @@ inherited ListGoodsForm: TListGoodsForm
       object colId: TcxGridDBColumn
         DataBinding.FieldName = 'Id'
         Visible = False
-      end
-      object colAmountDiff: TcxGridDBColumn
-        DataBinding.FieldName = 'AmountDiff'
-        Visible = False
-        Options.Editing = False
       end
     end
     object ListGoodsGridLevel: TcxGridLevel
@@ -121,8 +111,6 @@ inherited ListGoodsForm: TListGoodsForm
     Height = 25
     Align = alTop
     TabOrder = 0
-    ExplicitTop = 0
-    ExplicitWidth = 601
     object edt1: TEdit
       Left = 1
       Top = 1
@@ -133,9 +121,7 @@ inherited ListGoodsForm: TListGoodsForm
       TabOrder = 0
       OnChange = edt1Change
       OnExit = edt1Exit
-      ExplicitLeft = 2
-      ExplicitTop = -4
-      ExplicitWidth = 634
+      ExplicitHeight = 21
     end
     object ProgressBar1: TProgressBar
       Left = 535
@@ -154,7 +140,6 @@ inherited ListGoodsForm: TListGoodsForm
     Height = 135
     Align = alBottom
     TabOrder = 2
-    ExplicitWidth = 601
     object ListDiffGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ListDiffDS
@@ -265,7 +250,7 @@ inherited ListGoodsForm: TListGoodsForm
     Width = 653
     Height = 27
     Align = alTop
-    Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099': '#1040#1074#1090#1086#1085#1086#1084#1085#1086
+    Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099': '#1040#1074#1090#1086#1085#1086#1084#1085#1086' ('#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1082#1072#1089#1089#1077')'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clMaroon
     Font.Height = -13
@@ -274,7 +259,6 @@ inherited ListGoodsForm: TListGoodsForm
     ParentFont = False
     TabOrder = 3
     Visible = False
-    ExplicitWidth = 636
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
@@ -344,7 +328,11 @@ inherited ListGoodsForm: TListGoodsForm
         DataType = ftCurrency
       end
       item
-        Name = 'AmoutDiffNoSend'
+        Name = 'AmoutDiff'
+        DataType = ftCurrency
+      end
+      item
+        Name = 'AmountDiffPrev'
         DataType = ftCurrency
       end>
     IndexDefs = <>
@@ -354,18 +342,23 @@ inherited ListGoodsForm: TListGoodsForm
     Left = 520
     Top = 136
     Data = {
-      7B0000009619E0BD0100000018000000030000000000030000007B0002494404
+      A00000009619E0BD010000001800000004000000000003000000A00002494404
       000100000000000D416D6F757444696666557365720800040000000100075355
-      42545950450200490006004D6F6E6579000F416D6F7574446966664E6F53656E
-      64080004000000010007535542545950450200490006004D6F6E6579000000}
+      42545950450200490006004D6F6E65790009416D6F7574446966660800040000
+      00010007535542545950450200490006004D6F6E6579000E416D6F756E744469
+      666650726576080004000000010007535542545950450200490006004D6F6E65
+      79000000}
     object ListlDiffNoSendCDSID: TIntegerField
       FieldName = 'ID'
     end
     object ListlDiffNoSendCDSAmoutDiffUser: TCurrencyField
       FieldName = 'AmoutDiffUser'
     end
-    object ListlDiffNoSendCDSAmoutDiffNoSend: TCurrencyField
-      FieldName = 'AmoutDiffNoSend'
+    object ListlDiffNoSendCDSAmoutDiff: TCurrencyField
+      FieldName = 'AmoutDiff'
+    end
+    object ListlDiffNoSendCDSAmountDiffPrev: TCurrencyField
+      FieldName = 'AmountDiffPrev'
     end
   end
   object spSelect_CashListDiff: TdsdStoredProc

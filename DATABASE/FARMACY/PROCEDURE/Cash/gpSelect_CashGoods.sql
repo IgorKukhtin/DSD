@@ -8,9 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_CashGoods(
 RETURNS TABLE (Id              Integer, 
                GoodsCode       Integer, 
                GoodsName       TVarChar, 
-               Price           TFloat,
-               AmountDiff      TFloat,
-               AmountDiffPrev  TFloat
+               Price           TFloat
                )
 AS
 $BODY$
@@ -128,42 +126,16 @@ BEGIN
                           WHERE COALESCE(JuridicalSettings.isPriceClose, FALSE) = FALSE
                           GROUP BY LinkGoodsObject.GoodsId
                         )
-                        
-  , tmpListDiff AS (SELECT
-                           MovementItem.ObjectId    AS GoodsId, 
-                           SUM(CASE WHEN Movement.OperDate >= CURRENT_DATE::TDateTime THEN MovementItem.Amount END)::TFloat AS AmountDiff,
-                           SUM(CASE WHEN Movement.OperDate < CURRENT_DATE::TDateTime THEN MovementItem.Amount END)::TFloat AS AmountDiffPrev 
-                    FROM Movement 
-                         LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                      ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                                     AND MovementLinkObject_UNit.DescId = zc_MovementLinkObject_Unit()
-                                                     AND MovementLinkObject_Unit.ObjectId = vbUnitId
-
-                         LEFT JOIN MovementItem ON MovementItem.MovementID = Movement.Id 
-             
-                         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
-
-                         LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
-
-                    WHERE Movement.OperDate >= (CURRENT_DATE - interval '1 day')::TDateTime
-                      AND Movement.DescId = zc_Movement_ListDiff()
-                    GROUP BY MovementItem.ObjectId)
-                        
-                        
+                                                
     SELECT tmpGoodsRetail.GoodsId                                             AS GoodsId
          , Object_Goods.ObjectCode                                            AS GoodsCode
          , Object_Goods.ValueData                                             AS GoodsName
          , COALESCE (GoodsPrice.Price, tmpPriceListItem.NewPrice, 0) ::TFloat AS Price
-         , ListDiff.AmountDiff                                                AS AmountDiff
-         , ListDiff.AmountDiffPrev                                            AS AmountDiffPrev
     FROM tmpGoodsRetail
          LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = tmpGoodsRetail.GoodsId
          LEFT JOIN tmpPriceListItem ON tmpPriceListItem.GoodsId_retail = tmpGoodsRetail.GoodsId
 
          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoodsRetail.GoodsId
-         LEFT JOIN tmpListDiff AS ListDiff ON ListDiff.GoodsId = tmpGoodsRetail.GoodsId
     ORDER BY Object_Goods.ObjectCode;
     
     -- старая выборка только товары из прайса подразделения
@@ -204,8 +176,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
- 17.10.18         *
- 11.09.18                                                       *
+ 11.09.18        *
 
 */
 

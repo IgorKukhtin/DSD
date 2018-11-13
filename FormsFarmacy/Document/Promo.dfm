@@ -4,7 +4,7 @@ inherited PromoForm: TPromoForm
   ClientWidth = 979
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
   ExplicitWidth = 995
-  ExplicitHeight = 603
+  ExplicitHeight = 602
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -89,6 +89,21 @@ inherited PromoForm: TPromoForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 72
+          end
+          object isChecked: TcxGridDBColumn
+            Caption = #1054#1090#1084'. '#1076#1083#1103' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+            DataBinding.FieldName = 'isChecked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object isReport: TcxGridDBColumn
+            Caption = #1054#1090#1084'. '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072
+            DataBinding.FieldName = 'isReport'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
         end
       end
@@ -1502,6 +1517,23 @@ inherited PromoForm: TPromoForm
         Component = MasterCDS
         ComponentItem = 'Summ'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsCheked'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isChecked'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsReport'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isReport'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     NeedResetData = True

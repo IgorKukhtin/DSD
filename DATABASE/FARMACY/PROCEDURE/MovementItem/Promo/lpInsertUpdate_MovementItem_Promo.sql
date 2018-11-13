@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_Promo()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Promo (Integer, Integer, Integer, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Promo (Integer, Integer, Integer, TFloat, TFloat, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Promo(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Promo(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена
+    IN inIsChecked           Boolean   , --
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -24,6 +26,9 @@ BEGIN
     -- сохранили <цену>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
 
+    -- сохранили свойство <>
+    PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Checked(), ioId, inIsChecked);
+
     -- пересчитали Итоговые суммы по накладной
     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
     
@@ -36,6 +41,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А,
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.11.18         *
  24.04.16         *
  */

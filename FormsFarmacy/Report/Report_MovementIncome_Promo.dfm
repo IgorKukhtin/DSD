@@ -3,7 +3,6 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
   ClientWidth = 806
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 822
-  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -207,6 +206,24 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object isChecked: TcxGridDBColumn
+            Caption = #1054#1090#1084'. '#1076#1083#1103' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+            DataBinding.FieldName = 'isChecked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1084#1077#1090#1082#1072' '#1076#1083#1103' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+            Options.Editing = False
+            Width = 65
+          end
+          object isReport: TcxGridDBColumn
+            Caption = #1054#1090#1084'. '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072
+            DataBinding.FieldName = 'isReport'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1084#1077#1090#1082#1072' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072
+            Options.Editing = False
+            Width = 60
           end
           object PartionGoods: TcxGridDBColumn
             Caption = #8470' '#1057#1077#1088#1080#1080' '#1087#1088'-'#1090#1072

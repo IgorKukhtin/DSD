@@ -189,13 +189,25 @@ BEGIN
                             WHERE Container.DescId        = zc_Container_Summ()
                               AND Container.ObjectId      = zc_Enum_Account_100301() -- прибыль текущего периода
                            )
+         -- получаем данные по итого приход
+         , tmpObject_PartionGoods AS (SELECT Object_PartionGoods.PartnerId
+                                           , SUM (Object_PartionGoods.Amount) AS Income_Amount
+                                           , SUM (Object_PartionGoods.Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END) AS Income_Summ
+                                      FROM Object_PartionGoods
+                                           INNER JOIN tmpUnit ON tmpUnit.UnitId = Object_PartionGoods.UnitId  
+                                      WHERE (Object_PartionGoods.PartnerId  = inPartnerId        OR inPartnerId   = 0)
+                                        AND (Object_PartionGoods.BrandId    = inBrandId          OR inBrandId     = 0)
+                                        AND (Object_PartionGoods.PeriodId   = inPeriodId         OR inPeriodId    = 0)
+                                        AND (Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear)
+                                      GROUP BY Object_PartionGoods.PartnerId
+                                      )
 
          , tmpData_all AS (SELECT Object_PartionGoods.BrandId
                                 , Object_PartionGoods.PeriodId
                                 , Object_PartionGoods.PeriodYear
                                 , Object_PartionGoods.PartnerId
 
-                                , COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) :: Integer AS UnitId
+                                , COALESCE (MIContainer.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) :: Integer AS UnitId
 
                                 , Object_PartionGoods.UnitId     AS UnitId_in
                                 , Object_PartionGoods.CurrencyId AS CurrencyId
@@ -205,13 +217,13 @@ BEGIN
                                 , (Object_PartionGoods.Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END) AS Income_Summ
 
                                   -- Кол-во: Долг
-                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() THEN MIConatiner.Amount ELSE 0 END) AS Debt_Amount
+                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END) AS Debt_Amount
 
                                   -- Кол-во: Только Продажа
-                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Sale_Amount
+                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIContainer.Amount ELSE 0 END) :: TFloat AS Sale_Amount
                                   -- С\с продажа - calc из валюты в Грн
-                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
-                                                 THEN -1 * MIConatiner.Amount
+                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
+                                                 THEN -1 * MIContainer.Amount
                                                      * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END
                                                      * CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 ELSE COALESCE (tmpCurrency.Amount, 0) END
                                                      / CASE WHEN tmpCurrency.ParValue > 0 THEN tmpCurrency.ParValue  ELSE 1 END
@@ -219,13 +231,13 @@ BEGIN
                                        END) :: TFloat AS Sale_SummCost_calc
 
                                   -- Сумма продажа
-                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND COALESCE (MIConatiner.AnalyzerId, 0) <> zc_Enum_AnalyzerId_SaleSumm_10300() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
-                                                 THEN -1 * MIConatiner.Amount
+                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_SaleSumm_10300() AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
+                                                 THEN -1 * MIContainer.Amount
                                             ELSE 0
                                        END) :: TFloat AS Sale_Summ
                                    -- переводим в валюту 
-                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND COALESCE (MIConatiner.AnalyzerId, 0) <> zc_Enum_AnalyzerId_SaleSumm_10300() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
-                                                 THEN -1 * MIConatiner.Amount
+                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_SaleSumm_10300() AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
+                                                 THEN -1 * MIContainer.Amount
                                                     / CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN COALESCE (tmpCurrency.Amount, 0) = 0 THEN 1 ELSE COALESCE (tmpCurrency.Amount, 0) END
                                                     * CASE WHEN tmpCurrency.ParValue > 0 THEN tmpCurrency.ParValue  ELSE 1 END
                                                     -- !!!обнулили если нет КУРСА!!!
@@ -234,36 +246,36 @@ BEGIN
                                        END) :: TFloat AS Sale_Summ_curr
 
                                   -- С\с продажа - ГРН
-                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND MIConatiner.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
-                                                 THEN  1 * MIConatiner.Amount
+                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300() AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
+                                                 THEN  1 * MIContainer.Amount
                                             ELSE 0
                                        END) :: TFloat AS Sale_SummCost
                                   -- С\с продажа - валюта
-                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
-                                                 THEN -1 * MIConatiner.Amount
+                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
+                                                 THEN -1 * MIContainer.Amount
                                                     * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END
                                             ELSE 0
                                        END) :: TFloat AS Sale_SummCost_curr
 
                                   -- Сумма Прайс
-                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND MIConatiner.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10100() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Sale_Summ_10100
+                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10100() AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIContainer.Amount ELSE 0 END) :: TFloat AS Sale_Summ_10100
                                   -- Сезонная скидка
-                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND MIConatiner.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10201() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN  1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Sale_Summ_10201
+                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10201() AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN  1 * MIContainer.Amount ELSE 0 END) :: TFloat AS Sale_Summ_10201
                                   -- Скидка outlet
-                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND MIConatiner.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10202() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN  1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Sale_Summ_10202
+                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10202() AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN  1 * MIContainer.Amount ELSE 0 END) :: TFloat AS Sale_Summ_10202
                                   -- Скидка клиента
-                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND MIConatiner.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10203() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN  1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Sale_Summ_10203
+                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10203() AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN  1 * MIContainer.Amount ELSE 0 END) :: TFloat AS Sale_Summ_10203
                                   -- скидка дополнительная
-                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND MIConatiner.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10204() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN  1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Sale_Summ_10204
+                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10204() AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN  1 * MIContainer.Amount ELSE 0 END) :: TFloat AS Sale_Summ_10204
 
                                   -- Скидка ИТОГО
-                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND MIConatiner.AnalyzerId IN (zc_Enum_AnalyzerId_SaleSumm_10201(), zc_Enum_AnalyzerId_SaleSumm_10202(), zc_Enum_AnalyzerId_SaleSumm_10203(), zc_Enum_AnalyzerId_SaleSumm_10204()) AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
-                                                 THEN 1 * MIConatiner.Amount
+                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleSumm_10201(), zc_Enum_AnalyzerId_SaleSumm_10202(), zc_Enum_AnalyzerId_SaleSumm_10203(), zc_Enum_AnalyzerId_SaleSumm_10204()) AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
+                                                 THEN 1 * MIContainer.Amount
                                             ELSE 0
                                        END) :: TFloat AS Sale_Summ_10200
                                    -- переводим в валюту 
-                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND MIConatiner.AnalyzerId IN (zc_Enum_AnalyzerId_SaleSumm_10201(), zc_Enum_AnalyzerId_SaleSumm_10202(), zc_Enum_AnalyzerId_SaleSumm_10203(), zc_Enum_AnalyzerId_SaleSumm_10204()) AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
-                                                 THEN 1 * MIConatiner.Amount
+                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleSumm_10201(), zc_Enum_AnalyzerId_SaleSumm_10202(), zc_Enum_AnalyzerId_SaleSumm_10203(), zc_Enum_AnalyzerId_SaleSumm_10204()) AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
+                                                 THEN 1 * MIContainer.Amount
                                                     / CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN COALESCE (tmpCurrency.Amount, 0) = 0 THEN 1 ELSE COALESCE (tmpCurrency.Amount, 0) END
                                                     * CASE WHEN tmpCurrency.ParValue > 0 THEN tmpCurrency.ParValue  ELSE 1 END
                                                     -- !!!обнулили если нет КУРСА!!!
@@ -273,52 +285,55 @@ BEGIN
 
                                   --  № п/п
                                 , ROW_NUMBER() OVER (PARTITION BY Object_PartionGoods.MovementItemId
-                                                     ORDER BY CASE WHEN Object_PartionGoods.UnitId = COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) THEN 0 ELSE 1 END ASC
+                                                     ORDER BY CASE WHEN Object_PartionGoods.UnitId = COALESCE (MIContainer.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) THEN 0 ELSE 1 END ASC
                                                     ) AS Ord
                                                     
 
-                           FROM Object_PartionGoods
-                                LEFT JOIN MovementItemContainer AS MIConatiner
-                                                                ON MIConatiner.PartionId = Object_PartionGoods.MovementItemId
-                                                               AND (MIConatiner.OperDate BETWEEN inStartDate AND inEndDate
+                           FROM tmpContainer
+                                LEFT JOIN MovementItemContainer AS MIContainer
+                                                                ON MIContainer.ContainerId = tmpContainer.ContainerId                                    --tmpContainer MIContainer.PartionId = 
+                                                               AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                                  OR inIsPeriodAll = TRUE)
-                                LEFT JOIN tmpContainer ON tmpContainer.ContainerId = MIConatiner.ContainerId
+
+                                LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
+                                                                 ON MILinkObject_PartionMI.MovementItemId = MIContainer.MovementItemId
+                                                                AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
+                                LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
+                                
+                                LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MIContainer.PartionId
                                 
                                 LEFT JOIN tmpCurrency  ON tmpCurrency.CurrencyFromId = zc_Currency_Basis()
                                                       AND tmpCurrency.CurrencyToId   = Object_PartionGoods.CurrencyId
-                                                      AND MIConatiner.OperDate       >= tmpCurrency.StartDate
-                                                      AND MIConatiner.OperDate       <  tmpCurrency.EndDate
+                                                      AND MIContainer.OperDate       >= tmpCurrency.StartDate
+                                                      AND MIContainer.OperDate       <  tmpCurrency.EndDate
 
-                                LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
-                                                                 ON MILinkObject_PartionMI.MovementItemId = MIConatiner.MovementItemId
-                                                                AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
-                                LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
 
-                                INNER JOIN tmpUnit ON tmpUnit.UnitId = COALESCE (MIConatiner.ObjectExtId_Analyzer, Object_PartionGoods.UnitId)                              
+
+                                INNER JOIN tmpUnit ON tmpUnit.UnitId = COALESCE (MIContainer.ObjectExtId_Analyzer, Object_PartionGoods.UnitId)                              
                            WHERE (Object_PartionGoods.PartnerId  = inPartnerId        OR inPartnerId   = 0)
                              AND (Object_PartionGoods.BrandId    = inBrandId          OR inBrandId     = 0)
                              AND (Object_PartionGoods.PeriodId   = inPeriodId         OR inPeriodId    = 0)
                              AND (Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear)
-                             AND (MIConatiner.ContainerId        > 0                  )
-                             AND (tmpContainer.ContainerId       > 0                  OR MIConatiner.PartionId IS NULL)
-                             AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
+                             AND (MIContainer.ContainerId        > 0                  )
+                             AND (tmpContainer.ContainerId       > 0                  OR MIContainer.PartionId IS NULL)
+                             AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
                       
                            GROUP BY Object_PartionGoods.BrandId
                                   , Object_PartionGoods.PeriodId
                                   , Object_PartionGoods.PeriodYear
                                   , Object_PartionGoods.PartnerId
-                                  , MIConatiner.ObjectExtId_Analyzer
+                                  , MIContainer.ObjectExtId_Analyzer
                                   , Object_PartionGoods.UnitId
                                   , Object_PartionGoods.CurrencyId
                                   , Object_PartionGoods.Amount
                                   , Object_PartionGoods.MovementItemId
 
-                            HAVING SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND COALESCE (MIConatiner.AnalyzerId, 0) =  zc_Enum_AnalyzerId_SaleSumm_10300() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END) <> 0
-                                OR SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ()  AND COALESCE (MIConatiner.AnalyzerId, 0) <> zc_Enum_AnalyzerId_SaleSumm_10300() AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END) <> 0
+                            HAVING SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND COALESCE (MIContainer.AnalyzerId, 0) =  zc_Enum_AnalyzerId_SaleSumm_10300() AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIContainer.Amount ELSE 0 END) <> 0
+                                OR SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_SaleSumm_10300() AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIContainer.Amount ELSE 0 END) <> 0
                                   -- Кол-во: Долг
-                                OR SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() THEN MIConatiner.Amount ELSE 0 END) <> 0
+                                OR SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END) <> 0
                                   -- Кол-во: Только Продажа
-                                OR SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END) <> 0
+                                OR SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIContainer.Amount ELSE 0 END) <> 0
                           )
 
        , tmpData AS (SELECT tmpData_all.BrandId
@@ -380,8 +395,8 @@ BEGIN
              , Object_Unit_In.ValueData     :: TVarChar  AS UnitName_In
              , Object_Currency.ValueData    :: TVarChar  AS CurrencyName
              
-             , tmpData.Income_Amount        :: TFloat
-             , tmpData.Income_Summ          :: TFloat
+             , tmpObject_PartionGoods.Income_Amount        :: TFloat
+             , tmpObject_PartionGoods.Income_Summ          :: TFloat
                                             
              , tmpData.Debt_Amount          :: TFloat
              , tmpData.Sale_Amount          :: TFloat
@@ -458,6 +473,8 @@ BEGIN
             LEFT JOIN Object AS Object_Currency         ON Object_Currency.Id         = tmpData.CurrencyId
             LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = tmpData.BrandId
             LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = tmpData.PeriodId
+
+            LEFT JOIN tmpObject_PartionGoods ON tmpObject_PartionGoods.PartnerId = tmpData.PartnerId
           ;
 
      --продажи больше 50% от прихода

@@ -62,6 +62,7 @@ type
     Golovko: TcxGridDBBandedColumn;
     ControlRGRatio: TcxGridDBBandedColumn;
     ControlRGNote: TcxGridDBBandedColumn;
+    Color_Calc: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

@@ -43,7 +43,7 @@ BEGIN
                SUM(CASE WHEN Movement.OperDate >= CURRENT_DATE::TDateTime THEN MovementItem.Amount END)::TFloat AS AmountDiff,
                SUM(CASE WHEN Movement.OperDate < CURRENT_DATE::TDateTime THEN MovementItem.Amount END)::TFloat  AS AmountDiffPrev 
        FROM Movement 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+            INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_UNit.DescId = zc_MovementLinkObject_Unit()
                                         AND MovementLinkObject_Unit.ObjectId = vbUnitId
@@ -69,4 +69,4 @@ $BODY$
 -- тест
 -- 
 -- SELECT * FROM gpSelect_CashListDiff (inSession:= '3')
--- select * from gpSelect_CashListDiff( inSession := '3354092');
+-- select * from gpSelect_CashListDiff( inSession := '5323107');
