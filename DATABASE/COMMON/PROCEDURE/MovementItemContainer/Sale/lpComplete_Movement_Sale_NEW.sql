@@ -911,7 +911,7 @@ BEGIN
      IF inUserId <> zfCalc_UserAdmin() :: Integer
      THEN
          -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Реализация" - !!!важно - здесь очищается _tmpMIContainer_insert, поэтому делаем ДО проводок!!!, но после заполнения _tmpItem
-         PERFORM lpComplete_Movement_Sale_NEW_Recalc (inMovementId := inMovementId
+         PERFORM lpComplete_Movement_Sale_Recalc (inMovementId := inMovementId
                                                 , inUnitId     := vbUnitId_From
                                                 , inUserId     := inUserId
                                                  );

@@ -692,7 +692,7 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.В документе не установлено значение <Договор>.Проведение невозможно.';
      END IF;
      -- проверка для кривых пользователей
-     IF inUserId <> zc_Enum_Process_Auto_PrimeCost()
+     IF inUserId <> zc_Enum_Process_Auto_PrimeCost() AND inUserId <> 5
         AND TRUE = (SELECT MovementBoolean.ValueData FROM MovementBoolean WHERE MovementBoolean.MovementId = inMovementId AND MovementBoolean.DescId = zc_MovementBoolean_List())
         AND EXISTS (SELECT 1 FROM _tmpItem
                                    LEFT JOIN MovementItemFloat AS MIFloat_MovementId
@@ -713,6 +713,7 @@ BEGIN
                        )
         AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
         AND inUserId <> zc_Enum_Process_Auto_ReturnIn()
+        AND inUserId <> 5
      THEN
          -- Проверка ошибки
          outMessageText:= lpCheck_Movement_ReturnIn_Auto (inMovementId    := inMovementId
@@ -731,7 +732,7 @@ BEGIN
 
 
      -- !!! только НЕ для Админа проверка что ParentId заполнен!!!
-     IF inUserId NOT IN (zc_Enum_Process_Auto_PrimeCost()) AND vbMovementId_parent = 0 AND NOT EXISTS (SELECT OperCount FROM _tmpItem WHERE OperCount <> 0 LIMIT 1)
+     IF inUserId NOT IN (5, zc_Enum_Process_Auto_PrimeCost()) AND vbMovementId_parent = 0 AND NOT EXISTS (SELECT OperCount FROM _tmpItem WHERE OperCount <> 0 LIMIT 1)
         AND NOT EXISTS (SELECT MovementBoolean.MovementId FROM MovementBoolean WHERE MovementBoolean.MovementId = inMovementId AND MovementBoolean.ValueData = TRUE AND MovementBoolean.DescId = zc_MovementBoolean_isPartner())
      THEN
          RAISE EXCEPTION 'Ошибка.%В документе не установлено значение <Основание № (возврат проведен кладовщиком)>.%Проведение невозможно.', CHR(13), CHR(13);

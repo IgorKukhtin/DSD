@@ -666,40 +666,47 @@ BEGIN
 
      -- определили
      vbAccountId_GoodsTransit_01:= CASE WHEN vbOperDate <> vbOperDatePartner AND vbMemberId_From = 0 AND (SELECT MemberId_To FROM _tmpItem WHERE MemberId_To <> 0 LIMIT 1) IS NULL
-                                           THEN CASE WHEN vbIsBranch_to = TRUE
-                                                          THEN zc_Enum_Account_110121() -- Транзит + товар в пути + расход на филиал
-                                                     ELSE zc_Enum_Account_110131() -- Транзит + товар в пути + возврат с филиала
-                                                END
-                                      ELSE 0
-                                 END;
-     vbAccountId_GoodsTransit_02:= CASE WHEN vbOperDate <> vbOperDatePartner AND vbMemberId_From = 0 AND (SELECT MemberId_To FROM _tmpItem WHERE MemberId_To <> 0 LIMIT 1) IS NULL
-                                           THEN CASE WHEN vbIsBranch_to = TRUE
-                                                          THEN zc_Enum_Account_110122() -- Транзит + товар в пути + Разница в весе
-                                                     ELSE zc_Enum_Account_110132() -- Транзит + товар в пути + Разница в весе
-                                                END
-                                      ELSE 0
-                                 END;
+                                             THEN CASE WHEN vbIsBranch_to = TRUE
+                                                            THEN zc_Enum_Account_110121() -- Транзит + товар в пути + расход на филиал
+                                                       ELSE zc_Enum_Account_110131() -- Транзит + товар в пути + возврат с филиала
+                                                  END
+                                        ELSE 0
+                                   END;
+     IF vbOperDate < zc_DateStart_OperDatePartner()
+     THEN vbAccountId_GoodsTransit_02:= CASE WHEN vbOperDate <> vbOperDatePartner AND vbMemberId_From = 0 AND (SELECT MemberId_To FROM _tmpItem WHERE MemberId_To <> 0 LIMIT 1) IS NULL
+                                                  THEN CASE WHEN vbIsBranch_to = TRUE
+                                                                 THEN zc_Enum_Account_110122() -- Транзит + товар в пути + Разница в весе
+                                                            ELSE zc_Enum_Account_110132() -- Транзит + товар в пути + Разница в весе
+                                                       END
+                                             ELSE 0
+                                        END;
+     ELSE vbAccountId_GoodsTransit_02:= vbAccountId_GoodsTransit_01;
+     END IF;
+
      -- определили
      vbAccountId_GoodsTransit_51:= CASE WHEN vbOperDate <> vbOperDatePartner AND vbMemberId_From = 0 AND (SELECT MemberId_To FROM _tmpItem WHERE MemberId_To <> 0 LIMIT 1) IS NULL
-                                                  THEN CASE WHEN vbIsBranch_to = TRUE
-                                                                 THEN zc_Enum_Account_110171() -- Транзит + прибыль в пути + расход на филиал
-                                                            ELSE zc_Enum_Account_110181() -- Транзит + прибыль в пути + возврат с филиала
-                                                       END
-                                             ELSE 0
-                                        END;
+                                             THEN CASE WHEN vbIsBranch_to = TRUE
+                                                            THEN zc_Enum_Account_110171() -- Транзит + прибыль в пути + расход на филиал
+                                                       ELSE zc_Enum_Account_110181() -- Транзит + прибыль в пути + возврат с филиала
+                                                  END
+                                        ELSE 0
+                                   END;
      vbAccountId_GoodsTransit_52:= CASE WHEN vbOperDate <> vbOperDatePartner AND vbMemberId_From = 0 AND (SELECT MemberId_To FROM _tmpItem WHERE MemberId_To <> 0 LIMIT 1) IS NULL
-                                                  THEN CASE WHEN vbIsBranch_to = TRUE
-                                                                 THEN zc_Enum_Account_110172() -- Транзит + прибыль в пути + расход на филиал Разница в весе
-                                                            ELSE zc_Enum_Account_110182() -- Транзит + прибыль в пути + возврат с филиала Разница в весе
-                                                       END
-                                             ELSE 0
-                                        END;
-     vbAccountId_GoodsTransit_53:= CASE WHEN vbOperDate <> vbOperDatePartner AND vbMemberId_From = 0 AND (SELECT MemberId_To FROM _tmpItem WHERE MemberId_To <> 0 LIMIT 1) IS NULL
+                                             THEN CASE WHEN vbIsBranch_to = TRUE
+                                                            THEN zc_Enum_Account_110172() -- Транзит + прибыль в пути + расход на филиал Разница в весе
+                                                       ELSE zc_Enum_Account_110182() -- Транзит + прибыль в пути + возврат с филиала Разница в весе
+                                                  END
+                                        ELSE 0
+                                   END;
+     IF vbOperDate < zc_DateStart_OperDatePartner()
+     THEN vbAccountId_GoodsTransit_53:= CASE WHEN vbOperDate <> vbOperDatePartner AND vbMemberId_From = 0 AND (SELECT MemberId_To FROM _tmpItem WHERE MemberId_To <> 0 LIMIT 1) IS NULL
                                                   THEN CASE WHEN vbIsBranch_to = TRUE
                                                                  THEN zc_Enum_Account_110173() -- Транзит + прибыль в пути + расход на филиал Скидка в весе
                                                        END
                                              ELSE 0
                                         END;
+     ELSE vbAccountId_GoodsTransit_53:= vbAccountId_GoodsTransit_01;
+     END IF;
 
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1235,6 +1242,7 @@ BEGIN
                
             OR (vbBranchId_From > 0 AND vbBranchId_To > 0 AND vbBranchId_From <> zc_Branch_Basis() AND vbBranchId_To <> zc_Branch_Basis())
               )
+          -- AND vbOperDate < zc_DateStart_OperDatePartner()
        ;
 
 
