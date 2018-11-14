@@ -463,7 +463,6 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             DataBinding.FieldName = 'Debt_Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' - '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
@@ -882,6 +881,16 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
               Format = ',0.##'
               Kind = skSum
               Column = cxSale_Summ_10204
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = cxDebt_Amount
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = cxIncome_Summ
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -967,6 +976,16 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
               Format = ',0.##'
               Kind = skSum
               Column = cxSale_SummCost_diff
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = cxDebt_Amount
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = cxIncome_Summ
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1043,7 +1062,6 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             DataBinding.FieldName = 'Debt_Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' - '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
@@ -1465,6 +1483,16 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
               Format = ',0.##'
               Kind = skSum
               Column = chSale_SummCost_diff
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = chDebt_Amount
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = chIncome_Summ
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -1550,6 +1578,16 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
               Format = ',0.##'
               Kind = skSum
               Column = chSale_SummCost_diff
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = chDebt_Amount
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = chIncome_Summ
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList

@@ -178,30 +178,50 @@ BEGIN
                        WHERE inIsUnit = FALSE
                       )
 
-         , tmpContainer AS (SELECT Container.Id         AS ContainerId
+         , tmpContainer AS (SELECT Container.Id          AS ContainerId
                             FROM Container
                                  INNER JOIN tmpUnit ON tmpUnit.UnitId = Container.WhereObjectId
                             WHERE Container.DescId   = zc_Container_Count()
                            UNION ALL
-                            SELECT Container.Id         AS ContainerId
+                            SELECT Container.Id          AS ContainerId
                             FROM Container
                                  INNER JOIN tmpUnit ON tmpUnit.UnitId = Container.WhereObjectId
                             WHERE Container.DescId        = zc_Container_Summ()
                               AND Container.ObjectId      = zc_Enum_Account_100301() -- прибыль текущего периода
                            )
-         -- получаем данные по итого приход
-         , tmpObject_PartionGoods AS (SELECT Object_PartionGoods.PartnerId
-                                           , SUM (Object_PartionGoods.Amount) AS Income_Amount
-                                           , SUM (Object_PartionGoods.Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END) AS Income_Summ
+         -- Паритии   
+         , tmpObject_PartionGoods AS (SELECT Object_PartionGoods.*
                                       FROM Object_PartionGoods
                                            INNER JOIN tmpUnit ON tmpUnit.UnitId = Object_PartionGoods.UnitId  
                                       WHERE (Object_PartionGoods.PartnerId  = inPartnerId        OR inPartnerId   = 0)
                                         AND (Object_PartionGoods.BrandId    = inBrandId          OR inBrandId     = 0)
                                         AND (Object_PartionGoods.PeriodId   = inPeriodId         OR inPeriodId    = 0)
                                         AND (Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear)
-                                      GROUP BY Object_PartionGoods.PartnerId
                                       )
 
+         --получаем данные по итого приход
+         , tmpPartionGoods_Income AS (SELECT Object_PartionGoods.PartnerId
+                                           , SUM (Object_PartionGoods.Amount) AS Income_Amount
+                                           , SUM (Object_PartionGoods.Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END) AS Income_Summ
+                                      FROM tmpObject_PartionGoods AS Object_PartionGoods
+                                      GROUP BY Object_PartionGoods.PartnerId
+                                      )
+         -- Остаток
+        , tmpRemains AS (SELECT tmpPartionGoods.PartnerId                                                   AS PartnerId
+                              , SUM (CASE WHEN CLO_Client.ContainerId > 0 THEN 0 ELSE Container.Amount END) AS Amount
+                              , SUM (Container.Amount)                                                      AS Amount_real
+                             -- , SUM (CASE WHEN CLO_Client.ContainerId > 0 THEN 0 ELSE Container.Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END END)   AS Amount_Summ
+                         FROM tmpObject_PartionGoods AS tmpPartionGoods
+                              INNER JOIN Container ON Container.PartionId = tmpPartionGoods.MovementItemId
+                                                  AND Container.DescId    = zc_Container_Count()
+                                                  AND Container.Amount    <> 0
+                              INNER JOIN tmpUnit ON tmpUnit.UnitId = Container.WhereObjectId
+                              LEFT JOIN ContainerLinkObject AS CLO_Client
+                                                            ON CLO_Client.ContainerId = Container.Id
+                                                           AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                         GROUP BY tmpPartionGoods.PartnerId
+                        )
+                                
          , tmpData_all AS (SELECT Object_PartionGoods.BrandId
                                 , Object_PartionGoods.PeriodId
                                 , Object_PartionGoods.PeriodYear
@@ -219,8 +239,10 @@ BEGIN
                                   -- Кол-во: Долг
                                 , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END) AS Debt_Amount
 
-                                  -- Кол-во: Только Продажа
-                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIContainer.Amount ELSE 0 END) :: TFloat AS Sale_Amount
+                                  -- Кол-во: Продажа - возврат
+                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIContainer.Amount ELSE 0 END
+                                     - CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount > 0 AND MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN 1 * MIContainer.Amount ELSE 0 END) :: TFloat AS Sale_Amount
+                                     
                                   -- С\с продажа - calc из валюты в Грн
                                 , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
                                                  THEN -1 * MIContainer.Amount
@@ -295,10 +317,10 @@ BEGIN
                                                                AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                                  OR inIsPeriodAll = TRUE)
 
-                                LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
+                                /*LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
                                                                  ON MILinkObject_PartionMI.MovementItemId = MIContainer.MovementItemId
                                                                 AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
-                                LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
+                                LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId*/
                                 
                                 LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MIContainer.PartionId
                                 
@@ -307,16 +329,14 @@ BEGIN
                                                       AND MIContainer.OperDate       >= tmpCurrency.StartDate
                                                       AND MIContainer.OperDate       <  tmpCurrency.EndDate
 
-
-
-                                INNER JOIN tmpUnit ON tmpUnit.UnitId = COALESCE (MIContainer.ObjectExtId_Analyzer, Object_PartionGoods.UnitId)                              
+                                INNER JOIN tmpUnit ON tmpUnit.UnitId = COALESCE (MIContainer.ObjectExtId_Analyzer/*, Object_PartionGoods.UnitId*/)                              
                            WHERE (Object_PartionGoods.PartnerId  = inPartnerId        OR inPartnerId   = 0)
                              AND (Object_PartionGoods.BrandId    = inBrandId          OR inBrandId     = 0)
                              AND (Object_PartionGoods.PeriodId   = inPeriodId         OR inPeriodId    = 0)
                              AND (Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear)
                              AND (MIContainer.ContainerId        > 0                  )
                              AND (tmpContainer.ContainerId       > 0                  OR MIContainer.PartionId IS NULL)
-                             AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
+                             AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount(), zc_Movement_ReturnIn())
                       
                            GROUP BY Object_PartionGoods.BrandId
                                   , Object_PartionGoods.PeriodId
@@ -395,10 +415,11 @@ BEGIN
              , Object_Unit_In.ValueData     :: TVarChar  AS UnitName_In
              , Object_Currency.ValueData    :: TVarChar  AS CurrencyName
              
-             , tmpObject_PartionGoods.Income_Amount        :: TFloat
-             , tmpObject_PartionGoods.Income_Summ          :: TFloat
+             , tmpPartionGoods_Income.Income_Amount        :: TFloat
+             , tmpPartionGoods_Income.Income_Summ          :: TFloat
                                             
-             , tmpData.Debt_Amount          :: TFloat
+             --, tmpData.Debt_Amount          :: TFloat
+             , tmpRemains.Amount_Real            :: TFloat   AS Debt_Amount
              , tmpData.Sale_Amount          :: TFloat
 
                -- Сумма продажа
@@ -424,14 +445,14 @@ BEGIN
              , tmpData.Sale_Summ_10200_curr :: TFloat
 
                -- % кол-во продали    / кол-во приход
-             , CASE WHEN tmpData.Sale_Amount > 0 AND tmpData.Income_Amount > 0
-                         THEN tmpData.Sale_Amount / tmpData.Income_Amount * 100
+             , CASE WHEN tmpData.Sale_Amount > 0 AND tmpPartionGoods_Income.Income_Amount > 0
+                         THEN tmpData.Sale_Amount / tmpPartionGoods_Income.Income_Amount * 100
                     ELSE 0
                END :: TFloat AS Tax_Amount
 
                -- % сумма с/с продали / сумма с/с приход
-             , CASE WHEN tmpData.Sale_Summ_curr > 0 AND tmpData.Income_Summ > 0
-                         THEN tmpData.Sale_Summ_curr * 100 / tmpData.Income_Summ
+             , CASE WHEN tmpData.Sale_Summ_curr > 0 AND tmpPartionGoods_Income.Income_Summ > 0
+                         THEN tmpData.Sale_Summ_curr * 100 / tmpPartionGoods_Income.Income_Summ
                     ELSE 0
                END :: TFloat AS Tax_Summ_curr
 
@@ -474,7 +495,8 @@ BEGIN
             LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = tmpData.BrandId
             LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = tmpData.PeriodId
 
-            LEFT JOIN tmpObject_PartionGoods ON tmpObject_PartionGoods.PartnerId = tmpData.PartnerId
+            LEFT JOIN tmpPartionGoods_Income ON tmpPartionGoods_Income.PartnerId = tmpData.PartnerId
+            LEFT JOIN tmpRemains ON tmpRemains.PartnerId = tmpData.PartnerId
           ;
 
      --продажи больше 50% от прихода
