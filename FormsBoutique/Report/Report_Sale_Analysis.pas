@@ -101,6 +101,11 @@ type
     edPresent2_Prof: TcxCurrencyEdit;
     Color_Sum: TcxGridDBColumn;
     Color_Prof: TcxGridDBColumn;
+    cbLineFabrica: TcxCheckBox;
+    cxLabel15: TcxLabel;
+    GuidesLineFabrica: TdsdGuides;
+    edLineFabrica: TcxButtonEdit;
+    LineFabricaName: TcxGridDBColumn;
   private
     { Private declarations }
   public

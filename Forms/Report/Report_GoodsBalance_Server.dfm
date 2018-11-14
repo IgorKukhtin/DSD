@@ -275,6 +275,11 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
           Format = ',0.####'
           Kind = skSum
           Column = CountIn_byPF
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummInventory_Basis
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -521,6 +526,11 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
           Format = ',0.####'
           Kind = skSum
           Column = CountIn_byPF
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummInventory_Basis
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -1213,6 +1223,19 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
+      end
+      object SummInventory_Basis: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1091#1073#1099#1083#1100' '#1087#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1072#1081#1089#1072
+        DataBinding.FieldName = 'SummInventory_Basis'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1091#1084#1084#1072' (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'. '#1087#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1072#1081#1089#1072
+        Options.Editing = False
+        Width = 75
       end
       object SummInventory_RePrice: TcxGridDBColumn
         Caption = #1048#1085#1074#1077#1085#1090'. '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1089'/'#1089

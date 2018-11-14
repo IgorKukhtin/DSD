@@ -87,6 +87,7 @@ RETURNS TABLE (AccountId Integer
 
              , SummLoss              TFloat
              , SummInventory         TFloat
+             , SummInventory_Basis   TFloat
              , SummInventory_RePrice TFloat
 
              , SummProductionIn  TFloat
@@ -472,7 +473,32 @@ BEGIN
 
     -- Ðåçóëüòàò
     RETURN QUERY
-          WITH tmpMIContainer AS (SELECT _tmpContainer.ContainerDescId
+          WITH 
+             tmpPriceList_Basis AS (SELECT ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
+                                         , ObjectHistory_PriceListItem.StartDate
+                                         , ObjectHistory_PriceListItem.EndDate
+                                         , (ObjectHistoryFloat_PriceListItem_Value.ValueData * 1.2) :: TFloat AS ValuePrice
+
+                                     FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                          LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
+                                                               ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                              AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+
+                                          LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                                  ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                                 AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
+                                                                 AND inEndDate >= ObjectHistory_PriceListItem.StartDate AND inStartDate < ObjectHistory_PriceListItem.EndDate
+
+                                          LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                                       ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                                      AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+
+                                     WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
+                                       AND ObjectLink_PriceListItem_PriceList.ChildObjectId = zc_PriceList_Basis()
+                                       AND COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) <> 0
+                                       )
+
+             , tmpMIContainer AS (SELECT _tmpContainer.ContainerDescId
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_count ELSE 0 END AS ContainerId_count
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_begin ELSE 0 END AS ContainerId_begin
                                        , _tmpContainer.LocationId
@@ -857,6 +883,13 @@ BEGIN
                                                   ELSE 0
                                              END) AS SummInventory
 
+                                       , SUM (tmpPriceList_Basis.ValuePrice *                              
+                                              CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Count()
+                                                    AND MIContainer.MovementDescId = zc_Movement_Inventory()
+                                                        THEN MIContainer.Amount
+                                                   ELSE 0
+                                              END) AS SummInventory_Basis
+
                                        , SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Summ()
                                                    -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_Inventory()
@@ -893,6 +926,10 @@ BEGIN
                                        LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
                                                                  ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
                                                                 AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
+
+                                       LEFT JOIN tmpPriceList_Basis ON tmpPriceList_Basis.GoodsId = _tmpContainer.GoodsId
+                                                                   AND (tmpPriceList_Basis.StartDate <= MIContainer.OperDate AND MIContainer.OperDate < tmpPriceList_Basis.EndDate)
+
                                   GROUP BY _tmpContainer.ContainerDescId
                                          , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_count ELSE 0 END
                                          , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_begin ELSE 0 END
@@ -1366,6 +1403,7 @@ BEGIN
 
                                        , 0 AS SummLoss
                                        , 0 AS SummInventory
+                                       , 0 AS SummInventory_Basis
                                        , 0 AS SummInventory_RePrice
 
                                        , 0 AS SummProductionIn
@@ -1466,6 +1504,7 @@ BEGIN
               , SUM (tmpMIContainer_all.SummReturnInReal_40208)  :: TFloat AS SummReturnInReal_40208
               , SUM (tmpMIContainer_all.SummLoss)                :: TFloat AS SummLoss
               , SUM (tmpMIContainer_all.SummInventory)           :: TFloat AS SummInventory
+              , SUM (tmpMIContainer_all.SummInventory_Basis)     :: TFloat AS SummInventory_Basis
               , SUM (tmpMIContainer_all.SummInventory_RePrice)   :: TFloat AS SummInventory_RePrice
               , SUM (tmpMIContainer_all.SummProductionIn)        :: TFloat AS SummProductionIn
               , SUM (tmpMIContainer_all.SummProductionOut)       :: TFloat AS SummProductionOut
@@ -1492,6 +1531,7 @@ ALTER FUNCTION lpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 14.11.18         * SummInventory_Basis
  09.05.15                                        * ALL
  15.02.15                                        * add zc_Enum_AnalyzerId_Loss...
  01.02.15                                                       *
