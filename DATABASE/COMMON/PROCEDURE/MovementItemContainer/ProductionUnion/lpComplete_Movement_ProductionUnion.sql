@@ -1030,6 +1030,8 @@ END IF;
                                ) AS tmpReceipt ON tmpReceipt.GoodsId = _tmpItem_pr.GoodsId
                                          AND tmpReceipt.GoodsKindId = _tmpItem_pr.GoodsKindId
                 WHERE _tmpItem_pr.GoodsKindId <> zc_GoodsKind_WorkProgress()
+                      -- Тушенка
+                  AND _tmpItem_pr.InfoMoneyId <> zc_Enum_InfoMoney_30102()
                ) AS tmp;
 
      END IF; -- if vbIsPeresort = FALSE

@@ -3,7 +3,7 @@
   ClientHeight = 446
   ClientWidth = 351
   ExplicitWidth = 357
-  ExplicitHeight = 475
+  ExplicitHeight = 471
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -37,6 +37,7 @@
     Top = 24
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 0
     Width = 162
   end

@@ -70,8 +70,7 @@ BEGIN
                                                       AND MovementItem.DescId     = zc_MI_Child()
                                                       AND MovementItem.isErased   = FALSE
                           )
-         , tmpMIContainer AS (SELECT tmpMI_Child.MovementId                          AS MovementId
-                                   , tmpMI_Child.OperDate                            AS OperDate
+         , tmpMIContainer AS (SELECT tmpMI_Child.OperDate                            AS OperDate
                                    , MIContainer.ObjectId_Analyzer                   AS GoodsId
                                    , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END * CASE WHEN MIContainer.isActive = TRUE THEN 1 ELSE -1 END) AS Amount
                                    , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN MIContainer.Amount ELSE 0 END * CASE WHEN MIContainer.isActive = TRUE THEN 1 ELSE -1 END) AS Summ
@@ -80,8 +79,7 @@ BEGIN
                                                               ON MIContainer.MovementId        = tmpMI_Child.MovementId
                                                              AND MIContainer.MovementItemId    = tmpMI_Child.MI_Id
                                                              AND MIContainer.ObjectId_Analyzer = tmpMI_Child.GoodsId
-                              GROUP BY tmpMI_Child.MovementId
-                                     , tmpMI_Child.OperDate
+                              GROUP BY tmpMI_Child.OperDate
                                      , MIContainer.ObjectId_Analyzer
                               HAVING SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN MIContainer.Amount ELSE 0 END * CASE WHEN MIContainer.isActive = TRUE THEN 1 ELSE -1 END) <> 0
                                  AND SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END * CASE WHEN MIContainer.isActive = TRUE THEN 1 ELSE -1 END) <> 0
@@ -89,9 +87,8 @@ BEGIN
 
            SELECT tmp.GoodsId
                 , tmp.OperDate
-                , CAST (AVG (tmp.Summ / tmp.Amount) AS NUMERIC (16,2) ) :: TFloat  AS Price   -- средн€€ цена на дату
-           FROM tmpMIContainer AS tmp
-           GROUP BY tmp.OperDate, tmp.GoodsId;
+                , CAST (tmp.Summ / tmp.Amount AS NUMERIC (16, 2)) :: TFloat  AS Price   -- средн€€ цена на дату
+           FROM tmpMIContainer AS tmp;
            
          -- записываем значени€ 
          PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId          := 0

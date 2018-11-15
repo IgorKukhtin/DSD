@@ -32,6 +32,7 @@ $BODY$
 
    DECLARE vbAmount TFloat;
    DECLARE vbGoodsId_master Integer;
+   DECLARE vbMeasureId_master Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProductionUnionTech());
@@ -81,6 +82,8 @@ BEGIN
 
    -- определяется
    vbGoodsId_master:= COALESCE ((SELECT inGoodsId WHERE inGoodsId IN (7129, 2328, 712542 )), 0); -- ЯЗЫК СВИН. ВАРЕН. + ГОЛОВЫ СВИН.ВАР. + МЯСО ГОЛОВ СВ в шкуре варен.
+   -- определяется
+   vbMeasureId_master:= (SELECT ObjectLink.ChildObjectId FROM ObjectLink WHERE ObjectLink.ObjectId = inGoodsId AND ObjectLink.DescId = zc_ObjectLink_Goods_Measure());
 
    -- сохранили <Документ>
    IF COALESCE (ioMovementId, 0) = 0
@@ -194,6 +197,8 @@ BEGIN
                                          THEN COALESCE (inCuterCount, 0) * COALESCE (tmpReceiptChild.AmountReceipt, 0)
                                     WHEN COALESCE (tmpMI_Child.AmountReceipt, -1) = 0  -- если <Количество по рецептуре на 1 кутер> в док. было введено = 0, тогда оставляем факт из Amount
                                          THEN tmpMI_Child.Amount
+                                    WHEN vbMeasureId_master = zc_Measure_Sh()
+                                         THEN inAmount * COALESCE (tmpMI_Child.AmountReceipt, 0) / tmpReceiptChild.Amount_master
                                     ELSE COALESCE (inCuterCount, 0) * COALESCE (tmpMI_Child.AmountReceipt, 0) -- иначе пересчет по <Количество по рецептуре на 1 кутер> в док.
                                END AS Amount
 

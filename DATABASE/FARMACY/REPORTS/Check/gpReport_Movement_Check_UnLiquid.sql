@@ -228,26 +228,26 @@ BEGIN
            , Object_Goods_View.NDSKindName
            , COALESCE (tmpIncomeLast.MinExpirationDate ,tmpRemains.MinExpirationDate) :: TDateTime  AS MinExpirationDate
            , COALESCE (tmpIncomeLast.MaxOperDate, tmpRemains.MaxOperDateIncome)       :: TDateTime  AS OperDate_LastIncome
-           , tmpRemains.Amount_Income             :: TFloat        AS Amount_LastIncome
-           , tmpPriceRemains.Price_Remains        :: TFloat
-           , tmpPriceRemains.Price_RemainsEnd     :: TFloat
+           , COALESCE (tmpRemains.Amount_Income, 0)             :: TFloat        AS Amount_LastIncome
+           , COALESCE (tmpPriceRemains.Price_Remains, 0)        :: TFloat
+           , COALESCE (tmpPriceRemains.Price_RemainsEnd, 0)     :: TFloat
 
-           , tmpRemains.RemainsStart :: TFloat AS RemainsStart
-           , tmpRemains.RemainsEnd   :: TFloat AS RemainsEnd
+           , COALESCE (tmpRemains.RemainsStart, 0) :: TFloat AS RemainsStart
+           , COALESCE (tmpRemains.RemainsEnd, 0)   :: TFloat AS RemainsEnd
            , CASE WHEN tmpCheck.Amount_Sale <> 0 THEN tmpCheck.Summa_Sale / tmpCheck.Amount_Sale ELSE 0 END :: TFloat AS Price_Sale
 
-           , (tmpRemains.RemainsStart * tmpPriceRemains.Price_Remains)  :: TFloat AS Summa_Remains
-           , (tmpRemains.RemainsEnd * tmpPriceRemains.Price_RemainsEnd) :: TFloat AS Summa_RemainsEnd
+           , COALESCE (tmpRemains.RemainsStart * tmpPriceRemains.Price_Remains, 0)  :: TFloat AS Summa_Remains
+           , COALESCE (tmpRemains.RemainsEnd * tmpPriceRemains.Price_RemainsEnd, 0) :: TFloat AS Summa_RemainsEnd
 
-           , tmpCheck.Amount_Sale       :: TFloat AS Amount_Sale
-           , tmpCheck.Summa_Sale        :: TFloat AS Summa_Sale
+           , COALESCE (tmpCheck.Amount_Sale, 0)       :: TFloat AS Amount_Sale
+           , COALESCE (tmpCheck.Summa_Sale, 0)        :: TFloat AS Summa_Sale
 
-           , tmpCheck.Amount_Sale1      :: TFloat AS Amount_Sale1
-           , tmpCheck.Summa_Sale1       :: TFloat AS Summa_Sale1
-           , tmpCheck.Amount_Sale3      :: TFloat AS Amount_Sale3
-           , tmpCheck.Summa_Sale3       :: TFloat AS Summa_Sale3
-           , tmpCheck.Amount_Sale6      :: TFloat AS Amount_Sale6
-           , tmpCheck.Summa_Sale6       :: TFloat AS Summa_Sale6
+           , COALESCE (tmpCheck.Amount_Sale1, 0)      :: TFloat AS Amount_Sale1
+           , COALESCE (tmpCheck.Summa_Sale1, 0)       :: TFloat AS Summa_Sale1
+           , COALESCE (tmpCheck.Amount_Sale3, 0)      :: TFloat AS Amount_Sale3
+           , COALESCE (tmpCheck.Summa_Sale3, 0)       :: TFloat AS Summa_Sale3
+           , COALESCE (tmpCheck.Amount_Sale6, 0)      :: TFloat AS Amount_Sale6
+           , COALESCE (tmpCheck.Summa_Sale6, 0)       :: TFloat AS Summa_Sale6
    
            , CASE WHEN (COALESCE (tmpCheck.Amount_Sale6,0)=0) AND COALESCE(tmp.Amount,0) <> 0 THEN TRUE ELSE FALSE END AS isSaleAnother
         FROM tmpRemains
@@ -257,7 +257,8 @@ BEGIN
              LEFT JOIN tmpIncomeLast ON tmpIncomeLast.GoodsId = tmpRemains.GoodsId
              LEFT JOIN (SELECT _tmpCheck.GoodsId, SUM (_tmpCheck.Amount) AS Amount FROM _tmpCheck GROUP BY _tmpCheck.GoodsId) AS tmp ON tmp.GoodsId = tmpRemains.GoodsId
 
-        WHERE COALESCE (tmpCheck.Amount_Sale1, 0) = 0 OR COALESCE (tmpCheck.Amount_Sale3, 0) = 0 OR COALESCE (tmpCheck.Amount_Sale6, 0) =0
+        WHERE (COALESCE (tmpCheck.Amount_Sale1, 0) = 0 OR COALESCE (tmpCheck.Amount_Sale3, 0) = 0 OR COALESCE (tmpCheck.Amount_Sale6, 0) =0)
+         -- and (Object_Goods_View.GoodsCodeInt in (1922, 22258) OR  inSession <> '3')
         ORDER BY GoodsGroupName, GoodsName;
 
      RETURN NEXT Cursor1;
@@ -268,15 +269,15 @@ BEGIN
       SELECT
              tmpCheck.GoodsId                     AS GoodsId
            , Object_Unit.ValueData                AS UnitName
-           , tmpCheck.Amount_Sale       :: TFloat AS Amount_Sale
-           , tmpCheck.Summa_Sale        :: TFloat AS Summa_Sale
+           , COALESCE (tmpCheck.Amount_Sale, 0)       :: TFloat AS Amount_Sale
+           , COALESCE (tmpCheck.Summa_Sale, 0)        :: TFloat AS Summa_Sale
 
-           , tmpCheck.Amount_Sale1      :: TFloat AS Amount_Sale1
-           , tmpCheck.Summa_Sale1       :: TFloat AS Summa_Sale1
-           , tmpCheck.Amount_Sale3      :: TFloat AS Amount_Sale3
-           , tmpCheck.Summa_Sale3       :: TFloat AS Summa_Sale3
-           , tmpCheck.Amount_Sale6      :: TFloat AS Amount_Sale6
-           , tmpCheck.Summa_Sale6       :: TFloat AS Summa_Sale6
+           , COALESCE (tmpCheck.Amount_Sale1, 0)      :: TFloat AS Amount_Sale1
+           , COALESCE (tmpCheck.Summa_Sale1, 0)       :: TFloat AS Summa_Sale1
+           , COALESCE (tmpCheck.Amount_Sale3, 0)      :: TFloat AS Amount_Sale3
+           , COALESCE (tmpCheck.Summa_Sale3, 0)       :: TFloat AS Summa_Sale3
+           , COALESCE (tmpCheck.Amount_Sale6, 0)      :: TFloat AS Amount_Sale6
+           , COALESCE (tmpCheck.Summa_Sale6, 0)       :: TFloat AS Summa_Sale6
 
       FROM _tmpCheck AS tmpCheck
            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpCheck.UnitId
