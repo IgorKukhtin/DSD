@@ -6,32 +6,32 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_KPU(
  INOUT ioId                    Integer    , -- Ключ объекта <Докумен>
    OUT outKPU                  TFloat     , -- КПУ
     IN inDateIn                TDateTime  , -- Дата приема
-    IN inMarkRatio             Integer    , -- Коеффициент выполнение плана по маркетингу
-    IN inAverageCheckRatio     TFloat     , -- Коеффициент за средний чек
-    IN inLateTimeRatio         Integer,
-    IN inFinancPlanRatio       Integer,
-    IN inIT_ExamRatio          Integer,
+ INOUT inMarkRatio             Integer    , -- Коеффициент выполнение плана по маркетингу
+ INOUT inAverageCheckRatio     TFloat     , -- Коеффициент за средний чек
+ INOUT inLateTimeRatio         Integer,
+ INOUT inFinancPlanRatio       Integer,
+ INOUT inIT_ExamRatio          Integer,
 
-    IN inComplaintsRatio       Integer,
-    IN inComplaintsNote        TVarChar,
+ INOUT inComplaintsRatio       Integer,
+ INOUT inComplaintsNote        TVarChar,
 
-    IN inDirectorRatio         Integer,
-    IN inDirectorNote          TVarChar,
+ INOUT inDirectorRatio         Integer,
+ INOUT inDirectorNote          TVarChar,
 
 
-    IN inYuriIT                Integer,
-    IN inOlegIT                Integer,
-    IN inMaximIT               Integer,
-    IN inCollegeITRatio        Integer,
-    IN inCollegeITNote         TVarChar,
+ INOUT inYuriIT                Integer,
+ INOUT inOlegIT                Integer,
+ INOUT inMaximIT               Integer,
+ INOUT inCollegeITRatio        Integer,
+ INOUT inCollegeITNote         TVarChar,
 
-    IN inVIPDepartRatio        Integer,
-    IN inVIPDepartRatioNote    TVarChar,
+ INOUT inVIPDepartRatio        Integer,
+ INOUT inVIPDepartRatioNote    TVarChar,
 
-    IN inRomanova              Integer,
-    IN inGolovko               Integer,
-    IN inControlRGRatio        Integer,
-    IN inControlRGNote         TVarChar,
+ INOUT inRomanova              Integer,
+ INOUT inGolovko               Integer,
+ INOUT inControlRGRatio        Integer,
+ INOUT inControlRGNote         TVarChar,
 
     IN inSession               TVarChar     -- сессия пользователя
 )
@@ -46,10 +46,15 @@ $BODY$
    DECLARE vbPersonalId            Integer;
 
    DECLARE vbMarkRatio             Integer;
+   DECLARE vbDMarkRatio            Integer;
    DECLARE vbAverageCheckRatio     TFloat;
+   DECLARE vbDAverageCheckRatio    TFloat;
    DECLARE vbLateTimeRatio         Integer;
+   DECLARE vbDLateTimeRatio        Integer;
    DECLARE vbFinancPlanRatio       Integer;
+   DECLARE vbDFinancPlanRatio      Integer;
    DECLARE vbIT_ExamRatio          Integer;
+   DECLARE vbDIT_ExamRatio         Integer;
 
    DECLARE vbComplaintsRatio       Integer;
    DECLARE vbComplaintsNote        TVarChar;
@@ -123,29 +128,44 @@ BEGIN
   SELECT
           Object_Personal_View.DateIn
         , Object_Personal_View.PersonalId
+
         , COALESCE (MIFloat_MarkRatio.ValueData,
             CASE WHEN COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) = COALESCE (MIFloat_BonusAmountTab.ValueData, 0)
             THEN 0 ELSE CASE WHEN COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) <= COALESCE (MIFloat_BonusAmountTab.ValueData, 0)
             THEN 1 ELSE -1 END END)::Integer              AS MarkRatio
+        , CASE WHEN COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) = COALESCE (MIFloat_BonusAmountTab.ValueData, 0)
+            THEN 0 ELSE CASE WHEN COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) <= COALESCE (MIFloat_BonusAmountTab.ValueData, 0)
+            THEN 1 ELSE -1 END END::Integer               AS DMarkRatio
 
         , COALESCE (MIFloat_AverageCheckRatio.ValueData,
             CASE WHEN COALESCE (MIFloat_PrevAverageCheck.ValueData, 0) = 0
             THEN 0 ELSE ROUND((COALESCE (MIFloat_AverageCheck.ValueData, 0) / COALESCE (MIFloat_PrevAverageCheck.ValueData, 0) - 1) * 100, 1)
             END)::TFloat                              AS AverageCheckRatio
+        , CASE WHEN COALESCE (MIFloat_PrevAverageCheck.ValueData, 0) = 0
+            THEN 0 ELSE ROUND((COALESCE (MIFloat_AverageCheck.ValueData, 0) / COALESCE (MIFloat_PrevAverageCheck.ValueData, 0) - 1) * 100, 1)
+            END::TFloat                               AS DAverageCheckRatio
 
-        , COALESCE (MIFloat_LateTimeRatio.ValueData, 
+        , COALESCE (MIFloat_LateTimeRatio.ValueData,
             MIFloat_LateTimePenalty.ValueData)::Integer    AS LateTimeRatio
-  
+        , MIFloat_LateTimePenalty.ValueData::Integer       AS DLateTimeRatio
+
         , COALESCE (MIFloat_FinancPlanRatio.ValueData,
             CASE WHEN COALESCE (MIFloat_FinancPlan.ValueData, 0) = 0 or COALESCE (MIFloat_FinancPlanFact.ValueData, 0) = 0
             THEN 0 ELSE CASE WHEN MIFloat_FinancPlan.ValueData <= MIFloat_FinancPlanFact.ValueData THEN 1 ELSE -1 END
             END)::Integer                             AS FinancPlanRatio
+        , CASE WHEN COALESCE (MIFloat_FinancPlan.ValueData, 0) = 0 or COALESCE (MIFloat_FinancPlanFact.ValueData, 0) = 0
+            THEN 0 ELSE CASE WHEN MIFloat_FinancPlan.ValueData <= MIFloat_FinancPlanFact.ValueData THEN 1 ELSE -1 END
+            END::Integer                              AS DFinancPlanRatio
 
         , COALESCE (MIFloat_IT_ExamRatio.ValueData::Integer,
-          CASE WHEN TestingUser.ExamPercentage IS NULL
-          THEN NULL ELSE
-          CASE WHEN TestingUser.ExamPercentage >= 80
-          THEN 4 - TestingUser.Attempts ELSE Null END END)   AS IT_ExamRatio
+            CASE WHEN TestingUser.ExamPercentage IS NULL
+            THEN NULL ELSE
+            CASE WHEN TestingUser.ExamPercentage >= 80
+            THEN 4 - TestingUser.Attempts ELSE Null END END)   AS IT_ExamRatio
+        , CASE WHEN TestingUser.ExamPercentage IS NULL
+            THEN NULL ELSE
+            CASE WHEN TestingUser.ExamPercentage >= 80
+            THEN 4 - TestingUser.Attempts ELSE Null END END    AS DIT_ExamRatio
 
         , MIFloat_ComplaintsRatio.ValueData::Integer  AS ComplaintsRatio
         , MIString_ComplaintsNote.ValueData           AS ComplaintsNote
@@ -169,12 +189,17 @@ BEGIN
   INTO
     vbDateIn,
     vbPersonalId,
-    
+
     vbMarkRatio,
+    vbDMarkRatio,
     vbAverageCheckRatio,
+    vbDAverageCheckRatio,
     vbLateTimeRatio,
+    vbDLateTimeRatio,
     vbFinancPlanRatio,
+    vbDFinancPlanRatio,
     vbIT_ExamRatio,
+    vbDIT_ExamRatio,
 
     vbComplaintsRatio,
     vbComplaintsNote,
@@ -333,15 +358,28 @@ BEGIN
     IF 375661 = inSession::Integer OR 4183126 = inSession::Integer OR 8001630 = inSession::Integer OR
        948223 = inSession::Integer OR 758920 = inSession::Integer OR 5168766 = inSession::Integer
     THEN
-      if (inMarkRatio > 1) OR (inMarkRatio < -1)
-      THEN
-        RAISE EXCEPTION 'Ошибка. Значение коэффициента <Выполнение плана по маркетингу> должно быть в пределах от -1 до 1.';
-      END IF;
 
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MarkRatio(), ioId, inMarkRatio);
+      IF inMarkRatio = - 1000
+      THEN
+        IF EXISTS(SELECT MovementItemId FROM MovementItemFloat WHERE DescId = zc_MIFloat_MarkRatio() and MovementItemId = ioId)
+        THEN
+          DELETE FROM MovementItemFloat WHERE DescId = zc_MIFloat_MarkRatio() and MovementItemId = ioId;
+        END IF;
+
+        inMarkRatio := vbDMarkRatio;
+      ELSE
+        IF (inMarkRatio > 1) OR (inMarkRatio < -1)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Значение коэффициента <Выполнение плана по маркетингу> должно быть в пределах от -1 до 1.';
+        END IF;
+
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MarkRatio(), ioId, inMarkRatio);
+      END IF;
     ELSE
       RAISE EXCEPTION 'Изменение коэффициента <Выполнение плана по маркетингу> вам запрещено.';
     END IF;
+  ELSE
+    inMarkRatio := vbMarkRatio;
   END IF;
 
     -- Средний чек
@@ -350,15 +388,27 @@ BEGIN
     IF 375661 = inSession::Integer OR 4183126 = inSession::Integer OR 8001630 = inSession::Integer OR
        948223 = inSession::Integer OR 758920 = inSession::Integer OR 5168766 = inSession::Integer
     THEN
-      if (inAverageCheckRatio > 1) OR (inAverageCheckRatio < -1)
+      IF inAverageCheckRatio = - 1000
       THEN
-        RAISE EXCEPTION 'Ошибка. Значение коэффициента <Средний чек> должно быть в пределах от -1 до 1.';
-      END IF;
+        IF EXISTS(SELECT MovementItemId FROM MovementItemFloat WHERE DescId = zc_MIFloat_AverageCheckRatio() and MovementItemId = ioId)
+        THEN
+          DELETE FROM MovementItemFloat WHERE DescId = zc_MIFloat_AverageCheckRatio() and MovementItemId = ioId;
+        END IF;
 
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AverageCheckRatio(), ioId, inAverageCheckRatio);
+        inAverageCheckRatio := vbDAverageCheckRatio;
+      ELSE
+        if (inAverageCheckRatio > 1) OR (inAverageCheckRatio < -1)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Значение коэффициента <Средний чек> должно быть в пределах от -1 до 1.';
+        END IF;
+
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AverageCheckRatio(), ioId, inAverageCheckRatio);
+      END IF;
     ELSE
       RAISE EXCEPTION 'Изменение коэффициента <Средний чек> вам запрещено.';
     END IF;
+  ELSE
+    inAverageCheckRatio := vbAverageCheckRatio;
   END IF;
 
     -- Время опоздания
@@ -367,15 +417,27 @@ BEGIN
     IF 375661 = inSession::Integer OR 4183126 = inSession::Integer OR 8001630 = inSession::Integer OR
        948223 = inSession::Integer OR 758920 = inSession::Integer OR 5168766 = inSession::Integer
     THEN
-      if (inLateTimeRatio > 3) OR (inLateTimeRatio < -3)
+      IF inLateTimeRatio = - 1000
       THEN
-        RAISE EXCEPTION 'Ошибка. Значение коэффициента <Время опоздания> должно быть в пределах от -3 до 3.';
-      END IF;
+        IF EXISTS(SELECT MovementItemId FROM MovementItemFloat WHERE DescId = zc_MIFloat_LateTimeRatio() and MovementItemId = ioId)
+        THEN
+          DELETE FROM MovementItemFloat WHERE DescId = zc_MIFloat_LateTimeRatio() and MovementItemId = ioId;
+        END IF;
 
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_LateTimeRatio(), ioId, inLateTimeRatio);
+        inLateTimeRatio := vbDLateTimeRatio;
+      ELSE
+/*        if (inLateTimeRatio > 3) OR (inLateTimeRatio < -3)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Значение коэффициента <Время опоздания> должно быть в пределах от -3 до 3.';
+        END IF;
+*/
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_LateTimeRatio(), ioId, inLateTimeRatio);
+      END IF;
     ELSE
       RAISE EXCEPTION 'Изменение коэффициента <Время опоздания> вам запрещено.';
     END IF;
+  ELSE
+    inLateTimeRatio := vbLateTimeRatio;
   END IF;
 
     -- Финансовый план
@@ -384,15 +446,27 @@ BEGIN
     IF 375661 = inSession::Integer OR 4183126 = inSession::Integer OR 8001630 = inSession::Integer OR
        948223 = inSession::Integer OR 758920 = inSession::Integer OR 5168766 = inSession::Integer
     THEN
-      if (inFinancPlanRatio > 1) OR (inFinancPlanRatio < -1)
+      IF inFinancPlanRatio = - 1000
       THEN
-        RAISE EXCEPTION 'Ошибка. Значение коэффициента <Финансовый план> должно быть в пределах от -1 до 1.';
-      END IF;
+        IF EXISTS(SELECT MovementItemId FROM MovementItemFloat WHERE DescId = zc_MIFloat_FinancPlanRatio() and MovementItemId = ioId)
+        THEN
+          DELETE FROM MovementItemFloat WHERE DescId = zc_MIFloat_FinancPlanRatio() and MovementItemId = ioId;
+        END IF;
 
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_FinancPlanRatio(), ioId, inFinancPlanRatio);
+        inFinancPlanRatio := vbDFinancPlanRatio;
+      ELSE
+        if (inFinancPlanRatio > 1) OR (inFinancPlanRatio < -1)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Значение коэффициента <Финансовый план> должно быть в пределах от -1 до 1.';
+        END IF;
+
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_FinancPlanRatio(), ioId, inFinancPlanRatio);
+      END IF;
     ELSE
       RAISE EXCEPTION 'Изменение коэффициента <Финансовый план> вам запрещено.';
     END IF;
+  ELSE
+    inFinancPlanRatio := vbFinancPlanRatio;
   END IF;
 
     -- Экзамен IT
@@ -401,15 +475,27 @@ BEGIN
     IF 375661 = inSession::Integer OR 4183126 = inSession::Integer OR 8001630 = inSession::Integer OR
        948223 = inSession::Integer OR 758920 = inSession::Integer OR 5168766 = inSession::Integer
     THEN
-      if (inIT_ExamRatio > 3) OR (inIT_ExamRatio < -3)
+      IF inIT_ExamRatio = - 1000
       THEN
-        RAISE EXCEPTION 'Ошибка. Значение коэффициента <Экзамен IT> должно быть в пределах от -3 до 3.';
-      END IF;
+        IF EXISTS(SELECT MovementItemId FROM MovementItemFloat WHERE DescId = zc_MIFloat_IT_ExamRatio() and MovementItemId = ioId)
+        THEN
+          DELETE FROM MovementItemFloat WHERE DescId = zc_MIFloat_IT_ExamRatio() and MovementItemId = ioId;
+        END IF;
 
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_IT_ExamRatio(), ioId, inIT_ExamRatio);
+        inIT_ExamRatio := vbDIT_ExamRatio;
+      ELSE
+        if (inIT_ExamRatio > 3) OR (inIT_ExamRatio < -3)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Значение коэффициента <Экзамен IT> должно быть в пределах от -3 до 3.';
+        END IF;
+
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_IT_ExamRatio(), ioId, inIT_ExamRatio);
+      END IF;
     ELSE
       RAISE EXCEPTION 'Изменение коэффициента <Экзамен IT> вам запрещено.';
     END IF;
+  ELSE
+    inIT_ExamRatio := vbIT_ExamRatio;
   END IF;
 
     -- Жалобы от клиентов
@@ -419,44 +505,80 @@ BEGIN
     IF 375661 = inSession::Integer OR 4183126 = inSession::Integer OR 8001630 = inSession::Integer OR
        948223 = inSession::Integer OR 758920 = inSession::Integer OR 5168766 = inSession::Integer
     THEN
-      if (inComplaintsRatio > 3) OR (inComplaintsRatio < -3)
+      IF inComplaintsRatio = - 1000
       THEN
-        RAISE EXCEPTION 'Ошибка. Значение коэффициента <Жалобы от клиентов> должно быть в пределах от -3 до 3.';
-      END IF;
+        IF EXISTS(SELECT MovementItemId FROM MovementItemFloat WHERE DescId = zc_MIFloat_ComplaintsRatio() and MovementItemId = ioId)
+        THEN
+          DELETE FROM MovementItemFloat WHERE DescId = zc_MIFloat_ComplaintsRatio() and MovementItemId = ioId;
+        END IF;
 
-      IF COALESCE (inComplaintsNote, '') = ''
-      THEN
-        RAISE EXCEPTION 'Комментарий к коэффициенту <Жалобы от клиентов> не заполнен.';
-      END IF;
+        IF EXISTS(SELECT MovementItemId FROM MovementItemString WHERE DescId = zc_MIString_ComplaintsNote() and MovementItemId = ioId)
+        THEN
+          DELETE FROM MovementItemString WHERE DescId = zc_MIString_ComplaintsNote() and MovementItemId = ioId;
+        END IF;
 
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ComplaintsRatio(), ioId, inComplaintsRatio);
-      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_ComplaintsNote(), ioId, inComplaintsNote);
+        inComplaintsRatio := Null;
+        inComplaintsNote := Null;
+      ELSE
+        if (inComplaintsRatio > 3) OR (inComplaintsRatio < -3)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Значение коэффициента <Жалобы от клиентов> должно быть в пределах от -3 до 3.';
+        END IF;
+
+        IF COALESCE (inComplaintsNote, '') = ''
+        THEN
+          RAISE EXCEPTION 'Комментарий к коэффициенту <Жалобы от клиентов> не заполнен.';
+        END IF;
+
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ComplaintsRatio(), ioId, inComplaintsRatio);
+        PERFORM lpInsertUpdate_MovementItemString (zc_MIString_ComplaintsNote(), ioId, inComplaintsNote);
+      END IF;
     ELSE
       RAISE EXCEPTION 'Изменение коэффициента <Жалобы от клиентов> вам запрещено.';
     END IF;
+  ELSE
+    inComplaintsRatio := vbComplaintsRatio;
   END IF;
 
     -- Директор
   IF COALESCE (inDirectorRatio, 0) <> COALESCE (vbDirectorRatio, 0) OR
     COALESCE (inDirectorNote, '') <> COALESCE (vbDirectorNote, '')
   THEN
-    IF 948223 = inSession::Integer
+    IF 948223 = inSession::Integer or 375661 = inSession::Integer OR 4183126 = inSession::Integer OR 8001630 = inSession::Integer
     THEN
-      if (inDirectorRatio > 3) OR (inDirectorRatio < -3)
+      IF inDirectorRatio = - 1000
       THEN
-        RAISE EXCEPTION 'Ошибка. Значение коэффициента <Директор> должно быть в пределах от -3 до 3.';
-      END IF;
+        IF EXISTS(SELECT MovementItemId FROM MovementItemFloat WHERE DescId = zc_MIFloat_DirectorRatio() and MovementItemId = ioId)
+        THEN
+          DELETE FROM MovementItemFloat WHERE DescId = zc_MIFloat_DirectorRatio() and MovementItemId = ioId;
+        END IF;
 
-      IF COALESCE (inDirectorNote, '') = ''
-      THEN
-        RAISE EXCEPTION 'Комментарий к коэффициенту <Директор> не заполнен.';
-      END IF;
+        IF EXISTS(SELECT MovementItemId FROM MovementItemString WHERE DescId = zc_MIString_DirectorNote() and MovementItemId = ioId)
+        THEN
+          DELETE FROM MovementItemString WHERE DescId = zc_MIString_DirectorNote() and MovementItemId = ioId;
+        END IF;
 
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_DirectorRatio(), ioId, inDirectorRatio);
-      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_DirectorNote(), ioId, inDirectorNote);
+        inDirectorRatio := Null;
+        inDirectorNote := Null;
+      ELSE
+        if (inDirectorRatio > 3) OR (inDirectorRatio < -3)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Значение коэффициента <Директор> должно быть в пределах от -3 до 3.';
+        END IF;
+
+        IF COALESCE (inDirectorNote, '') = ''
+        THEN
+          RAISE EXCEPTION 'Комментарий к коэффициенту <Директор> не заполнен.';
+        END IF;
+
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_DirectorRatio(), ioId, inDirectorRatio);
+        PERFORM lpInsertUpdate_MovementItemString (zc_MIString_DirectorNote(), ioId, inDirectorNote);
+      END IF;
     ELSE
       RAISE EXCEPTION 'Изменение коэффициента <Директор> вам запрещено.';
     END IF;
+  ELSE
+    inDirectorRatio := vbDirectorRatio;
   END IF;
 
     --  Коллегия IT
@@ -464,45 +586,81 @@ BEGIN
   THEN
     IF 375661 = inSession::Integer
     THEN
-      if (inYuriIT > 3) OR (inYuriIT < -3)
+      IF inYuriIT = - 1000
       THEN
-        RAISE EXCEPTION 'Ошибка. Значение коэффициента <Юрий IT> должно быть в пределах от -3 до 3.';
-      END IF;
+        IF EXISTS(SELECT MovementItemId FROM MovementItemFloat WHERE DescId = zc_MIFloat_YuriIT() and MovementItemId = ioId)
+        THEN
+          DELETE FROM MovementItemFloat WHERE DescId = zc_MIFloat_YuriIT() and MovementItemId = ioId;
+        END IF;
 
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_YuriIT(), ioId, inYuriIT);
+        inYuriIT := Null;
+      ELSE
+        if (inYuriIT > 1) OR (inYuriIT < -1)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Значение коэффициента <Юрий IT> должно быть в пределах от -3 до 3.';
+        END IF;
+
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_YuriIT(), ioId, inYuriIT);
+      END IF;
     ELSE
       RAISE EXCEPTION 'Изменение коэффициента <Юрий IT> вам запрещено.';
     END IF;
+  ELSE
+    inYuriIT := vbYuriIT;
   END IF;
 
   IF COALESCE (inOlegIT, 0) <> COALESCE (vbOlegIT, 0)
   THEN
     IF 4183126 = inSession::Integer
     THEN
-      if (inOlegIT > 3) OR (inOlegIT < -3)
+      IF inOlegIT = - 1000
       THEN
-        RAISE EXCEPTION 'Ошибка. Значение коэффициента <Олег IT> должно быть в пределах от -3 до 3.';
-      END IF;
+        IF EXISTS(SELECT MovementItemId FROM MovementItemFloat WHERE DescId = zc_MIFloat_OlegIT() and MovementItemId = ioId)
+        THEN
+          DELETE FROM MovementItemFloat WHERE DescId = zc_MIFloat_OlegIT() and MovementItemId = ioId;
+        END IF;
 
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OlegIT(), ioId, inOlegIT);
+        inOlegIT := Null;
+      ELSE
+        if (inOlegIT > 1) OR (inOlegIT < -1)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Значение коэффициента <Олег IT> должно быть в пределах от -3 до 3.';
+        END IF;
+
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OlegIT(), ioId, inOlegIT);
+      END IF;
     ELSE
       RAISE EXCEPTION 'Изменение коэффициента <Олег IT> вам запрещено.';
     END IF;
+  ELSE
+    inOlegIT := vbOlegIT;
   END IF;
 
   IF COALESCE (inMaximIT, 0) <> COALESCE (vbMaximIT, 0)
   THEN
     IF 8001630 = inSession::Integer
     THEN
-      if (inMaximIT > 3) OR (inMaximIT < -3)
+      IF inMaximIT = - 1000
       THEN
-        RAISE EXCEPTION 'Ошибка. Значение коэффициента <<Максим IT> должно быть в пределах от -3 до 3.';
-      END IF;
+        IF EXISTS(SELECT MovementItemId FROM MovementItemFloat WHERE DescId = zc_MIFloat_MaximIT() and MovementItemId = ioId)
+        THEN
+          DELETE FROM MovementItemFloat WHERE DescId = zc_MIFloat_MaximIT() and MovementItemId = ioId;
+        END IF;
 
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MaximIT(), ioId, inMaximIT);
+        inMaximIT := Null;
+      ELSE
+        if (inMaximIT > 1) OR (inMaximIT < -1)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Значение коэффициента <<Максим IT> должно быть в пределах от -3 до 3.';
+        END IF;
+
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MaximIT(), ioId, inMaximIT);
+      END IF;
     ELSE
       RAISE EXCEPTION 'Изменение коэффициента <Максим IT> вам запрещено.';
     END IF;
+  ELSE
+    inMaximIT := vbMaximIT;
   END IF;
 
   IF COALESCE (inCollegeITRatio, 0) <> COALESCE (vbCollegeITRatio, 0) OR
@@ -510,21 +668,39 @@ BEGIN
   THEN
     IF 375661 = inSession::Integer OR 4183126 = inSession::Integer OR 8001630 = inSession::Integer
     THEN
-      if (inCollegeITRatio > 3) OR (inCollegeITRatio < -3)
+      IF inCollegeITRatio = - 1000
       THEN
-        RAISE EXCEPTION 'Ошибка. Значение коэффициента <Коллегия IT> должно быть в пределах от -3 до 3.';
-      END IF;
+        IF EXISTS(SELECT MovementItemId FROM MovementItemFloat WHERE DescId = zc_MIFloat_CollegeITRatio() and MovementItemId = ioId)
+        THEN
+          DELETE FROM MovementItemFloat WHERE DescId = zc_MIFloat_CollegeITRatio() and MovementItemId = ioId;
+        END IF;
 
-      IF COALESCE (inCollegeITNote, '') = ''
-      THEN
-        RAISE EXCEPTION 'Комментарий к коэффициенту <Коллегия IT> не заполнен.';
-      END IF;
+        IF EXISTS(SELECT MovementItemId FROM MovementItemString WHERE DescId = zc_MIString_CollegeITNote() and MovementItemId = ioId)
+        THEN
+          DELETE FROM MovementItemString WHERE DescId = zc_MIString_CollegeITNote() and MovementItemId = ioId;
+        END IF;
 
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CollegeITRatio(), ioId, inCollegeITRatio);
-      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_CollegeITNote(), ioId, inCollegeITNote);
+        inCollegeITRatio := Null;
+        inCollegeITNote := Null;
+      ELSE
+        if (inCollegeITRatio > 1) OR (inCollegeITRatio < -1)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Значение коэффициента <Коллегия IT> должно быть в пределах от -3 до 3.';
+        END IF;
+
+        IF COALESCE (inCollegeITNote, '') = ''
+        THEN
+          RAISE EXCEPTION 'Комментарий к коэффициенту <Коллегия IT> не заполнен.';
+        END IF;
+
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CollegeITRatio(), ioId, inCollegeITRatio);
+        PERFORM lpInsertUpdate_MovementItemString (zc_MIString_CollegeITNote(), ioId, inCollegeITNote);
+      END IF;
     ELSE
       RAISE EXCEPTION 'Изменение коэффициента <Коллегия IT> вам запрещено.';
     END IF;
+  ELSE
+    inCollegeITRatio := vbCollegeITRatio;
   END IF;
 
     -- VIP отдел
@@ -533,21 +709,39 @@ BEGIN
   THEN
     IF 375661 = inSession::Integer OR 4183126 = inSession::Integer OR 8001630 = inSession::Integer
     THEN
-      if (inVIPDepartRatio > 3) OR (inVIPDepartRatio < -3)
+      IF inVIPDepartRatio = - 1000
       THEN
-        RAISE EXCEPTION 'Ошибка. Значение коэффициента <VIP отдел> должно быть в пределах от -3 до 3.';
-      END IF;
+        IF EXISTS(SELECT MovementItemId FROM MovementItemFloat WHERE DescId = zc_MIFloat_VIPDepartRatio() and MovementItemId = ioId)
+        THEN
+          DELETE FROM MovementItemFloat WHERE DescId = zc_MIFloat_VIPDepartRatio() and MovementItemId = ioId;
+        END IF;
 
-      IF COALESCE (inVIPDepartRatioNote, '') = ''
-      THEN
-        RAISE EXCEPTION 'Комментарий к коэффициенту <VIP отдел> не заполнен.';
-      END IF;
+        IF EXISTS(SELECT MovementItemId FROM MovementItemString WHERE DescId = zc_MIString_VIPDepartRatioNote() and MovementItemId = ioId)
+        THEN
+          DELETE FROM MovementItemString WHERE DescId = zc_MIString_VIPDepartRatioNote() and MovementItemId = ioId;
+        END IF;
 
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_VIPDepartRatio(), ioId, inVIPDepartRatio);
-      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_VIPDepartRatioNote(), ioId, inVIPDepartRatioNote);
+        inVIPDepartRatio := Null;
+        inVIPDepartRatioNote := Null;
+      ELSE
+        if (inVIPDepartRatio > 1) OR (inVIPDepartRatio < -1)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Значение коэффициента <VIP отдел> должно быть в пределах от -3 до 3.';
+        END IF;
+
+        IF COALESCE (inVIPDepartRatioNote, '') = ''
+        THEN
+          RAISE EXCEPTION 'Комментарий к коэффициенту <VIP отдел> не заполнен.';
+        END IF;
+
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_VIPDepartRatio(), ioId, inVIPDepartRatio);
+        PERFORM lpInsertUpdate_MovementItemString (zc_MIString_VIPDepartRatioNote(), ioId, inVIPDepartRatioNote);
+      END IF;
     ELSE
       RAISE EXCEPTION 'Изменение коэффициента <VIP отдел> вам запрещено.';
     END IF;
+  ELSE
+    inVIPDepartRatio := vbVIPDepartRatio;
   END IF;
 
     -- Контроль Т.В. и Т.А.
@@ -555,52 +749,95 @@ BEGIN
   THEN
     IF 758920 = inSession::Integer
     THEN
-      if (inRomanova > 3) OR (inRomanova < -3)
+      IF inRomanova = - 1000
       THEN
-        RAISE EXCEPTION 'Ошибка. Значение коэффициента <Романова Т.В.> должно быть в пределах от -3 до 3.';
-      END IF;
+        IF EXISTS(SELECT MovementItemId FROM MovementItemFloat WHERE DescId = zc_MIFloat_Romanova() and MovementItemId = ioId)
+        THEN
+          DELETE FROM MovementItemFloat WHERE DescId = zc_MIFloat_Romanova() and MovementItemId = ioId;
+        END IF;
 
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Romanova(), ioId, inRomanova);
+        inRomanova := Null;
+      ELSE
+        if (inRomanova > 3) OR (inRomanova < -3)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Значение коэффициента <Романова Т.В.> должно быть в пределах от -3 до 3.';
+        END IF;
+
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Romanova(), ioId, inRomanova);
+      END IF;
     ELSE
       RAISE EXCEPTION 'Изменение коэффициента <Романова Т.В.> вам запрещено.';
     END IF;
+  ELSE
+    inRomanova := vbRomanova;
   END IF;
 
   IF COALESCE (inGolovko, 0) <> COALESCE (vbGolovko, 0)
   THEN
     IF 5168766 = inSession::Integer
     THEN
-      if (inGolovko > 3) OR (inGolovko < -3)
+      IF inGolovko = - 1000
       THEN
-        RAISE EXCEPTION 'Ошибка. Значение коэффициента <Головко Т.А.> должно быть в пределах от -3 до 3.';
-      END IF;
+        IF EXISTS(SELECT MovementItemId FROM MovementItemFloat WHERE DescId = zc_MIFloat_Golovko() and MovementItemId = ioId)
+        THEN
+          DELETE FROM MovementItemFloat WHERE DescId = zc_MIFloat_Golovko() and MovementItemId = ioId;
+        END IF;
 
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Golovko(), ioId, inGolovko);
+        inGolovko := Null;
+      ELSE
+        if (inGolovko > 3) OR (inGolovko < -3)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Значение коэффициента <Головко Т.А.> должно быть в пределах от -3 до 3.';
+        END IF;
+
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Golovko(), ioId, inGolovko);
+      END IF;
     ELSE
       RAISE EXCEPTION 'Изменение коэффициента <Головко Т.А.> вам запрещено.';
     END IF;
+  ELSE
+    inGolovko := vbGolovko;
   END IF;
 
   IF COALESCE (inControlRGRatio, 0) <> COALESCE (vbControlRGRatio, 0) OR
     COALESCE (inControlRGNote, '') <> COALESCE (vbControlRGNote, '')
   THEN
-    IF 758920 = inSession::Integer OR 5168766 = inSession::Integer
+    IF 758920 = inSession::Integer OR 5168766 = inSession::Integer or
+       375661 = inSession::Integer OR 4183126 = inSession::Integer OR 8001630 = inSession::Integer
     THEN
-      if (inControlRGRatio > 3) OR (inControlRGRatio < -3)
+      IF inControlRGRatio = - 1000
       THEN
-        RAISE EXCEPTION 'Ошибка. Значение коэффициента <Контроль Т.В. и Т.А.> должно быть в пределах от -3 до 3.';
-      END IF;
+        IF EXISTS(SELECT MovementItemId FROM MovementItemFloat WHERE DescId = zc_MIFloat_ControlRGRatio() and MovementItemId = ioId)
+        THEN
+          DELETE FROM MovementItemFloat WHERE DescId = zc_MIFloat_ControlRGRatio() and MovementItemId = ioId;
+        END IF;
 
-      IF COALESCE (inControlRGNote, '') = ''
-      THEN
-        RAISE EXCEPTION 'Комментарий к коэффициенту <Контроль Т.В. и Т.А.> не заполнен.';
-      END IF;
+        IF EXISTS(SELECT MovementItemId FROM MovementItemString WHERE DescId = zc_MIString_ControlRGNote() and MovementItemId = ioId)
+        THEN
+          DELETE FROM MovementItemString WHERE DescId = zc_MIString_ControlRGNote() and MovementItemId = ioId;
+        END IF;
 
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ControlRGRatio(), ioId, inControlRGRatio);
-      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_ControlRGNote(), ioId, inControlRGNote);
+        inControlRGRatio := Null;
+        inControlRGNote := Null;
+      ELSE
+        if (inControlRGRatio > 3) OR (inControlRGRatio < -3)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Значение коэффициента <Контроль Т.В. и Т.А.> должно быть в пределах от -3 до 3.';
+        END IF;
+
+        IF COALESCE (inControlRGNote, '') = ''
+        THEN
+          RAISE EXCEPTION 'Комментарий к коэффициенту <Контроль Т.В. и Т.А.> не заполнен.';
+        END IF;
+
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ControlRGRatio(), ioId, inControlRGRatio);
+        PERFORM lpInsertUpdate_MovementItemString (zc_MIString_ControlRGNote(), ioId, inControlRGNote);
+      END IF;
     ELSE
       RAISE EXCEPTION 'Изменение коэффициента <Контроль Т.В. и Т.А.> вам запрещено.';
     END IF;
+  ELSE
+    inControlRGRatio := vbControlRGRatio;
   END IF;
 
   PERFORM lpUpdate_MovementItem_KPU (ioId);
@@ -618,6 +855,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.
+ 13.11.18         *
  12.11.18         *
  05.11.18         *
  05.10.18         *

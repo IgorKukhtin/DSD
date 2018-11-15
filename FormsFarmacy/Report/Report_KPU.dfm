@@ -223,7 +223,7 @@ inherited Report_KPUForm: TReport_KPUForm
             Position.RowIndex = 0
           end
           object MarkRatio: TcxGridDBBandedColumn
-            Caption = #1050#1086#1101#1092'.'
+            Caption = '1. '#1050#1086#1101#1092'.'
             DataBinding.FieldName = 'MarkRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -257,7 +257,7 @@ inherited Report_KPUForm: TReport_KPUForm
             Position.RowIndex = 0
           end
           object AverageCheckRatio: TcxGridDBBandedColumn
-            Caption = #1050#1086#1101#1092'.'
+            Caption = '2. '#1050#1086#1101#1092'.'
             DataBinding.FieldName = 'AverageCheckRatio'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 1
@@ -270,7 +270,7 @@ inherited Report_KPUForm: TReport_KPUForm
             Position.RowIndex = 0
           end
           object LateTimeRatio: TcxGridDBBandedColumn
-            Caption = #1086#1087#1086#1079#1076#1072#1085#1080#1103
+            Caption = #1086#1087#1086#1079#1076#1072#1085#1080#1103' 3. '#1050#1086#1101#1092'.'
             DataBinding.FieldName = 'LateTimeRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -302,7 +302,7 @@ inherited Report_KPUForm: TReport_KPUForm
             Position.RowIndex = 0
           end
           object FinancPlanRatio: TcxGridDBBandedColumn
-            Caption = #1050#1086#1101#1092'.'
+            Caption = '4. '#1050#1086#1101#1092'.'
             DataBinding.FieldName = 'FinancPlanRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -358,7 +358,7 @@ inherited Report_KPUForm: TReport_KPUForm
             Position.RowIndex = 0
           end
           object IT_ExamRatio: TcxGridDBBandedColumn
-            Caption = #1050#1086#1101#1092'.'
+            Caption = '5. '#1050#1086#1101#1092'.'
             DataBinding.FieldName = 'IT_ExamRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -368,7 +368,7 @@ inherited Report_KPUForm: TReport_KPUForm
             Position.RowIndex = 0
           end
           object ComplaintsRatio: TcxGridDBBandedColumn
-            Caption = #1050#1086#1101#1092'.'
+            Caption = '6. '#1050#1086#1101#1092'.'
             DataBinding.FieldName = 'ComplaintsRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -389,7 +389,7 @@ inherited Report_KPUForm: TReport_KPUForm
             Position.RowIndex = 0
           end
           object DirectorRatio: TcxGridDBBandedColumn
-            Caption = #1050#1086#1101#1092'.'
+            Caption = '7. '#1050#1086#1101#1092'.'
             DataBinding.FieldName = 'DirectorRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -440,7 +440,7 @@ inherited Report_KPUForm: TReport_KPUForm
             Position.RowIndex = 0
           end
           object CollegeITRatio: TcxGridDBBandedColumn
-            Caption = #1050#1086#1101#1092'.'
+            Caption = '8. '#1050#1086#1101#1092'.'
             DataBinding.FieldName = 'CollegeITRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -461,7 +461,7 @@ inherited Report_KPUForm: TReport_KPUForm
             Position.RowIndex = 0
           end
           object VIPDepartRatio: TcxGridDBBandedColumn
-            Caption = #1050#1086#1101#1092'.'
+            Caption = '9. '#1050#1086#1101#1092'.'
             DataBinding.FieldName = 'VIPDepartRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -502,7 +502,7 @@ inherited Report_KPUForm: TReport_KPUForm
             Position.RowIndex = 0
           end
           object ControlRGRatio: TcxGridDBBandedColumn
-            Caption = #1050#1086#1101#1092'.'
+            Caption = '10. '#1050#1086#1101#1092'.'
             DataBinding.FieldName = 'ControlRGRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -803,7 +803,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MarkRatio'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -812,7 +812,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Component = MasterCDS
         ComponentItem = 'AverageCheckRatio'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -820,7 +820,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'LateTimeRatio'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -828,7 +828,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'FinancPlanRatio'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -836,7 +836,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'IT_ExamRatio'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -844,7 +844,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ComplaintsRatio'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -853,7 +853,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Component = MasterCDS
         ComponentItem = 'ComplaintsNote'
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -861,7 +861,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'DirectorRatio'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -870,7 +870,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Component = MasterCDS
         ComponentItem = 'DirectorNote'
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -878,7 +878,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'YuriIT'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -886,7 +886,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OlegIT'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -894,7 +894,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MaximIT'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -902,7 +902,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CollegeITRatio'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -911,7 +911,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Component = MasterCDS
         ComponentItem = 'CollegeITNote'
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -919,7 +919,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'VIPDepartRatio'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -928,7 +928,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Component = MasterCDS
         ComponentItem = 'VIPDepartRatioNote'
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -936,7 +936,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Romanova'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -944,7 +944,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Golovko'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -952,7 +952,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ControlRGRatio'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -961,7 +961,7 @@ inherited Report_KPUForm: TReport_KPUForm
         Component = MasterCDS
         ComponentItem = 'ControlRGNote'
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

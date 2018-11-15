@@ -33,7 +33,8 @@ BEGIN
                                  AnalysisContainer.Price)::NUMERIC (16, 2))::TFloat                          AS Summa
                         FROM AnalysisContainer AS AnalysisContainer
                         GROUP BY AnalysisContainer.UnitID
-                               , AnalysisContainer.GoodsId),
+                               , AnalysisContainer.GoodsId
+                        ),
 
     tmpSaldoOut AS (
                         SELECT MovementItem.UnitID                                                       AS UnitID
@@ -45,43 +46,44 @@ BEGIN
                         GROUP BY MovementItem.UnitID
                                , MovementItem.GoodsId ),
 
-    tmContainerItem AS (
-      SELECT
-          AnalysisContainerItem.UnitID                       AS UnitID
-        , AnalysisContainerItem.GoodsId                      AS GoodsId
+    tmContainerItem AS (SELECT
+                            AnalysisContainerItem.UnitID                       AS UnitID
+                          , AnalysisContainerItem.GoodsId                      AS GoodsId
+                  
+                          , SUM(AnalysisContainerItem.AmountIncome)            AS AmountIncome             -- Приход
+                          , SUM(AnalysisContainerItem.AmountIncomeSumWith)     AS AmountIncomeSumWith
+                          , SUM(AnalysisContainerItem.AmountIncomeSum)         AS AmountIncomeSum
+                  
+                          , SUM(AnalysisContainerItem.AmountReturnOut)         AS AmountReturnOut          -- Возврат поставщику
+                          , SUM(AnalysisContainerItem.AmountReturnOutSum)      AS AmountReturnOutSum
+                  
+                          , SUM(AnalysisContainerItem.AmountCheck)             AS AmountCheck              -- Кассовый чек
+                          , SUM(AnalysisContainerItem.AmountCheckSumJuridical) AS AmountCheckSumJuridical
+                          , SUM(AnalysisContainerItem.AmountCheckSum)          AS AmountCheckSum
+                  
+                          , SUM(AnalysisContainerItem.AmountSale)              AS AmountSale               -- Продажа
+                          , SUM(AnalysisContainerItem.AmountSaleSumJuridical)  AS AmountSaleSumJuridical
+                          , SUM(AnalysisContainerItem.AmountSaleSum)           AS AmountSaleSum
+                  
+                          , SUM(AnalysisContainerItem.AmountInventory)         AS AmountInventory          -- Переучет
+                          , SUM(AnalysisContainerItem.AmountInventorySum)      AS AmountInventorySum
+                  
+                          , SUM(AnalysisContainerItem.AmountLoss)              AS AmountLoss               -- Списание
+                          , SUM(AnalysisContainerItem.AmountLossSum)           AS AmountLossSum
+                  
+                          , SUM(AnalysisContainerItem.AmountSend)              AS AmountSend               -- Перемещение
+                          , SUM(AnalysisContainerItem.AmountSendSum)           AS AmountSendSum
+                  
+                          , SUM(AnalysisContainerItem.Saldo)                   AS Saldo
+                          , SUM(AnalysisContainerItem.SaldoSum)                AS Summa
+                  
+                          , Count(*)                                           AS CountItem
+                        FROM AnalysisContainerItem AS AnalysisContainerItem
+                        WHERE AnalysisContainerItem.Operdate >= vbStartDate
+                          AND AnalysisContainerItem.Operdate <= vbEndDate
+                        GROUP BY AnalysisContainerItem.UnitID, AnalysisContainerItem.GoodsId
+                        )
 
-        , SUM(AnalysisContainerItem.AmountIncome)            AS AmountIncome             -- Приход
-        , SUM(AnalysisContainerItem.AmountIncomeSumWith)     AS AmountIncomeSumWith
-        , SUM(AnalysisContainerItem.AmountIncomeSum)         AS AmountIncomeSum
-
-        , SUM(AnalysisContainerItem.AmountReturnOut)         AS AmountReturnOut          -- Возврат поставщику
-        , SUM(AnalysisContainerItem.AmountReturnOutSum)      AS AmountReturnOutSum
-
-        , SUM(AnalysisContainerItem.AmountCheck)             AS AmountCheck              -- Кассовый чек
-        , SUM(AnalysisContainerItem.AmountCheckSumJuridical) AS AmountCheckSumJuridical
-        , SUM(AnalysisContainerItem.AmountCheckSum)          AS AmountCheckSum
-
-        , SUM(AnalysisContainerItem.AmountSale)              AS AmountSale               -- Продажа
-        , SUM(AnalysisContainerItem.AmountSaleSumJuridical)  AS AmountSaleSumJuridical
-        , SUM(AnalysisContainerItem.AmountSaleSum)           AS AmountSaleSum
-
-        , SUM(AnalysisContainerItem.AmountInventory)         AS AmountInventory          -- Переучет
-        , SUM(AnalysisContainerItem.AmountInventorySum)      AS AmountInventorySum
-
-        , SUM(AnalysisContainerItem.AmountLoss)              AS AmountLoss               -- Списание
-        , SUM(AnalysisContainerItem.AmountLossSum)           AS AmountLossSum
-
-        , SUM(AnalysisContainerItem.AmountSend)              AS AmountSend               -- Перемещение
-        , SUM(AnalysisContainerItem.AmountSendSum)           AS AmountSendSum
-
-        , SUM(AnalysisContainerItem.Saldo)                   AS Saldo
-        , SUM(AnalysisContainerItem.SaldoSum)                AS Summa
-
-        , Count(*)                                           AS CountItem
-      FROM AnalysisContainerItem AS AnalysisContainerItem
-      WHERE AnalysisContainerItem.Operdate >= vbStartDate
-        AND AnalysisContainerItem.Operdate <= vbEndDate
-      GROUP BY AnalysisContainerItem.UnitID, AnalysisContainerItem.GoodsId)
 
     SELECT
         Object_Parent.ValueData              AS ParentName
@@ -203,11 +205,17 @@ BEGIN
     SELECT DISTINCT
         Movement.InvNumber AS PromoID
       , Object_Goods.ObjectCode AS GoodsID
+      , COALESCE (MIBoolean_Checked.ValueData, FALSE)                                           ::Boolean  AS isChecked
+      , CASE WHEN COALESCE (MIBoolean_Checked.ValueData, FALSE) = TRUE THEN FALSE ELSE TRUE END ::Boolean  AS isReport
     FROM Movement
       INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
                                          AND MI_Goods.DescId = zc_MI_Master()
                                          AND MI_Goods.isErased = FALSE
       LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_Goods.ObjectId
+
+      LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                    ON MIBoolean_Checked.MovementItemId = MI_Goods.Id
+                                   AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
     WHERE Movement.StatusId = zc_Enum_Status_Complete()
       AND Movement.DescId = zc_Movement_Promo();
     RETURN NEXT cur4;
@@ -219,8 +227,9 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Шаблий О.В.
- 24.05.18        *
+             Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Шаблий О.В.
+ 12.11.18       *               
+ 24.05.18                                                      *
 */
 
 -- тест

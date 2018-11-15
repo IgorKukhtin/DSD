@@ -69,6 +69,10 @@ type
     edPresent2_Summ: TcxCurrencyEdit;
     edPresent1_Prof: TcxCurrencyEdit;
     edPresent2_Prof: TcxCurrencyEdit;
+    cxLabel15: TcxLabel;
+    edLineFabrica: TcxButtonEdit;
+    cbLineFabrica: TcxCheckBox;
+    GuidesLineFabrica: TdsdGuides;
   private
     { Private declarations }
   public

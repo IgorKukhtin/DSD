@@ -32,10 +32,22 @@ inherited ListDiffForm: TListDiffForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = RemainsInUnit
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = MCS
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = Summa
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Income_Amount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -52,6 +64,21 @@ inherited ListDiffForm: TListDiffForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsInUnit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = MCS
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Income_Amount
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -215,6 +242,56 @@ inherited ListDiffForm: TListDiffForm
             HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1077#1088#1077#1085#1077#1089#1077#1085#1086' '#1074#1086' '#1074#1085'.'#1079#1072#1082#1072#1079')'
             Options.Editing = False
             Width = 101
+          end
+          object RemainsInUnit: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'RemainsInUnit'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1077#1082#1091#1097#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080
+            Options.Editing = False
+            Width = 61
+          end
+          object Income_Amount: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076#1099' '#1089#1077#1075#1086#1076#1085#1103
+            DataBinding.FieldName = 'Income_Amount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object MCS: TcxGridDBColumn
+            Caption = #1053#1058#1047
+            DataBinding.FieldName = 'MCS'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 37
+          end
+          object MCSNotRecalc: TcxGridDBColumn
+            Caption = #1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072
+            DataBinding.FieldName = 'MCSNotRecalc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077' '#1087#1077#1088#1077#1089#1095#1080#1090#1099#1074#1072#1090#1100' '#1053#1058#1047
+            Options.Editing = False
+            Width = 59
+          end
+          object MCSIsClose: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' '#1082#1086#1076
+            DataBinding.FieldName = 'MCSIsClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 44
+          end
+          object IsClose: TcxGridDBColumn
+            Caption = #1047#1072#1082#1088#1099#1090' '#1082#1086#1076' '#1087#1086' '#1074#1089#1077#1081' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'IsClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 81
           end
         end
       end
@@ -548,11 +625,9 @@ inherited ListDiffForm: TListDiffForm
     SummaryItemList = <
       item
         Param.Value = Null
-        Param.Component = FormParams
-        Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 5
+        DataSummaryItemIndex = 0
       end>
     SearchAsFilter = False
     Left = 694
@@ -612,8 +687,8 @@ inherited ListDiffForm: TListDiffForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 272
-    Top = 440
+    Left = 296
+    Top = 432
   end
   inherited StatusGuides: TdsdGuides
     Left = 56
@@ -1032,7 +1107,7 @@ inherited ListDiffForm: TListDiffForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 72
+    Left = 48
     Top = 376
   end
 end

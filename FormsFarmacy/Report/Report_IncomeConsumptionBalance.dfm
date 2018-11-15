@@ -113,6 +113,19 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
             Options.Editing = False
             Width = 195
           end
+          object cxgChoiceGoodsDBTableViewColumn3: TcxGridDBColumn
+            Caption = #1054#1090#1084#1077#1090#1082#1072' '#1076#1083#1103' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+            DataBinding.FieldName = 'isChecked'
+            HeaderAlignmentHorz = taCenter
+            HeaderHint = #1054#1090#1084#1077#1090#1082#1072' '#1076#1083#1103' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+            Width = 50
+          end
+          object cxgChoiceGoodsDBTableViewColumn4: TcxGridDBColumn
+            Caption = #1054#1090#1084#1077#1090#1082#1072' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072
+            DataBinding.FieldName = 'isReport'
+            HeaderAlignmentHorz = taCenter
+            Width = 50
+          end
         end
         object cxgChoiceGoodsLevel: TcxGridLevel
           Caption = #1052#1077#1076#1080#1082#1072#1084#1077#1085#1090#1099
@@ -1043,8 +1056,8 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 384
-    Top = 56
+    Left = 688
+    Top = 8
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null

@@ -38,12 +38,12 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
       ExplicitWidth = 20
     end
     object cxLabel3: TcxLabel
-      Left = 141
+      Left = 120
       Top = 5
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
-      Left = 235
+      Left = 209
       Top = 5
       Properties.Buttons = <
         item
@@ -122,7 +122,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
       Width = 105
     end
     object cbUnit: TcxCheckBox
-      Left = 424
+      Left = 397
       Top = 5
       Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1087#1086' '#1057#1087#1080#1089#1082#1091
@@ -185,6 +185,17 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
       ShowHint = True
       TabOrder = 18
       Width = 119
+    end
+    object cbLineFabrica: TcxCheckBox
+      Left = 397
+      Top = 33
+      Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1051#1080#1085#1080#1102
+      ParentShowHint = False
+      Properties.ReadOnly = False
+      ShowHint = True
+      TabOrder = 19
+      Width = 107
     end
   end
   inherited PageControl: TcxPageControl [1]
@@ -458,15 +469,22 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             Options.Editing = False
             Width = 45
           end
+          object LineFabricaName: TcxGridDBColumn
+            Caption = #1051#1080#1085#1080#1103
+            DataBinding.FieldName = 'LineFabricaName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           object Debt_Amount: TcxGridDBColumn
-            Caption = #1054#1089#1090'. '#1076#1086#1083#1075
+            Caption = #1054#1089#1090'. '#1082#1086#1083'. '
             DataBinding.FieldName = 'Debt_Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' - '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082
             Width = 55
           end
           object Income_Amount: TcxGridDBColumn
@@ -482,13 +500,13 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             Width = 55
           end
           object Sale_Amount: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076'. '#1050#1086#1083'.'
+            Caption = #1055#1088#1086#1076'. '#1050#1086#1083'. +'#1044
             DataBinding.FieldName = 'Sale_Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078#1072
+            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078#1072' + '#1076#1086#1083#1075#1080
             Width = 58
           end
           object Tax_Amount: TcxGridDBColumn
@@ -882,6 +900,16 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
               Format = ',0.##'
               Kind = skSum
               Column = cxSale_Summ_10204
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = cxDebt_Amount
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = cxIncome_Summ
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -967,6 +995,16 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
               Format = ',0.##'
               Kind = skSum
               Column = cxSale_SummCost_diff
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = cxDebt_Amount
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = cxIncome_Summ
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1038,15 +1076,22 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             Options.Editing = False
             Width = 45
           end
+          object cxLineFabricaName: TcxGridDBColumn
+            Caption = #1051#1080#1085#1080#1103
+            DataBinding.FieldName = 'LineFabricaName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           object cxDebt_Amount: TcxGridDBColumn
-            Caption = #1054#1089#1090'. '#1076#1086#1083#1075
+            Caption = #1054#1089#1090'. '#1082#1086#1083'.'
             DataBinding.FieldName = 'Debt_Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' - '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082
             Width = 55
           end
           object cxIncome_Amount: TcxGridDBColumn
@@ -1062,13 +1107,13 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             Width = 55
           end
           object cxSale_Amount: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076'. '#1050#1086#1083'.'
+            Caption = #1055#1088#1086#1076'. '#1050#1086#1083'. +'#1044
             DataBinding.FieldName = 'Sale_Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078#1072
+            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078#1072' + '#1076#1086#1083#1075#1080
             Width = 58
           end
           object cxTax_Amount: TcxGridDBColumn
@@ -1465,6 +1510,16 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
               Format = ',0.##'
               Kind = skSum
               Column = chSale_SummCost_diff
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = chDebt_Amount
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = chIncome_Summ
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -1550,6 +1605,16 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
               Format = ',0.##'
               Kind = skSum
               Column = chSale_SummCost_diff
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = chDebt_Amount
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = chIncome_Summ
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1621,15 +1686,22 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             Options.Editing = False
             Width = 45
           end
+          object chLineFabricaName: TcxGridDBColumn
+            Caption = #1051#1080#1085#1080#1103
+            DataBinding.FieldName = 'LineFabricaName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           object chDebt_Amount: TcxGridDBColumn
-            Caption = #1054#1089#1090'. '#1076#1086#1083#1075
+            Caption = #1054#1089#1090'. '#1082#1086#1083'.'
             DataBinding.FieldName = 'Debt_Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' - '#1076#1086#1083#1075#1080' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082
             Width = 55
           end
           object chIncome_Amount: TcxGridDBColumn
@@ -1645,13 +1717,13 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             Width = 55
           end
           object chSale_Amount: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076'. '#1050#1086#1083'.'
+            Caption = #1055#1088#1086#1076'. '#1050#1086#1083'. +'#1044
             DataBinding.FieldName = 'Sale_Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078#1072
+            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078#1072' + '#1076#1086#1083#1075#1080
             Width = 58
           end
           object chTax_Amount: TcxGridDBColumn
@@ -1905,12 +1977,12 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
     end
   end
   object cxLabel4: TcxLabel [2]
-    Left = 141
+    Left = 120
     Top = 59
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072':'
   end
   object edBrand: TcxButtonEdit [3]
-    Left = 235
+    Left = 209
     Top = 59
     Properties.Buttons = <
       item
@@ -1923,12 +1995,12 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
     Width = 185
   end
   object cxLabel5: TcxLabel [4]
-    Left = 141
+    Left = 120
     Top = 33
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
   end
   object edPartner: TcxButtonEdit [5]
-    Left = 235
+    Left = 209
     Top = 32
     Properties.Buttons = <
       item
@@ -2012,6 +2084,24 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
     BiDiMode = bdRightToLeft
     ParentBiDiMode = False
     Width = 25
+  end
+  object cxLabel15: TcxLabel [16]
+    Left = 508
+    Top = 60
+    Caption = #1051#1080#1085#1080#1103':'
+  end
+  object edLineFabrica: TcxButtonEdit [17]
+    Left = 549
+    Top = 59
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    Style.Color = clWindow
+    TabOrder = 21
+    Width = 161
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -2293,6 +2383,31 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
           Value = Null
           Component = cbIsSumm
           DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isLineFabrica'
+          Value = Null
+          Component = cbLineFabrica
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LineFabricaId'
+          Value = Null
+          Component = GuidesLineFabrica
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LineFabricaName'
+          Value = Null
+          Component = GuidesLineFabrica
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -2807,6 +2922,14 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inLineFabricaId'
+        Value = Null
+        Component = GuidesLineFabrica
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inStartYear'
         Value = Null
         Component = GuidesStartYear
@@ -2906,6 +3029,14 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
         Name = 'inIsProf'
         Value = Null
         Component = cbIsProf
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLineFabrica'
+        Value = Null
+        Component = cbLineFabrica
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3150,8 +3281,8 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 398
-    Top = 182
+    Left = 406
+    Top = 174
   end
   object GuidesPeriod: TdsdGuides
     KeyField = 'Id'
@@ -3181,7 +3312,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 662
+    Left = 710
     Top = 186
   end
   object GuidesEndYear: TdsdGuides
@@ -3195,13 +3326,24 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PeriodYear'
+        Name = 'Key'
         Value = ''
-        Component = edEndYear
+        Component = GuidesEndYear
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = Null
+        Component = GuidesEndYear
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 726
-    Top = 194
+    Left = 646
+    Top = 186
   end
   object GuidesStartYear: TdsdGuides
     KeyField = 'Id'
@@ -3314,5 +3456,36 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
     SummaryItemList = <>
     Left = 568
     Top = 520
+  end
+  object GuidesLineFabrica: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLineFabrica
+    Key = '0'
+    FormNameParam.Value = 'TLineFabricaForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TLineFabricaForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesLineFabrica
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesLineFabrica
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 612
+    Top = 56
   end
 end

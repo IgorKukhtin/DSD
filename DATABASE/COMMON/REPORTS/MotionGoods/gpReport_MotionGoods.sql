@@ -111,6 +111,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , SummReturnIn_40208 TFloat
              , SummLoss TFloat
              , SummInventory TFloat
+             , SummInventory_Basis TFloat
              , SummInventory_RePrice TFloat
              , SummProductionIn TFloat
              , SummProductionOut TFloat
@@ -348,7 +349,8 @@ BEGIN
                             , COALESCE (tmpReport_summ.SummReturnInReal_40208, 0) AS SummReturnInReal_40208
 
                             , COALESCE (tmpReport_summ.SummLoss, 0)              AS SummLoss             
-                            , COALESCE (tmpReport_summ.SummInventory, 0)         AS SummInventory        
+                            , COALESCE (tmpReport_summ.SummInventory, 0)         AS SummInventory
+                            , COALESCE (tmpReport_summ.SummInventory_Basis, 0)   AS SummInventory_Basis  
                             , COALESCE (tmpReport_summ.SummInventory_RePrice, 0) AS SummInventory_RePrice
 
                             , COALESCE (tmpReport_summ.SummProductionIn, 0)  AS SummProductionIn 
@@ -491,6 +493,7 @@ BEGIN
                                        , SUM (tmpMIContainer_all.SummReturnIn_40208)  AS SummReturnIn_40208
                                        , SUM (tmpMIContainer_all.SummLoss)            AS SummLoss
                                        , SUM (tmpMIContainer_all.SummInventory)       AS SummInventory
+                                       , SUM (tmpMIContainer_all.SummInventory_Basis)   AS SummInventory_Basis
                                        , SUM (tmpMIContainer_all.SummInventory_RePrice) AS SummInventory_RePrice
                                        , SUM (tmpMIContainer_all.SummProductionIn)    AS SummProductionIn
                                        , SUM (tmpMIContainer_all.SummProductionOut)   AS SummProductionOut
@@ -676,6 +679,7 @@ BEGIN
         , CAST (tmpMIContainer_group.SummReturnIn_40208   AS TFloat) AS SummReturnIn_40208
         , CAST (tmpMIContainer_group.SummLoss             AS TFloat) AS SummLoss
         , CAST (tmpMIContainer_group.SummInventory        AS TFloat) AS SummInventory
+        , CAST (tmpMIContainer_group.SummInventory_Basis  AS TFloat) AS SummInventory_Basis
         , CAST (tmpMIContainer_group.SummInventory_RePrice AS TFloat) AS SummInventory_RePrice
         , CAST (tmpMIContainer_group.SummProductionIn     AS TFloat) AS SummProductionIn
         , CAST (tmpMIContainer_group.SummProductionOut    AS TFloat) AS SummProductionOut
@@ -880,6 +884,7 @@ ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 14.11.18         *
  19.10.18         *
  11.07.15                                        * add GoodsKindName_complete
  09.05.15                                        *

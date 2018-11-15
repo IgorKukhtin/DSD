@@ -38,6 +38,7 @@ inherited CashCloseDialogForm: TCashCloseDialogForm
       Left = 16
       Top = 19
       ParentFont = False
+      Properties.DecimalPlaces = 1
       Properties.DisplayFormat = ',0.00'
       Properties.OnChange = edSalerCashPropertiesChange
       Style.Font.Charset = DEFAULT_CHARSET
@@ -146,6 +147,7 @@ inherited CashCloseDialogForm: TCashCloseDialogForm
       Left = 16
       Top = 19
       ParentFont = False
+      Properties.DecimalPlaces = 1
       Properties.DisplayFormat = ',0.00'
       Properties.OnChange = edSalerCashPropertiesChange
       Style.Font.Charset = DEFAULT_CHARSET

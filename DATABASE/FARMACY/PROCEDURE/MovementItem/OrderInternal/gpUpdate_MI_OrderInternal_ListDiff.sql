@@ -18,8 +18,8 @@ BEGIN
      vbUserId := inSession;
 
      -- строки заказа
-     CREATE TEMP TABLE _tmp_MI (Id integer, GoodsId Integer, ListDiffAmount TFloat, AmountManual TFloat) ON COMMIT DROP;
-       INSERT INTO _tmp_MI (Id, GoodsId, ListDiffAmount, AmountManual)
+     CREATE TEMP TABLE _tmp_MI (Id integer, GoodsId Integer, ListDiffAmount TFloat, AmountManual TFloat, Comment TVarChar) ON COMMIT DROP;
+       INSERT INTO _tmp_MI (Id, GoodsId, ListDiffAmount, AmountManual, Comment)
              WITH
                   tmpMI AS (SELECT MovementItem.Id
                                  , MovementItem.ObjectId AS GoodsId
@@ -42,14 +42,21 @@ BEGIN
                                                 AND MovementItemFloat.DescId = zc_MIFloat_AmountManual()
                                                 AND COALESCE (MovementItemFloat.ValueData, 0) <> 0 
                                               )
+                , tmpMI_String AS (SELECT MovementItemString.*
+                                    FROM MovementItemString
+                                    WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                      AND MovementItemString.DescId = zc_MIString_Comment()
+                                  )
                 
              SELECT tmpMI.Id
                   , tmpMI.GoodsId
-                  , COALESCE (MIFloat_ListDiff.ValueData, 0)        AS ListDiffAmount
-                  , COALESCE (MIFloat_AmountManual.ValueData, 0) AS AmountManual
+                  , COALESCE (MIFloat_ListDiff.ValueData, 0)         AS ListDiffAmount
+                  , COALESCE (MIFloat_AmountManual.ValueData, 0)     AS AmountManual
+                  , COALESCE (tmpMI_String.ValueData, '') ::TVarChar AS Comment
              FROM tmpMI
                   LEFT JOIN tmpMIFloat_ListDiff     AS MIFloat_ListDiff     ON MIFloat_ListDiff.MovementItemId = tmpMI.Id
                   LEFT JOIN tmpMIFloat_AmountManual AS MIFloat_AmountManual ON MIFloat_AmountManual.MovementItemId = tmpMI.Id
+                  LEFT JOIN tmpMI_String            AS tmpMI_String         ON tmpMI_String.MovementItemId = tmpMI.Id
                   ;
 
      -- Данные из док. отказ
@@ -105,13 +112,20 @@ BEGIN
                                                      , inGoodsId        := COALESCE ( _tmp_MI.GoodsId, tmpListDiff_MI.GoodsId)
                                                      , inAmountManual   := (COALESCE (_tmp_MI.AmountManual,0) + COALESCE (tmpListDiff_MI.Amount, 0) ) ::TFloat
                                                      , inListDiffAmount := (COALESCE (_tmp_MI.ListDiffAmount,0) + COALESCE (tmpListDiff_MI.Amount, 0) )::TFloat
-                                                     , inComment        := COALESCE (tmpListDiff_MI.Comment, '') :: TVarChar
+
+                                                     , inComment        := CASE WHEN COALESCE (_tmp_MI.Comment, '') <> '' 
+                                                                                THEN CASE WHEN COALESCE (tmpListDiff_MI.Comment, '') <> '' 
+                                                                                          THEN COALESCE (_tmp_MI.Comment, '') ||', '||COALESCE (tmpListDiff_MI.Comment, '')
+                                                                                          ELSE COALESCE (_tmp_MI.Comment, '')
+                                                                                     END 
+                                                                                ELSE COALESCE (tmpListDiff_MI.Comment, '')
+                                                                           END :: TVarChar
                                                      , inUserId         := vbUserId
                                                      )
      FROM _tmp_MI
           FULL JOIN (SELECT _tmpListDiff_MI.GoodsId      AS GoodsId
                           , SUM (_tmpListDiff_MI.Amount) AS Amount 
-                          , STRING_AGG (_tmpListDiff_MI.Comment, ';') :: TVarChar AS Comment
+                          , STRING_AGG (DISTINCT _tmpListDiff_MI.Comment, ';') :: TVarChar AS Comment
                      FROM _tmpListDiff_MI
                      GROUP BY _tmpListDiff_MI.GoodsId
                      ) AS tmpListDiff_MI ON tmpListDiff_MI.GoodsId = _tmp_MI.GoodsId

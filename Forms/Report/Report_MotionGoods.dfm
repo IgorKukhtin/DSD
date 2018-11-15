@@ -2,7 +2,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   Left = 0
   Top = 0
   Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 670
+  ClientHeight = 598
   ClientWidth = 1344
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,9 +22,10 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Left = 0
     Top = 80
     Width = 1344
-    Height = 590
+    Height = 518
     Align = alClient
     TabOrder = 0
+    ExplicitHeight = 590
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -350,6 +351,11 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Format = ',0.####'
           Kind = skSum
           Column = CountSendOnPriceIn_40200_Weight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummInventory_Basis
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -671,6 +677,11 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Format = ',0.####'
           Kind = skSum
           Column = CountSendOnPriceIn_40200_Weight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummInventory_Basis
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -1717,6 +1728,19 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object SummInventory_Basis: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1091#1073#1099#1083#1100' '#1087#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1072#1081#1089#1072
+        DataBinding.FieldName = 'SummInventory_Basis'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1091#1084#1084#1072' (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'. '#1087#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1072#1081#1089#1072
         Options.Editing = False
         Width = 75
       end
