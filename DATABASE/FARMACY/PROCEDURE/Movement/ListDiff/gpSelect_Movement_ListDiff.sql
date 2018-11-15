@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , TotalSumm TFloat
              , Count_free  TFloat
              , Count_Order TFloat
+             , Summa_free  TFloat
               )
 
 AS
@@ -62,6 +63,8 @@ BEGIN
         , tmpData_MI AS (SELECT MovementItem.MovementId
                               , SUM (CASE WHEN COALESCE (MIFloat_OrderId.ValueData, 0) = 0  THEN MovementItem.Amount ELSE 0 END) AS Count_free
                               , SUM (CASE WHEN COALESCE (MIFloat_OrderId.ValueData, 0) <> 0 THEN MovementItem.Amount ELSE 0 END) AS Count_Order
+                              , SUM (MI_Float_Price.ValueData * 
+                                     CASE WHEN COALESCE (MIFloat_OrderId.ValueData, 0) = 0  THEN MovementItem.Amount ELSE 0 END) AS Summa_free
                          FROM tmpMovement
                               INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
                                                      AND MovementItem.DescId     = zc_MI_Master()
@@ -69,6 +72,9 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_OrderId
                                                           ON MIFloat_OrderId.MovementItemId = MovementItem.Id
                                                          AND MIFloat_OrderId.DescId         = zc_MIFloat_MovementId()
+                              LEFT JOIN MovementItemFloat AS MI_Float_Price
+                                                          ON MI_Float_Price.MovementItemId = MovementItem.Id
+                                                         AND MI_Float_Price.DescId = zc_MIFloat_Price()                           
                          GROUP BY MovementItem.MovementId
                          )
        SELECT
@@ -86,6 +92,7 @@ BEGIN
            
            , tmpData_MI.Count_free  :: TFloat
            , tmpData_MI.Count_Order :: TFloat
+           , tmpData_MI.Summa_free  :: TFloat
 
        FROM tmpMovement AS Movement
 

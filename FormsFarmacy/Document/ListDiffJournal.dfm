@@ -47,6 +47,11 @@ inherited ListDiffJournalForm: TListDiffJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = Count_Order
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summa_free
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -67,6 +72,11 @@ inherited ListDiffJournalForm: TListDiffJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = Count_Order
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summa_free
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -120,15 +130,15 @@ inherited ListDiffJournalForm: TListDiffJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object Count_free: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1085#1077' '#1079#1072#1082#1072#1079#1072
-            DataBinding.FieldName = 'Count_free'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object TotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 74
+            Options.Editing = False
+            Width = 97
           end
           object Count_Order: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1079#1072#1082#1072#1079#1077
@@ -140,15 +150,25 @@ inherited ListDiffJournalForm: TListDiffJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 72
           end
-          object TotalSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'TotalSumm'
-            PropertiesClassName = 'TcxCalcEditProperties'
-            Properties.DisplayFormat = ',0.00'
+          object Count_free: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1085#1077' '#1079#1072#1082#1072#1079#1072
+            DataBinding.FieldName = 'Count_free'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 97
+            Width = 74
+          end
+          object Summa_free: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074#1085#1077' '#1079#1072#1082#1072#1079#1072
+            DataBinding.FieldName = 'Summa_free'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 74
           end
         end
       end
