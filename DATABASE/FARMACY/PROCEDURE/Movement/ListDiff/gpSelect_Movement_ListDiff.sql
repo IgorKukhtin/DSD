@@ -14,6 +14,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , JuridicalName TVarChar
              , TotalCount TFloat
              , TotalSumm TFloat
+             , Count_free  TFloat
+             , Count_Order TFloat
               )
 
 AS
@@ -44,7 +46,31 @@ BEGIN
                         WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                         )
 
+        , tmpMovement AS (SELECT Movement.*
+                               , MovementLinkObject_Unit.ObjectId AS UnitId
+                               , tmpUnit.JuridicalId
+                          FROM tmpStatus
+                               INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                                  AND Movement.DescId = zc_Movement_ListDiff() 
+                                                  AND Movement.StatusId = tmpStatus.StatusId
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                           AND MovementLinkObject_UNit.DescId = zc_MovementLinkObject_Unit()
+                               INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
+                          )
 
+        , tmpData_MI AS (SELECT MovementItem.MovementId
+                              , SUM (CASE WHEN COALESCE (MIFloat_OrderId.ValueData, 0) = 0  THEN MovementItem.Amount ELSE 0 END) AS Count_free
+                              , SUM (CASE WHEN COALESCE (MIFloat_OrderId.ValueData, 0) <> 0 THEN MovementItem.Amount ELSE 0 END) AS Count_Order
+                         FROM tmpMovement
+                              INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
+                                                     AND MovementItem.DescId     = zc_MI_Master()
+                                                     AND MovementItem.isErased   = FALSE
+                              LEFT JOIN MovementItemFloat AS MIFloat_OrderId
+                                                          ON MIFloat_OrderId.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_OrderId.DescId         = zc_MIFloat_MovementId()
+                         GROUP BY MovementItem.MovementId
+                         )
        SELECT
              Movement.Id                        AS Id
            , Movement.InvNumber                 AS InvNumber
@@ -57,20 +83,11 @@ BEGIN
 
            , MovementFloat_TotalCount.ValueData AS TotalCount
            , MovementFloat_TotalSumm.ValueData  AS TotalSumm
+           
+           , tmpData_MI.Count_free  :: TFloat
+           , tmpData_MI.Count_Order :: TFloat
 
-       FROM (SELECT Movement.*
-                  , MovementLinkObject_Unit.ObjectId AS UnitId
-                  , tmpUnit.JuridicalId
-             FROM tmpStatus
-                  INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
-                                     AND Movement.DescId = zc_Movement_ListDiff() 
-                                     AND Movement.StatusId = tmpStatus.StatusId
-                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                               ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                              AND MovementLinkObject_UNit.DescId = zc_MovementLinkObject_Unit()
-                  INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
-
-            ) AS Movement
+       FROM tmpMovement AS Movement
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
@@ -82,6 +99,8 @@ BEGIN
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement.UnitId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Movement.JuridicalId
+            
+            LEFT JOIN tmpData_MI ON tmpData_MI.MovementId = Movement.Id
             
             ;
 END;

@@ -37,6 +37,16 @@ inherited ListDiffJournalForm: TListDiffJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count_free
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count_Order
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -47,6 +57,16 @@ inherited ListDiffJournalForm: TListDiffJournalForm
               Format = ',0.00'
               Kind = skSum
               Column = TotalSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count_free
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count_Order
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -64,23 +84,16 @@ inherited ListDiffJournalForm: TListDiffJournalForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
-            Width = 88
+            Width = 56
           end
           inherited colInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
-            Width = 107
+            Width = 70
           end
           inherited colOperDate: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
-            Width = 119
-          end
-          object UnitName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'UnitName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 329
+            Width = 71
           end
           object JuridicalName: TcxGridDBColumn
             Caption = #1063#1055
@@ -90,6 +103,13 @@ inherited ListDiffJournalForm: TListDiffJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 123
           end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 282
+          end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
@@ -98,7 +118,27 @@ inherited ListDiffJournalForm: TListDiffJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 92
+            Width = 60
+          end
+          object Count_free: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1085#1077' '#1079#1072#1082#1072#1079#1072
+            DataBinding.FieldName = 'Count_free'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 74
+          end
+          object Count_Order: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1079#1072#1082#1072#1079#1077
+            DataBinding.FieldName = 'Count_Order'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 72
           end
           object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
