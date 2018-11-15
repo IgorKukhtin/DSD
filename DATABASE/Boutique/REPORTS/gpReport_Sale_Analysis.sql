@@ -214,7 +214,8 @@ BEGIN
                                       )
          -- Остаток
         , tmpRemains AS (SELECT tmpPartionGoods.PartnerId                                                   AS PartnerId
-                              , SUM (CASE WHEN CLO_Client.ContainerId > 0 THEN 0 ELSE Container.Amount END) AS Amount
+                              --, SUM (CASE WHEN CLO_Client.ContainerId > 0 THEN 0 ELSE Container.Amount END) AS Amount  --IS NULL
+                              , SUM (CASE WHEN CLO_Client.ContainerId IS NULL THEN Container.Amount ELSE 0 END) AS Amount
                               , SUM (Container.Amount)                                                      AS Amount_real
                              -- , SUM (CASE WHEN CLO_Client.ContainerId > 0 THEN 0 ELSE Container.Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END END)   AS Amount_Summ
                          FROM tmpObject_PartionGoods AS tmpPartionGoods
@@ -244,11 +245,12 @@ BEGIN
                                 , (Object_PartionGoods.Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END) AS Income_Summ
 
                                   -- Кол-во: Долг
-                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END) AS Debt_Amount
+                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN COALESCE (MIContainer.Amount,0) ELSE 0 END) AS Debt_Amount
 
                                   -- Кол-во: Продажа - возврат
                                 , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIContainer.Amount ELSE 0 END
-                                     - CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount > 0 AND MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN 1 * MIContainer.Amount ELSE 0 END) :: TFloat AS Sale_Amount
+                                     - CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount > 0 AND MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN 1 * MIContainer.Amount ELSE 0 END
+                                       )    :: TFloat AS Sale_Amount
                                      
                                   -- С\с продажа - calc из валюты в Грн
                                 , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
@@ -433,8 +435,10 @@ BEGIN
              , tmpPartionGoods_Income.Income_Summ          :: TFloat
                                             
              --, tmpData.Debt_Amount          :: TFloat
-             , tmpRemains.Amount_Real            :: TFloat   AS Debt_Amount
-             , tmpData.Sale_Amount          :: TFloat
+             -- остаток
+             , tmpRemains.Amount            :: TFloat   AS Debt_Amount  --Amount_Real
+             -- продажа - возврат + долг
+             , (COALESCE (tmpData.Sale_Amount,0) + COALESCE (tmpData.Debt_Amount,0)) :: TFloat AS Sale_Amount 
 
                -- Сумма продажа
              , tmpData.Sale_Summ            :: TFloat

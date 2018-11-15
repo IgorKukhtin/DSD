@@ -12,6 +12,7 @@ $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbContractId Integer;
   DECLARE vbJuridicalId Integer;
+  DECLARE vbStatusId Integer;
   DECLARE vbUnitName TVarChar;
   DECLARE vbSubject TVarChar;
   DECLARE vbMainJuridicalName TVarChar;
@@ -20,19 +21,26 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
    vbUserId := lpGetUserBySession (inSession);
-
-
+  
    -- определяем
    SELECT FromId
-        , REPLACE (REPLACE (ToName, '/', '_'), '\', '_'), Object_Unit_View.JuridicalName
+        , REPLACE (REPLACE (ToName, '/', '_'), '\', '_')
+        , Object_Unit_View.JuridicalName
+        , StatusId
           INTO vbJuridicalId
              , vbUnitName
              , vbMainJuridicalName
+             , vbStatusId
    FROM Movement_OrderExternal_View 
         LEFT JOIN Object_Unit_View ON Object_Unit_View.Id = ToId
    WHERE Movement_OrderExternal_View.Id = inMovementId;
 
-       
+   -- проверка на проведение, проведенный заказ не отправлять
+   IF vbStatusId = zc_Enum_Status_Complete()
+   THEN
+       RAISE EXCEPTION 'Отправка запрещена, документ проведен.';
+   END IF; 
+          
    -- Оптима
    IF vbJuridicalId = 59611
    THEN 
