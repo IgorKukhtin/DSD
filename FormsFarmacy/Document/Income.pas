@@ -162,6 +162,8 @@ type
     actShowMessage: TShowMessageAction;
     spLinkCheck: TdsdStoredProc;
     actLinkCheck: TdsdExecStoredProc;
+    spCheckObject: TdsdStoredProc;
+    actCheckObject: TdsdExecStoredProc;
   private
     { Private declarations }
   public
