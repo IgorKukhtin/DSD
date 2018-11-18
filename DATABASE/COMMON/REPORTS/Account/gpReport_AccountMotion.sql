@@ -23,7 +23,7 @@ CREATE OR REPLACE FUNCTION gpReport_AccountMotion (
     IN inIsDetail               Boolean ,
     IN inSession                TVarChar    -- сессия пользователя
 )
-RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, MovementDescName TVarChar
+RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, OperDatePartner TDateTime, MovementDescName TVarChar
               , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
 
               , JuridicalBasisCode Integer, JuridicalBasisName TVarChar
@@ -105,4 +105,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_AccountMotion (inStartDate:= '01.12.2015', inEndDate:= '31.12.2015', inAccountGroupId:= 0, inAccountDirectionId:= 0, inInfoMoneyId:= 0, inAccountId:= 9128, inBusinessId:= 0, inProfitLossGroupId:= 0,  inProfitLossDirectionId:= 0,  inProfitLossId:= 0,  inBranchId:= 0, inMovementDescId:=0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_AccountMotion (inStartDate := ('01.11.2018')::TDateTime , inEndDate := ('01.11.2018')::TDateTime , inAccountGroupId := 9015 , inAccountDirectionId := 9034 , inInfoMoneyId := 0 , inAccountId := 0 , inBusinessId := 0 , inProfitLossGroupId := 0 , inProfitLossDirectionId := 0 , inProfitLossId := 0 , inBranchId := 0 , inMovementDescId := 0 , inIsMovement := 'False' , inIsGoods := 'False' , inIsGoodsKind := 'False' , inIsDetail := False, inSession:= zfCalc_UserAdmin());

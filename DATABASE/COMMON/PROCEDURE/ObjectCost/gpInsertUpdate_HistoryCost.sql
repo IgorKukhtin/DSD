@@ -39,13 +39,13 @@ BEGIN
           return;
      END IF;*/
 
-     -- IF inBranchId <> 0 -- OR 1 = 1
-     -- THEN RETURN;
-     -- END IF;
+
+     -- IF inBranchId <> 8379 THEN RETURN; END IF;
+     -- IF inBranchId <> 0 THEN RETURN; END IF;
+
 
      vbItearationCount_err:= 5;
 
--- IF inBranchId <> 8379 THEN RETURN; END IF;
 
 -- !!!ВРЕМЕННО!!!
 -- IF inStartDate = '01.01.2017' THEN inItearationCount:= 100; END IF;
@@ -197,6 +197,7 @@ end if;
                                     )
                              )
        -- , tmpAccount_60000 AS (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE Object_Account_View.AccountGroupId = zc_Enum_AccountGroup_60000()) -- Прибыль будущих периодов
+
 
      INSERT INTO _tmpMaster (ContainerId, UnitId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, calcCount_external, calcSumm_external, OutCount, OutSumm)
         SELECT COALESCE (Container_Summ.Id, tmpContainer.ContainerId) AS ContainerId
@@ -424,6 +425,23 @@ end if;
                       ELSE FALSE
                  END
        ;
+       
+     -- !!!Оптимизация!!!
+     ANALYZE _tmpMaster;
+
+     -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
+     INSERT INTO ObjectProtocol (ObjectId, OperDate, UserId, ProtocolData, isInsert)
+       SELECT zfCalc_UserAdmin() :: Integer, CLOCK_TIMESTAMP(), zfCalc_UserAdmin() :: Integer
+               , '<XML>'
+              || '<Field FieldName = "Код" FieldValue = "HistoryCost"/>'
+              || '<Field FieldName = "Название" FieldValue = "end - INSERT INTO _tmpMaster"/>'
+              || '<Field FieldName = "BranchId" FieldValue = "' || lfGet_Object_ValueData_sh (inBranchId) || '"/>'
+              || '<Field FieldName = "Itearation" FieldValue = "0"/>'
+              || '<Field FieldName = "Time" FieldValue = "'     || (CLOCK_TIMESTAMP() - vbOperDate_StartBegin) :: TVarChar || '"/>'
+              || '</XML>'
+           , TRUE;
+     -- запомнили время начала Следующего действия
+     vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
 
 
      -- тест***
@@ -527,6 +545,23 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
                                            INNER JOIN tmpContainer_master ON tmpContainer_master.ContainerId = MIContainer_Summ_In.ContainerId
                                       GROUP BY tmp.ParentId, MIContainer_Summ_In.MovementId, MIContainer_Summ_In.ContainerId, MIContainer_Summ_In.MovementItemId, MIContainer_Summ_In.WhereObjectId_Analyzer
                                      )
+            , tmpSeparate AS (SELECT Movement.Id AS  MovementId
+                                   , MIContainer_Summ_Out.MovementItemId
+                                   , MIContainer_Summ_Out.ContainerId
+                                   , COALESCE (SUM (-1 * MIContainer_Summ_Out.Amount), 0) AS Summ
+                              FROM Movement
+                                   LEFT JOIN MovementItemContainer AS MIContainer_Summ_Out
+                                                                   ON MIContainer_Summ_Out.MovementId = Movement.Id
+                                                                  AND MIContainer_Summ_Out.DescId = zc_MIContainer_Summ()
+                                                                  AND MIContainer_Summ_Out.isActive = FALSE
+                              WHERE Movement.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod
+                                AND Movement.DescId = zc_Movement_ProductionSeparate()
+                                AND Movement.StatusId = zc_Enum_Status_Complete()
+                              GROUP BY Movement.Id
+                                     , MIContainer_Summ_Out.MovementItemId
+                                     , MIContainer_Summ_Out.ContainerId
+                             )                                     
+        -- Результат
         SELECT COALESCE (MIContainer_Summ_In.ContainerId, 0)   AS MasterContainerId
              , COALESCE (MIContainer_Summ_Out.ContainerId, 0)  AS ContainerId
              , COALESCE (MIContainer_Count_In.ContainerId, 0)  AS MasterContainerId_Count
@@ -559,25 +594,10 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
                                          AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
                                          AND MovementLinkObject_User.ObjectId = zc_Enum_Process_Auto_Defroster()
 
-             LEFT JOIN (SELECT Movement.Id AS  MovementId
-                             , MIContainer_Summ_Out.MovementItemId
-                             , MIContainer_Summ_Out.ContainerId
-                             , COALESCE (SUM (-1 * MIContainer_Summ_Out.Amount), 0) AS Summ
-                        FROM Movement
-                             LEFT JOIN MovementItemContainer AS MIContainer_Summ_Out
-                                                             ON MIContainer_Summ_Out.MovementId = Movement.Id
-                                                            AND MIContainer_Summ_Out.DescId = zc_MIContainer_Summ()
-                                                            AND MIContainer_Summ_Out.isActive = FALSE
-                        WHERE Movement.OperDate BETWEEN vbStartDate_zavod AND vbEndDate_zavod
-                          AND Movement.DescId = zc_Movement_ProductionSeparate()
-                          AND Movement.StatusId = zc_Enum_Status_Complete()
-                        GROUP BY Movement.Id
-                               , MIContainer_Summ_Out.MovementItemId
-                               , MIContainer_Summ_Out.ContainerId
-                       ) AS _tmp ON _tmp.MovementId = MIContainer_Count_Out.MovementId
-                                AND _tmp.ContainerId = MIContainer_Summ_Out.ContainerId
-                                AND _tmp.MovementItemId = MIContainer_Summ_Out.MovementItemId
-                                AND MIContainer_Count_Out.MovementDescId = zc_Movement_ProductionSeparate()
+             LEFT JOIN tmpSeparate AS _tmp ON _tmp.MovementId = MIContainer_Count_Out.MovementId
+                                          AND _tmp.ContainerId = MIContainer_Summ_Out.ContainerId
+                                          AND _tmp.MovementItemId = MIContainer_Summ_Out.MovementItemId
+                                          AND MIContainer_Count_Out.MovementDescId = zc_Movement_ProductionSeparate()
         WHERE MovementLinkObject_User.MovementId IS NULL
         GROUP BY MIContainer_Summ_In.ContainerId
                , MIContainer_Summ_Out.ContainerId
@@ -587,6 +607,20 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
                , MIContainer_Summ_In.WhereObjectId_Analyzer
                -- , MIContainer_Count_Out.MovementDescId
         ;
+
+        -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
+        INSERT INTO ObjectProtocol (ObjectId, OperDate, UserId, ProtocolData, isInsert)
+          SELECT zfCalc_UserAdmin() :: Integer, CLOCK_TIMESTAMP(), zfCalc_UserAdmin() :: Integer
+                  , '<XML>'
+                 || '<Field FieldName = "Код" FieldValue = "HistoryCost"/>'
+                 || '<Field FieldName = "Название" FieldValue = "end - INSERT INTO _tmpChild"/>'
+                 || '<Field FieldName = "BranchId" FieldValue = "' || lfGet_Object_ValueData_sh (inBranchId) || '"/>'
+                 || '<Field FieldName = "Itearation" FieldValue = "0"/>'
+                 || '<Field FieldName = "Time" FieldValue = "'     || (CLOCK_TIMESTAMP() - vbOperDate_StartBegin) :: TVarChar || '"/>'
+                 || '</XML>'
+              , TRUE;
+        -- запомнили время начала Следующего действия
+        vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
 
      END IF; -- if inBranchId = 0
 
@@ -664,6 +698,20 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
          WHERE _tmpMaster.ContainerId = _tmpSumm.ContainerId;
 
 
+
+     -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
+     INSERT INTO ObjectProtocol (ObjectId, OperDate, UserId, ProtocolData, isInsert)
+       SELECT zfCalc_UserAdmin() :: Integer, CLOCK_TIMESTAMP(), zfCalc_UserAdmin() :: Integer
+               , '<XML>'
+              || '<Field FieldName = "Код" FieldValue = "HistoryCost"/>'
+              || '<Field FieldName = "Название" FieldValue = "end - UPDATE _tmpMaster - 0.1."/>'
+              || '<Field FieldName = "BranchId" FieldValue = "' || lfGet_Object_ValueData_sh (inBranchId) || '"/>'
+              || '<Field FieldName = "Itearation" FieldValue = "0"/>'
+              || '<Field FieldName = "Time" FieldValue = "'     || (CLOCK_TIMESTAMP() - vbOperDate_StartBegin) :: TVarChar || '"/>'
+              || '</XML>'
+           , TRUE;
+     -- запомнили время начала Следующего действия
+     vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
 
      -- тест***
      /*INSERT INTO HistoryCost_test (InsertDate, Itearation, CountDiff, ContainerId, UnitId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, calcCount_external, calcSumm_external, OutCount, OutSumm)
@@ -1324,4 +1372,4 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 
 -- тест
 -- SELECT * FROM  ObjectProtocol WHERE ObjectId = zfCalc_UserAdmin() :: Integer ORDER BY ID DESC LIMIT 100
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.09.2018', inEndDate:= '30.09.2018', inBranchId:= 0, inItearationCount:= 50, inInsert:= -1, inDiffSumm:= 1, inSession:= '2')  ORDER BY ABS (Price) DESC -- WHERE ContainerId = 141708 -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.11.2018', inEndDate:= '30.11.2018', inBranchId:= 0, inItearationCount:= 50, inInsert:= -1, inDiffSumm:= 1, inSession:= '2')  ORDER BY ABS (Price) DESC -- WHERE ContainerId = 141708 -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext

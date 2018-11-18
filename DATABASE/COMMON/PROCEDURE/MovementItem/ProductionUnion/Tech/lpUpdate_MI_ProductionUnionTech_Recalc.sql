@@ -29,8 +29,14 @@ BEGIN
 
 
        -- пересчет кол-во для zc_MI_Master
-       outAmount_master = CASE WHEN vbGoodsId_master > 0 THEN vbCuterCount * vbValue_Receipt
+       outAmount_master = CASE -- для  Тушенка
+                               WHEN EXISTS (SELECT 1 FROM MovementItem JOIN ObjectLink AS OL ON OL.ObjectId = MovementItem.ObjectId AND OL.ChildObjectId = zc_Enum_InfoMoney_30102() AND OL.DescId = zc_ObjectLink_Goods_InfoMoney() WHERE MovementItem.Id = inParentId)
+                                    THEN (SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = inParentId)
+                               -- для  ЯЗЫК СВИН. ВАРЕН.
+                               WHEN vbGoodsId_master > 0
+                                    THEN vbCuterCount * vbValue_Receipt
                                ELSE
+                               -- для остальных
                   (SELECT SUM (MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END)
                    FROM MovementItem
                         LEFT JOIN MovementItemBoolean AS MIBoolean_TaxExit

@@ -1979,7 +1979,14 @@ END IF;
 
                                                                                 ELSE vbAccountDirectionId_To
                                                                            END
-                                             , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId_calc
+                                             , inInfoMoneyDestinationId := CASE WHEN -- Запасы + на производстве
+                                                                                     vbAccountDirectionId_To                    = zc_Enum_AccountDirection_20400()
+                                                                                     -- Доходы + Продукция
+                                                                                 AND _tmpItem_group.InfoMoneyDestinationId_calc = zc_Enum_InfoMoneyDestination_30100()
+                                                                                     THEN -- !!!замена - Незавершенное производство!!!
+                                                                                          zc_Enum_InfoMoneyDestination_21300()
+                                                                                ELSE _tmpItem_group.InfoMoneyDestinationId_calc
+                                                                           END
                                              , inInfoMoneyId            := NULL
                                              , inUserId                 := inUserId
                                               ) AS AccountId

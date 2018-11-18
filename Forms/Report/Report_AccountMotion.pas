@@ -132,6 +132,7 @@ type
     cxLabel13: TcxLabel;
     edMovementDesc: TcxButtonEdit;
     GuidesMovementDesc: TdsdGuides;
+    OperDatePartner: TcxGridDBColumn;
   private
   public
   end;

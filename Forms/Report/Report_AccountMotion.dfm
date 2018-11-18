@@ -372,6 +372,13 @@ object Report_AccountMotionForm: TReport_AccountMotionForm
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
+      object OperDatePartner: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1091' '#1087#1086#1082'.'
+        DataBinding.FieldName = 'OperDatePartner'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
       object AccountCode_inf: TcxGridDBColumn
         Caption = #1087#1088#1080#1084'. '#1050#1086#1076' '#1089#1095'.'
         DataBinding.FieldName = 'AccountCode_inf'

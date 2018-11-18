@@ -231,8 +231,10 @@ end if;*/
                 (SELECT Container.ObjectId AS AccountId
                       , Container.Id AS ContainerId
                       -- , Container.ParentId
-                      , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
-                      , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
+                      -- , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  1 * MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
+                      -- , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
+                      , COALESCE (SUM (CASE WHEN  MIContainer.isActive = TRUE  AND COALESCE (MIContainer.AccountId, 0) <> zc_Enum_Account_100301()  AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  1 * MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
+                      , COALESCE (SUM (CASE WHEN (MIContainer.isActive = FALSE OR  COALESCE (MIContainer.AccountId, 0) =  zc_Enum_Account_100301()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
                       , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS AmountRemainsStart
                  FROM Container
                       LEFT JOIN MovementItemContainer AS MIContainer
@@ -250,9 +252,10 @@ end if;*/
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
                                               ON ContainerLinkObject_InfoMoney.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                /*LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
+                LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
                                               ON ContainerLinkObject_InfoMoneyDetail.ContainerId = tmpMIContainer_Remains.ContainerId
-                                             AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()*/
+                                             AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
+                                             AND ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Cash
                                               ON ContainerLinkObject_Cash.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_Cash.DescId = zc_ContainerLinkObject_Cash()
@@ -286,6 +289,7 @@ end if;*/
                 /*LEFT JOIN ContainerLinkObject AS ContainerLO_Business
                                               ON ContainerLO_Business.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLO_Business.DescId = zc_ContainerLinkObject_Business()*/
+            WHERE ContainerLinkObject_InfoMoneyDetail.ContainerId IS NULL
             GROUP BY tmpMIContainer_Remains.AccountId
                    , ContainerLinkObject_InfoMoney.ObjectId
                    -- , ContainerLinkObject_InfoMoneyDetail.ObjectId
@@ -311,7 +315,8 @@ end if;*/
                                                )
                                           )
                                       )
-
+                                  -- AND tmpReportOperation.InfoMoneyId        <> zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+      
            LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpReportOperation.InfoMoneyId
            -- LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View_Detail ON Object_InfoMoney_View_Detail.InfoMoneyId = CASE WHEN COALESCE (tmpReportOperation.InfoMoneyId_Detail, 0) = 0 THEN tmpReportOperation.InfoMoneyId ELSE tmpReportOperation.InfoMoneyId_Detail END
            -- LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (BankAccountId, COALESCE (CashId, COALESCE (JuridicalId, CASE WHEN CarId <> 0 THEN CarId WHEN MemberId <> 0 THEN MemberId ELSE UnitId END)))
@@ -355,4 +360,4 @@ ALTER FUNCTION gpReport_Balance (TDateTime, TDateTime, TVarChar) OWNER TO postgr
 */
 
 -- тест
--- SELECT * FROM gpReport_Balance (inStartDate:= '01.08.2016', inEndDate:= '31.08.2016', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_Balance (inStartDate:= '01.08.2019', inEndDate:= '31.08.2019', inSession:= zfCalc_UserAdmin())
