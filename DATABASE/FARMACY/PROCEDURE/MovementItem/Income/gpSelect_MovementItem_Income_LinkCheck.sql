@@ -13,9 +13,9 @@ $BODY$
 BEGIN
      
      -- Проверяем все ли товары состыкованы. 
-     IF EXISTS (SELECT * FROM MovementItem WHERE MovementId = inMovementId AND ObjectId IS NULL) THEN
-        RAISE EXCEPTION 'В документе прихода не все товары состыкованы';
-     END IF;
+     --IF EXISTS (SELECT * FROM MovementItem WHERE MovementId = inMovementId AND ObjectId IS NULL) THEN
+     --   RAISE EXCEPTION 'В документе прихода не все товары состыкованы';
+     --END IF;
    
      -- проверка привязки товара
      vbRetailId := (SELECT ObjectLink_Juridical_Retail.ChildObjectId AS RetailId

@@ -21,6 +21,8 @@
       inherited cxGrid: TcxGrid
         Width = 1054
         Height = 354
+        ExplicitLeft = 613
+        ExplicitTop = 120
         ExplicitWidth = 1054
         ExplicitHeight = 354
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1153,10 +1155,32 @@
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1088#1080#1075#1080#1085#1072#1083' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
-    object macCalculateSalePrice: TMultiAction [22]
+    object actCheckObject: TdsdExecStoredProc [22]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCheckObject
+      StoredProcList = <
+        item
+          StoredProc = spCheckObject
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1096#1077#1075#1086' '#1090#1086#1074#1072#1088#1072
+      Hint = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1096#1077#1075#1086' '#1090#1086#1074#1072#1088#1072
+      ImageIndex = 75
+    end
+    object macCalculateSalePrice: TMultiAction [23]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
+        item
+          Action = actCheckObject
+        end
         item
           Action = actUpdate_OrderExternal_Deferred
         end
@@ -1172,7 +1196,7 @@
       Hint = #1056#1072#1089#1095#1077#1090' '#1094#1077#1085#1099' '#1087#1088#1086#1076#1072#1078#1080', '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1090#1072#1090#1091#1089#1072' '#1079#1072#1103#1074#1082#1080
       ImageIndex = 75
     end
-    object actUpdate_OrderExternal_Deferred: TdsdExecStoredProc [23]
+    object actUpdate_OrderExternal_Deferred: TdsdExecStoredProc [24]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1185,7 +1209,7 @@
       Hint = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1090#1072#1090#1091#1089#1072' '#1079#1072#1082#1072#1079#1072
       ImageIndex = 75
     end
-    object actLinkCheck: TdsdExecStoredProc [24]
+    object actLinkCheck: TdsdExecStoredProc [25]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1204,7 +1228,7 @@
       Hint = #1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1088#1080#1074#1103#1079#1082#1080
       ImageIndex = 75
     end
-    object actCalculateSalePrice: TdsdExecStoredProc [25]
+    object actCalculateSalePrice: TdsdExecStoredProc [26]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1223,7 +1247,7 @@
       Hint = #1056#1072#1089#1095#1077#1090' '#1094#1077#1085#1099' '#1087#1088#1086#1076#1072#1078#1080
       ImageIndex = 75
     end
-    object actPrintStickerOld: TdsdPrintAction [26]
+    object actPrintStickerOld: TdsdPrintAction [27]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
@@ -1261,7 +1285,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintReestr: TdsdPrintAction [27]
+    object actPrintReestr: TdsdPrintAction [28]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1299,7 +1323,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object mactEditPartnerData: TMultiAction [28]
+    object mactEditPartnerData: TMultiAction [29]
       Category = 'PartnerData'
       MoveParams = <>
       ActionList = <
@@ -1316,7 +1340,7 @@
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1080' '#1076#1072#1090#1091' '#1086#1087#1083#1072#1090#1099
       ImageIndex = 35
     end
-    inherited actPrint: TdsdPrintAction [29]
+    inherited actPrint: TdsdPrintAction [30]
       StoredProc = spSelectPrint
       StoredProcList = <
         item
@@ -3465,8 +3489,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 344
-    Top = 208
+    Left = 368
+    Top = 184
   end
   object spLinkCheck: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Income_LinkCheck'
@@ -3490,7 +3514,24 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 344
-    Top = 256
+    Left = 944
+    Top = 384
+  end
+  object spCheckObject: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_Income_CheckObject'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 968
+    Top = 320
   end
 end
