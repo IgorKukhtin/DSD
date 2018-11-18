@@ -24,6 +24,23 @@ BEGIN
     --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_UnnamedEnterprises());
     vbUserId := inSession;
 
+    IF EXISTS(SELECT 1 FROM MovementLinkMovement
+              WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Sale()
+                AND MovementLinkMovement.MovementId = ioId)
+    THEN
+      RAISE EXCEPTION 'Ошибка. По безналу предприятия создана продежа <%> от <%>...',
+        (SELECT Movement.InvNumber
+         FROM MovementLinkMovement
+              INNER JOIN Movement ON Movement.ID = MovementLinkMovement.MovementChildId
+         WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Sale()
+           AND MovementLinkMovement.MovementId = ioId),
+        (SELECT to_char(Movement.OperDate, 'DD-MM-YYYY')
+         FROM MovementLinkMovement
+              INNER JOIN Movement ON Movement.ID = MovementLinkMovement.MovementChildId
+         WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Sale()
+           AND MovementLinkMovement.MovementId = ioId);
+    END IF;
+
     -- сохранили <Документ>
     ioId := lpInsertUpdate_Movement_UnnamedEnterprises (ioId          := ioId
                                         , inInvNumber       := inInvNumber
@@ -57,5 +74,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.
+ 16.11.18         *
  30.09.18         *
 */

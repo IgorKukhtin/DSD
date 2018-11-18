@@ -59,11 +59,11 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-  {
+
   LoadReportFromFile('Коммерческое предложение', ReportPath + '\Коммерческое предложение.fr3');
   LoadReportFromFile('Счет к безналу предприятия', ReportPath + '\Счет к безналу предприятия.fr3');
   Exit;
-  }
+
   LoadReportFromFile('Счет соц.проект', ReportPath + '\Счет соц.проект.fr3');
   //доп. соглащения Соц. проект
   LoadReportFromFile('PrintReport_CheckSP_8513005', ReportPath + '\PrintReport_CheckSP_8513005.fr3');

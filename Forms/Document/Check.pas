@@ -83,6 +83,11 @@ type
     cxLabel20: TcxLabel;
     cxLabel21: TcxLabel;
     edTotalSummPayAdd: TcxTextEdit;
+    actUpdateUnit: TMultiAction;
+    actExecStoredUpdateUnit: TdsdExecStoredProc;
+    spUpdateUnit: TdsdStoredProc;
+    dxBarButton2: TdxBarButton;
+    actChoiceUnitTreeForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

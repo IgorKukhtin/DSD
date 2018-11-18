@@ -597,7 +597,7 @@ BEGIN
       ELSE
         if (inYuriIT > 1) OR (inYuriIT < -1)
         THEN
-          RAISE EXCEPTION 'Ошибка. Значение коэффициента <Юрий IT> должно быть в пределах от -3 до 3.';
+          RAISE EXCEPTION 'Ошибка. Значение коэффициента <Юрий IT> должно быть в пределах от -1 до 1.';
         END IF;
 
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_YuriIT(), ioId, inYuriIT);
@@ -624,7 +624,7 @@ BEGIN
       ELSE
         if (inOlegIT > 1) OR (inOlegIT < -1)
         THEN
-          RAISE EXCEPTION 'Ошибка. Значение коэффициента <Олег IT> должно быть в пределах от -3 до 3.';
+          RAISE EXCEPTION 'Ошибка. Значение коэффициента <Олег IT> должно быть в пределах от -1 до 1.';
         END IF;
 
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OlegIT(), ioId, inOlegIT);
@@ -651,7 +651,7 @@ BEGIN
       ELSE
         if (inMaximIT > 1) OR (inMaximIT < -1)
         THEN
-          RAISE EXCEPTION 'Ошибка. Значение коэффициента <<Максим IT> должно быть в пределах от -3 до 3.';
+          RAISE EXCEPTION 'Ошибка. Значение коэффициента <<Максим IT> должно быть в пределах от -1 до 1.';
         END IF;
 
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MaximIT(), ioId, inMaximIT);
@@ -685,7 +685,7 @@ BEGIN
       ELSE
         if (inCollegeITRatio > 1) OR (inCollegeITRatio < -1)
         THEN
-          RAISE EXCEPTION 'Ошибка. Значение коэффициента <Коллегия IT> должно быть в пределах от -3 до 3.';
+          RAISE EXCEPTION 'Ошибка. Значение коэффициента <Коллегия IT> должно быть в пределах от -1 до 1.';
         END IF;
 
         IF COALESCE (inCollegeITNote, '') = ''
@@ -726,7 +726,7 @@ BEGIN
       ELSE
         if (inVIPDepartRatio > 1) OR (inVIPDepartRatio < -1)
         THEN
-          RAISE EXCEPTION 'Ошибка. Значение коэффициента <VIP отдел> должно быть в пределах от -3 до 3.';
+          RAISE EXCEPTION 'Ошибка. Значение коэффициента <VIP отдел> должно быть в пределах от -1 до 1.';
         END IF;
 
         IF COALESCE (inVIPDepartRatioNote, '') = ''

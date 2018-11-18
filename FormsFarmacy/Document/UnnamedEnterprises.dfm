@@ -1,5 +1,5 @@
 inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
-  Caption = #1055#1088#1086#1076#1072#1078#1072
+  Caption = #1041#1077#1079#1085#1072#1083' '#1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1081
   ClientHeight = 500
   ClientWidth = 953
   AddOnFormData.AddOnFormRefresh.ParentList = 'UnnamedEnterprises'
