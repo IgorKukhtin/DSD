@@ -3624,4 +3624,31 @@ inherited MainCashForm2: TMainCashForm2
       OnClick = pm_VIP1Click
     end
   end
+  object CashListDiffCDS: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <>
+    IndexDefs = <>
+    Params = <>
+    StoreDefs = True
+    Left = 704
+    Top = 168
+  end
+  object spSelect_CashListDiffGoods: TdsdStoredProc
+    StoredProcName = 'gpSelect_CashListDiffGoods'
+    DataSet = CashListDiffCDS
+    DataSets = <
+      item
+        DataSet = CashListDiffCDS
+      end>
+    Params = <
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 112
+  end
 end

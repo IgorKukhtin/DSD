@@ -334,6 +334,8 @@ type
     CheckGridAccommodationName: TcxGridDBColumn;
     actCashListDiffPeriod: TdsdOpenForm;
     N20: TMenuItem;
+    CashListDiffCDS: TClientDataSet;
+    spSelect_CashListDiffGoods: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

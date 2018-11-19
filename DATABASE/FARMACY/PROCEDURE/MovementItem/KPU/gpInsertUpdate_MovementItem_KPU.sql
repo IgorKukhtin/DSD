@@ -123,11 +123,18 @@ BEGIN
 
                       WHERE Movement.DescId = zc_Movement_TestingUser()
                         AND MovementItem.ObjectId = vbUserId
-                        AND Movement.OperDate = vbDateStart)
+                        AND Movement.OperDate = vbDateStart),
+       tmpPersonal AS (SELECT 
+                             ROW_NUMBER() OVER (PARTITION BY MemberId ORDER BY IsErased) AS Ord
+                           , Object_Personal_View.MemberId
+                           , Object_Personal_View.PositionName
+                           , Object_Personal_View.DateIn 
+                        FROM Object_Personal_View)
+                        
 
   SELECT
-          Object_Personal_View.DateIn
-        , Object_Personal_View.PersonalId
+          tmpPersonal.DateIn
+        , tmpPersonal.PersonalId
 
         , COALESCE (MIFloat_MarkRatio.ValueData,
             CASE WHEN COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) = COALESCE (MIFloat_BonusAmountTab.ValueData, 0)
@@ -226,7 +233,8 @@ BEGIN
                             ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
                            AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
 
-       LEFT JOIN Object_Personal_View ON Object_Personal_View.MemberId = ObjectLink_User_Member.ChildObjectid
+       LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectid
+                            AND tmpPersonal.Ord = 1
 
        LEFT JOIN MovementItemFloat AS MIFloat_AmountTheFineTab
                                    ON MIFloat_AmountTheFineTab.MovementItemId = MovementItem.Id
@@ -349,6 +357,11 @@ BEGIN
       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_In(), vbPersonalId, inDateIn);
     ELSE
       RAISE EXCEPTION 'Изменение <Дата приема> вам запрещено.';
+    END IF;
+  ELSE
+    IF COALESCE (inDateIn, CURRENT_DATE::TDateTime) <> COALESCE (vbDateIn, CURRENT_DATE::TDateTime) and COALESCE (vbPersonalId, 0) = 0
+    THEN
+      RAISE EXCEPTION 'Изменение <Дата приема> не найдена запись в таблице перcонал.';
     END IF;
   END IF;
 
