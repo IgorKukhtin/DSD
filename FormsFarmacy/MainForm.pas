@@ -463,6 +463,8 @@ type
     GUID1: TMenuItem;
     actRepriceUnitSheduler: TdsdOpenForm;
     N173: TMenuItem;
+    actCheckNoCashRegister: TdsdOpenForm;
+    N174: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

@@ -11,6 +11,7 @@ $BODY$
 BEGIN
 
   IF LOWER (REPLACE (inDefaultKey, '-zc_Object_Unit', 'zc_Object_Unit')) = LOWER ('zc_Object_Unit') AND inUserId = 183242 -- Люба
+    OR LOWER (inDefaultKey) = LOWER ('-zc_Object_Unit') AND inUserId = 4183126 -- Олег 
   THEN
        RETURN '0'; -- !!!захардодил для Pharmacy!!!
   ELSE
@@ -97,7 +98,8 @@ ALTER FUNCTION lpGet_DefaultValue (TVarChar, Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 19:11:18                                                       * для Олега обход аптек
  18.02.14                         * add LEFT для пользователя.
  20.12.13                         *
 */

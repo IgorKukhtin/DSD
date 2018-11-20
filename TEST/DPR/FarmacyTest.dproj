@@ -2124,6 +2124,10 @@
 				<Form>Report_CashListDiffPeriodForm</Form>
 				<FormType>dfm</FormType>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\CheckNoCashRegister.pas">
+				<Form>CheckNoCashRegisterForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

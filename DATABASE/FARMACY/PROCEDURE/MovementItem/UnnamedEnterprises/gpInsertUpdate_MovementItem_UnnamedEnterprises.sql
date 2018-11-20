@@ -27,6 +27,43 @@ BEGIN
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_UnnamedEnterprises());
     vbUserId := inSession;
 
+    IF EXISTS(SELECT 1 FROM MovementLinkMovement
+              WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Sale()
+                AND MovementLinkMovement.MovementId = inMovementId)
+    THEN
+      RAISE EXCEPTION 'Ошибка. По безналу предприятия создана продежа <%> от <%>...',
+        (SELECT Movement.InvNumber
+         FROM MovementLinkMovement
+              INNER JOIN Movement ON Movement.ID = MovementLinkMovement.MovementChildId
+         WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Sale()
+           AND MovementLinkMovement.MovementId = inMovementId),
+        (SELECT to_char(Movement.OperDate, 'DD-MM-YYYY')
+         FROM MovementLinkMovement
+              INNER JOIN Movement ON Movement.ID = MovementLinkMovement.MovementChildId
+         WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Sale()
+           AND MovementLinkMovement.MovementId = inMovementId);
+    END IF;
+
+    IF EXISTS(SELECT 1 FROM MovementLinkMovement
+              WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
+                AND MovementLinkMovement.MovementId = inMovementId) AND
+       NOT EXISTS(SELECT 1 FROM MovementItemFloat
+             WHERE MovementItemFloat.DescId = zc_MIFloat_AmountOrder() AND MovementItemFloat.MovementItemId = ioId
+               AND COALESCE (MovementItemFloat.ValueData, 0) = COALESCE (inAmountOrder, 0))
+    THEN
+      RAISE EXCEPTION 'Ошибка. Данные добавлены во внутренний заказ номер <%> от <%>. Изменение количества в заказ запрещено...',
+        (SELECT Movement.InvNumber
+         FROM MovementLinkMovement
+              INNER JOIN Movement ON Movement.ID = MovementLinkMovement.MovementChildId
+         WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
+           AND MovementLinkMovement.MovementId = inMovementId),
+        (SELECT to_char(Movement.OperDate, 'DD-MM-YYYY')
+         FROM MovementLinkMovement
+              INNER JOIN Movement ON Movement.ID = MovementLinkMovement.MovementChildId
+         WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
+           AND MovementLinkMovement.MovementId = inMovementId);
+    END IF;
+
     --Посчитали сумму
     outSumm := ROUND(COALESCE(inAmount,0)*COALESCE(inPrice,0),2);
     outSummOrder := ROUND(COALESCE(inAmountOrder,0)*COALESCE(inPrice,0),2);
@@ -63,7 +100,7 @@ BEGIN
                  ((COALESCE (inCodeUKTZED, '') <> '') AND COALESCE (ObjectString_Goods_CodeUKTZED.ValueData, '') <> COALESCE (inCodeUKTZED, '')) OR
                  ((COALESCE (inExchangeId, 0) <> 0) AND COALESCE (ObjectLink_Goods_Exchange.ChildObjectId, 0) <> COALESCE (inExchangeId, 0))))
    THEN
-      PERFORM lpUpdate__MovementItem_UnnamedEnterprises_Goods(
+      PERFORM lpUpdate_MovementItem_UnnamedEnterprises_Goods(
                                               inId           := inGoodsId
                                             , inNameUkr      := inGoodsNameUkr
                                             , inCodeUKTZED   := inCodeUKTZED

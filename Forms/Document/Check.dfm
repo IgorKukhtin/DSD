@@ -232,7 +232,6 @@ inherited CheckForm: TCheckForm
   inherited DataPanel: TPanel
     Width = 817
     Height = 156
-    ExplicitTop = 7
     ExplicitWidth = 817
     ExplicitHeight = 156
     inherited edInvNumber: TcxTextEdit
@@ -961,6 +960,55 @@ inherited CheckForm: TCheckForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1055
       ImageIndex = 26
     end
+    object actUpdateUnit: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actChoiceUnitTreeForm
+        end
+        item
+          Action = actExecStoredUpdateUnit
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      ImageIndex = 8
+    end
+    object actChoiceUnitTreeForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceUnitTreeForm'
+      FormName = 'TUnitTreeForm'
+      FormNameParam.Value = 'TUnitTreeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'UnitID'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actExecStoredUpdateUnit: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateUnit
+      StoredProcList = <
+        item
+          StoredProc = spUpdateUnit
+        end>
+      Caption = 'actExecStoredUpdateUnit'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 221
@@ -1040,6 +1088,10 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1075,6 +1127,10 @@ inherited CheckForm: TCheckForm
     end
     object bb: TdxBarButton
       Action = macUpdateSpParam
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actUpdateUnit
       Category = 0
     end
   end
@@ -1130,6 +1186,11 @@ inherited CheckForm: TCheckForm
       end
       item
         Name = 'PaidTypeCode'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitID'
         Value = Null
         MultiSelectSeparator = ','
       end>
@@ -1367,6 +1428,7 @@ inherited CheckForm: TCheckForm
       end
       item
         Name = 'TotalSummPayAdd'
+        Value = Null
         Component = edTotalSummPayAdd
         DataType = ftFloat
         MultiSelectSeparator = ','
@@ -1624,5 +1686,30 @@ inherited CheckForm: TCheckForm
       end>
     Left = 352
     Top = 16
+  end
+  object spUpdateUnit: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_Unit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'UnitID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 674
+    Top = 336
   end
 end

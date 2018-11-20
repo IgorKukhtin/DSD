@@ -74,9 +74,9 @@ BEGIN
         SELECT
             Object_Goods.ObjectCode                   AS GoodsCode
           , ObjectString_Goods_NameUkr.ValueData      AS GoodsName
-          , MIFloat_AmountOrder.ValueData             AS Amount
+          , MI_UnnamedEnterprises.Amount              AS Amount
           , MIFloat_Price.ValueData                   AS Price
-          , MIFloat_SummOrder.ValueData                    AS Summ
+          , MIFloat_Summ.ValueData                    AS Summ
           , SUBSTRING(Object_NDSKind.ValueData, 1, 3) AS NDSKindName
           , ObjectString_Goods_CodeUKTZED.ValueData   AS CodeUKTZED
           , Object_Exchange.ValueData                 AS ExchangeName
@@ -93,12 +93,9 @@ BEGIN
               LEFT JOIN MovementItemFloat AS MIFloat_Price
                                           ON MIFloat_Price.MovementItemId = MI_UnnamedEnterprises.Id
                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
-              LEFT JOIN MovementItemFloat AS MIFloat_AmountOrder
-                                          ON MIFloat_AmountOrder.MovementItemId = MI_UnnamedEnterprises.Id
-                                         AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
-              LEFT JOIN MovementItemFloat AS MIFloat_SummOrder
-                                          ON MIFloat_SummOrder.MovementItemId = MI_UnnamedEnterprises.Id
-                                         AND MIFloat_SummOrder.DescId = zc_MIFloat_SummOrder()
+              LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                          ON MIFloat_Summ.MovementItemId = MI_UnnamedEnterprises.Id
+                                         AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
 
               LEFT JOIN ObjectString AS ObjectString_Goods_NameUkr
                                      ON ObjectString_Goods_NameUkr.ObjectId = Object_Goods.Id
@@ -118,7 +115,7 @@ BEGIN
             AND
             MI_UnnamedEnterprises.isErased = FALSE
             AND
-            MIFloat_AmountOrder.ValueData > 0
+            MI_UnnamedEnterprises.Amount > 0
         ORDER BY
             Object_Goods.ValueData;
 

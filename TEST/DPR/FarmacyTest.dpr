@@ -625,7 +625,8 @@ uses
   RepriceUnitSheduler in '..\..\FormsFarmacy\ConnectWithOld\RepriceUnitSheduler.pas' {RepriceUnitShedulerForm: TParentForm},
   UserNick in '..\..\FormsFarmacy\Guides\UserNick.pas' {UserNickForm: TParentForm},
   OrderExternal in '..\..\FormsFarmacy\Document\OrderExternal.pas' {OrderExternalForm: TParentForm},
-  Report_CashListDiffPeriod in '..\..\FormsFarmacy\Report\Report_CashListDiffPeriod.pas' {Report_CashListDiffPeriodForm};
+  Report_CashListDiffPeriod in '..\..\FormsFarmacy\Report\Report_CashListDiffPeriod.pas' {Report_CashListDiffPeriodForm},
+  CheckNoCashRegister in '..\..\Forms\Document\CheckNoCashRegister.pas' {CheckNoCashRegisterForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -90,7 +90,8 @@ end;
 
 procedure ListDiffAddGoods(ListGoodsCDS : TClientDataSet);
   var  AValues: array[0..1] of string; nCount, nInput : currency;
-      ListDiffCDS : TClientDataSet; bSend : boolean;
+      ListDiffCDS : TClientDataSet; bSend : boolean; S : string;
+      AmountDiffUser, AmountDiff, AmountDiffPrev : currency;
 begin
 
   if not ListGoodsCDS.Active  then Exit;
@@ -104,21 +105,53 @@ begin
     ListDiffCDS :=  TClientDataSet.Create(Nil);
     try
       try
+        nInput := 0; AmountDiffUser := 0; AmountDiff := 0; AmountDiffPrev := 0;
+        if not gc_User.Local then
+        try
+          MainCashForm.spSelect_CashListDiffGoods.Params.ParamByName('inGoodsId').Value := ListGoodsCDS.FieldByName('ID').AsInteger;
+          MainCashForm.spSelect_CashListDiffGoods.Execute;
+          if MainCashForm.CashListDiffCDS.Active and (MainCashForm.CashListDiffCDS.RecordCount = 1) then
+          begin
+            AmountDiffUser := MainCashForm.CashListDiffCDS.FieldByName('AmountDiffUser').AsCurrency;
+            AmountDiff := MainCashForm.CashListDiffCDS.FieldByName('AmountDiff').AsCurrency;
+            nInput := MainCashForm.CashListDiffCDS.FieldByName('AmountDiff').AsCurrency;
+            AmountDiffPrev := MainCashForm.CashListDiffCDS.FieldByName('AmountDiffPrev').AsCurrency;
+          end;
+        Except
+        end;
+
         LoadLocalData(ListDiffCDS, ListDiff_lcl);
         if not ListDiffCDS.Active then ListDiffCDS.Open;
-
-        nInput := 0;
         ListDiffCDS.First;
         while not ListDiffCDS.Eof do
         begin
-          if (ListDiffCDS.FieldByName('ID').AsInteger = ListGoodsCDS.FieldByName('ID').AsInteger) and
-            (StartOfTheDay(ListDiffCDS.FieldByName('DateInput').AsDateTime) = Date) then
-            nInput := nInput + ListDiffCDS.FieldByName('Amount').AsCurrency;
+          if (ListDiffCDS.FieldByName('ID').AsInteger = ListGoodsCDS.FieldByName('ID').AsInteger) then
+          begin
+            if (StartOfTheDay(ListDiffCDS.FieldByName('DateInput').AsDateTime) = Date) then
+            begin
+              if not MainCashForm.CashListDiffCDS.Active or not ListDiffCDS.FieldByName('IsSend').AsBoolean then
+              begin
+                if (ListDiffCDS.FieldByName('UserID').AsString = gc_User.Session) then
+                  AmountDiffUser := AmountDiffUser + ListDiffCDS.FieldByName('Amount').AsCurrency;
+                AmountDiff := AmountDiff + ListDiffCDS.FieldByName('Amount').AsCurrency;
+                nInput := nInput + ListDiffCDS.FieldByName('Amount').AsCurrency;
+              end;
+            end else if not MainCashForm.CashListDiffCDS.Active then
+              AmountDiffPrev := AmountDiffPrev + ListDiffCDS.FieldByName('Amount').AsCurrency;
+          end;
           ListDiffCDS.Next;
         end;
 
+        S := '';
+        if AmountDiff <> 0 Then S := S +  #13#10'Отказы сегодня: ' + FormatCurr(',0.000', AmountDiff);
+        if AmountDiffUser <> 0 Then S := S +  #13#10'  в том числе вами: ' + FormatCurr(',0.000', AmountDiffUser);
+        if AmountDiffPrev <> 0 Then S := S +  #13#10'Отказы вчера: ' + FormatCurr(',0.000', AmountDiffPrev);
+        if S = '' then S := #13#10'За последнии два дня отказы не найдены';
+
+        if not MainCashForm.CashListDiffCDS.Active then S := #13#10'Работа автономно (Данные по кассе)' + S;
+
         if not InputQuery('Добавление препарата в лист отказов', ['Препарат: '#13#10 +
-          ListGoodsCDS.FieldByName('GoodsName').AsString +
+          ListGoodsCDS.FieldByName('GoodsName').AsString + S +
           #13#10#13#10'Количество', 'Примечание'], AValues,
         function (const AValues: array of string) : boolean
           var I : integer; E1, E2 : TEdit;
@@ -189,6 +222,7 @@ begin
     end;
   finally
     ReleaseMutex(MutexDiffCDS);
+    if MainCashForm.CashListDiffCDS.Active then MainCashForm.CashListDiffCDS.Close;
       // отправка сообщения о необходимости отправки листа отказов
     if bSend then PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 4);
   end;

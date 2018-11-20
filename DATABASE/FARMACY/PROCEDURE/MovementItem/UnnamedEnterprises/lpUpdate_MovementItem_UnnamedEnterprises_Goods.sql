@@ -1,8 +1,8 @@
 -- Function: lpUpdate__MovementItem_UnnamedEnterprises_Goods()
 
-DROP FUNCTION IF EXISTS lpUpdate__MovementItem_UnnamedEnterprises_Goods(Integer, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS lpUpdate_MovementItem_UnnamedEnterprises_Goods(Integer, TVarChar, TVarChar, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION lpUpdate__MovementItem_UnnamedEnterprises_Goods(
+CREATE OR REPLACE FUNCTION lpUpdate_MovementItem_UnnamedEnterprises_Goods(
     IN inId                  Integer   ,    -- ключ объекта <Товар>
     IN inNameUkr             TVarChar  ,    -- Название украинское
     IN inCodeUKTZED          TVarChar  ,    -- Код УКТЗЭД
@@ -137,4 +137,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM lpUpdate__MovementItem_UnnamedEnterprises_Goods
+-- SELECT * FROM lpUpdate_MovementItem_UnnamedEnterprises_Goods
