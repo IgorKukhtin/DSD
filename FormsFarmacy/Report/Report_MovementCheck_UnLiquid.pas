@@ -71,6 +71,10 @@ type
     bbmacSend: TdxBarButton;
     cbList: TcxCheckBox;
     actRefreshList: TdsdDataSetRefresh;
+    spReportUnLiquid_mov: TdsdStoredProc;
+    actReportUnLiquid_mov: TdsdExecStoredProc;
+    macReportUnLiquid_mov: TMultiAction;
+    bbReportUnLiquid_mov: TdxBarButton;
   private
     { Private declarations }
   public

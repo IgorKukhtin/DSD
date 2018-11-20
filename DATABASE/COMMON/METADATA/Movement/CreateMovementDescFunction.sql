@@ -312,10 +312,15 @@ CREATE OR REPLACE FUNCTION zc_Movement_KPU() RETURNS Integer AS $BODY$BEGIN RETU
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_KPU', 'Данные для ртчета по КПУ' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_KPU');
 
+CREATE OR REPLACE FUNCTION zc_Movement_ReportUnLiquid() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_ReportUnLiquid'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_ReportUnLiquid', 'Отчет по неликвидному товару' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_ReportUnLiquid');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 19.11.18         * zc_Movement_ReportUnLiquid
  04.10.18                                                                                     *  zc_Movement_KPU
  30.09.18                                                                                     *  zc_Movement_UnnamedEnterprises
  15.09.18         * zc_Movement_ListDiff

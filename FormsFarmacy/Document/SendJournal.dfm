@@ -11,17 +11,17 @@ inherited SendJournalForm: TSendJournalForm
     Width = 780
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 785
+    ExplicitWidth = 780
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 780
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 785
+      ExplicitWidth = 780
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 780
         Height = 478
-        ExplicitWidth = 785
+        ExplicitWidth = 780
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -366,13 +366,20 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 77
           end
+          object ReportInvNumber_full: TcxGridDBColumn
+            Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1054#1090#1095'. '#1087#1086' '#1085#1077#1083#1080#1082#1074'.'
+            DataBinding.FieldName = 'ReportInvNumber_full'
+            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1054#1090#1095#1077#1090' '#1087#1086' '#1085#1077#1083#1080#1082#1074#1080#1076#1085#1086#1084#1091' '#1090#1086#1074#1072#1088#1091
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
     Width = 780
-    ExplicitWidth = 785
+    ExplicitWidth = 780
     inherited deStart: TcxDateEdit
       EditValue = 42005d
     end
@@ -499,6 +506,9 @@ inherited SendJournalForm: TSendJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'

@@ -810,10 +810,12 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
     ExplicitHeight = 32
     inherited deStart: TcxDateEdit
       Left = 29
+      EditValue = 43101d
       ExplicitLeft = 29
     end
     inherited deEnd: TcxDateEdit
       Left = 142
+      EditValue = 43101d
       ExplicitLeft = 142
     end
     inherited cxLabel1: TcxLabel
@@ -1022,6 +1024,18 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actReportUnLiquid_mov: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spReportUnLiquid_mov
+      StoredProcList = <
+        item
+          StoredProc = spReportUnLiquid_mov
+        end>
+      Caption = 'actReportUnLiquid_mov'
+      ImageIndex = 43
+    end
     object actSend: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1033,6 +1047,20 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
         end>
       Caption = 'actSend'
       ImageIndex = 41
+    end
+    object macReportUnLiquid_mov: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actReportUnLiquid_mov
+        end>
+      DataSource = MasterDS
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1086' '#1086#1090#1095#1077#1090#1091'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1054#1090#1095#1077#1090' '#1087#1086' '#1085#1077#1083#1080#1082#1074#1080#1076#1085#1086#1084#1091' '#1090#1086#1074#1072#1088#1091'> '#1089#1086#1079#1076#1072#1085
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1086#1090#1095#1077#1090#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1086#1090#1095#1077#1090#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 43
     end
     object macSend: TMultiAction
       Category = 'DSDLib'
@@ -1116,11 +1144,10 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 72
+    Left = 80
     Top = 160
   end
   inherited BarManager: TdxBarManager
-    Left = 120
     Top = 160
     DockControlHeights = (
       0
@@ -1163,6 +1190,14 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
         end
         item
           Visible = True
+          ItemName = 'bbReportUnLiquid_mov'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1189,10 +1224,14 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
       Action = macSend
       Category = 0
     end
+    object bbReportUnLiquid_mov: TdxBarButton
+      Action = macReportUnLiquid_mov
+      Category = 0
+    end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 224
-    Top = 8
+    Left = 232
+    Top = 176
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     Left = 432
@@ -1206,8 +1245,8 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
       item
         Component = GuidesUnit
       end>
-    Left = 272
-    Top = 24
+    Left = 328
+    Top = 144
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -1291,12 +1330,28 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
     Top = 368
   end
   object spSend: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Send_Auto'
+    StoredProcName = 'gpInsertUpdate_MovementItem_Send_byUnLiquid'
     DataSets = <
       item
       end>
     OutputType = otMultiExecute
     Params = <
+      item
+        Name = 'inStartSale'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndSale'
+        Value = 42370d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inFromId'
         Value = ''
@@ -1310,14 +1365,6 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
         Value = Null
         Component = DataSetDocs
         ComponentItem = 'UnitId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = 42370d
-        Component = deEnd
-        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1372,6 +1419,184 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
       end>
     PackSize = 1000
     Left = 48
+    Top = 360
+  end
+  object spReportUnLiquid_mov: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_ReportUnLiquid_Auto'
+    DataSets = <
+      item
+      end>
+    OutputType = otMultiExecute
+    Params = <
+      item
+        Name = 'inStartSale'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndSale'
+        Value = 42370d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount_Sale'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRemainsStart'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RemainsStart'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRemainsEnd'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RemainsEnd'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountM1'
+        Value = 0.000000000000000000
+        Component = MasterCDS
+        ComponentItem = 'Amount_Sale1'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountM3'
+        Value = 0.000000000000000000
+        Component = MasterCDS
+        ComponentItem = 'Amount_Sale3'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountM6'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount_Sale6'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountIncome'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount_LastIncome'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summa_Sale'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummStart'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summa_Remains'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummEnd'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summa_RemainsEnd'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummM1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summa_Sale1'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummM3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summa_Sale3'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummM6'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summa_Sale6'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateIncome'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'OperDate_LastIncome'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMinExpirationDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'MinExpirationDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 500
+    Left = 296
     Top = 360
   end
 end

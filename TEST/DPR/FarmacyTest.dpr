@@ -626,7 +626,9 @@ uses
   UserNick in '..\..\FormsFarmacy\Guides\UserNick.pas' {UserNickForm: TParentForm},
   OrderExternal in '..\..\FormsFarmacy\Document\OrderExternal.pas' {OrderExternalForm: TParentForm},
   Report_CashListDiffPeriod in '..\..\FormsFarmacy\Report\Report_CashListDiffPeriod.pas' {Report_CashListDiffPeriodForm},
-  CheckNoCashRegister in '..\..\Forms\Document\CheckNoCashRegister.pas' {CheckNoCashRegisterForm: TParentForm};
+  CheckNoCashRegister in '..\..\Forms\Document\CheckNoCashRegister.pas' {CheckNoCashRegisterForm: TParentForm},
+  ReportUnLiquidJournal in '..\..\FormsFarmacy\Document\ReportUnLiquidJournal.pas' {ReportUnLiquidJournalForm: TParentForm},
+  ReportUnLiquid_Movement in '..\..\FormsFarmacy\Document\ReportUnLiquid_Movement.pas' {ReportUnLiquid_MovementForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

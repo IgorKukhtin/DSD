@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , UpdateName TVarChar, UpdateDate TDateTime
              , InsertDateDiff TFloat
              , UpdateDateDiff TFloat
+             , MovementId_Report Integer, InvNumber_Report TVarChar, ReportInvNumber_full TVarChar
               )
 
 AS
@@ -87,6 +88,10 @@ BEGIN
 
            , ( MovementDate_Insert.ValueData::Date - Movement.OperDate::Date) ::TFloat AS InsertDateDiff 
            , ( MovementDate_Update.ValueData::Date - Movement.OperDate::Date) ::TFloat AS UpdateDateDiff
+
+           , Movement_ReportUnLiquid.Id                    AS MovementId_Report
+           , Movement_ReportUnLiquid.InvNumber             AS InvNumber_Report
+           , ('№ ' || Movement_ReportUnLiquid.InvNumber ||' от '||TO_CHAR(Movement_ReportUnLiquid.OperDate , 'DD.MM.YYYY') ) :: TVarChar AS ReportInvNumber_full
 
            --, date_part('day', MovementDate_Insert.ValueData - Movement.OperDate) ::TFloat AS InsertDateDiff 
            --, date_part('day', MovementDate_Update.ValueData - Movement.OperDate) ::TFloat AS UpdateDateDiff
@@ -172,6 +177,11 @@ BEGIN
                                          ON MLO_Update.MovementId = Movement.Id
                                         AND MLO_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId 
+
+            LEFT JOIN MovementLinkMovement AS MLM_ReportUnLiquid
+                                           ON MLM_ReportUnLiquid.MovementId = Movement.Id
+                                          AND MLM_ReportUnLiquid.DescId = zc_MovementLinkMovement_ReportUnLiquid()
+            LEFT JOIN Movement AS Movement_ReportUnLiquid ON Movement_ReportUnLiquid.Id = MLM_ReportUnLiquid.MovementChildId
 
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
         

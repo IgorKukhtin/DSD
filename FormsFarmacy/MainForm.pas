@@ -465,6 +465,8 @@ type
     N173: TMenuItem;
     actCheckNoCashRegister: TdsdOpenForm;
     N174: TMenuItem;
+    actReportUnLiquid_Movement: TdsdOpenForm;
+    N175: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

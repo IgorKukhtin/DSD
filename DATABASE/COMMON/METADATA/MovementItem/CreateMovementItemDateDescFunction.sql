@@ -80,10 +80,14 @@ CREATE OR REPLACE FUNCTION zc_MIDate_List() RETURNS Integer AS $BODY$BEGIN RETUR
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_List', 'Дата/время (лист отказов)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_List');
 
+CREATE OR REPLACE FUNCTION zc_MIDate_Income() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Income'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_Income', 'Дата последнего прихода' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Income');
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.  Шаблий О.В.
+ 19.11.18         * zc_MIDate_Income
  07.11.18         * zc_MIDate_List
  21.09.18                                                                         * zc_MIDate_TestingUser
  26.03.17         * zc_MIDate_InsertMobile
