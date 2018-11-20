@@ -40,7 +40,7 @@ object GoodsSeparateEditForm: TGoodsSeparateEditForm
   object cxLabel5: TcxLabel
     Left = 34
     Top = 7
-    Caption = #1058#1086#1074#1072#1088
+    Caption = #1058#1086#1074#1072#1088' '#1087#1088#1080#1093#1086#1076
   end
   object ceGoods: TcxButtonEdit
     Left = 34
@@ -57,7 +57,7 @@ object GoodsSeparateEditForm: TGoodsSeparateEditForm
   object cxLabel3: TcxLabel
     Left = 34
     Top = 53
-    Caption = #1042#1080#1076#1099' '#1090#1086#1074#1072#1088#1072
+    Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1080#1093#1086#1076')'
   end
   object ceGoodsKind: TcxButtonEdit
     Left = 34
@@ -81,7 +81,7 @@ object GoodsSeparateEditForm: TGoodsSeparateEditForm
   object cxLabel1: TcxLabel
     Left = 34
     Top = 103
-    Caption = #1043#1083#1072#1074#1085'. '#1090#1086#1074#1072#1088
+    Caption = #1058#1086#1074#1072#1088' '#1088#1072#1089#1093#1086#1076
   end
   object edGoodsMaster: TcxButtonEdit
     Left = 34

@@ -62,6 +62,7 @@ type
     SummIn: TcxGridDBColumn;
     chPriceIn: TcxGridDBColumn;
     chSummIn: TcxGridDBColumn;
+    chPriceIn_hist: TcxGridDBColumn;
   private
     { Private declarations }
   public

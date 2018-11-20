@@ -236,6 +236,7 @@ BEGIN
                                AND vbIsSummIn             = TRUE
                              GROUP BY MIContainer.MovementItemId
                              )
+          , tmpPriceSeparateHist AS (SELECT * FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_ProductionSeparateHist(), inOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)))
        SELECT
              MovementItem.Id			         AS Id
            , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS INTEGER) AS  LineNum
@@ -256,6 +257,7 @@ BEGIN
            , MovementItem.Amount			 AS Amount
            , CASE WHEN MovementItem.Amount <> 0 THEN tmpSummIn.SummIn / MovementItem.Amount ELSE 0 END :: TFloat AS PriceIn
            , tmpSummIn.SummIn :: TFloat                  AS SummIn
+           , COALESCE (tmpPriceSeparateHist.ValuePrice, 0)  :: TFloat AS PriceIn_hist
            , MIFloat_LiveWeight.ValueData                AS LiveWeight
            , MIFloat_HeadCount.ValueData 		 AS HeadCount
            , COALESCE (MIBoolean_Calculated.ValueData, FALSE) ::Boolean AS isCalculated
@@ -299,6 +301,8 @@ BEGIN
                                           ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
                                          AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
                                          
+            LEFT JOIN tmpPriceSeparateHist ON tmpPriceSeparateHist.GoodsId   = MovementItem.ObjectId 
+
        ORDER BY MovementItem.Id
             ;
     RETURN NEXT Cursor2;

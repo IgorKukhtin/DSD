@@ -6,7 +6,7 @@ inherited GoodsSeparateForm: TGoodsSeparateForm
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 898
-  ExplicitHeight = 426
+  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -59,15 +59,16 @@ inherited GoodsSeparateForm: TGoodsSeparateForm
           Styles.Footer = nil
           Styles.Header = nil
           object GoodsGroupNameFull_Master: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')  ('#1075#1083'.'#1090#1086#1074#1072#1088')'
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077') ('#1090#1086#1074#1072#1088' '#1088#1072#1089#1093'.)'
             DataBinding.FieldName = 'GoodsGroupNameFull_Master'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 150
           end
           object GoodsMasterCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' ('#1075#1083'.'#1090#1086#1074#1072#1088')'
+            Caption = #1050#1086#1076' ('#1090#1086#1074#1072#1088'  '#1088#1072#1089#1093'.)'
             DataBinding.FieldName = 'GoodsMasterCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -75,7 +76,7 @@ inherited GoodsSeparateForm: TGoodsSeparateForm
             Width = 72
           end
           object GoodsMasterName: TcxGridDBColumn
-            Caption = #1043#1083#1072#1074#1085#1099#1081' '#1090#1086#1074#1072#1088
+            Caption = #1058#1086#1074#1072#1088' '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'GoodsMasterName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -83,23 +84,25 @@ inherited GoodsSeparateForm: TGoodsSeparateForm
             Width = 123
           end
           object MeasureName_Master: TcxGridDBColumn
-            Caption = #1045#1076'. '#1080#1079#1084'.  ('#1075#1083'.'#1090#1086#1074#1072#1088')'
+            Caption = #1045#1076'. '#1080#1079#1084'.  ('#1090#1086#1074#1072#1088'  '#1088#1072#1089#1093'.)'
             DataBinding.FieldName = 'MeasureName_Master'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 67
+            Width = 70
           end
           object Weight_Master: TcxGridDBColumn
-            Caption = #1042#1077#1089'  ('#1075#1083'.'#1090#1086#1074#1072#1088')'
+            Caption = #1042#1077#1089'  ('#1090#1086#1074#1072#1088' '#1088#1072#1089#1093'.)'
             DataBinding.FieldName = 'Weight_Master'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 75
           end
           object GoodsGroupNameFull: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077') ('#1090#1086#1074#1072#1088' '#1087#1088#1080#1093'.)'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -107,7 +110,7 @@ inherited GoodsSeparateForm: TGoodsSeparateForm
             Width = 150
           end
           object GoodsGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1090#1086#1074#1072#1088' '#1087#1088#1080#1093'.)'
             DataBinding.FieldName = 'GoodsGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -115,7 +118,7 @@ inherited GoodsSeparateForm: TGoodsSeparateForm
             Width = 172
           end
           object GoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
+            Caption = #1050#1086#1076' ('#1090#1086#1074#1072#1088' '#1087#1088#1080#1093'.)'
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -123,7 +126,7 @@ inherited GoodsSeparateForm: TGoodsSeparateForm
             Width = 62
           end
           object GoodsName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
+            Caption = #1058#1086#1074#1072#1088' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -140,7 +143,7 @@ inherited GoodsSeparateForm: TGoodsSeparateForm
             Width = 55
           end
           object GoodsKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1087#1088#1080#1093'.)'
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -150,6 +153,7 @@ inherited GoodsSeparateForm: TGoodsSeparateForm
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -157,6 +161,7 @@ inherited GoodsSeparateForm: TGoodsSeparateForm
           object Weight: TcxGridDBColumn
             Caption = #1042#1077#1089
             DataBinding.FieldName = 'Weight'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 45

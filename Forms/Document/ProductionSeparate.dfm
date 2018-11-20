@@ -2,8 +2,10 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
   ClientHeight = 678
   ClientWidth = 903
+  ExplicitLeft = -130
+  ExplicitTop = -256
   ExplicitWidth = 919
-  ExplicitHeight = 716
+  ExplicitHeight = 713
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -296,7 +298,19 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object chPriceIn: TcxGridDBColumn [7]
+          object chPriceIn_hist: TcxGridDBColumn [7]
+            Caption = #1062#1077#1085#1072' '#1089'/'#1089' ('#1080#1089#1090#1086#1088#1080#1103')'
+            DataBinding.FieldName = 'PriceIn_hist'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object chPriceIn: TcxGridDBColumn [8]
             Caption = #1062#1077#1085#1072' '#1089'/'#1089
             DataBinding.FieldName = 'PriceIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -308,7 +322,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Options.Editing = False
             Width = 55
           end
-          object chSummIn: TcxGridDBColumn [8]
+          object chSummIn: TcxGridDBColumn [9]
             Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089
             DataBinding.FieldName = 'SummIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -320,7 +334,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Options.Editing = False
             Width = 55
           end
-          object ChildLiveWeight: TcxGridDBColumn [9]
+          object ChildLiveWeight: TcxGridDBColumn [10]
             Caption = #1046#1080#1074#1086#1081' '#1074#1077#1089
             DataBinding.FieldName = 'LiveWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -331,7 +345,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object ChildHeadCount: TcxGridDBColumn [10]
+          object ChildHeadCount: TcxGridDBColumn [11]
             Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -341,7 +355,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object ChildPartionGoods: TcxGridDBColumn [11]
+          object ChildPartionGoods: TcxGridDBColumn [12]
             Caption = #1055#1072#1088#1090#1080#1103' '#1089#1099#1088#1100#1103
             DataBinding.FieldName = 'PartionGoods'
             Visible = False
@@ -350,7 +364,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Options.Editing = False
             Width = 80
           end
-          object chIsCalculated: TcxGridDBColumn [12]
+          object chIsCalculated: TcxGridDBColumn [13]
             Caption = #1088#1072#1089#1095#1077#1090
             DataBinding.FieldName = 'isCalculated'
             HeaderAlignmentHorz = taCenter
