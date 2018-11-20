@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpSelect_Movement_UnnamedEnterprisesExactly_PrintScore (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_UnnamedEnterprisesExactly_PrintScore(
-    IN inMovementId        Integer  , -- ключ Документа
+    IN inMovementId    Integer  , -- ключ Документа
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -26,7 +26,9 @@ BEGIN
           , COALESCE(MovementFloat_TotalSumm.ValueData,0)::TFloat      AS TotalSumm
           , COALESCE(MovementFloat_TotalCount.ValueData,0)::TFloat     AS TotalCount
           , Object_Unit.ValueData                                      AS UnitName
-          , Object_ClientsByBank.ValueData                             AS ClientsByBankName
+          , Object_ClientsByBank.ValueData || ', ОКПО ' ||
+            COALESCE(ObjectString_OKPO.ValueData, '') || ', ИНН ' ||                                
+            COALESCE(ObjectString_INN.ValueData, '')                   AS ClientsByBankName
           , DATE_TRUNC ('DAY', CURRENT_TIMESTAMP)                      AS Date
           , ObjectString_OKPO.ValueData                                AS OKPO
           , ObjectString_INN.ValueData                                 AS INN
@@ -48,11 +50,11 @@ BEGIN
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId = Movement_UnnamedEnterprises.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSummOrder()
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId = Movement_UnnamedEnterprises.Id
-                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCountOrder()
+                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
 
             LEFT JOIN ObjectString AS ObjectString_OKPO
                                    ON ObjectString_OKPO.ObjectId = Object_ClientsByBank.Id
@@ -69,7 +71,6 @@ BEGIN
             Movement_UnnamedEnterprises.Id = inMovementId;
     RETURN NEXT Cursor1;
 
-
     OPEN Cursor2 FOR
         SELECT
             Object_Goods.ObjectCode                   AS GoodsCode
@@ -77,7 +78,7 @@ BEGIN
           , MI_UnnamedEnterprises.Amount              AS Amount
           , MIFloat_Price.ValueData                   AS Price
           , MIFloat_Summ.ValueData                    AS Summ
-          , SUBSTRING(Object_NDSKind.ValueData, 1, 3) AS NDSKindName
+          , SUBSTRING(Object_NDSKind.ValueData, 1, strpos(Object_NDSKind.ValueData, '%') - 1) AS NDSKindName
           , ObjectString_Goods_CodeUKTZED.ValueData   AS CodeUKTZED
           , Object_Exchange.ValueData                 AS ExchangeName
         FROM
