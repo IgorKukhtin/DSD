@@ -267,6 +267,16 @@ inherited ListDiffForm: TListDiffForm
             Options.Editing = False
             Width = 37
           end
+          object MCSDateChange: TcxGridDBColumn
+            AlternateCaption = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1085#1077#1089#1085#1080#1078#1072#1077#1084#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
+            Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083'. '#1080#1079#1084'. '#1053#1058#1047
+            DataBinding.FieldName = 'MCSDateChange'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1085#1077#1089#1085#1080#1078#1072#1077#1084#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
+            Options.Editing = False
+            Width = 81
+          end
           object MCSNotRecalc: TcxGridDBColumn
             Caption = #1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072
             DataBinding.FieldName = 'MCSNotRecalc'
@@ -275,6 +285,14 @@ inherited ListDiffForm: TListDiffForm
             HeaderHint = #1053#1077' '#1087#1077#1088#1077#1089#1095#1080#1090#1099#1074#1072#1090#1100' '#1053#1058#1047
             Options.Editing = False
             Width = 59
+          end
+          object MCSNotRecalcDateChange: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' "'#1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100' '#1082#1086#1076#1072'"'
+            DataBinding.FieldName = 'MCSNotRecalcDateChange'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 85
           end
           object MCSIsClose: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' '#1082#1086#1076
