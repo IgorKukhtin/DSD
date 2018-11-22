@@ -365,6 +365,66 @@ inherited RepriceForm: TRepriceForm
     inherited actAddMask: TdsdExecStoredProc
       Enabled = False
     end
+    object actRepriceMI: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecRepriceMI
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1091' '#1090#1077#1082#1091#1097#1077#1081' '#1087#1086#1079#1080#1094#1080#1080'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1080#1090#1100' '#1090#1077#1082#1091#1097#1091#1102' '#1087#1086#1079#1080#1094#1080#1102
+      Hint = #1055#1077#1088#1077#1086#1094#1077#1085#1080#1090#1100' '#1090#1077#1082#1091#1097#1091#1102' '#1087#1086#1079#1080#1094#1080#1102
+      ImageIndex = 27
+    end
+    object actExecRepriceMI: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spExecRepriceMI
+      StoredProcList = <
+        item
+          StoredProc = spExecRepriceMI
+        end>
+      Caption = 'actExecRepriceMI'
+    end
+    object actRepriceMIAll: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecRepriceMIAll
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1091' '#1090#1077#1082#1091#1097#1077#1081' '#1087#1086#1079#1080#1094#1080#1080' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1074#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1087 +
+        #1077#1088#1077#1086#1094#1077#1085#1082#1080' '#1079#1072' '#1076#1077#1085#1100' '#1075#1076#1077' '#1086#1085#1072' '#1086#1090#1089#1077#1077#1085#1072'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = 
+        #1055#1077#1088#1077#1086#1094#1077#1085#1080#1090#1100' '#1090#1077#1082#1091#1097#1091#1102' '#1087#1086#1079#1080#1094#1080#1102' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1074#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1080 +
+        ' '#1079#1072' '#1076#1077#1085#1100
+      Hint = 
+        #1055#1077#1088#1077#1086#1094#1077#1085#1080#1090#1100' '#1090#1077#1082#1091#1097#1091#1102' '#1087#1086#1079#1080#1094#1080#1102' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1074#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1080 +
+        ' '#1079#1072' '#1076#1077#1085#1100
+      ImageIndex = 28
+    end
+    object actExecRepriceMIAll: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spExecRepriceMIAll
+      StoredProcList = <
+        item
+          StoredProc = spExecRepriceMIAll
+        end>
+      Caption = 'actExecRepriceMIAll'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Reprice'
@@ -452,6 +512,18 @@ inherited RepriceForm: TRepriceForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRepriceMI'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRepriceMIAll'
         end>
     end
     inherited bbPrint: TdxBarButton
@@ -480,6 +552,26 @@ inherited RepriceForm: TRepriceForm
     end
     inherited bbMovementItemProtocol: TdxBarButton
       Visible = ivNever
+    end
+    object bbRepriceMI: TdxBarButton
+      Action = actRepriceMI
+      Category = 0
+    end
+    object bbRepriceMIAll: TdxBarButton
+      Action = actRepriceMIAll
+      Category = 0
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = 'New SubItem'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <>
+    end
+    object dxBarStatic1: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Hint = '     '
+      Visible = ivAlways
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -646,5 +738,39 @@ inherited RepriceForm: TRepriceForm
       end>
     Left = 784
     Top = 16
+  end
+  object spExecRepriceMI: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Reprice'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 662
+    Top = 176
+  end
+  object spExecRepriceMIAll: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_RepriceAll'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 662
+    Top = 256
   end
 end

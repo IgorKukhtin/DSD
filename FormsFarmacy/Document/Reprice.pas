@@ -43,6 +43,16 @@ type
     edChangePercent: TcxCurrencyEdit;
     Color_calc: TcxGridDBColumn;
     IsTop_Goods: TcxGridDBColumn;
+    actRepriceMI: TMultiAction;
+    actExecRepriceMI: TdsdExecStoredProc;
+    spExecRepriceMI: TdsdStoredProc;
+    bbRepriceMI: TdxBarButton;
+    actRepriceMIAll: TMultiAction;
+    actExecRepriceMIAll: TdsdExecStoredProc;
+    spExecRepriceMIAll: TdsdStoredProc;
+    bbRepriceMIAll: TdxBarButton;
+    dxBarSubItem1: TdxBarSubItem;
+    dxBarStatic1: TdxBarStatic;
   private
     { Private declarations }
   public

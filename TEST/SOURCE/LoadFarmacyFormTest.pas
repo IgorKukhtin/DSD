@@ -921,10 +921,10 @@ procedure TLoadFormTest.LoadRepriceFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRepriceUnitShedulerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRepriceUnitShedulerForm');
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRepriceJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRepriceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRepriceJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRepriceForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TRepriceForm');}
+  TdsdFormStorageFactory.GetStorage.Load('TRepriceForm');
 end;
 
 procedure TLoadFormTest.LoadMovementReportUnLiquidFormTest;

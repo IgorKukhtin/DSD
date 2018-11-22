@@ -25,6 +25,8 @@ BEGIN
                                  THEN 0
                             WHEN MovementLinkObject_PaidType.ObjectId = zc_Enum_PaidType_Card()
                                  THEN 1
+                            WHEN MovementLinkObject_PaidType.ObjectId = zc_Enum_PaidType_CardAdd()
+                                 THEN 2
                        END as PaidType 
                      , Movement_Check.CashRegisterId
 
@@ -59,7 +61,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 22.11.14                                                                   *
  03.07.14                                                       *
 */
 
