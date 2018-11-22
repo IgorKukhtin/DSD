@@ -103,11 +103,15 @@ BEGIN
 
      -- удаляем строки мастера (расход)
      UPDATE MovementItem 
-     SET isErased = TRUE
+     SET isErased = TRUE                                       -- удаляем
      WHERE MovementItem.MovementId = inMovementId
        AND MovementItem.DescId     = zc_MI_Master()
        AND MovementItem.isErased   = FALSE;
-     
+     -- сохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE) -- сохранили протокол
+     FROM MovementItem
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId     = zc_MI_Master();
      -- записываем новые строки в мастер
      PERFORM lpInsertUpdate_MI_ProductionSeparate_Master (ioId               := 0
                                                         , inMovementId       := inMovementId
@@ -124,10 +128,11 @@ BEGIN
                 , tmpMI_Master.GoodsKindId
                 , COALESCE (tmpMI_Child.StorageLineId, 0) AS StorageLineId
                 , tmpMI_Child.Amount
-                , ROW_NUMBER() OVER (PARTITION BY COALESCE (tmpMI_Child.StorageLineId, 0)) AS ord
+                , ROW_NUMBER() OVER (ORDER BY COALESCE (tmpMI_Child.StorageLineId, 0)) AS ord
            FROM tmpMI_Master
                 INNER JOIN tmpMI_Child ON COALESCE (tmpMI_Child.StorageLineId, 0) <> 0
           UNION 
+           --
            SELECT tmpMI_Master.GoodsId
                 , tmpMI_Master.GoodsKindId
                 , 0 AS StorageLineId
@@ -138,6 +143,7 @@ BEGIN
                            ) AS tmpMI_Child ON 1= 1
            WHERE (tmpMI_Master.Amount - tmpMI_Child.Amount) <> 0
            ) AS tmp
+           -- в одну из строк запишем значения LiveWeight и HeadCount
            LEFT JOIN tmpMI_Master ON tmp.ord = 1;
 
 END;
