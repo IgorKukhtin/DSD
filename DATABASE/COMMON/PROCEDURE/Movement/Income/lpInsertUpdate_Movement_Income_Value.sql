@@ -45,6 +45,7 @@ BEGIN
                                         , inPersonalPackerId  := inPersonalPackerId
                                         , inCurrencyDocumentId:= inCurrencyDocumentId
                                         , inCurrencyPartnerId := inCurrencyPartnerId
+                                        , ioCurrencyValue     := NULL :: TFloat
                                         , inUserId            := inUserId
                                          ) AS tmp);
 

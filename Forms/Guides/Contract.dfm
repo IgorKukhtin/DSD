@@ -2985,8 +2985,8 @@ object ContractForm: TContractForm
     MasterSource = DataSource
     PacketRecords = 0
     Params = <>
-    Left = 997
-    Top = 365
+    Left = 965
+    Top = 373
   end
   object DataSourceGoods: TDataSource
     DataSet = CDSContractGoods
