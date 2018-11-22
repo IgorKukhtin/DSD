@@ -236,7 +236,6 @@ object IncomeForm: TIncomeForm
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
-      Properties.ReadOnly = True
       TabOrder = 26
       Width = 44
     end
@@ -251,7 +250,6 @@ object IncomeForm: TIncomeForm
       Properties.Buttons = <
         item
           Default = True
-          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -745,9 +743,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1492,6 +1487,9 @@ object IncomeForm: TIncomeForm
       ReportNameParam.Value = 'PrintMovement_Income'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -1933,6 +1931,9 @@ object IncomeForm: TIncomeForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintSticker: TdsdPrintAction
       Category = 'DSDLib'
@@ -1963,6 +1964,9 @@ object IncomeForm: TIncomeForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   object MasterDS: TDataSource
@@ -2314,10 +2318,11 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outCurrencyValue'
+        Name = 'ioCurrencyValue'
         Value = 0.000000000000000000
         Component = edCurrencyValue
         DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -2329,8 +2334,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 402
-    Top = 232
+    Left = 418
+    Top = 256
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -2780,7 +2785,7 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     Left = 680
-    Top = 80
+    Top = 88
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -2928,9 +2933,31 @@ object IncomeForm: TIncomeForm
         Component = edChangePercent
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = Null
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = Null
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyValue'
+        Value = Null
+        Component = edCurrencyValue
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
-    Left = 336
-    Top = 8
+    Left = 296
+    Top = 16
   end
   object spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TotalSumm'
@@ -2983,8 +3010,8 @@ object IncomeForm: TIncomeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 824
-    Top = 32
+    Left = 816
+    Top = 96
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
@@ -3606,8 +3633,8 @@ object IncomeForm: TIncomeForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 836
-    Top = 96
+    Left = 852
+    Top = 152
   end
   object JuridicalFromGuides: TdsdGuides
     KeyField = 'Id'
@@ -3619,8 +3646,8 @@ object IncomeForm: TIncomeForm
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 377
-    Top = 24
+    Left = 409
+    Top = 48
   end
   object spSelectPrintSticker: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Income_PrintSticker'

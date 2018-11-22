@@ -35,6 +35,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , AmountDebet TFloat
              , AmountKredit TFloat
              , BranchName TVarChar, ContainerId Integer
+             , CurrencyId Integer, CurrencyName TVarChar, CurrencyValue TFloat
              , isErased Boolean
               )
 AS
@@ -141,6 +142,10 @@ BEGIN
        , Object_Branch.ValueData AS BranchName
        , Container_Partner_View.ContainerId
 
+       , Object_Currency.Id         AS CurrencyId 
+       , Object_Currency.ValueData  AS CurrencyName
+       , 0                :: TFloat AS CurrencyValue
+
        , Object_Partner.isErased
 
    FROM Object AS Object_Partner
@@ -235,6 +240,12 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_Comment
                                ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
+ 
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
+                             ON ObjectLink_Contract_Currency.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
+        LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
+
 
         /*LEFT JOIN (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
                          , ObjectFloat_Value.ValueData AS ChangePercent
@@ -390,6 +401,10 @@ BEGIN
        , Object_Branch.ValueData AS BranchName
        , Container_Partner_View.ContainerId
 
+       , Object_Currency.Id         AS CurrencyId 
+       , Object_Currency.ValueData  AS CurrencyName 
+       , 0                :: TFloat AS CurrencyValue
+
        , Object_Partner.isErased
 
    FROM Object AS Object_Partner
@@ -486,6 +501,11 @@ BEGIN
                                ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
 
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
+                             ON ObjectLink_Contract_Currency.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
+        LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
+
         LEFT JOIN /*(SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
                          , ObjectFloat_Value.ValueData AS ChangePercent
                     FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
@@ -567,7 +587,8 @@ ALTER FUNCTION gpSelect_Object_ContractPartnerChoice (Boolean, TVarChar) OWNER T
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.+
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.11.18         * add Currency
  10.05.17         *  add Address, GPSE, GPSN
  12.09.15         * add MemberTake1...7
  08.09.14                                        * add Object_RoleAccessKeyGuide_View

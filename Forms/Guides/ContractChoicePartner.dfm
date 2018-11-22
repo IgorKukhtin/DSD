@@ -3,7 +3,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
   ClientHeight = 460
   ClientWidth = 1000
   ExplicitWidth = 1016
-  ExplicitHeight = 499
+  ExplicitHeight = 498
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -183,6 +183,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           object ContractTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object CurrencyName: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072
+            DataBinding.FieldName = 'CurrencyName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -689,6 +697,29 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           Name = 'PriceListName'
           Value = ''
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CurrencyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CurrencyName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CurrencyValue'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
     end
