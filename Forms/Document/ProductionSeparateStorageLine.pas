@@ -50,6 +50,10 @@ type
     actStorageLine: TOpenChoiceForm;
     actStorageLineChild: TOpenChoiceForm;
     PrintItemsTwoCDS: TClientDataSet;
+    gpUpdate_StorageLineByChild: TdsdStoredProc;
+    actUpdate_StorageLineByChild: TdsdExecStoredProc;
+    bbUpdate_StorageLineByChild: TdxBarButton;
+    macUpdate_StorageLineByChild: TMultiAction;
   private
     { Private declarations }
   public
