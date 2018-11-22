@@ -70,6 +70,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.11.18         *
  29.05.15                                        * lpInsertUpdate_Movement_Income
  06.09.14                                        * add lpInsert_MovementProtocol
  23.07.14         * add inCurrencyDocumentId

@@ -162,8 +162,7 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
       inherited cxGridChild: TcxGrid
         Top = 229
         Width = 903
-        ExplicitLeft = -3
-        ExplicitTop = 230
+        ExplicitTop = 229
         ExplicitWidth = 903
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -267,7 +266,6 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

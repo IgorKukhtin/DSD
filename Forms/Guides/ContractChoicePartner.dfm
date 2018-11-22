@@ -713,14 +713,6 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           ComponentItem = 'CurrencyName'
           DataType = ftString
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'CurrencyValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'CurrencyValue'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
         end>
     end
     object actShowAll: TBooleanStoredProcAction

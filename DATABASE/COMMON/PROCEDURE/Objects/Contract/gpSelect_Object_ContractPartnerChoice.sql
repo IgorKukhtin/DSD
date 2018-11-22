@@ -35,7 +35,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , AmountDebet TFloat
              , AmountKredit TFloat
              , BranchName TVarChar, ContainerId Integer
-             , CurrencyId Integer, CurrencyName TVarChar, CurrencyValue TFloat
+             , CurrencyId Integer, CurrencyName TVarChar
              , isErased Boolean
               )
 AS
@@ -144,7 +144,6 @@ BEGIN
 
        , Object_Currency.Id         AS CurrencyId 
        , Object_Currency.ValueData  AS CurrencyName
-       , 0                :: TFloat AS CurrencyValue
 
        , Object_Partner.isErased
 
@@ -403,7 +402,6 @@ BEGIN
 
        , Object_Currency.Id         AS CurrencyId 
        , Object_Currency.ValueData  AS CurrencyName 
-       , 0                :: TFloat AS CurrencyValue
 
        , Object_Partner.isErased
 

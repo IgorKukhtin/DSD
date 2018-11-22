@@ -23,7 +23,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
     IN inPersonalPackerId    Integer   , -- —отрудник (заготовитель)
     IN inCurrencyDocumentId  Integer   , -- ¬алюта (документа)
     IN inCurrencyPartnerId   Integer   , -- ¬алюта (контрагента)
- INOUT ioCurrencyValue      TFloat    , -- курс валюты
+ INOUT ioCurrencyValue       TFloat    , -- курс валюты
     IN inUserId              Integer     -- пользователь
 )
 RETURNS RECORD
@@ -32,6 +32,8 @@ $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
    DECLARE vbCurrencyValue TFloat;
+   DECLARE vbCurrencyDocumentId Integer;
+   DECLARE vbCurrencyPartnerId Integer;
 BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('DAY', inOperDatePartner) 
@@ -44,6 +46,11 @@ BEGIN
      THEN
          RAISE EXCEPTION 'ќшибка.Ќе установлено значение <ƒоговор>.';
      END IF;
+     
+     -- сохраненна€ валюта документа
+     vbCurrencyDocumentId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_CurrencyDocument());
+     -- сохраненна€ ¬алюта (контрагента)
+     vbCurrencyPartnerId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_CurrencyPartner());    
 
      -- проверка - св€занные документы »змен€ть нельз€
      PERFORM lfCheck_Movement_Parent (inMovementId:= ioId, inComment:= 'изменение');
@@ -72,33 +79,51 @@ BEGIN
 
      -- рассчитали и свойство < урс дл€ перевода в валюту баланса>
      --outCurrencyValue := 1.00;
-     IF inCurrencyDocumentId <> inCurrencyPartnerId
+     IF inCurrencyDocumentId <> inCurrencyPartnerId 
      THEN
-         vbCurrencyValue:= (SELECT MovementItem.Amount
-                             FROM (SELECT MAX (Movement.OperDate) as maxOperDate
-                                   FROM Movement 
-                                       JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
-                                                        AND MovementItem.ObjectId = inCurrencyDocumentId
-                                       JOIN MovementItemLinkObject AS MILinkObject_CurrencyTo
-                                                                   ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
-                                                                  AND MILinkObject_CurrencyTo.DescId = zc_MILinkObject_Currency()
-                                                                  AND MILinkObject_CurrencyTo.ObjectId = inCurrencyPartnerId
-                                   WHERE Movement.DescId = zc_Movement_Currency()
-                                     AND Movement.OperDate <= inOperDate
-                                     AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())   
-                                  ) AS tmpDate
-                                  INNER JOIN Movement ON Movement.DescId = zc_Movement_Currency()
-                                                     AND Movement.OperDate = tmpDate.maxOperDate
-                                                     AND Movement.StatusId IN (zc_Enum_Status_Complete()/*, zc_Enum_Status_UnComplete()*/)
-                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
-                                                         AND MovementItem.DescId = zc_MI_Master()
-                            );
-     END IF;
-     
-     -- если не определен курс в джокументе то берем рассчет
-     IF COALESCE (ioCurrencyValue, 0) = 0
-     THEN 
-         ioCurrencyValue := vbCurrencyValue;
+         -- если изменилась валюта документа или если значение курса = 0
+         IF (vbCurrencyDocumentId <> inCurrencyDocumentId OR vbCurrencyPartnerId <> inCurrencyPartnerId OR COALESCE (ioCurrencyValue, 0) = 0)
+         THEN
+             ioCurrencyValue:= (SELECT MovementItem.Amount
+                                FROM (
+                                      SELECT MovementItem.Amount
+                                           , ROW_NUMBER() OVER (ORDER BY Movement.OperDate DESC) as ord
+                                      FROM Movement 
+                                          JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+                                                           AND MovementItem.ObjectId = inCurrencyDocumentId
+                                          JOIN MovementItemLinkObject AS MILinkObject_CurrencyTo
+                                                                      ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
+                                                                     AND MILinkObject_CurrencyTo.DescId = zc_MILinkObject_Currency()
+                                                                     AND MILinkObject_CurrencyTo.ObjectId = inCurrencyPartnerId
+                                      WHERE Movement.DescId = zc_Movement_Currency()
+                                        AND Movement.OperDate <= inOperDate
+                                        AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())   
+                                      ) AS MovementItem
+                                WHERE MovementItem.ord = 1
+                                );
+             
+                                /*
+                                (SELECT MovementItem.Amount
+                                FROM (SELECT MAX (Movement.OperDate) as maxOperDate
+                                      FROM Movement 
+                                          JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+                                                           AND MovementItem.ObjectId = inCurrencyDocumentId
+                                          JOIN MovementItemLinkObject AS MILinkObject_CurrencyTo
+                                                                      ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
+                                                                     AND MILinkObject_CurrencyTo.DescId = zc_MILinkObject_Currency()
+                                                                     AND MILinkObject_CurrencyTo.ObjectId = inCurrencyPartnerId
+                                      WHERE Movement.DescId = zc_Movement_Currency()
+                                        AND Movement.OperDate <= inOperDate
+                                        AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())   
+                                     ) AS tmpDate
+                                     INNER JOIN Movement ON Movement.DescId = zc_Movement_Currency()
+                                                        AND Movement.OperDate = tmpDate.maxOperDate
+                                                        AND Movement.StatusId IN (zc_Enum_Status_Complete()/*, zc_Enum_Status_UnComplete()*/)
+                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
+                                                            AND MovementItem.DescId = zc_MI_Master()
+                               );*/
+         END IF;
+     ELSE ioCurrencyValue := 1.00;
      END IF;
      
      -- сохранили свойство < урс дл€ перевода в валюту баланса>
