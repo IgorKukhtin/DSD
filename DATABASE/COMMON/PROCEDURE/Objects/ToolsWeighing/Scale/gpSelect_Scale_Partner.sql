@@ -189,12 +189,13 @@ BEGIN
     -- Результат
     RETURN QUERY
        WITH tmpUnit_not AS (SELECT 954062 AS UnitId -- Отдел Х
-                           UNION 
+                           /*UNION 
                             SELECT lfSelect.LocationId FROM lfSelect_Object_Unit_List (8382) AS lfSelect -- Админ
                            UNION 
                             SELECT lfSelect.LocationId FROM lfSelect_Object_Unit_List (8427) AS lfSelect WHERE lfSelect.LocationId <> 8429 -- Общефирменные + Отдел логистики
                            -- UNION 
                            --  SELECT lfSelect.LocationId FROM lfSelect_Object_Unit_List (8432) AS lfSelect -- Общепроизводственные
+                           */
                             
                            )
           , tmpMember AS (SELECT lfSelect.MemberId        AS MemberId

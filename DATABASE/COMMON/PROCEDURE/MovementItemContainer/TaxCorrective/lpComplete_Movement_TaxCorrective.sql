@@ -56,7 +56,9 @@ BEGIN
           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), MovementLinkMovement.MovementChildId, vbDocumentTaxKindId)
           FROM MovementLinkMovement
           WHERE MovementLinkMovement.MovementId = inMovementId
-            AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master();
+            AND MovementLinkMovement.DescId     = zc_MovementLinkMovement_Master()
+            AND MovementLinkMovement.MovementChildId > 0
+            ;
      END IF;
 
      -- ФИНИШ - Обязательно меняем статус документа + сохранили протокол

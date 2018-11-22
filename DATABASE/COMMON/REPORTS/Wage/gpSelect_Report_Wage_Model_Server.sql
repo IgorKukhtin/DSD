@@ -1070,42 +1070,6 @@ BEGIN
 
     FROM Setting_Wage_1 AS Setting
          CROSS JOIN tmpOperDate
-         LEFT OUTER JOIN Movement_SheetGroup ON COALESCE (Movement_SheetGroup.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
-                                            AND COALESCE (Movement_SheetGroup.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
-                                            AND (COALESCE (Movement_SheetGroup.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_From, 0)
-                                              OR COALESCE (Movement_SheetGroup.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_To, 0)
-                                              OR (COALESCE (Setting.StorageLineId_From, 0)        = 0
-                                              AND COALESCE (Setting.StorageLineId_To, 0)          = 0)
-                                                )
-                                            AND Setting.ServiceModelKindId                        = zc_Enum_ModelServiceKind_MonthSheetWorkTime() -- за мес€ц табель
-
-         LEFT OUTER JOIN Movement_Sheet ON COALESCE (Movement_Sheet.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
-                                       AND COALESCE (Movement_Sheet.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
-                                       AND (COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_From, 0)
-                                         OR COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_To, 0)
-                                         OR (COALESCE (Setting.StorageLineId_From, 0)   = 0
-                                         AND COALESCE (Setting.StorageLineId_To, 0)     = 0)
-                                           )
-                                       AND Movement_Sheet.OperDate                      = tmpOperDate.OperDate
-                                       AND (COALESCE (Movement_Sheet.MemberId, 0)       = Movement_SheetGroup.MemberId
-                                         OR Movement_SheetGroup.MemberId IS NULL
-                                           )
-
-         LEFT OUTER JOIN Movement_Sheet_Trainee
-                                        ON COALESCE (Movement_Sheet_Trainee.PositionId, 0)      = COALESCE (Movement_Sheet.PositionId, 0)
-                                       AND COALESCE (Movement_Sheet_Trainee.PositionLevelId, 0) = COALESCE (Movement_Sheet.PositionLevelId, 0)
-                                       AND COALESCE (Movement_Sheet_Trainee.StorageLineId, 0)   = COALESCE (Movement_Sheet.StorageLineId, 0)
-                                       AND Movement_Sheet_Trainee.OperDate                      = Movement_Sheet.OperDate
-                                       AND Movement_Sheet_Trainee.Ord                           = 1
-                                       --
-                                       AND Movement_Sheet.Tax_Trainee                           > 0
-                                       AND Setting.ServiceModelKindId                           = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime()
- 
-         LEFT OUTER JOIN Movement_Sheet_Count_Day ON Movement_Sheet_Count_Day.MemberId        = COALESCE (Movement_SheetGroup.MemberId, Movement_Sheet.MemberId)
-                                                 AND Movement_Sheet_Count_Day.PersonalGroupId = COALESCE (Movement_SheetGroup.PersonalGroupId, Movement_Sheet.PersonalGroupId)
-                                                 AND Movement_Sheet_Count_Day.PositionLevelId = COALESCE (Movement_SheetGroup.PositionLevelId, Movement_Sheet.PositionLevelId)
-                                                 AND Movement_Sheet_Count_Day.PositionId      = COALESCE (Movement_SheetGroup.PositionId, Movement_Sheet.PositionId)
-                                                 AND Movement_Sheet_Count_Day.StorageLineId   = COALESCE (Movement_SheetGroup.StorageLineId, Movement_Sheet.StorageLineId)
 
         LEFT OUTER JOIN ServiceModelMovement ON COALESCE (Setting.StaffListId, 0)                  = COALESCE (ServiceModelMovement.StaffListId, 0)
                                             AND COALESCE (Setting.UnitId, 0)                       = COALESCE (ServiceModelMovement.UnitId, 0)
@@ -1136,6 +1100,53 @@ BEGIN
                                             AND (ServiceModelMovement.DocumentKindId               = Setting.DocumentKindId
                                               OR Setting.DocumentKindId = 0
                                                 )
+
+         LEFT OUTER JOIN Movement_SheetGroup ON COALESCE (Movement_SheetGroup.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
+                                            AND COALESCE (Movement_SheetGroup.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
+                                            AND (COALESCE (Movement_SheetGroup.StorageLineId, 0)  = COALESCE (ServiceModelMovement.StorageLineId_From, 0)
+                                              OR COALESCE (Movement_SheetGroup.StorageLineId, 0)  = COALESCE (ServiceModelMovement.StorageLineId_To, 0)
+                                              OR (COALESCE (ServiceModelMovement.StorageLineId_From, 0) = 0
+                                              AND COALESCE (ServiceModelMovement.StorageLineId_To,   0) = 0)
+                                                )
+                                            /*AND (COALESCE (Movement_SheetGroup.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_From, 0)
+                                              OR COALESCE (Movement_SheetGroup.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_To, 0)
+                                              OR (COALESCE (Setting.StorageLineId_From, 0)        = 0
+                                              AND COALESCE (Setting.StorageLineId_To, 0)          = 0)
+                                                )*/
+                                            AND Setting.ServiceModelKindId                        = zc_Enum_ModelServiceKind_MonthSheetWorkTime() -- за мес€ц табель
+
+         LEFT OUTER JOIN Movement_Sheet ON COALESCE (Movement_Sheet.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
+                                       AND COALESCE (Movement_Sheet.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
+                                       AND (COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (ServiceModelMovement.StorageLineId_From, 0)
+                                         OR COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (ServiceModelMovement.StorageLineId_To, 0)
+                                         OR (COALESCE (ServiceModelMovement.StorageLineId_From, 0) = 0
+                                         AND COALESCE (ServiceModelMovement.StorageLineId_To,   0) = 0)
+                                           )
+                                       /*AND (COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_From, 0)
+                                         OR COALESCE (Movement_Sheet.StorageLineId, 0)  = COALESCE (Setting.StorageLineId_To, 0)
+                                         OR (COALESCE (Setting.StorageLineId_From, 0)   = 0
+                                         AND COALESCE (Setting.StorageLineId_To, 0)     = 0)
+                                           )*/
+                                       AND Movement_Sheet.OperDate                      = tmpOperDate.OperDate
+                                       AND (COALESCE (Movement_Sheet.MemberId, 0)       = Movement_SheetGroup.MemberId
+                                         OR Movement_SheetGroup.MemberId IS NULL
+                                           )
+
+         LEFT OUTER JOIN Movement_Sheet_Trainee
+                                        ON COALESCE (Movement_Sheet_Trainee.PositionId, 0)      = COALESCE (Movement_Sheet.PositionId, 0)
+                                       AND COALESCE (Movement_Sheet_Trainee.PositionLevelId, 0) = COALESCE (Movement_Sheet.PositionLevelId, 0)
+                                       AND COALESCE (Movement_Sheet_Trainee.StorageLineId, 0)   = COALESCE (Movement_Sheet.StorageLineId, 0)
+                                       AND Movement_Sheet_Trainee.OperDate                      = Movement_Sheet.OperDate
+                                       AND Movement_Sheet_Trainee.Ord                           = 1
+                                       --
+                                       AND Movement_Sheet.Tax_Trainee                           > 0
+                                       AND Setting.ServiceModelKindId                           = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime()
+ 
+         LEFT OUTER JOIN Movement_Sheet_Count_Day ON Movement_Sheet_Count_Day.MemberId        = COALESCE (Movement_SheetGroup.MemberId, Movement_Sheet.MemberId)
+                                                 AND Movement_Sheet_Count_Day.PersonalGroupId = COALESCE (Movement_SheetGroup.PersonalGroupId, Movement_Sheet.PersonalGroupId)
+                                                 AND Movement_Sheet_Count_Day.PositionLevelId = COALESCE (Movement_SheetGroup.PositionLevelId, Movement_Sheet.PositionLevelId)
+                                                 AND Movement_Sheet_Count_Day.PositionId      = COALESCE (Movement_SheetGroup.PositionId, Movement_Sheet.PositionId)
+                                                 AND Movement_Sheet_Count_Day.StorageLineId   = COALESCE (Movement_SheetGroup.StorageLineId, Movement_Sheet.StorageLineId)
 
         LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = COALESCE (Movement_SheetGroup.PersonalGroupId, Movement_Sheet.PersonalGroupId)
 

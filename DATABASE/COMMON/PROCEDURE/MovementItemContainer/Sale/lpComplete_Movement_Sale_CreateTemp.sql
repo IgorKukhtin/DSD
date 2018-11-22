@@ -25,7 +25,7 @@ BEGIN
                                , ContainerId_GoodsTransit_01 Integer, ContainerId_GoodsTransit_02 Integer, ContainerId_GoodsTransit_53 Integer
                                , ObjectDescId Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime, ChangePercent TFloat, isChangePrice Boolean
                                , OperCount TFloat, OperCount_ChangePercent TFloat, OperCount_Partner TFloat, tmpOperSumm_PriceList TFloat, OperSumm_PriceList TFloat, tmpOperSumm_PriceListJur TFloat, OperSumm_PriceListJur TFloat
-                               , tmpOperSumm_Partner TFloat, tmpOperSumm_Partner_original      TFloat, tmpOperSumm_PartnerVirt               TFloat, tmpOperSumm_Partner_Currency TFloat
+                               , tmpOperSumm_Partner TFloat, tmpOperSumm_Partner_original      TFloat, tmpOperSumm_PartnerVirt            TFloat, tmpOperSumm_Partner_Currency TFloat
                                , OperSumm_Partner TFloat,    OperSumm_Partner_ChangePercent TFloat,    OperSumm_PartnerVirt_ChangePercent TFloat,            OperSumm_Currency TFloat, OperSumm_Partner_ChangePromo TFloat, OperSumm_80103 TFloat
                                , ContainerId_ProfitLoss_10100 Integer, ContainerId_ProfitLoss_10200 Integer, ContainerId_ProfitLoss_10250 Integer, ContainerId_ProfitLoss_10300 Integer, ContainerId_ProfitLoss_80103 Integer
                                , ContainerId_Partner Integer, ContainerId_Currency Integer, AccountId_Partner Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
