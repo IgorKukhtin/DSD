@@ -7,44 +7,22 @@ CREATE OR REPLACE FUNCTION gpMovementItem_GoodsAccount_SetErased(
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
 )
-  RETURNS Boolean
+RETURNS Boolean
 AS
 $BODY$
-   DECLARE vbMovementId Integer;
-   DECLARE vbStatusId Integer;
    DECLARE vbUserId Integer;
 BEGIN
   -- проверка прав пользователя на вызов процедуры
-  -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_MI_GoodsAccount());
+  -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_MI_GoodsAccount());
   vbUserId:= lpGetUserBySession (inSession);
 
 
   -- устанавливаем новое значение
-  outIsErased := TRUE;
-
-  -- Обязательно меняем
-  UPDATE MovementItem SET isErased = TRUE WHERE Id = inMovementItemId
-         RETURNING MovementId INTO vbMovementId;
-
-  -- проверка - связанные документы Изменять нельзя
-  -- PERFORM lfCheck_Movement_Parent (inMovementId:= vbMovementId, inComment:= 'изменение');
-
-  -- определяем <Статус>
-  vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
-
-  -- проверка - проведенные/удаленные документы Изменять нельзя
-  IF vbStatusId <> zc_Enum_Status_UnComplete() -- AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
-  THEN
-      RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData_sh (vbStatusId);
-  END IF;
-
-  -- пересчитали Итоговые суммы по накладной
-  PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
+  outIsErased := lpSetErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpMovementItem_GoodsAccount_SetErased (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

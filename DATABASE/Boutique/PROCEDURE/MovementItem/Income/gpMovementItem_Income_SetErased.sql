@@ -1,8 +1,8 @@
--- Function: gpMovementItem_ReturnOut_SetErased (Integer, Integer, TVarChar)
+-- Function: gpMovementItem_Income_SetErased (Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpMovementItem_ReturnOut_SetErased (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpMovementItem_Income_SetErased (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpMovementItem_ReturnOut_SetErased(
+CREATE OR REPLACE FUNCTION gpMovementItem_Income_SetErased(
     IN inMovementItemId      Integer              , -- ключ объекта <Ёлемент документа>
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
@@ -10,12 +10,10 @@ CREATE OR REPLACE FUNCTION gpMovementItem_ReturnOut_SetErased(
   RETURNS Boolean
 AS
 $BODY$
-   DECLARE vbMovementId Integer;
-   DECLARE vbStatusId Integer;
    DECLARE vbUserId Integer;
 BEGIN
   -- проверка прав пользовател€ на вызов процедуры
-  vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_MI_ReturnOut());
+  vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_MI_Income());
 
   -- устанавливаем новое значение
   outIsErased := lpSetErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);
@@ -31,4 +29,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpMovementItem_ReturnOut_SetErased (inMovementId:= 55, inJuridicalId = 1, inSession:= '2')
+-- SELECT * FROM gpMovementItem_Income_SetErased (inMovementId:= 55, inJuridicalId = 1, inSession:= '2')

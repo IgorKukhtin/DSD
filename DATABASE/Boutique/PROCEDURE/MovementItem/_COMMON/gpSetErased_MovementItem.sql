@@ -31,4 +31,6 @@ ALTER FUNCTION gpSetErased_MovementItem (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
+-- SELECT * FROM Object_PartionGoods join MovementItem on MovementItem.Id = MovementItemId and MovementItem.isErased <> Object_PartionGoods.isErased
+-- тест
 -- SELECT * FROM gpSetErased_MovementItem (inMovementItemId:= 0, inSession:= '2')
