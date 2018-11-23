@@ -29,13 +29,13 @@ BEGIN
        OPEN Cursor1 FOR
        WITH -- себестоимость 
             tmpSummIn AS (SELECT MIContainer.MovementItemId, -1 * SUM (MIContainer.Amount) AS SummIn
-                             FROM MovementItemContainer AS MIContainer
-                             WHERE MIContainer.MovementId = inMovementId
-                               AND MIContainer.DescId     = zc_MIContainer_Summ()
-                               AND MIContainer.isActive   = FALSE
-                               AND vbIsSummIn             = TRUE
-                             GROUP BY MIContainer.MovementItemId
-                             )
+                          FROM MovementItemContainer AS MIContainer
+                          WHERE MIContainer.MovementId = inMovementId
+                            AND MIContainer.DescId     = zc_MIContainer_Summ()
+                            AND MIContainer.isActive   = FALSE
+                            AND vbIsSummIn             = TRUE
+                          GROUP BY MIContainer.MovementItemId
+                         )
        SELECT
              0                                      AS Id
            , 0                                      AS LineNum

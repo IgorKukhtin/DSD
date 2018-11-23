@@ -51,6 +51,14 @@ BEGIN
 
      -- Ёти параметры нужны дл€
      inIsLastComplete:= TRUE;
+     
+
+     -- !!!ѕересчет StorageLine - by Child!!!
+     IF vbUserId = zc_Enum_Process_Auto_ReComplete()
+        AND DATE_TRUNC ('MONTH', (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)) < DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '3 DAY')
+     THEN
+         PERFORM gpUpdate_MI_ProductionSeparate_StorageLineByChild (inMovementId, inSession);
+     END IF;
 
 
      -- Ёти параметры нужны дл€ формировани€ јналитик в проводках
