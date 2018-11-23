@@ -743,11 +743,10 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_UnLiquidForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_UnLiquidDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_UnLiquidDialogForm');
-    exit;
     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportOrderGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReportOrderGoodsForm');
-
+    }
     // отчет распределение остатков
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsForm');
@@ -757,7 +756,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoods_ToForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoods_ToForm');
     exit;
-
+    {
     //Отчет Приход на точку
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');

@@ -114,6 +114,8 @@ type
     cxLabel8: TcxLabel;
     cbTerm: TcxCheckBox;
     edTerm: TcxCurrencyEdit;
+    actRefreshReserve: TdsdDataSetRefresh;
+    cbReserve: TcxCheckBox;
   private
     { Private declarations }
   public

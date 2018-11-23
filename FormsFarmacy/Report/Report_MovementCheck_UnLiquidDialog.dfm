@@ -3,7 +3,7 @@ object Report_MovementCheck_UnLiquidDialogForm: TReport_MovementCheck_UnLiquidDi
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1087#1086' '#1053#1077#1083#1080#1082#1074#1080#1076#1085#1086#1084#1091' '#1090#1086#1074#1072#1088#1091'>'
-  ClientHeight = 170
+  ClientHeight = 215
   ClientWidth = 349
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_MovementCheck_UnLiquidDialogForm: TReport_MovementCheck_UnLiquidDi
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 49
-    Top = 136
+    Top = 177
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_MovementCheck_UnLiquidDialogForm: TReport_MovementCheck_UnLiquidDi
   end
   object cxButton2: TcxButton
     Left = 223
-    Top = 136
+    Top = 177
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -54,7 +54,7 @@ object Report_MovementCheck_UnLiquidDialogForm: TReport_MovementCheck_UnLiquidDi
   end
   object edUnit: TcxButtonEdit
     Left = 10
-    Top = 78
+    Top = 119
     Properties.Buttons = <
       item
         Default = True
@@ -66,7 +66,7 @@ object Report_MovementCheck_UnLiquidDialogForm: TReport_MovementCheck_UnLiquidDi
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 58
+    Top = 99
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object cxLabel6: TcxLabel
@@ -87,15 +87,22 @@ object Report_MovementCheck_UnLiquidDialogForm: TReport_MovementCheck_UnLiquidDi
     TabOrder = 8
     Width = 129
   end
+  object cbReserve: TcxCheckBox
+    Left = 8
+    Top = 65
+    Caption = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' ('#1044#1072'/'#1053#1077#1090')'
+    TabOrder = 9
+    Width = 249
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
     Left = 175
-    Top = 121
+    Top = 162
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 214
-    Top = 47
+    Top = 88
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -108,7 +115,7 @@ object Report_MovementCheck_UnLiquidDialogForm: TReport_MovementCheck_UnLiquidDi
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 255
-    Top = 93
+    Top = 134
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -152,9 +159,17 @@ object Report_MovementCheck_UnLiquidDialogForm: TReport_MovementCheck_UnLiquidDi
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isReserve'
+        Value = Null
+        Component = cbReserve
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 22
-    Top = 103
+    Top = 144
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -185,11 +200,11 @@ object Report_MovementCheck_UnLiquidDialogForm: TReport_MovementCheck_UnLiquidDi
         MultiSelectSeparator = ','
       end>
     Left = 86
-    Top = 71
+    Top = 112
   end
   object ActionList: TActionList
     Left = 155
-    Top = 80
+    Top = 121
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -249,6 +264,6 @@ object Report_MovementCheck_UnLiquidDialogForm: TReport_MovementCheck_UnLiquidDi
       end>
     PackSize = 1
     Left = 111
-    Top = 113
+    Top = 154
   end
 end

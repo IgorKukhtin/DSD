@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION  gpReport_Movement_Check_UnLiquid(
     IN inStartDate        TDateTime,  -- Дата начала
     IN inEndDate          TDateTime,  -- Дата окончания
     IN inisUnitList       Boolean  ,  -- для выбранных подразделений
+    IN inIsReserve        Boolean  ,  --  Учитывать отложенный товар Да/Нет
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS  SETOF refcursor
@@ -141,23 +142,63 @@ BEGIN
             AND Movement_Send.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
           GROUP BY MI_Send.ObjectId 
                  , MovementLinkObject_Unit.ObjectId 
-          HAVING SUM (MI_Send.Amount) <> 0 
+          HAVING SUM (MI_Send.Amount) <> 0
           ;
                       
     CREATE TEMP TABLE _tmpCheck (GoodsId Integer, GoodsMainId Integer, UnitId Integer, Amount_Sale TFloat, Summa_Sale TFloat
                                , Amount_Sale1 TFloat, Summa_Sale1 TFloat, Amount_Sale3 TFloat, Summa_Sale3 TFloat, Amount_Sale6 TFloat, Summa_Sale6 TFloat
-                               , Amount TFloat, Amount_Send TFloat, RemainsStart TFloat, RemainsEnd TFloat) ON COMMIT DROP;
+                               , Amount TFloat, Amount_Send TFloat, RemainsStart TFloat, RemainsEnd TFloat, Amount_Reserve TFloat) ON COMMIT DROP;
       INSERT INTO _tmpCheck (GoodsId, UnitId, Amount_Sale, Summa_Sale, Amount_Sale1, Summa_Sale1, Amount_Sale3, Summa_Sale3, Amount_Sale6, Summa_Sale6
-                           , Amount, Amount_Send, RemainsStart, RemainsEnd)
+                           , Amount, Amount_Send, RemainsStart, RemainsEnd, Amount_Reserve)
           WITH
-          tmpRemains AS (SELECT tmpContainer.UnitId            AS UnitId
+             -- выбираем отложенные Чеки (как в кассе колонка VIP)
+          tmpMovementReserv AS (SELECT Movement.Id
+                                     , MovementLinkObject_Unit.ObjectId AS UnitId
+                                FROM MovementBoolean AS MovementBoolean_Deferred
+                                     INNER JOIN Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
+                                                        AND Movement.DescId = zc_Movement_Check()
+                                                        AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                   ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                     --ограничиваем подразделениями
+                                     INNER JOIN tmpUnit_list ON tmpUnit_list.UnitId = MovementLinkObject_Unit.ObjectId
+                                WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
+                                  AND MovementBoolean_Deferred.ValueData = TRUE
+                               UNION
+                                SELECT Movement.Id
+                                     , MovementLinkObject_Unit.ObjectId AS UnitId
+                                FROM MovementString AS MovementString_CommentError
+                                     INNER JOIN Movement ON Movement.Id     = MovementString_CommentError.MovementId
+                                                        AND Movement.DescId = zc_Movement_Check()
+                                                        AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                   ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                     --ограничиваем подразделениями
+                                     INNER JOIN tmpUnit_list ON tmpUnit_list.UnitId = MovementLinkObject_Unit.ObjectId
+                               WHERE MovementString_CommentError.DescId = zc_MovementString_CommentError()
+                                 AND MovementString_CommentError.ValueData <> ''
+                               )
+        , tmpReserve AS (SELECT tmpMovementReserv.UnitId          AS UnitId
+                              , MovementItem.ObjectId             AS GoodsId
+                              , SUM (MovementItem.Amount)::TFloat AS Amount
+                         FROM tmpMovementReserv
+                              INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementReserv.Id
+                                                     AND MovementItem.DescId     = zc_MI_Master()
+                                                     AND MovementItem.isErased   = FALSE
+                         GROUP BY MovementItem.ObjectId
+                                , tmpMovementReserv.UnitId
+                         )
+
+        , tmpRemains AS (SELECT tmpContainer.UnitId            AS UnitId
                               , tmpContainer.GoodsId           AS GoodsId
                               , Sum(tmpContainer.RemainsStart) AS RemainsStart
                               , Sum(tmpContainer.RemainsEnd)   AS RemainsEnd 
                          FROM tmpContainer 
                          GROUP BY tmpContainer.UnitId, tmpContainer.GoodsId
                          )
-                         
+
           SELECT MIContainer.ObjectId_analyzer                AS GoodsId
                , MIContainer.WhereObjectId_analyzer           AS UnitId
                , SUM (CASE WHEN MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY' THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END) AS Amount_Sale
@@ -174,7 +215,9 @@ BEGIN
                , SUM (COALESCE (-1 * MIContainer.Amount, 0))  AS Amount
                , COALESCE (tmpSend.Amount, 0)                 AS Amount_Send
                , COALESCE (tmpRemains.RemainsStart, 0)        AS RemainsStart
-               , COALESCE (tmpRemains.RemainsEnd, 0)          AS RemainsEnd 
+               , COALESCE (tmpRemains.RemainsEnd, 0)          AS RemainsEnd
+               
+               , COALESCE (tmpReserve.Amount, 0)              AS Amount_Reserve
            FROM MovementItemContainer AS MIContainer
                 --ограничиваем подразделениями
                 INNER JOIN tmpUnit_list ON tmpUnit_list.UnitId = MIContainer.WhereObjectId_analyzer
@@ -183,6 +226,8 @@ BEGIN
                                  AND tmpSend.UnitId  = MIContainer.WhereObjectId_analyzer
                 LEFT JOIN tmpRemains ON tmpRemains.UnitId  = MIContainer.WhereObjectId_analyzer
                                     AND tmpRemains.GoodsId = MIContainer.ObjectId_analyzer
+                LEFT JOIN tmpReserve ON tmpReserve.UnitId  = MIContainer.WhereObjectId_analyzer
+                                    AND tmpReserve.GoodsId = MIContainer.ObjectId_analyzer
            WHERE MIContainer.DescId = zc_MIContainer_Count()
              AND MIContainer.MovementDescId = zc_Movement_Check()
              --AND MIContainer.WhereObjectId_analyzer <> inUnitId  
@@ -193,6 +238,7 @@ BEGIN
                   , COALESCE (tmpSend.Amount, 0)
                   , COALESCE (tmpRemains.RemainsStart, 0)
                   , COALESCE (tmpRemains.RemainsEnd, 0)
+                  , COALESCE (tmpReserve.Amount, 0)
            HAVING sum(COALESCE (-1 * MIContainer.Amount, 0)) <> 0
          ; 
       
@@ -221,11 +267,12 @@ BEGIN
                               , Amount_Sale1 TFloat, Summa_Sale1 TFloat
                               , Amount_Sale3 TFloat, Summa_Sale3 TFloat
                               , Amount_Sale6 TFloat, Summa_Sale6 TFloat
-                              , Amount_Send TFloat, isSaleAnother Boolean)  ON COMMIT DROP;
+                              , Amount_Send TFloat, Amount_Reserve TFloat, isSaleAnother Boolean)  ON COMMIT DROP;
+                              
       INSERT INTO _tmpData (UnitId, GoodsId, GoodsMainId, MinExpirationDate, OperDate_LastIncome, Term, Amount_LastIncome
                           , Price_Remains, Price_RemainsEnd, RemainsStart, RemainsEnd
                           , Amount_Sale, Summa_Sale, Amount_Sale1, Summa_Sale1, Amount_Sale3, Summa_Sale3, Amount_Sale6, Summa_Sale6
-                          , Amount_Send, isSaleAnother) 
+                          , Amount_Send, Amount_Reserve, isSaleAnother) 
       WITH 
       -- связываем с партиями
       tmpRemains_1 AS ( SELECT tmpContainer.GoodsId
@@ -367,6 +414,7 @@ BEGIN
              , tmpCheck.Amount_Sale6                                                    :: TFloat     AS Amount_Sale6
              , tmpCheck.Summa_Sale6                                                     :: TFloat     AS Summa_Sale6
              , COALESCE (tmpSend.Amount, 0)                                                           AS Amount_Send
+             , COALESCE (tmpCheck.Amount_Reserve, 0)                                                  AS Amount_Reserve
              , CASE WHEN (COALESCE (tmpCheck.Amount_Sale6,0)=0) AND COALESCE(tmp.Amount,0) <> 0 THEN TRUE ELSE FALSE END AS isSaleAnother
         FROM tmpRemains
              LEFT JOIN tmpCheck        ON tmpCheck.GoodsId        = tmpRemains.GoodsId
@@ -387,7 +435,10 @@ BEGIN
       INSERT INTO tmpDataTo (GoodsId, GoodsMainId, UnitId, RemainsMCS_result)
       WITH 
       --неликвидныe товарs, которые можно перемещать
-      tmpDataFrom AS (SELECT _tmpData.*, (_tmpData.RemainsEnd + _tmpData.Amount_Send) AS RemainsCalc
+      tmpDataFrom AS (SELECT _tmpData.*
+                          , (_tmpData.RemainsEnd 
+                           + _tmpData.Amount_Send
+                           - CASE WHEN inIsReserve = TRUE THEN COALESCE (_tmpData.Amount_Reserve, 0) ELSE 0 END ) AS RemainsCalc
                       FROM  _tmpData
                       WHERE _tmpData.Term > 6 
                         AND _tmpData.isSaleAnother = TRUE 
@@ -422,27 +473,27 @@ BEGIN
              , tmpDataAll.UnitId
              
              , CASE -- для первого - учитывается ТОЛЬКО "не хватает"
-                    WHEN Ord = 1 THEN CASE WHEN RemainsMCS_to <= RemainsMCS_from THEN RemainsMCS_to ELSE RemainsMCS_from END
+                    WHEN Ord = 1 THEN CASE WHEN RemainsMCS_To <= RemainsMCS_From THEN RemainsMCS_To ELSE RemainsMCS_From END
                     -- для остальных - учитывается "накопительная" сумма "не хватает" !!!минус!!! то что в текущей записи
-                    WHEN RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to) > 0 -- сколько осталось "излишков" если всем предыдущим уже распределили
+                    WHEN RemainsMCS_From - (RemainsMCS_period - RemainsMCS_To) > 0 -- сколько осталось "излишков" если всем предыдущим уже распределили
                          THEN CASE -- если "не хватает" меньше сколько осталось "излишков"
-                                   WHEN RemainsMCS_to <= RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to)
-                                        THEN RemainsMCS_to
+                                   WHEN RemainsMCS_To <= RemainsMCS_From - (RemainsMCS_period - RemainsMCS_To)
+                                        THEN RemainsMCS_To
                                    ELSE -- иначе остаток "излишков"
-                                        RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to)
+                                        RemainsMCS_From - (RemainsMCS_period - RemainsMCS_To)
                               END
                     ELSE 0
                END AS RemainsMCS_result
         FROM tmpDataAll
         WHERE  CASE -- для первого - учитывается ТОЛЬКО "не хватает"
-                    WHEN Ord = 1 THEN CASE WHEN RemainsMCS_to <= RemainsMCS_from THEN RemainsMCS_to ELSE RemainsMCS_from END
+                    WHEN Ord = 1 THEN CASE WHEN RemainsMCS_To <= RemainsMCS_From THEN RemainsMCS_To ELSE RemainsMCS_From END
                     -- для остальных - учитывается "накопительная" сумма "не хватает" !!!минус!!! то что в текущей записи
-                    WHEN RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to) > 0 -- сколько осталось "излишков" если всем предыдущим уже распределили
+                    WHEN RemainsMCS_From - (RemainsMCS_period - RemainsMCS_To) > 0 -- сколько осталось "излишков" если всем предыдущим уже распределили
                          THEN CASE -- если "не хватает" меньше сколько осталось "излишков"
-                                   WHEN RemainsMCS_to <= RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to)
-                                        THEN RemainsMCS_to
+                                   WHEN RemainsMCS_To <= RemainsMCS_From - (RemainsMCS_period - RemainsMCS_To)
+                                        THEN RemainsMCS_To
                                    ELSE -- иначе остаток "излишков"
-                                        RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to)
+                                        RemainsMCS_From - (RemainsMCS_period - RemainsMCS_To)
                               END
                     ELSE 0
                END <> 0
@@ -492,6 +543,7 @@ BEGIN
    
            , COALESCE (tmpChildTo.RemainsMCS_result, 0)         :: TFloat AS RemainsMCS_result
            , COALESCE (_tmpData.Amount_Send, 0)                 :: TFloat AS Amount_Send
+           , COALESCE (_tmpData.Amount_Reserve, 0)              :: TFloat AS Amount_Reserve
            , _tmpData.isSaleAnother                         AS isSaleAnother
         FROM _tmpData
              LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = _tmpData.GoodsId
@@ -521,6 +573,7 @@ BEGIN
                                            
            , COALESCE (tmpDataTo.RemainsMCS_result, 0)     :: TFloat AS RemainsMCS_result
            , COALESCE (tmpCheck.Amount_Send, 0)            :: TFloat AS Amount_Send
+           , COALESCE (tmpCheck.Amount_Reserve, 0)         :: TFloat AS Amount_Reserve
            , COALESCE (tmpCheck.RemainsEnd, 0)             :: TFloat AS RemainsEnd
       FROM _tmpCheck AS tmpCheck
            LEFT JOIN tmpDataTo ON tmpDataTo.GoodsId = tmpCheck.GoodsId AND tmpDataTo.UnitId = tmpCheck.UnitId
@@ -587,6 +640,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 23.11.18         * add reserve
  07.01.18         * 
  23.11.17         * add inisUnitList, GoodsMainId
  16.01.17         *

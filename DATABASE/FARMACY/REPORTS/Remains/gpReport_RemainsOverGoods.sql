@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_RemainsOverGoods(
     IN inUnitId           Integer  ,  -- Подразделение
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpReport_RemainsOverGoods(
     IN inisInMCS          Boolean,    -- для аптек-получателей изпользовать НТЗ из справочника
     IN inisRecal          Boolean,    -- Да / нет - "Временно исправлются ошибки с датами в ценах"
     IN inisAssortment     Boolean,    -- оставить кол-во для ассортимента Да / нет
+    IN inIsReserve        Boolean  ,  --  Учитывать отложенный товар Да/Нет
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS  SETOF refcursor
@@ -91,7 +93,7 @@ BEGIN
                              , RemainsStart TFloat, SummaRemainsStart TFloat
                              , RemainsMCS_from TFloat, SummaRemainsMCS_from TFloat
                              , RemainsMCS_to TFloat, SummaRemainsMCS_to TFloat
-                             , AmountSend TFloat
+                             , AmountSend TFloat, Amount_Reserve TFloat
                              , PRIMARY KEY (UnitId, GoodsId)
                               ) ON COMMIT DROP;
     -- Таблица - Результат
@@ -376,12 +378,54 @@ BEGIN
                             , RemainsStart, SummaRemainsStart
                             , RemainsMCS_from, SummaRemainsMCS_from
                             , RemainsMCS_to, SummaRemainsMCS_to
-                            , AmountSend
+                            , AmountSend, Amount_Reserve
                              )
-             WITH tmpOverSettings AS (SELECT *
-                                      FROM gpSelect_Object_OverSettings (inSession) AS tmp
-                                      WHERE tmp.isErased = FALSE AND tmp.MinPrice <> tmp.MinPriceEnd
-                                     )
+         WITH 
+          tmpOverSettings AS (SELECT *
+                              FROM gpSelect_Object_OverSettings (inSession) AS tmp
+                              WHERE tmp.isErased = FALSE AND tmp.MinPrice <> tmp.MinPriceEnd
+                              )
+
+          -- выбираем отложенные Чеки (как в кассе колонка VIP)
+        , tmpMovementReserv AS (SELECT Movement.Id
+                                     , MovementLinkObject_Unit.ObjectId AS UnitId
+                                FROM MovementBoolean AS MovementBoolean_Deferred
+                                     INNER JOIN Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
+                                                        AND Movement.DescId = zc_Movement_Check()
+                                                        AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                   ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                     --ограничиваем подразделениями
+                                     INNER JOIN tmpUnit_list ON tmpUnit_list.UnitId = MovementLinkObject_Unit.ObjectId
+                                WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
+                                  AND MovementBoolean_Deferred.ValueData = TRUE
+                               UNION
+                                SELECT Movement.Id
+                                     , MovementLinkObject_Unit.ObjectId AS UnitId
+                                FROM MovementString AS MovementString_CommentError
+                                     INNER JOIN Movement ON Movement.Id     = MovementString_CommentError.MovementId
+                                                        AND Movement.DescId = zc_Movement_Check()
+                                                        AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                   ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                     --ограничиваем подразделениями
+                                     INNER JOIN tmpUnit_list ON tmpUnit_list.UnitId = MovementLinkObject_Unit.ObjectId
+                               WHERE MovementString_CommentError.DescId = zc_MovementString_CommentError()
+                                 AND MovementString_CommentError.ValueData <> ''
+                               )
+        , tmpReserve AS (SELECT tmpMovementReserv.UnitId          AS UnitId
+                              , MovementItem.ObjectId             AS GoodsId
+                              , SUM (MovementItem.Amount)::TFloat AS Amount
+                         FROM tmpMovementReserv
+                              INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementReserv.Id
+                                                     AND MovementItem.DescId     = zc_MI_Master()
+                                                     AND MovementItem.isErased   = FALSE
+                         GROUP BY MovementItem.ObjectId
+                                , tmpMovementReserv.UnitId
+                         )
+               
              -- Результат
              SELECT
                  tmpGoods_list.GoodsMainId
@@ -400,13 +444,39 @@ BEGIN
                  -- Излишки
                , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
                            THEN 0
-                      WHEN Object_Remains.RemainsStart > tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue >= 0
-                           THEN FLOOR ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
-                                --*** ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
-                              * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
-                      ELSE 0
+                      ELSE CASE WHEN inIsReserve = FALSE 
+                                THEN CASE WHEN Object_Remains.RemainsStart > tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue >= 0
+                                          THEN FLOOR ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                             * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                                          ELSE 0
+                                     END
+                                ELSE CASE WHEN Object_Remains.RemainsStart - COALESCE (tmpReserve.Amount, 0) > tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue >= 0
+                                          THEN FLOOR ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue - COALESCE (tmpReserve.Amount, 0) ) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                             * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                                          ELSE 0
+                                     END
+                           END
                  END AS RemainsMCS_from
+
                , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
+                           THEN 0
+                      ELSE CASE WHEN inIsReserve = FALSE 
+                                THEN CASE WHEN Object_Remains.RemainsStart > tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue >= 0
+                                          THEN FLOOR ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                             * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                                             * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
+                                          ELSE 0
+                                     END
+                                ELSE CASE WHEN Object_Remains.RemainsStart - COALESCE (tmpReserve.Amount, 0) > tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue >= 0
+                                          THEN FLOOR ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue - COALESCE (tmpReserve.Amount, 0) ) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                             * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                                             * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
+                                          ELSE 0
+                                     END
+                           END
+                 END AS SummaRemainsMCS_from
+
+/*               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
                            THEN 0
                       WHEN Object_Remains.RemainsStart > tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue >= 0
                           THEN FLOOR ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
@@ -414,18 +484,44 @@ BEGIN
                              * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
                              * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
                       ELSE 0
-                 END AS RemainsMCS_from
-
+                 END AS SummaRemainsMCS_from
+*/
                  -- Не хватает
                , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
                            THEN 0
-                      WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
-                           THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
-                                --***((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
-                              * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
-                      ELSE 0
+                      ELSE CASE WHEN inIsReserve = FALSE 
+                                THEN CASE WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
+                                          THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                             * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                                          ELSE 0
+                                     END
+                                ELSE CASE WHEN COALESCE (Object_Remains.RemainsStart, 0) - COALESCE (tmpReserve.Amount, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
+                                          THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0) - COALESCE (tmpReserve.Amount, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                             * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                                          ELSE 0
+                                     END
+                           END
                  END AS RemainsMCS_to
+
                , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
+                           THEN 0
+                      ELSE CASE WHEN inIsReserve = FALSE
+                                THEN CASE WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
+                                          THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                             * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                                             * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
+                                          ELSE 0
+                                     END
+                                ELSE CASE WHEN COALESCE (Object_Remains.RemainsStart, 0) - COALESCE (tmpReserve.Amount, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
+                                          THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0) - COALESCE (tmpReserve.Amount, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                             * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                                             * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
+                                          ELSE 0
+                                     END
+                           END
+                 END AS SummaRemainsMCS_to
+                 
+/*               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
                            THEN 0
                       WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
                            THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
@@ -433,9 +529,10 @@ BEGIN
                               * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
                               * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
                       ELSE 0
-                 END AS RemainsMCS_to
-
-               , Object_Send.Amount   AS AmountSend
+                 END AS SummaRemainsMCS_to
+*/
+               , Object_Send.Amount              AS AmountSend
+               , COALESCE (tmpReserve.Amount, 0) AS Amount_Reserve
 --               , Object_Send.Amount_To     AS AmountSend_To
 
             FROM tmpGoods_list
@@ -445,6 +542,8 @@ BEGIN
                 LEFT JOIN tmpSend AS Object_Send
                                   ON Object_Send.GoodsId = tmpGoods_list.GoodsId
                                  AND Object_Send.UnitId  = tmpGoods_list.UnitId
+                LEFT JOIN tmpReserve ON tmpReserve.GoodsId = tmpGoods_list.GoodsId
+                                    AND tmpReserve.UnitId  = tmpGoods_list.UnitId
 
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
                                         ON ObjectBoolean_Goods_Close.ObjectId = tmpGoods_list.GoodsId
@@ -491,6 +590,7 @@ BEGIN
                        FROM tmpDataFrom
                             INNER JOIN tmpDataTo ON tmpDataTo.GoodsMainId = tmpDataFrom.GoodsMainId
                       )
+
    INSERT INTO tmpDataTo (GoodsId, GoodsMainId, UnitId, RemainsMCS_result)
    SELECT tmpDataAll.GoodsId
         , tmpDataAll.GoodsMainId
@@ -567,6 +667,7 @@ BEGIN
                , (tmpChildTo.RemainsMCS_result * tmpData.Price) :: TFloat AS SummaRemainsMCS_result
 
                , tmpData.AmountSend            :: TFloat  AS AmountSend
+               , tmpData.Amount_Reserve        :: TFloat  AS Amount_Reserve
  
                , tmpData.GoodsId
                , tmpData.GoodsMainId
@@ -636,6 +737,7 @@ BEGIN
                , COALESCE (tmpMIChild.Summa, 0)  :: TFloat  AS Summa_Over
                , (COALESCE (tmpDataTo.RemainsMCS_result, 0) - COALESCE (tmpMIChild.Amount, 0)) :: TFloat AS Amount_OverDiff
                , tmpData.AmountSend            :: TFloat    AS AmountSend
+               , tmpData.Amount_Reserve        :: TFloat    AS Amount_Reserve
      FROM tmpData
           LEFT JOIN Object AS Object_Unit  ON Object_Unit.Id = tmpData.UnitId
           LEFT JOIN Object AS Object_Goods  ON Object_Goods.Id = tmpData.GoodsId
@@ -742,6 +844,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 23.11.18         *
  20.01.17         *
  01.11.16         * add inisRecal, rename inisOutMCS -> inisInMCS
  30.10.16         *
@@ -752,9 +855,7 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpReport_RemainsOverGoods (inUnitId:= 183292, inStartDate:= '12.01.2017' ::TDateTime, inPeriod:= 30::tfloat, inDay:= 28::tfloat,inAssortment:=1::tfloat, inisAssortment:=False, inSession:= '3'::TVarChar);  -- Аптека_1 пр_Правды_6
-
 /*
-SELECT * FROM gpReport_RemainsOverGoods(inUnitId := 183288 , inStartDate := ('23.02.2017')::TDateTime , inPeriod := 30 , inDay := 30 , inAssortment := 1 , inisMCS := 'False' , inisInMCS := 'True' , inisRecal := 'False' , inisAssortment := 'False' ,  inSession := '3')
+SELECT * FROM gpReport_RemainsOverGoods(inUnitId := 183288 , inStartDate := ('23.02.2017')::TDateTime , inPeriod := 30 , inDay := 30 , inAssortment := 1 , inisMCS := 'False' , inisInMCS := 'True' , inisRecal := 'False' , inisAssortment := 'False' , inIsReserve:='False' ,  inSession := '3')
 FETCH ALL "<unnamed portal 1>";
 */

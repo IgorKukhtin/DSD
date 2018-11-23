@@ -54,6 +54,7 @@ type
     cxLabel8: TcxLabel;
     edTerm: TcxCurrencyEdit;
     cbTerm: TcxCheckBox;
+    cbReserve: TcxCheckBox;
   private
     { Private declarations }
   public

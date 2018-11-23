@@ -1,16 +1,16 @@
 inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
   Caption = #1054#1090#1095#1077#1090' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1080#1079#1083#1080#1096#1082#1086#1074' '#1085#1072' '#1072#1087#1090#1077#1082#1091'>'
   ClientHeight = 559
-  ClientWidth = 1066
+  ClientWidth = 1091
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1082
+  ExplicitWidth = 1107
   ExplicitHeight = 597
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 81
-    Width = 1066
+    Width = 1091
     Height = 478
     ParentShowHint = False
     ShowHint = True
@@ -21,7 +21,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
     ExplicitWidth = 1066
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 1066
+    ClientRectRight = 1091
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
       Caption = #1054#1089#1085#1086#1074#1085#1072#1103
@@ -30,7 +30,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       ExplicitWidth = 1066
       ExplicitHeight = 454
       inherited cxGrid: TcxGrid
-        Width = 1066
+        Width = 1091
         Height = 217
         ExplicitWidth = 1066
         ExplicitHeight = 217
@@ -135,6 +135,11 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSend
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Reserve
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -241,6 +246,11 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSend
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Reserve
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -399,6 +409,17 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             HeaderHint = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1088#1072#1089#1093#1086#1076
             Options.Editing = False
             Width = 69
+          end
+          object Amount_Reserve: TcxGridDBColumn
+            Caption = #1054#1090#1083'. '#1090#1086#1074#1072#1088' ('#1095#1077#1082')'
+            DataBinding.FieldName = 'Amount_Reserve'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' ('#1095#1077#1082')'
+            Options.Editing = False
+            Width = 51
           end
           object SummaRemainsStart: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1089#1091#1084#1084#1072' '#1085#1072#1095'.'
@@ -641,11 +662,12 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 222
-        Width = 1066
+        Width = 1091
         Height = 232
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 1066
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -715,6 +737,11 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
               Format = ',0.####'
               Kind = skSum
               Column = chAmountSend
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount_Reserve
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -785,6 +812,11 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
               Format = ',0.####'
               Kind = skSum
               Column = chAmountSend
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount_Reserve
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -858,6 +890,17 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             HeaderHint = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1088#1080#1093#1086#1076
             Options.Editing = False
             Width = 69
+          end
+          object chAmount_Reserve: TcxGridDBColumn
+            Caption = #1054#1090#1083'. '#1090#1086#1074#1072#1088' ('#1095#1077#1082')'
+            DataBinding.FieldName = 'Amount_Reserve'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' ('#1095#1077#1082')'
+            Options.Editing = False
+            Width = 51
           end
           object chSummaRemainsStart: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1089#1091#1084#1084#1072' '#1085#1072#1095'.'
@@ -1026,22 +1069,25 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       object cxSplitterChild: TcxSplitter
         Left = 0
         Top = 217
-        Width = 1066
+        Width = 1091
         Height = 5
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitWidth = 1066
       end
     end
     object cxTabSheetTotal: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 2
+      ExplicitWidth = 1066
       object cxGridTotal: TcxGrid
         Left = 0
         Top = 0
-        Width = 1066
+        Width = 1091
         Height = 454
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1066
         object cxGridTotalDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TotalDS
@@ -1438,7 +1484,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
     end
   end
   inherited Panel: TPanel
-    Width = 1066
+    Width = 1091
     Height = 55
     ExplicitWidth = 1066
     ExplicitHeight = 55
@@ -1500,7 +1546,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       Properties.DisplayFormat = '0'
       Properties.MinValue = 1.000000000000000000
       TabOrder = 7
-      Width = 35
+      Width = 27
     end
     object cxLabel6: TcxLabel
       Left = 535
@@ -1537,21 +1583,30 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       TabOrder = 12
       Width = 30
     end
+    object cbReserve: TcxCheckBox
+      Left = 930
+      Top = 4
+      Action = actRefreshReserve
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 13
+      Width = 155
+    end
   end
   object cxLabel5: TcxLabel [2]
-    Left = 731
+    Left = 722
     Top = 6
     Caption = #1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1079#1072#1087#1072#1089' '#1053#1058#1047' '#1076#1083#1103' '#1061' '#1076#1085#1077#1081
   end
   object edDay: TcxCurrencyEdit [3]
-    Left = 905
-    Top = 5
+    Left = 896
+    Top = 4
     EditValue = 12.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.MinValue = 1.000000000000000000
     TabOrder = 7
-    Width = 35
+    Width = 27
   end
   object cbInMCS: TcxCheckBox [4]
     Left = 718
@@ -1570,8 +1625,8 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
     Width = 152
   end
   object cbisRecal: TcxCheckBox [6]
-    Left = 972
-    Top = 4
+    Left = 1034
+    Top = 29
     Hint = #1076#1083#1103' '#1072#1087#1090#1077#1082'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1080#1079#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1053#1058#1047' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
     TabOrder = 10
     Width = 22
@@ -1821,6 +1876,14 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isReserve'
+          Value = Null
+          Component = cbReserve
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -2024,6 +2087,18 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
       ImageIndex = 41
     end
+    object actRefreshReserve: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1086#1090#1083'. '#1090#1086#1074#1072#1088
+      Hint = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' ('#1044#1072'/'#1053#1077#1090')'
+      RefreshOnTabSetChanges = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 216
@@ -2130,6 +2205,14 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         ComponentItem = 'inisTo'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsReserve'
+        Value = Null
+        Component = cbReserve
+        DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 80
@@ -2250,8 +2333,8 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
     Top = 224
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 264
-    Top = 152
+    Left = 328
+    Top = 240
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <

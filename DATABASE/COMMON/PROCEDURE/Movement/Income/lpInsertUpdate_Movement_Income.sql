@@ -84,44 +84,11 @@ BEGIN
          -- если изменилась валюта документа или если значение курса = 0
          IF (vbCurrencyDocumentId <> inCurrencyDocumentId OR vbCurrencyPartnerId <> inCurrencyPartnerId OR COALESCE (ioCurrencyValue, 0) = 0)
          THEN
-             ioCurrencyValue:= (SELECT MovementItem.Amount
-                                FROM (
-                                      SELECT MovementItem.Amount
-                                           , ROW_NUMBER() OVER (ORDER BY Movement.OperDate DESC) as ord
-                                      FROM Movement 
-                                          JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
-                                                           AND MovementItem.ObjectId = inCurrencyDocumentId
-                                          JOIN MovementItemLinkObject AS MILinkObject_CurrencyTo
-                                                                      ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
-                                                                     AND MILinkObject_CurrencyTo.DescId = zc_MILinkObject_Currency()
-                                                                     AND MILinkObject_CurrencyTo.ObjectId = inCurrencyPartnerId
-                                      WHERE Movement.DescId = zc_Movement_Currency()
-                                        AND Movement.OperDate <= inOperDate
-                                        AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())   
-                                      ) AS MovementItem
-                                WHERE MovementItem.ord = 1
-                                );
-             
-                                /*
-                                (SELECT MovementItem.Amount
-                                FROM (SELECT MAX (Movement.OperDate) as maxOperDate
-                                      FROM Movement 
-                                          JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
-                                                           AND MovementItem.ObjectId = inCurrencyDocumentId
-                                          JOIN MovementItemLinkObject AS MILinkObject_CurrencyTo
-                                                                      ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
-                                                                     AND MILinkObject_CurrencyTo.DescId = zc_MILinkObject_Currency()
-                                                                     AND MILinkObject_CurrencyTo.ObjectId = inCurrencyPartnerId
-                                      WHERE Movement.DescId = zc_Movement_Currency()
-                                        AND Movement.OperDate <= inOperDate
-                                        AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())   
-                                     ) AS tmpDate
-                                     INNER JOIN Movement ON Movement.DescId = zc_Movement_Currency()
-                                                        AND Movement.OperDate = tmpDate.maxOperDate
-                                                        AND Movement.StatusId IN (zc_Enum_Status_Complete()/*, zc_Enum_Status_UnComplete()*/)
-                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
-                                                            AND MovementItem.DescId = zc_MI_Master()
-                               );*/
+             ioCurrencyValue:= (SELECT tmp.Amount 
+                                FROM lfSelect_Movement_Currency_byDate (inOperDate       := inOperDatePartner
+                                                                      , inCurrencyFromId := inCurrencyDocumentId
+                                                                      , inCurrencyToId   := inCurrencyPartnerId
+                                                                      , inPaidKindId     := inPaidKindId)            AS tmp);
          END IF;
      ELSE ioCurrencyValue := 1.00;
      END IF;
