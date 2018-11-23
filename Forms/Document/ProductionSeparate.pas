@@ -63,6 +63,10 @@ type
     chPriceIn: TcxGridDBColumn;
     chSummIn: TcxGridDBColumn;
     chPriceIn_hist: TcxGridDBColumn;
+    gpUpdate_StorageLineByChild: TdsdStoredProc;
+    actUpdate_StorageLineByChild: TdsdExecStoredProc;
+    macUpdate_StorageLineByChild: TMultiAction;
+    bbUpdate_StorageLineByChild: TdxBarButton;
   private
     { Private declarations }
   public

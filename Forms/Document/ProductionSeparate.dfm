@@ -2,10 +2,8 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
   ClientHeight = 678
   ClientWidth = 903
-  ExplicitLeft = -130
-  ExplicitTop = -256
   ExplicitWidth = 919
-  ExplicitHeight = 713
+  ExplicitHeight = 716
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -665,6 +663,33 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         #1079#1076#1077#1083#1077#1085#1080#1080'>'
       ImageIndex = 77
     end
+    object actUpdate_StorageLineByChild: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = gpUpdate_StorageLineByChild
+      StoredProcList = <
+        item
+          StoredProc = gpUpdate_StorageLineByChild
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = 'actUpdate_StorageLineByChild'
+    end
+    object macUpdate_StorageLineByChild: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_StorageLineByChild
+        end>
+      QuestionBeforeExecute = #1056#1072#1089#1087#1088#1077#1076#1077#1083#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1088#1072#1089#1093#1086#1076' '#1087#1086' '#1083#1080#1085#1080#1103#1084' '#1087#1088'-'#1074#1072' '#1090#1086#1074#1072#1088#1072' '#1087#1088#1080#1093#1086#1076'?'
+      InfoAfterExecute = #1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1074#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1056#1072#1089#1087#1088#1077#1076#1077#1083#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1088#1072#1089#1093#1086#1076' '#1087#1086' '#1083#1080#1085#1080#1103#1084' '#1087#1088'-'#1074#1072' '#1090#1086#1074#1072#1088#1072' '#1087#1088#1080#1093#1086#1076
+      Hint = #1056#1072#1089#1087#1088#1077#1076#1077#1083#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1088#1072#1089#1093#1086#1076' '#1087#1086' '#1083#1080#1085#1080#1103#1084' '#1087#1088'-'#1074#1072' '#1090#1086#1074#1072#1088#1072' '#1087#1088#1080#1093#1086#1076
+      ImageIndex = 42
+    end
   end
   inherited MasterCDS: TClientDataSet
     Left = 656
@@ -741,6 +766,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         item
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_StorageLineByChild'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -821,6 +854,10 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     object bbUpdate_MI_Calculated: TdxBarButton
       Action = actUpdate_MI_Calculated
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1083#1103' '#1090#1086#1074#1072#1088#1072' "'#1088#1072#1089#1089#1095#1080#1090#1099#1074#1072#1077#1090#1089#1103' '#1044#1072'/'#1053#1077#1090'"'
+      Category = 0
+    end
+    object bbUpdate_StorageLineByChild: TdxBarButton
+      Action = macUpdate_StorageLineByChild
       Category = 0
     end
   end
@@ -1446,5 +1483,22 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     PackSize = 1
     Left = 392
     Top = 451
+  end
+  object gpUpdate_StorageLineByChild: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_ProductionSeparate_StorageLineByChild'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 96
+    Top = 427
   end
 end

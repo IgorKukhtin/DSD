@@ -1286,7 +1286,7 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 56
+    Left = 96
     Top = 427
   end
 end
