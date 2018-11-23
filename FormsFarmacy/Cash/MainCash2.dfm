@@ -296,7 +296,7 @@ inherited MainCashForm2: TMainCashForm2
           Properties.DisplayFormat = ',0.###'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
-          Styles.Content = dmMain.cxRemainsContentStyle
+          Styles.Content = dmMain.cxRemainsCashContentStyle
           Width = 45
         end
         object MainColPrice: TcxGridDBColumn
