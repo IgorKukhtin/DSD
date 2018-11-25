@@ -63,6 +63,7 @@ type
     ControlRGRatio: TcxGridDBBandedColumn;
     ControlRGNote: TcxGridDBBandedColumn;
     Color_Calc: TcxGridDBBandedColumn;
+    TotalExecutionLine: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public
