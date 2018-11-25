@@ -65,7 +65,7 @@ BEGIN
              , (CEIL (MovementItem.Amount / COALESCE (vbMinimumLot, 1)) * COALESCE (vbMinimumLot, 1) * inPrice) :: TFloat AS outSumm
              , (CEIL (MovementItem.Amount / COALESCE (vbMinimumLot, 1)) * COALESCE (vbMinimumLot, 1))           :: TFloat AS outCalcAmount
              , (COALESCE (MIFloat_AmountManual.ValueData, (CEIL ((MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0) ) / COALESCE (vbMinimumLot, 1)) * COALESCE (vbMinimumLot, 1))) * inPrice) :: TFloat AS outSummAll
-             , (MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0) ) :: TFloat AS outAmountAll
+             , (MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0) /*+ COALESCE(MIFloat_ListDiff.ValueData,0)*/ ) :: TFloat AS outAmountAll
              , COALESCE (MIFloat_AmountManual.ValueData, (CEIL ((MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0) ) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))) :: TFloat AS outCalcAmountAll
 
              , MovementItem.Amount            AS outAmount
@@ -135,7 +135,7 @@ BEGIN
     FROM Object_Goods_View WHERE Id = inGoodsId;
     
     SELECT
-        (CEIL((Amount + COALESCE(MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0) ) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1)),
+        (CEIL((Amount + COALESCE(MIFloat_AmountSecond.ValueData,0) /*+ COALESCE(MIFloat_ListDiff.ValueData,0)*/ ) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1)),
         COALESCE(MIFloat_AmountManual.ValueData,(CEIL((Amount + COALESCE(MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0) ) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1)))::TFloat
     INTO
         vbCalcAmount,
@@ -189,7 +189,7 @@ BEGIN
     SELECT
          (CEIL(inAmount / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))::TFloat
        , (CEIL(inAmount / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1) * inPrice)::TFloat
-       , inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0)
+       , inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0) /*+ COALESCE(MIFloat_ListDiff.ValueData,0)*/
        , COALESCE (MIFloat_AmountManual.ValueData,(CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0) ) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1)))           ::TFloat
        , COALESCE (MIFloat_AmountManual.ValueData,(CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0) ) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))) * inPrice ::TFloat
 

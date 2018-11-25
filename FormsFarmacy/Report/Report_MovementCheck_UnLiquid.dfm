@@ -4,7 +4,7 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
   ClientWidth = 941
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 957
-  ExplicitHeight = 515
+  ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -128,6 +128,11 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_Send
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Reserve
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -236,6 +241,11 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_Send
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Reserve
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -336,6 +346,17 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object Amount_Reserve: TcxGridDBColumn
+            Caption = #1054#1090#1083'. '#1090#1086#1074#1072#1088' ('#1095#1077#1082')'
+            DataBinding.FieldName = 'Amount_Reserve'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' ('#1095#1077#1082')'
+            Options.Editing = False
+            Width = 51
           end
           object RemainsStart: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1085#1072#1095'. '#1076#1072#1090#1091
@@ -597,6 +618,11 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
               Format = ',0.####'
               Kind = skSum
               Column = chRemainsEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount_Reserve
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -653,6 +679,11 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
               Format = ',0.####'
               Kind = skSum
               Column = chRemainsEnd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount_Reserve
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -699,6 +730,17 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 68
+          end
+          object chAmount_Reserve: TcxGridDBColumn
+            Caption = #1054#1090#1083'. '#1090#1086#1074#1072#1088' ('#1095#1077#1082')'
+            DataBinding.FieldName = 'Amount_Reserve'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' ('#1095#1077#1082')'
+            Options.Editing = False
+            Width = 51
           end
           object chRemainsMCS_result: TcxGridDBColumn
             Caption = #1048#1058#1054#1043#1054' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
@@ -855,6 +897,13 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
       TabOrder = 6
       Width = 137
     end
+    object cbReserve: TcxCheckBox
+      Left = 680
+      Top = 5
+      Action = actRefreshReserve
+      TabOrder = 7
+      Width = 249
+    end
   end
   inherited ActionList: TActionList
     object actGet_UserUnit: TdsdExecStoredProc
@@ -910,7 +959,7 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actRefreshIsPartion: TdsdDataSetRefresh
+    object actRefreshReserve: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -918,8 +967,8 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
-      Hint = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
+      Caption = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1059#1095#1080#1090#1099#1074#1072#1090#1100' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' ('#1044#1072'/'#1053#1077#1090')'
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -971,6 +1020,14 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
           Name = 'isList'
           Value = Null
           Component = cbList
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isReserve'
+          Value = Null
+          Component = cbReserve
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1140,6 +1197,14 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
         Name = 'inisUnitList'
         Value = Null
         Component = cbList
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsReserve'
+        Value = Null
+        Component = cbReserve
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

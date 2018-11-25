@@ -2,6 +2,7 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 529
   ClientWidth = 1229
+  ExplicitLeft = 5
   ExplicitWidth = 1245
   ExplicitHeight = 567
   PixelsPerInch = 96
@@ -1648,8 +1649,7 @@ inherited OrderInternalForm: TOrderInternalForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_OrderInternal'
-    Left = 152
-    Top = 160
+    Top = 144
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderInternal'
@@ -1774,8 +1774,8 @@ inherited OrderInternalForm: TOrderInternalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 218
-    Top = 368
+    Left = 242
+    Top = 360
   end
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
@@ -1958,19 +1958,19 @@ inherited OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outMessageText'
-        Value = Null
-        Component = actShowMessage
-        ComponentItem = 'MessageText'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'outAmount'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -1997,8 +1997,7 @@ inherited OrderInternalForm: TOrderInternalForm
     Top = 360
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 420
-    Top = 188
+    Top = 204
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null

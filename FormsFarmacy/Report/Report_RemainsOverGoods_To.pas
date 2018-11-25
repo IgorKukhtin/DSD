@@ -115,6 +115,8 @@ type
     cbTerm: TcxCheckBox;
     edTerm: TcxCurrencyEdit;
     FormParams: TdsdFormParams;
+    actRefreshReserve: TdsdDataSetRefresh;
+    cbReserve: TcxCheckBox;
   private
     { Private declarations }
   public

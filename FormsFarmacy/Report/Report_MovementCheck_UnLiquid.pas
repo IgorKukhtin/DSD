@@ -43,7 +43,7 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     GoodsGroupName: TcxGridDBColumn;
     NDS: TcxGridDBColumn;
-    actRefreshIsPartion: TdsdDataSetRefresh;
+    actRefreshReserve: TdsdDataSetRefresh;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actRefreshPartionPrice: TdsdDataSetRefresh;
@@ -75,6 +75,7 @@ type
     actReportUnLiquid_mov: TdsdExecStoredProc;
     macReportUnLiquid_mov: TMultiAction;
     bbReportUnLiquid_mov: TdxBarButton;
+    cbReserve: TcxCheckBox;
   private
     { Private declarations }
   public
