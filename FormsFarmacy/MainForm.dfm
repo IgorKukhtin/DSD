@@ -2488,6 +2488,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actCheckUnComplete: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1054#1090#1084#1077#1085#1099' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1082#1072#1089#1089#1086#1074#1099#1093' '#1095#1077#1082#1086#1074
+      Hint = #1054#1090#1084#1077#1085#1099' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1082#1072#1089#1089#1086#1074#1099#1093' '#1095#1077#1082#1086#1074
+      FormName = 'TCheckUnCompleteForm'
+      FormNameParam.Value = 'TCheckUnCompleteForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3215,10 +3227,13 @@ inherited MainForm: TMainForm
       object N174: TMenuItem [6]
         Action = actCheckNoCashRegister
       end
-      object miSetDefault: TMenuItem [7]
+      object N176: TMenuItem [7]
+        Action = actCheckUnComplete
+      end
+      object miSetDefault: TMenuItem [8]
         Action = actSetDefault
       end
-      object N92: TMenuItem [8]
+      object N92: TMenuItem [9]
         Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1055#1086#1095#1090#1099
         object N93: TMenuItem
           Action = actEmailSettings
@@ -3233,63 +3248,63 @@ inherited MainForm: TMainForm
           Action = actEmail
         end
       end
-      object miGoodsCommon: TMenuItem [9]
+      object miGoodsCommon: TMenuItem [10]
         Action = actGoodsMain
       end
-      object N61: TMenuItem [10]
+      object N61: TMenuItem [11]
         Action = actGoodsOnUnit_ForSite
       end
-      object N98: TMenuItem [11]
+      object N98: TMenuItem [12]
         Action = actConfirmedKind
       end
-      object ID1: TMenuItem [12]
+      object ID1: TMenuItem [13]
         Action = actReport_GoodsRemains_AnotherRetail
       end
-      object N7: TMenuItem [13]
+      object N7: TMenuItem [14]
         Caption = '-'
       end
-      object miSaveData: TMenuItem [14]
+      object miSaveData: TMenuItem [15]
         Action = actSaveData
       end
-      object miPriceGroupSettings: TMenuItem [15]
+      object miPriceGroupSettings: TMenuItem [16]
         Action = actPriceGroupSettings
       end
-      object N102: TMenuItem [16]
+      object N102: TMenuItem [17]
         Action = actPriceGroupSettingsTOP
       end
-      object miJuridicalSettings: TMenuItem [17]
+      object miJuridicalSettings: TMenuItem [18]
         Action = actJuridicalSettings
       end
-      object N9: TMenuItem [18]
+      object N9: TMenuItem [19]
         Caption = '-'
       end
-      object miImportType: TMenuItem [19]
+      object miImportType: TMenuItem [20]
         Action = actImportType
       end
-      object miImportSettings: TMenuItem [20]
+      object miImportSettings: TMenuItem [21]
         Action = actImportSettings
       end
-      object miImportExportLink: TMenuItem [21]
+      object miImportExportLink: TMenuItem [22]
         Action = actImportExportLink
       end
-      object FarmacyCash1: TMenuItem [23]
+      object FarmacyCash1: TMenuItem [24]
         Action = actUnitForFarmacyCash
       end
-      object N10: TMenuItem [25]
+      object N10: TMenuItem [26]
         Caption = '-'
       end
-      object miReprice: TMenuItem [26]
+      object miReprice: TMenuItem [27]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072
         OnClick = miRepriceClick
       end
-      object miRepriceChange: TMenuItem [27]
+      object miRepriceChange: TMenuItem [28]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1094#1077#1085' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
         OnClick = miRepriceChangeClick
       end
-      object miExportSalesForSupp: TMenuItem [28]
+      object miExportSalesForSupp: TMenuItem [29]
         Action = actExportSalesForSuppClick
       end
-      object N173: TMenuItem [29]
+      object N173: TMenuItem [30]
         Action = actRepriceUnitSheduler
       end
     end

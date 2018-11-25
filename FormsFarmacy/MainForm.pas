@@ -467,6 +467,8 @@ type
     N174: TMenuItem;
     actReportUnLiquid_Movement: TdsdOpenForm;
     N175: TMenuItem;
+    actCheckUnComplete: TdsdOpenForm;
+    N176: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

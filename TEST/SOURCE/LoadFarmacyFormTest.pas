@@ -309,6 +309,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckNoCashRegisterForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckNoCashRegisterForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckUnCompleteForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckUnCompleteForm');
 end;
 
 procedure TLoadFormTest.LoadConditionsKeepFormTest;
