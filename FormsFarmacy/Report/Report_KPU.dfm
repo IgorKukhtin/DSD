@@ -190,9 +190,21 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 58
+            Width = 46
             Position.BandIndex = 1
             Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object TotalExecutionLine: TcxGridDBBandedColumn
+            Caption = '% '#1074#1099#1087#1086#1083#1085'.'
+            DataBinding.FieldName = 'TotalExecutionLine'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+            Position.BandIndex = 1
+            Position.ColIndex = 1
             Position.RowIndex = 0
           end
           object BonusAmountTab: TcxGridDBBandedColumn
@@ -203,9 +215,9 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 73
+            Width = 60
             Position.BandIndex = 1
-            Position.ColIndex = 1
+            Position.ColIndex = 2
             Position.RowIndex = 0
           end
           object AmountTheFineTab: TcxGridDBBandedColumn
@@ -217,9 +229,9 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 79
+            Width = 58
             Position.BandIndex = 1
-            Position.ColIndex = 2
+            Position.ColIndex = 3
             Position.RowIndex = 0
           end
           object MarkRatio: TcxGridDBBandedColumn
@@ -228,9 +240,9 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taRightJustify
-            Width = 45
+            Width = 41
             Position.BandIndex = 1
-            Position.ColIndex = 3
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object PrevAverageCheck: TcxGridDBBandedColumn

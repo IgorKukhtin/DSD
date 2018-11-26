@@ -127,7 +127,7 @@ BEGIN
        tmpPersonal AS (SELECT 
                              ROW_NUMBER() OVER (PARTITION BY MemberId ORDER BY IsErased) AS Ord
                            , Object_Personal_View.MemberId
-                           , Object_Personal_View.PositionName
+                           , Object_Personal_View.PersonalId
                            , Object_Personal_View.DateIn 
                         FROM Object_Personal_View)
                         
@@ -137,13 +137,68 @@ BEGIN
         , tmpPersonal.PersonalId
 
         , COALESCE (MIFloat_MarkRatio.ValueData,
-            CASE WHEN COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) = COALESCE (MIFloat_BonusAmountTab.ValueData, 0)
-            THEN 0 ELSE CASE WHEN COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) <= COALESCE (MIFloat_BonusAmountTab.ValueData, 0)
-            THEN 1 ELSE -1 END END)::Integer              AS MarkRatio
-        , CASE WHEN COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) = COALESCE (MIFloat_BonusAmountTab.ValueData, 0)
-            THEN 0 ELSE CASE WHEN COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) <= COALESCE (MIFloat_BonusAmountTab.ValueData, 0)
-            THEN 1 ELSE -1 END END::Integer               AS DMarkRatio
-
+            CASE WHEN COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) = 0 AND COALESCE (MIFloat_BonusAmountTab.ValueData, 0) = 0  THEN 0
+            ELSE
+              CASE WHEN upper(substring(Object_UnitCategory.ValueData, 1, 2)) = 'ÀÏ'
+              THEN
+                CASE WHEN MIFloat_TotalExecutionLine.ValueData >= 80 THEN 2
+                ELSE
+                  CASE WHEN MIFloat_TotalExecutionLine.ValueData >= 50 AND
+                            COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) <= COALESCE (MIFloat_BonusAmountTab.ValueData, 0) THEN 1
+                  ELSE
+                    CASE WHEN MIFloat_TotalExecutionLine.ValueData < 50 AND
+                              COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) <= COALESCE (MIFloat_BonusAmountTab.ValueData, 0) THEN 0
+                    ELSE
+                      -1
+                    END
+                  END
+                END
+              ELSE
+                CASE WHEN MIFloat_TotalExecutionLine.ValueData >= 90 THEN 2
+                ELSE
+                  CASE WHEN MIFloat_TotalExecutionLine.ValueData >= 60 AND
+                            COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) <= COALESCE (MIFloat_BonusAmountTab.ValueData, 0) THEN 1
+                  ELSE
+                    CASE WHEN MIFloat_TotalExecutionLine.ValueData < 60 AND
+                              COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) <= COALESCE (MIFloat_BonusAmountTab.ValueData, 0) THEN 0
+                    ELSE
+                      -1
+                    END
+                  END
+                END
+              END
+            END)::Integer              AS MarkRatio
+        , CASE WHEN COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) = 0 AND COALESCE (MIFloat_BonusAmountTab.ValueData, 0) = 0  THEN 0
+            ELSE
+              CASE WHEN upper(substring(Object_UnitCategory.ValueData, 1, 2)) = 'ÀÏ'
+              THEN
+                CASE WHEN MIFloat_TotalExecutionLine.ValueData >= 80 THEN 2
+                ELSE
+                  CASE WHEN MIFloat_TotalExecutionLine.ValueData >= 50 AND
+                            COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) <= COALESCE (MIFloat_BonusAmountTab.ValueData, 0) THEN 1
+                  ELSE
+                    CASE WHEN MIFloat_TotalExecutionLine.ValueData < 50 AND
+                              COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) <= COALESCE (MIFloat_BonusAmountTab.ValueData, 0) THEN 0
+                    ELSE
+                      -1
+                    END
+                  END
+                END
+              ELSE
+                CASE WHEN MIFloat_TotalExecutionLine.ValueData >= 90 THEN 2
+                ELSE
+                  CASE WHEN MIFloat_TotalExecutionLine.ValueData >= 60 AND
+                            COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) <= COALESCE (MIFloat_BonusAmountTab.ValueData, 0) THEN 1
+                  ELSE
+                    CASE WHEN MIFloat_TotalExecutionLine.ValueData < 60 AND
+                              COALESCE (MIFloat_AmountTheFineTab.ValueData, 0) <= COALESCE (MIFloat_BonusAmountTab.ValueData, 0) THEN 0
+                    ELSE
+                      -1
+                    END
+                  END
+                END
+              END
+            END::Integer               AS DMarkRatio
         , COALESCE (MIFloat_AverageCheckRatio.ValueData,
             CASE WHEN COALESCE (MIFloat_PrevAverageCheck.ValueData, 0) = 0
             THEN 0 ELSE ROUND((COALESCE (MIFloat_AverageCheck.ValueData, 0) / COALESCE (MIFloat_PrevAverageCheck.ValueData, 0) - 1) * 100, 1)
@@ -229,12 +284,26 @@ BEGIN
     vbControlRGNote
   FROM MovementItem
 
+       LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                        ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                       AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+       LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+
+       LEFT JOIN ObjectLink AS ObjectLink_Unit_Category
+                            ON ObjectLink_Unit_Category.ObjectId = Object_Unit.Id
+                           AND ObjectLink_Unit_Category.DescId = zc_ObjectLink_Unit_Category()
+       LEFT JOIN Object AS Object_UnitCategory ON Object_UnitCategory.Id = ObjectLink_Unit_Category.ChildObjectId
+
        LEFT JOIN ObjectLink AS ObjectLink_User_Member
                             ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
                            AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
 
        LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectid
                             AND tmpPersonal.Ord = 1
+
+       LEFT JOIN MovementItemFloat AS MIFloat_TotalExecutionLine
+                                   ON MIFloat_TotalExecutionLine.MovementItemId = MovementItem.Id
+                                  AND MIFloat_TotalExecutionLine.DescId = zc_MIFloat_TotalExecutionLine()
 
        LEFT JOIN MovementItemFloat AS MIFloat_AmountTheFineTab
                                    ON MIFloat_AmountTheFineTab.MovementItemId = MovementItem.Id
@@ -868,6 +937,7 @@ $BODY$
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Øàáëèé Î.Â.
+ 25.11.18         *
  13.11.18         *
  12.11.18         *
  05.11.18         *
