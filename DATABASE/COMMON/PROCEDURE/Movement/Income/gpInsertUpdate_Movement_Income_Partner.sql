@@ -42,7 +42,7 @@ BEGIN
 
      
      -- сохранили <Документ>
-     SELECT tmp.ioId, tmp.outCurrencyValue
+     SELECT tmp.ioId, tmp.ioCurrencyValue
             INTO ioId, outCurrencyValue
      FROM lpInsertUpdate_Movement_Income (ioId                := ioId
                                         , inInvNumber         := inInvNumber
