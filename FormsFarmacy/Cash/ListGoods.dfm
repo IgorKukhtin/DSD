@@ -2,20 +2,21 @@ inherited ListGoodsForm: TListGoodsForm
   BorderIcons = [biSystemMenu]
   Caption = #1055#1086#1076#1073#1086#1088' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1086#1074
   ClientHeight = 422
-  ClientWidth = 653
+  ClientWidth = 839
   OnCreate = ParentFormCreate
   OnKeyDown = ParentFormKeyDown
-  ExplicitWidth = 669
+  ExplicitWidth = 855
   ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   object ListGoodsGrid: TcxGrid [0]
     Left = 0
     Top = 52
-    Width = 653
+    Width = 839
     Height = 235
     Align = alClient
     TabOrder = 1
+    ExplicitWidth = 653
     object ListGoodsGridDBTableView: TcxGridDBTableView
       OnDblClick = ListGoodsGridDBTableViewDblClick
       Navigator.Buttons.CustomButtons = <>
@@ -53,7 +54,7 @@ inherited ListGoodsForm: TListGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 261
+        Width = 204
       end
       object colPrice: TcxGridDBColumn
         Caption = #1062#1077#1085#1072
@@ -63,7 +64,7 @@ inherited ListGoodsForm: TListGoodsForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 86
+        Width = 61
       end
       object colAmoutDayUser: TcxGridDBColumn
         Caption = #1053#1072#1073#1080#1090#1086' '#1074#1072#1084#1080' '#1089#1077#1075#1086#1076#1085#1103
@@ -97,6 +98,78 @@ inherited ListGoodsForm: TListGoodsForm
       object colId: TcxGridDBColumn
         DataBinding.FieldName = 'Id'
         Visible = False
+        Options.Editing = False
+      end
+      object colJuridicalName: TcxGridDBColumn
+        Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+        DataBinding.FieldName = 'JuridicalName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 119
+      end
+      object colGoodsNDS: TcxGridDBColumn
+        Caption = #1053#1044#1057' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'NDS'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0 %; ; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+      end
+      object colJuridicalPrice: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1079#1072#1082#1091#1087#1082#1080' '#1073#1077#1079' '#1053#1044#1057
+        DataBinding.FieldName = 'JuridicalPrice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+      end
+      object colMarginPercent: TcxGridDBColumn
+        Caption = #1053#1072#1094#1077#1085#1082#1072
+        DataBinding.FieldName = 'MarginPercent'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.## %'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 57
+      end
+      object colExpirationDate: TcxGridDBColumn
+        Caption = #1057#1088#1086#1082' '#1093#1088#1072#1085#1077#1085#1080#1103
+        DataBinding.FieldName = 'ExpirationDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 82
+      end
+      object colIsClose: TcxGridDBColumn
+        Caption = #1047#1072#1082#1088#1099#1090
+        DataBinding.FieldName = 'IsClose'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 50
+      end
+      object colisFirst: TcxGridDBColumn
+        Caption = '1-'#1074#1099#1073#1086#1088
+        DataBinding.FieldName = 'isFirst'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 56
+      end
+      object colisSecond: TcxGridDBColumn
+        Caption = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088
+        DataBinding.FieldName = 'isSecond'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
       end
     end
     object ListGoodsGridLevel: TcxGridLevel
@@ -107,39 +180,47 @@ inherited ListGoodsForm: TListGoodsForm
   object pnl1: TPanel [1]
     Left = 0
     Top = 27
-    Width = 653
+    Width = 839
     Height = 25
     Align = alTop
     TabOrder = 0
+    ExplicitWidth = 653
+    DesignSize = (
+      839
+      25)
     object edt1: TEdit
       Left = 1
       Top = 1
-      Width = 651
+      Width = 837
       Height = 23
       Align = alClient
       AutoSelect = False
       TabOrder = 0
       OnChange = edt1Change
       OnExit = edt1Exit
+      ExplicitWidth = 651
       ExplicitHeight = 21
     end
     object ProgressBar1: TProgressBar
-      Left = 535
-      Top = 13
+      Left = 773
+      Top = 12
       Width = 57
       Height = 9
+      Anchors = [akTop, akRight]
       BarColor = clMedGray
       TabOrder = 1
       Visible = False
+      ExplicitLeft = 783
     end
   end
   object ListDiffGrid: TcxGrid [2]
     Left = 0
     Top = 287
-    Width = 653
+    Width = 839
     Height = 135
     Align = alBottom
     TabOrder = 2
+    ExplicitWidth = 653
     object ListDiffGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ListDiffDS
@@ -247,7 +328,7 @@ inherited ListGoodsForm: TListGoodsForm
   object pnlLocal: TPanel [3]
     Left = 0
     Top = 0
-    Width = 653
+    Width = 839
     Height = 27
     Align = alTop
     Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099': '#1040#1074#1090#1086#1085#1086#1084#1085#1086' ('#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1082#1072#1089#1089#1077')'
@@ -259,6 +340,7 @@ inherited ListGoodsForm: TListGoodsForm
     ParentFont = False
     TabOrder = 3
     Visible = False
+    ExplicitWidth = 653
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59

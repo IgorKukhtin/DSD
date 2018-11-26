@@ -76,6 +76,7 @@ type
     spCreateSale: TdsdStoredProc;
     actExecspCreateSale: TdsdExecStoredProc;
     dxBarButton3: TdxBarButton;
+    actExchangeChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public
