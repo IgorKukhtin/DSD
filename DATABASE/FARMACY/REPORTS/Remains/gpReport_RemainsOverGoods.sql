@@ -3,18 +3,21 @@
 DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_RemainsOverGoods(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inStartDate        TDateTime,  -- Дата остатка
     IN inPeriod           TFloat,     -- Кол-во дней для анализа НТЗ
     IN inDay              TFloat,     -- Страховой запас НТЗ для Х дней
+    IN inDayIncome        TFloat,     -- Учитывать товар в затоварку, пришедший до X дней
     IN inAssortment       TFloat,     -- кол-во для ассортимента
     IN inisMCS            Boolean,    -- для аптеки-отправителя изпользовать НТЗ из справочника
     IN inisInMCS          Boolean,    -- для аптек-получателей изпользовать НТЗ из справочника
     IN inisRecal          Boolean,    -- Да / нет - "Временно исправлются ошибки с датами в ценах"
     IN inisAssortment     Boolean,    -- оставить кол-во для ассортимента Да / нет
     IN inIsReserve        Boolean  ,  --  Учитывать отложенный товар Да/Нет
+    IN inIsIncome         Boolean  ,  -- Учитывать товар в затоварку, пришедший до X дней Да/Нет
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS  SETOF refcursor
@@ -31,6 +34,7 @@ $BODY$
    DECLARE vbMovementItemId Integer;
    DECLARE vbMovementItemChildId Integer;
    
+   DECLARE vbIncomeDate TDateTime;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -40,6 +44,9 @@ BEGIN
     -- замена
     inStartDate := DATE_TRUNC ('DAY', inStartDate);
 
+    -- определяем дату прихода после которой не учитываем товар для перемещения (Учитывать товар в затоварку)
+    vbIncomeDate := inStartDate - (''||inDayIncome|| ' day') ::Interval;
+    
     -- !!!только НЕ так определяется <Торговая сеть>!!!
     -- vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
     -- !!!только так - определяется <Торговая сеть>!!!
@@ -78,8 +85,8 @@ BEGIN
 
     -- Таблицы
     CREATE TEMP TABLE tmpGoods_list (GoodsMainId Integer, GoodsId Integer, UnitId Integer, PriceId Integer, MCSValue TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
-    CREATE TEMP TABLE tmpRemains_1 (GoodsId Integer, UnitId Integer, RemainsStart TFloat, ContainerId Integer, PRIMARY KEY (UnitId, GoodsId,ContainerId)) ON COMMIT DROP;
-    CREATE TEMP TABLE tmpRemains (GoodsId Integer, UnitId Integer, RemainsStart TFloat, RemainsStart_save TFloat, MinExpirationDate TDateTime, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpRemains_1 (GoodsId Integer, UnitId Integer, RemainsStart TFloat, Amount_In TFloat, ContainerId Integer, PRIMARY KEY (UnitId, GoodsId,ContainerId)) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpRemains (GoodsId Integer, UnitId Integer, RemainsStart TFloat, RemainsStart_save TFloat, Amount_In TFloat, MinExpirationDate TDateTime, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMCS (GoodsId Integer, UnitId Integer, MCSValue TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMIMaster (GoodsId Integer, Amount TFloat, Summa TFloat, InvNumber TVarChar, MovementId Integer, MIMaster_Id Integer, PRIMARY KEY (MovementId, MIMaster_Id, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMIChild (UnitId Integer, GoodsMainId Integer, GoodsId Integer, Amount TFloat, Summa TFloat, MIChild_Id Integer, PRIMARY KEY (MIChild_Id, UnitId,GoodsId)) ON COMMIT DROP;
@@ -93,7 +100,7 @@ BEGIN
                              , RemainsStart TFloat, SummaRemainsStart TFloat
                              , RemainsMCS_from TFloat, SummaRemainsMCS_from TFloat
                              , RemainsMCS_to TFloat, SummaRemainsMCS_to TFloat
-                             , AmountSend TFloat, Amount_Reserve TFloat
+                             , AmountSend TFloat, Amount_Reserve TFloat, Amount_In Tfloat
                              , PRIMARY KEY (UnitId, GoodsId)
                               ) ON COMMIT DROP;
     -- Таблица - Результат
@@ -173,20 +180,45 @@ BEGIN
                              AND ObjectBoolean_Over.ValueData = TRUE;
                            
        -- Remains
-       INSERT INTO tmpRemains_1 (GoodsId, UnitId, RemainsStart, ContainerId)
-                              SELECT Container.Objectid      AS GoodsId
-                                   , Container.WhereObjectId AS UnitId
-                                   , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS RemainsStart
-                                   , Container.Id  AS ContainerId
-                              FROM tmpUnit_list
-                                   INNER JOIN Container ON Container.WhereObjectId = tmpUnit_list.UnitId
-                                                       AND Container.DescId = zc_Container_Count()
-                                   LEFT JOIN MovementItemContainer AS MIContainer
-                                                                   ON MIContainer.ContainerId = Container.Id
-                                                                  AND MIContainer.OperDate >= inStartDate
-                              GROUP BY Container.Id, Container.Objectid, Container.WhereObjectId, Container.Amount
-                              HAVING  Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
-                              ;
+       INSERT INTO tmpRemains_1 (GoodsId, UnitId, RemainsStart, Amount_In, ContainerId)
+                   WITH
+                   tmpContainer AS (SELECT Container.Objectid      AS GoodsId
+                                         , Container.WhereObjectId AS UnitId
+                                         , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS RemainsStart
+                                         , Container.Id  AS ContainerId
+                                    FROM tmpUnit_list
+                                         INNER JOIN Container ON Container.WhereObjectId = tmpUnit_list.UnitId
+                                                             AND Container.DescId = zc_Container_Count()
+                                         LEFT JOIN MovementItemContainer AS MIContainer
+                                                                         ON MIContainer.ContainerId = Container.Id
+                                                                        AND MIContainer.OperDate >= inStartDate
+                                    GROUP BY Container.Id, Container.Objectid, Container.WhereObjectId, Container.Amount
+                                    HAVING  Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
+                                    )
+                   SELECT tmpContainer.GoodsId
+                        , tmpContainer.UnitId
+                        , SUM (tmpContainer.RemainsStart) AS RemainsStart
+                        , SUM (CASE WHEN vbIncomeDate <= Movement_Income.OperDate THEN tmpContainer.RemainsStart ELSE 0 END) AS Amount_In
+                        , tmpContainer.ContainerId
+                   FROM tmpContainer
+                        -- находим партию
+                        LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                               ON ContainerLinkObject_MovementItem.Containerid = tmpContainer.ContainerId
+                              AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                        LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                        -- элемент прихода
+                        LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                        -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                        LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                               ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                              AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                        -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                        LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+   
+                        LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) 
+                   WHERE tmpContainer.UnitId = inUnitId
+                   GROUP BY tmpContainer.ContainerId, tmpContainer.GoodsId, tmpContainer.UnitId
+                   ;
 
          -- автоперемещения приход / расход
          INSERT INTO tmpSend  (GoodsId, UnitId, Amount) 
@@ -234,11 +266,12 @@ BEGIN
                        ;
 
        -- остатки
-       INSERT INTO tmpRemains (GoodsId, UnitId, RemainsStart, RemainsStart_save, MinExpirationDate)                              
+       INSERT INTO tmpRemains (GoodsId, UnitId, RemainsStart, RemainsStart_save, Amount_In, MinExpirationDate)                              
                          WITH tmp AS
                         (SELECT tmp.GoodsId
                               , tmp.UnitId
                               , SUM (tmp.RemainsStart) AS RemainsStart
+                              , SUM (tmp.Amount_In)    AS Amount_In
                               , Null    ::TDateTime AS MinExpirationDate -- Срок годности
                           FROM tmpRemains_1 AS tmp 
                           --переносим при сохранении документа "излишки" - делать расчет Срока годности
@@ -246,17 +279,24 @@ BEGIN
                           HAVING  SUM (tmp.RemainsStart) <> 0
                          )
                          -- Результат        --
-                         -- если признак оставить для ассортимента Да, тогда снимаем с остатка это кол-во 
+                         
                          SELECT tmp.GoodsId
                               , tmp.UnitId
                               --, tmp.RemainsStart + COALESCE (tmpSend.Amount, 0) AS RemainsStart
                               
                               , tmp.RemainsStart + COALESCE (tmpSend.Amount, 0)
+                              -- если признак оставить для ассортимента Да, тогда снимаем с остатка это кол-во 
                               - CASE WHEN inisAssortment = TRUE AND tmp.UnitId = inUnitId
                                           THEN inAssortment
                                      ELSE 0
-                                END                                             AS RemainsStart
-                              , tmp.RemainsStart                                AS RemainsStart_save
+                                END  
+                              -- если признак Учитывать товар в затоварку Да, тогда снимаем с остатка это кол-во  (приходы за Х дней)
+                              - CASE WHEN inIsIncome = TRUE AND tmp.UnitId = inUnitId
+                                          THEN tmp.Amount_In
+                                     ELSE 0
+                                END                      AS RemainsStart
+                              , tmp.RemainsStart         AS RemainsStart_save
+                              , tmp.Amount_In            AS Amount_In
                               , tmp.MinExpirationDate
                          FROM tmp
                               LEFT JOIN tmpSend ON tmpSend.GoodsId = tmp.GoodsId AND tmpSend.UnitId = tmp.UnitId AND tmpSend.UnitId <> inUnitId
@@ -269,6 +309,7 @@ BEGIN
                                      ELSE 0
                                 END                          AS RemainsStart
                               , 0                            AS RemainsStart_save
+                              , 0                            AS Amount_In
                               , NULL                         AS MinExpirationDate
                          FROM tmpSend
                               LEFT JOIN tmp ON tmp.GoodsId = tmpSend.GoodsId AND tmp.UnitId = tmpSend.UnitId
@@ -378,7 +419,7 @@ BEGIN
                             , RemainsStart, SummaRemainsStart
                             , RemainsMCS_from, SummaRemainsMCS_from
                             , RemainsMCS_to, SummaRemainsMCS_to
-                            , AmountSend, Amount_Reserve
+                            , AmountSend, Amount_Reserve, Amount_In
                              )
          WITH 
           tmpOverSettings AS (SELECT *
@@ -531,8 +572,9 @@ BEGIN
                       ELSE 0
                  END AS SummaRemainsMCS_to
 */
-               , Object_Send.Amount              AS AmountSend
-               , COALESCE (tmpReserve.Amount, 0) AS Amount_Reserve
+               , Object_Send.Amount                     AS AmountSend
+               , COALESCE (tmpReserve.Amount, 0)        AS Amount_Reserve
+               , COALESCE (Object_Remains.Amount_In, 0) AS Amount_In
 --               , Object_Send.Amount_To     AS AmountSend_To
 
             FROM tmpGoods_list
@@ -668,6 +710,7 @@ BEGIN
 
                , tmpData.AmountSend            :: TFloat  AS AmountSend
                , tmpData.Amount_Reserve        :: TFloat  AS Amount_Reserve
+               , tmpData.Amount_In             :: TFloat  AS Amount_In
  
                , tmpData.GoodsId
                , tmpData.GoodsMainId

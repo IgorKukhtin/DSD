@@ -3,7 +3,7 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' < '#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' '#1080#1079#1083#1080#1096#1082#1086#1074' '#1087#1086' '#1072#1087#1090#1077#1082#1072#1084'>'
-  ClientHeight = 376
+  ClientHeight = 414
   ClientWidth = 355
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 43
-    Top = 343
+    Top = 379
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
   end
   object cxButton2: TcxButton
     Left = 217
-    Top = 343
+    Top = 379
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -169,13 +169,32 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
     Width = 22
   end
   object cbReserve: TcxCheckBox
-    Left = 22
-    Top = 302
+    Left = 8
+    Top = 312
     Caption = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' ('#1044#1072'/'#1053#1077#1090')'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 20
     Width = 248
+  end
+  object cbIncome: TcxCheckBox
+    Left = 8
+    Top = 342
+    Caption = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1090#1086#1074#1072#1088', '#1087#1088#1080#1096#1077#1076#1096#1080#1081' '#1079#1072' '#1087#1086#1089#1083#1077#1076#1085#1080#1077' '#1061' '#1076#1085#1077#1081
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 21
+    Width = 305
+  end
+  object edDayIncome: TcxCurrencyEdit
+    Left = 311
+    Top = 342
+    EditValue = 15.000000000000000000
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    Properties.MinValue = 1.000000000000000000
+    TabOrder = 22
+    Width = 26
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -303,6 +322,22 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
         Value = Null
         Component = cbReserve
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isIncome'
+        Value = Null
+        Component = cbIncome
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DayIncome'
+        Value = Null
+        Component = edDayIncome
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
