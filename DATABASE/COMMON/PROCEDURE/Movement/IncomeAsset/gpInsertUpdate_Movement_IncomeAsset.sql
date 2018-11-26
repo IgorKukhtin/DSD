@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_IncomeAsset()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_IncomeAsset (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_IncomeAsset (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_IncomeAsset(
@@ -21,7 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_IncomeAsset(
     IN inContractId          Integer   , -- Договора
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
-   OUT outCurrencyValue      TFloat    , -- курс валюты
+ INOUT ioCurrencyValue       TFloat    , -- курс валюты
     IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -36,8 +37,8 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_IncomeAsset());
                                               
      -- сохранили <Документ>
-     SELECT tmp.ioId, tmp.outCurrencyValue
-            INTO ioId, outCurrencyValue
+     SELECT tmp.ioId, tmp.ioCurrencyValue
+            INTO ioId, ioCurrencyValue
      FROM lpInsertUpdate_Movement_IncomeAsset (ioId                := ioId
                                              , inInvNumber         := inInvNumber
                                              , inOperDate          := inOperDate
@@ -52,6 +53,7 @@ BEGIN
                                              , inContractId        := inContractId
                                              , inCurrencyDocumentId:= inCurrencyDocumentId
                                              , inCurrencyPartnerId := inCurrencyPartnerId
+                                             , ioCurrencyValue     := ioCurrencyValue
                                              , inComment           := inComment
                                              , inUserId            := vbUserId
                                               ) AS tmp;
@@ -64,6 +66,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 26.11.18         * ioCurrencyValue
  06.10.16         * parce
  25.07.16         *
 */

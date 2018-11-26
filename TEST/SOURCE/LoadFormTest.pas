@@ -704,6 +704,7 @@ procedure TLoadFormTest.LoadIncomeFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
   //
@@ -722,17 +723,19 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalChoiceForm');
-
+   }
 end;
 procedure TLoadFormTest.LoadIncomeAssetFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeAssetForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeAssetForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeAssetJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeAssetJournalForm');
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetPlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetPlace_ObjectForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadOrderIncomeFormTest;

@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_IncomeAsset()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_IncomeAsset (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_IncomeAsset (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_IncomeAsset(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -20,7 +21,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_IncomeAsset(
     IN inContractId          Integer   , -- Договора
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
-   OUT outCurrencyValue      TFloat    , -- курс валюты
+ INOUT ioCurrencyValue       TFloat    , -- курс валюты
     IN inComment             TVarChar  , -- примечание
     IN inUserId              Integer     -- пользователь
 )
@@ -29,6 +30,8 @@ AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbCurrencyDocumentId Integer;
+   DECLARE vbCurrencyPartnerId Integer;
 BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('DAY', inOperDatePartner) 
@@ -45,9 +48,13 @@ BEGIN
      -- проверка - связанные документы Изменять нельзя
      PERFORM lfCheck_Movement_Parent (inMovementId:= ioId, inComment:= 'изменение');
 
+     -- сохраненная валюта документа
+     vbCurrencyDocumentId := COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_CurrencyDocument()), zc_Enum_Currency_Basis());
+     -- сохраненная Валюта (контрагента)
+     vbCurrencyPartnerId := COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_CurrencyPartner()), zc_Enum_Currency_Basis());    
 
      -- определяем ключ доступа
-    -- vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_IncomeAsset());
+     -- vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_IncomeAsset());
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -71,31 +78,23 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
 
      -- рассчитали и свойство <Курс для перевода в валюту баланса>
-     outCurrencyValue := 1.00;
-     IF inCurrencyDocumentId <> inCurrencyPartnerId
+     --outCurrencyValue := 1.00;
+     IF inCurrencyDocumentId <> inCurrencyPartnerId 
      THEN
-         outCurrencyValue:= (SELECT MovementItem.Amount
-                             FROM (SELECT MAX (Movement.OperDate) as maxOperDate
-                                   FROM Movement 
-                                       JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
-                                                        AND MovementItem.ObjectId = inCurrencyDocumentId
-                                       JOIN MovementItemLinkObject AS MILinkObject_CurrencyTo
-                                                                   ON MILinkObject_CurrencyTo.MovementItemId = MovementItem.Id
-                                                                  AND MILinkObject_CurrencyTo.DescId = zc_MILinkObject_Currency()
-                                                                  AND MILinkObject_CurrencyTo.ObjectId = inCurrencyPartnerId
-                                   WHERE Movement.DescId = zc_Movement_Currency()
-                                     AND Movement.OperDate <= inOperDate
-                                     AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())   
-                                  ) AS tmpDate
-                                  INNER JOIN Movement ON Movement.DescId = zc_Movement_Currency()
-                                                     AND Movement.OperDate = tmpDate.maxOperDate
-                                                     AND Movement.StatusId IN (zc_Enum_Status_Complete())
-                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
-                                                         AND MovementItem.DescId = zc_MI_Master()
-                            );
+         -- если изменилась валюта документа или если значение курса = 0
+         IF (vbCurrencyDocumentId <> inCurrencyDocumentId OR vbCurrencyPartnerId <> inCurrencyPartnerId OR COALESCE (ioCurrencyValue, 0) = 0)
+         THEN
+             ioCurrencyValue:= (SELECT tmp.Amount 
+                                FROM lfSelect_Movement_Currency_byDate (inOperDate       := inOperDatePartner
+                                                                      , inCurrencyFromId := inCurrencyDocumentId
+                                                                      , inCurrencyToId   := inCurrencyPartnerId
+                                                                      , inPaidKindId     := inPaidKindId)            AS tmp);
+         END IF;
+     ELSE ioCurrencyValue := 1.00;
      END IF;
+
      -- сохранили свойство <Курс для перевода в валюту баланса>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, outCurrencyValue);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, ioCurrencyValue);
 
      -- сохранили связь с <От кого (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
