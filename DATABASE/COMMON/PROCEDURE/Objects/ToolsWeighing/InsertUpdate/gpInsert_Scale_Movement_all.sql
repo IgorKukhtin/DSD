@@ -547,8 +547,9 @@ end if;*/
                                                   , inPaidKindId            := PaidKindId
                                                   , inContractId            := ContractId
                                                   , inPersonalPackerId      := NULL
-                                                  , inCurrencyDocumentId    := NULL
-                                                  , inCurrencyPartnerId     := NULL
+                                                  , inCurrencyDocumentId    := 0
+                                                  , inCurrencyPartnerId     := 0
+                                                  , inCurrencyValue         := 0
                                                   , inUserId                := vbUserId
                                                    )
                                           WHEN vbMovementDescId = zc_Movement_ReturnOut()

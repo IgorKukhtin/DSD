@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_Income_Value()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income_Value (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income_Value (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income_Value (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income_Value(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -21,6 +22,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income_Value(
     IN inPersonalPackerId    Integer   , -- Сотрудник (заготовитель)
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
+    IN inCurrencyValue       TFloat    , -- курс валюты
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -45,7 +47,7 @@ BEGIN
                                         , inPersonalPackerId  := inPersonalPackerId
                                         , inCurrencyDocumentId:= inCurrencyDocumentId
                                         , inCurrencyPartnerId := inCurrencyPartnerId
-                                        , ioCurrencyValue     := NULL :: TFloat
+                                        , ioCurrencyValue     := inCurrencyValue
                                         , inUserId            := inUserId
                                          ) AS tmp);
 
