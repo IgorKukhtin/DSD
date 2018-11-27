@@ -1,30 +1,25 @@
--- Function: gpSelect_CashGoodsNew()
+-- Function: gpSelect_CashGoods_AddVip()
 
-DROP FUNCTION IF EXISTS gpSelect_CashGoodsNew (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_CashGoods_AddVip (TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_CashGoodsNew(
+CREATE OR REPLACE FUNCTION gpSelect_CashGoods_AddVip(
     IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer,
-               GoodsCode Integer,
-               GoodsName TVarChar,
-               JuridicalName TVarChar,
-               ExpirationDate TDateTime,
+               Code Integer,
+               Name TVarChar,
                Price TFloat)
 
 AS
 $BODY$
   DECLARE vbUserId     Integer;
-  DECLARE vbObjectId   Integer;
   DECLARE vbUnitId     Integer;
   DECLARE vbUnitIdStr  TVarChar;
-  DECLARE vbAreaId     Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PriceList());
      vbUserId := inSession;
-     vbObjectId := COALESCE (lpGet_DefaultValue ('zc_Object_Retail', vbUserId), '0');
      vbUnitIdStr := COALESCE (lpGet_DefaultValue ('zc_Object_Unit', vbUserId), '0');
      IF vbUnitIdStr <> '' THEN
         vbUnitId := vbUnitIdStr;
@@ -34,7 +29,13 @@ BEGIN
 
     -- старая выборка только товары из прайса подразделения
      RETURN QUERY
-     WITH tmpObject_Price AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat  AS Price
+     WITH tmpContainer AS (SELECT DISTINCT Container.ObjectId AS GoodsID
+                          FROM Container
+                          WHERE Container.DescId = zc_Container_Count()
+                            AND Container.WhereObjectId = vbUnitId
+                            AND Container.Amount > 0
+                         )
+       , tmpObject_Price AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat  AS Price
                              , MCS_Value.ValueData                     AS MCSValue
                              , Price_Goods.ChildObjectId               AS GoodsId
                         FROM ObjectLink AS ObjectLink_Price_Unit
@@ -51,12 +52,14 @@ BEGIN
                           AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                         )
 
-    SELECT tmpObject_Price.GoodsId                     AS GoodsId
-         , Object_Goods.ObjectCode                     AS GoodsCode
-         , Object_Goods.ValueData                      AS GoodsName
+    SELECT tmpObject_Price.GoodsId                     AS Id
+         , Object_Goods.ObjectCode                     AS Code
+         , Object_Goods.ValueData                      AS Name
          , COALESCE(tmpObject_Price.Price,0)::TFloat   AS Price
     FROM
         tmpObject_Price
+
+        INNER JOIN tmpContainer ON tmpContainer.GoodsID = tmpObject_Price.GoodsId
 
         LEFT OUTER JOIN Object AS Object_Goods 
                                ON Object_Goods.Id = tmpObject_Price.GoodsId
@@ -73,4 +76,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_CashGoodsNew (inSession := '3354092');
+-- SELECT * FROM gpSelect_CashGoods_AddVip (inSession := '3354092');

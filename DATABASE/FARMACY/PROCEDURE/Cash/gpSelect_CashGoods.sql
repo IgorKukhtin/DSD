@@ -92,7 +92,8 @@ BEGIN
 
         INSERT INTO _GoodsPriceAll
         SELECT
-           LoadPriceListItem.GoodsId           AS GoodsId,
+           
+           LinkGoodsObject.GoodsId             AS GoodsId,
            LoadPriceList.JuridicalId           AS JuridicalId,
            Object_Goods.NDS                    AS NDS,
            LoadPriceListItem.Price             AS JuridicalPrice,
