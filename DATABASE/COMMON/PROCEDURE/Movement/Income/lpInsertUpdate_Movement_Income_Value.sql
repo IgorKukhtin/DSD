@@ -48,6 +48,7 @@ BEGIN
                                         , inCurrencyDocumentId:= inCurrencyDocumentId
                                         , inCurrencyPartnerId := inCurrencyPartnerId
                                         , ioCurrencyValue     := inCurrencyValue
+                                        , ioParValue          := NULL  :: TFloat
                                         , inUserId            := inUserId
                                          ) AS tmp);
 

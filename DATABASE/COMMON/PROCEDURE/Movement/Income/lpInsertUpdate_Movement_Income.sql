@@ -3,6 +3,7 @@
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer);
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -24,6 +25,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
  INOUT ioCurrencyValue       TFloat    , -- курс валюты
+ INOUT ioParValue            TFloat    , -- номинал
     IN inUserId              Integer     -- пользователь
 )
 RETURNS RECORD
@@ -77,24 +79,50 @@ BEGIN
      -- сохранили свойство <(-)% Скидки (+)% Наценки >
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
 
-     -- рассчитали и свойство <Курс для перевода в валюту баланса>
+     -- рассчитали и свойство <Курс для перевода в валюту баланса>   -- ну как-то так
      --outCurrencyValue := 1.00;
-     IF inCurrencyDocumentId <> inCurrencyPartnerId 
+     IF (inCurrencyDocumentId <> inCurrencyPartnerId) OR (inCurrencyDocumentId <> zc_Enum_Currency_Basis() AND inCurrencyPartnerId <> zc_Enum_Currency_Basis())
      THEN
-         -- если изменилась валюта документа или если значение курса = 0
-         IF (vbCurrencyDocumentId <> inCurrencyDocumentId OR vbCurrencyPartnerId <> inCurrencyPartnerId OR COALESCE (ioCurrencyValue, 0) = 0)
+         IF (inCurrencyDocumentId <> inCurrencyPartnerId)
          THEN
-             ioCurrencyValue:= (SELECT tmp.Amount 
-                                FROM lfSelect_Movement_Currency_byDate (inOperDate       := inOperDatePartner
-                                                                      , inCurrencyFromId := inCurrencyDocumentId
-                                                                      , inCurrencyToId   := inCurrencyPartnerId
-                                                                      , inPaidKindId     := inPaidKindId)            AS tmp);
+             -- если изменилась валюта документа или если значение курса = 0
+             IF (vbCurrencyDocumentId <> inCurrencyDocumentId OR vbCurrencyPartnerId <> inCurrencyPartnerId OR COALESCE (ioCurrencyValue, 0) = 0) 
+             OR (inCurrencyDocumentId <> inCurrencyPartnerId AND COALESCE (ioCurrencyValue, 0) = 0)
+             THEN
+                 IF inCurrencyDocumentId <> zc_Enum_Currency_Basis()
+                 THEN
+                     SELECT tmp.Amount, tmp.ParValue
+                     INTO ioCurrencyValue, ioParValue
+                     FROM lfSelect_Movement_Currency_byDate (inOperDate       := inOperDatePartner
+                                                           , inCurrencyFromId := zc_Enum_Currency_Basis()
+                                                           , inCurrencyToId   := inCurrencyDocumentId
+                                                           , inPaidKindId     := inPaidKindId)            AS tmp;
+                 ELSE 
+                     SELECT tmp.Amount, tmp.ParValue
+                     INTO ioCurrencyValue, ioParValue
+                     FROM lfSelect_Movement_Currency_byDate (inOperDate       := inOperDatePartner
+                                                           , inCurrencyFromId := zc_Enum_Currency_Basis()
+                                                           , inCurrencyToId   := inCurrencyPartnerId
+                                                           , inPaidKindId     := inPaidKindId)            AS tmp;
+                 END IF;    
+             END IF;
+         ELSE IF (inCurrencyDocumentId = inCurrencyPartnerId AND COALESCE (ioCurrencyValue, 0) = 0)
+              THEN
+                  SELECT tmp.Amount, tmp.ParValue
+                  INTO ioCurrencyValue, ioParValue
+                  FROM lfSelect_Movement_Currency_byDate (inOperDate       := inOperDatePartner
+                                                        , inCurrencyFromId := zc_Enum_Currency_Basis()
+                                                        , inCurrencyToId   := inCurrencyDocumentId
+                                                        , inPaidKindId     := inPaidKindId)            AS tmp;
+              END IF;
          END IF;
-     ELSE ioCurrencyValue := 1.00;
-     END IF;
+     ELSE ioCurrencyValue := 1.00; ioParValue := 1.00;
+     END IF; 
      
      -- сохранили свойство <Курс для перевода в валюту баланса>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, ioCurrencyValue);
+     -- сохранили свойство <Номинал для перевода в валюту баланса>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParValue(), ioId, ioParValue);
 
      -- сохранили связь с <От кого (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);

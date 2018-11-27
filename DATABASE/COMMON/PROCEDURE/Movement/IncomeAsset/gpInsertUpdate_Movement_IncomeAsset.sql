@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_IncomeAsset (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_IncomeAsset (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_IncomeAsset (Integer, TVarChar, TDateTime,TDateTime, TVarChar, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_IncomeAsset(
@@ -23,6 +24,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_IncomeAsset(
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
  INOUT ioCurrencyValue       TFloat    , -- курс валюты
+ INOUT ioParValue            TFloat    , -- номинал
     IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -37,8 +39,8 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_IncomeAsset());
                                               
      -- сохранили <Документ>
-     SELECT tmp.ioId, tmp.ioCurrencyValue
-            INTO ioId, ioCurrencyValue
+     SELECT tmp.ioId, tmp.ioCurrencyValue, tmp.ioParValue
+            INTO ioId, ioCurrencyValue, ioParValue
      FROM lpInsertUpdate_Movement_IncomeAsset (ioId                := ioId
                                              , inInvNumber         := inInvNumber
                                              , inOperDate          := inOperDate
@@ -54,6 +56,7 @@ BEGIN
                                              , inCurrencyDocumentId:= inCurrencyDocumentId
                                              , inCurrencyPartnerId := inCurrencyPartnerId
                                              , ioCurrencyValue     := ioCurrencyValue
+                                             , ioParValue          := ioParValue
                                              , inComment           := inComment
                                              , inUserId            := vbUserId
                                               ) AS tmp;
