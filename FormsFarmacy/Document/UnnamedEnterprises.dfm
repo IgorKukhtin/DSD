@@ -86,7 +86,9 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           end
           object NDSKindName: TcxGridDBColumn
             Caption = #1053#1076#1089
-            DataBinding.FieldName = 'NDSKindName'
+            DataBinding.FieldName = 'NDS'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.## %'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -161,7 +163,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = False
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 44

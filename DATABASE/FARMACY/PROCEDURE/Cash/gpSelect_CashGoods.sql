@@ -1,6 +1,5 @@
 -- Function: gpSelect_CashGoods()
 
-DROP FUNCTION IF EXISTS gpSelect_CashGoodsNew (TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_CashGoods (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_CashGoods(
