@@ -3,14 +3,14 @@ unit ClientsByBank;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, DataModul, ParentForm, cxGraphics,
-  cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxStyles, cxCustomData,
-  cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData, cxCheckBox,
-  dsdAddOn, dsdDB, dsdAction, System.Classes, Vcl.ActnList, dxBarExtItems,
-  dxBar, cxClasses, cxPropertiesStore, Datasnap.DBClient, cxGridLevel,
-  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  Vcl.Controls, cxGrid, AncestorGuides, cxPCdxBarPopupMenu, Vcl.Menus, cxPC,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels,
+  cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter, cxData,
+  cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
+  cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
+  cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
+  Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
+  cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore,
   dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
   dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
   dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
@@ -20,21 +20,63 @@ uses
   dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
-  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  Vcl.Menus;
 
 type
-  TClientsByBankForm = class(TAncestorGuidesForm)
+  TClientsByBankForm = class(TParentForm)
+    cxGridLevel: TcxGridLevel;
+    cxGrid: TcxGrid;
+    DataSource: TDataSource;
+    ClientDataSet: TClientDataSet;
+    cxPropertiesStore: TcxPropertiesStore;
+    dxBarManager: TdxBarManager;
+    dxBarManagerBar1: TdxBar;
+    ActionList: TActionList;
+    bbRefresh: TdxBarButton;
+    actRefresh: TdsdDataSetRefresh;
+    bbInsert: TdxBarButton;
+    spSelect: TdsdStoredProc;
+    actUpdate: TdsdInsertUpdateAction;
+    bbEdit: TdxBarButton;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
+    dsdGridToExcel: TdsdGridToExcel;
+    bbToExcel: TdxBarButton;
+    dxBarStatic: TdxBarStatic;
+    spErasedUnErased: TdsdStoredProc;
+    bbChoice: TdxBarButton;
+    cxGridDBTableView: TcxGridDBTableView;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    actInsert: TdsdInsertUpdateAction;
+    pmGrid: TPopupMenu;
+    pmAdd: TMenuItem;
+    N1: TMenuItem;
+    N2: TMenuItem;
+    dsdSetUnErased: TdsdUpdateErased;
+    dsdSetErased: TdsdUpdateErased;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
+    Phone: TcxGridDBColumn;
   private
     { Private declarations }
   public
     { Public declarations }
   end;
 
-
 implementation
 
 {$R *.dfm}
+
 initialization
   RegisterClass(TClientsByBankForm);
+
 end.

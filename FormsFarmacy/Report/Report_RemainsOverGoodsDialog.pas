@@ -55,6 +55,8 @@ type
     edTerm: TcxCurrencyEdit;
     cbTerm: TcxCheckBox;
     cbReserve: TcxCheckBox;
+    cbIncome: TcxCheckBox;
+    edDayIncome: TcxCurrencyEdit;
   private
     { Private declarations }
   public

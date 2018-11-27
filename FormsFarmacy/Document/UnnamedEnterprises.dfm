@@ -157,7 +157,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Caption = 'actOpenChoiceExchange'
+                Action = actExchangeChoice
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -446,6 +446,33 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           StoredProc = spCreateSale
         end>
       Caption = 'actExecspCreateSale'
+    end
+    object actExchangeChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actExchangeChoice'
+      FormName = 'TExchangeForm'
+      FormNameParam.Value = 'TExchangeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ExchangeID'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ExchangeName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -1046,8 +1073,8 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 392
-    Top = 40
+    Left = 160
+    Top = 48
   end
   object GuidesClientsByBank: TdsdGuides
     KeyField = 'Id'
@@ -1056,7 +1083,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TClientsByBankForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -1075,7 +1102,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 136
+    Left = 408
     Top = 48
   end
   object spSelectPrint: TdsdStoredProc

@@ -116,6 +116,9 @@ type
     edTerm: TcxCurrencyEdit;
     actRefreshReserve: TdsdDataSetRefresh;
     cbReserve: TcxCheckBox;
+    cbIncome: TcxCheckBox;
+    edDayIncome: TcxCurrencyEdit;
+    actRefreshIncome: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

@@ -221,9 +221,8 @@ object IncomeAssetForm: TIncomeAssetForm
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
-      Properties.ReadOnly = True
       TabOrder = 24
-      Width = 44
+      Width = 63
     end
     object cxLabel14: TcxLabel
       Left = 724
@@ -236,7 +235,6 @@ object IncomeAssetForm: TIncomeAssetForm
       Properties.Buttons = <
         item
           Default = True
-          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -257,7 +255,7 @@ object IncomeAssetForm: TIncomeAssetForm
           Kind = bkEllipsis
         end>
       TabOrder = 28
-      Width = 127
+      Width = 146
     end
     object cxLabel16: TcxLabel
       Left = 451
@@ -268,7 +266,7 @@ object IncomeAssetForm: TIncomeAssetForm
       Left = 451
       Top = 103
       TabOrder = 30
-      Width = 401
+      Width = 420
     end
     object cxLabel19: TcxLabel
       Left = 271
@@ -602,9 +600,6 @@ object IncomeAssetForm: TIncomeAssetForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1279,6 +1274,9 @@ object IncomeAssetForm: TIncomeAssetForm
       ReportNameParam.Value = 'PrintMovement_IncomeAsset'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -2093,10 +2091,11 @@ object IncomeAssetForm: TIncomeAssetForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outCurrencyValue'
+        Name = 'ioCurrencyValue'
         Value = 0.000000000000000000
         Component = edCurrencyValue
         DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -2635,8 +2634,23 @@ object IncomeAssetForm: TIncomeAssetForm
         Component = edChangePercent
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = Null
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = Null
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 336
+    Left = 320
     Top = 8
   end
   object spGetTotalSumm: TdsdStoredProc
@@ -2690,7 +2704,7 @@ object IncomeAssetForm: TIncomeAssetForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 752
+    Left = 744
     Top = 64
   end
   object CurrencyPartnerGuides: TdsdGuides

@@ -59,7 +59,7 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-
+  {
   LoadReportFromFile('Коммерческое предложение', ReportPath + '\Коммерческое предложение.fr3');
   LoadReportFromFile('Счет к безналу предприятия', ReportPath + '\Счет к безналу предприятия.fr3');
   Exit;
@@ -67,10 +67,11 @@ begin
   LoadReportFromFile('Счет соц.проект', ReportPath + '\Счет соц.проект.fr3');
   //доп. соглащения Соц. проект
   LoadReportFromFile('PrintReport_CheckSP_8513005', ReportPath + '\PrintReport_CheckSP_8513005.fr3');
+  }
   LoadReportFromFile('PrintReport_CheckSP_9102200', ReportPath + '\PrintReport_CheckSP_9102200.fr3');
   LoadReportFromFile('PrintReport_CheckSP_9089478', ReportPath + '\PrintReport_CheckSP_9089478.fr3');
   LoadReportFromFile('PrintReport_CheckSP_9126996', ReportPath + '\PrintReport_CheckSP_9126996.fr3');
-  //exit;
+
   {
   LoadReportFromFile('PrintReport_CheckSP_4474509', ReportPath + '\PrintReport_CheckSP_4474509.fr3');
   LoadReportFromFile('PrintReport_CheckSP_4474508', ReportPath + '\PrintReport_CheckSP_4474508.fr3');
@@ -82,9 +83,12 @@ begin
 
   LoadReportFromFile('Счет постановление 1303', ReportPath + '\Счет постановление 1303.fr3');
   LoadReportFromFile('Pеестр по постановлению 1303', ReportPath + '\Pеестр по постановлению 1303.fr3');
-  }
+
   LoadReportFromFile('Отчет по продажам Соц.проекта', ReportPath + '\Отчет по продажам Соц.проекта.fr3');
+  }
   LoadReportFromFile('Отчет по продажам Соц.проекта(пост.152)', ReportPath + '\Отчет по продажам Соц.проекта(пост.152).fr3');
+  exit;
+   {
   LoadReportFromFile('PrintReport_CheckSP_4474558', ReportPath + '\PrintReport_CheckSP_4474558.fr3');
   exit;
   {

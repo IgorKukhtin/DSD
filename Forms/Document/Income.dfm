@@ -26,7 +26,6 @@ object IncomeForm: TIncomeForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 943
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -315,14 +314,12 @@ object IncomeForm: TIncomeForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 943
     ClientRectBottom = 314
     ClientRectRight = 954
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 943
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -330,7 +327,6 @@ object IncomeForm: TIncomeForm
         Height = 290
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 943
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -751,7 +747,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitWidth = 943
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -759,7 +754,6 @@ object IncomeForm: TIncomeForm
         Height = 290
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 943
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSourceCost
@@ -2947,14 +2941,14 @@ object IncomeForm: TIncomeForm
       item
         Name = 'CurrencyId'
         Value = Null
-        Component = CurrencyDocumentGuides
+        Component = CurrencyPartnerGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyName'
         Value = Null
-        Component = CurrencyDocumentGuides
+        Component = CurrencyPartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3013,7 +3007,7 @@ object IncomeForm: TIncomeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 832
+    Left = 824
     Top = 64
   end
   object CurrencyPartnerGuides: TdsdGuides
@@ -3043,8 +3037,7 @@ object IncomeForm: TIncomeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 816
-    Top = 8
+    Left = 840
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

@@ -54,6 +54,14 @@ type
     ListlDiffNoSendCDSAmoutDiffUser: TCurrencyField;
     ListlDiffNoSendCDSAmoutDiff: TCurrencyField;
     ListlDiffNoSendCDSAmountDiffPrev: TCurrencyField;
+    colGoodsNDS: TcxGridDBColumn;
+    colJuridicalPrice: TcxGridDBColumn;
+    colMarginPercent: TcxGridDBColumn;
+    colExpirationDate: TcxGridDBColumn;
+    colIsClose: TcxGridDBColumn;
+    colisFirst: TcxGridDBColumn;
+    colisSecond: TcxGridDBColumn;
+    colJuridicalName: TcxGridDBColumn;
     procedure ParentFormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure edt1Exit(Sender: TObject);
