@@ -4,6 +4,7 @@
 DROP FUNCTION IF EXISTS gpInsert_Object_ReportCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_Object_ReportCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat,TFloat,TFloat Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_Object_ReportCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Object_ReportCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Object_ReportCollation(
     IN inStartDate           TDateTime,    --
@@ -12,8 +13,8 @@ CREATE OR REPLACE FUNCTION gpInsert_Object_ReportCollation(
     IN inPartnerId           Integer,      --
     IN inContractId          Integer,      --
     IN inPaidKindId          Integer,      --
-/*    IN inAccountId           Integer,      --
     IN InInfoMoneyId         Integer,      --
+/*    IN inAccountId           Integer,      --
     IN inCurrencyId          Integer,      --
     IN inMovementId_Partion  Integer,      --
     */
@@ -31,11 +32,11 @@ $BODY$
   -- DECLARE vbCode_old Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   IF inIsInsert = TRUE
+  /* IF inIsInsert = TRUE
    THEN vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ReportCollation());
    ELSE vbUserId := lpGetUserBySession (inSession);
    END IF;
-
+*/
 
    IF inIsInsert = TRUE OR inIsUpdate = TRUE
    THEN
@@ -47,7 +48,7 @@ BEGIN
        END IF;*/
 
 
-       -- поиск существующего акта сверки: период, юр.лицо, контрагент, договор, форма оплаты
+       -- поиск существующего акта сверки: период, юр.лицо, контрагент, договор, форма оплаты, УП Статья
        vbId:= (SELECT ObjectDate_Start.ObjectId
                FROM ObjectDate AS ObjectDate_Start
                   INNER JOIN Object ON Object.Id       = ObjectDate_Start.ObjectId
@@ -73,12 +74,17 @@ BEGIN
                                        ON ObjectLink_ReportCollation_Contract.ObjectId = ObjectDate_Start.ObjectId
                                       AND ObjectLink_ReportCollation_Contract.DescId = zc_ObjectLink_ReportCollation_Contract()
 
+                  LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_InfoMoney
+                                       ON ObjectLink_ReportCollation_InfoMoney.ObjectId = ObjectDate_Start.ObjectId
+                                      AND ObjectLink_ReportCollation_InfoMoney.DescId = zc_ObjectLink_ReportCollation_InfoMoney()
+
               WHERE ObjectDate_Start.DescId = zc_ObjectDate_ReportCollation_Start()
                 AND ObjectDate_Start.ValueData= inStartDate
                 AND (ObjectLink_ReportCollation_PaidKind.ChildObjectId  = COALESCE (inPaidKindId, 0)  OR COALESCE (inPaidKindId, 0)  = 0)
                 AND (ObjectLink_ReportCollation_Juridical.ChildObjectId = COALESCE (inJuridicalId, 0) OR COALESCE (inJuridicalId, 0) = 0)
                 AND (ObjectLink_ReportCollation_Partner.ChildObjectId   = COALESCE (inPartnerId, 0)   OR COALESCE (inPartnerId, 0)   = 0)
                 AND (ObjectLink_ReportCollation_Contract.ChildObjectId  = COALESCE (inContractId, 0)  OR COALESCE (inContractId, 0)  = 0)
+                AND (ObjectLink_ReportCollation_InfoMoney.ChildObjectId = COALESCE (inInfoMoneyId, 0) OR COALESCE (inInfoMoneyId, 0) = 0)
              );
 
          IF inIsUpdate = TRUE AND COALESCE (vbId, 0) = 0
@@ -132,6 +138,8 @@ BEGIN
              PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ReportCollation_Contract(), vbId, COALESCE (inContractId,0));
              --
              PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ReportCollation_PaidKind(), vbId, COALESCE (inPaidKindId,0));
+             --
+             PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ReportCollation_InfoMoney(), vbId, COALESCE (inInfoMoneyId,0));
 
              -- сохранили свойство <Дата начала периода>
              PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReportCollation_Start(), vbId, inStartDate);
@@ -142,7 +150,7 @@ BEGIN
              -- сохранили свойства <>
              PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReportCollation_StartRemainsRep(), vbId, SUM (tmp.StartRemains))
                    , lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReportCollation_EndRemainsRep(), vbId, SUM (tmp.EndRemains))
-             FROM gpReport_JuridicalCollation(inStartDate:=inStartDate, inEndDate:=inEndDate, inJuridicalId:=inJuridicalId, inPartnerId:=inPartnerId, inContractId:=inContractId, inAccountId := 0, inPaidKindId:=inPaidKindId, InInfoMoneyId := 0, inCurrencyId := 0, inMovementId_Partion := 0, inSession:=inSession) AS tmp;
+             FROM gpReport_JuridicalCollation(inStartDate:=inStartDate, inEndDate:=inEndDate, inJuridicalId:=inJuridicalId, inPartnerId:=inPartnerId, inContractId:=inContractId, inAccountId := 0, inPaidKindId:=inPaidKindId, InInfoMoneyId := InInfoMoneyId, inCurrencyId := 0, inMovementId_Partion := 0, inSession:=inSession) AS tmp;
 
              -- сохранили свойство <Дата создания>
              PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReportCollation_Insert(), vbId, CURRENT_TIMESTAMP);
@@ -216,6 +224,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.11.18         * add inInfoMoneyId
  14.10.18         *
  20.01.17         *
 */

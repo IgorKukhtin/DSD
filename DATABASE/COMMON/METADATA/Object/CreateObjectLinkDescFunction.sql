@@ -1481,6 +1481,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ReportCollation_PaidKind() RETURNS Inte
   INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_ReportCollation_PaidKind', 'Связь с формой оплаты', zc_Object_ReportCollation(), zc_Object_PaidKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportCollation_PaidKind');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReportCollation_InfoMoney() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportCollation_InfoMoney'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ReportCollation_InfoMoney', 'УП статья назначения', zc_Object_ReportCollation(), zc_Object_InfoMoney() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportCollation_InfoMoney');
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ReportCollation_Insert() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportCollation_Insert'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ReportCollation_Insert', 'Пользователь (создание)', zc_Object_ReportCollation(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportCollation_Insert');
@@ -2031,6 +2035,7 @@ SELECT 'zc_ObjectLink_RepriceUnitSheduler_User', 'Связь с Пользователем', zc_Obj
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 28.11.18         * zc_ObjectLink_ReportCollation_InfoMoney
  09.11.18         * zc_ObjectLink_GoodsSeparate_GoodsMaster
  30.10.18                                                                                      * zc_ObjectLink_RepriceUnitSheduler_User
  23.10.18                                                                                      * zc_ObjectLink_RepriceUnitSheduler_Unit

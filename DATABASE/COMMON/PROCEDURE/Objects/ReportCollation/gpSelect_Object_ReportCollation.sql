@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_ReportCollation (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ReportCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ReportCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ReportCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ReportCollation(
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReportCollation(
     IN inPartnerId           Integer,      --
     IN inContractId          Integer,      --
     IN inPaidKindId          Integer,      --
+    IN inInfoMoneyId         Integer,      --
     IN inIsShowAll           Boolean,  
     IN inSession             TVarChar       -- сессия пользователя
 )
@@ -26,6 +28,7 @@ RETURNS TABLE (Id Integer, ObjectCode Integer, idBarCode TVarChar
              , PartnerName TVarChar
              , ContractName TVarChar
              , PaidKindName TVarChar
+             , InfoMoneyName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
              , BuhName TVarChar
@@ -68,6 +71,7 @@ BEGIN
                         , Object_Partner.ValueData        AS PartnerName
                         , Object_Contract.ValueData       AS ContractName
                         , Object_PaidKind.ValueData       AS PaidKindName
+                        , Object_InfoMoney.ValueData      AS InfoMoneyName
 
                         , Object_Insert.ValueData         AS InsertName
                         , ObjectDate_Insert.ValueData     AS InsertDate
@@ -82,6 +86,7 @@ BEGIN
                         , COALESCE (ObjectLink_ReportCollation_Contract.ChildObjectId,  0) AS ContractId
                         , COALESCE (ObjectLink_ReportCollation_Partner.ChildObjectId,   0) AS PartnerId
                         , COALESCE (ObjectLink_ReportCollation_Juridical.ChildObjectId, 0) AS JuridicalId
+                        , COALESCE (ObjectLink_ReportCollation_InfoMoney.ChildObjectId, 0) AS InfoMoneyId
                         
                         , COALESCE (ObjectFloat_StartRemainsRep.ValueData, 0)     AS StartRemainsRep
                         , COALESCE (ObjectFloat_EndRemainsRep.ValueData, 0)       AS EndRemainsRep
@@ -149,6 +154,13 @@ BEGIN
                                            AND ObjectLink_ReportCollation_Contract.DescId = zc_ObjectLink_ReportCollation_Contract()
                        LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = ObjectLink_ReportCollation_Contract.ChildObjectId
 
+                       LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_InfoMoney
+                                            ON ObjectLink_ReportCollation_InfoMoney.ObjectId = Object_ReportCollation.Id
+                                           AND ObjectLink_ReportCollation_InfoMoney.DescId = zc_ObjectLink_ReportCollation_InfoMoney()
+                       LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_ReportCollation_InfoMoney.ChildObjectId
+                                                           AND Object_InfoMoney.DescId = zc_Object_InfoMoney()
+                       
+
                        LEFT JOIN ObjectLink AS ObjectLink_Insert
                                             ON ObjectLink_Insert.ObjectId = Object_ReportCollation.Id
                                            AND ObjectLink_Insert.DescId = zc_ObjectLink_ReportCollation_Insert()
@@ -164,9 +176,10 @@ BEGIN
                      AND ObjectDate_End.ValueData   <= inEndDate
                      AND (Object_ReportCollation.isErased = FALSE OR inIsShowAll = TRUE)
                      AND (COALESCE (ObjectLink_ReportCollation_Juridical.ChildObjectId, 0) = inJuridicalId OR inJuridicalId = 0)
-                     AND (COALESCE (ObjectLink_ReportCollation_Partner.ChildObjectId, 0)   = inPartnerId  OR inPartnerId = 0)
-                     AND (COALESCE (ObjectLink_ReportCollation_Contract.ChildObjectId, 0)  = inContractId OR inContractId = 0)
-                     AND (COALESCE (ObjectLink_ReportCollation_PaidKind.ChildObjectId, 0)  = inPaidKindId OR inPaidKindId = 0)
+                     AND (COALESCE (ObjectLink_ReportCollation_Partner.ChildObjectId, 0)   = inPartnerId   OR inPartnerId = 0)
+                     AND (COALESCE (ObjectLink_ReportCollation_Contract.ChildObjectId, 0)  = inContractId  OR inContractId = 0)
+                     AND (COALESCE (ObjectLink_ReportCollation_PaidKind.ChildObjectId, 0)  = inPaidKindId  OR inPaidKindId = 0)
+                     AND (COALESCE (ObjectLink_ReportCollation_InfoMoney.ChildObjectId, 0) = inInfoMoneyId OR inInfoMoneyId = 0)
                    )
                    
       SELECT tmpData.Id
@@ -182,6 +195,7 @@ BEGIN
            , tmpData.PartnerName
            , tmpData.ContractName
            , tmpData.PaidKindName
+           , tmpData.InfoMoneyName
 
            , tmpData.InsertName
            , tmpData.InsertDate
@@ -249,10 +263,11 @@ $BODY$
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.11.18         * add inInfoMoneyId
  14.10.18         * 
  20.01.17         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ReportCollation(inStartDate := ('01.01.2018')::TDateTime , inEndDate := ('01.01.2018')::TDateTime , inJuridicalId := 0 , inPartnerId := 0 , inContractId := 0 , inPaidKindId := 0 ,  inSession := '5');
+-- select * from gpSelect_Object_ReportCollation(inStartDate := ('01.10.2018')::TDateTime , inEndDate := ('03.11.2018')::TDateTime , inJuridicalId := 112824 , inPartnerId := 0 , inContractId := 0 , inPaidKindId := 0 , inInfoMoneyId := 0 , inIsShowAll := 'False' ,  inSession := '5');

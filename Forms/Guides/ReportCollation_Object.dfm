@@ -3,7 +3,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
   Top = 0
   Caption = #1040#1082#1090#1099' '#1089#1074#1077#1088#1086#1082
   ClientHeight = 537
-  ClientWidth = 918
+  ClientWidth = 1128
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 91
-    Width = 918
+    Width = 1128
     Height = 446
     Align = alClient
     TabOrder = 0
@@ -187,6 +187,17 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         Options.Editing = False
         Width = 55
       end
+      object InfoMoneyName: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyName'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        Options.Editing = False
+        Width = 140
+      end
       object StartRemainsRep: TcxGridDBColumn
         Caption = #1085#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1054#1090#1095#1077#1090')'
         DataBinding.FieldName = 'StartRemainsRep'
@@ -347,7 +358,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 918
+    Width = 1128
     Height = 65
     Align = alTop
     BevelOuter = bvNone
@@ -426,12 +437,12 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       Width = 210
     end
     object cxLabel8: TcxLabel
-      Left = 558
-      Top = 6
+      Left = 602
+      Top = 9
       Caption = #1044#1086#1075#1086#1074#1086#1088':'
     end
     object ceContract: TcxButtonEdit
-      Left = 609
+      Left = 658
       Top = 5
       Properties.Buttons = <
         item
@@ -440,15 +451,15 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 90
+      Width = 143
     end
     object cxLabel5: TcxLabel
-      Left = 528
+      Left = 807
       Top = 30
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
     end
     object edPaidKind: TcxButtonEdit
-      Left = 609
+      Left = 888
       Top = 29
       Properties.Buttons = <
         item
@@ -460,12 +471,12 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       Width = 90
     end
     object cxLabel20: TcxLabel
-      Left = 705
+      Left = 817
       Top = 6
       Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075':'
     end
     object edContractTag: TcxButtonEdit
-      Left = 775
+      Left = 888
       Top = 5
       Properties.Buttons = <
         item
@@ -475,7 +486,24 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         end>
       Properties.ReadOnly = True
       TabOrder = 13
-      Width = 120
+      Width = 90
+    end
+    object cxLabel7: TcxLabel
+      Left = 530
+      Top = 30
+      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
+    end
+    object ceInfoMoney: TcxButtonEdit
+      Left = 658
+      Top = 29
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 15
+      Width = 143
     end
   end
   object DataSource: TDataSource
@@ -1247,6 +1275,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
@@ -1261,6 +1290,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
@@ -1318,6 +1348,14 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         Name = 'inPaidKindId'
         Value = Null
         Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1389,6 +1427,9 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
       end
       item
         Component = GuidesPartner
+      end
+      item
+        Component = GuidesInfoMoney
       end>
     Left = 376
     Top = 216
@@ -1477,6 +1518,14 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         Name = 'inPaidKindId'
         Value = Null
         Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1745,8 +1794,8 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 664
-    Top = 6
+    Left = 680
+    Top = 62
   end
   object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
@@ -1805,8 +1854,8 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 851
-    Top = 36
+    Left = 899
+    Top = 60
   end
   object spUpdate_Buh_Yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_ReportCollation_Buh'
@@ -1872,5 +1921,32 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
     PackSize = 1
     Left = 496
     Top = 184
+  end
+  object GuidesInfoMoney: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 768
+    Top = 13
   end
 end
