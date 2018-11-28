@@ -14,8 +14,12 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_Client_isErased());
-   -- vbUserId:= lpGetUserBySession (inSession);
+   IF inIsErased = FALSE
+   THEN
+       vbUserId:= lpGetUserBySession (inSession);
+   ELSE 
+       vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_Client_isErased());
+   END IF;
 
    -- изменили
    PERFORM lpUpdate_Object_isErased (inObjectId:= inObjectId, inIsErased:=inIsErased, inUserId:= vbUserId);

@@ -193,14 +193,16 @@ BEGIN
              , COALESCE (MIFloat_AmountCurrency.ValueData, 0) AS OperSumm_Currency
              , MovementItem.Id AS MovementItemId
              -- , inMovementId    AS MovementId
-             , COALESCE (MIFloat_ContainerId.ValueData, 0) AS ContainerId -- сформируем позже, или ...
-             , 0 AS AccountGroupId, 0 AS AccountDirectionId               -- сформируем позже, или ...
+             , COALESCE (MIFloat_ContainerId.ValueData, 0)   AS ContainerId         -- сформируем позже, или ...
+             , COALESCE (View_Account.AccountGroupId, 0)     AS AccountGroupId      -- сформируем позже, или ...
+             , COALESCE (View_Account.AccountDirectionId, 0) AS AccountDirectionId  -- сформируем позже, или ...
              , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500()) -- Маркетинг
                          -- MILinkObject_InfoMoney.ObjectId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502()) -- Бонусы за продукцию + Бонусы за мясное сырье
                          THEN vbAccountId
                     ELSE vbAccountId -- 0
                END AS AccountId
              , vbAccountId AS AccountId_main
+
                -- Группы ОПиУ
              , 0 AS ProfitLossGroupId
                -- Аналитики ОПиУ - направления
@@ -266,6 +268,7 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis ON ObjectLink_Contract_JuridicalBasis.ObjectId = MILinkObject_Contract.ObjectId
                                                                        AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+             LEFT JOIN Object_Account_View   AS View_Account   ON View_Account.AccountId     = vbAccountId
 
              LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
                                      ON ObjectBoolean_isCorporate.ObjectId = MovementItem.ObjectId

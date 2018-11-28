@@ -107,6 +107,9 @@ BEGIN
      IF inCurrencyPartnerId > 0 AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId = zc_Object_Cash())
      THEN
         vbCurrencyPartnerId:= inCurrencyPartnerId;
+     ELSEIF COALESCE (inCurrencyId, 0) NOT IN (0, zc_Enum_Currency_Basis())
+     THEN
+        vbCurrencyPartnerId:= inCurrencyPartnerId;
      ELSE
         vbCurrencyPartnerId:= COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inContractId AND OL.DescId = zc_ObjectLink_Contract_Currency())
                                       , zc_Enum_Currency_Basis());
