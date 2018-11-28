@@ -1,6 +1,7 @@
 -- Function: gpUpdate_Object_ReportCollation_RemainsCalc(Integer,Integer,TVarChar,Integer,Integer,Integer,TVarChar)
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_ReportCollation_RemainsCalc (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_ReportCollation_RemainsCalc (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_ReportCollation_RemainsCalc(
     IN inStartDate           TDateTime,    --
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_ReportCollation_RemainsCalc(
     IN inPartnerId           Integer,      --
     IN inContractId          Integer,      --
     IN inPaidKindId          Integer,      --
+    IN inInfoMoneyId         Integer,      --
     IN inSession             TVarChar
 )
 
@@ -35,6 +37,7 @@ BEGIN
               , COALESCE (ObjectLink_ReportCollation_Contract.ChildObjectId,  0) AS ContractId
               , COALESCE (ObjectLink_ReportCollation_Partner.ChildObjectId,   0) AS PartnerId
               , COALESCE (ObjectLink_ReportCollation_Juridical.ChildObjectId, 0) AS JuridicalId
+              , COALESCE (ObjectLink_ReportCollation_InfoMoney.ChildObjectId, 0) AS InfoMoneyId
           FROM Object AS Object_ReportCollation
              LEFT JOIN ObjectDate AS ObjectDate_Start
                                   ON ObjectDate_Start.ObjectId = Object_ReportCollation.Id
@@ -46,22 +49,22 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_PaidKind
                                   ON ObjectLink_ReportCollation_PaidKind.ObjectId = Object_ReportCollation.Id
                                  AND ObjectLink_ReportCollation_PaidKind.DescId = zc_ObjectLink_ReportCollation_PaidKind()
-             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_ReportCollation_PaidKind.ChildObjectId
    
              LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_Juridical
                                   ON ObjectLink_ReportCollation_Juridical.ObjectId = Object_ReportCollation.Id
                                  AND ObjectLink_ReportCollation_Juridical.DescId = zc_ObjectLink_ReportCollation_Juridical()
-             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_ReportCollation_Juridical.ChildObjectId
    
              LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_Partner
                                   ON ObjectLink_ReportCollation_Partner.ObjectId = Object_ReportCollation.Id
                                  AND ObjectLink_ReportCollation_Partner.DescId = zc_ObjectLink_ReportCollation_Partner()
-             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_ReportCollation_Partner.ChildObjectId
    
              LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_Contract
                                   ON ObjectLink_ReportCollation_Contract.ObjectId = Object_ReportCollation.Id
                                  AND ObjectLink_ReportCollation_Contract.DescId = zc_ObjectLink_ReportCollation_Contract()
-             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = ObjectLink_ReportCollation_Contract.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_ReportCollation_InfoMoney
+                                  ON ObjectLink_ReportCollation_InfoMoney.ObjectId = Object_ReportCollation.Id
+                                 AND ObjectLink_ReportCollation_InfoMoney.DescId = zc_ObjectLink_ReportCollation_InfoMoney()
    
          WHERE Object_ReportCollation.DescId = zc_Object_ReportCollation()
            AND Object_ReportCollation.isErased = FALSE
@@ -71,8 +74,9 @@ BEGIN
            AND (COALESCE (ObjectLink_ReportCollation_Partner.ChildObjectId, 0)   = inPartnerId  OR inPartnerId = 0)
            AND (COALESCE (ObjectLink_ReportCollation_Contract.ChildObjectId, 0)  = inContractId OR inContractId = 0)
            AND (COALESCE (ObjectLink_ReportCollation_PaidKind.ChildObjectId, 0)  = inPaidKindId OR inPaidKindId = 0)
+           AND (COALESCE (ObjectLink_ReportCollation_InfoMoney.ChildObjectId, 0) = inInfoMoneyId OR inInfoMoneyId = 0)
          ) AS tmpObject
-         LEFT JOIN gpReport_JuridicalCollation(tmpObject.StartDate, tmpObject.EndDate, tmpObject.JuridicalId, tmpObject.PartnerId, tmpObject.ContractId, 0, tmpObject.PaidKindId,  0,  0,  0, inSession) AS tmpreport ON 1 = 1
+         LEFT JOIN gpReport_JuridicalCollation(tmpObject.StartDate, tmpObject.EndDate, tmpObject.JuridicalId, tmpObject.PartnerId, tmpObject.ContractId, 0, tmpObject.PaidKindId,  tmpObject.InfoMoneyId,  0,  0, inSession) AS tmpreport ON 1 = 1
    GROUP BY tmpObject.Id;
 
   
@@ -85,5 +89,6 @@ END;$BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 28.11.18         *
  15.10.18         *
 */

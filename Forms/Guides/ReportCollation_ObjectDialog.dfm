@@ -3,7 +3,7 @@ object ReportCollation_ObjectDialogForm: TReportCollation_ObjectDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1088#1077#1077#1089#1090#1088#1072' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
-  ClientHeight = 230
+  ClientHeight = 243
   ClientWidth = 479
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@ object ReportCollation_ObjectDialogForm: TReportCollation_ObjectDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 113
-    Top = 187
+    Left = 98
+    Top = 193
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object ReportCollation_ObjectDialogForm: TReportCollation_ObjectDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 287
-    Top = 187
+    Left = 272
+    Top = 193
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -38,7 +38,7 @@ object ReportCollation_ObjectDialogForm: TReportCollation_ObjectDialogForm
   end
   object deEnd: TcxDateEdit
     Left = 128
-    Top = 30
+    Top = 27
     EditValue = 43131d
     Properties.ShowTime = False
     TabOrder = 2
@@ -63,13 +63,13 @@ object ReportCollation_ObjectDialogForm: TReportCollation_ObjectDialogForm
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object cxLabel11: TcxLabel
-    Left = 250
-    Top = 7
+    Left = 252
+    Top = 125
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
   end
   object edPaidKind: TcxButtonEdit
     Left = 250
-    Top = 27
+    Top = 145
     Properties.Buttons = <
       item
         Default = True
@@ -114,13 +114,13 @@ object ReportCollation_ObjectDialogForm: TReportCollation_ObjectDialogForm
     Width = 220
   end
   object cxLabel8: TcxLabel
-    Left = 8
-    Top = 121
+    Left = 252
+    Top = 7
     Caption = #1044#1086#1075#1086#1074#1086#1088':'
   end
   object ceContract: TcxButtonEdit
-    Left = 8
-    Top = 141
+    Left = 252
+    Top = 27
     Properties.Buttons = <
       item
         Default = True
@@ -128,16 +128,16 @@ object ReportCollation_ObjectDialogForm: TReportCollation_ObjectDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 13
-    Width = 220
+    Width = 116
   end
   object cxLabel20: TcxLabel
-    Left = 250
-    Top = 121
+    Left = 374
+    Top = 7
     Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object edContractTag: TcxButtonEdit
-    Left = 250
-    Top = 141
+    Left = 374
+    Top = 27
     Properties.Buttons = <
       item
         Default = True
@@ -146,7 +146,24 @@ object ReportCollation_ObjectDialogForm: TReportCollation_ObjectDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 15
-    Width = 120
+    Width = 96
+  end
+  object cxLabel2: TcxLabel
+    Left = 8
+    Top = 125
+    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
+  end
+  object ceInfoMoney: TcxButtonEdit
+    Left = 8
+    Top = 145
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 17
+    Width = 220
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -155,7 +172,7 @@ object ReportCollation_ObjectDialogForm: TReportCollation_ObjectDialogForm
     Top = 16
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 226
+    Left = 211
     Top = 183
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -168,7 +185,7 @@ object ReportCollation_ObjectDialogForm: TReportCollation_ObjectDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 402
+    Left = 387
     Top = 185
   end
   object FormParams: TdsdFormParams
@@ -273,9 +290,26 @@ object ReportCollation_ObjectDialogForm: TReportCollation_ObjectDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 42
-    Top = 168
+    Left = 19
+    Top = 144
   end
   object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
@@ -552,8 +586,8 @@ object ReportCollation_ObjectDialogForm: TReportCollation_ObjectDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 53
-    Top = 126
+    Left = 213
+    Top = 94
   end
   object ContractTagGuides: TdsdGuides
     KeyField = 'Id'
@@ -582,7 +616,34 @@ object ReportCollation_ObjectDialogForm: TReportCollation_ObjectDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 307
-    Top = 116
+    Left = 411
+    Top = 100
+  end
+  object GuidesInfoMoney: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 176
+    Top = 109
   end
 end

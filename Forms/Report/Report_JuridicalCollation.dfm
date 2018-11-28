@@ -782,7 +782,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           'Key'
           'TextValue')
       end>
-    Left = 208
+    Left = 232
     Top = 272
   end
   inherited ActionList: TActionList
@@ -1700,8 +1700,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1088#1077#1077#1089#1090#1088#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1088#1077#1077#1089#1090#1088#1072
       ImageIndex = 35
-      FormName = 'TReportCollation_ObjectDialogForm'
-      FormNameParam.Value = 'TReportCollation_ObjectDialogForm'
+      FormName = 'TReport_JuridicalCollationDialogForm'
+      FormNameParam.Value = 'TReport_JuridicalCollationDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1929,8 +1929,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 184
-    Top = 196
+    Left = 192
+    Top = 220
   end
   inherited BarManager: TdxBarManager
     Left = 112
@@ -2411,8 +2411,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 296
-    Top = 240
+    Left = 328
+    Top = 264
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
@@ -2783,6 +2783,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsInsert'
         Value = Null
         Component = cbIsInsert
@@ -2811,34 +2819,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        Component = GuidesAccount
-        ComponentItem = 'Key'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        Component = GuidesInfoMoney
-        ComponentItem = 'Key'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        Component = GuidesCurrency
-        ComponentItem = 'Key'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        Component = GuidesSaleChoice
-        ComponentItem = 'Key'
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1
