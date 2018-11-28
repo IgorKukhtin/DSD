@@ -60,6 +60,7 @@ BEGIN
                                         , inCurrencyDocumentId:= inCurrencyDocumentId
                                         , inCurrencyPartnerId := inCurrencyPartnerId
                                         , ioCurrencyValue     := NULL :: TFloat
+                                        , ioParValue          := NULL :: TFloat
                                         , inUserId            := vbUserId
                                          ) AS tmp;
 

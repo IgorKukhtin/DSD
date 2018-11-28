@@ -179,6 +179,8 @@ type
     AssetCode: TcxGridDBColumn;
     InvNumber_AssetTo: TcxGridDBColumn;
     InvNumber_Asset: TcxGridDBColumn;
+    cxLabel21: TcxLabel;
+    edParValue: TcxCurrencyEdit;
   private
   public
   end;

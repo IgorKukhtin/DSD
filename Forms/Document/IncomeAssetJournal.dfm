@@ -428,6 +428,14 @@ object IncomeAssetJournalForm: TIncomeAssetJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 52
       end
+      object ParValue: TcxGridDBColumn
+        Caption = #1053#1086#1084#1080#1085#1072#1083
+        DataBinding.FieldName = 'ParValue'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
       object CurrencyPartnerName: TcxGridDBColumn
         Caption = #1042#1072#1083#1102#1090#1072' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
         DataBinding.FieldName = 'CurrencyPartnerName'
@@ -748,6 +756,9 @@ object IncomeAssetJournalForm: TIncomeAssetJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'

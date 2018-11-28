@@ -517,6 +517,15 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 40
       end
+      object ParValue: TcxGridDBColumn
+        Caption = #1053#1086#1084#1080#1085#1072#1083
+        DataBinding.FieldName = 'ParValue'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
       object CurrencyDocumentName: TcxGridDBColumn
         Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082')'
         DataBinding.FieldName = 'CurrencyDocumentName'
@@ -873,6 +882,9 @@ object IncomeJournalForm: TIncomeJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -1311,6 +1323,9 @@ object IncomeJournalForm: TIncomeJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintSticker: TdsdPrintAction
       Category = 'DSDLib'
@@ -1354,6 +1369,9 @@ object IncomeJournalForm: TIncomeJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   object dsdStoredProc: TdsdStoredProc

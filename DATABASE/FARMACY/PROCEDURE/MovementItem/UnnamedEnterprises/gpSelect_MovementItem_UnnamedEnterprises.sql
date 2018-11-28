@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_UnnamedEnterprises(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsNameUkr TVarChar
-             , NDSKindId Integer, NDSKindCode Integer, NDSKindName TVarChar
+             , NDSKindId Integer, NDSKindCode Integer, NDSKindName TVarChar, NDS TFloat
              , Amount TFloat, AmountRemains TFloat, AmountOrder TFloat
              , Price TFloat, Summ TFloat, SummOrder TFloat
              , CodeUKTZED TVarChar, ExchangeId Integer, ExchangeCode Integer, ExchangeName TVarChar
@@ -200,6 +200,7 @@ BEGIN
                  , ObjectLink_Goods_NDSKind.ChildObjectId               AS NDSKindId
                  , Object_NDSKind.ObjectCode                            AS NDSKindCode
                  , Object_NDSKind.ValueData                             AS NDSKindName
+                 , ObjectFloat_NDSKind_NDS.ValueData                    AS NDS
 
                  , MovementItem_UnnamedEnterprises.Amount               AS Amount
                  , tmpRemains.Amount::TFloat                            AS AmountRemains
@@ -232,7 +233,7 @@ BEGIN
                 LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                                       ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
                                      AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
-
+      
                 LEFT JOIN ObjectString AS ObjectString_Goods_NameUkr
                                        ON ObjectString_Goods_NameUkr.ObjectId = Object_Goods.Id
                                       AND ObjectString_Goods_NameUkr.DescId = zc_ObjectString_Goods_NameUkr()
@@ -304,6 +305,7 @@ BEGIN
                  , ObjectLink_Goods_NDSKind.ChildObjectId               AS NDSKindId
                  , Object_NDSKind.ObjectCode                            AS NDSKindCode
                  , Object_NDSKind.ValueData                             AS NDSKindName
+                 , ObjectFloat_NDSKind_NDS.ValueData                    AS NDS
 
                  , MovementItem_UnnamedEnterprises.Amount               AS Amount
                  , tmpRemains.Amount::TFloat                            AS AmountRemains
@@ -329,6 +331,9 @@ BEGIN
                                      ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
                                     AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
                 LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+                LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                      ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
+                                     AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
 
                 LEFT JOIN ObjectString AS ObjectString_Goods_NameUkr
                                        ON ObjectString_Goods_NameUkr.ObjectId = Object_Goods.Id

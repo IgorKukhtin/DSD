@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Income(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
-             , CurrencyValue TFloat
+             , CurrencyValue TFloat, ParValue TFloat
              , FromId Integer, FromName TVarChar
              , JuridicalId_From Integer, JuridicalName_From TVarChar
              , ToId Integer, ToName TVarChar, ToParentId Integer
@@ -53,6 +53,7 @@ BEGIN
              , CAST (0 as TFloat)               AS ChangePercent
              
              , CAST (1 as TFloat)               AS CurrencyValue
+             , CAST (1 AS TFloat)               AS ParValue
 
              , 0                     AS FromId
              , CAST ('' as TVarChar) AS FromName
@@ -125,6 +126,7 @@ BEGIN
              , MovementFloat_ChangePercent.ValueData       AS ChangePercent
 
              , MovementFloat_CurrencyValue.ValueData       AS CurrencyValue
+             , COALESCE (MovementFloat_ParValue.ValueData, 1) :: TFloat  AS ParValue
 
              , Object_From.Id                        AS FromId
              , Object_From.ValueData                 AS FromName
@@ -174,10 +176,10 @@ BEGIN
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                   ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                     ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementString AS MovementString_Comment 
@@ -185,22 +187,25 @@ BEGIN
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                      ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                                    ON MovementFloat_VATPercent.MovementId =  Movement.Id
+                                    ON MovementFloat_VATPercent.MovementId = Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                                    ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                    ON MovementFloat_ChangePercent.MovementId = Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercentTo
-                                    ON MovementFloat_ChangePercentTo.MovementId =  Movement.Id
+                                    ON MovementFloat_ChangePercentTo.MovementId = Movement.Id
                                    AND MovementFloat_ChangePercentTo.DescId = zc_MovementFloat_ChangePercentPartner()
 
             LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
-                                    ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
+                                    ON MovementFloat_CurrencyValue.MovementId = Movement.Id
                                    AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+            LEFT JOIN MovementFloat AS MovementFloat_ParValue
+                                    ON MovementFloat_ParValue.MovementId = Movement.Id
+                                   AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id

@@ -86,7 +86,7 @@ BEGIN
     -- Таблицы
     CREATE TEMP TABLE tmpGoods_list (GoodsMainId Integer, GoodsId Integer, UnitId Integer, PriceId Integer, MCSValue TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpRemains_1 (GoodsId Integer, UnitId Integer, RemainsStart TFloat, Amount_In TFloat, ContainerId Integer, PRIMARY KEY (UnitId, GoodsId,ContainerId)) ON COMMIT DROP;
-    CREATE TEMP TABLE tmpRemains (GoodsId Integer, UnitId Integer, RemainsStart TFloat, RemainsStart_save TFloat, Amount_In TFloat, MinExpirationDate TDateTime, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpRemains (GoodsId Integer, UnitId Integer, RemainsStart TFloat, RemainsStart_save TFloat, Amount_Reserve TFloat, Amount_In TFloat, MinExpirationDate TDateTime, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMCS (GoodsId Integer, UnitId Integer, MCSValue TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMIMaster (GoodsId Integer, Amount TFloat, Summa TFloat, InvNumber TVarChar, MovementId Integer, MIMaster_Id Integer, PRIMARY KEY (MovementId, MIMaster_Id, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMIChild (UnitId Integer, GoodsMainId Integer, GoodsId Integer, Amount TFloat, Summa TFloat, MIChild_Id Integer, PRIMARY KEY (MIChild_Id, UnitId,GoodsId)) ON COMMIT DROP;
@@ -195,28 +195,39 @@ BEGIN
                                     GROUP BY Container.Id, Container.Objectid, Container.WhereObjectId, Container.Amount
                                     HAVING  Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
                                     )
+                  , tmp_In AS (SELECT tmpContainer.GoodsId
+                                           , tmpContainer.UnitId
+                                           , SUM (tmpContainer.RemainsStart) AS RemainsStart
+                                           , SUM (CASE WHEN vbIncomeDate <= Movement_Income.OperDate THEN tmpContainer.RemainsStart ELSE 0 END) AS Amount_In
+                                           , tmpContainer.ContainerId
+                                      FROM tmpContainer
+                                           -- находим партию
+                                           LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                  ON ContainerLinkObject_MovementItem.Containerid = tmpContainer.ContainerId
+                                                 AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                           LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                                           -- элемент прихода
+                                           LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                           -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                           LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                  ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                 AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                           -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                           LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+
+                                           LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) 
+                                      WHERE tmpContainer.UnitId = inUnitId
+                                      GROUP BY tmpContainer.ContainerId, tmpContainer.GoodsId, tmpContainer.UnitId
+                                      )
                    SELECT tmpContainer.GoodsId
                         , tmpContainer.UnitId
-                        , SUM (tmpContainer.RemainsStart) AS RemainsStart
-                        , SUM (CASE WHEN vbIncomeDate <= Movement_Income.OperDate THEN tmpContainer.RemainsStart ELSE 0 END) AS Amount_In
+                        , SUM (tmpContainer.RemainsStart)  AS RemainsStart
+                        , SUM (tmp_In.Amount_In)           AS Amount_In
                         , tmpContainer.ContainerId
                    FROM tmpContainer
-                        -- находим партию
-                        LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
-                               ON ContainerLinkObject_MovementItem.Containerid = tmpContainer.ContainerId
-                              AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                        LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
-                        -- элемент прихода
-                        LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
-                        -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
-                        LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
-                               ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
-                              AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
-                        -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
-                        LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
-   
-                        LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) 
-                   WHERE tmpContainer.UnitId = inUnitId
+                        LEFT JOIN tmp_In ON tmp_In.ContainerId = tmpContainer.ContainerId
+                                        AND tmp_In.GoodsId = tmpContainer.GoodsId
+                                        AND tmp_In.UnitId  = tmpContainer.UnitId
                    GROUP BY tmpContainer.ContainerId, tmpContainer.GoodsId, tmpContainer.UnitId
                    ;
 
@@ -266,7 +277,7 @@ BEGIN
                        ;
 
        -- остатки
-       INSERT INTO tmpRemains (GoodsId, UnitId, RemainsStart, RemainsStart_save, Amount_In, MinExpirationDate)                              
+       INSERT INTO tmpRemains (GoodsId, UnitId, RemainsStart, RemainsStart_save, Amount_Reserve, Amount_In, MinExpirationDate)                              
                          WITH tmp AS
                         (SELECT tmp.GoodsId
                               , tmp.UnitId
@@ -278,12 +289,51 @@ BEGIN
                           GROUP BY tmp.GoodsId, tmp.UnitId
                           HAVING  SUM (tmp.RemainsStart) <> 0
                          )
+                -- выбираем отложенные Чеки (как в кассе колонка VIP)
+                , tmpMovementReserv AS (SELECT Movement.Id
+                                             , MovementLinkObject_Unit.ObjectId AS UnitId
+                                        FROM MovementBoolean AS MovementBoolean_Deferred
+                                             INNER JOIN Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
+                                                                AND Movement.DescId = zc_Movement_Check()
+                                                                AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                           ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                                          AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                             --ограничиваем подразделениями
+                                             INNER JOIN tmpUnit_list ON tmpUnit_list.UnitId = MovementLinkObject_Unit.ObjectId
+                                        WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
+                                          AND MovementBoolean_Deferred.ValueData = TRUE
+                                       UNION
+                                        SELECT Movement.Id
+                                             , MovementLinkObject_Unit.ObjectId AS UnitId
+                                        FROM MovementString AS MovementString_CommentError
+                                             INNER JOIN Movement ON Movement.Id     = MovementString_CommentError.MovementId
+                                                                AND Movement.DescId = zc_Movement_Check()
+                                                                AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                           ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                                          AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                             --ограничиваем подразделениями
+                                             INNER JOIN tmpUnit_list ON tmpUnit_list.UnitId = MovementLinkObject_Unit.ObjectId
+                                       WHERE MovementString_CommentError.DescId = zc_MovementString_CommentError()
+                                         AND MovementString_CommentError.ValueData <> ''
+                                       )
+                , tmpReserve AS (SELECT tmpMovementReserv.UnitId          AS UnitId
+                                      , MovementItem.ObjectId             AS GoodsId
+                                      , SUM (MovementItem.Amount)::TFloat AS Amount
+                                 FROM tmpMovementReserv
+                                      INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementReserv.Id
+                                                             AND MovementItem.DescId     = zc_MI_Master()
+                                                             AND MovementItem.isErased   = FALSE
+                                 GROUP BY MovementItem.ObjectId
+                                        , tmpMovementReserv.UnitId
+                                 )
+
                          -- Результат        --
                          
                          SELECT tmp.GoodsId
                               , tmp.UnitId
                               --, tmp.RemainsStart + COALESCE (tmpSend.Amount, 0) AS RemainsStart
-                              
                               , tmp.RemainsStart + COALESCE (tmpSend.Amount, 0)
                               -- если признак оставить для ассортимента Да, тогда снимаем с остатка это кол-во 
                               - CASE WHEN inisAssortment = TRUE AND tmp.UnitId = inUnitId
@@ -294,12 +344,19 @@ BEGIN
                               - CASE WHEN inIsIncome = TRUE AND tmp.UnitId = inUnitId
                                           THEN tmp.Amount_In
                                      ELSE 0
+                                END
+                              -- Если признак Не учитывать отл.товар Да, то снимаем с остатка это кол-во
+                              - CASE WHEN inIsReserve = TRUE AND tmp.UnitId = inUnitId                              --- для подр. с которого переносим
+                                          THEN tmpReserve.Amount
+                                     ELSE 0
                                 END                      AS RemainsStart
                               , tmp.RemainsStart         AS RemainsStart_save
+                              , COALESCE (tmpReserve.Amount, 0) AS Amount_Reserve
                               , tmp.Amount_In            AS Amount_In
                               , tmp.MinExpirationDate
                          FROM tmp
                               LEFT JOIN tmpSend ON tmpSend.GoodsId = tmp.GoodsId AND tmpSend.UnitId = tmp.UnitId AND tmpSend.UnitId <> inUnitId
+                              LEFT JOIN tmpReserve ON tmpReserve.GoodsId = tmp.GoodsId AND tmpReserve.UnitId = tmp.UnitId
                         UNION
                          SELECT tmpSend.GoodsId
                               , tmpSend.UnitId
@@ -309,6 +366,7 @@ BEGIN
                                      ELSE 0
                                 END                          AS RemainsStart
                               , 0                            AS RemainsStart_save
+                              , 0                            AS Amount_Reserve
                               , 0                            AS Amount_In
                               , NULL                         AS MinExpirationDate
                          FROM tmpSend
@@ -427,46 +485,6 @@ BEGIN
                               WHERE tmp.isErased = FALSE AND tmp.MinPrice <> tmp.MinPriceEnd
                               )
 
-          -- выбираем отложенные Чеки (как в кассе колонка VIP)
-        , tmpMovementReserv AS (SELECT Movement.Id
-                                     , MovementLinkObject_Unit.ObjectId AS UnitId
-                                FROM MovementBoolean AS MovementBoolean_Deferred
-                                     INNER JOIN Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
-                                                        AND Movement.DescId = zc_Movement_Check()
-                                                        AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                                     INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                                   ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                                                  AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                     --ограничиваем подразделениями
-                                     INNER JOIN tmpUnit_list ON tmpUnit_list.UnitId = MovementLinkObject_Unit.ObjectId
-                                WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
-                                  AND MovementBoolean_Deferred.ValueData = TRUE
-                               UNION
-                                SELECT Movement.Id
-                                     , MovementLinkObject_Unit.ObjectId AS UnitId
-                                FROM MovementString AS MovementString_CommentError
-                                     INNER JOIN Movement ON Movement.Id     = MovementString_CommentError.MovementId
-                                                        AND Movement.DescId = zc_Movement_Check()
-                                                        AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                                     INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                                   ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                                                  AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                     --ограничиваем подразделениями
-                                     INNER JOIN tmpUnit_list ON tmpUnit_list.UnitId = MovementLinkObject_Unit.ObjectId
-                               WHERE MovementString_CommentError.DescId = zc_MovementString_CommentError()
-                                 AND MovementString_CommentError.ValueData <> ''
-                               )
-        , tmpReserve AS (SELECT tmpMovementReserv.UnitId          AS UnitId
-                              , MovementItem.ObjectId             AS GoodsId
-                              , SUM (MovementItem.Amount)::TFloat AS Amount
-                         FROM tmpMovementReserv
-                              INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementReserv.Id
-                                                     AND MovementItem.DescId     = zc_MI_Master()
-                                                     AND MovementItem.isErased   = FALSE
-                         GROUP BY MovementItem.ObjectId
-                                , tmpMovementReserv.UnitId
-                         )
-               
              -- Результат
              SELECT
                  tmpGoods_list.GoodsMainId
@@ -485,39 +503,13 @@ BEGIN
                  -- Излишки
                , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
                            THEN 0
-                      ELSE CASE WHEN inIsReserve = FALSE 
-                                THEN CASE WHEN Object_Remains.RemainsStart > tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue >= 0
-                                          THEN FLOOR ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
-                                             * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
-                                          ELSE 0
-                                     END
-                                ELSE CASE WHEN Object_Remains.RemainsStart - COALESCE (tmpReserve.Amount, 0) > tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue >= 0
-                                          THEN FLOOR ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue - COALESCE (tmpReserve.Amount, 0) ) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
-                                             * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
-                                          ELSE 0
-                                     END
-                           END
+                      WHEN Object_Remains.RemainsStart > tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue >= 0
+                           THEN FLOOR ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                --*** ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                              * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                      ELSE 0
                  END AS RemainsMCS_from
-
                , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
-                           THEN 0
-                      ELSE CASE WHEN inIsReserve = FALSE 
-                                THEN CASE WHEN Object_Remains.RemainsStart > tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue >= 0
-                                          THEN FLOOR ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
-                                             * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
-                                             * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
-                                          ELSE 0
-                                     END
-                                ELSE CASE WHEN Object_Remains.RemainsStart - COALESCE (tmpReserve.Amount, 0) > tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue >= 0
-                                          THEN FLOOR ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue - COALESCE (tmpReserve.Amount, 0) ) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
-                                             * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
-                                             * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
-                                          ELSE 0
-                                     END
-                           END
-                 END AS SummaRemainsMCS_from
-
-/*               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
                            THEN 0
                       WHEN Object_Remains.RemainsStart > tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue >= 0
                           THEN FLOOR ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
@@ -525,44 +517,18 @@ BEGIN
                              * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
                              * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
                       ELSE 0
-                 END AS SummaRemainsMCS_from
-*/
+                 END AS RemainsMCS_from
+
                  -- Не хватает
                , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
                            THEN 0
-                      ELSE CASE WHEN inIsReserve = FALSE 
-                                THEN CASE WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
-                                          THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
-                                             * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
-                                          ELSE 0
-                                     END
-                                ELSE CASE WHEN COALESCE (Object_Remains.RemainsStart, 0) - COALESCE (tmpReserve.Amount, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
-                                          THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0) - COALESCE (tmpReserve.Amount, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
-                                             * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
-                                          ELSE 0
-                                     END
-                           END
+                      WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
+                           THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                --***((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                              * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                      ELSE 0
                  END AS RemainsMCS_to
-
                , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
-                           THEN 0
-                      ELSE CASE WHEN inIsReserve = FALSE
-                                THEN CASE WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
-                                          THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
-                                             * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
-                                             * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
-                                          ELSE 0
-                                     END
-                                ELSE CASE WHEN COALESCE (Object_Remains.RemainsStart, 0) - COALESCE (tmpReserve.Amount, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
-                                          THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0) - COALESCE (tmpReserve.Amount, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
-                                             * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
-                                             * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
-                                          ELSE 0
-                                     END
-                           END
-                 END AS SummaRemainsMCS_to
-                 
-/*               , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
                            THEN 0
                       WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
                            THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
@@ -570,11 +536,11 @@ BEGIN
                               * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
                               * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
                       ELSE 0
-                 END AS SummaRemainsMCS_to
-*/
-               , Object_Send.Amount                     AS AmountSend
-               , COALESCE (tmpReserve.Amount, 0)        AS Amount_Reserve
-               , COALESCE (Object_Remains.Amount_In, 0) AS Amount_In
+                 END AS RemainsMCS_to
+
+               , Object_Send.Amount                          AS AmountSend
+               , COALESCE (Object_Remains.Amount_Reserve, 0) AS Amount_Reserve
+               , COALESCE (Object_Remains.Amount_In, 0)      AS Amount_In
 --               , Object_Send.Amount_To     AS AmountSend_To
 
             FROM tmpGoods_list
@@ -584,8 +550,6 @@ BEGIN
                 LEFT JOIN tmpSend AS Object_Send
                                   ON Object_Send.GoodsId = tmpGoods_list.GoodsId
                                  AND Object_Send.UnitId  = tmpGoods_list.UnitId
-                LEFT JOIN tmpReserve ON tmpReserve.GoodsId = tmpGoods_list.GoodsId
-                                    AND tmpReserve.UnitId  = tmpGoods_list.UnitId
 
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
                                         ON ObjectBoolean_Goods_Close.ObjectId = tmpGoods_list.GoodsId
@@ -860,8 +824,11 @@ BEGIN
                , SUM(COALESCE (tmpMIChild.Summa, 0))   :: TFloat  AS Summa_Over
                , SUM(COALESCE (tmpDataTo.RemainsMCS_result, 0) - COALESCE (tmpMIChild.Amount, 0)) :: TFloat AS Amount_OverDiff
 
-               , (CASE WHEN SUM(COALESCE(tmpData.SummaRemainsStart,0)) <>0 THEN (SUM(tmpData.SummaRemainsMCS_to) * 100 / SUM(tmpData.SummaRemainsStart)) ELSE  0 END) :: TFloat  AS Rersent_to
+               , (CASE WHEN SUM(COALESCE(tmpData.SummaRemainsStart,0)) <>0 THEN (SUM(tmpData.SummaRemainsMCS_to) * 100 / SUM(tmpData.SummaRemainsStart)) ELSE  0 END)    :: TFloat  AS Rersent_to
                , (CASE WHEN SUM(COALESCE(tmpData.SummaRemainsStart,0)) <>0 THEN (SUM(tmpData.SummaRemainsMCS_from) * 100 / SUM(tmpData.SummaRemainsStart)) ELSE  0 END)  :: TFloat  AS Rersent_from
+               , SUM(tmpData.Amount_Reserve)        :: TFloat  AS Amount_Reserve
+               , SUM(tmpData.Amount_In)             :: TFloat  AS Amount_In
+               
      FROM tmpData
           LEFT JOIN Object AS Object_Unit  ON Object_Unit.Id = tmpData.UnitId
           
@@ -874,7 +841,7 @@ BEGIN
           LEFT JOIN tmpMIChild ON tmpMIChild.GoodsMainId = tmpData.GoodsMainId
                               AND tmpMIChild.UnitId  = tmpData.UnitId
  
-     GROUP BY Object_Unit.Id, Object_Unit.ValueDAta 
+     GROUP BY Object_Unit.Id, Object_Unit.ValueDAta
 
        ;
        
@@ -886,7 +853,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  23.11.18         *
  20.01.17         *
  01.11.16         * add inisRecal, rename inisOutMCS -> inisInMCS

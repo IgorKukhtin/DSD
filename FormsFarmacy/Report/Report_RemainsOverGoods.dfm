@@ -1417,6 +1417,28 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             Options.Editing = False
             Width = 100
           end
+          object cxAmount_Reserve: TcxGridDBColumn
+            Caption = #1054#1090#1083'. '#1090#1086#1074#1072#1088' ('#1095#1077#1082')'
+            DataBinding.FieldName = 'Amount_Reserve'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' ('#1095#1077#1082')'
+            Options.Editing = False
+            Width = 51
+          end
+                    object cxAmount_In: TcxGridDBColumn
+            Caption = #1047#1072#1090#1086#1074#1072#1088#1082#1072' ('#1087#1088#1080#1093'.)'
+            DataBinding.FieldName = 'Amount_In'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1090#1086#1074#1072#1088#1082#1072' ('#1087#1088#1080#1093'.)'
+            Options.Editing = False
+            Width = 54
+          end
           object cxAmount_Over: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1055#1056#1048#1061#1054#1044' ('#1076#1086#1082')'
             DataBinding.FieldName = 'Amount_Over'

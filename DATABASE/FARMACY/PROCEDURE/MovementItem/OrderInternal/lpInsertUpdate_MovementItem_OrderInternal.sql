@@ -37,7 +37,7 @@ BEGIN
         FROM Object_Goods_View WHERE Id = inGoodsId;
     
         SELECT
-            (CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))
+            (CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))
         INTO
             inAmountManual
         FROM
@@ -45,6 +45,9 @@ BEGIN
             LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountSecond
                                               ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                              AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+            LEFT OUTER JOIN MovementItemFloat AS MIFloat_ListDiff
+                                              ON MIFloat_ListDiff.MovementItemId = MovementItem.Id
+                                             AND MIFloat_ListDiff.DescId = zc_MIFloat_ListDiff()
         WHERE
             Id = ioId;
     END IF;

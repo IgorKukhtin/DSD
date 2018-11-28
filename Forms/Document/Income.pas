@@ -208,6 +208,8 @@ type
     actPrintStickerTermo: TdsdPrintAction;
     bbPrintStickerTermo: TdxBarButton;
     bb: TdxBarButton;
+    cxLabel21: TcxLabel;
+    edParValue: TcxCurrencyEdit;
   private
   public
   end;

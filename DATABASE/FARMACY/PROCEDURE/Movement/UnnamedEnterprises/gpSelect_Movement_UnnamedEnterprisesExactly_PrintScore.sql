@@ -26,13 +26,15 @@ BEGIN
           , COALESCE(MovementFloat_TotalSumm.ValueData,0)::TFloat      AS TotalSumm
           , COALESCE(MovementFloat_TotalCount.ValueData,0)::TFloat     AS TotalCount
           , Object_Unit.ValueData                                      AS UnitName
-          , Object_ClientsByBank.ValueData || ', Œ œŒ ' ||
+          , Object_ClientsByBank.ValueData                             AS ClientsByBankName
+/*          , Object_ClientsByBank.ValueData || ', Œ œŒ ' ||
             COALESCE(ObjectString_OKPO.ValueData, '') || ', »ÕÕ ' ||                                
-            COALESCE(ObjectString_INN.ValueData, '')                   AS ClientsByBankName
+            COALESCE(ObjectString_INN.ValueData, '')                   AS ClientsByBankName */
           , DATE_TRUNC ('DAY', CURRENT_TIMESTAMP)                      AS Date
           , ObjectString_OKPO.ValueData                                AS OKPO
           , ObjectString_INN.ValueData                                 AS INN
           , ObjectString_RegAddress.ValueData                          AS Address
+          , MovementString_Comment.ValueData                           AS Comment
         FROM
            Movement AS Movement_UnnamedEnterprises
 
@@ -67,6 +69,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_RegAddress
                                    ON ObjectString_RegAddress.ObjectId = Object_ClientsByBank.Id
                                   AND ObjectString_RegAddress.DescId = zc_ObjectString_ClientsByBank_RegAddress()
+
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId = Movement_UnnamedEnterprises.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
         WHERE
             Movement_UnnamedEnterprises.Id = inMovementId;
     RETURN NEXT Cursor1;
@@ -79,6 +85,7 @@ BEGIN
           , MIFloat_Price.ValueData                   AS Price
           , MIFloat_Summ.ValueData                    AS Summ
           , SUBSTRING(Object_NDSKind.ValueData, 1, strpos(Object_NDSKind.ValueData, '%') - 1) AS NDSKindName
+          , ObjectFloat_NDSKind_NDS.ValueData         AS NDS
           , ObjectString_Goods_CodeUKTZED.ValueData   AS CodeUKTZED
           , Object_Exchange.ValueData                 AS ExchangeName
         FROM
@@ -90,6 +97,9 @@ BEGIN
                                    ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
                                   AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
               LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+              LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                    ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
+                                   AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
 
               LEFT JOIN MovementItemFloat AS MIFloat_Price
                                           ON MIFloat_Price.MovementItemId = MI_UnnamedEnterprises.Id
