@@ -261,11 +261,20 @@ BEGIN
                END AS ServiceDateId
 
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
+
              , CASE WHEN -- если Контрагент - "Павильоны" + это Бизнес у кассы - "Павильоны"
                          ObjectLink_Partner_Unit.ChildObjectId > 0
                      AND ObjectLink_Cash_Business.ChildObjectId > 0
-                         THEN zc_Enum_PaidKind_SecondForm() -- !!!меняется на НАЛ!!!
+                         -- !!!меняется на НАЛ!!!
+                         THEN zc_Enum_PaidKind_SecondForm()
+
+                    WHEN  _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                      AND ObjectLink_Contract_PaidKind.ChildObjectId > 0
+                         -- !!!меняется на БН!!!
+                         THEN ObjectLink_Contract_PaidKind.ChildObjectId
+
                     ELSE _tmpItem.PaidKindId -- !!!НЕ Всегда НАЛ!!!
+
                END AS PaidKindId
 
              , CASE WHEN ObjectBoolean_PartionDoc.ValueData = TRUE
@@ -330,6 +339,9 @@ BEGIN
              /*LEFT JOIN ObjectLink AS ObjectLink_MoneyPlace_Branch ON ObjectLink_MoneyPlace_Branch.ObjectId = MILinkObject_MoneyPlace.ObjectId
                                                                  AND ObjectLink_MoneyPlace_Branch.DescId = zc_ObjectLink_Unit_Branch() -- !!!не ошибка!!!*/
 
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+                                  ON ObjectLink_Contract_PaidKind.ObjectId = MILinkObject_Contract.ObjectId
+                                 AND ObjectLink_Contract_PaidKind.DescId   = zc_ObjectLink_Contract_PaidKind()
              LEFT JOIN ObjectLink AS ObjectLink_Founder_InfoMoney
                                   ON ObjectLink_Founder_InfoMoney.ChildObjectId = _tmpItem.InfoMoneyId
                                  AND ObjectLink_Founder_InfoMoney.DescId = zc_ObjectLink_Founder_InfoMoney()
@@ -347,6 +359,7 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDoc
                                      ON ObjectBoolean_PartionDoc.ObjectId = ObjectLink_Cash_Branch.ChildObjectId
                                     AND ObjectBoolean_PartionDoc.DescId = zc_ObjectBoolean_Branch_PartionDoc()
+
 
              /*LEFT JOIN ObjectLink AS ObjectLink_Partner_Branch ON ObjectLink_Partner_Branch.ObjectId = MILinkObject_MoneyPlace.ObjectId
                                                               AND ObjectLink_Partner_Branch.DescId = zc_ObjectLink_Unit_Branch() -- !!!не ошибка!!!*/
