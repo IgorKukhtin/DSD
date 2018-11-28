@@ -38,6 +38,9 @@ type
     cxLabel20: TcxLabel;
     edContractTag: TcxButtonEdit;
     ContractTagGuides: TdsdGuides;
+    cxLabel2: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
+    GuidesInfoMoney: TdsdGuides;
   private
     { Private declarations }
   public

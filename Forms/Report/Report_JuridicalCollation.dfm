@@ -1700,8 +1700,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1088#1077#1077#1089#1090#1088#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1088#1077#1077#1089#1090#1088#1072
       ImageIndex = 35
-      FormName = 'TReportCollation_ObjectDialogForm'
-      FormNameParam.Value = 'TReportCollation_ObjectDialogForm'
+      FormName = 'TReport_JuridicalCollationDialogForm'
+      FormNameParam.Value = 'TReport_JuridicalCollationDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
