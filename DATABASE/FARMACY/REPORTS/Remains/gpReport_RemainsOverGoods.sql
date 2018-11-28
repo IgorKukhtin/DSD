@@ -221,8 +221,8 @@ BEGIN
                                       )
                    SELECT tmpContainer.GoodsId
                         , tmpContainer.UnitId
-                        , SUM (tmpContainer.RemainsStart)  AS RemainsStart
-                        , SUM (tmp_In.Amount_In)           AS Amount_In
+                        , SUM (tmpContainer.RemainsStart)     AS RemainsStart
+                        , SUM (COALESCE(tmp_In.Amount_In,0))  AS Amount_In
                         , tmpContainer.ContainerId
                    FROM tmpContainer
                         LEFT JOIN tmp_In ON tmp_In.ContainerId = tmpContainer.ContainerId
@@ -342,17 +342,17 @@ BEGIN
                                 END  
                               -- если признак Учитывать товар в затоварку Да, тогда снимаем с остатка это кол-во  (приходы за Х дней)
                               - CASE WHEN inIsIncome = TRUE AND tmp.UnitId = inUnitId
-                                          THEN tmp.Amount_In
+                                          THEN COALESCE (tmp.Amount_In, 0)
                                      ELSE 0
                                 END
                               -- Если признак Не учитывать отл.товар Да, то снимаем с остатка это кол-во
                               - CASE WHEN inIsReserve = TRUE AND tmp.UnitId = inUnitId                              --- для подр. с которого переносим
-                                          THEN tmpReserve.Amount
+                                          THEN COALESCE (tmpReserve.Amount, 0)
                                      ELSE 0
                                 END                      AS RemainsStart
                               , tmp.RemainsStart         AS RemainsStart_save
                               , COALESCE (tmpReserve.Amount, 0) AS Amount_Reserve
-                              , tmp.Amount_In            AS Amount_In
+                              , COALESCE (tmp.Amount_In, 0)     AS Amount_In
                               , tmp.MinExpirationDate
                          FROM tmp
                               LEFT JOIN tmpSend ON tmpSend.GoodsId = tmp.GoodsId AND tmpSend.UnitId = tmp.UnitId AND tmpSend.UnitId <> inUnitId
