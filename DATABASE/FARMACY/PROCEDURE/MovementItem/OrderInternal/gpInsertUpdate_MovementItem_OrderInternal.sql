@@ -135,7 +135,7 @@ BEGIN
     FROM Object_Goods_View WHERE Id = inGoodsId;
     
     SELECT
-        (CEIL((Amount + COALESCE(MIFloat_AmountSecond.ValueData,0) /*+ COALESCE(MIFloat_ListDiff.ValueData,0)*/ ) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1)),
+        (CEIL((Amount + COALESCE(MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0) ) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1)),
         COALESCE(MIFloat_AmountManual.ValueData,(CEIL((Amount + COALESCE(MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0) ) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1)))::TFloat
     INTO
         vbCalcAmount,
