@@ -84,6 +84,20 @@ BEGIN
                         GROUP BY AnalysisContainerItem.UnitID, AnalysisContainerItem.GoodsId
                         )
 
+  , tmpGoodsChecked AS (SELECT DISTINCT MI_Goods.ObjectId  AS GoodsId
+                        FROM Movement
+                          INNER JOIN MovementItem AS MI_Goods 
+                                                  ON MI_Goods.MovementId = Movement.Id
+                                                 AND MI_Goods.DescId = zc_MI_Master()
+                                                 AND MI_Goods.isErased = FALSE
+                          INNER JOIN MovementItemBoolean AS MIBoolean_Checked
+                                                         ON MIBoolean_Checked.MovementItemId = MI_Goods.Id
+                                                        AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
+                                                        AND MIBoolean_Checked.ValueData = TRUE
+                        WHERE Movement.StatusId = zc_Enum_Status_Complete()
+                          AND Movement.DescId = zc_Movement_Promo()
+                        )
+
 
     SELECT
         Object_Parent.ValueData              AS ParentName
@@ -124,24 +138,28 @@ BEGIN
       , tmpContainer.Saldo - COALESCE(tmpSaldoOut.Saldo, 0)    AS SaldoOut
       , tmpContainer.Summa - COALESCE(tmpSaldoOut.Summa, 0)    AS SummaOut
 
+      , CASE WHEN tmpGoodsChecked.GoodsId IS NOT NULL THEN TRUE ELSE FALSE END  ::Boolean  AS isChecked
+      , CASE WHEN tmpGoodsChecked.GoodsId IS NULL     THEN TRUE ELSE FALSE END  ::Boolean  AS isReport
     FROM tmpContainer as tmpContainer
     
-        LEFT JOIN tmpSaldoOut AS tmpSaldoOut ON tmpSaldoOut.UnitID = tmpContainer.UnitID
+        LEFT JOIN tmpSaldoOut AS tmpSaldoOut 
+                              ON tmpSaldoOut.UnitID = tmpContainer.UnitID
                              AND tmpSaldoOut.GoodsId = tmpContainer.GoodsId
 
-        LEFT JOIN tmContainerItem AS tmpMovement ON tmpMovement.UnitID = tmpContainer.UnitID
+        LEFT JOIN tmContainerItem AS tmpMovement 
+                                  ON tmpMovement.UnitID = tmpContainer.UnitID
                                  AND tmpMovement.GoodsId = tmpContainer.GoodsId
 
-        INNER JOIN Object AS Object_Unit
-                          ON Object_Unit.ID = tmpContainer.UnitID
-        INNER JOIN Object AS Object_Goods
-                          ON Object_Goods.Id = tmpContainer.GoodsId
+        INNER JOIN Object AS Object_Unit  ON Object_Unit.Id  = tmpContainer.UnitID
+        INNER JOIN Object AS Object_Goods ON Object_Goods.Id = tmpContainer.GoodsId
 
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
         LEFT JOIN Object AS Object_Parent
                          ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
+
+        LEFT JOIN tmpGoodsChecked ON tmpGoodsChecked.GoodsId = tmpContainer.GoodsId
 
     WHERE COALESCE(tmpMovement.CountItem, tmpContainer.Saldo - COALESCE(tmpSaldoOut.Saldo, 0)) <> 0
     ORDER BY Object_Goods.ObjectCode, Object_Parent.ValueData, Object_Unit.ValueData;
@@ -203,19 +221,14 @@ BEGIN
       -- Товары маркетинговых контрактов
     OPEN cur4 FOR
     SELECT DISTINCT
-        Movement.InvNumber AS PromoID
-      , Object_Goods.ObjectCode AS GoodsID
-      , COALESCE (MIBoolean_Checked.ValueData, FALSE)                                           ::Boolean  AS isChecked
-      , CASE WHEN COALESCE (MIBoolean_Checked.ValueData, FALSE) = TRUE THEN FALSE ELSE TRUE END ::Boolean  AS isReport
+        Movement.InvNumber AS PromoId
+      , Object_Goods.ObjectCode AS GoodsId
     FROM Movement
       INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
                                          AND MI_Goods.DescId = zc_MI_Master()
                                          AND MI_Goods.isErased = FALSE
       LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_Goods.ObjectId
 
-      LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
-                                    ON MIBoolean_Checked.MovementItemId = MI_Goods.Id
-                                   AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
     WHERE Movement.StatusId = zc_Enum_Status_Complete()
       AND Movement.DescId = zc_Movement_Promo();
     RETURN NEXT cur4;

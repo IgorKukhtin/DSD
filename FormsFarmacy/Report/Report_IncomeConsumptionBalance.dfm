@@ -113,19 +113,6 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
             Options.Editing = False
             Width = 195
           end
-          object cxgChoiceGoodsDBTableViewColumn3: TcxGridDBColumn
-            Caption = #1054#1090#1084#1077#1090#1082#1072' '#1076#1083#1103' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
-            DataBinding.FieldName = 'isChecked'
-            HeaderAlignmentHorz = taCenter
-            HeaderHint = #1054#1090#1084#1077#1090#1082#1072' '#1076#1083#1103' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
-            Width = 50
-          end
-          object cxgChoiceGoodsDBTableViewColumn4: TcxGridDBColumn
-            Caption = #1054#1090#1084#1077#1090#1082#1072' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072
-            DataBinding.FieldName = 'isReport'
-            HeaderAlignmentHorz = taCenter
-            Width = 50
-          end
         end
         object cxgChoiceGoodsLevel: TcxGridLevel
           Caption = #1052#1077#1076#1080#1082#1072#1084#1077#1085#1090#1099
@@ -432,6 +419,26 @@ object Report_IncomeConsumptionBalanceForm: TReport_IncomeConsumptionBalanceForm
         Width = 164
         Position.BandIndex = 1
         Position.ColIndex = 1
+        Position.RowIndex = 0
+      end
+      object colisReport: TcxGridDBBandedColumn
+        Caption = #1054#1090#1084'. '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072
+        DataBinding.FieldName = 'isReport'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 66
+        Position.BandIndex = 1
+        Position.ColIndex = 3
+        Position.RowIndex = 0
+      end
+      object colisChecked: TcxGridDBBandedColumn
+        Caption = #1054#1090#1084'. '#1076#1083#1103' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+        DataBinding.FieldName = 'isChecked'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 73
+        Position.BandIndex = 1
+        Position.ColIndex = 2
         Position.RowIndex = 0
       end
       object colSaldoIn: TcxGridDBBandedColumn

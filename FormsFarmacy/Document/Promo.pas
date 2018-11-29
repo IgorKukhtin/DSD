@@ -116,6 +116,17 @@ type
     cxLabel10: TcxLabel;
     isChecked: TcxGridDBColumn;
     isReport: TcxGridDBColumn;
+    spUpdate_Checked_Yes: TdsdStoredProc;
+    spUpdate_Checked_No: TdsdStoredProc;
+    actUpdate_Checked_Yes: TdsdExecStoredProc;
+    actUpdate_Checked_No: TdsdExecStoredProc;
+    macUpdate_Checked_Yes_List: TMultiAction;
+    macUpdate_Checked_Yes: TMultiAction;
+    actRefreshMI: TdsdDataSetRefresh;
+    macUpdate_Checked_No_List: TMultiAction;
+    macUpdate_Checked_No: TMultiAction;
+    bbUpdate_Checked_Yes: TdxBarButton;
+    bbUpdate_Checked_No: TdxBarButton;
   private
     { Private declarations }
   public

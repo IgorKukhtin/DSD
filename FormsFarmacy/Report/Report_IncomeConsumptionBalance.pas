@@ -120,8 +120,6 @@ type
     cxIncomeConsumptionBalanceDBBandedTableView1Column12: TcxGridDBBandedColumn;
     cxIncomeConsumptionBalanceDBBandedTableView1Column13: TcxGridDBBandedColumn;
     cxIncomeConsumptionBalanceDBBandedTableView1Column14: TcxGridDBBandedColumn;
-    cxgChoiceGoodsDBTableViewColumn3: TcxGridDBColumn;
-    cxgChoiceGoodsDBTableViewColumn4: TcxGridDBColumn;
     procedure actSetGoodsExecute(Sender: TObject);
     procedure actSetPromoExecute(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
