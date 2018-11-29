@@ -1,6 +1,6 @@
 -- Function: gpUpdate_Object_DocumentTaxKind_Code(Integer, Integer, TVarChar, TVarChar)
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_DocumentTaxKind_Code (Integer, TVarChar, TVarChar);
+-- DROP FUNCTION gpUpdate_Object_DocumentTaxKind_Code (Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_DocumentTaxKind_Code(
  INOUT inId             Integer,       -- Ключ объекта <>
@@ -16,10 +16,10 @@ BEGIN
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_DocumentTaxKind_Code());
 
    -- сохранили свойство <Код причины>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_DocumentTaxKind_Code(), inId, inCode);
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_DocumentTaxKind_Code(), iтId, inCode);
  
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
+   PERFORM lpInsert_ObjectProtocol (inId, UserId);
 
 END;$BODY$
 

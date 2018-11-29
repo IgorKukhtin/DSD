@@ -638,13 +638,14 @@ BEGIN
                                                   AND ObjectString_JuridicalTo_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
                        )
 /*  -- причины корректировки и кода
-1. "«м≥на к≥лькост≥".
-2. "«м≥на ц≥ни".
-3. "«м≥на номенклатури". --zc_Enum_DocumentTaxKind_Goods
-4. "ѕоверненн€ товар≥в або авансових платеж≥в".
-5. "«меншенн€ обс€гу при нульов≥й к≥лькост≥".
-6. "«меншенн€ к≥лькост≥ при нульовому обс€з≥".
-7. "”суненн€ неоднозначностей"  --zc_Enum_DocumentTaxKind_Change
+101. "«м≥на ц≥ни".
+102. "«м≥на к≥лькост≥".
+103. "ѕоверненн€ товар≥в або авансових платеж≥в".
+104. "«м≥на номенклатури". --zc_Enum_DocumentTaxKind_Goods
+
+. "«меншенн€ обс€гу при нульов≥й к≥лькост≥".
+. "«меншенн€ к≥лькост≥ при нульовому обс€з≥".
+. "”суненн€ неоднозначностей"  --zc_Enum_DocumentTaxKind_Change
 */ 
    , tmpData_all AS
       -- –≈«”Ћ№“ј“
@@ -677,7 +678,7 @@ BEGIN
            , 'оплата з поточного рахунка'::TVarChar                         AS N9
 
            , CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Goods()--, zc_Enum_DocumentTaxKind_Change())
-                       THEN 3 --Object_DocumentTaxKind.ValueData
+                       THEN 104 --Object_DocumentTaxKind.ValueData
 
                   WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Change()
                        THEN 7 --Object_DocumentTaxKind.ValueData
@@ -692,7 +693,7 @@ BEGIN
                        THEN 1 --'«м≥на к≥лькост≥' -- 'Ќ≈ƒќ¬≤«'
 
                   ELSE 1 --'«м≥на к≥лькост≥' -- 'поверненн€ товару або авансових платеж≥в' -- 'поверненн€'
-             END ::integer AS KindCode
+             END ::integer AS KindCode 
 
            , CASE WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change())
                        THEN Object_DocumentTaxKind.ValueData
