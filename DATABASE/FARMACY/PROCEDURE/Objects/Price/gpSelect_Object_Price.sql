@@ -19,7 +19,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Price(
 RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , MCSPeriod TFloat, MCSDay TFloat, StartDate TDateTime
              , GoodsId Integer, GoodsCode Integer
-             , BarCode TVarChar
+             , BarCode  TVarChar
              ,/* IdBarCode TVarChar,*/ GoodsName TVarChar
              , IntenalSPName TVarChar
              , GoodsGroupName TVarChar, NDSKindName TVarChar, NDS TFloat
@@ -30,7 +30,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , MCSNotRecalc Boolean, MCSNotRecalcDateChange TDateTime
              , Fix Boolean, FixDateChange TDateTime
              , MinExpirationDate TDateTime
-             , Reserved TFloat
+             , Reserved TFloat, SummaReserved TFloat
              , Remains TFloat, SummaRemains TFloat
              , RemainsNotMCS TFloat, SummaNotMCS TFloat
              , PriceRetSP TFloat, PriceOptSP TFloat, PriceSP TFloat, PaymentSP TFloat, DiffSP2 TFloat
@@ -109,6 +109,7 @@ BEGIN
                ,NULL::TDateTime                  AS FixDateChange
                ,NULL::TDateTime                  AS MinExpirationDate
                ,NULL::TFloat                     AS Reserved
+               ,NULL::TFloat                     AS SummaReserved
                ,NULL::TFloat                     AS Remains
                ,NULL::TFloat                     AS SummaRemains
                ,NULL::TFloat                     AS RemainsNotMCS
@@ -325,7 +326,8 @@ BEGIN
                            
    -- Штрих-коды производителя
    , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
-                              , Object_Goods_BarCode.ValueData        AS BarCode
+                              , STRING_AGG (Object_Goods_BarCode.ValueData, ',' ORDER BY Object_Goods_BarCode.ID desc) AS BarCode
+                              --, Object_Goods_BarCode.ValueData        AS BarCode
                          FROM ObjectLink AS ObjectLink_Main_BarCode
                               JOIN ObjectLink AS ObjectLink_Child_BarCode
                                               ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
@@ -338,7 +340,9 @@ BEGIN
                          WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
                            AND ObjectLink_Main_BarCode.ChildObjectId > 0
                            AND TRIM (Object_Goods_BarCode.ValueData) <> ''
+                         GROUP BY ObjectLink_Main_BarCode.ChildObjectId
                         )
+                        
    -- выбираем отложенные Чеки (как в кассе колонка VIP) 
    , tmpMovementChek AS (SELECT Movement.Id
                          FROM MovementBoolean AS MovementBoolean_Deferred
@@ -405,7 +409,9 @@ BEGIN
                , tmpPrice_View.FixDateChange                     AS FixDateChange
                , Object_Remains.MinExpirationDate                AS MinExpirationDate   --SelectMinPrice_AllGoods.MinExpirationDate AS MinExpirationDate
 
-               , COALESCE (tmpReserve.Amount, 0) :: TFloat       AS Reserved    -- кол-во в отложенных чеках
+               , COALESCE (tmpReserve.Amount, 0)                                     :: TFloat   AS Reserved       -- кол-во в отложенных чеках
+               , (COALESCE (tmpReserve.Amount, 0)* COALESCE (tmpPrice_View.Price,0)) :: TFloat   AS SummaReserved  -- Сумма отложенных чеков
+
                , Object_Remains.Remains                          AS Remains
                , (Object_Remains.Remains * COALESCE (tmpPrice_View.Price,0)) ::TFloat AS SummaRemains
                
@@ -927,7 +933,8 @@ BEGIN
 
       -- Штрих-коды производителя
       , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
-                                 , Object_Goods_BarCode.ValueData        AS BarCode
+                                 , STRING_AGG (Object_Goods_BarCode.ValueData, ',' ORDER BY Object_Goods_BarCode.ID desc) AS BarCode
+                                 --, Object_Goods_BarCode.ValueData        AS BarCode
                             FROM ObjectLink AS ObjectLink_Main_BarCode
                                  JOIN ObjectLink AS ObjectLink_Child_BarCode
                                                  ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
@@ -940,6 +947,7 @@ BEGIN
                             WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
                               AND ObjectLink_Main_BarCode.ChildObjectId > 0
                               AND TRIM (Object_Goods_BarCode.ValueData) <> ''
+                            GROUP BY ObjectLink_Main_BarCode.ChildObjectId
                            )
                         
       , tmpGoods AS (SELECT ObjectLink_Goods_Object.ObjectId AS GoodsId
@@ -1136,7 +1144,8 @@ BEGIN
                , tmpPrice_All.FixDateChange                AS FixDateChange
                , tmpPrice_All.MinExpirationDate            AS MinExpirationDate   --, CASE WHEN inGoodsId = 0 THEN SelectMinPrice_AllGoods.MinExpirationDate ELSE SelectMinPrice_List.PartionGoodsDate END AS MinExpirationDate
 
-               , COALESCE (tmpReserve.Amount, 0) :: TFloat AS Reserved           -- кол-во в отложенных чеках
+               , COALESCE (tmpReserve.Amount, 0)                                     :: TFloat AS Reserved           -- кол-во в отложенных чеках
+               , (COALESCE (tmpReserve.Amount, 0) * COALESCE (tmpPrice_All.Price,0)) :: TFloat AS SummaReserved      -- Сумма отложенных чеков
 
                , tmpPrice_All.Remains                      AS Remains
                , (tmpPrice_All.Remains * COALESCE (tmpPrice_All.Price,0)) ::TFloat AS SummaRemains
@@ -1347,6 +1356,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
+ 29.11.18         *
  31.08.18         * add Reserved
  11.08.18                                                                       *
  05.01.18         *
