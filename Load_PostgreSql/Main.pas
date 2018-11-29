@@ -20550,6 +20550,7 @@ begin
                                                          + ', 0' // inPartnerId
                                                          + ', 0' // inContractId
                                                          + ', 0' // inPaidKindId
+                                                         + ', 0' // inInfoMoneyId
                                                          + ', zfCalc_UserAdmin())');
      //
      //

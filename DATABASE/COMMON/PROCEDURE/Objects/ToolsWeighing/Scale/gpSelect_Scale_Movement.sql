@@ -167,6 +167,11 @@ BEGIN
                                          AND (MovementLinkObject_User.ObjectId = vbUserId OR vbUserId = 0)
             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
 
+            INNER JOIN MovementFloat AS MovementFloat_BranchCode
+                                     ON MovementFloat_BranchCode.MovementId =  Movement.Id
+                                    AND MovementFloat_BranchCode.DescId     = zc_MovementFloat_BranchCode()
+                                    AND MovementFloat_BranchCode.ValueData  < 1000
+
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
