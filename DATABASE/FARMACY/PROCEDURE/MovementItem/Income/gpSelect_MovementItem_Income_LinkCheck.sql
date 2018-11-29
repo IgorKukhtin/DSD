@@ -16,7 +16,9 @@ BEGIN
      --IF EXISTS (SELECT * FROM MovementItem WHERE MovementId = inMovementId AND ObjectId IS NULL) THEN
      --   RAISE EXCEPTION 'В документе прихода не все товары состыкованы';
      --END IF;
-   
+     
+     outMessageText := '';
+     
      -- проверка привязки товара
      vbRetailId := (SELECT ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
                     FROM MovementLinkObject AS MovementLinkObject_Juridical
@@ -73,7 +75,20 @@ BEGIN
      THEN 
          outMessageText := 'Проверьте привязку товаров поставщика '||vbMessageText;
      END IF;    
+     
+     vbMessageText := '';
                  
+     -- информация по товарам Цена которых более 25% отл. отличается от средней 
+     vbMessageText := (SELECT STRING_AGG ('(' || tmp.GoodsCode ||') '||tmp.GoodsName, '; ' ORDER BY tmp.GoodsName)
+                       FROM gpSelect_MovementItem_Income (inMovementId := inMovementId  , inShowAll := FALSE , inIsErased := FALSE ,  inSession := inSession) as tmp
+                       WHERE tmp.AVGIncomePriceWarning = TRUE
+                       ) :: Text;
+
+     IF COALESCE (vbMessageText, '') <> ''
+     THEN 
+         outMessageText :=  outMessageText ||' Товары, цена которых отл. >25%: '||vbMessageText;
+     END IF;   
+     
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
