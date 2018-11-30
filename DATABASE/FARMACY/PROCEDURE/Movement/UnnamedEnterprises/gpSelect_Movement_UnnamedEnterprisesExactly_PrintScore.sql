@@ -10,6 +10,11 @@ RETURNS SETOF refcursor
 AS
 $BODY$
     DECLARE vbUserId Integer;
+    DECLARE vbClientsByBankName TVarChar;
+    DECLARE vbOKPO TVarChar;
+    DECLARE vbINN TVarChar;
+    DECLARE vbAddress TVarChar;
+    DECLARE vbComment TVarChar;
 
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
@@ -17,7 +22,47 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
     vbUserId:= inSession;
+    
+    SELECT
+            Object_ClientsByBank.ValueData                             AS ClientsByBankName
+          , ObjectString_OKPO.ValueData                                AS OKPO
+          , ObjectString_INN.ValueData                                 AS INN
+          , ObjectString_RegAddress.ValueData                          AS Address
+          , MovementString_Comment.ValueData                           AS Comment
+    INTO
+          vbClientsByBankName
+          , vbOKPO
+          , vbINN
+          , vbAddress
+          , vbComment
+        
+    FROM
+           Movement AS Movement_UnnamedEnterprises
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ClientsByBank
+                                         ON MovementLinkObject_ClientsByBank.MovementId = Movement_UnnamedEnterprises.Id
+                                        AND MovementLinkObject_ClientsByBank.DescId = zc_MovementLinkObject_ClientsByBank()
+            LEFT JOIN Object AS Object_ClientsByBank
+                             ON Object_ClientsByBank.Id = MovementLinkObject_ClientsByBank.ObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_OKPO
+                                   ON ObjectString_OKPO.ObjectId = Object_ClientsByBank.Id
+                                  AND ObjectString_OKPO.DescId = zc_ObjectString_ClientsByBank_OKPO()
+
+            LEFT JOIN ObjectString AS ObjectString_INN
+                                   ON ObjectString_INN.ObjectId = Object_ClientsByBank.Id
+                                  AND ObjectString_INN.DescId = zc_ObjectString_ClientsByBank_INN()
+
+            LEFT JOIN ObjectString AS ObjectString_RegAddress
+                                   ON ObjectString_RegAddress.ObjectId = Object_ClientsByBank.Id
+                                  AND ObjectString_RegAddress.DescId = zc_ObjectString_ClientsByBank_RegAddress()
+
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId = Movement_UnnamedEnterprises.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
+    WHERE
+          Movement_UnnamedEnterprises.Id = inMovementId;
+    
     OPEN Cursor1 FOR
         SELECT
             Movement_UnnamedEnterprises.Id
@@ -78,8 +123,9 @@ BEGIN
     RETURN NEXT Cursor1;
 
     OPEN Cursor2 FOR
-        SELECT
-            Object_Goods.ObjectCode                   AS GoodsCode
+         WITH tmpResult AS (SELECT
+            ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData DESC) as Ord
+          , Object_Goods.ObjectCode                   AS GoodsCode
           , ObjectString_Goods_NameUkr.ValueData      AS GoodsName
           , MI_UnnamedEnterprises.Amount              AS Amount
           , MIFloat_Price.ValueData                   AS Price
@@ -126,9 +172,26 @@ BEGIN
             AND
             MI_UnnamedEnterprises.isErased = FALSE
             AND
-            MI_UnnamedEnterprises.Amount > 0
+            MI_UnnamedEnterprises.Amount > 0)
+            
+       SELECT
+              tmpResult.GoodsCode
+            , tmpResult.GoodsName
+            , tmpResult.Amount
+            , tmpResult.Price
+            , tmpResult.Summ
+            , tmpResult.NDSKindName
+            , tmpResult.NDS
+            , tmpResult.CodeUKTZED
+            , tmpResult.ExchangeName
+            , CASE WHEN ORD = 1 THEN vbClientsByBankName END::TVarChar AS ClientsByBankName
+            , CASE ORD WHEN 1 THEN vbOKPO WHEN 2 THEN vbComment END::TVarChar AS OKPO
+            , CASE WHEN ORD = 1 THEN vbINN END::TVarChar AS INN
+            , CASE WHEN ORD = 1 THEN vbAddress END::TVarChar AS Address
+            
+        FROM tmpResult
         ORDER BY
-            Object_Goods.ValueData;
+            tmpResult.Ord;
 
     RETURN NEXT Cursor2;
 
