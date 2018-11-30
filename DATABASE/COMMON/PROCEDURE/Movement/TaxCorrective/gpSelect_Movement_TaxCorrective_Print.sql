@@ -581,6 +581,7 @@ BEGIN
                             , ObjectString_Retail_GLNCodeCorporate.ValueData  AS Retail_GLNCodeCorporate
                             , ObjectString_JuridicalTo_GLNCode.ValueData      AS JuridicalTo_GLNCode
                             , MovementLinkObject_DocumentTaxKind.ObjectId     AS DocumentTaxKind
+                            , ObjectString_DocumentTaxKind_Code.ValueData     AS DocumentTaxKindCode
                             , MovementLinkObject_Branch.ObjectId              AS BranchId
                             , MovementString_FromINN.ValueData                AS INN_From
                        FROM tmpMovement
@@ -636,6 +637,10 @@ BEGIN
                             LEFT JOIN ObjectString AS ObjectString_JuridicalTo_GLNCode
                                                    ON ObjectString_JuridicalTo_GLNCode.ObjectId = MovementLinkObject_To.ObjectId
                                                   AND ObjectString_JuridicalTo_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
+
+                            LEFT JOIN ObjectString AS ObjectString_DocumentTaxKind_Code
+                                                   ON ObjectString_DocumentTaxKind_Code.ObjectId = MovementLinkObject_DocumentTaxKind.ObjectId
+                                                  AND ObjectString_DocumentTaxKind_Code.DescId = zc_objectString_DocumentTaxKind_Code()
                        )
 /*  -- причины корректировки и кода
 101. "Зміна ціни".
@@ -677,23 +682,7 @@ BEGIN
 
            , 'оплата з поточного рахунка'::TVarChar                         AS N9
 
-           , CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Goods()--, zc_Enum_DocumentTaxKind_Change())
-                       THEN 104 --Object_DocumentTaxKind.ValueData
-
-                  WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Change()
-                       THEN 7 --Object_DocumentTaxKind.ValueData
-
-                  WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
-                       THEN 2 --'Зміна ціни'
-                       
-                  WHEN MovementBoolean_isCopy.ValueData = TRUE
-                       THEN 4 --'ВИПРАВЛЕННЯ ПОМИЛКИ'
-
-                  WHEN tmpMI.isPartner = TRUE
-                       THEN 1 --'Зміна кількості' -- 'НЕДОВІЗ'
-
-                  ELSE 1 --'Зміна кількості' -- 'повернення товару або авансових платежів' -- 'повернення'
-             END ::integer AS KindCode 
+           , tmpMovement_Data.DocumentTaxKindCode    ::integer              AS KindCode     -- заполняется в справочнике
 
            , CASE WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change())
                        THEN Object_DocumentTaxKind.ValueData
@@ -1048,7 +1037,7 @@ BEGIN
                                                          , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
                                                           )
                    AND tmpData_all.AmountTax_calc = tmpData_all.Amount
-                       THEN 4 --'Повернення товару або авансових платежів'
+                       THEN 103  --4 --'Повернення товару або авансових платежів'
                   ELSE tmpData_all.KindCode
              END ::integer AS KindCode
 
@@ -1180,13 +1169,16 @@ BEGIN
 
              -- сумма НДС
            , ( (CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
-                          -- !!!Корр. цены!!!
-                          THEN (tmpData_all.Amount_for_PriceCor * -1 * (tmpData_all.PriceTax_calc - tmpData_all.Price_for_PriceCor)) :: NUMERIC (16, 2)
+                    AND vbIsNPP_calc = TRUE
+                        -- !!!Корр. цены!!!
+                        THEN (tmpData_all.Amount_for_PriceCor * tmpData_all.PriceTax_calc) :: NUMERIC (16, 2)
 
-                     WHEN tmpData_all.CountForPrice_orig > 0
-                          THEN ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
-                     ELSE ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig) :: NUMERIC (16, 2)
-                END) / 100 * tmpData_all.VATPercent ) :: TFloat AS SummVat
+                   WHEN tmpData_all.CountForPrice_orig > 0
+                        THEN ((COALESCE (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount_orig END, 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
+                   ELSE ((COALESCE (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount_orig END, 0)) * tmpData_all.Price_orig) :: NUMERIC (16, 2)
+              END
+            + tmpData_all.SummTaxDiff_calc
+             ) / 100 * tmpData_all.VATPercent ) :: TFloat AS SummVat
 
            , tmpData_all.InvNumberBranch
            , tmpData_all.InvNumberBranch_Child
