@@ -190,8 +190,9 @@ BEGIN
                        GROUP BY tmp.ObjectId
                       )
      -- Штрих-коды производителя
-      , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
-                                 , Object_Goods_BarCode.ValueData        AS BarCode
+      , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId                                                  AS GoodsMainId
+                                 , STRING_AGG (Object_Goods_BarCode.ValueData, ',' ORDER BY Object_Goods_BarCode.ID desc) AS BarCode
+                                 --, Object_Goods_BarCode.ValueData        AS BarCode
                             FROM ObjectLink AS ObjectLink_Main_BarCode
                                  JOIN ObjectLink AS ObjectLink_Child_BarCode
                                                  ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
@@ -204,6 +205,7 @@ BEGIN
                             WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
                               AND ObjectLink_Main_BarCode.ChildObjectId > 0
                               AND TRIM (Object_Goods_BarCode.ValueData) <> ''
+                            GROUP BY ObjectLink_Main_BarCode.ChildObjectId
                            )
       , tmpOH_PriceChange AS (SELECT ObjectHistory_PriceChange.*
                               FROM ObjectHistory AS ObjectHistory_PriceChange
@@ -410,8 +412,9 @@ BEGIN
                                )
 
         -- Штрих-коды производителя
-      , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
-                                 , Object_Goods_BarCode.ValueData        AS BarCode
+      , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId                                                  AS GoodsMainId
+                                 , STRING_AGG (Object_Goods_BarCode.ValueData, ',' ORDER BY Object_Goods_BarCode.ID desc) AS BarCode
+                                 --, Object_Goods_BarCode.ValueData        AS BarCode
                             FROM ObjectLink AS ObjectLink_Main_BarCode
                                  JOIN ObjectLink AS ObjectLink_Child_BarCode
                                                  ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
@@ -424,6 +427,7 @@ BEGIN
                             WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
                               AND ObjectLink_Main_BarCode.ChildObjectId > 0
                               AND TRIM (Object_Goods_BarCode.ValueData) <> ''
+                            GROUP BY ObjectLink_Main_BarCode.ChildObjectId
                            )
 
       , tmpGoods AS (SELECT ObjectLink_Goods_Object.ObjectId AS GoodsId
@@ -540,12 +544,12 @@ BEGIN
                                                  ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
                LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
-                                   -- получается GoodsMainId
-                                   LEFT JOIN ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = tmpPriceChange_All.GoodsId
-                                                                            AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
-                                   LEFT JOIN ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                                           AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-                                   LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = ObjectLink_Main.ChildObjectId
+               -- получается GoodsMainId
+               LEFT JOIN ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = tmpPriceChange_All.GoodsId
+                                                        AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+               LEFT JOIN ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                       AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+               LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = ObjectLink_Main.ChildObjectId
 
             WHERE (inisShowDel = TRUE OR Object_Goods_View.isErased = FALSE)
               AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)

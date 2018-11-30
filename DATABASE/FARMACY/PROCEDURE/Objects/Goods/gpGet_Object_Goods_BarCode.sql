@@ -67,7 +67,8 @@ BEGIN
                                      AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
                                   )
                 , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId          AS GoodsMainId
-                                           , MAX (Object_Goods_BarCode.ValueData)::TVarChar AS BarCode
+                                           , STRING_AGG (Object_Goods_BarCode.ValueData, ',' ORDER BY Object_Goods_BarCode.ID desc) AS BarCode
+                                           --, MAX (Object_Goods_BarCode.ValueData)::TVarChar AS BarCode
                                       FROM ObjectLink AS ObjectLink_Main_BarCode
                                            JOIN tmpGoodsMain ON tmpGoodsMain.GoodsMainId = ObjectLink_Main_BarCode.ChildObjectId
                                            JOIN ObjectLink AS ObjectLink_Child_BarCode

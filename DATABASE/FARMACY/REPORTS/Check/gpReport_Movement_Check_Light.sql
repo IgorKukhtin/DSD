@@ -228,26 +228,22 @@ BEGIN
                                                          AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId*/
                          )
       -- Штрих-коды производителя
-      , tmpGoodsBarCode AS (SELECT tmp.GoodsMainId
-                                 , tmp.BarCode
-                            FROM (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
-                                       , Object_Goods_BarCode.ValueData        AS BarCode
-                                       --, ROW_NUMBER() OVER (PARTITION BY ObjectLink_Main_BarCode.ChildObjectId ORDER BY Object_Goods_BarCode.Id DESC) AS Ord
-                                       , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Main_BarCode.ChildObjectId ORDER BY ObjectLink_Main_BarCode.ChildObjectId, ObjectLink_Main_BarCode.ObjectId DESC) AS Ord   -- так в  gpSelect_Object_Goods_Retail спр. тов. сети (штрихкод поставщ.)
-                                  FROM ObjectLink AS ObjectLink_Main_BarCode
-                                       JOIN ObjectLink AS ObjectLink_Child_BarCode
-                                                       ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
-                                                      AND ObjectLink_Child_BarCode.DescId = zc_ObjectLink_LinkGoods_Goods()
-                                       JOIN ObjectLink AS ObjectLink_Goods_Object_BarCode
-                                                       ON ObjectLink_Goods_Object_BarCode.ObjectId = ObjectLink_Child_BarCode.ChildObjectId
-                                                      AND ObjectLink_Goods_Object_BarCode.DescId = zc_ObjectLink_Goods_Object()
-                                                      AND ObjectLink_Goods_Object_BarCode.ChildObjectId = zc_Enum_GlobalConst_BarCode()
-                                       LEFT JOIN Object AS Object_Goods_BarCode ON Object_Goods_BarCode.Id = ObjectLink_Goods_Object_BarCode.ObjectId
-                                  WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    AND ObjectLink_Main_BarCode.ChildObjectId > 0
-                                    AND TRIM (Object_Goods_BarCode.ValueData) <> ''
-                                 ) AS tmp
-                            WHERE tmp.Ord = 1
+      , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId                                                  AS GoodsMainId
+                                 , STRING_AGG (Object_Goods_BarCode.ValueData, ',' ORDER BY Object_Goods_BarCode.ID desc) AS BarCode
+                                 --, Object_Goods_BarCode.ValueData        AS BarCode
+                            FROM ObjectLink AS ObjectLink_Main_BarCode
+                                 JOIN ObjectLink AS ObjectLink_Child_BarCode
+                                                 ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
+                                                AND ObjectLink_Child_BarCode.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                 JOIN ObjectLink AS ObjectLink_Goods_Object_BarCode
+                                                 ON ObjectLink_Goods_Object_BarCode.ObjectId = ObjectLink_Child_BarCode.ChildObjectId
+                                                AND ObjectLink_Goods_Object_BarCode.DescId = zc_ObjectLink_Goods_Object()
+                                                AND ObjectLink_Goods_Object_BarCode.ChildObjectId = zc_Enum_GlobalConst_BarCode()
+                                 LEFT JOIN Object AS Object_Goods_BarCode ON Object_Goods_BarCode.Id = ObjectLink_Goods_Object_BarCode.ObjectId
+                            WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                              AND ObjectLink_Main_BarCode.ChildObjectId > 0
+                              AND TRIM (Object_Goods_BarCode.ValueData) <> ''
+                            GROUP BY ObjectLink_Main_BarCode.ChildObjectId
                            )
 
         -- результат
@@ -373,5 +369,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Movement_Check_Light(inUnitId := 183292 , inDateStart := ('01.02.2016')::TDateTime , inDateFinal := ('29.02.2016')::TDateTime , inIsPartion := 'False' ,  inSession := '3');
--- SELECT * FROM gpReport_Movement_Check_Light (inUnitId:= 0, inDateStart:= '20150801'::TDateTime, inDateFinal:= '20150810'::TDateTime, inIsPartion:= FALSE, inSession:= '3')
+-- SELECT * FROM gpReport_Movement_Check_Light(inUnitId := 183292 , inRetailId:=0 , inJuridicalId:= 0, inDateStart := ('01.02.2016')::TDateTime , inDateFinal := ('29.02.2016')::TDateTime , inIsPartion := 'False' , inisPartionPrice:='False', inisJuridical:='False', inisUnitList:='False', inSession := '3');
