@@ -27,7 +27,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , InsertName TVarChar, InsertDate TDateTime 
              , UpdateName TVarChar, UpdateDate TDateTime
              , ConditionsKeepName TVarChar
-             , MorionCode Integer, BarCode TVarChar, OrdBar Integer
+             , MorionCode Integer, BarCode TVarChar--, OrdBar Integer
              , NDS_PriceList TFloat, isNDS_dif Boolean
              , OrdPrice Integer
              , isNotUploadSites Boolean
@@ -198,15 +198,9 @@ BEGIN
                                 AND ObjectLink_Main_Morion.ChildObjectId > 0
                               GROUP BY ObjectLink_Main_Morion.ChildObjectId
                              )
-         , tmpGoodsBarCode AS (SELECT
-                                      T1.GoodsMainId
-                                    , T1.BarCode
-                                    , T1.Ord
-                               FROM (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
-                                 -- , MAX (Object_Goods_BarCode.ValueData)  AS BarCode
-                                    , Object_Goods_BarCode.ValueData        AS BarCode
-                                    , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Main_BarCode.ChildObjectId
-                                                         ORDER BY ObjectLink_Main_BarCode.ChildObjectId, ObjectLink_Main_BarCode.ObjectId DESC) AS Ord
+         , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId                                                  AS GoodsMainId
+                                    , STRING_AGG (Object_Goods_BarCode.ValueData, ',' ORDER BY Object_Goods_BarCode.ID desc) AS BarCode
+                                     -- , MAX (Object_Goods_BarCode.ValueData)  AS BarCode
                                FROM ObjectLink AS ObjectLink_Main_BarCode
                                     JOIN ObjectLink AS ObjectLink_Child_BarCode
                                                     ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
@@ -219,10 +213,9 @@ BEGIN
                                WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
                                  AND ObjectLink_Main_BarCode.ChildObjectId > 0
                                  AND TRIM (Object_Goods_BarCode.ValueData) <> ''
-                               -- GROUP BY ObjectLink_Main_BarCode.ChildObjectId
-                                 ) AS T1
-                               -- WHERE T1.Ord = 1
+                               GROUP BY ObjectLink_Main_BarCode.ChildObjectId
                               )  
+
          -- вытягиваем из LoadPriceListItem.GoodsNDS по входящему Договору поставщика (inContractId)
          , tmpPricelistItems AS (SELECT tmp.GoodsMainId
                                       , tmp.GoodsNDS
@@ -288,9 +281,9 @@ BEGIN
            , COALESCE(ObjectDate_Update.ValueData, Null)   ::TDateTime AS UpdateDate
            , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
 
-           , tmpGoodsMorion.MorionCode
-           , tmpGoodsBarCode.BarCode
-           , tmpGoodsBarCode.Ord        :: Integer AS OrdBar
+           , tmpGoodsMorion.MorionCode                     
+           , tmpGoodsBarCode.BarCode                       ::TVarChar
+           --, tmpGoodsBarCode.Ord        :: Integer AS OrdBar
 
            , tmpPricelistItems.GoodsNDS :: TFloat  AS NDS_PriceList
            , CASE WHEN COALESCE (tmpPricelistItems.GoodsNDS, 0) <> 0 AND inContractId <> 0 AND COALESCE (tmpPricelistItems.GoodsNDS, 0) <> Object_Goods_View.NDS THEN TRUE ELSE FALSE END AS isNDS_dif

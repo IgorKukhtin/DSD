@@ -228,8 +228,9 @@ BEGIN
                        HAVING SUM (tmpData_all.Amount) <> 0
                       )
           -- Штрих-коды производителя
-         , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
-                                    , Object_Goods_BarCode.ValueData        AS BarCode
+         , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId                                                  AS GoodsMainId
+                                    , STRING_AGG (Object_Goods_BarCode.ValueData, ',' ORDER BY Object_Goods_BarCode.ID desc) AS BarCode
+                                    --, Object_Goods_BarCode.ValueData        AS BarCode
                                FROM ObjectLink AS ObjectLink_Main_BarCode
                                     JOIN ObjectLink AS ObjectLink_Child_BarCode
                                                     ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
@@ -242,6 +243,7 @@ BEGIN
                                WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
                                  AND ObjectLink_Main_BarCode.ChildObjectId > 0
                                  AND TRIM (Object_Goods_BarCode.ValueData) <> ''
+                               GROUP BY ObjectLink_Main_BarCode.ChildObjectId
                               )
           , tmpGoodsList AS (SELECT DISTINCT tmpData.GoodsId
                                     FROM tmpData)                 

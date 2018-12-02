@@ -27,6 +27,9 @@ uses
 type
   TDocumentTaxKindForm = class(TAncestorEnumForm)
     clName: TcxGridDBColumn;
+    spUpdate_DocumentTaxKind_Code: TdsdStoredProc;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

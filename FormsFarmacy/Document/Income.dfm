@@ -21,8 +21,6 @@
       inherited cxGrid: TcxGrid
         Width = 1054
         Height = 354
-        ExplicitLeft = 613
-        ExplicitTop = 120
         ExplicitWidth = 1054
         ExplicitHeight = 354
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1163,12 +1161,6 @@
       StoredProcList = <
         item
           StoredProc = spCheckObject
-        end
-        item
-          StoredProc = spSelect
-        end
-        item
-          StoredProc = spGet
         end>
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1096#1077#1075#1086' '#1090#1086#1074#1072#1088#1072
       Hint = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1096#1077#1075#1086' '#1090#1086#1074#1072#1088#1072
@@ -1217,12 +1209,6 @@
       StoredProcList = <
         item
           StoredProc = spLinkCheck
-        end
-        item
-          StoredProc = spSelect
-        end
-        item
-          StoredProc = spGet
         end>
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1088#1080#1074#1103#1079#1082#1080
       Hint = #1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1088#1080#1074#1103#1079#1082#1080
@@ -1239,9 +1225,6 @@
         end
         item
           StoredProc = spSelect
-        end
-        item
-          StoredProc = spGet
         end>
       Caption = #1056#1072#1089#1095#1077#1090' '#1094#1077#1085#1099' '#1087#1088#1086#1076#1072#1078#1080
       Hint = #1056#1072#1089#1095#1077#1090' '#1094#1077#1085#1099' '#1087#1088#1086#1076#1072#1078#1080

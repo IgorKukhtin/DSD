@@ -1,11 +1,11 @@
 -- Function: gpSelect_Object_DocumentTaxKind(TVarChar)
 
--- DROP FUNCTION gpSelect_Object_DocumentTaxKind(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_DocumentTaxKind(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_DocumentTaxKind(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean)
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, KindCode TVarChar, isErased Boolean)
 AS
 $BODY$
 BEGIN
@@ -17,18 +17,22 @@ BEGIN
          Object.Id         AS Id
        , Object.ObjectCode AS Code
        , Object.ValueData  AS Name
+       , ObjectString_Code.ValueData  :: TVarChar AS KindCode
        , Object.isErased   AS isErased
    FROM Object
+        LEFT JOIN ObjectString AS ObjectString_Code
+                               ON ObjectString_Code.ObjectId = Object.Id
+                              AND ObjectString_Code.DescId = zc_objectString_DocumentTaxKind_Code()
    WHERE Object.DescId = zc_Object_DocumentTaxKind();
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_DocumentTaxKind(TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 29.11.18         *
  11.02.14                                                       *
 */
 

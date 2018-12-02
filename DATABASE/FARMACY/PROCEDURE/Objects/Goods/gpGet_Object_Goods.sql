@@ -95,7 +95,8 @@ BEGIN
                                      GROUP BY ObjectLink_Main_Morion.ChildObjectId
                                     )
                 , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId          AS GoodsMainId
-                                           , MAX (Object_Goods_BarCode.ValueData)::TVarChar AS BarCode
+                                           , STRING_AGG (Object_Goods_BarCode.ValueData, ',' ORDER BY Object_Goods_BarCode.ID desc) AS BarCode
+                                           --, MAX (Object_Goods_BarCode.ValueData)::TVarChar AS BarCode
                                       FROM ObjectLink AS ObjectLink_Main_BarCode
                                            JOIN tmpGoodsMain ON tmpGoodsMain.GoodsMainId = ObjectLink_Main_BarCode.ChildObjectId
                                            JOIN ObjectLink AS ObjectLink_Child_BarCode
@@ -138,7 +139,7 @@ BEGIN
                   , Object_Goods_View.isSecond       AS isSecond
                   
                   , tmpGoodsMorion.MorionCode
-                  , tmpGoodsBarCode.BarCode
+                  , tmpGoodsBarCode.BarCode    ::TVarChar
 
                   , ObjectString_Goods_NameUkr.ValueData     AS NameUkr
                   , ObjectString_Goods_CodeUKTZED.ValueData  AS CodeUKTZED

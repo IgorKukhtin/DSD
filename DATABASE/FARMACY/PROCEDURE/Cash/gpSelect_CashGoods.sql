@@ -59,17 +59,22 @@ BEGIN
                              isFirst  Boolean,
                              isSecond Boolean) ON COMMIT DROP;
 
-     WITH DD AS (SELECT DISTINCT Object_MarginCategoryItem_View.MarginPercent
-                               , Object_MarginCategoryItem_View.MinPrice
-                               , Object_MarginCategoryItem_View.MarginCategoryId
-                 FROM Object_MarginCategoryItem_View
-                      INNER JOIN Object AS Object_MarginCategoryItem ON Object_MarginCategoryItem.Id = Object_MarginCategoryItem_View.Id
-                                                                    AND Object_MarginCategoryItem.isErased = FALSE
+     WITH DD AS (SELECT DISTINCT 
+            Object_MarginCategoryItem_View.MarginPercent, 
+            Object_MarginCategoryItem_View.MinPrice, 
+            Object_MarginCategoryItem_View.MarginCategoryId,
+            ROW_NUMBER()OVER(PARTITION BY Object_MarginCategoryItem_View.MarginCategoryId ORDER BY Object_MarginCategoryItem_View.MinPrice) as ORD
+        FROM Object_MarginCategoryItem_View
+             INNER JOIN Object AS Object_MarginCategoryItem ON Object_MarginCategoryItem.Id = Object_MarginCategoryItem_View.Id
+                                                           AND Object_MarginCategoryItem.isErased = FALSE
                 )
-        , MarginCondition AS (SELECT DD.MarginCategoryId, DD.MarginPercent, DD.MinPrice
-                                   , COALESCE ((SELECT MIN (FF.minprice) FROM DD AS FF WHERE FF.MinPrice > DD.MinPrice AND FF.MarginCategoryId = DD.MarginCategoryId)
-                                             , 1000000) AS MaxPrice
-                              FROM DD)
+        , MarginCondition AS (SELECT 
+            D1.MarginCategoryId, 
+            D1.MarginPercent, 
+            D1.MinPrice,
+            COALESCE(D2.MinPrice, 1000000) AS MaxPrice 
+        FROM DD AS D1
+            LEFT OUTER JOIN DD AS D2 ON D1.MarginCategoryId = D2.MarginCategoryId AND D1.ORD = D2.ORD-1)
 
           -- Список цены + ТОП
         , GoodsPrice AS
@@ -137,11 +142,16 @@ BEGIN
                                                        ON (Object_MarginCategoryLink.UnitId = vbUnitId)
                                                       AND Object_MarginCategoryLink.JuridicalId = LoadPriceList.JuridicalId
 
+              LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink_all
+                                                       ON COALESCE (Object_MarginCategoryLink_all.UnitId, 0) = 0
+                                                      AND Object_MarginCategoryLink_all.JuridicalId = LoadPriceList.JuridicalId
+                                                      AND Object_MarginCategoryLink_all.isErased    = FALSE
+                                                      AND Object_MarginCategoryLink.JuridicalId IS NULL
+
               LEFT JOIN Object_Goods_Main_View AS Object_Goods ON Object_Goods.Id = LoadPriceListItem.GoodsId
 
-              LEFT JOIN MarginCondition ON MarginCondition.MarginCategoryId = Object_MarginCategoryLink.MarginCategoryId
-                                       AND (LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100)::TFloat
-                                       BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
+              LEFT JOIN MarginCondition ON MarginCondition.MarginCategoryId = COALESCE (Object_MarginCategoryLink.MarginCategoryId, Object_MarginCategoryLink_all.MarginCategoryId)
+                                      AND (LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100)::TFloat BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
 
               LEFT JOIN Object_Goods_View AS PartnerGoods ON PartnerGoods.ObjectId  = LoadPriceList.JuridicalId
                                                          AND PartnerGoods.GoodsCode = LoadPriceListItem.GoodsCode
