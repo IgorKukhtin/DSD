@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementFloat_TotalSumm(
 )
   RETURNS VOID AS
 $BODY$
-  DECLARE vbMovementDescId Integer;
+  DECLARE vbMovementDescId  Integer;
+  DECLARE vbOperDatePartner TDateTime;
 
   DECLARE vbOperCount_Master TFloat;
   DECLARE vbOperCount_Child TFloat;
@@ -83,6 +84,10 @@ BEGIN
 
      -- Эти параметры нужны для расчета конечных сумм по Контрагенту и Заготовителю
      SELECT Movement.DescId
+          , CASE WHEN Movement.DescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_SendOnPrice())
+                      THEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)
+                 ELSE Movement.OperDate
+            END AS OperDatePartner
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE)
           , COALESCE(ObjectFloat_NDSKind_NDS.ValueData, COALESCE (MovementFloat_VATPercent.ValueData, 0))
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END
@@ -96,10 +101,13 @@ BEGIN
           , COALESCE (MovementFloat_ParValue.ValueData, 0)                                    AS ParValue
           , COALESCE (MovementFloat_CurrencyPartnerValue.ValueData, 0)                        AS CurrencyPartnerValue
           , COALESCE (MovementFloat_ParPartnerValue.ValueData, 0)                             AS ParPartnerValue
-            INTO vbMovementDescId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePrice, vbPaidKindId
+            INTO vbMovementDescId, vbOperDatePartner, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePrice, vbPaidKindId
                , vbCurrencyDocumentId, vbCurrencyPartnerId, vbCurrencyValue, vbParValue, vbCurrencyPartnerValue, vbParPartnerValue
 
       FROM Movement
+           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                  ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                 AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                      ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -580,39 +588,60 @@ BEGIN
                   END AS OperSumm_MVAT
 
                   -- Сумма с НДС
-                , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
-                            -- если цены с НДС
+                , CASE -- если цены с НДС
+                       WHEN vbPriceWithVAT OR vbVATPercent = 0
                             THEN (OperSumm_Partner)
+                       -- если цены без НДС, и новая Схема для НДС - 6 знаков
+                       WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm()
+                            AND vbOperDatePartner >= zc_DateStart_Tax_2018()
+                            AND vbMovementDescId IN (zc_Movement_Tax(), zc_Movement_TaxCorrective(), zc_Movement_Sale(), zc_Movement_ReturnIn())
+                            THEN OperSumm_Partner + OperSumm_VAT_2018
+
+                       -- если цены без НДС
                        WHEN vbVATPercent > 0
-                            -- если цены без НДС
                             THEN CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner) AS NUMERIC (16, 2))
                   END AS OperSumm_PVAT
 
                   -- Сумма с НДС + !!!НЕ!!! учтена скидка в цене
-                , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
-                            -- если цены с НДС
+                , CASE -- если цены с НДС
+                       WHEN vbPriceWithVAT OR vbVATPercent = 0
                             THEN (OperSumm_Partner_original)
+
+                       -- если цены без НДС, и новая Схема для НДС - 6 знаков
+                       WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm()
+                            AND vbOperDatePartner >= zc_DateStart_Tax_2018()
+                            AND vbMovementDescId IN (zc_Movement_Tax(), zc_Movement_TaxCorrective(), zc_Movement_Sale(), zc_Movement_ReturnIn())
+                            THEN OperSumm_Partner_original + OperSumm_VAT_2018_original
+
+                       -- если цены без НДС
                        WHEN vbVATPercent > 0
-                            -- если цены без НДС
                             THEN CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_original) AS NUMERIC (16, 2))
                   END AS OperSumm_PVAT_original
 
 
                   -- Сумма по Контрагенту
-                , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
+                , CASE WHEN vbPriceWithVAT = TRUE OR vbVATPercent = 0
                           -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
                           THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
                                     WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
                                     ELSE (OperSumm_Partner_ChangePrice)
                                END
+
+                       -- если цены без НДС, и новая Схема для НДС - 6 знаков
+                       WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm()
+                            AND vbOperDatePartner >= zc_DateStart_Tax_2018()
+                            AND vbMovementDescId IN (zc_Movement_Tax(), zc_Movement_TaxCorrective(), zc_Movement_Sale(), zc_Movement_ReturnIn())
+                            THEN OperSumm_Partner_ChangePrice + OperSumm_VAT_2018
+
+                       -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
                        WHEN vbVATPercent > 0
-                          -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
                           THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
                                     WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
                                     ELSE CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
                                END
+
+                       -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
                        WHEN vbVATPercent > 0
-                          -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
                           THEN CASE WHEN 1=0 AND vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
                                     WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
                                     ELSE CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
@@ -737,6 +766,52 @@ BEGIN
                             END) AS OperCount_Kg
                       , SUM (tmpMI.OperCount_ShFrom) AS OperCount_ShFrom
                       , SUM (tmpMI.OperCount_KgFrom) AS OperCount_KgFrom
+
+                        -- новая Схема для суммы НДС - 6 знаков
+                      , CAST (
+                        SUM (CASE WHEN vbPriceWithVAT = TRUE OR vbVATPercent = 0
+                                       -- если цены с НДС
+                                       THEN CAST (-- !!!OperSumm_Partner!!!
+                                                  CASE WHEN tmpMI.CountForPrice <> 0
+                                                            THEN CAST (tmpMI.OperCount_calc * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                                       ELSE CAST (tmpMI.OperCount_calc * tmpMI.Price AS NUMERIC (16, 2))
+                                                  END
+                                                * vbVATPercent / (100 + vbVATPercent)
+                                                  AS NUMERIC (16, 6))
+                                  WHEN vbVATPercent > 0
+                                       -- если цены без НДС
+                                       THEN CAST (-- !!!OperSumm_Partner!!!
+                                                  CASE WHEN tmpMI.CountForPrice <> 0
+                                                            THEN CAST (tmpMI.OperCount_calc * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                                       ELSE CAST (tmpMI.OperCount_calc * tmpMI.Price AS NUMERIC (16, 2))
+                                                  END
+                                                * vbVATPercent / 100
+                                                  AS NUMERIC (16, 6))
+                             END)
+                        AS NUMERIC (16, 2)) AS OperSumm_VAT_2018
+
+                        -- новая Схема для суммы НДС - 6 знаков + !!!НЕ!!! учтена скидка в цене
+                      , CAST (
+                        SUM (CASE WHEN vbPriceWithVAT = TRUE OR vbVATPercent = 0
+                                       -- если цены с НДС
+                                       THEN CAST (-- !!!OperSumm_Partner!!!
+                                                  CASE WHEN tmpMI.CountForPrice <> 0
+                                                            THEN CAST (tmpMI.OperCount_calc * tmpMI.Price_original / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                                       ELSE CAST (tmpMI.OperCount_calc * tmpMI.Price_original AS NUMERIC (16, 2))
+                                                  END
+                                                * vbVATPercent / (100 + vbVATPercent)
+                                                  AS NUMERIC (16, 6))
+                                  WHEN vbVATPercent > 0
+                                       -- если цены без НДС
+                                       THEN CAST (-- !!!OperSumm_Partner!!!
+                                                  CASE WHEN tmpMI.CountForPrice <> 0
+                                                            THEN CAST (tmpMI.OperCount_calc * tmpMI.Price_original / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                                       ELSE CAST (tmpMI.OperCount_calc * tmpMI.Price_original AS NUMERIC (16, 2))
+                                                  END
+                                                * vbVATPercent / 100
+                                                  AS NUMERIC (16, 6))
+                             END)
+                        AS NUMERIC (16, 2)) AS OperSumm_VAT_2018_original
 
                         -- сумма по Контрагенту - с округлением до 2-х знаков
                       , SUM (CASE WHEN tmpMI.CountForPrice <> 0

@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory_bySend(
 RETURNS void AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbUnitId Integer;
    DECLARE vbKoef Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -20,12 +21,21 @@ BEGIN
      -- определяем нужно добавлять или минусовать кол-во из накладной перемещения
      vbKoef := (CASE WHEN inIsAdd = True THEN 1 ELSE -1 END);
      
+     -- определяем
+     vbUnitId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
+     
      -- сохранили
      PERFORM lpInsertUpdate_MovementItem_Inventory (ioId                 := COALESCE (tmp.MovementItemId, 0)
                                                   , inMovementId         := inMovementId
                                                   , inGoodsId            := tmp.GoodsId
                                                   , inAmount             := COALESCE (tmp.Amount,0)
-                                                  , inPartionGoodsDate   := CASE WHEN tmp.PartionGoodsDate = zc_DateStart() THEN NULL ELSE tmp.PartionGoodsDate END
+                                                  , inPartionGoodsDate   := CASE WHEN vbUnitId IN (8459 -- Склад Реализации
+                                                                                                 , 8458 -- Склад База ГП
+                                                                                                  )
+                                                                                      THEN NULL
+                                                                                  WHEN tmp.PartionGoodsDate = zc_DateStart() THEN NULL
+                                                                                  ELSE tmp.PartionGoodsDate
+                                                                            END
                                                   , inPrice              := 0
                                                   , inSumm               := 0
                                                   , inHeadCount          := 0
@@ -55,6 +65,9 @@ BEGIN
                     LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                                ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
                                               AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                              AND vbUnitId NOT IN (8459 -- Склад Реализации
+                                                                 , 8458 -- Склад База ГП
+                                                                  )
                     LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                  ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
                                                 AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()

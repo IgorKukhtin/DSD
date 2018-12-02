@@ -417,6 +417,15 @@ object ClientForm: TClientForm
         HeaderHint = #1044#1072#1090#1072' ('#1089#1086#1079#1076#1072#1085#1080#1103')'
         Width = 80
       end
+      object isOutlet: TcxGridDBColumn
+        Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074' '#1084#1072#1075#1072#1079#1080#1085#1072#1093' Outlet...'
+        DataBinding.FieldName = 'isOutlet'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'

@@ -127,9 +127,9 @@ BEGIN
                                    ON OS_Unit_Print.ObjectId = Object_Unit.Id
                                   AND OS_Unit_Print.DescId = zc_ObjectString_Unit_Print()
 
-            LEFT JOIN ObjectFloat AS OS_Unit_DiscountTax
-                                  ON OS_Unit_DiscountTax.ObjectId = Object_Unit.Id
-                                 AND OS_Unit_DiscountTax.DescId = zc_ObjectFloat_Unit_DiscountTax()
+            LEFT JOIN ObjectFloat AS OF_Unit_DiscountTax
+                                  ON OF_Unit_DiscountTax.ObjectId = Object_Unit.Id
+                                 AND OF_Unit_DiscountTax.DescId = zc_ObjectFloat_Unit_DiscountTax()
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_PartnerBarCode 
                                     ON ObjectBoolean_PartnerBarCode.ObjectId = Object_Unit.Id 

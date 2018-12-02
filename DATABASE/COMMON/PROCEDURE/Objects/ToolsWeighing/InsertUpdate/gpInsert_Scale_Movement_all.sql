@@ -1495,7 +1495,7 @@ end if;*/
 
      -- проверка когда суммирование
      -- IF vbMovementDescId NOT IN (zc_Movement_Send()) OR inBranchCode <> 201 -- если Обвалка
-     IF vbMovementDescId = zc_Movement_Inventory()
+     IF vbMovementDescId = zc_Movement_Inventory() AND 1=0
      THEN
           -- !!!Проверка что элемент один - проверка уникальности!!!
           /*PERFORM lpInsert_LockUnique (inKeyData:= 'MI'

@@ -24,6 +24,8 @@ AS
 $BODY$
    DECLARE vbUserId   Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbIsOutlet Boolean;
+   DECLARE vbUnitId   Integer;
 
    DECLARE vbName_Sybase TVarChar;
    DECLARE vbName_Sybase2 TVarChar;
@@ -36,6 +38,14 @@ BEGIN
    -- !!!Замена!!!
    inName:= TRIM (inName);
 
+   -- Получили - 
+   vbUnitId:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_User_Unit() AND OL.ObjectId = vbUserId);
+   -- Проверка
+   IF COALESCE (vbUnitId, 0) =  0 THEN
+      RAISE EXCEPTION 'Ошибка.Нет прав добавлять Покупателя.';
+   END IF;
+   -- Получили - показывать ЛИ 
+   vbIsOutlet := EXISTS (SELECT 1 FROM lfSelect_Object_Unit_isOutlet() AS lfSelect WHERE lfSelect.UnitId = vbUnitId);
 
    -- Нужен ВСЕГДА- ДЛЯ НОВОЙ СХЕМЫ С ioCode -> ioCode
    IF COALESCE (ioId, 0) = 0 AND COALESCE (ioCode, 0) <> 0 THEN ioCode := NEXTVAL ('Object_Client_seq');
@@ -79,7 +89,44 @@ BEGIN
 
 
    -- проверка прав уникальности для свойства <Название>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Client(), inName);
+   IF vbIsOutlet = TRUE
+   THEN
+       IF EXISTS (WITH tmpUnit_isOutlet AS (SELECT * FROM lfSelect_Object_Unit_isOutlet())
+                  SELECT 1
+                  FROM Object AS Object_Client
+                       LEFT JOIN ObjectBoolean AS ObjectBoolean_Client_Outlet
+                                               ON ObjectBoolean_Client_Outlet.ObjectId = Object_Client.Id
+                                              AND ObjectBoolean_Client_Outlet.DescId   = zc_ObjectBoolean_Client_Outlet()
+                       LEFT JOIN ObjectLink AS ObjectLink_Client_InsertUnit
+                                            ON ObjectLink_Client_InsertUnit.ObjectId = Object_Client.Id
+                                           AND ObjectLink_Client_InsertUnit.DescId   = zc_ObjectLink_Client_InsertUnit()
+                       LEFT JOIN tmpUnit_isOutlet ON tmpUnit_isOutlet.UnitId = ObjectLink_Client_InsertUnit.ChildObjectId
+                  WHERE Object_Client.DescId = zc_Object_Client()
+                    AND LOWER (TRIM (Object_Client.ValueData)) = LOWER (TRIM (inName))
+                    AND Object_Client.Id <> COALESCE (ioId, 0)
+                    AND (tmpUnit_isOutlet.UnitId > 0 OR ObjectBoolean_Client_Outlet.ValueData = TRUE)
+                 )
+       THEN
+            RAISE EXCEPTION 'Ошибка добавления.Значение <%> уже существует.', inName;
+       END IF;
+   ELSE
+       IF EXISTS (WITH tmpUnit_isOutlet AS (SELECT * FROM lfSelect_Object_Unit_isOutlet())
+                  SELECT 1
+                  FROM Object AS Object_Client
+                       LEFT JOIN ObjectLink AS ObjectLink_Client_InsertUnit
+                                            ON ObjectLink_Client_InsertUnit.ObjectId = Object_Client.Id
+                                           AND ObjectLink_Client_InsertUnit.DescId   = zc_ObjectLink_Client_InsertUnit()
+                       LEFT JOIN tmpUnit_isOutlet ON tmpUnit_isOutlet.UnitId = ObjectLink_Client_InsertUnit.ChildObjectId
+                  WHERE Object_Client.DescId = zc_Object_Client()
+                    AND LOWER (TRIM (Object_Client.ValueData)) = LOWER (TRIM (inName))
+                    AND Object_Client.Id <> COALESCE (ioId, 0)
+                    AND tmpUnit_isOutlet.UnitId IS NULL
+                 )
+       THEN
+            RAISE EXCEPTION 'Ошибка добавления.Значение <%> уже существует.', inName;
+       END IF;
+   END IF;
+   
 
 
    -- определяется признак Создание/Корректировка
@@ -117,7 +164,7 @@ BEGIN
    IF vbIsInsert = TRUE
    THEN
        -- сохранили протокол - Подразделение (создание)
-       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_InsertUnit(), ioId, (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_User_Unit() AND OL.ObjectId = vbUserId));
+       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_InsertUnit(), ioId, vbUnitId);
        -- сохранили протокол - Пользователь (создание)
        PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), ioId, vbUserId);
        -- сохранили протокол - Дата создания

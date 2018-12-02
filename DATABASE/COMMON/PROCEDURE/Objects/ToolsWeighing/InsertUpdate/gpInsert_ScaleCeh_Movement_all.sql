@@ -585,7 +585,7 @@ BEGIN
                              --  № п/п
                            , ROW_NUMBER() OVER (PARTITION BY -- Склад Реализации + Склад База ГП
                                                              CASE WHEN vbMovementDescId = zc_Movement_Inventory() AND MLO_From.ObjectId IN (8459, 8458) THEN 0 ELSE MovementItem.Id END
-                                                           , MovementItem.ObjectId, MILinkObject_GoodsKind.ObjectId, MIFloat_Price.ValueData
+                                                           , MovementItem.ObjectId, MILinkObject_GoodsKind.ObjectId
                                                 ORDER BY MovementItem.Amount DESC) AS Ord
 
                       FROM (SELECT zc_MI_Master() AS DescId, 0 AS Amount WHERE vbMovementDescId = zc_Movement_Inventory()
@@ -1119,7 +1119,8 @@ BEGIN
           END IF;
 
           -- !!!Проверка что элемент один!!!
-          IF EXISTS (SELECT 1
+          IF 1=0
+         AND EXISTS (SELECT 1
                      FROM MovementItem
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id

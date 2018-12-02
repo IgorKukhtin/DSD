@@ -34,7 +34,7 @@ BEGIN
 
 
      -- Проверка
-     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.OperDate >= CURRENT_DATE - INTERVAL '1 DAY')
+     /*IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.OperDate >= CURRENT_DATE - INTERVAL '1 DAY')
     AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId
                                                           AND MLO.ObjectId IN (8459 -- Склад Реализации
                                                                              , 8458 -- Склад База ГП
@@ -57,7 +57,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Товар <%> <%> уже существует в документе.Дублирование заблокировано', lfGet_Object_ValueData_sh (inGoodsId), lfGet_Object_ValueData_sh (inGoodsKindId);
          -- select goodsId, goodsKindId, goodsCode, goodsName, goodsKindName from gpSelect_MovementItem_Inventory(inMovementId := 8538761 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '5') where amount <> 0 group by goodsId, goodsKindId, goodsCode, goodsName, goodsKindName having count(*) > 1
-     END IF;
+     END IF;*/
 
 
      -- сохранили

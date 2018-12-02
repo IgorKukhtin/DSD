@@ -195,7 +195,7 @@ BEGIN
            , CASE WHEN tmpDiscount.StartDate = zc_DateStart() OR tmpDiscount.StartDate < '01.01.1980' THEN NULL ELSE tmpDiscount.StartDate END :: TDateTime AS StartDate
            , CASE WHEN tmpDiscount.EndDate   = zc_DateEnd() THEN NULL ELSE tmpDiscount.EndDate END :: TDateTime AS EndDate
 
-           , COALESCE(tmpDiscount.ValueDiscount, NULL) :: TFloat  AS ValueDiscount
+           , COALESCE(tmpDiscount.ValueDiscount, 0) :: TFloat  AS ValueDiscount
 
            , Object_Insert.ValueData              AS InsertName
            , Object_Update.ValueData              AS UpdateName

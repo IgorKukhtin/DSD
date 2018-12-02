@@ -737,7 +737,9 @@ end if;*/
      IF vbIsCalculated = TRUE
         AND EXISTS (SELECT 1 FROM _tmpItemSummChild WHERE _tmpItemSummChild.OperSumm < 0)
      THEN
-          RAISE EXCEPTION 'Ошибка. Сумма по фиксированным ценам = <%> больше чем сумма для распределения. Для товара <%> расчетная сумма = % < 0'
+          RAISE EXCEPTION 'Ошибка. Сумма по фиксированным ценам больше чем сумма для распределения, расход = <%>, фикс = <%>,  расчет = <%>. Для товара <%> расчетная сумма = % < 0'
+                        , (SELECT SUM (_tmpItemSumm.OperSumm) FROM _tmpItemSumm)
+                        , (SELECT SUM (_tmpItemSummChild.OperSumm) FROM _tmpItemSummChild JOIN _tmpItemChild ON _tmpItemChild.MovementItemId = _tmpItemSummChild.MovementItemId WHERE _tmpItemChild.isCalculated = FALSE)
                         , (SELECT SUM (_tmpItemSummChild.OperSumm) FROM _tmpItemSummChild JOIN _tmpItemChild ON _tmpItemChild.MovementItemId = _tmpItemSummChild.MovementItemId WHERE _tmpItemChild.isCalculated = TRUE)
                         , lfGet_Object_ValueData ((SELECT _tmpItemChild.GoodsId FROM _tmpItemSummChild JOIN _tmpItemChild ON _tmpItemChild.MovementItemId = _tmpItemSummChild.MovementItemId WHERE _tmpItemSummChild.OperSumm < 0 ORDER BY _tmpItemChild.GoodsId LIMIT 1))
                         , (SELECT SUM (_tmpItemSummChild.OperSumm) FROM _tmpItemSummChild JOIN _tmpItemChild ON _tmpItemChild.MovementItemId = _tmpItemSummChild.MovementItemId WHERE _tmpItemSummChild.OperSumm < 0 AND _tmpItemChild.GoodsId

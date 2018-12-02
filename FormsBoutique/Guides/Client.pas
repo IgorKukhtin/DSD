@@ -96,6 +96,7 @@ type
     UnitName_insert: TcxGridDBColumn;
     InsertName: TcxGridDBColumn;
     InsertDate: TcxGridDBColumn;
+    isOutlet: TcxGridDBColumn;
   private
     { Private declarations }
   public

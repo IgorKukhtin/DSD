@@ -21,12 +21,14 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UnitName_insert TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
-             , isErased boolean
+             , isOutlet Boolean
+             , isErased Boolean
               )
 AS
 $BODY$
    DECLARE vbUserId      Integer;
    DECLARE vbIsOperPrice Boolean;
+   DECLARE vbIsOutlet    Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Client());
@@ -39,12 +41,16 @@ BEGIN
 
      -- Получили - показывать ЛИ цену ВХ.
      vbIsOperPrice:= lpCheckOperPrice_visible (vbUserId);
+     
+     -- Получили - показывать ЛИ 
+     vbIsOutlet := EXISTS (SELECT 1 FROM lfSelect_Object_Unit_isOutlet() AS lfSelect WHERE lfSelect.UnitId = inUnitId);
 
 
      -- Результат
      RETURN QUERY
      WITH
-     tmpContainer AS (SELECT CLO_Client.ObjectId                  AS ClientId
+     tmpUnit_isOutlet AS (SELECT * FROM lfSelect_Object_Unit_isOutlet())
+   , tmpContainer AS (SELECT CLO_Client.ObjectId                  AS ClientId
                            , SUM (COALESCE (Container.Amount, 0)) AS Summa_All
                            , SUM (CASE WHEN COALESCE (inUnitId, 0) <> 0 AND Container.WhereObjectId = inUnitId THEN COALESCE (Container.Amount, 0) ELSE 0 END) AS Summa
                       FROM Container
@@ -88,6 +94,8 @@ BEGIN
            , Object_Unit_Insert.ValueData            AS UnitName_insert
            , Object_User_Insert.ValueData            AS InsertName
            , ObjectDate_Protocol_Insert.ValueData    AS InsertDate
+
+           , COALESCE (ObjectBoolean_Client_Outlet.ValueData, FALSE) :: Boolean AS isOutlet
 
            , Object_Client.isErased                  AS isErased
 
@@ -184,6 +192,8 @@ BEGIN
                                  ON ObjectLink_Client_InsertUnit.ObjectId = Object_Client.Id
                                 AND ObjectLink_Client_InsertUnit.DescId   = zc_ObjectLink_Client_InsertUnit()
             LEFT JOIN Object AS Object_Unit_Insert ON Object_Unit_Insert.Id = ObjectLink_Client_InsertUnit.ChildObjectId
+            LEFT JOIN tmpUnit_isOutlet ON tmpUnit_isOutlet.UnitId = ObjectLink_Client_InsertUnit.ChildObjectId
+            
             LEFT JOIN ObjectLink AS ObjectLink_Protocol_Insert
                                  ON ObjectLink_Protocol_Insert.ObjectId = Object_Client.Id
                                 AND ObjectLink_Protocol_Insert.DescId   = zc_ObjectLink_Protocol_Insert()
@@ -192,11 +202,18 @@ BEGIN
                                   ON ObjectDate_Protocol_Insert.ObjectId = Object_Client.Id
                                  AND ObjectDate_Protocol_Insert.DescId   = zc_ObjectDate_Protocol_Insert()
 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Client_Outlet
+                                    ON ObjectBoolean_Client_Outlet.ObjectId = Object_Client.Id
+                                   AND ObjectBoolean_Client_Outlet.DescId   = zc_ObjectBoolean_Client_Outlet()
 
             LEFT JOIN tmpContainer ON tmpContainer.ClientId = Object_Client.Id
 
      WHERE Object_Client.DescId = zc_Object_Client()
-              AND (Object_Client.isErased = FALSE OR inIsShowAll = TRUE)
+       AND (Object_Client.isErased = FALSE OR inIsShowAll = TRUE)
+       AND (((tmpUnit_isOutlet.UnitId > 0 OR ObjectBoolean_Client_Outlet.ValueData = TRUE) AND vbIsOutlet = TRUE)
+         OR (tmpUnit_isOutlet.UnitId IS NULL AND vbIsOutlet = FALSE)
+         OR inUnitId = 0
+           )
     ;
 
 END;
