@@ -4,9 +4,10 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
   ClientWidth = 1073
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -55
+  ExplicitLeft = -249
+  ExplicitTop = -113
   ExplicitWidth = 1089
-  ExplicitHeight = 574
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -143,12 +144,26 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 80
           end
+          object ItemName_from: TcxGridDBColumn
+            Caption = #1054#1090' '#1082#1086#1075#1086' ('#1101#1083#1077#1084#1077#1085#1090')'
+            DataBinding.FieldName = 'ItemName_from'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
+          end
+          object ItemName_to: TcxGridDBColumn
+            Caption = #1050#1086#1084#1091' ('#1101#1083#1077#1084#1077#1085#1090')'
+            DataBinding.FieldName = 'ItemName_to'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
@@ -331,6 +346,9 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint1: TdsdPrintAction
       Category = 'DSDLib'
@@ -379,6 +397,9 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintCeh: TdsdPrintAction
       Category = 'DSDLib'
@@ -419,6 +440,9 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'

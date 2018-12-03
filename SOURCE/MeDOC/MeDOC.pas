@@ -12,8 +12,12 @@ type
     procedure CreateJ1201006XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
     procedure CreateJ1201007XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
     procedure CreateJ1201008XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+
     procedure CreateJ1201009XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
     procedure CreateJ1201009XMLFile_IFIN(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+
+    procedure CreateJ1201010XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+
   public
     procedure CreateXMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string; FIsMedoc : Boolean);
   end;
@@ -668,6 +672,164 @@ begin
 end;
 
 procedure TMedoc.CreateJ1201009XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+var
+  ZVIT: IXMLZVITType;
+  i: integer;
+begin
+  ZVIT := NewZVIT;
+  ZVIT.TRANSPORT.CREATEDATE := FormatDateTime('dd.mm.yyyy', Now);
+  ZVIT.TRANSPORT.VERSION := '4.1';
+  ZVIT.ORG.FIELDS.EDRPOU := HeaderDataSet.FieldByName('OKPO_From').AsString;
+
+  with ZVIT.ORG.CARD.FIELDS do begin
+    PERTYPE := '0';
+    //перший день періоду
+    PERDATE := FormatDateTime('dd.mm.yyyy', StartOfTheMonth(HeaderDataSet.FieldByName('OperDate').AsDateTime));
+    //код документу
+    CHARCODE := HeaderDataSet.FieldByName('CHARCODE').AsString; // 'J1201009';
+    //Id документа
+    DOCID := HeaderDataSet.FieldByName('Id').AsString;
+  end;
+
+
+  //ЄДРПОУ покупця
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'EDR_POK', '');
+  //Адреса підприємства
+  //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'FIRM_ADR', HeaderDataSet.FieldByName('JuridicalAddress_From').AsString);
+  //Код ЄДРПОУ підприємства
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'FIRM_EDRPOU', HeaderDataSet.FieldByName('OKPO_From').AsString);
+  //ІПН підприємства
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'FIRM_INN', HeaderDataSet.FieldByName('INN_From').AsString);
+  //Найменування підприємства
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'FIRM_NAME', HeaderDataSet.FieldByName('JuridicalName_From').AsString);
+  //Телефон підприємства
+  //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'PHON', HeaderDataSet.FieldByName('Phone_From').AsString);
+
+  //Порядковий номер ПН (системне поле)
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N2_1', HeaderDataSet.FieldByName('InvNumberPartner').AsString);
+  //Порядковий номер ПН
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N2_11', HeaderDataSet.FieldByName('InvNumberPartner').AsString);
+  //Числовий номер філії
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N2_13', HeaderDataSet.FieldByName('InvNumberBranch').AsString);
+  //Дата виписки ПН
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N11', FormatDateTime('dd.mm.yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime));
+
+  if HeaderDataSet.FieldByName('TaxKind').asString = 'X' then
+     // Зведена податкова накладна
+     CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N25', '1');
+
+  if HeaderDataSet.FieldByName('isNotNDSPayer').asBoolean then begin
+     // Не видається покупцю
+     CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N13', '1');
+     // Не видається покупцю (тип причини)
+     CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N14',
+             HeaderDataSet.FieldByName('NotNDSPayerC1').asString + HeaderDataSet.FieldByName('NotNDSPayerC2').asString);
+  end;
+
+  //Найменування покупця
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N3', HeaderDataSet.FieldByName('JuridicalName_To').AsString);
+  //ІПН покупця
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N4', HeaderDataSet.FieldByName('INN_To').AsString);
+  // № Філії покупця
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'DEPT_POK', HeaderDataSet.FieldByName('InvNumberBranch_To').AsString);
+  // Код ЄДРПОУ покупця
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'EDR_POK', HeaderDataSet.FieldByName('OKPO_To').AsString);
+  //Місцезнаходження покупця
+  //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N5', HeaderDataSet.FieldByName('JuridicalAddress_To').AsString);
+  //Телефон покупця
+  //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N6', HeaderDataSet.FieldByName('Phone_To').AsString);
+  //Вид цивільно-правового договору
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N8', HeaderDataSet.FieldByName('ContractKind').AsString);
+  //Номер договору
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N81', HeaderDataSet.FieldByName('ContractName').AsString);
+  //Дата договору
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N82', FormatDateTime('dd.mm.yyyy', HeaderDataSet.FieldByName('ContractSigningDate').AsDateTime));
+  //Форма проведення розрахунків
+  //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N9', HeaderDataSet.FieldByName('N9').AsString);
+
+  //Усього по розділу I (колонка 12 "Загальна сума коштів, що підлягає сплаті")
+  //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A5_11', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
+  //Розділ А Усього обсяги постачання за основною ставкою (код ставки 20)
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A5_7', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
+  //Розділ А Усього обсяги постачання при експорті товарів за ставкою 0% (код ставки 901)
+  //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A5_9', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT_11').AsFloat), FormatSettings.DecimalSeparator, '.'));
+
+   if HeaderDataSet.FieldByName('VatPercent').AsFloat = 901 then begin
+     //Розділ А Усього обсяги постачання на митній території України за ставкою 0% (код ставки 902)
+     CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A5_9', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT_11').AsFloat), FormatSettings.DecimalSeparator, '.'));
+   end;
+   if HeaderDataSet.FieldByName('VatPercent').AsFloat = 902 then begin
+     //Розділ А Усього обсяги постачання на митній території України за ставкою 0% (код ставки 902)
+     CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A5_8', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT_11').AsFloat), FormatSettings.DecimalSeparator, '.'));
+   end;
+
+  //Загальна сума податку на додану вартість за основною ставкою
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A6_7', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('SummVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
+  //Загальна сума податку на додану вартість, у тому числі:
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A6_11', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('SummVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
+  //Загальна сума кошті,що підлягають сплаті з урахуванням податку на додану вартість
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A7_11', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
+  //Посадова (уповноважена) особа/фізична особа (законний представник)
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N10', HeaderDataSet.FieldByName('N10').AsString);
+  //Реєстраційний номер облікової картки платника податку
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'INN', HeaderDataSet.FieldByName('AccounterINN_From').AsString);
+
+  //Загальна сума з ПДВ ("основна ставка")
+  //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A7_7', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
+  //Общая сумма с НДС (0% процентов (экспорт))
+  //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A7_9', ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT_11').AsFloat), FormatSettings.DecimalSeparator, '.'));
+  //Усього по розділу I (колонка 10 "нульова ставка експорт")
+  //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'A5_9', '0.00');
+
+  with ItemsDataSet do begin
+     First;
+     i := 0;
+     while not EOF do begin
+         if (FieldByName('Amount').AsFloat <> 0) and (FieldByName('PriceNoVAT').AsFloat <> 0) then begin
+           //Дата відвантаження
+           //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A12', FormatDateTime('dd.mm.yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime));
+           //Номенклатура поставки товарів
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A13', FieldByName('GoodsName').AsString);
+           //Код товару згідно з УКТ ЗЕД
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A131', FieldByName('GoodsCodeUKTZED').AsString);
+           //Одиниця виміру товару
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A14', FieldByName('MeasureName').AsString);
+           //Код одиниці виміру товару
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A141', FieldByName('MeasureCode').AsString);
+           //Кількість
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A15', ReplaceStr(FormatFloat('0.####', FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           //Ціна постачання одиниці товару\послуги
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A16', ReplaceStr(FormatFloat('0.00', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           //Код ставки
+           //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A8', ReplaceStr(FormatFloat('0.00', FieldByName('VatPercent').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A8', ReplaceStr(FormatFloat('0.###', HeaderDataSet.FieldByName('VatPercent').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           //Обсяги постачання (база оподаткування) без урахування податку на додану вартість
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A10', ReplaceStr(FormatFloat('0.00', FieldByName('AmountSummNoVAT_12').AsFloat), FormatSettings.DecimalSeparator, '.'));
+
+           //Ознака імпортованого товару
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A132', FieldByName('GoodsCodeTaxImport').AsString);
+           //Послуги згідно з ДКПП
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A133', FieldByName('GoodsCodeDKPP').AsString);
+           //Код виду діяльності сг товаровир
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A11', FieldByName('GoodsCodeTaxAction').AsString);
+
+           //Обсяги постачання без урахування ПДВ ("основна ставка")
+           //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A17', ReplaceStr(FormatFloat('0.00', FieldByName('AmountSummNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           //Обсяги постачання без урахування ПДВ (нульова ставка експорт)
+           //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A19', ReplaceStr(FormatFloat('0.00', FieldByName('AmountSummNoVAT_11').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           inc(i);
+         end;
+         Next;
+     end;
+     Close;
+  end;
+
+  ZVIT.OwnerDocument.Encoding :='WINDOWS-1251';
+  ZVIT.OwnerDocument.SaveToFile(FileName);
+
+end;
+
+procedure TMedoc.CreateJ1201010XMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
 var
   ZVIT: IXMLZVITType;
   i: integer;

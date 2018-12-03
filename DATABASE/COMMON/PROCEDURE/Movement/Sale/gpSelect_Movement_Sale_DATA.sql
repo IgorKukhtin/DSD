@@ -61,8 +61,12 @@ BEGIN
      vbIsXleb:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 131936  AND UserId = inUserId);
 
 
+if inUserId = 1613484 then
+  perform pg_sleep (59);
+  -- return;
+end if;
      -- !!!т.к. нельзя когда много данных в гриде!!!
-     IF inStartDate + (INTERVAL '100 DAY') <= inEndDate
+     IF inStartDate + (INTERVAL '200 DAY') <= inEndDate
      THEN
          inStartDate:= inEndDate + (INTERVAL '1 DAY');
      END IF;

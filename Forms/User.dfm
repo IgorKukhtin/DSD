@@ -258,7 +258,13 @@ object UserForm: TUserForm
         OptionsView.HeaderAutoHeight = True
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-        object cxGridDBColumn5: TcxGridDBColumn
+        object Code_ch1: TcxGridDBColumn
+          Caption = #1050#1086#1076
+          DataBinding.FieldName = 'Code'
+          Options.Editing = False
+          Width = 50
+        end
+        object Name_ch1: TcxGridDBColumn
           Caption = #1056#1086#1083#1100
           DataBinding.FieldName = 'Name'
           PropertiesClassName = 'TcxButtonEditProperties'
@@ -270,7 +276,7 @@ object UserForm: TUserForm
             end>
           Properties.ReadOnly = True
           HeaderAlignmentVert = vaCenter
-          Width = 224
+          Width = 289
         end
       end
       object RoleGridLevel: TcxGridLevel
@@ -327,7 +333,7 @@ object UserForm: TUserForm
               Default = True
               Kind = bkEllipsis
             end>
-          Width = 232
+          Width = 220
         end
         object CloseDate_excl: TcxGridDBColumn
           Caption = #1055#1077#1088#1080#1086#1076

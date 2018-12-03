@@ -54,7 +54,7 @@ type
     RoleCDS: TClientDataSet;
     RoleGrid: TcxGrid;
     RoleGridView: TcxGridDBTableView;
-    cxGridDBColumn5: TcxGridDBColumn;
+    Name_ch1: TcxGridDBColumn;
     RoleGridLevel: TcxGridLevel;
     cxSplitter: TcxSplitter;
     UpdateDataSet: TdsdUpdateDataSet;
@@ -92,6 +92,7 @@ type
     MobileModel: TcxGridDBColumn;
     MobileVesion: TcxGridDBColumn;
     MobileVesionSDK: TcxGridDBColumn;
+    Code_ch1: TcxGridDBColumn;
   private
     { Private declarations }
   public

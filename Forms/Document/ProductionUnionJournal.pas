@@ -53,6 +53,8 @@ type
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     InvNumber_ProductionFull: TcxGridDBColumn;
+    ItemName_from: TcxGridDBColumn;
+    ItemName_to: TcxGridDBColumn;
   private
     { Private declarations }
   public

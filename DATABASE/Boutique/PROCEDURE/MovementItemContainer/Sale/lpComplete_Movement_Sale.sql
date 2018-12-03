@@ -1,4 +1,4 @@
- -- Function: lpComplete_Movement_Sale()
+-- Function: lpComplete_Movement_Sale()
 
 DROP FUNCTION IF EXISTS lpComplete_Movement_Sale (Integer, Integer);
 
