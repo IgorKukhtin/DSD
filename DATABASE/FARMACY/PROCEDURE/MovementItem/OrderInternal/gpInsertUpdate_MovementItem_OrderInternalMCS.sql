@@ -86,7 +86,8 @@ BEGIN
         FROM (WITH Object_Price AS (SELECT ObjectLink_Price_Unit.ChildObjectId     AS UnitId
                                          , Price_Goods.ChildObjectId               AS GoodsId
                                          , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
-                                         , MCS_Value.ValueData                     AS MCSValue 
+                                         , MCS_Value.ValueData                     AS MCSValue
+                                         , COALESCE(Price_MCSValueMin.ValueData,0) ::TFloat AS MCSValue_min
                                     FROM ObjectLink AS ObjectLink_Price_Unit
                                          LEFT JOIN ObjectBoolean AS MCS_isClose
                                                                  ON MCS_isClose.ObjectId = ObjectLink_Price_Unit.ObjectId
@@ -102,6 +103,9 @@ BEGIN
                                          LEFT JOIN ObjectFloat AS MCS_Value
                                                                ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
                                                               AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                                         LEFT JOIN ObjectFloat AS Price_MCSValueMin
+                                                               ON Price_MCSValueMin.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                              AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()
                                     WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                                       AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
                                       AND COALESCE(MCS_isClose.ValueData,False) = False
@@ -223,7 +227,17 @@ BEGIN
                                                 AND MovementItem.isErased   = FALSE
                     GROUP BY MovementItem.ObjectId
                     )
-
+   , tmpRemains AS (SELECT Object_Price.UnitId
+                         , Object_Price.GoodsId
+                         , SUM (COALESCE (Container.Amount, 0)) AS Amount
+                    FROM Object_Price
+                         LEFT JOIN Container ON Container.WhereObjectId = Object_Price.UnitId
+                                            AND Container.ObjectId = Object_Price.GoodsId
+                                            AND Container.DescId = zc_Container_Count() 
+                                            AND Container.Amount <> 0
+                    GROUP BY Object_Price.UnitId
+                           , Object_Price.GoodsId
+                    )
               --при формировании кол-ва автозаказа от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
         
               -- Результат
@@ -231,20 +245,22 @@ BEGIN
                    , Object_Price.GoodsId
                    , COALESCE (MovementItemSaved.Amount, 0) AS Amount
                    , Object_Price.Price AS Price
-                   , CASE WHEN Object_Price.MCSValue >= 0.1 AND Object_Price.MCSValue < 10 AND 1 >= ROUND (Object_Price.MCSValue - (SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                               THEN CEIL (Object_Price.MCSValue - (SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                          WHEN Object_Price.MCSValue >= 10 AND 1 >= CEIL (Object_Price.MCSValue - (SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                               THEN ROUND  (Object_Price.MCSValue - (SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                          ELSE FLOOR (Object_Price.MCSValue - (SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                     END :: TFloat AS ValueData
+                   , CASE WHEN COALESCE (Object_Price.MCSValue_min, 0) = 0 OR (COALESCE (Container.Amount, 0) <= COALESCE (Object_Price.MCSValue_min, 0))
+                          THEN CASE WHEN Object_Price.MCSValue >= 0.1 AND Object_Price.MCSValue < 10 AND 1 >= ROUND (Object_Price.MCSValue - (COALESCE (Container.Amount, 0) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
+                                         THEN CEIL (Object_Price.MCSValue - (COALESCE (Container.Amount, 0) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
+                                    WHEN Object_Price.MCSValue >= 10 AND 1 >= CEIL (Object_Price.MCSValue - (COALESCE (Container.Amount, 0) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
+                                         THEN ROUND  (Object_Price.MCSValue - (COALESCE (Container.Amount, 0) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
+                                    ELSE FLOOR (Object_Price.MCSValue - (COALESCE (Container.Amount, 0) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
+                               END 
+                          ELSE 0
+                     END                          :: TFloat AS ValueData
               FROM Object_Price
             -- LEFT OUTER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                                 -- ON ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
                                                -- AND ContainerLinkObject_Unit.ObjectId = Object_Price.UnitId
-            LEFT OUTER JOIN Container ON Container.WhereObjectId = Object_Price.UnitId
-                                     AND Container.ObjectId = Object_Price.GoodsId
-                                     AND Container.DescId = zc_Container_Count() 
-                                     AND Container.Amount <> 0
+            LEFT JOIN tmpRemains AS Container 
+                                 ON Container.UnitId  = Object_Price.UnitId
+                                AND Container.GoodsId = Object_Price.GoodsId
 
             LEFT OUTER JOIN MovementItemSaved ON MovementItemSaved.ObjectId = Object_Price.GoodsId
 
@@ -263,6 +279,7 @@ BEGIN
             Object_Price.UnitId,
             Object_Price.GoodsId,
             Object_Price.MCSValue,
+            COALESCE (Object_Price.MCSValue_min, 0),
             Object_Price.Price,
             MovementItemSaved.Id,
             MovementItemSaved.Amount,
@@ -272,11 +289,14 @@ BEGIN
             Income.Amount_Income,
             tmpMI_OrderExternal.Amount,
             COALESCE (tmpReserve.Amount, 0)
-        HAVING CASE WHEN Object_Price.MCSValue >= 0.1 AND Object_Price.MCSValue < 10 AND 1 >= ROUND (Object_Price.MCSValue - (SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                         THEN ROUND (Object_Price.MCSValue - (SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                    WHEN Object_Price.MCSValue >= 10 AND 1 >= CEIL (Object_Price.MCSValue - (SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                         THEN ROUND (Object_Price.MCSValue - (SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                    ELSE FLOOR (Object_Price.MCSValue - (SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
+        HAVING CASE WHEN COALESCE (Object_Price.MCSValue_min, 0) = 0 OR (COALESCE (Container.Amount, 0) <= COALESCE (Object_Price.MCSValue_min, 0))
+                    THEN CASE WHEN Object_Price.MCSValue >= 0.1 AND Object_Price.MCSValue < 10 AND 1 >= ROUND (Object_Price.MCSValue - (COALESCE (Container.Amount, 0) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
+                                   THEN CEIL (Object_Price.MCSValue - (COALESCE (Container.Amount, 0) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
+                              WHEN Object_Price.MCSValue >= 10 AND 1 >= CEIL (Object_Price.MCSValue - (COALESCE (Container.Amount, 0) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
+                                   THEN ROUND  (Object_Price.MCSValue - (COALESCE (Container.Amount, 0) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
+                              ELSE FLOOR (Object_Price.MCSValue - (COALESCE (Container.Amount, 0) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
+                         END 
+                    ELSE 0
                END > 0
        ) AS tmp;
 
@@ -330,6 +350,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 03.12.18         *
  02.11.18         *
  12.06.17         *
  27.12.16         * add tmpMI_OrderExternal.Amount

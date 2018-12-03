@@ -119,6 +119,8 @@ type
     cbIncome: TcxCheckBox;
     edDayIncome: TcxCurrencyEdit;
     actRefreshIncome: TdsdDataSetRefresh;
+    cbSummSend: TcxCheckBox;
+    edSummSend: TcxCurrencyEdit;
   private
     { Private declarations }
   public

@@ -426,7 +426,7 @@ AS
            , CAST ('01.01.2214' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
-           , CAST ('PrintMovement_TaxCorrective1118' AS TVarChar)
+           , CAST ('PrintMovement_TaxCorrective1218' AS TVarChar)
 /*
 -- Новая форма налоговой
       UNION

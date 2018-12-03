@@ -8,12 +8,14 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TDateTime, TFloat,
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Price (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Price(
  INOUT ioId                       Integer   ,    -- ключ объекта < Цена >
  INOUT ioStartDate                TDateTime , 
     IN inPrice                    TFloat    ,    -- цена
     IN inMCSValue                 TFloat    ,    -- Неснижаемый товарный запас
+    IN inMCSValue_min             TFloat    ,    -- мин. Неснижаемый товарный запас
     IN inMCSPeriod                TFloat    ,    -- Количество дней для анализа НТЗ
     IN inMCSDay                   TFloat    ,    -- Страховой запас дней НТЗ
     IN inPercentMarkup            TFloat    ,    -- % наценки
@@ -46,15 +48,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Price(
 AS
 $BODY$
     DECLARE
-        vbUserId Integer;
-        vbPrice TFloat;
-        vbMCSValue TFloat;
-        vbMCSIsClose Boolean;
+        vbUserId       Integer;
+        vbPrice        TFloat;
+        vbMCSValue     TFloat;
+        vbMCSValue_min TFloat;
+        vbMCSIsClose   Boolean;
         vbMCSNotRecalc Boolean;
-        vbFix Boolean;
-        vbTop Boolean;
+        vbFix          Boolean;
+        vbTop          Boolean;
         vbPercentMarkup TFloat;
-        vbDate TDateTime;
+        vbDate         TDateTime;
     DECLARE vbIsMCSAuto_old  Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
@@ -92,6 +95,7 @@ BEGIN
            isTop,
            PercentMarkup,
            MCSValueOld,
+           MCSValue_min,
            StartDateMCSAuto,
            EndDateMCSAuto,
            isMCSNotRecalcOld,
@@ -107,6 +111,7 @@ BEGIN
            vbTop,
            vbPercentMarkup,
            outMCSValueOld,
+           vbMCSValue_min,
            outStartDateMCSAuto,
            outEndDateMCSAuto,
            outisMCSNotRecalcOld,
@@ -124,61 +129,65 @@ BEGIN
                              , COALESCE(Price_Top.ValueData,False)     AS isTop
                              , COALESCE(Price_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
                              , COALESCE(Price_MCSValueOld.ValueData,0)    ::TFloat AS MCSValueOld
+                             , COALESCE(MCS_Value_min.ValueData, 0)       ::TFloat AS MCSValue_min
                              , MCS_StartDateMCSAuto.ValueData                      AS StartDateMCSAuto
                              , MCS_EndDateMCSAuto.ValueData                        AS EndDateMCSAuto
                              , COALESCE(Price_MCSAuto.ValueData,False)          :: Boolean   AS isMCSAuto
                              , COALESCE(Price_MCSNotRecalcOld.ValueData,False)  :: Boolean   AS isMCSNotRecalcOld
                            FROM Object AS Object_Price
-                               INNER JOIN ObjectLink       AS Price_Goods
-                                       ON Price_Goods.ObjectId = Object_Price.Id
-                                      AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                                      AND Price_Goods.ChildObjectId = inGoodsId
-                               INNER JOIN ObjectLink       AS ObjectLink_Price_Unit
-                                       ON ObjectLink_Price_Unit.ObjectId = Object_Price.Id
-                                      AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                                      AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
-                               LEFT JOIN ObjectFloat       AS Price_Value
-                                      ON Price_Value.ObjectId = Object_Price.Id
-                                     AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
-                               LEFT JOIN ObjectDate        AS Price_DateChange
-                                      ON Price_DateChange.ObjectId = Object_Price.Id
-                                     AND Price_DateChange.DescId = zc_ObjectDate_Price_DateChange()
-                               LEFT JOIN ObjectFloat       AS MCS_Value
-                                      ON MCS_Value.ObjectId = Object_Price.Id
-                                     AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
-                               LEFT JOIN ObjectFloat       AS Price_MCSValueOld
-                                      ON Price_MCSValueOld.ObjectId = Object_Price.Id
-                                     AND Price_MCSValueOld.DescId = zc_ObjectFloat_Price_MCSValueOld()
-                               LEFT JOIN ObjectDate        AS MCS_DateChange
-                                      ON MCS_DateChange.ObjectId = Object_Price.Id
-                                     AND MCS_DateChange.DescId = zc_ObjectDate_Price_MCSDateChange()
-                               LEFT JOIN ObjectDate        AS MCS_StartDateMCSAuto
-                                      ON MCS_StartDateMCSAuto.ObjectId = Object_Price.Id
-                                     AND MCS_StartDateMCSAuto.DescId = zc_ObjectDate_Price_StartDateMCSAuto()
-                               LEFT JOIN ObjectDate        AS MCS_EndDateMCSAuto
-                                      ON MCS_EndDateMCSAuto.ObjectId = Object_Price.Id
-                                     AND MCS_EndDateMCSAuto.DescId = zc_ObjectDate_Price_EndDateMCSAuto()
-                               LEFT JOIN ObjectBoolean     AS MCS_isClose
-                                      ON MCS_isClose.ObjectId = Object_Price.Id
-                                     AND MCS_isClose.DescId = zc_ObjectBoolean_Price_MCSIsClose()
-                               LEFT JOIN ObjectBoolean     AS MCS_NotRecalc
-                                      ON MCS_NotRecalc.ObjectId = Object_Price.Id
-                                     AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc()
-                               LEFT JOIN ObjectBoolean     AS Price_Fix
-                                      ON Price_Fix.ObjectId = Object_Price.Id
-                                     AND Price_Fix.DescId = zc_ObjectBoolean_Price_Fix()
-                               LEFT JOIN ObjectBoolean     AS Price_Top
-                                      ON Price_Top.ObjectId = Object_Price.Id
-                                     AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
-                               LEFT JOIN ObjectFloat       AS Price_PercentMarkup                                                   
-                                      ON Price_PercentMarkup.ObjectId = Object_Price.Id
-                                     AND Price_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
-                               LEFT JOIN ObjectBoolean     AS Price_MCSAuto
-                                      ON Price_MCSAuto.ObjectId = Object_Price.Id
-                                     AND Price_MCSAuto.DescId = zc_ObjectBoolean_Price_MCSAuto()
-                               LEFT JOIN ObjectBoolean     AS Price_MCSNotRecalcOld
-                                      ON Price_MCSNotRecalcOld.ObjectId = Object_Price.Id
-                                     AND Price_MCSNotRecalcOld.DescId = zc_ObjectBoolean_Price_MCSNotRecalcOld()
+                               INNER JOIN ObjectLink AS Price_Goods
+                                                     ON Price_Goods.ObjectId = Object_Price.Id
+                                                    AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                                    AND Price_Goods.ChildObjectId = inGoodsId
+                               INNER JOIN ObjectLink AS ObjectLink_Price_Unit
+                                                     ON ObjectLink_Price_Unit.ObjectId = Object_Price.Id
+                                                    AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                                    AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
+                               LEFT JOIN ObjectFloat AS Price_Value
+                                                     ON Price_Value.ObjectId = Object_Price.Id
+                                                    AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                               LEFT JOIN ObjectDate AS Price_DateChange
+                                                    ON Price_DateChange.ObjectId = Object_Price.Id
+                                                   AND Price_DateChange.DescId = zc_ObjectDate_Price_DateChange()
+                               LEFT JOIN ObjectFloat AS MCS_Value
+                                                     ON MCS_Value.ObjectId = Object_Price.Id
+                                                    AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                               LEFT JOIN ObjectFloat AS MCS_Value_min
+                                                     ON MCS_Value_min.ObjectId = Object_Price.Id
+                                                    AND MCS_Value_min.DescId = zc_ObjectFloat_Price_MCSValueMin()
+                               LEFT JOIN ObjectFloat AS Price_MCSValueOld
+                                                     ON Price_MCSValueOld.ObjectId = Object_Price.Id
+                                                    AND Price_MCSValueOld.DescId = zc_ObjectFloat_Price_MCSValueOld()
+                               LEFT JOIN ObjectDate AS MCS_DateChange
+                                                    ON MCS_DateChange.ObjectId = Object_Price.Id
+                                                   AND MCS_DateChange.DescId = zc_ObjectDate_Price_MCSDateChange()
+                               LEFT JOIN ObjectDate AS MCS_StartDateMCSAuto
+                                                    ON MCS_StartDateMCSAuto.ObjectId = Object_Price.Id
+                                                   AND MCS_StartDateMCSAuto.DescId = zc_ObjectDate_Price_StartDateMCSAuto()
+                               LEFT JOIN ObjectDate AS MCS_EndDateMCSAuto
+                                                    ON MCS_EndDateMCSAuto.ObjectId = Object_Price.Id
+                                                   AND MCS_EndDateMCSAuto.DescId = zc_ObjectDate_Price_EndDateMCSAuto()
+                               LEFT JOIN ObjectBoolean AS MCS_isClose
+                                                       ON MCS_isClose.ObjectId = Object_Price.Id
+                                                      AND MCS_isClose.DescId = zc_ObjectBoolean_Price_MCSIsClose()
+                               LEFT JOIN ObjectBoolean AS MCS_NotRecalc
+                                                       ON MCS_NotRecalc.ObjectId = Object_Price.Id
+                                                      AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc()
+                               LEFT JOIN ObjectBoolean AS Price_Fix
+                                                       ON Price_Fix.ObjectId = Object_Price.Id
+                                                      AND Price_Fix.DescId = zc_ObjectBoolean_Price_Fix()
+                               LEFT JOIN ObjectBoolean AS Price_Top
+                                                       ON Price_Top.ObjectId = Object_Price.Id
+                                                      AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
+                               LEFT JOIN ObjectFloat AS Price_PercentMarkup                                                   
+                                                     ON Price_PercentMarkup.ObjectId = Object_Price.Id
+                                                    AND Price_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
+                               LEFT JOIN ObjectBoolean AS Price_MCSAuto
+                                                       ON Price_MCSAuto.ObjectId = Object_Price.Id
+                                                      AND Price_MCSAuto.DescId = zc_ObjectBoolean_Price_MCSAuto()
+                               LEFT JOIN ObjectBoolean AS Price_MCSNotRecalcOld
+                                                       ON Price_MCSNotRecalcOld.ObjectId = Object_Price.Id
+                                                      AND Price_MCSNotRecalcOld.DescId = zc_ObjectBoolean_Price_MCSNotRecalcOld()
                               WHERE  Object_Price.DescId = zc_Object_Price())
           SELECT  * FROM tmp1) AS tmp;
 
@@ -359,6 +368,12 @@ BEGIN
         outMCSNotRecalcDateChange := CURRENT_DATE;
         PERFORM lpInsertUpdate_objectDate(zc_ObjectDate_Price_MCSNotRecalcDateChange(), ioId, outMCSNotRecalcDateChange);
     END IF;
+
+    IF (inMCSValue_min IS NOT NULL) AND (COALESCE(vbMCSValue_min, 0) <> inMCSValue_min)
+    THEN
+        -- сохранили св-во мин НТЗ
+        PERFORM lpInsertUpdate_objectFloat (zc_ObjectFloat_Price_MCSValueMin(), ioId, inMCSValue_min);
+    END IF;
     
     outisMCSAuto := COALESCE (outisMCSAuto,False);
     outisMCSNotRecalcOld:= COALESCE (outisMCSNotRecalcOld,False);
@@ -375,6 +390,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 30.11.18         *
  13.06.17         * без Object_Price_View
  09.06.17         *
  04.07.16         *
