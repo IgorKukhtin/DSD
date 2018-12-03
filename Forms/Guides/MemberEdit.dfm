@@ -27,7 +27,7 @@
     Height = 409
     Align = alTop
     TabOrder = 0
-    Properties.ActivePage = tsContact
+    Properties.ActivePage = tsCommon
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 409
     ClientRectRight = 294

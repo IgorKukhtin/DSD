@@ -55,11 +55,12 @@ BEGIN
     ) ON COMMIT DROP;   
     
     --
-    CREATE TEMP TABLE tmpPrice  (UnitId Integer, GoodsId Integer, MCSValue TFloat, PercentMarkup TFloat, isTop Boolean, Fix Boolean) ON COMMIT DROP;  
-    INSERT INTO tmpPrice (UnitId, GoodsId, MCSValue, PercentMarkup, isTop, Fix)  
+    CREATE TEMP TABLE tmpPrice  (UnitId Integer, GoodsId Integer, MCSValue TFloat, MCSValue_min TFloat, PercentMarkup TFloat, isTop Boolean, Fix Boolean) ON COMMIT DROP;  
+    INSERT INTO tmpPrice (UnitId, GoodsId, MCSValue, MCSValue_min, PercentMarkup, isTop, Fix)  
                     SELECT ObjectLink_Price_Unit.ChildObjectId    AS UnitId
                        , Price_Goods.ChildObjectId                AS GoodsId     
                        , MCS_Value.ValueData                      AS MCSValue
+                       , COALESCE(Price_MCSValueMin.ValueData,0)    ::TFloat AS MCSValue_min
                        , COALESCE(Price_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
                        , COALESCE(Price_Top.ValueData,False)      AS isTop        
                        , COALESCE(Price_Fix.ValueData,False)      AS Fix  
@@ -78,7 +79,10 @@ BEGIN
                                             AND Price_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()  
                        LEFT JOIN ObjectFloat AS MCS_Value
                                              ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                            AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()                                          
+                                            AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue() 
+                       LEFT JOIN ObjectFloat AS Price_MCSValueMin
+                                             ON Price_MCSValueMin.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                            AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()                                         
                        LEFT JOIN ObjectBoolean AS Price_Fix
                                                ON Price_Fix.ObjectId = ObjectLink_Price_Unit.ObjectId
                                               AND Price_Fix.DescId = zc_ObjectBoolean_Price_Fix()
@@ -172,6 +176,7 @@ BEGIN
                                         ioStartDate    := zc_dateEnd(),         -- 
                                         inPrice        := NULL::TFloat,         -- цена
                                         inMCSValue     := MAX(Sold)::TFloat,    -- Неснижаемый товарный запас
+                                        inMCSValue_min := Object_Price.MCSValue_min ::TFloat,     --
                                         inMCSPeriod    := inPeriod::TFloat,     --
                                         inMCSDay       := inDay::TFloat,        --
                                         inPercentMarkup:= Object_Price.PercentMarkup, -- % наценки
@@ -192,6 +197,7 @@ BEGIN
     GROUP BY
         tmp_ResultSet.GoodsId,
         Object_Price.MCSValue,
+        Object_Price.MCSValue_min,
         Object_Price.isTop,
         Object_Price.PercentMarkup,
         Object_Price.Fix
@@ -204,7 +210,8 @@ ALTER FUNCTION gpRecalcMCS(Integer, Integer, Integer, TVarChar) OWNER TO postgre
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А. 
+ 03.12.18         * 
  24.02.17         *
  04.07.16         * add PercentMarkup
  29.08.15                                                         *

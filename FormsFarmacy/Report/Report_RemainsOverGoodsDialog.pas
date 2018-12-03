@@ -57,6 +57,8 @@ type
     cbReserve: TcxCheckBox;
     cbIncome: TcxCheckBox;
     edDayIncome: TcxCurrencyEdit;
+    cbSummSend: TcxCheckBox;
+    edSummSend: TcxCurrencyEdit;
   private
     { Private declarations }
   public

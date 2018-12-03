@@ -1888,6 +1888,37 @@ inherited MainCashForm2: TMainCashForm2
           Component = FormParams
           ComponentItem = 'ManualDiscount'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoCodeID'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PromoCodeID'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PromoName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoCodeGUID'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PromoCodeGUID'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoCodeChangePercent'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PromoCodeChangePercent'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end

@@ -73,6 +73,8 @@ type
     InvNumber_PromoCode_Full: TcxGridDBColumn;
     GUID_PromoCode: TcxGridDBColumn;
     TotalSummPayAdd: TcxGridDBColumn;
+    actCashSummaForDey: TdsdOpenForm;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

@@ -99,7 +99,7 @@ implementation
 
 {$R *.dfm}
 
-uses LocalWorkUnit, CommonData, ListDiff;
+uses LocalWorkUnit, CommonData, ListDiff, ListDiffAddGoods;
 
 
 procedure TListGoodsForm.FilterRecord(DataSet: TDataSet; var Accept: Boolean);
@@ -145,7 +145,13 @@ begin
   if not ListGoodsCDS.Active  then Exit;
   if ListGoodsCDS.RecordCount < 1  then Exit;
 
-  ListDiffAddGoods(ListGoodsCDS);
+  with TListDiffAddGoodsForm.Create(nil) do
+  try
+    ListGoodsCDS := Self.ListGoodsCDS;
+    if ShowModal <> mrOk then Exit;
+  finally
+     Free;
+  end;
 
   try
     ListGoodsCDS.DisableControls;

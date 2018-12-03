@@ -34,7 +34,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , Remains TFloat, SummaRemains TFloat
              , RemainsNotMCS TFloat, SummaNotMCS TFloat
              , PriceRetSP TFloat, PriceOptSP TFloat, PriceSP TFloat, PaymentSP TFloat, DiffSP2 TFloat
-             , MCSValueOld TFloat
+             , MCSValueOld TFloat, MCSValue_min TFloat
              , StartDateMCSAuto TDateTime, EndDateMCSAuto TDateTime
              , isMCSAuto Boolean, isMCSNotRecalcOld Boolean
              , isSP Boolean
@@ -121,6 +121,7 @@ BEGIN
                ,NULL::TFloat                     AS DiffSP2
 
                ,NULL::TFloat                     AS MCSValueOld
+               ,NULL::TFloat                     AS MCSValue_min
                ,NULL::TDateTime                  AS StartDateMCSAuto
                ,NULL::TDateTime                  AS EndDateMCSAuto
                ,NULL::Boolean                    AS isMCSAuto
@@ -223,7 +224,8 @@ BEGIN
                             , Price_TOPDateChange.ValueData           AS TopDateChange 
                             , COALESCE(Price_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup 
                             , Price_PercentMarkupDateChange.ValueData             AS PercentMarkupDateChange 
-                            , COALESCE(Price_MCSValueOld.ValueData,0)    ::TFloat AS MCSValueOld         
+                            , COALESCE(Price_MCSValueOld.ValueData,0)    ::TFloat AS MCSValueOld 
+                            , COALESCE(Price_MCSValueMin.ValueData,0)    ::TFloat AS MCSValue_min        
                             , MCS_StartDateMCSAuto.ValueData                      AS StartDateMCSAuto
                             , MCS_EndDateMCSAuto.ValueData                        AS EndDateMCSAuto
                             , COALESCE(Price_MCSAuto.ValueData,False)          :: Boolean   AS isMCSAuto
@@ -253,6 +255,10 @@ BEGIN
                             LEFT JOIN ObjectFloat AS Price_MCSValueOld
                                                   ON Price_MCSValueOld.ObjectId = ObjectLink_Price_Unit.ObjectId
                                                  AND Price_MCSValueOld.DescId = zc_ObjectFloat_Price_MCSValueOld()
+
+                            LEFT JOIN ObjectFloat AS Price_MCSValueMin
+                                                  ON Price_MCSValueMin.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                 AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()
 
                             LEFT JOIN ObjectDate AS MCS_DateChange
                                                  ON MCS_DateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
@@ -538,6 +544,7 @@ BEGIN
                   ) :: TFloat AS DiffSP2
 
                , tmpPrice_View.MCSValueOld
+               , tmpPrice_View.MCSValue_min
                , tmpPrice_View.StartDateMCSAuto
                , tmpPrice_View.EndDateMCSAuto
                , tmpPrice_View.isMCSAuto                           :: Boolean
@@ -807,7 +814,8 @@ BEGIN
                                , Price_TOPDateChange.ValueData           AS TopDateChange 
                                , COALESCE(Price_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup 
                                , Price_PercentMarkupDateChange.ValueData             AS PercentMarkupDateChange 
-                               , COALESCE(Price_MCSValueOld.ValueData,0)    ::TFloat AS MCSValueOld         
+                               , COALESCE(Price_MCSValueOld.ValueData,0)    ::TFloat AS MCSValueOld 
+                               , COALESCE(Price_MCSValueMin.ValueData,0)    ::TFloat AS MCSValue_min         
                                , MCS_StartDateMCSAuto.ValueData                      AS StartDateMCSAuto
                                , MCS_EndDateMCSAuto.ValueData                        AS EndDateMCSAuto
                                , COALESCE(Price_MCSAuto.ValueData,False)          :: Boolean   AS isMCSAuto
@@ -825,6 +833,11 @@ BEGIN
                                LEFT JOIN ObjectFloat AS Price_MCSValueOld
                                                      ON Price_MCSValueOld.ObjectId = tmpPrice.Id
                                                     AND Price_MCSValueOld.DescId = zc_ObjectFloat_Price_MCSValueOld()
+
+                               LEFT JOIN ObjectFloat AS Price_MCSValueMin
+                                                     ON Price_MCSValueMin.ObjectId = tmpPrice.Id
+                                                    AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()
+
                                LEFT JOIN ObjectDate AS Price_DateChange
                                                     ON Price_DateChange.ObjectId = tmpPrice.Id
                                                    AND Price_DateChange.DescId = zc_ObjectDate_Price_DateChange()
@@ -902,6 +915,7 @@ BEGIN
                               , tmpPrice.PercentMarkup 
                               , tmpPrice.PercentMarkupDateChange 
                               , tmpPrice.MCSValueOld         
+                              , tmpPrice.MCSValue_min
                               , tmpPrice.StartDateMCSAuto
                               , tmpPrice.EndDateMCSAuto
                               , COALESCE(tmpPrice.isMCSAuto, False)          :: Boolean   AS isMCSAuto
@@ -1270,6 +1284,7 @@ BEGIN
                   ) :: TFloat AS DiffSP2
 
                , tmpPrice_All.MCSValueOld
+               , tmpPrice_All.MCSValue_min
                , tmpPrice_All.StartDateMCSAuto
                , tmpPrice_All.EndDateMCSAuto
                , tmpPrice_All.isMCSAuto                            :: Boolean

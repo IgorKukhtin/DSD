@@ -25,6 +25,7 @@ type
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     Button7: TButton;
+    Button8: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -33,11 +34,14 @@ type
     procedure Button5Click(Sender: TObject);
     procedure btDeleteAllArticulClick(Sender: TObject);
     procedure Button6Click(Sender: TObject);
+    procedure Button8Click(Sender: TObject);
   private
     m_Cash: ICash;
     m_DataSet: TDataSet;
   public
     constructor Create(Cash: ICash; DataSet: TDataSet);
+
+    procedure SaveZReport(AFileName, AText : string);
   end;
 
 implementation
@@ -69,7 +73,10 @@ end;
 procedure TCashWorkForm.Button2Click(Sender: TObject);
 begin
   if MessageDlg('Вы уверены в снятии Z-отчета?', mtInformation, mbOKCancel, 0) = mrOk then
+  begin
+     SaveZReport(m_Cash.FileNameZReport, m_Cash.InfoZReport);
      m_Cash.ClosureFiscal;
+  end;
 end;
 
 procedure TCashWorkForm.Button3Click(Sender: TObject);
@@ -123,6 +130,11 @@ begin
   m_Cash.SetTime
 end;
 
+procedure TCashWorkForm.Button8Click(Sender: TObject);
+begin
+  ShowMessage(m_Cash.InfoZReport);
+end;
+
 procedure TCashWorkForm.btDeleteAllArticulClick(Sender: TObject);
 var i: integer;
 begin
@@ -135,6 +147,33 @@ begin
    m_Cash.ClearArticulAttachment;
    ShowMessage('Артикулы удалены')
   {}
+end;
+
+procedure TCashWorkForm.SaveZReport(AFileName, AText : string);
+  var F: TextFile; cName : string;
+begin
+  try
+    if not ForceDirectories(ExtractFilePath(Application.ExeName) + 'ZRepot') then
+    begin
+      ShowMessage('Ошибка создания директории для сохранения Электронной формы z отчёта. Покажите это окно системному администратору...');
+      Exit;
+    end;
+
+    cName := ExtractFilePath(Application.ExeName) + 'ZRepot\' + AFileName + '.txt';
+
+    try
+      if FileExists(cName) then DeleteFile(cName);
+      AssignFile(F,cName);
+      Rewrite(F);
+
+      Writeln(F, AText);
+    finally
+       Flush(F);
+      CloseFile(F);
+    end;
+  except on E: Exception do
+    ShowMessage('Ошибка сохранения Электронной формы z отчёта. Покажите это окно системному администратору: ' + #13#10 + E.Message);
+  end;
 end;
 
 end.

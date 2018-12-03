@@ -16,7 +16,6 @@ inherited ListGoodsForm: TListGoodsForm
     Height = 235
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 653
     object ListGoodsGridDBTableView: TcxGridDBTableView
       OnDblClick = ListGoodsGridDBTableViewDblClick
       Navigator.Buttons.CustomButtons = <>
@@ -184,7 +183,6 @@ inherited ListGoodsForm: TListGoodsForm
     Height = 25
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 653
     DesignSize = (
       839
       25)
@@ -198,7 +196,6 @@ inherited ListGoodsForm: TListGoodsForm
       TabOrder = 0
       OnChange = edt1Change
       OnExit = edt1Exit
-      ExplicitWidth = 651
       ExplicitHeight = 21
     end
     object ProgressBar1: TProgressBar
@@ -210,7 +207,6 @@ inherited ListGoodsForm: TListGoodsForm
       BarColor = clMedGray
       TabOrder = 1
       Visible = False
-      ExplicitLeft = 783
     end
   end
   object ListDiffGrid: TcxGrid [2]
@@ -220,7 +216,6 @@ inherited ListGoodsForm: TListGoodsForm
     Height = 135
     Align = alBottom
     TabOrder = 2
-    ExplicitWidth = 653
     object ListDiffGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ListDiffDS
@@ -340,7 +335,6 @@ inherited ListGoodsForm: TListGoodsForm
     ParentFont = False
     TabOrder = 3
     Visible = False
-    ExplicitWidth = 653
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59

@@ -631,6 +631,18 @@ inherited CheckJournalForm: TCheckJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       ImageIndex = 3
     end
+    object actCashSummaForDey: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actCashSummaForDey'
+      ImageIndex = 56
+      FormName = 'TCashSummaForDeyForm'
+      FormNameParam.Value = 'TCashSummaForDeyForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Check'
@@ -744,6 +756,10 @@ inherited CheckJournalForm: TCheckJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end>
     end
     inherited bbInsert: TdxBarButton
@@ -763,6 +779,10 @@ inherited CheckJournalForm: TCheckJournalForm
     end
     object bbPrint: TdxBarButton
       Action = macPrint
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actCashSummaForDey
       Category = 0
     end
   end

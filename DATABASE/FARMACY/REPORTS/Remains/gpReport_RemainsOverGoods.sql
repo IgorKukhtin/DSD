@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, T
 DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_RemainsOverGoods(
     IN inUnitId           Integer  ,  -- Подразделение
@@ -12,12 +13,14 @@ CREATE OR REPLACE FUNCTION gpReport_RemainsOverGoods(
     IN inDay              TFloat,     -- Страховой запас НТЗ для Х дней
     IN inDayIncome        TFloat,     -- Учитывать товар в затоварку, пришедший до X дней
     IN inAssortment       TFloat,     -- кол-во для ассортимента
+    IN inSummSend         TFloat,     -- мин cумма товара для пермещения
     IN inisMCS            Boolean,    -- для аптеки-отправителя изпользовать НТЗ из справочника
     IN inisInMCS          Boolean,    -- для аптек-получателей изпользовать НТЗ из справочника
     IN inisRecal          Boolean,    -- Да / нет - "Временно исправлются ошибки с датами в ценах"
     IN inisAssortment     Boolean,    -- оставить кол-во для ассортимента Да / нет
-    IN inIsReserve        Boolean  ,  --  Учитывать отложенный товар Да/Нет
-    IN inIsIncome         Boolean  ,  -- Учитывать товар в затоварку, пришедший до X дней Да/Нет
+    IN inIsReserve        Boolean  ,  -- Не учитывать отложенный товар (Да/Нет)
+    IN inIsIncome         Boolean  ,  -- Не учитывать товар, пришедший за последние Х дней
+    IN inIsSummSend       Boolean  ,  -- Учитывать товар в затоварку, пришедший до X дней Да/Нет
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS  SETOF refcursor
@@ -104,7 +107,7 @@ BEGIN
                              , PRIMARY KEY (UnitId, GoodsId)
                               ) ON COMMIT DROP;
     -- Таблица - Результат
-    CREATE TEMP TABLE tmpDataTo (GoodsId Integer, GoodsMainId Integer, UnitId Integer, RemainsMCS_result TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpDataTo (GoodsId Integer, GoodsMainId Integer, UnitId Integer, RemainsMCS_result TFloat, RemainsMCS_result_inf TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
 
 
       -- ищем ИД документа Распределений остатков (ключ - дата, Подразделение) 
@@ -597,35 +600,49 @@ BEGIN
                             INNER JOIN tmpDataTo ON tmpDataTo.GoodsMainId = tmpDataFrom.GoodsMainId
                       )
 
-   INSERT INTO tmpDataTo (GoodsId, GoodsMainId, UnitId, RemainsMCS_result)
-   SELECT tmpDataAll.GoodsId
-        , tmpDataAll.GoodsMainId
-        , tmpDataAll.UnitId
-        , CASE -- для первого - учитывается ТОЛЬКО "не хватает"
-               WHEN Ord = 1 THEN CASE WHEN RemainsMCS_to <= RemainsMCS_from THEN RemainsMCS_to ELSE RemainsMCS_from END
-               -- для остальных - учитывается "накопительная" сумма "не хватает" !!!минус!!! то что в текущей записи
-               WHEN RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to) > 0 -- сколько осталось "излишков" если всем предыдущим уже распределили
-                    THEN CASE -- если "не хватает" меньше сколько осталось "излишков"
-                              WHEN RemainsMCS_to <= RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to)
-                                   THEN RemainsMCS_to
-                              ELSE -- иначе остаток "излишков"
-                                   RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to)
-                         END
-               ELSE 0
-          END AS RemainsMCS_result
-   FROM tmpDataAll
-   WHERE  CASE -- для первого - учитывается ТОЛЬКО "не хватает"
-               WHEN Ord = 1 THEN CASE WHEN RemainsMCS_to <= RemainsMCS_from THEN RemainsMCS_to ELSE RemainsMCS_from END
-               -- для остальных - учитывается "накопительная" сумма "не хватает" !!!минус!!! то что в текущей записи
-               WHEN RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to) > 0 -- сколько осталось "излишков" если всем предыдущим уже распределили
-                    THEN CASE -- если "не хватает" меньше сколько осталось "излишков"
-                              WHEN RemainsMCS_to <= RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to)
-                                   THEN RemainsMCS_to
-                              ELSE -- иначе остаток "излишков"
-                                   RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to)
-                         END
-               ELSE 0
-          END <> 0
+   INSERT INTO tmpDataTo (GoodsId, GoodsMainId, UnitId, RemainsMCS_result, RemainsMCS_result_inf)
+   WITH 
+     tmpTo AS (SELECT tmpDataAll.GoodsId
+                    , tmpDataAll.GoodsMainId
+                    , tmpDataAll.UnitId
+                    , CASE -- для первого - учитывается ТОЛЬКО "не хватает"
+                           WHEN Ord = 1 THEN CASE WHEN RemainsMCS_to <= RemainsMCS_from THEN RemainsMCS_to ELSE RemainsMCS_from END
+                           -- для остальных - учитывается "накопительная" сумма "не хватает" !!!минус!!! то что в текущей записи
+                           WHEN RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to) > 0 -- сколько осталось "излишков" если всем предыдущим уже распределили
+                                THEN CASE -- если "не хватает" меньше сколько осталось "излишков"
+                                          WHEN RemainsMCS_to <= RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to)
+                                               THEN RemainsMCS_to
+                                          ELSE -- иначе остаток "излишков"
+                                               RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to)
+                                     END
+                           ELSE 0
+                      END AS RemainsMCS_result
+               FROM tmpDataAll
+               WHERE  CASE -- для первого - учитывается ТОЛЬКО "не хватает"
+                           WHEN Ord = 1 THEN CASE WHEN RemainsMCS_to <= RemainsMCS_from THEN RemainsMCS_to ELSE RemainsMCS_from END
+                           -- для остальных - учитывается "накопительная" сумма "не хватает" !!!минус!!! то что в текущей записи
+                           WHEN RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to) > 0 -- сколько осталось "излишков" если всем предыдущим уже распределили
+                                THEN CASE -- если "не хватает" меньше сколько осталось "излишков"
+                                          WHEN RemainsMCS_to <= RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to)
+                                               THEN RemainsMCS_to
+                                          ELSE -- иначе остаток "излишков"
+                                               RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to)
+                                     END
+                           ELSE 0
+                      END <> 0
+               )
+         SELECT tmpTo.GoodsId
+              , tmpTo.GoodsMainId
+              , tmpTo.UnitId
+              
+              , CASE WHEN (inIsSummSend = TRUE AND (tmpTo.RemainsMCS_result * tmpData.Price) >= inSummSend) OR inIsSummSend = FALSE
+                     THEN tmpTo.RemainsMCS_result 
+                     ELSE 0
+                END           :: TFloat AS RemainsMCS_result
+              , tmpTo.RemainsMCS_result AS RemainsMCS_result_inf
+         FROM tmpTo
+              LEFT JOIN tmpData ON tmpData.GoodsId = tmpTo.GoodsId 
+                               AND tmpData.UnitId  = tmpTo.UnitId
          ;
 
 
@@ -644,7 +661,8 @@ BEGIN
                        GROUP BY tmpData.GoodsMainId  --tmpData.GoodsId, 
                       )
       , tmpChildTo AS (SELECT tmpDataTo.GoodsMainId   --tmpDataTo.GoodsId, 
-                            , SUM (tmpDataTo.RemainsMCS_result) AS RemainsMCS_result
+                            , SUM (tmpDataTo.RemainsMCS_result)     AS RemainsMCS_result
+                            , SUM (tmpDataTo.RemainsMCS_result_inf) AS RemainsMCS_result_inf
                        FROM tmpDataTo
                        GROUP BY tmpDataTo.GoodsMainId  -- tmpDataTo.GoodsId,
                       )
@@ -671,6 +689,9 @@ BEGIN
                
                , tmpChildTo.RemainsMCS_result                   :: TFloat AS RemainsMCS_result
                , (tmpChildTo.RemainsMCS_result * tmpData.Price) :: TFloat AS SummaRemainsMCS_result
+
+               , tmpChildTo.RemainsMCS_result_inf                 :: TFloat AS RemainsMCS_result_inf
+               , tmpChildTo.RemainsMCS_result_inf * tmpData.Price :: TFloat AS SummaRemainsMCS_result_inf
 
                , tmpData.AmountSend            :: TFloat  AS AmountSend
                , tmpData.Amount_Reserve        :: TFloat  AS Amount_Reserve
@@ -737,6 +758,10 @@ BEGIN
 
                , tmpDataTo.RemainsMCS_result
                , (tmpDataTo.RemainsMCS_result * tmpData.Price) :: TFloat AS SummaRemainsMCS_result
+
+               , tmpDataTo.RemainsMCS_result_inf                 :: TFloat AS RemainsMCS_result_inf
+               , tmpDataTo.RemainsMCS_result_inf * tmpData.Price :: TFloat AS SummaRemainsMCS_result_inf
+
                , tmpData.MinExpirationDate
 
                , tmpMIChild.MIChild_Id                      AS MIChild_Id_Over
@@ -754,7 +779,7 @@ BEGIN
           LEFT JOIN tmpMIChild ON tmpMIChild.GoodsMainId = tmpData.GoodsMainId
                               AND tmpMIChild.UnitId = tmpData.UnitId
      WHERE tmpData.UnitId <> inUnitId
-       AND tmpDataTo.RemainsMCS_result > 0
+       AND tmpDataTo.RemainsMCS_result_inf > 0
     ;
      
      RETURN NEXT Cursor2;
@@ -817,8 +842,11 @@ BEGIN
                , SUM(tmpData.RemainsMCS_to)            :: TFloat  AS RemainsMCS_to
                , SUM(tmpData.SummaRemainsMCS_to)       :: TFloat  AS SummaRemainsMCS_to
 
-               , SUM(tmpDataTo.RemainsMCS_result )     :: TFloat  AS RemainsMCS_result
+               , SUM(tmpDataTo.RemainsMCS_result )                :: TFloat AS RemainsMCS_result
                , SUM(tmpDataTo.RemainsMCS_result * tmpData.Price) :: TFloat AS SummaRemainsMCS_result
+
+               , SUM(tmpDataTo.RemainsMCS_result_inf )                :: TFloat AS RemainsMCS_result_inf
+               , SUM(tmpDataTo.RemainsMCS_result_inf * tmpData.Price) :: TFloat AS SummaRemainsMCS_result_inf
 
                , SUM(COALESCE (tmpMIChild.Amount, 0))  :: TFloat  AS Amount_Over
                , SUM(COALESCE (tmpMIChild.Summa, 0))   :: TFloat  AS Summa_Over
@@ -854,6 +882,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.11.18         *
  23.11.18         *
  20.01.17         *
  01.11.16         * add inisRecal, rename inisOutMCS -> inisInMCS

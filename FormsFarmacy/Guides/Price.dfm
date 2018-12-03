@@ -1,16 +1,16 @@
 inherited PriceForm: TPriceForm
   Caption = #1055#1088#1072#1081#1089' - '#1083#1080#1089#1090' '#1090#1077#1082#1091#1097#1080#1081
-  ClientHeight = 413
-  ClientWidth = 789
+  ClientHeight = 422
+  ClientWidth = 829
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 805
-  ExplicitHeight = 451
+  ExplicitWidth = 845
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel [0]
     Left = 0
     Top = 0
-    Width = 789
+    Width = 829
     Height = 57
     Align = alTop
     TabOrder = 6
@@ -73,21 +73,21 @@ inherited PriceForm: TPriceForm
   end
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 789
-    Height = 330
+    Width = 829
+    Height = 339
     ExplicitTop = 83
-    ExplicitWidth = 789
-    ExplicitHeight = 330
-    ClientRectBottom = 330
-    ClientRectRight = 789
+    ExplicitWidth = 829
+    ExplicitHeight = 339
+    ClientRectBottom = 339
+    ClientRectRight = 829
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 789
-      ExplicitHeight = 330
+      ExplicitWidth = 829
+      ExplicitHeight = 339
       inherited cxGrid: TcxGrid
-        Width = 789
-        Height = 330
-        ExplicitWidth = 789
-        ExplicitHeight = 330
+        Width = 829
+        Height = 339
+        ExplicitWidth = 829
+        ExplicitHeight = 339
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -413,6 +413,18 @@ inherited PriceForm: TPriceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
+            Width = 53
+          end
+          object MCSValue_min: TcxGridDBColumn
+            AlternateCaption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
+            Caption = #1053#1058#1047' '#1084#1080#1085'.'
+            DataBinding.FieldName = 'MCSValue_min'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1053#1058#1047
             Width = 53
           end
           object MCSPeriod: TcxGridDBColumn
@@ -1626,6 +1638,15 @@ inherited PriceForm: TPriceForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MCSValue'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCSValue_min'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MCSValue_min'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
