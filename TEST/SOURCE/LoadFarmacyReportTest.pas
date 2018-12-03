@@ -67,12 +67,13 @@ begin
   LoadReportFromFile('Счет соц.проект', ReportPath + '\Счет соц.проект.fr3');
   //доп. соглащения Соц. проект
   LoadReportFromFile('PrintReport_CheckSP_8513005', ReportPath + '\PrintReport_CheckSP_8513005.fr3');
-  }
+
   LoadReportFromFile('PrintReport_CheckSP_9102200', ReportPath + '\PrintReport_CheckSP_9102200.fr3');
   LoadReportFromFile('PrintReport_CheckSP_9089478', ReportPath + '\PrintReport_CheckSP_9089478.fr3');
+  }
   LoadReportFromFile('PrintReport_CheckSP_9126996', ReportPath + '\PrintReport_CheckSP_9126996.fr3');
-
   {
+
   LoadReportFromFile('PrintReport_CheckSP_4474509', ReportPath + '\PrintReport_CheckSP_4474509.fr3');
   LoadReportFromFile('PrintReport_CheckSP_4474508', ReportPath + '\PrintReport_CheckSP_4474508.fr3');
   LoadReportFromFile('PrintReport_CheckSP_4474307', ReportPath + '\PrintReport_CheckSP_4474307.fr3');
