@@ -22,7 +22,7 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
   DataModul, cxButtonEdit, cxContainer, cxTextEdit, cxMaskEdit, cxLabel,
-  dsdGuides;
+  dsdGuides, ExternalLoad;
 
 type
   TMemberForm = class(TParentForm)
@@ -100,6 +100,16 @@ type
     actChoiceBankForm: TOpenChoiceForm;
     actChoiceBankSecondForm: TOpenChoiceForm;
     actChoiceBankChildForm: TOpenChoiceForm;
+    FormParams: TdsdFormParams;
+    spGetImportSettingId: TdsdStoredProc;
+    actGetImportSetting: TdsdExecStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    macStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
+    spGetImportSettingIdSecond: TdsdStoredProc;
+    actGetImportSettingSecond: TdsdExecStoredProc;
+    macStartLoadSecond: TMultiAction;
+    bbStartLoadSecond: TdxBarButton;
   private
     { Private declarations }
   public
