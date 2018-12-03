@@ -36,7 +36,11 @@ RETURNS TABLE (
   SPKindName TVarChar,
   SPTax TFloat,
   Color_CalcDoc Integer,
-  ManualDiscount Integer
+  ManualDiscount Integer,
+  PromoCodeID Integer,
+  PromoName TVarChar,
+  PromoCodeGUID TVarChar,
+  PromoCodeChangePercent TFloat
  )
 AS
 $BODY$
@@ -148,6 +152,10 @@ BEGIN
              END  AS Color_CalcDoc
             , MovementFloat_ManualDiscount.ValueData::Integer AS ManualDiscount
 
+            , MI_PromoCode.Id AS PromoCodeID
+            , Object_PromoCode.ValueData AS PromoName
+            , MIString_GUID.ValueData AS PromoCodeGUID
+            , COALESCE(MovementFloat_ChangePercent.ValueData,0)::TFloat AS PromoCodeChangePercent
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id 
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id 
@@ -237,6 +245,29 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_SPTax
                                   ON ObjectFloat_SPTax.ObjectId = Object_SPKind.Id
                                  AND ObjectFloat_SPTax.DescId   = zc_ObjectFloat_SPKind_Tax()
+
+            -- инфа из документа промо код
+            LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
+                                    ON MovementFloat_MovementItemId.MovementId = Movement.Id
+                                   AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
+            LEFT JOIN MovementItem AS MI_PromoCode 
+                                   ON MI_PromoCode.Id       = MovementFloat_MovementItemId.ValueData :: Integer
+                                  AND MI_PromoCode.isErased = FALSE
+            LEFT JOIN Movement AS Movement_PromoCode ON Movement_PromoCode.Id = MI_PromoCode.MovementId
+            LEFT JOIN Object AS Object_Status_PromoCode ON Object_Status_PromoCode.Id = Movement_PromoCode.StatusId
+
+            LEFT JOIN MovementItemString AS MIString_GUID
+                                         ON MIString_GUID.MovementItemId = MI_PromoCode.Id
+                                        AND MIString_GUID.DescId = zc_MIString_GUID()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PromoCode
+                                         ON MovementLinkObject_PromoCode.MovementId = Movement_PromoCode.Id
+                                        AND MovementLinkObject_PromoCode.DescId = zc_MovementLinkObject_PromoCode()
+            LEFT JOIN Object AS Object_PromoCode ON Object_PromoCode.Id = MovementLinkObject_PromoCode.ObjectId
+            
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                    ON MovementFloat_ChangePercent.MovementId = Movement_PromoCode.Id
+                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()                        
 
             LEFT JOIN MovementFloat AS MovementFloat_ManualDiscount
                                     ON MovementFloat_ManualDiscount.MovementId =  Movement.Id

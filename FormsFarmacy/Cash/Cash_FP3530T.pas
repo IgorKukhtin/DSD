@@ -38,6 +38,8 @@ type
     procedure ClearArticulAttachment;
     procedure SetTime;
     procedure Anulirovt;
+    function InfoZReport : string;
+    function FileNameZReport : string;
   public
     constructor Create;
   end;
@@ -736,6 +738,16 @@ begin
   Table.Close;
   Table.EmptyTable;
   Table.Open
+end;
+
+function TCashFP3530T.InfoZReport : string;
+begin
+  Result := '';
+end;
+
+function TCashFP3530T.FileNameZReport : string;
+begin
+  Result := '';
 end;
 
 end.

@@ -88,7 +88,8 @@ uses
   PromoCodeDialog in '..\FormsFarmacy\Cash\PromoCodeDialog.pas' {PromoCodeDialogForm: TParentForm},
   dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas',
   ListDiff in '..\FormsFarmacy\Cash\ListDiff.pas' {ListDiffForm: TParentForm},
-  ListGoods in '..\FormsFarmacy\Cash\ListGoods.pas' {ListGoodsForm: TParentForm};
+  ListGoods in '..\FormsFarmacy\Cash\ListGoods.pas' {ListGoodsForm: TParentForm},
+  ListDiffAddGoods in '..\FormsFarmacy\Cash\ListDiffAddGoods.pas' {ListDiffAddGoodsForm};
 
 {$R *.res}
 

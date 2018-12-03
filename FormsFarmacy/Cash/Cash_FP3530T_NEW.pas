@@ -38,6 +38,8 @@ type
     procedure ClearArticulAttachment;
     procedure SetTime;
     procedure Anulirovt;
+    function InfoZReport : string;
+    function FileNameZReport : string;
   public
     constructor Create;
   end;
@@ -375,6 +377,154 @@ end;
 
 procedure TCashFP3530T_NEW.ClearArticulAttachment;
 begin
+end;
+
+function TCashFP3530T_NEW.InfoZReport : string;
+  var I : integer; S : String;
+      nSum : array [0..3] of Currency;
+
+  function Centr(AStr : string) : String;
+  begin
+    if Length(AStr) > 40 then
+      Result := Copy(AStr, 1, 40) + #13#10 + Centr(Copy(AStr, 41, Length(AStr)))
+    else if Length(AStr) = 40 then Result := AStr
+    else Result := StringOfChar(' ', (40 - Length(AStr)) div 2) + AStr;
+  end;
+
+  function Str(ACur : Currency; AL : integer) : String;
+  begin
+    Result := FormatCurr('0.00', ACur);
+    if AL > Length(Result) then Result := StringOfChar(' ', AL - Length(Result)) + Result;
+    Result := StringReplace(Result, FormatSettings.DecimalSeparator, '.', [rfReplaceAll])
+  end;
+
+begin
+  Result := '';
+
+  for I := 0 to 9 do
+  begin
+    S := FPrinter.READPROGCHECK[I, 1, Password];
+    if not СообщениеКА(FPrinter.GETERROR) then Exit;
+    if Trim(S) <> ';0' then Result := Result + S + #13#10;
+  end;
+
+  S := 'ЗН ' + FPrinter. ZNUM[Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  S := S + '  ФН ' + FPrinter.FNUM[Password] + #13#10;
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  Result := Result + Centr(S) + #13#10;
+
+  S := '           Z-звіт N ' + IntToStr(FPrinter.COUNTERSDAY[0, Password]);
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  Result := Result + S + #13#10;
+
+  Result := Result + '              ЗАГАЛОМ' + #13#10;
+  Result := Result + '  ------      Повернення    Продаж' + #13#10;
+
+  S := FPrinter.SUMDAY[2, 0, 0, 1, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[0]) then Exit;
+
+  S := FPrinter.SUMDAY[2, 1, 0, 1, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[1]) then Exit;
+
+  S := FPrinter.SUMDAY[2, 0, 0, 2, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[2]) then Exit;
+
+  S := FPrinter.SUMDAY[2, 1, 0, 2, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[3]) then Exit;
+
+  Result := Result + '  Готівка  ' + Str(nSum[2], 13) + Str(nSum[0], 13) + #13#10;
+  Result := Result + '  Картка   ' + Str(nSum[3], 13) + Str(nSum[1], 13) + #13#10;
+  Result := Result + '  ВСЬОГО   ' + Str(nSum[2] + nSum[3], 13) + Str(nSum[0] + nSum[1], 13) + #13#10;
+
+  S := FPrinter.SUMDAY[3, 1, 0, 2, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[0]) then Exit;
+
+  S := FPrinter.SUMDAY[3, 1, 0, 1, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[1]) then Exit;
+
+  S := FPrinter.SUMDAY[3, 0, 0, 1, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[2]) then Exit;
+
+  Result := Result + '  ------         Видача     Внесок'#13#10;
+  Result := Result + '  Готівка  ' + Str(-nSum[0], 13) + Str(nSum[1], 13) + #13#10;
+  Result := Result + '  Готівка в касі        ' + Str(nSum[2], 13) + #13#10;
+
+  S := FPrinter.SUMDAY[0, 0, 0, 1, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[0]) then Exit;
+
+  S := FPrinter.SUMDAY[0, 1 , 0, 1, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[1]) then Exit;
+
+  S := FPrinter.SUMDAY[1, 0, 0, 1, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[2]) then Exit;
+
+  S := FPrinter.SUMDAY[1, 1 , 0, 1, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[3]) then Exit;
+
+  Result := Result + '  ------        Податок       Обіг' + #13#10;
+  Result := Result + '  ДОД. А   ' + Str(nSum[2], 13) + Str(nSum[0], 13) + #13#10;
+  Result := Result + '  ДОД. Б   ' + Str(nSum[3], 13) + Str(nSum[1], 13) + #13#10;
+  Result := Result + '  Чеків продажу ' + IntToStr(FPrinter.COUNTERSDAY[1, Password]) + #13#10;
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+
+  S := FPrinter.SUMDAY[0, 0, 0, 2, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[0]) then Exit;
+
+  S := FPrinter.SUMDAY[0, 1 , 0, 2, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[1]) then Exit;
+
+  S := FPrinter.SUMDAY[1, 0, 0, 2, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[2]) then Exit;
+
+  S := FPrinter.SUMDAY[1, 1 , 0, 2, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[3]) then Exit;
+
+  Result := Result + '  ВІД. A   ' + Str(nSum[2], 13) + Str(nSum[0], 13) + #13#10;
+  Result := Result + '  ВІД. Б   ' + Str(nSum[3], 13) + Str(nSum[1], 13) + #13#10;
+  Result := Result + '  Чеків повернення ' + IntToStr(FPrinter.COUNTERSDAY[2, Password]) + #13#10;
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+
+  S := FPrinter.READTAXRATE[0, 2, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[0]) then Exit;
+
+  S := FPrinter.READTAXRATE[1, 2, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[1]) then Exit;
+
+  Result := Result + '  Податок     від        10.10.2017' + #13#10;
+  Result := Result + '            ПДВ_A (Вкл) A =    ' + Str(nSum[0], 5) + '%' + #13#10;
+  Result := Result + '            ПДВ_Б (Вкл) Б =    ' + Str(nSum[1], 5) + '%' + #13#10;
+  Result := Result + '                    ' + FormatDateTime('DD.MM.YYYY  HH:NN', Now)  + #13#10;
+  Result := Result + '         ФІСКАЛЬНИЙ ЧЕК' + #13#10;
+  Result := Result + '  --------------------------------------' + #13#10;
+  Result := Result + '  --------------------------------------' + #13#10;
+
+end;
+
+
+function TCashFP3530T_NEW.FileNameZReport : string;
+begin
+  Result := FPrinter.ZNUM[Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  Result := Result + '_' + IntToStr(FPrinter.COUNTERSDAY[0, Password]);
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
 end;
 
 end.

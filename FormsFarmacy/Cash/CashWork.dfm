@@ -110,7 +110,7 @@ object CashWorkForm: TCashWorkForm
     OnClick = btDeleteAllArticulClick
   end
   object Button6: TButton
-    Left = 177
+    Left = 150
     Top = 80
     Width = 75
     Height = 25
@@ -127,6 +127,15 @@ object CashWorkForm: TCashWorkForm
     Caption = #1042#1099#1085#1077#1089#1090#1080' '#1089#1091#1084#1084#1091
     TabOrder = 9
     OnClick = Button1Click
+  end
+  object Button8: TButton
+    Left = 246
+    Top = 80
+    Width = 75
+    Height = 25
+    Caption = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103
+    TabOrder = 10
+    OnClick = Button8Click
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 43

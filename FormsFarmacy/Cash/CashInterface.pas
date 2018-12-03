@@ -34,6 +34,8 @@ type
      procedure ClearArticulAttachment;
      procedure SetTime;
      procedure Anulirovt;
+     function InfoZReport : string;
+     function FileNameZReport : string;
      property AlwaysSold: boolean read GetAlwaysSold write SetAlwaysSold;
    end;
 implementation

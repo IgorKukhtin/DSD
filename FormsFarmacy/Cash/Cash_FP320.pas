@@ -42,6 +42,8 @@ type
     procedure ClearArticulAttachment;
     procedure SetTime;
     procedure Anulirovt;
+    function InfoZReport : string;
+    function FileNameZReport : string;
   public
     constructor Create;
   end;
@@ -347,6 +349,16 @@ begin
   if not result then exit;
   FPrinter.PrintXReport;
   Result := not PrinterException;
+end;
+
+function TCashFP320.InfoZReport : string;
+begin
+  Result := '';
+end;
+
+function TCashFP320.FileNameZReport : string;
+begin
+  Result := '';
 end;
 
 end.

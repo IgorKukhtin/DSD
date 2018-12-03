@@ -528,7 +528,7 @@ implementation
 
 uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog, CashWork, MessagesUnit,
      LocalWorkUnit, Splash, DiscountService, MainCash, UnilWin, ListDiff, ListGoods,
-	   MediCard.Intf, PromoCodeDialog, TlHelp32;
+	   MediCard.Intf, PromoCodeDialog, ListDiffAddGoods, TlHelp32;
 
 const
   StatusUnCompleteCode = 1;
@@ -948,6 +948,12 @@ begin
   if (FormParams.ParamByName('BayerPhone').AsString <> '')
   then lblBayer.Caption := lblBayer.Caption + ' * ' + FormParams.ParamByName('BayerPhone').AsString;
 
+  if FormParams.ParamByName('PromoCodeId').Value <> 0 then
+    SetPromoCode(FormParams.ParamByName('PromoCodeId').Value,
+      FormParams.ParamByName('PromoName').AsString,
+      FormParams.ParamByName('PromoCodeGUID').AsString,
+      FormParams.ParamByName('PromoCodeChangePercent').Value);
+
   //***30.06.18
   if FormParams.ParamByName('ManualDiscount').Value > 0 then
   begin
@@ -1203,7 +1209,13 @@ begin
   if not RemainsCDS.Active  then Exit;
   if RemainsCDS.RecordCount < 1  then Exit;
 
-  ListDiffAddGoods(RemainsCDS);
+  with TListDiffAddGoodsForm.Create(nil) do
+  try
+    ListGoodsCDS := RemainsCDS;
+    ShowModal;
+  finally
+     Free;
+  end;
 end;
 
 procedure TMainCashForm2.actListGoodsExecute(Sender: TObject);
