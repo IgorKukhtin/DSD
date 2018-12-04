@@ -246,7 +246,8 @@ order by 4*/
            , CASE WHEN Movement.OperDate < '01.01.2015' THEN 'J1201006'
                   WHEN vbOperDate_begin  < '01.04.2016' THEN 'J1201007'
                   WHEN Movement.OperDate < '01.03.2017' THEN 'J1201008'
-                  ELSE 'J1201009'
+                  WHEN Movement.OperDate < '01.12.2018' THEN 'J1201009'
+                  ELSE 'J1201010'
              END ::TVarChar AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                    AS N10
            , CASE WHEN Object_PersonalSigning.PersonalName <> ''
@@ -309,7 +310,11 @@ order by 4*/
              END AS JuridicalAddress_To
 
 --           , OH_JuridicalDetails_To.JuridicalAddress    AS JuridicalAddress_To
-           , OH_JuridicalDetails_To.OKPO                AS OKPO_To
+           , CASE WHEN Movement.OperDate >= '01.12.2018' 
+                   AND COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) IN ('100000000000', '300000000000')
+                  THEN ''
+                  ELSE OH_JuridicalDetails_To.OKPO
+             END :: TVarChar AS OKPO_To
            , CASE WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) IN ('100000000000', '300000000000')
                   THEN ''
                   ELSE (REPEAT ('0', 10 - LENGTH (OH_JuridicalDetails_To.OKPO)) ||  OH_JuridicalDetails_To.OKPO)

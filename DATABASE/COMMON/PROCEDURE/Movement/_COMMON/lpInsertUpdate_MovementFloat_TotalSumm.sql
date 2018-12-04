@@ -23,11 +23,12 @@ $BODY$
   DECLARE vbOperSumm_Partner     TFloat;
   DECLARE vbOperSumm_PartnerFrom TFloat;
   DECLARE vbOperSumm_Currency    TFloat;
-  DECLARE vbOperSumm_Packer TFloat;
-  DECLARE vbOperSumm_MVAT TFloat;
-  DECLARE vbOperSumm_PVAT TFloat;
+  DECLARE vbOperSumm_Packer        TFloat;
+  DECLARE vbOperSumm_MVAT          TFloat;
+  DECLARE vbOperSumm_PVAT          TFloat;
   DECLARE vbOperSumm_PVAT_original TFloat;
-  DECLARE vbOperSumm_Inventory TFloat;
+  DECLARE vbOperSumm_VAT_2018      TFloat;
+  DECLARE vbOperSumm_Inventory     TFloat;
 
   DECLARE vbTotalSummToPay            TFloat;
   DECLARE vbTotalSummService          TFloat;
@@ -241,6 +242,9 @@ BEGIN
                   -- так переводится в валюту zc_Enum_Currency_Basis
                 -- !!!убрал, переводится в строчной части!!! * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END ELSE 1 END
             AS NUMERIC (16, 2)) AS OperSumm_PVAT_original
+            
+            -- Сумма НДС
+          , OperSumm_VAT_2018
 
             -- Сумма по Контрагенту
           , CAST (OperSumm_Partner
@@ -299,7 +303,8 @@ BEGIN
           , OperSumm_AddOthRecalc
 
             INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperCount_Second, vbOperCount_Tare, vbOperCount_Sh, vbOperCount_Kg, vbOperCount_ShFrom, vbOperCount_KgFrom
-               , vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_PVAT_original, vbOperSumm_Partner, vbOperSumm_PartnerFrom, vbOperSumm_Currency
+               , vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_PVAT_original, vbOperSumm_VAT_2018
+               , vbOperSumm_Partner, vbOperSumm_PartnerFrom, vbOperSumm_Currency
                , vbOperCount_Packer, vbOperSumm_Packer, vbOperSumm_Inventory
                , vbTotalSummToPay, vbTotalSummService, vbTotalSummCard, vbTotalSummCardSecond, vbTotalSummNalog, vbTotalSummMinus, vbTotalSummAdd, vbTotalSummHoliday
                , vbTotalSummCardRecalc, vbTotalSummCardSecondRecalc, vbTotalSummCardSecondCash, vbTotalSummNalogRecalc, vbTotalSummSocialIn, vbTotalSummSocialAdd
@@ -618,6 +623,7 @@ BEGIN
                             THEN CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_original) AS NUMERIC (16, 2))
                   END AS OperSumm_PVAT_original
 
+                , OperSumm_VAT_2018
 
                   -- Сумма по Контрагенту
                 , CASE WHEN vbPriceWithVAT = TRUE OR vbVATPercent = 0
@@ -1284,6 +1290,17 @@ BEGIN
              -- Сохранили свойство <Итого сумма по накладной (с учетом НДС и скидки, ушло)>
              PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummFrom(), inMovementId, vbOperSumm_PartnerFrom);
          END IF;
+
+
+         -- если цены без НДС, и новая Схема для НДС - 6 знаков
+        /* IF vbPaidKindId = zc_Enum_PaidKind_FirstForm()
+        AND vbOperDatePartner >= zc_DateStart_Tax_2018()
+        AND vbMovementDescId IN (zc_Movement_Tax(), zc_Movement_TaxCorrective(), zc_Movement_Sale(), zc_Movement_ReturnIn())
+         THEN
+             -- Сохранили свойство <Итого количество, шт (ушло)>
+             PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCountShFrom(), inMovementId, vbOperCount_ShFrom);
+         END IF;*/
+
 
          -- Сохранили свойство <Итого сумма по накладной (без НДС)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMVAT(), inMovementId, vbOperSumm_MVAT);

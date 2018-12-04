@@ -660,8 +660,9 @@ BEGIN
            , tmpMI.OperDate				                    AS OperDate
            -- , 'J1201006'::TVarChar                                           AS CHARCODE
            , CASE WHEN vbOperDate_begin  < '01.04.2016' THEN 'J1201207'
-                  WHEN tmpMI.OperDate < '01.03.2017' THEN 'J1201208'
-                  ELSE 'J1201209'
+                  WHEN tmpMI.OperDate    < '01.03.2017' THEN 'J1201208'
+                  WHEN tmpMI.OperDate    < '01.12.2018' THEN 'J1201209'
+                  ELSE 'J1201210'
              END ::TVarChar AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                                        AS N10
            , CASE WHEN tmpPersonalSigning.PersonalName <> '' 
