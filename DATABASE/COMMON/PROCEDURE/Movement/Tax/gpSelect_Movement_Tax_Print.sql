@@ -311,7 +311,7 @@ order by 4*/
              END AS JuridicalAddress_To
 
 --           , OH_JuridicalDetails_To.JuridicalAddress    AS JuridicalAddress_To
-           , CASE WHEN Movement.OperDate >= '01.12.2018' 
+           , CASE WHEN vbOperDate_begin >= '01.12.2018' 
                    AND COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) IN ('100000000000', '300000000000')
                   THEN ''
                   ELSE OH_JuridicalDetails_To.OKPO
@@ -395,8 +395,6 @@ order by 4*/
                     OR vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                     OR vbCalcNDSPayer_INN <> ''
                    THEN 'X' 
-                  WHEN Movement.OperDate >= '01.12.2018' AND vbDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_Tax(), zc_Enum_DocumentTaxKind_Prepay()) 
-                   THEN '4'
                    ELSE '' END                  AS NotNDSPayer
 
            , CASE WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
@@ -425,7 +423,10 @@ order by 4*/
 
            , COALESCE(MovementFloat_Amount.ValueData, 0) AS SendDeclarAmount
 
-           , CASE WHEN vbDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_Tax(), zc_Enum_DocumentTaxKind_Prepay()) THEN 'X' ELSE '' END AS TaxKind -- для сводной НН
+           , CASE WHEN vbDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_Tax(), zc_Enum_DocumentTaxKind_Prepay()) AND vbOperDate_begin < '01.12.2018' THEN 'X' 
+                  WHEN vbDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_Tax(), zc_Enum_DocumentTaxKind_Prepay()) AND vbOperDate_begin >= '01.12.2018' THEN '4'
+                  ELSE '' 
+             END AS TaxKind -- для сводной НН
 
            , COALESCE (ObjectBoolean_Vat.ValueData, False) AS  isVat
 

@@ -661,7 +661,7 @@ BEGIN
            -- , 'J1201006'::TVarChar                                           AS CHARCODE
            , CASE WHEN vbOperDate_begin  < '01.04.2016' THEN 'J1201207'
                   WHEN tmpMI.OperDate    < '01.03.2017' THEN 'J1201208'
-                  WHEN tmpMI.OperDate    < '01.12.2018' THEN 'J1201209'
+                  WHEN vbOperDate_begin  < '01.12.2018' THEN 'J1201209'
                   ELSE 'J1201210'
              END ::TVarChar AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                                        AS N10
@@ -758,7 +758,6 @@ BEGIN
              END :: TVarChar AS ERPN2 -- Підлягає реєстрації в ЄРПН покупцем
 
            , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> '' THEN 'X'
-                  WHEN tmpMI.OperDate >= '01.12.2018' AND tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay()) THEN '4'
                   ELSE '' 
              END :: TVarChar AS NotNDSPayer
            , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
@@ -932,8 +931,10 @@ BEGIN
 
            --, COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) :: Integer AS LineNum
            , CASE WHEN tmpMI.isAuto = TRUE THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE tmpMI.NPP END :: Integer AS LineNum
-           , CASE WHEN tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay())
-                  THEN 'X' ELSE '' END    AS TaxKind --признак  сводной корректировки
+           , CASE WHEN tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay()) AND vbOperDate_begin < '01.12.2018' THEN 'X' 
+                  WHEN tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Corrective(),zc_Enum_DocumentTaxKind_Prepay()) AND vbOperDate_begin >= '01.12.2018' THEN '4'
+                  ELSE '' 
+             END    AS TaxKind --признак  сводной корректировки
 
            , tmpMI.NPPTax_calc           :: Integer AS NPPTax_calc
            , tmpMI.NPP_calc              :: Integer AS NPP_calc
