@@ -1383,6 +1383,8 @@ end;
 
 procedure TLoadFormTest.LoadPriceFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceOnDateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceOnDateForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceForm');
@@ -1398,8 +1400,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceHistoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceHistoryForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceOnDateForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TPriceOnDateForm');
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceDialogForm');

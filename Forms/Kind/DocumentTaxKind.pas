@@ -30,6 +30,8 @@ type
     spUpdate_DocumentTaxKind_Code: TdsdStoredProc;
     cxGridDBTableViewColumn1: TcxGridDBColumn;
     actUpdateDataSet: TdsdUpdateDataSet;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpen: TdxBarButton;
   private
     { Private declarations }
   public

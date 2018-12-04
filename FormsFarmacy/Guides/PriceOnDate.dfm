@@ -308,6 +308,18 @@ inherited PriceOnDateForm: TPriceOnDateForm
             HeaderHint = #1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
             Width = 53
           end
+          object MCSValue_min: TcxGridDBColumn
+            AlternateCaption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1053#1077#1089#1085#1080#1078#1072#1077#1084#1099#1081' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1079#1072#1087#1072#1089
+            Caption = #1053#1058#1047' '#1084#1080#1085'.'
+            DataBinding.FieldName = 'MCSValue_min'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1053#1058#1047
+            Width = 53
+          end
           object StartDateEnd: TcxGridDBColumn
             Caption = #1048#1089#1090#1086#1088#1080#1103' '#1082#1086#1085'. '#1076#1072#1085#1085#1099#1093' '#1089
             DataBinding.FieldName = 'StartDateEnd'
@@ -1168,6 +1180,15 @@ inherited PriceOnDateForm: TPriceOnDateForm
       item
         Name = 'inMCSDay'
         Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCSValue_min'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MCSValue_min'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

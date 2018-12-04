@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PriceHistory(
     IN inisShowDel   Boolean,       --True - показать так же удаленные, False - показать только рабочие
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
+RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat, MCSValue_min TFloat
              , MCSPeriod TFloat, MCSDay TFloat, StartDate TDateTime
              , MCSPeriodEnd TFloat, MCSDayEnd TFloat, StartDateEnd TDateTime
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
@@ -56,6 +56,7 @@ BEGIN
                 NULL::Integer                    AS Id
                ,NULL::TFloat                     AS Price
                ,NULL::TFloat                     AS MCSValue
+               ,NULL::TFloat                     AS MCSValue_min
                ,NULL::TFloat                     AS MCSPeriod
                ,NULL::TFloat                     AS MCSDay              
                ,NULL::TDateTime                  AS StartDate
@@ -126,6 +127,7 @@ BEGIN
    , tmpPrice_View AS (SELECT ObjectLink_Price_Unit.ObjectId          AS Id
                             , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
                             , MCS_Value.ValueData                     AS MCSValue 
+                            , COALESCE(Price_MCSValueMin.ValueData,0)  ::TFloat AS MCSValue_min
                             , Price_Goods.ChildObjectId               AS GoodsId
                             , price_datechange.valuedata              AS DateChange 
                             , MCS_datechange.valuedata                AS MCSDateChange 
@@ -184,7 +186,10 @@ BEGIN
                                    AND Price_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
                             LEFT JOIN ObjectDate        AS Price_PercentMarkupDateChange
                                     ON Price_PercentMarkupDateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                   AND Price_PercentMarkupDateChange.DescId = zc_ObjectDate_Price_PercentMarkupDateChange()    
+                                   AND Price_PercentMarkupDateChange.DescId = zc_ObjectDate_Price_PercentMarkupDateChange() 
+                            LEFT JOIN ObjectFloat AS Price_MCSValueMin
+                                                  ON Price_MCSValueMin.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                 AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()   
                        WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                          AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
                        )
@@ -193,6 +198,7 @@ BEGIN
                 tmpPrice_View.Id                            AS Id
                , COALESCE (ObjectHistoryFloat_Price.ValueData, 0)                  :: TFloat    AS Price
                , COALESCE (ObjectHistoryFloat_MCSValue.ValueData, 0)               :: TFloat    AS MCSValue
+               , COALESCE (tmpPrice_View.MCSValue_min, 0)                          :: TFloat    AS MCSValue_min
                , COALESCE (ObjectHistoryFloat_MCSPeriod.ValueData, 0)              :: TFloat    AS MCSPeriod
                , COALESCE (ObjectHistoryFloat_MCSDay.ValueData, 0)                 :: TFloat    AS MCSDay
                , COALESCE (ObjectHistory_Price.StartDate, NULL /*zc_DateStart()*/) :: TDateTime AS StartDate
@@ -335,6 +341,7 @@ BEGIN
    , tmpPrice_View AS (SELECT ObjectLink_Price_Unit.ObjectId          AS Id
                             , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
                             , MCS_Value.ValueData                     AS MCSValue 
+                            , COALESCE(Price_MCSValueMin.ValueData,0)  ::TFloat AS MCSValue_min
                             , Price_Goods.ChildObjectId               AS GoodsId
                             , price_datechange.valuedata              AS DateChange 
                             , MCS_datechange.valuedata                AS MCSDateChange 
@@ -394,6 +401,9 @@ BEGIN
                             LEFT JOIN ObjectDate        AS Price_PercentMarkupDateChange
                                     ON Price_PercentMarkupDateChange.ObjectId = ObjectLink_Price_Unit.ObjectId
                                    AND Price_PercentMarkupDateChange.DescId = zc_ObjectDate_Price_PercentMarkupDateChange()    
+                            LEFT JOIN ObjectFloat AS Price_MCSValueMin
+                                                  ON Price_MCSValueMin.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                 AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()
                        WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                          AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
                        )
@@ -402,6 +412,7 @@ BEGIN
                  tmpPrice_View.Id                          AS Id
                , COALESCE (ObjectHistoryFloat_Price.ValueData, 0)                  :: TFloat    AS Price
                , COALESCE (ObjectHistoryFloat_MCSValue.ValueData, 0)               :: TFloat    AS MCSValue
+               , COALESCE (tmpPrice_View.MCSValue_min, 0)                          :: TFloat    AS MCSValue_min
                , COALESCE (ObjectHistoryFloat_MCSPeriod.ValueData, 0)              :: TFloat    AS MCSPeriod
                , COALESCE (ObjectHistoryFloat_MCSDay.ValueData, 0)                 :: TFloat    AS MCSDay
                , COALESCE (ObjectHistory_Price.StartDate, NULL /*zc_DateStart()*/) :: TDateTime AS StartDate
@@ -521,6 +532,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В. 
+ 04.12.08         *
  11.08.18                                                                       *
  05.01.18         *
  12.06.17         *
