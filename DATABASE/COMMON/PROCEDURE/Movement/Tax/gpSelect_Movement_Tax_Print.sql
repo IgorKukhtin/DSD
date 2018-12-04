@@ -802,10 +802,11 @@ order by 4*/
                                           END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
                    AS NUMERIC (16, 2)) AS AmountSummNoVAT_12
            -- Сума податку на додану вартість
-           , CAST (tmpMI.Amount * CASE WHEN vbPriceWithVAT = TRUE
-                                      THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100))) /100 * vbVATPercent 
-                                      ELSE (tmpMI.Price / 100 * vbVATPercent)
-                                  END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+           , CAST (CAST(tmpMI.Amount * CASE WHEN vbPriceWithVAT = TRUE
+                                           THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)))
+                                           ELSE (tmpMI.Price)
+                                       END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+                    AS NUMERIC (16, 2))  / 100 * vbVATPercent 
                    AS NUMERIC (16, 6)) AS SummVAT
        FROM tmpMI
             LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = tmpMI.GoodsGroupId

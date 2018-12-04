@@ -705,7 +705,8 @@ BEGIN
            , CAST (REPEAT (' ', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
            , CAST (REPEAT ('0', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner_ifin
 
-           , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
+           ---, CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
+           , CAST (COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) / 100 * MovementFloat_VATPercent.ValueData AS TFloat) AS TotalSummVAT
            , MovementFloat_TotalSummMVAT.ValueData                          AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData                          AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
@@ -1168,7 +1169,7 @@ BEGIN
              ) :: TFloat AS AmountSumm
 
              -- сумма НДС
-           , ( (CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+           , ( CAST (CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
                     AND vbIsNPP_calc = TRUE
                         -- !!!Корр. цены!!!
                         THEN (tmpData_all.Amount_for_PriceCor * tmpData_all.PriceTax_calc) :: NUMERIC (16, 2)
@@ -1178,7 +1179,7 @@ BEGIN
                    ELSE ((COALESCE (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount_orig END, 0)) * tmpData_all.Price_orig) :: NUMERIC (16, 2)
               END
             + tmpData_all.SummTaxDiff_calc
-             ) / 100 * tmpData_all.VATPercent ) :: TFloat AS SummVat
+              AS NUMERIC (16, 2)) / 100 * tmpData_all.VATPercent ) :: TFloat AS SummVat
 
            , tmpData_all.InvNumberBranch
            , tmpData_all.InvNumberBranch_Child
