@@ -40,6 +40,12 @@ RETURNS TABLE (Id Integer
              , isDocument  Boolean
              , SPName TVarChar
 
+             , DepartmentId    Integer
+             , DepartmentName  TVarChar
+             , ContractName_Department         TVarChar
+             , Contract_SigningDate_Department TDateTime
+             , Contract_StartDate_Department   TDateTime
+             , Contract_EndDate_Department     TDateTime
               )
 
 AS
@@ -83,6 +89,41 @@ BEGIN
                               LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_Bank.ChildObjectId
                            WHERE Object_BankAccount.DescId = zc_object_BankAccount()
                            )
+      -- договора для департаментов
+     , tmpContractDepartment AS (SELECT  ObjectLink_Contract_JuridicalBasis.ChildObjectId AS JuridicalId
+                                       , tmp.DepartmentId                                 AS DepartmentId
+                                       , Object_Department.ValueData                      AS DepartmentName
+                                       , COALESCE(Object_Department_Contract.Id,0)        AS ContractId
+                                       , Object_Department_Contract.ValueData             AS ContractName
+                                       , ObjectDate_Signing.ValueData                     AS Contract_SigningDate
+                                       , ObjectDate_Start.ValueData                       AS Contract_StartDate 
+                                       , ObjectDate_End.ValueData                         AS Contract_EndDate 
+
+                                 FROM (SELECT DISTINCT ObjectLink.ChildObjectId AS DepartmentId
+                                       FROM ObjectLink
+                                       WHERE ObjectLink.DescId = zc_ObjectLink_PartnerMedical_Department()
+                                      ) AS tmp
+                                    LEFT JOIN Object AS Object_Department ON Object_Department.Id =  tmp.DepartmentId
+                                    LEFT JOIN ObjectLink AS ObjectLink_Contract_Department
+                                                         ON ObjectLink_Contract_Department.ChildObjectId = tmp.DepartmentId
+                                                        AND ObjectLink_Contract_Department.DescId = zc_ObjectLink_Contract_Juridical()
+                                    LEFT JOIN Object AS Object_Department_Contract ON Object_Department_Contract.Id = ObjectLink_Contract_Department.ObjectId
+
+                                    INNER JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
+                                                          ON ObjectLink_Contract_JuridicalBasis.ObjectId = Object_Department_Contract.Id 
+                                                         AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+
+                                    LEFT JOIN ObjectDate AS ObjectDate_Start
+                                                         ON ObjectDate_Start.ObjectId = Object_Department_Contract.Id
+                                                        AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
+                                    LEFT JOIN ObjectDate AS ObjectDate_End
+                                                         ON ObjectDate_End.ObjectId = Object_Department_Contract.Id
+                                                        AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()
+                                    LEFT JOIN ObjectDate AS ObjectDate_Signing
+                                                         ON ObjectDate_Signing.ObjectId = Object_Department_Contract.Id
+                                                        AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
+                                 )
+
 
         -- Результат
     SELECT     
@@ -126,6 +167,14 @@ BEGIN
              WHEN COALESCE(MovementFloat_SP.ValueData,0) = 2 THEN 'Приказ 1303' 
              ELSE ''
         END  :: TVarChar AS SPName
+
+      , Object_Department.Id                       AS DepartmentId
+      , Object_Department.ValueData                AS DepartmentName
+      , tmpContractDepartment.ContractName         AS ContractName_Department
+      , tmpContractDepartment.Contract_SigningDate AS Contract_SigningDate_Department
+      , tmpContractDepartment.Contract_StartDate   AS Contract_StartDate_Department
+      , tmpContractDepartment.Contract_EndDate     AS Contract_EndDate_Department
+
     FROM tmpStatus
         INNER JOIN Movement ON Movement.StatusId = tmpStatus.StatusId
                            AND Movement.DescId = zc_Movement_Invoice()
@@ -195,6 +244,15 @@ BEGIN
         LEFT JOIN MovementFloat AS MovementFloat_SP
                                 ON MovementFloat_SP.MovementId = Movement.Id
                                AND MovementFloat_SP.DescId = zc_MovementFloat_SP()
+
+        LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Department 
+                             ON ObjectLink_PartnerMedical_Department.ObjectId = MovementLinkObject_PartnerMedical.ObjectId
+                            AND ObjectLink_PartnerMedical_Department.DescId = zc_ObjectLink_PartnerMedical_Department()
+        LEFT JOIN Object AS Object_Department ON Object_Department.Id = ObjectLink_PartnerMedical_Department.ChildObjectId
+        LEFT JOIN tmpContractDepartment ON tmpContractDepartment.DepartmentId = ObjectLink_PartnerMedical_Department.ChildObjectId
+                                       AND tmpContractDepartment.JuridicalId  = MovementLinkObject_Juridical.ObjectId
+                                       AND tmpContractDepartment.Contract_StartDate <= MovementDate_OperDateStart.ValueData
+                                       AND tmpContractDepartment.Contract_EndDate >= MovementDate_OperDateStart.ValueData
 
 
 ;

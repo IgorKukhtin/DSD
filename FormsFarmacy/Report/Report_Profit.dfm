@@ -202,6 +202,16 @@ inherited Report_ProfitForm: TReport_ProfitForm
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
               Column = SummaProfitAll
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaRemainsStart
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaRemainsEnd
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -367,6 +377,16 @@ inherited Report_ProfitForm: TReport_ProfitForm
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
               Column = SummaProfitAll
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaRemainsStart
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaRemainsEnd
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -436,6 +456,26 @@ inherited Report_ProfitForm: TReport_ProfitForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 79
+          end
+          object SummaRemainsStart: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1085#1072#1095'. '#1086#1089#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079', '#1075#1088#1085
+            DataBinding.FieldName = 'SummaRemainsStart'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object SummaRemainsEnd: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1082#1086#1085#1077#1095#1085'. '#1086#1089#1090'. '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079', '#1075#1088#1085
+            DataBinding.FieldName = 'SummaRemainsEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 79
           end
           object PersentProfit: TcxGridDBColumn
@@ -1228,6 +1268,9 @@ inherited Report_ProfitForm: TReport_ProfitForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0
@@ -1421,6 +1464,7 @@ inherited Report_ProfitForm: TReport_ProfitForm
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1048#1090#1086#1075#1080
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1048#1090#1086#1075#1080
       ImageIndex = 6
+      ShortCut = 16472
     end
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1566,6 +1610,9 @@ inherited Report_ProfitForm: TReport_ProfitForm
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1044#1086#1093#1086#1076#1085#1086#1089#1090#1080
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource

@@ -59,6 +59,11 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     isErased: TcxGridDBColumn;
     isProfitLoss: TcxGridDBColumn;
+    spUpdate_ProfitLoss: TdsdStoredProc;
+    actUpdate_ProfitLoss: TdsdExecStoredProc;
+    bbUpdate_ProfitLoss: TdxBarButton;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpen: TdxBarButton;
   private
     { Private declarations }
   public

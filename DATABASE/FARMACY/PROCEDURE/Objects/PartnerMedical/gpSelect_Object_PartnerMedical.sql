@@ -49,7 +49,7 @@ $BODY$BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Department 
                                 ON ObjectLink_PartnerMedical_Department.ObjectId = Object_PartnerMedical.Id 
                                AND ObjectLink_PartnerMedical_Department.DescId = zc_ObjectLink_PartnerMedical_Department()
-           LEFT JOIN Object AS Object_Department ON Object_Department.Id = ObjectLink_PartnerMedical_Department.ChildObjectId      
+           LEFT JOIN Object AS Object_Department ON Object_Department.Id = ObjectLink_PartnerMedical_Department.ChildObjectId
      WHERE Object_PartnerMedical.DescId = zc_Object_PartnerMedical();
   
 END;
