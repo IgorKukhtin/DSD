@@ -32,11 +32,11 @@ $BODY$
   -- DECLARE vbCode_old Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-  /* IF inIsInsert = TRUE
+   IF inIsInsert = TRUE
    THEN vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ReportCollation());
    ELSE vbUserId := lpGetUserBySession (inSession);
    END IF;
-*/
+
 
    IF inIsInsert = TRUE OR inIsUpdate = TRUE
    THEN

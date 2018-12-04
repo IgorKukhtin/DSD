@@ -1224,6 +1224,9 @@
           StoredProc = spCalculateSalePrice
         end
         item
+          StoredProc = spGet
+        end
+        item
           StoredProc = spSelect
         end>
       Caption = #1056#1072#1089#1095#1077#1090' '#1094#1077#1085#1099' '#1087#1088#1086#1076#1072#1078#1080
