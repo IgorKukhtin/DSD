@@ -2421,7 +2421,7 @@ begin
    else
 
    // так для Медка
-   if HeaderDataSet.FieldByName('OperDate').asDateTime >= StrToDateTime( '01.12.2018', F) then
+   if HeaderDataSet.FieldByName('OperDate_begin').asDateTime >= StrToDateTime( '01.12.2018', F) then
       CreateJ1201210XMLFile(HeaderDataSet, ItemsDataSet, FileName)
    else
 

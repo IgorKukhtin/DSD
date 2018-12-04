@@ -26,8 +26,8 @@ BEGIN
             INTO vbOperDate
      FROM (SELECT CASE WHEN Movement_find.OperDate < '01.03.2017' AND MovementDate_DateRegistered.ValueData >= '01.03.2017'
                             THEN Movement_find.OperDate
-                       -- ELSE COALESCE (MovementDate_DateRegistered.ValueData, Movement_find.OperDate)
-                       ELSE COALESCE (MovementDate_DateRegistered.ValueData, CURRENT_DATE)
+                       ELSE COALESCE (MovementDate_DateRegistered.ValueData, Movement_find.OperDate)
+                       -- ELSE COALESCE (MovementDate_DateRegistered.ValueData, CURRENT_DATE)
                   END AS OperDate1
                 , Movement_find.OperDate AS OperDate2
            FROM Movement

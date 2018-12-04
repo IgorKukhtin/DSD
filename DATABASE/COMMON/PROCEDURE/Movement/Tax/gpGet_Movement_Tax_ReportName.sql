@@ -20,7 +20,12 @@ BEGIN
        SELECT COALESCE (PrintForms_View.PrintFormName, 'PrintMovement_Tax')
               INTO vbPrintFormName
        FROM (-- поиск даты
-             SELECT MAX (CASE WHEN Movement.OperDate < '01.03.2017' AND MovementDate_DateRegistered.ValueData >= '01.03.2017' THEN Movement.OperDate WHEN Movement.OperDate > COALESCE (MovementDate_DateRegistered.ValueData, Movement.OperDate) THEN Movement.OperDate ELSE COALESCE (MovementDate_DateRegistered.ValueData, Movement.OperDate) END) AS OperDate
+             SELECT MAX (CASE WHEN Movement.OperDate < '01.03.2017' AND MovementDate_DateRegistered.ValueData >= '01.03.2017'
+                                   THEN Movement.OperDate
+                              WHEN Movement.OperDate > COALESCE (MovementDate_DateRegistered.ValueData, Movement.OperDate)
+                                   THEN Movement.OperDate
+                              ELSE COALESCE (MovementDate_DateRegistered.ValueData, Movement.OperDate)
+                         END) AS OperDate
              FROM Movement
                   LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                          ON MovementDate_DateRegistered.MovementId = Movement.Id

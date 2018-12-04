@@ -243,10 +243,11 @@ order by 4*/
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
            , Movement.OperDate                          AS OperDate
+           , vbOperDate_begin                           AS OperDate_begin -- поле для Медка
            , CASE WHEN Movement.OperDate < '01.01.2015' THEN 'J1201006'
                   WHEN vbOperDate_begin  < '01.04.2016' THEN 'J1201007'
                   WHEN Movement.OperDate < '01.03.2017' THEN 'J1201008'
-                  WHEN Movement.OperDate < '01.12.2018' THEN 'J1201009'
+                  WHEN vbOperDate_begin  < '01.12.2018' THEN 'J1201009'
                   ELSE 'J1201010'
              END ::TVarChar AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                    AS N10
@@ -425,9 +426,6 @@ order by 4*/
            , COALESCE(MovementFloat_Amount.ValueData, 0) AS SendDeclarAmount
 
            , CASE WHEN vbDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_Tax(), zc_Enum_DocumentTaxKind_Prepay()) THEN 'X' ELSE '' END AS TaxKind -- для сводной НН
-
-           , vbOperDate_begin AS OperDate_begin -- поле для Медка
-
 
            , COALESCE (ObjectBoolean_Vat.ValueData, False) AS  isVat
 

@@ -143,7 +143,7 @@ BEGIN
 
      -- сохранили "текущая дата", вместо "регистрации" - если нет или убрали электронная (т.е. регистрация медка)
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_DateRegistered(), tmp.MovementId, CURRENT_DATE)
-     FROM (SELECT ioId AS MovementId WHERE vbIsInsert = TRUE AND CURRENT_DATE >= '01.04.2016' ) AS tmp
+     FROM (SELECT ioId AS MovementId /*WHERE vbIsInsert = TRUE AND CURRENT_DATE >= '01.04.2016'*/) AS tmp
           LEFT JOIN MovementBoolean ON MovementBoolean.MovementId = tmp.MovementId
                                    AND MovementBoolean.DescId = zc_MovementBoolean_Electron()
      WHERE COALESCE (MovementBoolean.ValueData, FALSE) = FALSE
