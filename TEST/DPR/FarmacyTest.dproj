@@ -956,40 +956,33 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalCorporate.pas">
 				<Form>JuridicalCorporateForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\ReasonDifferences.pas">
 				<Form>ReasonDifferencesForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\ReasonDifferencesTest.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Document\Income_AmountTrouble.pas">
 				<Form>Income_AmountTroubleForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_UploadBaDM.pas">
 				<Form>Report_UploadBaDMForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_UploadOptima.pas">
 				<Form>Report_UploadOptimaForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\RepriceTest.pas"/>
 			<DCCReference Include="..\SOURCE\MovementItem\All\Farmacy\RepriceMovementItemTest.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Document\RepriceJournal.pas">
 				<Form>RepriceJournalForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\Reprice.pas">
 				<Form>RepriceForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\ChangeIncomePaymentKindTest.pas"/>
@@ -1000,22 +993,18 @@
 			<DCCReference Include="..\SOURCE\Movement\All\Farmacy\ChangeIncomePaymentTest.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Document\ChangeIncomePaymentJournal.pas">
 				<Form>ChangeIncomePaymentJournalForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\ChangeIncomePayment.pas">
 				<Form>ChangeIncomePaymentForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\PriceHistory.pas">
 				<Form>PriceHistoryForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\ReturnOutPartnerDataDialog.pas">
 				<Form>ReturnOutPartnerDataDialogForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\IncomePartnerDataDialog.pas">
@@ -1636,7 +1625,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsBarCode.pas">
 				<Form>GoodsBarCodeForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\MemberIncomeCheck.pas">
@@ -2122,7 +2110,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_CashListDiffPeriod.pas">
 				<Form>Report_CashListDiffPeriodForm</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\CheckNoCashRegister.pas">
 				<Form>CheckNoCashRegisterForm</Form>

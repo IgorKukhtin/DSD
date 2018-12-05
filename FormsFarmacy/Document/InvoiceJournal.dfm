@@ -175,6 +175,40 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             HeaderHint = #1044#1072#1090#1072' '#1087#1086#1076#1087#1080#1089#1072#1085#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
             Width = 70
           end
+          object DepartmentName: TcxGridDBColumn
+            Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' '#1086#1093#1088#1072#1085#1099' '#1079#1076#1086#1088#1086#1074#1100#1103
+            DataBinding.FieldName = 'DepartmentName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 110
+          end
+          object ContractName_Department: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088' ('#1044#1054#1047')'
+            DataBinding.FieldName = 'ContractName_Department'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Contract_SigningDate_Department: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086#1076#1087'. '#1076#1086#1075'. ('#1044#1054#1047')'
+            DataBinding.FieldName = 'Contract_SigningDate_Department'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1087#1086#1076#1087#1080#1089#1072#1085#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Options.Editing = False
+            Width = 74
+          end
+          object Contract_StartDate_Department: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1075#1086#1074#1086#1088#1072' ('#1044#1054#1047')'
+            DataBinding.FieldName = 'Contract_StartDate_Department'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object TotalSummWithOutVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummWithOutVAT'

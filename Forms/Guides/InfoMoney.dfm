@@ -74,6 +74,7 @@ object InfoMoneyForm: TInfoMoneyForm
         DataBinding.FieldName = 'isProfitLoss'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
       end
       object isErased: TcxGridDBColumn
@@ -189,7 +190,23 @@ object InfoMoneyForm: TInfoMoneyForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_ProfitLoss'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpen'
         end
         item
           Visible = True
@@ -241,6 +258,15 @@ object InfoMoneyForm: TInfoMoneyForm
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
+      Category = 0
+    end
+    object bbUpdate_ProfitLoss: TdxBarButton
+      Action = actUpdate_ProfitLoss
+      Category = 0
+      ImageIndex = 76
+    end
+    object bbProtocolOpen: TdxBarButton
+      Action = ProtocolOpenForm
       Category = 0
     end
   end
@@ -380,6 +406,48 @@ object InfoMoneyForm: TInfoMoneyForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actUpdate_ProfitLoss: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_ProfitLoss
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ProfitLoss
+        end>
+      Caption = #1047#1072#1090#1088#1072#1090#1099' '#1087#1086' '#1086#1087#1083#1072#1090#1077' '#1044#1072'/'#1053#1077#1090
+      Hint = #1047#1072#1090#1088#1072#1090#1099' '#1087#1086' '#1086#1087#1083#1072#1090#1077' '#1044#1072'/'#1053#1077#1090
+    end
+    object ProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_InfoMoney'
@@ -390,8 +458,8 @@ object InfoMoneyForm: TInfoMoneyForm
       end>
     Params = <>
     PackSize = 1
-    Left = 256
-    Top = 184
+    Left = 224
+    Top = 192
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 112
@@ -441,5 +509,39 @@ object InfoMoneyForm: TInfoMoneyForm
     SummaryItemList = <>
     Left = 304
     Top = 152
+  end
+  object spUpdate_ProfitLoss: TdsdStoredProc
+    StoredProcName = 'gpUpdate_InfoMoney_ProfitLoss'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisProfitLoss'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isProfitLoss'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisProfitLoss'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isProfitLoss'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 147
   end
 end

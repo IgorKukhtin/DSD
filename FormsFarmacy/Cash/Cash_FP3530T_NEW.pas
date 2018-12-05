@@ -403,9 +403,9 @@ begin
 
   for I := 0 to 9 do
   begin
-    S := FPrinter.READPROGCHECK[I, 1, Password];
+    S := Trim(FPrinter.READPROGCHECK[I, 1, Password]);
     if not СообщениеКА(FPrinter.GETERROR) then Exit;
-    if Trim(S) <> ';0' then Result := Result + S + #13#10;
+    if Trim(S) <> ';0' then Result := Result + Centr(S) + #13#10;
   end;
 
   S := 'ЗН ' + FPrinter. ZNUM[Password];

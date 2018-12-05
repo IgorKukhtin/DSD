@@ -59,20 +59,20 @@ BEGIN
                              isFirst  Boolean,
                              isSecond Boolean) ON COMMIT DROP;
 
-     WITH DD AS (SELECT DISTINCT 
-            Object_MarginCategoryItem_View.MarginPercent, 
-            Object_MarginCategoryItem_View.MinPrice, 
+     WITH DD AS (SELECT DISTINCT
+            Object_MarginCategoryItem_View.MarginPercent,
+            Object_MarginCategoryItem_View.MinPrice,
             Object_MarginCategoryItem_View.MarginCategoryId,
             ROW_NUMBER()OVER(PARTITION BY Object_MarginCategoryItem_View.MarginCategoryId ORDER BY Object_MarginCategoryItem_View.MinPrice) as ORD
         FROM Object_MarginCategoryItem_View
              INNER JOIN Object AS Object_MarginCategoryItem ON Object_MarginCategoryItem.Id = Object_MarginCategoryItem_View.Id
                                                            AND Object_MarginCategoryItem.isErased = FALSE
                 )
-        , MarginCondition AS (SELECT 
-            D1.MarginCategoryId, 
-            D1.MarginPercent, 
+        , MarginCondition AS (SELECT
+            D1.MarginCategoryId,
+            D1.MarginPercent,
             D1.MinPrice,
-            COALESCE(D2.MinPrice, 1000000) AS MaxPrice 
+            COALESCE(D2.MinPrice, 1000000) AS MaxPrice
         FROM DD AS D1
             LEFT OUTER JOIN DD AS D2 ON D1.MarginCategoryId = D2.MarginCategoryId AND D1.ORD = D2.ORD-1)
 
@@ -93,10 +93,17 @@ BEGIN
                 AND ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Goods()
                 AND (ObjectBoolean_Top.ValueData = TRUE OR ObjectFloat_PercentMarkup.ValueData <> 0)
              )
+          , JuridicalSettings AS
+             (SELECT DISTINCT JuridicalId, ContractId, isPriceCloseOrder
+                           FROM lpSelect_Object_JuridicalSettingsRetail (vbObjectId) AS JuridicalSettings
+                     LEFT JOIN Object AS Object_ContractSettings ON Object_ContractSettings.Id = JuridicalSettings.MainJuridicalId
+              WHERE COALESCE (Object_ContractSettings.isErased, FALSE) = FALSE
+                   AND JuridicalSettings.MainJuridicalId <> 5603474
+             )
 
         INSERT INTO _GoodsPriceAll
         SELECT
-           
+
            LinkGoodsObject.GoodsId             AS GoodsId,
            LoadPriceList.JuridicalId           AS JuridicalId,
            Object_Goods.NDS                    AS NDS,
@@ -125,8 +132,7 @@ BEGIN
 
               INNER JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
 
-              LEFT JOIN (SELECT DISTINCT JuridicalId, ContractId, isPriceClose
-                           FROM lpSelect_Object_JuridicalSettingsRetail (vbObjectId)) AS JuridicalSettings
+              LEFT JOIN JuridicalSettings
                       ON JuridicalSettings.JuridicalId = LoadPriceList.JuridicalId
                      AND JuridicalSettings.ContractId = LoadPriceList.ContractId
 
@@ -163,9 +169,10 @@ BEGIN
 
               LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = LinkGoodsObject.GoodsId
 
-        WHERE COALESCE(JuridicalSettings.isPriceClose, FALSE) <> TRUE
+
+        WHERE COALESCE(JuridicalSettings.isPriceCloseOrder, TRUE)  = FALSE
           AND (LoadPriceList.AreaId = 0 OR COALESCE (LoadPriceList.AreaId, 0) = vbAreaId OR COALESCE(vbAreaId, 0) = 0 OR
-               COALESCE (LoadPriceList.AreaId, 0) = zc_Area_Basis() );
+               COALESCE (LoadPriceList.AreaId, 0) = zc_Area_Basis());
 
      ANALYSE _GoodsPriceAll;
 
@@ -214,6 +221,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 05.12.18                                                                                     *
  26.11.18                                                                                     *
  11.09.18        *
 */

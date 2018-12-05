@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Price_Lite(
     IN inisShowDel   Boolean,       -- True - показать так же удаленные, False - показать только рабочие
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
+RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat, MCSValue_min TFloat
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupName TVarChar, NDSKindName TVarChar
              , Goods_isTop Boolean, Goods_PercentMarkup TFloat
@@ -52,6 +52,7 @@ BEGIN
                 NULL::Integer                    AS Id
                ,NULL::TFloat                     AS Price
                ,NULL::TFloat                     AS MCSValue
+               ,NULL::TFloat                     AS MCSValue_min
                ,NULL::Integer                    AS GoodsId
                ,NULL::Integer                    AS GoodsCode
                ,NULL::TVarChar                   AS GoodsName
@@ -147,6 +148,7 @@ BEGIN
                           , Price_Goods.ChildObjectId                  AS GoodsId
                           , ROUND(Price_Value.ValueData,2)   ::TFloat  AS Price
                           , COALESCE (MCS_Value.ValueData,0) ::TFloat  AS MCSValue
+                          , COALESCE(Price_MCSValueMin.ValueData,0) ::TFloat AS MCSValue_min
                           , price_datechange.valuedata                 AS DateChange
                           , MCS_datechange.valuedata                   AS MCSDateChange
                           , COALESCE (MCS_isClose.ValueData,False)     AS MCSIsClose
@@ -234,12 +236,16 @@ BEGIN
                         LEFT JOIN ObjectBoolean     AS Price_MCSNotRecalcOld
                                ON Price_MCSNotRecalcOld.ObjectId = ObjectLink_Price_Unit.ObjectId
                               AND Price_MCSNotRecalcOld.DescId = zc_ObjectBoolean_Price_MCSNotRecalcOld()
+                        LEFT JOIN ObjectFloat AS Price_MCSValueMin
+                                              ON Price_MCSValueMin.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                             AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()
                      WHERE Object_Price.DescId = zc_Object_Price()
                     )
 
-            SELECT tmpPrice.Id                       AS Id
+            SELECT tmpPrice.Id                            AS Id
                  , COALESCE (tmpPrice.Price,0)   ::TFloat AS Price
                  , COALESCE (tmpPrice.MCSValue,0)::TFloat AS MCSValue
+                 , COALESCE (tmpPrice.MCSValue_min,0)::TFloat AS MCSValue_min
                               
                  , tmpGoods.GoodsId
                  , tmpGoods.GoodsCode                      AS GoodsCode
@@ -334,6 +340,7 @@ BEGIN
                           , Price_Goods.ChildObjectId                 AS GoodsId
                           , ROUND(Price_Value.ValueData,2)   ::TFloat AS Price
                           , COALESCE (MCS_Value.ValueData,0) ::TFloat AS MCSValue
+                          , COALESCE(Price_MCSValueMin.ValueData,0) ::TFloat AS MCSValue_min
                           , price_datechange.valuedata                AS DateChange
                           , MCS_datechange.valuedata                  AS MCSDateChange
                           , COALESCE (MCS_isClose.ValueData,False)    AS MCSIsClose
@@ -420,12 +427,16 @@ BEGIN
                         LEFT JOIN ObjectBoolean     AS Price_MCSNotRecalcOld
                                ON Price_MCSNotRecalcOld.ObjectId = ObjectLink_Price_Unit.ObjectId
                               AND Price_MCSNotRecalcOld.DescId = zc_ObjectBoolean_Price_MCSNotRecalcOld()
+                        LEFT JOIN ObjectFloat AS Price_MCSValueMin
+                                              ON Price_MCSValueMin.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                             AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()
                      WHERE Object_Price.DescId = zc_Object_Price()
                     )
       
             SELECT tmpPrice.Id
                  , COALESCE (tmpPrice.Price,0)    :: TFloat AS Price
                  , COALESCE (tmpPrice.MCSValue,0) :: TFloat AS MCSValue
+                 , COALESCE (tmpPrice.MCSValue_min,0)::TFloat AS MCSValue_min
                               
                  , tmpGoods.GoodsId
                  , tmpGoods.GoodsCode                     AS GoodsCode
@@ -470,6 +481,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 04.12.18         *
  14.06.17 
  05.10.16         * parce
  12.09.16         *

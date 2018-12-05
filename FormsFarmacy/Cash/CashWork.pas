@@ -74,7 +74,7 @@ procedure TCashWorkForm.Button2Click(Sender: TObject);
 begin
   if MessageDlg('Вы уверены в снятии Z-отчета?', mtInformation, mbOKCancel, 0) = mrOk then
   begin
-     SaveZReport(m_Cash.FileNameZReport, m_Cash.InfoZReport);
+//     SaveZReport(m_Cash.FileNameZReport, m_Cash.InfoZReport);
      m_Cash.ClosureFiscal;
   end;
 end;

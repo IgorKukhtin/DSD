@@ -19,8 +19,7 @@ BEGIN
       RETURN;
    END IF;
 
-   vbUserId := lpGetUserBySession (inSession);
-
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_Contract());
    -- определили признак
       IF isNotParam = True
       THEN

@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InfoMoney(
 )
   RETURNS integer AS
 $BODY$
-   DECLARE UserId Integer;
+   DECLARE vbUserId Integer;
    DECLARE Code_calc Integer; 
 BEGIN
    -- !!! это временно !!!
@@ -21,7 +21,7 @@ BEGIN
 
    -- проверка прав пользовател€ на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_InfoMoney());
-   UserId := inSession;
+   vbUserId := inSession;
 
    -- ≈сли код не установлен, определ€ем его каи последний+1
    Code_calc:=lfGet_ObjectCode (inCode, zc_Object_InfoMoney());
@@ -43,7 +43,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_ProfitLoss(), ioId, inisProfitLoss);
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
