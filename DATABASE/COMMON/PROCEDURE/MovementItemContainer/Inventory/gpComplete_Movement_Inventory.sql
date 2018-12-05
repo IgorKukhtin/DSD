@@ -178,7 +178,7 @@ BEGIN
                                   );
 
 
-     IF inMovementId IN (11270863 , 11250369)
+     IF inMovementId IN (11270863 , 11250369, 11648660)
      THEN 
          vbIsLastOnMonth:= FALSE;
      END IF;

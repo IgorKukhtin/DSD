@@ -193,6 +193,10 @@ BEGIN
                   -- Аналитики счетов - направления
                 , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Car()
                                       THEN zc_Enum_AccountDirection_20500() -- 20000; "Запасы"; 20500; "сотрудники (МО)"
+                                 WHEN Object_To.DescId = zc_Object_Member()
+                                   -- !!!т.е. если НЕ ГСМ!!!
+                                   AND COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, 0) <> zc_Enum_InfoMoney_20401()
+                                      THEN zc_Enum_AccountDirection_20500() -- 20000; "Запасы"; 20500; "сотрудники (МО)"
                                  ELSE ObjectLink_UnitTo_AccountDirection.ChildObjectId
                             END, 0) AS AccountDirectionId_To
                 , COALESCE (ObjectBoolean_PartionDate.ValueData, FALSE)  AS isPartionDate_Unit
@@ -1368,6 +1372,8 @@ END IF;
              LEFT JOIN lfGet_Object_InfoMoney (zc_Enum_InfoMoney_21425()) AS lfGet_21425 ON 1 = 1 -- 20401 Общефирменные + услуги полученные + амортизация транспорт торговых
 
         WHERE vbMemberId_To <> 0 AND vbMovementDescId = zc_Movement_Income()
+          -- !!!т.е. Эта схема ТОЛЬКО для ГСМ!!!
+          AND vbInfoMoneyId_From = zc_Enum_InfoMoney_20401()
         -- убрал т.к. хоть одна проводка должна быть (!!!для отчетов!!!)
         -- AND _tmpItem.OperSumm_Partner <> 0
        ;
@@ -1980,8 +1986,8 @@ END IF;
      vbObjectExtId_Analyzer:= CASE WHEN vbPartnerId_From <> 0 THEN vbPartnerId_From WHEN vbMemberId_From <> 0 THEN vbMemberId_From WHEN vbCardFuelId_From <> 0 THEN vbCardFuelId_From WHEN vbTicketFuelId_From <> 0 THEN vbTicketFuelId_From END;
 
 
-     -- 3.0.4. !!!Ход конем - удалили, если ПОКУПАТЕЛЮ или заправка Сотрудника или заправка Учредитель - ТОЛЬКО для прихода!!!
-     DELETE FROM _tmpItem WHERE (vbPartnerId_To <> 0 OR vbMemberId_To <> 0) AND vbMovementDescId = zc_Movement_Income();
+     -- 3.0.4. !!!Ход конем - удалили, если ПОКУПАТЕЛЮ или заправка ТОЛЬКО ГСМ Сотрудника или заправка Учредитель - ТОЛЬКО для прихода!!!
+     DELETE FROM _tmpItem WHERE (vbPartnerId_To <> 0 OR (vbMemberId_To <> 0 AND vbInfoMoneyId_From = zc_Enum_InfoMoney_20401())) AND vbMovementDescId = zc_Movement_Income();
 
 
      -- 1.1.1. определяется ContainerId_CountSupplier для !!!забалансовой!!! проводки по количественному учету - долги Поставщику

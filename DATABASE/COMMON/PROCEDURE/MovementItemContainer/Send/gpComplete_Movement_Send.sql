@@ -337,7 +337,8 @@ BEGIN
 
               -- сформируем позже
             , 0 AS MIContainerId_To
-            , COALESCE (tmpContainer.ContainerId, 0) AS ContainerId_Goods -- !!!или подбор партий!!!
+              -- !!!или подбор партий!!!
+            , COALESCE (tmpContainer.ContainerId, 0) AS ContainerId_Goods
             , 0 AS ContainerId_GoodsTo
 
             , _tmp.ObjectDescId
@@ -349,6 +350,7 @@ BEGIN
             , _tmp.PartionGoodsDate_From
             , _tmp.PartionGoodsDate_To
 
+              -- !!!или подбор партий!!!
             , COALESCE (tmpContainer.Amount, _tmp.OperCount) AS OperCount
 
               -- Аналитики счетов - направления (От Кого)
@@ -366,6 +368,7 @@ BEGIN
             , _tmp.BusinessId_To
 
              , _tmp.StorageId_Item
+               -- !!!или подбор партий!!!
              , COALESCE (tmpContainer.PartionGoodsId, 0) AS PartionGoodsId_Item
 
             , _tmp.isPartionCount

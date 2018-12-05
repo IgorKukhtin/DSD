@@ -556,6 +556,20 @@ object IncomeJournalForm: TIncomeJournalForm
         VisibleForCustomization = False
         Width = 30
       end
+      object ItemName_from: TcxGridDBColumn
+        Caption = #1054#1090' '#1082#1086#1075#1086' ('#1101#1083#1077#1084#1077#1085#1090')'
+        DataBinding.FieldName = 'ItemName_from'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object ItemName_to: TcxGridDBColumn
+        Caption = #1050#1086#1084#1091' ('#1101#1083#1077#1084#1077#1085#1090')'
+        DataBinding.FieldName = 'ItemName_to'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

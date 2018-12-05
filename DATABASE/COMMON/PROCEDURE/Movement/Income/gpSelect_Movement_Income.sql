@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCountPartner TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , TotalSummPacker TFloat, TotalSummSpending TFloat, TotalSummVAT TFloat
              , CurrencyValue TFloat, ParValue TFloat
-             , FromName TVarChar, ToName TVarChar
+             , FromName TVarChar, ItemName_from TVarChar, ToName TVarChar, ItemName_to TVarChar
              , PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , JuridicalName_From TVarChar, OKPO_From TVarChar
@@ -44,7 +44,7 @@ BEGIN
 
 
      -- –ÂÁÛÎ¸Ú‡Ú
-     RETURN QUERY 
+     RETURN QUERY
      WITH tmpRoleAccessKey_all AS (SELECT AccessKeyId, UserId FROM Object_RoleAccessKey_View)
         , tmpRoleAccessKey_user AS (SELECT AccessKeyId FROM tmpRoleAccessKey_all WHERE UserId = vbUserId GROUP BY AccessKeyId)
         , tmpAccessKey_IsDocumentAll AS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId
@@ -89,7 +89,9 @@ BEGIN
            , COALESCE (MovementFloat_ParValue.ValueData, 1) :: TFloat              AS ParValue
 
            , Object_From.ValueData                       AS FromName
+           , ObjectDesc_from.ItemName                    AS ItemName_from
            , Object_To.ValueData                         AS ToName
+           , ObjectDesc_to.ItemName                      AS ItemName_to
            , Object_PaidKind.ValueData                   AS PaidKindName
            , View_Contract_InvNumber.ContractId          AS ContractId
            , View_Contract_InvNumber.ContractCode        AS ContractCode
@@ -135,7 +137,7 @@ BEGIN
                                      ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
-            LEFT JOIN MovementString AS MovementString_Comment 
+            LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
@@ -183,10 +185,13 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            LEFT JOIN ObjectDesc AS ObjectDesc_from ON ObjectDesc_from.Id = Object_From.DescId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            LEFT JOIN ObjectDesc AS ObjectDesc_to ON ObjectDesc_to.Id = Object_To.DescId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
@@ -224,9 +229,9 @@ BEGIN
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
-                                      ON MovementBoolean_isIncome.MovementId =  Movement.Id
-                                     AND MovementBoolean_isIncome.DescId = zc_MovementBoolean_isIncome()
-                                     AND MovementBoolean_isIncome.ValueData  = False
+                                      ON MovementBoolean_isIncome.MovementId = Movement.Id
+                                     AND MovementBoolean_isIncome.DescId     = zc_MovementBoolean_isIncome()
+                                     AND MovementBoolean_isIncome.ValueData  = FALSE
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                            ON MovementLinkMovement_Transport.MovementId = Movement.Id
@@ -241,7 +246,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                                            AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
-            
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement_Transport.Id
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
@@ -254,9 +259,10 @@ BEGIN
 
 
        WHERE MovementBoolean_isIncome.ValueData is NULL
-         AND COALESCE (Object_To.DescId, 0) NOT IN (zc_Object_Car(), zc_Object_Member()) -- !!!—¿ÃŒ≈ Õ≈ –¿—»¬Œ≈ –≈ÿ≈Õ»≈!!!
+         -- AND COALESCE (Object_To.DescId, 0) NOT IN (zc_Object_Car(), zc_Object_Member(), zc_Object_Founder()) -- !!!—¿ÃŒ≈ Õ≈ –¿—»¬Œ≈ –≈ÿ≈Õ»≈!!!
+         AND View_InfoMoney.InfoMoneyId <> zc_Enum_InfoMoney_20401() -- !!!—¿ÃŒ≈ Õ≈ –¿—»¬Œ≈ –≈ÿ≈Õ»≈!!!
     ;
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -288,4 +294,4 @@ $BODY$
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_Income (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Income (inStartDate:= '01.01.2018', inEndDate:= '01.01.2018', inIsErased:= FALSE, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
