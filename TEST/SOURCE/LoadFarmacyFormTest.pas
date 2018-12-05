@@ -312,6 +312,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckUnCompleteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckUnCompleteForm');
+
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashSummaForDeyForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TCashSummaForDeyForm');
 end;
 
 procedure TLoadFormTest.LoadConditionsKeepFormTest;

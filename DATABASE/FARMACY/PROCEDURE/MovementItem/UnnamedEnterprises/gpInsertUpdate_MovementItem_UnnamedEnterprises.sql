@@ -22,46 +22,75 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbGoodsId Integer;
+   DECLARE vbAmount TFloat;
+   DECLARE vbAmountOrder TFloat;
+   DECLARE vbPrice TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_UnnamedEnterprises());
     vbUserId := inSession;
 
-    IF EXISTS(SELECT 1 FROM MovementLinkMovement
-              WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Sale()
-                AND MovementLinkMovement.MovementId = inMovementId)
-    THEN
-      RAISE EXCEPTION 'Ошибка. По безналу предприятия создана продежа <%> от <%>...',
-        (SELECT Movement.InvNumber
-         FROM MovementLinkMovement
-              INNER JOIN Movement ON Movement.ID = MovementLinkMovement.MovementChildId
-         WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Sale()
-           AND MovementLinkMovement.MovementId = inMovementId),
-        (SELECT to_char(Movement.OperDate, 'DD-MM-YYYY')
-         FROM MovementLinkMovement
-              INNER JOIN Movement ON Movement.ID = MovementLinkMovement.MovementChildId
-         WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Sale()
-           AND MovementLinkMovement.MovementId = inMovementId);
-    END IF;
+    SELECT
+      MovementItem.ObjectId,
+      MovementItem.Amount,
+      MIFloat_AmountOrder.ValueData,
+      MIFloat_Price.ValueData
+    INTO
+      vbGoodsId,
+      vbAmount,
+      vbAmountOrder,
+      vbPrice
+    FROM MovementItem
+         LEFT JOIN MovementItemFloat AS MIFloat_AmountOrder
+                                     ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
+                                    AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
 
-    IF EXISTS(SELECT 1 FROM MovementLinkMovement
-              WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
-                AND MovementLinkMovement.MovementId = inMovementId) AND
-       NOT EXISTS(SELECT 1 FROM MovementItemFloat
-             WHERE MovementItemFloat.DescId = zc_MIFloat_AmountOrder() AND MovementItemFloat.MovementItemId = ioId
-               AND COALESCE (MovementItemFloat.ValueData, 0) = COALESCE (inAmountOrder, 0))
+         LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+    WHERE MovementItem.ID = ioId;
+    
+    IF COALESCE(ioId, 0) = 0 or COALESCE(inGoodsId, 0) <> COALESCE(vbGoodsId, 0) or COALESCE(inAmount, 0) <> COALESCE(vbAmount, 0) or
+       COALESCE(inAmountOrder, 0) <> COALESCE(vbAmountOrder, 0) or COALESCE(inPrice, 0) <> COALESCE(vbPrice, 0)
     THEN
-      RAISE EXCEPTION 'Ошибка. Данные добавлены во внутренний заказ номер <%> от <%>. Изменение количества в заказ запрещено...',
-        (SELECT Movement.InvNumber
-         FROM MovementLinkMovement
-              INNER JOIN Movement ON Movement.ID = MovementLinkMovement.MovementChildId
-         WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
-           AND MovementLinkMovement.MovementId = inMovementId),
-        (SELECT to_char(Movement.OperDate, 'DD-MM-YYYY')
-         FROM MovementLinkMovement
-              INNER JOIN Movement ON Movement.ID = MovementLinkMovement.MovementChildId
-         WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
-           AND MovementLinkMovement.MovementId = inMovementId);
+      IF EXISTS(SELECT 1 FROM MovementLinkMovement
+                WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Sale()
+                  AND MovementLinkMovement.MovementId = inMovementId)
+      THEN
+        RAISE EXCEPTION 'Ошибка. По безналу предприятия создана продежа <%> от <%>...',
+          (SELECT Movement.InvNumber
+           FROM MovementLinkMovement
+                INNER JOIN Movement ON Movement.ID = MovementLinkMovement.MovementChildId
+           WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Sale()
+             AND MovementLinkMovement.MovementId = inMovementId),
+          (SELECT to_char(Movement.OperDate, 'DD-MM-YYYY')
+           FROM MovementLinkMovement
+                INNER JOIN Movement ON Movement.ID = MovementLinkMovement.MovementChildId
+           WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Sale()
+             AND MovementLinkMovement.MovementId = inMovementId);
+      END IF;
+
+      IF EXISTS(SELECT 1 FROM MovementLinkMovement
+                WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
+                  AND MovementLinkMovement.MovementId = inMovementId) AND
+         NOT EXISTS(SELECT 1 FROM MovementItemFloat
+               WHERE MovementItemFloat.DescId = zc_MIFloat_AmountOrder() AND MovementItemFloat.MovementItemId = ioId
+                 AND COALESCE (MovementItemFloat.ValueData, 0) = COALESCE (inAmountOrder, 0))
+      THEN
+        RAISE EXCEPTION 'Ошибка. Данные добавлены во внутренний заказ номер <%> от <%>. Изменение количества в заказ запрещено...',
+          (SELECT Movement.InvNumber
+           FROM MovementLinkMovement
+                INNER JOIN Movement ON Movement.ID = MovementLinkMovement.MovementChildId
+           WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
+             AND MovementLinkMovement.MovementId = inMovementId),
+          (SELECT to_char(Movement.OperDate, 'DD-MM-YYYY')
+           FROM MovementLinkMovement
+                INNER JOIN Movement ON Movement.ID = MovementLinkMovement.MovementChildId
+           WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
+             AND MovementLinkMovement.MovementId = inMovementId);
+      END IF;
     END IF;
 
     --Посчитали сумму
@@ -115,6 +144,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.
+ 05.12.18         *
  02.10.18         *
  30.09.18         *
 */
