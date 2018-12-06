@@ -212,7 +212,7 @@ BEGIN
              , Movement.OperDate	              AS OperDate
              , MovementItem.ObjectId                  AS GoodsId
              , MovementItem.Amount                    AS Amount
-             , COALESCE (MIBoolean_isAuto.ValueData, TRUE)   AS isAuto
+             , COALESCE (MIBoolean_isAuto.ValueData, TRUE)   AS isAuto	
              , ObjectLink_GoodsGroup.ChildObjectId    AS GoodsGroupId
              , tmpMovement.isPartner
         FROM tmpMovement
@@ -1013,6 +1013,44 @@ BEGIN
 
             LEFT JOIN tmpReturnIn ON 1 = 1
      )
+
+     -- ссумируем сумму НДС построчные
+    , tmpMI_SummVat AS (SELECT SUM (tmp.SummVat) AS SummVat
+                        FROM (SELECT -- сумма НДС
+                                      SUM (CAST (CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                                       AND vbIsNPP_calc = TRUE
+                                                           -- !!!Корр. цены!!!
+                                                           THEN (tmpData_all.Amount_for_PriceCor * tmpData_all.PriceTax_calc) :: NUMERIC (16, 2)
+                                   
+                                                      WHEN tmpData_all.CountForPrice_orig > 0
+                                                           THEN ((COALESCE (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount_orig END, 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
+                                                      ELSE ((COALESCE (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount_orig END, 0)) * tmpData_all.Price_orig) :: NUMERIC (16, 2)
+                                                 END
+                                               + tmpData_all.SummTaxDiff_calc
+                                                 AS NUMERIC (16, 2)) / 100 * tmpData_all.VATPercent ) :: TFloat AS SummVat
+                              FROM tmpData_all
+
+                             UNION ALL
+                              SELECT -- сумма НДС
+                                     SUM ( (CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                                      -- !!!Корр. цены!!!
+                                                      THEN (tmpData_all.Amount_for_PriceCor * -1 * (tmpData_all.PriceTax_calc - tmpData_all.Price_for_PriceCor)) :: NUMERIC (16, 2)
+                            
+                                                 WHEN tmpData_all.CountForPrice_orig > 0
+                                                      THEN ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
+                                                 ELSE ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig) :: NUMERIC (16, 2)
+                                            END) / 100 * tmpData_all.VATPercent ) :: TFloat AS SummVat
+                               FROM tmpData_all
+                               WHERE vbIsNPP_calc = TRUE
+                                      -- !!!важно - показали ТОЛЬКО если есть еще что возвращать!!!
+                                 AND (tmpData_all.AmountTax_calc <> tmpData_all.Amount
+                                      -- или !!!Корр. цены!!!
+                                   OR tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                    , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
+                                                                     ))
+                               ) AS tmp
+                        )
+
       -- РЕЗУЛЬТАТ
       SELECT tmpData_all.InvNumberPartner
              -- !!! только для сортировки !!!
@@ -1060,6 +1098,7 @@ BEGIN
            , tmpData_all.TotalSummMVAT
            , tmpData_all.TotalSummPVAT
            , tmpData_all.TotalSumm
+           , tmpMI_SummVat.SummVat AS TotalSummVAT_calc
 
            , tmpData_all.ContractName
            , tmpData_all.ContractSigningDate
@@ -1203,6 +1242,7 @@ BEGIN
            , tmpData_all.TaxKind -- признак  сводной корректировки
 
       FROM tmpData_all
+           LEFT JOIN tmpMI_SummVat ON 1 = 1
 
      UNION ALL
       SELECT 
@@ -1238,6 +1278,7 @@ BEGIN
            , tmpData_all.TotalSummMVAT
            , tmpData_all.TotalSummPVAT
            , tmpData_all.TotalSumm
+           , tmpMI_SummVat.SummVat AS TotalSummVAT_calc
 
            , tmpData_all.ContractName
            , tmpData_all.ContractSigningDate
@@ -1372,6 +1413,7 @@ BEGIN
            , tmpData_all.TaxKind -- признак  сводной корректировки
 
        FROM tmpData_all
+            LEFT JOIN tmpMI_SummVat ON 1 = 1
        WHERE vbIsNPP_calc = TRUE
               -- !!!важно - показали ТОЛЬКО если есть еще что возвращать!!!
          AND (tmpData_all.AmountTax_calc <> tmpData_all.Amount
