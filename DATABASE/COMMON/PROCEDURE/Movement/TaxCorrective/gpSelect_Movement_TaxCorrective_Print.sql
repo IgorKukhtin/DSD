@@ -1511,8 +1511,8 @@ BEGIN
            , tmpData_all.AmountSumm
 
              -- сумма НДС
-           , CASE WHEN tmpData_all.OperDate_child < '01.12.2018' AND tmpData_all.OperDate_begin >= '01.12.2018' AND tmpData_all.AmountSumm > 0 THEN tmpData_all.AmountSumm_orig / 100 * tmpData_all.VATPercent
-                  WHEN tmpData_all.OperDate_child < '01.12.2018' AND tmpData_all.OperDate_begin >= '01.12.2018' AND tmpData_all.AmountSumm < 0 THEN 0 -- tmpData_all.AmountSumm_orig / 100 * tmpData_all.VATPercent
+           , CASE WHEN tmpData_all.OperDate_child < '01.12.2018' AND tmpData_all.OperDate_begin >= '01.12.2018' AND tmpData_all.AmountSumm > 0 THEN 0 -- tmpData_all.AmountSumm_orig / 100 * tmpData_all.VATPercent
+                  WHEN 1=0 AND tmpData_all.OperDate_child < '01.12.2018' AND tmpData_all.OperDate_begin >= '01.12.2018' AND tmpData_all.AmountSumm < 0 THEN -1 * tmpData_all.AmountSumm_orig / 100 * tmpData_all.VATPercent
                   ELSE tmpData_all.AmountSumm / 100 * tmpData_all.VATPercent
              END :: TFloat AS SummVat
 
