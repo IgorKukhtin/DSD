@@ -706,8 +706,7 @@ BEGIN
            , CAST (REPEAT (' ', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
            , CAST (REPEAT ('0', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner_ifin
 
-           ---, CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
-           , CAST (COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) / 100 * MovementFloat_VATPercent.ValueData AS TFloat) AS TotalSummVAT
+           , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
            , MovementFloat_TotalSummMVAT.ValueData                          AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData                          AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
@@ -1094,11 +1093,13 @@ BEGIN
            , tmpData_all.VATPercent
            , tmpData_all.InvNumberPartner_ifin
 
-           , tmpData_all.TotalSummVAT
+           , CASE WHEN vbOperDate_begin <  '01.12.2018' THEN tmpData_all.TotalSummVAT
+                  WHEN vbOperDate_begin >= '01.12.2018' THEN tmpMI_SummVat.SummVat
+             END AS TotalSummVAT
+           --, tmpData_all.TotalSummVAT
            , tmpData_all.TotalSummMVAT
            , tmpData_all.TotalSummPVAT
            , tmpData_all.TotalSumm
-           , tmpMI_SummVat.SummVat AS TotalSummVAT_calc
 
            , tmpData_all.ContractName
            , tmpData_all.ContractSigningDate
@@ -1274,11 +1275,13 @@ BEGIN
            , tmpData_all.VATPercent
            , tmpData_all.InvNumberPartner_ifin
 
-           , tmpData_all.TotalSummVAT
+           , CASE WHEN vbOperDate_begin <  '01.12.2018' THEN tmpData_all.TotalSummVAT
+                  WHEN vbOperDate_begin >= '01.12.2018' THEN tmpMI_SummVat.SummVat
+             END AS TotalSummVAT
+           --, tmpData_all.TotalSummVAT
            , tmpData_all.TotalSummMVAT
            , tmpData_all.TotalSummPVAT
            , tmpData_all.TotalSumm
-           , tmpMI_SummVat.SummVat AS TotalSummVAT_calc
 
            , tmpData_all.ContractName
            , tmpData_all.ContractSigningDate
