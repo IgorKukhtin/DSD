@@ -176,7 +176,7 @@ BEGIN
      ELSE
      -- определили !!!только для SPEC!!!
      IF vbMovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut())
-        AND inBranchCode IN (301) -- Dnepr + Dnepr-OBV + иногда Dnepr-SPEC
+        AND inBranchCode BETWEEN 301 AND 310 -- Dnepr-SPEC-Zapch
         AND inBoxCount > 0
      THEN
          -- !!!т.к. Криво - передаем цену через этот параметр!!!
@@ -185,7 +185,9 @@ BEGIN
      ELSE
      -- определили !!!только для Днепра!!!
      IF vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
-        AND inBranchCode IN (1, 201, 301) -- Dnepr + Dnepr-OBV + иногда Dnepr-SPEC
+        AND (inBranchCode IN (1, 201) -- Dnepr + Dnepr-OBV
+         OR  inBranchCode BETWEEN 301 AND 310 -- иногда Dnepr-SPEC-Zapch
+            )
      THEN
          -- !!!замена!!!
          SELECT tmp.PriceListId, tmp.OperDate
@@ -313,7 +315,7 @@ BEGIN
                                                                                             THEN inPrice
 
                                                                                        -- цена для Специй
-                                                                                       WHEN inBranchCode = 301 AND vbPrice_301 > 0 AND vbMovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut())
+                                                                                       WHEN inBranchCode BETWEEN 301 AND 310 AND vbPrice_301 > 0 AND vbMovementDescId IN (zc_Movement_Income(), zc_Movement_ReturnOut())
                                                                                             THEN vbPrice_301
                                                                                        -- в первую очередь - если Возврат + Акция
                                                                                        WHEN vbMovementDescId = zc_Movement_ReturnIn() AND inMovementId_Promo > 0

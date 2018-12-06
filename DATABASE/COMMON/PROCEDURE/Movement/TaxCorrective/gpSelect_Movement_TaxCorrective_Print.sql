@@ -771,7 +771,11 @@ BEGIN
            , OH_JuridicalDetails_To.FullName                                AS JuridicalName_To
            , OH_JuridicalDetails_To.JuridicalAddress                        AS JuridicalAddress_To
 
-           , OH_JuridicalDetails_To.OKPO                                    AS OKPO_To
+           , CASE WHEN vbOperDate_begin >= '01.12.2018' 
+                   AND OH_JuridicalDetails_To.INN IN ('100000000000', '300000000000')
+                  THEN ''
+                  ELSE OH_JuridicalDetails_To.OKPO
+             END :: TVarChar AS OKPO_To
            , CASE WHEN OH_JuridicalDetails_To.INN IN ('100000000000', '300000000000')
                   THEN ''
                   ELSE (REPEAT ('0', 10 - LENGTH (OH_JuridicalDetails_To.OKPO)) ||  OH_JuridicalDetails_To.OKPO)
@@ -821,7 +825,11 @@ BEGIN
                   THEN 'Неплатник'
              ELSE OH_JuridicalDetails_From.JuridicalAddress END             AS JuridicalAddress_From
 
-           , OH_JuridicalDetails_From.OKPO                                  AS OKPO_From
+           , CASE WHEN vbOperDate_begin >= '01.12.2018' 
+                   AND OH_JuridicalDetails_From.OKPO IN ('100000000000', '300000000000')
+                  THEN ''
+                  ELSE OH_JuridicalDetails_From.OKPO
+             END :: TVarChar AS OKPO_From
            , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) IN ('100000000000', '300000000000')
                   THEN ''
                   ELSE (REPEAT ('0', 10 - LENGTH (OH_JuridicalDetails_From.OKPO)) ||  OH_JuridicalDetails_From.OKPO)

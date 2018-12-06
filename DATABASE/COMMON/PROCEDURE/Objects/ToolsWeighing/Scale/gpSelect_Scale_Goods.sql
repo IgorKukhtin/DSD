@@ -65,7 +65,7 @@ BEGIN
 
 
    -- товар которого нет как бы в заявке, но его все равно надо провести
-   IF (inOrderExternalId > 0 OR inBranchCode = 301) AND inGoodsCode <> 0 THEN vbGoodsId:= (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inGoodsCode AND Object.DescId = zc_Object_Goods() AND Object.isErased = FALSE);
+   IF (inOrderExternalId > 0 OR inBranchCode BETWEEN 301 AND 310) AND inGoodsCode <> 0 THEN vbGoodsId:= (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inGoodsCode AND Object.DescId = zc_Object_Goods() AND Object.isErased = FALSE);
    END IF;
 
 
@@ -86,7 +86,7 @@ BEGIN
         WHERE Movement.Id = inOrderExternalId;
 
 
-         IF vbGoodsId <> 0 AND inBranchCode <> 301
+         IF vbGoodsId <> 0 AND inBranchCode NOT BETWEEN 301 AND 310
          THEN
               -- определили
               SELECT tmp.PriceListId, tmp.OperDate
@@ -174,7 +174,7 @@ BEGIN
                                OR View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
                                                                , zc_Enum_InfoMoney_10106() -- Сыр
                                                                 )
-                               OR inBranchCode <> 301
+                               OR inBranchCode NOT BETWEEN 301 AND 310
                            UNION ALL
                             SELECT Object_Goods.Id AS GoodsId
                                  , CASE WHEN inIsGoodsComplete = FALSE THEN zc_Enum_GoodsKind_Main() ELSE zc_Enum_GoodsKind_Main() END  AS GoodsKindId
@@ -267,7 +267,7 @@ BEGIN
                                                                                                          , zc_Enum_InfoMoney_10106() -- Сыр
                                                                                                           )
                                                                            )
-                                  WHERE inBranchCode = 301
+                                  WHERE inBranchCode BETWEEN 301 AND 310
                                     AND TRIM (inGoodsName)  <> ''
                                     AND Object.DescId = zc_Object_Goods() AND Object.isErased = FALSE
                                     AND UPPER (Object.ValueData) LIKE UPPER ('%' || TRIM (inGoodsName) || '%')
@@ -337,7 +337,7 @@ BEGIN
             , Object_GoodsKind.ValueData  AS GoodsKindName_max
             , Object_Measure.Id           AS MeasureId
             , Object_Measure.ValueData    AS MeasureName
-            , CASE WHEN inBranchCode = 301
+            , CASE WHEN inBranchCode BETWEEN 301 AND 310
                         THEN 0
                    WHEN Object_Measure.Id = zc_Measure_Kg()
                         THEN CASE WHEN inIsGoodsComplete = FALSE
@@ -347,11 +347,11 @@ BEGIN
                    ELSE 0
               END :: TFloat AS ChangePercentAmount
             , tmpMI.Amount_Order :: TFloat    AS Amount_Order
-            , (tmpMI.Amount_Order * CASE WHEN inBranchCode = 301 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat    AS Amount_OrderWeight
+            , (tmpMI.Amount_Order * CASE WHEN inBranchCode BETWEEN 301 AND 310 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat    AS Amount_OrderWeight
             , tmpMI.Amount_Weighing :: TFloat AS Amount_Weighing
-            , (tmpMI.Amount_Weighing * CASE WHEN inBranchCode = 301 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS Amount_WeighingWeight
+            , (tmpMI.Amount_Weighing * CASE WHEN inBranchCode BETWEEN 301 AND 310 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS Amount_WeighingWeight
             , (tmpMI.Amount_Order - tmpMI.Amount_Weighing) :: TFloat AS Amount_diff
-            , ((tmpMI.Amount_Order - tmpMI.Amount_Weighing)  * CASE WHEN inBranchCode = 301 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS Amount_diffWeight
+            , ((tmpMI.Amount_Order - tmpMI.Amount_Weighing)  * CASE WHEN inBranchCode BETWEEN 301 AND 310 THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS Amount_diffWeight
             , CASE WHEN tmpMI.Amount_Weighing > tmpMI.Amount_Order
                         THEN CASE WHEN tmpMI.Amount_Order = 0
                                        THEN TRUE
@@ -478,7 +478,7 @@ BEGIN
                                                      AND ObjectLink_GoodsListIncome_Goods.DescId   = zc_ObjectLink_GoodsListIncome_Goods()
                             WHERE Object_GoodsListIncome.DescId   = zc_Object_GoodsListIncome()
                               AND Object_GoodsListIncome.isErased = FALSE
-                              AND inBranchCode                  = 301
+                              AND inBranchCode                    BETWEEN 301 AND 310
                            UNION ALL
                             -- Перемещение - Склад Специй
                             SELECT DISTINCT MovementItem.ObjectId AS GoodsId
@@ -514,15 +514,15 @@ BEGIN
                             WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '3 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
                               AND Movement.DescId = zc_Movement_OrderInternal()
                               AND Movement.StatusId = zc_Enum_Status_Complete()
-                              AND inBranchCode                  = 301
+                              AND inBranchCode                  BETWEEN 301 AND 310
                               AND inMovementId                  = 0
                            UNION ALL
                             -- По коду - Склад Специй
                             SELECT vbGoodsId AS GoodsId
                                  , 0   AS GoodsKindId_max
                                  , ''  AS WordList
-                            WHERE inBranchCode = 301
-                              AND vbGoodsId     <> 0
+                            WHERE inBranchCode BETWEEN 301 AND 310
+                              AND vbGoodsId    <> 0
                            UNION ALL
                             -- По Названию - Склад Специй
                             SELECT Object.Id AS GoodsId
@@ -543,14 +543,14 @@ BEGIN
                                                                                                    , zc_Enum_InfoMoney_10106() -- Сыр
                                                                                                     )
                                                                      )
-                            WHERE inBranchCode = 301
+                            WHERE inBranchCode BETWEEN 301 AND 310
                               AND TRIM (inGoodsName)  <> ''
                               AND Object.DescId = zc_Object_Goods() AND Object.isErased = FALSE
                               AND UPPER (Object.ValueData) LIKE UPPER ('%' || TRIM (inGoodsName) || '%')
                             ;
     -- 
     INSERT INTO _tmpWord_Split_from (WordList) 
-       SELECT DISTINCT _tmpWord_Goods.WordList FROM _tmpWord_Goods WHERE inOrderExternalId < 0 OR inBranchCode = 301;
+       SELECT DISTINCT _tmpWord_Goods.WordList FROM _tmpWord_Goods WHERE inOrderExternalId < 0 OR inBranchCode BETWEEN 301 AND 310;
 
     -- RAISE EXCEPTION '<%>   <%> ', (select count(* ) from _tmpWord_Goods), (select count(* ) from _tmpWord_Split_from);
 
@@ -575,7 +575,7 @@ BEGIN
                              SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
                              FROM Object_InfoMoney_View AS View_InfoMoney
                              WHERE inIsGoodsComplete = FALSE
-                               AND inBranchCode <> 301
+                               AND inBranchCode NOT BETWEEN 301 AND 310
                                AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
                                                                            , zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
                                                                             )
@@ -583,7 +583,7 @@ BEGIN
                              SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
                              FROM Object_InfoMoney_View AS View_InfoMoney
                              WHERE inIsGoodsComplete = FALSE
-                               AND inBranchCode <> 301
+                               AND inBranchCode NOT BETWEEN 301 AND 310
                                AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10204() -- Основное сырье + Прочее сырье
                                                                  )
                             UNION
@@ -592,13 +592,13 @@ BEGIN
                              WHERE View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
                                                                            , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
                                                                             )
-                               AND inBranchCode <> 301
+                               AND inBranchCode NOT BETWEEN 301 AND 310
 
                             UNION
                              SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
                              FROM Object_InfoMoney_View AS View_InfoMoney
                              WHERE inIsGoodsComplete = FALSE
-                               AND inBranchCode = 301
+                               AND inBranchCode BETWEEN 301 AND 310
                                AND (View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
                                                                             , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
                                                                             , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
@@ -648,7 +648,7 @@ BEGIN
                             WHERE ObjectBoolean_ScaleCeh.DescId    IN (zc_ObjectBoolean_GoodsByGoodsKind_ScaleCeh(), zc_ObjectBoolean_GoodsByGoodsKind_Order())
                               AND ObjectBoolean_ScaleCeh.ValueData = TRUE
                               AND inMovementId >= 0
-                              AND inBranchCode <> 301
+                              AND inBranchCode NOT BETWEEN 301 AND 310
                            ) AS tmp
                             GROUP BY tmp.GoodsId
                            )
@@ -666,11 +666,11 @@ BEGIN
                                          AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                           JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
                                                      AND Object_Goods.isErased = FALSE
-                                                     AND (Object_Goods.ObjectCode <> 0 OR inBranchCode = 301)
+                                                     AND (Object_Goods.ObjectCode <> 0 OR inBranchCode BETWEEN 301 AND 310)
                           LEFT JOIN tmpGoods_ScaleCeh ON tmpGoods_ScaleCeh.GoodsId = Object_Goods.Id
                           LEFT JOIN tmpGoods_Return ON tmpGoods_Return.GoodsId = Object_Goods.Id
                           LEFT JOIN Object AS Object_GoodsKind_Main ON Object_GoodsKind_Main.Id = zc_Enum_GoodsKind_Main()
-                     WHERE (tmpGoods_Return.GoodsId > 0 OR (inMovementId >= 0 AND inBranchCode <> 301) OR tmpInfoMoney.isTare = TRUE)
+                     WHERE (tmpGoods_Return.GoodsId > 0 OR (inMovementId >= 0 AND inBranchCode NOT BETWEEN 301 AND 310) OR tmpInfoMoney.isTare = TRUE)
                     )
       , tmpPrice1 AS (SELECT tmpGoods.GoodsId
                            , COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) AS Price

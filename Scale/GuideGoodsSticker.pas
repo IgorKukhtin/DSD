@@ -732,7 +732,7 @@ begin
      if Result = TRUE then
      begin
           //если не ШТ, проверка стабильности - т.е. вес такой же как и был
-          if 1=0 // (CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Kg) and (SettingMain.BranchCode <> 301)
+          if 1=0 // (CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Kg) and ((SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310))
           then begin
           end;
 
@@ -890,7 +890,7 @@ begin if(Key='+')then Key:=#0;end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsStickerForm.EditWeightValueExit(Sender: TObject);
 begin
-     //if (CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Kg) and (SettingMain.BranchCode <> 301)
+     //if (CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Kg) and ((SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310))
      //then exit;
 
      try StrToFloat(EditWeightValue.Text)
@@ -956,7 +956,7 @@ begin
                   end
         else if ParamsMI.ParamByName('RealWeight').AsFloat<=1
              then
-                  if 1=1//(CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)
+                  if 1=1//(CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
                   then begin ShowMessage('Ошибка.Не определено значение <Ввод КОЛИЧЕСТВО>.');ActiveControl:=EditWeightValue;end
                   else begin ShowMessage('Ошибка.Не определено значение <Вес на Табло>.');ActiveControl:=EditGoodsCode;end;
 
@@ -1097,7 +1097,7 @@ procedure TGuideGoodsStickerForm.DSDataChange(Sender: TObject; Field: TField);
 begin
      with ParamsMI do begin
         if CDS.RecordCount=1 then
-         if 1=1//(CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or (SettingMain.BranchCode = 301)
+         if 1=1//(CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
          then try ParamByName('RealWeight').AsFloat:=StrToFloat(EditWeightValue.Text); except ParamByName('RealWeight').AsFloat:=0;end
          else ParamByName('RealWeight').AsFloat:=ParamByName('RealWeight_Get').AsFloat
         else

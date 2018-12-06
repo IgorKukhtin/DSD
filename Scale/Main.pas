@@ -805,9 +805,9 @@ begin
          // Диалог для параметров товара из списка всех товаров + в нем сохранение MovementItem
          if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)
           or((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Income)
-             and(SettingMain.BranchCode = 301))
+             and((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)))
           or((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
-             and(SettingMain.BranchCode = 301))
+             and((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)))
          then
               if GuideGoodsPartnerForm.Execute (ParamsMovement, isModeSave) = TRUE
               then begin
@@ -1380,7 +1380,7 @@ begin
 
   bbChangeCountPack.Visible:=not bbChangeHeadCount.Visible;
   //
-  bbUpdatePartner.Visible:= SettingMain.BranchCode = 301;
+  bbUpdatePartner.Visible:= (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310);
   bbUpdateUnit.Visible:= not bbUpdatePartner.Visible;
   //
   bbGuideGoodsView.Visible:= GetArrayList_Value_byName(Default_Array,'isCheckDelete') = AnsiUpperCase('TRUE');

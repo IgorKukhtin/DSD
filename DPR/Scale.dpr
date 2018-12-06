@@ -88,7 +88,9 @@ uses
   GuideGoods in '..\Scale\GuideGoods.pas' {GuideGoodsForm},
   DialogStringValue in '..\Scale\DialogStringValue.pas' {DialogStringValueForm},
   DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm},
-  dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas';
+  dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas',
+  Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
+  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas';
 
 {$R *.res}
 

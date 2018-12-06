@@ -510,7 +510,8 @@ begin
                     ParamByName('GoodsPropertyCode').AsInteger:= 0;
                     ParamByName('GoodsPropertyName').asString := '';
 
-                    if (SettingMain.BranchCode <> 301) or (CDS.FieldByName('MovementDescId').asInteger <> zc_Movement_Send)
+                    if (SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310)
+                    or (CDS.FieldByName('MovementDescId').asInteger <> zc_Movement_Send)
                     then begin
                               ParamByName('OrderExternalId').AsInteger        := 0;
                               ParamByName('OrderExternal_DescId').AsInteger   := 0;

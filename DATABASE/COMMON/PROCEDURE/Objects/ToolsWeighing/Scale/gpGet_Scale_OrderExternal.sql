@@ -86,7 +86,7 @@ BEGIN
                                                      AND MLO.DescId     = zc_MovementLinkObject_Juridical()
                                                    LIMIT 1)
                                         WHEN MovementLinkObject_From.ObjectId = MovementLinkObject_To.ObjectId
-                                         AND inBranchCode = 301
+                                         AND inBranchCode BETWEEN 301 AND 310
                                          AND tmpMovement.DescId = zc_Movement_OrderInternal()
                                              THEN 8455 -- Склад специй
                                         ELSE MovementLinkObject_To.ObjectId
@@ -121,7 +121,7 @@ BEGIN
                                        , Movement.DescId
                                        , Movement.OperDate
                                   FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId WHERE CHAR_LENGTH (inBarCode) >= 13
-                                                                                                                      AND inBranchCode = 301
+                                                                                                                      AND inBranchCode BETWEEN 301 AND 310
                                        ) AS tmp
                                        INNER JOIN Movement ON Movement.Id = tmp.MovementId
                                                           AND Movement.DescId = zc_Movement_OrderIncome()
@@ -146,7 +146,7 @@ BEGIN
                                        , Movement.DescId
                                        , Movement.OperDate
                                   FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) > 0 AND CHAR_LENGTH (inBarCode) < 13
-                                                                      AND inBranchCode = 301
+                                                                      AND inBranchCode BETWEEN 301 AND 310
                                        ) AS tmp
                                        INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
                                                           AND Movement.DescId = zc_Movement_OrderIncome()

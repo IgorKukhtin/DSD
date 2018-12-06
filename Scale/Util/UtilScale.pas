@@ -803,7 +803,7 @@ end;
 {------------------------------------------------------------------------------}
 function gpCheck_BranchCode: Boolean;
 begin
-    Result:=((SettingMain.isCeh = FALSE) and ((SettingMain.BranchCode = 201) or (SettingMain.BranchCode = 301) or (SettingMain.BranchCode < 100)))
+    Result:=((SettingMain.isCeh = FALSE) and ((SettingMain.BranchCode = 201) or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)) or (SettingMain.BranchCode < 100)))
           or((SettingMain.isCeh = TRUE) and ((SettingMain.BranchCode = 1) or ((SettingMain.BranchCode > 100) and (SettingMain.BranchCode < 1000))))
           or((SettingMain.isSticker = TRUE) and (SettingMain.BranchCode > 1000))
           ;

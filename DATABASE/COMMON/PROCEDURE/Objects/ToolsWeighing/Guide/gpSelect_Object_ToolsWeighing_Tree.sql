@@ -31,6 +31,8 @@ BEGIN
                   WHEN Object_ToolsWeighing_View.Name = 'Scale_301'
                        THEN 'Экспедиция - (301)Склад специй'
 
+                  WHEN Object_ToolsWeighing_View.Name = 'Scale_302'
+                       THEN 'Экспедиция - (302)Склад запчастей'
 
                   WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_1'
                        THEN 'Производство - (001)Склад Реализации'
@@ -48,6 +50,9 @@ BEGIN
                   WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_301'
                        THEN 'Производство - (301)Склад специй'
 
+                  WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_302'
+                       THEN 'Производство - (302)Склад запчастей'
+                       
                   WHEN POSITION ('Scale_' IN Object_ToolsWeighing_View.Name) = 1
                    AND Object_ToolsWeighing_View.BranchCode > 0
                    AND Object_ToolsWeighing_View.BranchCode < 1000

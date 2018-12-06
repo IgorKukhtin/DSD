@@ -210,7 +210,7 @@ BEGIN
                                LEFT  JOIN tmpUnit_not ON tmpUnit_not.UnitId = lfSelect.UnitId
                           WHERE tmpUnit_not.UnitId IS NULL
                             AND Object_Member.isErased = FALSE
-                            -- AND (inBranchCode= 301 OR (inBranchCode= 1 AND inIsGoodsComplete = TRUE))
+                            -- AND (inBranchCode BETWEEN 301 AND 310 OR (inBranchCode= 1 AND inIsGoodsComplete = TRUE))
                          )
           , tmpInfoMoney AS (-- 1.1.
                              SELECT View_InfoMoney_find.InfoMoneyId
@@ -219,7 +219,7 @@ BEGIN
                              FROM Object_InfoMoney_View AS View_InfoMoney_find
                              WHERE View_InfoMoney_find.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
                                AND inIsGoodsComplete = FALSE
-                               AND inBranchCode     <> 301
+                               AND inBranchCode      NOT BETWEEN 301 AND 310
                             UNION
                              -- 1.1.
                              SELECT View_InfoMoney_find.InfoMoneyId
@@ -242,7 +242,7 @@ BEGIN
                                                                                 , zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
                                                                                  )
                                AND inIsGoodsComplete = FALSE
-                               AND inBranchCode     <> 301
+                               AND inBranchCode      NOT BETWEEN 301 AND 310
                             UNION
                              -- 2.1.
                              SELECT View_InfoMoney_find.InfoMoneyId
@@ -277,7 +277,7 @@ BEGIN
                                                                                 , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
                                                                                  )
                                AND inIsGoodsComplete = FALSE
-                               AND inBranchCode      = 301
+                               AND inBranchCode      BETWEEN 301 AND 310
                             )
          , tmpContractPartner AS (SELECT ObjectLink_ContractPartner_Contract.ChildObjectId AS ContractId
                                        , ObjectLink_ContractPartner_Partner.ChildObjectId  AS PartnerId
@@ -519,8 +519,8 @@ BEGIN
             , FALSE       :: Boolean AS isSpec   ,   0 :: TFloat AS CountSpec
             , FALSE       :: Boolean AS isTax    ,   0 :: TFloat AS CountTax
 
-            , CASE WHEN inBranchCode <> 301 THEN tmpMember.DescId   ELSE zc_Object_ArticleLoss() END :: Integer AS ObjectDescId
-            , CASE WHEN inBranchCode <> 301 THEN zc_Movement_Send() ELSE zc_Movement_Loss()      END :: Integer AS MovementDescId
+            , CASE WHEN inBranchCode NOT BETWEEN 301 AND 310 THEN tmpMember.DescId   ELSE zc_Object_ArticleLoss() END :: Integer AS ObjectDescId
+            , CASE WHEN inBranchCode NOT BETWEEN 301 AND 310 THEN zc_Movement_Send() ELSE zc_Movement_Loss()      END :: Integer AS MovementDescId
             , ObjectDesc.ItemName
 
        FROM tmpMember
