@@ -70,9 +70,7 @@ begin
 
   LoadReportFromFile('PrintReport_CheckSP_9102200', ReportPath + '\PrintReport_CheckSP_9102200.fr3');
   LoadReportFromFile('PrintReport_CheckSP_9089478', ReportPath + '\PrintReport_CheckSP_9089478.fr3');
-  }
   LoadReportFromFile('PrintReport_CheckSP_9126996', ReportPath + '\PrintReport_CheckSP_9126996.fr3');
-  {
 
   LoadReportFromFile('PrintReport_CheckSP_4474509', ReportPath + '\PrintReport_CheckSP_4474509.fr3');
   LoadReportFromFile('PrintReport_CheckSP_4474508', ReportPath + '\PrintReport_CheckSP_4474508.fr3');
@@ -86,10 +84,10 @@ begin
   LoadReportFromFile('Pеестр по постановлению 1303', ReportPath + '\Pеестр по постановлению 1303.fr3');
 
   LoadReportFromFile('Отчет по продажам Соц.проекта', ReportPath + '\Отчет по продажам Соц.проекта.fr3');
-  }
+
   LoadReportFromFile('Отчет по продажам Соц.проекта(пост.152)', ReportPath + '\Отчет по продажам Соц.проекта(пост.152).fr3');
   exit;
-   {
+
   LoadReportFromFile('PrintReport_CheckSP_4474558', ReportPath + '\PrintReport_CheckSP_4474558.fr3');
   exit;
   {
@@ -105,8 +103,9 @@ begin
   LoadReportFromFile('Перемещение', ReportPath + '\Перемещение.fr3');
   LoadReportFromFile('Продажа', ReportPath + '\Продажа.fr3');
   LoadReportFromFile('Оплаты', ReportPath + '\Оплаты.fr3');
+  }
   LoadReportFromFile('Возвратная_накладная', ReportPath + '\Возвратная_накладная.fr3');
-  LoadReportFromFile('Отчет по продажам на кассах', ReportPath + '\Отчет по продажам на кассах.fr3');
+  {LoadReportFromFile('Отчет по продажам на кассах', ReportPath + '\Отчет по продажам на кассах.fr3');
   LoadReportFromFile('Отчет Доходности', ReportPath + '\Отчет Доходности.fr3');
    }
 end;
