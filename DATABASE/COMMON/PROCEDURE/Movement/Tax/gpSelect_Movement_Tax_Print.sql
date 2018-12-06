@@ -239,26 +239,6 @@ order by 4*/
 
      -- Данные по заголовку налоговой
      OPEN Cursor1 FOR
-         WITH tmpMI_SummVAT AS (-- Сума податку на додану вартість
-                                SELECT SUM (CAST(MovementItem.Amount * CASE WHEN vbPriceWithVAT = TRUE
-                                                                            THEN (MIFloat_Price.ValueData - MIFloat_Price.ValueData * (vbVATPercent / (vbVATPercent + 100)))
-                                                                            ELSE (MIFloat_Price.ValueData)
-                                                                        END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-                                                 AS NUMERIC (16, 2))  / 100 * vbVATPercent 
-                                            ) AS SummVAT
-                                FROM MovementItem
-                                     INNER JOIN MovementItemFloat AS MIFloat_Price
-                                                                  ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                     LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                                                 ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                                                AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-                                WHERE MovementItem.MovementId = vbMovementId_Tax
-                                  AND MovementItem.DescId     = zc_MI_Master()
-                                  AND MovementItem.isErased   = FALSE
-                                  AND MovementItem.Amount     <> 0
-                               )
-       
        SELECT
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
@@ -301,6 +281,11 @@ order by 4*/
                        THEN 902
                   WHEN (vbCurrencyPartnerId <> zc_Enum_Currency_Basis() AND COALESCE (ObjectBoolean_Vat.ValueData, False) = False)
                        THEN 901
+                  ElSE 20
+             END AS CodeStavka
+
+           , CASE WHEN (COALESCE (ObjectBoolean_Vat.ValueData, False) = True) OR (vbCurrencyPartnerId <> zc_Enum_Currency_Basis() AND COALESCE (ObjectBoolean_Vat.ValueData, False) = False)
+                       THEN 0
                   ElSE vbVATPercent
              END AS VATPercent
 
@@ -308,12 +293,10 @@ order by 4*/
           --, CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() OR COALESCE (ObjectBoolean_Vat.ValueData, False) = True THEN MovementFloat_TotalSummPVAT.ValueData ELSE 0 END AS TotalSummPVAT
            , MovementFloat_TotalSummPVAT.ValueData AS TotalSummPVAT
             , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, False) = False 
-                        THEN COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) 
-                     -- THEN CAST (COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) / 100 * vbVATPercent AS TFloat)
-                -- WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, False) = False 
-                --      THEN CAST (tmpMI_SummVAT.SummVAT AS TFloat)
-                   ELSE 0 
+                        THEN COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)
+                        ELSE 0
              END AS SummVAT
+             
            , MovementFloat_TotalSumm.ValueData AS TotalSumm
 
            , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, False) = False THEN 0 ELSE MovementFloat_TotalSummMVAT.ValueData END AS TotalSummMVAT_11
@@ -605,9 +588,6 @@ order by 4*/
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Vat
                                     ON ObjectBoolean_Vat.ObjectId = View_Contract.ContractId
                                    AND ObjectBoolean_Vat.DescId = zc_ObjectBoolean_Contract_Vat()
-    
-            
-            LEFT JOIN tmpMI_SummVAT ON 1 = 1
        WHERE Movement.Id =  vbMovementId_Tax
          AND Movement.StatusId = zc_Enum_Status_Complete()
       ;

@@ -1013,49 +1013,356 @@ BEGIN
             LEFT JOIN tmpReturnIn ON 1 = 1
      )
 
-     -- ссумируем сумму НДС построчные
-    , tmpMI_SummVat AS (SELECT SUM (tmp.SummVat) AS SummVat
-                        FROM (SELECT -- сумма НДС
-                                      SUM (CAST (CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
-                                                       AND vbIsNPP_calc = TRUE
-                                                           -- !!!Корр. цены!!!
-                                                           THEN (tmpData_all.Amount_for_PriceCor * tmpData_all.PriceTax_calc) :: NUMERIC (16, 2)
-                                   
-                                                      WHEN tmpData_all.CountForPrice_orig > 0
-                                                           THEN ((COALESCE (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount_orig END, 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
-                                                      ELSE ((COALESCE (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount_orig END, 0)) * tmpData_all.Price_orig) :: NUMERIC (16, 2)
-                                                 END
-                                               + tmpData_all.SummTaxDiff_calc
-                                                 AS NUMERIC (16, 2)) / 100 * tmpData_all.VATPercent ) :: TFloat AS SummVat
-                              FROM tmpData_all
+    , tmpData AS (SELECT tmpData_all.InvNumberPartner
+                         -- !!! только для сортировки !!!
+                       , tmpData_all.LineNum AS LineNum_order
+                         -- !!! ПЕРВАЯ Строка !!!
+                       , (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.NPPTax_calc ELSE tmpData_all.LineNum END) :: Integer AS LineNum
+            
+                       , tmpData_all.GoodsName
+                       , tmpData_all.GoodsKindName
+            
+                       , tmpData_all.GoodsName_two
+                       , tmpData_all.MeasureName
+                       , tmpData_all.MeasureCode
+            
+                       , tmpData_all.inMovementId
+                       , tmpData_all.MovementId
+                       , tmpData_all.InvNumber
+                       , tmpData_all.OperDate
+                       , tmpData_all.CHARCODE
+                       , tmpData_all.N10
+                       , tmpData_all.N10_ifin
+            
+                       , tmpData_all.N9
+                       , CASE WHEN tmpData_all.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                     , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
+                                                                      )
+                               AND tmpData_all.AmountTax_calc = tmpData_all.Amount
+                                   THEN 103  --4 --'Повернення товару або авансових платежів'
+                              ELSE tmpData_all.KindCode
+                         END ::integer AS KindCode
+            
+                       , CASE WHEN tmpData_all.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                     , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
+                                                                      )
+                               AND tmpData_all.AmountTax_calc = tmpData_all.Amount
+                                   THEN 'Повернення товару або авансових платежів'
+                              ELSE tmpData_all.KindName
+                         END :: TVarChar AS KindName
+            
+                       , tmpData_all.PriceWithVAT
+                       , tmpData_all.VATPercent
+                       , tmpData_all.InvNumberPartner_ifin
+            
+                       , tmpData_all.TotalSummVAT
+                       , tmpData_all.TotalSummMVAT
+                       , tmpData_all.TotalSummPVAT
+                       , tmpData_all.TotalSumm
+            
+                       , tmpData_all.ContractName
+                       , tmpData_all.ContractSigningDate
+                       , tmpData_all.ContractKind
+            
+                       , tmpData_all.InvNumber_Child
+                       , tmpData_all.OperDate_Child
+            
+                       , tmpData_all.CopyForClient
+                       , tmpData_all.CopyForUs
+            
+                       , tmpData_all.x11
+                       , tmpData_all.x12
+                       , tmpData_all.PZOB           -- поле для Медка
+                       , tmpData_all.OperDate_begin -- поле для Медка
+            
+                       , tmpData_all.isERPN -- Підлягає реєстрації в ЄРПН покупцем !!!так криво для медка до 01.04.2016!!!
+            
+                       , tmpData_all.ERPN -- Підлягає реєстрації в ЄРПН постачальником (продавцем)
+            
+                       , tmpData_all.ERPN2 -- Підлягає реєстрації в ЄРПН покупцем
+            
+                       , tmpData_all.NotNDSPayer
+                       , tmpData_all.isNotNDSPayer
+                       , tmpData_all.NotNDSPayerC1
+                       , tmpData_all.NotNDSPayerC2
+            
+                       , tmpData_all.PartnerAddress_From
+            
+                       , tmpData_all.JuridicalName_To
+                       , tmpData_all.JuridicalAddress_To
+            
+                       , tmpData_all.OKPO_To
+                       , tmpData_all.OKPO_To_ifin
+                       , tmpData_all.INN_To
+                       , tmpData_all.NumberVAT_To
+                       , tmpData_all.AccounterName_To
+                       , tmpData_all.AccounterINN_To
+            
+                       , tmpData_all.BankAccount_To
+                       , tmpData_all.BankName_To
+                       , tmpData_all.BankMFO_To
+                       , tmpData_all.Phone_To
+            
+                       , tmpData_all.BuyerGLNCode
+            
+                       , tmpData_all.SupplierGLNCode
+            
+                       , tmpData_all.JuridicalName_From
+                       , tmpData_all.JuridicalAddress_From
+            
+                       , tmpData_all.OKPO_From
+                       , tmpData_all.OKPO_From_ifin
+                       , tmpData_all.INN_From
+            
+                       , tmpData_all.InvNumberBranch_From
+                       , tmpData_all.NumberVAT_From
+                       , tmpData_all.AccounterName_From
+                       , tmpData_all.BankAccount_From
+                       , tmpData_all.BankName_From
+                       , tmpData_all.BankMFO_From
+                       , tmpData_all.Phone_From
+            
+                       , tmpData_all.Id
+                       , tmpData_all.GoodsCode
+            
+                       , tmpData_all.GoodsCodeUKTZED
+            
+                       , tmpData_all.GoodsCodeTaxImport
+            
+                       , tmpData_all.GoodsCodeDKPP
+            
+                       , tmpData_all.GoodsCodeTaxAction
+            
+            
+                       , tmpData_all.Article_Juridical
+                       , tmpData_all.BarCode_Juridical
+                       , tmpData_all.ArticleGLN_Juridical
+                       , tmpData_all.BarCodeGLN_Juridical
+            
+                         -- !!! ПЕРВАЯ Строка !!!
+                       , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                   THEN 0 -- !!!Корр. цены!!!
+                              ELSE CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount END
+                         END :: TFloat AS Amount
+            
+                       , tmpData_all.Price
+            
+                       , tmpData_all.Amount_for_PriceCor
+                         -- !!! ПЕРВАЯ Строка - Корр. цены!!!
+                       , CASE WHEN vbIsNPP_calc = FALSE
+                                    THEN tmpData_all.Price_for_PriceCor
+                              WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                    THEN tmpData_all.PriceTax_calc
+                              ELSE 0
+                         END :: TFloat AS Price_for_PriceCor
+                       
+                         -- !!! ПЕРВАЯ Строка !!!
+                       , (CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                AND vbIsNPP_calc = TRUE
+                                    -- !!!Корр. цены!!!
+                                    THEN (tmpData_all.Amount_for_PriceCor * tmpData_all.PriceTax_calc) :: NUMERIC (16, 2)
+            
+                               WHEN tmpData_all.CountForPrice_orig > 0
+                                    THEN ((COALESCE (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount_orig END, 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
+                               ELSE ((COALESCE (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount_orig END, 0)) * tmpData_all.Price_orig) :: NUMERIC (16, 2)
+                          END
+                        + tmpData_all.SummTaxDiff_calc
+                         ) :: TFloat AS AmountSumm
+            
+                       , tmpData_all.InvNumberBranch
+                       , tmpData_all.InvNumberBranch_Child
+            
+                       , tmpData_all.InvNumberMark
+                       , tmpData_all.OperDatePartner_ReturnIn
+                       , tmpData_all.InvNumberPartner_ReturnIn
+            
+                       , tmpData_all.InvNumber_Sale
+                       , tmpData_all.InvNumberPartner_Sale
+                       , tmpData_all.InvNumberOrder_Sale
+                       , tmpData_all.OperDatePartner_Sale
+            
+                       , tmpData_all.InvNumberPartnerEDI
+                       , tmpData_all.OperDatePartnerEDI
+                       , tmpData_all.EDIId
+                       , tmpData_all.SendDeclarAmount
+            
+                       , tmpData_all.TaxKind -- признак  сводной корректировки
+            
+                  FROM tmpData_all
+                 UNION ALL
+                  SELECT 
+                         tmpData_all.InvNumberPartner
+                         -- !!! только для сортировки !!!
+                       , tmpData_all.LineNum AS LineNum_order
+                         -- !!! ВТОРАЯ Строка !!!
+                       , tmpData_all.NPP_calc AS LineNum
+            
+                       , tmpData_all.GoodsName
+                       , tmpData_all.GoodsKindName
+            
+                       , tmpData_all.GoodsName_two
+                       , tmpData_all.MeasureName
+                       , tmpData_all.MeasureCode
+            
+                       , tmpData_all.inMovementId
+                       , tmpData_all.MovementId
+                       , tmpData_all.InvNumber
+                       , tmpData_all.OperDate
+                       , tmpData_all.CHARCODE
+                       , tmpData_all.N10
+                       , tmpData_all.N10_ifin
+            
+                       , tmpData_all.N9
+                       , tmpData_all.KindCode ::integer
+                       , tmpData_all.KindName
+                       , tmpData_all.PriceWithVAT
+                       , tmpData_all.VATPercent
+                       , tmpData_all.InvNumberPartner_ifin
+            
+                       , tmpData_all.TotalSummVAT
+                       , tmpData_all.TotalSummMVAT
+                       , tmpData_all.TotalSummPVAT
+                       , tmpData_all.TotalSumm
+            
+                       , tmpData_all.ContractName
+                       , tmpData_all.ContractSigningDate
+                       , tmpData_all.ContractKind
+            
+                       , tmpData_all.InvNumber_Child
+                       , tmpData_all.OperDate_Child
+            
+                       , tmpData_all.CopyForClient
+                       , tmpData_all.CopyForUs
+            
+                       , tmpData_all.x11
+                       , tmpData_all.x12
+                       , tmpData_all.PZOB           -- поле для Медка
+                       , tmpData_all.OperDate_begin -- поле для Медка
+            
+                       , tmpData_all.isERPN -- Підлягає реєстрації в ЄРПН покупцем !!!так криво для медка до 01.04.2016!!!
+            
+                       , tmpData_all.ERPN -- Підлягає реєстрації в ЄРПН постачальником (продавцем)
+            
+                       , tmpData_all.ERPN2 -- Підлягає реєстрації в ЄРПН покупцем
+            
+                       , tmpData_all.NotNDSPayer
+                       , tmpData_all.isNotNDSPayer
+                       , tmpData_all.NotNDSPayerC1
+                       , tmpData_all.NotNDSPayerC2
+            
+                       , tmpData_all.PartnerAddress_From
+            
+                       , tmpData_all.JuridicalName_To
+                       , tmpData_all.JuridicalAddress_To
+            
+                       , tmpData_all.OKPO_To
+                       , tmpData_all.OKPO_To_ifin
+                       , tmpData_all.INN_To
+                       , tmpData_all.NumberVAT_To
+                       , tmpData_all.AccounterName_To
+                       , tmpData_all.AccounterINN_To
+            
+                       , tmpData_all.BankAccount_To
+                       , tmpData_all.BankName_To
+                       , tmpData_all.BankMFO_To
+                       , tmpData_all.Phone_To
+            
+                       , tmpData_all.BuyerGLNCode
+            
+                       , tmpData_all.SupplierGLNCode
+            
+                       , tmpData_all.JuridicalName_From
+                       , tmpData_all.JuridicalAddress_From
+            
+                       , tmpData_all.OKPO_From
+                       , tmpData_all.OKPO_From_ifin
+                       , tmpData_all.INN_From
+            
+                       , tmpData_all.InvNumberBranch_From
+                       , tmpData_all.NumberVAT_From
+                       , tmpData_all.AccounterName_From
+                       , tmpData_all.BankAccount_From
+                       , tmpData_all.BankName_From
+                       , tmpData_all.BankMFO_From
+                       , tmpData_all.Phone_From
+            
+                       , tmpData_all.Id
+                       , tmpData_all.GoodsCode
+            
+                       , tmpData_all.GoodsCodeUKTZED
+            
+                       , tmpData_all.GoodsCodeTaxImport
+            
+                       , tmpData_all.GoodsCodeDKPP
+            
+                       , tmpData_all.GoodsCodeTaxAction
+            
+                       , tmpData_all.Article_Juridical
+                       , tmpData_all.BarCode_Juridical
+                       , tmpData_all.ArticleGLN_Juridical
+                       , tmpData_all.BarCodeGLN_Juridical
+            
+                         -- !!! ВТОРАЯ Строка !!!
+                       , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                   THEN 0 -- !!!Корр. цены!!!
+                              ELSE -1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount)
+                         END :: TFloat AS Amount
+            
+                       , tmpData_all.Price
+            
+                       , tmpData_all.Amount_for_PriceCor
+                         -- !!! ВТОРАЯ Строка - Корр. цены!!!
+                       , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                    THEN -1 * (tmpData_all.PriceTax_calc - tmpData_all.Price_for_PriceCor)
+                               ELSE 0
+                         END :: TFloat AS Price_for_PriceCor
+            
+                         -- !!! ВТОРАЯ Строка !!!
+                       , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                   -- !!!Корр. цены!!!
+                                   THEN (tmpData_all.Amount_for_PriceCor * -1 * (tmpData_all.PriceTax_calc - tmpData_all.Price_for_PriceCor)) :: NUMERIC (16, 2)
+            
+                              WHEN tmpData_all.CountForPrice_orig > 0
+                                   THEN ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
+                              ELSE ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig) :: NUMERIC (16, 2)
+                         END :: TFloat AS AmountSumm
+            
+                       , tmpData_all.InvNumberBranch
+                       , tmpData_all.InvNumberBranch_Child
+            
+                       , tmpData_all.InvNumberMark
+                       , tmpData_all.OperDatePartner_ReturnIn
+                       , tmpData_all.InvNumberPartner_ReturnIn
+            
+                       , tmpData_all.InvNumber_Sale
+                       , tmpData_all.InvNumberPartner_Sale
+                       , tmpData_all.InvNumberOrder_Sale
+                       , tmpData_all.OperDatePartner_Sale
+            
+                       , tmpData_all.InvNumberPartnerEDI
+                       , tmpData_all.OperDatePartnerEDI
+                       , tmpData_all.EDIId
+                       , tmpData_all.SendDeclarAmount
+            
+                       , tmpData_all.TaxKind -- признак  сводной корректировки
+            
+                   FROM tmpData_all
+                   WHERE vbIsNPP_calc = TRUE
+                          -- !!!важно - показали ТОЛЬКО если есть еще что возвращать!!!
+                     AND (tmpData_all.AmountTax_calc <> tmpData_all.Amount
+                          -- или !!!Корр. цены!!!
+                       OR tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                        , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
+                                                         ))
+                  )
 
-                             UNION ALL
-                              SELECT -- сумма НДС
-                                     SUM ( (CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
-                                                      -- !!!Корр. цены!!!
-                                                      THEN (tmpData_all.Amount_for_PriceCor * -1 * (tmpData_all.PriceTax_calc - tmpData_all.Price_for_PriceCor)) :: NUMERIC (16, 2)
-                            
-                                                 WHEN tmpData_all.CountForPrice_orig > 0
-                                                      THEN ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
-                                                 ELSE ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig) :: NUMERIC (16, 2)
-                                            END) / 100 * tmpData_all.VATPercent ) :: TFloat AS SummVat
-                               FROM tmpData_all
-                               WHERE vbIsNPP_calc = TRUE
-                                      -- !!!важно - показали ТОЛЬКО если есть еще что возвращать!!!
-                                 AND (tmpData_all.AmountTax_calc <> tmpData_all.Amount
-                                      -- или !!!Корр. цены!!!
-                                   OR tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
-                                                                    , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
-                                                                     ))
-                               ) AS tmp
-                        )
 
       -- РЕЗУЛЬТАТ
       SELECT tmpData_all.InvNumberPartner
              -- !!! только для сортировки !!!
            , tmpData_all.LineNum AS LineNum_order
-             -- !!! ПЕРВАЯ Строка !!!
-           , (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.NPPTax_calc ELSE tmpData_all.LineNum END) :: Integer AS LineNum
+
+           , tmpData_all.LineNum
 
            , tmpData_all.GoodsName
            , tmpData_all.GoodsKindName
@@ -1073,212 +1380,18 @@ BEGIN
            , tmpData_all.N10_ifin
 
            , tmpData_all.N9
-           , CASE WHEN tmpData_all.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
-                                                         , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
-                                                          )
-                   AND tmpData_all.AmountTax_calc = tmpData_all.Amount
-                       THEN 103  --4 --'Повернення товару або авансових платежів'
-                  ELSE tmpData_all.KindCode
-             END ::integer AS KindCode
-
-           , CASE WHEN tmpData_all.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
-                                                         , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
-                                                          )
-                   AND tmpData_all.AmountTax_calc = tmpData_all.Amount
-                       THEN 'Повернення товару або авансових платежів'
-                  ELSE tmpData_all.KindName
-             END :: TVarChar AS KindName
-
-           , tmpData_all.PriceWithVAT
-           , tmpData_all.VATPercent
-           , tmpData_all.InvNumberPartner_ifin
-
-           , CASE WHEN vbOperDate_begin <  '01.12.2018' THEN tmpData_all.TotalSummVAT
-                  WHEN vbOperDate_begin >= '01.12.2018' THEN tmpMI_SummVat.SummVat
-             END AS TotalSummVAT
-           --, tmpData_all.TotalSummVAT
-           , tmpData_all.TotalSummMVAT
-           , tmpData_all.TotalSummPVAT
-           , tmpData_all.TotalSumm
-
-           , tmpData_all.ContractName
-           , tmpData_all.ContractSigningDate
-           , tmpData_all.ContractKind
-
-           , tmpData_all.InvNumber_Child
-           , tmpData_all.OperDate_Child
-
-           , tmpData_all.CopyForClient
-           , tmpData_all.CopyForUs
-
-           , tmpData_all.x11
-           , tmpData_all.x12
-           , tmpData_all.PZOB           -- поле для Медка
-           , tmpData_all.OperDate_begin -- поле для Медка
-
-           , tmpData_all.isERPN -- Підлягає реєстрації в ЄРПН покупцем !!!так криво для медка до 01.04.2016!!!
-
-           , tmpData_all.ERPN -- Підлягає реєстрації в ЄРПН постачальником (продавцем)
-
-           , tmpData_all.ERPN2 -- Підлягає реєстрації в ЄРПН покупцем
-
-           , tmpData_all.NotNDSPayer
-           , tmpData_all.isNotNDSPayer
-           , tmpData_all.NotNDSPayerC1
-           , tmpData_all.NotNDSPayerC2
-
-           , tmpData_all.PartnerAddress_From
-
-           , tmpData_all.JuridicalName_To
-           , tmpData_all.JuridicalAddress_To
-
-           , tmpData_all.OKPO_To
-           , tmpData_all.OKPO_To_ifin
-           , tmpData_all.INN_To
-           , tmpData_all.NumberVAT_To
-           , tmpData_all.AccounterName_To
-           , tmpData_all.AccounterINN_To
-
-           , tmpData_all.BankAccount_To
-           , tmpData_all.BankName_To
-           , tmpData_all.BankMFO_To
-           , tmpData_all.Phone_To
-
-           , tmpData_all.BuyerGLNCode
-
-           , tmpData_all.SupplierGLNCode
-
-           , tmpData_all.JuridicalName_From
-           , tmpData_all.JuridicalAddress_From
-
-           , tmpData_all.OKPO_From
-           , tmpData_all.OKPO_From_ifin
-           , tmpData_all.INN_From
-
-           , tmpData_all.InvNumberBranch_From
-           , tmpData_all.NumberVAT_From
-           , tmpData_all.AccounterName_From
-           , tmpData_all.BankAccount_From
-           , tmpData_all.BankName_From
-           , tmpData_all.BankMFO_From
-           , tmpData_all.Phone_From
-
-           , tmpData_all.Id
-           , tmpData_all.GoodsCode
-
-           , tmpData_all.GoodsCodeUKTZED
-
-           , tmpData_all.GoodsCodeTaxImport
-
-           , tmpData_all.GoodsCodeDKPP
-
-           , tmpData_all.GoodsCodeTaxAction
-
-
-           , tmpData_all.Article_Juridical
-           , tmpData_all.BarCode_Juridical
-           , tmpData_all.ArticleGLN_Juridical
-           , tmpData_all.BarCodeGLN_Juridical
-
-             -- !!! ПЕРВАЯ Строка !!!
-           , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
-                       THEN 0 -- !!!Корр. цены!!!
-                  ELSE CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount END
-             END :: TFloat AS Amount
-
-           , tmpData_all.Price
-
-           , tmpData_all.Amount_for_PriceCor
-             -- !!! ПЕРВАЯ Строка - Корр. цены!!!
-           , CASE WHEN vbIsNPP_calc = FALSE
-                        THEN tmpData_all.Price_for_PriceCor
-                  WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
-                        THEN tmpData_all.PriceTax_calc
-                  ELSE 0
-             END :: TFloat AS Price_for_PriceCor
-           
-             -- !!! ПЕРВАЯ Строка !!!
-           , (CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
-                    AND vbIsNPP_calc = TRUE
-                        -- !!!Корр. цены!!!
-                        THEN (tmpData_all.Amount_for_PriceCor * tmpData_all.PriceTax_calc) :: NUMERIC (16, 2)
-
-                   WHEN tmpData_all.CountForPrice_orig > 0
-                        THEN ((COALESCE (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount_orig END, 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
-                   ELSE ((COALESCE (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount_orig END, 0)) * tmpData_all.Price_orig) :: NUMERIC (16, 2)
-              END
-            + tmpData_all.SummTaxDiff_calc
-             ) :: TFloat AS AmountSumm
-
-             -- сумма НДС
-           , ( CAST (CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
-                    AND vbIsNPP_calc = TRUE
-                        -- !!!Корр. цены!!!
-                        THEN (tmpData_all.Amount_for_PriceCor * tmpData_all.PriceTax_calc) :: NUMERIC (16, 2)
-
-                   WHEN tmpData_all.CountForPrice_orig > 0
-                        THEN ((COALESCE (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount_orig END, 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
-                   ELSE ((COALESCE (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.AmountTax_calc ELSE tmpData_all.Amount_orig END, 0)) * tmpData_all.Price_orig) :: NUMERIC (16, 2)
-              END
-            + tmpData_all.SummTaxDiff_calc
-              AS NUMERIC (16, 2)) / 100 * tmpData_all.VATPercent ) :: TFloat AS SummVat
-
-           , tmpData_all.InvNumberBranch
-           , tmpData_all.InvNumberBranch_Child
-
-           , tmpData_all.InvNumberMark
-           , tmpData_all.OperDatePartner_ReturnIn
-           , tmpData_all.InvNumberPartner_ReturnIn
-
-           , tmpData_all.InvNumber_Sale
-           , tmpData_all.InvNumberPartner_Sale
-           , tmpData_all.InvNumberOrder_Sale
-           , tmpData_all.OperDatePartner_Sale
-
-           , tmpData_all.InvNumberPartnerEDI
-           , tmpData_all.OperDatePartnerEDI
-           , tmpData_all.EDIId
-           , tmpData_all.SendDeclarAmount
-
-           , tmpData_all.TaxKind -- признак  сводной корректировки
-
-      FROM tmpData_all
-           LEFT JOIN tmpMI_SummVat ON 1 = 1
-
-     UNION ALL
-      SELECT 
-             tmpData_all.InvNumberPartner
-             -- !!! только для сортировки !!!
-           , tmpData_all.LineNum AS LineNum_order
-             -- !!! ВТОРАЯ Строка !!!
-           , tmpData_all.NPP_calc AS LineNum
-
-           , tmpData_all.GoodsName
-           , tmpData_all.GoodsKindName
-
-           , tmpData_all.GoodsName_two
-           , tmpData_all.MeasureName
-           , tmpData_all.MeasureCode
-
-           , tmpData_all.inMovementId
-           , tmpData_all.MovementId
-           , tmpData_all.InvNumber
-           , tmpData_all.OperDate
-           , tmpData_all.CHARCODE
-           , tmpData_all.N10
-           , tmpData_all.N10_ifin
-
-           , tmpData_all.N9
-           , tmpData_all.KindCode ::integer
+           , tmpData_all.KindCode
            , tmpData_all.KindName
+
            , tmpData_all.PriceWithVAT
            , tmpData_all.VATPercent
            , tmpData_all.InvNumberPartner_ifin
 
-           , CASE WHEN vbOperDate_begin <  '01.12.2018' THEN tmpData_all.TotalSummVAT
+           /*, CASE WHEN vbOperDate_begin <  '01.12.2018' THEN tmpData_all.TotalSummVAT
                   WHEN vbOperDate_begin >= '01.12.2018' THEN tmpMI_SummVat.SummVat
-             END AS TotalSummVAT
-           --, tmpData_all.TotalSummVAT
+             END AS TotalSummVAT*/
+             
+           , tmpData_all.TotalSummVAT
            , tmpData_all.TotalSummMVAT
            , tmpData_all.TotalSummPVAT
            , tmpData_all.TotalSumm
@@ -1356,45 +1469,21 @@ BEGIN
 
            , tmpData_all.GoodsCodeTaxAction
 
+
            , tmpData_all.Article_Juridical
            , tmpData_all.BarCode_Juridical
            , tmpData_all.ArticleGLN_Juridical
            , tmpData_all.BarCodeGLN_Juridical
-
-             -- !!! ВТОРАЯ Строка !!!
-           , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
-                       THEN 0 -- !!!Корр. цены!!!
-                  ELSE -1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount)
-             END :: TFloat AS Amount
-
+           , tmpData_all.Amount
            , tmpData_all.Price
-
            , tmpData_all.Amount_for_PriceCor
-             -- !!! ВТОРАЯ Строка - Корр. цены!!!
-           , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
-                        THEN -1 * (tmpData_all.PriceTax_calc - tmpData_all.Price_for_PriceCor)
-                   ELSE 0
-             END :: TFloat AS Price_for_PriceCor
-
-             -- !!! ВТОРАЯ Строка !!!
-           , CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
-                       -- !!!Корр. цены!!!
-                       THEN (tmpData_all.Amount_for_PriceCor * -1 * (tmpData_all.PriceTax_calc - tmpData_all.Price_for_PriceCor)) :: NUMERIC (16, 2)
-
-                  WHEN tmpData_all.CountForPrice_orig > 0
-                       THEN ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
-                  ELSE ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig) :: NUMERIC (16, 2)
-             END :: TFloat AS AmountSumm
+           , tmpData_all.Price_for_PriceCor
+           , tmpData_all.AmountSumm
 
              -- сумма НДС
-           , ( (CASE WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
-                          -- !!!Корр. цены!!!
-                          THEN (tmpData_all.Amount_for_PriceCor * -1 * (tmpData_all.PriceTax_calc - tmpData_all.Price_for_PriceCor)) :: NUMERIC (16, 2)
-
-                     WHEN tmpData_all.CountForPrice_orig > 0
-                          THEN ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig / tmpData_all.CountForPrice_orig) :: NUMERIC (16, 2)
-                     ELSE ((COALESCE (-1 * (tmpData_all.AmountTax_calc - tmpData_all.Amount), 0)) * tmpData_all.Price_orig) :: NUMERIC (16, 2)
-                END) / 100 * tmpData_all.VATPercent ) :: TFloat AS SummVat
+           , CASE WHEN tmpData_all.OperDate_child < '01.12.2018' AND tmpData_all.AmountSumm > 0 THEN 0
+                  ELSE tmpData_all.AmountSumm / 100 * tmpData_all.VATPercent
+             END :: TFloat AS SummVat
 
            , tmpData_all.InvNumberBranch
            , tmpData_all.InvNumberBranch_Child
@@ -1415,15 +1504,8 @@ BEGIN
 
            , tmpData_all.TaxKind -- признак  сводной корректировки
 
-       FROM tmpData_all
-            LEFT JOIN tmpMI_SummVat ON 1 = 1
-       WHERE vbIsNPP_calc = TRUE
-              -- !!!важно - показали ТОЛЬКО если есть еще что возвращать!!!
-         AND (tmpData_all.AmountTax_calc <> tmpData_all.Amount
-              -- или !!!Корр. цены!!!
-           OR tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
-                                            , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
-                                             ))
+      FROM tmpData AS tmpData_all
+      --     LEFT JOIN tmpMI_SummVat ON 1 = 1
        ORDER BY 1
               , 2
               , 3

@@ -95,7 +95,7 @@ BEGIN
     CREATE TEMP TABLE tmpMIChild (UnitId Integer, GoodsMainId Integer, GoodsId Integer, Amount TFloat, Summa TFloat, MIChild_Id Integer, PRIMARY KEY (MIChild_Id, UnitId,GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpUnit_list (UnitId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE tmpSend (GoodsId Integer, UnitId Integer, Amount TFloat) ON COMMIT DROP;      
-    CREATE TEMP TABLE tmpPrice (PriceId Integer, UnitId Integer, GoodsId Integer, MCSValue TFloat) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpPrice (PriceId Integer, UnitId Integer, GoodsId Integer, MCSValue TFloat, MCSNotRecalc Boolean) ON COMMIT DROP;
 
     -- Таблица - Результат
     CREATE TEMP TABLE tmpData (GoodsMainId Integer, GoodsId Integer, UnitId Integer, MCSValue TFloat
@@ -405,11 +405,12 @@ BEGIN
        END IF;
        
        -- tmpPrice
-       INSERT INTO tmpPrice (PriceId, UnitId, GoodsId, MCSValue)   
+       INSERT INTO tmpPrice (PriceId, UnitId, GoodsId, MCSValue, MCSNotRecalc)   
                     SELECT ObjectLink_Price_Unit.ObjectId           AS PriceId
                          , ObjectLink_Price_Unit.ChildObjectId      AS UnitId
                          , Price_Goods.ChildObjectId                AS GoodsId
                          , COALESCE(MCS_Value.ValueData,0) ::Tfloat AS MCSValue 
+                         , COALESCE(MCS_NotRecalc.ValueData, False) :: Boolean AS MCSNotRecalc       -- для товаров, на которых стоит спецконтроль (по подразделению с которого перемещаем), будем брать НТЗ из справочника всегда
                     FROM tmpUnit_list
                        LEFT JOIN ObjectLink AS ObjectLink_Price_Unit
                                             ON ObjectLink_Price_Unit.ChildObjectId = tmpUnit_list.UnitId
@@ -419,7 +420,10 @@ BEGIN
                                            AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                        LEFT JOIN ObjectFloat AS MCS_Value
                                              ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                            AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue();
+                                            AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                       LEFT JOIN ObjectBoolean AS MCS_NotRecalc
+                                               ON MCS_NotRecalc.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                              AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc();
 
        -- Goods_list
        INSERT INTO tmpGoods_list (GoodsMainId, GoodsId, UnitId, PriceId, MCSValue)
@@ -459,7 +463,7 @@ BEGIN
          
        -- Goods_list - MCSValue
        UPDATE tmpGoods_list
-              SET MCSValue = CASE WHEN (inisMCS = TRUE AND tmpGoods_list.UnitId = inUnitId) THEN COALESCE (tmpPrice.MCSValue, 0)
+              SET MCSValue = CASE WHEN (inisMCS = TRUE AND tmpGoods_list.UnitId = inUnitId) OR (tmpPrice.MCSNotRecalc = TRUE AND tmpGoods_list.UnitId = inUnitId) THEN COALESCE (tmpPrice.MCSValue, 0)
                                   WHEN (inisInMCS = TRUE AND tmpGoods_list.UnitId <> inUnitId) THEN COALESCE (tmpPrice.MCSValue, 0)
                                   ELSE COALESCE (tmpMCS.MCSValue, 0)
                              END
