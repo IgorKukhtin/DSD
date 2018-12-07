@@ -826,7 +826,7 @@ BEGIN
              ELSE OH_JuridicalDetails_From.JuridicalAddress END             AS JuridicalAddress_From
 
            , CASE WHEN vbOperDate_begin >= '01.12.2018' 
-                   AND OH_JuridicalDetails_From.OKPO IN ('100000000000', '300000000000')
+                   AND OH_JuridicalDetails_From.INN IN ('100000000000', '300000000000')
                   THEN ''
                   ELSE OH_JuridicalDetails_From.OKPO
              END :: TVarChar AS OKPO_From

@@ -188,7 +188,8 @@ BEGIN
        WHERE (Object_Unit_View.BranchId = vbObjectId_Constraint
               OR (Object_Unit_View.BranchId > 0 AND vbIsBranch_Kharkov = FALSE)
               OR vbIsConstraint = FALSE
-              OR Object_Unit_View.Id IN (8459 -- Склад Реализации
+              OR Object_Unit_View.Id IN (8458 -- Склад База ГП
+                                       , 8459 -- Склад Реализации
                                        , 8462 -- Склад Брак
                                        , 8461 -- Склад Возвратов
                                        , 256716 -- Склад УТИЛЬ
