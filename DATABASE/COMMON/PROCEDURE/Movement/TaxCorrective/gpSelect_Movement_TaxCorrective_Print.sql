@@ -949,6 +949,16 @@ BEGIN
            , tmpMI.SummTaxDiff_calc      :: TFloat  AS SummTaxDiff_calc
            , tmpMI.PriceTax_calc         :: TFloat  AS PriceTax_calc
 
+             -- № п/п
+           , ROW_NUMBER() OVER (ORDER BY CASE WHEN vbIsNPP_calc = TRUE THEN tmpMI.NPPTax_calc
+                                              WHEN tmpMI.isAuto = TRUE THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum)
+                                              ELSE tmpMI.NPP
+                                         END
+                                       , tmpGoods.GoodsName
+                                       , tmpMI.GoodsKindName
+                               ) AS Ord
+
+
        FROM tmpMI
 
             LEFT JOIN tmpMovement_ChildEDI ON tmpMovement_ChildEDI.MovementId = tmpMI.MovementId
@@ -1023,7 +1033,7 @@ BEGIN
 
     , tmpData AS (SELECT tmpData_all.InvNumberPartner
                          -- !!! только для сортировки !!!
-                       , tmpData_all.LineNum AS LineNum_order
+                       , tmpData_all.Ord AS LineNum_order -- tmpData_all.LineNum AS LineNum_order
                          -- !!! ПЕРВАЯ Строка !!!
                        , (CASE WHEN vbIsNPP_calc = TRUE THEN tmpData_all.NPPTax_calc ELSE tmpData_all.LineNum END) :: Integer AS LineNum
             
@@ -1213,7 +1223,7 @@ BEGIN
                   SELECT 
                          tmpData_all.InvNumberPartner
                          -- !!! только для сортировки !!!
-                       , tmpData_all.LineNum AS LineNum_order
+                       , tmpData_all.Ord AS LineNum_order -- tmpData_all.LineNum AS LineNum_order
                          -- !!! ВТОРАЯ Строка !!!
                        , tmpData_all.NPP_calc AS LineNum
             
@@ -1390,9 +1400,9 @@ BEGIN
       -- РЕЗУЛЬТАТ
       SELECT tmpData_all.InvNumberPartner
              -- !!! только для сортировки !!!
-           , tmpData_all.LineNum AS LineNum_order
+           , tmpData_all.LineNum_order :: Integer As LineNum_order -- tmpData_all.LineNum AS LineNum_order
 
-           , tmpData_all.LineNum
+           , tmpData_all.LineNum       :: Integer As LineNum
 
            , tmpData_all.GoodsName
            , tmpData_all.GoodsKindName
