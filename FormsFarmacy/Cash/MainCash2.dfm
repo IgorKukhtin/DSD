@@ -44,6 +44,7 @@ inherited MainCashForm2: TMainCashForm2
         OptionsData.DeletingConfirmation = False
         OptionsData.Editing = False
         OptionsData.Inserting = False
+        OptionsSelection.HideSelection = True
         OptionsView.GridLineColor = clBtnFace
         OptionsView.GroupByBox = False
         OptionsView.Indicator = True
@@ -254,6 +255,7 @@ inherited MainCashForm2: TMainCashForm2
         OptionsData.Deleting = False
         OptionsData.DeletingConfirmation = False
         OptionsData.Inserting = False
+        OptionsSelection.HideSelection = True
         OptionsView.GridLineColor = clBtnFace
         OptionsView.GroupByBox = False
         OptionsView.HeaderAutoHeight = True
