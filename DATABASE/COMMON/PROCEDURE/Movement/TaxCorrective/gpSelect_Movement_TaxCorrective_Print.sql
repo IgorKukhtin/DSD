@@ -530,6 +530,11 @@ BEGIN
                         , MovementString_InvNumberPartner_Sale.ValueData AS InvNumberPartner_Sale
                         , MovementString_InvNumberOrder_Sale.ValueData   AS InvNumberOrder_Sale
                         , MovementDate_OperDatePartner_Sale.ValueData    AS OperDatePartner_Sale
+                        , CASE WHEN MovementDate_DateRegistered_Child.ValueData         > Movement_child.OperDate
+                             -- AND MovementString_InvNumberRegistered_Child.ValueData <> '' 
+                                    THEN MovementDate_DateRegistered_Child.ValueData
+                               ELSE Movement_child.OperDate
+                          END AS OperDate_begin_Child
 
                    FROM tmpMovement
                         INNER JOIN MovementLinkMovement AS MovementLinkMovement_Child
@@ -538,6 +543,13 @@ BEGIN
                         INNER JOIN Movement AS Movement_child 
                                             ON Movement_child.Id = MovementLinkMovement_Child.MovementChildId
                                            AND Movement_child.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+
+                        LEFT JOIN MovementDate AS MovementDate_DateRegistered_Child
+                                               ON MovementDate_DateRegistered_Child.MovementId = Movement_child.Id
+                                              AND MovementDate_DateRegistered_Child.DescId     = zc_MovementDate_DateRegistered()
+                        LEFT JOIN MovementString AS MovementString_InvNumberRegistered_Child
+                                                 ON MovementString_InvNumberRegistered_Child.MovementId = Movement_child.Id
+                                                AND MovementString_InvNumberRegistered_Child.DescId     = zc_MovementString_InvNumberRegistered()
 
                         LEFT JOIN MovementString AS MovementString_InvNumberBranch_Child
                                                  ON MovementString_InvNumberBranch_Child.MovementId = Movement_child.Id
@@ -717,17 +729,19 @@ BEGIN
 
            , CAST (REPEAT (' ', 7 - LENGTH (tmpMLM_Child.InvNumberPartner_Child)) || tmpMLM_Child.InvNumberPartner_Child AS TVarChar) AS InvNumber_Child
            , tmpMLM_Child.OperDate_Child                                    AS OperDate_Child
+           , tmpMLM_Child.OperDate_begin_Child                              AS OperDate_begin_Child
 
            , CASE WHEN inisClientCopy=TRUE
                   THEN 'X' ELSE '' END                                      AS CopyForClient
            , CASE WHEN inisClientCopy=TRUE
                   THEN '' ELSE 'X' END                                      AS CopyForUs
 
-           , tmpMLM_Child.MovementId_Child       AS x11
-           , tmpMLM_Child.OperDate_Child AS x12
-           , '51' ::TVarChar         AS PZOB           -- поле для Медка
-           , vbOperDate_begin        AS OperDate_begin -- поле для Медка
+           , tmpMLM_Child.MovementId_Child  AS x11
+           , tmpMLM_Child.OperDate_Child    AS x12
+           , '51' ::TVarChar                AS PZOB           -- поле для Медка
+           , vbOperDate_begin               AS OperDate_begin -- поле для Медка
 
+             -- Підлягає реєстрації в ЄРПН покупцем !!!так криво для медка до 01.04.2016!!!
            , CASE WHEN tmpMI.OperDate < '01.01.2015' AND (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) > 10000
                   THEN TRUE
                   WHEN tmpMI.OperDate >= '01.01.2015' AND tmpMLM_Child.OperDate_Child >= '01.01.2015'
@@ -735,7 +749,7 @@ BEGIN
                        AND COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) >= 0
                   THEN TRUE
                   ELSE FALSE
-             END :: Boolean AS isERPN -- Підлягає реєстрації в ЄРПН покупцем !!!так криво для медка до 01.04.2016!!!
+             END :: Boolean AS isERPN
 
            , CASE WHEN vbOperDate_begin >= '01.04.2016' AND COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) <> vbNotNDSPayer_INN AND vbCalcNDSPayer_INN = ''
                        AND COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) < 0
@@ -1084,6 +1098,7 @@ BEGIN
             
                        , tmpData_all.InvNumber_Child
                        , tmpData_all.OperDate_Child
+                       , tmpData_all.OperDate_begin_Child
             
                        , tmpData_all.CopyForClient
                        , tmpData_all.CopyForUs
@@ -1260,6 +1275,7 @@ BEGIN
             
                        , tmpData_all.InvNumber_Child
                        , tmpData_all.OperDate_Child
+                       , tmpData_all.OperDate_begin_Child
             
                        , tmpData_all.CopyForClient
                        , tmpData_all.CopyForUs
@@ -1442,6 +1458,7 @@ BEGIN
 
            , tmpData_all.InvNumber_Child
            , tmpData_all.OperDate_Child
+           , tmpData_all.OperDate_begin_Child
 
            , tmpData_all.CopyForClient
            , tmpData_all.CopyForUs
@@ -1521,8 +1538,8 @@ BEGIN
            , tmpData_all.AmountSumm
 
              -- сумма НДС
-           , CASE WHEN tmpData_all.OperDate_child < '01.12.2018' AND tmpData_all.OperDate_begin >= '01.12.2018' AND tmpData_all.AmountSumm > 0 THEN 0 -- tmpData_all.AmountSumm_orig / 100 * tmpData_all.VATPercent
-                  WHEN 1=0 AND tmpData_all.OperDate_child < '01.12.2018' AND tmpData_all.OperDate_begin >= '01.12.2018' AND tmpData_all.AmountSumm < 0 THEN -1 * tmpData_all.AmountSumm_orig / 100 * tmpData_all.VATPercent
+           , CASE WHEN tmpData_all.OperDate_begin_Child < '01.12.2018' AND tmpData_all.OperDate_begin >= '01.12.2018' AND tmpData_all.AmountSumm > 0 THEN 0 -- tmpData_all.AmountSumm_orig / 100 * tmpData_all.VATPercent
+                  WHEN 1=0 AND tmpData_all.OperDate_begin_Child < '01.12.2018' AND tmpData_all.OperDate_begin >= '01.12.2018' AND tmpData_all.AmountSumm < 0 THEN -1 * tmpData_all.AmountSumm_orig / 100 * tmpData_all.VATPercent
                   ELSE tmpData_all.AmountSumm / 100 * tmpData_all.VATPercent
              END :: TFloat AS SummVat
 
