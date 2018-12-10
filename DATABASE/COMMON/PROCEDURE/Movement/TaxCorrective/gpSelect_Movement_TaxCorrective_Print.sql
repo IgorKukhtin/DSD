@@ -950,7 +950,7 @@ BEGIN
            , tmpMI.PriceTax_calc         :: TFloat  AS PriceTax_calc
 
              -- № п/п
-           , ROW_NUMBER() OVER (ORDER BY CASE WHEN vbIsNPP_calc = TRUE THEN tmpMI.NPPTax_calc
+           , ROW_NUMBER() OVER (ORDER BY CASE WHEN vbIsNPP_calc = TRUE THEN tmpMI.NPP_calc
                                               WHEN tmpMI.isAuto = TRUE THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum)
                                               ELSE tmpMI.NPP
                                          END
@@ -1546,12 +1546,11 @@ BEGIN
            , tmpData_all.TaxKind -- признак  сводной корректировки
 
       FROM tmpData AS tmpData_all
-      --     LEFT JOIN tmpMI_SummVat ON 1 = 1
-       ORDER BY 1
-              , 2
-              , 3
-              , 4
-              , 5
+      ORDER BY 1
+             , 2
+             , 3
+             , 4
+             , 5
       ;
      RETURN NEXT Cursor1;
 
