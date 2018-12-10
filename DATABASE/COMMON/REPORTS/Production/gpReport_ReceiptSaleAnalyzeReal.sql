@@ -160,7 +160,7 @@ BEGIN
 
             FROM
            (SELECT MIContainer.ObjectId_Analyzer       AS GoodsId
-                 , MIContainer.ObjectIntId_analyzer    AS GoodsKindId
+                 , CASE WHEN COALESCE (MIContainer.ObjectIntId_analyzer, 0) = 0 THEN zc_GoodsKind_Basis() ELSE MIContainer.ObjectIntId_analyzer END AS GoodsKindId
                  -- , MIContainer.isActive
                  , MIContainer.MovementDescId
                  -- , COALESCE (MIContainer.AccountId, 0) AS AccountId

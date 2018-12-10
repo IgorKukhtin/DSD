@@ -2219,10 +2219,10 @@ begin
 
   if HeaderDataSet.FieldByName('ERPN2').asString <> '' then
      // Підлягає реєстрації в ЄРПН покупцем
-     ZVIT.DECLARBODY.HERPN0 := 1;
+     ZVIT.DECLARBODY.HERPN := 1;
   if HeaderDataSet.FieldByName('ERPN').asString <> '' then
      // Підлягає реєстрації в ЄРПН постачальником (продавцем)
-     ZVIT.DECLARBODY.HERPN  := 1;
+     ZVIT.DECLARBODY.HERPN0  := 1;
 
   if HeaderDataSet.FieldByName('TaxKind').asString = '4' then
      // Зведена податкова накладна
@@ -2270,11 +2270,11 @@ begin
   // Податковий номер платника податку або серія та/або номер паспорта (покупець)
   ZVIT.DECLARBODY.HTINBUY := HeaderDataSet.FieldByName('OKPO_From').AsString;
 
-  ZVIT.DECLARBODY.R001G03 := ReplaceStr(FormatFloat('0.00####', HeaderDataSet.FieldByName('TotalSummVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
-  ZVIT.DECLARBODY.R02G9   := ReplaceStr(FormatFloat('0.00####', HeaderDataSet.FieldByName('TotalSummVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+  ZVIT.DECLARBODY.R001G03 := ReplaceStr(FormatFloat('0.00####', -1 * HeaderDataSet.FieldByName('TotalSummVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+  ZVIT.DECLARBODY.R02G9   := ReplaceStr(FormatFloat('0.00####', -1 * HeaderDataSet.FieldByName('TotalSummVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
 
   ZVIT.DECLARBODY.ChildNodes['R02G111'].SetAttributeNS('nil', NS_URI, true);
-  ZVIT.DECLARBODY.R01G9   := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+  ZVIT.DECLARBODY.R01G9   := ReplaceStr(FormatFloat('0.00', -1 * HeaderDataSet.FieldByName('TotalSummMVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
   ZVIT.DECLARBODY.ChildNodes['R01G111'].SetAttributeNS('nil', NS_URI, true);
   ZVIT.DECLARBODY.ChildNodes['R006G03'].SetAttributeNS('nil', NS_URI, true);
   ZVIT.DECLARBODY.ChildNodes['R007G03'].SetAttributeNS('nil', NS_URI, true);
@@ -2310,15 +2310,15 @@ begin
 
            if FieldByName('Price_for_PriceCor').AsFloat <> 0 then
           begin
-              //Коригування кількості (зміна кількості, об'єму, обсягу) - ReplaceStr(FormatFloat('0.00', -1 * FieldByName('Price_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.')
-              with ZVIT.DECLARBODY.RXXXXG7.Add do begin ROWNUM := I; SetAttributeNS('nil', NS_URI, true); end;
-              //Коригування кількості  (ціна постачання одиниці товару\послуги) - ReplaceStr(FormatFloat('0.####', 1 * FieldByName('Amount_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.')
-              with ZVIT.DECLARBODY.RXXXXG8.Add do begin ROWNUM := I; SetAttributeNS('nil', NS_URI, true); end;
+              //Коригування
+              with ZVIT.DECLARBODY.RXXXXG7.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.####', -1 * FieldByName('Price_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
+              //Коригування
+              with ZVIT.DECLARBODY.RXXXXG8.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00', FieldByName('Amount_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
           end
           else
           begin
               //Кількість
-              with ZVIT.DECLARBODY.RXXXXG5.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.####', 1 * FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
+              with ZVIT.DECLARBODY.RXXXXG5.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.####', -1 * FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
               //Ціна постачання одиниці товару\послуги
               with ZVIT.DECLARBODY.RXXXXG6.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00', FieldByName('Price').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
           end;
@@ -2329,10 +2329,10 @@ begin
           with ZVIT.DECLARBODY.RXXXXG009.Add do begin ROWNUM := I; SetAttributeNS('nil', NS_URI, true); end;
 
           //Обсяги постачання (база оподаткування) без урахування податку на додану вартість
-          with ZVIT.DECLARBODY.RXXXXG010.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00', 1 * FieldByName('AmountSumm').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
+          with ZVIT.DECLARBODY.RXXXXG010.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00', -1 * FieldByName('AmountSumm').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
 
           //Сума податку на додану вартість
-          with ZVIT.DECLARBODY.RXXXXG11_10.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00####', 1 * FieldByName('SummVat').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
+          with ZVIT.DECLARBODY.RXXXXG11_10.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00####', -1 * FieldByName('SummVat').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
 
           //Код виду діяльності сільськогосподарського товаровиробника
           with ZVIT.DECLARBODY.RXXXXG011.Add do begin ROWNUM := I; SetAttributeNS('nil', NS_URI, true); end;

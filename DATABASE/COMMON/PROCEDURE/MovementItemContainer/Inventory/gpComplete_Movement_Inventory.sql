@@ -610,7 +610,7 @@ BEGIN
      ;
 
      -- заполняем таблицу - суммовой расчетный остаток на конец vbOperDate (ContainerId_Goods - значит в разрезе товарных остатков)
-     INSERT INTO _tmpRemainsSumm (ContainerId_Goods, ContainerId, AccountId, GoodsId, InfoMoneyGroupId, InfoMoneyDestinationId, OperSumm)
+     INSERT INTO _tmpRemainsSumm (ContainerId_Goods, ContainerId, AccountId, GoodsId, InfoMoneyGroupId, InfoMoneyDestinationId, OperSumm, InfoMoneyId, InfoMoneyId_Detail)
         WITH tmpAccount AS (SELECT View_Account.AccountId FROM Object_Account_View AS View_Account WHERE View_Account.AccountGroupId NOT IN (zc_Enum_AccountGroup_10000(), zc_Enum_AccountGroup_110000()) -- !!!т.е. без счета Необоротные активы + Транзит!!!
                            )
            , tmpContainerList AS (SELECT Container.*
@@ -635,6 +635,8 @@ BEGIN
                                        , tmpContainerList.ObjectId  AS AccountId
                                        , tmpContainerList.ParentId  AS ContainerId_Goods
                                        , tmpContainerList.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS OperSumm
+                                       -- , tmpContainerList.InfoMoneyId
+                                       -- , tmpContainerList.InfoMoneyId_Detail
                                   FROM tmpContainerList
                                        LEFT JOIN MovementItemContainer AS MIContainer
                                                                        ON MIContainer.ContainerId = tmpContainerList.Id
@@ -643,6 +645,8 @@ BEGIN
                                          , tmpContainerList.ObjectId
                                          , tmpContainerList.ParentId
                                          , tmpContainerList.Amount
+                                         -- , tmpContainerList.InfoMoneyId
+                                         -- , tmpContainerList.InfoMoneyId_Detail
                                   HAVING (tmpContainerList.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
                                  )
         SELECT tmpContainer.ContainerId_Goods
@@ -652,12 +656,20 @@ BEGIN
              , COALESCE (ObjectLink_InfoMoneyGroup.ChildObjectId, 0)
              , COALESCE (ObjectLink_InfoMoneyDestination.ChildObjectId, 0)
              , tmpContainer.OperSumm
+             , COALESCE (ContainerLinkObject_InfoMoney.ObjectId, 0)       AS InfoMoneyId
+             , COALESCE (ContainerLinkObject_InfoMoneyDetail.ObjectId, 0) AS InfoMoneyId_Detail
         FROM tmpContainer
              LEFT JOIN Container AS Container_Count ON Container_Count.Id = tmpContainer.ContainerId_Goods
              LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = Container_Count.ObjectId AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
              LEFT JOIN ObjectLink AS ObjectLink_InfoMoneyGroup ON ObjectLink_InfoMoneyGroup.ObjectId = ObjectLink_Goods_InfoMoney.ChildObjectId AND ObjectLink_InfoMoneyGroup.DescId = zc_ObjectLink_InfoMoney_InfoMoneyGroup()
              LEFT JOIN ObjectLink AS ObjectLink_InfoMoneyDestination ON ObjectLink_InfoMoneyDestination.ObjectId = ObjectLink_Goods_InfoMoney.ChildObjectId AND ObjectLink_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
-     ;
+             LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
+                                           ON ContainerLinkObject_InfoMoney.ContainerId = tmpContainer.ContainerId
+                                          AND ContainerLinkObject_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
+             LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
+                                           ON ContainerLinkObject_InfoMoneyDetail.ContainerId = tmpContainer.ContainerId
+                                          AND ContainerLinkObject_InfoMoneyDetail.DescId      = zc_ContainerLinkObject_InfoMoneyDetail()
+       ;
 
      -- добавляем из суммовой расчетный остаток в количественный расчетный остаток те товары которых нет, и пробуем найти MovementItemId (что бы расчетный остаток связать с фактическим)
      INSERT INTO _tmpRemainsCount (MovementItemId, ContainerId_Goods, GoodsId, InfoMoneyGroupId, InfoMoneyDestinationId, OperCount, OperCount_find)
@@ -877,8 +889,10 @@ BEGIN
                           -- WHEN vbPriceListId <> 0 AND View_Account.AccountDirectionId = zc_Enum_AccountDirection_60200() -- Прибыль будущих периодов + на филиалах
                           --      THEN 0 -- !!!этот счет по филиалам всегда выравниваем в 0!!!
 
-                               -- сумма остатка - по цене с/с
+                          -- сумма остатка - по цене с/с
                           ELSE CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
+                          -- сумма остатка - сумма с/с на дату
+                          -- ELSE COALESCE (_tmpRemainsSumm.OperSumm, 0)
 
                      END AS OperSumm
 
@@ -905,25 +919,67 @@ BEGIN
                                                             )
                    LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
+                    LEFT JOIN _tmpRemainsSumm ON _tmpRemainsSumm.ContainerId = Container_Summ.Id
+                   
                    LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container_Summ.ObjectId
                    LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
                                                  ON ContainerLinkObject_InfoMoney.ContainerId = Container_Summ.Id
                                                 AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                                                AND vbPriceListId > 0
                    LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
                                                  ON ContainerLinkObject_InfoMoneyDetail.ContainerId = Container_Summ.Id
                                                 AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
+                                                AND vbPriceListId > 0
 
+             /*UNION ALL
+              -- 1.1. это введенные остатки
+              SELECT _tmpItem.MovementItemId
+                     -- !!!всегда выравниваем филиал на один InfoMoneyId_Detail = _tmpItem.InfoMoneyId!!!
+                   , 0 AS ContainerId
+                   , 0 AS AccountId
+
+                   , -- сумма остатка - по цене с/с
+                     CAST (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
+                     -- сумма остатка - сумма с/с на дату
+                    -1 * COALESCE (_tmpRemainsSumm.OperSumm, 0)
+                     AS OperSumm
+
+              FROM _tmpItem
+                   LEFT JOIN _tmpRemainsSumm ON _tmpRemainsSumm.ContainerId_Goods = _tmpItem.ContainerId_Goods
+                   LEFT JOIN HistoryCost ON HistoryCost.ContainerId = _tmpRemainsSumm.ContainerId
+                                        AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
+                   
+                   LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = _tmpRemainsSumm.AccountId
+                   
+              WHERE vbPriceListId > 0
+                AND (_tmpRemainsSumm.InfoMoneyId        = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                  OR _tmpRemainsSumm.InfoMoneyId_Detail = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                    )
+                AND View_Account.AccountDirectionId <> zc_Enum_AccountDirection_60200() -- Прибыль будущих периодов + на филиалах
+                */
              UNION ALL
               -- 1.2.1. это расчетные остатки (их надо вычесть) - !!!для "наши"!!!
               SELECT _tmpRemainsCount.MovementItemId
                    , COALESCE (Container_Summ.Id, 0) AS ContainerId
                    , COALESCE (Container_Summ.ObjectId, 0) AS AccountId
-                   , -1 * CAST (_tmpRemainsCount.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4)) AS OperSumm
+                   , CASE WHEN vbPriceListId = 0 OR View_Account.AccountDirectionId = zc_Enum_AccountDirection_60200() -- Прибыль будущих периодов + на филиалах
+                           OR _tmpRemainsSumm.InfoMoneyId        = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                           OR _tmpRemainsSumm.InfoMoneyId_Detail = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                               -- сумма остатка - по цене с/с
+                               THEN -1 * CAST (_tmpRemainsCount.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
+--                               THEN -1 * COALESCE (_tmpRemainsSumm.OperSumm, 0)
+                          ELSE -- сумма остатка - сумма с/с на дату
+                               -1 * COALESCE (_tmpRemainsSumm.OperSumm, 0)
+--                               -1 * CAST (_tmpRemainsCount.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
+                     END AS OperSumm
+                               
               FROM _tmpRemainsCount
                    INNER JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpRemainsCount.ContainerId_Goods
-                                                         AND Container_Summ.DescId = zc_Container_Summ()
+                                                         AND Container_Summ.DescId   = zc_Container_Summ()
+                   LEFT JOIN _tmpRemainsSumm ON _tmpRemainsSumm.ContainerId = Container_Summ.Id
                    LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
+                   LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container_Summ.ObjectId
               WHERE vbPriceListId = 0
                  AND inMovementId <> 2184096 -- Кротон хранение - 31.07.2015
                  AND (_tmpRemainsCount.ContainerId_Goods IN (SELECT _tmpItem.ContainerId_Goods FROM _tmpItem WHERE _tmpItem.OperCount <> 0)
@@ -941,8 +997,7 @@ BEGIN
                    LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpRemainsSumm.ContainerId_Goods
                    LEFT JOIN _tmpItem ON _tmpItem.ContainerId_Goods = _tmpRemainsCount.ContainerId_Goods
 
-              WHERE /*vbPriceListId = 0
-                AND*/ vbIsLastOnMonth = TRUE
+              WHERE  vbIsLastOnMonth = TRUE
                 AND COALESCE (_tmpItem.OperCount, 0) = 0 AND COALESCE (_tmpRemainsCount.OperCount_find, 0) = 0
                 AND (_tmpRemainsSumm.InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_10000(), zc_Enum_InfoMoneyGroup_30000()) -- Основное сырье + Доходы
                   OR _tmpRemainsSumm.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20600(), zc_Enum_InfoMoneyDestination_20700(), zc_Enum_InfoMoneyDestination_20800(), zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_21300()) -- Прочие материалы + Товары + Ирна + Чапли + Дворкин + Незавершенное производство
@@ -954,15 +1009,31 @@ BEGIN
               SELECT _tmpRemainsCount.MovementItemId
                    , COALESCE (Container_Summ.Id, 0) AS ContainerId
                    , COALESCE (Container_Summ.ObjectId, 0) AS AccountId
-                   , CASE WHEN View_Account.AccountDirectionId = zc_Enum_AccountDirection_60200() -- Прибыль будущих периодов + на филиалах
-                               THEN -1 * CAST (_tmpRemainsCount.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
-                          ELSE -1 * CAST (_tmpRemainsCount.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
+                     -- сумма остатка - по цене с/с
+                   -- , CASE WHEN View_Account.AccountDirectionId = zc_Enum_AccountDirection_60200() -- Прибыль будущих периодов + на филиалах
+                   --             THEN -1 * CAST (_tmpRemainsCount.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
+                   --        ELSE -1 * CAST (_tmpRemainsCount.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
+                   --   END AS OperSumm
+
+
+                   , CASE WHEN vbPriceListId = 0 OR View_Account.AccountDirectionId = zc_Enum_AccountDirection_60200() -- Прибыль будущих периодов + на филиалах
+                           OR _tmpRemainsSumm.InfoMoneyId        = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                           OR _tmpRemainsSumm.InfoMoneyId_Detail = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                               -- сумма остатка - по цене с/с
+--                               THEN -1 * CAST (_tmpRemainsCount.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
+                               THEN -1 * COALESCE (_tmpRemainsSumm.OperSumm, 0)
+
+                          ELSE -- сумма остатка - сумма с/с на дату
+                               -1 * COALESCE (_tmpRemainsSumm.OperSumm, 0)
+--                               -1 * CAST (_tmpRemainsCount.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
                      END AS OperSumm
+
               FROM _tmpRemainsCount
                    INNER JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpRemainsCount.ContainerId_Goods
                                                          AND Container_Summ.DescId = zc_Container_Summ()
                    LEFT JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
+                   LEFT JOIN _tmpRemainsSumm ON _tmpRemainsSumm.ContainerId = Container_Summ.Id
                    LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = Container_Summ.ObjectId
 
               WHERE (_tmpRemainsCount.ContainerId_Goods IN (SELECT _tmpItem.ContainerId_Goods FROM _tmpItem WHERE _tmpItem.OperCount <> 0)
@@ -1011,6 +1082,15 @@ BEGIN
                                   AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
        ;
 
+/*
+if inSession = '5' 
+then
+    RAISE EXCEPTION '<%> %  %  %', vbIsLastOnMonth, (select _tmpItemSumm.OperSumm from _tmpItemSumm where _tmpItemSumm.ContainerId = 695902)
+, (select _tmpRemainsSumm.InfoMoneyId_Detail from _tmpRemainsSumm where _tmpRemainsSumm.ContainerId = 695905)
+ , zc_Enum_InfoMoney_80401() -- (select _tmpItemSumm.OperSumm from _tmpItemSumm where _tmpItemSumm.ContainerId = 0 and _tmpItemSumm.MovementItemId = 121243281)
+;
+end if;
+*/
      -- 3.2. определяется Счет для проводок по суммовому учету
      UPDATE _tmpItemSumm SET AccountId = _tmpItem_byAccount.AccountId
      FROM _tmpItem
@@ -1669,8 +1749,39 @@ WHERE Movement.Id = MovementId
   AND MovementItem.Amount = 0
   AND Movement.Id = 1902144
 */
+/*
+with tmp1 as (select MovementItemId, sum(amount) as amount from MovementItemContainer where MovementId = 11295799 and DescId = 2 and AccountId <> zc_Enum_Account_100301 () group by MovementItemId)
+, tmp2 as (select MovementItemId, sum(amount) as amount from tmpMIContainer_test where MovementId = 11295799 and DescId = 2 and AccountId <> zc_Enum_Account_100301 ()  group by MovementItemId)
+, res as (select coalesce (tmp1.MovementItemId, tmp2.MovementItemId) as MovementItemId, coalesce (tmp1.amount, 0) as t1 , coalesce (tmp2.amount, 0) as t2 --, * 
+         from tmp1 full join tmp2 on tmp1.MovementItemId = tmp2.MovementItemId
+         where coalesce (tmp1.amount, 0) <>  coalesce (tmp2.amount, 0))
+
+select * from res
+left join MovementItem on MovementItem .Id = MovementItemId
+left join Object as Object1 on Object1.Id = MovementItem.ObjectId
+LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                 ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+left join Object as Object2 on Object2.Id = MILinkObject_GoodsKind.ObjectId
+
+ where Object1.ObjectCode = 198
+-- where res.MovementItemId = 123394051
+order by abs (t1 - t2) desc
+--  select sum (t1), sum (t2) from res
+
+update Container set Amount = AmountCalc
+from 
+  (select Container.Id, Container.Amount , coalesce (sum (coalesce (MovementItemContainer.Amount, 0)), 0) as AmountCalc
+   from Container
+        left join  MovementItemContainer on MovementItemContainer.ContainerId = Container.Id
+   group by Container.Id, Container.Amount
+   having Container.Amount <> coalesce (sum (coalesce (MovementItemContainer.Amount, 0)), 0)
+  ) as tmp
+where Container.Id = tmp.Id
+*/
 -- тест
 -- SELECT * FROM gpReComplete_Movement_Inventory (inMovementId:= 10774526, inSession:= '5')
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 29207, inSession:= '2')
 -- SELECT * FROM gpComplete_Movement_Inventory (inMovementId:= 1902144, inIsLastComplete:= FALSE, inSession:= zc_Enum_Process_Auto_PrimeCost() :: TVarChar)
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 29207, inSession:= '2')
+-- SELECT * FROM gpReComplete_Movement_Inventory (inMovementId:= 11295799, inSession:= '5')

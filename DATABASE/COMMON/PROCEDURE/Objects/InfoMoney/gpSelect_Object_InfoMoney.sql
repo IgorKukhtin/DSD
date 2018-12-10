@@ -8,8 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_InfoMoney(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar,
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar,
-               isProfitLoss boolean,
-               isErased boolean
+               isProfitLoss Boolean,
+               isErased Boolean
 )
 AS
 $BODY$

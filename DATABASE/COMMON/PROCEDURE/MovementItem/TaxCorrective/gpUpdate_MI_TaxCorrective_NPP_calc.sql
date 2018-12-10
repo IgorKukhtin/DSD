@@ -20,6 +20,7 @@ $BODY$
    DECLARE vbUserId         Integer;
    DECLARE vbMovementId_tax Integer;
    DECLARE vbOperDate       TDateTime;
+   DECLARE vbOperDate_begin TDateTime;
    DECLARE vbMovementId_Corrective Integer; -- для Корректировки №2 (переносим строчки с другой причиной корректировки)
    DECLARE vbDocumentTaxKindId     Integer; -- вид Корректировки
 BEGIN
@@ -40,10 +41,14 @@ BEGIN
 
      -- определяются параметры для <Корректировка>
      SELECT Movement.OperDate
+          , CASE WHEN MovementDate_DateRegistered.ValueData > Movement.OperDate THEN MovementDate_DateRegistered.ValueData ELSE Movement.OperDate END AS OperDate_begin
           , MovementLinkMovement_Child.MovementChildId AS MovementId_tax
           , MLO_DocumentTaxKind.ObjectId
-            INTO vbOperDate, vbMovementId_tax, vbDocumentTaxKindId
+            INTO vbOperDate, vbOperDate_begin, vbMovementId_tax, vbDocumentTaxKindId
      FROM Movement
+          LEFT JOIN MovementDate AS MovementDate_DateRegistered
+                                 ON MovementDate_DateRegistered.MovementId = Movement.Id
+                                AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
                                          ON MovementLinkMovement_Child.MovementId = Movement.Id
                                         AND MovementLinkMovement_Child.DescId     = zc_MovementLinkMovement_Child()
@@ -717,6 +722,7 @@ BEGIN
       AND vbDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                     , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                      )
+      AND vbOperDate_begin < '01.12.2018'
      THEN
          -- создаем новую <Корректировку>
          vbMovementId_Corrective:= lpInsertUpdate_Movement_TaxCorrective (ioId               :=0

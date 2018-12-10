@@ -23,13 +23,13 @@ CREATE TABLE MovementItemContainer(
    ObjectId_analyzer integer,
    WhereObjectId_analyzer integer,
    ContainerId_analyzer integer,
-   AccountId_analyzer integer,
-
-   ContainerIntId_analyzer integer,
 
    ObjectIntId_analyzer integer,
    ObjectExtId_analyzer integer,
    
+   ContainerIntId_analyzer integer,
+   AccountId_analyzer integer,
+
    CONSTRAINT fk_MovementItemContainer_DescId FOREIGN KEY(DescId) REFERENCES MovementItemContainerDesc(Id),
    CONSTRAINT fk_MovementItemContainer_MovementId FOREIGN KEY(MovementId) REFERENCES Movement(Id),
    CONSTRAINT fk_MovementItemContainer_ContainerId FOREIGN KEY(ContainerId) REFERENCES Container(Id),
@@ -92,4 +92,58 @@ $$;
  26.10.14                                        * add index ???idx_MovementItemContainer_MovementItemId???
  26.10.14                                        * drop index idx_movementitemcontainer_containerid_descid_operdate_amount
  30.08.13                                        * 1251Cyr
+*/
+
+/*
+-- test - 07.12.2018
+insert into tmpMIContainer_test(
+Id       , 
+   DescId   ,
+   MovementId,
+   ContainerId,
+   Amount     , 
+   OperDate   ,
+   MovementItemId ,
+   ParentId       ,
+   isActive       ,
+
+   MovementDescId ,
+   AnalyzerId ,
+   AccountId ,
+   ObjectId_analyzer ,
+   WhereObjectId_analyzer ,
+   ContainerId_analyzer ,
+
+   ObjectIntId_analyzer ,
+   ObjectExtId_analyzer ,
+
+   ContainerIntId_analyzer ,
+   AccountId_analyzer 
+)
+select 
+   Id       , 
+   DescId   ,
+   MovementId,
+   ContainerId,
+   Amount     , 
+   OperDate   ,
+   MovementItemId ,
+   ParentId       ,
+   isActive       ,
+
+   MovementDescId ,
+   AnalyzerId ,
+   AccountId ,
+   ObjectId_analyzer ,
+   WhereObjectId_analyzer ,
+   ContainerId_analyzer ,
+
+   ObjectIntId_analyzer ,
+   ObjectExtId_analyzer ,
+
+   ContainerIntId_analyzer ,
+   AccountId_analyzer 
+
+from MovementItemContainer
+where MovementId IN (11295799 , 11196706 , 11081354, 11000691)
 */

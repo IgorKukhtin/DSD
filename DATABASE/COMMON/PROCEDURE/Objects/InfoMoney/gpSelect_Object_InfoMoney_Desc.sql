@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_InfoMoney_Desc(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar,
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar,
+               isProfitLoss Boolean,
                isErased Boolean
               )
 AS
@@ -63,7 +64,12 @@ BEGIN
           , tmpInfoMoney AS (SELECT * FROM gpSelect_Object_InfoMoney (inSession))
 
        -- Результат
-       SELECT tmpInfoMoney.*
+       SELECT tmpInfoMoney.Id, tmpInfoMoney.Code, tmpInfoMoney.Name, tmpInfoMoney.NameAll
+            , tmpInfoMoney.InfoMoneyGroupId, tmpInfoMoney.InfoMoneyGroupCode, tmpInfoMoney.InfoMoneyGroupName
+            , tmpInfoMoney.InfoMoneyDestinationId, tmpInfoMoney.InfoMoneyDestinationCode
+            , tmpInfoMoney.InfoMoneyDestinationName
+            , tmpInfoMoney.isProfitLoss
+            , tmpInfoMoney.isErased
        FROM tmpContainer
             INNER JOIN tmpLevel ON tmpLevel.InfoMoneyId = tmpContainer.InfoMoneyId
             INNER JOIN tmpInfoMoney ON tmpInfoMoney.Id = tmpContainer.InfoMoneyId

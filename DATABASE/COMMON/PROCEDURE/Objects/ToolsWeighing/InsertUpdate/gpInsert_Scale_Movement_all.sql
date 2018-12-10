@@ -473,14 +473,19 @@ end if;*/
      IF vbMovementDescId = zc_Movement_SendOnPrice()
      THEN
           IF EXISTS (SELECT MLM_Order.MovementChildId
-                                                                 FROM MovementLinkMovement AS MLM_Order
-                                                                      JOIN Movement ON Movement.Id = MLM_Order.MovementChildId
-                                                                                   AND Movement.DescId = zc_Movement_SendOnPrice()
-                                                                                   AND Movement.OperDate BETWEEN inOperDate - INTERVAL '8 DAY' AND inOperDate
-                                                                 WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order())
+                     FROM MovementLinkMovement AS MLM_Order
+                          JOIN Movement ON Movement.Id = MLM_Order.MovementChildId
+                                       AND Movement.DescId = zc_Movement_SendOnPrice()
+                                       AND Movement.OperDate BETWEEN inOperDate - INTERVAL '8 DAY' AND inOperDate
+                     WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
+                    )
           THEN
               -- на основании <Перемещение по цене> - поиск существующего документа <Перемещение по цене> !!!сразу получаем ключ!!!
-              vbMovementId_find:= (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order());
+              vbMovementId_find:= (SELECT MLM_Order.MovementChildId
+                                   FROM MovementLinkMovement AS MLM_Order
+                                   WHERE MLM_Order.MovementId = inMovementId
+                                     AND MLM_Order.DescId     = zc_MovementLinkMovement_Order()
+                                  );
           ELSE
               -- на основании <Заявки> или вообще "безликий" - поиск существующего документа <Перемещение по цене> !!!сразу получаем ключ!!!
               vbMovementId_find:= (SELECT Movement.Id
@@ -492,8 +497,9 @@ end if;*/
                                                             AND Movement.DescId = zc_Movement_SendOnPrice()
                                                             AND Movement.OperDate = inOperDate
                                                             AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
-                                    WHERE MovementLinkMovement.MovementId = inMovementId
-                                      AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order());
+                                   WHERE MovementLinkMovement.MovementId = inMovementId
+                                     AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
+                                  );
           END IF;
 
 
