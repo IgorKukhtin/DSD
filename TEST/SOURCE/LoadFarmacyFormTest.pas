@@ -1594,6 +1594,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_KPUForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_KPUForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TestingUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TestingUserForm');
 

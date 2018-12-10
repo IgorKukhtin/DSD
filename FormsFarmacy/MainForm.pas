@@ -469,6 +469,8 @@ type
     N175: TMenuItem;
     actCheckUnComplete: TdsdOpenForm;
     N176: TMenuItem;
+    actEmployeeSchedule: TdsdOpenForm;
+    N177: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
