@@ -1753,7 +1753,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'PersonalName;PositionName;ModelServiceName;PositionLevelName;Sta' +
+            'PositionName;PersonalName;ModelServiceName;PositionLevelName;Sta' +
             'ffListSummKindName'
         end>
       Params = <

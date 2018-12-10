@@ -55,7 +55,7 @@ BEGIN
                            FROM Container 
                                 INNER JOIN tmpUnit ON Container.WhereObjectId = tmpUnit.Unitid
                            WHERE Container.DescId = zc_Container_Count()
-                             AND Container.Amount <> 0
+                           --  AND Container.Amount <> 0
                            GROUP BY Container.Id, Container.ObjectId, Container.Amount, Container.WhereObjectId
                            )
         , tmpRemains_All AS (SELECT tmp.GoodsId

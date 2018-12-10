@@ -583,7 +583,8 @@ BEGIN
                          , SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) IN (12109, 12110) THEN MIFloat_Price.ValueData ELSE 0 END)            AS Price_Dop    -- расценка за смену
                          , SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) NOT IN (0, 12109, 12110) THEN MIFloat_Price.ValueData ELSE 0 END)     AS Price_Day    -- расценка за день
                          , SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) IN (12109, 12110) THEN MIFloat_DayCount.ValueData ELSE 0 END)         AS DayCount_Dop -- кол. смен - доплата
-                         , SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) NOT IN (0, 12109, 12110) THEN MIFloat_DayCount.ValueData ELSE 0 END)  AS DayCount     -- кол. смен
+                         --, SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) NOT IN (0, 12109, 12110) THEN MIFloat_DayCount.ValueData ELSE 0 END)  AS DayCount     -- кол. смен
+                         , SUM (CASE WHEN COALESCE (MIFloat_HoursDay.ValueData,0) <> 0 THEN MIFloat_WorkTimeHoursOne.ValueData / COALESCE (MIFloat_HoursDay.ValueData,0) ELSE 0 END) AS DayCount     -- кол. смен (часы, деленные на норму часов за 1 рабочий день)
                          , SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) = 0 THEN tmpMI_Child.Amount ELSE 0 END)                               AS Amount       -- начислено 
                          , SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) IN ( 12109, 12110)  THEN tmpMI_Child.Amount ELSE 0 END)               AS Amount_Dop   -- начислено за смену
                          , SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) NOT IN (0, 12109, 12110) THEN tmpMI_Child.Amount ELSE 0 END)          AS Amount_Day   -- начислено за день
@@ -693,7 +694,7 @@ BEGIN
             , tmpChild.Price_Dop           :: TFloat -- расценка за смену
             , tmpChild.Price_Day           :: TFloat -- расценка за день
             , tmpChild.DayCount_Dop        :: TFloat -- кол. смен - доплата
-            , tmpChild.DayCount            :: TFloat -- кол. смен
+            , CAST (tmpChild.DayCount AS NUMERIC (16,2)) :: TFloat -- кол. смен
             , tmpChild.Amount :: TFloat AS Amount_Child -- начислено 
             , tmpChild.Amount_Dop          :: TFloat -- начислено за смену
             , tmpChild.Amount_Day          :: TFloat -- начислено за день
@@ -726,8 +727,8 @@ BEGIN
             LEFT JOIN Object AS Object_StaffListSummKind ON Object_StaffListSummKind.Id = tmpChild.StaffListSummKindId
             --LEFT JOIN Object AS Object_StorageLine       ON Object_StorageLine.Id       = tmpChild.StorageLineId
        --where tmpAll.PersonalId = 2250371  
-       ORDER BY Object_Personal.ValueData
-              , Object_Position.ValueData
+       ORDER BY 
+                Object_Position.ValueData , Object_Personal.ValueData
               , Object_ModelService.ValueData
               , Object_PositionLevel.ValueData
               , Object_StaffListSummKind.Id

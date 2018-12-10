@@ -931,7 +931,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'PersonalName;PositionName;ModelServiceName;PositionLevelName;Sta' +
+            'PositionName;PersonalName;ModelServiceName;PositionLevelName;Sta' +
             'ffListSummKindName'
         end>
       Params = <
