@@ -631,7 +631,8 @@ uses
   ReportUnLiquid_Movement in '..\..\FormsFarmacy\Document\ReportUnLiquid_Movement.pas' {ReportUnLiquid_MovementForm: TParentForm},
   CheckUnComplete in '..\..\Forms\Document\CheckUnComplete.pas' {CheckUnCompleteForm: TParentForm},
   EmployeeScheduleJournal in '..\..\FormsFarmacy\Document\EmployeeScheduleJournal.pas' {EmployeeScheduleJournalForm: TParentForm},
-  EmployeeSchedule in '..\..\FormsFarmacy\Document\EmployeeSchedule.pas' {EmployeeScheduleForm: TParentForm};
+  EmployeeSchedule in '..\..\FormsFarmacy\Document\EmployeeSchedule.pas' {EmployeeScheduleForm: TParentForm},
+  CashSummaForDey in '..\..\FormsFarmacy\Cash\CashSummaForDey.pas' {CashSummaForDeyFormForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

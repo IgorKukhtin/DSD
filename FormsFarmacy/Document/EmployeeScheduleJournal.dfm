@@ -1,5 +1,5 @@
 inherited EmployeeScheduleJournalForm: TEmployeeScheduleJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' "'#1043#1088#1072#1092#1080#1082' '#1088#1072#1073#1086#1090#1099' '#1089#1086#1090#1088#1091#1076#1077#1080#1082#1086#1074'"'
+  Caption = #1046#1091#1088#1085#1072#1083' "'#1043#1088#1072#1092#1080#1082' '#1088#1072#1073#1086#1090#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074'"'
   ClientHeight = 491
   ClientWidth = 650
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -16,17 +16,17 @@ inherited EmployeeScheduleJournalForm: TEmployeeScheduleJournalForm
     Width = 650
     Height = 434
     TabOrder = 3
-    ExplicitWidth = 745
+    ExplicitWidth = 650
     ExplicitHeight = 434
     ClientRectBottom = 434
     ClientRectRight = 650
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 745
+      ExplicitWidth = 650
       ExplicitHeight = 434
       inherited cxGrid: TcxGrid
         Width = 650
         Height = 434
-        ExplicitWidth = 745
+        ExplicitWidth = 650
         ExplicitHeight = 434
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -118,7 +118,7 @@ inherited EmployeeScheduleJournalForm: TEmployeeScheduleJournalForm
   end
   inherited Panel: TPanel
     Width = 650
-    ExplicitWidth = 745
+    ExplicitWidth = 650
     inherited deStart: TcxDateEdit
       Properties.DisplayFormat = 'mmmm yyyy'
       ExplicitWidth = 118

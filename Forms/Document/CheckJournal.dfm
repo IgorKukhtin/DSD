@@ -634,13 +634,32 @@ inherited CheckJournalForm: TCheckJournalForm
     object actCashSummaForDey: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'actCashSummaForDey'
+      Caption = #1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1089#1091#1084#1084' '#1087#1086' '#1082#1072#1089#1089#1086#1074#1086#1084#1091' '#1072#1087#1072#1088#1072#1090#1091
+      Hint = #1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1089#1091#1084#1084' '#1087#1086' '#1082#1072#1089#1089#1086#1074#1086#1084#1091' '#1072#1087#1072#1088#1072#1090#1091
       ImageIndex = 56
       FormName = 'TCashSummaForDeyForm'
       FormNameParam.Value = 'TCashSummaForDeyForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'CashRegisterName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CashRegisterName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Date'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
   end
@@ -888,7 +907,7 @@ inherited CheckJournalForm: TCheckJournalForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 336
+    Left = 360
     Top = 24
   end
   object rdUnit: TRefreshDispatcher

@@ -113,4 +113,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_CashSummaForDey (inCashRegisterName := '3000337830', inDate := ('29.11.2018')::TDateTime, inSession := '3354092');
+-- SELECT * FROM gpSelect_CashSummaForDey (inCashRegisterName := '3000358419', inDate := ('01.07.2018')::TDateTime, inSession := '3354092');

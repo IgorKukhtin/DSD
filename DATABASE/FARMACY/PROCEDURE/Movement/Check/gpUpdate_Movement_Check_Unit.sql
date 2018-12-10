@@ -15,9 +15,10 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpGetUserBySession (inSession);
-    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Check_OperDate());
+--    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Check_OperDate());
 
-    IF 3 <> inSession::Integer AND 375661 <> inSession::Integer AND 4183126 <> inSession::Integer AND 8001630 <> inSession::Integer
+    IF 3 <> inSession::Integer AND 375661 <> inSession::Integer AND 4183126 <> inSession::Integer AND 
+      8001630 <> inSession::Integer AND 9560329 <> inSession::Integer
     THEN
       RAISE EXCEPTION 'Изменение <Подразделения> вам запрещено.';
     END IF;
