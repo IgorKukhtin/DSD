@@ -2500,6 +2500,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actEmployeeSchedule: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      MoveParams = <>
+      Caption = #1043#1088#1072#1092#1080#1082' '#1088#1072#1073#1086#1090#1099' '#1089#1086#1090#1088#1091#1076#1077#1080#1082#1086#1074
+      Hint = #1043#1088#1072#1092#1080#1082' '#1088#1072#1073#1086#1090#1099' '#1089#1086#1090#1088#1091#1076#1077#1080#1082#1086#1074
+      FormName = 'TEmployeeScheduleJournalForm'
+      FormNameParam.Value = 'TEmployeeScheduleJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -2757,6 +2769,9 @@ inherited MainForm: TMainForm
       end
       object N86: TMenuItem
         Action = actReport_Wage
+      end
+      object N177: TMenuItem
+        Action = actEmployeeSchedule
       end
       object N167: TMenuItem
         Action = actReport_TestingUser

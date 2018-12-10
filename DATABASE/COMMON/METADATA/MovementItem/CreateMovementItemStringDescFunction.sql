@@ -108,10 +108,15 @@ CREATE OR REPLACE FUNCTION zc_MIString_ControlRGNote() RETURNS Integer AS $BODY$
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_ControlRGNote', 'Примечание к Контролю Т.В. и Т.А.' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_ControlRGNote');
 
+CREATE OR REPLACE FUNCTION zc_MIString_ComingValueDay() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_ComingValueDay'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_ComingValueDay', 'Время прихода на работу' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_ComingValueDay');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 09.12.18                                                                                      * zc_MIString_ComingValueDay
  05.11.18                                                                                      * 
  09.10.18                                                                                      * 
  13.08.18         * for GoodsSP

@@ -1,8 +1,8 @@
--- Function: gpUpdate_Status_UnnamedEnterprises()
+-- Function: gpUpdate_Status_Sale()
 
-DROP FUNCTION IF EXISTS gpUpdate_Status_UnnamedEnterprises (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Status_EmployeeSchedule (Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_Status_UnnamedEnterprises(
+CREATE OR REPLACE FUNCTION gpUpdate_Status_EmployeeSchedule(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inStatusCode          Integer   , -- Статус документа. Возвращается который должен быть
     IN inSession             TVarChar    -- сессия пользователя
@@ -12,11 +12,11 @@ $BODY$
 BEGIN
      CASE inStatusCode
          WHEN zc_Enum_StatusCode_UnComplete() THEN
-            PERFORM gpUnComplete_Movement_UnnamedEnterprises (inMovementId, inSession);
+            PERFORM gpUnComplete_Movement_EmployeeSchedule (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Complete() THEN
-            PERFORM gpComplete_Movement_UnnamedEnterprises (inMovementId,inSession);
+            PERFORM gpComplete_Movement_EmployeeSchedule (inMovementId,inSession);
          WHEN zc_Enum_StatusCode_Erased() THEN
-            PERFORM gpSetErased_Movement_UnnamedEnterprises (inMovementId, inSession);
+            PERFORM gpSetErased_Movement_EmployeeSchedule (inMovementId, inSession);
          ELSE
             RAISE EXCEPTION 'Нет статуса с кодом <%>', inStatusCode;
      END CASE;
