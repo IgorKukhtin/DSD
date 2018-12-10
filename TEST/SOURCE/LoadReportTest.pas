@@ -339,8 +339,9 @@ begin
   LoadReportFromFile('PrintMovement_Tax1214', ReportPath + '\Товарный Учет\PrintMovement_Tax1214.fr3');
   LoadReportFromFile('PrintMovement_Tax0115', ReportPath + '\Товарный Учет\PrintMovement_Tax0115.fr3');
   LoadReportFromFile('PrintMovement_Tax0416', ReportPath + '\Товарный Учет\PrintMovement_Tax0416.fr3');
-  LoadReportFromFile('PrintMovement_Tax0317', ReportPath + '\Товарный Учет\PrintMovement_Tax0317.fr3');
   }
+  LoadReportFromFile('PrintMovement_Tax0317', ReportPath + '\Товарный Учет\PrintMovement_Tax0317.fr3');
+
   LoadReportFromFile('PrintMovement_Tax1218', ReportPath + '\Товарный Учет\PrintMovement_Tax1218.fr3');
   LoadReportFromFile('PrintMovement_TaxCorrective1218', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective1218.fr3');
   exit;

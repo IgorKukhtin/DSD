@@ -277,15 +277,19 @@ order by 4*/
 
            , vbPriceWithVAT                             AS PriceWithVAT
 
+/*         -- в делфи прописано все для параметра VATPercent (901,902) 
            , CASE WHEN COALESCE (ObjectBoolean_Vat.ValueData, False) = True
                        THEN 902
                   WHEN (vbCurrencyPartnerId <> zc_Enum_Currency_Basis() AND COALESCE (ObjectBoolean_Vat.ValueData, False) = False)
                        THEN 901
                   ElSE 20
              END AS CodeStavka
+             */
 
-           , CASE WHEN (COALESCE (ObjectBoolean_Vat.ValueData, False) = True) OR (vbCurrencyPartnerId <> zc_Enum_Currency_Basis() AND COALESCE (ObjectBoolean_Vat.ValueData, False) = False)
-                       THEN 0
+           , CASE WHEN COALESCE (ObjectBoolean_Vat.ValueData, False) = True
+                       THEN 902
+                  WHEN (vbCurrencyPartnerId <> zc_Enum_Currency_Basis() AND COALESCE (ObjectBoolean_Vat.ValueData, False) = False)
+                       THEN 901
                   ElSE vbVATPercent
              END AS VATPercent
 
@@ -295,7 +299,7 @@ order by 4*/
             , CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() and COALESCE (ObjectBoolean_Vat.ValueData, False) = False 
                         THEN COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)
                         ELSE 0
-             END AS SummVAT
+             END  :: TFloat AS SummVAT
              
            , MovementFloat_TotalSumm.ValueData AS TotalSumm
 
