@@ -89,7 +89,9 @@ uses
   dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas',
   ListDiff in '..\FormsFarmacy\Cash\ListDiff.pas' {ListDiffForm: TParentForm},
   ListGoods in '..\FormsFarmacy\Cash\ListGoods.pas' {ListGoodsForm: TParentForm},
-  ListDiffAddGoods in '..\FormsFarmacy\Cash\ListDiffAddGoods.pas' {ListDiffAddGoodsForm};
+  ListDiffAddGoods in '..\FormsFarmacy\Cash\ListDiffAddGoods.pas' {ListDiffAddGoodsForm},
+  Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
+  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas';
 
 {$R *.res}
 

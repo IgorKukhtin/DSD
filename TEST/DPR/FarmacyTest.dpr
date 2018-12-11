@@ -632,7 +632,9 @@ uses
   CheckUnComplete in '..\..\Forms\Document\CheckUnComplete.pas' {CheckUnCompleteForm: TParentForm},
   EmployeeScheduleJournal in '..\..\FormsFarmacy\Document\EmployeeScheduleJournal.pas' {EmployeeScheduleJournalForm: TParentForm},
   EmployeeSchedule in '..\..\FormsFarmacy\Document\EmployeeSchedule.pas' {EmployeeScheduleForm: TParentForm},
-  CashSummaForDey in '..\..\FormsFarmacy\Cash\CashSummaForDey.pas' {CashSummaForDeyFormForm: TParentForm};
+  CashSummaForDey in '..\..\FormsFarmacy\Cash\CashSummaForDey.pas' {CashSummaForDeyFormForm: TParentForm},
+  Medoc_J1201010 in '..\..\SOURCE\MeDOC\Medoc_J1201010.pas',
+  Medoc_J1201210 in '..\..\SOURCE\MeDOC\Medoc_J1201210.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

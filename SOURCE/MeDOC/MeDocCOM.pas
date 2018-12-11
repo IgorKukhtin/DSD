@@ -236,7 +236,7 @@ end;
                    and (FormCode <> 14027)
                   then
                   begin
-                  if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) or (FormCode = 14025) then
+                   if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) or (FormCode = 14025) or (FormCode = 16271) then
                      DocKind := 'Tax'
                   else
                      DocKind := 'TaxCorrective';

@@ -1,10 +1,10 @@
 inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
   BorderStyle = bsSingle
   Caption = #1047#1072#1075#1088#1091#1079#1082#1072'  '#1080#1079' '#1052#1077#1076#1082#1072
-  ClientHeight = 98
+  ClientHeight = 99
   ClientWidth = 359
   ExplicitWidth = 365
-  ExplicitHeight = 123
+  ExplicitHeight = 124
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -29,7 +29,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
   object dePeriodDate: TcxDateEdit [3]
     Left = 155
     Top = 16
-    EditValue = 42736d
+    EditValue = 43101d
     Properties.AssignedValues.EditFormat = True
     Properties.DisplayFormat = 'mmmm yyyy'
     Properties.SaveTime = False
@@ -63,7 +63,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       PeriodDate.Value = 42005d
       PeriodDate.Component = dePeriodDate
       PeriodDate.MultiSelectSeparator = ','
-      CharCode.Value = 'J1201009'
+      CharCode.Value = 'J1201010'
       CharCode.MultiSelectSeparator = ','
       Caption = 'TaxJur'
     end
@@ -73,7 +73,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       PeriodDate.Value = 42005d
       PeriodDate.Component = dePeriodDate
       PeriodDate.MultiSelectSeparator = ','
-      CharCode.Value = 'J1201209'
+      CharCode.Value = 'J1201210'
       CharCode.MultiSelectSeparator = ','
       Caption = 'TaxCorrectiveJur'
     end
@@ -83,7 +83,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       PeriodDate.Value = Null
       PeriodDate.Component = dePeriodDate
       PeriodDate.MultiSelectSeparator = ','
-      CharCode.Value = 'F1201009'
+      CharCode.Value = 'F1201010'
       CharCode.MultiSelectSeparator = ','
       Caption = 'TaxFiz'
     end
@@ -93,7 +93,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       PeriodDate.Value = Null
       PeriodDate.Component = dePeriodDate
       PeriodDate.MultiSelectSeparator = ','
-      CharCode.Value = 'F1201209'
+      CharCode.Value = 'F1201210'
       CharCode.MultiSelectSeparator = ','
       Caption = 'TaxCorrectiveFiz'
     end
