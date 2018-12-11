@@ -41,6 +41,7 @@ type
     procedure LoadCreateOrderFromMCSFormTest;
     procedure LoadDefaultFormTest;
     procedure LoadDiscountFormTest;
+    procedure LoadDiffKindFormTest;
     procedure LoadEnumFormTest;
     procedure LoadEmailFormTest;
     procedure LoadEmailSettingsFormTest;
@@ -224,6 +225,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TAreaForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAreaEditForm');
+end;
+procedure TLoadFormTest.LoadDiffKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiffKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiffKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiffKindEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiffKindEditForm');
 end;
 
 procedure TLoadFormTest.LoadBankStatementFormTest;
