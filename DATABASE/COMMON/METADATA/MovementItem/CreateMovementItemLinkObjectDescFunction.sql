@@ -283,10 +283,15 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_List() RETURNS Integer AS $BODY$BEGIN
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_List', 'Пользователь (лист отказов)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_List');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_DiffKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_DiffKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_DiffKind', 'Вид отказа' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_DiffKind');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.12.18         * zc_MILinkObject_DiffKind
  07.11.18         * zc_MILinkObject_List
  13.08.18         * for GoodsSP
  25.05.17         * zc_MILinkObject_StorageLine

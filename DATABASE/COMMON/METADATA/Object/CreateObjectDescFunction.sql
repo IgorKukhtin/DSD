@@ -1071,6 +1071,11 @@ CREATE OR REPLACE FUNCTION zc_Object_RepriceUnitSheduler() RETURNS Integer AS $B
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_RepriceUnitSheduler', 'Планировщик переоценок' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_RepriceUnitSheduler');
 
+CREATE OR REPLACE FUNCTION zc_Object_DiffKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_DiffKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_DiffKind', 'Вид отказа' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_DiffKind');
+
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1087,6 +1092,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 11.12.18         * zc_Object_DiffKind
  22.10.18                                                                                        * zc_Object_RepriceUnitSheduler
  07.10.18         * zc_Object_GoodsSeparate
  28.09.18                                                                                        * zc_Object_Exchange, zc_Object_ClientsByBank  
