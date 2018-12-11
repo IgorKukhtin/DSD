@@ -19,7 +19,10 @@ RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar
              , ProvinceCityName_Unit TVarChar
              , JuridicalName_Unit TVarChar
              , Phone TVarChar
-             , Amount TFloat, AmountIncome TFloat, AmountAll TFloat
+             , Amount TFloat
+             , AmountIncome TFloat
+             , AmountReserve TFloat
+             , AmountAll TFloat
              , PriceSale  TFloat
              , SummaSale TFloat
              , PriceSaleIncome  TFloat
@@ -108,7 +111,7 @@ BEGIN
                      )
 
       , tmpIncome AS (SELECT MovementLinkObject_To.ObjectId          AS UnitId
-                           , MI_Income.ObjectId                      AS GoosdId
+                           , MI_Income.ObjectId                      AS GoodsId
                            , SUM(COALESCE (MI_Income.Amount, 0))     AS AmountIncome  
                            , SUM(COALESCE (MI_Income.Amount, 0) * COALESCE(MIFloat_PriceSale.ValueData,0))  AS SummSale    
                       FROM Movement AS Movement_Income
@@ -137,6 +140,41 @@ BEGIN
                               , MovementLinkObject_To.ObjectId 
                     )                          
 
+       -- Отложенные чеки
+      , tmpMovReserve AS (SELECT Movement.Id
+                               , MovementLinkObject_Unit.ObjectId AS UnitId
+                          FROM MovementBoolean AS MovementBoolean_Deferred
+                             INNER JOIN Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
+                                                AND Movement.DescId = zc_Movement_Check()
+                                                AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                           ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                          AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                          WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
+                            AND MovementBoolean_Deferred.ValueData = TRUE
+                         UNION ALL
+                          SELECT Movement.Id
+                               , MovementLinkObject_Unit.ObjectId AS UnitId
+                          FROM MovementString AS MovementString_CommentError
+                             INNER JOIN Movement ON Movement.Id     = MovementString_CommentError.MovementId
+                                                AND Movement.DescId = zc_Movement_Check()
+                                                AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                           ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                          AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                         WHERE MovementString_CommentError.DescId = zc_MovementString_CommentError()
+                           AND MovementString_CommentError.ValueData <> ''
+                         )
+      , tmpReserve AS (SELECT tmpMovReserve.UnitId             AS UnitId
+                            , MovementItem.ObjectId            AS GoodsId
+                            , Sum(MovementItem.Amount)::TFloat AS Amount
+                       FROM tmpMovReserve
+                            INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovReserve.Id
+                                                   AND MovementItem.DescId     = zc_MI_Master()
+                                                   AND MovementItem.isErased   = FALSE
+                       GROUP BY MovementItem.ObjectId, tmpMovReserve.UnitId
+                       )
+    
         SELECT Object_Goods_View.Id                         AS Id
              , Object_Goods_View.GoodsCodeInt    :: Integer AS GoodsCode
              , Object_Goods_View.GoodsName                  AS GoodsName
@@ -151,12 +189,13 @@ BEGIN
              , Object_Juridical.ValueData                   AS JuridicalName_Unit
 
              , ObjectString_Phone.ValueData                 AS Phone
-             , COALESCE(tmpData.Amount,0)         :: TFloat AS Amount
-             , COALESCE(tmpIncome.AmountIncome,0)                                  :: TFloat AS AmountIncome
-             , (COALESCE(tmpData.Amount,0) + COALESCE(tmpIncome.AmountIncome,0))   :: TFloat AS AmountAll
-             , COALESCE (ObjectHistoryFloat_Price.ValueData, 0)                    :: TFloat AS PriceSale
-             , (tmpData.Amount * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)) :: TFloat AS SummaSale
-             , CASE WHEN COALESCE(tmpIncome.AmountIncome,0) <> 0 THEN COALESCE(tmpIncome.SummSale,0) / COALESCE(tmpIncome.AmountIncome,0) ELSE 0 END  :: TFloat AS PriceSaleIncome
+             , COALESCE (tmpData.Amount,0)         :: TFloat AS Amount
+             , COALESCE (tmpIncome.AmountIncome,0)                                   :: TFloat AS AmountIncome
+             , COALESCE (tmpReserve.Amount, 0)                                       :: TFloat AS AmountReserve
+             , (COALESCE (tmpData.Amount,0) + COALESCE (tmpIncome.AmountIncome,0))   :: TFloat AS AmountAll
+             , COALESCE (ObjectHistoryFloat_Price.ValueData, 0)                      :: TFloat AS PriceSale
+             , (tmpData.Amount * COALESCE (ObjectHistoryFloat_Price.ValueData, 0))   :: TFloat AS SummaSale
+             , CASE WHEN COALESCE(tmpIncome.AmountIncome,0) <> 0 THEN COALESCE (tmpIncome.SummSale,0) / COALESCE (tmpIncome.AmountIncome,0) ELSE 0 END  :: TFloat AS PriceSaleIncome
              , tmpData.MinExpirationDate  ::TDateTime
         FROM tmpGoods
             LEFT JOIN Object AS Object_Unit ON Object_Unit.DescId = zc_Object_Unit()
@@ -168,9 +207,12 @@ BEGIN
                                 AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Unit_Area.ChildObjectId
 
-            LEFT JOIN tmpIncome ON tmpIncome.GoosdId = tmpGoods.Id
+            LEFT JOIN tmpIncome ON tmpIncome.GoodsId = tmpGoods.Id
                                AND tmpIncome.UnitId  = Object_Unit.Id
-                               
+
+            LEFT JOIN tmpReserve ON tmpReserve.GoodsId = tmpGoods.Id
+                                AND tmpReserve.UnitId  = Object_Unit.Id
+     
             LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = tmpGoods.Id
 
             LEFT OUTER JOIN Object_Price_View AS Object_Price
@@ -223,7 +265,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.12.18         * AmountReserve
  28.08.18         *
  05.01.18         *
  08.07.16         *

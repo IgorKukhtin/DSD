@@ -581,13 +581,14 @@ end;
 
 procedure TLoadFormTest.LoadLoadFormTest;
 begin
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListLoad_AddForm'));
     TdsdFormStorageFactory.GetStorage.Load('TPriceListLoad_AddForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListLoadForm'));
     TdsdFormStorageFactory.GetStorage.Load('TPriceListLoadForm');
     exit;
-   {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemsLoadForm'));
     TdsdFormStorageFactory.GetStorage.Load('TPriceListItemsLoadForm');
 
@@ -601,8 +602,7 @@ begin
     exit;
   }
   // отчет поиск товара по всей сети
-  TdsdFormStorageFactory.GetStorage.Save
-    (GetForm('TChoiceGoodsFromRemainsForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsFromRemainsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsFromRemainsForm');
   exit;
   //
