@@ -174,7 +174,31 @@ inherited ListDiffForm: TListDiffForm
             HeaderHint = #1044#1086#1075#1086#1074#1086#1088' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
             Width = 106
           end
-          object Comment: TcxGridDBColumn [7]
+          object DiffKindName: TcxGridDBColumn [7]
+            Caption = #1042#1080#1076' '#1086#1090#1082#1072#1079#1072
+            DataBinding.FieldName = 'DiffKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actDiffKindChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 140
+          end
+          object isClose_DiffKind: TcxGridDBColumn [8]
+            Caption = #1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
+            DataBinding.FieldName = 'isClose_DiffKind'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' ('#1042#1080#1076' '#1086#1090#1082#1072#1079#1072')'
+            Options.Editing = False
+            Width = 75
+          end
+          object Comment: TcxGridDBColumn [9]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -467,7 +491,34 @@ inherited ListDiffForm: TListDiffForm
         end>
       isShowModal = True
     end
-    object actJuridicalChoice: TOpenChoiceForm [14]
+    object actDiffKindChoice: TOpenChoiceForm [14]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'DiffKindForm'
+      FormName = 'TDiffKindForm'
+      FormNameParam.Value = 'TDiffKindForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DiffKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DiffKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actJuridicalChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -901,6 +952,14 @@ inherited ListDiffForm: TListDiffForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiffKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DiffKindId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

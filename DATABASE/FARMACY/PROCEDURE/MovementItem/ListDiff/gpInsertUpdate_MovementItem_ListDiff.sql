@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_ListDiff()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ListDiff(Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ListDiff(Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ListDiff(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ListDiff(
     IN inGoodsId             Integer   , -- Товары
     IN inJuridicalId         Integer   , -- 
     IN inContractId          Integer   , -- 
+    IN inDiffKindId          Integer   , -- вид отказа
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена
     IN inComment             TVarChar  , -- 
@@ -37,7 +39,10 @@ BEGIN
 
      -- сохранили связь с <Договором>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), ioId, inContractId);
- 
+
+     -- сохранили связь с <вид отказа>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_DiffKind(), ioId, inDiffKindId);
+
      -- сохранили свойство <Примечание>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
