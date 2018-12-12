@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GroupStatId Integer, GroupStatName TVarChar
              , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
+             , AssetId Integer, AssetName TVarChar
              , MeasureId Integer, MeasureName TVarChar
              , TradeMarkName TVarChar
              , GoodsTagName TVarChar
@@ -60,6 +61,8 @@ BEGIN
             , Object_GoodsGroupAnalyst.Id        AS GoodsGroupAnalystId
             , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName
 
+            , Object_Asset.Id        AS AssetId
+            , Object_Asset.ValueData AS AssetName
 
             , Object_Measure.Id               AS MeasureId
             , Object_Measure.ValueData        AS MeasureName
@@ -148,6 +151,11 @@ BEGIN
                                  AND ObjectLink_Goods_GoodsPlatform.DescId = zc_ObjectLink_Goods_GoodsPlatform()
              LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = ObjectLink_Goods_GoodsPlatform.ChildObjectId
 
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Asset
+                                  ON ObjectLink_Goods_Asset.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_Asset.DescId = zc_ObjectLink_Goods_Asset()
+             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = ObjectLink_Goods_Asset.ChildObjectId
+
              LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                    ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                   AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
@@ -206,6 +214,8 @@ BEGIN
             , 0                   :: Integer  AS GoodsGroupAnalystId
             , ''                  :: TVarChar AS GoodsGroupAnalystName
 
+            , 0                   :: Integer  AS AssetId
+            , ''                  :: TVarChar AS AssetName
 
             , 0                   :: Integer  AS MeasureId
             , ''                  :: TVarChar AS MeasureName
@@ -244,6 +254,7 @@ ALTER FUNCTION gpSelect_Object_Goods (Boolean, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 12.12.18         * 
  18.10.18         *
  15.04.15         * add GoodsPlatform
  23.02.15         * add inShowAll
