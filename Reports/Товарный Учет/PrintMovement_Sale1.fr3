@@ -74,7 +74,7 @@
       <TfrxMemoView Name="Memo18" Left="119.05511811" Top="0" Width="613.35436" Height="16" ShowHint="False" StretchMode="smMaxHeight" Text="[frxDBDHeader.&#34;placeof&#34;]"/>
     </TfrxChild>
   </TfrxReportPage>
-  <TfrxReportPage Name="Page2" PaperWidth="210" PaperHeight="297" PaperSize="256" LeftMargin="6" RightMargin="6" TopMargin="6" BottomMargin="6" ColumnWidth="0" ColumnPositions.Text="" HGuides.Text="" VGuides.Text="">
+  <TfrxReportPage Name="Page2" PaperWidth="210" PaperHeight="297" PaperSize="9" LeftMargin="6" RightMargin="6" TopMargin="6" BottomMargin="6" ColumnWidth="0" ColumnPositions.Text="" HGuides.Text="" VGuides.Text="">
     <TfrxHeader Name="Header1" Font.Charset="204" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" Height="18.8976378" Left="0" ParentFont="False" Top="404.40971" Width="748.34694">
       <TfrxMemoView Name="Memo25" Align="baLeft" Left="473.755851812992" Top="0" Width="45.35432583" Height="18.8976377952756" ShowHint="False" AllowExpressions="False" Color="-16777201" Font.Charset="204" Font.Color="0" Font.Height="-11" Font.Name="Arial" Font.Style="0" Frame.Typ="15" GapX="1" HAlign="haCenter" ParentFont="False" WordWrap="False" VAlign="vaCenter" Text="Од. вим."/>
       <TfrxMemoView Name="Memo30" Align="baLeft" Left="69.35432583" Top="0" Width="199.17316" Height="18.8976378" ShowHint="False" Color="-16777201" Font.Charset="204" Font.Color="0" Font.Height="-11" Font.Name="Arial" Font.Style="0" Frame.Typ="15" GapX="1" HAlign="haCenter" ParentFont="False" WordWrap="False" VAlign="vaCenter" Text="Назва товару"/>

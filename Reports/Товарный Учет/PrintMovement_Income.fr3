@@ -103,7 +103,7 @@
       <TfrxMemoView Name="Memo98" Left="335.88188976" Top="0" Width="162.51968504" Height="18.8976378" ShowHint="False" Font.Charset="204" Font.Color="0" Font.Height="-12" Font.Name="Arial" Font.Style="1" HAlign="haRight" ParentFont="False" WordWrap="False" VAlign="vaCenter" Text="Сумма : "/>
     </TfrxFooter>
   </TfrxReportPage>
-  <TfrxReportPage Name="Page3" PaperWidth="210" PaperHeight="297" PaperSize="256" LeftMargin="8" RightMargin="8" TopMargin="6" BottomMargin="6" ColumnWidth="0" ColumnPositions.Text="" HGuides.Text="" VGuides.Text="">
+  <TfrxReportPage Name="Page3" PaperWidth="210" PaperHeight="297" PaperSize="9" LeftMargin="8" RightMargin="8" TopMargin="6" BottomMargin="6" ColumnWidth="0" ColumnPositions.Text="" HGuides.Text="" VGuides.Text="">
     <TfrxHeader Name="Header2" Font.Charset="204" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" Height="26.45669291" Left="0" ParentFont="False" Top="222.99227" Width="733.22882">
       <TfrxMemoView Name="Memo53" Align="baLeft" Left="431.04724166" Top="0" Width="49.13385583" Height="26.4566929133858" ShowHint="False" AllowExpressions="False" Font.Charset="204" Font.Color="0" Font.Height="-11" Font.Name="Arial" Font.Style="0" Frame.Typ="15" GapX="1" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="Од. вим."/>
       <TfrxMemoView Name="Memo54" Align="baLeft" Left="73.13385583" Top="0" Width="293.66141" Height="26.45669291" ShowHint="False" Font.Charset="204" Font.Color="0" Font.Height="-11" Font.Name="Arial" Font.Style="0" Frame.Typ="15" GapX="1" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="Назва товару 3"/>
