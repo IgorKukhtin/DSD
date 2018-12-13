@@ -109,7 +109,7 @@ BEGIN
                                          ON MovementLinkObject_DocumentKind.MovementId = Movement.Id
                                         AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
             LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MovementLinkObject_DocumentKind.ObjectId
-       WHERE Object_To.DescId = zc_Object_Member() OR Object_From.DescId = zc_Object_Member()
+       WHERE Object_To.DescId IN (zc_Object_Member(), zc_Object_Car()) OR Object_From.DescId IN (zc_Object_Member(), zc_Object_Car())
             ;
 
 END;

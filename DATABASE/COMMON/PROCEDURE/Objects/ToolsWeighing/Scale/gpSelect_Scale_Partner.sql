@@ -52,7 +52,7 @@ BEGIN
 
 
    IF (inBranchCode > 1000)
-   THEN 
+   THEN
 
 
     -- Результат
@@ -179,7 +179,7 @@ BEGIN
                                    AND 1=0 -- убрал, т.к. проверка по связи заявки с EDI
            ;
    ELSE
-   
+
    -- определяется уровень доступа
    vbObjectId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.JuridicalGroupId), 0);
    vbBranchId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId), 0);
@@ -189,15 +189,41 @@ BEGIN
     -- Результат
     RETURN QUERY
        WITH tmpUnit_not AS (SELECT 954062 AS UnitId -- Отдел Х
-                           /*UNION 
+                           /*UNION
                             SELECT lfSelect.LocationId FROM lfSelect_Object_Unit_List (8382) AS lfSelect -- Админ
-                           UNION 
+                           UNION
                             SELECT lfSelect.LocationId FROM lfSelect_Object_Unit_List (8427) AS lfSelect WHERE lfSelect.LocationId <> 8429 -- Общефирменные + Отдел логистики
-                           -- UNION 
+                           -- UNION
                            --  SELECT lfSelect.LocationId FROM lfSelect_Object_Unit_List (8432) AS lfSelect -- Общепроизводственные
                            */
-                            
+
                            )
+             , tmpCar AS (SELECT Object_Car.Id         AS CarId
+                               , Object_Car.DescId     AS DescId
+                               , Object_Car.ObjectCode AS CarCode
+                               , TRIM (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, ''))  AS CarName
+                               , Object_PersonalDriver.ObjectCode   AS PersonalDriverCode
+                               , Object_PersonalDriver.ValueData    AS PersonalDriverName
+                          FROM Object AS Object_Car
+                               LEFT JOIN ObjectLink AS Car_CarModel
+                                                    ON Car_CarModel.ObjectId = Object_Car.Id
+                                                   AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+                               LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
+
+                               /*LEFT JOIN ObjectLink AS ObjectLink_Car_Unit
+                                                    ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
+                                                   AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
+                               LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Car_Unit.ChildObjectId*/
+
+                               LEFT JOIN ObjectLink AS ObjectLink_Car_PersonalDriver
+                                                    ON ObjectLink_Car_PersonalDriver.ObjectId = Object_Car.Id
+                                                   AND ObjectLink_Car_PersonalDriver.DescId = zc_ObjectLink_Car_PersonalDriver()
+                               LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = ObjectLink_Car_PersonalDriver.ChildObjectId
+
+                          WHERE Object_Car.DescId = zc_Object_Car()
+                            AND Object_Car.isErased = FALSE
+                            AND (inBranchCode BETWEEN 301 AND 310)
+                         )
           , tmpMember AS (SELECT lfSelect.MemberId        AS MemberId
                                , Object_Member.DescId     AS DescId
                                , Object_Member.ObjectCode AS MemberCode
@@ -272,6 +298,7 @@ BEGIN
                                   , zc_Movement_Income() AS MovementDescId
                              FROM Object_InfoMoney_View AS View_InfoMoney_find
                              WHERE View_InfoMoney_find.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
+                                                                                , zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты
                                                                                 , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
                                                                                 , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                                                                 , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
@@ -329,7 +356,7 @@ BEGIN
                                                     AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
 
                                 LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                                     ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id 
+                                                     ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id
                                                     AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
                                 LEFT JOIN ObjectLink AS ObjectLink_PersonalTrade_Unit
                                                      ON ObjectLink_PersonalTrade_Unit.ObjectId = ObjectLink_Partner_PersonalTrade.ChildObjectId
@@ -473,7 +500,7 @@ BEGIN
        FROM Object AS Object_ArticleLoss
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_ArticleLoss.DescId
 
-            LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_InfoMoney 
+            LEFT JOIN ObjectLink AS ObjectLink_ArticleLoss_InfoMoney
                                  ON ObjectLink_ArticleLoss_InfoMoney.ObjectId = Object_ArticleLoss.Id
                                 AND ObjectLink_ArticleLoss_InfoMoney.DescId = zc_ObjectLink_ArticleLoss_InfoMoney()
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_ArticleLoss_InfoMoney.ChildObjectId
@@ -519,12 +546,58 @@ BEGIN
             , FALSE       :: Boolean AS isSpec   ,   0 :: TFloat AS CountSpec
             , FALSE       :: Boolean AS isTax    ,   0 :: TFloat AS CountTax
 
-            , CASE WHEN inBranchCode NOT BETWEEN 301 AND 310 THEN tmpMember.DescId   ELSE zc_Object_ArticleLoss() END :: Integer AS ObjectDescId
-            , CASE WHEN inBranchCode NOT BETWEEN 301 AND 310 THEN zc_Movement_Send() ELSE zc_Movement_Loss()      END :: Integer AS MovementDescId
+            , CASE WHEN inBranchCode NOT BETWEEN 301 AND 301 THEN tmpMember.DescId   ELSE zc_Object_ArticleLoss() END :: Integer AS ObjectDescId
+            , tmpDesc.MovementDescId :: Integer AS MovementDescId
             , ObjectDesc.ItemName
 
        FROM tmpMember
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = tmpMember.DescId
+            LEFT JOIN (SELECT zc_Movement_Send() AS MovementDescId WHERE inBranchCode <> 301
+                 UNION SELECT zc_Movement_Loss() AS MovementDescId WHERE inBranchCode BETWEEN 301 AND 310
+                      ) AS tmpDesc ON 1=1
+
+      UNION ALL
+       SELECT tmpCar.CarId               AS PartnerId
+            , tmpCar.CarCode             AS PartnerCode
+            , tmpCar.CarName :: TVarChar AS PartnerName
+            , '' :: TVarChar             AS JuridicalName
+            , NULL :: Integer            AS PaidKindId
+            , '' :: TVarChar             AS PaidKindName
+
+            , (-1 * zc_Object_Car()) :: Integer AS ContractId
+            , tmpCar.PersonalDriverCode             AS ContractCode
+            , tmpCar.PersonalDriverCode :: TVarChar AS ContractNumber
+            , tmpCar.PersonalDriverName             AS ContractTagName
+
+            , (-1 * zc_Object_Car()) :: Integer AS InfoMoneyId
+            , NULL :: Integer  AS InfoMoneyCode
+            , NULL :: TVarChar AS InfoMoneyName
+
+            , NULL :: TFloat AS ChangePercent
+            , NULL :: TFloat AS ChangePercentAmount
+
+            , FALSE       :: Boolean AS isEdiOrdspr
+            , FALSE       :: Boolean AS isEdiInvoice
+            , FALSE       :: Boolean AS isEdiDesadv
+
+            , TRUE        :: Boolean AS isMovement,  2 :: TFloat AS CountMovement
+            , FALSE       :: Boolean AS isAccount,   0 :: TFloat AS CountAccount
+            , FALSE       :: Boolean AS isTransport, 0 :: TFloat AS CountTransport
+            , FALSE       :: Boolean AS isQuality,   0 :: TFloat AS CountQuality
+            , FALSE       :: Boolean AS isPack   ,   0 :: TFloat AS CountPack
+            , FALSE       :: Boolean AS isSpec   ,   0 :: TFloat AS CountSpec
+            , FALSE       :: Boolean AS isTax    ,   0 :: TFloat AS CountTax
+
+            , tmpCar.DescId                     AS ObjectDescId
+            , tmpDesc.MovementDescId :: Integer AS MovementDescId
+            , ObjectDesc.ItemName
+
+       FROM tmpCar
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = tmpCar.DescId
+            LEFT JOIN (SELECT zc_Movement_Send() AS MovementDescId
+                 UNION SELECT zc_Movement_Loss() AS MovementDescId
+                      ) AS tmpDesc ON 1=1
+       WHERE inBranchCode BETWEEN 302 AND 310
 
       UNION ALL
        SELECT Object_Unit.Id          AS PartnerId

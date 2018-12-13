@@ -130,9 +130,11 @@ begin
      then CDS.Filter:='MovementDescId='+IntToStr(zc_Movement_Sale)
                     + ' and ObjectDescId='+IntToStr(zc_Object_Partner)
      else if (ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Loss)
-          then CDS.Filter:='ObjectDescId='+IntToStr(zc_Object_ArticleLoss)
+          //then CDS.Filter:='ObjectDescId='+IntToStr(zc_Object_Member) + ' or ObjectDescId='+IntToStr(zc_Object_Car) + ' or ObjectDescId='+IntToStr(zc_Object_ArticleLoss)
+          then CDS.Filter:='MovementDescId='+IntToStr(zc_Movement_Loss)
           else if (ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
-               then CDS.Filter:='ObjectDescId='+IntToStr(zc_Object_Member)
+               //then CDS.Filter:='ObjectDescId='+IntToStr(zc_Object_Member) + ' or ObjectDescId='+IntToStr(zc_Object_Car) + ' or ObjectDescId='+IntToStr(zc_Object_ArticleLoss)
+               then CDS.Filter:='MovementDescId='+IntToStr(zc_Movement_Send)
                else if (ParamsMovement_local.ParamByName('MovementDescId').AsInteger = zc_Movement_SendOnPrice)
                     then CDS.Filter:='ObjectDescId='+IntToStr(zc_Object_Unit)
                else CDS.Filter:='1=0';

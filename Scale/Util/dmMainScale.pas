@@ -1375,6 +1375,11 @@ begin
          Execute;
          zc_Object_Unit:=DataSet.FieldByName('Value').asInteger;
 
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Object_Car() :: TVarChar';
+         Execute;
+         zc_Object_Car:=DataSet.FieldByName('Value').asInteger;
+
+
        {except
          result.Code := Code;
          result.Id   := 0;

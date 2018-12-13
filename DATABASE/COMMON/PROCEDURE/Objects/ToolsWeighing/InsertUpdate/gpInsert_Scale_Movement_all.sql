@@ -656,8 +656,8 @@ end if;*/
                                                   , inPriceWithVAT          := FALSE
                                                   , inVATPercent            := 20
                                                   , inFromId                := FromId
-                                                  , inToId                  := CASE WHEN tmp.DescId_to = zc_Object_Member() THEN tmp.ToId ELSE ContractId END -- !!!не ошибка!!!
-                                                  , inArticleLossId         := CASE WHEN tmp.DescId_to = zc_Object_Member() THEN 0        ELSE ToId       END -- !!!не ошибка!!!
+                                                  , inToId                  := CASE WHEN tmp.DescId_to IN (zc_Object_Member(), zc_Object_Car()) THEN tmp.ToId ELSE ContractId END -- !!!не ошибка!!!
+                                                  , inArticleLossId         := CASE WHEN tmp.DescId_to IN (zc_Object_Member(), zc_Object_Car()) THEN 0        ELSE ToId       END -- !!!не ошибка!!!
                                                   , inPaidKindId            := zc_Enum_PaidKind_SecondForm()
                                                   , inUserId                := vbUserId
                                                    )

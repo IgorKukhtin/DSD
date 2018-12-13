@@ -45,6 +45,8 @@ BEGIN
 
 
      vbItearationCount_err:= 5;
+     
+     -- inItearationCount:= 50;
 
 
 -- !!!ВРЕМЕННО!!!
@@ -488,6 +490,8 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
 --     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (SELECT CLO.ContainerId FROM ContainerLinkObject as CLO WHERE CLO.DescId = zc_ContainerLinkObject_Member()
 --                                                                                                                      AND CLO.ObjectId = 12573); -- Однокопила Ірина Борисівна
 
+
+     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (154253, 154250); -- 12.2018
 
      IF inBranchId = 0 -- OR 1 = 1
      THEN
@@ -1397,4 +1401,4 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 
 -- тест
 -- SELECT * FROM  ObjectProtocol WHERE ObjectId = zfCalc_UserAdmin() :: Integer ORDER BY ID DESC LIMIT 100
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.11.2018', inEndDate:= '30.11.2018', inBranchId:= 0, inItearationCount:= 50, inInsert:= -1, inDiffSumm:= 1, inSession:= '2')  ORDER BY ABS (Price) DESC -- WHERE ContainerId = 141708 -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.12.2018', inEndDate:= '31.12.2018', inBranchId:= 0, inItearationCount:= 00, inInsert:= -1, inDiffSumm:= 1, inSession:= '2')  ORDER BY ABS (Price) DESC -- WHERE ContainerId = 141708 -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext

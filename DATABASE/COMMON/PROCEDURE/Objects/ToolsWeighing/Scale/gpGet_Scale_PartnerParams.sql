@@ -56,13 +56,10 @@ BEGIN
                                     , zc_PriceList_Basis()          AS PriceListId
                                     , 0                             AS GoodsPropertyId
                                FROM Object AS Object_Partner
-                                    LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                         ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
-                                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                 WHERE Object_Partner.Id       = inPartnerId
-                                  AND Object_Partner.DescId   = zc_Object_Member()
+                                  AND Object_Partner.DescId   = (-1 * inContractId)
                                   AND Object_Partner.isErased = FALSE
-                                  AND inContractId            = -1 * zc_Object_Member()
+                                  AND inContractId            IN (-1 * zc_Object_Member(), -1 * zc_Object_Car())
                              )
 
        SELECT tmpPartner.PartnerId

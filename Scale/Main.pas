@@ -1107,12 +1107,17 @@ begin
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.EditBarCodePropertiesChange(Sender: TObject);
+var lBarCodeText : String;
 begin
-     EditBarCode.Text:=trim(EditBarCode.Text);
-     if Length(EditBarCode.Text)>=13
+     lBarCodeText:=trim(EditBarCode.Text);
+     //
+     if (Length(lBarCodeText)=12)and (lBarCodeText[1]='0')
+     then lBarCodeText:= '0' + lBarCodeText;
+
+     if Length(lBarCodeText)>=13
      then begin
                //Проверка <Контрольная сумма>
-               if CheckBarCode(trim(EditBarCode.Text)) = FALSE
+               if CheckBarCode(lBarCodeText) = FALSE
                then begin
                   EditBarCode.Text:='';
                   ActiveControl:=EditBarCode;
@@ -1124,22 +1129,22 @@ begin
                //если в ШК - Id товара или товар+вид товара
                if Pos(zc_BarCodePref_Object,EditBarCode.Text)=1
                then begin
-                         GetParams_Goods (FALSE, EditBarCode.Text, TRUE);//isRetail=FALSE
+                         GetParams_Goods (FALSE, lBarCodeText, TRUE);//isRetail=FALSE
                          EditBarCode.Text:='';
                     end
                else
                    //если в ШК - Id документа заявки
-                   if (Pos(zc_BarCodePref_Movement, EditBarCode.Text) = 1)
-                   and (Pos('20204979',EditBarCode.Text) <> 1)
-                   and (Pos('20204982',EditBarCode.Text) <> 1)
-                   and (Pos('20204983',EditBarCode.Text) <> 1)
+                   if (Pos(zc_BarCodePref_Movement, lBarCodeText) = 1)
+                   and (Pos('20204979', lBarCodeText) <> 1)
+                   and (Pos('20204982', lBarCodeText) <> 1)
+                   and (Pos('20204983', lBarCodeText) <> 1)
                    then begin
-                             GetParams_MovementDesc(EditBarCode.Text);
+                             GetParams_MovementDesc (lBarCodeText);
                              EditBarCode.Text:='';
                         end
                    else begin
                             //если в ШК - закодированый товар + кол-во, т.е. для Retail
-                             GetParams_Goods (TRUE, EditBarCode.Text, TRUE);//isRetail=TRUE
+                             GetParams_Goods (TRUE, lBarCodeText, TRUE);//isRetail=TRUE
                              EditBarCode.Text:='';
                         end;
                finally
@@ -1368,7 +1373,7 @@ begin
   end;
 
   //local visible
-  PanelPartionGoods.Visible:=SettingMain.isGoodsComplete = FALSE;
+  PanelPartionGoods.Visible:=(SettingMain.isGoodsComplete = FALSE) and ((SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310));
   HeadCountPanel.Visible:=PanelPartionGoods.Visible;
   PanelCountPack.Visible:=(not PanelPartionGoods.Visible) and (SettingMain.isSticker = FALSE);
   BarCodePanel.Visible:=GetArrayList_Value_byName (Default_Array,'isBarCode') = AnsiUpperCase('TRUE');

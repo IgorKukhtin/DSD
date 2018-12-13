@@ -251,17 +251,19 @@ BEGIN
                                  AND inPartnerCode > 0
                                  AND inInfoMoneyId >=0 
                               UNION
-                               SELECT Object_ArticleLoss.DescId         AS ObjectDescId
-                                    , Object_ArticleLoss.Id             AS PartnerId
-                                    , Object_ArticleLoss.ObjectCode     AS PartnerCode
-                                    , Object_ArticleLoss.ValueData      AS PartnerName
-                               FROM Object AS Object_ArticleLoss
-                               WHERE Object_ArticleLoss.ObjectCode = inPartnerCode
-                                 AND Object_ArticleLoss.DescId     = zc_Object_Member()
-                                 AND Object_ArticleLoss.isErased   = FALSE
+                               -- zc_Object_Member() OR zc_Object_Car()
+                               SELECT Object_Member.DescId         AS ObjectDescId
+                                    , Object_Member.Id             AS PartnerId
+                                    , Object_Member.ObjectCode     AS PartnerCode
+                                    , Object_Member.ValueData      AS PartnerName
+                               FROM Object AS Object_Member
+                               WHERE Object_Member.ObjectCode = inPartnerCode
+                                 AND Object_Member.DescId     = (-1 * inInfoMoneyId)
+                                 AND Object_Member.isErased   = FALSE
                                  AND inPartnerCode > 0
-                                 AND inInfoMoneyId = -1 * zc_Object_Member()
+                                 AND inInfoMoneyId IN (-1 * zc_Object_Member(), -1 * zc_Object_Car())
                               )
+       -- zc_Object_ArticleLoss() OR zc_Object_Member() OR zc_Object_Car()
        SELECT tmpArticleLoss.ObjectDescId
             , tmpArticleLoss.PartnerId
             , tmpArticleLoss.PartnerCode
@@ -307,7 +309,7 @@ BEGIN
    ELSE
    IF inMovementDescId IN (zc_Movement_Send())
    THEN
-       -- Результат для ArticleLoss
+       -- Результат для zc_Object_Member() OR zc_Object_Car()
        RETURN QUERY
        WITH tmpMember AS (SELECT Object_Member.DescId         AS ObjectDescId
                                , Object_Member.Id             AS PartnerId
@@ -323,20 +325,47 @@ BEGIN
                             AND Object_Member.DescId     = zc_Object_Member()
                             AND Object_Member.isErased   = FALSE
                             AND inPartnerCode > 0
-                            -- AND inInfoMoneyId = -1 * zc_Object_Member()
+                         UNION
+                          SELECT Object_Member.DescId         AS ObjectDescId
+                               , Object_Member.Id             AS PartnerId
+                               , Object_Member.ObjectCode     AS PartnerCode
+                               , TRIM (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Member.ValueData, '')) AS PartnerName
+                               , COALESCE (Object_PersonalDriver.ObjectCode, Object_Unit.ObjectCode)  AS UnitCode
+                               , COALESCE (Object_PersonalDriver.ValueData,  Object_Unit.ValueData)   AS UnitName
+                          FROM Object AS Object_Member
+                               LEFT JOIN lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                                                                                         ON lfSelect.MemberId    = Object_Member.Id
+                                                                                        AND Object_Member.DescId = zc_Object_Member()
+                               LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = lfSelect.UnitId
+
+                               LEFT JOIN ObjectLink AS Car_CarModel
+                                                    ON Car_CarModel.ObjectId = Object_Member.Id
+                                                   AND Car_CarModel.DescId   = zc_ObjectLink_Car_CarModel()
+                               LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
+                               LEFT JOIN ObjectLink AS ObjectLink_Car_PersonalDriver
+                                                    ON ObjectLink_Car_PersonalDriver.ObjectId = Object_Member.Id
+                                                   AND ObjectLink_Car_PersonalDriver.DescId   = zc_ObjectLink_Car_PersonalDriver()
+                               LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = ObjectLink_Car_PersonalDriver.ChildObjectId
+
+                          WHERE Object_Member.ObjectCode = inPartnerCode
+                            AND Object_Member.DescId     = (-1 * inInfoMoneyId)
+                            AND Object_Member.isErased   = FALSE
+                            AND inPartnerCode > 0
+                            AND inInfoMoneyId IN (-1 * zc_Object_Member(), -1 * zc_Object_Car())
                          )
        SELECT tmpMember.ObjectDescId
-            , tmpMember.PartnerId
-            , tmpMember.PartnerCode
-            , tmpMember.PartnerName
-            , NULL :: Integer AS PaidKindId
-            , '' :: TVarChar  AS PaidKindName
+            , tmpMember.PartnerId   :: Integer   AS PartnerId
+            , tmpMember.PartnerCode :: Integer   AS PartnerCode
+            , tmpMember.PartnerName :: TVarChar  AS PartnerName
+
+            , NULL :: Integer  AS PaidKindId
+            , ''   :: TVarChar AS PaidKindName
 
             , Object_PriceList.Id                  AS PriceListId
             , Object_PriceList.ObjectCode          AS PriceListCode
             , Object_PriceList.ValueData           AS PriceListName
 
-            , (-1 * zc_Object_Member()) :: Integer AS ContractId
+            , (-1 * tmpMember.ObjectDescId) :: Integer AS ContractId
             , tmpMember.UnitCode             AS ContractCode
             , tmpMember.UnitCode :: TVarChar AS ContractNumber
             , tmpMember.UnitName             AS ContractTagName

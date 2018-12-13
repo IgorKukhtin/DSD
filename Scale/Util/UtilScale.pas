@@ -149,6 +149,7 @@ var
   zc_Object_ArticleLoss: Integer;
   zc_Object_Member     : Integer;
   zc_Object_Unit       : Integer;
+  zc_Object_Car        : Integer;
 
 //  zc_Measure_Sh: Integer;
   zc_Measure_Kg: Integer;

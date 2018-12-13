@@ -920,7 +920,11 @@ begin
   ZVIT.DECLARBODY.HTINSEL:= HeaderDataSet.FieldByName('OKPO_From').AsString;
 
   ZVIT.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('INN_To').AsString;
-  ZVIT.DECLARBODY.ChildNodes['HFBUY'].SetAttributeNS('nil', NS_URI, true);
+  // № Філії покупця
+  if HeaderDataSet.FieldByName('InvNumberBranch_From').AsString <> ''
+  then ZVIT.DECLARBODY.HFBUY := StrToInt(HeaderDataSet.FieldByName('InvNumberBranch_To').AsString)
+  else ZVIT.DECLARBODY.ChildNodes['HFBUY'].SetAttributeNS('nil', NS_URI, true);
+
   ZVIT.DECLARBODY.HTINBUY := HeaderDataSet.FieldByName('OKPO_To').AsString;
 
   ZVIT.DECLARBODY.R04G11  := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
@@ -2266,7 +2270,9 @@ begin
   // ІПН підприємства - Покупатель
   ZVIT.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('INN_From').AsString;
   // Код філії покупця
-  ZVIT.DECLARBODY.ChildNodes['HFBUY'].SetAttributeNS('nil', NS_URI, true);
+  if HeaderDataSet.FieldByName('InvNumberBranch_From').AsString <> ''
+  then ZVIT.DECLARBODY.HFBUY := StrToInt(HeaderDataSet.FieldByName('InvNumberBranch_From').AsString)
+  else ZVIT.DECLARBODY.ChildNodes['HFBUY'].SetAttributeNS('nil', NS_URI, true);
   // Податковий номер платника податку або серія та/або номер паспорта (покупець)
   ZVIT.DECLARBODY.HTINBUY := HeaderDataSet.FieldByName('OKPO_From').AsString;
 
