@@ -634,7 +634,9 @@ uses
   EmployeeSchedule in '..\..\FormsFarmacy\Document\EmployeeSchedule.pas' {EmployeeScheduleForm: TParentForm},
   CashSummaForDey in '..\..\FormsFarmacy\Cash\CashSummaForDey.pas' {CashSummaForDeyFormForm: TParentForm},
   Medoc_J1201010 in '..\..\SOURCE\MeDOC\Medoc_J1201010.pas',
-  Medoc_J1201210 in '..\..\SOURCE\MeDOC\Medoc_J1201210.pas';
+  Medoc_J1201210 in '..\..\SOURCE\MeDOC\Medoc_J1201210.pas',
+  DiffKind in '..\..\FormsFarmacy\Guides\DiffKind.pas' {DiffKindForm: TParentForm},
+  DiffKindEdit in '..\..\FormsFarmacy\Guides\DiffKindEdit.pas' {DiffKindEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -413,12 +413,14 @@ order by 4*/
            , CASE WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
                     OR vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                     OR vbCalcNDSPayer_INN <> ''
+                    OR (vbOperDate_begin >= '01.12.2018' AND OH_JuridicalDetails_To.OKPO = '100000000000')
                    THEN 'X' 
                    ELSE '' END                  AS NotNDSPayer
 
            , CASE WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
                     OR vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                     OR vbCalcNDSPayer_INN <> ''
+                    OR (vbOperDate_begin >= '01.12.2018' AND OH_JuridicalDetails_To.OKPO = '100000000000')
                   THEN TRUE ELSE FALSE END :: Boolean   AS isNotNDSPayer
 
              -- 1 - (зазначається відповідний тип причини)
@@ -426,6 +428,7 @@ order by 4*/
                        THEN '0'
                   WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
                     OR vbCalcNDSPayer_INN <> ''
+                    OR (vbOperDate_begin >= '01.12.2018' AND OH_JuridicalDetails_To.OKPO = '100000000000')
                        THEN '0'
              END AS NotNDSPayerC1
              -- 2 - (зазначається відповідний тип причини)
@@ -433,6 +436,7 @@ order by 4*/
                        THEN '7'
                   WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
                     OR vbCalcNDSPayer_INN <> ''
+                    OR (vbOperDate_begin >= '01.12.2018' AND OH_JuridicalDetails_To.OKPO = '100000000000')
                        THEN '2'
              END AS NotNDSPayerC2
 

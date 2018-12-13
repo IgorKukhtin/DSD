@@ -37,6 +37,11 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
               Format = ',0.00'
               Kind = skSum
               Column = colAmountAll
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountReserve
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -53,6 +58,11 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
               Format = ',0.00'
               Kind = skSum
               Column = colAmountAll
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountReserve
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -122,6 +132,18 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 98
+          end
+          object AmountReserve: TcxGridDBColumn
+            Caption = #1054#1090#1083'. '#1090#1086#1074#1072#1088
+            DataBinding.FieldName = 'AmountReserve'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088
+            Options.Editing = False
+            Width = 73
           end
           object colPriceSaleIncome: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1090#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080')'

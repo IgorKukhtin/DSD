@@ -26,6 +26,7 @@ object GoodsForm: TGoodsForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 104
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -41,7 +42,6 @@ object GoodsForm: TGoodsForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -51,6 +51,7 @@ object GoodsForm: TGoodsForm
         DataBinding.FieldName = 'GoodsPlatformName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 120
       end
       object TradeMarkName: TcxGridDBColumn
@@ -58,6 +59,7 @@ object GoodsForm: TGoodsForm
         DataBinding.FieldName = 'TradeMarkName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object GoodsGroupAnalystName: TcxGridDBColumn
@@ -65,6 +67,7 @@ object GoodsForm: TGoodsForm
         DataBinding.FieldName = 'GoodsGroupAnalystName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object GoodsTagName: TcxGridDBColumn
@@ -72,6 +75,7 @@ object GoodsForm: TGoodsForm
         DataBinding.FieldName = 'GoodsTagName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object GroupStatName: TcxGridDBColumn
@@ -80,6 +84,7 @@ object GoodsForm: TGoodsForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object GoodsGroupNameFull: TcxGridDBColumn
@@ -87,6 +92,7 @@ object GoodsForm: TGoodsForm
         DataBinding.FieldName = 'GoodsGroupNameFull'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 150
       end
       object GoodsGroupName: TcxGridDBColumn
@@ -95,6 +101,7 @@ object GoodsForm: TGoodsForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 172
       end
       object Code: TcxGridDBColumn
@@ -102,6 +109,7 @@ object GoodsForm: TGoodsForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 63
       end
       object Name: TcxGridDBColumn
@@ -109,13 +117,31 @@ object GoodsForm: TGoodsForm
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 206
+      end
+      object AssetName: TcxGridDBColumn
+        Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086' ('#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1058#1052#1062')'
+        DataBinding.FieldName = 'AssetName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceAsset
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1089#1085#1086#1074#1085#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086' ('#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1058#1052#1062')'
+        Width = 150
       end
       object MeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object Weight: TcxGridDBColumn
@@ -123,6 +149,7 @@ object GoodsForm: TGoodsForm
         DataBinding.FieldName = 'Weight'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 45
       end
       object GoodsCode_basis: TcxGridDBColumn
@@ -179,6 +206,7 @@ object GoodsForm: TGoodsForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object BusinessName: TcxGridDBColumn
@@ -187,6 +215,7 @@ object GoodsForm: TGoodsForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object InfoMoneyCode: TcxGridDBColumn
@@ -194,6 +223,7 @@ object GoodsForm: TGoodsForm
         DataBinding.FieldName = 'InfoMoneyCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object InfoMoneyGroupName: TcxGridDBColumn
@@ -202,6 +232,7 @@ object GoodsForm: TGoodsForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object InfoMoneyDestinationName: TcxGridDBColumn
@@ -210,6 +241,7 @@ object GoodsForm: TGoodsForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object InfoMoneyName: TcxGridDBColumn
@@ -217,6 +249,7 @@ object GoodsForm: TGoodsForm
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object IsPartionCount: TcxGridDBColumn
@@ -224,6 +257,7 @@ object GoodsForm: TGoodsForm
         DataBinding.FieldName = 'isPartionCount'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object IsPartionSumm: TcxGridDBColumn
@@ -241,6 +275,7 @@ object GoodsForm: TGoodsForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 40
       end
       object InDate: TcxGridDBColumn
@@ -769,6 +804,45 @@ object GoodsForm: TGoodsForm
       Hint = #1054#1087#1088#1077#1076#1077#1083#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1086#1089#1083'. '#1087#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097'.  '#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
       ImageIndex = 43
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateAsset
+      StoredProcList = <
+        item
+          StoredProc = spUpdateAsset
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
+    object actChoiceAsset: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'AssetForm'
+      FormName = 'TAssetForm'
+      FormNameParam.Value = 'TAssetForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'AssetId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'AssetName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods'
@@ -921,5 +995,30 @@ object GoodsForm: TGoodsForm
     Params = <>
     Left = 464
     Top = 232
+  end
+  object spUpdateAsset: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Goods_Asset'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAssetId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'AssetId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 648
+    Top = 256
   end
 end

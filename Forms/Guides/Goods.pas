@@ -20,7 +20,7 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxCheckBox, dxSkinsdxBarPainter,
   dsdAddOn, dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxButtonEdit;
 
 type
   TGoodsForm = class(TParentForm)
@@ -90,6 +90,10 @@ type
     macUpdateGoods_In: TMultiAction;
     bbUpdateGoods_In: TdxBarButton;
     FormParams: TdsdFormParams;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    spUpdateAsset: TdsdStoredProc;
+    actChoiceAsset: TOpenChoiceForm;
+    AssetName: TcxGridDBColumn;
   private
     { Private declarations }
   public

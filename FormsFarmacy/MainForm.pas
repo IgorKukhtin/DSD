@@ -471,6 +471,8 @@ type
     N176: TMenuItem;
     actEmployeeSchedule: TdsdOpenForm;
     N177: TMenuItem;
+    actDiffKind: TdsdOpenForm;
+    miDiffKind: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

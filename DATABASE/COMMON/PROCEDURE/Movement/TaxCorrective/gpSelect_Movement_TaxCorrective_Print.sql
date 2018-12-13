@@ -561,7 +561,7 @@ BEGIN
             
                         LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind_Child
                                                      ON MovementLinkObject_DocumentTaxKind_Child.MovementId = MovementLinkMovement_Child.MovementChildId
-                                                    AND MovementLinkObject_DocumentTaxKind_Child.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                                    AND MovementLinkObject_DocumentTaxKind_Child.DescId = zc_MovementLinkObject_DocumentTaxKind() 
             
                         LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child_Sale
                                                        ON MovementLinkMovement_Child_Sale.MovementChildId = MovementLinkMovement_Child.MovementChildId
@@ -594,6 +594,7 @@ BEGIN
                             , ObjectString_JuridicalTo_GLNCode.ValueData      AS JuridicalTo_GLNCode
                             , MovementLinkObject_DocumentTaxKind.ObjectId     AS DocumentTaxKind
                             , ObjectString_DocumentTaxKind_Code.ValueData     AS DocumentTaxKindCode
+                            --, CASE WHEN COALESCE (ObjectString_DocumentTaxKind_Code.ValueData,'') = '' THEN '0' ELSE  ObjectString_DocumentTaxKind_Code.ValueData END  AS DocumentTaxKindCode
                             , MovementLinkObject_Branch.ObjectId              AS BranchId
                             , MovementString_FromINN.ValueData                AS INN_From
                        FROM tmpMovement
@@ -695,7 +696,7 @@ BEGIN
 
            , 'оплата з поточного рахунка'::TVarChar                         AS N9
 
-           , tmpMovement_Data.DocumentTaxKindCode    ::integer              AS KindCode     -- заполняется в справочнике
+           , tmpMovement_Data.DocumentTaxKindCode          AS KindCode     -- заполняется в справочнике
 
            , CASE WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change())
                        THEN Object_DocumentTaxKind.ValueData
@@ -1071,9 +1072,9 @@ BEGIN
                                                                      , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
                                                                       )
                                AND tmpData_all.AmountTax_calc = tmpData_all.Amount
-                                   THEN 103  --4 --'Повернення товару або авансових платежів'
+                                   THEN '103'  --4 --'Повернення товару або авансових платежів'
                               ELSE tmpData_all.KindCode
-                         END ::integer AS KindCode
+                         END AS KindCode
             
                        , CASE WHEN tmpData_all.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                                      , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
@@ -1258,7 +1259,7 @@ BEGIN
                        , tmpData_all.N10_ifin
             
                        , tmpData_all.N9
-                       , tmpData_all.KindCode ::integer
+                       , tmpData_all.KindCode
                        , tmpData_all.KindName
                        , tmpData_all.PriceWithVAT
                        , tmpData_all.VATPercent

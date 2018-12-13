@@ -2141,6 +2141,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiffKind.pas">
+				<Form>DiffKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiffKindEdit.pas">
+				<Form>DiffKindEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

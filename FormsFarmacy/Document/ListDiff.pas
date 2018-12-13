@@ -52,6 +52,9 @@ type
     Comment: TcxGridDBColumn;
     actContractChoice: TOpenChoiceForm;
     OrderInvNumber_full: TcxGridDBColumn;
+    DiffKindName: TcxGridDBColumn;
+    isClose_DiffKind: TcxGridDBColumn;
+    actDiffKindChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

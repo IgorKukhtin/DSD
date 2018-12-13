@@ -81,9 +81,15 @@ BEGIN
                                               INNER JOIN MovementItem ON MovementItem.MovementId = tmpListDiff.Id
                                                                      AND MovementItem.DescId     = zc_MI_Master()
                                                                      AND MovementItem.isErased   = FALSE
-                                              --ограничиваем товаром заказа
-                                              --INNER JOIN _tmp_MI ON _tmp_MI.GoodsId = MovementItem.ObjectId
+                                              LEFT JOIN MovementItemLinkObject AS MILO_DiffKind
+                                                                               ON MILO_DiffKind.MovementItemId = MovementItem.Id
+                                                                              AND MILO_DiffKind.DescId = zc_MILinkObject_DiffKind()
+                                              LEFT JOIN ObjectBoolean AS ObjectBoolean_DiffKind_Close
+                                                                      ON ObjectBoolean_DiffKind_Close.ObjectId = MILO_DiffKind.ObjectId
+                                                                     AND ObjectBoolean_DiffKind_Close.DescId = zc_ObjectBoolean_DiffKind_Close()
+                                         WHERE COALESCE (ObjectBoolean_DiffKind_Close.ValueData, FALSE) = FALSE                         -- берем все строки кроме закрытых для заказа (св-во вид отказа)
                                      )
+
                   -- свойство строк <Id док. заказа>
                 , tmpMI_MovementId AS (SELECT MovementItemFloat.*
                                        FROM MovementItemFloat
