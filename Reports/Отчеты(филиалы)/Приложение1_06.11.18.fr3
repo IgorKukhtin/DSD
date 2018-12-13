@@ -254,7 +254,7 @@
       <TfrxMemoView Name="Memo488" Align="baLeft" Left="298.58267717" Top="808.81942" Width="143.62204724" Height="15.11811024" ShowHint="False" Font.Charset="1" Font.Color="255" Font.Height="-12" Font.Name="Arial" Font.Style="1" Frame.Typ="15" HAlign="haRight" ParentFont="False" VAlign="vaCenter" Text="[FormatFloat(',0.##; -,0.##; ',  &#60;SUM(&#60;frxDBDMaster.&#34;InventorySumm_Vz&#34;&#62;,MasterData2,1)&#62; +  &#60;SUM(&#60;frxDBDMaster.&#34;SummInventory_RePrice_Vz&#34;&#62;,MasterData2,1)&#62;+  &#60;SUM(&#60;frxDBDMaster.&#34;ReturnInSumm_Vz&#34;&#62;,MasterData2,1)&#62;+&#60;SUM(&#60;frxDBDMaster.&#34;ReturnInsumm&#34;&#62;,MasterData2,1)&#62; - &#60;SUM(&#60;frxDBDMaster.&#34;ReturnInRealSumm&#34;&#62;,MasterData2,1)&#62;)] "/>
     </TfrxGroupFooter>
   </TfrxReportPage>
-  <TfrxReportPage Name="Page1" PaperWidth="215.9" PaperHeight="279.4" PaperSize="256" LeftMargin="6" RightMargin="5" TopMargin="5" BottomMargin="10" ColumnWidth="0" ColumnPositions.Text="" HGuides.Text="" VGuides.Text="">
+  <TfrxReportPage Name="Page1" PaperWidth="215.9" PaperHeight="279.4" PaperSize="9" LeftMargin="6" RightMargin="5" TopMargin="5" BottomMargin="10" ColumnWidth="0" ColumnPositions.Text="" HGuides.Text="" VGuides.Text="">
     <TfrxReportTitle Name="ReportTitle1" Height="3.77953" Left="0" Top="18.89765" Visible="False" Width="774.425697"/>
     <TfrxPageFooter Name="PageFooter1" Height="18.89765" Left="0" Top="1035.59122" Width="774.425697">
       <TfrxMemoView Name="Memo1" Left="665.19728" Top="0" Width="75.5906" Height="18.89765" ShowHint="False" HAlign="haRight" Text="[Page#]"/>
