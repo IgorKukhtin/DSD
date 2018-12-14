@@ -159,7 +159,7 @@ BEGIN
                   ELSE ''
              END AS Price_info
 
-           , MovementBoolean_isIncome.ValueData            AS isIncome
+           , COALESCE (MovementBoolean_isIncome.ValueData, TRUE) ::Boolean AS isIncome
            
        FROM Movement
           --  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
@@ -174,7 +174,7 @@ BEGIN
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
-                                      ON MovementBoolean_isIncome.MovementId =  Movement.Id
+                                      ON MovementBoolean_isIncome.MovementId = Movement.Id
                                      AND MovementBoolean_isIncome.DescId = zc_MovementBoolean_isIncome()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
