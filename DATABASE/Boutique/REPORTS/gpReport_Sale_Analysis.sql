@@ -340,6 +340,9 @@ BEGIN
                                                                AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                                  OR inIsPeriodAll = TRUE)
                                                                AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount(), zc_Movement_ReturnIn())
+                                                               AND (MIContainer.AccountId = zc_Enum_Account_100301 () -- прибыль текущего периода
+                                                                 OR MIContainer.DescId = zc_MIContainer_Count()
+                                                                   )
                                 /*LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
                                                                  ON MILinkObject_PartionMI.MovementItemId = MIContainer.MovementItemId
                                                                 AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
@@ -352,9 +355,10 @@ BEGIN
                                                       AND MIContainer.OperDate       >= tmpCurrency.StartDate
                                                       AND MIContainer.OperDate       <  tmpCurrency.EndDate
 
-                                INNER JOIN tmpUnit2 ON tmpUnit2.UnitId = MIContainer.ObjectExtId_Analyzer
                                 -- надо ограничить, что б попали проводки "продажа" - от Клиента
-                                
+                                INNER JOIN tmpUnit2 ON tmpUnit2.UnitId = MIContainer.ObjectExtId_Analyzer
+
+-- where MIContainer.MovementId =  266623 
                            /*WHERE (Object_PartionGoods.PartnerId  = inPartnerId        OR inPartnerId   = 0)
                              AND (Object_PartionGoods.BrandId    = inBrandId          OR inBrandId     = 0)
                              AND (Object_PartionGoods.PeriodId   = inPeriodId         OR inPeriodId    = 0)

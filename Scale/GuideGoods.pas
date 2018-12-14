@@ -682,7 +682,7 @@ begin
 
 
 
-     if CDS.RecordCount=0
+     if (CDS.RecordCount=0)and(trim(EditGoodsCode.Text)<>'')
      then if ParamsMovement.ParamByName('OrderExternalId').asInteger<>0
           then begin fEnterGoodsCode:=false;
                      GoodsCode_FilterValue:=EditGoodsCode.Text;

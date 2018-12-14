@@ -549,7 +549,8 @@ BEGIN
                                                                  ON CLO_Position.ContainerId = CLO_ServiceDate.ContainerId
                                                                 AND CLO_Position.DescId     = zc_ContainerLinkObject_Position()
                              )
-     , tmpMIContainer_pay AS (SELECT SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalAvance() THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
+     , tmpMIContainer_pay AS (SELECT -- SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
+                                     SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance(), zc_Enum_AnalyzerId_Cash_PersonalService()) THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
                                    , tmpContainer_pay.MemberId
                                    , CASE WHEN inisShowAll = TRUE THEN tmpContainer_pay.PositionId ELSE 0 END AS PositionId
                               FROM tmpContainer_pay
