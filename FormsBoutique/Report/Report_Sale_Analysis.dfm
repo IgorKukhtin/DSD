@@ -1,49 +1,53 @@
 inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
-  Caption = #1054#1090#1095#1077#1090' <'#1040#1085#1072#1083#1080#1079' '#1087#1088#1080#1093#1086#1076' / '#1087#1088#1086#1076#1072#1078#1072'> '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1080
+  Caption = #1054#1090#1095#1077#1090' <'#1040#1085#1072#1083#1080#1090#1080#1082#1072' '#1082#1083#1102#1095#1077#1074#1099#1093' '#1087#1086#1082#1072#1079#1072#1090#1077#1083#1077#1081'>'
   ClientHeight = 643
-  ClientWidth = 1032
+  ClientWidth = 1054
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1048
-  ExplicitHeight = 681
+  ExplicitWidth = 1070
+  ExplicitHeight = 678
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
-    Width = 1032
+    Width = 1054
     Height = 89
     ExplicitWidth = 1032
     ExplicitHeight = 89
     inherited deStart: TcxDateEdit
-      Left = 29
+      Left = 33
       EditValue = 43101d
-      ExplicitLeft = 29
+      ExplicitLeft = 33
+      ExplicitWidth = 81
+      Width = 81
     end
     inherited deEnd: TcxDateEdit
-      Left = 29
+      Left = 33
       Top = 32
       EditValue = 43101d
-      ExplicitLeft = 29
+      ExplicitLeft = 33
       ExplicitTop = 32
+      ExplicitWidth = 81
+      Width = 81
     end
     inherited cxLabel1: TcxLabel
-      Caption = #1057':'
-      ExplicitWidth = 15
+      Caption = #1057'...'
+      ExplicitWidth = 23
     end
     inherited cxLabel2: TcxLabel
-      Left = 7
+      Left = 2
       Top = 33
-      Caption = #1087#1086':'
-      ExplicitLeft = 7
+      Caption = #1055#1054'...'
+      ExplicitLeft = 2
       ExplicitTop = 33
-      ExplicitWidth = 20
+      ExplicitWidth = 31
     end
     object cxLabel3: TcxLabel
-      Left = 120
-      Top = 5
+      Left = 118
+      Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
-      Left = 209
+      Left = 205
       Top = 5
       Properties.Buttons = <
         item
@@ -55,16 +59,16 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
       Properties.UseNullString = True
       TabOrder = 5
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-      Width = 185
+      Width = 180
     end
     object cxLabel7: TcxLabel
-      Left = 509
-      Top = 6
+      Left = 168
+      Top = 60
       Caption = #1057#1077#1079#1086#1085':'
     end
     object edPeriod: TcxButtonEdit
-      Left = 549
-      Top = 5
+      Left = 205
+      Top = 59
       Properties.Buttons = <
         item
           Default = True
@@ -72,21 +76,21 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 161
+      Width = 180
     end
     object cxLabel8: TcxLabel
-      Left = 506
-      Top = 35
+      Left = 400
+      Top = 33
       Caption = #1043#1086#1076' '#1089' ...'
     end
     object cxLabel9: TcxLabel
-      Left = 605
-      Top = 35
+      Left = 393
+      Top = 60
       Caption = #1043#1086#1076' '#1087#1086' ...'
     end
     object edStartYear: TcxButtonEdit
-      Left = 554
-      Top = 34
+      Left = 446
+      Top = 32
       Properties.Buttons = <
         item
           Default = True
@@ -94,11 +98,11 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
         end>
       Properties.ReadOnly = True
       TabOrder = 10
-      Width = 50
+      Width = 58
     end
     object edEndYear: TcxButtonEdit
-      Left = 660
-      Top = 34
+      Left = 446
+      Top = 59
       TabStop = False
       Properties.Buttons = <
         item
@@ -107,7 +111,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
         end>
       Properties.ReadOnly = True
       TabOrder = 11
-      Width = 50
+      Width = 58
     end
     object cbPeriodAll: TcxCheckBox
       Left = 10
@@ -122,97 +126,102 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
       Width = 105
     end
     object cbUnit: TcxCheckBox
-      Left = 397
+      Left = 386
       Top = 5
       Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' ('#1044#1072'/'#1053#1077#1090')'
-      Caption = #1087#1086' '#1057#1087#1080#1089#1082#1091
+      Caption = #1085#1077#1089#1082#1086#1083#1100#1082#1086' '#1052#1072#1075#1072#1079#1080#1085#1086#1074
       ParentShowHint = False
       Properties.ReadOnly = False
       ShowHint = True
       TabOrder = 13
-      Width = 76
+      Width = 134
     end
     object edPresent1: TcxCurrencyEdit
-      Left = 902
+      Left = 884
+      Top = 5
+      EditValue = '80'
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####'
+      Style.TextColor = clBlue
+      TabOrder = 14
+      BiDiMode = bdRightToLeft
+      ParentBiDiMode = False
+      Width = 30
+    end
+    object edPresent2: TcxCurrencyEdit
+      Left = 1005
       Top = 5
       EditValue = '50'
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
-      TabOrder = 14
-      BiDiMode = bdRightToLeft
-      ParentBiDiMode = False
-      Width = 25
-    end
-    object edPresent2: TcxCurrencyEdit
-      Left = 999
-      Top = 5
-      EditValue = '20'
-      Properties.DecimalPlaces = 4
-      Properties.DisplayFormat = ',0.####'
+      Style.TextColor = clRed
       TabOrder = 15
       BiDiMode = bdRightToLeft
       ParentBiDiMode = False
-      Width = 25
+      Width = 30
     end
     object cbIsAmount: TcxCheckBox
-      Left = 716
+      Left = 672
       Top = 5
-      Caption = #1044#1083#1103' % '#1055#1088#1086#1076'. '#1082#1086#1083'.'
+      Caption = '1. % '#1055#1088#1086#1076'. '#1082#1086#1083'-'#1074#1086
       ParentShowHint = False
       Properties.ReadOnly = False
       ShowHint = True
       State = cbsChecked
+      Style.TextColor = clWindowText
+      Style.TextStyle = []
       TabOrder = 16
-      Width = 119
+      Width = 118
     end
     object cbIsSumm: TcxCheckBox
-      Left = 716
+      Left = 672
       Top = 32
-      Caption = #1044#1083#1103' % '#1055#1088#1086#1076'. '#1089#1091#1084#1084'.'
+      Caption = '2. % '#1055#1088#1086#1076'. '#1089#1091#1084#1084#1072
       ParentShowHint = False
       Properties.ReadOnly = False
       ShowHint = True
+      Style.TextColor = clWindowText
       TabOrder = 17
-      Width = 119
+      Width = 118
     end
     object cbIsProf: TcxCheckBox
-      Left = 716
+      Left = 672
       Top = 59
       Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' ('#1044#1072'/'#1053#1077#1090')'
-      Caption = #1044#1083#1103' % '#1055#1088#1080#1073#1099#1083#1080
+      Caption = '3. % '#1056#1077#1085#1090#1072#1073#1077#1083#1100#1085'.'
       ParentShowHint = False
       Properties.ReadOnly = False
       ShowHint = True
       TabOrder = 18
-      Width = 119
+      Width = 118
     end
     object cbLineFabrica: TcxCheckBox
-      Left = 397
-      Top = 33
+      Left = 523
+      Top = 5
       Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' ('#1044#1072'/'#1053#1077#1090')'
-      Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1051#1080#1085#1080#1102
+      Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1051#1080#1085#1080#1102' '#1058#1052
       ParentShowHint = False
       Properties.ReadOnly = False
       ShowHint = True
       TabOrder = 19
-      Width = 107
+      Width = 130
     end
   end
   inherited PageControl: TcxPageControl [1]
     Top = 115
-    Width = 1032
+    Width = 1054
     Height = 528
     TabOrder = 3
     ExplicitTop = 115
     ExplicitWidth = 1032
     ExplicitHeight = 528
     ClientRectBottom = 528
-    ClientRectRight = 1032
+    ClientRectRight = 1054
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1032
       ExplicitHeight = 528
       inherited cxGrid: TcxGrid
-        Width = 1032
+        Width = 1054
         Height = 197
         ExplicitWidth = 1032
         ExplicitHeight = 197
@@ -470,7 +479,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             Width = 45
           end
           object LineFabricaName: TcxGridDBColumn
-            Caption = #1051#1080#1085#1080#1103
+            Caption = #1051#1080#1085#1080#1103' '#1058#1052
             DataBinding.FieldName = 'LineFabricaName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -530,7 +539,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             Width = 55
           end
           object Tax_Summ_prof: TcxGridDBColumn
-            Caption = '3. % '#1055#1088#1080#1073'.'
+            Caption = '3. % '#1056#1077#1085#1090'.'
             DataBinding.FieldName = 'Tax_Summ_prof'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
@@ -736,11 +745,12 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
       object cxGrid2: TcxGrid
         Left = 0
         Top = 205
-        Width = 1032
+        Width = 1054
         Height = 163
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 1032
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource1
@@ -1077,7 +1087,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             Width = 45
           end
           object cxLineFabricaName: TcxGridDBColumn
-            Caption = #1051#1080#1085#1080#1103
+            Caption = #1051#1080#1085#1080#1103' '#1058#1052
             DataBinding.FieldName = 'LineFabricaName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1137,7 +1147,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             Width = 55
           end
           object cxTax_Summ_prof: TcxGridDBColumn
-            Caption = '3. % '#1055#1088#1080#1073'.'
+            Caption = '3. % '#1056#1077#1085#1090'.'
             DataBinding.FieldName = 'Tax_Summ_prof'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
@@ -1260,7 +1270,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% ('#1076#1086#1083#1103' '#1089#1077#1079#1086#1085#1085#1086#1081' + outlet '#1089#1082#1080#1076#1082#1080')'
-            Width = 65
+            Width = 72
           end
           object cxTax_Summ_10203: TcxGridDBColumn
             Caption = '% ('#1076#1086#1083#1103' '#1089#1082'.'#1082#1083#1080#1077#1085#1090#1072' + '#1076#1086#1087'. '#1089#1082'.)'
@@ -1270,7 +1280,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% ('#1076#1086#1083#1103' '#1089#1082#1080#1076#1082#1080' '#1082#1083#1080#1077#1085#1090#1072' + '#1044#1086#1087'. '#1089#1082#1080#1076#1082#1072')'
-            Width = 55
+            Width = 83
           end
           object cxSale_Summ_10201: TcxGridDBColumn
             Caption = #1057#1077#1079#1086#1085#1085#1072#1103' '#1089#1082#1080#1076#1082#1072
@@ -1346,11 +1356,12 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
       object cxGrid3: TcxGrid
         Left = 0
         Top = 376
-        Width = 1032
+        Width = 1054
         Height = 152
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 2
+        ExplicitWidth = 1032
         object cxGridDBTableView3: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource2
@@ -1687,7 +1698,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             Width = 45
           end
           object chLineFabricaName: TcxGridDBColumn
-            Caption = #1051#1080#1085#1080#1103
+            Caption = #1051#1080#1085#1080#1103' '#1058#1052
             DataBinding.FieldName = 'LineFabricaName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1747,7 +1758,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             Width = 55
           end
           object chTax_Summ_prof: TcxGridDBColumn
-            Caption = '3. % '#1055#1088#1080#1073'.'
+            Caption = '3. % '#1056#1077#1085#1090'.'
             DataBinding.FieldName = 'Tax_Summ_prof'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
@@ -1870,7 +1881,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% ('#1076#1086#1083#1103' '#1089#1077#1079#1086#1085#1085#1086#1081' + outlet '#1089#1082#1080#1076#1082#1080')'
-            Width = 60
+            Width = 72
           end
           object chTax_Summ_10203: TcxGridDBColumn
             Caption = '% ('#1076#1086#1083#1103' '#1089#1082'.'#1082#1083#1080#1077#1085#1090#1072' + '#1076#1086#1087'. '#1089#1082'.)'
@@ -1880,7 +1891,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% ('#1076#1086#1083#1103' '#1089#1082#1080#1076#1082#1080' '#1082#1083#1080#1077#1085#1090#1072' + '#1044#1086#1087'. '#1089#1082#1080#1076#1082#1072')'
-            Width = 58
+            Width = 83
           end
           object chSale_Summ_10201: TcxGridDBColumn
             Caption = #1057#1077#1079#1086#1085#1085#1072#1103' '#1089#1082#1080#1076#1082#1072
@@ -1959,31 +1970,33 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
       object cxSplitter2: TcxSplitter
         Left = 0
         Top = 368
-        Width = 1032
+        Width = 1054
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer9Style'
         AlignSplitter = salBottom
         Control = cxGrid3
+        ExplicitWidth = 1032
       end
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 197
-        Width = 1032
+        Width = 1054
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer9Style'
         AlignSplitter = salBottom
         Control = cxGrid2
+        ExplicitWidth = 1032
       end
     end
   end
   object cxLabel4: TcxLabel [2]
-    Left = 120
-    Top = 59
+    Left = 118
+    Top = 33
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072':'
   end
   object edBrand: TcxButtonEdit [3]
-    Left = 209
-    Top = 59
+    Left = 205
+    Top = 32
     Properties.Buttons = <
       item
         Default = True
@@ -1992,16 +2005,16 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
     Properties.ReadOnly = True
     Style.Color = clWindow
     TabOrder = 7
-    Width = 185
+    Width = 180
   end
   object cxLabel5: TcxLabel [4]
-    Left = 120
-    Top = 33
+    Left = 511
+    Top = 60
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
   end
   object edPartner: TcxButtonEdit [5]
-    Left = 209
-    Top = 32
+    Left = 575
+    Top = 59
     Properties.Buttons = <
       item
         Default = True
@@ -2009,90 +2022,100 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 185
+    Width = 93
   end
   object cxLabel6: TcxLabel [6]
-    Left = 835
+    Left = 789
     Top = 6
-    Caption = '% '#1087#1088#1077#1076#1077#1083' 1:'
+    Caption = '1.'#1054#1090#1083#1080#1095#1085#1086', % '#1086#1090':'
+    Style.TextColor = clBlue
   end
   object cxLabel11: TcxLabel [7]
-    Left = 932
+    Left = 922
     Top = 6
-    Caption = '% '#1087#1088#1077#1076#1077#1083' 2:'
+    Caption = '1.'#1055#1083#1086#1093#1086', % '#1076#1086':'
+    Style.TextColor = clRed
   end
   object cxLabel10: TcxLabel [8]
-    Left = 835
-    Top = 35
-    Caption = '% '#1087#1088#1077#1076#1077#1083' 1:'
+    Left = 789
+    Top = 33
+    Caption = '2.'#1054#1090#1083#1080#1095#1085#1086', % '#1086#1090':'
+    Style.TextColor = clBlue
   end
   object cxLabel12: TcxLabel [9]
-    Left = 932
-    Top = 35
-    Caption = '% '#1087#1088#1077#1076#1077#1083' 2:'
+    Left = 922
+    Top = 33
+    Caption = '2.'#1055#1083#1086#1093#1086', % '#1076#1086':'
+    Style.TextColor = clRed
   end
   object edPresent1_Summ: TcxCurrencyEdit [10]
-    Left = 902
-    Top = 34
-    EditValue = 120.000000000000000000
+    Left = 884
+    Top = 32
+    EditValue = 125.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
+    Style.TextColor = clBlue
     TabOrder = 14
     BiDiMode = bdRightToLeft
     ParentBiDiMode = False
-    Width = 25
+    Width = 30
   end
   object edPresent2_Summ: TcxCurrencyEdit [11]
-    Left = 999
-    Top = 34
-    EditValue = 100.000000000000000000
+    Left = 1005
+    Top = 32
+    EditValue = 80.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
+    Style.TextColor = clRed
     TabOrder = 15
     BiDiMode = bdRightToLeft
     ParentBiDiMode = False
-    Width = 25
+    Width = 30
   end
   object cxLabel13: TcxLabel [12]
-    Left = 835
+    Left = 789
     Top = 60
-    Caption = '% '#1087#1088#1077#1076#1077#1083' 1:'
+    Caption = '3.'#1054#1090#1083#1080#1095#1085#1086', % '#1086#1090':'
+    Style.TextColor = clBlue
   end
   object cxLabel14: TcxLabel [13]
-    Left = 932
+    Left = 922
     Top = 60
-    Caption = '% '#1087#1088#1077#1076#1077#1083' 2:'
+    Caption = '3.'#1055#1083#1086#1093#1086', % '#1076#1086':'
+    Style.TextColor = clRed
   end
   object edPresent1_Prof: TcxCurrencyEdit [14]
-    Left = 902
+    Left = 884
     Top = 59
-    EditValue = 100.000000000000000000
+    EditValue = 80.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
+    Style.TextColor = clBlue
     TabOrder = 18
     BiDiMode = bdRightToLeft
     ParentBiDiMode = False
-    Width = 25
+    Width = 30
   end
   object edPresent2_Prof: TcxCurrencyEdit [15]
-    Left = 999
+    Left = 1005
     Top = 59
     EditValue = '50'
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
+    Style.TextColor = clRed
     TabOrder = 19
     BiDiMode = bdRightToLeft
     ParentBiDiMode = False
-    Width = 25
+    Width = 30
   end
   object cxLabel15: TcxLabel [16]
-    Left = 508
-    Top = 60
-    Caption = #1051#1080#1085#1080#1103':'
+    Left = 520
+    Top = 33
+    Caption = #1051#1080#1085#1080#1103' '#1058#1052':'
   end
   object edLineFabrica: TcxButtonEdit [17]
-    Left = 549
-    Top = 59
+    Left = 575
+    Top = 32
     Properties.Buttons = <
       item
         Default = True
@@ -2101,7 +2124,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
     Properties.ReadOnly = True
     Style.Color = clWindow
     TabOrder = 21
-    Width = 161
+    Width = 93
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -3156,8 +3179,8 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
     Top = 208
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 24
-    Top = 8
+    Left = 80
+    Top = 80
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <

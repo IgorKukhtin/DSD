@@ -305,7 +305,9 @@ uses
   Report_Sale_AnalysisDialog in '..\..\FormsBoutique\Report\Report_Sale_AnalysisDialog.pas' {Report_Sale_AnalysisDialogForm: TParentForm},
   dsdPivotGrid in '..\..\SOURCE\COMPONENT\dsdPivotGrid.pas',
   IncomeItemPriceDialog in '..\..\FormsBoutique\Document\IncomeItemPriceDialog.pas' {IncomeItemPriceDialogForm: TParentForm},
-  Report_Sale_Analysis in '..\..\FormsBoutique\Report\Report_Sale_Analysis.pas' {Report_Sale_AnalysisForm: TParentForm};
+  Report_Sale_Analysis in '..\..\FormsBoutique\Report\Report_Sale_Analysis.pas' {Report_Sale_AnalysisForm: TParentForm},
+  Medoc_J1201010 in '..\..\SOURCE\MeDOC\Medoc_J1201010.pas',
+  Medoc_J1201210 in '..\..\SOURCE\MeDOC\Medoc_J1201210.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
