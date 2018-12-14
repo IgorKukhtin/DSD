@@ -5,13 +5,13 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1070
-  ExplicitHeight = 678
+  ExplicitHeight = 681
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
     Width = 1054
     Height = 89
-    ExplicitWidth = 1032
+    ExplicitWidth = 1054
     ExplicitHeight = 89
     inherited deStart: TcxDateEdit
       Left = 33
@@ -187,7 +187,6 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
     object cbIsProf: TcxCheckBox
       Left = 672
       Top = 59
-      Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' ('#1044#1072'/'#1053#1077#1090')'
       Caption = '3. % '#1056#1077#1085#1090#1072#1073#1077#1083#1100#1085'.'
       ParentShowHint = False
       Properties.ReadOnly = False
@@ -213,17 +212,17 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
     Height = 528
     TabOrder = 3
     ExplicitTop = 115
-    ExplicitWidth = 1032
+    ExplicitWidth = 1054
     ExplicitHeight = 528
     ClientRectBottom = 528
     ClientRectRight = 1054
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1032
+      ExplicitWidth = 1054
       ExplicitHeight = 528
       inherited cxGrid: TcxGrid
         Width = 1054
         Height = 197
-        ExplicitWidth = 1032
+        ExplicitWidth = 1054
         ExplicitHeight = 197
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -750,7 +749,6 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 1032
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource1
@@ -1361,7 +1359,6 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 2
-        ExplicitWidth = 1032
         object cxGridDBTableView3: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource2
@@ -1975,7 +1972,6 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
         HotZoneClassName = 'TcxMediaPlayer9Style'
         AlignSplitter = salBottom
         Control = cxGrid3
-        ExplicitWidth = 1032
       end
       object cxSplitter1: TcxSplitter
         Left = 0
@@ -1985,7 +1981,6 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
         HotZoneClassName = 'TcxMediaPlayer9Style'
         AlignSplitter = salBottom
         Control = cxGrid2
-        ExplicitWidth = 1032
       end
     end
   end
@@ -2431,6 +2426,22 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
           Component = GuidesLineFabrica
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Present1'
+          Value = Null
+          Component = edPresent1
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Present2'
+          Value = Null
+          Component = edPresent2
+          DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>

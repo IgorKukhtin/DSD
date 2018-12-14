@@ -558,7 +558,7 @@ BEGIN
         OR (inIsSumm   = TRUE AND Tax_Summ_curr >= inPresent2_Summ AND Tax_Summ_curr < inPresent1_Summ)
         OR (inIsProf   = TRUE AND Tax_Summ_prof >= inPresent2_Prof AND Tax_Summ_prof < inPresent1_Prof)
      ;
-     RETURN NEXT Cursor2;
+     RETURN NEXT Cursor2; 
 
      --продажи меньше 20% от прихода
      OPEN Cursor3 FOR
