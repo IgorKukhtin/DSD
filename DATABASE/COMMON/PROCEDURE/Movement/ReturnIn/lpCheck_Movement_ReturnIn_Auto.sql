@@ -27,6 +27,7 @@ BEGIN
      -- !!!для НАЛ - обнуление и выход!!!
      IF zc_Enum_PaidKind_SecondForm() = (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindFrom()))
     AND inUserId <> zc_Enum_Process_Auto_ReturnIn()
+    AND inUserId > 0
      THEN
          -- !!!ВРЕМЕННО - НИЧЕГО НЕ ДЕЛАЕМ!!!
          -- !!!обнуление и выход!!!
@@ -37,7 +38,7 @@ BEGIN
                                                            , inAmount              := 0
                                                            , inMovementId_sale     := 0
                                                            , inMovementItemId_sale := 0
-                                                           , inUserId              := inUserId
+                                                           , inUserId              := ABS (inUserId)
                                                            , inIsRightsAll         := FALSE
                                                             )
          FROM MovementItem
@@ -115,7 +116,8 @@ BEGIN
                        SELECT 'Ошибка. Для возврата кол-во = <' || COALESCE (tmpMaster.Amount, 0) :: TVarChar || '>'
                || CHR (13) || 'не соответствует привязка к продаже с кол-во = <' || COALESCE (tmpResult.Amount, 0) :: TVarChar || '>.'
                || CHR (13) || 'Товар <' || lfGet_Object_ValueData (ABS (COALESCE (tmpMaster.GoodsId, tmpResult.GoodsId))) || '>'
-                           || CASE WHEN COALESCE (tmpMaster.GoodsKindId, tmpResult.GoodsKindId) > 0 THEN CHR (13) || 'вид <' || lfGet_Object_ValueData (COALESCE (tmpMaster.GoodsKindId, tmpResult.GoodsKindId)) || '>' ELSE '' END
+                           || CASE WHEN COALESCE (tmpMaster.GoodsKindId, tmpResult.GoodsKindId) > 0 THEN CHR (13) || 'вид <' || lfGet_Object_ValueData_sh (COALESCE (tmpMaster.GoodsKindId, tmpResult.GoodsKindId)) || '>' ELSE '' END
+                || CHR (13) || 'Цена <' || zfConvert_FloatToString (tmpMaster.Price_original) || '>'
                        FROM tmpMaster
                             FULL JOIN tmpResult ON tmpResult.GoodsId         = tmpMaster.GoodsId
                                                AND tmpResult.GoodsKindId     = tmpMaster.GoodsKindId

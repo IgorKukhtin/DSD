@@ -427,7 +427,7 @@ BEGIN
            || zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndReturn)
              ) :: TVarChar AS MovementPromo
 
-           , CASE WHEN 1 = 0 AND tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo
+           , CASE WHEN 1 = 1 AND tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo
                   WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
                   WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
                   ELSE 0
@@ -691,7 +691,7 @@ BEGIN
               END
            || zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndReturn)
              ) :: TVarChar AS MovementPromo
-           , CASE WHEN 1 = 0 AND tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo
+           , CASE WHEN 1 = 1 AND tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo
                   WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
                   WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
                   ELSE 0

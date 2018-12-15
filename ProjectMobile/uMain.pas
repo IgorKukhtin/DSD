@@ -1216,12 +1216,17 @@ type
     procedure MobileIdle(Sender: TObject; var Done: Boolean);
 
     property CashAmountValue: Double read FCashAmountValue write SetCashAmountValue;
+
+    function MyRound_2 (Value : Double) : Double;
   public
     { Public declarations }
     FMarkerList: TList<TLocationData>;
 
     function GetCoordinates(const Address: string; out Coordinates: TLocationCoord2D): Boolean;
     procedure ShowBigMap;
+
+    function fOptimizeDB : Boolean;
+
   end;
 
 var
@@ -1243,6 +1248,14 @@ begin
     Result := 'pc' + Result;
     Result := 'cu' + Result; }
     Result := '111';
+end;
+
+function TfrmMain.MyRound_2 (Value : Double) : Double;
+var t1, t2 : Integer;
+begin
+    t1:= TRUNC (Value);
+    t2:= ROUND (Value * 100) - t1 * 100;
+    Result:= t1 + t2 / 100
 end;
 
 { TJuridicalItem }
@@ -1474,6 +1487,7 @@ end;
 
 procedure TfrmMain.FormShow(Sender: TObject);
 begin
+  //
   SwitchToForm(tiStart, nil);
   ChangeMainPageUpdate(tcMain);
 end;
@@ -1716,7 +1730,11 @@ begin
       ShowMessage('Нет связи с сервером. Продолжение работы невозможно');
       exit;
     end;
+    //
   end;
+
+  // !!!Optimize!!!
+  // fOptimizeDB;
 
   // сохранение координат при логине и запуск таймера
   tSavePathTimer(tSavePath);
@@ -3724,8 +3742,10 @@ begin
   end;
 end;
 
-procedure TfrmMain.bOptimizeDBClick(Sender: TObject);
+function TfrmMain.fOptimizeDB : Boolean;
 begin
+  Result:= false;
+  //
   try
     DM.conMain.ExecSQL('pragma integrity_check');
     DM.conMain.ExecSQL('VACUUM');
@@ -3747,40 +3767,22 @@ begin
     DM.conMain.ExecSQL('pragma integrity_check');
     DM.conMain.ExecSQL('VACUUM');
 
-    ShowMessage('Оптимизация базы данных успешно завершена');
+    Result:= true;
+
   except
     on E: Exception do
       Showmessage(E.Message);
   end;
 end;
+procedure TfrmMain.bOptimizeDBClick(Sender: TObject);
+begin
+  if fOptimizeDB  then
+    ShowMessage('Оптимизация базы данных успешно завершена');
+end;
 procedure TfrmMain.bOptimizeDBClick_two(Sender: TObject);
 begin
-  try
-    DM.conMain.ExecSQL('pragma integrity_check');
-    DM.conMain.ExecSQL('VACUUM');
-
-    DM.conMain.ExecSQL('DELETE FROM MOVEMENT_ROUTEMEMBER');
-
-    DM.conMain.ExecSQL('DELETE FROM Object_GoodsByGoodsKind WHERE isErased = 1');
-    DM.conMain.ExecSQL('DELETE FROM Object_GoodsListSale WHERE isErased = 1');
-
-    DM.conMain.ExecSQL('DELETE FROM OBJECT_PARTNER'
-     + ' WHERE  OBJECT_PARTNER.ISERASED = 1'
-     + '    AND NOT EXISTS (SELECT 1 FROM  MOVEMENT_ORDEREXTERNAL WHERE MOVEMENT_ORDEREXTERNAL.PARTNERID = OBJECT_PARTNER.ID AND MOVEMENT_ORDEREXTERNAL.CONTRACTID = OBJECT_PARTNER.CONTRACTID)'
-     + '    AND NOT EXISTS (SELECT 1 FROM  MOVEMENT_RETURNIN WHERE MOVEMENT_RETURNIN.PARTNERID = OBJECT_PARTNER.ID AND MOVEMENT_RETURNIN.CONTRACTID = OBJECT_PARTNER.CONTRACTID)'
-     + '    AND NOT EXISTS (SELECT 1 FROM  MOVEMENT_CASH WHERE MOVEMENT_CASH.PARTNERID = OBJECT_PARTNER.ID AND MOVEMENT_CASH.CONTRACTID = OBJECT_PARTNER.CONTRACTID)'
-     + '    AND NOT EXISTS (SELECT 1 FROM  MOVEMENT_STOREREAL WHERE MOVEMENT_STOREREAL.PARTNERID = OBJECT_PARTNER.ID)'
-     + '    AND NOT EXISTS (SELECT 1 FROM  MOVEMENT_VISIT WHERE MOVEMENT_VISIT.PARTNERID = OBJECT_PARTNER.ID)'
-     + '    AND NOT EXISTS (SELECT 1 FROM  MOVEMENTITEM_TASK WHERE MOVEMENTITEM_TASK.PARTNERID = OBJECT_PARTNER.ID)');
-
-    DM.conMain.ExecSQL('pragma integrity_check');
-    DM.conMain.ExecSQL('VACUUM');
-
+  if fOptimizeDB  then
     ShowMessage('Оптимизация базы данных успешно завершена');
-  except
-    on E: Exception do
-      Showmessage(E.Message);
-  end;
 end;
 
 // переход на форму ввода нового возврата товаров
@@ -6113,6 +6115,7 @@ begin
   FCheckedGooodsItems.Clear;
 end;
 
+
 // пересчет общей цены и веса выбранных товаров для заявки
 procedure TfrmMain.RecalculateTotalPriceAndWeight;
 var
@@ -6129,18 +6132,21 @@ begin
     DM.cdsOrderItems.First;
     while not DM.cdsOrderItems.Eof do
     begin
-      if DM.cdsOrderItemsisChangePercent.AsBoolean then
-        PriceWithPercent := DM.cdsOrderItemsPrice.AsFloat * DM.cdsOrderItemsCount.AsFloat *
-          (100 + DM.cdsOrderExternalChangePercent.AsCurrency) / 100
+      if DM.cdsOrderItemsisChangePercent.AsBoolean
+      then
+        PriceWithPercent := MyRound_2 (DM.cdsOrderItemsCount.AsFloat
+                                     * MyRound_2 (DM.cdsOrderItemsPrice.AsFloat * (1 + DM.cdsOrderExternalChangePercent.AsCurrency/100)))
       else
-        PriceWithPercent := DM.cdsOrderItemsPrice.AsFloat * DM.cdsOrderItemsCount.AsFloat;
+        PriceWithPercent := MyRound_2 (DM.cdsOrderItemsPrice.AsFloat * DM.cdsOrderItemsCount.AsFloat);
 
       TotalPriceWithPercent := TotalPriceWithPercent + PriceWithPercent;
 
       if DM.cdsOrderExternalPriceWithVAT.AsBoolean then
         FOrderTotalPrice := FOrderTotalPrice + PriceWithPercent
       else
-        FOrderTotalPrice := FOrderTotalPrice + PriceWithPercent * (100 + DM.cdsOrderExternalVATPercent.AsCurrency) / 100;
+        //добавить НДС - потом, на всю сумму
+        // FOrderTotalPrice := FOrderTotalPrice + PriceWithPercent * (100 + DM.cdsOrderExternalVATPercent.AsCurrency) / 100;
+        FOrderTotalPrice := FOrderTotalPrice + PriceWithPercent;
 
       if FormatFloat('0.##', DM.cdsOrderItemsWeight.AsFloat) <> '0' then
         FOrderTotalCountKg := FOrderTotalCountKg + DM.cdsOrderItemsWeight.AsFloat * DM.cdsOrderItemsCount.AsFloat
@@ -6149,6 +6155,12 @@ begin
 
       DM.cdsOrderItems.Next;
     end;
+
+    //добавили НДС - на всю сумму
+    if DM.cdsOrderExternalPriceWithVAT.AsBoolean = FALSE
+    then
+       FOrderTotalPrice := MyRound_2 (FOrderTotalPrice * (1 + DM.cdsOrderExternalVATPercent.AsCurrency / 100));
+
   finally
     DM.cdsOrderItems.GotoBookmark(b);
     DM.cdsOrderItems.EnableControls;
@@ -6193,15 +6205,23 @@ begin
     DM.cdsReturnInItems.First;
     while not DM.cdsReturnInItems.Eof do
     begin
-      PriceWithPercent := DM.cdsReturnInItemsPrice.AsFloat * DM.cdsReturnInItemsCount.AsFloat *
-        (100 + DM.cdsReturnInChangePercent.AsCurrency) / 100;
+      // сумма по строкам - округление до 2-х знаков
+      if DM.cdsReturnInChangePercent.AsCurrency <> 0
+      then
+        PriceWithPercent :=  MyRound_2 (DM.cdsReturnInItemsCount.AsFloat
+                                      * MyRound_2(DM.cdsReturnInItemsPrice.AsFloat * (1 + DM.cdsReturnInChangePercent.AsCurrency/100)))
+      else
+        PriceWithPercent :=  MyRound_2 (DM.cdsReturnInItemsCount.AsFloat
+                                      * DM.cdsReturnInItemsPrice.AsFloat);
 
       TotalPriceWithPercent := TotalPriceWithPercent + PriceWithPercent;
 
       if DM.cdsReturnInPriceWithVAT.AsBoolean then
         FReturnInTotalPrice := FReturnInTotalPrice + PriceWithPercent
       else
-        FReturnInTotalPrice := FReturnInTotalPrice + PriceWithPercent * (100 + DM.cdsReturnInVATPercent.AsCurrency) / 100;
+         //добавить НДС - потом, на всю сумму
+         //FReturnInTotalPrice := FReturnInTotalPrice + PriceWithPercent * (100 + DM.cdsReturnInVATPercent.AsCurrency) / 100;
+         FReturnInTotalPrice := FReturnInTotalPrice + PriceWithPercent;
 
       if FormatFloat('0.##', DM.cdsReturnInItemsWeight.AsFloat) <> '0' then
         FReturnInTotalCountKg := FReturnInTotalCountKg + DM.cdsReturnInItemsWeight.AsFloat * DM.cdsReturnInItemsCount.AsFloat
@@ -6210,6 +6230,11 @@ begin
 
       DM.cdsReturnInItems.Next;
     end;
+    //добавили НДС - на всю сумму
+    if DM.cdsReturnInPriceWithVAT.AsBoolean = FALSE
+    then
+      FReturnInTotalPrice := MyRound_2 (FReturnInTotalPrice * (1 + DM.cdsReturnInVATPercent.AsCurrency / 100));
+
   finally
     DM.cdsReturnInItems.GotoBookmark(b);
     DM.cdsReturnInItems.EnableControls;

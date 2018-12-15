@@ -724,7 +724,7 @@ BEGIN
                                                        , inAmount              := CASE WHEN tmp.MovementId_sale > 0 AND tmp.MovementItemId_sale > 0 THEN COALESCE (tmp.Amount, 0) ELSE 0 END
                                                        , inMovementId_sale     := COALESCE (tmp.MovementId_sale, 0)
                                                        , inMovementItemId_sale := COALESCE (tmp.MovementItemId_sale, 0)
-                                                       , inUserId              := inUserId
+                                                       , inUserId              := ABS (inUserId)
                                                        -- , inIsRightsAll         := FALSE
                                                        , inIsRightsAll         := CASE WHEN inUserId IN (zfCalc_UserAdmin() :: Integer, zc_Enum_Process_Auto_ReturnIn()) THEN TRUE ELSE FALSE END
                                                         )
@@ -843,7 +843,7 @@ BEGIN
 
 if inUserId = 5 AND 1=1
 then
-    RAISE EXCEPTION 'Admin - Errr _end   % %', outMessageText, (SELECT MAX (_tmpResult_ReturnIn_Auto.Amount) :: TVarChar || ' _ ' || MIN (_tmpResult_ReturnIn_Auto.Amount) :: TVarChar FROM _tmpResult_ReturnIn_Auto WHERE _tmpResult_ReturnIn_Auto.ParentId = 53690064);
+    RAISE EXCEPTION 'Admin - Errr _end   % %', outMessageText, (SELECT MAX (_tmpResult_ReturnIn_Auto.Amount) :: TVarChar || ' _ ' || MIN (_tmpResult_ReturnIn_Auto.Amount) :: TVarChar FROM _tmpResult_ReturnIn_Auto WHERE _tmpResult_ReturnIn_Auto.ParentId = 127263612);
     -- 'Повторите действие через 3 мин.'
 end if;
 

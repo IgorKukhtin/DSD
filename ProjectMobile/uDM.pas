@@ -3286,6 +3286,9 @@ begin
   if gc_User.Local or (not LoadData and not UploadData) then
     Exit;
 
+  // !!!Optimize!!!
+  frmMain.fOptimizeDB;
+
   SyncThread := TSyncThread.Create(True);
   SyncThread.FreeOnTerminate := True;
   SyncThread.LoadData := LoadData;
@@ -5276,7 +5279,7 @@ begin
        ' SELECT '
      + '       MovementItem_ReturnIn.Id || '';'' || Object_Goods.Id || '';'' || IFNULL(Object_GoodsKind.Id, 0) || '';'' || '
      + '       CAST(Object_Goods.ObjectCode as varchar)  || '' '' || Object_Goods.ValueData || '';'' || IFNULL(Object_GoodsKind.ValueData, ''-'') || '';'' || '
-     + '       IFNULL(Object_PriceListItems.ReturnPrice, 0) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' || '
+     + '       IFNULL(MovementItem_ReturnIn.Price, IFNULL(Object_PriceListItems.ReturnPrice, 0)) || '';'' || IFNULL(Object_Measure.ValueData, ''-'') || '';'' || Object_Goods.Weight || '';'' || '
      + '       IFNULL(Object_TradeMark.ValueData, '''') || '';'' || MovementItem_ReturnIn.Amount || '';'' || '
      + '       CASE WHEN MovementItem_ReturnIn.isRecalcPrice THEN ''Пересчитано'' ELSE ''-'' END '
      + ' FROM  MovementItem_ReturnIn  '
