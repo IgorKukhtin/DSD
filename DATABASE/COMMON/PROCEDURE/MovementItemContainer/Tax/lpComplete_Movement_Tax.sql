@@ -11,9 +11,37 @@ AS
 $BODY$
   DECLARE vbOperDate TDateTime;
   DECLARE vbObjectId Integer;
+  DECLARE vbPrice TFloat;
 BEGIN
      -- определили
      vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+
+     -- проверка цены из свойств DocumentTaxKind
+     vbPrice := (SELECT ObjectFloat_Price.ValueData
+                 FROM MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                      LEFT JOIN ObjectFloat AS ObjectFloat_Price
+                                            ON ObjectFloat_Price.ObjectId = MovementLinkObject_DocumentTaxKind.ObjectId
+                                           AND ObjectFloat_Price.DescId = zc_objectFloat_DocumentTaxKind_Price()
+                 WHERE MovementLinkObject_DocumentTaxKind.MovementId = inMovementId
+                   AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                 );
+     IF COALESCE (vbPrice, 0) <> 0
+     THEN
+         IF EXISTS (SELECT 1
+                    FROM MovementItem
+                         INNER JOIN MovementItemFloat AS MIFloat_Price
+                                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                    WHERE MovementItem.MovementId = inMovementId
+                      AND MovementItem.DescId     = zc_MI_Master()
+                      AND MovementItem.isErased   = FALSE
+                      AND MovementItem.Amount     <> 0
+                      AND COALESCE (MIFloat_Price.ValueData, 0) <> vbPrice
+                    ) 
+         THEN 
+             RAISE EXCEPTION 'Ошибка.Цена не соответствует предопределенной для типа налог. накладной';
+         END IF;
+     END IF; 
 
      -- поиск
      vbObjectId:= (SELECT MovementItem.ObjectId

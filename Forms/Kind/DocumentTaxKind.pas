@@ -22,16 +22,20 @@ uses
   dxSkinsdxBarPainter, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, Vcl.Menus, dxBarExtItems, dxBar, cxClasses,
   Datasnap.DBClient, cxPropertiesStore, cxGridLevel, cxGridCustomView, cxGrid,
-  cxPC;
+  cxPC, cxCurrencyEdit;
 
 type
   TDocumentTaxKindForm = class(TAncestorEnumForm)
     clName: TcxGridDBColumn;
-    spUpdate_DocumentTaxKind_Code: TdsdStoredProc;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    spUpdate_DocumentTaxKind_Params: TdsdStoredProc;
+    KindCode: TcxGridDBColumn;
     actUpdateDataSet: TdsdUpdateDataSet;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpen: TdxBarButton;
+    GoodsName: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    MeasureCode: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
   private
     { Private declarations }
   public

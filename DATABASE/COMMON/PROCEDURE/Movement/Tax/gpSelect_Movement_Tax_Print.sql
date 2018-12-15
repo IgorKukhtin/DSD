@@ -39,6 +39,11 @@ $BODY$
    DECLARE vbUserSeal TVarChar;
    DECLARE vbUserKey  TVarChar;
 
+    DECLARE vbGoods_DocumentTaxKind       TVarChar;
+    DECLARE vbMeasure_DocumentTaxKind     TVarChar;
+    DECLARE vbMeasureCode_DocumentTaxKind TVarChar;
+    DECLARE vbPrice_DocumentTaxKind       TVarChar;
+
 BEGIN
      -- ÔÓ‚ÂÍ‡ Ô‡‚ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ Ì‡ ‚˚ÁÓ‚ ÔÓˆÂ‰Û˚
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
@@ -151,8 +156,19 @@ order by 4*/
           , CASE WHEN MovementDate_DateRegistered.ValueData > Movement_Tax.OperDate THEN MovementDate_DateRegistered.ValueData ELSE Movement_Tax.OperDate END AS OperDate_begin
           , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)    AS isLongUKTZED
 
+
+          , ObjectString_Goods.ValueData        :: TVarChar AS Goods_DocumentTaxKind
+          , ObjectString_Measure.ValueData      :: TVarChar AS Measure_DocumentTaxKind
+          , ObjectString_MeasureCode.ValueData  :: TVarChar AS MeasureCode_DocumentTaxKind
+          , ObjectFloat_Price.ValueData         :: TFloat   AS Price_DocumentTaxKind
+       
             INTO vbMovementId_Tax, vbStatusId_Tax, vbDocumentTaxKindId, vbPriceWithVAT, vbVATPercent, vbCurrencyPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis
                , vbOperDate_begin, vbIsLongUKTZED
+               
+               , vbGoods_DocumentTaxKind
+               , vbMeasure_DocumentTaxKind
+               , vbMeasureCode_DocumentTaxKind
+               , vbPrice_DocumentTaxKind
      FROM (SELECT CASE WHEN Movement.DescId = zc_Movement_Tax()
                             THEN inMovementId
                        ELSE MovementLinkMovement_Master.MovementChildId
@@ -202,6 +218,22 @@ order by 4*/
                                ON ObjectLink_JuridicalBasis_GoodsProperty.ObjectId = zc_Juridical_Basis()
                               AND ObjectLink_JuridicalBasis_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
                               -- AND ObjectLink_Juridical_GoodsProperty.ChildObjectId IS NULL*/
+        -- Ò‚ÓÈÒÚ‚‡ ‰Îˇ DocumentTaxKind
+        LEFT JOIN ObjectString AS ObjectString_Code
+                               ON ObjectString_Code.ObjectId = MovementLinkObject_DocumentTaxKind.ObjectId
+                              AND ObjectString_Code.DescId = zc_objectString_DocumentTaxKind_Code()
+        LEFT JOIN ObjectString AS ObjectString_Goods
+                               ON ObjectString_Goods.ObjectId = MovementLinkObject_DocumentTaxKind.ObjectId
+                              AND ObjectString_Goods.DescId = zc_objectString_DocumentTaxKind_Goods()
+        LEFT JOIN ObjectString AS ObjectString_Measure
+                               ON ObjectString_Measure.ObjectId = MovementLinkObject_DocumentTaxKind.ObjectId
+                              AND ObjectString_Measure.DescId = zc_objectString_DocumentTaxKind_Measure()
+        LEFT JOIN ObjectString AS ObjectString_MeasureCode
+                               ON ObjectString_MeasureCode.ObjectId = MovementLinkObject_DocumentTaxKind.ObjectId
+                              AND ObjectString_MeasureCode.DescId = zc_objectString_DocumentTaxKind_MeasureCode()
+        LEFT JOIN ObjectFloat AS ObjectFloat_Price
+                              ON ObjectFloat_Price.ObjectId = MovementLinkObject_DocumentTaxKind.ObjectId
+                             AND ObjectFloat_Price.DescId = zc_objectFloat_DocumentTaxKind_Price()
      ;
 
      -- Ó˜ÂÌ¸ ‚‡ÊÌ‡ˇ ÔÓ‚ÂÍ‡
@@ -749,7 +781,9 @@ order by 4*/
              END :: TVarChar AS GoodsCodeTaxAction
 
            , (CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
-                        THEN 'œ–≈ƒŒœÀ¿“¿ «¿  ŒÀ¡.»«ƒ≈À»ﬂ'
+                        THEN CASE WHEN vbOperDate_begin >= '01.12.2018' AND COALESCE (vbGoods_DocumentTaxKind, '') <> '' THEN vbGoods_DocumentTaxKind
+                                  ELSE 'œ–≈ƒŒœÀ¿“¿ «¿  ŒÀ¡.»«ƒ≈À»ﬂ'
+                             END
                    ELSE CASE WHEN tmpObject_GoodsPropertyValue.Name <> ''
                                   THEN tmpObject_GoodsPropertyValue.Name
                              WHEN tmpObject_GoodsPropertyValue_basis.Name <> ''
@@ -757,7 +791,11 @@ order by 4*/
                              ELSE Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
                         END
               END) :: TVarChar AS GoodsName
-           , (CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay() THEN 'œ–≈ƒŒœÀ¿“¿ «¿  ŒÀ¡.»«ƒ≈À»ﬂ'
+
+           , (CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay() 
+                        THEN CASE WHEN vbOperDate_begin >= '01.12.2018' AND COALESCE (vbGoods_DocumentTaxKind, '') <> '' THEN vbGoods_DocumentTaxKind
+                                  ELSE 'œ–≈ƒŒœÀ¿“¿ «¿  ŒÀ¡.»«ƒ≈À»ﬂ'
+                             END
                    ELSE CASE WHEN tmpObject_GoodsPropertyValue.Name <> ''
                                   THEN tmpObject_GoodsPropertyValue.Name
                              WHEN tmpObject_GoodsPropertyValue_basis.Name <> ''
@@ -765,12 +803,21 @@ order by 4*/
                              ELSE Object_Goods.ValueData
                         END
              END) :: TVarChar AS GoodsName_two
-           , Object_GoodsKind.ValueData             AS GoodsKindName
-           , Object_Measure.ValueData               AS MeasureName
-           , CASE WHEN Object_Measure.ObjectCode=1 THEN '0301'
-                  WHEN Object_Measure.ObjectCode=2 THEN '2009'
-             ELSE ''     END                        AS MeasureCode
 
+           , Object_GoodsKind.ValueData             AS GoodsKindName
+
+           , CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay() AND vbOperDate_begin >= '01.12.2018' AND COALESCE (vbMeasure_DocumentTaxKind, '') <> ''
+                  THEN vbMeasure_DocumentTaxKind
+                  ELSE Object_Measure.ValueData
+             END              AS MeasureName
+
+           , CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay() AND vbOperDate_begin >= '01.12.2018' AND COALESCE (vbMeasureCode_DocumentTaxKind, '') <> ''
+                  THEN vbMeasureCode_DocumentTaxKind
+                  ELSE CASE WHEN Object_Measure.ObjectCode=1 THEN '0301'
+                            WHEN Object_Measure.ObjectCode=2 THEN '2009'
+                            ELSE ''     
+                       END 
+             END                             AS MeasureCode
 
            , tmpMI.Amount                    AS Amount
            , tmpMI.Amount                    AS AmountPartner
@@ -782,7 +829,6 @@ order by 4*/
            , COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')    AS BarCode_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.ArticleGLN, COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN, '')) AS ArticleGLN_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, '') AS BarCodeGLN_Juridical
-
 
            , CAST (CASE WHEN tmpMI.CountForPrice > 0
                            THEN CAST (tmpMI.Amount * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))

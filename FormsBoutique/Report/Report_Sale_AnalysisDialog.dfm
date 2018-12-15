@@ -2,9 +2,9 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1040#1085#1072#1083#1080#1079' '#1087#1088#1080#1093#1086#1076' / '#1087#1088#1086#1076#1072#1078#1072'>'
-  ClientHeight = 408
-  ClientWidth = 375
+  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1040#1085#1072#1083#1080#1090#1080#1082#1072' '#1082#1083#1102#1095#1077#1074#1099#1093' '#1087#1086#1082#1072#1079#1072#1090#1077#1083#1077#1081'>'
+  ClientHeight = 361
+  ClientWidth = 474
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,8 +17,8 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 38
-    Top = 374
+    Left = 94
+    Top = 326
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -27,8 +27,8 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 212
-    Top = 374
+    Left = 268
+    Top = 326
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -44,7 +44,7 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
     Width = 90
   end
   object deStart: TcxDateEdit
-    Left = 10
+    Left = 14
     Top = 27
     EditValue = 42370d
     Properties.ShowTime = False
@@ -61,7 +61,7 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 4
-    Width = 273
+    Width = 197
   end
   object cxLabel3: TcxLabel
     Left = 14
@@ -69,7 +69,7 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object cxLabel6: TcxLabel
-    Left = 10
+    Left = 14
     Top = 7
     Caption = #1055#1077#1088#1080#1086#1076' '#1089' ...'
   end
@@ -96,13 +96,13 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
     Width = 197
   end
   object cxLabel2: TcxLabel
-    Left = 222
-    Top = 120
+    Left = 299
+    Top = 172
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
   end
   object edPartner: TcxButtonEdit
-    Left = 222
-    Top = 139
+    Left = 299
+    Top = 191
     Properties.Buttons = <
       item
         Default = True
@@ -110,7 +110,7 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 141
+    Width = 160
   end
   object cxLabel5: TcxLabel
     Left = 14
@@ -130,18 +130,18 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
     Width = 197
   end
   object cxLabel8: TcxLabel
-    Left = 222
-    Top = 171
+    Left = 223
+    Top = 119
     Caption = #1043#1086#1076' '#1089' ...'
   end
   object cxLabel9: TcxLabel
-    Left = 298
+    Left = 223
     Top = 171
     Caption = #1043#1086#1076' '#1087#1086' ...'
   end
   object edStartYear: TcxButtonEdit
-    Left = 222
-    Top = 191
+    Left = 223
+    Top = 139
     Properties.Buttons = <
       item
         Default = True
@@ -153,7 +153,7 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
     Width = 65
   end
   object edEndYear: TcxButtonEdit
-    Left = 298
+    Left = 223
     Top = 191
     Properties.Buttons = <
       item
@@ -176,20 +176,20 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
     Width = 105
   end
   object cbUnit: TcxCheckBox
-    Left = 293
+    Left = 211
     Top = 83
     Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' ('#1044#1072'/'#1053#1077#1090')'
-    Caption = #1087#1086' '#1057#1087#1080#1089#1082#1091
+    Caption = #1085#1077#1089#1082#1086#1083#1100#1082#1086' '#1052#1072#1075#1072#1079#1080#1085#1086#1074
     ParentShowHint = False
     Properties.ReadOnly = False
     ShowHint = True
     TabOrder = 19
-    Width = 76
+    Width = 140
   end
   object cbIsAmount: TcxCheckBox
     Left = 14
-    Top = 277
-    Caption = #1044#1083#1103' % '#1055#1088#1086#1076'. '#1082#1086#1083'.'
+    Top = 233
+    Caption = '1. % '#1055#1088#1086#1076'. '#1082#1086#1083'-'#1074#1086
     ParentShowHint = False
     Properties.ReadOnly = False
     ShowHint = True
@@ -199,8 +199,8 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
   end
   object cbIsSumm: TcxCheckBox
     Left = 14
-    Top = 304
-    Caption = #1044#1083#1103' % '#1055#1088#1086#1076'. '#1089#1091#1084#1084'.'
+    Top = 260
+    Caption = '2. % '#1055#1088#1086#1076'. '#1089#1091#1084#1084#1072
     ParentShowHint = False
     Properties.ReadOnly = False
     ShowHint = True
@@ -209,9 +209,8 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
   end
   object cbIsProf: TcxCheckBox
     Left = 14
-    Top = 332
-    Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' ('#1044#1072'/'#1053#1077#1090')'
-    Caption = #1044#1083#1103' % '#1055#1088#1080#1073#1099#1083#1080
+    Top = 288
+    Caption = '3. % '#1056#1077#1085#1090#1072#1073#1077#1083#1100#1085'.'
     ParentShowHint = False
     Properties.ReadOnly = False
     ShowHint = True
@@ -219,109 +218,123 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
     Width = 119
   end
   object cxLabel4: TcxLabel
-    Left = 139
-    Top = 278
-    Caption = '% '#1087#1088#1077#1076#1077#1083' 1:'
+    Left = 133
+    Top = 234
+    Caption = '1.'#1054#1090#1083#1080#1095#1085#1086', % '#1086#1090':'
+    ParentColor = False
+    Style.Color = clBtnFace
+    Style.TextColor = clBlue
   end
   object cxLabel10: TcxLabel
-    Left = 139
-    Top = 308
-    Caption = '% '#1087#1088#1077#1076#1077#1083' 1:'
+    Left = 133
+    Top = 264
+    Caption = '2.'#1054#1090#1083#1080#1095#1085#1086', % '#1086#1090':'
+    Style.TextColor = clBlue
   end
   object cxLabel13: TcxLabel
-    Left = 139
-    Top = 335
-    Caption = '% '#1087#1088#1077#1076#1077#1083' 1:'
+    Left = 133
+    Top = 291
+    Caption = '3.'#1054#1090#1083#1080#1095#1085#1086', % '#1086#1090':'
+    Style.TextColor = clBlue
   end
   object cxLabel11: TcxLabel
-    Left = 234
-    Top = 278
-    Caption = '% '#1087#1088#1077#1076#1077#1083' 2:'
+    Left = 263
+    Top = 234
+    Caption = '1.'#1055#1083#1086#1093#1086', % '#1076#1086':'
+    Style.TextColor = clRed
   end
   object cxLabel12: TcxLabel
-    Left = 234
-    Top = 308
-    Caption = '% '#1087#1088#1077#1076#1077#1083' 2:'
+    Left = 263
+    Top = 264
+    Caption = '2.'#1055#1083#1086#1093#1086', % '#1076#1086':'
+    Style.TextColor = clRed
   end
   object cxLabel14: TcxLabel
-    Left = 234
-    Top = 335
-    Caption = '% '#1087#1088#1077#1076#1077#1083' 2:'
+    Left = 263
+    Top = 291
+    Caption = '3.'#1055#1083#1086#1093#1086', % '#1076#1086':'
+    Style.TextColor = clRed
   end
   object edPresent1: TcxCurrencyEdit
-    Left = 205
-    Top = 277
-    EditValue = '50'
+    Left = 231
+    Top = 233
+    EditValue = '80'
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
+    Style.TextColor = clBlue
     TabOrder = 29
     BiDiMode = bdRightToLeft
     ParentBiDiMode = False
     Width = 25
   end
   object edPresent2: TcxCurrencyEdit
-    Left = 302
-    Top = 277
-    EditValue = '20'
+    Left = 345
+    Top = 233
+    EditValue = '50'
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
+    Style.TextColor = clRed
     TabOrder = 30
     BiDiMode = bdRightToLeft
     ParentBiDiMode = False
     Width = 25
   end
   object edPresent1_Summ: TcxCurrencyEdit
-    Left = 205
-    Top = 307
-    EditValue = 120.000000000000000000
+    Left = 231
+    Top = 263
+    EditValue = 125.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
+    Style.TextColor = clBlue
     TabOrder = 31
     BiDiMode = bdRightToLeft
     ParentBiDiMode = False
     Width = 25
   end
   object edPresent2_Summ: TcxCurrencyEdit
-    Left = 302
-    Top = 307
-    EditValue = 100.000000000000000000
+    Left = 345
+    Top = 263
+    EditValue = 80.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
+    Style.TextColor = clRed
     TabOrder = 32
     BiDiMode = bdRightToLeft
     ParentBiDiMode = False
     Width = 25
   end
   object edPresent1_Prof: TcxCurrencyEdit
-    Left = 205
-    Top = 334
-    EditValue = '50'
+    Left = 231
+    Top = 290
+    EditValue = '80'
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
+    Style.TextColor = clBlue
     TabOrder = 33
     BiDiMode = bdRightToLeft
     ParentBiDiMode = False
     Width = 25
   end
   object edPresent2_Prof: TcxCurrencyEdit
-    Left = 302
-    Top = 334
-    EditValue = '20'
+    Left = 345
+    Top = 290
+    EditValue = '50'
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
+    Style.TextColor = clRed
     TabOrder = 34
     BiDiMode = bdRightToLeft
     ParentBiDiMode = False
     Width = 25
   end
   object cxLabel15: TcxLabel
-    Left = 14
-    Top = 221
+    Left = 299
+    Top = 118
     Caption = #1051#1080#1085#1080#1103':'
   end
   object edLineFabrica: TcxButtonEdit
-    Left = 14
-    Top = 242
+    Left = 299
+    Top = 139
     Properties.Buttons = <
       item
         Default = True
@@ -330,11 +343,11 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
     Properties.ReadOnly = True
     Style.Color = clWindow
     TabOrder = 36
-    Width = 203
+    Width = 160
   end
   object cbLineFabrica: TcxCheckBox
-    Left = 223
-    Top = 242
+    Left = 352
+    Top = 83
     Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1051#1080#1085#1080#1102
     ParentShowHint = False
@@ -363,8 +376,8 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 163
-    Top = 354
+    Left = 173
+    Top = 310
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -582,6 +595,22 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Present1'
+        Value = Null
+        Component = edPresent1
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Present2'
+        Value = Null
+        Component = edPresent2
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 66
     Top = 189
@@ -676,8 +705,8 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 290
-    Top = 116
+    Left = 386
+    Top = 172
   end
   object GuidesPeriod: TdsdGuides
     KeyField = 'Id'
@@ -737,8 +766,8 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 238
-    Top = 161
+    Left = 240
+    Top = 133
   end
   object GuidesEndYear: TdsdGuides
     KeyField = 'Id'
@@ -767,8 +796,8 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 313
-    Top = 171
+    Left = 265
+    Top = 155
   end
   object GuidesLineFabrica: TdsdGuides
     KeyField = 'Id'
@@ -798,7 +827,7 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 612
-    Top = 56
+    Left = 364
+    Top = 120
   end
 end

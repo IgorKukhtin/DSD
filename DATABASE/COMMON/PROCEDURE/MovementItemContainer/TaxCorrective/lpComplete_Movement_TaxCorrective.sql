@@ -11,6 +11,7 @@ RETURNS Text
 AS
 $BODY$
   DECLARE vbDocumentTaxKindId Integer;
+  DECLARE vbPrice TFloat;
 BEGIN
 
      -- определяется <Тип формирования налогового документа>
@@ -24,6 +25,29 @@ BEGIN
          IF outMessageText <> '' THEN RETURN; END IF;
      END IF;
 
+     -- проверка цены из свойств DocumentTaxKind
+     vbPrice := (SELECT ObjectFloat_Price.ValueData
+                 FROM ObjectFloat AS ObjectFloat_Price
+                 WHERE ObjectFloat_Price.ObjectId = vbDocumentTaxKindId
+                   AND ObjectFloat_Price.DescId = zc_objectFloat_DocumentTaxKind_Price()
+                 );
+     IF COALESCE (vbPrice, 0) <> 0
+     THEN
+         IF EXISTS (SELECT 1
+                    FROM MovementItem
+                         INNER JOIN MovementItemFloat AS MIFloat_Price
+                                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                    WHERE MovementItem.MovementId = inMovementId
+                      AND MovementItem.DescId     = zc_MI_Master()
+                      AND MovementItem.isErased   = FALSE
+                      AND MovementItem.Amount     <> 0
+                      AND COALESCE (MIFloat_Price.ValueData, 0) <> vbPrice
+                    ) 
+         THEN 
+             RAISE EXCEPTION 'Ошибка.Цена не соответствует предопределенной для типа налог. накладной';
+         END IF;
+     END IF; 
 
      -- !!!сохранили - НОВАЯ схема с 30.03.18!!!
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_NPP_calc(), inMovementId
