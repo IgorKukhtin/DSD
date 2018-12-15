@@ -791,6 +791,7 @@ order by 4*/
                              ELSE Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
                         END
               END) :: TVarChar AS GoodsName
+
            , (CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay() 
                         THEN CASE WHEN vbOperDate_begin >= '01.12.2018' AND COALESCE (vbGoods_DocumentTaxKind, '') <> '' THEN vbGoods_DocumentTaxKind
                                   ELSE 'ÏÐÅÄÎÏËÀÒÀ ÇÀ ÊÎËÁ.ÈÇÄÅËÈß'
@@ -802,7 +803,9 @@ order by 4*/
                              ELSE Object_Goods.ValueData
                         END
              END) :: TVarChar AS GoodsName_two
+
            , Object_GoodsKind.ValueData             AS GoodsKindName
+
            , CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay() AND vbOperDate_begin >= '01.12.2018' AND COALESCE (vbMeasure_DocumentTaxKind, '') <> ''
                   THEN vbMeasure_DocumentTaxKind
                   ELSE Object_Measure.ValueData
@@ -826,7 +829,6 @@ order by 4*/
            , COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')    AS BarCode_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.ArticleGLN, COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN, '')) AS ArticleGLN_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, '') AS BarCodeGLN_Juridical
-
 
            , CAST (CASE WHEN tmpMI.CountForPrice > 0
                            THEN CAST (tmpMI.Amount * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
