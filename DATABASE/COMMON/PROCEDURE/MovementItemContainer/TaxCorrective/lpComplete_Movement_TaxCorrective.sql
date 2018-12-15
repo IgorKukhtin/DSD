@@ -31,13 +31,13 @@ BEGIN
                  WHERE ObjectFloat_Price.ObjectId = vbDocumentTaxKindId
                    AND ObjectFloat_Price.DescId = zc_objectFloat_DocumentTaxKind_Price()
                  );
-     IF COALESCE (vbPrice, 0) <> 0
+     IF vbPrice <> 0
      THEN
          IF EXISTS (SELECT 1
                     FROM MovementItem
-                         INNER JOIN MovementItemFloat AS MIFloat_Price
-                                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                         LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
                     WHERE MovementItem.MovementId = inMovementId
                       AND MovementItem.DescId     = zc_MI_Master()
                       AND MovementItem.isErased   = FALSE
@@ -45,7 +45,7 @@ BEGIN
                       AND COALESCE (MIFloat_Price.ValueData, 0) <> vbPrice
                     ) 
          THEN 
-             RAISE EXCEPTION 'Ошибка.Цена не соответствует предопределенной для типа налог. накладной';
+             RAISE EXCEPTION 'Ошибка.Цена должна быть равна <%>', vbPrice;
          END IF;
      END IF; 
 
