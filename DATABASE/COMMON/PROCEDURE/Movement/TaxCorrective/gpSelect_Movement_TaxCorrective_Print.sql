@@ -583,6 +583,34 @@ BEGIN
                                               AND MovementDate_OperDatePartner_Sale.DescId = zc_MovementDate_OperDatePartner()
                    )
 
+, tmpDocumentTaxKind AS (SELECT Object.Id                                       AS Id
+                              , Object.ObjectCode                               AS Code
+                              , Object.ValueData                                AS Name
+                              , ObjectString_Code.ValueData         :: TVarChar AS KindCode
+                              , ObjectString_Goods.ValueData        :: TVarChar AS GoodsName
+                              , ObjectString_Measure.ValueData      :: TVarChar AS MeasureName
+                              , ObjectString_MeasureCode.ValueData  :: TVarChar AS MeasureCode
+                              , ObjectFloat_Price.ValueData         :: TFloat   AS Price
+                         FROM Object
+                              LEFT JOIN ObjectString AS ObjectString_Code
+                                                     ON ObjectString_Code.ObjectId = Object.Id
+                                                    AND ObjectString_Code.DescId = zc_objectString_DocumentTaxKind_Code()
+                              LEFT JOIN ObjectString AS ObjectString_Goods
+                                                     ON ObjectString_Goods.ObjectId = Object.Id
+                                                    AND ObjectString_Goods.DescId = zc_objectString_DocumentTaxKind_Goods()
+                              LEFT JOIN ObjectString AS ObjectString_Measure
+                                                     ON ObjectString_Measure.ObjectId = Object.Id
+                                                    AND ObjectString_Measure.DescId = zc_objectString_DocumentTaxKind_Measure()
+                              LEFT JOIN ObjectString AS ObjectString_MeasureCode
+                                                     ON ObjectString_MeasureCode.ObjectId = Object.Id
+                                                    AND ObjectString_MeasureCode.DescId = zc_objectString_DocumentTaxKind_MeasureCode()
+                              LEFT JOIN ObjectFloat AS ObjectFloat_Price
+                                                    ON ObjectFloat_Price.ObjectId = Object.Id
+                                                   AND ObjectFloat_Price.DescId = zc_objectFloat_DocumentTaxKind_Price()
+                         WHERE Object.DescId = zc_Object_DocumentTaxKind()
+                           AND Object.isErased = FALSE
+                         )
+
 , tmpMovement_Data AS (SELECT tmpMovement.Id                                  AS MovementId
                             , MovementLinkObject_To.ObjectId                  AS ToId
                             , MovementLinkObject_From.ObjectId                AS FromId
@@ -593,8 +621,13 @@ BEGIN
                             , ObjectString_Retail_GLNCodeCorporate.ValueData  AS Retail_GLNCodeCorporate
                             , ObjectString_JuridicalTo_GLNCode.ValueData      AS JuridicalTo_GLNCode
                             , MovementLinkObject_DocumentTaxKind.ObjectId     AS DocumentTaxKind
-                            , ObjectString_DocumentTaxKind_Code.ValueData     AS DocumentTaxKindCode
-                            --, CASE WHEN COALESCE (ObjectString_DocumentTaxKind_Code.ValueData,'') = '' THEN '0' ELSE  ObjectString_DocumentTaxKind_Code.ValueData END  AS DocumentTaxKindCode
+                            , tmpDocumentTaxKind.KindCode                     AS Code_DocumentTaxKind
+                            , tmpDocumentTaxKind.GoodsName                    AS Goods_DocumentTaxKind
+                            , tmpDocumentTaxKind.MeasureName                   AS Measure_DocumentTaxKind
+                            , tmpDocumentTaxKind.MeasureCode                  AS MeasureCode_DocumentTaxKind
+                            , tmpDocumentTaxKind.Price                        AS Price_DocumentTaxKind
+                            
+                            --, CASE WHEN COALESCE (ObjectString_DocumentTaxKind_Code.ValueData,'') = '' THEN '0' ELSE  ObjectString_DocumentTaxKind_Code.ValueData END  AS Code_DocumentTaxKind
                             , MovementLinkObject_Branch.ObjectId              AS BranchId
                             , MovementString_FromINN.ValueData                AS INN_From
                        FROM tmpMovement
@@ -651,10 +684,9 @@ BEGIN
                                                    ON ObjectString_JuridicalTo_GLNCode.ObjectId = MovementLinkObject_To.ObjectId
                                                   AND ObjectString_JuridicalTo_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
 
-                            LEFT JOIN ObjectString AS ObjectString_DocumentTaxKind_Code
-                                                   ON ObjectString_DocumentTaxKind_Code.ObjectId = MovementLinkObject_DocumentTaxKind.ObjectId
-                                                  AND ObjectString_DocumentTaxKind_Code.DescId = zc_objectString_DocumentTaxKind_Code()
+                            LEFT JOIN tmpDocumentTaxKind ON tmpDocumentTaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
                        )
+
 /*  -- причины корректировки и кода
 101. "Зміна ціни".
 102. "Зміна кількості".
@@ -696,7 +728,7 @@ BEGIN
 
            , 'оплата з поточного рахунка'::TVarChar                         AS N9
 
-           , tmpMovement_Data.DocumentTaxKindCode          AS KindCode     -- заполняется в справочнике
+           , tmpMovement_Data.Code_DocumentTaxKind          AS KindCode     -- заполняется в справочнике
 
            , CASE WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change())
                        THEN Object_DocumentTaxKind.ValueData
@@ -899,13 +931,35 @@ BEGIN
                   ELSE ''
              END :: TVarChar AS GoodsCodeTaxAction
 
-           , (CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() THEN 'ПРЕДОПЛАТА ЗА КОЛБ.ИЗДЕЛИЯ' WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE tmpGoods.GoodsName || CASE WHEN COALESCE (tmpMI.GoodsKindId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || tmpMI.GoodsKindName END END) :: TVarChar AS GoodsName
-           , CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() THEN 'ПРЕДОПЛАТА ЗА КОЛБ.ИЗДЕЛИЯ' WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE tmpGoods.GoodsName END AS GoodsName_two
+           , (CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() THEN CASE WHEN vbOperDate_begin >= '01.12.2018' AND COALESCE (tmpMovement_Data.Goods_DocumentTaxKind, '') <> '' THEN tmpMovement_Data.Goods_DocumentTaxKind
+                                                                                                      ELSE 'ПРЕДОПЛАТА ЗА КОЛБ.ИЗДЕЛИЯ'
+                                                                                                 END
+                   WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name 
+                   WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name 
+                   ELSE tmpGoods.GoodsName || CASE WHEN COALESCE (tmpMI.GoodsKindId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || tmpMI.GoodsKindName END 
+                   END) :: TVarChar AS GoodsName
+
+           , CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() THEN CASE WHEN vbOperDate_begin >= '01.12.2018' AND COALESCE (tmpMovement_Data.Goods_DocumentTaxKind, '') <> '' THEN tmpMovement_Data.Goods_DocumentTaxKind
+                                                                                                     ELSE 'ПРЕДОПЛАТА ЗА КОЛБ.ИЗДЕЛИЯ' 
+                                                                                                END
+                  WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name 
+                  WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name 
+                  ELSE tmpGoods.GoodsName 
+             END AS GoodsName_two
+
            , tmpMI.GoodsKindName                                            AS GoodsKindName
-           , tmpGoods.MeasureName                                           AS MeasureName
-           , CASE WHEN tmpGoods.MeasureCode=1 THEN '0301'
-                  WHEN tmpGoods.MeasureCode=2 THEN '2009'
-             ELSE ''     END                                                AS MeasureCode
+           , CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() AND vbOperDate_begin >= '01.12.2018' AND COALESCE (tmpMovement_Data.Measure_DocumentTaxKind, '') <> ''
+                  THEN tmpMovement_Data.Measure_DocumentTaxKind
+                  ELSE tmpGoods.MeasureName
+             END                                                            AS MeasureName
+           , CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() AND vbOperDate_begin >= '01.12.2018' AND COALESCE (tmpMovement_Data.MeasureCode_DocumentTaxKind, '') <> ''
+                  THEN tmpMovement_Data.MeasureCode_DocumentTaxKind
+                  ELSE CASE WHEN tmpGoods.MeasureCode=1 THEN '0301'
+                            WHEN tmpGoods.MeasureCode=2 THEN '2009'
+                            ELSE ''
+                       END
+             END                                                            AS MeasureCode
+
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, ''))    AS Article_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')            AS BarCode_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.ArticleGLN, COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN, '')) AS ArticleGLN_Juridical

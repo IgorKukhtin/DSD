@@ -1191,10 +1191,14 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_RepriceUnitSheduler(), 'zc_ObjectFloat_RepriceUnitSheduler_EqualRepriceMin', 'Уравн. с % не менее' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RepriceUnitSheduler_EqualRepriceMin');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_DocumentTaxKind_Price() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_DocumentTaxKind_Price'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_DocumentTaxKind(), 'zc_ObjectFloat_DocumentTaxKind_Price', 'Цена' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_DocumentTaxKind_Price');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 14,12,18         * zc_ObjectFloat_DocumentTaxKind_Price
  22.10.18                                                                                     * zc_ObjectFloat_RepriceUnitSheduler_ ...
  14.10.18         *zc_ObjectFloat_ReportCollation_...
  27.08.18                                                                                     * zc_ObjectFloat_Overdraft_Summa

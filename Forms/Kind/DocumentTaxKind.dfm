@@ -1,23 +1,23 @@
 inherited DocumentTaxKindForm: TDocumentTaxKindForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1080#1087#1099' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' '#1085#1072#1083#1086#1075#1086#1074#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
   ClientHeight = 333
-  ClientWidth = 528
-  ExplicitWidth = 544
+  ClientWidth = 598
+  ExplicitWidth = 614
   ExplicitHeight = 371
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 528
+    Width = 598
     Height = 307
     ExplicitWidth = 528
     ExplicitHeight = 307
     ClientRectBottom = 307
-    ClientRectRight = 528
+    ClientRectRight = 598
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 528
       ExplicitHeight = 307
       inherited cxGrid: TcxGrid
-        Width = 528
+        Width = 598
         Height = 307
         ExplicitWidth = 528
         ExplicitHeight = 307
@@ -27,20 +27,50 @@ inherited DocumentTaxKindForm: TDocumentTaxKindForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object cxGridDBTableViewColumn1: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1087#1088#1080#1095#1080#1085#1099
-            DataBinding.FieldName = 'KindCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 71
-          end
           object clName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 449
+            Width = 190
+          end
+          object KindCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1087#1088#1080#1095#1080#1085#1099
+            DataBinding.FieldName = 'KindCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 73
+          end
+          object GoodsName: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1085#1082#1083#1072#1090#1091#1088#1072
+            DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 112
+          end
+          object MeasureName: TcxGridDBColumn
+            Caption = #1045#1076'.'#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object MeasureCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1077#1076'.'#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Price: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
         end
       end
@@ -60,10 +90,10 @@ inherited DocumentTaxKindForm: TDocumentTaxKindForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_DocumentTaxKind_Code
+      StoredProc = spUpdate_DocumentTaxKind_Params
       StoredProcList = <
         item
-          StoredProc = spUpdate_DocumentTaxKind_Code
+          StoredProc = spUpdate_DocumentTaxKind_Params
         end>
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
@@ -163,8 +193,8 @@ inherited DocumentTaxKindForm: TDocumentTaxKindForm
     Left = 144
     Top = 232
   end
-  object spUpdate_DocumentTaxKind_Code: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_DocumentTaxKind_Code'
+  object spUpdate_DocumentTaxKind_Params: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_DocumentTaxKind_Params'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -182,6 +212,42 @@ inherited DocumentTaxKindForm: TDocumentTaxKindForm
         Component = MasterCDS
         ComponentItem = 'KindCode'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMeasureName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MeasureName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMeasureCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MeasureCode'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
