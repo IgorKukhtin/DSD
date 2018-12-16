@@ -16,15 +16,16 @@ BEGIN
      -- определили
      vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
-     -- проверка цены из свойств DocumentTaxKind
+     -- получили цену для DocumentTaxKind
      vbPrice := (SELECT ObjectFloat_Price.ValueData
                  FROM MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                       LEFT JOIN ObjectFloat AS ObjectFloat_Price
                                             ON ObjectFloat_Price.ObjectId = MovementLinkObject_DocumentTaxKind.ObjectId
                                            AND ObjectFloat_Price.DescId = zc_objectFloat_DocumentTaxKind_Price()
                  WHERE MovementLinkObject_DocumentTaxKind.MovementId = inMovementId
-                   AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                   AND MovementLinkObject_DocumentTaxKind.DescId     = zc_MovementLinkObject_DocumentTaxKind()
                  );
+     -- проверка цены
      IF vbPrice <> 0
      THEN
          IF EXISTS (SELECT 1
@@ -37,9 +38,12 @@ BEGIN
                       AND MovementItem.isErased   = FALSE
                       AND MovementItem.Amount     <> 0
                       AND COALESCE (MIFloat_Price.ValueData, 0) <> vbPrice
-                    ) 
+                   ) 
          THEN 
-             RAISE EXCEPTION 'Ошибка.Цена должна быть равна <%>', vbPrice;
+             RAISE EXCEPTION 'Ошибка.Для документа <%> должна быть цена = <%>'
+                            , lfGet_Object_ValueData_sh ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_DocumentTaxKind()))
+                            , vbPrice
+                             ;
          END IF;
      END IF; 
 

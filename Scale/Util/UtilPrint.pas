@@ -100,6 +100,8 @@ type
     actInsert_Movement_EDI_Send: TdsdExecStoredProc;
     actPrint_PackGross2: TdsdPrintAction;
     actPrint_PackGross: TdsdPrintAction;
+    spSelectPrintSticker: TdsdStoredProc;
+    actPrintStickerTermo: TdsdPrintAction;
   private
   end;
 
@@ -114,6 +116,7 @@ type
   function Print_Transport(MovementDescId,MovementId,MovementId_sale:Integer; OperDate:TDateTime; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Quality  (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Sale_Order(MovementId_order,MovementId_by:Integer; isDiff:Boolean; isDiffTax:Boolean):Boolean;
+  function Print_StickerTermo (MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
 
   procedure SendEDI_Invoice (MovementId: Integer);
   procedure SendEDI_OrdSpr (MovementId: Integer);
@@ -144,6 +147,13 @@ begin
    or (UtilPrintForm.spGetMovement.ParamByName('outDocumentKindId').Value = zc_Enum_DocumentKind_RealWeight)
   then UtilPrintForm.actPrintCeh.Execute
   else UtilPrintForm.actPrint_Send.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+procedure Print_StickerTermoDocument (MovementId: Integer; isPreview:Boolean);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.actPrintStickerTermo.WithOutPreview:= not isPreview;
+  UtilPrintForm.actPrintStickerTermo.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 procedure Print_Loss (MovementId: Integer);
@@ -387,6 +397,26 @@ begin
              else begin ShowMessage ('Ошибка.Форма печати <Спецификация> не найдена.');exit;end;
           except
                 ShowMessage('Ошибка.Печать <Спецификация> не сформирована.');
+                exit;
+          end;
+     Result:=true;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_StickerTermo (MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
+begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
+     Result:=false;
+          //
+          try
+             //Print
+             if (MovementDescId = zc_Movement_Income)
+             then Print_StickerTermoDocument (MovementId,isPreview)
+             else begin ShowMessage('Ошибка.Печать на термопринтер стикера-самоклейки возможна только для документа <Приход от поставщика>.');exit;end;
+          except
+                ShowMessage('Ошибка.Печать <Печать на термопринтер> НЕ сформирована.');
                 exit;
           end;
      Result:=true;

@@ -145,7 +145,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbViewMIClick
       end
       object bbEDI_Invoice: TSpeedButton
-        Left = 496
+        Left = 488
         Top = 3
         Width = 31
         Height = 29
@@ -190,7 +190,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbEDI_InvoiceClick
       end
       object bbEDI_Ordspr: TSpeedButton
-        Left = 548
+        Left = 523
         Top = 3
         Width = 31
         Height = 29
@@ -235,7 +235,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbEDI_OrdsprClick
       end
       object bbEDI_Desadv: TSpeedButton
-        Left = 601
+        Left = 557
         Top = 3
         Width = 31
         Height = 29
@@ -383,6 +383,30 @@ object GuideMovementForm: TGuideMovementForm
         ParentShowHint = False
         ShowHint = True
         OnClick = bbSale_Order_diffTaxClick
+      end
+      object bbPrintStickerTermo: TSpeedButton
+        Left = 612
+        Top = 2
+        Width = 31
+        Height = 29
+        Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088'  '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+        Glyph.Data = {
+          76010000424D7601000000000000760000002800000020000000100000000100
+          04000000000000010000120B0000120B00001000000000000000000000000000
+          800000800000008080008000000080008000808000007F7F7F00BFBFBF000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00300000000000
+          0003377777777777777308888888888888807F33333333333337088888888888
+          88807FFFFFFFFFFFFFF7000000000000000077777777777777770F8F8F8F8F8F
+          8F807F333333333333F708F8F8F8F8F8F9F07F333333333337370F8F8F8F8F8F
+          8F807FFFFFFFFFFFFFF7000000000000000077777777777777773330FFFFFFFF
+          03333337F3FFFF3F7F333330F0000F0F03333337F77773737F333330FFFFFFFF
+          03333337F3FF3FFF7F333330F00F000003333337F773777773333330FFFF0FF0
+          33333337F3F37F3733333330F08F0F0333333337F7337F7333333330FFFF0033
+          33333337FFFF7733333333300000033333333337777773333333}
+        NumGlyphs = 2
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbPrintStickerTermoClick
       end
     end
     object cxDBGrid: TcxGrid

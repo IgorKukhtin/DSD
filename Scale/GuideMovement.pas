@@ -116,6 +116,7 @@ type
     actChangeMember: TAction;
     cbPrintPackGross: TCheckBox;
     bbSale_Order_diffTax: TSpeedButton;
+    bbPrintStickerTermo: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -145,6 +146,7 @@ type
     procedure bbPrint_ReestrKindClick(Sender: TObject);
     procedure actChangeMemberExecute(Sender: TObject);
     procedure bbSale_Order_diffTaxClick(Sender: TObject);
+    procedure bbPrintStickerTermoClick(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -621,6 +623,11 @@ end;
 procedure TGuideMovementForm.bbSale_Order_diffTaxClick(Sender: TObject);
 begin
      with CDS do Print_Sale_Order(CDS.FieldByName('MovementId_Order').AsInteger,FieldByName('Id').AsInteger,FALSE,TRUE);
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.bbPrintStickerTermoClick(Sender: TObject);
+begin
+     with CDS do Print_StickerTermo(CDS.FieldByName('MovementDescId').AsInteger, CDS.FieldByName('MovementId_parent').AsInteger,TRUE);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.bbEDI_DesadvClick(Sender: TObject);

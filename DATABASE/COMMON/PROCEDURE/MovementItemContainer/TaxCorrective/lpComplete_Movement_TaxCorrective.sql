@@ -25,12 +25,13 @@ BEGIN
          IF outMessageText <> '' THEN RETURN; END IF;
      END IF;
 
-     -- проверка цены из свойств DocumentTaxKind
+     -- получили цену для DocumentTaxKind
      vbPrice := (SELECT ObjectFloat_Price.ValueData
                  FROM ObjectFloat AS ObjectFloat_Price
                  WHERE ObjectFloat_Price.ObjectId = vbDocumentTaxKindId
-                   AND ObjectFloat_Price.DescId = zc_objectFloat_DocumentTaxKind_Price()
+                   AND ObjectFloat_Price.DescId   = zc_objectFloat_DocumentTaxKind_Price()
                  );
+     -- проверка цены
      IF vbPrice <> 0
      THEN
          IF EXISTS (SELECT 1
@@ -43,9 +44,12 @@ BEGIN
                       AND MovementItem.isErased   = FALSE
                       AND MovementItem.Amount     <> 0
                       AND COALESCE (MIFloat_Price.ValueData, 0) <> vbPrice
-                    ) 
+                   ) 
          THEN 
-             RAISE EXCEPTION 'Ошибка.Цена должна быть равна <%>', vbPrice;
+             RAISE EXCEPTION 'Ошибка.Для документа <%> должна быть цена = <%>'
+                            , lfGet_Object_ValueData_sh ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_DocumentTaxKind()))
+                            , vbPrice
+                             ;
          END IF;
      END IF; 
 
