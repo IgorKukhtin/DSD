@@ -294,6 +294,15 @@ BEGIN
                                                  THEN  1 * MIContainer.Amount
                                             ELSE 0
                                        END) :: TFloat AS Sale_SummCost
+                                  -- !!! ТОЛЬКО ДЛЯ ТЕСТОВОЙ БАЗЫ!!! С\с продажа - ГРН
+                                /*, SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
+                                                 THEN -1 * MIContainer.Amount
+                                                     * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END
+                                                     * CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 ELSE COALESCE (tmpCurrency.Amount, 0) END
+                                                     / CASE WHEN tmpCurrency.ParValue > 0 THEN tmpCurrency.ParValue  ELSE 1 END
+                                            ELSE 0
+                                       END) :: TFloat AS Sale_SummCost*/
+
                                   -- С\с продажа - валюта
                                 , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
                                                  THEN -1 * MIContainer.Amount
