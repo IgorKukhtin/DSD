@@ -33,10 +33,12 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , PersonalCode2 Integer, PersonalName2 TVarChar
              , PersonalCode3 Integer, PersonalName3 TVarChar
              , PersonalCode4 Integer, PersonalName4 TVarChar
+             , PersonalCode5 Integer, PersonalName5 TVarChar
              , PositionCode1 Integer, PositionName1 TVarChar
              , PositionCode2 Integer, PositionName2 TVarChar
              , PositionCode3 Integer, PositionName3 TVarChar
              , PositionCode4 Integer, PositionName4 TVarChar
+             , PositionCode5 Integer, PositionName5 TVarChar
              , UserName TVarChar
              , isPromo Boolean
              , MovementPromo TVarChar
@@ -160,11 +162,13 @@ BEGIN
              , Object_Personal2.ObjectCode AS PersonalCode2, Object_Personal2.ValueData AS PersonalName2
              , Object_Personal3.ObjectCode AS PersonalCode3, Object_Personal3.ValueData AS PersonalName3
              , Object_Personal4.ObjectCode AS PersonalCode4, Object_Personal4.ValueData AS PersonalName4
+             , Object_Personal5.ObjectCode AS PersonalCode5, Object_Personal5.ValueData AS PersonalName5
 
              , Object_Position1.ObjectCode AS PositionCode1, Object_Position1.ValueData AS PositionName1
              , Object_Position2.ObjectCode AS PositionCode2, Object_Position2.ValueData AS PositionName2
              , Object_Position3.ObjectCode AS PositionCode3, Object_Position3.ValueData AS PositionName3
              , Object_Position4.ObjectCode AS PositionCode4, Object_Position4.ValueData AS PositionName4
+             , Object_Position5.ObjectCode AS PositionCode5, Object_Position5.ValueData AS PositionName5
 
              , Object_User.ValueData              AS UserName
 
@@ -285,6 +289,10 @@ BEGIN
                                          ON MovementLinkObject_Personal4.MovementId = Movement.Id
                                         AND MovementLinkObject_Personal4.DescId = zc_MovementLinkObject_PersonalComplete4()
             LEFT JOIN Object AS Object_Personal4 ON Object_Personal4.Id = MovementLinkObject_Personal4.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal5
+                                         ON MovementLinkObject_Personal5.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal5.DescId = zc_MovementLinkObject_PersonalComplete5()
+            LEFT JOIN Object AS Object_Personal5 ON Object_Personal5.Id = MovementLinkObject_Personal5.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Position1
                                          ON MovementLinkObject_Position1.MovementId = Movement.Id
@@ -302,6 +310,10 @@ BEGIN
                                          ON MovementLinkObject_Position4.MovementId = Movement.Id
                                         AND MovementLinkObject_Position4.DescId = zc_MovementLinkObject_PositionComplete4()
             LEFT JOIN Object AS Object_Position4 ON Object_Position4.Id = MovementLinkObject_Position4.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position5
+                                         ON MovementLinkObject_Position5.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position5.DescId = zc_MovementLinkObject_PositionComplete5()
+            LEFT JOIN Object AS Object_Position5 ON Object_Position5.Id = MovementLinkObject_Position5.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_User
                                          ON MovementLinkObject_User.MovementId = Movement.Id
@@ -382,6 +394,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 17.12.18         * 
  05.10.16         * add inJuridicalBasisId
  04.10.16         * add AccessKey
  11.10.14                                        * all

@@ -34,10 +34,12 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , PersonalCode2 Integer, PersonalName2 TVarChar
              , PersonalCode3 Integer, PersonalName3 TVarChar
              , PersonalCode4 Integer, PersonalName4 TVarChar
+             , PersonalCode5 Integer, PersonalName5 TVarChar
              , PositionCode1 Integer, PositionName1 TVarChar
              , PositionCode2 Integer, PositionName2 TVarChar
              , PositionCode3 Integer, PositionName3 TVarChar
              , PositionCode4 Integer, PositionName4 TVarChar
+             , PositionCode5 Integer, PositionName5 TVarChar
              , UserName TVarChar
 
              , GoodsCode Integer, GoodsName TVarChar, GoodsGroupNameFull TVarChar
@@ -177,52 +179,52 @@ BEGIN
              , Object_Personal2.ObjectCode AS PersonalCode2, Object_Personal2.ValueData AS PersonalName2
              , Object_Personal3.ObjectCode AS PersonalCode3, Object_Personal3.ValueData AS PersonalName3
              , Object_Personal4.ObjectCode AS PersonalCode4, Object_Personal4.ValueData AS PersonalName4
+             , Object_Personal5.ObjectCode AS PersonalCode5, Object_Personal5.ValueData AS PersonalName5
 
              , Object_Position1.ObjectCode AS PositionCode1, Object_Position1.ValueData AS PositionName1
              , Object_Position2.ObjectCode AS PositionCode2, Object_Position2.ValueData AS PositionName2
              , Object_Position3.ObjectCode AS PositionCode3, Object_Position3.ValueData AS PositionName3
              , Object_Position4.ObjectCode AS PositionCode4, Object_Position4.ValueData AS PositionName4
+             , Object_Position5.ObjectCode AS PositionCode5, Object_Position5.ValueData AS PositionName5
 
              , Object_User.ValueData              AS UserName
 
+             , Object_Goods.ObjectCode          AS GoodsCode
+             , Object_Goods.ValueData           AS GoodsName
+             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
-                  , Object_Goods.ObjectCode          AS GoodsCode
-                  , Object_Goods.ValueData           AS GoodsName
-                  , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+             , MovementItem.Amount as MIAmount
+             , COALESCE (MIFloat_AmountPartner.ValueData, 0)::TFloat AS AmountPartner
 
-                  , MovementItem.Amount as MIAmount
-                  , COALESCE (MIFloat_AmountPartner.ValueData, 0)::TFloat AS AmountPartner
+             , COALESCE (MIFloat_RealWeight.ValueData, 0)   ::TFloat       AS RealWeight
+             , COALESCE (MIFloat_CountTare.ValueData, 0) ::TFloat          AS CountTare
+             , (COALESCE (MIFloat_CountTare.ValueData, 0) * COALESCE (MIFloat_WeightTare.ValueData, 0)) ::TFloat          AS WeightTare
 
-                  , COALESCE (MIFloat_RealWeight.ValueData, 0)   ::TFloat       AS RealWeight
-                  , COALESCE (MIFloat_CountTare.ValueData, 0) ::TFloat          AS CountTare
-                  , (COALESCE (MIFloat_CountTare.ValueData, 0) * COALESCE (MIFloat_WeightTare.ValueData, 0)) ::TFloat          AS WeightTare
+             , MIFloat_HeadCount.ValueData                  AS HeadCount
+             , MIFloat_BoxCount.ValueData                   AS BoxCount
+ 
+             , MIFloat_BoxNumber.ValueData                  AS BoxNumber
+             , MIFloat_LevelNumber.ValueData                AS LevelNumber
 
-                  , MIFloat_HeadCount.ValueData                  AS HeadCount
-                  , MIFloat_BoxCount.ValueData                   AS BoxCount
-      
-                  , MIFloat_BoxNumber.ValueData                  AS BoxNumber
-                  , MIFloat_LevelNumber.ValueData                AS LevelNumber
+             , MIFloat_ChangePercentAmount.ValueData        AS ChangePercentAmount
+             , MIFloat_ChangePercent.ValueData              AS ChangePercent_mi
+             , MIFloat_Price.ValueData                      AS Price
+             , MIFloat_CountForPrice.ValueData              AS CountForPrice
 
-                  , MIFloat_ChangePercentAmount.ValueData        AS ChangePercentAmount
-                  , MIFloat_ChangePercent.ValueData              AS ChangePercent_mi
-                  , MIFloat_Price.ValueData                      AS Price
-                  , MIFloat_CountForPrice.ValueData              AS CountForPrice
-           
-                  , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()):: TDateTime AS PartionGoodsDate
+             , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()):: TDateTime AS PartionGoodsDate
 
-           
-                  , COALESCE (MIDate_Insert.ValueData, zc_DateStart()):: TDateTime   AS InsertDate
-                  , COALESCE (MIDate_Update.ValueData, zc_DateStart()):: TDateTime   AS UpdateDate
-                  , Object_GoodsKind.ValueData      AS GoodsKindName
-                  , Object_Measure.ValueData        AS MeasureName
-                  , COALESCE (Object_Box.ValueData, '')::TVarChar              AS BoxName
-                  , COALESCE (Object_PriceList.ValueData , '')::TVarChar       AS PriceListName
+             , COALESCE (MIDate_Insert.ValueData, zc_DateStart()):: TDateTime   AS InsertDate
+             , COALESCE (MIDate_Update.ValueData, zc_DateStart()):: TDateTime   AS UpdateDate
+             , Object_GoodsKind.ValueData      AS GoodsKindName
+             , Object_Measure.ValueData        AS MeasureName
+             , COALESCE (Object_Box.ValueData, '')::TVarChar              AS BoxName
+             , COALESCE (Object_PriceList.ValueData , '')::TVarChar       AS PriceListName
 
-                  , COALESCE (MIBoolean_BarCode.ValueData, FALSE) :: Boolean AS isBarCode
+             , COALESCE (MIBoolean_BarCode.ValueData, FALSE) :: Boolean AS isBarCode
 
-                  , zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, CASE WHEN MovementFloat_MovementDesc.ValueData = zc_Movement_ReturnIn() THEN Movement_Promo_View.EndReturn ELSE Movement_Promo_View.EndSale END) AS MovementPromo
+             , zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, CASE WHEN MovementFloat_MovementDesc.ValueData = zc_Movement_ReturnIn() THEN Movement_Promo_View.EndReturn ELSE Movement_Promo_View.EndSale END) AS MovementPromo
 
-                  , MovementItem.isErased
+             , MovementItem.isErased
 
        FROM tmpStatus
             INNER JOIN Movement ON Movement.DescId = zc_Movement_WeighingPartner()
@@ -328,6 +330,10 @@ BEGIN
                                          ON MovementLinkObject_Personal4.MovementId = Movement.Id
                                         AND MovementLinkObject_Personal4.DescId = zc_MovementLinkObject_PersonalComplete4()
             LEFT JOIN Object AS Object_Personal4 ON Object_Personal4.Id = MovementLinkObject_Personal4.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal5
+                                         ON MovementLinkObject_Personal5.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal5.DescId = zc_MovementLinkObject_PersonalComplete5()
+            LEFT JOIN Object AS Object_Personal5 ON Object_Personal5.Id = MovementLinkObject_Personal5.ObjectId            
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Position1
                                          ON MovementLinkObject_Position1.MovementId = Movement.Id
@@ -345,6 +351,10 @@ BEGIN
                                          ON MovementLinkObject_Position4.MovementId = Movement.Id
                                         AND MovementLinkObject_Position4.DescId = zc_MovementLinkObject_PositionComplete4()
             LEFT JOIN Object AS Object_Position4 ON Object_Position4.Id = MovementLinkObject_Position4.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position5
+                                         ON MovementLinkObject_Position5.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position5.DescId = zc_MovementLinkObject_PositionComplete5()
+            LEFT JOIN Object AS Object_Position5 ON Object_Position5.Id = MovementLinkObject_Position5.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
                                          ON MovementLinkObject_Member.MovementId = Movement.Id
@@ -507,6 +517,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 17.12.18         *
  15.03.17         * add zc_MovementLinkObject_Member
  05.10.16         * add inJuridicalBasisId
  04.10.16         * add AccessKey

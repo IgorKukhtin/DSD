@@ -32,10 +32,12 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , PersonalId2 Integer, PersonalCode2 Integer, PersonalName2 TVarChar
              , PersonalId3 Integer, PersonalCode3 Integer, PersonalName3 TVarChar
              , PersonalId4 Integer, PersonalCode4 Integer, PersonalName4 TVarChar
+             , PersonalId5 Integer, PersonalCode5 Integer, PersonalName5 TVarChar
              , PositionId1 Integer, PositionCode1 Integer, PositionName1 TVarChar
              , PositionId2 Integer, PositionCode2 Integer, PositionName2 TVarChar
              , PositionId3 Integer, PositionCode3 Integer, PositionName3 TVarChar
              , PositionId4 Integer, PositionCode4 Integer, PositionName4 TVarChar
+             , PositionId5 Integer, PositionCode5 Integer, PositionName5 TVarChar
              , EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean
              , UserName TVarChar
               )
@@ -144,11 +146,13 @@ BEGIN
              , Object_Personal2.Id AS PersonalId2, Object_Personal2.ObjectCode AS PersonalCode2, Object_Personal2.ValueData AS PersonalName2
              , Object_Personal3.Id AS PersonalId3, Object_Personal3.ObjectCode AS PersonalCode3, Object_Personal3.ValueData AS PersonalName3
              , Object_Personal4.Id AS PersonalId4, Object_Personal4.ObjectCode AS PersonalCode4, Object_Personal4.ValueData AS PersonalName4
+             , Object_Personal5.Id AS PersonalId5, Object_Personal5.ObjectCode AS PersonalCode5, Object_Personal5.ValueData AS PersonalName5
 
              , Object_Position1.Id AS PositionId1, Object_Position1.ObjectCode AS PositionCode1, Object_Position1.ValueData AS PositionName1
              , Object_Position2.Id AS PositionId2, Object_Position2.ObjectCode AS PositionCode2, Object_Position2.ValueData AS PositionName2
              , Object_Position3.Id AS PositionId3, Object_Position3.ObjectCode AS PositionCode3, Object_Position3.ValueData AS PositionName3
              , Object_Position4.Id AS PositionId4, Object_Position4.ObjectCode AS PositionCode4, Object_Position4.ValueData AS PositionName4
+             , Object_Position5.Id AS PositionId5, Object_Position5.ObjectCode AS PositionCode5, Object_Position5.ValueData AS PositionName5
 
              , COALESCE (MovementBoolean_EdiOrdspr.ValueData, FALSE)    AS EdiOrdspr
              , COALESCE (MovementBoolean_EdiInvoice.ValueData, FALSE)   AS EdiInvoice
@@ -262,6 +266,10 @@ BEGIN
                                          ON MovementLinkObject_Personal4.MovementId = Movement.Id
                                         AND MovementLinkObject_Personal4.DescId = zc_MovementLinkObject_PersonalComplete4()
             LEFT JOIN Object AS Object_Personal4 ON Object_Personal4.Id = MovementLinkObject_Personal4.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal5
+                                         ON MovementLinkObject_Personal5.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal5.DescId = zc_MovementLinkObject_PersonalComplete5()
+            LEFT JOIN Object AS Object_Personal5 ON Object_Personal5.Id = MovementLinkObject_Personal5.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Position1
                                          ON MovementLinkObject_Position1.MovementId = Movement.Id
@@ -279,6 +287,10 @@ BEGIN
                                          ON MovementLinkObject_Position4.MovementId = Movement.Id
                                         AND MovementLinkObject_Position4.DescId = zc_MovementLinkObject_PositionComplete4()
             LEFT JOIN Object AS Object_Position4 ON Object_Position4.Id = MovementLinkObject_Position4.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position5
+                                         ON MovementLinkObject_Position5.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position5.DescId = zc_MovementLinkObject_PositionComplete5()
+            LEFT JOIN Object AS Object_Position5 ON Object_Position5.Id = MovementLinkObject_Position5.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
                                            ON MovementLinkMovement_Tax.MovementId = Movement.ParentId
@@ -322,8 +334,6 @@ BEGIN
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
             LEFT JOIN Object AS Object_Route ON Object_Route.Id = COALESCE (MILinkObject_Route.ObjectId, CASE WHEN Movement_Transport.DescId = zc_Movement_Transport() THEN MI_Transport.ObjectId END)
 
-
-
             LEFT JOIN MovementBoolean AS MovementBoolean_EdiOrdspr
                                       ON MovementBoolean_EdiOrdspr.MovementId =  Movement.ParentId
                                      AND MovementBoolean_EdiOrdspr.DescId = zc_MovementBoolean_EdiOrdspr()
@@ -362,6 +372,7 @@ ALTER FUNCTION gpSelect_Scale_Movement (TDateTime, TDateTime, Boolean, TVarChar)
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 17.12.18         *
  11.10.14                                        * all
  11.03.14         *
 */

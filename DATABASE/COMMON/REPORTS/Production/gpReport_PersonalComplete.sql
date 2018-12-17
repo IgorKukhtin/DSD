@@ -72,6 +72,8 @@ BEGIN
                             SELECT zc_MovementLinkObject_PersonalComplete3() AS PersonalDescId
                            UNION ALL
                             SELECT zc_MovementLinkObject_PersonalComplete4() AS PersonalDescId
+                           UNION ALL
+                            SELECT zc_MovementLinkObject_PersonalComplete5() AS PersonalDescId
                            )
         -- Все документы
       , tmpMovement_all AS (SELECT Movement.Id AS MovementId
@@ -284,6 +286,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.12.18         * add PersonalComplete5
  26.11.17                                        * all
  15.12.15         * add Branch
  27.05.15         *
