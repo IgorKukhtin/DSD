@@ -11,6 +11,8 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
+   DECLARE vbUnitKey TVarChar;
+   DECLARE vbUserUnitId Integer;
    DECLARE vbInventoryDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -22,6 +24,23 @@ BEGIN
                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
     WHERE Movement.Id = inMovementId;
+
+    IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+              WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = 308121) -- Для роли "Кассир аптеки"
+    THEN
+     
+       vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+       IF vbUnitKey = '' THEN
+          vbUnitKey := '0';
+       END IF;
+       vbUserUnitId := vbUnitKey::Integer;
+
+       IF COALESCE (vbUnitId, 0) <> COALESCE (vbUserUnitId, 0)
+       THEN
+          RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);     
+       END IF;     
+    END IF;     
+
      -- сохранили
      PERFORM lpInsertUpdate_MovementItem_Inventory (ioId                 := COALESCE (tmp.MovementItemId, 0)
                                                   , inMovementId         := inMovementId
