@@ -636,7 +636,8 @@ uses
   Medoc_J1201010 in '..\..\SOURCE\MeDOC\Medoc_J1201010.pas',
   Medoc_J1201210 in '..\..\SOURCE\MeDOC\Medoc_J1201210.pas',
   DiffKind in '..\..\FormsFarmacy\Guides\DiffKind.pas' {DiffKindForm: TParentForm},
-  DiffKindEdit in '..\..\FormsFarmacy\Guides\DiffKindEdit.pas' {DiffKindEditForm: TParentForm};
+  DiffKindEdit in '..\..\FormsFarmacy\Guides\DiffKindEdit.pas' {DiffKindEditForm: TParentForm},
+  dsdExportToXLSAction in '..\..\SOURCE\COMPONENT\dsdExportToXLSAction.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
