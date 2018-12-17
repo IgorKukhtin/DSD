@@ -276,7 +276,7 @@ inherited ListGoodsForm: TListGoodsForm
         Options.Editing = False
         Width = 77
       end
-      object cxGridDBColumn1: TcxGridDBColumn
+      object colPriceDiff: TcxGridDBColumn
         Caption = #1062#1077#1085#1072
         DataBinding.FieldName = 'Price'
         PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -285,6 +285,17 @@ inherited ListGoodsForm: TListGoodsForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 73
+      end
+      object colDiffKindId: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1086#1090#1082#1072#1079#1072
+        DataBinding.FieldName = 'DiffKindId'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taLeftJustify
+        OnGetDisplayText = colDiffKindIdGetDisplayText
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 211
       end
       object colComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -457,5 +468,14 @@ inherited ListGoodsForm: TListGoodsForm
     StoreDefs = True
     Left = 64
     Top = 160
+  end
+  object DiffKindCDS: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <>
+    IndexDefs = <>
+    Params = <>
+    StoreDefs = True
+    Left = 368
+    Top = 360
   end
 end

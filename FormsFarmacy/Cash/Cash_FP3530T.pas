@@ -39,7 +39,8 @@ type
     procedure SetTime;
     procedure Anulirovt;
     function InfoZReport : string;
-    function FileNameZReport : string;
+    function JuridicalName : string;
+    function ZReport : Integer;
   public
     constructor Create;
   end;
@@ -745,9 +746,14 @@ begin
   Result := '';
 end;
 
-function TCashFP3530T.FileNameZReport : string;
+function TCashFP3530T.JuridicalName : string;
 begin
   Result := '';
+end;
+
+function TCashFP3530T.ZReport : Integer;
+begin
+  Result := 0;
 end;
 
 end.

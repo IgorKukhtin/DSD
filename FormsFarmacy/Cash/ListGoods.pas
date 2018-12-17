@@ -37,7 +37,7 @@ type
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
-    cxGridDBColumn1: TcxGridDBColumn;
+    colPriceDiff: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
     colDateInput: TcxGridDBColumn;
     colUserName: TcxGridDBColumn;
@@ -62,6 +62,8 @@ type
     colisFirst: TcxGridDBColumn;
     colisSecond: TcxGridDBColumn;
     colJuridicalName: TcxGridDBColumn;
+    colDiffKindId: TcxGridDBColumn;
+    DiffKindCDS: TClientDataSet;
     procedure ParentFormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure edt1Exit(Sender: TObject);
@@ -82,6 +84,8 @@ type
     procedure colAmountDiffGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
     procedure colAmountDiffPrevGetDisplayText(Sender: TcxCustomGridTableItem;
+      ARecord: TcxCustomGridRecord; var AText: string);
+    procedure colDiffKindIdGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
   private
     { Private declarations }
@@ -209,6 +213,17 @@ begin
     AText := FormatCurr('0.000', ListlDiffNoSendCDS.FieldByName('AmoutDiffUser').AsCurrency);
 end;
 
+procedure TListGoodsForm.colDiffKindIdGetDisplayText(
+  Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AText: string);
+  var I : Integer;
+begin
+  if not TryStrToInt(AText, I) then Exit;
+  if not DiffKindCDS.Active then Exit;
+  if DiffKindCDS.Locate('id', I, []) then
+       AText := DiffKindCDS.FieldByName('Name').AsString;
+end;
+
 procedure TListGoodsForm.colGoodsNameCustomDrawCell(
   Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
   AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
@@ -299,6 +314,17 @@ begin
     FillingListGoodsCDS(False);
   finally
     ListGoodsCDS.EnableControls;
+  end;
+
+  if FileExists(DiffKind_lcl) then
+  begin
+    WaitForSingleObject(MutexDiffKind, INFINITE);
+    try
+      LoadLocalData(DiffKindCDS,DiffKind_lcl);
+      if not DiffKindCDS.Active then DiffKindCDS.Open;
+    finally
+      ReleaseMutex(MutexDiffKind);
+    end;
   end;
 
   WaitForSingleObject(MutexDiffCDS, INFINITE);

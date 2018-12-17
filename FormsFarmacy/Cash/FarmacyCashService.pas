@@ -159,8 +159,10 @@ type
     FHasError: boolean;
     procedure SaveLocalVIP;
     procedure SaveLocalGoods;
+    procedure SaveLocalDiffKind;
     procedure SaveRealAll;
     procedure SaveListDiff;
+    procedure SendZReport;
     procedure ChangeStatus(AStatus: String);
     function InitLocalStorage: Boolean;
     function ExistNotCompletedCheck: boolean;
@@ -185,7 +187,7 @@ var
   csCriticalSection_All: TRTLCriticalSection;
   AllowedConduct : Boolean = false;
   MutexDBF, MutexDBFDiff,  MutexVip, MutexRemains, MutexAlternative, MutexRefresh,
-  MutexAllowedConduct, MutexGoods, MutexDiffCDS: THandle;
+  MutexAllowedConduct, MutexGoods, MutexDiffCDS, MutexDiffKind: THandle;
   LastErr: Integer;
 
   FM_SERVISE: Integer;
@@ -229,6 +231,10 @@ begin
 
         4: begin
              SaveListDiff;  // попросили отправить листы звквзовж
+           end;
+
+        5: begin
+             SendZReport;  // попросили отправить Z отчеты
            end;
 
         9: begin
@@ -473,6 +479,8 @@ begin   //yes
           SaveLocalVIP;
           //Получение товаров
           SaveLocalGoods;
+          //Получение причин отказов
+          SaveLocalDiffKind;
           PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 3);
           // Вывод уведомления сервиса
           tiServise.BalloonHint:='Остатки обновлены.';
@@ -561,6 +569,7 @@ begin
   SaveRealAll;  // Проводим чеки которые остались не проведенными раньше. Учитывается CountСhecksAtOnce = 7
                 // проведутся первые 7 чеков и будут ждать или таймер или пока не пройдет первая покупка
   SaveListDiff; // Отправляем листы отказов
+  SendZReport;  // Отправляем Z отчеты
   if not FHasError then
     ChangeStatus('Получение остатков');
   FirstRemainsReceived := false;
@@ -776,7 +785,41 @@ begin  //+
       ReleaseMutex(MutexDiffCDS);
     end;
   end;
+end;
 
+procedure TMainCashForm2.SaveLocalDiffKind;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+  DateTime: TDateTimeInfoRec;
+begin  //+
+  // pr вызывается из обновления остатков
+
+  sp := TdsdStoredProc.Create(nil);
+  try
+    ds := TClientDataSet.Create(nil);
+    try
+      sp.OutputType := otDataSet;
+      sp.DataSet := ds;
+
+      sp.StoredProcName := 'gpSelect_Object_DiffKindCash';
+      sp.Params.Clear;
+      sp.Execute;
+      Add_Log('Start DiffKind');
+      WaitForSingleObject(MutexDiffKind, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+      try
+        SaveLocalData(ds,DiffKind_lcl);
+      finally
+        Add_Log('End DiffKind');
+        ReleaseMutex(MutexDiffKind);
+      end;
+
+    finally
+      ds.free;
+    end;
+  finally
+    freeAndNil(sp);
+  end;
 end;
 
 procedure TMainCashForm2.TimerSaveRealTimer(Sender: TObject);
@@ -786,6 +829,7 @@ begin
   try
     SaveRealAll;
     SaveListDiff;
+    SendZReport;
   finally
     TimerSaveReal.Enabled := True;
   end;
@@ -1522,6 +1566,11 @@ begin
       ReleaseMutex(MutexDiffCDS);
     end;
   end;
+end;
+
+procedure TMainCashForm2.SendZReport;
+begin
+
 end;
 
 function TMainCashForm2.GetTrayIcon: integer;

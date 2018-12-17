@@ -586,7 +586,7 @@ object MainCashForm2: TMainCashForm2
     Left = 432
     Top = 16
     Bitmap = {
-      494C010107003400400180008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010107003400500180008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000000200000001000001002000000000000000
       0800000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -17533,6 +17533,14 @@ object MainCashForm2: TMainCashForm2
         Component = ListDiffCDS
         ComponentItem = 'Price'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiffKindId'
+        Value = Null
+        Component = ListDiffCDS
+        ComponentItem = 'DiffKindId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

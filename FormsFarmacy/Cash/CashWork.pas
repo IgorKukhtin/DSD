@@ -38,8 +38,9 @@ type
   private
     m_Cash: ICash;
     m_DataSet: TDataSet;
+    m_ZReportName: string;
   public
-    constructor Create(Cash: ICash; DataSet: TDataSet);
+    constructor Create(Cash: ICash; DataSet: TDataSet; ZReportName: string);
 
     procedure SaveZReport(AFileName, AText : string);
   end;
@@ -50,11 +51,13 @@ implementation
 
 { TCashWorkForm }
 
-constructor TCashWorkForm.Create(Cash: ICash; DataSet: TDataSet);
+constructor TCashWorkForm.Create(Cash: ICash; DataSet: TDataSet; ZReportName: string);
 begin
   inherited Create(nil);
   m_Cash:= Cash;
   m_DataSet:= DataSet;
+  m_ZReportName:= ZReportName;
+  if (m_ZReportName <> '') and (Copy(m_ZReportName, Length(m_ZReportName) - 1, 1) <> ' ') then m_ZReportName := m_ZReportName + ' ';
 end;
 
 procedure TCashWorkForm.Button1Click(Sender: TObject);
@@ -74,7 +77,9 @@ procedure TCashWorkForm.Button2Click(Sender: TObject);
 begin
   if MessageDlg('Вы уверены в снятии Z-отчета?', mtInformation, mbOKCancel, 0) = mrOk then
   begin
-//     SaveZReport(m_Cash.FileNameZReport, m_Cash.InfoZReport);
+     SaveZReport(StringReplace(m_Cash.JuridicalName, '"', '', [rfReplaceAll]) + ' ' +
+                 m_ZReportName + FormatDateTime('DD.MM.YY', Date) + ' ФН' +
+                 m_Cash.FiscalNumber  + ' №' + IntToStr(m_Cash.ZReport), m_Cash.InfoZReport);
      m_Cash.ClosureFiscal;
   end;
 end;
@@ -168,9 +173,10 @@ begin
 
       Writeln(F, AText);
     finally
-       Flush(F);
+      Flush(F);
       CloseFile(F);
     end;
+//    PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 5);
   except on E: Exception do
     ShowMessage('Ошибка сохранения Электронной формы z отчёта. Покажите это окно системному администратору: ' + #13#10 + E.Message);
   end;

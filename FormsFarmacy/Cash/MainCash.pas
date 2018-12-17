@@ -524,7 +524,7 @@ end;
 procedure TMainCashForm.actCashWorkExecute(Sender: TObject);
 begin
   inherited;
-  with TCashWorkForm.Create(Cash, RemainsCDS) do begin
+  with TCashWorkForm.Create(Cash, RemainsCDS, '') do begin
     ShowModal;
     Free;
   end;

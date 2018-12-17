@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_SaleExactly_Print()
+-- Function: gpSelect_Movement_UnnamedEnterprisesExactly_Print()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_UnnamedEnterprisesExactly_Print (Integer, TVarChar);
 
@@ -20,11 +20,14 @@ BEGIN
 
     OPEN Cursor1 FOR
         SELECT
-            Movement_UnnamedEnterprises.Id
+            'Коммерческое предложение от сети аптек "Не Болей!" для '||
+              Object_ClientsByBank.ValueData||', состоянием на '||
+              to_char(DATE_TRUNC ('DAY', CURRENT_TIMESTAMP), 'DD.MM.YYYY') as Title
+          ,  Movement_UnnamedEnterprises.Id
           , Movement_UnnamedEnterprises.InvNumber
           , Movement_UnnamedEnterprises.OperDate
           , COALESCE(MovementFloat_TotalSumm.ValueData,0)::TFloat      AS TotalSumm
-          , COALESCE(MovementFloat_TotalCount.ValueData,0)::TFloat  AS TotalCount
+          , COALESCE(MovementFloat_TotalCount.ValueData,0)::TFloat     AS TotalCount
           , Object_Unit.ValueData                                      AS UnitName
           , Object_ClientsByBank.ValueData                             AS ClientsByBankName
           , DATE_TRUNC ('DAY', CURRENT_TIMESTAMP)                      AS Date
@@ -63,6 +66,7 @@ BEGIN
           , MIFloat_Price.ValueData                   AS Price
           , MIFloat_Summ.ValueData                    AS Summ
           , SUBSTRING(Object_NDSKind.ValueData, 1, 3) AS NDSKindName
+          , ObjectFloat_NDSKind_NDS.ValueData         AS NDS
         FROM
             MovementItem AS MI_UnnamedEnterprises
 
@@ -72,6 +76,9 @@ BEGIN
                                    ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
                                   AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
               LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+              LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                    ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
+                                   AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
 
               LEFT JOIN MovementItemFloat AS MIFloat_Price
                                           ON MIFloat_Price.MovementItemId = MI_UnnamedEnterprises.Id

@@ -8,7 +8,8 @@ uses
   Gauges, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, cxTextEdit, cxCurrencyEdit,
   cxClasses, cxPropertiesStore, dsdAddOn, dxSkinsCore, dxSkinsDefaultPainters,
-  Datasnap.DBClient, Vcl.Menus, cxButtons;
+  Datasnap.DBClient, Vcl.Menus, cxButtons, cxDropDownEdit, cxLookupEdit,
+  cxDBLookupEdit, cxDBLookupComboBox, cxMaskEdit;
 
 type
   TListDiffAddGoodsForm = class(TForm)
@@ -18,8 +19,12 @@ type
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
-    cbNote: TComboBox;
     ceAmount: TcxCurrencyEdit;
+    meComent: TcxMaskEdit;
+    Label4: TLabel;
+    lcbDiffKind: TcxLookupComboBox;
+    DiffKindCDS: TClientDataSet;
+    DiffKindDS: TDataSource;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
@@ -36,7 +41,7 @@ implementation
 
 uses CommonData, LocalWorkUnit, MainCash2, ListDiff;
 
-var MutexDiffCDS: THandle;
+var MutexDiffCDS, MutexDiffKind: THandle;
 
 { TListDiffAddGoodsForm }
 
@@ -66,11 +71,11 @@ begin
     Exit;
   end;
 
-  if cbNote.Text = '' then
+  if lcbDiffKind.EditValue = Null then
   begin
     Action := TCloseAction.caNone;
-    ShowMessage('Примечание должно быть выбрано из списка...');
-    cbNote.SetFocus;
+    ShowMessage('Вид отказа должен быть выбрано из списка...');
+    lcbDiffKind.SetFocus;
     Exit;
   end;
 
@@ -87,7 +92,8 @@ begin
       ListDiffCDS.FieldByName('Code').AsInteger := ListGoodsCDS.FieldByName('GoodsCode').AsInteger;
       ListDiffCDS.FieldByName('Name').AsString := ListGoodsCDS.FieldByName('GoodsName').AsString;
       ListDiffCDS.FieldByName('Price').AsCurrency := ListGoodsCDS.FieldByName('Price').AsCurrency;
-      ListDiffCDS.FieldByName('Comment').AsString := cbNote.Text;
+      ListDiffCDS.FieldByName('DiffKindId').AsVariant := lcbDiffKind.EditValue;
+      ListDiffCDS.FieldByName('Comment').AsString := meComent.Text;
       ListDiffCDS.FieldByName('UserID').AsString := gc_User.Session;
       ListDiffCDS.FieldByName('UserName').AsString := gc_User.Login;
       ListDiffCDS.FieldByName('DateInput').AsDateTime := Now;
@@ -130,10 +136,29 @@ begin
       Except
       end;
 
+      if FileExists(DiffKind_lcl) then
+      begin
+        WaitForSingleObject(MutexDiffKind, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          LoadLocalData(DiffKindCDS,DiffKind_lcl);
+          if not DiffKindCDS.Active then DiffKindCDS.Open;
+          if Assigned(DiffKindCDS.FindField('Name')) then
+            DiffKindCDS.FindField('Name').DisplayLabel := 'Вид отказа';
+        finally
+          ReleaseMutex(MutexDiffKind);
+        end;
+      end;
+
       if FileExists(ListDiff_lcl) then
       begin
-        LoadLocalData(ListDiffCDS, ListDiff_lcl);
+        WaitForSingleObject(MutexDiffCDS, INFINITE);
+        try
+          LoadLocalData(ListDiffCDS, ListDiff_lcl);
+        finally
+          ReleaseMutex(MutexDiffCDS);
+        end;
         if not ListDiffCDS.Active then ListDiffCDS.Open;
+
         ListDiffCDS.First;
         while not ListDiffCDS.Eof do
         begin
@@ -165,7 +190,7 @@ begin
       Label1.Caption := S;
 
     Except ON E:Exception do
-      ShowMessage('Ошибка сохранения листа отказов:'#13#10 + E.Message);
+      ShowMessage('Ошибка открытия листа отказов:'#13#10 + E.Message);
     end;
   finally
     ReleaseMutex(MutexDiffCDS);

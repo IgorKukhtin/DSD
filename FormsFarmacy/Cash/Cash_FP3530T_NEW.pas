@@ -39,7 +39,8 @@ type
     procedure SetTime;
     procedure Anulirovt;
     function InfoZReport : string;
-    function FileNameZReport : string;
+    function JuridicalName : string;
+    function ZReport : Integer;
   public
     constructor Create;
   end;
@@ -509,8 +510,8 @@ begin
   if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[1]) then Exit;
 
   Result := Result + '  Податок     від        10.10.2017' + #13#10;
-  Result := Result + '            ПДВ_A (Вкл) A =    ' + Str(nSum[0], 5) + '%' + #13#10;
-  Result := Result + '            ПДВ_Б (Вкл) Б =    ' + Str(nSum[1], 5) + '%' + #13#10;
+  Result := Result + '            ПДВ_A (Вкл) A =    ' + Str(nSum[0], 6) + '%' + #13#10;
+  Result := Result + '            ПДВ_Б (Вкл) Б =    ' + Str(nSum[1], 6) + '%' + #13#10;
   Result := Result + '                    ' + FormatDateTime('DD.MM.YYYY  HH:NN', Now)  + #13#10;
   Result := Result + '         ФІСКАЛЬНИЙ ЧЕК' + #13#10;
   Result := Result + '  --------------------------------------' + #13#10;
@@ -518,12 +519,15 @@ begin
 
 end;
 
-
-function TCashFP3530T_NEW.FileNameZReport : string;
+function TCashFP3530T_NEW.JuridicalName : string;
 begin
-  Result := FPrinter.ZNUM[Password];
+  Result := Trim(FPrinter.READPROGCHECK[0, 1, Password]);
   if not СообщениеКА(FPrinter.GETERROR) then Exit;
-  Result := Result + '_' + IntToStr(FPrinter.COUNTERSDAY[0, Password]);
+end;
+
+function TCashFP3530T_NEW.ZReport : Integer;
+begin
+  Result := FPrinter.COUNTERSDAY[0, Password];
   if not СообщениеКА(FPrinter.GETERROR) then Exit;
 end;
 

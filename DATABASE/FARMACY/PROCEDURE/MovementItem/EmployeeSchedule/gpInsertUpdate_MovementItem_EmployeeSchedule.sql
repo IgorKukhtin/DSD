@@ -48,6 +48,7 @@ BEGIN
     vbValue := CASE ioValue WHEN '8:00' THEN 1
                             WHEN '9:00' THEN 2
                             WHEN '10:00' THEN 3
+                            WHEN 'Â' THEN 9
                             ELSE 0 END;
 
     vbComingValueDay := SUBSTRING(vbComingValueDay, 1, ioTypeId - 1) || vbValue::TVarChar || SUBSTRING(vbComingValueDay, ioTypeId + 1, 31);

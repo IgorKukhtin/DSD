@@ -129,6 +129,7 @@
 			<DCCReference Include="..\SOURCE\CommonData.pas"/>
 			<DCCReference Include="..\SOURCE\Authentication.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdAction.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXLSAction.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConvert.pas"/>
 			<DCCReference Include="..\SOURCE\ParentForm.pas">
 				<Form>ParentForm</Form>

@@ -749,7 +749,7 @@ end;
 procedure TMainCashForm2.actCashWorkExecute(Sender: TObject);
 begin
   inherited;
-  with TCashWorkForm.Create(Cash, RemainsCDS) do begin
+  with TCashWorkForm.Create(Cash, RemainsCDS, FormParams.ParamByName('ZReportName').Value) do begin
     ShowModal;
     Free;
   end;
@@ -2871,6 +2871,7 @@ begin
   ChangeStatus('Установка первоначальных параметров');
   // CashSessionId только в службе
   FormParams.ParamByName('CashSessionId').Value := iniLocalGUIDGet;
+  FormParams.ParamByName('ZReportName').Value := iniLocalUnitNameGet;
   actSaveCashSesionIdToFile.Execute;  // только 2 форма
   FormParams.ParamByName('ClosedCheckId').Value := 0;
   FormParams.ParamByName('CheckId').Value := 0;

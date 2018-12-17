@@ -14,6 +14,7 @@ BEGIN
                     WHEN 1 THEN '8:00'
                     WHEN 2 THEN '9:00'
                     WHEN 3 THEN '10:00'
+                    WHEN 9 THEN 'В'
                     ELSE NULL END);
 
 END;
@@ -29,4 +30,4 @@ ALTER FUNCTION lpDecodeValueDay (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- select * from lpDecodeValueDay(inId := 2, inValue := '0100000000000000000000000000000');
+-- select * from lpDecodeValueDay(inId := 2, inValue := '0900000000000000000000000000000');

@@ -84,7 +84,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
             HeaderAlignmentVert = vaCenter
             Width = 156
           end
-          object NDSKindName: TcxGridDBColumn
+          object NDS: TcxGridDBColumn
             Caption = #1053#1076#1089
             DataBinding.FieldName = 'NDS'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -476,6 +476,343 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
         end>
       isShowModal = False
     end
+    object actPrintCommercialOffer: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecSelectPrint
+        end
+        item
+          Action = actPrintXLS
+        end>
+      Caption = 'actPrintXLSCommercialOffer'
+      ImageIndex = 3
+    end
+    object actExecSelectPrint: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = 'actExecSelectPrint'
+    end
+    object actPrintXLS: TdsdExportToXLS
+      Category = 'DSDLib'
+      MoveParams = <>
+      ItemsDataSet = PrintItemsCDS
+      TitleDataSet = PrintHeaderCDS
+      FileName = 'CommercialOffer'
+      TitleHeight = 3.000000000000000000
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -16
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = [fsBold]
+      HeaderFont.Charset = DEFAULT_CHARSET
+      HeaderFont.Color = clWindowText
+      HeaderFont.Height = -11
+      HeaderFont.Name = 'Tahoma'
+      HeaderFont.Style = [fsBold]
+      ColumnParams = <
+        item
+          Caption = #1053#1044#1057
+          FieldName = 'NDS'
+          DataType = ftInteger
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 5
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1050#1086#1076
+          FieldName = 'GoodsCode'
+          DataType = ftInteger
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 7
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+          FieldName = 'GoodsName'
+          DataType = ftUnknown
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 44
+          WrapText = True
+          CalcColumnLists = <>
+          Kind = skText
+          KindText = #1048#1090#1086#1075#1086':'
+        end
+        item
+          Caption = #1050#1086#1083'-'#1074#1086
+          FieldName = 'Amount'
+          DataType = ftFloat
+          DecimalPlace = 3
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 9
+          CalcColumnLists = <>
+          Kind = skSumma
+        end
+        item
+          Caption = #1062#1077#1085#1072
+          FieldName = 'Price'
+          DataType = ftFloat
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 9
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1057#1091#1084#1084#1072
+          DataType = ftFloat
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 9
+          CalcColumn = ccMultiplication
+          CalcColumnLists = <
+            item
+              FieldName = 'Amount'
+            end
+            item
+              FieldName = 'Price'
+            end>
+          Kind = skSumma
+        end>
+      Caption = 'actPrintXLS'
+    end
+    object actPrintXLSScope: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecSelectPrintScore
+        end
+        item
+          Action = actPrintScopeXLS
+        end>
+      Caption = 'actPrintXLSScope'
+      ImageIndex = 3
+    end
+    object actExecSelectPrintScore: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectPrintScore
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintScore
+        end>
+      Caption = 'actExecSelectPrintScore'
+    end
+    object actPrintScopeXLS: TdsdExportToXLS
+      Category = 'DSDLib'
+      MoveParams = <>
+      ItemsDataSet = PrintItemsCDS
+      FileName = 'Scope'
+      TitleHeight = 1.000000000000000000
+      Orientation = orLandscape
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      HeaderFont.Charset = DEFAULT_CHARSET
+      HeaderFont.Color = clWindowText
+      HeaderFont.Height = -11
+      HeaderFont.Name = 'Tahoma'
+      HeaderFont.Style = [fsBold]
+      ColumnParams = <
+        item
+          Caption = #1050#1086#1076
+          FieldName = 'GoodsCode'
+          DataType = ftInteger
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 6
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+          FieldName = 'GoodsName'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 31
+          WrapText = True
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1054#1076
+          FieldName = 'ExchangeName'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 4
+          WrapText = True
+          CalcColumnLists = <>
+          Kind = skText
+          KindText = #1048#1090#1086#1075#1086':'
+        end
+        item
+          Caption = #1050#1086#1083'-'#1074#1086
+          FieldName = 'Amount'
+          DataType = ftFloat
+          DecimalPlace = 3
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 8
+          CalcColumnLists = <>
+          Kind = skSumma
+        end
+        item
+          Caption = #1062#1077#1085#1072
+          FieldName = 'Price'
+          DataType = ftFloat
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 8
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1057#1091#1084#1084#1072
+          DataType = ftFloat
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 8
+          CalcColumn = ccMultiplication
+          CalcColumnLists = <
+            item
+              FieldName = 'Amount'
+            end
+            item
+              FieldName = 'Price'
+            end>
+          Kind = skSumma
+        end
+        item
+          Caption = #1050#1086#1076' '#1059#1050#1058#1047#1069#1044
+          FieldName = 'CodeUKTZED'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          WrapText = True
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1053#1044#1057
+          FieldName = 'NDS'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 4
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1082#1086#1084#1087#1072#1085#1080#1080
+          FieldName = 'ClientsByBankName'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 12
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1054#1050#1055#1054
+          FieldName = 'OKPO'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 9
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1048#1053#1053
+          FieldName = 'INN'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 9
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1040#1076#1088#1077#1089' '#1082#1086#1084#1087#1072#1085#1080#1080
+          FieldName = 'Address'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 12
+          CalcColumnLists = <>
+        end>
+      Caption = 'actPrintScopeXLS'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -592,6 +929,9 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           ItemName = 'dxBarStatic'
         end>
     end
+    inherited bbPrint: TdxBarButton
+      Action = actPrintCommercialOffer
+    end
     object bbPrintCheck: TdxBarButton
       Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
       Category = 0
@@ -606,7 +946,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
       ImageIndex = 74
     end
     object dxBarButton1: TdxBarButton
-      Action = actPrintScore
+      Action = actPrintXLSScope
       Category = 0
     end
     object dxBarButton2: TdxBarButton

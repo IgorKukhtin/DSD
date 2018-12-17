@@ -107,9 +107,12 @@ BEGIN
                                       inPrice   := vbPriceNew,
                                       inDate    := CURRENT_DATE::TDateTime,
                                       inUserId  := vbUserId);
-
+                                      
     -- сохранили <Признак лог отсечения>
   PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_ClippedReprice(), inMovementItemID, False);
+
+    -- Пересчитали суммы
+  PERFORM lpInsertUpdate_MovementFloat_TotalSummReprice(vbMovementID);                                      
 
 --  RAISE EXCEPTION 'Ошибка. %', inMovementItemID;
 

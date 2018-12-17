@@ -35,7 +35,8 @@ type
      procedure SetTime;
      procedure Anulirovt;
      function InfoZReport : string;
-     function FileNameZReport : string;
+     function JuridicalName : string;
+     function ZReport : Integer;
      property AlwaysSold: boolean read GetAlwaysSold write SetAlwaysSold;
    end;
 implementation

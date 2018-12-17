@@ -80,6 +80,17 @@ inherited ListDiffForm: TListDiffForm
         Options.Editing = False
         Width = 86
       end
+      object colDiffKindId: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1086#1090#1082#1072#1079#1072
+        DataBinding.FieldName = 'DiffKindId'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taLeftJustify
+        OnGetDisplayText = colDiffKindIdGetDisplayText
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 126
+      end
       object colComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
@@ -310,5 +321,14 @@ inherited ListDiffForm: TListDiffForm
     PackSize = 1
     Left = 64
     Top = 144
+  end
+  object DiffKindCDS: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <>
+    IndexDefs = <>
+    Params = <>
+    StoreDefs = True
+    Left = 360
+    Top = 200
   end
 end

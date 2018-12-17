@@ -72,9 +72,6 @@ BEGIN
           , COALESCE(MovementFloat_TotalCount.ValueData,0)::TFloat     AS TotalCount
           , Object_Unit.ValueData                                      AS UnitName
           , Object_ClientsByBank.ValueData                             AS ClientsByBankName
-/*          , Object_ClientsByBank.ValueData || ', Œ œŒ ' ||
-            COALESCE(ObjectString_OKPO.ValueData, '') || ', »ÕÕ ' ||                                
-            COALESCE(ObjectString_INN.ValueData, '')                   AS ClientsByBankName */
           , DATE_TRUNC ('DAY', CURRENT_TIMESTAMP)                      AS Date
           , ObjectString_OKPO.ValueData                                AS OKPO
           , ObjectString_INN.ValueData                                 AS INN
@@ -130,7 +127,7 @@ BEGIN
           , MI_UnnamedEnterprises.Amount              AS Amount
           , MIFloat_Price.ValueData                   AS Price
           , MIFloat_Summ.ValueData                    AS Summ
-          , SUBSTRING(Object_NDSKind.ValueData, 1, strpos(Object_NDSKind.ValueData, '%') - 1) AS NDSKindName
+          , Object_NDSKind.ValueData                  AS NDSKindName
           , ObjectFloat_NDSKind_NDS.ValueData         AS NDS
           , ObjectString_Goods_CodeUKTZED.ValueData   AS CodeUKTZED
           , Object_Exchange.ValueData                 AS ExchangeName

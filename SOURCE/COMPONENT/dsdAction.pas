@@ -808,7 +808,8 @@ uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
   cxExportPivotGridLink, cxCustomPivotGrid, StrUtils, Variants,
   frxDBSet, Printers,
   cxGridAddOn, cxTextEdit, cxGridDBDataDefinitions, ExternalSave,
-  dxmdaset, dxCore, cxCustomData, cxGridLevel, cxImage, UnilWin, dsdAddOn;
+  dxmdaset, dxCore, cxCustomData, cxGridLevel, cxImage, UnilWin, dsdAddOn,
+  dsdExportToXLSAction;
 
 procedure Register;
 begin
@@ -843,6 +844,7 @@ begin
   RegisterActions('DSDLib', [TdsdPartnerMapAction], TdsdPartnerMapAction);
   RegisterActions('DSDLibExport', [TdsdStoredProcExportToFile], TdsdStoredProcExportToFile);
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
+  RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
 
 end;
 

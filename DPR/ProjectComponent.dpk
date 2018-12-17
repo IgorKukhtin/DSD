@@ -77,6 +77,7 @@ contains
   CommonData in '..\SOURCE\CommonData.pas',
   Authentication in '..\SOURCE\Authentication.pas',
   dsdAction in '..\SOURCE\COMPONENT\dsdAction.pas',
+  dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
   UtilConvert in '..\SOURCE\UtilConvert.pas',
   ParentForm in '..\SOURCE\ParentForm.pas' {ParentForm},
   dsdGuides in '..\SOURCE\COMPONENT\dsdGuides.pas',

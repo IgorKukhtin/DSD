@@ -23,7 +23,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  dsdExportToXLSAction;
 
 type
   TUnnamedEnterprisesForm = class(TAncestorDocumentForm)
@@ -55,7 +56,7 @@ type
     AmountOrder: TcxGridDBColumn;
     CodeUKTZED: TcxGridDBColumn;
     ExchangeName: TcxGridDBColumn;
-    NDSKindName: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
     GoodsNameUkr: TcxGridDBColumn;
     edAmountAccount: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
@@ -77,6 +78,12 @@ type
     actExecspCreateSale: TdsdExecStoredProc;
     dxBarButton3: TdxBarButton;
     actExchangeChoice: TOpenChoiceForm;
+    actPrintXLS: TdsdExportToXLS;
+    actPrintCommercialOffer: TMultiAction;
+    actExecSelectPrintScore: TdsdExecStoredProc;
+    actExecSelectPrint: TdsdExecStoredProc;
+    actPrintXLSScope: TMultiAction;
+    actPrintScopeXLS: TdsdExportToXLS;
   private
     { Private declarations }
   public
