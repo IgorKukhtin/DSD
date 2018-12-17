@@ -5,6 +5,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -45
   ExplicitWidth = 1202
   ExplicitHeight = 573
   PixelsPerInch = 96
@@ -2175,6 +2176,9 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           Action = actDialog_QualityDoc
         end
         item
+          Action = actPrint_Quality_ReportName
+        end
+        item
           Action = actPrint_QualityDoc
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
@@ -3250,6 +3254,17 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrint_Quality_ReportName: TdsdExecStoredProc
+      Category = 'Print_QualityDoc'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportNameQuality
+      StoredProcList = <
+        item
+          StoredProc = spGetReportNameQuality
+        end>
+      Caption = 'actPrint_Quality_ReportName'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -3852,6 +3867,13 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       end
       item
         Name = 'ReportNameTransport'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReportNameQuality'
         Value = Null
         DataType = ftString
         ParamType = ptInput
@@ -5129,5 +5151,30 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     PackSize = 1
     Left = 623
     Top = 248
+  end
+  object spGetReportNameQuality: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Quality_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_Quality_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameQuality'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 432
   end
 end

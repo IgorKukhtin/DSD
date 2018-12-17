@@ -629,6 +629,20 @@ AS
            , CAST (0 AS INTEGER)
            , CAST ('PrintObject_Sticker' AS TVarChar)
 
+      UNION
+      -- печать качественного Метро
+      SELECT
+             zc_Movement_Sale()
+           , CAST ('Quality' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_Quality32049199' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('32049199')        
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
 --   ORDER BY 1,2,4
 
@@ -641,6 +655,7 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.12.18         * PrintMovement_Quality32049199
  26.10.17         * add PrintObject_Sticker
  19.06.17         * add PrintMovement_Sale2902403938
  15.03.17         * add Tax0317, TaxCorrective0317

@@ -57,6 +57,9 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    spGetReportNameQuality: TdsdStoredProc;
+    actPrint_Quality_ReportName: TdsdExecStoredProc;
+    mactPrint_QualityDoc: TMultiAction;
   private
     { Private declarations }
   public

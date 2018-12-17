@@ -219,6 +219,8 @@ type
     bbPrintSaleOrderTax: TdxBarButton;
     bbPrint_PackWeight: TdxBarButton;
     actPrint_PackWeight: TdsdPrintAction;
+    spGetReportNameQuality: TdsdStoredProc;
+    actPrint_Quality_ReportName: TdsdExecStoredProc;
   private
     { Private declarations }
   public

@@ -4,9 +4,8 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
   ClientWidth = 975
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -40
   ExplicitWidth = 991
-  ExplicitHeight = 576
+  ExplicitHeight = 575
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -399,8 +398,19 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
     end
+    object actPrint_Quality_ReportName: TdsdExecStoredProc [20]
+      Category = 'Print_QualityDoc'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportNameQuality
+      StoredProcList = <
+        item
+          StoredProc = spGetReportNameQuality
+        end>
+      Caption = 'actPrint_Quality_ReportName'
+    end
     object actPrint: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print_QualityDoc'
       MoveParams = <
         item
           FromParam.Value = Null
@@ -443,9 +453,14 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
         end>
       ReportName = 'PrintMovement_Quality'
       ReportNameParam.Value = 'PrintMovement_Quality'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameQuality'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -493,6 +508,32 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object mactPrint_QualityDoc: TMultiAction
+      Category = 'Print_QualityDoc'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actPrint_Quality_ReportName
+        end
+        item
+          Action = actPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      ImageIndex = 16
     end
   end
   inherited MasterDS: TDataSource
@@ -618,7 +659,7 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
         end>
     end
     object bbPrint: TdxBarButton
-      Action = actPrint
+      Action = mactPrint_QualityDoc
       Category = 0
     end
   end
@@ -695,6 +736,13 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReportNameQuality'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -718,13 +766,13 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Quality_Print'
-    DataSet = PrintHeaderCDS
+    DataSet = PrintItemsCDS
     DataSets = <
       item
-        DataSet = PrintHeaderCDS
+        DataSet = PrintItemsCDS
       end
       item
-        DataSet = PrintItemsCDS
+        DataSet = PrintHeaderCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -798,5 +846,30 @@ inherited QualityDocJournalForm: TQualityDocJournalForm
     PackSize = 1
     Left = 824
     Top = 48
+  end
+  object spGetReportNameQuality: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Quality_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_Quality_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameQuality'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 792
+    Top = 344
   end
 end
