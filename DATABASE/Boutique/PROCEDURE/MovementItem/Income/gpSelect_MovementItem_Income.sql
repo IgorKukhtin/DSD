@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, PartionId Integer, GoodsId Integer, GoodsCode Integer
              , LineFabricaName TVarChar
              , LabelName TVarChar
              , GoodsSizeId Integer, GoodsSizeName TVarChar
-             , Amount TFloat
+             , Amount TFloat, Remains TFloat
              , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
              , TotalSumm TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat
              , PriceTax TFloat       -- % наценки
@@ -32,6 +32,7 @@ $BODY$
   DECLARE vbCurrencyId_Doc Integer;
   DECLARE vbCurrencyValue  TFloat;
   DECLARE vbParValue       TFloat;
+  DECLARE vbUnitId         Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_Income());
@@ -53,6 +54,14 @@ BEGIN
        AND MLO_CurrencyDocument.DescId     = zc_MovementLinkObject_CurrencyDocument()
     ;
 
+
+     -- Параметры документа - Подразделение
+     SELECT MovementLinkObject_To.ObjectId
+          INTO vbUnitId
+     FROM MovementLinkObject AS MovementLinkObject_To
+     WHERE MovementLinkObject_To.MovementId = inMovementId
+       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To();
+     
      -- Результат
      RETURN QUERY
        WITH tmpMI AS (SELECT MovementItem.Id
@@ -93,7 +102,21 @@ BEGIN
                      WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                        AND MovementItemProtocol.OperDate >= inStartDate AND MovementItemProtocol.OperDate < inEndDate + INTERVAL '1 DAY'
                     )
-
+     -- остатки
+   , tmpContainer AS (SELECT DISTINCT Container.*
+                      FROM tmpMI
+                           INNER JOIN Container ON Container.PartionId     = tmpMI.PartionId
+                                               AND Container.WhereObjectId = vbUnitId
+                                               AND Container.DescId        = zc_Container_Count()
+                                               -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
+                                               AND Container.ObjectId      = tmpMI.GoodsId
+                                               -- !!!обязательно условие, т.к. мог меняться GoodsSizeId и тогда в Container - несколько строк!!!
+                                               AND Container.Amount        <> 0
+                           LEFT JOIN ContainerLinkObject AS CLO_Client
+                                                         ON CLO_Client.ContainerId = Container.Id
+                                                        AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                      WHERE CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
+                     )
 
        -- Результат
        SELECT
@@ -114,6 +137,7 @@ BEGIN
            , Object_GoodsSize.ValueData          AS GoodsSizeName
 
            , tmpMI.Amount
+           , Container.Amount          :: TFloat AS Remains
            , tmpMI.OperPrice           :: TFloat AS OperPrice
            , tmpMI.CountForPrice       :: TFloat AS CountForPrice
            , tmpMI.OperPriceList       :: TFloat AS OperPriceList
@@ -144,6 +168,9 @@ BEGIN
 
        FROM tmpMI
             LEFT JOIN tmpProtocol ON tmpProtocol.MovementItemId = tmpMI.Id
+
+            LEFT JOIN tmpContainer AS Container ON Container.PartionId = tmpMI.PartionId
+                                               AND Container.ObjectId  = tmpMI.GoodsId
 
             LEFT JOIN Object_PartionGoods               ON Object_PartionGoods.MovementItemId = tmpMI.PartionId
 
