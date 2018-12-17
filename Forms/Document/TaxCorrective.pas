@@ -151,6 +151,8 @@ type
     spUpdateMI_NPP_Null: TdsdStoredProc;
     actUpdateMI_NPP_Null: TdsdExecStoredProc;
     bbUpdateMI_NPP_Null: TdxBarButton;
+    cxLabel18: TcxLabel;
+    edInvNumberRegistered: TcxTextEdit;
   private
     { Private declarations }
   public

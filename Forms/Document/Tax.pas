@@ -108,6 +108,8 @@ type
     spUpdate_INN: TdsdStoredProc;
     actUpdateINN: TdsdDataSetRefresh;
     bbUpdateINN: TdxBarButton;
+    cxLabel13: TcxLabel;
+    edInvNumberRegistered: TcxTextEdit;
   private
     { Private declarations }
   public

@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_TaxCorrective(
 )
 RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , Checked Boolean, Document Boolean
-             , isElectron Boolean, DateisElectron TDateTime, DateRegistered TDateTime
+             , isElectron Boolean, DateisElectron TDateTime, DateRegistered TDateTime, InvNumberRegistered TVarChar
              , isNPP_calc Boolean, DateisNPP_calc TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat
@@ -59,6 +59,7 @@ BEGIN
              , CAST (False as Boolean)              AS isElectron
              , inOperDate                           AS DateisElectron
              , inOperDate                           AS DateRegistered
+             , CAST ('' as TVarChar)                AS InvNumberRegistered
              , CAST (False as Boolean)              AS isNPP_calc
              , CURRENT_TIMESTAMP       :: TDateTime AS DateisNPP_calc
              , CAST (False as Boolean)              AS PriceWithVAT
@@ -135,6 +136,7 @@ BEGIN
            , COALESCE (MovementBoolean_Electron.ValueData, FALSE)           AS isElectron
            , COALESCE (MovementDate_DateRegistered.ValueData,Movement.OperDate) AS DateisElectron
            , COALESCE (MovementDate_DateRegistered.ValueData,Movement.OperDate) AS DateRegistered
+           , MovementString_InvNumberRegistered.ValueData                       AS InvNumberRegistered
 
            , COALESCE (MovementBoolean_NPP_calc.ValueData, FALSE) ::Boolean AS isNPP_calc
            , COALESCE (MovementDate_NPP_calc.ValueData, CURRENT_TIMESTAMP) :: TDateTime  AS DateisNPP_calc
@@ -229,6 +231,10 @@ BEGIN
                                     AND MovementString_FromINN.DescId = zc_MovementString_FromINN()
                                     AND MovementString_FromINN.ValueData  <> ''
 
+            LEFT JOIN MovementString AS MovementString_InvNumberRegistered
+                                     ON MovementString_InvNumberRegistered.MovementId = Movement.Id
+                                    AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
+
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -309,6 +315,7 @@ ALTER FUNCTION gpGet_Movement_TaxCorrective (Integer, Boolean, TDateTime, TVarCh
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 17.12.18         * InvNumberRegistered
  01.04.18         * 
  04.12.15         * add isPartner
  16.03.15         * add inMask

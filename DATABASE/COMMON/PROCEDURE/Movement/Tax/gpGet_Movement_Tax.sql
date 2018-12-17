@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Tax(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , Checked Boolean, Document Boolean, isElectron Boolean, DateRegistered TDateTime
+             , Checked Boolean, Document Boolean, isElectron Boolean, DateRegistered TDateTime, InvNumberRegistered TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat
@@ -59,6 +59,7 @@ BEGIN
              , CAST (False as Boolean)         		AS Document
              , CAST (False as Boolean)        		AS isElectron
              , inOperDate         	            	AS DateRegistered
+             , CAST ('' as TVarChar) 			AS InvNumberRegistered
              , CAST (False as Boolean)              AS PriceWithVAT
              , CAST (TaxPercent_View.Percent as TFloat) AS VATPercent
              , CAST (0 as TFloat)                   AS TotalCount
@@ -132,6 +133,7 @@ BEGIN
            , COALESCE (MovementBoolean_Document.ValueData, FALSE)       AS Document
            , COALESCE (MovementBoolean_Electron.ValueData, FALSE)       AS isElectron
            , COALESCE (MovementDate_DateRegistered.ValueData,CAST (DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) AS TDateTime)) AS DateRegistered
+           , MovementString_InvNumberRegistered.ValueData               AS InvNumberRegistered
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)   AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_TotalCount.ValueData         AS TotalCount
@@ -209,6 +211,10 @@ BEGIN
                                     AND MovementString_ToINN.DescId     = zc_MovementString_ToINN()
                                     AND MovementString_ToINN.ValueData  <> ''
 
+            LEFT JOIN MovementString AS MovementString_InvNumberRegistered
+                                     ON MovementString_InvNumberRegistered.MovementId = Movement.Id
+                                    AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
+
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId = Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -283,6 +289,7 @@ ALTER FUNCTION gpGet_Movement_Tax (Integer, Boolean, TDateTime, TVarChar) OWNER 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.12.18         * InvNumberRegistered
  02.03.18         * MovementString_ToINN
  01.12.16         * add ReestrKind
  10.05.16         * add StartDateTax
