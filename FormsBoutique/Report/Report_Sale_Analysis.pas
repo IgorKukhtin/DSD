@@ -106,6 +106,7 @@ type
     GuidesLineFabrica: TdsdGuides;
     edLineFabrica: TcxButtonEdit;
     LineFabricaName: TcxGridDBColumn;
+    cbBrand: TcxCheckBox;
   private
     { Private declarations }
   public

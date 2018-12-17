@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpReport_Sale_Analysis (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Sale_Analysis (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Sale_Analysis (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Sale_Analysis (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Sale_Analysis (
     IN inStartDate        TDateTime,  -- Дата начала
@@ -22,6 +23,7 @@ CREATE OR REPLACE FUNCTION gpReport_Sale_Analysis (
     IN inPresent2_Prof    TFloat   ,
     IN inIsPeriodAll      Boolean  , -- ограничение за Весь период (Да/Нет) (движение по Документам)
     IN inIsUnit           Boolean  , -- по выбранным подразделениям
+    IN inIsBrand          Boolean  , -- по выбранным т орговым маркам
     IN inIsAmount         Boolean  , -- распределять по гридам по % продаж кол-во
     IN inIsSumm           Boolean  , -- распределять по гридам по % продаж сумма
     IN inIsProf           Boolean  , -- распределять по гридам по % прибыли
@@ -165,6 +167,28 @@ BEGIN
                                                          AND tmpCurrency_next.Ord            = tmpCurrency_all.Ord + 1
                           )
 
+           -- Список торговых марок
+         , tmpBrand AS (SELECT ObjectLink_Object.ChildObjectId AS BrandId
+                       FROM Object
+                            INNER JOIN ObjectLink AS ObjectLink_User
+                                                  ON ObjectLink_User.ObjectId      = Object.Id
+                                                 AND ObjectLink_User.DescId        = zc_ObjectLink_ReportOLAP_User()
+                                                 AND ObjectLink_User.ChildObjectId = vbUserId
+                            INNER JOIN ObjectLink AS ObjectLink_Object
+                                                  ON ObjectLink_Object.ObjectId    = Object.Id
+                                                 AND ObjectLink_Object.DescId      = zc_ObjectLink_ReportOLAP_Object()
+                       WHERE Object.DescId     = zc_Object_ReportOLAP()
+                         AND Object.ObjectCode = zc_ReportOLAP_Brand()
+                         AND Object.isErased   = FALSE
+                         AND inIsBrand = TRUE
+                      UNION
+                       SELECT Object.Id AS BrandId
+                       FROM Object
+                       WHERE inIsBrand = FALSE 
+                         AND (Object.Id = inBrandId OR inBrandId = 0)
+                         AND Object.DescId = zc_Object_Brand()
+                      )
+
          , tmpUnit2 AS (SELECT Object.Id AS UnitId
                         FROM Object
                         WHERE Object.DescId = zc_Object_Unit()
@@ -191,9 +215,10 @@ BEGIN
            -- Партии - приходы на tmpUnit
          , tmpObject_PartionGoods AS (SELECT Object_PartionGoods.*
                                       FROM Object_PartionGoods
-                                           INNER JOIN tmpUnit ON tmpUnit.UnitId = Object_PartionGoods.UnitId  
+                                           INNER JOIN tmpUnit ON tmpUnit.UnitId = Object_PartionGoods.UnitId
+                                           INNER JOIN tmpBrand ON tmpBrand.BrandId = Object_PartionGoods.BrandId
                                       WHERE (Object_PartionGoods.PartnerId  = inPartnerId        OR inPartnerId   = 0)
-                                        AND (Object_PartionGoods.BrandId    = inBrandId          OR inBrandId     = 0)
+                                        --AND (Object_PartionGoods.BrandId    = inBrandId          OR inBrandId     = 0)
                                         AND (Object_PartionGoods.PeriodId   = inPeriodId         OR inPeriodId    = 0)
                                         AND (Object_PartionGoods.LineFabricaId = inLineFabricaId OR inLineFabricaId =0)
                                         AND (Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear)
@@ -593,6 +618,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 17.12.18         *
  09.11.18         *
  26.07.18         *
 */

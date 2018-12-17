@@ -73,6 +73,7 @@ type
     edLineFabrica: TcxButtonEdit;
     cbLineFabrica: TcxCheckBox;
     GuidesLineFabrica: TdsdGuides;
+    cbBrand: TcxCheckBox;
   private
     { Private declarations }
   public

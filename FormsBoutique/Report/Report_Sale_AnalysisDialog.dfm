@@ -93,7 +93,7 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 197
+    Width = 110
   end
   object cxLabel2: TcxLabel
     Left = 299
@@ -356,6 +356,17 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
     TabOrder = 37
     Width = 107
   end
+  object cbBrand: TcxCheckBox
+    Left = 124
+    Top = 139
+    Hint = #1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1079#1072' '#1042#1077#1089#1100' '#1087#1077#1088#1080#1086#1076' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1085#1077#1089#1082#1086#1083#1100#1082#1086' '#1058#1052
+    ParentShowHint = False
+    Properties.ReadOnly = False
+    ShowHint = True
+    TabOrder = 38
+    Width = 93
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -611,6 +622,14 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsBrand'
+        Value = Null
+        Component = cbBrand
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 66
     Top = 189
@@ -674,8 +693,8 @@ object Report_Sale_AnalysisDialogForm: TReport_Sale_AnalysisDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 114
-    Top = 132
+    Left = 74
+    Top = 84
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
