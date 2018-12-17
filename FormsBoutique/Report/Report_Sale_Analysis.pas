@@ -107,6 +107,10 @@ type
     edLineFabrica: TcxButtonEdit;
     LineFabricaName: TcxGridDBColumn;
     cbBrand: TcxCheckBox;
+    actGridToExcel_Summ: TdsdGridToExcel;
+    actGridToExcel_Prof: TdsdGridToExcel;
+    bbGridToExcel2: TdxBarButton;
+    bbGridToExcel3: TdxBarButton;
   private
     { Private declarations }
   public

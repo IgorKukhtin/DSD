@@ -86,6 +86,10 @@ BEGIN
                            , Sale_Summ_10204       TFloat
                            , Sale_Summ_10200       TFloat
                            , Sale_Summ_10200_curr  TFloat
+                           , Sale_Summ_10201_curr  TFloat
+                           , Sale_Summ_10202_curr  TFloat
+                           , Sale_Summ_10203_curr  TFloat
+                           , Sale_Summ_10204_curr  TFloat
                            , Tax_Amount            TFloat
                            , Tax_Summ_curr         TFloat
                            , Tax_Summ_prof         TFloat
@@ -93,6 +97,7 @@ BEGIN
                            , Tax_Summ_10100        TFloat
                            , Tax_Summ_10203        TFloat
                            , Tax_Summ_10201        TFloat
+                           , Tax_Summ_10202        TFloat
                          ) ON COMMIT DROP;
                            
         INSERT INTO _tmpData (BrandName
@@ -124,6 +129,11 @@ BEGIN
                             , Sale_Summ_10204
                             , Sale_Summ_10200
                             , Sale_Summ_10200_curr
+                            , Sale_Summ_10201_curr
+                            , Sale_Summ_10202_curr
+                            , Sale_Summ_10203_curr
+                            , Sale_Summ_10204_curr
+             
                             , Tax_Amount
                             , Tax_Summ_curr
                             , Tax_Summ_prof
@@ -131,6 +141,7 @@ BEGIN
                             , Tax_Summ_10100
                             , Tax_Summ_10203
                             , Tax_Summ_10201 
+                            , Tax_Summ_10202
                               )
       WITH 
            tmpCurrency_all AS (SELECT Movement.Id                    AS MovementId
@@ -361,6 +372,41 @@ BEGIN
                                             ELSE 0
                                        END) :: TFloat AS Sale_Summ_10200_curr
 
+                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10201() AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
+                                                 THEN 1 * MIContainer.Amount
+                                                    / CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN COALESCE (tmpCurrency.Amount, 0) = 0 THEN 1 ELSE COALESCE (tmpCurrency.Amount, 0) END
+                                                    * CASE WHEN tmpCurrency.ParValue > 0 THEN tmpCurrency.ParValue  ELSE 1 END
+                                                    -- !!!обнулили если нет КУРСА!!!
+                                                    * CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN COALESCE (tmpCurrency.Amount, 0) = 0 THEN 0 ELSE 1 END
+                                            ELSE 0
+                                       END) :: TFloat AS Sale_Summ_10201_curr
+
+                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10202() AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
+                                                 THEN 1 * MIContainer.Amount
+                                                    / CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN COALESCE (tmpCurrency.Amount, 0) = 0 THEN 1 ELSE COALESCE (tmpCurrency.Amount, 0) END
+                                                    * CASE WHEN tmpCurrency.ParValue > 0 THEN tmpCurrency.ParValue  ELSE 1 END
+                                                    -- !!!обнулили если нет КУРСА!!!
+                                                    * CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN COALESCE (tmpCurrency.Amount, 0) = 0 THEN 0 ELSE 1 END
+                                            ELSE 0
+                                       END) :: TFloat AS Sale_Summ_10202_curr
+
+                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10203() AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
+                                                 THEN 1 * MIContainer.Amount
+                                                    / CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN COALESCE (tmpCurrency.Amount, 0) = 0 THEN 1 ELSE COALESCE (tmpCurrency.Amount, 0) END
+                                                    * CASE WHEN tmpCurrency.ParValue > 0 THEN tmpCurrency.ParValue  ELSE 1 END
+                                                    -- !!!обнулили если нет КУРСА!!!
+                                                    * CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN COALESCE (tmpCurrency.Amount, 0) = 0 THEN 0 ELSE 1 END
+                                            ELSE 0
+                                       END) :: TFloat AS Sale_Summ_10203_curr
+
+                                , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10204() AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount())
+                                                 THEN 1 * MIContainer.Amount
+                                                    / CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN COALESCE (tmpCurrency.Amount, 0) = 0 THEN 1 ELSE COALESCE (tmpCurrency.Amount, 0) END
+                                                    * CASE WHEN tmpCurrency.ParValue > 0 THEN tmpCurrency.ParValue  ELSE 1 END
+                                                    -- !!!обнулили если нет КУРСА!!!
+                                                    * CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN COALESCE (tmpCurrency.Amount, 0) = 0 THEN 0 ELSE 1 END
+                                            ELSE 0
+                                       END) :: TFloat AS Sale_Summ_10204_curr
                                   --  № п/п
                                 /*, ROW_NUMBER() OVER (PARTITION BY Object_PartionGoods.MovementItemId
                                                      ORDER BY CASE WHEN Object_PartionGoods.UnitId = COALESCE (MIContainer.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) THEN 0 ELSE 1 END ASC
@@ -457,6 +503,11 @@ BEGIN
                           , SUM (tmpData_all.Sale_Summ_10200)       AS Sale_Summ_10200
                           , SUM (tmpData_all.Sale_Summ_10200_curr)  AS Sale_Summ_10200_curr
 
+                          , SUM (tmpData_all.Sale_Summ_10201_curr)  AS Sale_Summ_10201_curr
+                          , SUM (tmpData_all.Sale_Summ_10202_curr)  AS Sale_Summ_10202_curr
+                          , SUM (tmpData_all.Sale_Summ_10203_curr)  AS Sale_Summ_10203_curr
+                          , SUM (tmpData_all.Sale_Summ_10204_curr)  AS Sale_Summ_10204_curr
+
                      FROM tmpData_all
 
                      GROUP BY tmpData_all.BrandId
@@ -514,6 +565,11 @@ BEGIN
              , tmpData.Sale_Summ_10200      :: TFloat
              , tmpData.Sale_Summ_10200_curr :: TFloat
 
+             , tmpData.Sale_Summ_10201_curr :: TFloat
+             , tmpData.Sale_Summ_10202_curr :: TFloat
+             , tmpData.Sale_Summ_10203_curr :: TFloat
+             , tmpData.Sale_Summ_10204_curr :: TFloat
+
                -- % кол-во продали    / кол-во приход
              , CASE WHEN tmpData.Sale_Amount > 0 AND tmpIncome.Income_Amount > 0
                          THEN tmpData.Sale_Amount / tmpIncome.Income_Amount * 100
@@ -550,12 +606,17 @@ BEGIN
                     ELSE 0
                END :: TFloat AS Tax_Summ_10203
                
-                -- % сумма скидки итого    / сумма скидки сезон + outlet
-             , CASE WHEN COALESCE (tmpData.Sale_Summ_10201,0) + COALESCE (tmpData.Sale_Summ_10202, 0) > 0 AND tmpData.Sale_Summ_10200 > 0
-                         THEN (COALESCE (tmpData.Sale_Summ_10201,0) + COALESCE (tmpData.Sale_Summ_10202, 0)) * 100/ tmpData.Sale_Summ_10200  -- 100
+                -- % сумма скидки итого    / сумма скидки сезон 
+             , CASE WHEN COALESCE (tmpData.Sale_Summ_10201,0) > 0 AND tmpData.Sale_Summ_10200 > 0
+                         THEN COALESCE (tmpData.Sale_Summ_10201,0) * 100/ tmpData.Sale_Summ_10200  -- 100
                     ELSE 0
                END :: TFloat AS Tax_Summ_10201
-               
+
+                -- % сумма скидки итого    / сумма скидки  outlet
+             , CASE WHEN COALESCE (tmpData.Sale_Summ_10202, 0) > 0 AND tmpData.Sale_Summ_10200 > 0
+                         THEN COALESCE (tmpData.Sale_Summ_10202, 0) * 100/ tmpData.Sale_Summ_10200  -- 100
+                    ELSE 0
+               END :: TFloat AS Tax_Summ_10202        
               
         FROM tmpData
             LEFT JOIN Object AS Object_Partner          ON Object_Partner.Id          = tmpData.PartnerId
@@ -617,7 +678,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  17.12.18         *
  09.11.18         *
  26.07.18         *
