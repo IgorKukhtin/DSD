@@ -2,11 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_GoodsPropertyValue_AmountDoc(Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_GoodsPropertyValue_AmountDoc(Integer, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_GoodsPropertyValue_AmountDoc(Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_GoodsPropertyValue_AmountDoc(
     IN inId                  Integer   ,    -- ключ объекта <Значения свойств товаров для классификатора>
     IN inAmountDoc           TFloat    ,    -- Количество вложение
     IN inCodeSticker         TVarChar  ,    -- Код PLU
+    IN inQuality2            TVarChar  ,    -- Строк придатності (КУ)
+    IN inQuality10           TVarChar  ,    -- Умови зберігання (КУ)
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS VOID
@@ -26,9 +29,13 @@ $BODY$
    -- сохранили свойство
    PERFORM lpInsertUpdate_ObjectFloat(zc_objectFloat_GoodsPropertyValue_AmountDoc(), inId, inAmountDoc);
  
-    -- сохранили свойство
+   -- сохранили свойство
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsPropertyValue_CodeSticker(), inId, inCodeSticker);
-   
+   -- сохранили свойство
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsPropertyValue_Quality2(), inId, inQuality2);
+   -- сохранили свойство
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsPropertyValue_Quality10(), inId, inQuality10);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
 
@@ -39,7 +46,8 @@ $BODY$
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.12.18         *
  25.07.18         *
  27.06.17         *
 */

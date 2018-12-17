@@ -195,6 +195,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsPropertyValue_CodeSticker() RETU
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_GoodsPropertyValue_CodeSticker', zc_Object_GoodsPropertyValue(), 'zc_ObjectString_GoodsPropertyValue_CodeSticker' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsPropertyValue_CodeSticker');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsPropertyValue_Quality2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsPropertyValue_Quality2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_GoodsPropertyValue_Quality2', zc_Object_GoodsPropertyValue(), 'Строк придатності (КУ)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsPropertyValue_Quality2');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsPropertyValue_Quality10() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsPropertyValue_Quality10'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_GoodsPropertyValue_Quality10', zc_Object_GoodsPropertyValue(), 'Умови зберігання (КУ)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsPropertyValue_Quality10');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectString_Juridical_GLNCode() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Juridical_GLNCode'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
@@ -887,6 +895,8 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 17.12.18         * zc_ObjectString_GoodsPropertyValue_Quality2
+                    zc_ObjectString_GoodsPropertyValue_Quality10
  29.11.18         * zc_ObjectString_DocumentTaxKind_Code
  28.09.18                                                                                                         * zc_ObjectString_Goods_NameUkr, zc_ObjectString_Goods_CodeUKTZED, zc_ObjectString_ClientsByBank_
  05.07.18         * zc_ObjectString_MemberPersonalServiceList_Comment

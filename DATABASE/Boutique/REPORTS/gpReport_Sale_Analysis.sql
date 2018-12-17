@@ -685,4 +685,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Sale_Analysis (inStartDate:= '01.01.2018', inEndDate:= '31.01.2018', inUnitId:= 1539, inPartnerId:= 0, inBrandId:= 0, inPeriodId:= 1554, inLineFabricaId:= 0, inStartYear:= 2017, inEndYear:= 2017, inPresent1:= 50, inPresent2:= 20, inPresent1_Summ:= 120, inPresent2_Summ:= 100, inPresent1_Prof:= 100, inPresent2_Prof:= 50, inIsPeriodAll:= TRUE, inIsUnit:= FALSE, inIsAmount:= TRUE, inIsSumm:= FALSE, inIsProf:= FALSE, inIsLineFabrica:= FALSE, inSession:= zfCalc_UserAdmin());
+-- select * from gpReport_Sale_Analysis(inStartDate := ('01.01.2018')::TDateTime , inEndDate := ('31.01.2018')::TDateTime , inUnitId := 1530 , inPartnerId := 0 , inBrandId := 0 , inPeriodId := 1554 , inLineFabricaId := 0 , inStartYear := 2001 , inEndYear := 2008 , inPresent1 := 80 , inPresent2 := 50 , inPresent1_Summ := 125 , inPresent2_Summ := 80 , inPresent1_Prof := 80 , inPresent2_Prof := 50 , inIsPeriodAll := 'True' , inIsUnit := 'False' , inIsBrand := 'False' , inIsAmount := 'True' , inIsSumm := 'False' , inIsProf := 'False' , inIsLineFabrica := 'False' ,  inSession := '8');

@@ -84,6 +84,8 @@ type
     BarCodeShort: TcxGridDBColumn;
     BoxCount: TcxGridDBColumn;
     CodeSticker: TcxGridDBColumn;
+    Quality2: TcxGridDBColumn;
+    Quality10: TcxGridDBColumn;
   private
     { Private declarations }
   public

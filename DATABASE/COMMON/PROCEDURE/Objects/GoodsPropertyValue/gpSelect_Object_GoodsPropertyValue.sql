@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsBoxId Integer, GoodsBoxCode Integer, GoodsBoxName TVarChar
+             , Quality2 TVarChar, Quality10 TVarChar
              , isOrder Boolean
              , isErased Boolean)
 AS
@@ -73,6 +74,9 @@ BEGIN
        , Object_GoodsBox.ObjectCode           AS GoodsBoxCode
        , Object_GoodsBox.ValueData            AS GoodsBoxName
 
+       , ObjectString_Quality2.ValueData      AS Quality2
+       , ObjectString_Quality10.ValueData     AS Quality10
+
        , COALESCE (tmpGoodsByGoodsKind.isOrder, FALSE) :: Boolean AS isOrder
        , Object_GoodsPropertyValue.isErased   AS isErased
 
@@ -120,6 +124,13 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_CodeSticker
                                ON ObjectString_CodeSticker.ObjectId = Object_GoodsPropertyValue.Id
                               AND ObjectString_CodeSticker.DescId = zc_ObjectString_GoodsPropertyValue_CodeSticker()
+
+        LEFT JOIN ObjectString AS ObjectString_Quality2
+                               ON ObjectString_Quality2.ObjectId = Object_GoodsPropertyValue.Id
+                              AND ObjectString_Quality2.DescId = zc_ObjectString_GoodsPropertyValue_Quality2()
+        LEFT JOIN ObjectString AS ObjectString_Quality10
+                               ON ObjectString_Quality10.ObjectId = Object_GoodsPropertyValue.Id
+                              AND ObjectString_Quality10.DescId = zc_ObjectString_GoodsPropertyValue_Quality10()
 
         LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                              ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = Object_GoodsPropertyValue.Id
@@ -239,6 +250,9 @@ BEGIN
        , tmpObjectLink.GoodsBoxCode
        , tmpObjectLink.GoodsBoxName
 
+       , tmpObjectLink.Quality2
+       , tmpObjectLink.Quality10
+
        , COALESCE (tmpGoodsByGoodsKind.isOrder, FALSE) :: Boolean AS isOrder
        ,tmpObjectLink.isErased
 
@@ -268,6 +282,9 @@ BEGIN
                         , Object_GoodsBox.Id                   AS GoodsBoxId
                         , Object_GoodsBox.ObjectCode           AS GoodsBoxCode
                         , Object_GoodsBox.ValueData            AS GoodsBoxName
+
+                        , ObjectString_Quality2.ValueData      AS Quality2
+                        , ObjectString_Quality10.ValueData     AS Quality10
                    FROM ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
                       LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                            ON ObjectLink_GoodsPropertyValue_Goods.ObjectId =  ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -323,6 +340,13 @@ BEGIN
                                             ON ObjectString_CodeSticker.ObjectId = Object_GoodsPropertyValue.Id
                                            AND ObjectString_CodeSticker.DescId = zc_ObjectString_GoodsPropertyValue_CodeSticker()
 
+                     LEFT JOIN ObjectString AS ObjectString_Quality2
+                                            ON ObjectString_Quality2.ObjectId = Object_GoodsPropertyValue.Id
+                                           AND ObjectString_Quality2.DescId = zc_ObjectString_GoodsPropertyValue_Quality2()
+                     LEFT JOIN ObjectString AS ObjectString_Quality10
+                                            ON ObjectString_Quality10.ObjectId = Object_GoodsPropertyValue.Id
+                                           AND ObjectString_Quality10.DescId = zc_ObjectString_GoodsPropertyValue_Quality10()
+
                    WHERE ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
                       AND (ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = inGoodsPropertyId)  
                    ) AS tmpObjectLink ON tmpObjectLink.GoodsId = tmpGoods.GoodsId 
@@ -341,6 +365,7 @@ END;$BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 17.12.18         * add Quality10, Quality2
  25.07.18         * add CodeSticker
  14.02.18         * add GoodsBox
  22.06.17         * add AmountDoc
