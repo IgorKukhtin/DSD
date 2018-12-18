@@ -213,7 +213,7 @@ end if;
              , SUM (tmpContainer.StartSumm)  AS StartSumm
              , SUM (tmpContainer.IncomeCount) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                                                              THEN tmpContainer.SendOnPriceCountIn_Cost
-                                                          ELSE 0 -- tmpContainer.SendOnPriceCountIn
+                                                          ELSE CASE WHEN inBranchId > 0 THEN 0 ELSE tmpContainer.SendOnPriceCountIn END
                                                      END)
                                               + SUM (CASE WHEN tmpContainer.isHistoryCost_ReturnIn = TRUE
                                                              THEN tmpContainer.ReturnInCount
@@ -221,7 +221,7 @@ end if;
                                                      END) AS IncomeCount
              , SUM (tmpContainer.IncomeSumm) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                                                               THEN tmpContainer.SendOnPriceSummIn_Cost
-                                                         ELSE 0 -- tmpContainer.SendOnPriceSummIn
+                                                         ELSE CASE WHEN inBranchId > 0 THEN 0 ELSE tmpContainer.SendOnPriceSummIn END
                                                     END)
                                               + SUM (CASE WHEN tmpContainer.isHistoryCost_ReturnIn = TRUE
                                                              THEN tmpContainer.ReturnInSumm
@@ -229,20 +229,20 @@ end if;
                                                      END) AS IncomeSumm
              , SUM (tmpContainer.calcCount) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                                                              THEN 0
-                                                          ELSE tmpContainer.SendOnPriceCountIn
+                                                          ELSE CASE WHEN inBranchId > 0 THEN tmpContainer.SendOnPriceCountIn ELSE 0 END
                                                      END) AS calcCount
              , SUM (tmpContainer.calcSumm) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                                                               THEN 0
-                                                         ELSE tmpContainer.SendOnPriceSummIn
+                                                         ELSE CASE WHEN inBranchId > 0 THEN tmpContainer.SendOnPriceSummIn ELSE 0 END
                                                     END) AS calcSumm
 
              , SUM (tmpContainer.calcCount_external) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                                                              THEN 0
-                                                          ELSE tmpContainer.SendOnPriceCountIn
+                                                          ELSE CASE WHEN inBranchId > 0 THEN tmpContainer.SendOnPriceCountIn ELSE 0 END
                                                      END) AS calcCount_external
              , SUM (tmpContainer.calcSumm_external) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                                                               THEN 0
-                                                         ELSE tmpContainer.SendOnPriceSummIn
+                                                         ELSE CASE WHEN inBranchId > 0 THEN tmpContainer.SendOnPriceSummIn ELSE 0 END
                                                     END) AS calcSumm_external
 
              , SUM (tmpContainer.OutCount) + SUM (CASE WHEN ContainerLinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_80401() OR ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
@@ -1401,4 +1401,4 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 
 -- тест
 -- SELECT * FROM  ObjectProtocol WHERE ObjectId = zfCalc_UserAdmin() :: Integer ORDER BY ID DESC LIMIT 100
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.12.2018', inEndDate:= '31.12.2018', inBranchId:= 0, inItearationCount:= 00, inInsert:= -1, inDiffSumm:= 1, inSession:= '2')  ORDER BY ABS (Price) DESC -- WHERE ContainerId = 141708 -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.12.2018', inEndDate:= '31.12.2018', inBranchId:= 0, inItearationCount:= 800, inInsert:= -1, inDiffSumm:= 1, inSession:= '2')  ORDER BY ABS (Price) DESC -- WHERE ContainerId = 2162036 -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext

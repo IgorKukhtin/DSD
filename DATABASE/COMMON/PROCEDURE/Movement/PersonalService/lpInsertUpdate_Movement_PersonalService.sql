@@ -64,12 +64,24 @@ BEGIN
      ELSE*/
          -- определяем ключ доступа
          -- vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalService());
-         vbAccessKeyId:= lpGetAccessKey ((SELECT ObjectLink_User_Member.ObjectId
+         vbAccessKeyId:= lpGetAccessKey ((SELECT tmp.ObjectId
+                                          FROM
+                                         (SELECT ObjectLink_User_Member.ObjectId
                                           FROM ObjectLink
                                                INNER JOIN ObjectLink AS ObjectLink_User_Member ON ObjectLink_User_Member.ChildObjectId = ObjectLink.ChildObjectId
                                                                                               AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-                                          WHERE ObjectLink.DescId = zc_ObjectLink_PersonalServiceList_Member()
+                                          WHERE ObjectLink.DescId   = zc_ObjectLink_PersonalServiceList_Member()
                                             AND ObjectLink.ObjectId = inPersonalServiceListId
+                                         /*UNION
+                                          SELECT ObjectLink_User_Member.ObjectId
+                                          FROM ObjectLink AS ObjectLink_User_Member
+                                               INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
+                                                                     ON ObjectLink_PersonalServiceList_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                                                    AND ObjectLink_PersonalServiceList_Member.DescId        = zc_ObjectLink_PersonalServiceList_Member()
+                                                                    AND ObjectLink_PersonalServiceList_Member.ObjectId      = inPersonalServiceListId
+                                          WHERE ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()*/
+
+                                         ) AS tmp
                                           LIMIT 1
                                          )
                                        , zc_Enum_Process_InsertUpdate_Movement_PersonalService()

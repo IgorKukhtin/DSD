@@ -32,8 +32,8 @@ where tmp.ObjectId = Object.Id and ValueData <> ValueData_new;
 /*
 -- 1.1. заменили цены
 update Object_PartionGoods set OperPrice = case when PeriodYear <= 2000 then cast (OperPrice * 1.2345 as numeric (16, 2))
-                                                when PeriodYear <= 2010 then cast (OperPrice * ((PeriodYear - 2000)/100 + 1.2) as numeric (16, 2))
-                                                else cast (OperPrice * ((PeriodYear - 2000)/100 + 1.0) as numeric (16, 2))
+                                                when PeriodYear <= 2010 then cast (OperPrice * ((PeriodYear - 2000)/100.0 + 1.2) as numeric (16, 2))
+                                                else cast (OperPrice * ((PeriodYear - 2000)/100.0 + 1.0) as numeric (16, 2))
                                            end;
 -- 1.2. заменили цены - в приходе
 update MovementItemFloat set ValueData = OperPrice

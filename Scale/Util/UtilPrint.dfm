@@ -351,6 +351,13 @@ object UtilPrintForm: TUtilPrintForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ReportNameQuality'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'OperDate'
         Value = 'NULL'
         DataType = ftDateTime
@@ -403,6 +410,9 @@ object UtilPrintForm: TUtilPrintForm
       ActionList = <
         item
           Action = actDialog_QualityDoc
+        end
+        item
+          Action = actPrint_Quality_ReportName
         end
         item
           Action = actPrint_QualityDoc
@@ -1258,7 +1268,6 @@ object UtilPrintForm: TUtilPrintForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
       Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -1280,6 +1289,8 @@ object UtilPrintForm: TUtilPrintForm
         end>
       ReportName = 'PrintMovement_Quality'
       ReportNameParam.Value = 'PrintMovement_Quality'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameQuality'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1931,6 +1942,17 @@ object UtilPrintForm: TUtilPrintForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_Quality_ReportName: TdsdExecStoredProc
+      Category = 'Print_QualityDoc'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportNameQuality
+      StoredProcList = <
+        item
+          StoredProc = spGetReportNameQuality
+        end>
+      Caption = 'actPrint_Quality_ReportName'
     end
   end
   object spSelectPrint_ReturnIn: TdsdStoredProc
@@ -2609,5 +2631,30 @@ object UtilPrintForm: TUtilPrintForm
     PackSize = 1
     Left = 527
     Top = 424
+  end
+  object spGetReportNameQuality: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Quality_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_Quality_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameQuality'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 288
+    Top = 184
   end
 end

@@ -90,7 +90,8 @@ uses
   DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm},
   dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas',
   Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
-  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas';
+  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas',
+  dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas';
 
 {$R *.res}
 

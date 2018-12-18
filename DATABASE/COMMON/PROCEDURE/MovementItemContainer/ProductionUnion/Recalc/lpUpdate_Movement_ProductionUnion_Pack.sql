@@ -415,8 +415,8 @@ BEGIN
                                                     AND ObjectFloat_Value_master.DescId = zc_ObjectFloat_Receipt_Value()
                                                     AND ObjectFloat_Value_master.ValueData <> 0
                               INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
-                                                   ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = tmpResult_master.ReceiptId_in
-                                                  AND ObjectLink_ReceiptChild_Receipt.DescId        = zc_ObjectLink_ReceiptChild_Receipt()
+                                                    ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = tmpResult_master.ReceiptId_in
+                                                   AND ObjectLink_ReceiptChild_Receipt.DescId        = zc_ObjectLink_ReceiptChild_Receipt()
                               INNER JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id       = ObjectLink_ReceiptChild_Receipt.ObjectId
                                                                       AND Object_ReceiptChild.isErased = FALSE
                               LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
@@ -437,12 +437,27 @@ BEGIN
                          AND tmpResult_master.ReceiptId_child = 0
                       )
           , tmpAll AS (-- данные zc_MI_Master, если будут делатьс€ из найденных "главных" товаров
-                       SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId, tmpResult_master.GoodsId_child            , 0 AS Koeff FROM tmpResult_master WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0 AND GoodsId_child > 0
+                       SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId, tmpResult_master.GoodsId_child            , 0 AS Koeff, 0 AS ContainerId FROM tmpResult_master WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0 AND GoodsId_child > 0
                       UNION
-                       SELECT DISTINCT tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId,  tmpReceipt_find.GoodsId_child,              0 AS Koeff FROM tmpReceipt_find WHERE tmpReceipt_find.Ord = 1 AND tmpReceipt_find.GoodsId_child > 0
+                       SELECT DISTINCT tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId,  tmpReceipt_find.GoodsId_child,              0 AS Koeff, 0 AS ContainerId FROM tmpReceipt_find WHERE tmpReceipt_find.Ord = 1 AND tmpReceipt_find.GoodsId_child > 0
                       UNION
                        -- данные zc_MI_Master, еще могут делатьс€ из самих себ€
-                       SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId, tmpResult_master.GoodsId AS GoodsId_child, 0 AS Koeff  FROM tmpResult_master WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
+                       SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId, tmpResult_master.GoodsId AS GoodsId_child, 0 AS Koeff
+                              -- если до 5% - тогда !!!“ќЋ№ ќ!!! сам в себ€
+                            , CASE WHEN tmpResult_master.OperCount + tmpResult_master.OperCount_two = 0
+                                       THEN 0
+                                   WHEN ((100 * tmp.OperCount / (tmpResult_master.OperCount + tmpResult_master.OperCount_two)) <  4
+                                     AND (100 * tmp.OperCount / (tmpResult_master.OperCount + tmpResult_master.OperCount_two)) > -4
+                                         )
+                                    -- or tmpResult_master.GoodsId = 7837
+                                       THEN tmpResult_master.ContainerId
+                                   ELSE 0
+                              END AS ContainerId
+                       FROM tmpResult_master
+                            LEFT JOIN (SELECT tmpResult_child.OperDate, tmpResult_child.ContainerId, SUM (tmpResult_child.OperCount) AS OperCount FROM tmpResult_child GROUP BY tmpResult_child.OperDate, tmpResult_child.ContainerId
+                                      ) AS tmp ON tmp.OperDate    = tmpResult_master.OperDate
+                                              AND tmp.ContainerId = tmpResult_master.ContainerId
+                       WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
                       UNION
                        -- данные zc_MI_Master, когда будут делатьс€ из товаров если ParentMulti
                        SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId, ObjectLink_ReceiptChild_Goods.ChildObjectId AS GoodsId_child
@@ -452,6 +467,7 @@ BEGIN
                                    ELSE 0
                               END
                               AS Koeff
+                            , 0 AS ContainerId
                        FROM tmpResult_master
                               INNER JOIN ObjectFloat AS ObjectFloat_Value_master
                                                      ON ObjectFloat_Value_master.ObjectId = (-1 * tmpResult_master.ReceiptId_in) :: Integer
@@ -496,7 +512,7 @@ BEGIN
                        WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
                       )
           , tmpAll_total AS (-- итог по будущим zc_MI_Master, если бы товаром был "из чего будет делатьс€"
-                             SELECT tmpResult_master.OperDate, tmpAll.GoodsId_child
+                             SELECT tmpResult_master.OperDate, tmpAll.GoodsId_child, tmpAll.ContainerId
                                   , SUM (CASE WHEN tmpResult_master.OperCount_Weight <> 0
                                                    THEN tmpResult_master.OperCount_Weight
                                               ELSE tmpResult_master.OperCount_Weight_two
@@ -508,7 +524,7 @@ BEGIN
                                         ) AS OperCount_Weight
                              FROM tmpAll
                                   INNER JOIN tmpResult_master ON tmpResult_master.GoodsId = tmpAll.GoodsId AND tmpResult_master.OperDate = tmpAll.OperDate
-                             GROUP BY tmpResult_master.OperDate, tmpAll.GoodsId_child
+                             GROUP BY tmpResult_master.OperDate, tmpAll.GoodsId_child, tmpAll.ContainerId
                             )
                               
           , tmpResult_new AS (-- результат - распределение + нашли им существующие MovementItemId
@@ -534,11 +550,19 @@ BEGIN
                               FROM tmpResult_child
                                    INNER JOIN tmpAll_total     ON tmpAll_total.GoodsId_child     = tmpResult_child.GoodsId
                                                               AND tmpAll_total.OperDate          = tmpResult_child.OperDate
+                                                              AND (tmpAll_total.ContainerId      = tmpResult_child.ContainerId
+                                                                OR tmpAll_total.ContainerId      = 0)
+
                                    INNER JOIN tmpAll           ON tmpAll.GoodsId_child           = tmpAll_total.GoodsId_child
                                                               AND tmpAll.OperDate                = tmpAll_total.OperDate
+                                                              AND tmpAll.ContainerId             = tmpAll_total.ContainerId
+
                                    INNER JOIN tmpResult_master ON tmpResult_master.GoodsId       = tmpAll.GoodsId
                                                               AND tmpResult_master.OperDate      = tmpAll.OperDate
                                                               -- AND tmpResult_master.OperCount     <> 0 
+                                                              AND (tmpResult_master.ContainerId  = tmpAll.ContainerId
+                                                                OR tmpAll.ContainerId      = 0)
+
                                    LEFT JOIN tmpResult_MI_find ON tmpResult_MI_find.ParentId    = tmpResult_master.MovementItemId
                                                               AND tmpResult_MI_find.ContainerId = tmpResult_child.ContainerId
                              UNION ALL

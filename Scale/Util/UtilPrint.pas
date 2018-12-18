@@ -102,6 +102,8 @@ type
     actPrint_PackGross: TdsdPrintAction;
     spSelectPrintSticker: TdsdStoredProc;
     actPrintStickerTermo: TdsdPrintAction;
+    spGetReportNameQuality: TdsdStoredProc;
+    actPrint_Quality_ReportName: TdsdExecStoredProc;
   private
   end;
 

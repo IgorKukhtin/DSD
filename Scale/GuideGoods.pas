@@ -486,6 +486,10 @@ begin
      //
      if fEnterGoodsName
      then
+
+       //if (AnsiUpperCase(EditGoodsName.Text) = AnsiUpperCase(DataSet.FieldByName('GoodsName').AsString))
+       // and (fGoodsName_equal)
+
        if  (pos(AnsiUpperCase(EditGoodsName.Text),AnsiUpperCase(DataSet.FieldByName('GoodsName').AsString))>0)
         and((GoodsKindCode=0)or(GoodsKindCode=DataSet.FieldByName('GoodsKindCode').AsInteger))
        then Accept:=true else Accept:=false // if DataSet.FieldByName('isTare').AsBoolean = FALSE then Accept:=true else Accept:=false
@@ -1196,7 +1200,11 @@ begin
           end
      else if ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
           then begin
-                EditGoodsName.Text:=CDS.FieldByName('GoodsName').AsString;
+                spSelect.Params.ParamByName('inGoodsCode').Value:= 0;
+                spSelect.Params.ParamByName('inGoodsName').Value:= CDS.FieldByName('GoodsName').AsString;
+                actRefreshExecute(Self);
+
+                EditGoodsName.Text:=spSelect.Params.ParamByName('inGoodsName').Value;
                 fEnterGoodsCode:= false;
                 fEnterGoodsName:= true;
                 EditGoodsNameChange(EditGoodsName) // EditGoodsNameExit(EditGoodsName);

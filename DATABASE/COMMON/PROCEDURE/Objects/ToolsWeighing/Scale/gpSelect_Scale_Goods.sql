@@ -228,6 +228,32 @@ BEGIN
                               AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
                               -- AND inSession <> '5'
                            )
+                , tmpGoods_byName AS (-- По Названию - Склад Специй
+                                      SELECT Object.Id            AS GoodsId
+                                           , zc_GoodsKind_Basis() AS GoodsKindId
+                                           , 0                    AS Price
+                                           , CASE WHEN UPPER (Object.ValueData) = UPPER (inGoodsName) THEN TRUE ELSE FALSE END AS isEqual
+                                      FROM Object
+                                           INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object.Id
+                                                                AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                                           INNER JOIN Object_InfoMoney_View AS View_InfoMoney
+                                                                            ON View_InfoMoney.InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                                           AND (View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
+                                                                                                                        , zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты
+                                                                                                                        , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
+                                                                                                                        , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                                                                                                        , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                                                                                         )
+                                                                             OR View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
+                                                                                                             , zc_Enum_InfoMoney_10106() -- Сыр
+                                                                                                              )
+                                                                               )
+                                      WHERE inBranchCode BETWEEN 301 AND 310
+                                        AND TRIM (inGoodsName)  <> ''
+                                        AND Object.DescId = zc_Object_Goods() AND Object.isErased = FALSE
+                                        AND UPPER (Object.ValueData) LIKE UPPER ('%' || TRIM (inGoodsName) || '%')
+                                     )
                 , tmpMI AS (SELECT tmpMI.GoodsId
                                  , tmpMI.GoodsKindId
                                  , tmpMI.Amount AS Amount_Order
@@ -252,29 +278,20 @@ BEGIN
                                   WHERE vbGoodsId <> 0
                                  UNION ALL
                                   -- По Названию - Склад Специй
-                                  SELECT Object.Id            AS GoodsId
-                                       , zc_GoodsKind_Basis() AS GoodsKindId
-                                       , 0                    AS Price
-                                  FROM Object
-                                       INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                                             ON ObjectLink_Goods_InfoMoney.ObjectId = Object.Id
-                                                            AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
-                                       INNER JOIN Object_InfoMoney_View AS View_InfoMoney
-                                                                        ON View_InfoMoney.InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
-                                                                       AND (View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
-                                                                                                                    , zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты
-                                                                                                                    , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
-                                                                                                                    , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                                                                                                                    , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
-                                                                                                                     )
-                                                                         OR View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
-                                                                                                         , zc_Enum_InfoMoney_10106() -- Сыр
-                                                                                                          )
-                                                                           )
-                                  WHERE inBranchCode BETWEEN 301 AND 310
-                                    AND TRIM (inGoodsName)  <> ''
-                                    AND Object.DescId = zc_Object_Goods() AND Object.isErased = FALSE
-                                    AND UPPER (Object.ValueData) LIKE UPPER ('%' || TRIM (inGoodsName) || '%')
+                                  SELECT tmpGoods_byName.GoodsId
+                                       , tmpGoods_byName.GoodsKindId
+                                       , tmpGoods_byName.Price
+                                  FROM tmpGoods_byName
+                                  WHERE EXISTS (SELECT 1 FROM tmpGoods_byName WHERE tmpGoods_byName.isEqual = TRUE)
+                                    AND tmpGoods_byName.isEqual = TRUE
+                                 UNION ALL
+                                  -- По Названию - Склад Специй
+                                  SELECT tmpGoods_byName.GoodsId
+                                       , tmpGoods_byName.GoodsKindId
+                                       , tmpGoods_byName.Price
+                                  FROM tmpGoods_byName
+                                  WHERE NOT EXISTS (SELECT 1 FROM tmpGoods_byName WHERE tmpGoods_byName.isEqual = TRUE)
+
                                  UNION ALL
                                   -- По zc_ObjectBoolean_..._ScaleCeh() + zc_ObjectBoolean_..._Order
                                   SELECT DISTINCT
@@ -435,105 +452,12 @@ BEGIN
     CREATE TEMP TABLE _tmpWord_Split_to (Ord Integer, Word TVarChar, WordList TVarChar) ON COMMIT DROP;
     -- 
     INSERT INTO _tmpWord_Goods (GoodsId, GoodsKindId_max, WordList) 
-                            SELECT DISTINCT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
-                                 , COALESCE (ObjectLink_GoodsListSale_GoodsKind.ChildObjectId, zc_Enum_GoodsKind_Main()) AS GoodsKindId_max
-                                 , COALESCE (ObjectString_GoodsKind.ValueData, zc_Enum_GoodsKind_Main() :: TVarChar)       AS WordList
-                            FROM Object AS Object_GoodsListSale
-                                 INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
-                                                       ON ObjectLink_GoodsListSale_Partner.ObjectId      = Object_GoodsListSale.Id
-                                                      AND ObjectLink_GoodsListSale_Partner.DescId        = zc_ObjectLink_GoodsListSale_Partner()
-                                                      -- !!!ограничение по контрагенту!!!
-                                                      AND ObjectLink_GoodsListSale_Partner.ChildObjectId = CASE WHEN inMovementId < 0 THEN -1 * inMovementId END :: Integer
-                                 INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_Contract
-                                                       ON ObjectLink_GoodsListSale_Contract.ObjectId      = Object_GoodsListSale.Id
-                                                      AND ObjectLink_GoodsListSale_Contract.DescId        = zc_ObjectLink_GoodsListSale_Contract()
-                                                      -- !!!ограничение по договору!!!
-                                                      AND ObjectLink_GoodsListSale_Contract.ChildObjectId = CASE WHEN inOrderExternalId < 0 THEN -1 * inOrderExternalId ELSE ObjectLink_GoodsListSale_Contract.ChildObjectId END :: Integer
-                                 LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
-                                                      ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
-                                                     AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
-                                 LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_GoodsKind
-                                                      ON ObjectLink_GoodsListSale_GoodsKind.ObjectId = Object_GoodsListSale.Id
-                                                     AND ObjectLink_GoodsListSale_GoodsKind.DescId = zc_ObjectLink_GoodsListSale_GoodsKind()
-                                 LEFT JOIN ObjectString AS ObjectString_GoodsKind
-                                                        ON ObjectString_GoodsKind.ObjectId = Object_GoodsListSale.Id
-                                                       AND ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind()
-                                                       AND ObjectString_GoodsKind.ValueData <> '0'
-                            WHERE Object_GoodsListSale.DescId   = zc_Object_GoodsListSale()
-                              AND Object_GoodsListSale.isErased = FALSE
-                           UNION ALL
-                            -- Поставщики - Склад Специй
-                            SELECT DISTINCT ObjectLink_GoodsListIncome_Goods.ChildObjectId AS GoodsId
-                                 , 0   AS GoodsKindId_max
-                                 , ''  AS WordList
-                            FROM Object AS Object_GoodsListIncome
-                                 INNER JOIN ObjectLink AS ObjectLink_GoodsListIncome_Partner
-                                                       ON ObjectLink_GoodsListIncome_Partner.ObjectId      = Object_GoodsListIncome.Id
-                                                      AND ObjectLink_GoodsListIncome_Partner.DescId        = zc_ObjectLink_GoodsListIncome_Partner()
-                                                      -- !!!ограничение по контрагенту!!!
-                                                      AND ObjectLink_GoodsListIncome_Partner.ChildObjectId = CASE WHEN inMovementId < 0 THEN -1 * inMovementId END :: Integer
-                                 INNER JOIN ObjectLink AS ObjectLink_GoodsListIncome_Contract
-                                                       ON ObjectLink_GoodsListIncome_Contract.ObjectId      = Object_GoodsListIncome.Id
-                                                      AND ObjectLink_GoodsListIncome_Contract.DescId        = zc_ObjectLink_GoodsListIncome_Contract()
-                                                      -- !!!ограничение по договору!!!
-                                                      -- AND ObjectLink_GoodsListIncome_Contract.ChildObjectId = CASE WHEN inOrderExternalId < 0 THEN -1 * inOrderExternalId ELSE ObjectLink_GoodsListIncome_Contract.ChildObjectId END :: Integer
-                                 LEFT JOIN ObjectLink AS ObjectLink_GoodsListIncome_Goods
-                                                      ON ObjectLink_GoodsListIncome_Goods.ObjectId = Object_GoodsListIncome.Id
-                                                     AND ObjectLink_GoodsListIncome_Goods.DescId   = zc_ObjectLink_GoodsListIncome_Goods()
-                            WHERE Object_GoodsListIncome.DescId   = zc_Object_GoodsListIncome()
-                              AND Object_GoodsListIncome.isErased = FALSE
-                              AND inBranchCode                    BETWEEN 301 AND 310
-                           UNION ALL
-                            -- Перемещение - Склад Специй
-                            SELECT DISTINCT MovementItem.ObjectId AS GoodsId
-                                 , 0   AS GoodsKindId_max
-                                 , ''  AS WordList
-                            FROM Movement
-                                 INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                               ON MovementLinkObject_From.MovementId = Movement.Id
-                                                              AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
-                                                              AND MovementLinkObject_From.ObjectId   IN (8447, 8448, 8449) -- ЦЕХ колбасный + ЦЕХ деликатесов + ЦЕХ с/к
-                                 INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                               ON MovementLinkObject_To.MovementId = Movement.Id
-                                                              AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                                                              AND MovementLinkObject_To.ObjectId   = MovementLinkObject_From.ObjectId
-                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                        AND MovementItem.DescId     = zc_MI_Master()
-                                                        AND MovementItem.Amount     <> 0
-                                                        AND MovementItem.isErased   = FALSE
-                                 INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                                       ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
-                                                      AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
-                                 INNER JOIN Object_InfoMoney_View AS View_InfoMoney
-                                                                  ON View_InfoMoney.InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
-                                                                 AND (View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
-                                                                                                              , zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты
-                                                                                                              , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
-                                                                                                              , zc_Enum_InfoMoneyDestination_20300() -- МНМА
-                                                                                                              , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                                                                                                              , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
-                                                                                                               )
-                                                                   OR View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
-                                                                                                   , zc_Enum_InfoMoney_10106() -- Сыр
-                                                                                                    )
-                                                                     )
-                            WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '3 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
-                              AND Movement.DescId = zc_Movement_OrderInternal()
-                              AND Movement.StatusId = zc_Enum_Status_Complete()
-                              AND inBranchCode                  BETWEEN 301 AND 310
-                              AND inMovementId                  = 0
-                           UNION ALL
-                            -- По коду - Склад Специй
-                            SELECT vbGoodsId AS GoodsId
-                                 , 0   AS GoodsKindId_max
-                                 , ''  AS WordList
-                            WHERE inBranchCode BETWEEN 301 AND 310
-                              AND vbGoodsId    <> 0
-                           UNION ALL
+       WITH tmpGoods_byName AS
                             -- По Названию - Склад Специй
-                            SELECT Object.Id AS GoodsId
+                           (SELECT Object.Id AS GoodsId
                                  , 0   AS GoodsKindId_max
                                  , ''  AS WordList
+                                 , CASE WHEN UPPER (Object.ValueData) = UPPER (inGoodsName) THEN TRUE ELSE FALSE END AS isEqual
                             FROM Object
                                  INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                        ON ObjectLink_Goods_InfoMoney.ObjectId = Object.Id
@@ -555,8 +479,119 @@ BEGIN
                               AND TRIM (inGoodsName)  <> ''
                               AND Object.DescId = zc_Object_Goods() AND Object.isErased = FALSE
                               AND UPPER (Object.ValueData) LIKE UPPER ('%' || TRIM (inGoodsName) || '%')
-                            ;
-    -- 
+                           )
+        -- Результат
+        SELECT DISTINCT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
+             , COALESCE (ObjectLink_GoodsListSale_GoodsKind.ChildObjectId, zc_Enum_GoodsKind_Main()) AS GoodsKindId_max
+             , COALESCE (ObjectString_GoodsKind.ValueData, zc_Enum_GoodsKind_Main() :: TVarChar)       AS WordList
+        FROM Object AS Object_GoodsListSale
+             INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
+                                   ON ObjectLink_GoodsListSale_Partner.ObjectId      = Object_GoodsListSale.Id
+                                  AND ObjectLink_GoodsListSale_Partner.DescId        = zc_ObjectLink_GoodsListSale_Partner()
+                                  -- !!!ограничение по контрагенту!!!
+                                  AND ObjectLink_GoodsListSale_Partner.ChildObjectId = CASE WHEN inMovementId < 0 THEN -1 * inMovementId END :: Integer
+             INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_Contract
+                                   ON ObjectLink_GoodsListSale_Contract.ObjectId      = Object_GoodsListSale.Id
+                                  AND ObjectLink_GoodsListSale_Contract.DescId        = zc_ObjectLink_GoodsListSale_Contract()
+                                  -- !!!ограничение по договору!!!
+                                  AND ObjectLink_GoodsListSale_Contract.ChildObjectId = CASE WHEN inOrderExternalId < 0 THEN -1 * inOrderExternalId ELSE ObjectLink_GoodsListSale_Contract.ChildObjectId END :: Integer
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
+                                  ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
+                                 AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_GoodsKind
+                                  ON ObjectLink_GoodsListSale_GoodsKind.ObjectId = Object_GoodsListSale.Id
+                                 AND ObjectLink_GoodsListSale_GoodsKind.DescId = zc_ObjectLink_GoodsListSale_GoodsKind()
+             LEFT JOIN ObjectString AS ObjectString_GoodsKind
+                                    ON ObjectString_GoodsKind.ObjectId = Object_GoodsListSale.Id
+                                   AND ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind()
+                                   AND ObjectString_GoodsKind.ValueData <> '0'
+        WHERE Object_GoodsListSale.DescId   = zc_Object_GoodsListSale()
+          AND Object_GoodsListSale.isErased = FALSE
+       UNION ALL
+        -- Поставщики - Склад Специй
+        SELECT DISTINCT ObjectLink_GoodsListIncome_Goods.ChildObjectId AS GoodsId
+             , 0   AS GoodsKindId_max
+             , ''  AS WordList
+        FROM Object AS Object_GoodsListIncome
+             INNER JOIN ObjectLink AS ObjectLink_GoodsListIncome_Partner
+                                   ON ObjectLink_GoodsListIncome_Partner.ObjectId      = Object_GoodsListIncome.Id
+                                  AND ObjectLink_GoodsListIncome_Partner.DescId        = zc_ObjectLink_GoodsListIncome_Partner()
+                                  -- !!!ограничение по контрагенту!!!
+                                  AND ObjectLink_GoodsListIncome_Partner.ChildObjectId = CASE WHEN inMovementId < 0 THEN -1 * inMovementId END :: Integer
+             INNER JOIN ObjectLink AS ObjectLink_GoodsListIncome_Contract
+                                   ON ObjectLink_GoodsListIncome_Contract.ObjectId      = Object_GoodsListIncome.Id
+                                  AND ObjectLink_GoodsListIncome_Contract.DescId        = zc_ObjectLink_GoodsListIncome_Contract()
+                                  -- !!!ограничение по договору!!!
+                                  -- AND ObjectLink_GoodsListIncome_Contract.ChildObjectId = CASE WHEN inOrderExternalId < 0 THEN -1 * inOrderExternalId ELSE ObjectLink_GoodsListIncome_Contract.ChildObjectId END :: Integer
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsListIncome_Goods
+                                  ON ObjectLink_GoodsListIncome_Goods.ObjectId = Object_GoodsListIncome.Id
+                                 AND ObjectLink_GoodsListIncome_Goods.DescId   = zc_ObjectLink_GoodsListIncome_Goods()
+        WHERE Object_GoodsListIncome.DescId   = zc_Object_GoodsListIncome()
+          AND Object_GoodsListIncome.isErased = FALSE
+          AND inBranchCode                    BETWEEN 301 AND 310
+       UNION ALL
+        -- Перемещение - Склад Специй
+        SELECT DISTINCT MovementItem.ObjectId AS GoodsId
+             , 0   AS GoodsKindId_max
+             , ''  AS WordList
+        FROM Movement
+             INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                           ON MovementLinkObject_From.MovementId = Movement.Id
+                                          AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                          AND MovementLinkObject_From.ObjectId   IN (8447, 8448, 8449) -- ЦЕХ колбасный + ЦЕХ деликатесов + ЦЕХ с/к
+             INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                           ON MovementLinkObject_To.MovementId = Movement.Id
+                                          AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                          AND MovementLinkObject_To.ObjectId   = MovementLinkObject_From.ObjectId
+             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                    AND MovementItem.DescId     = zc_MI_Master()
+                                    AND MovementItem.Amount     <> 0
+                                    AND MovementItem.isErased   = FALSE
+             INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                   ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                  AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+             INNER JOIN Object_InfoMoney_View AS View_InfoMoney
+                                              ON View_InfoMoney.InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                             AND (View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
+                                                                                          , zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты
+                                                                                          , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
+                                                                                          , zc_Enum_InfoMoneyDestination_20300() -- МНМА
+                                                                                          , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                                                                          , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                                                           )
+                                               OR View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
+                                                                               , zc_Enum_InfoMoney_10106() -- Сыр
+                                                                                )
+                                                 )
+        WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '3 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
+          AND Movement.DescId = zc_Movement_OrderInternal()
+          AND Movement.StatusId = zc_Enum_Status_Complete()
+          AND inBranchCode                  BETWEEN 301 AND 310
+          AND inMovementId                  = 0
+       UNION ALL
+        -- По коду - Склад Специй
+        SELECT vbGoodsId AS GoodsId
+             , 0   AS GoodsKindId_max
+             , ''  AS WordList
+        WHERE inBranchCode BETWEEN 301 AND 310
+          AND vbGoodsId    <> 0
+       UNION ALL
+        -- По Названию - Склад Специй
+        SELECT tmpGoods_byName.GoodsId
+             , 0   AS GoodsKindId_max
+             , ''  AS WordList
+        FROM tmpGoods_byName
+        WHERE tmpGoods_byName.isEqual = TRUE
+       UNION ALL
+        -- По Названию - Склад Специй
+        SELECT tmpGoods_byName.GoodsId
+             , 0   AS GoodsKindId_max
+             , ''  AS WordList
+        FROM tmpGoods_byName
+        WHERE NOT EXISTS (SELECT 1 FROM tmpGoods_byName WHERE tmpGoods_byName.isEqual = TRUE)
+       ;
+
+    --
     INSERT INTO _tmpWord_Split_from (WordList) 
        SELECT DISTINCT _tmpWord_Goods.WordList FROM _tmpWord_Goods WHERE inOrderExternalId < 0 OR inBranchCode BETWEEN 301 AND 310;
 
