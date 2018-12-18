@@ -1938,6 +1938,8 @@ inherited Sale_TransportJournalForm: TSale_TransportJournalForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'ReportNameQuality'
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
@@ -4335,7 +4337,7 @@ inherited Sale_TransportJournalForm: TSale_TransportJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 920
+    Left = 896
     Top = 304
   end
   object ExportCDS: TClientDataSet
@@ -4774,7 +4776,7 @@ inherited Sale_TransportJournalForm: TSale_TransportJournalForm
       item
         Name = 'inMovementId'
         Value = Null
-        Component = FormParams
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
