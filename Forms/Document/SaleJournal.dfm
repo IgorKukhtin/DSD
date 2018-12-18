@@ -25,6 +25,8 @@ inherited SaleJournalForm: TSaleJournalForm
       inherited cxGrid: TcxGrid
         Width = 1237
         Height = 560
+        ExplicitLeft = 368
+        ExplicitTop = 3
         ExplicitWidth = 1237
         ExplicitHeight = 560
         inherited cxGridDBTableView: TcxGridDBTableView

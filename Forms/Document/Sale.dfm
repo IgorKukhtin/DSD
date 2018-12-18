@@ -2022,12 +2022,12 @@
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
+          IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
         end
         item
           DataSet = PrintHeaderCDS
           UserName = 'frxDBDMaster2'
-          IndexFieldNames = 'GroupName_Juridical;GoodsName_Juridical;GoodsName;GoodsKindName'
+          IndexFieldNames = 'QualityCode;GoodsGroupName;GoodsName;GoodsKindName'
         end>
       Params = <
         item
@@ -2039,6 +2039,8 @@
         end>
       ReportName = 'PrintMovement_Quality'
       ReportNameParam.Value = 'PrintMovement_Quality'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameQuality'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -2269,6 +2271,58 @@
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actPrint_Quality_ReportName: TdsdExecStoredProc
+      Category = 'Print_QualityDoc'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportNameQuality
+      StoredProcList = <
+        item
+          StoredProc = spGetReportNameQuality
+        end>
+      Caption = 'actPrint_Quality_ReportName'
+    end
+    object mactPrint_QualityDoc: TMultiAction
+      Category = 'Print_QualityDoc'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDialog_QualityDoc
+        end
+        item
+          Action = actPrint_Quality_ReportName
+        end
+        item
+          Action = actPrint_QualityDoc
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+      ImageIndex = 16
+    end
+    object actDialog_QualityDoc: TdsdOpenForm
+      Category = 'Print_QualityDoc'
+      MoveParams = <>
+      Caption = 'actDialog_QualityDoc'
+      Hint = 'actDialog_QualityDoc'
+      FormName = 'TQualityDocForm'
+      FormNameParam.Value = 'TQualityDocForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_Sale'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -2624,7 +2678,7 @@
       Category = 0
     end
     object bbPrint_Quality: TdxBarButton
-      Action = actPrint_QualityDoc
+      Action = mactPrint_QualityDoc
       Category = 0
     end
     object вв: TdxBarButton
@@ -2769,6 +2823,13 @@
       end
       item
         Name = 'ReportNameTransport'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReportNameQuality'
         Value = Null
         DataType = ftString
         ParamType = ptInput
@@ -5350,5 +5411,30 @@
     PackSize = 1
     Left = 671
     Top = 288
+  end
+  object spGetReportNameQuality: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Quality_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_Quality_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameQuality'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 936
+    Top = 496
   end
 end
