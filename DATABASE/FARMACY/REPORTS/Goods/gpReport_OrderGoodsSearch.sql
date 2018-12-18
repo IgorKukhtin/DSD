@@ -225,7 +225,8 @@ BEGIN
                                    AND MIFloat_PriceSample.DescId = zc_MIFloat_PriceSample()
 
 
-    WHERE Movement.DescId in (zc_Movement_OrderInternal(), zc_Movement_OrderExternal(), zc_Movement_Income(), zc_Movement_Send(), zc_Movement_Check())
+    WHERE Movement.DescId in (zc_Movement_OrderInternal(), zc_Movement_OrderExternal(), zc_Movement_Income(), zc_Movement_Send(), zc_Movement_Check()
+                            , zc_Movement_Sale(), zc_Movement_Loss(), zc_Movement_ReturnOut())
       AND Movement.OperDate >= inStartDate AND Movement.OperDate <inEndDate + INTERVAL '1 DAY'
       AND (Object_Unit.Id = vbUnitId OR vbUnitId = 0)
       AND (ObjectLink_Juridical_Retail.ChildObjectId = vbRetailId OR vbRetailId = 0)
@@ -240,6 +241,7 @@ ALTER FUNCTION gpReport_OrderGoodsSearch (Integer, TDateTime, TDateTime, TVarCha
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.  Âîðîáêàëî À.À.
+ 18.12.18         * add  zc_Movement_Sale(), zc_Movement_Loss(), zc_Movement_ReturnOut()
  07.01.18         *
  07.01.17         *
  05.09.16         *
