@@ -93,6 +93,14 @@ type
     macDelete_bySend: TMultiAction;
     actDelete_bySend: TdsdExecStoredProc;
     bbDelete_bySend: TdxBarButton;
+    StorageName_Partion: TcxGridDBColumn;
+    UnitName_Partion: TcxGridDBColumn;
+    Price_Partion: TcxGridDBColumn;
+    actPartionGoodsChoiceForm: TOpenChoiceForm;
+    spUpdate_PartionGoods: TdsdStoredProc;
+    actUpdate_PartionGoods: TdsdExecStoredProc;
+    macUpdate_PartionGoods: TMultiAction;
+    bbUpdate_PartionGoods: TdxBarButton;
   private
     { Private declarations }
   public
