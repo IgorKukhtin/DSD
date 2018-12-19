@@ -589,6 +589,48 @@ inherited CheckVIPForm: TCheckVIPForm
       Caption = 'actUpdateMovementItemAmount'
       DataSource = DataSource1
     end
+    object actCheckCash: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
+        end>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1095#1077#1082' '#1076#1083#1103' '#1088#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1103
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1095#1077#1082' '#1076#1083#1103' '#1088#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1103
+      FormName = 'TCheckCashForm'
+      FormNameParam.Value = 'TCheckCashForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -676,11 +718,15 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarButton4'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
     end
     inherited dxBarStatic: TdxBarStatic
@@ -710,6 +756,11 @@ inherited CheckVIPForm: TCheckVIPForm
       Category = 0
       ImageIndex = 58
     end
+    object dxBarButton4: TdxBarButton
+      Action = actCheckCash
+      Category = 0
+      ImageIndex = 1
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -732,7 +783,7 @@ inherited CheckVIPForm: TCheckVIPForm
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 344
+    Left = 312
     Top = 56
   end
   object DataSource1: TDataSource
