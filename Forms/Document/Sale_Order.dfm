@@ -1,26 +1,26 @@
 inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
-  ClientHeight = 445
+  ClientHeight = 456
   ClientWidth = 1291
   ExplicitWidth = 1307
-  ExplicitHeight = 483
+  ExplicitHeight = 494
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
     Width = 1291
-    Height = 279
+    Height = 290
     ExplicitTop = 166
     ExplicitWidth = 1291
     ExplicitHeight = 279
-    ClientRectBottom = 279
+    ClientRectBottom = 290
     ClientRectRight = 1291
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1291
       ExplicitHeight = 255
       inherited cxGrid: TcxGrid
         Width = 1291
-        Height = 255
+        Height = 266
         ExplicitWidth = 1291
         ExplicitHeight = 255
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1253,6 +1253,9 @@ inherited Sale_OrderForm: TSale_OrderForm
           Action = actDialog_QualityDoc
         end
         item
+          Action = actPrint_Quality_ReportName
+        end
+        item
           Action = actPrint_QualityDoc
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
@@ -1882,6 +1885,8 @@ inherited Sale_OrderForm: TSale_OrderForm
         end>
       ReportName = 'PrintMovement_Quality'
       ReportNameParam.Value = 'PrintMovement_Quality'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameQuality'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -2181,6 +2186,17 @@ inherited Sale_OrderForm: TSale_OrderForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_Quality_ReportName: TdsdExecStoredProc
+      Category = 'Print_QualityDoc'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportNameQuality
+      StoredProcList = <
+        item
+          StoredProc = spGetReportNameQuality
+        end>
+      Caption = 'actPrint_Quality_ReportName'
     end
   end
   inherited MasterDS: TDataSource
@@ -2662,6 +2678,13 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'ReportNameTransport'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReportNameQuality'
         Value = Null
         DataType = ftString
         ParamType = ptInput
@@ -5149,5 +5172,30 @@ inherited Sale_OrderForm: TSale_OrderForm
     PackSize = 1
     Left = 623
     Top = 264
+  end
+  object spGetReportNameQuality: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Quality_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_Quality_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameQuality'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 936
+    Top = 496
   end
 end

@@ -5,7 +5,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -36
   ExplicitWidth = 1193
   ExplicitHeight = 573
   PixelsPerInch = 96
@@ -2152,6 +2151,8 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'ReportNameQuality'
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
@@ -4801,7 +4802,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       item
         Name = 'inMovementId'
         Value = Null
-        Component = FormParams
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','

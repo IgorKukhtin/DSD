@@ -4,7 +4,6 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
   ClientWidth = 1089
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -71
   ExplicitWidth = 1105
   ExplicitHeight = 681
   PixelsPerInch = 96
@@ -469,6 +468,11 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
               Format = ',0.####'
               Kind = skSum
               Column = Sale_Summ_10202_curr
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = BrandName
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -1159,6 +1163,11 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
               Format = ',0.####'
               Kind = skSum
               Column = cxSale_Summ_10202_curr
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = cxBrandName
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1859,6 +1868,11 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
               Format = ',0.####'
               Kind = skSum
               Column = chSale_Summ_10204_curr
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = chBrandName
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList

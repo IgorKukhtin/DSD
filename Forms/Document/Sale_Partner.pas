@@ -189,6 +189,10 @@ type
     bbPrintPackGross: TdxBarButton;
     bbPrint_PackWeight: TdxBarButton;
     actPrint_PackWeight: TdsdPrintAction;
+    spGetReportNameQuality: TdsdStoredProc;
+    actPrint_Quality_ReportName: TdsdExecStoredProc;
+    actDialog_QualityDoc: TdsdOpenForm;
+    mactPrint_QualityDoc: TMultiAction;
   private
     { Private declarations }
   public
