@@ -90,6 +90,66 @@ BEGIN
                 , CAST (tmp.Summ / tmp.Amount AS NUMERIC (16, 2)) :: TFloat  AS Price   -- средняя цена на дату
            FROM tmpMIContainer AS tmp;
            
+
+      -- временно !!!отладка!!!
+      WITH tmpMovement AS (SELECT Movement.Id        AS MovementId
+                                , Movement.OperDate  AS OperDate
+                           FROM Movement 
+                                LEFT JOIN MovementBoolean AS MovementBoolean_Calculated
+                                                          ON MovementBoolean_Calculated.MovementId = Movement.Id
+                                                         AND MovementBoolean_Calculated.DescId     = zc_MovementBoolean_Calculated()
+                                                         AND MovementBoolean_Calculated.ValueData  = TRUE
+                           WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate 
+                             AND Movement.DescId   = zc_Movement_ProductionSeparate()
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                             AND MovementBoolean_Calculated.MovementId IS NULL
+                          )
+          -- определяем только элементы прихода
+         , tmpMI_Child AS (SELECT tmpMovement.MovementId
+                                , tmpMovement.OperDate   AS OperDate
+                                , MovementItem.Id        AS MI_Id
+                                , MovementItem.ObjectId  AS GoodsId
+                           FROM tmpMovement
+                                LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
+                                                      AND MovementItem.DescId     = zc_MI_Child()
+                                                      AND MovementItem.isErased   = FALSE
+                          )
+         , tmpMIContainer AS (SELECT tmpMI_Child.OperDate                            AS OperDate
+                                   , MIContainer.ObjectId_Analyzer                   AS GoodsId
+                                   , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END * CASE WHEN MIContainer.isActive = TRUE THEN 1 ELSE -1 END) AS Amount
+                                   , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN MIContainer.Amount ELSE 0 END * CASE WHEN MIContainer.isActive = TRUE THEN 1 ELSE -1 END) AS Summ
+                                   , tmpMI_Child.MovementId                          AS MovementId
+                              FROM tmpMI_Child
+                                   JOIN MovementItemContainer AS MIContainer
+                                                              ON MIContainer.MovementId        = tmpMI_Child.MovementId
+                                                             AND MIContainer.MovementItemId    = tmpMI_Child.MI_Id
+                                                             AND MIContainer.ObjectId_Analyzer = tmpMI_Child.GoodsId
+                              GROUP BY tmpMI_Child.OperDate
+                                     , MIContainer.ObjectId_Analyzer
+                                     , tmpMI_Child.MovementId
+                             )
+         -- временно !!!отладка!!!
+         INSERT INTO HistoryCost_test (InsertDate, OperDate, Itearation, CountDiff, ContainerId, UnitId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, calcCount_external, calcSumm_external, OutCount, OutSumm)
+            SELECT CURRENT_TIMESTAMP
+                 , tmp.OperDate
+                 , 0 AS Itearation
+                 , 0 AS CountDiff
+                 , tmp.GoodsId AS ContainerId
+                 , tmp.MovementId AS UnitId
+                 , FALSE AS isInfoMoney_80401
+                 , 0 AS StartCount
+                 , 0 AS StartSumm
+                 , tmp.Amount AS IncomeCount
+                 , tmp.Summ   AS IncomeSumm
+                 , 0 AS calcCount
+                 , 0 AS calcSumm
+                 , 0 AS calcCount_external
+                 , 0 AS calcSumm_external
+                 , 0 AS OutCount
+                 , 0 AS OutSumm
+            FROM tmpMIContainer AS tmp;
+            ;
+
          -- записываем значения 
          PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId          := 0
                                                            , inPriceListId := vbPriceListId

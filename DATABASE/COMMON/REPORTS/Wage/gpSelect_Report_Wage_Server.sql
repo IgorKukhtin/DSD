@@ -233,18 +233,22 @@ BEGIN
     -- Результат
     RETURN QUERY
         WITH tmpPersonal AS (SELECT *
-                                  , ROW_NUMBER(*) OVER (PARTITION BY Object_Personal.MemberId, COALESCE (Object_Personal.PositionId, 0), COALESCE (Object_Personal.PositionLevelId, 0), COALESCE (Object_Personal.UnitId, 0)) AS ORD
+                                  , ROW_NUMBER(*) OVER (PARTITION BY Object_Personal.MemberId
+                                                                   , COALESCE (Object_Personal.PositionId, 0)
+                                                                   , COALESCE (Object_Personal.PositionLevelId, 0)
+                                                                   , COALESCE (Object_Personal.UnitId, 0)
+                                                        ) AS Ord
                              FROM Object_Personal_View AS Object_Personal
                             )
-          , tmpPersonalServiceList AS (SELECT View_Personal.MemberId, MAX (ObjectLink_Personal_PersonalServiceList.ChildObjectId) AS PersonalServiceListId
-                                        FROM Object_Personal_View AS View_Personal
-                                             LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
-                                                                  ON ObjectLink_Personal_PersonalServiceList.ObjectId = View_Personal.PersonalId
-                                                                 AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
-                                                                 AND ObjectLink_Personal_PersonalServiceList.ChildObjectId <> 0
-                                        WHERE View_Personal.isErased = FALSE
-                                        GROUP BY View_Personal.MemberId
-                                       )
+        , tmpPersonalServiceList AS (SELECT lfSelect.MemberId
+                                          , lfSelect.PersonalId
+                                          , lfSelect.UnitId
+                                          , lfSelect.PositionId
+                                          , lfSelect.BranchId
+                                          , lfSelect.PersonalServiceListId
+                                          , lfSelect.Ord
+                                     FROM lfSelect_Object_Member_findPersonal(zfCalc_UserAdmin()) AS lfSelect
+                                    )
            , tmpRes AS (
             SELECT
                 Res.StaffListId
@@ -514,14 +518,21 @@ BEGIN
                                                 AND COALESCE (Object_Personal.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0)
                                                 AND COALESCE (Object_Personal.UnitId, 0)          = COALESCE (tmpRes.UnitId, 0)
                                                 AND Object_Personal.ORD                           = 1
-            LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList_two
+            /*LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList_two
                                  ON ObjectLink_Personal_PersonalServiceList_two.ObjectId = tmpRes.MemberId
                                 AND ObjectLink_Personal_PersonalServiceList_two.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
             LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                        ON ObjectLink_Personal_PersonalServiceList.ObjectId = Object_Personal.PersonalId
-                                      AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+                                      AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()*/
+
+            -- вдруг здесь PersonalId
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_find
+                                 ON ObjectLink_Personal_Member_find.ObjectId = tmpRes.MemberId
+                                AND ObjectLink_Personal_Member_find.DescId   = zc_ObjectLink_Personal_Member()
+            LEFT JOIN tmpPersonalServiceList AS tmpPersonalServiceList_find ON tmpPersonalServiceList_find.MemberId = ObjectLink_Personal_Member_find.ChildObjectId
+
             LEFT JOIN tmpPersonalServiceList ON tmpPersonalServiceList.MemberId = tmpRes.MemberId
-            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = COALESCE (ObjectLink_Personal_PersonalServiceList_two.ChildObjectId, COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, tmpPersonalServiceList.PersonalServiceListId))
+            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = COALESCE (tmpPersonalServiceList.PersonalServiceListId, tmpPersonalServiceList_find.PersonalServiceListId) -- COALESCE (ObjectLink_Personal_PersonalServiceList_two.ChildObjectId, COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, tmpPersonalServiceList.PersonalServiceListId))
 
 
             LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = tmpRes.DocumentKindId

@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION lfSelect_Object_Member_findPersonal(
 )
 RETURNS TABLE (MemberId Integer, PersonalId Integer
              , UnitId   Integer, PositionId Integer
-             , BranchId Integer, isDateOut  Boolean
+             , BranchId Integer, PersonalServiceListId Integer
+             , isDateOut  Boolean
              , Ord      Integer
               )
 AS
@@ -20,17 +21,18 @@ BEGIN
 
    -- Результат
    RETURN QUERY 
-     WITH tmpPersonal AS (SELECT ObjectLink_Personal_Member.ChildObjectId   AS MemberId
-                               , ObjectLink_Personal_Member.ObjectId        AS PersonalId
-                               , ObjectLink_Personal_Unit.ChildObjectId     AS UnitId
-                               , ObjectLink_Personal_Position.ChildObjectId AS PositionId
-                               , ObjectLink_Unit_Branch.ChildObjectId       AS BranchId
+     WITH tmpPersonal AS (SELECT ObjectLink_Personal_Member.ChildObjectId     AS MemberId
+                               , ObjectLink_Personal_Member.ObjectId          AS PersonalId
+                               , ObjectLink_Personal_Unit.ChildObjectId       AS UnitId
+                               , ObjectLink_Personal_Position.ChildObjectId   AS PositionId
+                               , ObjectLink_Unit_Branch.ChildObjectId         AS BranchId
+                               , ObjectLink_PersonalServiceList.ChildObjectId AS PersonalServiceListId
                                , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN FALSE ELSE TRUE END AS isDateOut
                                , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Personal_Member.ChildObjectId
                                                     -- сортировкой определяется приоритет для выбора, т.к. выбираем с Ord = 1
                                                     ORDER BY CASE WHEN Object_Personal.isErased = FALSE THEN 0 ELSE 1 END
                                                            , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN 0 ELSE 1 END
-                                                           -- , CASE WHEN ObjectLink_Personal_PersonalServiceList.ChildObjectId > 0 THEN 0 ELSE 1 END
+                                                           -- , CASE WHEN ObjectLink_PersonalServiceList.ChildObjectId > 0 THEN 0 ELSE 1 END
                                                            , CASE WHEN ObjectBoolean_Official.ValueData = TRUE THEN 0 ELSE 1 END
                                                            , CASE WHEN ObjectBoolean_Main.ValueData = TRUE THEN 0 ELSE 1 END
                                                            , ObjectLink_Personal_Member.ObjectId
@@ -49,9 +51,9 @@ BEGIN
                                LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                                     ON ObjectLink_Unit_Branch.ObjectId = ObjectLink_Personal_Unit.ChildObjectId
                                                    AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
-                               -- LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
-                               --                      ON ObjectLink_Personal_PersonalServiceList.ObjectId = ObjectLink_Personal_Member.ObjectId
-                               --                     AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+                               LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList
+                                                    ON ObjectLink_PersonalServiceList.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                   AND ObjectLink_PersonalServiceList.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
                                LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
                                                        ON ObjectBoolean_Official.ObjectId = ObjectLink_Personal_Member.ObjectId
                                                       AND ObjectBoolean_Official.DescId   = zc_ObjectBoolean_Member_Official()
@@ -67,6 +69,7 @@ BEGIN
           , tmpPersonal.UnitId
           , tmpPersonal.PositionId
           , tmpPersonal.BranchId
+          , tmpPersonal.PersonalServiceListId
           , tmpPersonal.isDateOut
           , tmpPersonal.Ord :: Integer AS Ord
      FROM tmpPersonal

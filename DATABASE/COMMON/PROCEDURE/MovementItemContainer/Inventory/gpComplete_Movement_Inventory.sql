@@ -328,6 +328,17 @@ BEGIN
                                                 AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
                                                 AND vbCarId <> 0
                             LEFT JOIN Object ON Object.Id = COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, MovementItem.ObjectId)
+
+                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Business
+                                                 ON ObjectLink_Goods_Business.ObjectId = MovementItem.ObjectId
+                                                AND ObjectLink_Goods_Business.DescId = zc_ObjectLink_Goods_Business()
+                            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                 ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                                             AND Object.DescId              <> zc_Object_Fuel()
+                            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Fuel ON View_InfoMoney_Fuel.InfoMoneyId = zc_Enum_InfoMoney_20401()
+                                                                                  AND Object.DescId                   = zc_Object_Fuel()
          
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -359,9 +370,17 @@ BEGIN
                             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                          ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                                                        AND View_InfoMoney.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                                                                        , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                                                                        , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                                                         )
                             LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                                        ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                                       AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                                      AND View_InfoMoney.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                                                                      , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                                                                      , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                                                       )
          
                             LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
                                                     ON ObjectBoolean_PartionCount.ObjectId = MovementItem.ObjectId
@@ -370,16 +389,6 @@ BEGIN
                                                     ON ObjectBoolean_PartionSumm.ObjectId = MovementItem.ObjectId
                                                    AND ObjectBoolean_PartionSumm.DescId = zc_ObjectBoolean_Goods_PartionSumm()
          
-                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Business
-                                                 ON ObjectLink_Goods_Business.ObjectId = MovementItem.ObjectId
-                                                AND ObjectLink_Goods_Business.DescId = zc_ObjectLink_Goods_Business()
-                            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                                 ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
-                                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-                                                                             AND Object.DescId <> zc_Object_Fuel()
-                            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Fuel ON View_InfoMoney_Fuel.InfoMoneyId = zc_Enum_InfoMoney_20401()
-                                                                                  AND Object.DescId = zc_Object_Fuel()
                        WHERE Movement.Id = inMovementId
                          AND Movement.DescId = zc_Movement_Inventory()
                          AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
@@ -388,7 +397,7 @@ BEGIN
            , tmpContainer_all AS (SELECT tmpMI.MovementItemId
                                        , ROW_NUMBER() OVER (PARTITION BY tmpMI.MovementItemId ORDER BY Container.Amount DESC) AS Ord -- !!!Надо отловить ПОСЛЕДНИЙ!!!
                                          -- !!!пустая партия!!!
-                                       , -1 AS PartionGoodsId
+                                       , CASE WHEN CLO_PartionGoods.ObjectId = 0 THEN -1 ELSE CLO_PartionGoods.ObjectId END AS PartionGoodsId
                                   FROM tmpMI
                                        INNER JOIN Container ON Container.ObjectId = tmpMI.GoodsId
                                                            AND Container.DescId   = zc_Container_Count()
@@ -400,7 +409,7 @@ BEGIN
                                        INNER JOIN ContainerLinkObject AS CLO_PartionGoods
                                                                       ON CLO_PartionGoods.ContainerId = Container.Id
                                                                      AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
-                                                                     AND CLO_PartionGoods.ObjectId    = 0
+                                                                     -- AND CLO_PartionGoods.ObjectId    = 0
                                   WHERE tmpMI.PartionGoodsDate = zc_DateEnd()
                                     AND tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                                        , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
@@ -442,11 +451,18 @@ BEGIN
              LEFT JOIN tmpContainer_all ON tmpContainer_all.MovementItemId = _tmp.MovementItemId
                                        AND tmpContainer_all.Ord            = 1 -- на всякий случай - № п/п
               ;
+/*if inSession = '5'
+then
+    RAISE EXCEPTION '<%>', (select _tmpItem.PartionGoodsId from _tmpItem where _tmpItem.MovementItemId = 127477878);
+end if;*/
+
 
      -- формируются Партии товара, ЕСЛИ надо ...
      UPDATE _tmpItem SET PartionGoodsId = CASE -- 
                                                WHEN _tmpItem.PartionGoodsId = -1
                                                    THEN 0
+                                               WHEN _tmpItem.PartionGoodsId > 0
+                                                   THEN _tmpItem.PartionGoodsId
 
                                                WHEN vbOperDate >= zc_DateStart_PartionGoods()
                                                 AND vbAccountDirectionId = zc_Enum_AccountDirection_20200() -- Запасы + на складах
