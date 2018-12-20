@@ -44,7 +44,7 @@ BEGIN
                                                   , inHeadCount          := 0
                                                   , inCount              := 0
                                                   , inPartionGoods       := tmp.PartionGoods
-                                                  , inPartionGoodsId     := CASE WHEN tmpGoodsByPartion IS NULL THEN NULL ELSE tmp.PartionGoodsId END
+                                                  , inPartionGoodsId     := tmp.PartionGoodsId
                                                   , inGoodsKindId        := tmp.GoodsKindId
                                                   , inGoodsKindCompleteId:= tmp.GoodsKindCompleteId
                                                   , inAssetId            := NULL
@@ -130,7 +130,7 @@ BEGIN
                 , COALESCE (tmpContainer.GoodsId, tmpMI.GoodsId)                         AS GoodsId
                 , COALESCE (tmpContainer.GoodsKindId, tmpMI.GoodsKindId)                 AS GoodsKindId
                 , COALESCE (tmpContainer.GoodsKindCompleteId, tmpMI.GoodsKindCompleteId) AS GoodsKindCompleteId
-                , COALESCE (tmpContainer.PartionGoodsId, tmpMI.PartionGoodsId)           AS PartionGoodsId
+                , CASE WHEN tmpGoodsByPartion.GoodsId IS NULL THEN NULL ELSE COALESCE (tmpContainer.PartionGoodsId, tmpMI.PartionGoodsId) END  AS PartionGoodsId
                 , COALESCE (tmpContainer.PartionGoods, tmpMI.PartionGoods)               AS PartionGoods
                 , COALESCE (tmpContainer.PartionGoodsDate, tmpMI.PartionGoodsDate)       AS PartionGoodsDate
                 , COALESCE (tmpContainer.Amount_End,0)                                   AS Amount_End
@@ -173,9 +173,9 @@ BEGIN
                                  AND tmpMI.PartionGoods        = tmpContainer.PartionGoods
                                  AND tmpMI.PartionGoodsDate    = tmpContainer.PartionGoodsDate
                                  AND tmpMI.Ord                 = 1 -- !!!вдруг дублируются строки!!!
-
+            LEFT JOIN tmpGoodsByPartion ON tmpGoodsByPartion.GoodsId = COALESCE (tmpContainer.GoodsId, tmpMI.GoodsId)
            ) AS tmp
-           LEFT JOIN tmpGoodsByPartion ON tmpGoodsByPartion.GoodsId = tmp.GoodsId
+           
            ;
 
 END;
