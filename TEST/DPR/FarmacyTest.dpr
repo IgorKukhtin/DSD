@@ -637,8 +637,9 @@ uses
   Medoc_J1201210 in '..\..\SOURCE\MeDOC\Medoc_J1201210.pas',
   DiffKind in '..\..\FormsFarmacy\Guides\DiffKind.pas' {DiffKindForm: TParentForm},
   DiffKindEdit in '..\..\FormsFarmacy\Guides\DiffKindEdit.pas' {DiffKindEditForm: TParentForm},
-  dsdExportToXLSAction in '..\..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
-  CheckCash in '..\..\FormsFarmacy\Cash\CheckCash.pas' {CheckCashForm: TParentForm};
+  CheckCash in '..\..\FormsFarmacy\Cash\CheckCash.pas' {CheckCashForm: TParentForm},
+  Unit_MCS in '..\..\FormsFarmacy\Guides\Unit_MCS.pas' {Unit_MCSForm: TParentForm},
+  dsdExportToXLSAction in '..\..\SOURCE\COMPONENT\dsdExportToXLSAction.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

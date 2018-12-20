@@ -473,6 +473,8 @@ type
     N177: TMenuItem;
     actDiffKind: TdsdOpenForm;
     miDiffKind: TMenuItem;
+    actUnit_MCS: TdsdOpenForm;
+    miUnit_MCS: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
