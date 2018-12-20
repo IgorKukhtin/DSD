@@ -3539,6 +3539,14 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
+			<DCCReference Include="..\..\Forms\Document\MemberHolidayJournal.pas">
+				<Form>MemberHolidayJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\MemberHoliday.pas">
+				<Form>MemberHolidayForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdExportToXLSAction.pas"/>
 			<BuildConfiguration Include="Release">

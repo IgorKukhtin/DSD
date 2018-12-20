@@ -991,6 +991,8 @@ type
     miProductionUnionTechReceiptTu: TMenuItem;
     actReport_ProductionSeparate_CheckPrice: TdsdOpenForm;
     N198: TMenuItem;
+    actMemberHoliday: TdsdOpenForm;
+    N199: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

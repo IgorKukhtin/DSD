@@ -1049,6 +1049,8 @@ uses
   Report_ProductionSeparate_CheckPrice in '..\..\Forms\Report\Report_ProductionSeparate_CheckPrice.pas' {Report_ProductionSeparate_CheckPriceForm: TParentForm},
   Report_ProductionSeparate_CheckPriceDialog in '..\..\Forms\Report\Report_ProductionSeparate_CheckPriceDialog.pas' {Report_ProductionSeparate_CheckPriceDialogForm: TParentForm},
   Medoc_J1201010 in '..\..\SOURCE\MeDOC\Medoc_J1201010.pas',
+  MemberHolidayJournal in '..\..\Forms\Document\MemberHolidayJournal.pas' {MemberHolidayJournalForm: TParentForm},
+  MemberHoliday in '..\..\Forms\Document\MemberHoliday.pas' {MemberHolidayForm: TParentForm},
   Medoc_J1201210 in '..\..\SOURCE\MeDOC\Medoc_J1201210.pas',
   dsdExportToXLSAction in '..\..\SOURCE\COMPONENT\dsdExportToXLSAction.pas';
 

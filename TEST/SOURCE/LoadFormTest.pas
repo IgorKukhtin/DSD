@@ -88,6 +88,7 @@ type
     procedure LoadMemberFormTest;
     procedure LoadMemberExternalFormTest;
     procedure LoadMemberSheetWorkTimeFormTest;
+    procedure LoadMemberHolidayFormTest;
     procedure LoadMemberPersonalServiceListFormTest;
     procedure LoadMobileTariffFormTest;
     procedure LoadMobileBillsFormTest;
@@ -2752,6 +2753,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMobileBillsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileBillsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileBillsJournalForm');
+end;
+
+ procedure TLoadFormTest.LoadMemberHolidayFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberHolidayForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberHolidayForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberHolidayJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberHolidayJournalForm');
 end;
 
 procedure TLoadFormTest.LoadMobileProjectFormTest;
