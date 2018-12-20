@@ -87,7 +87,10 @@ BEGIN
                                          , Price_Goods.ChildObjectId               AS GoodsId
                                          , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
                                          , MCS_Value.ValueData                     AS MCSValue
-                                         , COALESCE(Price_MCSValueMin.ValueData,0) ::TFloat AS MCSValue_min
+                                         , CASE WHEN Price_MCSValueMin.ValueData is not null 
+                                                THEN CASE WHEN COALESCE (Price_MCSValueMin.ValueData, 0) < COALESCE (MCS_Value.ValueData, 0) THEN COALESCE(Price_MCSValueMin.ValueData,0) ELSE MCS_Value.ValueData END 
+                                                ELSE 0
+                                           END ::TFloat AS MCSValue_min
                                     FROM ObjectLink AS ObjectLink_Price_Unit
                                          LEFT JOIN ObjectBoolean AS MCS_isClose
                                                                  ON MCS_isClose.ObjectId = ObjectLink_Price_Unit.ObjectId
