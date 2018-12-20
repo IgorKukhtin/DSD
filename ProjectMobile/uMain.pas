@@ -1734,7 +1734,8 @@ begin
   end;
 
   // !!!Optimize!!!
-  // fOptimizeDB;
+  if NeedSync then
+     fOptimizeDB;
 
   // сохранение координат при логине и запуск таймера
   tSavePathTimer(tSavePath);

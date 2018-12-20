@@ -3287,7 +3287,7 @@ begin
     Exit;
 
   // !!!Optimize!!!
-  frmMain.fOptimizeDB;
+  //frmMain.fOptimizeDB;
 
   SyncThread := TSyncThread.Create(True);
   SyncThread.FreeOnTerminate := True;
