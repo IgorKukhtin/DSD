@@ -68,6 +68,8 @@ type
     spUpdateMovementItemAmount: TdsdStoredProc;
     actUpdateMovementItemAmount: TdsdUpdateDataSet;
     cxSplitter1: TcxSplitter;
+    actCheckCash: TdsdOpenForm;
+    dxBarButton4: TdxBarButton;
   private
     { Private declarations }
   public

@@ -1,26 +1,27 @@
 inherited InventoryForm: TInventoryForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
-  ClientHeight = 668
+  ClientHeight = 598
   ClientWidth = 1020
   ExplicitWidth = 1036
-  ExplicitHeight = 706
+  ExplicitHeight = 636
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
     Width = 1020
-    Height = 542
+    Height = 472
     ExplicitTop = 126
     ExplicitWidth = 1020
     ExplicitHeight = 542
-    ClientRectBottom = 542
+    ClientRectBottom = 472
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1020
-        Height = 518
+        Height = 448
+        ExplicitLeft = -3
         ExplicitWidth = 1020
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -326,6 +327,30 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
+          end
+          object StorageName_Partion: TcxGridDBColumn
+            Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1087#1072#1088#1090#1080#1103')'
+            DataBinding.FieldName = 'StorageName_Partion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object UnitName_Partion: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1072#1088#1090#1080#1103')'
+            DataBinding.FieldName = 'UnitName_Partion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Price_Partion: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' ('#1087#1072#1088#1090#1080#1103')'
+            DataBinding.FieldName = 'Price_Partion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
         end
       end
@@ -760,6 +785,55 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
+    object actPartionGoodsChoiceForm: TOpenChoiceForm
+      Category = 'Partion'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actPartionGoodsChoice'
+      FormName = 'TPartionGoodsChoiceForm'
+      FormNameParam.Value = 'TPartionGoodsChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'PartionGoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitId'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitName'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actSendOpenForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -797,6 +871,23 @@ inherited InventoryForm: TInventoryForm
       Hint = #1054#1090#1085#1103#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
       ImageIndex = 39
     end
+    object macUpdate_PartionGoods: TMultiAction
+      Category = 'Partion'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPartionGoodsChoiceForm
+        end
+        item
+          Action = actUpdate_PartionGoods
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' '#1090#1086#1074#1072#1088#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' '#1090#1086#1074#1072#1088#1072
+      ImageIndex = 77
+    end
     object actDelete_bySend: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -809,6 +900,22 @@ inherited InventoryForm: TInventoryForm
       Caption = #1054#1090#1085#1103#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
       Hint = #1054#1090#1085#1103#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
       ImageIndex = 39
+    end
+    object actUpdate_PartionGoods: TdsdExecStoredProc
+      Category = 'Partion'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PartionGoods
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PartionGoods
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' '#1090#1086#1074#1072#1088#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' '#1090#1086#1074#1072#1088#1072
+      ImageIndex = 77
     end
     object macInsert_bySend: TMultiAction
       Category = 'DSDLib'
@@ -1041,6 +1148,14 @@ inherited InventoryForm: TInventoryForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_PartionGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -1115,6 +1230,10 @@ inherited InventoryForm: TInventoryForm
     end
     object bbDelete_bySend: TdxBarButton
       Action = macDelete_bySend
+      Category = 0
+    end
+    object bbUpdate_PartionGoods: TdxBarButton
+      Action = macUpdate_PartionGoods
       Category = 0
     end
   end
@@ -1593,6 +1712,14 @@ inherited InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPartionGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsKindId'
         Value = Null
         Component = MasterCDS
@@ -2055,5 +2182,30 @@ inherited InventoryForm: TInventoryForm
     PackSize = 1
     Left = 72
     Top = 464
+  end
+  object spUpdate_PartionGoods: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Inventory_PartionGoods'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoodsId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'PartionGoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 416
+    Top = 448
   end
 end

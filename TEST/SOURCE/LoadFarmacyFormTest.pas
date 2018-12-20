@@ -1459,6 +1459,9 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckVIP_SearchForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckVIP_SearchForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckCashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckCashForm');
 end;
 
 procedure TLoadFormTest.LoadOverFormTest;
