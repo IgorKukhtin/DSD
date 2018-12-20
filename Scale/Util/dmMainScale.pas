@@ -218,10 +218,12 @@ begin
        Params.AddParam('inPersonalId2', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PersonalId2').AsInteger);
        Params.AddParam('inPersonalId3', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PersonalId3').AsInteger);
        Params.AddParam('inPersonalId4', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PersonalId4').AsInteger);
+       Params.AddParam('inPersonalId5', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PersonalId5').AsInteger);
        Params.AddParam('inPositionId1', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId1').AsInteger);
        Params.AddParam('inPositionId2', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId2').AsInteger);
        Params.AddParam('inPositionId3', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId3').AsInteger);
        Params.AddParam('inPositionId4', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId4').AsInteger);
+       Params.AddParam('inPositionId5', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId5').AsInteger);
        //try
          Execute;
        {except

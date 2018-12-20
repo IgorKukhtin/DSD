@@ -2,18 +2,18 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
   Left = 529
   Top = 238
   Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#8470
-  ClientHeight = 250
+  ClientHeight = 336
   ClientWidth = 506
   OldCreateOrder = True
   Position = poScreenCenter
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   ExplicitWidth = 522
-  ExplicitHeight = 285
+  ExplicitHeight = 371
   PixelsPerInch = 96
   TextHeight = 14
   inherited bbPanel: TPanel
-    Top = 209
+    Top = 295
     Width = 506
     TabOrder = 4
     ExplicitTop = 209
@@ -41,7 +41,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object LabelPositionName1: TLabel
         Left = 0
         Top = 0
-        Width = 79
+        Width = 186
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -52,6 +52,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 79
       end
       object gbPositionName1: TGroupBox
         Left = 0
@@ -89,7 +90,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object LabelPersonalName1: TLabel
         Left = 0
         Top = 0
-        Width = 108
+        Width = 320
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -100,6 +101,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 108
       end
       object gbPersonalCode1: TGroupBox
         Left = 0
@@ -170,7 +172,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object LabelPositionName2: TLabel
         Left = 0
         Top = 0
-        Width = 79
+        Width = 186
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -181,6 +183,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 79
       end
       object gbPositionName2: TGroupBox
         Left = 0
@@ -218,7 +221,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object LabelPersonalName2: TLabel
         Left = 0
         Top = 0
-        Width = 108
+        Width = 320
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -229,6 +232,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 108
       end
       object gbPersonalCode2: TGroupBox
         Left = 0
@@ -299,7 +303,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object LabelPositionName3: TLabel
         Left = 0
         Top = 0
-        Width = 79
+        Width = 186
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -310,6 +314,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 79
       end
       object gbPositionName3: TGroupBox
         Left = 0
@@ -347,7 +352,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object LabelPersonalName3: TLabel
         Left = 0
         Top = 0
-        Width = 108
+        Width = 320
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -358,6 +363,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 108
       end
       object gbPersonalCode3: TGroupBox
         Left = 0
@@ -428,7 +434,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object LabelPositionName4: TLabel
         Left = 0
         Top = 0
-        Width = 79
+        Width = 186
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -439,6 +445,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 79
       end
       object gbPositionName4: TGroupBox
         Left = 0
@@ -476,7 +483,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
       object LabePersonalName4: TLabel
         Left = 0
         Top = 0
-        Width = 108
+        Width = 320
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -487,6 +494,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 108
       end
       object gbPersonalCode4: TGroupBox
         Left = 0
@@ -531,6 +539,137 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
           Properties.OnButtonClick = EditPersonalName1PropertiesButtonClick
           TabOrder = 0
           Text = 'EditPersonalName4'
+          OnKeyDown = EditPersonalName1KeyDown
+          Width = 245
+        end
+      end
+    end
+  end
+  object infoPanelPersona5: TPanel
+    Left = 0
+    Top = 208
+    Width = 506
+    Height = 52
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 5
+    ExplicitTop = 164
+    object PanelPosition5: TPanel
+      Left = 320
+      Top = 0
+      Width = 186
+      Height = 52
+      Align = alClient
+      BevelOuter = bvNone
+      TabOrder = 1
+      object LabelPositionName5: TLabel
+        Left = 0
+        Top = 0
+        Width = 186
+        Height = 13
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' 5'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 79
+      end
+      object gbPositionName5: TGroupBox
+        Left = 0
+        Top = 13
+        Width = 186
+        Height = 39
+        Align = alClient
+        TabOrder = 0
+        object PanelPositionName5: TPanel
+          Left = 2
+          Top = 16
+          Width = 182
+          Height = 21
+          Align = alClient
+          BevelOuter = bvNone
+          Caption = 'PanelPositionName5'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clNavy
+          Font.Height = -12
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+        end
+      end
+    end
+    object PanelPersonal5: TPanel
+      Left = 0
+      Top = 0
+      Width = 320
+      Height = 52
+      Align = alLeft
+      BevelOuter = bvNone
+      TabOrder = 0
+      object LabePersonalName5: TLabel
+        Left = 0
+        Top = 0
+        Width = 320
+        Height = 13
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082' 5'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 108
+      end
+      object gbPersonalCode5: TGroupBox
+        Left = 0
+        Top = 13
+        Width = 67
+        Height = 39
+        Align = alLeft
+        Caption = #1050#1086#1076
+        TabOrder = 0
+        object EditPersonalCode5: TcxCurrencyEdit
+          Tag = 5
+          Left = 6
+          Top = 14
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.AssignedValues.DisplayFormat = True
+          Properties.DecimalPlaces = 0
+          TabOrder = 0
+          OnExit = EditPersonalCode1Exit
+          OnKeyDown = EditPersonalCode1KeyDown
+          Width = 55
+        end
+      end
+      object gbPersonalName5: TGroupBox
+        Left = 67
+        Top = 13
+        Width = 253
+        Height = 39
+        Align = alClient
+        Caption = #1060#1048#1054
+        TabOrder = 1
+        object EditPersonalName5: TcxButtonEdit
+          Tag = 5
+          Left = 5
+          Top = 14
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          Properties.OnButtonClick = EditPersonalName1PropertiesButtonClick
+          TabOrder = 0
+          Text = 'EditPersonalName5'
           OnKeyDown = EditPersonalName1KeyDown
           Width = 245
         end

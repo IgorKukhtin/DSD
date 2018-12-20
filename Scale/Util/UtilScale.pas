@@ -377,6 +377,7 @@ begin
      Create_ParamsPersonal(Params, '2');
      Create_ParamsPersonal(Params, '3');
      Create_ParamsPersonal(Params, '4');
+     Create_ParamsPersonal(Params, '5');
      ParamAdd(Params,'MovementId', ftInteger);
      ParamAdd(Params,'InvNumber',ftString);
      ParamAdd(Params,'OperDate',ftDateTime);

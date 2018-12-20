@@ -1,6 +1,7 @@
 -- Function: gpUpdate_Scale_Movement_PersonalComlete()
 
-DROP FUNCTION IF EXISTS gpUpdate_Scale_Movement_PersonalComlete (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpUpdate_Scale_Movement_PersonalComlete (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Scale_Movement_PersonalComlete (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Scale_Movement_PersonalComlete(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
@@ -8,10 +9,12 @@ CREATE OR REPLACE FUNCTION gpUpdate_Scale_Movement_PersonalComlete(
     IN inPersonalId2         Integer   , -- Ключ объекта
     IN inPersonalId3         Integer   , -- Ключ объекта
     IN inPersonalId4         Integer   , -- Ключ объекта
+    IN inPersonalId5         Integer   , -- Ключ объекта
     IN inPositionId1         Integer   , -- Ключ объекта
     IN inPositionId2         Integer   , -- Ключ объекта
     IN inPositionId3         Integer   , -- Ключ объекта
     IN inPositionId4         Integer   , -- Ключ объекта
+    IN inPositionId5         Integer   , -- Ключ объекта
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS VOID
@@ -32,6 +35,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalComplete3(), inMovementId, inPersonalId3);
      -- сохранили связь с <Сотрудник комплектовщик 4>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalComplete4(), inMovementId, inPersonalId4);
+     -- сохранили связь с <Сотрудник комплектовщик 5>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalComplete5(), inMovementId, inPersonalId5);
 
      -- сохранили связь с <Должность комплектовщик 1>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PositionComplete1(), inMovementId, inPositionId1);
@@ -41,6 +46,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PositionComplete3(), inMovementId, inPositionId3);
      -- сохранили связь с <Должность комплектовщик 4>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PositionComplete4(), inMovementId, inPositionId4);
+     -- сохранили связь с <Должность комплектовщик 5>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PositionComplete5(), inMovementId, inPositionId5);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);

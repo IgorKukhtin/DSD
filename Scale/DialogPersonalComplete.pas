@@ -56,6 +56,17 @@ type
     EditPersonalName2: TcxButtonEdit;
     EditPersonalName3: TcxButtonEdit;
     EditPersonalName4: TcxButtonEdit;
+    infoPanelPersona5: TPanel;
+    PanelPosition5: TPanel;
+    LabelPositionName5: TLabel;
+    gbPositionName5: TGroupBox;
+    PanelPositionName5: TPanel;
+    PanelPersonal5: TPanel;
+    LabePersonalName5: TLabel;
+    gbPersonalCode5: TGroupBox;
+    EditPersonalCode5: TcxCurrencyEdit;
+    gbPersonalName5: TGroupBox;
+    EditPersonalName5: TcxButtonEdit;
 
     procedure FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
     procedure EditPersonalCode1Exit(Sender: TObject);
@@ -120,6 +131,10 @@ begin
           EditPersonalCode4.Text:=ParamByName('PersonalCode4').AsString;
           EditPersonalName4.Text:=ParamByName('PersonalName4').AsString;
           PanelPositionName4.Caption:=ParamByName('PositionName4').AsString;
+
+          EditPersonalCode5.Text:=ParamByName('PersonalCode5').AsString;
+          EditPersonalName5.Text:=ParamByName('PersonalName5').AsString;
+          PanelPositionName5.Caption:=ParamByName('PositionName5').AsString;
      end;
      ActiveControl:=EditPersonalCode1;
      fStartWrite:=false;
@@ -135,6 +150,7 @@ var PersonalCode1:Integer;
     PersonalCode2:Integer;
     PersonalCode3:Integer;
     PersonalCode4:Integer;
+    PersonalCode5:Integer;
 begin
      Result:=false;
      //
@@ -142,11 +158,13 @@ begin
      try PersonalCode2:= StrToInt(EditPersonalCode2.Text); except PersonalCode2:= 0;end;
      try PersonalCode3:= StrToInt(EditPersonalCode3.Text); except PersonalCode3:= 0;end;
      try PersonalCode4:= StrToInt(EditPersonalCode4.Text); except PersonalCode4:= 0;end;
+     try PersonalCode5:= StrToInt(EditPersonalCode5.Text); except PersonalCode5:= 0;end;
      //
      EditPersonalCode1Exit(EditPersonalCode1);
      EditPersonalCode1Exit(EditPersonalCode2);
      EditPersonalCode1Exit(EditPersonalCode3);
      EditPersonalCode1Exit(EditPersonalCode4);
+     EditPersonalCode1Exit(EditPersonalCode5);
      //
      //
      Result:=(PersonalCode1<>0)and(trim(EditPersonalName1.Text)<>'')and(ParamsPersonalComplete_local.ParamByName('PersonalId1').AsInteger<>0);
@@ -193,6 +211,17 @@ begin
      end;
      //
      //
+     Result:=((PersonalCode5<>0)and(trim(EditPersonalName5.Text)<>'')and(ParamsPersonalComplete_local.ParamByName('PersonalId5').AsInteger<>0))
+          or ((PersonalCode5=0)and(trim(EditPersonalName5.Text)='')and(ParamsPersonalComplete_local.ParamByName('PersonalId5').AsInteger=0)
+             );
+     if not Result then
+     begin
+           ActiveControl:=EditPersonalCode5;
+           ShowMessage('Введите Комплектовщик 5.');
+           exit;
+     end;
+     //
+     //
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogPersonalCompleteForm.FormCreate(Sender: TObject);
@@ -207,7 +236,8 @@ begin
       if (ActiveControl=EditPersonalCode1)or(ActiveControl=EditPersonalName1)then ActiveControl:=EditPersonalCode2
       else if (ActiveControl=EditPersonalCode2)or(ActiveControl=EditPersonalName2)then ActiveControl:=EditPersonalCode3
            else if (ActiveControl=EditPersonalCode3)or(ActiveControl=EditPersonalName3)then ActiveControl:=EditPersonalCode4
-                else if (ActiveControl=EditPersonalCode4)or(ActiveControl=EditPersonalName4) then bbOkClick(self);
+                else if (ActiveControl=EditPersonalCode4)or(ActiveControl=EditPersonalName4) then ActiveControl:=EditPersonalCode5
+                     else if (ActiveControl=EditPersonalCode5)or(ActiveControl=EditPersonalName5) then bbOkClick(self);
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogPersonalCompleteForm.EditPersonalCode1KeyDown(Sender: TObject;var Key: Word; Shift: TShiftState);
@@ -220,7 +250,8 @@ begin
          if (TcxCurrencyEdit(Sender).Tag = 1) then if Value = 0 then ActiveControl:=EditPersonalName1 else ActiveControl:=EditPersonalCode2
          else if (TcxCurrencyEdit(Sender).Tag = 2) then if Value = 0 then ActiveControl:=EditPersonalName2 else ActiveControl:=EditPersonalCode3
               else if (TcxCurrencyEdit(Sender).Tag = 3) then if Value = 0 then ActiveControl:=EditPersonalName3 else ActiveControl:=EditPersonalCode4
-                   else if (TcxCurrencyEdit(Sender).Tag = 4) then if Value = 0 then ActiveControl:=EditPersonalName4 else bbOkClick(self);
+                   else if (TcxCurrencyEdit(Sender).Tag = 4) then if Value = 0 then ActiveControl:=EditPersonalName4 else ActiveControl:=EditPersonalCode5
+                        else if (TcxCurrencyEdit(Sender).Tag = 5) then if Value = 0 then ActiveControl:=EditPersonalName5 else bbOkClick(self);
     end;
 end;
 {------------------------------------------------------------------------------}
@@ -231,7 +262,8 @@ begin
          if (TcxCurrencyEdit(Sender).Tag = 1) then ActiveControl:=EditPersonalCode2
          else if (TcxCurrencyEdit(Sender).Tag = 2) then ActiveControl:=EditPersonalCode3
               else if (TcxCurrencyEdit(Sender).Tag = 3) then ActiveControl:=EditPersonalCode4
-                   else if (TcxCurrencyEdit(Sender).Tag = 4) then bbOkClick(self);
+                   else if (TcxCurrencyEdit(Sender).Tag = 4) then ActiveControl:=EditPersonalCode5
+                        else if (TcxCurrencyEdit(Sender).Tag = 5) then bbOkClick(self);
     end;
 end;
 {------------------------------------------------------------------------------}
@@ -249,6 +281,7 @@ begin
     if idx = '2' then try PersonalCode:= StrToInt(EditPersonalCode2.Text); except PersonalCode:= 0;end;
     if idx = '3' then try PersonalCode:= StrToInt(EditPersonalCode3.Text); except PersonalCode:= 0;end;
     if idx = '4' then try PersonalCode:= StrToInt(EditPersonalCode4.Text); except PersonalCode:= 0;end;
+    if idx = '5' then try PersonalCode:= StrToInt(EditPersonalCode5.Text); except PersonalCode:= 0;end;
     //
     if PersonalCode = 0 then
     begin
@@ -264,6 +297,7 @@ begin
          if idx = '2' then begin EditPersonalName2.Text:=''; PanelPositionName2.Caption:=''; end;
          if idx = '3' then begin EditPersonalName3.Text:=''; PanelPositionName3.Caption:=''; end;
          if idx = '4' then begin EditPersonalName4.Text:=''; PanelPositionName4.Caption:=''; end;
+         if idx = '5' then begin EditPersonalName5.Text:=''; PanelPositionName5.Caption:=''; end;
          fStartWrite:=false;
          //
          fChangePersonalCode:=false;
@@ -307,6 +341,12 @@ begin
                               EditPersonalName4.Text:=execParams.ParamByName('PersonalName').AsString;
                               PanelPositionName4.Caption:=execParams.ParamByName('PositionName').AsString;
                          end;
+                         if idx = '5' then
+                         begin
+                              EditPersonalCode5.Text:=execParams.ParamByName('PersonalCode').AsString;
+                              EditPersonalName5.Text:=execParams.ParamByName('PersonalName').AsString;
+                              PanelPositionName5.Caption:=execParams.ParamByName('PositionName').AsString;
+                         end;
                         //
                         fStartWrite:=false;
                         //
@@ -323,6 +363,7 @@ begin
                         if idx = '2' then begin EditPersonalName2.Text:=''; PanelPositionName2.Caption:=''; ActiveControl:=EditPersonalCode2; end;
                         if idx = '3' then begin EditPersonalName3.Text:=''; PanelPositionName3.Caption:=''; ActiveControl:=EditPersonalCode3; end;
                         if idx = '4' then begin EditPersonalName4.Text:=''; PanelPositionName4.Caption:=''; ActiveControl:=EditPersonalCode4; end;
+                        if idx = '5' then begin EditPersonalName5.Text:=''; PanelPositionName5.Caption:=''; ActiveControl:=EditPersonalCode5; end;
                         fStartWrite:=false;
                         //
                    end;
@@ -389,6 +430,13 @@ begin
                     EditPersonalCode4.Text:=execParams.ParamByName('PersonalCode').AsString;
                     EditPersonalName4.Text:=execParams.ParamByName('PersonalName').AsString;
                     PanelPositionName4.Caption:=execParams.ParamByName('PositionName').AsString;
+                    ActiveControl:=EditPersonalCode5;
+               end;
+               if idx = '5' then
+               begin
+                    EditPersonalCode5.Text:=execParams.ParamByName('PersonalCode').AsString;
+                    EditPersonalName5.Text:=execParams.ParamByName('PersonalName').AsString;
+                    PanelPositionName5.Caption:=execParams.ParamByName('PositionName').AsString;
                     ActiveControl:=bbOk;
                end;
                //
