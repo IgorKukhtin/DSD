@@ -77,6 +77,7 @@ BEGIN
                                  )
                   -- строки документа отказ
                 , tmpListDiff_MI_All AS (SELECT MovementItem.*
+                                              , Object_DiffKind.Name ::TVarChar AS DiffKindName
                                          FROM tmpListDiff
                                               INNER JOIN MovementItem ON MovementItem.MovementId = tmpListDiff.Id
                                                                      AND MovementItem.DescId     = zc_MI_Master()
@@ -84,6 +85,8 @@ BEGIN
                                               LEFT JOIN MovementItemLinkObject AS MILO_DiffKind
                                                                                ON MILO_DiffKind.MovementItemId = MovementItem.Id
                                                                               AND MILO_DiffKind.DescId = zc_MILinkObject_DiffKind()
+                                              LEFT JOIN tmpDiffKind AS Object_DiffKind ON Object_DiffKind.Id = MILO_DiffKind.ObjectId
+
                                               LEFT JOIN ObjectBoolean AS ObjectBoolean_DiffKind_Close
                                                                       ON ObjectBoolean_DiffKind_Close.ObjectId = MILO_DiffKind.ObjectId
                                                                      AND ObjectBoolean_DiffKind_Close.DescId = zc_ObjectBoolean_DiffKind_Close()
@@ -104,9 +107,10 @@ BEGIN
                                     )
                                                  
                 SELECT tmpListDiff_MI_All.Id
-                     , tmpListDiff_MI_All.ObjectId     AS GoodsId
-                     , tmpListDiff_MI_All.Amount       AS Amount
+                     , tmpListDiff_MI_All.ObjectId                       AS GoodsId
+                     , tmpListDiff_MI_All.Amount                         AS Amount
                      , COALESCE (tmpMI_Comment.ValueData, '') ::TVarChar AS Comment
+                     , CASE WHEN COALESCE (tmpListDiff_MI_All.DiffKindName, '') = COALESCE (tmpMI_Comment.ValueData, '') THEN '' ELSE COALESCE (tmpListDiff_MI_All.DiffKindName, '') END ::TVarChar AS DiffKindName
                 FROM tmpListDiff_MI_All
                      LEFT JOIN tmpMI_MovementId ON tmpMI_MovementId.MovementItemId = tmpListDiff_MI_All.Id
                      LEFT JOIN tmpMI_Comment    ON tmpMI_Comment.MovementItemId    = tmpListDiff_MI_All.Id
@@ -131,7 +135,8 @@ BEGIN
      FROM _tmp_MI
           FULL JOIN (SELECT _tmpListDiff_MI.GoodsId      AS GoodsId
                           , SUM (_tmpListDiff_MI.Amount) AS Amount 
-                          , STRING_AGG (DISTINCT _tmpListDiff_MI.Comment, ';') :: TVarChar AS Comment
+                          , STRING_AGG (DISTINCT _tmpListDiff_MI.Comment, ';')  || STRING_AGG (DISTINCT _tmpListDiff_MI.DiffKindName, ';') :: TVarChar AS Comment
+                          --, STRING_AGG (DISTINCT _tmpListDiff_MI.DiffKindName, ';') :: TVarChar AS DiffKindName
                      FROM _tmpListDiff_MI
                      GROUP BY _tmpListDiff_MI.GoodsId
                      ) AS tmpListDiff_MI ON tmpListDiff_MI.GoodsId = _tmp_MI.GoodsId
