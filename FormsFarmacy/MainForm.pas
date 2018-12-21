@@ -475,6 +475,9 @@ type
     miDiffKind: TMenuItem;
     actUnit_MCS: TdsdOpenForm;
     miUnit_MCS: TMenuItem;
+    actReport_Movement_ListDiff: TdsdOpenForm;
+    miReport_Movement_ListDiff: TMenuItem;
+    N178: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

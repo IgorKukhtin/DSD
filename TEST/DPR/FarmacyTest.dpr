@@ -639,7 +639,9 @@ uses
   DiffKindEdit in '..\..\FormsFarmacy\Guides\DiffKindEdit.pas' {DiffKindEditForm: TParentForm},
   CheckCash in '..\..\FormsFarmacy\Cash\CheckCash.pas' {CheckCashForm: TParentForm},
   Unit_MCS in '..\..\FormsFarmacy\Guides\Unit_MCS.pas' {Unit_MCSForm: TParentForm},
-  dsdExportToXLSAction in '..\..\SOURCE\COMPONENT\dsdExportToXLSAction.pas';
+  dsdExportToXLSAction in '..\..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
+  Report_Movement_ListDiffDialog in '..\..\FormsFarmacy\Report\Report_Movement_ListDiffDialog.pas' {Report_Movement_ListDiffDialogForm: TParentForm},
+  Report_Movement_ListDiff in '..\..\FormsFarmacy\Report\Report_Movement_ListDiff.pas' {Report_Movement_ListDiffForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
