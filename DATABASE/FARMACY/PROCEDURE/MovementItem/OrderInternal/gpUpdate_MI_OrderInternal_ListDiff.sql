@@ -60,8 +60,8 @@ BEGIN
                   ;
 
      -- Данные из док. отказ
-     CREATE TEMP TABLE _tmpListDiff_MI (Id integer, GoodsId Integer, Amount TFloat, Comment TVarChar) ON COMMIT DROP;
-       INSERT INTO _tmpListDiff_MI (Id, GoodsId, Amount, Comment)
+     CREATE TEMP TABLE _tmpListDiff_MI (Id integer, GoodsId Integer, Amount TFloat, Comment TVarChar, DiffKindName TVarChar) ON COMMIT DROP;
+       INSERT INTO _tmpListDiff_MI (Id, GoodsId, Amount, Comment, DiffKindName)
               WITH    
                   -- документы отказа
                   tmpListDiff AS (SELECT Movement.*
@@ -77,7 +77,7 @@ BEGIN
                                  )
                   -- строки документа отказ
                 , tmpListDiff_MI_All AS (SELECT MovementItem.*
-                                              , Object_DiffKind.Name ::TVarChar AS DiffKindName
+                                              , Object_DiffKind.ValueData ::TVarChar AS DiffKindName
                                          FROM tmpListDiff
                                               INNER JOIN MovementItem ON MovementItem.MovementId = tmpListDiff.Id
                                                                      AND MovementItem.DescId     = zc_MI_Master()
@@ -85,7 +85,7 @@ BEGIN
                                               LEFT JOIN MovementItemLinkObject AS MILO_DiffKind
                                                                                ON MILO_DiffKind.MovementItemId = MovementItem.Id
                                                                               AND MILO_DiffKind.DescId = zc_MILinkObject_DiffKind()
-                                              LEFT JOIN tmpDiffKind AS Object_DiffKind ON Object_DiffKind.Id = MILO_DiffKind.ObjectId
+                                              LEFT JOIN Object AS Object_DiffKind ON Object_DiffKind.Id = MILO_DiffKind.ObjectId
 
                                               LEFT JOIN ObjectBoolean AS ObjectBoolean_DiffKind_Close
                                                                       ON ObjectBoolean_DiffKind_Close.ObjectId = MILO_DiffKind.ObjectId
