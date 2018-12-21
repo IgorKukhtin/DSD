@@ -1718,7 +1718,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HistoryCostForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_HistoryCostForm');
-
+  //
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_byPartnerDateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_byPartnerDateForm');
+  exit;
+  {
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_byMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_byMovementForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_byMovementDialogForm'));

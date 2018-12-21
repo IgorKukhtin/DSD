@@ -1,5 +1,5 @@
-inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1086#1090#1075#1088#1091#1079#1082#1072#1084'>'
+inherited Report_Goods_byPartnerDateForm: TReport_Goods_byPartnerDateForm
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1086#1090#1075#1088#1091#1079#1082#1072#1084' '#1087#1086' '#1076#1072#1090#1077' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 542
   ClientWidth = 894
   AddOnFormData.isSingle = False
@@ -2166,7 +2166,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Goods_byMovement'
+    StoredProcName = 'gpReport_Goods_byPartnerDate'
     DataSets = <
       item
         DataSet = MasterCDS
@@ -2243,8 +2243,8 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 224
-    Top = 224
+    Left = 256
+    Top = 232
   end
   inherited BarManager: TdxBarManager
     Left = 160
@@ -2394,8 +2394,8 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
   end
   object FormParams: TdsdFormParams
     Params = <>
-    Left = 312
-    Top = 194
+    Left = 328
+    Top = 170
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'

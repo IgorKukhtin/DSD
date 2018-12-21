@@ -1052,7 +1052,8 @@ uses
   MemberHolidayJournal in '..\..\Forms\Document\MemberHolidayJournal.pas' {MemberHolidayJournalForm: TParentForm},
   MemberHoliday in '..\..\Forms\Document\MemberHoliday.pas' {MemberHolidayForm: TParentForm},
   Medoc_J1201210 in '..\..\SOURCE\MeDOC\Medoc_J1201210.pas',
-  dsdExportToXLSAction in '..\..\SOURCE\COMPONENT\dsdExportToXLSAction.pas';
+  dsdExportToXLSAction in '..\..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
+  Report_Goods_byPartnerDate in '..\..\Forms\Report\Report_Goods_byPartnerDate.pas' {Report_Goods_byPartnerDateForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
