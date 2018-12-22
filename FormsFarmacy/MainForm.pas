@@ -477,6 +477,7 @@ type
     miUnit_MCS: TMenuItem;
     actReport_Movement_ListDiff: TdsdOpenForm;
     miReport_Movement_ListDiff: TMenuItem;
+    actRecalcMCSSheduler: TdsdOpenForm;
     N178: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 

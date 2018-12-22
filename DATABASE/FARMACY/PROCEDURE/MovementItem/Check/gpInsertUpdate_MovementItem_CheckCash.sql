@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_CheckCash(
    OUT outSumm               TFloat    , -- Сумма
    OUT outSummSale           TFloat    , -- Сумма без скидки
    OUT outIsSp               Boolean   , --
+   OUT outColor_calc         integer   ,
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS record
@@ -23,16 +24,12 @@ $BODY$
    DECLARE vbPriceSale TFloat;
    DECLARE vbChangePercent TFloat;
    DECLARE vbSummChangePercent TFloat;
+   DECLARE vbUnitId Integer;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
     vbUserId := lpGetUserBySession (inSession);
-
-    IF 4183126 <> inSession::Integer
-    THEN
-      RAISE EXCEPTION 'Изменение чека вам запрещено.';
-    END IF;
 
     --определяем признак участвует в соц.проекте, по шапке док.
     outIsSp:= COALESCE (
@@ -169,17 +166,32 @@ BEGIN
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
 
+     -- определяется подразделение
+     SELECT MovementLinkObject_Unit.ObjectId
+     INTO vbUnitId
+     FROM MovementLinkObject AS MovementLinkObject_Unit
+     WHERE MovementLinkObject_Unit.MovementId = inMovementId
+       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit();
+
     -- Получили данные по строчке
     SELECT
       MovementItem_Check.PriceSale,
       MovementItem_Check.SummChangePercent,
       MovementItem_Check.AmountSumm,
-      (MovementItem_Check.PriceSale * MovementItem_Check.Amount)::TFloat
+      (MovementItem_Check.PriceSale * MovementItem_Check.Amount)::TFloat,
+      CASE WHEN COALESCE((SELECT SUM(Container.Amount)
+                              FROM Container
+                              WHERE Container.DescId = zc_Container_Count()
+                                AND Container.WhereObjectId = vbUnitId
+                                AND Container.ObjectId = inGoodsId
+                                AND Container.Amount <> 0), 0) < inAmount 
+        THEN zc_Color_Red() ELSE zc_Color_White() END  AS Color_calc
     INTO
       outPriceSale,
       outSummChangePercent,
       outSumm,
-      outSummSale
+      outSummSale,
+      outColor_calc
     FROM MovementItem_Check_View AS MovementItem_Check
     WHERE MovementItem_Check.Id =  ioId;
 

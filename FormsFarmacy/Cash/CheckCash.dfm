@@ -33,7 +33,6 @@ inherited CheckCashForm: TCheckCashForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountOrder
             end
             item
               Format = ',0.####'
@@ -66,7 +65,6 @@ inherited CheckCashForm: TCheckCashForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountOrder
             end
             item
               Format = ',0.####'
@@ -140,18 +138,7 @@ inherited CheckCashForm: TCheckCashForm
             HeaderAlignmentVert = vaCenter
             Width = 73
           end
-          object colAmountOrder: TcxGridDBColumn [6]
-            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079
-            DataBinding.FieldName = 'AmountOrder'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 73
-          end
-          object colPrice: TcxGridDBColumn [7]
+          object colPrice: TcxGridDBColumn [6]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -162,7 +149,7 @@ inherited CheckCashForm: TCheckCashForm
             Options.Editing = False
             Width = 60
           end
-          object colPriceSale: TcxGridDBColumn [8]
+          object colPriceSale: TcxGridDBColumn [7]
             Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'PriceSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -173,7 +160,7 @@ inherited CheckCashForm: TCheckCashForm
             Options.Editing = False
             Width = 74
           end
-          object colSummChangePercent: TcxGridDBColumn [9]
+          object colSummChangePercent: TcxGridDBColumn [8]
             Caption = #1057#1091#1084#1084#1072' '#1057#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'SummChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -184,7 +171,7 @@ inherited CheckCashForm: TCheckCashForm
             Options.Editing = False
             Width = 65
           end
-          object List_UID: TcxGridDBColumn [10]
+          object List_UID: TcxGridDBColumn [9]
             Caption = 'UID '#1101#1083#1077#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'List_UID'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -199,7 +186,7 @@ inherited CheckCashForm: TCheckCashForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colSumm: TcxGridDBColumn [11]
+          object colSumm: TcxGridDBColumn [10]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -210,7 +197,7 @@ inherited CheckCashForm: TCheckCashForm
             Options.Editing = False
             Width = 60
           end
-          object colSummSale: TcxGridDBColumn [12]
+          object colSummSale: TcxGridDBColumn [11]
             Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'SummSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -221,7 +208,7 @@ inherited CheckCashForm: TCheckCashForm
             Options.Editing = False
             Width = 60
           end
-          object colisSp: TcxGridDBColumn [13]
+          object colisSp: TcxGridDBColumn [12]
             Caption = #1059#1095'. '#1074' '#1057#1055
             DataBinding.FieldName = 'isSp'
             HeaderAlignmentHorz = taCenter
@@ -233,6 +220,10 @@ inherited CheckCashForm: TCheckCashForm
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+          end
+          object colColor_calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_calc'
+            Visible = False
           end
         end
       end
@@ -276,11 +267,13 @@ inherited CheckCashForm: TCheckCashForm
     end
     inherited cxLabel15: TcxLabel
       Top = 37
+      Visible = False
       ExplicitTop = 37
     end
     inherited ceStatus: TcxButtonEdit
       Top = 52
       PopupMenu = nil
+      Visible = False
       ExplicitTop = 52
       ExplicitWidth = 141
       ExplicitHeight = 22
@@ -1020,10 +1013,6 @@ inherited CheckCashForm: TCheckCashForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1049,10 +1038,6 @@ inherited CheckCashForm: TCheckCashForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bb'
         end
         item
           Visible = True
@@ -1106,6 +1091,11 @@ inherited CheckCashForm: TCheckCashForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = colColor_calc
+        ColorValueList = <>
+      end>
     SummaryItemList = <
       item
         Param.Value = Null
@@ -1455,6 +1445,7 @@ inherited CheckCashForm: TCheckCashForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -1470,6 +1461,7 @@ inherited CheckCashForm: TCheckCashForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
@@ -1477,6 +1469,7 @@ inherited CheckCashForm: TCheckCashForm
       end
       item
         Name = 'inAmount'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
@@ -1522,6 +1515,13 @@ inherited CheckCashForm: TCheckCashForm
         Component = MasterCDS
         ComponentItem = 'SummSale'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outColor_calc'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Color_calc'
         MultiSelectSeparator = ','
       end>
     Left = 576

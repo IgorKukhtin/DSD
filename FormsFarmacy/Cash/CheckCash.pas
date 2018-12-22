@@ -89,6 +89,7 @@ type
     dxBarButton5: TdxBarButton;
     dxBarButton6: TdxBarButton;
     colRemains: TcxGridDBColumn;
+    colColor_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

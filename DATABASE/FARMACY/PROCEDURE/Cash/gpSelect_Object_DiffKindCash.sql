@@ -18,11 +18,7 @@ BEGIN
           , Object_DiffKind.ObjectCode             AS Code
           , Object_DiffKind.ValueData              AS Name
      FROM Object AS Object_DiffKind
-          LEFT JOIN ObjectBoolean AS ObjectBoolean_DiffKind_Close
-                                  ON ObjectBoolean_DiffKind_Close.ObjectId = Object_DiffKind.Id
-                                 AND ObjectBoolean_DiffKind_Close.DescId = zc_ObjectBoolean_DiffKind_Close()   
      WHERE Object_DiffKind.DescId = zc_Object_DiffKind()
-       AND COALESCE(ObjectBoolean_DiffKind_Close.ValueData, FALSE) = FALSE
        AND Object_DiffKind.isErased = FALSE;
   
 END;

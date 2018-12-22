@@ -800,7 +800,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
         Value = Null
         Component = CrossDBViewAddOn
         ComponentItem = 'TypeId'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     NeedResetData = True

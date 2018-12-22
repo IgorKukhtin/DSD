@@ -373,6 +373,15 @@ end;
 
 procedure TLoadFormTest.LoadCreateOrderFromMCSFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRecalcMCSShedulerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRecalcMCSShedulerForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRecalcMCSShedulerEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRecalcMCSShedulerEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeekForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWeekForm');
+  Exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCreateOrderFromMCSForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCreateOrderFromMCSForm');
 end;

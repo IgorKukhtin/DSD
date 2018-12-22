@@ -19,15 +19,11 @@ RETURNS TABLE (Id Integer, ParentId integer
              , SummSale TFloat
              , ChangePercent TFloat
              , SummChangePercent TFloat
-             , AmountOrder TFloat
-             -- , DiscountCardId Integer
-             -- , DiscountCardName TVarChar
              , List_UID TVarChar
              , isErased Boolean
              , isSp Boolean
              , Remains TFloat
              , Color_calc integer
-             , Color_ExpirationDate integer
               )
 AS
 $BODY$
@@ -40,6 +36,14 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Income());
      vbUserId := inSession;
+
+    IF 3997056 <> inSession::Integer and 7579515 <> inSession::Integer and
+       4183126 <> inSession::Integer and 3 <> inSession::Integer and 
+       4007345 <> inSession::Integer and 4055652 <> inSession::Integer and 
+       4555291 <> inSession::Integer
+    THEN
+      RAISE EXCEPTION 'В разработке будет позже.';
+    END IF;
 
      -- определяется подразделение
      SELECT MovementLinkObject_Unit.ObjectId
@@ -103,7 +107,6 @@ BEGIN
                                              , (MovementItem.PriceSale * MovementItem.Amount) :: TFloat AS SummSale
                                              , MovementItem.ChangePercent
                                              , MovementItem.SummChangePercent
-                                             , MovementItem.AmountOrder
                                              , MovementItem.List_UID
                                              , MovementItem.isErased
                                              , CASE WHEN COALESCE (vbMovementId_SP,0) = 0 THEN False ELSE TRUE END AS isSp
@@ -155,13 +158,11 @@ BEGIN
                  , MovementItem_Check.SummSale                            AS SummSale
                  , CASE WHEN vbSPKindId = zc_Enum_SPKind_1303() THEN COALESCE (MovementItem_Check.ChangePercent, 100) ELSE MovementItem_Check.ChangePercent END :: TFloat AS ChangePercent
                  , MovementItem_Check.SummChangePercent
-                 , MovementItem_Check.AmountOrder
                  , MovementItem_Check.List_UID
                  , COALESCE(MovementItem_Check.IsErased,FALSE)           AS isErased
                  , CASE WHEN COALESCE (vbMovementId_SP,0) = 0 THEN False ELSE TRUE END AS isSp
                  , tmpRemains.Amount::TFloat                                           AS Remains
-                 , zc_Color_White()                                                    AS Color_calc
-                 , zc_Color_Black()                                                    AS Color_ExpirationDate
+                 , CASE WHEN COALESCE(tmpRemains.Amount, 0) < MovementItem_Check.Amount THEN zc_Color_Red() ELSE zc_Color_White() END  AS Color_calc
             FROM tmpRemains
                 FULL OUTER JOIN MovementItem_Check ON tmpRemains.GoodsId = MovementItem_Check.GoodsId
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE(MovementItem_Check.GoodsId,tmpRemains.GoodsId)
@@ -196,13 +197,11 @@ BEGIN
            , (MovementItem.PriceSale * MovementItem.Amount) :: TFloat AS SummSale
            , MovementItem.ChangePercent
            , MovementItem.SummChangePercent
-           , MovementItem.AmountOrder
            , MovementItem.List_UID
            , MovementItem.isErased
            , CASE WHEN COALESCE (vbMovementId_SP,0) = 0 THEN False ELSE TRUE END AS isSp
            , tmpRemains.Amount::TFloat                                           AS Remains
-           , zc_Color_White()                                                    AS Color_calc
-           , zc_Color_Black()                                                    AS Color_ExpirationDate
+           , CASE WHEN COALESCE(tmpRemains.Amount, 0) < MovementItem.Amount THEN zc_Color_Red() ELSE zc_Color_White() END  AS Color_calc
        FROM MovementItem_Check_View AS MovementItem
             -- получаем GoodsMainId
             LEFT JOIN  ObjectLink AS ObjectLink_Child
@@ -235,4 +234,4 @@ ALTER FUNCTION gpSelect_MovementItem_CheckCash (Integer, Boolean, Boolean, TVarC
 */
 
 -- тест
--- select * from gpSelect_MovementItem_CheckCash(10582660 ,  True, True, '3');
+-- select * from gpSelect_MovementItem_CheckCash(8010623  , False, False, '3');

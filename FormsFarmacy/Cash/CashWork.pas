@@ -45,6 +45,9 @@ type
     procedure SaveZReport(AFileName, AText : string);
   end;
 
+var
+  FM_SERVISE: Integer;
+
 implementation
 
 {$R *.dfm}
@@ -176,10 +179,13 @@ begin
       Flush(F);
       CloseFile(F);
     end;
-//    PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 5);
+    PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 5);
   except on E: Exception do
     ShowMessage('Ошибка сохранения Электронной формы z отчёта. Покажите это окно системному администратору: ' + #13#10 + E.Message);
   end;
 end;
+
+initialization
+  FM_SERVISE := RegisterWindowMessage('FarmacyCashMessage');
 
 end.

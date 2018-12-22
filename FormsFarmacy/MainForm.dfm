@@ -2548,6 +2548,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actRecalcMCSSheduler: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1097#1080#1082' '#1087#1077#1088#1077#1097#1077#1090#1072' '#1053#1058#1047
+      Hint = #1055#1083#1072#1085#1080#1088#1086#1074#1097#1080#1082' '#1087#1077#1088#1077#1097#1077#1090#1072' '#1053#1058#1047
+      FormName = 'TRecalcMCSShedulerForm'
+      FormNameParam.Value = 'TRecalcMCSShedulerForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3369,6 +3381,9 @@ inherited MainForm: TMainForm
       end
       object N173: TMenuItem [30]
         Action = actRepriceUnitSheduler
+      end
+      object N180: TMenuItem [31]
+        Action = actRecalcMCSSheduler
       end
     end
   end
