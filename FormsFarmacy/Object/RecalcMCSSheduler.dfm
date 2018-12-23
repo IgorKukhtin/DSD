@@ -21,7 +21,6 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
         Left = 3
         Width = 734
         Height = 313
-        ExplicitLeft = 3
         ExplicitWidth = 734
         ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -41,6 +40,7 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
             DataBinding.FieldName = 'Ord'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 36
           end
           object Value: TcxGridDBColumn
@@ -52,7 +52,7 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ViewStyle = vsButtonsAutoWidth
+            Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -61,6 +61,7 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
           object Color_cal: TcxGridDBColumn
             DataBinding.FieldName = 'Color_calc'
             Visible = False
+            Options.Editing = False
           end
         end
       end
@@ -117,7 +118,6 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Enabled = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
@@ -225,10 +225,6 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
         item
           Visible = True
           ItemName = 'dxBarButton1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton2'
         end
         item
           Visible = True

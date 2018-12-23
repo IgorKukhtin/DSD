@@ -1075,6 +1075,12 @@ CREATE OR REPLACE FUNCTION zc_Object_DiffKind() RETURNS Integer AS $BODY$BEGIN R
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_DiffKind', 'Вид отказа' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_DiffKind');
 
+CREATE OR REPLACE FUNCTION zc_Object_RecalcMCSSheduler() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_RecalcMCSSheduler'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_RecalcMCSSheduler', 'Планировщик перещета НТЗ' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_RecalcMCSSheduler');
+
+
+
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
@@ -1092,6 +1098,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 21.12.18                                                                                        * zc_Object_RecalcMCSSheduler
  11.12.18         * zc_Object_DiffKind
  22.10.18                                                                                        * zc_Object_RepriceUnitSheduler
  07.10.18         * zc_Object_GoodsSeparate
