@@ -3553,6 +3553,14 @@
 				<Form>Report_Goods_byPartnerDateForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_HolidayPersonalDialog.pas">
+				<Form>Report_HolidayPersonalDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_HolidayPersonal.pas">
+				<Form>Report_HolidayPersonalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -1626,6 +1626,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HolidayPersonalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_HolidayPersonalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HolidayPersonalDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_HolidayPersonalDialogForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionSeparate_CheckPriceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionSeparate_CheckPriceForm');

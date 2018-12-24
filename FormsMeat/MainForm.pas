@@ -995,6 +995,8 @@ type
     N199: TMenuItem;
     actReport_Goods_byPartnerDate: TdsdOpenForm;
     miReport_Goods_byPartnerDate: TMenuItem;
+    actReport_HolidayPersonal: TdsdOpenForm;
+    miReport_HolidayPersonal: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
