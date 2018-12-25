@@ -35,6 +35,11 @@ BEGIN
     
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
     
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmp_AllDayCount'))
+    THEN
+      DROP TABLE tmp_AllDayCount;    
+    END IF;
+
     --пустографка с днями
     CREATE TEMP TABLE tmp_AllDayCount(
         NumberDay        Integer not null,
@@ -46,6 +51,11 @@ BEGIN
         vbCounter := vbCounter + 1;
     END LOOP;
     
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmp_SoldGoodsOneDay'))
+    THEN
+      DROP TABLE tmp_SoldGoodsOneDay;    
+    END IF;
+
     --товар / день / продажа
     CREATE TEMP TABLE tmp_SoldGoodsOneDay(
         GoodsId  integer not null,
@@ -54,6 +64,11 @@ BEGIN
         primary key(GoodsId,NumberOfDay)
     ) ON COMMIT DROP;   
     
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpPrice'))
+    THEN
+      DROP TABLE tmpPrice;    
+    END IF;
+
     --
     CREATE TEMP TABLE tmpPrice  (UnitId Integer, GoodsId Integer, MCSValue TFloat, MCSValue_min TFloat, PercentMarkup TFloat, isTop Boolean, Fix Boolean) ON COMMIT DROP;  
     INSERT INTO tmpPrice (UnitId, GoodsId, MCSValue, MCSValue_min, PercentMarkup, isTop, Fix)  
@@ -111,6 +126,11 @@ BEGIN
                                ON Object_Price.GoodsId = Object_Goods.Id
                               AND Object_Price.UnitId = inUnitId;
 
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmp_OneDaySold'))
+    THEN
+      DROP TABLE tmp_OneDaySold;    
+    END IF;
+
     --Таблица для продаж
     CREATE TEMP TABLE tmp_OneDaySold(
         GoodsId   integer not null,
@@ -119,6 +139,11 @@ BEGIN
         primary key(GoodsId,DayCount)
     ) ON COMMIT DROP;
     
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmp_ResultSet'))
+    THEN
+      DROP TABLE tmp_ResultSet;    
+    END IF;
+
     --результат вычислений
     CREATE TEMP TABLE tmp_ResultSet(
         GoodsId integer not null,
@@ -207,10 +232,11 @@ $BODY$
 LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpRecalcMCS(Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А. 
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
+ 23.12.18                                                                      * 
  03.12.18         * 
  24.02.17         *
  04.07.16         * add PercentMarkup

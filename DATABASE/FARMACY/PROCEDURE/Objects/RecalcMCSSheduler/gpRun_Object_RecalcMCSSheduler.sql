@@ -8,14 +8,37 @@ CREATE OR REPLACE FUNCTION gpRun_Object_RecalcMCSSheduler(
 )
 RETURNS VOID AS
 $BODY$
+  DECLARE vbHolidays Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_ImportType());
 
+  IF EXISTS(SELECT
+                 TRUE       AS Holidays
+            FROM
+                Object AS Object_RecalcMCSSheduler
+
+                 INNER JOIN ObjectDate AS ObjectDate_BeginHolidays
+                                       ON ObjectDate_BeginHolidays.ObjectId = Object_RecalcMCSSheduler.Id
+                                      AND ObjectDate_BeginHolidays.DescId = zc_ObjectFloat_RecalcMCSSheduler_BeginHolidays()
+                 INNER JOIN ObjectDate AS ObjectDate_EndHolidays
+                                       ON ObjectDate_EndHolidays.ObjectId = Object_RecalcMCSSheduler.Id
+                                      AND ObjectDate_EndHolidays.DescId = zc_ObjectFloat_RecalcMCSSheduler_EndHolidays()
+            WHERE Object_RecalcMCSSheduler.DescId = zc_Object_RecalcMCSSheduler()
+               AND ObjectDate_BeginHolidays.ValueData <= ObjectDate_EndHolidays.ValueData  
+               AND ObjectDate_BeginHolidays.ValueData <= current_date
+               AND current_date <= ObjectDate_EndHolidays.ValueData  
+            ORDER BY ID LIMIT 1)
+  THEN
+    vbHolidays := TRUE;
+  ELSE
+    vbHolidays := FALSE;  
+  END IF;
+
   PERFORM  gpRecalcMCS(inUnitId := ObjectLink_Unit.ChildObjectId,
                        inPeriod := ObjectFloat_Period.ValueData::Integer,
                        inDay := ObjectFloat_Day.ValueData::Integer,
-                       inSession := inSession),
+                       inSession := COALESCE (ObjectLink_User.ChildObjectId::TVarChar, inSession))
   FROM Object AS Object_RecalcMCSSheduler
 
            INNER JOIN ObjectLink AS ObjectLink_Unit
@@ -26,22 +49,17 @@ BEGIN
                                  ON ObjectLink_Unit_Juridical.ObjectId = ObjectLink_Unit.ChildObjectId
                                 AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
 
-           INNER JOIN ObjectFloat AS ObjectFloat_Week
-                                  ON ObjectFloat_Week.ObjectId = Object_RecalcMCSSheduler.Id
-                                 AND ObjectFloat_Week.DescId = zc_ObjectFloat_RecalcMCSSheduler_Week()
-                                 AND ObjectFloat_Week.ValueData::Integer = to_char(clock_timestamp(), 'ID')::Integer
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_PharmacyItem
+                                   ON ObjectBoolean_PharmacyItem.ObjectId = ObjectLink_Unit.ChildObjectId
+                                  AND ObjectBoolean_PharmacyItem.DescId = zc_ObjectBoolean_Unit_PharmacyItem()
 
            LEFT JOIN ObjectLink AS ObjectLink_User
                                  ON ObjectLink_User.ObjectId = Object_RecalcMCSSheduler.Id
                                 AND ObjectLink_User.DescId = zc_ObjectLink_RecalcMCSSheduler_User()
 
-           LEFT JOIN ObjectBoolean AS ObjectFloat_Holiday
-                                 ON ObjectFloat_Holiday.ObjectId = ObjectLink_Unit.ChildObjectId
-                                AND ObjectFloat_Holiday.DescId = zc_ObjectBoolean_Unit_Holiday()
-
            LEFT JOIN ObjectFloat AS ObjectFloat_Period
                                  ON ObjectFloat_Period.ObjectId = ObjectLink_Unit.ChildObjectId
-                                AND ObjectFloat_Period.DescId = CASE WHEN COALESCE(ObjectFloat_Holiday.ValueData, FALSE) = TRUE
+                                AND ObjectFloat_Period.DescId = CASE WHEN COALESCE(ObjectBoolean_PharmacyItem.ValueData, False) = FALSE AND vbHolidays
                                                                 THEN zc_ObjectFloat_Unit_Period()
                                                                 ELSE
                                                                   CASE to_char(clock_timestamp(), 'ID')::Integer
@@ -55,7 +73,7 @@ BEGIN
 
            LEFT JOIN ObjectFloat AS ObjectFloat_Day
                                  ON ObjectFloat_Day.ObjectId = ObjectLink_Unit.ChildObjectId
-                                AND ObjectFloat_Day.DescId = CASE WHEN COALESCE(ObjectFloat_Holiday.ValueData, FALSE) = TRUE
+                                AND ObjectFloat_Day.DescId = CASE WHEN COALESCE(ObjectBoolean_PharmacyItem.ValueData, False) = FALSE AND vbHolidays
                                                              THEN zc_ObjectFloat_Unit_Day()
                                                              ELSE
                                                                CASE to_char(clock_timestamp(), 'ID')::Integer
