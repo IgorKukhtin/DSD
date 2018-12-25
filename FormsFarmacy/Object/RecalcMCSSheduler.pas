@@ -12,12 +12,11 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxButtonEdit, Vcl.ExtCtrls, cxSplitter, cxDropDownEdit,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dxBarBuiltInMenu, cxNavigator;
+  dxBarBuiltInMenu, cxNavigator, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
+  cxLabel, cxTextEdit, cxMaskEdit, cxCalendar;
 
 type
   TRecalcMCSShedulerForm = class(TAncestorDBGridForm)
-    Value: TcxGridDBColumn;
-    spErased: TdsdStoredProc;
     bbSetErased: TdxBarButton;
     bbUnErased: TdxBarButton;
     bbSetErasedChild: TdxBarButton;
@@ -25,20 +24,28 @@ type
     bbdsdChoiceGuides: TdxBarButton;
     cxSplitter1: TcxSplitter;
     Ord: TcxGridDBColumn;
-    HeaderCDS: TClientDataSet;
-    CrossDBViewAddOn: TCrossDBViewAddOn;
     actInsert: TdsdInsertUpdateAction;
     actUpdate: TdsdInsertUpdateAction;
     dxBarButton1: TdxBarButton;
     dxBarButton2: TdxBarButton;
     Color_cal: TcxGridDBColumn;
-    actSetErased: TMultiAction;
-    actUnErased: TMultiAction;
-    actExecSetErased: TdsdExecStoredProc;
-    actExecUnErased: TdsdExecStoredProc;
-    spUnErased: TdsdStoredProc;
     dxBarButton3: TdxBarButton;
     dxBarButton4: TdxBarButton;
+    dxBarButton5: TdxBarButton;
+    actOpenUnitTree: TOpenChoiceForm;
+    actAddUnit: TMultiAction;
+    actOpenRecalcMCSShedulerEdit: TdsdOpenForm;
+    FormParams: TdsdFormParams;
+    Panel1: TPanel;
+    edBeginHolidays: TcxDateEdit;
+    cxLabel2: TcxLabel;
+    edEndHolidays: TcxDateEdit;
+    cxLabel1: TcxLabel;
+    spGetHolidays: TdsdStoredProc;
+    spUpdateHolidays: TdsdStoredProc;
+    HeaderSaver: THeaderSaver;
+    spInsertUpdateMovement: TdsdExecStoredProc;
+    dxBarButton6: TdxBarButton;
   private
     { Private declarations }
   public

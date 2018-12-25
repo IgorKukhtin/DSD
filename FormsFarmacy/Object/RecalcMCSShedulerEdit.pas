@@ -34,19 +34,42 @@ type
     dsdDataSetRefresh: TdsdDataSetRefresh;
     dsdFormClose1: TdsdFormClose;
     spInsertUpdate: TdsdStoredProc;
-    dsdFormParams: TdsdFormParams;
+    FormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
-    UnitGuides: TdsdGuides;
-    WeekGuides: TdsdGuides;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel4: TcxLabel;
-    ceUnit: TcxButtonEdit;
-    ceWeek: TcxButtonEdit;
     ceUser: TcxButtonEdit;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
     UserGuides: TdsdGuides;
     cbIsClose: TcxCheckBox;
+    edUnitName: TcxTextEdit;
+    cxLabel1: TcxLabel;
+    cxLabel5: TcxLabel;
+    cePeriod: TcxCurrencyEdit;
+    ceDay: TcxCurrencyEdit;
+    ceDay1: TcxCurrencyEdit;
+    cePeriod1: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
+    ceDay2: TcxCurrencyEdit;
+    cePeriod2: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    ceDay3: TcxCurrencyEdit;
+    cePeriod3: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
+    ceDay4: TcxCurrencyEdit;
+    cePeriod4: TcxCurrencyEdit;
+    cxLabel9: TcxLabel;
+    ceDay5: TcxCurrencyEdit;
+    cePeriod5: TcxCurrencyEdit;
+    cxLabel10: TcxLabel;
+    ceDay6: TcxCurrencyEdit;
+    cePeriod6: TcxCurrencyEdit;
+    cxLabel11: TcxLabel;
+    ceDay7: TcxCurrencyEdit;
+    cePeriod7: TcxCurrencyEdit;
+    cxLabel12: TcxLabel;
+    cbPharmacyItem: TcxCheckBox;
   private
     { Private declarations }
   public

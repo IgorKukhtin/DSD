@@ -1,28 +1,31 @@
 inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
   Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1097#1080#1082' '#1087#1077#1088#1077#1097#1077#1090#1072' '#1053#1058#1047
   ClientHeight = 339
-  ClientWidth = 737
+  ClientWidth = 691
   AddOnFormData.isAlwaysRefresh = False
-  ExplicitWidth = 753
+  ExplicitWidth = 707
   ExplicitHeight = 378
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 737
-    Height = 313
-    ExplicitWidth = 737
-    ExplicitHeight = 313
-    ClientRectBottom = 313
-    ClientRectRight = 737
+    Top = 59
+    Width = 691
+    Height = 280
+    ExplicitTop = 59
+    ExplicitWidth = 691
+    ExplicitHeight = 280
+    ClientRectBottom = 280
+    ClientRectRight = 691
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 737
-      ExplicitHeight = 313
+      ExplicitWidth = 691
+      ExplicitHeight = 280
       inherited cxGrid: TcxGrid
         Left = 3
-        Width = 734
-        Height = 313
-        ExplicitWidth = 734
-        ExplicitHeight = 313
+        Width = 688
+        Height = 280
+        ExplicitLeft = 3
+        ExplicitWidth = 688
+        ExplicitHeight = 280
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.FocusCellOnCycle = False
           OptionsData.CancelOnExit = True
@@ -43,25 +46,87 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
             Options.Editing = False
             Width = 36
           end
-          object Value: TcxGridDBColumn
-            DataBinding.FieldName = 'Value'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actUpdate
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
+          object PharmacyItem: TcxGridDBColumn
+            Caption = #1040#1087#1090'. '#1087#1091#1085#1082#1090
+            DataBinding.FieldName = 'PharmacyItem'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 42
+          end
+          object UnitCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'UnitCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 120
+            Options.Editing = False
+            Width = 34
+          end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 177
+          end
+          object AreaName: TcxGridDBColumn
+            Caption = #1056#1077#1075#1080#1086#1085
+            DataBinding.FieldName = 'AreaName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
+          end
+          object ProvinceCityName: TcxGridDBColumn
+            Caption = #1056#1072#1081#1086#1085
+            DataBinding.FieldName = 'ProvinceCityName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 81
+          end
+          object UserName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+            DataBinding.FieldName = 'UserName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 113
           end
           object Color_cal: TcxGridDBColumn
-            DataBinding.FieldName = 'Color_calc'
+            DataBinding.FieldName = 'Color_cal'
             Visible = False
             Options.Editing = False
+          end
+          object isErased: TcxGridDBColumn
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 52
           end
         end
       end
@@ -69,9 +134,42 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
         Left = 0
         Top = 0
         Width = 3
-        Height = 313
+        Height = 280
         Control = cxGrid
       end
+    end
+  end
+  object Panel1: TPanel [1]
+    Left = 0
+    Top = 0
+    Width = 691
+    Height = 33
+    Align = alTop
+    ShowCaption = False
+    TabOrder = 5
+    object edBeginHolidays: TcxDateEdit
+      Left = 188
+      Top = 7
+      EditValue = 32874d
+      TabOrder = 0
+      Width = 100
+    end
+    object cxLabel2: TcxLabel
+      Left = 14
+      Top = 8
+      Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1087#1088#1072#1079#1076#1085#1080#1095#1085#1099#1093' '#1076#1085#1077#1081
+    end
+    object edEndHolidays: TcxDateEdit
+      Left = 458
+      Top = 7
+      EditValue = 32874d
+      TabOrder = 2
+      Width = 100
+    end
+    object cxLabel1: TcxLabel
+      Left = 302
+      Top = 8
+      Caption = #1055#1086#1089#1083#1077#1076#1085#1080#1081' '#1076#1077#1085#1100' '#1087#1088#1072#1079#1076#1085#1080#1082#1086#1074
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -93,6 +191,7 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
           StoredProc = spSelect
         end
         item
+          StoredProc = spGetHolidays
         end>
     end
     object actInsert: TdsdInsertUpdateAction
@@ -129,8 +228,16 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
         item
           Name = 'Id'
           Value = Null
-          Component = CrossDBViewAddOn
-          ComponentItem = 'TypeId'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -139,55 +246,76 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object actSetErased: TMultiAction
+    object actAddUnit: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
-      Enabled = False
       ActionList = <
         item
-          Action = actExecSetErased
+          Action = actOpenUnitTree
         end
         item
           Action = actRefresh
-        end>
-      Caption = 'MultiAction1'
-      ImageIndex = 2
-    end
-    object actExecSetErased: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spErased
-      StoredProcList = <
-        item
-          StoredProc = spErased
-        end>
-      Caption = 'actExecSetErased'
-    end
-    object actUnErased: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Enabled = False
-      ActionList = <
-        item
-          Action = actExecUnErased
         end
         item
-          Action = actRefresh
+          Action = actOpenRecalcMCSShedulerEdit
         end>
-      Caption = 'MultiAction2'
-      ImageIndex = 8
+      Caption = 'actAddUnit'
+      ImageIndex = 0
     end
-    object actExecUnErased: TdsdExecStoredProc
+    object actOpenUnitTree: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUnErased
+      Caption = 'actOpenUnitTree'
+      FormName = 'TUnitTreeForm'
+      FormNameParam.Value = 'TUnitTreeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'UnitID'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenRecalcMCSShedulerEdit: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actOpenRecalcMCSShedulerEdit'
+      FormName = 'TRecalcMCSShedulerEditForm'
+      FormNameParam.Value = 'TRecalcMCSShedulerEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitID'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'UnitID'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object spInsertUpdateMovement: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateHolidays
       StoredProcList = <
         item
-          StoredProc = spUnErased
+          StoredProc = spUpdateHolidays
         end>
-      Caption = 'actExecUnErased'
+      Caption = #1057#1086#1093#1088#1072#1085#1077#1085#1077#1085#1080#1103' '#1087#1077#1088#1080#1086#1076#1072' '#1087#1088#1072#1079#1076#1085#1080#1082#1086#1074
+      Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1077#1085#1080#1103' '#1087#1077#1088#1080#1086#1076#1072' '#1087#1088#1072#1079#1076#1085#1080#1082#1086#1074
+      ImageIndex = 14
     end
   end
   inherited MasterDS: TDataSource
@@ -200,15 +328,6 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_RecalcMCSSheduler'
-    DataSet = HeaderCDS
-    DataSets = <
-      item
-        DataSet = HeaderCDS
-      end
-      item
-        DataSet = MasterCDS
-      end>
-    OutputType = otMultiDataSet
     Left = 112
     Top = 64
   end
@@ -224,19 +343,19 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton1'
         end
         item
           Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton3'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton4'
         end
         item
           Visible = True
@@ -307,7 +426,7 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
       ImageIndex = 7
     end
     object dxBarButton1: TdxBarButton
-      Action = actInsert
+      Action = actAddUnit
       Category = 0
     end
     object dxBarButton2: TdxBarButton
@@ -315,79 +434,119 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
       Category = 0
     end
     object dxBarButton3: TdxBarButton
-      Action = actSetErased
+      Caption = 'MultiAction1'
       Category = 0
+      Visible = ivAlways
+      ImageIndex = 2
     end
     object dxBarButton4: TdxBarButton
-      Action = actUnErased
+      Caption = 'MultiAction2'
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 8
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actUpdate
+      Category = 0
+    end
+    object dxBarButton6: TdxBarButton
+      Action = spInsertUpdateMovement
       Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    View = nil
+    OnDblClickActionList = <
+      item
+        Action = actUpdate
+      end>
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_cal
+        ColorValueList = <>
+      end>
     Left = 280
     Top = 192
   end
-  object spErased: TdsdStoredProc
-    StoredProcName = 'gp_Object_RecalcMCSSheduler_Erased'
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitID'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    Left = 256
+    Top = 72
+  end
+  object spGetHolidays: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_RecalcMCSSheduler_Holidays'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inObjectId'
-        Value = Null
-        Component = CrossDBViewAddOn
-        ComponentItem = 'TypeId'
-        ParamType = ptInput
+        Name = 'BeginHolidays'
+        Value = 'NULL'
+        Component = edBeginHolidays
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndHolidays'
+        Value = 'NULL'
+        Component = edEndHolidays
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 192
-    Top = 192
-  end
-  object HeaderCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
     Left = 368
-    Top = 80
+    Top = 104
   end
-  object CrossDBViewAddOn: TCrossDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = cxGridDBTableView
-    OnDblClickActionList = <>
-    ActionItemList = <>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
-    ColorRuleList = <
-      item
-        ColorColumn = Value
-        ValueColumn = Color_cal
-        ColorValueList = <>
-      end>
-    ColumnAddOnList = <>
-    ColumnEnterList = <>
-    SummaryItemList = <>
-    HeaderDataSet = HeaderCDS
-    HeaderColumnName = 'Name'
-    TemplateColumn = Value
-    Left = 384
-    Top = 192
-  end
-  object spUnErased: TdsdStoredProc
-    StoredProcName = 'gp_Object_RecalcMCSSheduler_UnErased'
+  object spUpdateHolidays: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_RecalcMCSSheduler_Holidays'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inObjectId'
-        Value = Null
-        Component = CrossDBViewAddOn
-        ComponentItem = 'TypeId'
+        Name = 'inBeginHolidays'
+        Value = 42132d
+        Component = edBeginHolidays
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndHolidays'
+        Value = 42132d
+        Component = edEndHolidays
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 192
-    Top = 256
+    Left = 368
+    Top = 152
+  end
+  object HeaderSaver: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
+    StoredProc = spUpdateHolidays
+    ControlList = <
+      item
+        Control = edBeginHolidays
+      end
+      item
+        Control = edEndHolidays
+      end>
+    GetStoredProc = spGetHolidays
+    Left = 448
+    Top = 105
   end
 end
