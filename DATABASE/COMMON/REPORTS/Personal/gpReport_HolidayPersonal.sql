@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_HolidayPersonal(
 )
 RETURNS TABLE(MemberId Integer, PersonalId Integer
             , PersonalCode Integer, PersonalName TVarChar
-            , PositionCode Integer, PositionName TVarChar
+            , PositionId Integer, PositionCode Integer, PositionName TVarChar
             , PositionLevelName TVarChar
             , UnitCode Integer, UnitName TVarChar
             , BranchName TVarChar
@@ -141,6 +141,7 @@ BEGIN
          , tmpVacation.PersonalId
          , tmpVacation.PersonalCode
          , tmpVacation.PersonalName
+         , tmpVacation.PositionId
          , tmpVacation.PositionCode
          , tmpVacation.PositionName
          , tmpVacation.PositionLevelName

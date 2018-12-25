@@ -1,4 +1,4 @@
-unit Report_HolidayPersonal;
+unit Report_HolidayCompensation;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   cxButtonEdit, ChoicePeriod, cxLabel, dxBarExtItems, cxCheckBox;
 
 type
-  TReport_HolidayPersonalForm = class(TParentForm)
+  TReport_HolidayCompensationForm = class(TParentForm)
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
@@ -54,7 +54,6 @@ type
     bbPrintBy_Goods: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     FormParams: TdsdFormParams;
-    Month_work: TcxGridDBColumn;
     spGetDescSets: TdsdStoredProc;
     SaleJournal: TdsdOpenForm;
     actIsDetail: TdsdDataSetRefresh;
@@ -76,8 +75,8 @@ type
     BranchName: TcxGridDBColumn;
     bbIsDay: TdxBarControlContainerItem;
     UnitName: TcxGridDBColumn;
-    cbDetail: TcxCheckBox;
-    InvNumber: TcxGridDBColumn;
+    AmountCompensation: TcxGridDBColumn;
+    SummaCompensation: TcxGridDBColumn;
   private
   public
   end;
@@ -89,6 +88,6 @@ implementation
 
 
 initialization
-  RegisterClass(TReport_HolidayPersonalForm);
+  RegisterClass(TReport_HolidayCompensationForm);
 
 end.

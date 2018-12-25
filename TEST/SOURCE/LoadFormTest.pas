@@ -1626,6 +1626,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HolidayCompensationForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_HolidayCompensationForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HolidayCompensationDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_HolidayCompensationDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HolidayPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_HolidayPersonalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HolidayPersonalDialogForm'));
