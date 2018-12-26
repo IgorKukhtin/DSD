@@ -5,7 +5,7 @@
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 260
+  ExplicitHeight = 257
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -6997,6 +6997,18 @@
       object miMemberSheetWorkTime: TMenuItem
         Action = actMemberSheetWorkTime
       end
+      object N200: TMenuItem
+        Caption = #1054#1090#1087#1091#1089#1082
+        object N199: TMenuItem
+          Action = actMemberHoliday
+        end
+        object miReport_HolidayPersonal: TMenuItem
+          Action = actReport_HolidayPersonal
+        end
+        object miReport_HolidayCompensation: TMenuItem
+          Action = actReport_HolidayCompensation
+        end
+      end
       object N22: TMenuItem
         Caption = '-'
       end
@@ -7005,9 +7017,6 @@
       end
       object miLossPersonal: TMenuItem
         Action = actLossPersonal
-      end
-      object N199: TMenuItem
-        Action = actMemberHoliday
       end
       object N57: TMenuItem
         Caption = '-'
@@ -7050,12 +7059,6 @@
       end
       object N89: TMenuItem
         Action = actReport_SheetWorkTime
-      end
-      object miReport_HolidayPersonal: TMenuItem
-        Action = actReport_HolidayPersonal
-      end
-      object miReport_HolidayCompensation: TMenuItem
-        Action = actReport_HolidayCompensation
       end
     end
     object miPersonalTrade: TMenuItem [9]
