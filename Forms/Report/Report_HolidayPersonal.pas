@@ -44,11 +44,11 @@ type
     DBViewAddOn: TdsdDBViewAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Day_vacation: TcxGridDBColumn;
-    PositionGuides: TdsdGuides;
+    GuidesPosition: TdsdGuides;
     PeriodChoice: TPeriodChoice;
     bbDialogForm: TdxBarButton;
     RefreshDispatcher: TRefreshDispatcher;
-    PersonalGuides: TdsdGuides;
+    GuidesMember: TdsdGuides;
     PositionName: TcxGridDBColumn;
     Day_holiday: TcxGridDBColumn;
     bbPrintBy_Goods: TdxBarButton;
@@ -62,7 +62,7 @@ type
     bbPrint3: TdxBarButton;
     Panel1: TPanel;
     deStart: TcxDateEdit;
-    edPersonal: TcxButtonEdit;
+    edMember: TcxButtonEdit;
     cxLabel3: TcxLabel;
     edPosition: TcxButtonEdit;
     cxLabel4: TcxLabel;

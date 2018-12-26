@@ -1,4 +1,4 @@
-unit Report_Goods_byPartnerDate;
+unit Report_Goods_byMovementReal;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TReport_Goods_byPartnerDateForm = class(TAncestorReportForm)
+  TReport_Goods_byMovementRealForm = class(TAncestorReportForm)
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
@@ -97,6 +97,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TReport_Goods_byPartnerDateForm);
+  RegisterClass(TReport_Goods_byMovementRealForm);
 
 end.

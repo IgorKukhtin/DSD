@@ -1,12 +1,13 @@
 -- Function: gpReport_HolidayCompensation ()
 
 DROP FUNCTION IF EXISTS gpReport_HolidayCompensation (TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_HolidayCompensation (TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_HolidayCompensation(
     IN inStartDate      TDateTime, --дата начала периода
     IN inUnitId         Integer,   --подразделение
-    IN inPersonalId     Integer,   --сотрудник
-    IN inPositionId     Integer,   --должность
+    IN inMemberId       Integer,   --сотрудник
+    --IN inPositionId     Integer,   --должность
     IN inSession        TVarChar   --сессия пользователя
 )
 RETURNS TABLE(MemberId Integer, PersonalId Integer
@@ -66,7 +67,7 @@ BEGIN
                        , tmp.Day_vacation
                        , tmp.Day_holiday   -- использовано 
                        , tmp.Day_diff      -- не использовано   
-                    FROM gpReport_HolidayPersonal (inStartDate:= inStartDate, inUnitId:= inUnitId, inPersonalId:= inPersonalId, inPositionId:= inPositionId, inisDetail:= FALSE, inSession:= inSession) AS tmp
+                    FROM gpReport_HolidayPersonal (inStartDate:= inStartDate, inUnitId:= inUnitId, inMemberId:= inMemberId, inisDetail:= FALSE, inSession:= inSession) AS tmp
                    )
 
   , tmpMovement AS (SELECT Movement.Id                                                                          -- итого отработано
@@ -76,27 +77,27 @@ BEGIN
                       AND Movement.StatusId = zc_Enum_Status_Complete()
                     )
   
-  , tmpPersonalService AS (SELECT MovementItem.ObjectId          AS PersonalId
-                                , MILinkObject_Position.ObjectId AS PositionId
-                                , CASE WHEN vbCountDay <> 0 THEN (SUM (COALESCE (MIFloat_SummToPay.ValueData, 0)) / 12 / vbCountDay) ELSE 0 END AS AmountCompensation
+  , tmpPersonalService AS (SELECT ObjectLink_Personal_Member.ChildObjectId  AS MemberId
+                                --, MILinkObject_Position.ObjectId AS PositionId
+                                , CASE WHEN vbCountDay <> 0 THEN (SUM (COALESCE (MIFloat_SummToPay.ValueData, 0)) / vbCountDay) ELSE 0 END AS AmountCompensation
                            FROM tmpMovement AS Movement
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId = zc_MI_Master()
                                                        AND MovementItem.isErased = FALSE
-                                                       AND (MovementItem.ObjectId  = inPersonalId OR inPersonalId = 0)
+                                                                
                                 INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                                   ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                                                  AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
                                                                  AND (MILinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0)
-                                INNER JOIN MovementItemLinkObject AS MILinkObject_Position
-                                                                  ON MILinkObject_Position.MovementItemId = MovementItem.Id
-                                                                 AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
-                                                                 AND (MILinkObject_Position.ObjectId = inPositionId OR inPositionId = 0)
+                                INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                      ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
+                                                     AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                                                     AND (ObjectLink_Personal_Member.ChildObjectId = inMemberId OR inMemberId = 0)
+                                               
                                 LEFT JOIN MovementItemFloat AS MIFloat_SummToPay
                                                             ON MIFloat_SummToPay.MovementItemId = MovementItem.Id
                                                            AND MIFloat_SummToPay.DescId = zc_MIFloat_SummToPay()
-                           GROUP BY MovementItem.ObjectId
-                                  , MILinkObject_Position.ObjectId
+                           GROUP BY ObjectLink_Personal_Member.ChildObjectId
                            )
 
     -- Результат
@@ -121,8 +122,9 @@ BEGIN
          , tmpPersonalService.AmountCompensation                        :: TFloat
          , (tmpPersonalService.AmountCompensation * tmpReport.Day_diff) :: TFloat AS SummaCompensation
     FROM tmpReport
-         LEFT JOIN tmpPersonalService ON tmpPersonalService.PersonalId = tmpReport.PersonalId
-                                     AND tmpPersonalService.PositionId = tmpReport.PositionId
+         LEFT JOIN tmpPersonalService ON tmpPersonalService.MemberId = tmpReport.MemberId
+                                     AND COALESCE (tmpPersonalService.AmountCompensation, 0) > 0
+                                     --AND tmpPersonalService.PositionId = tmpReport.PositionId
     ORDER BY tmpReport.UnitName
            , tmpReport.PersonalName
            , tmpReport.PositionName
@@ -133,4 +135,4 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
 -- тест
--- SELECT * FROM gpReport_HolidayCompensation (inStartDate:= '03.11.2018', inUnitId:= 8439, inPersonalId:= 0, inPositionId:= 0, inSession:= '5');
+-- select * from gpReport_HolidayCompensation(inStartDate := ('01.01.2019')::TDateTime , inUnitId := 8384 , inMemberId := 442269 ,  inSession := '5');

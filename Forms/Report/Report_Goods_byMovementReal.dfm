@@ -1,4 +1,4 @@
-inherited Report_Goods_byPartnerDateForm: TReport_Goods_byPartnerDateForm
+inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1086#1090#1075#1088#1091#1079#1082#1072#1084' '#1087#1086' '#1076#1072#1090#1077' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 542
   ClientWidth = 894
@@ -55,7 +55,7 @@ inherited Report_Goods_byPartnerDateForm: TReport_Goods_byPartnerDateForm
             Width = 300
           end
           object SaleAmount: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'SaleAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -66,7 +66,7 @@ inherited Report_Goods_byPartnerDateForm: TReport_Goods_byPartnerDateForm
             Width = 90
           end
           object ReturnAmount: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'ReturnAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -77,7 +77,7 @@ inherited Report_Goods_byPartnerDateForm: TReport_Goods_byPartnerDateForm
             Width = 90
           end
           object Amount: TcxGridDBColumn
-            Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1082#1075
+            Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1082#1075'  ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -88,7 +88,7 @@ inherited Report_Goods_byPartnerDateForm: TReport_Goods_byPartnerDateForm
             Width = 80
           end
           object SaleAmountPartner: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1080#1085#1092'.)'
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1087#1086#1082#1091#1087'.)'
             DataBinding.FieldName = 'SaleAmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -100,7 +100,7 @@ inherited Report_Goods_byPartnerDateForm: TReport_Goods_byPartnerDateForm
             Width = 90
           end
           object ReturnAmountPartner: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1080#1085#1092'.)'
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1087#1086#1082#1091#1087'.)'
             DataBinding.FieldName = 'ReturnAmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -112,7 +112,7 @@ inherited Report_Goods_byPartnerDateForm: TReport_Goods_byPartnerDateForm
             Width = 90
           end
           object AmountPartner: TcxGridDBColumn
-            Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1080#1085#1092'.)'
+            Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1087#1086#1082#1091#1087'.)'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -2166,7 +2166,7 @@ inherited Report_Goods_byPartnerDateForm: TReport_Goods_byPartnerDateForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Goods_byPartnerDate'
+    StoredProcName = 'gpReport_Goods_byMovementReal'
     DataSets = <
       item
         DataSet = MasterCDS
