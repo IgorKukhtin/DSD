@@ -993,7 +993,7 @@ type
     N198: TMenuItem;
     actMemberHoliday: TdsdOpenForm;
     N199: TMenuItem;
-    actReport_Goods_byPartnerDate: TdsdOpenForm;
+    actReport_Goods_byMovementReal: TdsdOpenForm;
     miReport_Goods_byPartnerDate: TMenuItem;
     actReport_HolidayPersonal: TdsdOpenForm;
     miReport_HolidayPersonal: TMenuItem;

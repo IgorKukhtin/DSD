@@ -54,9 +54,10 @@ object Report_HolidayPersonalDialogForm: TReport_HolidayPersonalDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 3
+    Visible = False
     Width = 250
   end
-  object edPersonal: TcxButtonEdit
+  object edMember: TcxButtonEdit
     Left = 101
     Top = 89
     Properties.Buttons = <
@@ -77,6 +78,7 @@ object Report_HolidayPersonalDialogForm: TReport_HolidayPersonalDialogForm
     Left = 34
     Top = 124
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100':'
+    Visible = False
   end
   object cxLabel6: TcxLabel
     Left = 47
@@ -145,7 +147,7 @@ object Report_HolidayPersonalDialogForm: TReport_HolidayPersonalDialogForm
         Value = ''
         Component = GuidesPosition
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -154,21 +156,21 @@ object Report_HolidayPersonalDialogForm: TReport_HolidayPersonalDialogForm
         Component = GuidesPosition
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PersonalId'
+        Name = 'MemberId'
         Value = ''
-        Component = GuidesPersonal
+        Component = GuidesMember
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PersonalName'
+        Name = 'MemberName'
         Value = ''
-        Component = GuidesPersonal
+        Component = GuidesMember
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -229,22 +231,22 @@ object Report_HolidayPersonalDialogForm: TReport_HolidayPersonalDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 142
-    Top = 114
+    Left = 182
+    Top = 122
   end
-  object GuidesPersonal: TdsdGuides
+  object GuidesMember: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edPersonal
-    FormNameParam.Value = 'TPersonal_ObjectForm'
+    LookupControl = edMember
+    FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonal_ObjectForm'
+    FormName = 'TMember_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesPersonal
+        Component = GuidesMember
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -253,7 +255,7 @@ object Report_HolidayPersonalDialogForm: TReport_HolidayPersonalDialogForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesPersonal
+        Component = GuidesMember
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

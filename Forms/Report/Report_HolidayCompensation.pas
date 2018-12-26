@@ -48,7 +48,7 @@ type
     PeriodChoice: TPeriodChoice;
     bbDialogForm: TdxBarButton;
     RefreshDispatcher: TRefreshDispatcher;
-    PersonalGuides: TdsdGuides;
+    GuidesMember: TdsdGuides;
     PositionName: TcxGridDBColumn;
     Day_holiday: TcxGridDBColumn;
     bbPrintBy_Goods: TdxBarButton;

@@ -136,42 +136,42 @@ IF inBranchId <> 0
                    , MIFloat_Price.ValueData              AS Price
           
                FROM MovementDate AS MD_OperDatePartner
-                                            INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                                          ON MovementLinkObject_To.MovementId = MD_OperDatePartner.MovementId
-                                                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                                         AND MovementLinkObject_To.ObjectId IN (SELECT _tmpListPartner.PartnerId FROM _tmpListPartner)
-                                            -- INNER JOIN _tmpListPartner ON _tmpListPartner.PartnerId = MovementLinkObject_To.ObjectId
-                                            INNER JOIN Movement ON Movement.Id       = MD_OperDatePartner.MovementId
-                                                               AND Movement.DescId   = zc_Movement_Sale()
-                                                               AND Movement.StatusId = zc_Enum_Status_Complete()
-
-                                            INNER JOIN MovementLinkObject AS MLO_PaidKind
-                                                                          ON MLO_PaidKind.MovementId = MD_OperDatePartner.MovementId
-                                                                         AND MLO_PaidKind.DescId     = zc_MovementLinkObject_PaidKind()
-                                                                         AND MLO_PaidKind.ObjectId   = inPaidKindId
-                                            LEFT JOIN MovementLinkObject AS MLO_Contract
-                                                                         ON MLO_Contract.MovementId = MD_OperDatePartner.MovementId
-                                                                        AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
-
-                                            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                                         ON MovementLinkObject_From.MovementId = MD_OperDatePartner.MovementId
-                                                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-
-                                            INNER JOIN MovementItem ON MovementItem.MovementId = MD_OperDatePartner.MovementId
-                                                                   AND MovementItem.isErased    = FALSE
-                                                                   AND MovementItem.DescId      = zc_MI_Master()
-                                                                   AND MovementItem.ObjectId    = inGoodsId
-                                            INNER JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                                                        AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
-                                                                        AND MIFloat_AmountPartner.ValueData    <> 0
-
-                                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                            LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                                       AND MIFloat_Price.DescId         = zc_MIFloat_Price()
+                    INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                  ON MovementLinkObject_To.MovementId = MD_OperDatePartner.MovementId
+                                                 AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                 AND MovementLinkObject_To.ObjectId IN (SELECT _tmpListPartner.PartnerId FROM _tmpListPartner)
+                    -- INNER JOIN _tmpListPartner ON _tmpListPartner.PartnerId = MovementLinkObject_To.ObjectId
+                    INNER JOIN Movement ON Movement.Id       = MD_OperDatePartner.MovementId
+                                       AND Movement.DescId   = zc_Movement_Sale()
+                                       AND Movement.StatusId = zc_Enum_Status_Complete()
+ 
+                    INNER JOIN MovementLinkObject AS MLO_PaidKind
+                                                  ON MLO_PaidKind.MovementId = MD_OperDatePartner.MovementId
+                                                 AND MLO_PaidKind.DescId     = zc_MovementLinkObject_PaidKind()
+                                                 AND MLO_PaidKind.ObjectId   = inPaidKindId
+                    LEFT JOIN MovementLinkObject AS MLO_Contract
+                                                 ON MLO_Contract.MovementId = MD_OperDatePartner.MovementId
+                                                AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
+ 
+                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                 ON MovementLinkObject_From.MovementId = MD_OperDatePartner.MovementId
+                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+ 
+                    INNER JOIN MovementItem ON MovementItem.MovementId = MD_OperDatePartner.MovementId
+                                           AND MovementItem.isErased    = FALSE
+                                           AND MovementItem.DescId      = zc_MI_Master()
+                                           AND MovementItem.ObjectId    = inGoodsId
+                    INNER JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                 ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
+                                                AND MIFloat_AmountPartner.ValueData    <> 0
+ 
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                    LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                               AND MIFloat_Price.DescId         = zc_MIFloat_Price()
               WHERE MD_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate - INTERVAL '1 DAY'
                 AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 

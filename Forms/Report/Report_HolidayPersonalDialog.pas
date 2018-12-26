@@ -22,10 +22,10 @@ type
     FormParams: TdsdFormParams;
     edPosition: TcxButtonEdit;
     GuidesPosition: TdsdGuides;
-    edPersonal: TcxButtonEdit;
+    edMember: TcxButtonEdit;
     cxLabel3: TcxLabel;
     cxLabel1: TcxLabel;
-    GuidesPersonal: TdsdGuides;
+    GuidesMember: TdsdGuides;
     cxLabel6: TcxLabel;
     cbDetail: TcxCheckBox;
     cxLabel2: TcxLabel;

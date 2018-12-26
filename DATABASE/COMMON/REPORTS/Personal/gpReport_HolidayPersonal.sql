@@ -1,12 +1,13 @@
 -- Function: gpReport_HolidayPersonal ()
 
 DROP FUNCTION IF EXISTS gpReport_HolidayPersonal (TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_HolidayPersonal (TDateTime, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_HolidayPersonal(
     IN inStartDate      TDateTime, --дата начала периода
     IN inUnitId         Integer,   --подразделение
-    IN inPersonalId     Integer,   --сотрудник
-    IN inPositionId     Integer,   --должность
+    IN inMemberId       Integer,   --сотрудник
+    --IN inPositionId     Integer,   --должность
     IN inisDetail       Boolean,   --детализировать по дн€м
     IN inSession        TVarChar   --сесси€ пользовател€
 )
@@ -28,21 +29,25 @@ RETURNS TABLE(MemberId Integer, PersonalId Integer
 
             , InvNumber          TVarChar 
             , OperDate           TDateTime
-            , OperDateStartDate  TDateTime
-            , OperDateEndDate    TDateTime
-            , BeginDateStartDate TDateTime
-            , BeginDateEndDate   TDateTime
+            , OperDateStart      TDateTime
+            , OperDateEnd        TDateTime
+            , BeginDateStart     TDateTime
+            , BeginDateEnd       TDateTime
             )
 AS
 $BODY$
     DECLARE vbUserId       Integer;
     DECLARE vbMonthHoliday TFloat;
     DECLARE vbDayHoliday   TFloat;
+    DECLARE vbStartDate TDateTime;
+    DECLARE vbEndDate TDateTime;
 BEGIN
     -- проверка прав пользовател€ на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
     vbUserId := inSession::Integer;
     
+    vbStartDate := inStartDate - INTERVAL '1 YEAR';
+    vbEndDate   := inStartDate;
     -- кол-во мес€цев после чего положен отпуск - 1 отпуск - после 6 м. непрерывного стажа
     vbMonthHoliday := 6;
     -- кол-во положенных дней отпуска
@@ -52,24 +57,34 @@ BEGIN
     RETURN QUERY
 
     WITH
-    tmpPersonal AS (SELECT Object_Personal_View.*
-                         , CASE WHEN Object_Personal_View.isDateOut = FALSE THEN inStartDate ELSE Object_Personal_View.DateOut_user END AS DateOut_Calc  -- CURRENT_DATE  -- если дата увольнени€ пута€ ставим = дате форм. отчета, дл€ расчета отр. мес€цев на дату форм. отчета
-                         , ROW_NUMBER(*) OVER (PARTITION BY Object_Personal_View.MemberId
-                                                          , COALESCE (Object_Personal_View.PositionId, 0)
-                                                          , COALESCE (Object_Personal_View.PositionLevelId, 0)
-                                                          , COALESCE (Object_Personal_View.UnitId, 0)
-                                              ) AS Ord
-                    FROM Object_Personal_View
-                    WHERE Object_Personal_View.isErased = FALSE
-                      AND (Object_Personal_View.UnitId = inUnitId OR inUnitId = 0)
-                      AND (Object_Personal_View.PersonalId = inPersonalId OR inPersonalId = 0)
-                      AND (Object_Personal_View.PositionId = inPositionId OR inPositionId = 0)
-                      AND Object_Personal_View.DateIn <= inStartDate
+
+    tmpMemberPersonal AS (SELECT lfSelect.MemberId
+                               , lfSelect.PersonalId
+                               , lfSelect.UnitId
+                               , lfSelect.PositionId
+                               , lfSelect.BranchId
+                          FROM lfSelect_Object_Member_findPersonal ('5') AS lfSelect
+                          WHERE lfSelect.Ord = 1
+                            AND (lfSelect.MemberId = inMemberId OR inMemberId = 0)
+                            AND (lfSelect.UnitId = inUnitId OR inUnitId = 0)
+                            --AND (lfSelect.PositionId = inPositionId OR inPositionId = 0)
+                          )
+
+  , tmpPersonal AS (SELECT Object_Personal_View.*
+                         , CASE WHEN Object_Personal_View.DateIn < vbStartDate THEN vbStartDate ELSE Object_Personal_View.DateIn END AS DateIn_Calc      -- 
+                         , CASE WHEN Object_Personal_View.isDateOut = FALSE THEN vbEndDate ELSE Object_Personal_View.DateOut_user END AS DateOut_Calc  -- CURRENT_DATE  -- если дата увольнени€ пута€ ставим = дате форм. отчета, дл€ расчета отр. мес€цев на дату форм. отчета
+                        -- , tmpMemberPersonal.BranchId
+                    FROM tmpMemberPersonal
+                         LEFT JOIN Object_Personal_View ON Object_Personal_View.MemberId = tmpMemberPersonal.MemberId
+                                                       AND Object_Personal_View.UnitId = tmpMemberPersonal.UnitId
+                                                       AND Object_Personal_View.PositionId = tmpMemberPersonal.PositionId
+                    WHERE Object_Personal_View.DateIn <= inStartDate
+                      AND ((Object_Personal_View.isDateOut = TRUE AND Object_Personal_View.DateOut_user >= vbStartDate) OR Object_Personal_View.isDateOut = FALSE)
                    )
 
   , tmpWork AS (SELECT *
-                     , DATE_PART('YEAR', AGE (tmpPersonal.DateOut_Calc, tmpPersonal.DateIn)) * 12 
-                     + DATE_PART('MONTH', AGE (tmpPersonal.DateOut_Calc, tmpPersonal.DateIn)) AS Month_work  -- кол-во отработанных мес€цев
+                     , DATE_PART('YEAR', AGE (tmpPersonal.DateOut_Calc, tmpPersonal.DateIn_Calc)) * 12 
+                     + DATE_PART('MONTH', AGE (tmpPersonal.DateOut_Calc, tmpPersonal.DateIn_Calc)) AS Month_work  -- кол-во отработанных мес€цев
                      , AGE (tmpPersonal.DateOut_Calc, tmpPersonal.DateIn) AS Age_work                                                                             -- итого отработано
                 FROM tmpPersonal
                 )
@@ -83,10 +98,10 @@ BEGIN
                             , Movement.InvNumber
                             , Movement.OperDate                            
                             , MovementLinkObject_Member.ObjectId    AS MemberId
-                            , MovementDate_OperDateStart.ValueData  AS OperDateStartDate
-                            , MovementDate_OperDateEnd.ValueData    AS OperDateEndDate
-                            , MovementDate_BeginDateStart.ValueData AS BeginDateStartDate
-                            , MovementDate_BeginDateEnd.ValueData   AS BeginDateEndDate
+                            , MovementDate_OperDateStart.ValueData  AS OperDateStart
+                            , MovementDate_OperDateEnd.ValueData    AS OperDateEnd
+                            , MovementDate_BeginDateStart.ValueData AS BeginDateStart
+                            , MovementDate_BeginDateEnd.ValueData   AS BeginDateEnd
                        FROM Movement
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
                                                          ON MovementLinkObject_Member.MovementId = Movement.Id
@@ -111,26 +126,28 @@ BEGIN
 
                        WHERE Movement.DescId = zc_Movement_MemberHoliday()
                          AND Movement.StatusId = zc_Enum_Status_Complete()
-                         AND Movement.OperDate <= inStartDate
+                         AND Movement.OperDate BETWEEN vbStartDate AND vbEndDate
                       )
   -- считаем кол-во дней пердоставленного отпуска
   , tmpHoliday AS (SELECT CASE WHEN inisDetail = TRUE THEN tmpData.InvNumber          ELSE ''   END :: TVarChar  AS InvNumber
                         , CASE WHEN inisDetail = TRUE THEN tmpData.OperDate           ELSE NULL END :: TDateTime AS OperDate
-                        , CASE WHEN inisDetail = TRUE THEN tmpData.OperDateStartDate  ELSE NULL END :: TDateTime AS OperDateStartDate
-                        , CASE WHEN inisDetail = TRUE THEN tmpData.OperDateEndDate    ELSE NULL END :: TDateTime AS OperDateEndDate
-                        , CASE WHEN inisDetail = TRUE THEN tmpData.BeginDateStartDate ELSE NULL END :: TDateTime AS BeginDateStartDate
-                        , CASE WHEN inisDetail = TRUE THEN tmpData.BeginDateEndDate   ELSE NULL END :: TDateTime AS BeginDateEndDate
+                        , CASE WHEN inisDetail = TRUE THEN tmpData.OperDateStart  ELSE NULL END :: TDateTime AS OperDateStart
+                        , CASE WHEN inisDetail = TRUE THEN tmpData.OperDateEnd    ELSE NULL END :: TDateTime AS OperDateEnd
+                        , CASE WHEN inisDetail = TRUE THEN tmpData.BeginDateStart ELSE NULL END :: TDateTime AS BeginDateStart
+                        , CASE WHEN inisDetail = TRUE THEN tmpData.BeginDateEnd   ELSE NULL END :: TDateTime AS BeginDateEnd
                         , tmpData.MemberId
-                        , SUM (DATE_PART ('DAY', tmpData.BeginDateEndDate - tmpData.BeginDateStartDate))  :: TFloat AS Day_holiday
+                        , SUM (DATE_PART ('DAY', tmpData.BeginDateEnd - tmpData.BeginDateStart))  :: TFloat AS Day_holiday
+                        , ROW_NUMBER(*) OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MemberId) AS Ord
+                        , SUM ( SUM(DATE_PART ('DAY', tmpData.BeginDateEnd - tmpData.BeginDateStart)) )  OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MemberId) AS Day_holiday_All
                    FROM tmpMov_Holiday AS tmpData
                    GROUP BY CASE WHEN inisDetail = TRUE THEN tmpData.InvNumber         ELSE ''   END
                           , CASE WHEN inisDetail = TRUE THEN tmpData.OperDate          ELSE NULL END
-                          , CASE WHEN inisDetail = TRUE THEN tmpData.OperDateStartDate ELSE NULL END
-                          , CASE WHEN inisDetail = TRUE THEN tmpData.OperDateEndDate   ELSE NULL END
-                          , CASE WHEN inisDetail = TRUE THEN tmpData.BeginDateStartDate ELSE NULL END
-                          , CASE WHEN inisDetail = TRUE THEN tmpData.BeginDateEndDate   ELSE NULL END
+                          , CASE WHEN inisDetail = TRUE THEN tmpData.OperDateStart ELSE NULL END
+                          , CASE WHEN inisDetail = TRUE THEN tmpData.OperDateEnd   ELSE NULL END
+                          , CASE WHEN inisDetail = TRUE THEN tmpData.BeginDateStart ELSE NULL END
+                          , CASE WHEN inisDetail = TRUE THEN tmpData.BeginDateEnd   ELSE NULL END
                           , tmpData.MemberId
-                   HAVING SUM (DATE_PART ('DAY', tmpData.BeginDateEndDate - tmpData.BeginDateStartDate)) <> 0
+                   HAVING SUM (DATE_PART ('DAY', tmpData.BeginDateEnd - tmpData.BeginDateStart)) <> 0
                    )
     -- св€зываемданные положенных дней отпуска и фоактич.
     -- –езультат
@@ -157,23 +174,19 @@ BEGIN
          , tmpVacation.isOfficial
          , tmpVacation.Age_work      :: TVarChar
          , tmpVacation.Month_work    :: TFloat
-         , tmpVacation.Day_vacation  :: TFloat
+         , CASE WHEN tmpHoliday.Ord = 1 OR tmpHoliday.Ord IS NULL THEN tmpVacation.Day_vacation ELSE 0 END :: TFloat AS Day_vacation 
          , tmpHoliday.Day_holiday    :: TFloat                                                                       -- использовано 
-         , (COALESCE (tmpVacation.Day_vacation, 0) - COALESCE (tmpHoliday.Day_holiday, 0))   :: TFloat AS Day_diff   -- не использовано   
+         , CASE WHEN tmpHoliday.Ord = 1 OR tmpHoliday.Ord IS NULL THEN (COALESCE (tmpVacation.Day_vacation, 0) - COALESCE (tmpHoliday.Day_holiday_All, 0)) ELSE 0 END  :: TFloat AS Day_diff   -- не использовано   
          , tmpHoliday.InvNumber          :: TVarChar 
          , tmpHoliday.OperDate           :: TDateTime
-         , tmpHoliday.OperDateStartDate  :: TDateTime
-         , tmpHoliday.OperDateEndDate    :: TDateTime
-         , tmpHoliday.BeginDateStartDate  :: TDateTime
-         , tmpHoliday.BeginDateEndDate    :: TDateTime
+         , tmpHoliday.OperDateStart  :: TDateTime
+         , tmpHoliday.OperDateEnd    :: TDateTime
+         , tmpHoliday.BeginDateStart  :: TDateTime
+         , tmpHoliday.BeginDateEnd    :: TDateTime
     FROM tmpVacation
          LEFT JOIN tmpHoliday ON tmpHoliday.MemberId = tmpVacation.MemberId
-                             AND tmpVacation.Ord = 1
 
-         LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                              ON ObjectLink_Unit_Branch.ObjectId = tmpVacation.UnitId
-                             AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
-         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
+         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpVacation.BranchId
     ORDER BY tmpVacation.UnitName
            , tmpVacation.PersonalName
            , tmpVacation.PositionName
@@ -184,4 +197,4 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
 -- тест
--- SELECT * FROM gpReport_HolidayPersonal (inStartDate:= '03.11.2018', inUnitId:= 8439, inPersonalId:= 0, inPositionId:= 0, inisDetail:= TRUE, inSession:= '5');
+-- select * from gpReport_HolidayPersonal(inStartDate := ('01.01.2019')::TDateTime , inUnitId := 8384 , inMemberId := 0 , inisDetail := 'True'::Boolean,  inSession := '5'::TVarChar);

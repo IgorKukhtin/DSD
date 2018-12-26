@@ -53,6 +53,11 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAll
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -104,6 +109,11 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             item
               Format = ',0.00'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAll
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -274,7 +284,18 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.Editing = False
             Width = 51
           end
-          object CalcAmountAll: TcxGridDBColumn [19]
+          object SummAll: TcxGridDBColumn [19]
+            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
+            DataBinding.FieldName = 'SummAll'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1079#1072#1082#1072#1079#1072' = ['#1042#1089#1077#1075#1086' '#1089' '#1084#1080#1085'. '#1086#1082#1088'.] '#1061' ['#1062#1077#1085#1072']'
+            Options.Editing = False
+            Width = 56
+          end
+          object CalcAmountAll: TcxGridDBColumn [20]
             Caption = #1042#1089#1077#1075#1086' '#1089' '#1084#1080#1085'. '#1086#1082#1088#1091#1075#1083'.'
             DataBinding.FieldName = 'CalcAmountAll'
             HeaderAlignmentHorz = taCenter
@@ -283,21 +304,21 @@ inherited OrderInternalLiteForm: TOrderInternalLiteForm
             Options.IncSearch = False
             Width = 62
           end
-          object PartnerGoodsName: TcxGridDBColumn [20]
+          object PartnerGoodsName: TcxGridDBColumn [21]
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'PartnerGoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 125
           end
-          object MakerName: TcxGridDBColumn [21]
+          object MakerName: TcxGridDBColumn [22]
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'MakerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 102
           end
-          object Price: TcxGridDBColumn [22]
+          object Price: TcxGridDBColumn [23]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             HeaderAlignmentHorz = taCenter

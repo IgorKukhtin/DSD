@@ -101,12 +101,12 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Goods_byPartnerDate: TdsdOpenForm [3]
+    object actReport_Goods_byMovementReal: TdsdOpenForm [3]
       Category = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1072#1084' '#1087#1086' '#1076#1072#1090#1072#1084' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
-      FormName = 'TReport_Goods_byPartnerDateForm'
-      FormNameParam.Value = 'TReport_Goods_byPartnerDateForm'
+      FormName = 'TReport_Goods_byMovementRealForm'
+      FormNameParam.Value = 'TReport_Goods_byMovementRealForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
       FormNameParam.MultiSelectSeparator = ','
@@ -7385,7 +7385,7 @@
         Action = actReport_Goods_byMovement
       end
       object miReport_Goods_byPartnerDate: TMenuItem
-        Action = actReport_Goods_byPartnerDate
+        Action = actReport_Goods_byMovementReal
       end
     end
     object N84: TMenuItem [14]

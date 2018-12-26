@@ -3,7 +3,7 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
   Top = 0
   Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1086#1090#1087#1091#1089#1082#1072#1084'>'
   ClientHeight = 496
-  ClientWidth = 945
+  ClientWidth = 965
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,18 +20,56 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 80
-    Width = 945
-    Height = 416
+    Top = 62
+    Width = 965
+    Height = 434
     Align = alClient
     TabOrder = 0
+    ExplicitTop = 80
+    ExplicitWidth = 945
+    ExplicitHeight = 416
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Day_holiday
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Day_diff
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Day_vacation
+        end>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Day_holiday
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Day_diff
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Day_vacation
+        end
+        item
+          Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = PersonalName
+        end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.GoToNextCellOnEnter = True
@@ -226,8 +264,8 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 945
-    Height = 54
+    Width = 965
+    Height = 36
     Align = alTop
     TabOrder = 2
     object deStart: TcxDateEdit
@@ -239,9 +277,9 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
       TabOrder = 1
       Width = 85
     end
-    object edPersonal: TcxButtonEdit
-      Left = 558
-      Top = 4
+    object edMember: TcxButtonEdit
+      Left = 544
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -252,13 +290,13 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
       Width = 203
     end
     object cxLabel3: TcxLabel
-      Left = 487
-      Top = 5
+      Left = 480
+      Top = 6
       Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082':'
     end
     object edPosition: TcxButtonEdit
-      Left = 558
-      Top = 29
+      Left = 898
+      Top = 13
       Properties.Buttons = <
         item
           Default = True
@@ -266,12 +304,14 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 3
-      Width = 203
+      Visible = False
+      Width = 67
     end
     object cxLabel4: TcxLabel
-      Left = 487
-      Top = 28
+      Left = 909
+      Top = 0
       Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100':'
+      Visible = False
     end
     object cxLabel5: TcxLabel
       Left = 13
@@ -279,8 +319,8 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
       Caption = #1053#1072' '#1076#1072#1090#1091' :'
     end
     object cbDetail: TcxCheckBox
-      Left = 252
-      Top = 29
+      Left = 752
+      Top = 5
       Action = actIsDetail
       Properties.ReadOnly = False
       TabOrder = 6
@@ -324,13 +364,13 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
           'Date')
       end
       item
-        Component = PersonalGuides
+        Component = GuidesMember
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = PositionGuides
+        Component = GuidesPosition
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -505,17 +545,17 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PersonalId'
+          Name = 'MemberId'
           Value = ''
-          Component = PersonalGuides
+          Component = GuidesMember
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PersonalName'
+          Name = 'MemberName'
           Value = ''
-          Component = PersonalGuides
+          Component = GuidesMember
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -524,18 +564,18 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
         item
           Name = 'PositionId'
           Value = ''
-          Component = PositionGuides
+          Component = GuidesPosition
           ComponentItem = 'Key'
-          ParamType = ptInput
+          ParamType = ptUnknown
           MultiSelectSeparator = ','
         end
         item
           Name = 'PositionName'
           Value = ''
-          Component = PositionGuides
+          Component = GuidesPosition
           ComponentItem = 'TextValue'
           DataType = ftString
-          ParamType = ptInput
+          ParamType = ptUnknown
           MultiSelectSeparator = ','
         end
         item
@@ -677,14 +717,14 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
         item
           Name = 'UnitGroupId'
           Value = Null
-          Component = PersonalGuides
+          Component = GuidesMember
           ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end
         item
           Name = 'UnitGroupName'
           Value = Null
-          Component = PersonalGuides
+          Component = GuidesMember
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -743,7 +783,7 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
         item
           Name = 'PersonalName'
           Value = ''
-          Component = PersonalGuides
+          Component = GuidesMember
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -751,7 +791,7 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
         item
           Name = 'PositionName'
           Value = ''
-          Component = PositionGuides
+          Component = GuidesPosition
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -807,7 +847,7 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
         item
           Name = 'PersonalName'
           Value = ''
-          Component = PersonalGuides
+          Component = GuidesMember
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -815,7 +855,7 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
         item
           Name = 'PositionName'
           Value = ''
-          Component = PositionGuides
+          Component = GuidesPosition
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -866,9 +906,9 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalId'
+        Name = 'inMemberId'
         Value = '0'
-        Component = PersonalGuides
+        Component = GuidesMember
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -876,9 +916,9 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
       item
         Name = 'inPositionId'
         Value = '0'
-        Component = PositionGuides
+        Component = GuidesPosition
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -916,7 +956,7 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
     Left = 344
     Top = 288
   end
-  object PositionGuides: TdsdGuides
+  object GuidesPosition: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPosition
     Key = '0'
@@ -929,7 +969,7 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
       item
         Name = 'Key'
         Value = ''
-        Component = PositionGuides
+        Component = GuidesPosition
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -938,7 +978,7 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PositionGuides
+        Component = GuidesPosition
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -952,20 +992,20 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
     Left = 176
     Top = 176
   end
-  object PersonalGuides: TdsdGuides
+  object GuidesMember: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edPersonal
+    LookupControl = edMember
     Key = '0'
-    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonal_ObjectForm'
+    FormName = 'TMember_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = PersonalGuides
+        Component = GuidesMember
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -974,7 +1014,7 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PersonalGuides
+        Component = GuidesMember
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -983,14 +1023,14 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
       item
         Name = 'PositionId'
         Value = Null
-        Component = PositionGuides
+        Component = GuidesPosition
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PositionName'
         Value = Null
-        Component = PositionGuides
+        Component = GuidesPosition
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1007,10 +1047,10 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
         Component = PeriodChoice
       end
       item
-        Component = PersonalGuides
+        Component = GuidesMember
       end
       item
-        Component = PositionGuides
+        Component = GuidesPosition
       end
       item
       end
