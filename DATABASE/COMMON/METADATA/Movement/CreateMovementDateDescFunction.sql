@@ -162,6 +162,13 @@ CREATE OR REPLACE FUNCTION zc_MovementDate_UserConfirmedKind() RETURNS Integer A
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_UserConfirmedKind', 'Дата когда поставлена/убрана галка Подтвержден' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_UserConfirmedKind');
 
+CREATE OR REPLACE FUNCTION zc_MovementDate_BeginDateStart() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_BeginDateStart'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_BeginDateStart', 'нач дата отпуска' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_BeginDateStart');
+
+CREATE OR REPLACE FUNCTION zc_MovementDate_BeginDateEnd() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_BeginDateEnd'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_BeginDateEnd', 'конечн дата отпуска' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_BeginDateEnd');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

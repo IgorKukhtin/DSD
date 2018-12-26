@@ -88,6 +88,7 @@ type
     procedure LoadMemberFormTest;
     procedure LoadMemberExternalFormTest;
     procedure LoadMemberSheetWorkTimeFormTest;
+    procedure LoadMemberHolidayFormTest;
     procedure LoadMemberPersonalServiceListFormTest;
     procedure LoadMobileTariffFormTest;
     procedure LoadMobileBillsFormTest;
@@ -1625,6 +1626,16 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HolidayCompensationForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_HolidayCompensationForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HolidayCompensationDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_HolidayCompensationDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HolidayPersonalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_HolidayPersonalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HolidayPersonalDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_HolidayPersonalDialogForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionSeparate_CheckPriceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionSeparate_CheckPriceForm');
@@ -1717,7 +1728,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HistoryCostForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_HistoryCostForm');
-
+  //
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_byPartnerDateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_byPartnerDateForm');
+  exit;
+  {
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_byMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_byMovementForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_byMovementDialogForm'));
@@ -2752,6 +2769,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMobileBillsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileBillsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileBillsJournalForm');
+end;
+
+ procedure TLoadFormTest.LoadMemberHolidayFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberHolidayForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberHolidayForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberHolidayJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberHolidayJournalForm');
 end;
 
 procedure TLoadFormTest.LoadMobileProjectFormTest;

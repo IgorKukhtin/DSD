@@ -34,7 +34,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , Remains TFloat, SummaRemains TFloat
              , RemainsNotMCS TFloat, SummaNotMCS TFloat
              , PriceRetSP TFloat, PriceOptSP TFloat, PriceSP TFloat, PaymentSP TFloat, DiffSP2 TFloat
-             , MCSValueOld TFloat, MCSValue_min TFloat
+             , MCSValueOld TFloat, MCSValue_min TFloat, isMCSValue_dif Boolean
              , StartDateMCSAuto TDateTime, EndDateMCSAuto TDateTime
              , isMCSAuto Boolean, isMCSNotRecalcOld Boolean
              , isSP Boolean
@@ -122,6 +122,7 @@ BEGIN
 
                ,NULL::TFloat                     AS MCSValueOld
                ,NULL::TFloat                     AS MCSValue_min
+               ,FALSE                            AS isMCSValue_dif
                ,NULL::TDateTime                  AS StartDateMCSAuto
                ,NULL::TDateTime                  AS EndDateMCSAuto
                ,NULL::Boolean                    AS isMCSAuto
@@ -545,6 +546,7 @@ BEGIN
 
                , tmpPrice_View.MCSValueOld
                , tmpPrice_View.MCSValue_min
+               , CASE WHEN COALESCE (tmpPrice_View.MCSValue_min,0) > COALESCE (tmpPrice_View.MCSValue,0) THEN TRUE ELSE FALSE END AS isMCSValue_dif
                , tmpPrice_View.StartDateMCSAuto
                , tmpPrice_View.EndDateMCSAuto
                , tmpPrice_View.isMCSAuto                           :: Boolean
@@ -1285,6 +1287,7 @@ BEGIN
 
                , tmpPrice_All.MCSValueOld
                , tmpPrice_All.MCSValue_min
+               , CASE WHEN COALESCE (tmpPrice_All.MCSValue_min,0) > COALESCE (tmpPrice_All.MCSValue,0) THEN TRUE ELSE FALSE END AS isMCSValue_dif
                , tmpPrice_All.StartDateMCSAuto
                , tmpPrice_All.EndDateMCSAuto
                , tmpPrice_All.isMCSAuto                            :: Boolean

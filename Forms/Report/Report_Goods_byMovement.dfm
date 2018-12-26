@@ -6,7 +6,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 910
-  ExplicitHeight = 577
+  ExplicitHeight = 580
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2130,6 +2130,9 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1055#1086' '#1054#1090#1075#1088#1091#1079#1082#1072#1084
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPivotToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -2240,8 +2243,8 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 256
-    Top = 232
+    Left = 224
+    Top = 224
   end
   inherited BarManager: TdxBarManager
     Left = 160
@@ -2391,8 +2394,8 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
   end
   object FormParams: TdsdFormParams
     Params = <>
-    Left = 328
-    Top = 170
+    Left = 312
+    Top = 194
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'

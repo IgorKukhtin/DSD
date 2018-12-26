@@ -427,6 +427,15 @@ inherited PriceForm: TPriceForm
             HeaderHint = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1053#1058#1047
             Width = 53
           end
+          object isMCSValue_dif: TcxGridDBColumn
+            Caption = #1053#1058#1047' '#1084#1080#1085'. > '#1053#1058#1047
+            DataBinding.FieldName = 'isMCSValue_dif'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1058#1047' '#1084#1080#1085'. '#1073#1086#1083#1100#1096#1077' '#1095#1077#1084' '#1053#1058#1047
+            Options.Editing = False
+            Width = 60
+          end
           object MCSPeriod: TcxGridDBColumn
             Caption = #1087#1077#1088#1080#1086#1076' '#1072#1085#1072#1083#1080#1079#1072'***'
             DataBinding.FieldName = 'MCSPeriod'

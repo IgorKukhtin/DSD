@@ -473,6 +473,12 @@ type
     N177: TMenuItem;
     actDiffKind: TdsdOpenForm;
     miDiffKind: TMenuItem;
+    actUnit_MCS: TdsdOpenForm;
+    miUnit_MCS: TMenuItem;
+    actReport_Movement_ListDiff: TdsdOpenForm;
+    miReport_Movement_ListDiff: TMenuItem;
+    actRecalcMCSSheduler: TdsdOpenForm;
+    N178: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

@@ -325,8 +325,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_RepriceUnitSheduler_DataStartLast() RET
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_RepriceUnitSheduler(), 'zc_ObjectDate_RepriceUnitSheduler_DataStartLast', 'Старт последней переоценкии' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_RepriceUnitSheduler_DataStartLast');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_RecalcMCSSheduler_BeginHolidays() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectFloat_RecalcMCSSheduler_BeginHolidays'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_RecalcMCSSheduler(), 'zc_ObjectFloat_RecalcMCSSheduler_BeginHolidays', 'Дата начала праздничных дней' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectFloat_RecalcMCSSheduler_BeginHolidays');
+
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_RecalcMCSSheduler_EndHolidays() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectFloat_RecalcMCSSheduler_EndHolidays'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_RecalcMCSSheduler(), 'zc_ObjectFloat_RecalcMCSSheduler_EndHolidays', 'Последний день праздников' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectFloat_RecalcMCSSheduler_EndHolidays');
+
+
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 25.12.18                                                                                     * zzc_ObjectFloat_RecalcMCSSheduler_
  22.10.18                                                                                     * zc_ObjectDate_RepriceUnitSheduler_DataStartLast 
  18.10.18         * zc_ObjectDate_Goods_In
  16,10,18         * zc_ObjectDate_Protocol_ReCalc

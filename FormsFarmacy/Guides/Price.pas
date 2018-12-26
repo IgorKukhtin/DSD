@@ -108,6 +108,7 @@ type
     AmountDiff: TcxGridDBColumn;
     MarginPercentNew: TcxGridDBColumn;
     isError_MarginPercent: TcxGridDBColumn;
+    isMCSValue_dif: TcxGridDBColumn;
   private
     { Private declarations }
   public

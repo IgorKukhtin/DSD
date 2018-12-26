@@ -320,10 +320,14 @@ CREATE OR REPLACE FUNCTION zc_Movement_EmployeeSchedule() RETURNS Integer AS $BO
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_EmployeeSchedule', 'График работы сотрудеиков' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_EmployeeSchedule');
 
+CREATE OR REPLACE FUNCTION zc_Movement_MemberHoliday() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_MemberHoliday'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_MemberHoliday', 'Приказы по отпускам' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_MemberHoliday');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 20.12.18         * zc_Movement_MemberHoliday
  07.12.18                                                                                     *  zc_Movement_EmployeeSchedule
  19.11.18         * zc_Movement_ReportUnLiquid
  04.10.18                                                                                     *  zc_Movement_KPU

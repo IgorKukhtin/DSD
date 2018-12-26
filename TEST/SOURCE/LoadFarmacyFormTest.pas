@@ -373,6 +373,15 @@ end;
 
 procedure TLoadFormTest.LoadCreateOrderFromMCSFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRecalcMCSShedulerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRecalcMCSShedulerForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRecalcMCSShedulerEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRecalcMCSShedulerEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeekForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWeekForm');
+  Exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCreateOrderFromMCSForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCreateOrderFromMCSForm');
 end;
@@ -632,6 +641,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ListDiffForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ListDiffForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ListDiffDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ListDiffDialogForm');
+    exit;
    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_GoodsPriceChangeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Check_GoodsPriceChangeForm');
@@ -1046,6 +1060,9 @@ end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_MCSForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnit_MCSForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitTreeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));

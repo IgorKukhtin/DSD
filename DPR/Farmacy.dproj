@@ -111,8 +111,8 @@
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
 			<Debugger_RunParams>/skipcheckconnect</Debugger_RunParams>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.2.7.58;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-			<VerInfo_Build>58</VerInfo_Build>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.2.7.59;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Build>59</VerInfo_Build>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_MinorVer>2</VerInfo_MinorVer>
@@ -239,6 +239,7 @@
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdPivotGrid.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXLSAction.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

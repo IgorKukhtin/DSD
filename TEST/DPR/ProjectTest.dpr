@@ -1049,8 +1049,15 @@ uses
   Report_ProductionSeparate_CheckPrice in '..\..\Forms\Report\Report_ProductionSeparate_CheckPrice.pas' {Report_ProductionSeparate_CheckPriceForm: TParentForm},
   Report_ProductionSeparate_CheckPriceDialog in '..\..\Forms\Report\Report_ProductionSeparate_CheckPriceDialog.pas' {Report_ProductionSeparate_CheckPriceDialogForm: TParentForm},
   Medoc_J1201010 in '..\..\SOURCE\MeDOC\Medoc_J1201010.pas',
+  MemberHolidayJournal in '..\..\Forms\Document\MemberHolidayJournal.pas' {MemberHolidayJournalForm: TParentForm},
+  MemberHoliday in '..\..\Forms\Document\MemberHoliday.pas' {MemberHolidayForm: TParentForm},
   Medoc_J1201210 in '..\..\SOURCE\MeDOC\Medoc_J1201210.pas',
-  dsdExportToXLSAction in '..\..\SOURCE\COMPONENT\dsdExportToXLSAction.pas';
+  dsdExportToXLSAction in '..\..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
+  Report_Goods_byPartnerDate in '..\..\Forms\Report\Report_Goods_byPartnerDate.pas' {Report_Goods_byPartnerDateForm: TParentForm},
+  Report_HolidayPersonalDialog in '..\..\Forms\Report\Report_HolidayPersonalDialog.pas' {Report_HolidayPersonalDialogForm: TParentForm},
+  Report_HolidayPersonal in '..\..\Forms\Report\Report_HolidayPersonal.pas' {Report_HolidayPersonalForm: TParentForm},
+  Report_HolidayCompensation in '..\..\Forms\Report\Report_HolidayCompensation.pas' {Report_HolidayCompensationForm: TParentForm},
+  Report_HolidayCompensationDialog in '..\..\Forms\Report\Report_HolidayCompensationDialog.pas' {Report_HolidayCompensationDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

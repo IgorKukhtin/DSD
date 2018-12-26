@@ -2149,9 +2149,21 @@
 				<Form>DiffKindEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdExportToXLSAction.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Cash\CheckCash.pas">
 				<Form>CheckCashForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Unit_MCS.pas">
+				<Form>Unit_MCSForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdExportToXLSAction.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Movement_ListDiffDialog.pas">
+				<Form>Report_Movement_ListDiffDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Movement_ListDiff.pas">
+				<Form>Report_Movement_ListDiffForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

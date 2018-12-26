@@ -85,7 +85,8 @@ uses
   IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
   dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas',
   Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
-  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas';
+  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas',
+  dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -112,7 +113,7 @@ begin
      TUpdater.AutomaticUpdateProgram;
      TUpdater.AutomaticCheckConnect;
      Application.CreateForm(TdmMain, dmMain);
-     Application.CreateForm(TMainForm, MainFormInstance);
+  Application.CreateForm(TMainForm, MainFormInstance);
   end
   else
     with TLoginForm.Create(Application) do

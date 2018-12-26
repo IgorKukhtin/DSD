@@ -80,7 +80,8 @@ uses
   Report_IncomeConsumptionBalance in '..\FormsFarmacy\Report\Report_IncomeConsumptionBalance.pas' {Report_IncomeConsumptionBalanceForm},
   dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas',
   Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
-  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas';
+  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas',
+  dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas';
 
 {$R *.res}
 
@@ -100,7 +101,7 @@ begin
     if not FindCmdLineSwitch('skipcheckconnect') then
        TUpdater.AutomaticCheckConnect;
     Application.CreateForm(TdmMain, dmMain);
-    Application.CreateForm(TMainForm, MainFormInstance);
+  Application.CreateForm(TMainForm, MainFormInstance);
   end;
   Application.Run;
 end.

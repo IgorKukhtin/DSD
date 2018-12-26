@@ -223,6 +223,7 @@
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdPivotGrid.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXLSAction.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
@@ -365,9 +366,9 @@
 							<Operation>1</Operation>
 						</Platform>
 					</DeployClass>
+					<ProjectRoot Name="$(PROJECTNAME)" Platform="Win32"/>
 					<ProjectRoot Name="$(PROJECTNAME).app" Platform="OSX32"/>
 					<ProjectRoot Name="$(PROJECTNAME)" Platform="Win64"/>
-					<ProjectRoot Name="$(PROJECTNAME)" Platform="Win32"/>
 				</Deployment>
 				<Platforms>
 					<Platform value="Win64">True</Platform>

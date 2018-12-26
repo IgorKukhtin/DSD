@@ -2039,9 +2039,20 @@ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_RepriceUnitSheduler_User', 'Связь с Пользователем', zc_Object_RepriceUnitSheduler(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_RepriceUnitSheduler_User');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_RecalcMCSSheduler_Unit() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_RecalcMCSSheduler_Unit'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_RecalcMCSSheduler_Unit', 'Связь с Подразделением', zc_Object_RecalcMCSSheduler(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_RecalcMCSSheduler_Unit');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_RecalcMCSSheduler_User() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_RecalcMCSSheduler_User'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_RecalcMCSSheduler_User', 'Связь с Пользователем', zc_Object_RecalcMCSSheduler(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_RecalcMCSSheduler_User');
+
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 21.12.18                                                                                      * zc_ObjectLink_RecalcMCSSheduler_Unit, zc_ObjectLink_RecalcMCSSheduler_User
  12.12.18         * zc_ObjectLink_Goods_Asset
  28.11.18         * zc_ObjectLink_ReportCollation_InfoMoney
  09.11.18         * zc_ObjectLink_GoodsSeparate_GoodsMaster

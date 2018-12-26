@@ -83,6 +83,12 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Кол-во дней для периода должно быть больше 0.';
     END IF;    
 
+    -- проверили корректность цены
+    IF COALESCE (inMCSValue_min, 0) > COALESCE (inMCSValue, 0)
+    THEN
+        RAISE EXCEPTION 'Ошибка.НТЗ мин. <%> Не может быть больше НТЗ <%>.', inMCSValue_min, inMCSValue;
+    END IF;
+    
     -- Если такая запись есть - достаем её ключу подр.-товар
     SELECT Id, 
            Price, 
