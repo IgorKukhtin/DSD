@@ -3,13 +3,14 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_ExportSettings_Email (Integer, TDateTime, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ExportSettings_Email (Integer, Integer, TDateTime, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ExportSettings_Email (Integer, Integer, TDateTime, TVarChar, TBlob, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ExportSettings_Email (Integer, Integer, TDateTime, Text, TBlob, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ExportSettings_Email(
     IN inObjectId         Integer,       -- ключ объекта
     IN inContactPersonId  Integer,       -- ключ объекта
     IN inByDate           TDateTime,     -- 
-    IN inByMail           TVarChar,      -- 
-    IN inByFileName       TBlob,      -- 
+    IN inByMail           Text,          -- 
+    IN inByFileName       TBlob,         -- 
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (EmailId          Integer

@@ -259,7 +259,32 @@ BEGIN
                                                                                  )
                                AND inIsGoodsComplete = TRUE
                             UNION
+                             -- 1.2.
+                             SELECT View_InfoMoney_find.InfoMoneyId
+                                  , View_InfoMoney_find.InfoMoneyGroupId
+                                  , zc_Movement_Income() AS MovementDescId
+                             FROM Object_InfoMoney_View AS View_InfoMoney_find
+                             WHERE View_InfoMoney_find.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
+                                                                                , zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты
+                                                                                , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
+                                                                                , zc_Enum_InfoMoneyDestination_20300() -- МНМА
+                                                                                , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                                                                , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                                                 )
+                               AND inBranchCode BETWEEN 301 AND 310
+                            UNION
                              -- 2.1.
+                             SELECT View_InfoMoney_find.InfoMoneyId
+                                  , View_InfoMoney_find.InfoMoneyGroupId
+                                  , zc_Movement_Sale() AS MovementDescId
+                             FROM Object_InfoMoney_View AS View_InfoMoney_find
+                             WHERE (View_InfoMoney_find.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
+                                                                                  )
+                                 OR View_InfoMoney_find.InfoMoneyId = zc_Enum_InfoMoney_30501() -- Прочие доходы
+                                   )
+                               AND inBranchCode BETWEEN 301 AND 310
+                            UNION
+                             -- 2.2.
                              SELECT View_InfoMoney_find.InfoMoneyId
                                   , View_InfoMoney_find.InfoMoneyGroupId
                                   , zc_Movement_Sale() AS MovementDescId
@@ -270,7 +295,7 @@ BEGIN
                                AND inIsGoodsComplete = FALSE
                                AND inBranchCode      NOT BETWEEN 301 AND 310
                             UNION
-                             -- 2.1.
+                             -- 2.3.
                              SELECT View_InfoMoney_find.InfoMoneyId
                                   , View_InfoMoney_find.InfoMoneyGroupId
                                   , zc_Movement_Sale() AS MovementDescId
@@ -281,30 +306,6 @@ BEGIN
                                                                                   )
                                    )
                                AND inIsGoodsComplete = TRUE
-                            /*UNION
-                             -- 2.2.
-                             SELECT View_InfoMoney_find.InfoMoneyId
-                                  , View_InfoMoney_find.InfoMoneyGroupId
-                                  , zc_Movement_Sale() AS MovementDescId
-                             FROM Object_InfoMoney_View AS View_InfoMoney_find
-                             WHERE View_InfoMoney_find.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
-                                                                                 )
-                               AND inIsGoodsComplete = TRUE
-                            */
-                            UNION
-                             -- 3.1.
-                             SELECT View_InfoMoney_find.InfoMoneyId
-                                  , View_InfoMoney_find.InfoMoneyGroupId
-                                  , zc_Movement_Income() AS MovementDescId
-                             FROM Object_InfoMoney_View AS View_InfoMoney_find
-                             WHERE View_InfoMoney_find.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
-                                                                                , zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты
-                                                                                , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
-                                                                                , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                                                                                , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
-                                                                                 )
-                               AND inIsGoodsComplete = FALSE
-                               AND inBranchCode      BETWEEN 301 AND 310
                             )
          , tmpContractPartner AS (SELECT ObjectLink_ContractPartner_Contract.ChildObjectId AS ContractId
                                        , ObjectLink_ContractPartner_Partner.ChildObjectId  AS PartnerId

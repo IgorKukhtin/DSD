@@ -464,7 +464,7 @@ object MainForm: TMainForm
       item
         Name = 'inByMail'
         Value = Null
-        DataType = ftString
+        DataType = ftWideString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

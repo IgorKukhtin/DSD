@@ -171,5 +171,12 @@ END;$BODY$
  03.10.18         *
 */
 
+/*
+-- select distinct InsertDate from HistoryCost_test
+-- select  UnitId, InsertDate from HistoryCost_test where OperDate = '10.12.2018' and ContainerId = 2126 
+select  InsertDate, sum (IncomeCount), sum (IncomeSumm), sum (IncomeSumm) / sum (IncomeCount) from HistoryCost_test where OperDate = '10.12.2018' and ContainerId = 2126 
+group by InsertDate
+order by 1
+*/
 -- тест
 -- SELECT * FROM gpInsertUpdate_ObjectHistory_PriceListItem_Separate (CURRENT_DATE, zfCalc_UserAdmin())

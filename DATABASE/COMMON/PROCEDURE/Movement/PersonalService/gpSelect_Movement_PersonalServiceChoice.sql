@@ -135,7 +135,8 @@ BEGIN
                                               AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
                   LEFT JOIN tmpMemberPersonalServiceList ON tmpMemberPersonalServiceList.PersonalServiceListId = MovementLinkObject_PersonalServiceList.ObjectId
              WHERE inIsServiceDate = FALSE
-               AND tmpMemberPersonalServiceList.PersonalServiceListId > 0
+               -- Волошина Е.А.
+               AND (vbUserId <> 140094 OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
             UNION ALL
              SELECT MovementDate_ServiceDate.MovementId  AS Id
              FROM MovementDate AS MovementDate_ServiceDate
@@ -149,7 +150,8 @@ BEGIN
             WHERE inIsServiceDate = TRUE
                AND MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', inStartDate) AND (DATE_TRUNC ('MONTH', inEndDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
                AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
-               AND tmpMemberPersonalServiceList.PersonalServiceListId > 0
+               -- Волошина Е.А.
+               AND (vbUserId <> 140094 OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
             ) AS tmpMovement
             LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
 

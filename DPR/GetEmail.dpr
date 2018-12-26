@@ -57,7 +57,11 @@ uses
   ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',
   IFIN_J1201009 in '..\SOURCE\MeDOC\IFIN_J1201009.pas',
   IFIN_J1201209 in '..\SOURCE\MeDOC\IFIN_J1201209.pas',
-  dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas';
+  dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas',
+  dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
+  Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
+  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas',
+  zLibUtil in '..\TEST\SOURCE\zLibUtil.pas';
 
 {$R *.res}
 
