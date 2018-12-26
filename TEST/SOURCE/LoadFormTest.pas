@@ -2717,6 +2717,7 @@ end;
 
 procedure TLoadFormTest.LoadStaffListFormTest;
 begin
+  {
   //штатное расписание данные
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListDataForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListDataForm');
@@ -2728,6 +2729,7 @@ begin
   //Типы сумм для штатного расписания
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListSummKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListSummKindForm');
+  }
   //Календарь рабочих дней
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCalendarForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCalendarForm');

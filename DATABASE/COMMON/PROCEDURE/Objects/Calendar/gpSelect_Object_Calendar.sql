@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Calendar(
 )
 RETURNS TABLE (Id Integer
              , Working Boolean
+             , isHoliday Boolean
              , Value TDateTime
              , DayOfWeekName TVarChar
              , Color_calc Integer
@@ -24,12 +25,13 @@ BEGIN
   
    
      SELECT 
-           Object_Calendar.Id         AS Id
-         , ObjectBoolean_Working.ValueData     AS Working  
-         , ObjectDate_Value.ValueData      AS Value
+           Object_Calendar.Id                       AS Id
+         , ObjectBoolean_Working.ValueData          AS Working  
+         , COALESCE (ObjectBoolean_Holiday.ValueData, FALSE ) :: Boolean AS isHoliday
+         , ObjectDate_Value.ValueData               AS Value
          , tmpWeekDay.DayOfWeekName_Full ::TVarChar AS DayOfWeekName  
       
-         , CASE WHEN ObjectBoolean_Working.ValueData = False THEN 15993821  ELSE 0 /*clBlack*/   END :: Integer AS Color_calc                                                      
+         , CASE WHEN ObjectBoolean_Working.ValueData = False OR COALESCE (ObjectBoolean_Holiday.ValueData, FALSE ) = TRUE THEN 15993821  ELSE 0 /*clBlack*/   END :: Integer AS Color_calc                                                      
   
          , Object_Calendar.isErased AS isErased
          
@@ -42,8 +44,12 @@ BEGIN
           LEFT JOIN Object AS Object_Calendar ON Object_Calendar.Id = ObjectDate_Value.ObjectId
          
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Working 
-                                ON ObjectBoolean_Working.ObjectId = Object_Calendar.Id 
-                               AND ObjectBoolean_Working.DescId = zc_ObjectBoolean_Calendar_Working()
+                                  ON ObjectBoolean_Working.ObjectId = Object_Calendar.Id 
+                                 AND ObjectBoolean_Working.DescId = zc_ObjectBoolean_Calendar_Working()
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Holiday
+                                  ON ObjectBoolean_Holiday.ObjectId = Object_Calendar.Id 
+                                 AND ObjectBoolean_Holiday.DescId = zc_ObjectBoolean_Calendar_Holiday()
 
           LEFT JOIN zfCalc_DayOfWeekName (ObjectDate_period.ValueData) AS tmpWeekDay ON 1=1
 

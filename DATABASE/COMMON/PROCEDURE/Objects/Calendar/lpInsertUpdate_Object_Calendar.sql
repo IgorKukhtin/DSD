@@ -1,10 +1,12 @@
 -- Function: lpInsertUpdate_Object_Calendar(Integer, Boolean, TDateTime, TVarChar,TVarChar )
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Calendar (Integer, Boolean, TDateTime, TVarChar );
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Calendar (Integer, Boolean, Boolean, TDateTime, TVarChar );
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Calendar (
  INOUT ioId                Integer   , -- ключ объекта <Календарь рабочих дней>
-    IN inWorking           Boolean   , -- Признак рабочий день
+    IN inisWorking         Boolean   , -- Признак рабочий день
+    IN inisHoliday         Boolean   , -- Признак праздничный день
     IN inValue             TDateTime , -- Дата
     IN inUserId            TVarChar 
 )
@@ -21,7 +23,9 @@ BEGIN
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Calendar(), 0, '');
    
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Calendar_Working(), ioId, inWorking);
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Calendar_Working(), ioId, inisWorking);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Calendar_Holiday(), ioId, inisHoliday);
   
    -- сохранили свойство <>   
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Calendar_Value(), ioId, inValue);
@@ -33,12 +37,12 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lpInsertUpdate_Object_Calendar (Integer, Boolean, TDateTime, TVarChar ) OWNER TO postgres;
 
   
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.12.18         *
  27.11.13         * 
 */
 
