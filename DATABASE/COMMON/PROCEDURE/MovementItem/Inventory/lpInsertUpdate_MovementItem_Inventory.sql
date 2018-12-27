@@ -93,11 +93,6 @@ BEGIN
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
 
-     -- сохранили свойство <Цена>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
-     -- сохранили свойство <Сумма>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
-
      -- сохранили свойство <Количество голов>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HeadCount(), ioId, inHeadCount);
      -- сохранили свойство <Количество батонов или упаковок>
@@ -105,12 +100,6 @@ BEGIN
 
      -- сохранили свойство <ContainerId>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContainerId(), ioId, 0);
-
-
-     -- сохранили свойство <Дата партии/Дата перемещения>
-     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
-     -- сохранили свойство <Партия товара/Инвентарный номер>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
 
      -- сохранили связь с <партия товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionGoods(), ioId, inPartionGoodsId);
@@ -123,10 +112,22 @@ BEGIN
      -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
 
-     -- сохранили связь с <Подразделение (для МО)>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
-     -- сохранили связь с <Место хранения>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Storage(), ioId, inStorageId);
+
+     IF COALESCE (inPartionGoodsId, 0) = 0
+     THEN
+         -- сохранили свойство <Цена>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
+         -- сохранили свойство <Сумма>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
+         -- сохранили свойство <Дата партии/Дата перемещения>
+         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
+         -- сохранили свойство <Партия товара/Инвентарный номер>
+         PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
+         -- сохранили связь с <Место хранения>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Storage(), ioId, inStorageId);
+         -- сохранили связь с <Подразделение (для МО)>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
+     END IF;
 
      -- создали объект <Связи Товары и Виды товаров>
      PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, inUserId);

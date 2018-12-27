@@ -22,10 +22,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , StorageId Integer, StorageName TVarChar
              , ContainerId Integer
              , isErased Boolean
-             
-             , PartionGoodsId    Integer
-             , Price_Partion     TFloat
-
+             , PartionGoodsId Integer
+           --  , Price_Partion     TFloat
              )
 AS
 $BODY$
@@ -80,7 +78,7 @@ BEGIN
            , FALSE AS isErased
 
            , 0 :: Integer                    AS PartionGoodsId
-           , CAST (NULL AS TFloat)           AS Price_Partion
+         --  , CAST (NULL AS TFloat)           AS Price_Partion
            
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
                   , Object_Goods.ObjectCode                                           AS GoodsCode
@@ -140,8 +138,8 @@ BEGIN
            , MovementItem.Amount                AS Amount
            , MIFloat_HeadCount.ValueData        AS HeadCount
            , MIFloat_Count.ValueData            AS Count
-           , CASE WHEN MIFloat_Price.ValueData <> 0 THEN MIFloat_Price.ValueData ELSE tmpPrice.Price END :: TFloat           AS Price
-           , MIFloat_Summ.ValueData             AS Summ
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectFloat_Price_Partion.ValueData ELSE (CASE WHEN MIFloat_Price.ValueData <> 0 THEN MIFloat_Price.ValueData ELSE tmpPrice.Price END) END:: TFloat AS Price
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectFloat_Price_Partion.ValueData * MovementItem.Amount ELSE  MIFloat_Summ.ValueData END    :: TFloat AS Summ
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectDate_Value.ValueData    ELSE MIDate_PartionGoods.ValueData   END AS PartionGoodsDate
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_PartionGoods.ValueData ELSE MIString_PartionGoods.ValueData END AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
@@ -166,8 +164,8 @@ BEGIN
            
            -- из партии
            , Object_PartionGoods.Id                AS PartionGoodsId
-           , ObjectFloat_Price_Partion.ValueData   AS Price_Partion
-/*           
+/*         , ObjectFloat_Price_Partion.ValueData   AS Price_Partion
+           
            , Object_Storage_Partion.Id             AS StorageId_Partion
            , Object_Storage_Partion.ValueData      AS StorageName_Partion
           
@@ -293,8 +291,8 @@ BEGIN
            , MovementItem.Amount                AS Amount
            , MIFloat_HeadCount.ValueData        AS HeadCount
            , MIFloat_Count.ValueData            AS Count
-           , CASE WHEN MIFloat_Price.ValueData <> 0 THEN MIFloat_Price.ValueData ELSE tmpPrice.Price END :: TFloat           AS Price
-           , MIFloat_Summ.ValueData             AS Summ
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectFloat_Price_Partion.ValueData ELSE (CASE WHEN COALESCE (MIFloat_Price.ValueData, 0) <> 0 THEN MIFloat_Price.ValueData ELSE tmpPrice.Price END) END :: TFloat AS Price
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectFloat_Price_Partion.ValueData * MovementItem.Amount ELSE  MIFloat_Summ.ValueData END    :: TFloat AS Summ
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectDate_Value.ValueData    ELSE MIDate_PartionGoods.ValueData   END AS PartionGoodsDate
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_PartionGoods.ValueData ELSE MIString_PartionGoods.ValueData END AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
@@ -320,8 +318,8 @@ BEGIN
 
            -- из партии
            , Object_PartionGoods.Id                AS PartionGoodsId
-           , ObjectFloat_Price_Partion.ValueData   AS Price_Partion
-         /*  
+         /*  , ObjectFloat_Price_Partion.ValueData   AS Price_Partion
+           
            , Object_Storage_Partion.Id             AS StorageId_Partion
            , Object_Storage_Partion.ValueData      AS StorageName_Partion
           

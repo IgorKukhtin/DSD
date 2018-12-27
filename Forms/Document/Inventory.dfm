@@ -327,14 +327,6 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object Price_Partion: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' ('#1087#1072#1088#1090#1080#1103')'
-            DataBinding.FieldName = 'Price_Partion'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
         end
       end
     end
