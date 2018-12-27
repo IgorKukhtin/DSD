@@ -204,7 +204,7 @@ object CalendarForm: TCalendarForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 80
+        Width = 86
       end
       object Working: TcxGridDBColumn
         Caption = #1056#1072#1073#1086#1095#1080#1081' '#1076#1077#1085#1100
@@ -212,7 +212,14 @@ object CalendarForm: TCalendarForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 80
+        Width = 86
+      end
+      object isHoliday: TcxGridDBColumn
+        Caption = #1055#1072#1079#1076#1085#1080#1095#1085#1099#1081' '#1076#1077#1085#1100
+        DataBinding.FieldName = 'isHoliday'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 84
       end
       object DayOfWeekName: TcxGridDBColumn
         Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
@@ -625,10 +632,19 @@ object CalendarForm: TCalendarForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inWorking'
+        Name = 'inisWorking'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Working'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisHoliday'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isHoliday'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

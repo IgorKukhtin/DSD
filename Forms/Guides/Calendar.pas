@@ -58,6 +58,7 @@ type
     bbOk: TcxButton;
     dsdUpdateDataSet1: TdsdUpdateDataSet;
     dsdStoredProcInsCalendar: TdsdStoredProc;
+    isHoliday: TcxGridDBColumn;
   private
   public
   end;

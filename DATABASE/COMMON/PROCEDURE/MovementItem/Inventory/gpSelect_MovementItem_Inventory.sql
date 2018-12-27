@@ -22,13 +22,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , StorageId Integer, StorageName TVarChar
              , ContainerId Integer
              , isErased Boolean
-             
-             , PartionGoodsId    Integer
-             , Price_Partion     TFloat
-             , StorageId_Partion Integer
-             , StorageName_Partion TVarChar
-             , UnitId_Partion    Integer
-             , UnitName_Partion  TVarChar
+             , PartionGoodsId Integer
+           --  , Price_Partion     TFloat
              )
 AS
 $BODY$
@@ -83,14 +78,8 @@ BEGIN
            , FALSE AS isErased
 
            , 0 :: Integer                    AS PartionGoodsId
-           , CAST (NULL AS TFloat)           AS Price_Partion
+         --  , CAST (NULL AS TFloat)           AS Price_Partion
            
-           , 0 :: Integer                    AS StorageId_Partion
-           , CAST (NULL AS TVarChar)         AS StorageName_Partion
-          
-           , 0 :: Integer                    AS UnitId_Partion
-           , CAST (NULL AS TVarChar)         AS UnitName_Partion
-
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
                   , Object_Goods.ObjectCode                                           AS GoodsCode
                   , Object_Goods.ValueData                                            AS GoodsName
@@ -149,8 +138,8 @@ BEGIN
            , MovementItem.Amount                AS Amount
            , MIFloat_HeadCount.ValueData        AS HeadCount
            , MIFloat_Count.ValueData            AS Count
-           , CASE WHEN MIFloat_Price.ValueData <> 0 THEN MIFloat_Price.ValueData ELSE tmpPrice.Price END :: TFloat           AS Price
-           , MIFloat_Summ.ValueData             AS Summ
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectFloat_Price_Partion.ValueData ELSE (CASE WHEN MIFloat_Price.ValueData <> 0 THEN MIFloat_Price.ValueData ELSE tmpPrice.Price END) END:: TFloat AS Price
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectFloat_Price_Partion.ValueData * MovementItem.Amount ELSE  MIFloat_Summ.ValueData END    :: TFloat AS Summ
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectDate_Value.ValueData    ELSE MIDate_PartionGoods.ValueData   END AS PartionGoodsDate
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_PartionGoods.ValueData ELSE MIString_PartionGoods.ValueData END AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
@@ -163,24 +152,26 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
-           , Object_Unit.Id                     AS UnitId
-           , Object_Unit.ValueData              AS UnitName
-           , Object_Storage.Id                  AS StorageId
-           , Object_Storage.ValueData           AS StorageName
+
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_Unit_Partion.Id ELSE Object_Unit.Id               END AS UnitId
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_Unit_Partion.ValueData ELSE Object_Unit.ValueData END AS UnitName
+
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_Storage_Partion.Id ELSE Object_Storage.Id               END AS StorageId
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_Storage_Partion.ValueData ELSE Object_Storage.ValueData END AS StorageName
 
            , MIFloat_ContainerId.ValueData :: Integer AS ContainerId
            , MovementItem.isErased              AS isErased
            
            -- из партии
            , Object_PartionGoods.Id                AS PartionGoodsId
-           , ObjectFloat_Price_Partion.ValueData   AS Price_Partion
+/*         , ObjectFloat_Price_Partion.ValueData   AS Price_Partion
            
            , Object_Storage_Partion.Id             AS StorageId_Partion
            , Object_Storage_Partion.ValueData      AS StorageName_Partion
           
            , Object_Unit_Partion.Id                AS UnitId_Partion
            , Object_Unit_Partion.ValueData         AS UnitName_Partion
-
+*/
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Master()
@@ -300,8 +291,8 @@ BEGIN
            , MovementItem.Amount                AS Amount
            , MIFloat_HeadCount.ValueData        AS HeadCount
            , MIFloat_Count.ValueData            AS Count
-           , CASE WHEN MIFloat_Price.ValueData <> 0 THEN MIFloat_Price.ValueData ELSE tmpPrice.Price END :: TFloat           AS Price
-           , MIFloat_Summ.ValueData             AS Summ
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectFloat_Price_Partion.ValueData ELSE (CASE WHEN COALESCE (MIFloat_Price.ValueData, 0) <> 0 THEN MIFloat_Price.ValueData ELSE tmpPrice.Price END) END :: TFloat AS Price
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectFloat_Price_Partion.ValueData * MovementItem.Amount ELSE  MIFloat_Summ.ValueData END    :: TFloat AS Summ
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectDate_Value.ValueData    ELSE MIDate_PartionGoods.ValueData   END AS PartionGoodsDate
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_PartionGoods.ValueData ELSE MIString_PartionGoods.ValueData END AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
@@ -314,10 +305,12 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyName
-           , Object_Unit.Id                     AS UnitId
-           , Object_Unit.ValueData              AS UnitName
-           , Object_Storage.Id                  AS StorageId
-           , Object_Storage.ValueData           AS StorageName
+
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_Unit_Partion.Id ELSE Object_Unit.Id               END AS UnitId
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_Unit_Partion.ValueData ELSE Object_Unit.ValueData END AS UnitName
+
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_Storage_Partion.Id ELSE Object_Storage.Id               END AS StorageId
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_Storage_Partion.ValueData ELSE Object_Storage.ValueData END AS StorageName
 
            , MIFloat_ContainerId.ValueData :: Integer AS ContainerId
 
@@ -325,13 +318,14 @@ BEGIN
 
            -- из партии
            , Object_PartionGoods.Id                AS PartionGoodsId
-           , ObjectFloat_Price_Partion.ValueData   AS Price_Partion
+         /*  , ObjectFloat_Price_Partion.ValueData   AS Price_Partion
            
            , Object_Storage_Partion.Id             AS StorageId_Partion
            , Object_Storage_Partion.ValueData      AS StorageName_Partion
           
            , Object_Unit_Partion.Id                AS UnitId_Partion
            , Object_Unit_Partion.ValueData         AS UnitName_Partion
+           */
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Master()

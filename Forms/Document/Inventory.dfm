@@ -12,18 +12,17 @@ inherited InventoryForm: TInventoryForm
     Height = 472
     ExplicitTop = 126
     ExplicitWidth = 1020
-    ExplicitHeight = 542
+    ExplicitHeight = 472
     ClientRectBottom = 472
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
-      ExplicitHeight = 518
+      ExplicitHeight = 448
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 448
-        ExplicitLeft = -3
         ExplicitWidth = 1020
-        ExplicitHeight = 518
+        ExplicitHeight = 448
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -327,30 +326,6 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
-          end
-          object StorageName_Partion: TcxGridDBColumn
-            Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1087#1072#1088#1090#1080#1103')'
-            DataBinding.FieldName = 'StorageName_Partion'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object UnitName_Partion: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1072#1088#1090#1080#1103')'
-            DataBinding.FieldName = 'UnitName_Partion'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object Price_Partion: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' ('#1087#1072#1088#1090#1080#1103')'
-            DataBinding.FieldName = 'Price_Partion'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
           end
         end
       end
