@@ -23,10 +23,17 @@ BEGIN
 
      -- определяем ключ доступа
      --vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_MemberHoliday());
-      
+
+     -- 1. Распроводим Документ
+     IF ioId > 0
+     THEN
+         PERFORM lpUnComplete_Movement (inMovementId := ioId
+                                      , inUserId     := inUserId);
+     END IF;
+     
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
-   
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_MemberHoliday(), inInvNumber, inOperDate, NULL);
 

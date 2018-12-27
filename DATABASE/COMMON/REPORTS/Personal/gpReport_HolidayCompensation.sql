@@ -41,8 +41,9 @@ BEGIN
     vbDayHoliday := 14;
 
     -- календарных дней в году
-    vbCountDay := (SELECT COUNT (*) - SUM (CASE WHEN Working = FALSE AND DayOfWeekName NOT IN ('Суббота', 'Воскресенье') THEN 1 ELSE 0 END)
-                   FROM gpSelect_Object_Calendar (inStartDate := inStartDate - INTERVAL '1 YEAR' , inEndDate := inStartDate + INTERVAL '1 DAY',  inSession := inSession)) :: TFloat;
+    vbCountDay := (SELECT COUNT (*) - SUM (CASE WHEN gpSelect.isHoliday = TRUE THEN 1 ELSE 0 END)
+                   FROM gpSelect_Object_Calendar (inStartDate := inStartDate - INTERVAL '1 YEAR' , inEndDate := inStartDate - INTERVAL '1 DAY',  inSession := inSession) AS gpSelect
+                   ) :: TFloat;
     -- Результат
     RETURN QUERY
 
@@ -72,13 +73,12 @@ BEGIN
 
   , tmpMovement AS (SELECT Movement.Id                                                                          -- итого отработано
                     FROM Movement
-                    WHERE Movement.OperDate BETWEEN inStartDate - INTERVAL '1 YEAR' AND inStartDate + INTERVAL '1 DAY' 
+                    WHERE Movement.OperDate BETWEEN inStartDate - INTERVAL '1 YEAR' AND inStartDate - INTERVAL '1 DAY' 
                       AND Movement.DescId = zc_Movement_PersonalService()
                       AND Movement.StatusId = zc_Enum_Status_Complete()
                     )
   
   , tmpPersonalService AS (SELECT ObjectLink_Personal_Member.ChildObjectId  AS MemberId
-                                --, MILinkObject_Position.ObjectId AS PositionId
                                 , CASE WHEN vbCountDay <> 0 THEN (SUM (COALESCE (MIFloat_SummToPay.ValueData, 0)) / vbCountDay) ELSE 0 END AS AmountCompensation
                            FROM tmpMovement AS Movement
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -124,7 +124,6 @@ BEGIN
     FROM tmpReport
          LEFT JOIN tmpPersonalService ON tmpPersonalService.MemberId = tmpReport.MemberId
                                      AND COALESCE (tmpPersonalService.AmountCompensation, 0) > 0
-                                     --AND tmpPersonalService.PositionId = tmpReport.PositionId
     ORDER BY tmpReport.UnitName
            , tmpReport.PersonalName
            , tmpReport.PositionName

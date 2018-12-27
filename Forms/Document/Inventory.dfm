@@ -180,7 +180,7 @@ inherited InventoryForm: TInventoryForm
             DataBinding.FieldName = 'PartionGoods'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 120
+            Width = 102
           end
           object PartionGoodsDate: TcxGridDBColumn [7]
             Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
@@ -222,7 +222,7 @@ inherited InventoryForm: TInventoryForm
             Width = 60
           end
           object Price: TcxGridDBColumn [11]
-            Caption = #1062#1077#1085#1072
+            Caption = #1062#1077#1085#1072' ('#1087#1072#1088#1090#1080#1103')'
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -242,7 +242,7 @@ inherited InventoryForm: TInventoryForm
             Width = 60
           end
           object AssetName: TcxGridDBColumn [13]
-            Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072
+            Caption = #1054#1089#1085'. '#1089#1088#1077#1076#1089#1090#1074#1086
             DataBinding.FieldName = 'AssetName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -254,10 +254,11 @@ inherited InventoryForm: TInventoryForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            HeaderHint = #1054#1089#1085#1086#1074#1085#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086' ('#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1058#1052#1062')'
+            Width = 68
           end
           object UnitName: TcxGridDBColumn [14]
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1072#1088#1090#1080#1103')'
             DataBinding.FieldName = 'UnitName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -269,10 +270,10 @@ inherited InventoryForm: TInventoryForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 67
           end
           object StorageName: TcxGridDBColumn [15]
-            Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103
+            Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1087#1072#1088#1090#1080#1103')'
             DataBinding.FieldName = 'StorageName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -284,11 +285,12 @@ inherited InventoryForm: TInventoryForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 74
           end
           object InfoMoneyCode: TcxGridDBColumn [16]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
@@ -312,6 +314,7 @@ inherited InventoryForm: TInventoryForm
           object InfoMoneyName: TcxGridDBColumn [19]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
@@ -559,8 +562,8 @@ inherited InventoryForm: TInventoryForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'StorageChoice'
-      FormName = 'TStoragePlace_ObjectForm'
-      FormNameParam.Value = 'TStoragePlace_ObjectForm'
+      FormName = 'TStorage_ObjectForm'
+      FormNameParam.Value = 'TStorage_ObjectForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

@@ -63,11 +63,10 @@ BEGIN
                                , lfSelect.UnitId
                                , lfSelect.PositionId
                                , lfSelect.BranchId
-                          FROM lfSelect_Object_Member_findPersonal ('5') AS lfSelect
+                          FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                           WHERE lfSelect.Ord = 1
                             AND (lfSelect.MemberId = inMemberId OR inMemberId = 0)
                             AND (lfSelect.UnitId = inUnitId OR inUnitId = 0)
-                            --AND (lfSelect.PositionId = inPositionId OR inPositionId = 0)
                           )
 
   , tmpPersonal AS (SELECT Object_Personal_View.*
@@ -168,9 +167,9 @@ BEGIN
                         , CASE WHEN inisDetail = TRUE THEN tmpData.BeginDateStart ELSE NULL END :: TDateTime AS BeginDateStart
                         , CASE WHEN inisDetail = TRUE THEN tmpData.BeginDateEnd   ELSE NULL END :: TDateTime AS BeginDateEnd
                         , tmpData.MemberId
-                        , SUM (DATE_PART ('DAY', tmpData.BeginDateEnd - tmpData.BeginDateStart))  :: TFloat AS Day_holiday
+                        , SUM (DATE_PART ('DAY', tmpData.BeginDateEnd - tmpData.BeginDateStart) +1)  :: TFloat AS Day_holiday
                         , ROW_NUMBER(*) OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MemberId) AS Ord
-                        , SUM ( SUM(DATE_PART ('DAY', tmpData.BeginDateEnd - tmpData.BeginDateStart)) )  OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MemberId) AS Day_holiday_All
+                        , SUM ( SUM(DATE_PART ('DAY', tmpData.BeginDateEnd - tmpData.BeginDateStart) +1 ) )  OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MemberId) AS Day_holiday_All
                    FROM tmpMov_Holiday AS tmpData
                    GROUP BY CASE WHEN inisDetail = TRUE THEN tmpData.InvNumber         ELSE ''   END
                           , CASE WHEN inisDetail = TRUE THEN tmpData.OperDate          ELSE NULL END
@@ -179,7 +178,7 @@ BEGIN
                           , CASE WHEN inisDetail = TRUE THEN tmpData.BeginDateStart ELSE NULL END
                           , CASE WHEN inisDetail = TRUE THEN tmpData.BeginDateEnd   ELSE NULL END
                           , tmpData.MemberId
-                   HAVING SUM (DATE_PART ('DAY', tmpData.BeginDateEnd - tmpData.BeginDateStart)) <> 0
+                   HAVING SUM (DATE_PART ('DAY', tmpData.BeginDateEnd - tmpData.BeginDateStart) +1 ) <> 0
                    )
     -- связываемданные положенных дней отпуска и фоактич.
     -- Результат

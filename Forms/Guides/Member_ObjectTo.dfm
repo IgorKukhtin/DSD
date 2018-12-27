@@ -1280,7 +1280,7 @@ object Member_ObjectToForm: TMember_ObjectToForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 352
-    Top = 80
+    Left = 384
+    Top = 120
   end
 end

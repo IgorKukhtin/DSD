@@ -20,6 +20,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UpdateName TVarChar
              , InsertDate TDateTime
              , UpdateDate TDateTime
+             , DateIn TDateTime
+             , DateOut TDateTime
+             , Day_work    TFloat
+             , Day_holiday TFloat
               )
 AS
 $BODY$
@@ -46,6 +50,16 @@ BEGIN
                          UNION SELECT Object_RoleAccessKeyDocument_View.AccessKeyId FROM Object_RoleAccessKeyDocument_View WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll) GROUP BY Object_RoleAccessKeyDocument_View.AccessKeyId
                          -- UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
                               )
+
+        , tmpMember AS (SELECT lfSelect.MemberId
+                             , lfSelect.PersonalId
+                             , lfSelect.UnitId
+                             , lfSelect.PositionId
+                             , lfSelect.BranchId
+                        FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                        WHERE lfSelect.Ord = 1
+                        )
+
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -53,10 +67,10 @@ BEGIN
            , Object_Status.ObjectCode              AS StatusCode
            , Object_Status.ValueData               AS StatusName
 
-           , MovementDate_OperDateStart.ValueData  AS OperDateStartDate
-           , MovementDate_OperDateEnd.ValueData    AS OperDateEndDate
-           , MovementDate_BeginDateStart.ValueData AS BeginDateStartDate
-           , MovementDate_BeginDateEnd.ValueData   AS BeginDateEndDate
+           , MovementDate_OperDateStart.ValueData  AS OperDateStart
+           , MovementDate_OperDateEnd.ValueData    AS OperDateEnd
+           , MovementDate_BeginDateStart.ValueData AS BeginDateStart
+           , MovementDate_BeginDateEnd.ValueData   AS BeginDateEnd
 
            , Object_Member.Id                      AS MemberId
            , Object_Member.ValueData               AS MemberName
@@ -67,6 +81,12 @@ BEGIN
            , Object_Update.ValueData               AS UpdateName
            , MovementDate_Insert.ValueData         AS InsertDate
            , MovementDate_Update.ValueData         AS UpdateDate
+
+           , ObjectDate_DateIn.ValueData           AS DateIn
+           , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN NULL ELSE ObjectDate_DateOut.ValueData END :: TDateTime AS DateOut
+           
+           , (DATE_PART ('DAY', MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData)   + 1) :: TFloat AS Day_work
+           , (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData - MovementDate_BeginDateStart.ValueData) + 1) :: TFloat AS Day_holiday
 
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_MemberHoliday()
@@ -119,6 +139,15 @@ BEGIN
                                          ON MovementLinkObject_Update.MovementId = Movement.Id
                                         AND MovementLinkObject_Update.DescId = zc_MovementLinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId
+            
+            --
+            LEFT JOIN tmpMember ON tmpMember.MemberId = MovementLinkObject_Member.ObjectId
+            LEFT JOIN ObjectDate AS ObjectDate_DateIn
+                                 ON ObjectDate_DateIn.ObjectId = tmpMember.PersonalId
+                                AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_In()
+            LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                                 ON ObjectDate_DateOut.ObjectId = tmpMember.PersonalId
+                                AND ObjectDate_DateOut.DescId = zc_ObjectDate_Personal_Out()
       ;
   
 END;
@@ -128,8 +157,9 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.12.18         *
  20.12.18         *
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_MemberHoliday (inStartDate:= '30.10.2015', inEndDate:= '01.12.2015', inIsErased:=false, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_MemberHoliday (inStartDate:= '30.10.2015', inEndDate:= '01.12.2019', inIsErased:=true, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())

@@ -8,7 +8,7 @@ uses
   dsdGuides, cxDropDownEdit, cxCalendar, cxMaskEdit, cxButtonEdit, cxTextEdit,
   cxCurrencyEdit, Vcl.Controls, cxLabel, dsdDB, dsdAction, System.Classes,
   Vcl.ActnList, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons,
-  dxSkinsCore, dxSkinsDefaultPainters;
+  dxSkinsCore, dxSkinsDefaultPainters, ChoicePeriod;
 
 type
   TMemberHolidayForm = class(TAncestorEditDialogForm)
@@ -41,6 +41,8 @@ type
     edBeginDateStart: TcxDateEdit;
     cxLabel7: TcxLabel;
     edBeginDateEnd: TcxDateEdit;
+    PeriodChoiceOperDate: TPeriodChoice;
+    PeriodChoiceBeginDate: TPeriodChoice;
   private
     { Private declarations }
   public

@@ -209,8 +209,8 @@
     Width = 130
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 99
-    Top = 141
+    Left = 75
+    Top = 69
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 232
@@ -540,10 +540,10 @@
   object GuideMember: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMember
-    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.Value = 'TMember_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMember_ObjectForm'
+    FormName = 'TMember_ChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -600,10 +600,10 @@
   object GuideMemberMain: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMemberMain
-    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.Value = 'TMember_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMember_ObjectForm'
+    FormName = 'TMember_ChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -625,5 +625,17 @@
       end>
     Left = 142
     Top = 103
+  end
+  object PeriodChoiceOperDate: TPeriodChoice
+    DateStart = edOperDateStart
+    DateEnd = edOperDateEnd
+    Left = 312
+    Top = 128
+  end
+  object PeriodChoiceBeginDate: TPeriodChoice
+    DateStart = edBeginDateStart
+    DateEnd = edBeginDateEnd
+    Left = 320
+    Top = 200
   end
 end

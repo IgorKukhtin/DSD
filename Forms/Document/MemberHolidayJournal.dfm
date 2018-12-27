@@ -61,39 +61,22 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Day_holiday
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
+              Column = Day_holiday
             end
             item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colInvNumber
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -120,7 +103,7 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
-            Width = 70
+            Width = 92
           end
           object OperDateStart: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1088#1072#1073'. '#1087#1077#1088#1080#1086#1076#1072
@@ -152,6 +135,30 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 87
           end
+          object Day_holiday: TcxGridDBColumn
+            Caption = #1054#1090#1087#1091#1089#1082', '#1076#1085#1077#1081
+            DataBinding.FieldName = 'Day_holiday'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1087#1091#1089#1082', '#1076#1085#1077#1081
+            Options.Editing = False
+            Width = 80
+          end
+          object Day_work: TcxGridDBColumn
+            Caption = #1056#1072#1073#1086#1095#1080#1081' '#1087#1077#1088#1080#1086#1076', '#1076#1085'.'
+            DataBinding.FieldName = 'Day_work'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1073#1086#1095#1080#1081' '#1087#1077#1088#1080#1086#1076', '#1076#1085#1077#1081
+            Options.Editing = False
+            Width = 80
+          end
           object MemberName: TcxGridDBColumn
             Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
             DataBinding.FieldName = 'MemberName'
@@ -165,6 +172,22 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 147
+          end
+          object DateIn: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
+            DataBinding.FieldName = 'DateIn'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object DateOut: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'DateOut'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 85
           end
           object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'

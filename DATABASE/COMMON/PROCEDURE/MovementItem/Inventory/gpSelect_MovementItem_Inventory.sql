@@ -139,7 +139,7 @@ BEGIN
            , MIFloat_HeadCount.ValueData        AS HeadCount
            , MIFloat_Count.ValueData            AS Count
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectFloat_Price_Partion.ValueData ELSE (CASE WHEN MIFloat_Price.ValueData <> 0 THEN MIFloat_Price.ValueData ELSE tmpPrice.Price END) END:: TFloat AS Price
-           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectFloat_Price_Partion.ValueData * MovementItem.Amount ELSE  MIFloat_Summ.ValueData END    :: TFloat AS Summ
+           , MIFloat_Summ.ValueData   :: TFloat AS Summ
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectDate_Value.ValueData    ELSE MIDate_PartionGoods.ValueData   END AS PartionGoodsDate
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_PartionGoods.ValueData ELSE MIString_PartionGoods.ValueData END AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
@@ -281,26 +281,26 @@ BEGIN
                          WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
                         )
        SELECT
-             MovementItem.Id                    AS Id
-           , Object_Goods.Id                    AS GoodsId
-           , Object_Goods.ObjectCode            AS GoodsCode
-           , Object_Goods.ValueData             AS GoodsName
+             MovementItem.Id                     AS Id
+           , Object_Goods.Id                     AS GoodsId
+           , Object_Goods.ObjectCode             AS GoodsCode
+           , Object_Goods.ValueData              AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-           , Object_Measure.ValueData                    AS MeasureName
+           , Object_Measure.ValueData            AS MeasureName
 
-           , MovementItem.Amount                AS Amount
-           , MIFloat_HeadCount.ValueData        AS HeadCount
-           , MIFloat_Count.ValueData            AS Count
+           , MovementItem.Amount                 AS Amount
+           , MIFloat_HeadCount.ValueData         AS HeadCount
+           , MIFloat_Count.ValueData             AS Count
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectFloat_Price_Partion.ValueData ELSE (CASE WHEN COALESCE (MIFloat_Price.ValueData, 0) <> 0 THEN MIFloat_Price.ValueData ELSE tmpPrice.Price END) END :: TFloat AS Price
-           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectFloat_Price_Partion.ValueData * MovementItem.Amount ELSE  MIFloat_Summ.ValueData END    :: TFloat AS Summ
+           , MIFloat_Summ.ValueData  :: TFloat AS Summ
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectDate_Value.ValueData    ELSE MIDate_PartionGoods.ValueData   END AS PartionGoodsDate
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_PartionGoods.ValueData ELSE MIString_PartionGoods.ValueData END AS PartionGoods
-           , Object_GoodsKind.Id                AS GoodsKindId
-           , Object_GoodsKind.ValueData         AS GoodsKindName
+           , Object_GoodsKind.Id                 AS GoodsKindId
+           , Object_GoodsKind.ValueData          AS GoodsKindName
            , Object_GoodsKindComplete.Id         AS GoodsKindId_Complete
            , Object_GoodsKindComplete.ValueData  AS GoodsKindName_Complete
-           , Object_Asset.Id                    AS AssetId
-           , Object_Asset.ValueData             AS AssetName
+           , Object_Asset.Id                     AS AssetId
+           , Object_Asset.ValueData              AS AssetName
            , Object_InfoMoney_View.InfoMoneyCode
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
@@ -314,18 +314,11 @@ BEGIN
 
            , MIFloat_ContainerId.ValueData :: Integer AS ContainerId
 
-           , MovementItem.isErased              AS isErased
+           , MovementItem.isErased               AS isErased
 
-           -- из партии
-           , Object_PartionGoods.Id                AS PartionGoodsId
-         /*  , ObjectFloat_Price_Partion.ValueData   AS Price_Partion
-           
-           , Object_Storage_Partion.Id             AS StorageId_Partion
-           , Object_Storage_Partion.ValueData      AS StorageName_Partion
-          
-           , Object_Unit_Partion.Id                AS UnitId_Partion
-           , Object_Unit_Partion.ValueData         AS UnitName_Partion
-           */
+           -- Id партии
+           , Object_PartionGoods.Id              AS PartionGoodsId
+
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Master()
