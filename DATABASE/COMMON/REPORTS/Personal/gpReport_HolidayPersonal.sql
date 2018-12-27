@@ -21,7 +21,7 @@ RETURNS TABLE(MemberId Integer, PersonalId Integer
             , StorageLineName TVarChar
             , DateIn TDateTime, DateOut TDateTime
             , isDateOut Boolean, isMain Boolean, isOfficial Boolean
-            , Age_work      TVarChar
+           -- , Age_work      TVarChar
             , Month_work    TFloat
             , Day_vacation  TFloat
             , Day_holiday   TFloat
@@ -73,7 +73,6 @@ BEGIN
   , tmpPersonal AS (SELECT Object_Personal_View.*
                          , CASE WHEN Object_Personal_View.DateIn < vbStartDate THEN vbStartDate ELSE Object_Personal_View.DateIn END AS DateIn_Calc      -- 
                          , CASE WHEN Object_Personal_View.isDateOut = FALSE THEN vbEndDate ELSE Object_Personal_View.DateOut_user END AS DateOut_Calc  -- CURRENT_DATE  -- если дата увольнени€ пута€ ставим = дате форм. отчета, дл€ расчета отр. мес€цев на дату форм. отчета
-                        -- , tmpMemberPersonal.BranchId
                     FROM tmpMemberPersonal
                          LEFT JOIN Object_Personal_View ON Object_Personal_View.MemberId = tmpMemberPersonal.MemberId
                                                        AND Object_Personal_View.UnitId = tmpMemberPersonal.UnitId
@@ -81,13 +80,46 @@ BEGIN
                     WHERE Object_Personal_View.DateIn <= inStartDate
                       AND ((Object_Personal_View.isDateOut = TRUE AND Object_Personal_View.DateOut_user >= vbStartDate) OR Object_Personal_View.isDateOut = FALSE)
                    )
-
+  -- вычисл€ем интервалы непрерывной работы более 6 мес€цев
+  , tmp1 (MemberId, DateIn_Calc, ord) AS
+         (SELECT t1.MemberId
+               , min(t1.DateIn_Calc) AS DateIn_Calc
+               , row_number() over (partition by t1.MemberId order by min(t1.DateIn_Calc))
+          FROM tmpPersonal AS t1
+               LEFT JOIN tmpPersonal AS t2 ON t1.DateIn_Calc > t2.DateIn_Calc and t1.DateIn_Calc <= t2.DateOut_Calc + interval '1 day' and t2.MemberId = t1.MemberId
+          WHERE t2.MemberId IS NULL
+          GROUP BY t1.DateIn_Calc, t1.MemberId
+         )
+  , tmp2 (MemberId, DateOut_Calc, Ord) AS
+         (SELECT t1.MemberId
+               , min(t1.DateOut_Calc) AS DateOut_Calc
+               , row_number() over (partition by t1.MemberId  order by min(t1.DateOut_Calc)) AS Ord
+          FROM tmpPersonal AS t1
+               LEFT JOIN tmpPersonal AS t2 ON t1.DateOut_Calc + interval '1 day' >= t2.DateIn_Calc and t1.DateOut_Calc < t2.DateOut_Calc and t2.MemberId = t1.MemberId
+          WHERE t2.MemberId IS NULL
+          GROUP BY t1.DateOut_Calc, t1.MemberId
+         )
+  , tmpWork AS (SELECT tmp.MemberId
+                     , SUM (tmp.Month_work) AS Month_work
+                FROM (SELECT tmp1.MemberId
+                           , DATE_PART('YEAR', AGE (tmp2.DateOut_Calc, tmp1.DateIn_Calc)) * 12 
+                                                + DATE_PART('MONTH', AGE (tmp2.DateOut_Calc, tmp1.DateIn_Calc))  AS Month_work 
+                      FROM tmp1
+                           JOIN tmp2 ON tmp1.ord = tmp2.ord
+                                    AND tmp2.MemberId = tmp1.MemberId
+                      WHERE DATE_PART('YEAR', AGE (tmp2.DateOut_Calc, tmp1.DateIn_Calc)) * 12 + DATE_PART('MONTH', AGE (tmp2.DateOut_Calc, tmp1.DateIn_Calc)) >= 6
+                      ) AS tmp
+                GROUP BY tmp.MemberId
+                )
+                   
+/*
   , tmpWork AS (SELECT *
                      , DATE_PART('YEAR', AGE (tmpPersonal.DateOut_Calc, tmpPersonal.DateIn_Calc)) * 12 
                      + DATE_PART('MONTH', AGE (tmpPersonal.DateOut_Calc, tmpPersonal.DateIn_Calc)) AS Month_work  -- кол-во отработанных мес€цев
                      , AGE (tmpPersonal.DateOut_Calc, tmpPersonal.DateIn) AS Age_work                                                                             -- итого отработано
                 FROM tmpPersonal
                 )
+                */
 
   , tmpVacation AS (SELECT *
                          , CASE WHEN tmpWork.Month_work >= vbMonthHoliday THEN CAST (vbDayHoliday * tmpWork.Month_work / 12 AS NUMERIC (16,0)) ELSE 0 END  AS Day_vacation -- колво положенных дней отпуска  (14 дней в год, 1 отпуск - после 6 м. непрерывного стажа)
@@ -152,27 +184,25 @@ BEGIN
     -- св€зываемданные положенных дней отпуска и фоактич.
     -- –езультат
 
-             
-
     SELECT tmpVacation.MemberId
-         , tmpVacation.PersonalId
-         , tmpVacation.PersonalCode
-         , tmpVacation.PersonalName
-         , tmpVacation.PositionId
-         , tmpVacation.PositionCode
-         , tmpVacation.PositionName
-         , tmpVacation.PositionLevelName
-         , tmpVacation.UnitCode
-         , tmpVacation.UnitName
-         , Object_Branch.ValueData  AS BranchName
-         , tmpVacation.PersonalGroupName
-         , tmpVacation.StorageLineName
-         , tmpVacation.DateIn
-         , tmpVacation.DateOut_user AS DateOut
-         , tmpVacation.isDateOut
-         , tmpVacation.isMain
-         , tmpVacation.isOfficial
-         , tmpVacation.Age_work      :: TVarChar
+         , tmpPersonal.PersonalId
+         , tmpPersonal.PersonalCode
+         , tmpPersonal.PersonalName
+         , tmpPersonal.PositionId
+         , tmpPersonal.PositionCode
+         , tmpPersonal.PositionName
+         , tmpPersonal.PositionLevelName
+         , tmpPersonal.UnitCode
+         , tmpPersonal.UnitName
+         , tmpPersonal.BranchName
+         , tmpPersonal.PersonalGroupName
+         , tmpPersonal.StorageLineName
+         , tmpPersonal.DateIn
+         , tmpPersonal.DateOut_user AS DateOut
+         , tmpPersonal.isDateOut
+         , tmpPersonal.isMain
+         , tmpPersonal.isOfficial
+         --, tmpPersonal.Age_work      :: TVarChar
          , tmpVacation.Month_work    :: TFloat
          , CASE WHEN tmpHoliday.Ord = 1 OR tmpHoliday.Ord IS NULL THEN tmpVacation.Day_vacation ELSE 0 END :: TFloat AS Day_vacation 
          , tmpHoliday.Day_holiday    :: TFloat                                                                       -- использовано 
@@ -186,10 +216,14 @@ BEGIN
     FROM tmpVacation
          LEFT JOIN tmpHoliday ON tmpHoliday.MemberId = tmpVacation.MemberId
 
-         LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpVacation.BranchId
-    ORDER BY tmpVacation.UnitName
-           , tmpVacation.PersonalName
-           , tmpVacation.PositionName
+         LEFT JOIN tmpMemberPersonal ON tmpMemberPersonal.MemberId = tmpVacation.MemberId
+         LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = tmpVacation.MemberId
+                              AND tmpPersonal.PositionId = tmpMemberPersonal.PositionId
+                              AND tmpPersonal.UnitId = tmpMemberPersonal.UnitId
+                              
+    ORDER BY tmpPersonal.UnitName
+           , tmpPersonal.PersonalName
+           , tmpPersonal.PositionName
     ;
 
 END;
@@ -198,3 +232,5 @@ $BODY$
 
 -- тест
 -- select * from gpReport_HolidayPersonal(inStartDate := ('01.01.2019')::TDateTime , inUnitId := 8384 , inMemberId := 0 , inisDetail := 'True'::Boolean,  inSession := '5'::TVarChar);
+
+
