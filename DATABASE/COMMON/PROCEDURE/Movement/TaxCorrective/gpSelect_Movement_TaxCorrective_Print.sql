@@ -504,6 +504,7 @@ BEGIN
                        , Object_ContractKind.Id          AS ContractKindId
                        , Object_ContractKind.ValueData   AS ContractKindName
                        , ObjectDate_Signing.ValueData    AS ContractSigningDate
+                       , COALESCE (ObjectString_PartnerCode.ValueData, '') :: TVarChar AS PartnerCode
                   FROM MovementLinkObject AS MovementLinkObject_Contract
                        LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
            
@@ -517,6 +518,11 @@ BEGIN
                                             ON ObjectDate_Signing.ObjectId = MovementLinkObject_Contract.ObjectId
                                            AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
                                            AND Object_Contract.ValueData <> '-'
+                       -- код поставщика
+                       LEFT JOIN ObjectString AS ObjectString_PartnerCode
+                                              ON ObjectString_PartnerCode.ObjectId = MovementLinkObject_Contract.ObjectId
+                                             AND ObjectString_PartnerCode.DescId = zc_objectString_Contract_PartnerCode()
+
                   WHERE MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                     AND MovementLinkObject_Contract.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
                  )
@@ -759,6 +765,7 @@ BEGIN
            , tmpContract.ContractName         		                    AS ContractName
            , tmpContract.ContractSigningDate                                AS ContractSigningDate
            , tmpContract.ContractKindName                                   AS ContractKind
+           , tmpContract.PartnerCode                                        AS PartnerCode
 
            , CAST (REPEAT (' ', 7 - LENGTH (tmpMLM_Child.InvNumberPartner_Child)) || tmpMLM_Child.InvNumberPartner_Child AS TVarChar) AS InvNumber_Child
            , tmpMLM_Child.OperDate_Child                                    AS OperDate_Child
@@ -1150,6 +1157,7 @@ BEGIN
                        , tmpData_all.ContractName
                        , tmpData_all.ContractSigningDate
                        , tmpData_all.ContractKind
+                       , tmpData_all.PartnerCode
             
                        , tmpData_all.InvNumber_Child
                        , tmpData_all.OperDate_Child
@@ -1327,6 +1335,7 @@ BEGIN
                        , tmpData_all.ContractName
                        , tmpData_all.ContractSigningDate
                        , tmpData_all.ContractKind
+                       , tmpData_all.PartnerCode
             
                        , tmpData_all.InvNumber_Child
                        , tmpData_all.OperDate_Child
@@ -1510,6 +1519,7 @@ BEGIN
            , tmpData_all.ContractName
            , tmpData_all.ContractSigningDate
            , tmpData_all.ContractKind
+           , tmpData_all.PartnerCode
 
            , tmpData_all.InvNumber_Child
            , tmpData_all.OperDate_Child
