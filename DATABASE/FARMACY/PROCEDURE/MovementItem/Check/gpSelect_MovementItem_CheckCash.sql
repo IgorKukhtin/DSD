@@ -40,7 +40,7 @@ BEGIN
     IF 3997056 <> inSession::Integer and 7579515 <> inSession::Integer and
        4183126 <> inSession::Integer and 3 <> inSession::Integer and 
        4007345 <> inSession::Integer and 4055652 <> inSession::Integer and 
-       4555291 <> inSession::Integer
+       4555291 <> inSession::Integer and 7008134 <> inSession::Integer
     THEN
       RAISE EXCEPTION 'В разработке будет позже.';
     END IF;

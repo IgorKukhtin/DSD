@@ -316,6 +316,7 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
       Caption = #1057#1086#1093#1088#1072#1085#1077#1085#1077#1085#1080#1103' '#1087#1077#1088#1080#1086#1076#1072' '#1087#1088#1072#1079#1076#1085#1080#1082#1086#1074
       Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1077#1085#1080#1103' '#1087#1077#1088#1080#1086#1076#1072' '#1087#1088#1072#1079#1076#1085#1080#1082#1086#1074
       ImageIndex = 14
+      ShortCut = 113
     end
   end
   inherited MasterDS: TDataSource
@@ -343,7 +344,7 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'dxBarButton6'
+          ItemName = 'bbInsertUpdateMovement'
         end
         item
           Visible = True
@@ -449,7 +450,7 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
       Action = actUpdate
       Category = 0
     end
-    object dxBarButton6: TdxBarButton
+    object bbInsertUpdateMovement: TdxBarButton
       Action = spInsertUpdateMovement
       Category = 0
     end
@@ -478,6 +479,12 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
       item
         Name = 'UnitID'
         Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IdAdd'
+        Value = '1'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
@@ -535,7 +542,7 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
     IdParam.Component = FormParams
-    IdParam.ComponentItem = 'Id'
+    IdParam.ComponentItem = 'IdAdd'
     IdParam.MultiSelectSeparator = ','
     StoredProc = spUpdateHolidays
     ControlList = <

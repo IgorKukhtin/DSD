@@ -98,10 +98,10 @@
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
 			<Debugger_RunParams>/skipcheckconnect</Debugger_RunParams>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.12.67;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.12.68;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<DCC_DcuOutput>..\TEMP</DCC_DcuOutput>
-			<VerInfo_Build>67</VerInfo_Build>
+			<VerInfo_Build>68</VerInfo_Build>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
 			<VerInfo_Release>12</VerInfo_Release>
@@ -256,6 +256,12 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
+			<DCCReference Include="..\FormsFarmacy\Cash\PayPosTermProcess.pas">
+				<Form>PayPosTermProcessForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\FormsFarmacy\Cash\Pos_ECRCommX_BPOS1Lib.pas"/>
+			<DCCReference Include="..\FormsFarmacy\Cash\PosFactory.pas"/>
+			<DCCReference Include="..\FormsFarmacy\Cash\PosInterface.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

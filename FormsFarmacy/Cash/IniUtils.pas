@@ -31,6 +31,14 @@ function iniCashSerialNumber: String;
 //возвращает номер налоговой группы для FP320
 function iniTaxGroup7:Integer;
 
+//возвраащет тип POS-терминала;
+function iniPosType:String;
+//возвращает порт POS-терминала
+function iniPosPortNumber:Integer;
+//возвращает скорость порта POS-терминала
+function iniPosPortSpeed:Integer;
+
+
 var gUnitName, gUserName, gPassValue: string;
 var gUnitId : Integer;
 var isMainForm_OLD : Boolean;
@@ -240,5 +248,32 @@ begin
   if not tryStrToInt(S,Result) then
     Result := 1;
 End;
+
+//возвраащет тип POS-терминала;
+function iniPosType:String;
+begin
+  Result := GetValue('TSoldWithCompMainForm','PosType','');
+end;
+
+//возвращает порт POS-терминала
+function iniPosPortNumber:Integer;
+var
+  S: String;
+begin
+  S := GetValue('TSoldWithCompMainForm','PosPortNumber','');
+  if not tryStrToInt(S,Result) then
+    Result := 0;
+end;
+
+//возвращает скорость порта POS-терминала
+function iniPosPortSpeed:Integer;
+ var
+  S: String;
+begin
+  S := GetValue('TSoldWithCompMainForm','PosPortSpeed','');
+  if not tryStrToInt(S,Result) then
+    Result := 0;
+end;
+
 
 end.

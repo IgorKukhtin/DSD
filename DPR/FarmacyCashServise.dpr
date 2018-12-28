@@ -59,7 +59,6 @@ uses
   CashInterface in '..\FormsFarmacy\Cash\CashInterface.pas',
   IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas',
   CashCloseDialog in '..\FormsFarmacy\Cash\CashCloseDialog.pas' {CashCloseDialogForm: TParentForm},
-  CashWork in '..\FormsFarmacy\Cash\CashWork.pas' {CashWorkForm},
   AncestorDialog in '..\Forms\Ancestor\AncestorDialog.pas' {AncestorDialogForm: TParentForm},
   dsdApplication in '..\SOURCE\dsdApplication.pas',
   ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',

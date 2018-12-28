@@ -45,12 +45,11 @@ type
     procedure SaveZReport(AFileName, AText : string);
   end;
 
-var
-  FM_SERVISE: Integer;
-
 implementation
 
 {$R *.dfm}
+
+  uses MainCash2;
 
 { TCashWorkForm }
 
@@ -184,8 +183,5 @@ begin
     ShowMessage('Ошибка сохранения Электронной формы z отчёта. Покажите это окно системному администратору: ' + #13#10 + E.Message);
   end;
 end;
-
-initialization
-  FM_SERVISE := RegisterWindowMessage('FarmacyCashMessage');
 
 end.

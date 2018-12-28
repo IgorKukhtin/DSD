@@ -13,7 +13,7 @@ uses
   cxGrid, cxPC, cxButtonEdit, Vcl.ExtCtrls, cxSplitter, cxDropDownEdit,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarBuiltInMenu, cxNavigator, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
-  cxLabel, cxTextEdit, cxMaskEdit, cxCalendar;
+  cxLabel, cxTextEdit, cxMaskEdit, cxCalendar, dsdGuides;
 
 type
   TRecalcMCSShedulerForm = class(TAncestorDBGridForm)
@@ -45,7 +45,7 @@ type
     spUpdateHolidays: TdsdStoredProc;
     HeaderSaver: THeaderSaver;
     spInsertUpdateMovement: TdsdExecStoredProc;
-    dxBarButton6: TdxBarButton;
+    bbInsertUpdateMovement: TdxBarButton;
   private
     { Private declarations }
   public

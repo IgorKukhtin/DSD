@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, System.DateUtils,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,  DataModul,  Vcl.ActnList, dsdAction,
-  Data.DB,  Vcl.ExtCtrls, dsdDB, Datasnap.DBClient,  Vcl.Menus,  Vcl.StdCtrls,
+  System.IOUtils, Data.DB,  Vcl.ExtCtrls, dsdDB, Datasnap.DBClient,  Vcl.Menus,  Vcl.StdCtrls,
   IniFIles, dxmdaset,  ActiveX,  Math,  VKDBFDataSet, FormStorage, CommonData, ParentForm,
   LocalWorkUnit , IniUtils, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters,
   cxButtons, Vcl.Grids, Vcl.DBGrids, AncestorBase, cxPropertiesStore, cxControls,
@@ -13,7 +13,7 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid,  cxSplitter, cxContainer,  cxTextEdit, cxCurrencyEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxLookupEdit,
   cxDBLookupEdit, cxDBLookupComboBox,  cxCheckBox, cxNavigator, CashInterface,  cxImageComboBox , dsdAddOn,
-  Vcl.ImgList, LocalStorage
+  Vcl.ImgList, LocalStorage, IdFTPCommon, IdGlobal, IdFTP, IdSSLOpenSSL, IdExplicitTLSClientServerBase
   ;
 
 type
@@ -128,6 +128,7 @@ type
     N8: TMenuItem;
     ListDiffCDS: TClientDataSet;
     spSendListDiff: TdsdStoredProc;
+    spLoadFTPParam: TdsdStoredProc;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -1569,8 +1570,114 @@ begin
 end;
 
 procedure TMainCashForm2.SendZReport;
+  var IdFTP : Tidftp;
+      s, p: string; sl : TStringList;  i : integer;
+
+  function ChangeDirFTP(ADir : String; ACreate : Boolean = true) : Boolean;
+    var S:string;
+  Begin
+    Result := false;
+    if ADir[length(ADir)]<>'/' then ADir:=ADir+'/';
+    IdFTP.ChangeDir('/');
+
+    while ADir <> '' do
+    Begin
+      S:=Copy(ADir,1,pos('/',ADir)-1);
+      try
+        IdFTP.ChangeDir(S);
+      except
+        if ACreate then
+        try
+          IdFTP.MakeDir(S);
+          IdFTP.ChangeDir(S);
+        Except
+          exit;
+        end else Exit;
+      end;
+      Delete(ADir,1,pos('/',ADir));
+    End;
+    Result:=True;
+  End;
+
 begin
 
+  try
+    spLoadFTPParam.Execute;
+  except
+    on E: Exception do
+    begin
+      Add_Log('spLoadFTPParam Exception: ' + E.Message);
+      Exit;
+    end;
+  end;
+
+  p := ExtractFilePath(Application.ExeName) + 'ZRepot\';
+
+  if not ForceDirectories(p + 'Send\') then
+  begin
+    Add_Log('Error crete path: ' + p + 'Send\');
+    Exit;
+  end;
+
+  sl := TStringList.Create;
+  for s in TDirectory.GetFiles(p, '*.txt') do sl.Add(TPath.GetFileName(s));
+
+  if sl.Count = 0 then
+  begin
+    sl.Free;
+    Exit;
+  end;
+
+  MainCashForm2.tiServise.IconIndex := 7;
+    // Отправка файла
+  IdFTP := Tidftp.Create(nil);
+  try
+    try
+      IdFTP.Passive := True;
+      IdFTP.TransferType := ftBinary;
+      IdFTP.UseExtensionDataPort := True;
+
+      IdFTP.Host := spLoadFTPParam.ParamByName('outHost').Value;
+      IdFTP.Port := spLoadFTPParam.ParamByName('outPort').Value;
+      IdFTP.Username := spLoadFTPParam.ParamByName('outUsername').Value;
+      IdFTP.Password := spLoadFTPParam.ParamByName('outPassword').Value;
+//      IdFTP.IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(IdFTP);
+//      IdFTP.UseTLS := utUseExplicitTLS;
+//      IdFTP.DataPortProtection := ftpdpsPrivate;
+//      TIdSSLIOHandlerSocketOpenSSL(IdFTP.IOHandler).SSLOptions.Method := sslvTLSv1;
+//      TIdSSLIOHandlerSocketOpenSSL(IdFTP.IOHandler).SSLOptions.Mode := sslmClient;
+//      TIdSSLIOHandlerSocketOpenSSL(IdFTP.IOHandler).SSLOptions.CipherList := 'ALL';
+      IdFTP.Connect;
+      if IdFTP.Connected then
+      try
+        if not ChangeDirFTP(iniLocalUnitNameGet, True) then Exit;
+        for i := 0 to sl.Count - 1 do
+        begin
+          IdFTP.Put(p + sl.Strings[i], sl.Strings[i], False);
+          TFile.Copy(p + sl.Strings[i], p + 'Send\' + sl.Strings[i], true);
+          TFile.Delete(p + sl.Strings[i]);
+        end;
+
+          // Удаление старых файлов
+        sl.Clear;
+        for s in TDirectory.GetFiles(p + 'Send\', '*.txt') do sl.Add(s);
+        for i := 0 to sl.Count - 1 do if TFile.GetCreationTime(sl.Strings[i]) <
+          IncDay(Date, - spLoadFTPParam.ParamByName('outPort').Value) then
+          TFile.Delete(sl.Strings[i]);
+
+        tiServise.BalloonHint := 'Z отчеты отправлены';
+        tiServise.ShowBalloonHint;
+      finally
+        IdFTP.Disconnect;
+      end;
+    except
+      on E: Exception do Add_Log('Send from FTP file Exception: ' + E.Message);
+    end;
+  finally
+    IdFTP.Free;
+    sl.Free;
+    MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+  end;
 end;
 
 function TMainCashForm2.GetTrayIcon: integer;

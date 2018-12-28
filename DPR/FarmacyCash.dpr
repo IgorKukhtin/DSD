@@ -91,7 +91,11 @@ uses
   ListGoods in '..\FormsFarmacy\Cash\ListGoods.pas' {ListGoodsForm: TParentForm},
   ListDiffAddGoods in '..\FormsFarmacy\Cash\ListDiffAddGoods.pas' {ListDiffAddGoodsForm},
   Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
-  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas';
+  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas',
+  PayPosTermProcess in '..\FormsFarmacy\Cash\PayPosTermProcess.pas' {PayPosTermProcessForm},
+  Pos_ECRCommX_BPOS1Lib in '..\FormsFarmacy\Cash\Pos_ECRCommX_BPOS1Lib.pas',
+  PosFactory in '..\FormsFarmacy\Cash\PosFactory.pas',
+  PosInterface in '..\FormsFarmacy\Cash\PosInterface.pas';
 
 {$R *.res}
 

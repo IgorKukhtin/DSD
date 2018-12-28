@@ -17,7 +17,7 @@ uses
   ActiveX,  Math, ShellApi,
   VKDBFDataSet, FormStorage, CommonData, ParentForm, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, LocalStorage, cxGridExportLink,
-  cxButtonEdit;
+  cxButtonEdit, PosInterface, PosFactory, PayPosTermProcess;
 
 type
   THeadRecord = record
@@ -425,6 +425,8 @@ type
     fShift: Boolean;
     FTotalSumm: Currency;
     Cash: ICash;
+    PosTerm: IPos;
+    PosTermBan : Boolean;
     SoldParallel: Boolean;
     SourceClientDataSet: TClientDataSet;
     ThreadErrorMessage:String;
@@ -1401,6 +1403,15 @@ begin
   end
   else
     ASalerCash:=FTotalSumm;
+
+  //проверили бана по POS-терминалу
+  if (PaidType <> ptMoney) and PosTermBan then
+  begin
+    ShowMessage('Внимание! Программа не смогла подключиться к POS-терминала.'+#13+
+                'Отпуск через кредитный терминал невозможен!');
+    Exit;
+  end;
+
   //показали что началась печать
   ShapeState.Brush.Color := clYellow;
   ShapeState.Repaint;
@@ -1435,6 +1446,11 @@ begin
   end;
   //послали на печать
   try
+    //проверили бана по POS-терминалу
+    if (PaidType <> ptMoney) and (PosTerm <> Nil) then
+    begin
+      if not PayPosTerminal(PosTerm, MainCashForm.ASalerCash) then Exit;
+    end;
     Add_Log('Печать чека');
     if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.ASalerCashAdd, MainCashForm.PaidType, FiscalNumber, CheckNumber) then
     Begin
@@ -2907,6 +2923,24 @@ begin
                   'Дальнейшая работа программы возможна только в нефискальном режиме!');
     End;
   end;
+
+  PosTermBan := False;
+  PosTerm := Nil;
+  if iniPosType <> '' then
+  try
+    try
+      PosTerm:=TPosFactory.GetPos(iniPosType);
+    except ON E:Exception do Add_Log('Exception: ' + E.Message);
+    end;
+  finally
+    if PosTerm = Nil then
+    begin
+      PosTermBan := True;
+      ShowMessage('Внимание! Программа не может подключиться к POS-терминала.'+#13+
+                  'Дальнейшая работа программы возможна только без отпуска через кредитный терминал!');
+    end;
+  end;
+
   //а2 начало -  только 2 форма
   ChangeStatus('Удаление файла остатков');
   WaitForSingleObject(MutexDBFDiff, INFINITE);
