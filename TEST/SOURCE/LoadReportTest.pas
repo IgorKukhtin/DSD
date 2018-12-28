@@ -120,6 +120,8 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+  LoadReportFromFile('PrintMovement_MemberHoliday', ReportPath + '\Персонал\PrintMovement_MemberHoliday.fr3');
+  exit;
   {LoadReportFromFile('По кассе (с комментариями)', ReportPath + '\Финансовый Учет\По кассе (с комментариями).fr3');
   exit;
 

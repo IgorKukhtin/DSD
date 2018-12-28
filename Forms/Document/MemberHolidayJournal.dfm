@@ -317,20 +317,16 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrint_Spec
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrint_Spec
         end>
-      Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
-      Hint = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+      Caption = #1055#1088#1080#1082#1072#1079' '#1085#1072' '#1086#1090#1087#1091#1089#1082
+      Hint = #1055#1088#1080#1082#1072#1079' '#1085#1072' '#1086#1090#1087#1091#1089#1082
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
@@ -339,12 +335,12 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
         item
           Name = 'Id'
           Value = Null
-          Component = FormParams
+          Component = MasterCDS
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_PersonalService'
-      ReportNameParam.Value = ''
+      ReportName = 'PrintMovement_MemberHoliday'
+      ReportNameParam.Value = 'PrintMovement_MemberHoliday'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -499,6 +495,14 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -631,6 +635,8 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
+    MasterSource = MasterDS
+    PacketRecords = 0
     Params = <>
     Left = 708
     Top = 217
@@ -643,11 +649,8 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_MemberHoliday_Print'
-    DataSet = PrintHeaderCDS
+    DataSet = PrintItemsCDS
     DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
       item
         DataSet = PrintItemsCDS
       end>
@@ -656,7 +659,7 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
       item
         Name = 'inMovementId'
         Value = Null
-        Component = FormParams
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -664,12 +667,6 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
     PackSize = 1
     Left = 535
     Top = 248
-  end
-  object PrintItemsSverkaCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 628
-    Top = 294
   end
   object JuridicalBasisGuides: TdsdGuides
     KeyField = 'Id'
@@ -724,5 +721,26 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
     PackSize = 1
     Left = 824
     Top = 48
+  end
+  object spSelectPrint_Spec: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_MemberHoliday_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 647
+    Top = 360
   end
 end

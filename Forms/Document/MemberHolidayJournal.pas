@@ -37,7 +37,6 @@ type
     bbPrintTax_Us: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
-    PrintItemsSverkaCDS: TClientDataSet;
     OperDateStart: TcxGridDBColumn;
     OperDateEnd: TcxGridDBColumn;
     BeginDateStart: TcxGridDBColumn;
@@ -50,6 +49,7 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    spSelectPrint_Spec: TdsdStoredProc;
   private
     { Private declarations }
   public
