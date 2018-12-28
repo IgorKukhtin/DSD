@@ -23,13 +23,14 @@ RETURNS TABLE(MemberId Integer, PersonalId Integer
             , Day_diff      TFloat
             , AmountCompensation TFloat
             , SummaCompensation  TFloat
+            , Day_calendar  TFloat
             )
 AS
 $BODY$
     DECLARE vbUserId       Integer;
     DECLARE vbMonthHoliday TFloat;
     DECLARE vbDayHoliday   TFloat;
-    DECLARE vbCountDay     TFloat;
+    --DECLARE vbCountDay     TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
@@ -41,9 +42,10 @@ BEGIN
     vbDayHoliday := 14;
 
     -- календарных дней в году
-    vbCountDay := (SELECT COUNT (*) - SUM (CASE WHEN gpSelect.isHoliday = TRUE THEN 1 ELSE 0 END)
+    /*vbCountDay := (SELECT COUNT (*) - SUM (CASE WHEN gpSelect.isHoliday = TRUE THEN 1 ELSE 0 END)
                    FROM gpSelect_Object_Calendar (inStartDate := inStartDate - INTERVAL '1 YEAR' , inEndDate := inStartDate - INTERVAL '1 DAY',  inSession := inSession) AS gpSelect
                    ) :: TFloat;
+    */
     -- Результат
     RETURN QUERY
 
@@ -68,6 +70,7 @@ BEGIN
                        , tmp.Day_vacation
                        , tmp.Day_holiday   -- использовано 
                        , tmp.Day_diff      -- не использовано   
+                       , tmp.Day_calendar
                     FROM gpReport_HolidayPersonal (inStartDate:= inStartDate, inUnitId:= inUnitId, inMemberId:= inMemberId, inisDetail:= FALSE, inSession:= inSession) AS tmp
                    )
 
@@ -79,7 +82,7 @@ BEGIN
                     )
   
   , tmpPersonalService AS (SELECT ObjectLink_Personal_Member.ChildObjectId  AS MemberId
-                                , CASE WHEN vbCountDay <> 0 THEN (SUM (COALESCE (MIFloat_SummToPay.ValueData, 0)) / vbCountDay) ELSE 0 END AS AmountCompensation
+                                , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0)) AS Amount
                            FROM tmpMovement AS Movement
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId = zc_MI_Master()
@@ -119,11 +122,13 @@ BEGIN
          , tmpReport.Day_vacation   :: TFloat
          , tmpReport.Day_holiday    :: TFloat       -- использовано 
          , tmpReport.Day_diff       :: TFloat       -- не использовано   
-         , tmpPersonalService.AmountCompensation                        :: TFloat
-         , (tmpPersonalService.AmountCompensation * tmpReport.Day_diff) :: TFloat AS SummaCompensation
+
+         , CASE WHEN tmpReport.Day_calendar <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar ELSE 0 END                        :: TFloat AS AmountCompensation
+         , (tmpReport.Day_diff * CASE WHEN tmpReport.Day_calendar <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar ELSE 0 END) :: TFloat AS SummaCompensation
+         , tmpReport.Day_calendar :: TFloat
     FROM tmpReport
          LEFT JOIN tmpPersonalService ON tmpPersonalService.MemberId = tmpReport.MemberId
-                                     AND COALESCE (tmpPersonalService.AmountCompensation, 0) > 0
+                                     AND COALESCE (tmpPersonalService.Amount, 0) > 0
     ORDER BY tmpReport.UnitName
            , tmpReport.PersonalName
            , tmpReport.PositionName

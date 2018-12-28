@@ -23,6 +23,7 @@ RETURNS TABLE(MemberId Integer, PersonalId Integer
             , isDateOut Boolean, isMain Boolean, isOfficial Boolean
            -- , Age_work      TVarChar
             , Month_work    TFloat
+            , Day_calendar  TFloat
             , Day_vacation  TFloat
             , Day_holiday   TFloat
             , Day_diff      TFloat
@@ -99,8 +100,13 @@ BEGIN
           GROUP BY t1.DateOut_Calc, t1.MemberId
          )
   , tmpWork AS (SELECT tmp.MemberId
-                     , SUM (tmp.Month_work) AS Month_work
+                     , SUM (tmp.Month_work)   AS Month_work
+                     , SUM (tmp.Day_calendar) AS Day_calendar
                 FROM (SELECT tmp1.MemberId
+
+                           , (SELECT COUNT (*) - SUM (CASE WHEN gpSelect.isHoliday = TRUE THEN 1 ELSE 0 END)
+                              FROM gpSelect_Object_Calendar (inStartDate := tmp1.DateIn_Calc, inEndDate := tmp2.DateOut_Calc - INTERVAL '1 DAY', inSession := inSession) AS gpSelect) :: TFloat AS Day_calendar
+
                            , DATE_PART('YEAR', AGE (tmp2.DateOut_Calc, tmp1.DateIn_Calc)) * 12 
                                                 + DATE_PART('MONTH', AGE (tmp2.DateOut_Calc, tmp1.DateIn_Calc))  AS Month_work 
                       FROM tmp1
@@ -203,6 +209,7 @@ BEGIN
          , tmpPersonal.isOfficial
          --, tmpPersonal.Age_work      :: TVarChar
          , tmpVacation.Month_work    :: TFloat
+         , tmpVacation.Day_calendar  :: TFloat
          , CASE WHEN tmpHoliday.Ord = 1 OR tmpHoliday.Ord IS NULL THEN tmpVacation.Day_vacation ELSE 0 END :: TFloat AS Day_vacation 
          , tmpHoliday.Day_holiday    :: TFloat                                                                       -- использовано 
          , CASE WHEN tmpHoliday.Ord = 1 OR tmpHoliday.Ord IS NULL THEN (COALESCE (tmpVacation.Day_vacation, 0) - COALESCE (tmpHoliday.Day_holiday_All, 0)) ELSE 0 END  :: TFloat AS Day_diff   -- не использовано   
