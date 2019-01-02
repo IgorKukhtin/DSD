@@ -46,6 +46,38 @@ $BODY$BEGIN
 
                      WHERE ObjectLink_Unit_Juridical.ObjectId = inUnitId
                        AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                  UNION 
+                     SELECT DISTINCT
+                            ObjectLink_PartnerMedical_Juridical.ChildObjectId  AS JuridicalId
+                          , ObjectLink_PartnerMedical_Department.ObjectId      AS PartnerMedicalId
+                     FROM ObjectLink AS ObjectLink_Unit_Juridical
+                          INNER JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
+                                                ON ObjectLink_Contract_JuridicalBasis.ChildObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                               AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+
+                          INNER JOIN ObjectDate AS ObjectDate_Start
+                                                ON ObjectDate_Start.ObjectId = ObjectLink_Contract_JuridicalBasis.ObjectId
+                                               AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
+                                               AND ObjectDate_Start.ValueData <= inOperDate
+                          INNER JOIN ObjectDate AS ObjectDate_End
+                                                ON ObjectDate_End.ObjectId = ObjectLink_Contract_JuridicalBasis.ObjectId
+                                               AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End() 
+                                               AND ObjectDate_End.ValueData >= inOperDate
+                                                                                
+                          LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                               ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Contract_JuridicalBasis.ObjectId
+                                              AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                          -- привязіваем по департаменту мед центра
+                          INNER JOIN ObjectLink AS ObjectLink_PartnerMedical_Department
+                                                ON ObjectLink_PartnerMedical_Department.ChildObjectId = ObjectLink_Contract_Juridical.ChildObjectId 
+                                               AND ObjectLink_PartnerMedical_Department.DescId = zc_ObjectLink_PartnerMedical_Department()
+                          --
+                          LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Juridical 
+                                               ON ObjectLink_PartnerMedical_Juridical.ObjectId = ObjectLink_PartnerMedical_Department.ObjectId 
+                                              AND ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
+         
+                     WHERE ObjectLink_Unit_Juridical.ObjectId = inUnitId
+                       AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                        )
 
      SELECT Object_PartnerMedical.Id          AS Id
@@ -87,9 +119,11 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.01.19         * плюс выборка по департаменту
  24.10.18         *
  25.01.18         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_PartnerMedicalChoice(inOperDate :='01.12.2017' :: TDateTime, inUnitId := 183289, inSession := '2')
+-- SELECT * FROM gpSelect_Object_PartnerMedicalChoice(inOperDate :='02.01.2019' :: TDateTime, inUnitId := 183289, inSession := '2')
+-- SELECT * FROM gpSelect_Object_PartnerMedicalChoice(inOperDate :='02.01.2019' :: TDateTime, inUnitId := 8301450 , inSession := '2')
