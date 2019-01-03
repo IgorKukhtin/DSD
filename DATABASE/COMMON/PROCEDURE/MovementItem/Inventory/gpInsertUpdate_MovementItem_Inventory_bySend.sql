@@ -41,6 +41,7 @@ BEGIN
                                                   , inHeadCount          := 0
                                                   , inCount              := 0
                                                   , inPartionGoods       := tmp.PartionGoods
+                                                  , inPartionGoodsId     := NULL
                                                   , inGoodsKindId        := tmp.GoodsKindId
                                                   , inGoodsKindCompleteId:= tmp.GoodsKindCompleteId
                                                   , inAssetId            := NULL

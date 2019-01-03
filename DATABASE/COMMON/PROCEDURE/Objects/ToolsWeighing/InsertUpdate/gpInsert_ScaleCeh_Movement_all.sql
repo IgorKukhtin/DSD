@@ -731,6 +731,7 @@ BEGIN
                                                         , inHeadCount           := tmp.HeadCount
                                                         , inCount               := tmp.Count
                                                         , inPartionGoods        := tmp.PartionGoods
+                                                        , inPartionGoodsId      := NULL
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inGoodsKindCompleteId := NULL
                                                         , inAssetId             := NULL

@@ -141,7 +141,7 @@ BEGIN
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectFloat_Price_Partion.ValueData ELSE (CASE WHEN MIFloat_Price.ValueData <> 0 THEN MIFloat_Price.ValueData ELSE tmpPrice.Price END) END:: TFloat AS Price
            , MIFloat_Summ.ValueData   :: TFloat AS Summ
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectDate_Value.ValueData    ELSE MIDate_PartionGoods.ValueData   END AS PartionGoodsDate
-           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_PartionGoods.ValueData ELSE MIString_PartionGoods.ValueData END AS PartionGoods
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 AND Object_PartionGoods.ValueData <> '0' THEN Object_PartionGoods.ValueData ELSE MIString_PartionGoods.ValueData END AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
            , Object_GoodsKindComplete.Id         AS GoodsKindId_Complete
@@ -294,7 +294,7 @@ BEGIN
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectFloat_Price_Partion.ValueData ELSE (CASE WHEN COALESCE (MIFloat_Price.ValueData, 0) <> 0 THEN MIFloat_Price.ValueData ELSE tmpPrice.Price END) END :: TFloat AS Price
            , MIFloat_Summ.ValueData  :: TFloat AS Summ
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectDate_Value.ValueData    ELSE MIDate_PartionGoods.ValueData   END AS PartionGoodsDate
-           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_PartionGoods.ValueData ELSE MIString_PartionGoods.ValueData END AS PartionGoods
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 AND Object_PartionGoods.ValueData <> '0' THEN Object_PartionGoods.ValueData ELSE MIString_PartionGoods.ValueData END AS PartionGoods
            , Object_GoodsKind.Id                 AS GoodsKindId
            , Object_GoodsKind.ValueData          AS GoodsKindName
            , Object_GoodsKindComplete.Id         AS GoodsKindId_Complete

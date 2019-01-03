@@ -10,7 +10,10 @@ RETURNS Integer
 AS
 $BODY$
   DECLARE vbValueId Integer;
+  DECLARE vbUserId_save Integer;
 BEGIN
+
+  vbUserId_save:= inUserId;
 
   -- для Админа  - Все Права
   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
@@ -293,13 +296,13 @@ BEGIN
              GROUP BY AccessKeyId
             );
   ELSE
-      RAISE EXCEPTION 'Ошибка.У пользователя <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (inUserId);
+      RAISE EXCEPTION 'Ошибка.У пользователя <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (vbUserId_save);
   END IF;  
   
 
   IF COALESCE (vbValueId, 0) = 0
   THEN
-      RAISE EXCEPTION 'Ошибка.У пользователя <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (inUserId);
+      RAISE EXCEPTION 'Ошибка.У пользователя <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (vbUserId_save);
   ELSE RETURN vbValueId;
   END IF;  
 
