@@ -3,10 +3,11 @@ inherited ListGoodsForm: TListGoodsForm
   Caption = #1055#1086#1076#1073#1086#1088' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1086#1074
   ClientHeight = 422
   ClientWidth = 839
+  Menu = MainMenu1
   OnCreate = ParentFormCreate
   OnKeyDown = ParentFormKeyDown
   ExplicitWidth = 855
-  ExplicitHeight = 461
+  ExplicitHeight = 481
   PixelsPerInch = 96
   TextHeight = 13
   object ListGoodsGrid: TcxGrid [0]
@@ -196,7 +197,8 @@ inherited ListGoodsForm: TListGoodsForm
       TabOrder = 0
       OnChange = edt1Change
       OnExit = edt1Exit
-      ExplicitHeight = 21
+      ExplicitLeft = 2
+      ExplicitTop = -4
     end
     object ProgressBar1: TProgressBar
       Left = 773
@@ -356,6 +358,7 @@ inherited ListGoodsForm: TListGoodsForm
     Top = 304
   end
   inherited ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 183
     Top = 303
     object actListDiffAddGoods: TAction
@@ -363,6 +366,18 @@ inherited ListGoodsForm: TListGoodsForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1088#1077#1087#1072#1088#1072#1090' '#1074' '#1083#1080#1089#1090' '#1086#1090#1082#1072#1079#1086#1074
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1088#1077#1087#1072#1088#1072#1090' '#1085#1072' '#1082#1086#1090#1086#1088#1086#1084' '#1095#1090#1086#1080#1090' '#1082#1091#1088#1089#1086#1088' '#1074' '#1083#1080#1089#1090' '#1086#1090#1082#1072#1079#1086#1074
       OnExecute = actListDiffAddGoodsExecute
+    end
+    object actSearchGoods: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1087#1088#1072#1081#1089' - '#1083#1080#1089#1090#1072#1093
+      ImageIndex = 28
+      FormName = 'TChoiceGoodsFromPriceListForm'
+      FormNameParam.Value = 'TChoiceGoodsFromPriceListForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
     end
   end
   object ListGoodsDS: TDataSource
@@ -477,5 +492,16 @@ inherited ListGoodsForm: TListGoodsForm
     StoreDefs = True
     Left = 368
     Top = 360
+  end
+  object MainMenu1: TMainMenu
+    Images = dmMain.ImageList
+    Left = 656
+    Top = 144
+    object mmSearchGoods: TMenuItem
+      Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1087#1088#1072#1081#1089' - '#1083#1080#1089#1090#1072#1093
+      ImageIndex = 28
+      ShortCut = 123
+      OnClick = mmSearchGoodsClick
+    end
   end
 end
