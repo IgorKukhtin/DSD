@@ -98,6 +98,9 @@ BEGIN
                            , Tax_Summ_10203        TFloat
                            , Tax_Summ_10201        TFloat
                            , Tax_Summ_10202        TFloat
+                           , Sale_Amount_10202        TFloat
+                           , Sale_Amount_InDiscount   TFloat
+                           , Sale_Amount_OutDiscount  TFloat
                          ) ON COMMIT DROP;
                            
         INSERT INTO _tmpData (BrandName
@@ -142,6 +145,10 @@ BEGIN
                             , Tax_Summ_10203
                             , Tax_Summ_10201 
                             , Tax_Summ_10202
+
+                            , Sale_Amount_10202
+                            , Sale_Amount_InDiscount
+                            , Sale_Amount_OutDiscount
                               )
       WITH 
            tmpCurrency_all AS (SELECT Movement.Id                    AS MovementId
@@ -177,6 +184,30 @@ BEGIN
                                                          AND tmpCurrency_next.CurrencyToId   = tmpCurrency_all.CurrencyToId
                                                          AND tmpCurrency_next.Ord            = tmpCurrency_all.Ord + 1
                           )
+
+        , tmpDiscountPeriod AS (SELECT ObjectLink_DiscountPeriod_Period.ChildObjectId AS PeriodId
+                                     , ObjectDate_StartDate.ValueData                 AS StartDate
+                                     , ObjectDate_EndDate.ValueData                   AS EndDate
+                                FROM Object as Object_DiscountPeriod
+                                     /*LEFT JOIN ObjectLink AS ObjectLink_DiscountPeriod_Unit
+                                                          ON ObjectLink_DiscountPeriod_Unit.ObjectId = Object_DiscountPeriod.Id
+                                                         AND ObjectLink_DiscountPeriod_Unit.DescId = zc_ObjectLink_DiscountPeriod_Unit()
+                                     */
+                                     LEFT JOIN ObjectLink AS ObjectLink_DiscountPeriod_Period
+                                                          ON ObjectLink_DiscountPeriod_Period.ObjectId = Object_DiscountPeriod.Id
+                                                         AND ObjectLink_DiscountPeriod_Period.DescId = zc_ObjectLink_DiscountPeriod_Period()
+  
+                                     LEFT JOIN ObjectDate AS ObjectDate_StartDate
+                                                          ON ObjectDate_StartDate.ObjectId = Object_DiscountPeriod.Id
+                                                         AND ObjectDate_StartDate.DescId = zc_ObjectDate_DiscountPeriod_StartDate()
+                         
+                                     LEFT JOIN ObjectDate AS ObjectDate_EndDate
+                                                          ON ObjectDate_EndDate.ObjectId = Object_DiscountPeriod.Id
+                                                         AND ObjectDate_EndDate.DescId = zc_ObjectDate_DiscountPeriod_EndDate()
+  
+                                WHERE Object_DiscountPeriod.DescId = zc_Object_DiscountPeriod()
+                                  AND Object_DiscountPeriod.isErased = FALSE
+                                )
 
            -- Список торговых марок
          , tmpBrand AS (SELECT ObjectLink_Object.ChildObjectId AS BrandId
@@ -248,16 +279,31 @@ BEGIN
                             WHERE Container.DescId   = zc_Container_Summ()
                               AND Container.ObjectId = zc_Enum_Account_100301() -- прибыль текущего периода
                            )*/
-           -- итого приход по PartnerId + LineFabricaId
-         , tmpIncome AS (SELECT Object_PartionGoods.PartnerId
-                              , CASE WHEN inIsLineFabrica = TRUE THEN Object_PartionGoods.LineFabricaId ELSE 0 END AS LineFabricaId
-                              , SUM (Object_PartionGoods.Amount) AS Income_Amount
-                              , SUM (Object_PartionGoods.Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END) AS Income_Summ
+          -- список Возврат Поставщику + Брак
+        , tmpReturnOut AS (SELECT tmpObject_PartionGoods.MovementItemId AS PartionId
+                                , SUM (-1 * MIContainer.Amount)      AS Amount
+                           FROM tmpObject_PartionGoods
+                                INNER JOIN MovementItemContainer AS MIContainer
+                                                                 ON MIContainer.PartionId = tmpObject_PartionGoods.MovementItemId
+                                                                AND MIContainer.MovementDescId IN (zc_Movement_ReturnOut(), zc_Movement_Loss())
+                                                                AND MIContainer.DescId = zc_MIContainer_Count()
+                                -- НЕ важно с какго подразделения, ГЛАВНОЕ - партия
+                                INNER JOIN tmpUnit ON tmpUnit.UnitId = tmpObject_PartionGoods.UnitId
+                           GROUP BY tmpObject_PartionGoods.MovementItemId
+                          )
+
+          -- итого приход по PartnerId + LineFabricaId   за минусом  Возврат Поставщику + Брак
+        , tmpIncome AS (SELECT Object_PartionGoods.PartnerId
+                             , CASE WHEN inIsLineFabrica = TRUE THEN Object_PartionGoods.LineFabricaId ELSE 0 END AS LineFabricaId
+                             , SUM (COALESCE (Object_PartionGoods.Amount, 0) - COALESCE (tmpReturnOut.Amount, 0)) AS Income_Amount
+                             , SUM ((COALESCE (Object_PartionGoods.Amount, 0) - COALESCE (tmpReturnOut.Amount, 0))  * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END) AS Income_Summ
                         FROM tmpObject_PartionGoods AS Object_PartionGoods
+                             LEFT JOIN tmpReturnOut ON tmpReturnOut.PartionId = Object_PartionGoods.MovementItemId
                         WHERE Object_PartionGoods.isErased = FALSE
                         GROUP BY Object_PartionGoods.PartnerId
                                , CASE WHEN inIsLineFabrica = TRUE THEN Object_PartionGoods.LineFabricaId ELSE 0 END
                         )
+
           -- итого Остаток по PartnerId + LineFabricaId
         , tmpRemains AS (SELECT Object_PartionGoods.PartnerId                                                      AS PartnerId
                               , CASE WHEN inIsLineFabrica = TRUE THEN Object_PartionGoods.LineFabricaId ELSE 0 END AS LineFabricaId
@@ -412,7 +458,38 @@ BEGIN
                                                      ORDER BY CASE WHEN Object_PartionGoods.UnitId = COALESCE (MIContainer.ObjectExtId_Analyzer, Object_PartionGoods.UnitId) THEN 0 ELSE 1 END ASC
                                                     ) AS Ord*/
 
-                           -- FROM tmpContainer
+                                 -- Кол-во: скидка outlet
+                                , SUM (CASE WHEN MILinkObject_DiscountSaleKind.ObjectId = 290 -- скидка outlet
+                                       THEN
+                                           CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIContainer.Amount ELSE 0 END
+                                         - CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount > 0 AND MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN 1 * MIContainer.Amount ELSE 0 END
+                                       ELSE 0
+                                       END                                     
+                                       )    :: TFloat AS Sale_Amount_10202
+                                       
+                                 -- Кол-во продажа (ПО Сезонным скидкам)
+                               , SUM (CASE WHEN COALESCE(tmpDiscountPeriod.PeriodId, 0) <> 0
+                                           THEN CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) AND MILinkObject_DiscountSaleKind.ObjectId <> 290 THEN -1 * MIContainer.Amount ELSE 0 END
+                                           ELSE 0
+                                      END) AS Sale_Amount_InDiscount
+                                 -- Кол-во продажа (ДО Сезонных скидок)
+                               , SUM (CASE WHEN COALESCE(tmpDiscountPeriod.PeriodId, 0) = 0
+                                           THEN CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) AND MILinkObject_DiscountSaleKind.ObjectId <> 290 THEN -1 * MIContainer.Amount ELSE 0 END
+                                           ELSE 0
+                                      END) AS Sale_Amount_OutDiscount
+
+                                 -- Кол-во: Только Возврат (ПО Сезонным скидкам)
+                               , SUM (CASE WHEN COALESCE(tmpDiscountPeriod_Ret.PeriodId, 0) <> 0 
+                                           THEN CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount > 0 AND MIContainer.MovementDescId IN (zc_Movement_ReturnIn()) AND MILinkObject_DiscountSaleKind.ObjectId <> 290 THEN 1 * MIContainer.Amount ELSE 0 END
+                                           ELSE 0
+                                      END) AS Return_Amount_InDiscount
+                                 -- Кол-во: Только Возврат (ДО Сезонных скидок)
+                               , SUM (CASE WHEN COALESCE(tmpDiscountPeriod_Ret.PeriodId, 0) = 0
+                                           THEN CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount > 0 AND MIContainer.MovementDescId IN (zc_Movement_ReturnIn()) AND MILinkObject_DiscountSaleKind.ObjectId <> 290 
+                                                     THEN 1 * MIContainer.Amount ELSE 0 END
+                                           ELSE 0
+                                      END) AS Return_Amount_OutDiscount
+
                            FROM tmpObject_PartionGoods AS Object_PartionGoods
                                 LEFT JOIN MovementItemContainer AS MIContainer
                                                              -- ON MIContainer.ContainerId    = tmpContainer.ContainerId
@@ -437,16 +514,30 @@ BEGIN
 
                                 -- надо ограничить, что б попали проводки "продажа" - от Клиента
                                 INNER JOIN tmpUnit2 ON tmpUnit2.UnitId = MIContainer.ObjectExtId_Analyzer
+                                
+                                --
+                                LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
+                                                                 ON MILinkObject_PartionMI.MovementItemId = MIContainer.MovementItemId
+                                                                AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
+                                LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
+                                LEFT JOIN MovementItemLinkObject AS MILinkObject_DiscountSaleKind
+                                                                 ON MILinkObject_DiscountSaleKind.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MIContainer.MovementItemId)
+                                                                AND MILinkObject_DiscountSaleKind.DescId         = zc_MILinkObject_DiscountSaleKind()
+
+                                LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
+                                LEFT JOIN tmpDiscountPeriod ON tmpDiscountPeriod.PeriodId = Object_PartionGoods.PeriodId
+                                                           AND Movement.OperDate BETWEEN tmpDiscountPeriod.StartDate AND tmpDiscountPeriod.EndDate
+
+                               -- док. продажи для док.возврата
+                               LEFT JOIN MovementItem AS MovementItem_Sale ON MovementItem_Sale.Id = Object_PartionMI.ObjectCode
+                               LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementItem_Sale.MovementId
+                               -- период скидок для возврата по дате продажи
+                               LEFT JOIN tmpDiscountPeriod AS tmpDiscountPeriod_Ret 
+                                                           ON tmpDiscountPeriod_Ret.PeriodId = Object_PartionGoods.PeriodId
+                                                          AND Movement_Sale.OperDate BETWEEN tmpDiscountPeriod_Ret.StartDate AND tmpDiscountPeriod_Ret.EndDate
+
 
 -- where MIContainer.MovementId =  266623 
-                           /*WHERE (Object_PartionGoods.PartnerId  = inPartnerId        OR inPartnerId   = 0)
-                             AND (Object_PartionGoods.BrandId    = inBrandId          OR inBrandId     = 0)
-                             AND (Object_PartionGoods.PeriodId   = inPeriodId         OR inPeriodId    = 0)
-                             AND (Object_PartionGoods.LineFabricaId = inLineFabricaId OR inLineFabricaId = 0)
-                             AND (Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear)
-                             -- AND (MIContainer.ContainerId        > 0                  )
-                             -- AND (tmpContainer.ContainerId       > 0                  OR MIContainer.PartionId IS NULL)
-                             AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount(), zc_Movement_ReturnIn())*/
 
                            GROUP BY Object_PartionGoods.PartnerId
                                   , Object_PartionGoods.BrandId
@@ -459,14 +550,14 @@ BEGIN
                                   -- , Object_PartionGoods.MovementItemId
                                   , CASE WHEN inIsLineFabrica = TRUE THEN Object_PartionGoods.LineFabricaId ELSE 0 END
 
-                            HAVING SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND COALESCE (MIContainer.AnalyzerId, 0) =  zc_Enum_AnalyzerId_SaleSumm_10300() AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIContainer.Amount ELSE 0 END) <> 0
+                         /*   HAVING SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND COALESCE (MIContainer.AnalyzerId, 0) =  zc_Enum_AnalyzerId_SaleSumm_10300() AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIContainer.Amount ELSE 0 END) <> 0
                                 OR SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_SaleSumm_10300() AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIContainer.Amount ELSE 0 END) <> 0
                                   -- Кол-во: Долг
                                 OR SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END) <> 0
                                   -- Кол-во: Только Продажа
                                 OR SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIContainer.Amount ELSE 0 END
                                       - CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount > 0 AND MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN 1 * MIContainer.Amount ELSE 0 END) <> 0
-                          )
+                          */)
 
        , tmpData AS (SELECT tmpData_all.PartnerId
                           , tmpData_all.BrandId
@@ -507,6 +598,12 @@ BEGIN
                           , SUM (tmpData_all.Sale_Summ_10202_curr)  AS Sale_Summ_10202_curr
                           , SUM (tmpData_all.Sale_Summ_10203_curr)  AS Sale_Summ_10203_curr
                           , SUM (tmpData_all.Sale_Summ_10204_curr)  AS Sale_Summ_10204_curr
+                          
+                          , SUM (tmpData_all.Sale_Amount_10202)       AS Sale_Amount_10202
+                          , SUM (tmpData_all.Sale_Amount_InDiscount)  AS Sale_InDiscount
+                          , SUM (tmpData_all.Sale_Amount_OutDiscount) AS Sale_OutDiscount
+                          , SUM (tmpData_all.Return_Amount_InDiscount)  AS Return_InDiscount
+                          , SUM (tmpData_all.Return_Amount_OutDiscount) AS Return_OutDiscount
 
                      FROM tmpData_all
 
@@ -616,7 +713,14 @@ BEGIN
              , CASE WHEN COALESCE (tmpData.Sale_Summ_10202, 0) > 0 AND tmpData.Sale_Summ_10200 > 0
                          THEN COALESCE (tmpData.Sale_Summ_10202, 0) * 100/ tmpData.Sale_Summ_10200  -- 100
                     ELSE 0
-               END :: TFloat AS Tax_Summ_10202        
+               END :: TFloat AS Tax_Summ_10202 
+               
+
+             , tmpData.Sale_Amount_10202       :: TFloat
+               -- Кол-во продажа - ПО Сезонным скидкам
+             , (COALESCE (tmpData.Sale_InDiscount,0) - COALESCE (tmpData.Return_InDiscount,0))      :: TFloat AS Sale_InDiscount
+               -- Кол-во продажа - ДО Сезонных скидок
+             , (COALESCE (tmpData.Sale_OutDiscount,0) - COALESCE (tmpData.Return_OutDiscount,0) + COALESCE (tmpData.Debt_Amount,0) )    :: TFloat AS Sale_OutDiscount
               
         FROM tmpData
             LEFT JOIN Object AS Object_Partner          ON Object_Partner.Id          = tmpData.PartnerId

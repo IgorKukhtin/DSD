@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , BoxId Integer, BoxName TVarChar
              , AmountSumm TFloat
              , isCheck_Pricelist Boolean
-             , MovementPromo TVarChar, PricePromo TFloat
+             , MovementId_Promo Integer, MovementPromo TVarChar, PricePromo TFloat
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , isErased Boolean
               )
@@ -345,6 +345,7 @@ BEGIN
            , CAST (NULL AS TFloat)      AS AmountSumm
            , FALSE                      AS isCheck_Pricelist
 
+           , tmpPromo.MovementId     ::Integer AS MovementId_Promo
            , tmpPromo.MovementPromo
            , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
                   WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
@@ -456,6 +457,7 @@ BEGIN
 
              END :: Boolean AS isCheck_Pricelist
 
+           , tmpMI.MovementId_Promo  :: Integer AS MovementId_Promo
            , (CASE WHEN (tmpPromo.isChangePercent = TRUE  AND tmpMI.ChangePercent <> vbChangePercent)
                      OR (tmpPromo.isChangePercent = FALSE AND tmpMI.ChangePercent <> 0)
                         THEN 'Œÿ»¡ ¿ <(-)% —ÍË‰ÍË (+)% Õ‡ˆÂÌÍË>'
@@ -760,6 +762,7 @@ BEGIN
                   ELSE TRUE
              END :: Boolean AS isCheck_Pricelist
 
+           , tmpMI.MovementId_Promo ::Integer AS MovementId_Promo
            , (CASE WHEN (tmpPromo.isChangePercent = TRUE  AND tmpMI.ChangePercent <> vbChangePercent)
                      OR (tmpPromo.isChangePercent = FALSE AND tmpMI.ChangePercent <> 0)
                         THEN 'Œÿ»¡ ¿ <(-)% —ÍË‰ÍË (+)% Õ‡ˆÂÌÍË>'

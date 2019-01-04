@@ -215,6 +215,10 @@ type
     actPrint_PackWeight: TdsdPrintAction;
     spGetReportNameQuality: TdsdStoredProc;
     actPrint_Quality_ReportName: TdsdExecStoredProc;
+    actOpenFormOrderExternal: TdsdOpenForm;
+    bbOrderExternal: TdxBarButton;
+    actOpenFormPromo: TdsdOpenForm;
+    bbPromo: TdxBarButton;
   private
     { Private declarations }
   public

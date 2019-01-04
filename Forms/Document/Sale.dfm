@@ -1,26 +1,26 @@
 ﻿inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 645
-  ClientWidth = 1298
+  ClientWidth = 1293
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1314
+  ExplicitWidth = 1309
   ExplicitHeight = 683
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1298
+    Width = 1293
     Height = 479
     ExplicitTop = 166
     ExplicitWidth = 1298
     ExplicitHeight = 479
     ClientRectBottom = 479
-    ClientRectRight = 1298
+    ClientRectRight = 1293
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1298
       ExplicitHeight = 455
       inherited cxGrid: TcxGrid
-        Width = 1298
+        Width = 1293
         Height = 455
         ExplicitWidth = 1298
         ExplicitHeight = 455
@@ -504,7 +504,7 @@
     end
   end
   inherited DataPanel: TPanel
-    Width = 1298
+    Width = 1293
     Height = 140
     TabOrder = 3
     ExplicitWidth = 1298
@@ -2272,6 +2272,76 @@
         end>
       isShowModal = False
     end
+    object actOpenFormOrderExternal: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1103#1074#1082#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1103#1074#1082#1072'>'
+      ImageIndex = 24
+      FormName = 'TOrderExternalForm'
+      FormNameParam.Value = 'TOrderExternalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = GuidesInvNumberOrder
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42094d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenFormPromo: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1040#1082#1094#1080#1103'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1040#1082#1094#1080#1103'>'
+      ImageIndex = 29
+      FormName = 'TPromoForm'
+      FormNameParam.Value = 'TPromoForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = ''
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Promo'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42094d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actPrint_Quality_ReportName: TdsdExecStoredProc
       Category = 'Print_QualityDoc'
       MoveParams = <>
@@ -2477,6 +2547,14 @@
         item
           Visible = True
           ItemName = 'bbOpenProduction'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOrderExternal'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPromo'
         end
         item
           Visible = True
@@ -2715,6 +2793,14 @@
     end
     object bbPrint_PackWeight: TdxBarButton
       Action = actPrint_PackWeight
+      Category = 0
+    end
+    object bbOrderExternal: TdxBarButton
+      Action = actOpenFormOrderExternal
+      Category = 0
+    end
+    object bbPromo: TdxBarButton
+      Action = actOpenFormPromo
       Category = 0
     end
   end
@@ -4400,8 +4486,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1288
-    Top = 88
+    Left = 1248
+    Top = 32
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -4715,7 +4801,7 @@
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end>
-    Left = 1192
+    Left = 1152
     Top = 96
   end
   object ContractTagGuides: TdsdGuides
@@ -4745,8 +4831,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1019
-    Top = 52
+    Left = 987
+    Top = 44
   end
   object GuidesInvNumberOrder: TdsdGuides
     KeyField = 'Id'
@@ -4946,7 +5032,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 188
-    Top = 24
+    Top = 16
   end
   object spSelectPrint_ExpPack: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_ExpPack_Print'
