@@ -232,6 +232,10 @@ type
     actPrint_Quality_ReportName: TdsdExecStoredProc;
     mactPrint_QualityDoc: TMultiAction;
     actDialog_QualityDoc: TdsdOpenForm;
+    actOpenFormOrderExternal: TdsdOpenForm;
+    bbOrderExternal: TdxBarButton;
+    actOpenFormPromo: TdsdOpenForm;
+    bbPromo: TdxBarButton;
   private
     { Private declarations }
   public

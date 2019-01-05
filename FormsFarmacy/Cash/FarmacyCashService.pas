@@ -1659,11 +1659,11 @@ begin
         end;
 
           // Удаление старых файлов
-        sl.Clear;
-        for s in TDirectory.GetFiles(p + 'Send\', '*.txt') do sl.Add(s);
-        for i := 0 to sl.Count - 1 do if TFile.GetCreationTime(sl.Strings[i]) <
-          IncDay(Date, - spLoadFTPParam.ParamByName('outPort').Value) then
-          TFile.Delete(sl.Strings[i]);
+//        sl.Clear;
+//        for s in TDirectory.GetFiles(p + 'Send\', '*.txt') do sl.Add(s);
+//        for i := 0 to sl.Count - 1 do if TFile.GetCreationTime(sl.Strings[i]) <
+//          IncDay(Date, - spLoadFTPParam.ParamByName('outPort').Value) then
+//          TFile.Delete(sl.Strings[i]);
 
         tiServise.BalloonHint := 'Z отчеты отправлены';
         tiServise.ShowBalloonHint;

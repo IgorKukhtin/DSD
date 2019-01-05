@@ -512,7 +512,14 @@ begin
   Result := Result + '  Податок     від        10.10.2017' + #13#10;
   Result := Result + '            ПДВ_A (Вкл) A =    ' + Str(nSum[0], 6) + '%' + #13#10;
   Result := Result + '            ПДВ_Б (Вкл) Б =    ' + Str(nSum[1], 6) + '%' + #13#10;
-  Result := Result + '                    ' + FormatDateTime('DD.MM.YYYY  HH:NN', Now)  + #13#10;
+
+  S := FPrinter.RETDT[1, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  S := S + '  ' + FPrinter.RETDT[0, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+  S := COPY(S, 1, 2) + '.' + COPY(S, 3, 2) +  '.20' + COPY(S, 5, 6) +  ':' + COPY(S, 11, 2);
+
+  Result := Result + '                    ' + S  + #13#10;
   Result := Result + '         ФІСКАЛЬНИЙ ЧЕК' + #13#10;
   Result := Result + '  --------------------------------------' + #13#10;
   Result := Result + '  --------------------------------------' + #13#10;

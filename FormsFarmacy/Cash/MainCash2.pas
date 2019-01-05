@@ -492,6 +492,8 @@ type
 
     // Сохранение чеков в CSV по дням
     procedure Add_Check_History;
+    procedure Start_Check_History(SalerCash, SalerCashAdd: Currency; PaidType: TPaidType);
+    procedure Finish_Check_History(SalerCash: Currency);
     // Очистка фильтров
     procedure ClearFilterAll;
     // Загружает VIP чек
@@ -3940,6 +3942,7 @@ begin
     end;
 
     if isFiscal then Add_Check_History;
+    if isFiscal then Start_Check_History(SalerCash, SalerCashAdd, PaidType);
 
     // Непосредственно печать чека
     str_log_xml:=''; i:=0;
@@ -3992,6 +3995,7 @@ begin
         Cash.SubTotal(true, true, 0, 0);
         Cash.TotalSumm(SalerCash, SalerCashAdd, PaidType);
         result := Cash.CloseReceiptEx(ACheckNumber); //Закрыли чек
+        if result and isFiscal then Finish_Check_History(SalerCash);
       end;
     end;
   except
@@ -5175,6 +5179,92 @@ begin
     ShowMessage('Ошибка сохранения истории чеков на локальном компьютере. Покажите это окно системному администратору: ' + #13#10 + E.Message);
   end;
 end;
+
+procedure TMainCashForm2.Start_Check_History(SalerCash, SalerCashAdd: Currency; PaidType: TPaidType);
+  var F: TextFile; cName, S : string;  bNew : boolean;
+      I : integer; SR: TSearchRec; FileList: TStringList;
+begin
+  try
+    if not ForceDirectories(ExtractFilePath(Application.ExeName) + 'CheckHistory') then
+    begin
+      ShowMessage('Ошибка создания директории для сохранения истории чеков на локальном компьютере. Покажите это окно системному администратору...');
+      Exit;
+    end;
+
+    cName := ExtractFilePath(Application.ExeName) + 'CheckHistory\ListCheck' + FormatDateTime('YYYY-MM-DD', Date) + '.CSV';
+
+    AssignFile(F,cName);
+    if not fileExists(cName) then
+    begin
+
+{      FileList := TStringList.Create;
+      try
+        if FindFirst(ExtractFilePath(Application.ExeName) + 'CheckHistory\ListCheck*.CSV', faAnyFile, SR) = 0 then
+        repeat
+          if SR.Name < 'ListCheck' + FormatDateTime('YYYY-MM-DD', IncMonth(Date, -1)) + '.CSV' then
+            FileList.Add(ExtractFilePath(Application.ExeName) + 'CheckHistory\' + SR.Name);
+        until FindNext(SR) <> 0;
+        FindClose(SR);
+
+        for I := 0 to FileList.Count - 1 do DeleteFile(FileList.Strings[I]);
+      finally
+        FileList.Free;
+      end;}
+
+      Rewrite(F);
+      bNew := True;
+    end else
+    begin
+      Append(F);
+      bNew := False;
+    end;
+
+    try
+      if bNew then Write(F, 'Тип;Дата и время;Подразделение;Касса;Кассир;Сумма нал;Сумма карта;Сумма закрытия');
+      bNew := True;
+      if pnlVIP.Visible then S := 'Вип' else S := '';
+      if pnlVIP.Visible and pnlSP.Visible then S := S + ',';
+      if pnlSP.Visible  then S := S + 'Сп.';
+      Writeln(F, '');
+      Write(F, S + ';' +
+              DateTimeToStr(Now) + ';' +
+              iniLocalUnitNameGet + ';' +
+              IntToStr(iniCashID) + ';' +
+              gc_User.Login + ';');
+      case PaidType of
+        ptMoney : Write(F, CurrToStr(SalerCash) + ';;');
+        ptCard : Write(F, ';' + CurrToStr(SalerCash) + ';');
+        ptCardAdd : Write(F, CurrToStr(SalerCashAdd) + ';' + CurrToStr(SalerCash - SalerCashAdd) + ';');
+      end;
+    finally
+      CloseFile(F);
+    end;
+  except on E: Exception do
+    ShowMessage('Ошибка сохранения перечня чеков на локальном компьютере. Покажите это окно системному администратору: ' + #13#10 + E.Message);
+  end;
+end;
+
+procedure TMainCashForm2.Finish_Check_History(SalerCash: Currency);
+  var F: TextFile; cName : string;
+begin
+  try
+    cName := ExtractFilePath(Application.ExeName) + 'CheckHistory\ListCheck' + FormatDateTime('YYYY-MM-DD', Date) + '.CSV';
+
+    AssignFile(F,cName);
+    if fileExists(cName) then
+    begin
+      Append(F);
+      try
+        Write(F, CurrToStr(SalerCash));
+      finally
+        CloseFile(F);
+      end;
+    end;
+  except on E: Exception do
+    ShowMessage('Ошибка сохранения перечня чеков на локальном компьютере. Покажите это окно системному администратору: ' + #13#10 + E.Message);
+  end;
+end;
+
 
 
 { TSaveRealThread }

@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , AmountSumm TFloat
              , CountPack TFloat, WeightTotal TFloat, WeightPack TFloat, isBarCode Boolean 
              , isCheck_Pricelist Boolean
-             , MovementPromo TVarChar, PricePromo TFloat
+             , MovementId_Promo Integer, MovementPromo TVarChar, PricePromo TFloat
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , isErased Boolean
              , isPeresort Boolean
@@ -327,6 +327,7 @@ BEGIN
                       
            , FALSE                      AS isCheck_PricelistBoolean
 
+           , tmpPromo.MovementId     ::Integer   AS MovementId_Promo
            , tmpPromo.MovementPromo
            , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
                   WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
@@ -458,6 +459,7 @@ BEGIN
                   ELSE TRUE
              END :: Boolean AS isCheck_PricelistBoolean
 
+           , tmpMI_Goods.MovementId_Promo ::Integer AS MovementId_Promo
            , (CASE WHEN (tmpPromo.isChangePercent = TRUE  AND tmpMI_Goods.ChangePercent <> vbChangePercent)
                      OR (tmpPromo.isChangePercent = FALSE AND tmpMI_Goods.ChangePercent <> 0)
                         THEN 'ОШИБКА <(-)% Скидки (+)% Наценки>'
@@ -741,6 +743,7 @@ BEGIN
                   ELSE TRUE
              END :: Boolean AS isCheck_PricelistBoolean
 
+           , COALESCE (tmpPromo.MovementId, tmpMI_Goods.MovementId_Promo) ::Integer AS MovementId_Promo
            , (CASE WHEN (tmpPromo.isChangePercent = TRUE  AND tmpMI_Goods.ChangePercent <> vbChangePercent)
                      OR (tmpPromo.isChangePercent = FALSE AND tmpMI_Goods.ChangePercent <> 0)
                         THEN 'ОШИБКА <(-)% Скидки (+)% Наценки>'
@@ -820,6 +823,7 @@ ALTER FUNCTION gpSelect_MovementItem_Sale (Integer, Integer, TDateTime, Boolean,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.01.19         * MovementId_Promo
  09.10.14                                                       * add box
  14.04.14                                                       * add inOperDate
  08.04.14                                        * add zc_Enum_InfoMoneyDestination_30100

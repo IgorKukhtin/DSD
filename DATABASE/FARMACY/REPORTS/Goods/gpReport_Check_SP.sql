@@ -603,6 +603,19 @@ BEGIN
                                       , Object_Bank.ValueData                              AS Department_BankName
                                       , ObjectString_MFO.ValueData                         AS Department_MFO
 
+                                      , ObjectHistory_JuridicalDetails.FullName AS JuridicalFullName
+                                      , ObjectHistory_JuridicalDetails.JuridicalAddress
+                                      , ObjectHistory_JuridicalDetails.OKPO
+                                      , ObjectHistory_JuridicalDetails.MainName
+                                      , ObjectHistory_JuridicalDetails.MainName_Cut
+                                      , ObjectHistory_JuridicalDetails.AccounterName
+                                      , ObjectHistory_JuridicalDetails.INN
+                                      , ObjectHistory_JuridicalDetails.NumberVAT
+                                      , ObjectHistory_JuridicalDetails.BankAccount ::TVarChar AS BankAccount
+                                      , ObjectHistory_JuridicalDetails.Phone
+                                      , tmpBankAccount.BankName  ::TVarChar AS BankName
+                                      , tmpBankAccount.MFO ::TVarChar AS MFO
+                            
                                  FROM (SELECT DISTINCT tmpMI.UnitId
                                             , tmpMI.JuridicalId
                                             , tmpMI.HospitalId
@@ -631,8 +644,12 @@ BEGIN
                                     LEFT JOIN ObjectDate AS ObjectDate_Signing
                                                          ON ObjectDate_Signing.ObjectId = Object_Department_Contract.Id
                                                         AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
-
+                              
+                                    LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := tmp.JuridicalId, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_JuridicalDetails ON 1=1
                                     LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := ObjectLink_PartnerMedical_Department.ChildObjectId, inFullName := '', inOKPO := '', inSession := '3') AS ObjectHistory_DepartmentDetails ON 1=1
+
+                                    LEFT JOIN tmpBankAccount ON tmpBankAccount.JuridicalId = tmp.JuridicalId
+                                                            AND tmpBankAccount.BankAccount = ObjectHistory_JuridicalDetails.BankAccount
 
                                     -- расчетный счет из договора , по идее для заклада охорони здоров'я
                                     LEFT JOIN ObjectLink AS ObjectLink_Contract_BankAccount
@@ -646,6 +663,7 @@ BEGIN
                                     LEFT JOIN ObjectString AS ObjectString_MFO
                                                            ON ObjectString_MFO.ObjectId = Object_Bank.Id
                                                           AND ObjectString_MFO.DescId = zc_ObjectString_Bank_MFO()
+                                                          
                                  )
 
         , tmpCountR AS (SELECT  tmpData.JuridicalId
@@ -736,17 +754,19 @@ BEGIN
              , CAST (tmpCountR.CountInvNumberSP AS Integer) AS CountInvNumberSP
 
              , COALESCE (tmpParam.JuridicalFullName, Object_Juridical.ValueData ) :: TVarChar  AS JuridicalFullName
-             , tmpParam.JuridicalAddress
-             , tmpParam.OKPO
-             , tmpParam.MainName
-             , COALESCE (tmpParam.MainName_Cut, tmpParam.MainName) :: TVarChar  AS MainName_Cut
-             , tmpParam.AccounterName
-             , tmpParam.INN
-             , tmpParam.NumberVAT
-             , tmpParam.BankAccount
-             , tmpParam.Phone
-             , tmpParam.BankName ::TVarChar
-             , tmpParam.MFO      ::TVarChar
+             
+             , COALESCE (tmpParam.JuridicalAddress, tmpParamDepartment.JuridicalAddress) :: TVarChar  AS JuridicalAddress
+             , COALESCE (tmpParam.OKPO, tmpParamDepartment.OKPO)                        :: TVarChar  AS OKPO
+             , COALESCE (tmpParam.MainName, tmpParamDepartment.MainName)                :: TVarChar  AS MainName
+             
+             , COALESCE (tmpParam.MainName_Cut, tmpParam.MainName, tmpParamDepartment.MainName_Cut, tmpParamDepartment.MainName)  :: TVarChar  AS MainName_Cut
+             , COALESCE (tmpParam.AccounterName, tmpParamDepartment.AccounterName)  :: TVarChar AS AccounterName
+             , COALESCE (tmpParam.INN, tmpParamDepartment.INN)                      :: TVarChar AS INN
+             , COALESCE (tmpParam.NumberVAT,tmpParamDepartment.NumberVAT)           :: TVarChar AS NumberVAT
+             , COALESCE (tmpParam.BankAccount, tmpParamDepartment.BankAccount)      :: TVarChar AS BankAccount
+             , COALESCE (tmpParam.Phone, tmpParamDepartment.Phone)                  :: TVarChar AS Phone
+             , COALESCE (tmpParam.BankName, tmpParamDepartment.BankName)            :: TVarChar AS BankName
+             , COALESCE (tmpParam.MFO, tmpParamDepartment.MFO)                      :: TVarChar AS MFO
 
              , COALESCE (tmpParam.PartnerMedical_FullName, Object_PartnerMedical.ValueData) :: TVarChar AS PartnerMedical_FullName
              , tmpParam.PartnerMedical_JuridicalAddress

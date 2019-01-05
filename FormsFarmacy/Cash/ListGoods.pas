@@ -64,6 +64,9 @@ type
     colJuridicalName: TcxGridDBColumn;
     colDiffKindId: TcxGridDBColumn;
     DiffKindCDS: TClientDataSet;
+    actSearchGoods: TdsdOpenForm;
+    MainMenu1: TMainMenu;
+    mmSearchGoods: TMenuItem;
     procedure ParentFormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure edt1Exit(Sender: TObject);
@@ -87,6 +90,7 @@ type
       ARecord: TcxCustomGridRecord; var AText: string);
     procedure colDiffKindIdGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
+    procedure mmSearchGoodsClick(Sender: TObject);
   private
     { Private declarations }
     FOldStr : String;
@@ -107,7 +111,7 @@ uses LocalWorkUnit, CommonData, ListDiff, ListDiffAddGoods;
 
 
 procedure TListGoodsForm.FilterRecord(DataSet: TDataSet; var Accept: Boolean);
-  Var S,S1:String; i,k:integer; F:Boolean;
+  Var S,S1:String; k:integer; F:Boolean;
 begin
   S1 := Trim(FOldStr);
   if S1 = '' then exit;
@@ -140,6 +144,26 @@ begin
   if not ListGoodsCDS.Eof then
     ListDiffCDS.Filter := 'Id = ' + ListGoodsCDS.FieldByName('Id').AsString
   else ListDiffCDS.Filter := 'Id = 0';
+end;
+
+procedure TListGoodsForm.mmSearchGoodsClick(Sender: TObject);
+  var i : Integer;
+begin
+  if actSearchGoods.Execute then
+  begin
+    for i := 0 to Screen.ActiveForm.ComponentCount - 1 do if Screen.ActiveForm.Components[I].Name = 'edGoodsSearch' then
+    begin
+      if edt1.Text = '' then
+      begin
+        if not ListGoodsCDS.IsEmpty then TcxTextEdit(Screen.ActiveForm.Components[I]).Text := ListGoodsCDS.FieldByName('GoodsName').AsString;
+      end else  TcxTextEdit(Screen.ActiveForm.Components[I]).Text := edt1.Text;
+    end;
+
+    for i := 0 to Screen.ActiveForm.ComponentCount - 1 do if Screen.ActiveForm.Components[I].Name = 'actRefreshSearch' then
+    begin
+      TdsdExecStoredProc(Screen.ActiveForm.Components[I]).Execute;
+    end;
+  end;
 end;
 
 procedure TListGoodsForm.actListDiffAddGoodsExecute(Sender: TObject);
@@ -299,6 +323,7 @@ begin
       pnlLocal.Visible := True;
     end;
   end else pnlLocal.Visible := True;
+  mmSearchGoods.Visible := not pnlLocal.Visible;
 
   while ListlDiffNoSendCDS.RecordCount > 0 do ListlDiffNoSendCDS.Delete;
   WaitForSingleObject(MutexGoods, INFINITE);
