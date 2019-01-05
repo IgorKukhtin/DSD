@@ -4,6 +4,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
   ClientWidth = 847
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitTop = -113
   ExplicitWidth = 863
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -142,12 +143,26 @@ inherited InventoryJournalForm: TInventoryJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
+          object ItemName_from: TcxGridDBColumn
+            Caption = #1054#1090' '#1082#1086#1075#1086' ('#1101#1083#1077#1084#1077#1085#1090')'
+            DataBinding.FieldName = 'ItemName_from'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
+          end
+          object ItemName_to: TcxGridDBColumn
+            Caption = #1050#1086#1084#1091' ('#1101#1083#1077#1084#1077#1085#1090')'
+            DataBinding.FieldName = 'ItemName_to'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
@@ -339,6 +354,9 @@ inherited InventoryJournalForm: TInventoryJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -429,6 +447,9 @@ inherited InventoryJournalForm: TInventoryJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintSticker: TdsdPrintAction
       Category = 'DSDLib'
@@ -472,6 +493,9 @@ inherited InventoryJournalForm: TInventoryJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource

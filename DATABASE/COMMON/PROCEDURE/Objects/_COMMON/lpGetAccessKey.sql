@@ -28,8 +28,9 @@ BEGIN
                        , zc_Enum_Process_Get_Movement_TransportService()
                        , zc_Enum_Process_InsertUpdate_Movement_PersonalAccount()
                         )
-      THEN
-           inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 24)); -- Транспорт Днепр
+      THEN 
+           -- <> Посохова Н.В.
+           inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE UserId <> 2556726 AND RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 24)); -- Транспорт Днепр
       ELSE
       -- Document
       IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Income()
@@ -55,8 +56,19 @@ BEGIN
                        , zc_Enum_Process_InsertUpdate_Movement_OrderInternal()
                         )
       THEN
-           inUserId := (SELECT MAX (Object_Process_User_View.UserId) FROM Object_Process_User_View JOIN Object_RoleAccessKey_View ON Object_RoleAccessKey_View.UserId = Object_Process_User_View.UserId WHERE Object_Process_User_View.ProcessId = inProcessId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_AccessKey_DocumentDnepr());
-           IF inUserId IS NULL THEN inUserId:= (SELECT MAX (Object_Process_User_View.UserId) FROM Object_Process_User_View JOIN Object_RoleAccessKey_View ON Object_RoleAccessKey_View.UserId = Object_Process_User_View.UserId WHERE Object_Process_User_View.ProcessId = inProcessId); END IF;
+           inUserId := (SELECT MAX (Object_Process_User_View.UserId)
+                        FROM Object_Process_User_View
+                             JOIN Object_RoleAccessKey_View ON Object_RoleAccessKey_View.UserId = Object_Process_User_View.UserId
+                        WHERE Object_Process_User_View.ProcessId = inProcessId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_AccessKey_DocumentDnepr()
+                          -- <> Посохова Н.В.
+                          AND Object_Process_User_View.UserId <> 2556726
+                       );
+           IF inUserId IS NULL THEN inUserId:= (SELECT MAX (Object_Process_User_View.UserId)
+                                                FROM Object_Process_User_View
+                                                     JOIN Object_RoleAccessKey_View ON Object_RoleAccessKey_View.UserId = Object_Process_User_View.UserId
+                                                WHERE Object_Process_User_View.ProcessId = inProcessId
+                                               );
+           END IF;
       ELSE
       -- Service
       IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Service()
@@ -296,13 +308,13 @@ BEGIN
              GROUP BY AccessKeyId
             );
   ELSE
-      RAISE EXCEPTION 'Ошибка.У пользователя <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (vbUserId_save);
+      RAISE EXCEPTION 'Ошибка.У пользователя <%> нельзя определить значение для доступа просмотра.(<%>)', lfGet_Object_ValueData_sh (vbUserId_save), lfGet_Object_ValueData_sh (inUserId);
   END IF;  
   
 
   IF COALESCE (vbValueId, 0) = 0
   THEN
-      RAISE EXCEPTION 'Ошибка.У пользователя <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (vbUserId_save);
+      RAISE EXCEPTION 'Ошибка.У пользователя <%> нельзя определить значение для доступа просмотра.(<%>)', lfGet_Object_ValueData_sh (vbUserId_save), lfGet_Object_ValueData_sh (inUserId);
   ELSE RETURN vbValueId;
   END IF;  
 

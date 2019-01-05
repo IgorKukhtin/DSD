@@ -381,6 +381,12 @@ BEGIN
      END IF;
 
 
+--   RAISE EXCEPTION '<%>  %', 
+--     (select sum (tmpResult_master.OperCount + tmpResult_master.OperCount_two) from _tmpResult AS tmpResult_master where tmpResult_master.GoodsId = 2480 and  tmpResult_master.DescId_mi = zc_MI_Child())
+-- ,          (select sum (tmpResult_master.OperCount + tmpResult_master.OperCount_two) from _tmpResult AS tmpResult_master where tmpResult_master.GoodsId = 2480 and  tmpResult_master.DescId_mi = zc_MI_Master())
+-- ;
+
+
      -- данные
      INSERT INTO _tmpResult_child (MovementId, OperDate, MovementItemId_master, MovementItemId, ContainerId_master, ContainerId, GoodsId, OperCount, isDelete)
        WITH tmpResult_MI_all AS (-- находим ParentId всем существующим элементам Расхода на пр-во
@@ -436,28 +442,58 @@ BEGIN
                        WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
                          AND tmpResult_master.ReceiptId_child = 0
                       )
+          /*, tmpAll2 AS (-- -- данные zc_MI_Master, еще могут делаться из самих себя
+                        SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId, tmpResult_master.GoodsId AS GoodsId_child, 0 AS Koeff
+                               -- если до 5% - тогда !!!ТОЛЬКО!!! сам в себя
+                             , CASE WHEN tmpResult_master.OperCount + tmpResult_master.OperCount_two = 0
+                                        THEN 0
+                                    WHEN ((100 * tmp.OperCount / (tmpResult_master.OperCount + tmpResult_master.OperCount_two)) <  4
+                                      AND (100 * tmp.OperCount / (tmpResult_master.OperCount + tmpResult_master.OperCount_two)) > -4
+                                          )
+                                     -- or tmpResult_master.GoodsId = 7837
+                                        THEN tmpResult_master.ContainerId
+                                    ELSE 0
+                               END AS ContainerId
+                        FROM tmpResult_master
+                             INNER JOIN (SELECT tmpResult_child.OperDate, tmpResult_child.ContainerId, SUM (tmpResult_child.OperCount) AS OperCount FROM tmpResult_child GROUP BY tmpResult_child.OperDate, tmpResult_child.ContainerId
+                                        ) AS tmp ON tmp.OperDate    = tmpResult_master.OperDate
+                                                AND tmp.ContainerId = tmpResult_master.ContainerId
+                        WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
+                       )*/
           , tmpAll AS (-- данные zc_MI_Master, если будут делаться из найденных "главных" товаров
-                       SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId, tmpResult_master.GoodsId_child            , 0 AS Koeff, 0 AS ContainerId FROM tmpResult_master WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0 AND GoodsId_child > 0
+                       SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId, tmpResult_master.GoodsId_child, 0 AS Koeff, 0 AS ContainerId FROM tmpResult_master WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0 AND tmpResult_master.GoodsId_child > 0 AND tmpResult_master.GoodsId <> tmpResult_master.GoodsId_child
                       UNION
-                       SELECT DISTINCT tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId,  tmpReceipt_find.GoodsId_child,              0 AS Koeff, 0 AS ContainerId FROM tmpReceipt_find WHERE tmpReceipt_find.Ord = 1 AND tmpReceipt_find.GoodsId_child > 0
+                       SELECT DISTINCT tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId,  tmpReceipt_find.GoodsId_child,  0 AS Koeff, 0 AS ContainerId FROM tmpReceipt_find WHERE tmpReceipt_find.Ord = 1 AND tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
+                      UNION
+                       -- данные zc_MI_Master, еще могут делаться из самих себя
+                        SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId, tmpResult_master.GoodsId AS GoodsId_child, 0 AS Koeff
+                               -- если до 5% - тогда !!!ТОЛЬКО!!! сам в себя
+                             , CASE WHEN tmpResult_master.OperCount + tmpResult_master.OperCount_two = 0
+                                        THEN 0
+                                    WHEN ((100 * tmp.OperCount / (tmpResult_master.OperCount + tmpResult_master.OperCount_two)) <  4
+                                      AND (100 * tmp.OperCount / (tmpResult_master.OperCount + tmpResult_master.OperCount_two)) > -4
+                                          )
+                                     -- or tmpResult_master.GoodsId = 7837
+                                        THEN tmpResult_master.ContainerId
+                                    ELSE 0
+                               END AS ContainerId
+                        FROM tmpResult_master
+                             LEFT JOIN (SELECT tmpResult_child.OperDate, tmpResult_child.ContainerId, SUM (tmpResult_child.OperCount) AS OperCount FROM tmpResult_child GROUP BY tmpResult_child.OperDate, tmpResult_child.ContainerId
+                                       ) AS tmp ON tmp.OperDate    = tmpResult_master.OperDate
+                                               AND tmp.ContainerId = tmpResult_master.ContainerId
+                        WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
+                        /*SELECT DISTINCT tmpAll2.OperDate, tmpAll2.GoodsId, tmpAll2.GoodsId_child, tmpAll2.Koeff, tmpAll2.ContainerId
+                        FROM tmpAll2
                       UNION
                        -- данные zc_MI_Master, еще могут делаться из самих себя
                        SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId, tmpResult_master.GoodsId AS GoodsId_child, 0 AS Koeff
                               -- если до 5% - тогда !!!ТОЛЬКО!!! сам в себя
-                            , CASE WHEN tmpResult_master.OperCount + tmpResult_master.OperCount_two = 0
-                                       THEN 0
-                                   WHEN ((100 * tmp.OperCount / (tmpResult_master.OperCount + tmpResult_master.OperCount_two)) <  4
-                                     AND (100 * tmp.OperCount / (tmpResult_master.OperCount + tmpResult_master.OperCount_two)) > -4
-                                         )
-                                    -- or tmpResult_master.GoodsId = 7837
-                                       THEN tmpResult_master.ContainerId
-                                   ELSE 0
-                              END AS ContainerId
+                            , 0 AS ContainerId
                        FROM tmpResult_master
-                            LEFT JOIN (SELECT tmpResult_child.OperDate, tmpResult_child.ContainerId, SUM (tmpResult_child.OperCount) AS OperCount FROM tmpResult_child GROUP BY tmpResult_child.OperDate, tmpResult_child.ContainerId
-                                      ) AS tmp ON tmp.OperDate    = tmpResult_master.OperDate
-                                              AND tmp.ContainerId = tmpResult_master.ContainerId
+                            LEFT JOIN tmpAll2 ON tmpAll2.OperDate = tmpResult_master.OperDate
+                                             AND tmpAll2.GoodsId  = tmpResult_master.GoodsId
                        WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
+                         AND tmpAll2.GoodsId IS NULL*/
                       UNION
                        -- данные zc_MI_Master, когда будут делаться из товаров если ParentMulti
                        SELECT DISTINCT tmpResult_master.OperDate, tmpResult_master.GoodsId, ObjectLink_ReceiptChild_Goods.ChildObjectId AS GoodsId_child
@@ -548,10 +584,15 @@ BEGIN
                                      END AS OperCount
                                    , FALSE AS isPeresort
                               FROM tmpResult_child
+                                   -- по этим будет только сам в себя
+                                   LEFT JOIN (SELECT DISTINCT tmpAll.ContainerId FROM tmpAll WHERE tmpAll.ContainerId > 0
+                                             ) AS tmp ON tmp.ContainerId = tmpResult_child.ContainerId
                                    INNER JOIN tmpAll_total     ON tmpAll_total.GoodsId_child     = tmpResult_child.GoodsId
                                                               AND tmpAll_total.OperDate          = tmpResult_child.OperDate
                                                               AND (tmpAll_total.ContainerId      = tmpResult_child.ContainerId
-                                                                OR tmpAll_total.ContainerId      = 0)
+                                                                OR (tmpAll_total.ContainerId     = 0 AND tmp.ContainerId IS NULL))
+                                                             -- OR tmpResult_child.ContainerId   = 0)
+                                                             -- OR (tmpAll_total.ContainerId     = 0 AND tmpResult_child.ContainerId   = 0))
 
                                    INNER JOIN tmpAll           ON tmpAll.GoodsId_child           = tmpAll_total.GoodsId_child
                                                               AND tmpAll.OperDate                = tmpAll_total.OperDate
@@ -978,3 +1019,4 @@ END;$BODY$
 -- where (DescId_mi < 0 and GoodsCode in (101, 2207)) or (DescId_mi IN (  1,  zc_MI_Child())   and (GoodsCode in (101, 2207) or GoodsCode_master = 101))
 -- where GoodsCode in (101, 2207) or GoodsCode_master in (101, 2207)
 -- order by DescId_mi desc, GoodsName_master, GoodsKindName_master, GoodsName, GoodsKindName, OperDate
+-- select * from gpUpdate_Movement_ProductionUnion_Pack(inStartDate := ('03.12.2018')::TDateTime , inEndDate := ('03.12.2018')::TDateTime , inUnitId := 8451 ,  inSession := '5')

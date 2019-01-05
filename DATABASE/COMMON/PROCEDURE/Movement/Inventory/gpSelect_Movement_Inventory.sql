@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Inventory(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , FromId Integer, FromName TVarChar, ItemName_from TVarChar, ToId Integer, ToName TVarChar, ItemName_to TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, isGoodsGroupIn Boolean, isGoodsGroupExc Boolean
              )
 AS
@@ -48,8 +48,10 @@ BEGIN
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
            , Object_From.Id                             AS FromId
            , Object_From.ValueData                      AS FromName
+           , ObjectDesc_from.ItemName                   AS ItemName_from
            , Object_To.Id                               AS ToId
            , Object_To.ValueData                        AS ToName
+           , ObjectDesc_to.ItemName                     AS ItemName_to
 
            , Object_GoodsGroup.Id                       AS GoodsGroupId
            , Object_GoodsGroup.ValueData                AS GoodsGroupName
@@ -85,11 +87,13 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            LEFT JOIN ObjectDesc AS ObjectDesc_from ON ObjectDesc_from.Id = Object_From.DescId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            LEFT JOIN ObjectDesc AS ObjectDesc_to ON ObjectDesc_to.Id = Object_To.DescId
             
             LEFT JOIN MovementLinkObject AS MovementLinkObject_GoodsGroup
                                          ON MovementLinkObject_GoodsGroup.MovementId = Movement.Id

@@ -41,5 +41,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 122175 , inSession:= '2')
--- SELECT * FROM gpReComplete_Movement_Send (inMovementId:= 122175, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReComplete_Movement_Send (inMovementId:= 8573837, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 122175 , inSession:= '2')

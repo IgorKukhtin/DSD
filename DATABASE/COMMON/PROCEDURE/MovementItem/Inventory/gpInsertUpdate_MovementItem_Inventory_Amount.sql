@@ -77,13 +77,14 @@ BEGIN
                           , MovementItem.ObjectId                                    AS GoodsId
                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)            AS GoodsKindId
                           , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, 0)    AS GoodsKindCompleteId
-                          , MILinkObject_PartionGoods.ObjectId                       AS PartionGoodsId
+                          , COALESCE (MILinkObject_PartionGoods.ObjectId, 0)         AS PartionGoodsId
                           , COALESCE (MIString_PartionGoods.ValueData, '')           AS PartionGoods
                           , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()) AS PartionGoodsDate
                             --  ¹ ï/ï
                           , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId
                                                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                                           , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, 0)
+                                                          , COALESCE (MILinkObject_PartionGoods.ObjectId, 0)
                                                           , COALESCE (MIString_PartionGoods.ValueData, '')
                                                           , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())
                                                ORDER BY MovementItem.Amount DESC
@@ -138,8 +139,8 @@ BEGIN
            FROM (SELECT tmpContainer.GoodsId
                       , COALESCE (CLO_GoodsKind.ObjectId, 0)                               AS GoodsKindId
                       , COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, 0)           AS GoodsKindCompleteId
-                      , Object_PartionGoods.Id                                             AS PartionGoodsId
-                      , COALESCE (Object_PartionGoods.ValueData, '')                       AS PartionGoods
+                      , COALESCE (Object_PartionGoods.Id, 0)                               AS PartionGoodsId
+                      , CASE WHEN Object_PartionGoods.ValueData <> '0' THEN Object_PartionGoods.ValueData ELSE '' END AS PartionGoods
                       , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateStart()) AS PartionGoodsDate
                       , SUM (tmpContainer.Amount_End)                                      AS Amount_End
 

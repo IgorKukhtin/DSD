@@ -48,6 +48,8 @@ type
     bbPrintSticker: TdxBarButton;
     actPrintStickerTermo: TdsdPrintAction;
     bbPrintStickerTermo: TdxBarButton;
+    ItemName_from: TcxGridDBColumn;
+    ItemName_to: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1098,7 +1098,7 @@ BEGIN
 
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
-     PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
+     PERFORM lpInsertUpdate_MovementItemContainer_byTable();
      -- 5.2. ФИНИШ - Обязательно сохраняем Проводки для Отчета
      PERFORM lpInsertUpdate_MIReport_byTable ();
 
