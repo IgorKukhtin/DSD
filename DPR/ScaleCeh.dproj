@@ -222,6 +222,9 @@
 			<DCCReference Include="..\ScaleCeh\GuideGoodsLine.pas">
 				<Form>GuideGoodsLineForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXLSAction.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

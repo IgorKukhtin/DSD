@@ -295,6 +295,7 @@ BEGIN
                             , COALESCE (MILinkObject_Storage.ObjectId, 0) AS StorageId_Item
                             , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
                             , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
+                            , COALESCE (MILinkObject_PartionGoods.ObjectId, 0) AS PartionGoodsId
          
                             , COALESCE (MIFloat_ContainerId.ValueData, 0) AS ContainerId
          
@@ -355,7 +356,13 @@ BEGIN
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage
                                                              ON MILinkObject_Storage.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_Storage.DescId = zc_MILinkObject_Storage()
-         
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
+                                                             ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
+                                                            AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                                                                        , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                                                                        , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                                                         )
                             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
@@ -415,6 +422,7 @@ BEGIN
                                                                        , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                                        , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                                         )
+                                    AND tmpMI.PartionGoodsId = 0
                                  )
         SELECT (_tmp.MovementItemId) AS MovementItemId
 
@@ -446,7 +454,7 @@ BEGIN
              , _tmp.isPartionCount
              , _tmp.isPartionSumm 
                -- Партии товара, сформируем позже, ИЛИ !!!ЕСТЬ остаток с пустой партией!!!
-             , COALESCE (tmpContainer_all.PartionGoodsId, 0) AS PartionGoodsId
+             , COALESCE (tmpContainer_all.PartionGoodsId, tmpMI.PartionGoodsId) AS PartionGoodsId
         FROM tmpMI AS _tmp
              LEFT JOIN tmpContainer_all ON tmpContainer_all.MovementItemId = _tmp.MovementItemId
                                        AND tmpContainer_all.Ord            = 1 -- на всякий случай - № п/п

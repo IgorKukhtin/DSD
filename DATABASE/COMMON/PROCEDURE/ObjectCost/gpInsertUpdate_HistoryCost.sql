@@ -491,7 +491,8 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
 --                                                                                                                      AND CLO.ObjectId = 12573); -- Однокопила Ірина Борисівна
 
 
-     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (154253, 154250); -- 12.2018
+     -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (154253, 154250); -- 12.2018
+
 
      IF inBranchId = 0 -- OR 1 = 1
      THEN

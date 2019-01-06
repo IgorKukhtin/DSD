@@ -85,7 +85,10 @@ uses
   DialogNumberValue in '..\Scale\DialogNumberValue.pas' {DialogNumberValueForm},
   GuideArticleLoss in '..\ScaleCeh\GuideArticleLoss.pas' {GuideArticleLossForm},
   dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas',
-  GuideGoodsLine in '..\ScaleCeh\GuideGoodsLine.pas' {GuideGoodsLineForm};
+  GuideGoodsLine in '..\ScaleCeh\GuideGoodsLine.pas' {GuideGoodsLineForm},
+  dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
+  Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
+  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas';
 
 {$R *.res}
 
@@ -107,7 +110,7 @@ begin
          if gpCheck_BranchCode = FALSE then exit;
          //
          Application.CreateForm(TdmMain, dmMain);
-         Application.CreateForm(TDMMainScaleCehForm, DMMainScaleCehForm);
+  Application.CreateForm(TDMMainScaleCehForm, DMMainScaleCehForm);
   // !!!важно первым!!!
   Application.CreateForm(TMainCehForm, MainCehForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);

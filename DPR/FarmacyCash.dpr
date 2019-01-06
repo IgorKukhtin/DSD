@@ -95,7 +95,8 @@ uses
   PayPosTermProcess in '..\FormsFarmacy\Cash\PayPosTermProcess.pas' {PayPosTermProcessForm},
   Pos_ECRCommX_BPOS1Lib in '..\FormsFarmacy\Cash\Pos_ECRCommX_BPOS1Lib.pas',
   PosFactory in '..\FormsFarmacy\Cash\PosFactory.pas',
-  PosInterface in '..\FormsFarmacy\Cash\PosInterface.pas';
+  PosInterface in '..\FormsFarmacy\Cash\PosInterface.pas',
+  dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas';
 
 {$R *.res}
 

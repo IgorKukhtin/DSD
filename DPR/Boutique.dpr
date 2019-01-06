@@ -74,6 +74,7 @@ uses
   dsdOLAPXMLBind in '..\SOURCE\COMPONENT\dsdOLAPXMLBind.pas',
   GridGroupCalculate in '..\SOURCE\GridGroupCalculate.pas',
   dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas',
+  dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
   Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
   Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas';
 
