@@ -1,27 +1,27 @@
-inherited Log_CashRemainsForm: TLog_CashRemainsForm
-  Caption = 'GUID '#1082#1072#1089#1089' '#1080' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
+inherited Check_CashRegisterForm: TCheck_CashRegisterForm
+  Caption = #1050#1072#1089#1089#1099' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
   ClientHeight = 463
-  ClientWidth = 734
+  ClientWidth = 511
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 750
+  ExplicitWidth = 527
   ExplicitHeight = 502
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 734
+    Width = 511
     Height = 406
     ExplicitWidth = 734
     ExplicitHeight = 406
     ClientRectBottom = 406
-    ClientRectRight = 734
+    ClientRectRight = 511
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 734
       ExplicitHeight = 406
       inherited cxGrid: TcxGrid
-        Width = 734
-        Height = 269
+        Width = 511
+        Height = 406
         ExplicitWidth = 734
-        ExplicitHeight = 269
+        ExplicitHeight = 406
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -48,12 +48,12 @@ inherited Log_CashRemainsForm: TLog_CashRemainsForm
           Styles.Footer = nil
           Styles.Header = nil
           object CashSessionId: TcxGridDBColumn
-            Caption = 'GUID'
-            DataBinding.FieldName = 'CashSessionId'
+            Caption = #1050#1072#1089#1089#1072
+            DataBinding.FieldName = 'CashRegisterName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 257
+            Width = 130
           end
           object UnitName: TcxGridDBColumn
             Caption = #1040#1087#1090#1077#1082#1072
@@ -64,137 +64,39 @@ inherited Log_CashRemainsForm: TLog_CashRemainsForm
             Width = 223
           end
           object UserName: TcxGridDBColumn
-            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
-            DataBinding.FieldName = 'UserName'
+            Caption = #1063#1077#1082#1086#1074' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+            DataBinding.FieldName = 'CheckCount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 134
-          end
-          object LoginTime: TcxGridDBColumn
-            Caption = #1042#1088#1077#1084#1103' '#1074#1093#1086#1076#1072
-            DataBinding.FieldName = 'LoginTime'
-            Width = 82
-          end
-          object OldProgram: TcxGridDBColumn
-            Caption = #1050#1072#1089#1089'.'
-            DataBinding.FieldName = 'OldProgram'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 41
-          end
-          object OldServise: TcxGridDBColumn
-            Caption = #1057#1077#1088'.'
-            DataBinding.FieldName = 'OldServise'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 41
-          end
-          object isErased: TcxGridDBColumn
-            DataBinding.FieldName = 'isErased'
-            Visible = False
+            Width = 107
           end
         end
-      end
-      object cxGridDouble: TcxGrid
-        Left = 0
-        Top = 277
-        Width = 734
-        Height = 129
-        Align = alBottom
-        PopupMenu = PopupMenu
-        TabOrder = 1
-        object cxGridDBTableView1: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = DoubleDS
-          DataController.Filter.Options = [fcoCaseInsensitive]
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####'
-            end
-            item
-              Kind = skSum
-              Position = spFooter
-            end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
-              Kind = skCount
-              Column = DoubleCashSessionId
-            end>
-          DataController.Summary.SummaryGroups = <>
-          Images = dmMain.SortImageList
-          OptionsBehavior.GoToNextCellOnEnter = True
-          OptionsBehavior.FocusCellOnCycle = True
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsCustomize.DataRowSizing = True
-          OptionsData.CancelOnExit = False
-          OptionsData.Editing = False
-          OptionsData.Inserting = False
-          OptionsView.Footer = True
-          OptionsView.GroupByBox = False
-          OptionsView.GroupSummaryLayout = gslAlignWithColumns
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.Indicator = True
-          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object DoubleCashSessionId: TcxGridDBColumn
-            Caption = #1044#1091#1073#1083#1080' GUID'
-            DataBinding.FieldName = 'CashSessionId'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 263
-          end
-          object DoubleUnitName: TcxGridDBColumn
-            Caption = #1040#1087#1090#1077#1082#1072
-            DataBinding.FieldName = 'UnitName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 220
-          end
-        end
-        object cxGridLevel1: TcxGridLevel
-          GridView = cxGridDBTableView1
-        end
-      end
-      object cxSplitter1: TcxSplitter
-        Left = 0
-        Top = 269
-        Width = 734
-        Height = 8
-        AlignSplitter = salBottom
-        Control = cxGridDouble
       end
     end
   end
   inherited Panel: TPanel
-    Width = 734
+    Width = 511
     ExplicitWidth = 734
     inherited deStart: TcxDateEdit
+      Left = 108
       EditValue = 43344d
       Properties.AssignedValues.DisplayFormat = True
       Properties.AssignedValues.EditFormat = True
       TabOrder = 1
+      ExplicitLeft = 108
     end
     inherited deEnd: TcxDateEdit
       Left = 334
-      EditValue = 42491d
+      EditValue = 43344d
       TabOrder = 0
-      Visible = False
       ExplicitLeft = 334
     end
     inherited cxLabel1: TcxLabel
-      Caption = #1044#1072#1090#1072' '#1074#1099#1073#1086#1088#1082#1080':'
-      ExplicitWidth = 81
+      Left = 11
+      ExplicitLeft = 11
     end
     inherited cxLabel2: TcxLabel
       Left = 218
-      Visible = False
       ExplicitLeft = 218
     end
   end
@@ -263,15 +165,23 @@ inherited Log_CashRemainsForm: TLog_CashRemainsForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TDataDialogForm'
-      FormNameParam.Value = 'TDataDialogForm'
+      FormName = 'TMovement_PeriodDialogForm'
+      FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'inOperDate'
+          Name = 'StartDate'
           Value = 42491d
           Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 'NULL'
+          Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -283,11 +193,8 @@ inherited Log_CashRemainsForm: TLog_CashRemainsForm
     object dsdOpenForm1: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1050#1072#1089#1089#1099' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
-      Hint = #1050#1072#1089#1089#1099' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
-      ImageIndex = 22
-      FormName = 'TCheck_CashRegisterForm'
-      FormNameParam.Value = 'TCheck_CashRegisterForm'
+      Caption = 'dsdOpenForm1'
+      FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -303,20 +210,20 @@ inherited Log_CashRemainsForm: TLog_CashRemainsForm
     Top = 88
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Log_CashRemains'
-    DataSets = <
-      item
-        DataSet = MasterCDS
-      end
-      item
-        DataSet = DoubleCDS
-      end>
-    OutputType = otMultiDataSet
+    StoredProcName = 'gpSelect_Movement_Check_CashRegister'
     Params = <
       item
         Name = 'inStartDate'
         Value = 'NULL'
         Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -361,18 +268,10 @@ inherited Log_CashRemainsForm: TLog_CashRemainsForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton1'
         end>
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
-      Category = 0
-    end
-    object dxBarButton1: TdxBarButton
-      Action = dsdOpenForm1
       Category = 0
     end
   end
@@ -398,18 +297,6 @@ inherited Log_CashRemainsForm: TLog_CashRemainsForm
       item
       end>
     Left = 104
-    Top = 136
-  end
-  object DoubleCDS: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 248
-    Top = 136
-  end
-  object DoubleDS: TDataSource
-    DataSet = DoubleCDS
-    Left = 336
     Top = 136
   end
 end

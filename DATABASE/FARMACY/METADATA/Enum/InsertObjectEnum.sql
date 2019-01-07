@@ -282,7 +282,8 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_InfoMoneyDestination_20500(), inDescId:= zc_Object_InfoMoneyDestination(), inCode:= 20500,  inName:= 'Предоплата', inEnumName:= 'zc_Enum_InfoMoneyDestination_20500');
 
 -- КОНСТАНТА НИЖЕ НЕ СТАВИТСЯ АВТОМАТОМ!!! 
---     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_ConnectParam(),  inDescId:= zc_Object_GlobalConst(), inCode:= 3, inName:= 'http://91.210.37.210/farmacy/index.php', inEnumName:= 'zc_Enum_GlobalConst_ConnectParam');
+--     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_ConnectParam(),  inDescId:= zc_Object_GlobalConst(), inCode:= 3, inName:= 'http://farmacy.neboley.dp.ua/index.php', inEnumName:= 'zc_Enum_GlobalConst_ConnectParam');
+--     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_ConnectReportParam(),  inDescId:= zc_Object_GlobalConst(), inCode:= 3, inName:= 'http://farmacy.neboley.dp.ua/index.php', inEnumName:= 'zc_Enum_GlobalConst_ConnectReportParam');
      
 END $$;
 
@@ -3163,6 +3164,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.    Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 07.01.19                                                                                                   * zc_Enum_GlobalConst_ConnectReportParam
  02.11.18                                                                                                   * zc_Enum_PaidType_CardAdd
  25.08.18         * Загрузчик Данные по Соц.проекту в документ
  30.10.17         * Загрузчик НТЗ в zc_Object_DataExcel

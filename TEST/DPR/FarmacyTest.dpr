@@ -644,8 +644,8 @@ uses
   Report_Movement_ListDiff in '..\..\FormsFarmacy\Report\Report_Movement_ListDiff.pas' {Report_Movement_ListDiffForm: TParentForm},
   RecalcMCSSheduler in '..\..\FormsFarmacy\Object\RecalcMCSSheduler.pas',
   RecalcMCSShedulerEdit in '..\..\FormsFarmacy\Object\RecalcMCSShedulerEdit.pas' {RecalcMCSShedulerEditForm: TParentForm},
-  Week in '..\..\FormsFarmacy\Guides\Week.pas' {WeekForm: TParentForm};
-
+  Week in '..\..\FormsFarmacy\Guides\Week.pas' {WeekForm: TParentForm},
+  Check_CashRegister in '..\..\FormsFarmacy\Guides\Check_CashRegister.pas' {Check_CashRegisterForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

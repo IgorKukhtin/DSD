@@ -17,7 +17,9 @@ CREATE TABLE Log_CashRemains
   FullRemains       Boolean, 
   UserId            Integer, 
   UnitId            Integer, 
-  RetailId          Integer
+  RetailId          Integer,
+  OldProgram        Boolean, 
+  OldServise        Boolean
  )
 ;
 
