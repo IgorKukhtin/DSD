@@ -3942,7 +3942,7 @@ begin
     end;
 
     if isFiscal then Add_Check_History;
-    if isFiscal then Start_Check_History(SalerCash, SalerCashAdd, PaidType);
+    if isFiscal then Start_Check_History(FTotalSumm, SalerCashAdd, PaidType);
 
     // Непосредственно печать чека
     str_log_xml:=''; i:=0;
@@ -3995,7 +3995,7 @@ begin
         Cash.SubTotal(true, true, 0, 0);
         Cash.TotalSumm(SalerCash, SalerCashAdd, PaidType);
         result := Cash.CloseReceiptEx(ACheckNumber); //Закрыли чек
-        if result and isFiscal then Finish_Check_History(SalerCash);
+        if result and isFiscal then Finish_Check_History(FTotalSumm);
       end;
     end;
   except
@@ -5197,7 +5197,7 @@ begin
     if not fileExists(cName) then
     begin
 
-{      FileList := TStringList.Create;
+      FileList := TStringList.Create;
       try
         if FindFirst(ExtractFilePath(Application.ExeName) + 'CheckHistory\ListCheck*.CSV', faAnyFile, SR) = 0 then
         repeat
@@ -5209,7 +5209,7 @@ begin
         for I := 0 to FileList.Count - 1 do DeleteFile(FileList.Strings[I]);
       finally
         FileList.Free;
-      end;}
+      end;
 
       Rewrite(F);
       bNew := True;

@@ -13,7 +13,8 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid,  cxSplitter, cxContainer,  cxTextEdit, cxCurrencyEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxLookupEdit,
   cxDBLookupEdit, cxDBLookupComboBox,  cxCheckBox, cxNavigator, CashInterface,  cxImageComboBox , dsdAddOn,
-  Vcl.ImgList, LocalStorage, IdFTPCommon, IdGlobal, IdFTP, IdSSLOpenSSL, IdExplicitTLSClientServerBase
+  Vcl.ImgList, LocalStorage, IdFTPCommon, IdGlobal, IdFTP, IdSSLOpenSSL, IdExplicitTLSClientServerBase,
+  UnilWin
   ;
 
 type
@@ -81,8 +82,7 @@ type
   TMainCashForm2 = class(TForm)
     FormParams: TdsdFormParams;
     spDelete_CashSession: TdsdStoredProc;
-    spGet_BlinkCheck: TdsdStoredProc;
-    spGet_BlinkVIP: TdsdStoredProc;
+    gpUpdate_Log_CashRemains: TdsdStoredProc;
 
     spSelectCheck: TdsdStoredProc;
     spSelect_Alternative: TdsdStoredProc;
@@ -164,6 +164,7 @@ type
     procedure SaveRealAll;
     procedure SaveListDiff;
     procedure SendZReport;
+    procedure SecureUpdateVersion;
     procedure ChangeStatus(AStatus: String);
     function InitLocalStorage: Boolean;
     function ExistNotCompletedCheck: boolean;
@@ -476,6 +477,8 @@ begin   //yes
           //Сохранение остатков в локальной базе
           SaveLocalData(RemainsCDS,Remains_lcl);
           SaveLocalData(AlternativeCDS,Alternative_lcl);
+          //Проверка обновления программ
+          SecureUpdateVersion;
           //Получение ВИП чеков и сохранение в локальной базе
           SaveLocalVIP;
           //Получение товаров
@@ -1679,6 +1682,36 @@ begin
     MainCashForm2.tiServise.IconIndex := GetTrayIcon;
   end;
 end;
+
+procedure TMainCashForm2.SecureUpdateVersion;
+  var LocalVersionInfo, BaseVersionInfo: TVersionInfo;
+      OldProgram, OldServise : Boolean;
+begin
+  OldProgram := False;
+  OldServise := False;
+  try
+    BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion('FarmacyCash.exe');
+    LocalVersionInfo := UnilWin.GetFileVersion('FarmacyCash.exe');
+    if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
+       ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then OldProgram := True;
+
+    BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)));
+    LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
+    if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
+       ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then OldServise := True;
+
+    if OldProgram or OldServise then
+    begin
+      gpUpdate_Log_CashRemains.Params.ParamByName('inOldProgram').Value := OldProgram;
+      gpUpdate_Log_CashRemains.Params.ParamByName('inOldServise').Value := OldServise;
+      gpUpdate_Log_CashRemains.Execute;
+    end;
+  except
+    on E: Exception do Add_Log('SecureUpdateVersion Exception: ' + E.Message);
+  end;
+
+end;
+
 
 function TMainCashForm2.GetTrayIcon: integer;
 begin

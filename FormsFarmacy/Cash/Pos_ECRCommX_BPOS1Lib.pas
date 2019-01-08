@@ -11,6 +11,7 @@ type
     FPOS : Variant;
     FLastPosError : String;
     FLastPosRRN : String;
+    FCancel : Boolean;
     FMsgDescriptionProc : TMsgDescriptionProc;
 
     procedure SetMsgDescriptionProc(Value: TMsgDescriptionProc);
@@ -18,6 +19,7 @@ type
   protected
     function WaitPosResponsePrivat() : Integer;
     function Payment(ASumma : Currency) : Boolean;
+    procedure Cancel;
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
@@ -45,6 +47,7 @@ begin
   inherited AfterConstruction;
 
   FPOS := Unassigned;
+  FCancel := False;
   aResult := CLSIDFromProgID(PWideChar(WideString('ECRCommX.BPOS1Lib')), ClassID);
   if aResult <> S_OK then
     raise Exception.Create('Не установлена ECRCommX библиотека~ для POS-терминала.')
@@ -61,6 +64,13 @@ function TPos_ECRCommX_BPOS1Lib.WaitPosResponsePrivat() : Integer;
 begin
   while FPOS.LastResult = 2 do
   begin
+    if FCancel then
+    begin
+      if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Прервано пользователем...');
+      FPOS.Cancel;
+      Result := -1;
+      Exit;
+    end;
     if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc(FPOS.LastStatMsgDescription);
   end;
 
@@ -101,5 +111,9 @@ begin
   end;
 end;
 
+procedure TPos_ECRCommX_BPOS1Lib.Cancel;
+begin
+  FCancel := True;
+end;
 
 end.
