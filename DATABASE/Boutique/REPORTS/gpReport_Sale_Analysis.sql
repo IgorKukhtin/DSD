@@ -101,6 +101,9 @@ BEGIN
                            , Sale_Amount_10202        TFloat
                            , Sale_Amount_InDiscount   TFloat
                            , Sale_Amount_OutDiscount  TFloat
+                           , Tax_Amount_10202  TFloat
+                           , Tax_InDiscount    TFloat
+                           , Tax_OutDiscount   TFloat
                          ) ON COMMIT DROP;
                            
         INSERT INTO _tmpData (BrandName
@@ -149,6 +152,9 @@ BEGIN
                             , Sale_Amount_10202
                             , Sale_Amount_InDiscount
                             , Sale_Amount_OutDiscount
+                            , Tax_Amount_10202
+                            , Tax_InDiscount
+                            , Tax_OutDiscount
                               )
       WITH 
            tmpCurrency_all AS (SELECT Movement.Id                    AS MovementId
@@ -459,40 +465,21 @@ BEGIN
                                                     ) AS Ord*/
 
                                  -- Кол-во: скидка outlet
-                                , SUM (CASE WHEN MILinkObject_DiscountSaleKind.ObjectId = 290 -- скидка outlet
-                                       THEN
-                                           CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIContainer.Amount ELSE 0 END
-                                         - CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount > 0 AND MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN 1 * MIContainer.Amount ELSE 0 END
-                                       ELSE 0
-                                       END                                     
+                                , SUM (CASE WHEN COALESCE (MILinkObject_DiscountSaleKind.ObjectId,0) = 290 AND MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIContainer.Amount ELSE 0 END
+                                         - CASE WHEN COALESCE (MILinkObject_DiscountSaleKind.ObjectId,0) = 290 AND MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount > 0 AND MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN 1 * MIContainer.Amount ELSE 0 END
                                        )    :: TFloat AS Sale_Amount_10202
                                        
-                                 -- Кол-во продажа (ПО Сезонным скидкам)
-                               , SUM (CASE WHEN COALESCE(tmpDiscountPeriod.PeriodId, 0) <> 0
-                                           THEN CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) AND MILinkObject_DiscountSaleKind.ObjectId <> 290 THEN -1 * MIContainer.Amount ELSE 0 END
-                                           ELSE 0
-                                      END) AS Sale_Amount_InDiscount
+                                -- Кол-во продажа (ПО Сезонным скидкам)
+                                , SUM (CASE WHEN COALESCE (MILinkObject_DiscountSaleKind.ObjectId,0) <> 290 AND COALESCE(tmpDiscountPeriod.PeriodId, 0) = 0 AND MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIContainer.Amount ELSE 0 END
+                                     - CASE WHEN COALESCE (MILinkObject_DiscountSaleKind.ObjectId,0) <> 290 AND COALESCE(tmpDiscountPeriod_Ret.PeriodId, 0) = 0 AND MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount > 0 AND MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN 1 * MIContainer.Amount ELSE 0 END
+                                       )    :: TFloat AS Sale_Amount_InDiscount
                                  -- Кол-во продажа (ДО Сезонных скидок)
-                               , SUM (CASE WHEN COALESCE(tmpDiscountPeriod.PeriodId, 0) = 0
-                                           THEN CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) AND MILinkObject_DiscountSaleKind.ObjectId <> 290 THEN -1 * MIContainer.Amount ELSE 0 END
-                                           ELSE 0
-                                      END) AS Sale_Amount_OutDiscount
-
-                                 -- Кол-во: Только Возврат (ПО Сезонным скидкам)
-                               , SUM (CASE WHEN COALESCE(tmpDiscountPeriod_Ret.PeriodId, 0) <> 0 
-                                           THEN CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount > 0 AND MIContainer.MovementDescId IN (zc_Movement_ReturnIn()) AND MILinkObject_DiscountSaleKind.ObjectId <> 290 THEN 1 * MIContainer.Amount ELSE 0 END
-                                           ELSE 0
-                                      END) AS Return_Amount_InDiscount
-                                 -- Кол-во: Только Возврат (ДО Сезонных скидок)
-                               , SUM (CASE WHEN COALESCE(tmpDiscountPeriod_Ret.PeriodId, 0) = 0
-                                           THEN CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount > 0 AND MIContainer.MovementDescId IN (zc_Movement_ReturnIn()) AND MILinkObject_DiscountSaleKind.ObjectId <> 290 
-                                                     THEN 1 * MIContainer.Amount ELSE 0 END
-                                           ELSE 0
-                                      END) AS Return_Amount_OutDiscount
+                                , SUM (CASE WHEN COALESCE (MILinkObject_DiscountSaleKind.ObjectId,0) <> 290 AND COALESCE(tmpDiscountPeriod.PeriodId, 0) <> 0 AND MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount < 0 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIContainer.Amount ELSE 0 END
+                                     - CASE WHEN COALESCE (MILinkObject_DiscountSaleKind.ObjectId,0) <> 290 AND COALESCE(tmpDiscountPeriod_Ret.PeriodId, 0) <> 0 AND MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.Amount > 0 AND MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN 1 * MIContainer.Amount ELSE 0 END
+                                       )    :: TFloat AS Sale_Amount_OutDiscount
 
                            FROM tmpObject_PartionGoods AS Object_PartionGoods
                                 LEFT JOIN MovementItemContainer AS MIContainer
-                                                             -- ON MIContainer.ContainerId    = tmpContainer.ContainerId
                                                                 ON MIContainer.PartionId = Object_PartionGoods.MovementItemId
                                                                AND (MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                                  OR inIsPeriodAll = TRUE)
@@ -602,8 +589,6 @@ BEGIN
                           , SUM (tmpData_all.Sale_Amount_10202)       AS Sale_Amount_10202
                           , SUM (tmpData_all.Sale_Amount_InDiscount)  AS Sale_InDiscount
                           , SUM (tmpData_all.Sale_Amount_OutDiscount) AS Sale_OutDiscount
-                          , SUM (tmpData_all.Return_Amount_InDiscount)  AS Return_InDiscount
-                          , SUM (tmpData_all.Return_Amount_OutDiscount) AS Return_OutDiscount
 
                      FROM tmpData_all
 
@@ -715,12 +700,19 @@ BEGIN
                     ELSE 0
                END :: TFloat AS Tax_Summ_10202 
                
-
+             -- кол-во продажа outlet
              , tmpData.Sale_Amount_10202       :: TFloat
                -- Кол-во продажа - ПО Сезонным скидкам
-             , (COALESCE (tmpData.Sale_InDiscount,0) - COALESCE (tmpData.Return_InDiscount,0))      :: TFloat AS Sale_InDiscount
+             , COALESCE (tmpData.Sale_InDiscount,0)    :: TFloat AS Sale_InDiscount
                -- Кол-во продажа - ДО Сезонных скидок
-             , (COALESCE (tmpData.Sale_OutDiscount,0) - COALESCE (tmpData.Return_OutDiscount,0) + COALESCE (tmpData.Debt_Amount,0) )    :: TFloat AS Sale_OutDiscount
+             , COALESCE (tmpData.Sale_OutDiscount,0)   :: TFloat AS Sale_OutDiscount
+
+             --% кол-во продажа outlet
+             , CASE WHEN COALESCE (tmpData.Sale_Amount,0) <> 0 THEN tmpData.Sale_Amount_10202 * 100 / tmpData.Sale_Amount ELSE 0 END :: TFloat AS Tax_Amount_10202
+             --% Кол-во продажа - ПО Сезонным скидкам
+             , CASE WHEN COALESCE (tmpData.Sale_Amount,0) <> 0 THEN COALESCE (tmpData.Sale_InDiscount,0) * 100 / tmpData.Sale_Amount ELSE 0 END :: TFloat AS Tax_InDiscount
+             --% Кол-во продажа - ДО Сезонных скидок
+             , CASE WHEN COALESCE (tmpData.Sale_Amount,0) <> 0 THEN COALESCE (tmpData.Sale_OutDiscount,0)* 100 / tmpData.Sale_Amount ELSE 0 END :: TFloat AS Tax_OutDiscount
               
         FROM tmpData
             LEFT JOIN Object AS Object_Partner          ON Object_Partner.Id          = tmpData.PartnerId

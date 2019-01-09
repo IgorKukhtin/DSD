@@ -641,6 +641,33 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             HeaderHint = '% '#1055#1088#1086#1076#1072#1078' '#1086#1090' '#1087#1088#1080#1093#1086#1076#1072' ('#1076#1083#1103' '#1082#1086#1083'-'#1074#1072')'
             Width = 55
           end
+          object Tax_Amount_10202: TcxGridDBColumn
+            Caption = '% '#1055#1088#1086#1076'. '#1050#1086#1083'. (outlet)'
+            DataBinding.FieldName = 'Tax_Amount_10202'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object Tax_InDiscount: TcxGridDBColumn
+            Caption = '% '#1055#1088#1086#1076'. '#1055#1054' '#1089#1082'.'
+            DataBinding.FieldName = 'Tax_InDiscount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object Tax_OutDiscount: TcxGridDBColumn
+            Caption = '% '#1055#1088#1086#1076'. '#1044#1054' '#1089#1082'.'
+            DataBinding.FieldName = 'Tax_OutDiscount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object Tax_Summ_curr: TcxGridDBColumn
             Caption = '2.% '#1055#1088#1086#1076'.'
             DataBinding.FieldName = 'Tax_Summ_curr'
@@ -1105,6 +1132,21 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
               Format = ',0.####'
               Kind = skSum
               Column = cxSale_Summ_10202_curr
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = cxSale_Amount_10202
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = cxSale_Amount_InDiscount
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = cxSale_Amount_OutDiscount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -1225,6 +1267,21 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = cxBrandName
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = cxSale_Amount_10202
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = cxSale_Amount_InDiscount
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = cxSale_Amount_OutDiscount
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1372,6 +1429,33 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% '#1055#1088#1086#1076#1072#1078' '#1086#1090' '#1087#1088#1080#1093#1086#1076#1072' ('#1076#1083#1103' '#1082#1086#1083'-'#1074#1072')'
+            Width = 55
+          end
+          object cxTax_Amount_10202: TcxGridDBColumn
+            Caption = '% '#1055#1088#1086#1076'. '#1050#1086#1083'. (outlet)'
+            DataBinding.FieldName = 'Tax_Amount_10202'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object cxTax_InDiscount: TcxGridDBColumn
+            Caption = '% '#1055#1088#1086#1076'. '#1055#1054' '#1089#1082'.'
+            DataBinding.FieldName = 'Tax_InDiscount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object cxTax_OutDiscount: TcxGridDBColumn
+            Caption = '% '#1055#1088#1086#1076'. '#1044#1054' '#1089#1082'.'
+            DataBinding.FieldName = 'Tax_OutDiscount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 55
           end
           object cxTax_Summ_curr: TcxGridDBColumn
@@ -1838,6 +1922,21 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
               Format = ',0.####'
               Kind = skSum
               Column = chSale_Summ_10204_curr
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = chSale_Amount_10202
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = chSale_Amount_InDiscount
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = chSale_Amount_OutDiscount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -1958,6 +2057,21 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = chBrandName
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = chSale_Amount_10202
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = chSale_Amount_InDiscount
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = chSale_Amount_OutDiscount
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -2105,6 +2219,33 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% '#1055#1088#1086#1076#1072#1078' '#1086#1090' '#1087#1088#1080#1093#1086#1076#1072' ('#1076#1083#1103' '#1082#1086#1083'-'#1074#1072')'
+            Width = 55
+          end
+          object chTax_Amount_10202: TcxGridDBColumn
+            Caption = '% '#1055#1088#1086#1076'. '#1050#1086#1083'. (outlet)'
+            DataBinding.FieldName = 'Tax_Amount_10202'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object chTax_InDiscount: TcxGridDBColumn
+            Caption = '% '#1055#1088#1086#1076'. '#1055#1054' '#1089#1082'.'
+            DataBinding.FieldName = 'Tax_InDiscount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object chTax_OutDiscount: TcxGridDBColumn
+            Caption = '% '#1055#1088#1086#1076'. '#1044#1054' '#1089#1082'.'
+            DataBinding.FieldName = 'Tax_OutDiscount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 55
           end
           object chTax_Summ_curr: TcxGridDBColumn
@@ -3947,7 +4088,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
     ColumnEnterList = <>
     SummaryItemList = <>
     Left = 568
-    Top = 520
+    Top = 552
   end
   object GuidesLineFabrica: TdsdGuides
     KeyField = 'Id'
