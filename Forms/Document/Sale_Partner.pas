@@ -197,6 +197,9 @@ type
     bbOrderExternal: TdxBarButton;
     actOpenFormPromo: TdsdOpenForm;
     bbPromo: TdxBarButton;
+    spCheckRight: TdsdStoredProc;
+    actCheckRight: TdsdExecStoredProc;
+    macOpenFormPromo: TMultiAction;
   private
     { Private declarations }
   public

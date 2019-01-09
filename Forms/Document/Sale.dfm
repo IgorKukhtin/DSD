@@ -12,17 +12,17 @@
     Width = 1293
     Height = 479
     ExplicitTop = 166
-    ExplicitWidth = 1298
+    ExplicitWidth = 1293
     ExplicitHeight = 479
     ClientRectBottom = 479
     ClientRectRight = 1293
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1298
+      ExplicitWidth = 1293
       ExplicitHeight = 455
       inherited cxGrid: TcxGrid
         Width = 1293
         Height = 455
-        ExplicitWidth = 1298
+        ExplicitWidth = 1293
         ExplicitHeight = 455
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -507,7 +507,7 @@
     Width = 1293
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1298
+    ExplicitWidth = 1293
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -2308,7 +2308,7 @@
       isShowModal = False
     end
     object actOpenFormPromo: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'Promo'
       TabSheet = tsMain
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1040#1082#1094#1080#1103'>'
@@ -2393,6 +2393,31 @@
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object macOpenFormPromo: TMultiAction
+      Category = 'Promo'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCheckRight
+        end
+        item
+          Action = actOpenFormPromo
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1040#1082#1094#1080#1103'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1040#1082#1094#1080#1103'>'
+      ImageIndex = 29
+    end
+    object actCheckRight: TdsdExecStoredProc
+      Category = 'Promo'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCheckRight
+      StoredProcList = <
+        item
+          StoredProc = spCheckRight
+        end>
+      Caption = 'actCheckRight'
     end
   end
   inherited MasterDS: TDataSource
@@ -2800,7 +2825,7 @@
       Category = 0
     end
     object bbPromo: TdxBarButton
-      Action = actOpenFormPromo
+      Action = macOpenFormPromo
       Category = 0
     end
   end
@@ -5522,5 +5547,14 @@
     PackSize = 1
     Left = 936
     Top = 496
+  end
+  object spCheckRight: TdsdStoredProc
+    StoredProcName = 'gpCheckRight_Movement_Promo'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 40
+    Top = 416
   end
 end

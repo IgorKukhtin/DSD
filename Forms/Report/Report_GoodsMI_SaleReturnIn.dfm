@@ -4,9 +4,8 @@
   ClientWidth = 1362
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -708
   ExplicitWidth = 1378
-  ExplicitHeight = 426
+  ExplicitHeight = 425
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -25,6 +24,8 @@
       inherited cxGrid: TcxGrid
         Width = 1362
         Height = 307
+        ExplicitLeft = -112
+        ExplicitTop = -20
         ExplicitWidth = 1362
         ExplicitHeight = 307
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -303,6 +304,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = Return_Summ_10700
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = BranchName
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -320,7 +326,7 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 95
           end
           object RetailName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
@@ -459,7 +465,7 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 95
           end
           object PartnerTagName: TcxGridDBColumn
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1058#1058
@@ -1365,6 +1371,9 @@
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_byJuridical: TdsdPrintAction
       Category = 'DSDLib'
@@ -1398,6 +1407,9 @@
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1102#1088#1083#1080#1094#1072#1084
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -1432,6 +1444,9 @@
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_byStatGroup: TdsdPrintAction
       Category = 'DSDLib'
@@ -1465,6 +1480,9 @@
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1075#1088#1091#1087#1087#1077' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -2015,7 +2033,7 @@
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 112
-    Top = 128
+    Top = 176
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ShowDialogAction = ExecuteDialog
@@ -2048,7 +2066,7 @@
         Component = GuidesInfoMoney
       end>
     Left = 184
-    Top = 136
+    Top = 160
   end
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'

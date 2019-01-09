@@ -1058,7 +1058,8 @@ uses
   Report_HolidayCompensation in '..\..\Forms\Report\Report_HolidayCompensation.pas' {Report_HolidayCompensationForm: TParentForm},
   Report_HolidayCompensationDialog in '..\..\Forms\Report\Report_HolidayCompensationDialog.pas' {Report_HolidayCompensationDialogForm: TParentForm},
   Report_Goods_byMovementReal in '..\..\Forms\Report\Report_Goods_byMovementReal.pas' {Report_Goods_byMovementRealForm: TParentForm},
-  Member_Choice in '..\..\Forms\Guides\Member_Choice.pas' {Member_ChoiceForm: TParentForm};
+  Member_Choice in '..\..\Forms\Guides\Member_Choice.pas' {Member_ChoiceForm: TParentForm},
+  Report_Goods_byMovementRealDialog in '..\..\Forms\Report\Report_Goods_byMovementRealDialog.pas' {Report_Goods_byMovementRealDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

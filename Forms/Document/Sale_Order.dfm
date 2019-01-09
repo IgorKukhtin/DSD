@@ -2234,7 +2234,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       isShowModal = False
     end
     object actOpenFormPromo: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'Promo'
       TabSheet = tsMain
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1040#1082#1094#1080#1103'>'
@@ -2267,6 +2267,31 @@ inherited Sale_OrderForm: TSale_OrderForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actCheckRight: TdsdExecStoredProc
+      Category = 'Promo'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCheckRight
+      StoredProcList = <
+        item
+          StoredProc = spCheckRight
+        end>
+      Caption = 'actCheckRight'
+    end
+    object macOpenFormPromo: TMultiAction
+      Category = 'Promo'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCheckRight
+        end
+        item
+          Action = actOpenFormPromo
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1040#1082#1094#1080#1103'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1040#1082#1094#1080#1103'>'
+      ImageIndex = 29
     end
   end
   inherited MasterDS: TDataSource
@@ -2666,7 +2691,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       Category = 0
     end
     object bbPromo: TdxBarButton
-      Action = actOpenFormPromo
+      Action = macOpenFormPromo
       Category = 0
     end
   end
@@ -5283,5 +5308,14 @@ inherited Sale_OrderForm: TSale_OrderForm
     PackSize = 1
     Left = 936
     Top = 496
+  end
+  object spCheckRight: TdsdStoredProc
+    StoredProcName = 'gpCheckRight_Movement_Promo'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 248
+    Top = 344
   end
 end
