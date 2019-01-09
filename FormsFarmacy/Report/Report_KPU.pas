@@ -15,7 +15,7 @@ uses
   Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod, cxDropDownEdit, cxCalendar,
   dsdGuides, dxBarBuiltInMenu, cxNavigator, dxSkinsCore, dxSkinsDefaultPainters,
   dxSkinscxPCPainter, dxSkinsdxBarPainter, cxGridBandedTableView,
-  cxGridDBBandedTableView, cxCheckBox, cxBlobEdit, cxMemo;
+  cxGridDBBandedTableView, cxCheckBox, cxBlobEdit, cxMemo, dsdExportToXLSAction;
 
 type
   TReport_KPUForm = class(TAncestorReportForm)
@@ -64,6 +64,13 @@ type
     ControlRGNote: TcxGridDBBandedColumn;
     Color_Calc: TcxGridDBBandedColumn;
     TotalExecutionLine: TcxGridDBBandedColumn;
+    actExecSelectPrint_UserTimePenalty: TdsdExecStoredProc;
+    actPrint_UserTimePenalty: TMultiAction;
+    actExportToXLS_UserTimePenalty: TdsdExportToXLS;
+    dxBarButton1: TdxBarButton;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint_UserTimePenalty: TdsdStoredProc;
   private
     { Private declarations }
   public

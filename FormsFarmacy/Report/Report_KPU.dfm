@@ -681,6 +681,116 @@ inherited Report_KPUForm: TReport_KPUForm
       Caption = 'actUpdateMainDS'
       DataSource = MasterDS
     end
+    object actPrint_UserTimePenalty: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecSelectPrint_UserTimePenalty
+        end
+        item
+          Action = actExportToXLS_UserTimePenalty
+        end>
+      Caption = #1056#1072#1079#1074#1086#1088#1086#1090' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091' '#1074#1088#1077#1084#1077#1085#1080' '#1086#1087#1086#1079#1076#1072#1085#1080#1103
+      Hint = #1056#1072#1079#1074#1086#1088#1086#1090' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091' '#1074#1088#1077#1084#1077#1085#1080' '#1086#1087#1086#1079#1076#1072#1085#1080#1103
+      ImageIndex = 16
+    end
+    object actExecSelectPrint_UserTimePenalty: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectPrint_UserTimePenalty
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_UserTimePenalty
+        end>
+      Caption = 'actExecSelectPrint_UserTimePenalty'
+    end
+    object actExportToXLS_UserTimePenalty: TdsdExportToXLS
+      Category = 'DSDLib'
+      MoveParams = <>
+      ItemsDataSet = PrintItemsCDS
+      TitleDataSet = PrintHeaderCDS
+      FileName = 'UserTimePenalty'
+      TitleHeight = 3.000000000000000000
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -13
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = [fsBold]
+      HeaderFont.Charset = DEFAULT_CHARSET
+      HeaderFont.Color = clWindowText
+      HeaderFont.Height = -11
+      HeaderFont.Name = 'Tahoma'
+      HeaderFont.Style = [fsBold]
+      ColumnParams = <
+        item
+          Caption = #1044#1072#1090#1072
+          FieldName = 'OperDate'
+          DataType = ftDateTime
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 15
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1058#1080#1087' '#1076#1085#1103
+          FieldName = 'TypeDay'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 15
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1042#1088#1077#1084#1103' '#1087#1088#1080#1093#1086#1076#1072
+          FieldName = 'DateStart'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 15
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1052#1080#1085#1091#1090' '#1086#1087#1086#1079#1076#1072#1085#1080#1103
+          FieldName = 'MinutePenalty'
+          DataType = ftInteger
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 15
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1064#1090#1088#1072#1092' '#1079#1072' '#1086#1087#1086#1079#1076#1072#1085#1080#1103
+          FieldName = 'Penalty'
+          DataType = ftInteger
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 15
+          CalcColumnLists = <>
+          Round = False
+          Kind = skSumma
+        end>
+      Caption = 'actExportToXLS_UserTimePenalty'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 96
@@ -749,10 +859,18 @@ inherited Report_KPUForm: TReport_KPUForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end>
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actPrint_UserTimePenalty
       Category = 0
     end
   end
@@ -981,5 +1099,59 @@ inherited Report_KPUForm: TReport_KPUForm
     ParamKeyField = 'ioId'
     Left = 338
     Top = 96
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 340
+    Top = 249
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 340
+    Top = 198
+  end
+  object spSelectPrint_UserTimePenalty: TdsdStoredProc
+    StoredProcName = 'gpSelect_UserTimePenalty'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inDate'
+        Value = 'NULL'
+        Component = deStart
+        ComponentItem = 'Id'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UserID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UserName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 463
+    Top = 200
   end
 end
