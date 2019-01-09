@@ -197,10 +197,9 @@ BEGIN
                        INNER JOIN Container ON Container.Id = CLO_Personal.ContainerId AND Container.DescId = zc_Container_Summ()
                        INNER JOIN ContainerLinkObject AS CLO_InfoMoney
                                                       ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                       INNER JOIN ContainerLinkObject AS CLO_PersonalServiceList
+                       LEFT JOIN ContainerLinkObject AS CLO_PersonalServiceList
                                                       ON CLO_PersonalServiceList.ContainerId = Container.Id
                                                      AND CLO_PersonalServiceList.DescId = zc_ContainerLinkObject_PersonalServiceList()
-                                                     AND (CLO_PersonalServiceList.ObjectId = inPersonalServiceListId OR COALESCE (inPersonalServiceListId,0) = 0)
 
                        LEFT JOIN ContainerLinkObject AS CLO_Unit
                                                      ON CLO_Unit.ContainerId = Container.Id AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
@@ -224,6 +223,7 @@ BEGIN
                     AND (Container.ObjectId = inAccountId OR inAccountId = 0)
                     AND (CLO_Branch.ObjectId = inBranchId OR inBranchId = 0)
                     AND (ObjectDate_Service.ValueData = inServiceDate OR inIsServiceDate = FALSE)
+                    AND (CLO_PersonalServiceList.ObjectId = inPersonalServiceListId OR COALESCE (inPersonalServiceListId,0) = 0)
                   ) AS tmpContainer
                   LEFT JOIN MovementItemContainer AS MIContainer
                                                   ON MIContainer.Containerid = tmpContainer.ContainerId

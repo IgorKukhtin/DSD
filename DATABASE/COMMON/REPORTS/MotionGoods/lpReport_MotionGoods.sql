@@ -511,6 +511,7 @@ BEGIN
                                        , _tmpContainer.AccountGroupId
 
                                        , CASE WHEN MovementBoolean_Peresort.ValueData = TRUE
+                                               AND inIsInfoMoney = FALSE
                                                    THEN -1
                                               WHEN MIContainer.MovementDescId IN (zc_Movement_SendOnPrice(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
                                                AND inIsInfoMoney = FALSE
@@ -942,6 +943,7 @@ BEGIN
                                          , _tmpContainer.AccountId
                                          , _tmpContainer.AccountGroupId
                                          , CASE WHEN MovementBoolean_Peresort.ValueData = TRUE
+                                                 AND inIsInfoMoney = FALSE
                                                      THEN -1
                                                 WHEN MIContainer.MovementDescId IN (zc_Movement_SendOnPrice(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
                                                  AND inIsInfoMoney = FALSE

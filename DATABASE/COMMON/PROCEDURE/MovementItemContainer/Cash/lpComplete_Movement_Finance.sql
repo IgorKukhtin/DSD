@@ -585,7 +585,7 @@ BEGIN
                                                                             , inObjectId_5        := _tmpItem.PositionId
                                                                             , inDescId_6          := zc_ContainerLinkObject_ServiceDate()
                                                                             , inObjectId_6        := _tmpItem.ServiceDateId
-                                                                            , inDescId_7          := zc_ContainerLinkObject_PersonalServiceList()
+                                                                            , inDescId_7          := CASE WHEN _tmpItem.PersonalServiceListId = 0 THEN NULL ELSE zc_ContainerLinkObject_PersonalServiceList() END
                                                                             , inObjectId_7        := _tmpItem.PersonalServiceListId
                                                                              )
                                             WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner())

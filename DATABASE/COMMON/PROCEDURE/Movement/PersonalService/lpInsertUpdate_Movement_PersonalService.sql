@@ -18,14 +18,19 @@ $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
    DECLARE vbMovementId_check Integer;
+   DECLARE vbIsAll Boolean;
 BEGIN
+     -- !!!
+     vbIsAll:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId);
+
+
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate)
      THEN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
      -- проверка
-     IF COALESCE (inPersonalServiceListId, 0) = 0
+     IF COALESCE (inPersonalServiceListId, 0) = 0 AND vbIsAll = FALSE
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлено значение <Ведомость начисления>.';
      END IF;
@@ -64,7 +69,18 @@ BEGIN
      ELSE*/
          -- определяем ключ доступа
          -- vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalService());
-         vbAccessKeyId:= lpGetAccessKey ((SELECT tmp.ObjectId
+         vbAccessKeyId:= CASE WHEN vbIsAll = TRUE
+                               AND NOT EXISTS (SELECT 1
+                                               FROM ObjectLink
+                                                    INNER JOIN ObjectLink AS ObjectLink_User_Member ON ObjectLink_User_Member.ChildObjectId = ObjectLink.ChildObjectId
+                                                                                                   AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                               WHERE ObjectLink.DescId   = zc_ObjectLink_PersonalServiceList_Member()
+                                                 AND ObjectLink.ObjectId = inPersonalServiceListId
+                                              )
+                        -- THEN zc_Enum_Process_AccessKey_PersonalServiceAdmin()
+                        THEN lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalService())
+                        ELSE
+                         lpGetAccessKey ((SELECT tmp.ObjectId
                                           FROM
                                          (SELECT ObjectLink_User_Member.ObjectId
                                           FROM ObjectLink
@@ -85,7 +101,8 @@ BEGIN
                                           LIMIT 1
                                          )
                                        , zc_Enum_Process_InsertUpdate_Movement_PersonalService()
-                                        );
+                                        )
+                        END;
      -- END IF;
 
 

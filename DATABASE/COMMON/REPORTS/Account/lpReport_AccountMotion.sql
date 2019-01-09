@@ -53,6 +53,7 @@ RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, OperD
 AS
 $BODY$
    DECLARE vbIsMovement Boolean;
+   DECLARE vbIsAll Boolean;
 BEGIN
 
      -- Блокируем ему просмотр
@@ -62,8 +63,9 @@ BEGIN
          RETURN;
      END IF;
 
-    --
-    -- RAISE EXCEPTION 'vbIsMovement = <%>', vbIsMovement;
+     -- !!!
+     vbIsAll:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId);
+
 
     -- оптимизация
     CREATE TEMP TABLE tmpContainer ON COMMIT DROP
@@ -77,7 +79,7 @@ BEGIN
                    OR (Object_Account_View.AccountDirectionId = COALESCE (inAccountDirectionId, 0) AND COALESCE (inAccountId, 0) = 0)
                    OR Object_Account_View.AccountId = COALESCE (inAccountId, 0)
                      )
-                  OR (EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
+                  OR (vbIsAll = TRUE
                   AND COALESCE (inAccountGroupId, 0) = 0 AND COALESCE (inAccountDirectionId, 0) = 0 AND COALESCE (inAccountId, 0) = 0
                      )
                 ) AS tmpAccount -- счет
@@ -602,6 +604,7 @@ BEGIN
       AND (View_ProfitLoss_inf.ProfitLossId = inProfitLossId OR 0 = inProfitLossId)
       AND (COALESCE (View_InfoMoney.InfoMoneyGroupId, 0) <> zc_Enum_InfoMoneyGroup_60000() -- Заработная плата
         OR View_Account.AccountGroupId = zc_Enum_AccountGroup_110000 () -- Транзит
+        OR vbIsAll = TRUE
           )
       AND (tmpReport.MovementDescId = inMovementDescId OR inMovementDescId = 0)
     ;

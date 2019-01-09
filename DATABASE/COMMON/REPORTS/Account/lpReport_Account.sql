@@ -48,6 +48,7 @@ RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, Movem
 AS
 $BODY$
    DECLARE vbIsMovement Boolean;
+   DECLARE vbIsAll Boolean;
 BEGIN
 
      -- Блокируем ему просмотр
@@ -56,6 +57,10 @@ BEGIN
          inUserId:= NULL;
          RETURN;
      END IF;
+     
+
+     -- !!!
+     vbIsAll:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId);
 
 
     -- !!!определяется - будет ли разворачиваться по документам для Прибыль текущего периода
@@ -89,12 +94,14 @@ BEGIN
     -- Результат
     RETURN QUERY
     WITH tmpContainer AS  (SELECT Container.Id AS ContainerId, Container.ObjectId AS AccountId, Container.Amount, ContainerLO_Business.ObjectId AS BusinessId
-                           FROM (SELECT AccountId FROM Object_Account_View WHERE Object_Account_View.AccountDirectionId <> zc_Enum_AccountDirection_70500() -- Кредиторы + Сотрудники
+                           FROM (SELECT AccountId FROM Object_Account_View WHERE ((Object_Account_View.AccountDirectionId <> zc_Enum_AccountDirection_70500() -- Кредиторы + Сотрудники
                                                                              AND Object_Account_View.AccountCode NOT IN (100101 -- Собственный капитал + Первоначальный капитал + Первоначальный капитал
                                                                                                                        , 100201 -- Собственный капитал + Дополнительный капитал + Дополнительный капитал
                                                                                                                        , 100401 -- Собственный капитал + Расчеты с участниками + Расчеты с участниками
                                                                                                                        , 100501 -- Собственный капитал + Прибыль накопленная + Прибыль накопленная
                                                                                                                         )
+                                                                                  )
+                                                                               OR vbIsAll = TRUE)
                                  AND (
                                    -- !!!ONLY!!! inAccountId OR inAccountGroupId OR inAccountDirectionId
                                   /*((Object_Account_View.AccountGroupId = COALESCE (inAccountGroupId, 0) OR COALESCE (inAccountGroupId, 0) = 0) 
@@ -105,7 +112,7 @@ BEGIN
                                 OR (Object_Account_View.AccountDirectionId = COALESCE (inAccountDirectionId, 0) AND COALESCE (inAccountId, 0) = 0)
                                 OR Object_Account_View.AccountId = COALESCE (inAccountId, 0)
                                   )
-                               OR (EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
+                               OR (vbIsAll = TRUE
                                AND COALESCE (inAccountGroupId, 0) = 0 AND COALESCE (inAccountDirectionId, 0) = 0 AND COALESCE (inAccountId, 0) = 0
                                   ))
                                 ) AS tmpAccount -- счет
@@ -525,6 +532,7 @@ BEGIN
       AND (View_ProfitLoss_inf.ProfitLossId = inProfitLossId OR 0 = inProfitLossId)
       AND (COALESCE (View_InfoMoney.InfoMoneyGroupId, 0) <> zc_Enum_InfoMoneyGroup_60000() -- Заработная плата
         OR View_Account.AccountGroupId = zc_Enum_AccountGroup_110000 () -- Транзит
+        OR vbIsAll = TRUE
           )
     ;
 

@@ -51,7 +51,8 @@ BEGIN
          INSERT INTO _tmpUnit (UnitId)
            SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect
           UNION 
-           SELECT inUnitId;
+           SELECT inUnitId
+          ;
      END IF;
 
 

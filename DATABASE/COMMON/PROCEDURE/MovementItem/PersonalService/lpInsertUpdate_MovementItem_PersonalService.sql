@@ -111,7 +111,18 @@ BEGIN
 
      -- !!!ВАЖНО!!!
      -- определяем ключ доступа
-     vbAccessKeyId:= lpGetAccessKey ((SELECT ObjectLink_User_Member.ObjectId
+     vbAccessKeyId:= CASE WHEN EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
+                               AND NOT EXISTS (SELECT 1
+                                               FROM ObjectLink
+                                                    INNER JOIN ObjectLink AS ObjectLink_User_Member ON ObjectLink_User_Member.ChildObjectId = ObjectLink.ChildObjectId
+                                                                                                   AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                               WHERE ObjectLink.DescId   = zc_ObjectLink_PersonalServiceList_Member()
+                                                 AND ObjectLink.ObjectId = (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList())
+                                              )
+                        -- THEN zc_Enum_Process_AccessKey_PersonalServiceAdmin()
+                        THEN lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalService())
+                        ELSE
+                     lpGetAccessKey ((SELECT ObjectLink_User_Member.ObjectId
                                       FROM ObjectLink
                                            INNER JOIN ObjectLink AS ObjectLink_User_Member ON ObjectLink_User_Member.ChildObjectId = ObjectLink.ChildObjectId
                                                                                           AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
@@ -120,7 +131,8 @@ BEGIN
                                        LIMIT 1
                                      )
                                    , zc_Enum_Process_InsertUpdate_Movement_PersonalService()
-                                    );
+                                    )
+                     END;
      -- !!!ВАЖНО!!!
      UPDATE Movement SET AccessKeyId = vbAccessKeyId WHERE Id = inMovementId;
 

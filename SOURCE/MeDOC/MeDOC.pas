@@ -1133,7 +1133,8 @@ begin
           begin
             ROWNUM := i;
             //Nil_ := false;
-            NodeValue := '20';
+            //NodeValue := '20';
+            NodeValue := ReplaceStr(FormatFloat('0.##', HeaderDataSet.FieldByName('VATPercent').AsFloat), FormatSettings.DecimalSeparator, '.');
           end;
           //
           inc(i);

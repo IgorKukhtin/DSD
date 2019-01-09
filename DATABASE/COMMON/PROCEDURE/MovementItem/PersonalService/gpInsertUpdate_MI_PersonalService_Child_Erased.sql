@@ -27,6 +27,9 @@ BEGIN
      END IF;
 
 
+     -- !!!ОТКЛЮЧИЛИ - ВСЕГДА СУММИРОВАНИЕ!!!
+     RETURN;
+
 
     -- поиск документа (ключ - Месяц начислений + ведомость) - ТОЛЬКО ОДИН
     vbMovementId:= (SELECT MovementDate_ServiceDate.MovementId

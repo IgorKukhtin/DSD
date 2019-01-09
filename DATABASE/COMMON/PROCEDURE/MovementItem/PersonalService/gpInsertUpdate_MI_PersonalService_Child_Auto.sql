@@ -321,12 +321,15 @@ BEGIN
 
     IF COALESCE (vbIsAuto, TRUE) = TRUE
     THEN
-       vbSummService := (SELECT SUM (MovementItem.Amount) AS Amount
+       /*vbSummService := (SELECT SUM (MovementItem.Amount) AS Amount
                          FROM MovementItem
                          WHERE MovementItem.ParentId = vbId_Master
                            AND MovementItem.DescId   = zc_MI_Child()
                            AND MovementItem.isErased = FALSE
-                        );
+                        );*/
+
+       vbSummService := COALESCE ((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = vbId_Master), 0)
+                      + COALESCE (inAmount, 0);
 
        -- обновляем сумму мастера = итого по чайлд
        PERFORM lpInsertUpdate_MovementItem_PersonalService (ioId                     := vbId_Master

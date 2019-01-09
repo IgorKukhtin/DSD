@@ -55,7 +55,22 @@ BEGIN
            SELECT Object.Id
            FROM Object
            WHERE (Object.Id = inUnitId OR inUnitId =0)
-             AND Object.DescId = zc_Object_Unit();
+             AND Object.DescId = zc_Object_Unit()
+          ;
+     ELSE
+         INSERT INTO _tmpUnit (UnitId)
+           SELECT Object.Id
+           FROM Object
+                INNER JOIN ObjectLink AS OL_Unit_Branch ON OL_Unit_Branch.ObjectId = Object.Id AND OL_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch() AND OL_Unit_Branch.ChildObjectId > 0
+           WHERE Object.DescId = zc_Object_Unit()
+          UNION
+           SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8460) AS lfSelect
+          UNION 
+           SELECT Object.Id
+           FROM Object
+           WHERE Object.Id     = 8459
+             AND Object.DescId = zc_Object_Unit()
+          ;
      END IF;
 
 
@@ -116,16 +131,18 @@ BEGIN
                                , MIContainer.OperDate
                                , MovementLinkMovement_Order.MovementChildId    AS MovementId_Order
                                , MIContainer.ObjectId_Analyzer                 AS GoodsId
-                               , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE THEN  1 * MIContainer.Amount ELSE 0 END) AS Sale_Summ
+
+                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId <> zc_Enum_AnalyzerId_SaleSumm_10500() AND tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE THEN  1 * MIContainer.Amount ELSE 0 END) AS Sale_Summ
                                , SUM (CASE WHEN tmpAnalyzer.isSale = FALSE AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Return_Summ
- 
-                               , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_Amount
+                                 -- 
+                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId <> zc_Enum_AnalyzerId_SaleCount_10500() AND tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_Amount
+                               -- , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_40200() AND tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_Amount
                                , SUM (CASE WHEN tmpAnalyzer.isSale = FALSE AND tmpAnalyzer.isSumm = FALSE THEN  1 * MIContainer.Amount ELSE 0 END) AS Return_Amount
- 
+                                 -- 
                                , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()     THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_AmountPartner
                                , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800() THEN  1 * MIContainer.Amount ELSE 0 END) AS Return_AmountPartner
                                
-                               , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = FALSE AND MIContainer.OperDate = inEndDate THEN -1 * MIContainer.Amount ELSE 0 END)  AS SaleAmountDay
+                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId <> zc_Enum_AnalyzerId_SaleCount_10500() AND tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = FALSE AND MIContainer.OperDate = inEndDate THEN -1 * MIContainer.Amount ELSE 0 END)  AS SaleAmountDay
                                , SUM (CASE WHEN tmpAnalyzer.isSale = FALSE AND tmpAnalyzer.isSumm = FALSE AND MIContainer.OperDate = inEndDate THEN  1 * MIContainer.Amount ELSE 0 END)  AS ReturnAmountDay
                                
                                , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()     AND MIContainer.OperDate = inEndDate THEN -1 * MIContainer.Amount ELSE 0 END) AS SaleAmountPartnerDay
@@ -143,6 +160,7 @@ BEGIN
                                LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                                               ON MovementLinkMovement_Order.MovementId = MIContainer.MovementId
                                                              AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+ 
 
                           GROUP BY MIContainer.MovementId
                                  , MIContainer.ObjectId_Analyzer
@@ -871,6 +889,4 @@ $BODY$
 */
 
 -- тест
---select * from gpReport_Goods_byMovementReal (inStartDate := ('01.12.2018')::TDateTime , inEndDate := ('25.12.2018')::TDateTime , inUnitId := 8459 , inUnitGroupId := 8460 , inGoodsGroupGPId := 1832 , inGoodsGroupId := 1979 , inWeek := 'False' ::Boolean, inMonth := 'False'::Boolean ,  inSession := '5' ::TVarChar);
-
-   
+-- SELECT * FROM gpReport_Goods_byMovementReal (inStartDate := ('01.12.2018')::TDateTime , inEndDate := ('25.12.2018')::TDateTime , inUnitId := 8459 , inUnitGroupId := 8460 , inGoodsGroupGPId := 1832 , inGoodsGroupId := 1979 , inWeek := 'False' ::Boolean, inMonth := 'False'::Boolean ,  inSession := '5' ::TVarChar);
