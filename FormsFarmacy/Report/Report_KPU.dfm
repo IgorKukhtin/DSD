@@ -81,7 +81,7 @@ inherited Report_KPUForm: TReport_KPUForm
               Caption = #1057#1088#1077#1076#1085#1080#1081' '#1095#1077#1082
             end
             item
-              Caption = #1042#1088#1077#1084#1103
+              Caption = #1042#1088#1077#1084#1103' '#1086#1087#1086#1079#1076#1072#1085#1080#1103
               Width = 66
             end
             item
@@ -282,7 +282,7 @@ inherited Report_KPUForm: TReport_KPUForm
             Position.RowIndex = 0
           end
           object LateTimeRatio: TcxGridDBBandedColumn
-            Caption = #1086#1087#1086#1079#1076#1072#1085#1080#1103' 3. '#1050#1086#1101#1092'.'
+            Caption = '3. '#1050#1086#1101#1092'.'
             DataBinding.FieldName = 'LateTimeRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -762,7 +762,7 @@ inherited Report_KPUForm: TReport_KPUForm
           CalcColumnLists = <>
         end
         item
-          Caption = #1052#1080#1085#1091#1090' '#1086#1087#1086#1079#1076#1072#1085#1080#1103
+          Caption = #1042#1088#1077#1084#1103' '#1086#1087#1086#1079#1076#1072#1085#1080#1103
           FieldName = 'MinutePenalty'
           DataType = ftInteger
           DecimalPlace = 0

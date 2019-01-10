@@ -19,10 +19,11 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
 
-     vbOperDate:= DATE_TRUNC ('DAY', inDate);
+     vbOperDate:= DATE_TRUNC ('MONTH', inDate);
 
      OPEN cur1 FOR SELECT 'Разворот по сотруднику '||inUserName||' времени опоздания за '||
-       to_char(DATE_TRUNC ('DAY', vbOperDate), 'MM.YYYY') as Title;
+       to_char(DATE_TRUNC ('DAY', vbOperDate), 'MM.YYYY')::TVarChar as Title,
+       1::Integer as ID;
      RETURN NEXT cur1;
 
      CREATE TEMP TABLE tmpCurrOperDate ON COMMIT DROP AS
@@ -73,4 +74,4 @@ ALTER FUNCTION gpSelect_UserTimePenalty (TDateTime, Integer, TVarChar, TVarChar)
 */
 
 -- тест
--- select * from gpSelect_UserTimePenalty(inDate:= '01.12.2018', inUserID := 6002014, inUserName := 'sadfssad', inSession := '4183126');
+-- select * from gpSelect_UserTimePenalty(inDate:= '31.12.2018', inUserID := 6002014, inUserName := 'sadfssad', inSession := '4183126');

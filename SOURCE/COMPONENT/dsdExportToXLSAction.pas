@@ -559,7 +559,8 @@ begin
           begin
             if not FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).IsNull then
               case FColumnParams.Items[I].DataType of
-                ftSmallint, ftInteger, ftWord, ftAutoInc, ftLargeint, ftBytes : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsLargeInt;
+                ftAutoInc, ftLargeint : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsExtended;
+                ftSmallint, ftInteger, ftWord, ftBytes : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsInteger;
                 ftDate, ftTime, ftDateTime : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsDateTime;
                 ftFloat, ftCurrency, ftBCD : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsExtended;
                 ftBoolean : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsBoolean;
@@ -682,10 +683,16 @@ begin
       xlBook.SaveAs(ExtractFilePath(ParamStr(0)) + FFileName)
     else xlBook.SaveAs(ExtractFilePath(ParamStr(0)) + 'ExportToXLS');
     xlApp.Application.ScreenUpdating := true;
+    xlApp.WindowState := $FFFFEFD4;
+    xlApp.WindowState := $FFFFEFD7 or $FFFFEFD1;
     xlApp.Visible := True;
   finally
 
   end;
 end;
+
+initialization
+
+  System.Variants.DispatchUnsignedAsSigned := True;
 
 end.
