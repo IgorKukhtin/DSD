@@ -26,6 +26,31 @@ BEGIN
      END IF;
 
 
+if inSession = '5' 
+then
+    -- поиск документа (ключ - Месяц начислений + ведомость) - ТОЛЬКО ОДИН
+    vbMovementId:= (SELECT MovementDate_ServiceDate.MovementId
+                    FROM MovementDate AS MovementDate_ServiceDate
+                         INNER JOIN Movement ON Movement.Id       = MovementDate_ServiceDate.MovementId
+                                            AND Movement.DescId   = zc_Movement_PersonalService()
+                                            AND Movement.StatusId <> zc_Enum_Status_Erased()
+                         INNER JOIN MovementLinkObject AS MLO_PersonalServiceList
+                                                       ON MLO_PersonalServiceList.MovementId = Movement.Id
+                                                      AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                                                      AND MLO_PersonalServiceList.ObjectId   = inPersonalServiceListId
+                         INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                AND MovementItem.DescId     = zc_MI_Child()
+                                                AND MovementItem.isErased   = FALSE
+
+                         LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                                   ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                                  AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+                    WHERE MovementDate_ServiceDate.ValueData = DATE_TRUNC ('MONTH', inEndDate)  + INTERVAL '1 MONTH'
+                      AND MovementDate_ServiceDate.DescId    = zc_MovementDate_ServiceDate()
+                    ORDER BY CASE WHEN MovementBoolean_isAuto.ValueData = TRUE THEN 0 ELSE 1 END, MovementDate_ServiceDate.MovementId
+                    LIMIT 1
+                   );
+else
     -- поиск документа (ключ - Месяц начислений + ведомость) - ТОЛЬКО ОДИН
     vbMovementId:= (SELECT MovementDate_ServiceDate.MovementId
                     FROM MovementDate AS MovementDate_ServiceDate
@@ -48,6 +73,8 @@ BEGIN
                     ORDER BY CASE WHEN MovementBoolean_isAuto.ValueData = TRUE THEN 0 ELSE 1 END, MovementDate_ServiceDate.MovementId
                     LIMIT 1
                    );
+end if;
+                   
 
 
       IF vbMovementId > 0
@@ -60,15 +87,15 @@ BEGIN
                                                              , inSummService            := 0 -- !!!обнулим сумму!!!
                                                              , inSummCardRecalc         := 0
                                                              , inSummCardSecondRecalc   := 0
-                                                             , inSummCardSecondCash     := MIFloat_SummCardSecondCash.ValueData
+                                                             , inSummCardSecondCash     := COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
                                                              , inSummNalogRecalc        := 0
                                                              , inSummNalogRetRecalc     := 0
-                                                             , inSummMinus              := MIFloat_SummMinus.ValueData
-                                                             , inSummAdd                := MIFloat_SummAdd.ValueData
-                                                             , inSummAddOthRecalc       := MIFloat_SummAddOthRecalc.ValueData
-                                                             , inSummHoliday            := MIFloat_SummHoliday.ValueData
-                                                             , inSummSocialIn           := MIFloat_SummSocialIn.ValueData
-                                                             , inSummSocialAdd          := MIFloat_SummSocialAdd.ValueData
+                                                             , inSummMinus              := COALESCE (MIFloat_SummMinus.ValueData, 0)
+                                                             , inSummAdd                := COALESCE (MIFloat_SummAdd.ValueData, 0)
+                                                             , inSummAddOthRecalc       := COALESCE (MIFloat_SummAddOthRecalc.ValueData, 0)
+                                                             , inSummHoliday            := COALESCE (MIFloat_SummHoliday.ValueData, 0)
+                                                             , inSummSocialIn           := COALESCE (MIFloat_SummSocialIn.ValueData, 0)
+                                                             , inSummSocialAdd          := COALESCE (MIFloat_SummSocialAdd.ValueData, 0)
                                                              , inSummChildRecalc        := 0
                                                              , inSummMinusExtRecalc     := 0
                                                              , inComment                := MIString_Comment.ValueData
@@ -84,7 +111,7 @@ BEGIN
                                               ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
                                              AND MIBoolean_isAuto.DescId         = zc_MIBoolean_isAuto()
                                              AND MIBoolean_isAuto.ValueData      = TRUE
-               -- ограничиваем подразделением
+                -- ограничиваем подразделением
                INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                  ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                                 AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
@@ -96,6 +123,10 @@ BEGIN
                LEFT JOIN MovementItemString AS MIString_Comment
                                             ON MIString_Comment.MovementItemId = MovementItem.Id
                                            AND MIString_Comment.DescId = zc_MIString_Comment()
+
+               LEFT JOIN MovementItemFloat AS MIFloat_SummService
+                                           ON MIFloat_SummService.MovementItemId = MovementItem.Id
+                                          AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
 
                LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondCash
                                            ON MIFloat_SummCardSecondCash.MovementItemId = MovementItem.Id
@@ -135,22 +166,35 @@ BEGIN
 
           WHERE MovementItem.MovementId = vbMovementId
             AND MovementItem.DescId     = zc_MI_Master()
-            AND MovementItem.isErased   = FALSE;
+            AND MovementItem.isErased   = FALSE
+            -- может так будет быстрее, если уже 1 раз обнулили ...
+            AND MIFloat_SummService.ValueData <> 0
+           ;
 
 
           -- удалим
-          PERFORM lpSetErased_MovementItem (inMovementItemId:= MovementItem.Id
+          PERFORM lpSetErased_MovementItem (inMovementItemId:= tmp.Id
                                           , inUserId        := vbUserId
                                            )
-          FROM MovementItem
-               -- удаляем только чайлды у которых в мастере тек. подразделение
-               INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                 ON MILinkObject_Unit.MovementItemId = MovementItem.ParentId
-                                                AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
-                                                AND MILinkObject_Unit.ObjectId       = inUnitId
-          WHERE MovementItem.MovementId = vbMovementId
-            AND MovementItem.DescId     = zc_MI_Child()
-            AND MovementItem.isErased   = FALSE;
+          FROM (WITH tmpMI_Master AS (SELECT MovementItem.Id
+                                      FROM MovementItem
+                                           -- удаляем только чайлды у которых в мастере тек. подразделение
+                                           INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                                            AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
+                                                                            AND MILinkObject_Unit.ObjectId       = inUnitId
+                                      WHERE MovementItem.MovementId = vbMovementId
+                                        AND MovementItem.DescId     = zc_MI_Master()
+                                        AND MovementItem.isErased   = FALSE
+                                     )
+
+                SELECT MovementItem.Id
+                FROM MovementItem
+                WHERE MovementItem.MovementId = vbMovementId
+                  AND MovementItem.DescId     = zc_MI_Child()
+                  AND MovementItem.isErased   = FALSE
+                  AND MovementItem.ParentId IN (SELECT DISTINCT tmpMI_Master.Id FROM tmpMI_Master)
+               ) AS tmp;
 
     END IF;
 

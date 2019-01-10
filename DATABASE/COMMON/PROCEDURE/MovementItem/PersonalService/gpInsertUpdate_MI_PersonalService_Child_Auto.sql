@@ -148,6 +148,33 @@ BEGIN
      END IF;
 
 
+if inSession = '5' 
+then
+    -- поиск документа (ключ - Месяц начислений + ведомость) - ТОЛЬКО ОДИН
+    SELECT MovementDate_ServiceDate.MovementId
+         , MLO_Juridical.ObjectId AS JuridicalId -- на которое происходит начисление(соц выплаты)
+           INTO vbMovementId, vbJuridicalId
+    FROM MovementDate AS MovementDate_ServiceDate
+        INNER JOIN Movement ON Movement.Id       = MovementDate_ServiceDate.MovementId
+                           AND Movement.DescId   = zc_Movement_PersonalService()
+                           AND Movement.StatusId <> zc_Enum_Status_Erased()
+        INNER JOIN MovementLinkObject AS MLO_PersonalServiceList
+                                      ON MLO_PersonalServiceList.MovementId = Movement.Id
+                                     AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                                     AND MLO_PersonalServiceList.ObjectId   = inPersonalServiceListId
+        LEFT JOIN MovementLinkObject AS MLO_Juridical
+                                     ON MLO_Juridical.MovementId = Movement.Id
+                                    AND MLO_Juridical.DescId     = zc_MovementLinkObject_Juridical()
+
+        LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                  ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                 AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+    WHERE MovementDate_ServiceDate.ValueData = DATE_TRUNC ('MONTH', inEndDate) + INTERVAL '1 MONTH'
+      AND MovementDate_ServiceDate.DescId    = zc_MovementDate_ServiceDate()
+    ORDER BY CASE WHEN MovementBoolean_isAuto.ValueData = TRUE THEN 0 ELSE 1 END, MovementDate_ServiceDate.MovementId
+    LIMIT 1
+   ;
+else
     -- поиск документа (ключ - Месяц начислений + ведомость) - ТОЛЬКО ОДИН
     SELECT MovementDate_ServiceDate.MovementId
          , MLO_Juridical.ObjectId AS JuridicalId -- на которое происходит начисление(соц выплаты)
@@ -172,11 +199,25 @@ BEGIN
     ORDER BY CASE WHEN MovementBoolean_isAuto.ValueData = TRUE THEN 0 ELSE 1 END, MovementDate_ServiceDate.MovementId
     LIMIT 1
    ;
-
+end if;
 
       IF COALESCE (vbMovementId, 0) = 0
       THEN
           -- сохранили новый <Документ>
+if inSession = '5' 
+then
+          vbMovementId := lpInsertUpdate_Movement_PersonalService (ioId                      := 0
+                                                                 , inInvNumber               := CAST (NEXTVAL ('Movement_PersonalService_seq') AS TVarChar) --inInvNumber
+                                                                 , inOperDate                := inEndDate
+                                                                 , inServiceDate             := DATE_TRUNC ('MONTH', inEndDate)  + INTERVAL '1 MONTH'
+                                                                 , inComment                 := '' :: TVarChar
+                                                                 , inPersonalServiceListId   := inPersonalServiceListId
+                                                                 , inJuridicalId             := vbJuridicalId
+                                                                 , inUserId                  := vbUserId
+                                                                  );
+          -- сохранили свойство <создан автоматически>
+          PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), vbMovementId, TRUE);
+else
           vbMovementId := lpInsertUpdate_Movement_PersonalService (ioId                      := 0
                                                                  , inInvNumber               := CAST (NEXTVAL ('Movement_PersonalService_seq') AS TVarChar) --inInvNumber
                                                                  , inOperDate                := inEndDate
@@ -188,7 +229,7 @@ BEGIN
                                                                   );
           -- сохранили свойство <создан автоматически>
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), vbMovementId, TRUE);
-
+end if;
       END IF;
 
 
@@ -321,15 +362,14 @@ BEGIN
 
     IF COALESCE (vbIsAuto, TRUE) = TRUE
     THEN
-       /*vbSummService := (SELECT SUM (MovementItem.Amount) AS Amount
+       vbSummService := (SELECT SUM (MovementItem.Amount) AS Amount
                          FROM MovementItem
                          WHERE MovementItem.ParentId = vbId_Master
                            AND MovementItem.DescId   = zc_MI_Child()
                            AND MovementItem.isErased = FALSE
-                        );*/
-
-       vbSummService := COALESCE ((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = vbId_Master), 0)
-                      + COALESCE (inAmount, 0);
+                        );
+       -- vbSummService := COALESCE ((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = vbId_Master), 0)
+       --                + COALESCE (inAmount, 0);
 
        -- обновляем сумму мастера = итого по чайлд
        PERFORM lpInsertUpdate_MovementItem_PersonalService (ioId                     := vbId_Master
