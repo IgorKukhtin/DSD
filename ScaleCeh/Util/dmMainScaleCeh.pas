@@ -30,6 +30,8 @@ type
     // Scale + ScaleCeh
     function gpGet_Scale_Movement_checkId(var execParamsMovement:TParams): Boolean;
     function lpGet_BranchName(inBranchCode:Integer): String;
+    // ScaleCeh
+    function lpGet_UnitName(inUnitId:Integer): String;
     //
     // +++ScaleCeh+++
     function gpGet_ScaleCeh_Movement(var execParamsMovement:TParams;isLast,isNext:Boolean): Boolean;
@@ -599,6 +601,22 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
+function TDMMainScaleCehForm.lpGet_UnitName(inUnitId:Integer): String;
+begin
+    with spSelect do
+    if inUnitId > 0 then
+    begin
+       StoredProcName:='gpExecSql_Value';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inSqlText', ftString, ptInput, 'SELECT Object.ValueData FROM Object WHERE Object.Id = '+ IntToStr(inUnitId) + ' AND Object.DescId = zc_Object_Unit()');
+       Execute;
+       Result:=DataSet.FieldByName('Value').asString;
+    end
+    else Result:='';
+end;
+{------------------------------------------------------------------------}
+{------------------------------------------------------------------------}
 function TDMMainScaleCehForm.lpGet_BranchName(inBranchCode:Integer): String;
 begin
     with spSelect do
@@ -807,6 +825,19 @@ begin
   begin
        SettingMain.WeightSkewer1:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightSkewer1'));
        SettingMain.WeightSkewer2:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightSkewer2'));
+
+       try SettingMain.UnitId1:= StrToInt(GetArrayList_Value_byName(Default_Array,'UnitId1')); except SettingMain.UnitId1:= 0; end;
+       try SettingMain.UnitId2:= StrToInt(GetArrayList_Value_byName(Default_Array,'UnitId2')); except SettingMain.UnitId2:= 0; end;
+       try SettingMain.UnitId3:= StrToInt(GetArrayList_Value_byName(Default_Array,'UnitId3')); except SettingMain.UnitId3:= 0; end;
+       try SettingMain.UnitId4:= StrToInt(GetArrayList_Value_byName(Default_Array,'UnitId4')); except SettingMain.UnitId4:= 0; end;
+       try SettingMain.UnitId5:= StrToInt(GetArrayList_Value_byName(Default_Array,'UnitId5')); except SettingMain.UnitId5:= 0; end;
+
+       SettingMain.UnitName1:= DMMainScaleCehForm.lpGet_UnitName(SettingMain.UnitId1);
+       SettingMain.UnitName2:= DMMainScaleCehForm.lpGet_UnitName(SettingMain.UnitId2);
+       SettingMain.UnitName3:= DMMainScaleCehForm.lpGet_UnitName(SettingMain.UnitId3);
+       SettingMain.UnitName4:= DMMainScaleCehForm.lpGet_UnitName(SettingMain.UnitId4);
+       SettingMain.UnitName5:= DMMainScaleCehForm.lpGet_UnitName(SettingMain.UnitId5);
+
   end;
   //
   Result:=true;

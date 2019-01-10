@@ -1,4 +1,4 @@
--- Function: gpReport_Balance()
+ -- Function: gpReport_Balance()
 
 DROP FUNCTION IF EXISTS gpReport_Balance (TDateTime, TDateTime, TVarChar);
 
@@ -231,10 +231,10 @@ end if;*/
                 (SELECT Container.ObjectId AS AccountId
                       , Container.Id AS ContainerId
                       -- , Container.ParentId
-                      -- , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  1 * MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
-                      -- , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
-                      , COALESCE (SUM (CASE WHEN  MIContainer.isActive = TRUE  AND COALESCE (MIContainer.AccountId, 0) <> zc_Enum_Account_100301()  AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  1 * MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
-                      , COALESCE (SUM (CASE WHEN (MIContainer.isActive = FALSE OR  COALESCE (MIContainer.AccountId, 0) =  zc_Enum_Account_100301()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
+                      , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  1 * MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
+                      , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
+                      -- , COALESCE (SUM (CASE WHEN  MIContainer.isActive = TRUE  AND COALESCE (MIContainer.AccountId, 0) <> zc_Enum_Account_100301()  AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  1 * MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
+                      -- , COALESCE (SUM (CASE WHEN (MIContainer.isActive = FALSE OR  COALESCE (MIContainer.AccountId, 0) =  zc_Enum_Account_100301()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
                       , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS AmountRemainsStart
                  FROM Container
                       LEFT JOIN MovementItemContainer AS MIContainer
@@ -252,10 +252,11 @@ end if;*/
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
                                               ON ContainerLinkObject_InfoMoney.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
+                /*LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
                                               ON ContainerLinkObject_InfoMoneyDetail.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
                                              AND ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
+                                             */
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Cash
                                               ON ContainerLinkObject_Cash.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_Cash.DescId = zc_ContainerLinkObject_Cash()
@@ -289,7 +290,7 @@ end if;*/
                 /*LEFT JOIN ContainerLinkObject AS ContainerLO_Business
                                               ON ContainerLO_Business.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLO_Business.DescId = zc_ContainerLinkObject_Business()*/
-            WHERE ContainerLinkObject_InfoMoneyDetail.ContainerId IS NULL
+            -- WHERE ContainerLinkObject_InfoMoneyDetail.ContainerId IS NULL
             GROUP BY tmpMIContainer_Remains.AccountId
                    , ContainerLinkObject_InfoMoney.ObjectId
                    -- , ContainerLinkObject_InfoMoneyDetail.ObjectId

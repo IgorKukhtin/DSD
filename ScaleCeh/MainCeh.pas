@@ -229,6 +229,12 @@ type
     PanelArticleLoss: TPanel;
     LabelArticleLoss: TLabel;
     EditArticleLoss: TcxButtonEdit;
+    PopupMenuGrid: TPopupMenu;
+    miReport_GoodsBalance_Unit1: TMenuItem;
+    miReport_GoodsBalance_Unit2: TMenuItem;
+    miReport_GoodsBalance_Unit3: TMenuItem;
+    miReport_GoodsBalance_Unit4: TMenuItem;
+    miReport_GoodsBalance_Unit5: TMenuItem;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -297,6 +303,7 @@ type
     procedure miFontClick(Sender: TObject);
     procedure EditArticleLossPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
+    procedure miReport_GoodsBalance_Unit1Click(Sender: TObject);
   private
     oldGoodsId, oldGoodsCode : Integer;
     fEnterKey13:Boolean;
@@ -506,6 +513,11 @@ end;
 procedure TMainCehForm.miFontClick(Sender: TObject);
 begin
   TLookAndFillSettingsForm.Create(nil).Show;
+end;
+{------------------------------------------------------------------------------}
+procedure TMainCehForm.miReport_GoodsBalance_Unit1Click(Sender: TObject);
+begin
+    Print_Report (MovementId_Reestr:Integer):Boolean;
 end;
 {------------------------------------------------------------------------------}
 procedure TMainCehForm.myActiveControl;
@@ -1719,6 +1731,17 @@ begin
   LabelSkewer1.Caption:='Кол-во по '+FloatToStr(SettingMain.WeightSkewer1)+' кг';
   LabelSkewer2.Caption:='Кол-во по '+FloatToStr(SettingMain.WeightSkewer2)+' кг';
 
+  //local Report
+  miReport_GoodsBalance_Unit1.Visible:= SettingMain.UnitName1 <> '';
+  miReport_GoodsBalance_Unit1.Caption:= 'Отчет по остаткам <'+SettingMain.UnitName1+'>';
+  miReport_GoodsBalance_Unit2.Visible:= SettingMain.UnitName2 <> '';
+  miReport_GoodsBalance_Unit2.Caption:= 'Отчет по остаткам <'+SettingMain.UnitName2+'>';
+  miReport_GoodsBalance_Unit3.Visible:= SettingMain.UnitName3 <> '';
+  miReport_GoodsBalance_Unit3.Caption:= 'Отчет по остаткам <'+SettingMain.UnitName3+'>';
+  miReport_GoodsBalance_Unit4.Visible:= SettingMain.UnitName4 <> '';
+  miReport_GoodsBalance_Unit4.Caption:= 'Отчет по остаткам <'+SettingMain.UnitName4+'>';
+  miReport_GoodsBalance_Unit5.Visible:= SettingMain.UnitName5 <> '';
+  miReport_GoodsBalance_Unit5.Caption:= 'Отчет по остаткам <'+SettingMain.UnitName5+'>';
 
   bbChangeHeadCount.Visible:=PanelPartionGoods.Visible;
   bbChangeLiveWeight.Visible:=PanelPartionGoods.Visible;

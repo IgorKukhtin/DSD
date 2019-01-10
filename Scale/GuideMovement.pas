@@ -120,6 +120,7 @@ type
     PersonalCode5: TcxGridDBColumn;
     PersonalName5: TcxGridDBColumn;
     PositionName5: TcxGridDBColumn;
+    bbPrintPackWeight_Fozzy: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -150,6 +151,7 @@ type
     procedure actChangeMemberExecute(Sender: TObject);
     procedure bbSale_Order_diffTaxClick(Sender: TObject);
     procedure bbPrintStickerTermoClick(Sender: TObject);
+    procedure bbPrintPackWeight_FozzyClick(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -633,6 +635,11 @@ end;
 procedure TGuideMovementForm.bbSale_Order_diffTaxClick(Sender: TObject);
 begin
      with CDS do Print_Sale_Order(CDS.FieldByName('MovementId_Order').AsInteger,FieldByName('Id').AsInteger,FALSE,TRUE);
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.bbPrintPackWeight_FozzyClick(Sender: TObject);
+begin
+     with CDS do Print_PackWeight(CDS.FieldByName('MovementDescId').AsInteger, CDS.FieldByName('MovementId_parent').AsInteger,TRUE);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.bbPrintStickerTermoClick(Sender: TObject);

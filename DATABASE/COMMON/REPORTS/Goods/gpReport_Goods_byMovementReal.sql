@@ -161,7 +161,8 @@ BEGIN
                                     , tmpMovSale.MovementId_Order
                                     , MovementItem.ObjectId AS GoodsId
 
-                                    , SUM (COALESCE (MIFloat_AmountChangePercent.ValueData, 0))  AS Amount
+                                 -- , SUM (COALESCE (MIFloat_AmountChangePercent.ValueData, 0))  AS Amount
+                                    , SUM (COALESCE (MovementItem.Amount, 0))                    AS Amount
                                     , SUM (COALESCE (MIFloat_AmountPartner.ValueData,0))         AS AmountPartner
 
                                FROM tmpMovSale

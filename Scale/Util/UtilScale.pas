@@ -51,6 +51,10 @@ type
     WeightSkewer1:Double;   // only ScaleCeh
     WeightSkewer2:Double;   // only ScaleCeh
     Exception_WeightDiff:Double; // only Scale
+
+    UnitId1, UnitId2, UnitId3, UnitId4, UnitId5:Integer;
+    UnitName1, UnitName2, UnitName3, UnitName4, UnitName5 :String;
+
     BranchCode:Integer;
     BranchName:String;
     ScaleCount:Integer;

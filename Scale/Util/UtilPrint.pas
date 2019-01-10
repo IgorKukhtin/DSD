@@ -104,6 +104,10 @@ type
     actPrintStickerTermo: TdsdPrintAction;
     spGetReportNameQuality: TdsdStoredProc;
     actPrint_Quality_ReportName: TdsdExecStoredProc;
+    actPrint_PackWeight: TdsdPrintAction;
+    actPrint_Report_GoodsBalance1: TdsdPrintAction;
+    actPrint_Report_GoodsBalance: TdsdPrintAction;
+    spReport: TdsdStoredProc;
   private
   end;
 
@@ -118,6 +122,7 @@ type
   function Print_Transport(MovementDescId,MovementId,MovementId_sale:Integer; OperDate:TDateTime; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Quality  (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Sale_Order(MovementId_order,MovementId_by:Integer; isDiff:Boolean; isDiffTax:Boolean):Boolean;
+  function Print_PackWeight (MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
   function Print_StickerTermo (MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
 
   procedure SendEDI_Invoice (MovementId: Integer);
@@ -149,6 +154,13 @@ begin
    or (UtilPrintForm.spGetMovement.ParamByName('outDocumentKindId').Value = zc_Enum_DocumentKind_RealWeight)
   then UtilPrintForm.actPrintCeh.Execute
   else UtilPrintForm.actPrint_Send.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+procedure Print_PackWeightDocument (MovementId: Integer; isPreview:Boolean);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.actPrint_PackWeight.WithOutPreview:= not isPreview;
+  UtilPrintForm.actPrint_PackWeight.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 procedure Print_StickerTermoDocument (MovementId: Integer; isPreview:Boolean);
@@ -399,6 +411,26 @@ begin
              else begin ShowMessage ('Ошибка.Форма печати <Спецификация> не найдена.');exit;end;
           except
                 ShowMessage('Ошибка.Печать <Спецификация> не сформирована.');
+                exit;
+          end;
+     Result:=true;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_PackWeight (MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
+begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
+     Result:=false;
+          //
+          try
+             //Print
+             if (MovementDescId = zc_Movement_Sale) or (MovementDescId = zc_Movement_SendOnPrice)
+             then Print_PackWeightDocument (MovementId,isPreview)
+             else begin ShowMessage('Ошибка.Печать тара (фоззи) возможна только для документа <Продажа покупателю>.');exit;end;
+          except
+                ShowMessage('Ошибка.Печать <Печать тара (фоззи)> НЕ сформирована.');
                 exit;
           end;
      Result:=true;

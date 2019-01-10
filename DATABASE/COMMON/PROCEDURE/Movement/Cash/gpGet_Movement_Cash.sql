@@ -45,15 +45,17 @@ BEGIN
 
      RETURN QUERY 
         WITH -- ОДИН Курс валют из ГРН в inCurrencyId - документы только НАЛ zc_Movement_Currency 
-             tmpCurrency AS (SELECT MovementItem.Amount AS Amount -- Курс
+             tmpCurrency2 AS (SELECT MovementItem.Amount AS Amount -- Курс
                                   , CASE WHEN MIFloat_ParValue.ValueData > 0
                                               THEN MIFloat_ParValue.ValueData
                                          ELSE 1
                                     END AS ParValue -- Номинал
+                                  , MovementItem.ObjectId   
+                                  , Movement.OperDate 
                              FROM Movement
                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                          AND MovementItem.DescId     = zc_MI_Master()
-                                                         AND MovementItem.ObjectId   = zc_Enum_Currency_Basis()
+                                                        -- AND MovementItem.ObjectId   = zc_Enum_Currency_Basis()
                                   INNER JOIN MovementItemLinkObject AS MILinkObject_PaidKind
                                                                     ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                                                    AND MILinkObject_PaidKind.DescId         = zc_MILinkObject_PaidKind()
@@ -68,18 +70,27 @@ BEGIN
                              WHERE Movement.DescId   = zc_Movement_Currency()
                                AND Movement.OperDate <= inOperDate
                                AND Movement.StatusId = zc_Enum_Status_Complete()
-                             ORDER BY Movement.OperDate DESC
+                            )
+           , tmpCurrency AS (SELECT -- Курс
+                                    tmpCurrency2.Amount
+                                  , tmpCurrency2.ParValue
+                             FROM tmpCurrency2
+                             WHERE tmpCurrency2.ObjectId = zc_Enum_Currency_Basis()
+                             ORDER BY tmpCurrency2.OperDate DESC
                              LIMIT 1
                             )
          -- ОДИН Курс валют из ГРН в inCurrencyId - документы zc_Movement_Cash
-      ,  tmpMovementCash AS (SELECT MovementFloat_CurrencyValue.ValueData        AS CurrencyValue
+      ,  tmpMovementCash2 AS (SELECT MovementFloat_CurrencyValue.ValueData       AS CurrencyValue
                                   , MovementFloat_ParValue.ValueData             AS ParValue
                                   , MovementFloat_CurrencyPartnerValue.ValueData AS CurrencyPartnerValue
                                   , MovementFloat_ParPartnerValue.ValueData      AS ParPartnerValue
+                                  , Movement.OperDate
+                                  , Movement.Id
+                                  , MovementItem.ObjectId
                              FROM Movement
                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                          AND MovementItem.DescId     = zc_MI_Master()
-                                                         AND MovementItem.ObjectId   = inCashId
+                                                      -- AND MovementItem.ObjectId   = inCashId
                                   INNER JOIN MovementItemLinkObject AS MILinkObject_Currency
                                                                     ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                                                    AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
@@ -100,10 +111,16 @@ BEGIN
                              WHERE Movement.DescId   = zc_Movement_Cash()
                                AND Movement.OperDate BETWEEN inOperDate - INTERVAL '10 DAY' AND inOperDate
                                AND Movement.StatusId = zc_Enum_Status_Complete()
-                             ORDER BY Movement.OperDate DESC, Movement.Id DESC
+                            )
+      ,  tmpMovementCash AS (SELECT tmpMovementCash2.CurrencyValue
+                                  , tmpMovementCash2.ParValue
+                                  , tmpMovementCash2.CurrencyPartnerValue
+                                  , tmpMovementCash2.ParPartnerValue
+                             FROM tmpMovementCash2
+                             WHERE tmpMovementCash2.ObjectId = inCashId
+                             ORDER BY tmpMovementCash2.OperDate DESC, tmpMovementCash2.Id DESC
                              LIMIT 1
                             )
-                          
        SELECT
              0 AS Id
            , CAST (NEXTVAL ('Movement_Cash_seq') AS TVarChar)  AS InvNumber

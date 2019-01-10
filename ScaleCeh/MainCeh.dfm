@@ -497,6 +497,7 @@ object MainCehForm: TMainCehForm
       Width = 617
       Height = 534
       Align = alClient
+      PopupMenu = PopupMenuGrid
       TabOrder = 2
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
@@ -2590,5 +2591,30 @@ object MainCehForm: TMainCehForm
     PackSize = 1
     Left = 480
     Top = 120
+  end
+  object PopupMenuGrid: TPopupMenu
+    Left = 784
+    Top = 200
+    object miReport_GoodsBalance_Unit1: TMenuItem
+      Tag = 1
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' <'#1057#1082#1083#1072#1076'1>'
+      OnClick = miReport_GoodsBalance_Unit1Click
+    end
+    object miReport_GoodsBalance_Unit2: TMenuItem
+      Tag = 2
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' <'#1057#1082#1083#1072#1076'2>'
+    end
+    object miReport_GoodsBalance_Unit3: TMenuItem
+      Tag = 3
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' <'#1057#1082#1083#1072#1076'3>'
+    end
+    object miReport_GoodsBalance_Unit4: TMenuItem
+      Tag = 4
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' <'#1057#1082#1083#1072#1076'4>'
+    end
+    object miReport_GoodsBalance_Unit5: TMenuItem
+      Tag = 5
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1089#1090#1072#1090#1082#1072#1084' <'#1057#1082#1083#1072#1076'5>'
+    end
   end
 end
