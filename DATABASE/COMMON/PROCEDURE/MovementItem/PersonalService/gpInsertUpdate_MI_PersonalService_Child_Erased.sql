@@ -84,6 +84,12 @@ BEGIN
                                               ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
                                              AND MIBoolean_isAuto.DescId         = zc_MIBoolean_isAuto()
                                              AND MIBoolean_isAuto.ValueData      = TRUE
+               -- ограничиваем подразделением
+               INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                 ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
+                                                AND MILinkObject_Unit.ObjectId       = inUnitId
+
                LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                              ON MIBoolean_Main.MovementItemId = MovementItem.Id
                                             AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
@@ -116,9 +122,7 @@ BEGIN
                LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                 ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                AND MILinkObject_InfoMoney.DescId         = zc_MILinkObject_InfoMoney()
-               LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                               AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
+
                LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
                                                 ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                                AND MILinkObject_Position.DescId         = zc_MILinkObject_Position()
@@ -139,6 +143,11 @@ BEGIN
                                           , inUserId        := vbUserId
                                            )
           FROM MovementItem
+               -- удаляем только чайлды у которых в мастере тек. подразделение
+               INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                 ON MILinkObject_Unit.MovementItemId = MovementItem.ParentId
+                                                AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
+                                                AND MILinkObject_Unit.ObjectId       = inUnitId
           WHERE MovementItem.MovementId = vbMovementId
             AND MovementItem.DescId     = zc_MI_Child()
             AND MovementItem.isErased   = FALSE;
@@ -152,6 +161,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.01.19         * ограничиваем подразделением
  05.01.18         *
  24.07.17                                        *
 */
