@@ -1710,6 +1710,11 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLog_CashRemainsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLog_CashRemainsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheck_CashRegisterForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheck_CashRegisterForm');
+  Exit;
   {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TFormsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TFormsForm');
@@ -1790,8 +1795,6 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodCloseForm'));
     TdsdFormStorageFactory.GetStorage.Load('TPeriodCloseForm');
   }
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLog_CashRemainsForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TLog_CashRemainsForm');
 end;
 
 initialization

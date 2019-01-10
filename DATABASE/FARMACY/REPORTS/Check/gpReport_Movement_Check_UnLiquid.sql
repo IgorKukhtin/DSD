@@ -434,7 +434,7 @@ BEGIN
     CREATE TEMP TABLE tmpDataTo (GoodsId Integer, GoodsMainId Integer, UnitId Integer, RemainsMCS_result TFloat) ON COMMIT DROP;
       INSERT INTO tmpDataTo (GoodsId, GoodsMainId, UnitId, RemainsMCS_result)
       WITH 
-      --неликвидныe товарs, которые можно перемещать
+      --неликвидныe товары, которые можно перемещать
       tmpDataFrom AS (SELECT _tmpData.*
                           , (_tmpData.RemainsEnd 
                            + _tmpData.Amount_Send
@@ -576,7 +576,8 @@ BEGIN
            , COALESCE (tmpCheck.Amount_Reserve, 0)         :: TFloat AS Amount_Reserve
            , COALESCE (tmpCheck.RemainsEnd, 0)             :: TFloat AS RemainsEnd
       FROM _tmpCheck AS tmpCheck
-           LEFT JOIN tmpDataTo ON tmpDataTo.GoodsId = tmpCheck.GoodsId AND tmpDataTo.UnitId = tmpCheck.UnitId
+           LEFT JOIN tmpDataTo ON tmpDataTo.GoodsId = tmpCheck.GoodsId
+                              AND tmpDataTo.UnitId = tmpCheck.UnitId
            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpCheck.UnitId
       WHERE tmpCheck.UnitId <> inUnitId
         AND (COALESCE (tmpCheck.Amount_Sale1, 0) <> 0 OR COALESCE (tmpCheck.Amount_Sale3, 0) <> 0 OR COALESCE (tmpCheck.Amount_Sale6, 0) <> 0)

@@ -3,11 +3,11 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Child_Erased (Integer, Integer, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PersonalService_Child_Erased(
-    IN inUnitId              Integer   , -- подразделение
+    IN inUnitId                Integer   , -- подразделение
     IN inPersonalServiceListId Integer   , -- ведомость начисления
-    IN inStartDate           TDateTime , -- дата
-    IN inEndDate             TDateTime , -- дата
-    IN inSession             TVarChar    -- сессия пользователя
+    IN inStartDate             TDateTime , -- дата
+    IN inEndDate               TDateTime , -- дата
+    IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS VOID
 AS
@@ -19,16 +19,11 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService_Child());
      vbUserId:= lpGetUserBySession (inSession);
 
-
      -- проверка
      IF COALESCE (inPersonalServiceListId, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлено значение <Ведомость Начисления>.';
      END IF;
-
-
-     -- !!!ОТКЛЮЧИЛИ - ВСЕГДА СУММИРОВАНИЕ!!!
-     RETURN;
 
 
     -- поиск документа (ключ - Месяц начислений + ведомость) - ТОЛЬКО ОДИН

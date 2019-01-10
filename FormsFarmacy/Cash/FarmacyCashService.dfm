@@ -127,35 +127,37 @@ object MainCashForm2: TMainCashForm2
     Left = 88
     Top = 160
   end
-  object spGet_BlinkCheck: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Check_CommentError'
+  object gpUpdate_Log_CashRemains: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Log_CashRemains_Version'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'outMovementId_list'
+        Name = 'inCashSessionId'
         Value = Null
+        Component = FormParams
+        ComponentItem = 'CashSessionId'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOldProgram'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOldServise'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 176
+    Left = 168
     Top = 80
-  end
-  object spGet_BlinkVIP: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Check_ConfirmedKind'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'outMovementId_list'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 176
-    Top = 144
   end
   object CheckDS: TDataSource
     DataSet = CheckCDS
@@ -586,7 +588,7 @@ object MainCashForm2: TMainCashForm2
     Left = 432
     Top = 16
     Bitmap = {
-      494C010108003400840180008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101080034008C0180008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000000200008001000001002000000000000000
       0C00000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

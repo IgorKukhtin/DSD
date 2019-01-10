@@ -1968,8 +1968,8 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_Goods_byMovementDialogForm'
-      FormNameParam.Value = 'TReport_Goods_byMovementDialogForm'
+      FormName = 'TReport_Goods_byMovementRealDialogForm'
+      FormNameParam.Value = 'TReport_Goods_byMovementRealDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -2247,7 +2247,7 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
     Top = 232
   end
   inherited BarManager: TdxBarManager
-    Left = 160
+    Left = 184
     Top = 240
     DockControlHeights = (
       0

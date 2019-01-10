@@ -1,4 +1,4 @@
-unit Log_CashRemains;
+unit Check_CashRegister;
 
 interface
 
@@ -17,26 +17,13 @@ uses
   dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter;
 
 type
-  TLog_CashRemainsForm = class(TAncestorReportForm)
+  TCheck_CashRegisterForm = class(TAncestorReportForm)
     CashSessionId: TcxGridDBColumn;
     actRefreshSearch: TdsdExecStoredProc;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     UserName: TcxGridDBColumn;
-    DoubleCDS: TClientDataSet;
-    DoubleDS: TDataSource;
-    cxGridDouble: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
-    DoubleCashSessionId: TcxGridDBColumn;
-    DoubleUnitName: TcxGridDBColumn;
-    cxGridLevel1: TcxGridLevel;
-    cxSplitter1: TcxSplitter;
-    LoginTime: TcxGridDBColumn;
-    OldProgram: TcxGridDBColumn;
-    OldServise: TcxGridDBColumn;
-    isErased: TcxGridDBColumn;
     dsdOpenForm1: TdsdOpenForm;
-    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public
@@ -48,6 +35,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TLog_CashRemainsForm);
+  RegisterClass(TCheck_CashRegisterForm);
 
 end.

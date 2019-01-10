@@ -25,7 +25,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Height = 518
     Align = alClient
     TabOrder = 0
-    ExplicitHeight = 590
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -682,6 +681,11 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Format = ',0.####'
           Kind = skSum
           Column = SummInventory_Basis
+        end
+        item
+          Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = GoodsName
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList

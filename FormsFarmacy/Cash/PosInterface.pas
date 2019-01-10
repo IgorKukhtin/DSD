@@ -11,6 +11,7 @@ type
       function GetMsgDescriptionProc: TMsgDescriptionProc;
 
       function Payment(ASumma : Currency) : Boolean;
+      procedure Cancel;
       property OnMsgDescriptionProc: TMsgDescriptionProc read GetMsgDescriptionProc write SetMsgDescriptionProc;
    end;
 

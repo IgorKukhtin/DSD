@@ -104,7 +104,7 @@ begin
   begin
     Action := caNone;
     ModalResult := 0;
-    if MessageDlg('Прервать оплату документа?',mtConfirmation,mbYesNo,0)<>mrYes then FPosTermThread.Terminate
+    if MessageDlg('Прервать оплату документа?',mtConfirmation,mbYesNo,0)<>mrYes then FPosTermThread.FPosTerm.Cancel;
   end else
   begin
     if Assigned(FPosTermThread) then FreeAndNil(FPosTermThread);

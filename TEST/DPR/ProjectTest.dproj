@@ -3573,6 +3573,10 @@
 				<Form>Member_ChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Goods_byMovementRealDialog.pas">
+				<Form>Report_Goods_byMovementRealDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

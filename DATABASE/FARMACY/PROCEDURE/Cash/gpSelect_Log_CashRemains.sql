@@ -24,20 +24,41 @@ BEGIN
     vbUserId := lpGetUserBySession (inSession);
 
     OPEN cur1 FOR 
-    SELECT CashSessionId      AS CashSessionId
+    WITH tmpOld AS (
+      SELECT ROW_NUMBER() OVER (PARTITION BY Log_CashRemains.CashSessionId, 
+                                             Log_CashRemains.UnitId,
+                                             Log_CashRemains.UserId ORDER BY Log_CashRemains.DateStart DESC) AS Ord
+           , Log_CashRemains.CashSessionId      AS CashSessionId
+           , Log_CashRemains.UnitId
+           , Log_CashRemains.UserId
+           , COALESCE (Log_CashRemains.OldProgram, FALSE)   AS OldProgram
+           , COALESCE (Log_CashRemains.OldServise, FALSE)    AS OldServise
+      FROM Log_CashRemains
+      WHERE Log_CashRemains.DateStart >= vbDateStart AND Log_CashRemains.DateStart < vbDateEnd)  
+
+    SELECT Log_CashRemains.CashSessionId      AS CashSessionId
          , OUnit.objectcode   AS UnitCode
          , OUnit.valuedata    AS UnitName
          , OUser.objectcode   AS UserCode
          , OUser.valuedata    AS UserName
          , to_char(MIN(Log_CashRemains.DateStart), 'HH24:MI:SS') AS LoginTime
+         , tmpOld.OldProgram
+         , tmpOld.OldServise
+         , CASE WHEN tmpOld.OldProgram = True OR tmpOld.OldServise = True
+           THEN TRUE ELSE FALSE END AS isErased
     FROM Log_CashRemains
          INNER JOIN Object AS OUnit ON OUnit.id = Log_CashRemains.UnitId
          INNER JOIN Object AS OUser ON OUser.id = Log_CashRemains.UserId
-    WHERE Log_CashRemains.DateStart >= vbDateStart AND Log_CashRemains.DateStart < vbDateEnd 
-    GROUP BY CashSessionId,
+         INNER JOIN tmpOld AS tmpOld ON tmpOld.CashSessionId = Log_CashRemains.CashSessionId 
+                                    AND tmpOld.UnitId = Log_CashRemains.UnitId
+                                    AND tmpOld.UserId = Log_CashRemains.UserId
+                                    AND tmpOld.Ord = 1
+    WHERE Log_CashRemains.DateStart >= vbDateStart AND Log_CashRemains.DateStart < vbDateEnd
+    GROUP BY Log_CashRemains.CashSessionId,
              OUnit.objectcode, OUnit.valuedata,
-             OUser.objectcode, OUser.valuedata
-    ORDER BY CashSessionId, OUnit.valuedata, OUser.valuedata;
+             OUser.objectcode, OUser.valuedata, 
+             tmpOld.OldProgram, tmpOld.OldServise
+    ORDER BY Log_CashRemains.CashSessionId, OUnit.valuedata, OUser.valuedata;
     RETURN NEXT cur1;
 
     OPEN cur2 FOR 
@@ -70,6 +91,7 @@ $BODY$
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Øàáëèé Î.Â.
+ 06.01.19         *
  20.10.18         *
 */
 
