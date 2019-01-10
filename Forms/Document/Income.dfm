@@ -1695,8 +1695,8 @@ object IncomeForm: TIncomeForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'CostJournalChoiceForm'
-      FormName = 'TCostJournalChoiceForm'
-      FormNameParam.Value = 'TCostJournalChoiceForm'
+      FormName = 'TCostJournalChoicebyIncomeForm'
+      FormNameParam.Value = 'TCostJournalChoicebyIncomeForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1749,7 +1749,7 @@ object IncomeForm: TIncomeForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      isShowModal = False
+      isShowModal = True
     end
     object actAddMask: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -3454,8 +3454,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 816
-    Top = 305
+    Left = 864
+    Top = 313
   end
   object InvoiceGuides: TdsdGuides
     KeyField = 'Id'
