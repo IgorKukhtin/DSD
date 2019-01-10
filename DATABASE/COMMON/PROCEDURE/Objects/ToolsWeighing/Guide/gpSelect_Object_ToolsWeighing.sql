@@ -61,5 +61,25 @@ ALTER FUNCTION gpSelect_Object_ToolsWeighing (TVarChar) OWNER TO postgres;
  13.03.14                                                         *
 */
 
+/*
+update Object set ValueData = ValueDataNew
+from (with a1 as (select * from gpSelect_Object_ToolsWeighing( inSession := '5') as a
+                  where nameFull Ilike 'SCALE_2 %'
+                 )
+         , a2 as (select *, 'Scale_2 ' || SPLIT_PART (namefull, 'Scale_12 ', 2) as nameNew from gpSelect_Object_ToolsWeighing( inSession := '5') as a
+                  where nameFull Ilike 'SCALE_12 %'
+                 )
+      
+      select a2.Id, a2.namefull , a2.ValueData
+           , case when a1.ValueData = '8411'
+                       then '3080691'
+                  when a1.ValueData = '428365'
+                       then '3080696'
+             else a1.ValueData  end as ValueDataNew
+      from a2
+      join a1 on a1.namefull = a2.nameNew
+      ) as tmp
+where Object.Id = tmp.Id
+*/
 -- тест
 -- SELECT * FROM gpSelect_Object_ToolsWeighing (zfCalc_UserAdmin())
