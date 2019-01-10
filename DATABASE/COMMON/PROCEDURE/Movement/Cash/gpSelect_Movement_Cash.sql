@@ -89,11 +89,16 @@ BEGIN
                            UNION SELECT AccessKeyId FROM Object_RoleAccessKeyDocument_View WHERE ProcessId = zc_Enum_Process_InsertUpdate_Movement_Cash() AND EXISTS (SELECT tmpAccessKey_isCashAll.Id FROM tmpAccessKey_isCashAll) GROUP BY AccessKeyId
                                 )
           , tmpAll AS (SELECT tmpStatus.StatusId, tmpStatus.StartDate, tmpStatus.EndDate, tmpRoleAccessKey.AccessKeyId FROM tmpStatus, tmpRoleAccessKey)
+          , tmpMovement2 AS (SELECT Movement.*
+                             FROM Movement
+                             WHERE Movement.DescId = zc_Movement_Cash()
+                              AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                            )
           , tmpMovement AS (SELECT Movement.*
                               , Object_Status.ObjectCode AS StatusCode
                               , Object_Status.ValueData  AS StatusName
                          FROM tmpAll
-                              INNER JOIN Movement ON Movement.DescId = zc_Movement_Cash()
+                              INNER JOIN tmpMovement2 AS Movement ON Movement.DescId = zc_Movement_Cash()
                                                  AND Movement.OperDate BETWEEN tmpAll.StartDate AND tmpAll.EndDate -- inStartDate AND inEndDate
                                                  AND Movement.StatusId = tmpAll.StatusId
                                                  AND Movement.AccessKeyId = tmpAll.AccessKeyId
@@ -107,6 +112,15 @@ BEGIN
                            FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                            WHERE lfSelect.Ord = 1
                           )
+          , tmpMLO AS (SELECT MovementLinkObject.*
+                                FROM MovementLinkObject
+                                WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                   AND MovementLinkObject.DescId = zc_MovementLinkObject_Insert()
+                               )
+          , tmpMovementDate AS (SELECT MovementDate.*
+                                FROM MovementDate
+                                WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                               )
          , tmpMovementFloat AS (SELECT MovementFloat.*
                                 FROM MovementFloat
                                 WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
@@ -144,14 +158,21 @@ BEGIN
                                                                          )
                                 )     
 
+         , tmpMI2 AS (SELECT MovementItem.*
+                      FROM MovementItem
+                      WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                       AND MovementItem.DescId = zc_MI_Master()
+                       -- AND MovementItem.ObjectId = inCashId
+                     )
          , tmpMI AS (SELECT MovementItem.*
                      FROM tmpMovement
-                          INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
+                          INNER JOIN tmpMI2 AS MovementItem ON MovementItem.MovementId = tmpMovement.Id
                                                  AND MovementItem.DescId = zc_MI_Master()
                                                  AND MovementItem.ObjectId = inCashId
                      )
          , tmpMIFloat_MovementId AS (SELECT MovementItemFloat.MovementItemId
                                           , MovementItemFloat.ValueData :: Integer
+                                          , MovementItemFloat.DescId
                                      FROM MovementItemFloat
                                      WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                        AND MovementItemFloat.DescId = zc_MIFloat_MovementId()
@@ -177,6 +198,26 @@ BEGIN
                                                              , zc_MILinkObject_Car()
                                                              )
                       )
+
+         , tmpContract_View AS (SELECT Object_Contract_InvNumber_View.*
+                                FROM Object_Contract_InvNumber_View
+                                WHERE Object_Contract_InvNumber_View.ContractId IN (SELECT DISTINCT tmpMILO.ObjectId FROM tmpMILO)
+                               )
+         , tmpInfoMoney_View AS (SELECT * FROM Object_InfoMoney_View)
+         , tmpJuridicalDetails_View AS (SELECT *
+                                        FROM ObjectHistory_JuridicalDetails_View
+                                        WHERE ObjectHistory_JuridicalDetails_View.JuridicalId
+                                              IN (SELECT DISTINCT ObjectLink_Partner_Juridical.ChildObjectId
+                                                  FROM tmpMILO AS MILinkObject_MoneyPlace
+                                                       INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                                          ON ObjectLink_Partner_Juridical.ObjectId = MILinkObject_MoneyPlace.ObjectId
+                                                                         AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                                  WHERE MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+                                                 )
+                                       )
+            -- LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
+            -- LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+            -- LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
 
        -- Результат
        SELECT
@@ -265,13 +306,13 @@ BEGIN
 
        FROM tmpMovement
 
-            LEFT JOIN MovementDate AS MovementDate_Insert
+            LEFT JOIN tmpMovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = tmpMovement.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
-            LEFT JOIN MovementDate AS MovementDate_InsertMobile
+            LEFT JOIN tmpMovementDate AS MovementDate_InsertMobile
                                    ON MovementDate_InsertMobile.MovementId = tmpMovement.Id
                                   AND MovementDate_InsertMobile.DescId = zc_MovementDate_InsertMobile()
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
+            LEFT JOIN tmpMLO AS MovementLinkObject_Insert
                                          ON MovementLinkObject_Insert.MovementId = tmpMovement.Id
                                         AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_Insert.ObjectId
@@ -311,7 +352,7 @@ BEGIN
 
             LEFT JOIN tmpMIFloat_MovementId AS MIFloat_MovementId
                                             ON MIFloat_MovementId.MovementItemId = MovementItem.Id
-                                        -- AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                                           AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
             LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = MIFloat_MovementId.ValueData
             
             LEFT JOIN MovementDesc AS MovementDesc_PartionMovement ON MovementDesc_PartionMovement.Id = Movement_PartionMovement.DescId
@@ -333,12 +374,12 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = MILinkObject_MoneyPlace.ObjectId
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+            LEFT JOIN tmpJuridicalDetails_View AS ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
 
             LEFT JOIN tmpMILO AS MILinkObject_InfoMoney
                               ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                              AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+            LEFT JOIN tmpInfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
 
             LEFT JOIN tmpMILO AS MILinkObject_Member
                               ON MILinkObject_Member.MovementItemId = MovementItem.Id
@@ -353,7 +394,7 @@ BEGIN
             LEFT JOIN tmpMILO AS MILinkObject_Contract
                               ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                              AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
+            LEFT JOIN tmpContract_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
 
             LEFT JOIN tmpMILO AS MILinkObject_Unit
                               ON MILinkObject_Unit.MovementItemId = MovementItem.Id
