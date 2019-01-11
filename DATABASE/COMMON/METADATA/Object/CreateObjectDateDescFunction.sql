@@ -334,9 +334,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_RecalcMCSSheduler_EndHolidays() RETURN
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_RecalcMCSSheduler(), 'zc_ObjectFloat_RecalcMCSSheduler_EndHolidays', 'Последний день праздников' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectFloat_RecalcMCSSheduler_EndHolidays');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Maker_SendPlan() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Maker_SendPlan'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Maker(), 'zc_ObjectDate_Maker_SendPlan', 'Когда планируем отправить(дата/время)' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Maker_SendPlan');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Maker_SendReal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Maker_SendReal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Maker(), 'zc_ObjectDate_Maker_SendReal', 'Когда успешно прошла отправка (дата/время)' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Maker_SendReal');
+
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 11.01.19         * zc_ObjectDate_Maker_SendPlan
+                    zc_ObjectDate_Maker_SendReal
  25.12.18                                                                                     * zzc_ObjectFloat_RecalcMCSSheduler_
  22.10.18                                                                                     * zc_ObjectDate_RepriceUnitSheduler_DataStartLast 
  18.10.18         * zc_ObjectDate_Goods_In

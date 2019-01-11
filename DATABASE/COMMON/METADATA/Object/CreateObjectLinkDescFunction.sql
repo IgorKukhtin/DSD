@@ -1053,6 +1053,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Maker_Country() RETURNS Integer AS $BOD
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Maker_Country', 'Ссылка на Страну в справочнике Производитель(ОС)', zc_Object_Maker(), zc_Object_Country() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Maker_Country');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Maker_ContactPerson() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Maker_ContactPerson'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Maker_ContactPerson', 'Ссылка на Контактные лица', zc_Object_Maker(), zc_Object_ContactPerson() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Maker_ContactPerson');
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Asset_Juridical() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Asset_Juridical'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Asset_Juridical', 'Ссылка на Юридические лица в справочнике Основные средства', zc_Object_Asset(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Asset_Juridical');
@@ -2052,6 +2056,7 @@ SELECT 'zc_ObjectLink_RecalcMCSSheduler_User', 'Связь с Пользователем', zc_Objec
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 11.01.19         * zc_ObjectLink_Maker_ContactPerson
  21.12.18                                                                                      * zc_ObjectLink_RecalcMCSSheduler_Unit, zc_ObjectLink_RecalcMCSSheduler_User
  12.12.18         * zc_ObjectLink_Goods_Asset
  28.11.18         * zc_ObjectLink_ReportCollation_InfoMoney

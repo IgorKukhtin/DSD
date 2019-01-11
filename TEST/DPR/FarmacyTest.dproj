@@ -1247,14 +1247,6 @@
 				<Form>IncomeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Maker.pas">
-				<Form>MakerForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\MakerEdit.pas">
-				<Form>MakerEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\Promo.pas">
 				<Form>PromoForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -2181,6 +2173,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\MemberSPChoiceDialog.pas">
 				<Form>MemberSPChoiceDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Maker.pas">
+				<Form>MakerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MakerEdit.pas">
+				<Form>MakerEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
