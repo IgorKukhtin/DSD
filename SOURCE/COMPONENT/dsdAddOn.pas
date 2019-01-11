@@ -249,7 +249,7 @@ type
     property SummaryItemList: TOwnedCollection read FSummaryItemList write FSummaryItemList;
     // Поиск как фильтр
     property SearchAsFilter: boolean read FSearchAsFilter write SetSearchAsFilter default true;
-    // При установке в Trur сохраняеться цвет шрифта и фон для выделенной строчки
+    // При установке в True сохраняется цвет шрифта и фон для выделенной строчки
     property KeepSelectColor: boolean read FKeepSelectColor write FKeepSelectColor default false;
 
   end;

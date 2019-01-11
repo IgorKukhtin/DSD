@@ -137,6 +137,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
               '8:00'
               '9:00'
               '10:00'
+              '21:00'
               #1042)
             Visible = False
             MinWidth = 40
