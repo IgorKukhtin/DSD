@@ -146,6 +146,9 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
     object tsPivot: TcxTabSheet
       Caption = #1058#1091#1096#1077#1085#1082#1072
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPivot: TcxGrid
         Left = 0
         Top = 0
@@ -462,6 +465,9 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
     object tsDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -2123,6 +2129,12 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
           Value = Null
           Component = GoodsGroupGuides
           ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReportName'
+          Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1072#1084' '#1087#1086' '#1076#1072#1090#1072#1084' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
           DataType = ftString
           MultiSelectSeparator = ','
         end>
