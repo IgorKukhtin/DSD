@@ -506,6 +506,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMakerEditForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerReportEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMakerReportEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMaker_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMaker_ObjectForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCountryForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountryEditForm'));

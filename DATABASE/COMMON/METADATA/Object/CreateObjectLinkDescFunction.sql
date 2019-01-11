@@ -1938,6 +1938,14 @@ CREATE OR REPLACE FUNCTION zc_Object_Accommodation_Goods() RETURNS Integer AS $B
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_Object_Accommodation_Goods', 'Связь размещения с подразделением', zc_Object_Goods(), zc_Object_Accommodation() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_Object_Accommodation_Goods');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MakerReport_Maker() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MakerReport_Maker'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_MakerReport_Maker', 'Ссылка на Производитель', zc_Object_MakerReport(), zc_Object_Maker() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MakerReport_Maker');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MakerReport_Juridical() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MakerReport_Juridical'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_MakerReport_Juridical', 'Ссылка на Юридические лица', zc_Object_MakerReport(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MakerReport_Juridical');
+
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
@@ -2057,6 +2065,8 @@ SELECT 'zc_ObjectLink_RecalcMCSSheduler_User', 'Связь с Пользователем', zc_Objec
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
  11.01.19         * zc_ObjectLink_Maker_ContactPerson
+                    zc_ObjectLink_MakerReport_Maker
+                    zc_ObjectLink_MakerReport_Juridical
  21.12.18                                                                                      * zc_ObjectLink_RecalcMCSSheduler_Unit, zc_ObjectLink_RecalcMCSSheduler_User
  12.12.18         * zc_ObjectLink_Goods_Asset
  28.11.18         * zc_ObjectLink_ReportCollation_InfoMoney

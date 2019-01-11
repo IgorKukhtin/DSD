@@ -1,4 +1,4 @@
-unit Maker;
+unit Maker_Object;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   cxSplitter;
 
 type
-  TMakerForm = class(TParentForm)
+  TMaker_ObjectForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
@@ -36,10 +36,6 @@ type
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
     bbRefresh: TdxBarButton;
-    bbInsert: TdxBarButton;
-    bbEdit: TdxBarButton;
-    bbErased: TdxBarButton;
-    bbUnErased: TdxBarButton;
     bbGridToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
@@ -65,26 +61,6 @@ type
     isReport3: TcxGridDBColumn;
     isReport4: TcxGridDBColumn;
     cxSplitter1: TcxSplitter;
-    cxGridReport: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
-    MakerName: TcxGridDBColumn;
-    JuridicalName: TcxGridDBColumn;
-    cxGridLevel1: TcxGridLevel;
-    ReportDS: TDataSource;
-    ReportCDS: TClientDataSet;
-    spSelectReport: TdsdStoredProc;
-    dsdDBViewAddOnReport: TdsdDBViewAddOn;
-    actGridToExcelReport: TdsdGridToExcel;
-    actInsertMakerReport: TdsdInsertUpdateAction;
-    actUpdateMakerReport: TdsdInsertUpdateAction;
-    dsdSetErasedMakerReport: TdsdUpdateErased;
-    dsdSetUnErasedMakerReport: TdsdUpdateErased;
-    colisErased: TcxGridDBColumn;
-    bbInsertMakerReport: TdxBarButton;
-    bbUpdateMakerReport: TdxBarButton;
-    bbSetErasedMakerReport: TdxBarButton;
-    bbSetUnErasedMakerReport: TdxBarButton;
-    bbGridToExcelReport: TdxBarButton;
   private
     { Private declarations }
   public
@@ -96,5 +72,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TMakerForm);
+  RegisterClass(TMaker_ObjectForm);
 end.

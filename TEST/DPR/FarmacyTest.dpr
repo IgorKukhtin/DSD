@@ -646,7 +646,9 @@ uses
   Check_CashRegister in '..\..\FormsFarmacy\Guides\Check_CashRegister.pas' {Check_CashRegisterForm: TParentForm},
   MemberSPChoiceDialog in '..\..\FormsFarmacy\Document\MemberSPChoiceDialog.pas' {MemberSPChoiceDialogForm: TParentForm},
   Maker in '..\..\FormsFarmacy\Guides\Maker.pas' {MakerForm: TParentForm},
-  MakerEdit in '..\..\FormsFarmacy\Guides\MakerEdit.pas' {MakerEditForm: TParentForm};
+  MakerEdit in '..\..\FormsFarmacy\Guides\MakerEdit.pas' {MakerEditForm: TParentForm},
+  MakerReportEdit in '..\..\FormsFarmacy\Guides\MakerReportEdit.pas' {MakerReportEditForm: TParentForm},
+  Maker_Object in '..\..\FormsFarmacy\Guides\Maker_Object.pas' {Maker_ObjectForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
