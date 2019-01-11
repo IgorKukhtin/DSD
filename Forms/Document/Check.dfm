@@ -3,26 +3,26 @@ inherited CheckForm: TCheckForm
   ClientHeight = 523
   ClientWidth = 817
   ExplicitWidth = 833
-  ExplicitHeight = 562
+  ExplicitHeight = 561
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 182
+    Top = 231
     Width = 817
-    Height = 341
-    ExplicitTop = 182
+    Height = 292
+    ExplicitTop = 231
     ExplicitWidth = 817
-    ExplicitHeight = 341
-    ClientRectBottom = 341
+    ExplicitHeight = 292
+    ClientRectBottom = 292
     ClientRectRight = 817
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 817
-      ExplicitHeight = 317
+      ExplicitHeight = 268
       inherited cxGrid: TcxGrid
         Width = 817
-        Height = 317
+        Height = 268
         ExplicitWidth = 817
-        ExplicitHeight = 317
+        ExplicitHeight = 268
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -231,9 +231,9 @@ inherited CheckForm: TCheckForm
   end
   inherited DataPanel: TPanel
     Width = 817
-    Height = 156
+    Height = 205
     ExplicitWidth = 817
-    ExplicitHeight = 156
+    ExplicitHeight = 205
     inherited edInvNumber: TcxTextEdit
       Left = 7
       Top = 14
@@ -389,6 +389,78 @@ inherited CheckForm: TCheckForm
       TabOrder = 23
       Width = 93
     end
+    object cxLabel22: TcxLabel
+      Left = 8
+      Top = 115
+      Caption = #1060#1048#1054' '#1087#1072#1094#1080#1077#1085#1090#1072
+    end
+    object edMemberSP: TcxButtonEdit
+      Left = 8
+      Top = 130
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 25
+      Width = 237
+    end
+    object cxLabel23: TcxLabel
+      Left = 251
+      Top = 115
+      Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1072#1094'-'#1090#1072
+    end
+    object edGroupMemberSP: TcxButtonEdit
+      Left = 251
+      Top = 130
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 27
+      Width = 95
+    end
+    object cxLabel24: TcxLabel
+      Left = 350
+      Top = 115
+      Caption = #1053#1086#1084#1077#1088'/'#1089#1077#1088#1080#1103' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1087#1072#1094'-'#1090#1072
+    end
+    object cxLabel25: TcxLabel
+      Left = 508
+      Top = 115
+      Caption = #1048#1053#1053' '#1087#1072#1094#1080#1077#1085#1090#1072
+    end
+    object edPassport: TcxTextEdit
+      Left = 350
+      Top = 130
+      Properties.ReadOnly = True
+      TabOrder = 30
+      Width = 155
+    end
+    object edInn: TcxTextEdit
+      Left = 508
+      Top = 130
+      Properties.ReadOnly = True
+      TabOrder = 31
+      Width = 92
+    end
+    object cxLabel26: TcxLabel
+      Left = 603
+      Top = 115
+      Caption = #1040#1076#1088#1077#1089' '#1087#1072#1094#1080#1077#1085#1090#1072
+    end
+    object edAddress: TcxTextEdit
+      Left = 603
+      Top = 130
+      Properties.ReadOnly = True
+      TabOrder = 33
+      Width = 198
+    end
   end
   object edInvNumberOrder: TcxTextEdit [2]
     Left = 155
@@ -444,24 +516,24 @@ inherited CheckForm: TCheckForm
   end
   object cxLabel12: TcxLabel [10]
     Left = 8
-    Top = 114
-    Caption = ' '#9#1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077'('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
+    Top = 157
+    Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077'('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
   end
   object edPartnerMedical: TcxTextEdit [11]
     Left = 8
-    Top = 130
+    Top = 173
     Properties.ReadOnly = True
     TabOrder = 15
     Width = 237
   end
   object cxLabel13: TcxLabel [12]
     Left = 251
-    Top = 115
+    Top = 158
     Caption = #1044#1072#1090#1072' '#1088#1077#1094#1077#1087#1090#1072
   end
   object edOperDateSP: TcxDateEdit [13]
     Left = 251
-    Top = 130
+    Top = 173
     EditValue = 42261d
     Properties.ReadOnly = True
     TabOrder = 17
@@ -469,48 +541,48 @@ inherited CheckForm: TCheckForm
   end
   object cxLabel14: TcxLabel [14]
     Left = 347
-    Top = 114
+    Top = 157
     Caption = #1053#1086#1084#1077#1088' '#1088#1077#1094#1077#1087#1090#1072
   end
   object edInvNumberSP: TcxTextEdit [15]
     Left = 347
-    Top = 130
+    Top = 173
     Properties.ReadOnly = True
     TabOrder = 19
     Width = 116
   end
   object cxLabel16: TcxLabel [16]
     Left = 464
-    Top = 114
+    Top = 157
     Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
   end
   object edMedicSP: TcxTextEdit [17]
     Left = 464
-    Top = 130
+    Top = 173
     Properties.ReadOnly = True
     TabOrder = 21
     Width = 123
   end
   object cxLabel17: TcxLabel [18]
     Left = 590
-    Top = 114
+    Top = 157
     Caption = #8470' '#1072#1084#1073#1091#1083#1072#1090#1086#1088#1080#1080' '
   end
   object edAmbulance: TcxTextEdit [19]
     Left = 589
-    Top = 130
+    Top = 173
     Properties.ReadOnly = True
     TabOrder = 23
     Width = 93
   end
   object cxLabel18: TcxLabel [20]
     Left = 684
-    Top = 114
+    Top = 157
     Caption = #1042#1080#1076' '#1089#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072
   end
   object edSPKind: TcxTextEdit [21]
     Left = 684
-    Top = 130
+    Top = 173
     Properties.ReadOnly = True
     TabOrder = 25
     Width = 117
@@ -542,7 +614,14 @@ inherited CheckForm: TCheckForm
     TabOrder = 28
     Width = 212
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Top = 349
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Top = 349
+  end
   inherited ActionList: TActionList
+    Top = 348
     inherited actMISetErased: TdsdUpdateErased
       Enabled = False
     end
@@ -1009,12 +1088,98 @@ inherited CheckForm: TCheckForm
         end>
       Caption = 'actExecStoredUpdateUnit'
     end
+    object macUpdateMemberSp: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogUpdateMemberSp
+        end
+        item
+          Action = actExecStoredUpdateMemberSp
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099#1073#1088#1072#1090#1100' '#1087#1072#1094#1080#1077#1085#1090#1072'?'
+      Caption = #1042#1099#1073#1088#1072#1090#1100' '#1087#1072#1094#1080#1077#1085#1090#1072
+      Hint = #1042#1099#1073#1088#1072#1090#1100' '#1087#1072#1094#1080#1077#1085#1090#1072
+      ImageIndex = 8
+    end
+    object actExecStoredUpdateMemberSp: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMemberSP
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMemberSP
+        end>
+      Caption = 'actExecStoredUpdateUnit'
+    end
+    object actChoiceMemberSpForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceMemberSpForm'
+      FormName = 'TMemberSPForm'
+      FormNameParam.Value = 'TMemberSPForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MemberSPId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object ExecuteDialogUpdateMemberSp: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1042#1099#1073#1088#1072#1090#1100' '#1087#1072#1094#1080#1077#1085#1090#1072
+      Hint = #1042#1099#1073#1088#1072#1090#1100' '#1087#1072#1094#1080#1077#1085#1090#1072
+      ImageIndex = 55
+      FormName = 'TMemberSPChoiceDialogForm'
+      FormNameParam.Value = 'TMemberSPChoiceDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMemberSPId'
+          Value = 42261d
+          Component = FormParams
+          ComponentItem = 'MemberSPId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerMedicalId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inPartnerMedicalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerMedicalName'
+          Value = Null
+          Component = edPartnerMedical
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
-    Top = 221
+    Top = 306
   end
   inherited MasterCDS: TClientDataSet
-    Top = 221
+    Top = 306
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Check'
@@ -1027,10 +1192,10 @@ inherited CheckForm: TCheckForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Top = 221
+    Top = 306
   end
   inherited BarManager: TdxBarManager
-    Top = 220
+    Top = 305
     DockControlHeights = (
       0
       0
@@ -1088,7 +1253,7 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton2'
+          ItemName = 'bbUpdateUnit'
         end
         item
           Visible = True
@@ -1096,7 +1261,15 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbUpdateMemberSp'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateSpParam'
         end
         item
           Visible = True
@@ -1125,13 +1298,18 @@ inherited CheckForm: TCheckForm
       Action = macUpdateOperDate
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbUpdateSpParam: TdxBarButton
       Action = macUpdateSpParam
       Category = 0
     end
-    object dxBarButton2: TdxBarButton
+    object bbUpdateUnit: TdxBarButton
       Action = actUpdateUnit
       Category = 0
+    end
+    object bbUpdateMemberSp: TdxBarButton
+      Action = macUpdateMemberSp
+      Category = 0
+      ImageIndex = 55
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1143,7 +1321,10 @@ inherited CheckForm: TCheckForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 0
       end>
-    Top = 214
+    Top = 299
+  end
+  inherited PopupMenu: TPopupMenu
+    Top = 349
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -1195,10 +1376,10 @@ inherited CheckForm: TCheckForm
         MultiSelectSeparator = ','
       end>
     Left = 56
-    Top = 312
+    Top = 397
   end
   inherited StatusGuides: TdsdGuides
-    Top = 221
+    Top = 306
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Check'
@@ -1228,7 +1409,7 @@ inherited CheckForm: TCheckForm
         MultiSelectSeparator = ','
       end>
     Left = 160
-    Top = 221
+    Top = 306
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Check'
@@ -1432,9 +1613,60 @@ inherited CheckForm: TCheckForm
         Component = edTotalSummPayAdd
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberSPid'
+        Value = Null
+        Component = GuidesMemberSP
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberSPName'
+        Value = Null
+        Component = GuidesMemberSP
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GroupMemberSPId'
+        Value = Null
+        Component = GuidesGroupMemberSP
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GroupMemberSPName'
+        Value = Null
+        Component = GuidesGroupMemberSP
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Address_MemberSP'
+        Value = Null
+        Component = edAddress
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'INN_MemberSP'
+        Value = Null
+        Component = edInn
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Passport_MemberSP'
+        Value = Null
+        Component = edPassport
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 112
-    Top = 312
+    Top = 397
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Check'
@@ -1463,21 +1695,24 @@ inherited CheckForm: TCheckForm
         MultiSelectSeparator = ','
       end>
     Left = 186
-    Top = 272
+    Top = 357
   end
   inherited GuidesFiller: TGuidesFiller
-    Top = 221
+    Top = 306
   end
   inherited HeaderSaver: THeaderSaver
     Left = 320
-    Top = 313
+    Top = 398
+  end
+  inherited RefreshAddOn: TRefreshAddOn
+    Top = 325
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    Top = 261
+    Top = 346
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     Left = 406
-    Top = 240
+    Top = 325
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     Left = 536
@@ -1485,7 +1720,7 @@ inherited CheckForm: TCheckForm
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     Left = 408
-    Top = 304
+    Top = 389
   end
   inherited spGetTotalSumm: TdsdStoredProc
     Left = 500
@@ -1522,7 +1757,7 @@ inherited CheckForm: TCheckForm
       end>
     PackSize = 1
     Left = 186
-    Top = 328
+    Top = 413
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Check_Print'
@@ -1545,20 +1780,20 @@ inherited CheckForm: TCheckForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 648
-    Top = 232
+    Left = 632
+    Top = 328
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 748
-    Top = 233
+    Left = 772
+    Top = 361
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 740
-    Top = 286
+    Left = 764
+    Top = 302
   end
   object spUpdateMovement_OperDate: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Check_OperDate'
@@ -1590,8 +1825,8 @@ inherited CheckForm: TCheckForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 378
-    Top = 384
+    Left = 482
+    Top = 424
   end
   object spUpdate_SpParam: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Check_SpParam'
@@ -1711,5 +1946,140 @@ inherited CheckForm: TCheckForm
     PackSize = 1
     Left = 674
     Top = 336
+  end
+  object GuidesMemberSP: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMemberSP
+    FormNameParam.Value = 'TMemberSPForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMemberSPForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMemberSP
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMemberSP
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GroupMemberSPId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GroupMemberSPName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerMedicalId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerMedicalName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Address'
+        Value = ''
+        Component = edAddress
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Passport'
+        Value = ''
+        Component = edPassport
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Inn'
+        Value = ''
+        Component = edInn
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 144
+    Top = 112
+  end
+  object GuidesGroupMemberSP: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGroupMemberSP
+    FormNameParam.Value = 'TGroupMemberSPForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGroupMemberSPForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGroupMemberSP
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGroupMemberSP
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 288
+    Top = 120
+  end
+  object spUpdateMemberSP: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_MemberSP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberSPId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MemberSPId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 698
+    Top = 384
   end
 end

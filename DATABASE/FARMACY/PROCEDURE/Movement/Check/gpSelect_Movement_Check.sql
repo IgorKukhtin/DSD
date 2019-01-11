@@ -34,6 +34,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , StatusCode_PromoCode Integer
              , InvNumber_PromoCode_Full TVarChar
              , GUID_PromoCode TVarChar
+             , MemberSPId Integer, MemberSPName TVarChar
+             , GroupMemberSPId Integer, GroupMemberSPName TVarChar
+             , Address_MemberSP  TVarChar
+             , INN_MemberSP      TVarChar
+             , Passport_MemberSP TVarChar
               )
 AS
 $BODY$
@@ -111,6 +116,14 @@ BEGIN
            , Object_Status_PromoCode.ObjectCode                 AS StatusCode_PromoCode
            , ('№ ' || Movement_PromoCode.InvNumber || ' от ' || Movement_PromoCode.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_PromoCode_Full
            , MIString_GUID.ValueData                 ::TVarChar AS GUID_PromoCode
+
+           , Object_MemberSP.Id                                           AS MemberSPId
+           , Object_MemberSP.ValueData                                    AS MemberSPName
+           , Object_GroupMemberSP.Id                                      AS GroupMemberSPId
+           , Object_GroupMemberSP.ValueData                               AS GroupMemberSPName
+           , COALESCE (ObjectString_Address.ValueData, '')   :: TVarChar  AS Address_MemberSP
+           , COALESCE (ObjectString_INN.ValueData, '')       :: TVarChar  AS INN_MemberSP
+           , COALESCE (ObjectString_Passport.ValueData, '')  :: TVarChar  AS Passport_MemberSP
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -269,6 +282,26 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_GUID
                                          ON MIString_GUID.MovementItemId = MI_PromoCode.Id
                                         AND MIString_GUID.DescId = zc_MIString_GUID()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSP
+                                         ON MovementLinkObject_MemberSP.MovementId = Movement_Check.Id
+                                        AND MovementLinkObject_MemberSP.DescId = zc_MovementLinkObject_MemberSP()
+            LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = MovementLinkObject_MemberSP.ObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_Address
+                                   ON ObjectString_Address.ObjectId = MovementLinkObject_MemberSP.ObjectId
+                                  AND ObjectString_Address.DescId = zc_ObjectString_MemberSP_Address()
+            LEFT JOIN ObjectString AS ObjectString_INN
+                                   ON ObjectString_INN.ObjectId = MovementLinkObject_MemberSP.ObjectId
+                                  AND ObjectString_INN.DescId = zc_ObjectString_MemberSP_INN()
+            LEFT JOIN ObjectString AS ObjectString_Passport
+                                   ON ObjectString_Passport.ObjectId = MovementLinkObject_MemberSP.ObjectId
+                                  AND ObjectString_Passport.DescId = zc_ObjectString_MemberSP_Passport()
+            LEFT JOIN ObjectLink AS ObjectLink_MemberSP_GroupMemberSP
+                                 ON ObjectLink_MemberSP_GroupMemberSP.ObjectId = MovementLinkObject_MemberSP.ObjectId
+                                AND ObjectLink_MemberSP_GroupMemberSP.DescId = zc_ObjectLink_MemberSP_GroupMemberSP()
+            LEFT JOIN Object AS Object_GroupMemberSP ON Object_GroupMemberSP.Id = ObjectLink_MemberSP_GroupMemberSP.ChildObjectId
+
       ;
 
 END;
