@@ -7,7 +7,8 @@ uses
   Dialogs, StdCtrls, Mask, CashInterface, DB, Buttons,
   Gauges, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, cxTextEdit, cxCurrencyEdit,
-  cxClasses, cxPropertiesStore, dsdAddOn, dxSkinsCore, dxSkinsDefaultPainters;
+  cxClasses, cxPropertiesStore, dsdAddOn, dxSkinsCore, dxSkinsDefaultPainters,
+  dsdDB;
 
 type
   TCashWorkForm = class(TForm)
@@ -83,6 +84,12 @@ begin
                  m_ZReportName + FormatDateTime('DD.MM.YY', Date) + ' ‘Õ' +
                  m_Cash.FiscalNumber  + ' π' + IntToStr(m_Cash.ZReport), m_Cash.InfoZReport);
      m_Cash.ClosureFiscal;
+     try
+       MainCashForm.spUpdate_CashSerialNumber.ParamByName('inFiscalNumber').Value := m_Cash.FiscalNumber;
+       MainCashForm.spUpdate_CashSerialNumber.ParamByName('inSerialNumber').Value := m_Cash.SerialNumber;
+       MainCashForm.spUpdate_CashSerialNumber.Execute;
+     except on E: Exception do Add_Log('Exception: ' + E.Message);
+     end;
   end;
 end;
 

@@ -1,26 +1,26 @@
 inherited Check_CashRegisterForm: TCheck_CashRegisterForm
   Caption = #1050#1072#1089#1089#1099' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
   ClientHeight = 463
-  ClientWidth = 511
+  ClientWidth = 583
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 527
+  ExplicitWidth = 599
   ExplicitHeight = 502
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 511
+    Width = 583
     Height = 406
-    ExplicitWidth = 734
+    ExplicitWidth = 511
     ExplicitHeight = 406
     ClientRectBottom = 406
-    ClientRectRight = 511
+    ClientRectRight = 583
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 734
+      ExplicitWidth = 511
       ExplicitHeight = 406
       inherited cxGrid: TcxGrid
-        Width = 511
+        Width = 583
         Height = 406
-        ExplicitWidth = 734
+        ExplicitWidth = 511
         ExplicitHeight = 406
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -55,28 +55,36 @@ inherited Check_CashRegisterForm: TCheck_CashRegisterForm
             Options.Editing = False
             Width = 130
           end
+          object cxGridDBTableViewColumn1: TcxGridDBColumn
+            Caption = #1057#1077#1088#1080#1081#1085#1099#1081' '#1085#1086#1084#1077#1088
+            DataBinding.FieldName = 'SerialNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 96
+          end
           object UnitName: TcxGridDBColumn
             Caption = #1040#1087#1090#1077#1082#1072
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 223
+            Width = 232
           end
           object UserName: TcxGridDBColumn
             Caption = #1063#1077#1082#1086#1074' '#1079#1072' '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'CheckCount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 107
+            Width = 80
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 511
-    ExplicitWidth = 734
+    Width = 583
+    ExplicitWidth = 511
     inherited deStart: TcxDateEdit
       Left = 108
       EditValue = 43344d

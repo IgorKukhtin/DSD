@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Check_CashRegister(
 )
 RETURNS TABLE (UnitID Integer, UnitCode Integer, UnitName TVarChar
              , CashRegisterID Integer, CashRegisterCode Integer, CashRegisterName TVarChar
+             , SerialNumber TVarChar
              , CheckCount Integer)
 AS
 $BODY$
@@ -21,14 +22,15 @@ BEGIN
      -- Результат
   RETURN QUERY
   SELECT
-     Object_Unit.ID                    AS UnitID,
-     Object_Unit.ObjectCode            AS UnitCode,
-     Object_Unit.ValueData             AS UnitName,
+     Object_Unit.ID                       AS UnitID,
+     Object_Unit.ObjectCode               AS UnitCode,
+     Object_Unit.ValueData                AS UnitName,
 
-     Object_CashRegister.ID            AS CashRegisterID,
-     Object_CashRegister.ObjectCode    AS CashRegisterCode,
-     Object_CashRegister.ValueData     AS CashRegisterName,
-     count(*)::Integer                 AS CheckCount
+     Object_CashRegister.ID               AS CashRegisterID,
+     Object_CashRegister.ObjectCode       AS CashRegisterCode,
+     Object_CashRegister.ValueData        AS CashRegisterName,
+     ObjectString_SerialNumber.ValueData  AS SerialNumber,
+     count(*)::Integer                    AS CheckCount
   FROM Movement
 
        INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -39,13 +41,18 @@ BEGIN
        INNER JOIN MovementLinkObject AS MovementLinkObject_CashRegister
                                     ON MovementLinkObject_CashRegister.MovementId = Movement.Id
                                    AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
+                                   
        INNER JOIN Object AS Object_CashRegister ON Object_CashRegister.Id = MovementLinkObject_CashRegister.ObjectId
+       LEFT JOIN ObjectString AS ObjectString_SerialNumber 
+                              ON ObjectString_SerialNumber.ObjectId = Object_CashRegister.Id
+                             AND ObjectString_SerialNumber.DescId = zc_ObjectString_CashRegister_SerialNumber()
 
   WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate) 
     AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
     AND Movement.DescId = zc_Movement_Check()
   GROUP BY Object_Unit.ID, Object_Unit.ObjectCode, Object_Unit.ValueData, 
-           Object_CashRegister.ID, Object_CashRegister.ObjectCode, Object_CashRegister.ValueData  
+           Object_CashRegister.ID, Object_CashRegister.ObjectCode, Object_CashRegister.ValueData,
+           ObjectString_SerialNumber.ValueData  
   ORDER BY Object_Unit.ObjectCode, Object_CashRegister.ObjectCode;
 
 END;

@@ -20,6 +20,7 @@ inherited Report_KPUForm: TReport_KPUForm
       inherited cxGrid: TcxGrid
         Width = 940
         Height = 447
+        ParentFont = False
         ExplicitWidth = 940
         ExplicitHeight = 447
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -179,6 +180,7 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Styles.Content = dmMain.cxFooterStyle
             Width = 32
             Position.BandIndex = 0
             Position.ColIndex = 5

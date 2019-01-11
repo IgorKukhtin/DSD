@@ -24,6 +24,7 @@ type
     bbExecuteDialog: TdxBarButton;
     UserName: TcxGridDBColumn;
     dsdOpenForm1: TdsdOpenForm;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
   private
     { Private declarations }
   public
