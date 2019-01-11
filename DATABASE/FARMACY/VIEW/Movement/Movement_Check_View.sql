@@ -48,6 +48,9 @@ SELECT
            , Object_SPKind.Id                                AS SPKindId
            , Object_SPKind.ValueData                         AS SPKindName
            , MovementFloat_ManualDiscount.ValueData::Integer AS ManualDiscount
+
+           , Object_MemberSP.Id                              AS MemberSPId
+           , Object_MemberSP.ValueData                       AS MemberSPName
        FROM Movement 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -155,8 +158,13 @@ SELECT
             LEFT JOIN Object AS Object_SPKind ON Object_SPKind.Id = MovementLinkObject_SPKind.ObjectId
 
             LEFT JOIN MovementFloat AS MovementFloat_ManualDiscount
-                                    ON MovementFloat_ManualDiscount.MovementId =  Movement.Id
+                                    ON MovementFloat_ManualDiscount.MovementId = Movement.Id
                                    AND MovementFloat_ManualDiscount.DescId = zc_MovementFloat_ManualDiscount()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSP
+                                         ON MovementLinkObject_MemberSP.MovementId = Movement.Id
+                                        AND MovementLinkObject_MemberSP.DescId = zc_MovementLinkObject_MemberSP()
+            LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = MovementLinkObject_MemberSP.ObjectId
 
         WHERE Movement.DescId = zc_Movement_Check();
 
@@ -167,6 +175,7 @@ ALTER TABLE Movement_Check_View
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 11.01.19         *
  02.10.18                                                       * add TotalSummPayAdd
  29.06.18                                                       * 
  23.05.17         *

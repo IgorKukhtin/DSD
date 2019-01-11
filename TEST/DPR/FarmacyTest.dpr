@@ -645,7 +645,8 @@ uses
   RecalcMCSSheduler in '..\..\FormsFarmacy\Object\RecalcMCSSheduler.pas',
   RecalcMCSShedulerEdit in '..\..\FormsFarmacy\Object\RecalcMCSShedulerEdit.pas' {RecalcMCSShedulerEditForm: TParentForm},
   Week in '..\..\FormsFarmacy\Guides\Week.pas' {WeekForm: TParentForm},
-  Check_CashRegister in '..\..\FormsFarmacy\Guides\Check_CashRegister.pas' {Check_CashRegisterForm: TParentForm};
+  Check_CashRegister in '..\..\FormsFarmacy\Guides\Check_CashRegister.pas' {Check_CashRegisterForm: TParentForm},
+  MemberSPChoiceDialog in '..\..\FormsFarmacy\Document\MemberSPChoiceDialog.pas' {MemberSPChoiceDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

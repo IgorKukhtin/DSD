@@ -72,7 +72,7 @@ type
     actUpdateSpParam: TdsdDataSetRefresh;
     ExecuteDialogSP: TExecuteDialog;
     macUpdateSpParam: TMultiAction;
-    bb: TdxBarButton;
+    bbUpdateSpParam: TdxBarButton;
     cxLabel18: TcxLabel;
     edSPKind: TcxTextEdit;
     cxLabel19: TcxLabel;
@@ -86,8 +86,26 @@ type
     actUpdateUnit: TMultiAction;
     actExecStoredUpdateUnit: TdsdExecStoredProc;
     spUpdateUnit: TdsdStoredProc;
-    dxBarButton2: TdxBarButton;
+    bbUpdateUnit: TdxBarButton;
     actChoiceUnitTreeForm: TOpenChoiceForm;
+    cxLabel22: TcxLabel;
+    edMemberSP: TcxButtonEdit;
+    cxLabel23: TcxLabel;
+    edGroupMemberSP: TcxButtonEdit;
+    cxLabel24: TcxLabel;
+    cxLabel25: TcxLabel;
+    edPassport: TcxTextEdit;
+    edInn: TcxTextEdit;
+    cxLabel26: TcxLabel;
+    edAddress: TcxTextEdit;
+    GuidesMemberSP: TdsdGuides;
+    GuidesGroupMemberSP: TdsdGuides;
+    actChoiceMemberSpForm: TOpenChoiceForm;
+    spUpdateMemberSP: TdsdStoredProc;
+    actExecStoredUpdateMemberSp: TdsdExecStoredProc;
+    macUpdateMemberSp: TMultiAction;
+    bbUpdateMemberSp: TdxBarButton;
+    ExecuteDialogUpdateMemberSp: TExecuteDialog;
   private
     { Private declarations }
   public

@@ -29,6 +29,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InvNumber_PromoCode_Full TVarChar
              , GUID_PromoCode TVarChar
              , ManualDiscount Integer
+             
+             , MemberSPId Integer, MemberSPName TVarChar
+             , GroupMemberSPId Integer, GroupMemberSPName TVarChar
+             , Address_MemberSP  TVarChar
+             , INN_MemberSP      TVarChar
+             , Passport_MemberSP TVarChar
 )
 AS
 $BODY$
@@ -77,6 +83,14 @@ BEGIN
            , MIString_GUID.ValueData                 ::TVarChar AS GUID_PromoCode
            , Movement_Check.ManualDiscount                      AS ManualDiscount
            
+           , Movement_Check.MemberSPId
+           , Movement_Check.MemberSPName
+           , Object_GroupMemberSP.Id                                      AS GroupMemberSPId
+           , Object_GroupMemberSP.ValueData                               AS GroupMemberSPName
+           , COALESCE (ObjectString_Address.ValueData, '')   :: TVarChar  AS Address_MemberSP
+           , COALESCE (ObjectString_INN.ValueData, '')       :: TVarChar  AS INN_MemberSP
+           , COALESCE (ObjectString_Passport.ValueData, '')  :: TVarChar  AS Passport_MemberSP
+
         FROM Movement_Check_View AS Movement_Check
              LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
                                   ON ObjectLink_DiscountExternal.ObjectId = Movement_Check.DiscountCardId
@@ -95,7 +109,21 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_GUID
                                           ON MIString_GUID.MovementItemId = MI_PromoCode.Id
                                          AND MIString_GUID.DescId = zc_MIString_GUID()
-                                         
+
+             LEFT JOIN ObjectString AS ObjectString_Address
+                                    ON ObjectString_Address.ObjectId = Movement_Check.MemberSPId
+                                   AND ObjectString_Address.DescId = zc_ObjectString_MemberSP_Address()
+             LEFT JOIN ObjectString AS ObjectString_INN
+                                    ON ObjectString_INN.ObjectId = Movement_Check.MemberSPId
+                                   AND ObjectString_INN.DescId = zc_ObjectString_MemberSP_INN()
+             LEFT JOIN ObjectString AS ObjectString_Passport
+                                    ON ObjectString_Passport.ObjectId = Movement_Check.MemberSPId
+                                   AND ObjectString_Passport.DescId = zc_ObjectString_MemberSP_Passport()
+             LEFT JOIN ObjectLink AS ObjectLink_MemberSP_GroupMemberSP
+                                  ON ObjectLink_MemberSP_GroupMemberSP.ObjectId = Movement_Check.MemberSPId
+                                 AND ObjectLink_MemberSP_GroupMemberSP.DescId = zc_ObjectLink_MemberSP_GroupMemberSP()
+             LEFT JOIN Object AS Object_GroupMemberSP ON Object_GroupMemberSP.Id = ObjectLink_MemberSP_GroupMemberSP.ChildObjectId
+
        WHERE Movement_Check.Id = inMovementId;
 
 END;
@@ -106,6 +134,7 @@ ALTER FUNCTION gpGet_Movement_Check (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.   ÿ‡·ÎËÈ Œ.¬.
+ 11.01.19         * add MemberSP
  02.10.18                                                                      * add TotalSummPayAdd
  29.06.18                                                                      * add ManualDiscount
  14.12.17         * add PromoCode
