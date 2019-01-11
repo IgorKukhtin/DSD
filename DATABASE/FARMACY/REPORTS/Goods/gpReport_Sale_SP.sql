@@ -211,26 +211,26 @@ BEGIN
                               , COALESCE (MovementBoolean_List.ValueData, FALSE) AS isListSP
                               , MovementString_InvNumberSP.ValueData         AS InvNumberSP
                               , COALESCE (MovementString_MedicSP.ValueData, '') :: TVarChar  AS MedicSP
-                              , 0                                                            AS MemberSPId
-                              , COALESCE (MovementString_Bayer.ValueData, '')   :: TVarChar  AS MemberSP
+                              , Object_MemberSP.Id                                                                     AS MemberSPId
+                              , COALESCE (Object_MemberSP.ValueData, MovementString_Bayer.ValueData, '')  :: TVarChar  AS MemberSP
                               , COALESCE (MovementDate_OperDateSP.ValueData,Null) AS OperDateSP
-                              , MovementLinkObject_GroupMemberSP.ObjectId         AS GroupMemberSPId
+                              , ObjectLink_MemberSP_GroupMemberSP.ChildObjectId   AS GroupMemberSPId
                               , Movement_Invoice.InvNumber  :: TVarChar           AS InvNumber_Invoice
                               , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Invoice_Full
                          FROM Movement AS Movement_Check
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                      ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
-                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                            ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
+                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                               INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
 
                               INNER JOIN MovementLinkObject AS MovementLinkObject_SPKind
-                                      ON MovementLinkObject_SPKind.MovementId = Movement_Check.Id
-                                     AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
-                                     AND MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303()
+                                                            ON MovementLinkObject_SPKind.MovementId = Movement_Check.Id
+                                                           AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+                                                           AND MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303()
 
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
-                                     ON MovementLinkObject_PartnerMedical.MovementId = Movement_Check.Id
-                                    AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
+                                                           ON MovementLinkObject_PartnerMedical.MovementId = Movement_Check.Id
+                                                          AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
 
                               LEFT JOIN MovementBoolean AS MovementBoolean_List
                                                         ON MovementBoolean_List.MovementId = Movement_Check.Id
@@ -240,36 +240,42 @@ BEGIN
                                                       AND MovementString_InvNumberSP.DescId     = zc_MovementString_InvNumberSP()
 
                              LEFT JOIN MovementString AS MovementString_MedicSP
-                                    ON MovementString_MedicSP.MovementId = Movement_Check.Id
-                                   AND MovementString_MedicSP.DescId = zc_MovementString_MedicSP()
+                                                      ON MovementString_MedicSP.MovementId = Movement_Check.Id
+                                                     AND MovementString_MedicSP.DescId = zc_MovementString_MedicSP()
                              LEFT JOIN MovementString AS MovementString_Bayer
-                                    ON MovementString_Bayer.MovementId = Movement_Check.Id
-                                   AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
+                                                      ON MovementString_Bayer.MovementId = Movement_Check.Id
+                                                     AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
 
                               LEFT JOIN MovementDate AS MovementDate_OperDateSP
-                                   ON MovementDate_OperDateSP.MovementId = Movement_Check.Id
-                                  AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
-
-                              LEFT JOIN MovementLinkObject AS MovementLinkObject_GroupMemberSP
-                                     ON MovementLinkObject_GroupMemberSP.MovementId = Movement_Check.Id
-                                    AND MovementLinkObject_GroupMemberSP.DescId = zc_MovementLinkObject_GroupMemberSP()
+                                                     ON MovementDate_OperDateSP.MovementId = Movement_Check.Id
+                                                    AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
 
                               LEFT JOIN MovementLinkMovement AS MLM_Child
-                                     ON MLM_Child.MovementId = Movement_Check.Id
-                                    AND MLM_Child.descId = zc_MovementLinkMovement_Child()
+                                                             ON MLM_Child.MovementId = Movement_Check.Id
+                                                            AND MLM_Child.descId = zc_MovementLinkMovement_Child()
                               LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MLM_Child.MovementChildId
+
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSP
+                                                           ON MovementLinkObject_MemberSP.MovementId = Movement_Check.Id
+                                                          AND MovementLinkObject_MemberSP.DescId = zc_MovementLinkObject_MemberSP()
+                              LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = MovementLinkObject_MemberSP.ObjectId
+
+                              LEFT JOIN ObjectLink AS ObjectLink_MemberSP_GroupMemberSP
+                                                   ON ObjectLink_MemberSP_GroupMemberSP.ObjectId = MovementLinkObject_MemberSP.ObjectId
+                                                  AND ObjectLink_MemberSP_GroupMemberSP.DescId = zc_ObjectLink_MemberSP_GroupMemberSP()
+                              LEFT JOIN Object AS Object_GroupMemberSP ON Object_GroupMemberSP.Id = ObjectLink_MemberSP_GroupMemberSP.ChildObjectId
 
                          WHERE Movement_Check.DescId = zc_Movement_Check()
                            AND Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY'
                            AND ( COALESCE (MovementLinkObject_PartnerMedical.ObjectId,0) <> 0 OR
-                                 COALESCE (MovementLinkObject_GroupMemberSP.ObjectId ,0) <> 0 OR
+                                 COALESCE (ObjectLink_MemberSP_GroupMemberSP.ChildObjectId ,0) <> 0 OR
                                  COALESCE (MovementString_InvNumberSP.ValueData,'') <> '' OR
                                  COALESCE (MovementString_MedicSP.ValueData, '') <> '' OR
                                  COALESCE (MovementString_Bayer.ValueData, '') <> ''
                                )
                            AND (MovementLinkObject_PartnerMedical.ObjectId = inHospitalId OR inHospitalId = 0)
-                           AND (   (MovementLinkObject_GroupMemberSP.ObjectId =  inGroupMemberSPId AND inisGroupMemberSP = FALSE AND COALESCE(inGroupMemberSPId,0) <> 0)
-                                OR (COALESCE(MovementLinkObject_GroupMemberSP.ObjectId,0) <> inGroupMemberSPId AND inisGroupMemberSP = TRUE AND COALESCE(inGroupMemberSPId,0) <> 0)
+                           AND (   (ObjectLink_MemberSP_GroupMemberSP.ChildObjectId = inGroupMemberSPId AND inisGroupMemberSP = FALSE AND COALESCE(inGroupMemberSPId,0) <> 0)
+                                OR (COALESCE(ObjectLink_MemberSP_GroupMemberSP.ChildObjectId, 0) <> inGroupMemberSPId AND inisGroupMemberSP = TRUE AND COALESCE(inGroupMemberSPId,0) <> 0)
                                 OR COALESCE(inGroupMemberSPId,0) = 0
                                 )
                            AND Movement_Check.StatusId = zc_Enum_Status_Complete()
@@ -643,6 +649,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+ 11.01.19         *
  05.06.18         *
  14.02.18         * add SigningDate_Contract
  24.05.17         * add zc_Movement_Check
