@@ -4,8 +4,9 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
   ClientWidth = 1089
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitTop = -97
   ExplicitWidth = 1105
-  ExplicitHeight = 681
+  ExplicitHeight = 678
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -3785,6 +3786,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
         BackGroundValueColumn = Color_Prof
         ColorValueList = <>
       end>
+    KeepSelectColor = True
     Left = 472
     Top = 208
   end
@@ -4058,6 +4060,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    KeepSelectColor = True
     Left = 456
     Top = 368
   end
@@ -4087,6 +4090,7 @@ inherited Report_Sale_AnalysisForm: TReport_Sale_AnalysisForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    KeepSelectColor = True
     Left = 568
     Top = 552
   end
