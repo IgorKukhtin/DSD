@@ -1,4 +1,4 @@
- -- Function: gpSelect_Movement_PersonalService()
+-- Function: gpSelect_Movement_PersonalService()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
@@ -41,7 +41,7 @@ BEGIN
      -- Блокируем ему просмотр
      IF vbUserId = 9457 -- Климентьев К.И.
      THEN
-        vbUserId:= NULL;
+         vbUserId:= NULL;
          RETURN;
      END IF;
 
@@ -51,9 +51,8 @@ BEGIN
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
-        , tmpUserAll AS (SELECT UserId FROM Constant_User_LevelMax01_View WHERE UserId = vbUserId /*AND UserId <> 9464*/) -- Документы-меню (управленцы) AND <> Рудик Н.В. + ЗП просмотр ВСЕ
         , tmpMemberPersonalServiceList
-                     AS (SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+                     AS (SELECT Object_PersonalServiceList.Id                       AS PersonalServiceListId
                          FROM ObjectLink AS ObjectLink_User_Member
                               INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
                                                     ON ObjectLink_MemberPersonalServiceList.ChildObjectId = ObjectLink_User_Member.ChildObjectId
@@ -68,35 +67,8 @@ BEGIN
                                                                               OR ObjectBoolean.ValueData          = TRUE)
                          WHERE ObjectLink_User_Member.ObjectId = vbUserId
                            AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
-                        UNION
-                         SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
-                         FROM ObjectLink AS ObjectLink_User_Member
-                              INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
-                                                    ON ObjectLink_PersonalServiceList_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
-                                                   AND ObjectLink_PersonalServiceList_Member.DescId        = zc_ObjectLink_PersonalServiceList_Member()
-                              LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
-                                                                            AND Object_PersonalServiceList.Id     = ObjectLink_PersonalServiceList_Member.ObjectId
-                         WHERE ObjectLink_User_Member.ObjectId = vbUserId
-                           AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
-                        UNION
-                         -- Админ и другие видят ВСЕХ
-                         SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
-                         FROM Object AS Object_PersonalServiceList
-                         WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
-                           AND EXISTS (SELECT 1 FROM tmpUserAll)
-                        UNION
-                         -- Админ и другие видят ВСЕХ
-                         SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
-                         FROM Object AS Object_PersonalServiceList
-                         WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
-                           AND EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceAdmin())
-                        /*UNION
-                         -- "ЗП филиалов" видят "Галат Е.Н."
-                         SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
-                         FROM Object AS Object_PersonalServiceList
-                         WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
-                           AND vbUserId = 106593*/
                         )
+        , tmpUserAll AS (SELECT UserId FROM Constant_User_LevelMax01_View WHERE UserId = vbUserId /*AND UserId <> 9464*/) -- Документы-меню (управленцы) AND <> Рудик Н.В. + ЗП просмотр ВСЕ
         , tmpRoleAccessKey AS (SELECT DISTINCT AccessKeyId_PersonalService AS AccessKeyId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId
                               UNION
                                -- Админ и другие видят ВСЕХ
@@ -126,9 +98,7 @@ BEGIN
                                                            AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
                                LEFT JOIN tmpMemberPersonalServiceList ON tmpMemberPersonalServiceList.PersonalServiceListId = MovementLinkObject_PersonalServiceList.ObjectId
                           WHERE inIsServiceDate = FALSE
-                            -- Волошина Е.А.
-                            AND ((tmpRoleAccessKey.AccessKeyId > 0 AND vbUserId <> 140094) OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
-                            -- AND (tmpRoleAccessKey.AccessKeyId > 0 OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
+                            AND (tmpRoleAccessKey.AccessKeyId > 0 OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
                          UNION ALL
                           SELECT MovementDate_ServiceDate.MovementId             AS Id
                                , MovementLinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
@@ -143,9 +113,7 @@ BEGIN
                           WHERE inIsServiceDate = TRUE
                             AND MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', inStartDate) AND (DATE_TRUNC ('MONTH', inEndDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
                             AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
-                            -- Волошина Е.А.
-                            AND ((tmpRoleAccessKey.AccessKeyId > 0 AND vbUserId <> 140094) OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
-                            -- AND (tmpRoleAccessKey.AccessKeyId > 0 OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
+                            AND (tmpRoleAccessKey.AccessKeyId > 0 OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
                          )
                          
         , tmpSign AS (SELECT tmpMovement.Id
@@ -161,7 +129,7 @@ BEGIN
                                                   ON ObjectLink_PersonalServiceList_Member.ObjectId = tmp.PersonalServiceListId 
                                                  AND ObjectLink_PersonalServiceList_Member.DescId = zc_ObjectLink_PersonalServiceList_Member()
                        )
-       -- Результат
+                         
        SELECT
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
