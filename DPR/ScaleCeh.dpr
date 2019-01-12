@@ -64,7 +64,7 @@ uses
   dsdException in '..\SOURCE\dsdException.pas',
   StatusXML in '..\SOURCE\EDI\StatusXML.pas',
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
-  DialogDateValue in '..\Scale\DialogDateValue.pas' {DialogDateValueForm: TParentForm},
+  DialogDateReport in '..\Scale\DialogDateReport.pas' {DialogDateReportForm: TParentForm},
   DialogPrint in '..\Scale\DialogPrint.pas' {DialogPrintForm},
   AxLibLib_TLB in '..\Scale\Util\AxLibLib_TLB.pas',
   dmMainScaleCeh in '..\ScaleCeh\Util\dmMainScaleCeh.pas' {DMMainScaleCehForm: TDataModule},
@@ -88,7 +88,8 @@ uses
   GuideGoodsLine in '..\ScaleCeh\GuideGoodsLine.pas' {GuideGoodsLineForm},
   dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
   Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
-  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas';
+  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas',
+  DialogDateValue in '..\Scale\DialogDateValue.pas' {DialogDateValueForm};
 
 {$R *.res}
 
@@ -120,6 +121,7 @@ begin
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
          Application.CreateForm(TDialogStringValueForm, DialogStringValueForm);
          Application.CreateForm(TDialogDateValueForm, DialogDateValueForm);
+         Application.CreateForm(TDialogDateReportForm, DialogDateReportForm);
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);
          Application.CreateForm(TDialogMessageForm, DialogMessageForm);
          Application.CreateForm(TGuideWorkProgressForm, GuideWorkProgressForm);
@@ -140,7 +142,7 @@ begin
          if gpCheck_BranchCode = FALSE then exit;
          //
          Application.CreateForm(TdmMain, dmMain);
-         Application.CreateForm(TDMMainScaleCehForm, DMMainScaleCehForm);
+  Application.CreateForm(TDMMainScaleCehForm, DMMainScaleCehForm);
   // !!!важно первым!!!
   Application.CreateForm(TMainCehForm, MainCehForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
@@ -150,6 +152,7 @@ begin
          Application.CreateForm(TDialogNumberValueForm, DialogNumberValueForm);
          Application.CreateForm(TDialogStringValueForm, DialogStringValueForm);
          Application.CreateForm(TDialogDateValueForm, DialogDateValueForm);
+         Application.CreateForm(TDialogDateReportForm, DialogDateReportForm);
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);
          Application.CreateForm(TDialogMessageForm, DialogMessageForm);
          Application.CreateForm(TGuideWorkProgressForm, GuideWorkProgressForm);

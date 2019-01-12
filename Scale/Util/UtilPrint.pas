@@ -101,13 +101,13 @@ type
     actPrint_PackGross2: TdsdPrintAction;
     actPrint_PackGross: TdsdPrintAction;
     spSelectPrintSticker: TdsdStoredProc;
-    actPrintStickerTermo: TdsdPrintAction;
     spGetReportNameQuality: TdsdStoredProc;
     actPrint_Quality_ReportName: TdsdExecStoredProc;
     actPrint_PackWeight: TdsdPrintAction;
     actPrint_Report_GoodsBalance1: TdsdPrintAction;
     actPrint_Report_GoodsBalance: TdsdPrintAction;
-    spReport: TdsdStoredProc;
+    spReport_GoodsBalance: TdsdStoredProc;
+    actPrintSticker: TdsdPrintAction;
   private
   end;
 
@@ -123,7 +123,8 @@ type
   function Print_Quality  (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Sale_Order(MovementId_order,MovementId_by:Integer; isDiff:Boolean; isDiffTax:Boolean):Boolean;
   function Print_PackWeight (MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
-  function Print_StickerTermo (MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
+  function Print_Sticker (MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
+  function Print_ReportGoodsBalance (StartDate,EndDate:TDateTime; UnitId : Integer; UnitName : String; isGoodsKind, isPartionGoods:Boolean):Boolean;
 
   procedure SendEDI_Invoice (MovementId: Integer);
   procedure SendEDI_OrdSpr (MovementId: Integer);
@@ -163,11 +164,11 @@ begin
   UtilPrintForm.actPrint_PackWeight.Execute;
 end;
 //------------------------------------------------------------------------------------------------
-procedure Print_StickerTermoDocument (MovementId: Integer; isPreview:Boolean);
+procedure Print_StickerDocument (MovementId: Integer; isPreview:Boolean);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
-  UtilPrintForm.actPrintStickerTermo.WithOutPreview:= not isPreview;
-  UtilPrintForm.actPrintStickerTermo.Execute;
+  UtilPrintForm.actPrintSticker.WithOutPreview:= not isPreview;
+  UtilPrintForm.actPrintSticker.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 procedure Print_Loss (MovementId: Integer);
@@ -436,7 +437,7 @@ begin
      Result:=true;
 end;
 //------------------------------------------------------------------------------------------------
-function Print_StickerTermo (MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
+function Print_Sticker (MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
 begin
      UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
      UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
@@ -447,10 +448,38 @@ begin
           try
              //Print
              if (MovementDescId = zc_Movement_Income)
-             then Print_StickerTermoDocument (MovementId,isPreview)
+             then Print_StickerDocument (MovementId,isPreview)
              else begin ShowMessage('Ошибка.Печать на термопринтер стикера-самоклейки возможна только для документа <Приход от поставщика>.');exit;end;
           except
                 ShowMessage('Ошибка.Печать <Печать на термопринтер> НЕ сформирована.');
+                exit;
+          end;
+     Result:=true;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_ReportGoodsBalance (StartDate,EndDate:TDateTime; UnitId : Integer; UnitName : String; isGoodsKind, isPartionGoods:Boolean):Boolean;
+begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
+     Result:=false;
+          //
+          try
+            UtilPrintForm.actPrint_Report_GoodsBalance.StoredProc.Params.ParamByName('inStartDate').Value:=StartDate;
+            UtilPrintForm.actPrint_Report_GoodsBalance.StoredProc.Params.ParamByName('inEndDate').Value:=EndDate;
+            UtilPrintForm.actPrint_Report_GoodsBalance.StoredProc.Params.ParamByName('inLocationId').Value:=UnitId;
+
+            UtilPrintForm.actPrint_Report_GoodsBalance.Params.ParamByName('StartDate').Value:=StartDate;
+            UtilPrintForm.actPrint_Report_GoodsBalance.Params.ParamByName('EndDate').Value:=EndDate;
+            UtilPrintForm.actPrint_Report_GoodsBalance.Params.ParamByName('LocationName').Value:=UnitName;
+            UtilPrintForm.actPrint_Report_GoodsBalance.Params.ParamByName('isGoodsKind').Value:=isGoodsKind;
+            UtilPrintForm.actPrint_Report_GoodsBalance.Params.ParamByName('isPartionGoods').Value:=isPartionGoods;
+            UtilPrintForm.actPrint_Report_GoodsBalance.Params.ParamByName('isAmount').Value:=true;
+
+            UtilPrintForm.actPrint_Report_GoodsBalance.Execute;
+          except
+                ShowMessage('Ошибка.Печать <Отчет> НЕ сформирована.');
                 exit;
           end;
      Result:=true;

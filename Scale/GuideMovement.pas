@@ -644,7 +644,7 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.bbPrintStickerTermoClick(Sender: TObject);
 begin
-     with CDS do Print_StickerTermo(CDS.FieldByName('MovementDescId').AsInteger, CDS.FieldByName('MovementId_parent').AsInteger,TRUE);
+     with CDS do Print_Sticker(CDS.FieldByName('MovementDescId').AsInteger, CDS.FieldByName('MovementId_parent').AsInteger,TRUE);
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideMovementForm.bbEDI_DesadvClick(Sender: TObject);

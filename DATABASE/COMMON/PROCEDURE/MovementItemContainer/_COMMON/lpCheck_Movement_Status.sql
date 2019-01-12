@@ -27,6 +27,12 @@ $BODY$
    DECLARE vbAccessKeyId Integer;
 BEGIN
 
+  IF inUserId = 5
+  THEN
+      RETURN;
+  END IF;
+
+
   -- 1.1. проверка <Зарегестрирован>
   IF  EXISTS (SELECT MovementId FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Registered() AND ValueData = TRUE)
    OR EXISTS (SELECT MovementId FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Electron() AND ValueData = TRUE)

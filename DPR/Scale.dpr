@@ -70,7 +70,7 @@ uses
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
   GuideMovementTransport in '..\Scale\GuideMovementTransport.pas' {GuideMovementTransportForm},
   DialogWeight in '..\Scale\DialogWeight.pas' {DialogWeightForm},
-  DialogDateValue in '..\Scale\DialogDateValue.pas' {DialogDateValueForm: TParentForm},
+  DialogDateReport in '..\Scale\DialogDateReport.pas' {DialogDateReportForm: TParentForm},
   DialogPersonalComplete in '..\Scale\DialogPersonalComplete.pas' {DialogPersonalCompleteForm},
   DialogMovementDesc in '..\Scale\DialogMovementDesc.pas' {DialogMovementDescForm},
   GuidePersonal in '..\Scale\GuidePersonal.pas' {GuidePersonalForm},

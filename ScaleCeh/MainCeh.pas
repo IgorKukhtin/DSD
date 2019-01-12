@@ -340,7 +340,7 @@ implementation
 {$R *.dfm}
 uses UnilWin,DMMainScaleCeh, DMMainScale, UtilConst, DialogMovementDesc, UtilPrint
     ,GuideMovementCeh, DialogNumberValue,DialogStringValue, DialogDateValue, DialogPrint, DialogMessage
-    ,GuideWorkProgress, GuideArticleLoss, GuideGoodsLine
+    ,GuideWorkProgress, GuideArticleLoss, GuideGoodsLine, DialogDateReport
     ,IdIPWatch, LookAndFillSettings;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -516,8 +516,23 @@ begin
 end;
 {------------------------------------------------------------------------------}
 procedure TMainCehForm.miReport_GoodsBalance_Unit1Click(Sender: TObject);
+var myUnitId : Integer;
+    myUnitName : String;
 begin
-    Print_Report (MovementId_Reestr:Integer):Boolean;
+    if TMenuItem(Sender).Tag = 1 then begin myUnitId:= SettingMain.UnitId1; myUnitName:= SettingMain.UnitName1; end;
+    if TMenuItem(Sender).Tag = 2 then begin myUnitId:= SettingMain.UnitId2; myUnitName:= SettingMain.UnitName2; end;
+    if TMenuItem(Sender).Tag = 3 then begin myUnitId:= SettingMain.UnitId3; myUnitName:= SettingMain.UnitName3; end;
+    if TMenuItem(Sender).Tag = 4 then begin myUnitId:= SettingMain.UnitId4; myUnitName:= SettingMain.UnitName4; end;
+    if TMenuItem(Sender).Tag = 5 then begin myUnitId:= SettingMain.UnitId5; myUnitName:= SettingMain.UnitName5; end;
+    //
+     with DialogDateReportForm do
+     begin
+          LabelValue.Caption:=myUnitName;
+          ActiveControl:=deStart;
+          if not Execute then begin exit;end;
+          //
+          Print_ReportGoodsBalance (StrToDate(deStart.Text), StrToDate(deEnd.Text), myUnitId, myUnitName, cbGoodsKind.Checked, cbPartionGoods.Checked);
+     end;
 end;
 {------------------------------------------------------------------------------}
 procedure TMainCehForm.myActiveControl;

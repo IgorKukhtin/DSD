@@ -29,8 +29,9 @@ BEGIN
 
 
      -- проверка
-     IF  EXISTS (SELECT MovementId FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Registered() AND ValueData = TRUE)
-      OR EXISTS (SELECT MovementId FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Electron()   AND ValueData = TRUE)
+     IF  (EXISTS (SELECT MovementId FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Registered() AND ValueData = TRUE)
+       OR EXISTS (SELECT MovementId FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Electron()   AND ValueData = TRUE))
+     AND vbUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.Установлен признак <Электронный документ> в <%> № <%> от <%>.<Изменение> невозможно.', (SELECT MovementDesc.ItemName FROM Movement JOIN MovementDesc ON MovementDesc.Id = Movement.DescId WHERE Movement.Id = inMovementId)
                                                                                                        , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)

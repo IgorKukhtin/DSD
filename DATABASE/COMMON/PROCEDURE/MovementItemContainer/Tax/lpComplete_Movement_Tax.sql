@@ -106,8 +106,9 @@ BEGIN
                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                 LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
            WHERE MovementItem.MovementId = inMovementId
-             AND MovementItem.DescId = zc_MI_Master()
-             AND MovementItem.isErased = FALSE
+             AND MovementItem.DescId     = zc_MI_Master()
+             AND MovementItem.isErased   = FALSE
+             AND MovementItem.Amount     <> 0
           ) AS tmp
     ;
 
