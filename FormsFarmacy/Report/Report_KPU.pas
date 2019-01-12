@@ -14,7 +14,7 @@ uses
   cxLabel, cxCurrencyEdit, cxButtonEdit, Vcl.DBActns, cxMaskEdit, Vcl.ExtCtrls,
   Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod, cxDropDownEdit, cxCalendar,
   dsdGuides, dxBarBuiltInMenu, cxNavigator, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxGridBandedTableView,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxGridBandedTableView, DataModul,
   cxGridDBBandedTableView, cxCheckBox, cxBlobEdit, cxMemo, dsdExportToXLSAction;
 
 type

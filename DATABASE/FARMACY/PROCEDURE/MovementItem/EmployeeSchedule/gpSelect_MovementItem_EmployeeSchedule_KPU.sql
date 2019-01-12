@@ -40,8 +40,8 @@ BEGIN
 
      RETURN QUERY
      WITH tmpEmployeeSchedule AS (SELECT
-         MovementItem.ObjectId                                   AS UserID,
-         tmpOperDate.OperDate::TDateTime                         AS Date,
+         MovementItem.ObjectId                                                    AS UserID,
+         tmpOperDate.OperDate::TDateTime                                          AS Date,
          lpDecodeValueDay(date_part('DAY', tmpOperDate.OperDate)::Integer , MIString_ComingValueDay.ValueData)  AS Value
        FROM tmpOperDate
 
@@ -56,9 +56,8 @@ BEGIN
      SELECT tmpEmployeeSchedule.UserID,
             tmpEmployeeSchedule.Date,
             tmpEmployeeSchedule.Value,
-            CASE WHEN tmpEmployeeSchedule.Value is Null THEN 8
-            ELSE CASE WHEN tmpEmployeeSchedule.Value = 'В' THEN 0
-            ELSE date_part('hour', tmpEmployeeSchedule.Value::TIME) END END::Integer AS HourIn
+            CASE WHEN tmpEmployeeSchedule.Value is Null OR tmpEmployeeSchedule.Value = 'В' THEN 8
+            ELSE date_part('hour', tmpEmployeeSchedule.Value::TIME) END::Integer AS HourIn
      FROM tmpEmployeeSchedule;
 
 END;
@@ -70,6 +69,7 @@ ALTER FUNCTION gpSelect_MovementItem_EmployeeSchedule_KPU (TDateTime, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 11.01.19                                                       *
  09.01.19                                                       *
 */
 

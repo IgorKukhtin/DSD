@@ -19,10 +19,11 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
 
-     vbOperDate:= DATE_TRUNC ('DAY', inDate);
+     vbOperDate:= DATE_TRUNC ('MONTH', inDate);
 
      OPEN cur1 FOR SELECT 'Разворот по сотруднику '||inUserName||' времени опоздания за '||
-       to_char(DATE_TRUNC ('DAY', vbOperDate), 'MM.YYYY') as Title;
+       to_char(DATE_TRUNC ('DAY', vbOperDate), 'MM.YYYY')::TVarChar as Title,
+       1::Integer as ID;
      RETURN NEXT cur1;
 
      CREATE TEMP TABLE tmpCurrOperDate ON COMMIT DROP AS
@@ -51,10 +52,11 @@ BEGIN
           , tmpEmployeeSchedule.Value                            AS TypeDay
           , to_char(tmpEmployeeSchedule.DateStart, 'HH24:MI:SS') AS DateStart
           , CASE WHEN COALESCE(tmpEmployeeSchedule.HourIn, 8) > 0 AND tmpEmployeeSchedule.MinutePenalty > 1 THEN tmpEmployeeSchedule.MinutePenalty END AS MinutePenalty
-          , CASE WHEN COALESCE(tmpEmployeeSchedule.HourIn, 8) > 0 AND tmpEmployeeSchedule.MinutePenalty > 1 AND tmpEmployeeSchedule.MinutePenalty <= 5 THEN - 1
+          , CASE WHEN COALESCE(tmpEmployeeSchedule.Value, 'В') <> 'В' AND tmpEmployeeSchedule.DateStart IS NULL THEN - 3
+                 ELSE CASE WHEN COALESCE(tmpEmployeeSchedule.HourIn, 8) > 0 AND tmpEmployeeSchedule.MinutePenalty > 1 AND tmpEmployeeSchedule.MinutePenalty <= 5 THEN - 1
                  ELSE CASE WHEN COALESCE(tmpEmployeeSchedule.HourIn, 8) > 0 AND tmpEmployeeSchedule.MinutePenalty > 1 AND tmpEmployeeSchedule.MinutePenalty <= 15 THEN - 2
                  ELSE CASE WHEN COALESCE(tmpEmployeeSchedule.HourIn, 8) > 0 AND tmpEmployeeSchedule.MinutePenalty > 1 AND tmpEmployeeSchedule.MinutePenalty > 15 THEN - 3
-                 END END END                                                     AS Penalty
+                 END END END END                                                    AS Penalty
 
      FROM tmpEmployeeSchedule
      ORDER BY tmpEmployeeSchedule.OperDate;
@@ -69,8 +71,9 @@ ALTER FUNCTION gpSelect_UserTimePenalty (TDateTime, Integer, TVarChar, TVarChar)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 11.01.19                                                       *
  09.01.19                                                       *
 */
 
 -- тест
--- select * from gpSelect_UserTimePenalty(inDate:= '01.12.2018', inUserID := 6002014, inUserName := 'sadfssad', inSession := '4183126');
+-- select * from gpSelect_UserTimePenalty(inDate:= '31.12.2018', inUserID := 6002014, inUserName := 'sadfssad', inSession := '4183126');

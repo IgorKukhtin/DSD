@@ -14,6 +14,7 @@ BEGIN
                     WHEN 1 THEN '8:00'
                     WHEN 2 THEN '9:00'
                     WHEN 3 THEN '10:00'
+                    WHEN 7 THEN '21:00'
                     WHEN 9 THEN 'В'
                     ELSE NULL END);
 
@@ -26,6 +27,7 @@ ALTER FUNCTION lpDecodeValueDay (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 11.12.18                                                       *
  09.12.18                                                       *
 */
 

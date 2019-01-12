@@ -39,6 +39,7 @@ type
     function PrintReportByDate(inStart, inEnd: TDateTime): boolean;
     function PrintReportByNum(inStart, inEnd: Integer): boolean;
     function FiscalNumber:String;
+    function SerialNumber:String;
     procedure ClearArticulAttachment;
     procedure SetTime;
     procedure Anulirovt;
@@ -155,6 +156,11 @@ var
   Data: WideString;
 begin
   Result := iniCashSerialNumber;
+end;
+
+function TCashFP320.SerialNumber:String;
+begin
+  Result := '';
 end;
 
 function TCashFP320.GetAlwaysSold: boolean;

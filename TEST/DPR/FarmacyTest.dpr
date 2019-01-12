@@ -405,8 +405,6 @@ uses
   ReportMovementCheck in '..\..\FormsFarmacy\Report\ReportMovementCheck.pas' {ReportMovementCheckForm: TParentForm},
   OrderExternalJournalChoice in '..\..\FormsFarmacy\Document\OrderExternalJournalChoice.pas' {OrderExternalJournalChoiceForm: TParentForm},
   Income in '..\..\FormsFarmacy\Document\Income.pas' {IncomeForm: TParentForm},
-  Maker in '..\..\Forms\Guides\Maker.pas' {MakerForm: TParentForm},
-  MakerEdit in '..\..\Forms\Guides\MakerEdit.pas' {MakerEditForm: TParentForm},
   Promo in '..\..\FormsFarmacy\Document\Promo.pas' {PromoForm: TParentForm},
   PromoJournal in '..\..\FormsFarmacy\Document\PromoJournal.pas' {PromoJournalForm: TParentForm},
   ReportMovementCheckMiddle in '..\..\FormsFarmacy\Report\ReportMovementCheckMiddle.pas' {ReportMovementCheckMiddleForm: TParentForm},
@@ -645,7 +643,12 @@ uses
   RecalcMCSSheduler in '..\..\FormsFarmacy\Object\RecalcMCSSheduler.pas',
   RecalcMCSShedulerEdit in '..\..\FormsFarmacy\Object\RecalcMCSShedulerEdit.pas' {RecalcMCSShedulerEditForm: TParentForm},
   Week in '..\..\FormsFarmacy\Guides\Week.pas' {WeekForm: TParentForm},
-  Check_CashRegister in '..\..\FormsFarmacy\Guides\Check_CashRegister.pas' {Check_CashRegisterForm: TParentForm};
+  Check_CashRegister in '..\..\FormsFarmacy\Guides\Check_CashRegister.pas' {Check_CashRegisterForm: TParentForm},
+  MemberSPChoiceDialog in '..\..\FormsFarmacy\Document\MemberSPChoiceDialog.pas' {MemberSPChoiceDialogForm: TParentForm},
+  Maker in '..\..\FormsFarmacy\Guides\Maker.pas' {MakerForm: TParentForm},
+  MakerEdit in '..\..\FormsFarmacy\Guides\MakerEdit.pas' {MakerEditForm: TParentForm},
+  MakerReportEdit in '..\..\FormsFarmacy\Guides\MakerReportEdit.pas' {MakerReportEditForm: TParentForm},
+  Maker_Object in '..\..\FormsFarmacy\Guides\Maker_Object.pas' {Maker_ObjectForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

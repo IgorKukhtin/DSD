@@ -5,7 +5,7 @@ inherited CheckJournalForm: TCheckJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 912
-  ExplicitHeight = 593
+  ExplicitHeight = 592
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -325,6 +325,48 @@ inherited CheckJournalForm: TCheckJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object MemberSPName: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1087#1072#1094#1080#1077#1085#1090#1072
+            DataBinding.FieldName = 'MemberSPName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
+          end
+          object GroupMemberSPName: TcxGridDBColumn
+            Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1072#1094#1080#1077#1085#1090#1072
+            DataBinding.FieldName = 'GroupMemberSPName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object INN_MemberSP: TcxGridDBColumn
+            Caption = #1048#1053#1053' '#1087#1072#1094#1080#1077#1085#1090#1072
+            DataBinding.FieldName = 'INN_MemberSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object Passport_MemberSP: TcxGridDBColumn
+            Caption = #1057#1077#1088#1080#1103' '#1080' '#1085#1086#1084#1077#1088' '#1087#1072#1089#1087#1086#1088#1090#1072'  '#1087#1072#1094#1080#1077#1085#1090#1072
+            DataBinding.FieldName = 'Passport_MemberSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1077#1088#1080#1103' '#1080' '#1085#1086#1084#1077#1088' '#1087#1072#1089#1087#1086#1088#1090#1072'  '#1087#1072#1094#1080#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 100
+          end
+          object Address_MemberSP: TcxGridDBColumn
+            Caption = #1040#1076#1088#1077#1089' '#1087#1072#1094#1080#1077#1085#1090#1072
+            DataBinding.FieldName = 'Address_MemberSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1076#1088#1077#1089' '#1087#1072#1094#1080#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 108
           end
         end
       end
@@ -918,8 +960,8 @@ inherited CheckJournalForm: TCheckJournalForm
       item
         Component = UnitGuides
       end>
-    Left = 264
-    Top = 24
+    Left = 288
+    Top = 16
   end
   object spGet_UserUnit: TdsdStoredProc
     StoredProcName = 'gpGet_UserUnit'

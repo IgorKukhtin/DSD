@@ -180,6 +180,7 @@ type
     FSummaryItemList: TOwnedCollection;
     FGridFocusedItemChangedEvent: TcxGridFocusedItemChangedEvent;
     FSearchAsFilter: boolean;
+    FKeepSelectColor: boolean;
     procedure TableViewFocusedItemChanged(Sender: TcxCustomGridTableView;
                         APrevFocusedItem, AFocusedItem: TcxCustomGridTableItem);
     procedure OnBeforeOpen(ADataSet: TDataSet);
@@ -248,6 +249,9 @@ type
     property SummaryItemList: TOwnedCollection read FSummaryItemList write FSummaryItemList;
     // Поиск как фильтр
     property SearchAsFilter: boolean read FSearchAsFilter write SetSearchAsFilter default true;
+    // При установке в True сохраняется цвет шрифта и фон для выделенной строчки
+    property KeepSelectColor: boolean read FKeepSelectColor write FKeepSelectColor default false;
+
   end;
 
   TCrossDBViewAddOn = class(TdsdDBViewAddOn)
@@ -803,6 +807,7 @@ begin
   FSummaryItemList := TOwnedCollection.Create(Self, TSummaryItemAddOn);
 
   SearchAsFilter := true;
+  FKeepSelectColor := false;
 end;
 
 procedure TdsdDBViewAddOn.OnAfterOpen(ADataSet: TDataSet);
@@ -855,7 +860,7 @@ end;
 procedure TdsdDBViewAddOn.OnCustomDrawCell(Sender: TcxCustomGridTableView;
   ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
   var ADone: Boolean);
-var Column: TcxGridColumn;
+var Column: TcxGridColumn; i, j : integer;
 begin
   if AViewInfo.Focused then begin
      ACanvas.Brush.Color := clHighlight;
@@ -863,6 +868,55 @@ begin
         ACanvas.Font.Color := clHighlightText
      else
         ACanvas.Font.Color := clYellow;
+  end else if FKeepSelectColor and AViewInfo.Selected then begin
+    ACanvas.Font.Color :=  clWindowText;
+    ACanvas.Brush.Color := clWindow;
+    // Работаем с условиями
+    try
+      for i := 0 to ColorRuleList.Count - 1 do
+        with TColorRule(ColorRuleList.Items[i]) do begin
+          if Assigned(ColorColumn) then
+          begin
+            if TcxGridDBTableView(Sender).Columns[AViewInfo.Item.Index] = ColorColumn then begin
+             //сначала Bold, !!!но так не работает, поэтому - отключил!!!!
+             {isBold_calc:= false;
+             if Assigned(ValueBoldColumn) then
+                if not VarIsNull(ARecord.Values[ValueBoldColumn.Index]) then
+                isBold_calc:= AnsiUpperCase(ARecord.Values[ValueBoldColumn.Index]) = AnsiUpperCase('true');}
+             //
+             if Assigned(ValueColumn) and (AViewInfo.GridRecord.ValueCount > ValueColumn.Index) then
+                if not VarIsNull(AViewInfo.GridRecord.Values[ValueColumn.Index]) then begin
+                   ACanvas.Font.Color := AViewInfo.GridRecord.Values[ValueColumn.Index];
+                end;
+             if Assigned(BackGroundValueColumn) and (AViewInfo.GridRecord.ValueCount > BackGroundValueColumn.Index) then
+                if not VarIsNull(AViewInfo.GridRecord.Values[BackGroundValueColumn.Index]) then begin
+                begin
+                  j := BackGroundValueColumn.Index;
+                  ACanvas.Brush.Color := AViewInfo.GridRecord.Values[BackGroundValueColumn.Index];
+                end;
+                end;
+             end;
+          end
+          else begin
+             //сначала Bold, !!!но так не работает, поэтому - отключил!!!!
+             {isBold_calc:= false;
+             if Assigned(ValueBoldColumn) then
+                if not VarIsNull(ARecord.Values[ValueBoldColumn.Index]) then
+                isBold_calc:= AnsiUpperCase(ARecord.Values[ValueBoldColumn.Index]) = AnsiUpperCase('true');}
+             //
+             if Assigned(ValueColumn) then
+                if not VarIsNull(AViewInfo.GridRecord.Values[ValueColumn.Index]) then begin
+                   ACanvas.Font.Color := AViewInfo.GridRecord.Values[ValueColumn.Index];
+                end;
+             if Assigned(BackGroundValueColumn) then
+                if not VarIsNull(AViewInfo.GridRecord.Values[BackGroundValueColumn.Index]) then begin
+                   ACanvas.Brush.Color := AViewInfo.GridRecord.Values[BackGroundValueColumn.Index];
+                end;
+          end;
+        end;
+    except
+      on E: Exception do ShowMessage(E.Message + ' ' +IntToStr(AViewInfo.GridRecord.ValueCount)  + ' ' +  IntToStr(J));
+    end;
   end;
 
   // работаем со свойством Удален

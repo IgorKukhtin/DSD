@@ -299,13 +299,17 @@ end;
 
 procedure TLoadFormTest.LoadCheckFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSPChoiceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberSPChoiceDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalUserForm'));
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalUserForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckPrintDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckPrintDialogForm');
 
@@ -323,6 +327,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashSummaForDeyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashSummaForDeyForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadConditionsKeepFormTest;
@@ -500,6 +505,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMakerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMakerEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerReportEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMakerReportEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMaker_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMaker_ObjectForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCountryForm');

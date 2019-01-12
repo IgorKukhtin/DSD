@@ -336,6 +336,7 @@ type
     N20: TMenuItem;
     CashListDiffCDS: TClientDataSet;
     spSelect_CashListDiffGoods: TdsdStoredProc;
+    spUpdate_CashSerialNumber: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

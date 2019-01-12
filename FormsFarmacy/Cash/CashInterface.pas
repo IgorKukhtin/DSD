@@ -31,6 +31,7 @@ type
      function PrintReportByDate(inStart, inEnd: TDateTime): boolean;
      function PrintReportByNum(inStart, inEnd: Integer): boolean;
      function FiscalNumber:String;
+     function SerialNumber:String;
      procedure ClearArticulAttachment;
      procedure SetTime;
      procedure Anulirovt;
