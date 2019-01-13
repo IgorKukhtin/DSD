@@ -588,7 +588,7 @@ object MainCashForm2: TMainCashForm2
     Left = 432
     Top = 16
     Bitmap = {
-      494C0101080034008C0180008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101080034009C0180008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000000200008001000001002000000000000000
       0C00000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -25946,8 +25946,8 @@ object MainCashForm2: TMainCashForm2
     IndexFieldNames = 'Name'
     Params = <>
     StoreDefs = True
-    Left = 432
-    Top = 88
+    Left = 488
+    Top = 80
   end
   object spSendListDiff: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_ListDiff_cash'
@@ -26034,7 +26034,7 @@ object MainCashForm2: TMainCashForm2
       end>
     PackSize = 1
     Left = 432
-    Top = 152
+    Top = 80
   end
   object spLoadFTPParam: TdsdStoredProc
     StoredProcName = 'gpSelect_LoadFReportFTPParams_cash'
@@ -26072,5 +26072,82 @@ object MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 432
     Top = 216
+  end
+  object EmployeeWorkLogCDS: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <>
+    IndexDefs = <>
+    IndexFieldNames = 'DateLogIn'
+    Params = <>
+    StoreDefs = True
+    Left = 488
+    Top = 152
+  end
+  object spEmployeeWorkLog: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_EmployeeWorkLog_Cash'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inCashSessionId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CashSessionId'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserId'
+        Value = Null
+        Component = EmployeeWorkLogCDS
+        ComponentItem = 'UserID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateLogIn'
+        Value = 'NULL'
+        Component = EmployeeWorkLogCDS
+        ComponentItem = 'DateLogIn'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateZReport'
+        Value = 'NULL'
+        Component = EmployeeWorkLogCDS
+        ComponentItem = 'DateZReport'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateLogOut'
+        Value = 'NULL'
+        Component = EmployeeWorkLogCDS
+        ComponentItem = 'DateLogOut'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOldProgram'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOldServise'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 152
   end
 end

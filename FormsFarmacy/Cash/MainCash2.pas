@@ -518,7 +518,9 @@ var
   csCriticalSection_Save,
   csCriticalSection_All: TRTLCriticalSection;
 
-  MutexDBF, MutexDBFDiff, MutexVip, MutexRemains, MutexAlternative, MutexAllowedConduct : THandle;  // MutexAllowedConduct только 2 форма
+  MutexDBF, MutexDBFDiff, MutexVip, MutexRemains, MutexAlternative, MutexAllowedConduct,
+  MutexDiffKind, MutexDiffCDS, MutexEmployeeWorkLog : THandle;  // MutexAllowedConduct только 2 форма
+
   LastErr: Integer;
   FM_SERVISE: Integer;  // для передачи сообщений между приложение и сервисом // только 2 форма
   function GetPrice(Price, Discount:currency): currency;
@@ -533,7 +535,7 @@ implementation
 
 uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog, CashWork, MessagesUnit,
      LocalWorkUnit, Splash, DiscountService, MainCash, UnilWin, ListDiff, ListGoods,
-	   MediCard.Intf, PromoCodeDialog, ListDiffAddGoods, TlHelp32;
+	   MediCard.Intf, PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog;
 
 const
   StatusUnCompleteCode = 1;
@@ -2884,6 +2886,12 @@ begin
   LastErr := GetLastError;
   MutexAlternative := CreateMutex(nil, false, 'farmacycashMutexAlternative');
   LastErr := GetLastError;
+  MutexDiffKind := CreateMutex(nil, false, 'farmacycashMutexDiffKind');
+  LastErr := GetLastError;
+  MutexDiffCDS := CreateMutex(nil, false, 'farmacycashMutexDiffCDS');
+  LastErr := GetLastError;
+  MutexEmployeeWorkLog := CreateMutex(nil, false, 'farmacycashMutexEmployeeWorkLog');
+  LastErr := GetLastError;
   DiscountServiceForm:= TDiscountServiceForm.Create(Self);
 
   //сгенерили гуид для определения сессии
@@ -2970,8 +2978,7 @@ begin
   OnCLoseQuery := ParentFormCloseQuery;
   OnShow := ParentFormShow;
 
-
-
+  EmployeeWorkLog_LogIn;
   SetBlinkVIP (true);
   SetBlinkCheck (true);
   TimerBlinkBtn.Enabled := true;
@@ -3725,6 +3732,7 @@ begin
     CanClose := MessageDlg('Вы действительно хотите выйти?',mtConfirmation,[mbYes,mbCancel], 0) = mrYes;
   if CanClose then
   Begin
+    EmployeeWorkLog_LogOut;
     try
       if not gc_User.Local then
       Begin
@@ -3764,6 +3772,9 @@ begin
  CloseHandle(MutexVip);
  CloseHandle(MutexRemains);
  CloseHandle(MutexAlternative);
+ CloseHandle(MutexDiffKind);
+ CloseHandle(MutexDiffCDS);
+ CloseHandle(MutexEmployeeWorkLog);
 end;
 
 procedure TMainCashForm2.ParentFormKeyDown(Sender: TObject; var Key: Word;
@@ -3822,6 +3833,7 @@ begin
     VipCDS.LoadFromFile(Vip_lcl);
     VIPListCDS.LoadFromFile(VipList_lcl);
   End;
+
 end;
 
 // что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА

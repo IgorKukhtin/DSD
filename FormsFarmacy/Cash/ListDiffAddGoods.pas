@@ -41,8 +41,6 @@ implementation
 
 uses CommonData, LocalWorkUnit, MainCash2, ListDiff;
 
-var MutexDiffCDS, MutexDiffKind: THandle;
-
 { TListDiffAddGoodsForm }
 
 procedure TListDiffAddGoodsForm.FormClose(Sender: TObject;

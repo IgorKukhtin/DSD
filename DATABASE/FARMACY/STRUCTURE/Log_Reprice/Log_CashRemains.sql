@@ -12,14 +12,17 @@ CREATE TABLE Log_CashRemains
 (
   Id                serial    NOT NULL PRIMARY KEY,
   
-  CashSessionId     TVarChar, 
-  DateStart         TDateTime, 
-  FullRemains       Boolean, 
-  UserId            Integer, 
-  UnitId            Integer, 
-  RetailId          Integer,
-  OldProgram        Boolean, 
-  OldServise        Boolean
+  CashSessionId     TVarChar,   -- Сессия кассового места
+  DateStart         TDateTime,  -- Дата выполнения
+  DateEnd           TDateTime,  -- Дата последнего действия
+
+  FullRemains       Boolean,    -- Полное обновление остатков
+  UserId            Integer,    -- Пользователь
+  UnitId            Integer,    -- Подразделение
+  RetailId          Integer,    -- Сеть
+
+  OldProgram        Boolean,    -- Вход старой кассой
+  OldServise        Boolean     -- Не обновлен сервис
  )
 ;
 

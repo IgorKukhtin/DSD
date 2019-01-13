@@ -31,12 +31,14 @@ type
     DoubleUnitName: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
-    LoginTime: TcxGridDBColumn;
+    TimeLogIn: TcxGridDBColumn;
     OldProgram: TcxGridDBColumn;
     OldServise: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
     dsdOpenForm1: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
+    TimeLogOut: TcxGridDBColumn;
+    TimeZReport: TcxGridDBColumn;
   private
     { Private declarations }
   public
