@@ -1,8 +1,9 @@
--- Function: gpSelect_Movement_TransportChoice()
+-- Function: gpSelect_Movement_IncomeCost_byParent()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Cost (Integer, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_Cost (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_IncomeCost_byParent (Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_Cost(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomeCost_byParent(
     IN inParentId    Integer   ,
     IN inIsErased    Boolean   ,
     IN inSession     TVarChar    -- сессия пользователя
@@ -79,14 +80,13 @@ BEGIN
                                      AND MovementString_CommentMaster.DescId = zc_MovementString_Comment()
              
           WHERE Movement.ParentId = inParentId
-            AND Movement.DescId in (zc_Movement_CostService() , zc_Movement_CostTransport())
+            AND Movement.DescId = zc_Movement_IncomeCost()
           
       ;
   
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -95,4 +95,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Cost (inParentId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_IncomeCost_byParent (inParentId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

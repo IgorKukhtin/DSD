@@ -787,7 +787,7 @@ object IncomeForm: TIncomeForm
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object clStatus: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082'. '#1079#1072#1090#1088#1072#1090#1099
+            Caption = #1057#1090#1072#1090#1091#1089' ('#1079#1072#1090#1088#1072#1090#1099')'
             DataBinding.FieldName = 'StatusCode'
             PropertiesClassName = 'TcxImageComboBoxProperties'
             Properties.Images = dmMain.ImageList
@@ -808,27 +808,31 @@ object IncomeForm: TIncomeForm
                 Value = 3
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1090#1088#1072#1090#1099
             Options.Editing = False
-            Width = 56
+            Width = 80
           end
           object InvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1090#1088#1072#1090#1099
+            Caption = #8470' '#1076#1086#1082'. ('#1079#1072#1090#1088#1072#1090#1099')'
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1090#1088#1072#1090#1099
             Options.Editing = False
-            Width = 123
+            Width = 70
           end
           object clComment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1086#1082'. '#1079#1072#1090#1088#1072#1090#1099
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1079#1072#1090#1088#1072#1090#1099')'
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 210
+            HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1090#1088#1072#1090#1099
+            Width = 150
           end
           object ItemName: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'ItemName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -860,7 +864,7 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 99
+            Width = 80
           end
           object MasterOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
@@ -871,7 +875,7 @@ object IncomeForm: TIncomeForm
             Width = 79
           end
           object MasterInvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'MasterInvNumber'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -880,17 +884,18 @@ object IncomeForm: TIncomeForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 123
+            Width = 70
           end
           object JuridicalName: TcxGridDBColumn
-            Caption = #1070#1088'.'#1083#1080#1094#1086
+            Caption = #1070#1088'.'#1083#1080#1094#1086' / '#1052#1072#1088#1097#1088#1091#1090
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 156
           end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -898,7 +903,7 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 70
           end
           object InfoMoneyName_all: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
@@ -906,7 +911,7 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 168
+            Width = 150
           end
           object MasterComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -1216,6 +1221,7 @@ object IncomeForm: TIncomeForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbInsertUpdateMovement: TdxBarButton
       Action = actInsertUpdateMovement
@@ -1345,10 +1351,10 @@ object IncomeForm: TIncomeForm
       TabSheet = cxTabSheet1
       MoveParams = <>
       Enabled = False
-      StoredProc = spSelect_Movement_Cost
+      StoredProc = spSelect_IncomeCost_byParent
       StoredProcList = <
         item
-          StoredProc = spSelect_Movement_Cost
+          StoredProc = spSelect_IncomeCost_byParent
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -1405,13 +1411,13 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate_Movement_Cost
+      StoredProc = spInsertUpdate_IncomeCost
       StoredProcList = <
         item
-          StoredProc = spInsertUpdate_Movement_Cost
+          StoredProc = spInsertUpdate_IncomeCost
         end
         item
-          StoredProc = spSelect_Movement_Cost
+          StoredProc = spSelect_IncomeCost_byParent
         end>
       Caption = 'actUpdateClientDataCost'
       DataSource = DataSourceCost
@@ -1446,7 +1452,7 @@ object IncomeForm: TIncomeForm
           StoredProc = spSelectMI
         end
         item
-          StoredProc = spSelect_Movement_Cost
+          StoredProc = spSelect_IncomeCost_byParent
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1635,6 +1641,7 @@ object IncomeForm: TIncomeForm
     end
     object MovementItemProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
@@ -1695,8 +1702,8 @@ object IncomeForm: TIncomeForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'CostJournalChoiceForm'
-      FormName = 'TCostJournalChoicebyIncomeForm'
-      FormNameParam.Value = 'TCostJournalChoicebyIncomeForm'
+      FormName = 'TCostJournalChoiceForm'
+      FormNameParam.Value = 'TCostJournalChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1753,6 +1760,7 @@ object IncomeForm: TIncomeForm
     end
     object actAddMask: TdsdExecStoredProc
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spInsertMaskMIMaster
@@ -1803,6 +1811,7 @@ object IncomeForm: TIncomeForm
     end
     object InsertRecordGoods: TInsertRecord
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
@@ -1832,10 +1841,10 @@ object IncomeForm: TIncomeForm
       TabSheet = cxTabSheet1
       MoveParams = <>
       Enabled = False
-      StoredProc = spMovementCompleteCost
+      StoredProc = spComplete_IncomeCost
       StoredProcList = <
         item
-          StoredProc = spMovementCompleteCost
+          StoredProc = spComplete_IncomeCost
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
@@ -1848,10 +1857,10 @@ object IncomeForm: TIncomeForm
       TabSheet = cxTabSheet1
       MoveParams = <>
       Enabled = False
-      StoredProc = spMovementSetErasedCost
+      StoredProc = spSetErased_IncomeCost
       StoredProcList = <
         item
-          StoredProc = spMovementSetErasedCost
+          StoredProc = spSetErased_IncomeCost
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
@@ -1864,10 +1873,10 @@ object IncomeForm: TIncomeForm
       TabSheet = cxTabSheet1
       MoveParams = <>
       Enabled = False
-      StoredProc = spMovementUnCompleteCost
+      StoredProc = spUnComplete_IncomeCost
       StoredProcList = <
         item
-          StoredProc = spMovementUnCompleteCost
+          StoredProc = spUnComplete_IncomeCost
         end>
       Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
       Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
@@ -3336,8 +3345,8 @@ object IncomeForm: TIncomeForm
     Left = 814
     Top = 223
   end
-  object spSelect_Movement_Cost: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Cost'
+  object spSelect_IncomeCost_byParent: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_IncomeCost_byParent'
     DataSet = ClientDataCost
     DataSets = <
       item
@@ -3361,11 +3370,11 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 704
-    Top = 247
+    Left = 696
+    Top = 305
   end
-  object spInsertUpdate_Movement_Cost: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Cost'
+  object spInsertUpdate_IncomeCost: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_IncomeCost'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -3403,11 +3412,11 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 790
-    Top = 271
+    Left = 782
+    Top = 287
   end
-  object spMovementUnCompleteCost: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
+  object spUnComplete_IncomeCost: TdsdStoredProc
+    StoredProcName = 'gpUnComplete_Movement_IncomeCost'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -3420,11 +3429,11 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 696
-    Top = 345
+    Left = 688
+    Top = 379
   end
-  object spMovementCompleteCost: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Cost'
+  object spComplete_IncomeCost: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_IncomeCost'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -3437,11 +3446,11 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 816
-    Top = 361
+    Left = 712
+    Top = 363
   end
-  object spMovementSetErasedCost: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement'
+  object spSetErased_IncomeCost: TdsdStoredProc
+    StoredProcName = 'gpSetErased_Movement_IncomeCost'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -3454,8 +3463,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 864
-    Top = 313
+    Left = 728
+    Top = 347
   end
   object InvoiceGuides: TdsdGuides
     KeyField = 'Id'

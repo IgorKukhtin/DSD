@@ -4,10 +4,8 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
   ClientWidth = 1078
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -351
-  ExplicitTop = -27
   ExplicitWidth = 1094
-  ExplicitHeight = 520
+  ExplicitHeight = 516
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -169,11 +167,13 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 114
+      EditValue = 43466d
       ExplicitLeft = 114
     end
     inherited deEnd: TcxDateEdit
       Left = 114
       Top = 31
+      EditValue = 43466d
       ExplicitLeft = 114
       ExplicitTop = 31
     end

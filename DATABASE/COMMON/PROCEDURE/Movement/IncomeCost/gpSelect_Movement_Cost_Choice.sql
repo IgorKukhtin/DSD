@@ -1,8 +1,8 @@
--- Function: gpSelect_Movement_Cost_byIncome()
+-- Function: gpSelect_Movement_Cost_Choice()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Cost_byIncome (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Cost_Choice (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_Cost_byIncome(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Cost_Choice(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
     IN inIsErased    Boolean   ,
@@ -206,4 +206,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Cost_byIncome (inStartDate:= '01.09.2015'::TDateTime, inEndDate:= '01.09.2015'::TDateTime, inIsErased:= FALSE, inUnitId:=0, inInfoMoneyId :=0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Cost_Choice (inStartDate:= '01.09.2015'::TDateTime, inEndDate:= '01.09.2015'::TDateTime, inIsErased:= FALSE, inUnitId:=0, inInfoMoneyId :=0, inSession:= zfCalc_UserAdmin())
