@@ -327,6 +327,10 @@ BEGIN
            WHERE _tmpItem.ObjectDescId = 0 OR _tmpItem.AccountId = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
           ) AS tmp;*/
 
+
+     -- 5.0. сохранили  "Сумма затрат" - расчет для удобства отображения в журналах
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCost(), inMovementId, COALESCE ((SELECT -1 * SUM (_tmpItem.OperSumm) FROM _tmpItem WHERE _tmpItem.IsMaster = TRUE), 0));
+
      -- 5.1. ФИНИШ - формируем/сохраняем Проводки
      PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId
                                         , inUserId     := inUserId);

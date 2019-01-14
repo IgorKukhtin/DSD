@@ -34,15 +34,18 @@ BEGIN
         GROUP BY CLO_InfoMoney.ObjectId
         ;
      -- определили документы в которые надо распределить "затрат"
-     INSERT INTO _tmpItem_To (MovementId, InfoMoneyId, OperSumm, OperSumm_calc)
+     INSERT INTO _tmpItem_To (MovementId_cost, MovementId_in, InfoMoneyId, OperSumm, OperSumm_calc)
         -- –асходы будущих периодов
-        SELECT MovementFloat.MovementId, _tmpItem_From.InfoMoneyId, MovementFloat_TotalSumm.ValueData AS OperSumm, 0 AS OperSumm_calc
+        SELECT Movement.Id AS MovementId_cost, Movement_Income.Id AS MovementId_in, _tmpItem_From.InfoMoneyId, MovementFloat_TotalSumm.ValueData AS OperSumm, 0 AS OperSumm_calc
         FROM MovementFloat
-             INNER JOIN Movement ON Movement.Id       = MovementFloat.MovementId
-                                AND Movement.DescId   = zc_Movement_Income()
-                                AND Movement.StatusId = zc_Enum_Status_Complete()
+             INNER JOIN Movement ON Movement.Id = MovementFloat.MovementId
+                                AND (Movement.StatusId = zc_Enum_Status_Complete()
+                                  OR Movement.Id       = inMovementId)
+             INNER JOIN Movement AS Movement_Income ON Movement_Income.Id       = Movement.ParentId
+                                                   AND Movement_Income.DescId   = zc_Movement_Income()
+                                                   AND Movement_Income.StatusId = zc_Enum_Status_Complete()
              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                     ON MovementFloat_TotalSumm.MovementId = MovementFloat.MovementId
+                                     ON MovementFloat_TotalSumm.MovementId = Movement_Income.Id
                                     AND MovementFloat_TotalSumm.DescId     = zc_MovementFloat_TotalSumm()
              CROSS JOIN _tmpItem_From
         WHERE MovementFloat.ValueData = vbMovementId_from
@@ -52,9 +55,9 @@ BEGIN
      -- распределение "затрат"
      UPDATE _tmpItem_To SET OperSumm_calc = tmp.OperSumm_calc
      FROM (WITH tmpItem_To_summ AS (SELECT _tmpItem_To.InfoMoneyId, SUM (_tmpItem_To.OperSumm) AS OperSumm FROM _tmpItem_To GROUP BY _tmpItem_To.InfoMoneyId)
-                       , tmpRes AS (SELECT _tmpItem_To.MovementId
+                       , tmpRes AS (SELECT _tmpItem_To.MovementId_cost
                                          , _tmpItem_To.InfoMoneyId
-                                         , _tmpItem_From.OperSumm * _tmpItem_To.OperSumm / tmpItem_To_summ.OperSumm AS OperSumm_calc
+                                         , CAST (_tmpItem_From.OperSumm * _tmpItem_To.OperSumm / tmpItem_To_summ.OperSumm AS Numeric(16, 2)) AS OperSumm_calc
                                            -- є п/п
                                          , ROW_NUMBER() OVER (PARTITION BY _tmpItem_To.InfoMoneyId ORDER BY _tmpItem_To.OperSumm DESC) AS Ord
                                     FROM _tmpItem_To
@@ -69,45 +72,19 @@ BEGIN
                                          INNER JOIN _tmpItem_From ON _tmpItem_From.InfoMoneyId = tmpRes_summ.InfoMoneyId
                                     WHERE _tmpItem_From.OperSumm <> tmpRes_summ.OperSumm_calc
                                    )
-           SELECT tmpRes.MovementId, tmpRes.InfoMoneyId, tmpRes.OperSumm_calc - COALESCE (tmpdiff.OperSumm_diff, 0) As OperSumm_calc
+           SELECT tmpRes.MovementId_cost, tmpRes.InfoMoneyId, tmpRes.OperSumm_calc - COALESCE (tmpdiff.OperSumm_diff, 0) As OperSumm_calc
            FROM tmpRes
                 LEFT JOIN tmpDiff ON tmpDiff.InfoMoneyId = tmpRes.InfoMoneyId
                                  AND                   1 = tmpRes.Ord
           ) AS tmp
-     WHERE tmp.MovementId  = _tmpItem_To.MovementId
-       AND tmp.InfoMoneyId = _tmpItem_To.InfoMoneyId
+     WHERE tmp.MovementId_cost = _tmpItem_To.MovementId_cost
+       AND tmp.InfoMoneyId     = _tmpItem_To.InfoMoneyId
     ;
 
      -- сохранили распределение "затрат"
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementId(), ioId, inMovementId)
-     FROM _tmpItem_To
-     UPDATE _tmpItem_To SET OperSumm_calc = tmp.OperSumm_calc
-     FROM (WITH tmpItem_To_summ AS (SELECT _tmpItem_To.InfoMoneyId, SUM (_tmpItem_To.OperSumm) AS OperSumm FROM _tmpItem_To GROUP BY _tmpItem_To.InfoMoneyId)
-                       , tmpRes AS (SELECT _tmpItem_To.MovementId
-                                         , _tmpItem_To.InfoMoneyId
-                                         , _tmpItem_From.OperSumm * _tmpItem_To.OperSumm / tmpItem_To_summ.OperSumm AS OperSumm_calc
-                                           -- є п/п
-                                         , ROW_NUMBER() OVER (PARTITION BY _tmpItem_To.InfoMoneyId ORDER BY _tmpItem_To.OperSumm DESC) AS Ord
-                                    FROM _tmpItem_To
-                                         INNER JOIN tmpItem_To_summ ON tmpItem_To_summ.InfoMoneyId = _tmpItem_To.InfoMoneyId
-                                         INNER JOIN _tmpItem_From   ON _tmpItem_From.InfoMoneyId    = _tmpItem_To.InfoMoneyId
-                                   )
-                       , tmpDiff AS (SELECT tmpRes_summ.InfoMoneyId
-                                          , _tmpItem_From.OperSumm - tmpRes_summ.OperSumm_calc AS OperSumm_diff
-                                    FROM (SELECT tmpRes.InfoMoneyId, SUM (tmpRes.OperSumm_calc) AS OperSumm_calc FROM tmpRes GROUP BY tmpRes.InfoMoneyId
-                                         ) AS tmpRes_summ
-                                         INNER JOIN _tmpItem_From ON _tmpItem_From.InfoMoneyId = tmpRes_summ.InfoMoneyId
-                                    WHERE _tmpItem_From.OperSumm <> tmpRes_summ.OperSumm_calc
-                                   )
-           SELECT tmpRes.MovementId, tmpRes.InfoMoneyId, tmpRes.OperSumm_calc - COALESCE (tmpdiff.OperSumm_diff, 0) As OperSumm_calc
-           FROM tmpRes
-                LEFT JOIN tmpDiff ON tmpDiff.InfoMoneyId = tmpRes.InfoMoneyId
-                                 AND                   1 = tmpRes.Ord
-          ) AS tmp
-     WHERE tmp.MovementId  = _tmpItem_To.MovementId
-       AND tmp.InfoMoneyId = _tmpItem_To.InfoMoneyId
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCost(), tmp.MovementId_cost, tmp.OperSumm_calc)
+     FROM (SELECT _tmpItem_To.MovementId_cost, SUM (_tmpItem_To.OperSumm_calc) AS OperSumm_calc FROM _tmpItem_To GROUP BY _tmpItem_To.MovementId_cost) AS tmp
     ;
-
 
 
 

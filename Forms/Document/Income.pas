@@ -211,6 +211,8 @@ type
     cxLabel21: TcxLabel;
     edParValue: TcxCurrencyEdit;
     actMIContainerCost: TdsdOpenForm;
+    AmountCost: TcxGridDBColumn;
+    AmountCost_Master: TcxGridDBColumn;
   private
   public
   end;

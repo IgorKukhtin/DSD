@@ -6,7 +6,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitLeft = -247
-  ExplicitTop = -157
+  ExplicitTop = -131
   ExplicitWidth = 1036
   ExplicitHeight = 588
   PixelsPerInch = 96
