@@ -48,19 +48,47 @@ BEGIN
                              WHERE ObjectLink_MainJuridical.DescId = zc_ObjectLink_ContractSettings_MainJuridical()
                              ) 
 
- ,  tmpMainJuridicalArea AS (SELECT DISTINCT ObjectLink_JuridicalRetail.ObjectId      AS MainJuridicalId
-                                 ,  ObjectLink_Unit_Area.ChildObjectId                AS AreaId
-                            FROM ObjectLink AS ObjectLink_JuridicalRetail 
-                                 LEFT JOIN ObjectLink AS OL_Unit_Juridical 
-                                                      ON OL_Unit_Juridical.ChildObjectId = ObjectLink_JuridicalRetail.ObjectId
-                                                     AND OL_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                                 LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
-                                                      ON ObjectLink_Unit_Area.ObjectId = OL_Unit_Juridical.ObjectId
-                                                     AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
-                                                    AND  ObjectLink_Unit_Area.ChildObjectId  <> 0 
-                            WHERE ObjectLink_JuridicalRetail.DescId = zc_ObjectLink_Juridical_Retail()    
-                              AND ObjectLink_JuridicalRetail.ChildObjectId = vbObjectId
-                            )
+   , tmpMainJuridicalArea AS (SELECT DISTINCT ObjectLink_JuridicalRetail.ObjectId      AS MainJuridicalId
+                                   , ObjectLink_Unit_Area.ChildObjectId                AS AreaId
+                              FROM ObjectLink AS ObjectLink_JuridicalRetail 
+                                   LEFT JOIN ObjectLink AS OL_Unit_Juridical 
+                                                        ON OL_Unit_Juridical.ChildObjectId = ObjectLink_JuridicalRetail.ObjectId
+                                                       AND OL_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
+                                                        ON ObjectLink_Unit_Area.ObjectId = OL_Unit_Juridical.ObjectId
+                                                       AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
+                                                      AND  ObjectLink_Unit_Area.ChildObjectId  <> 0 
+                              WHERE ObjectLink_JuridicalRetail.DescId = zc_ObjectLink_Juridical_Retail()    
+                                AND ObjectLink_JuridicalRetail.ChildObjectId = vbObjectId
+                              )
+
+   , tmpJuridicalSettingsItem AS (SELECT tmp.JuridicalSettingsId
+                                       , tmp.Bonus
+                                       , tmp.PriceLimit
+                                  FROM (SELECT ObjectLink_JuridicalSettings.ChildObjectId AS JuridicalSettingsId
+                                             , ObjectFloat_Bonus.ValueData                AS Bonus
+                                             , ObjectFloat_PriceLimit.ValueData           AS PriceLimit
+                                             , ROW_NUMBER() OVER (PARTITION BY ObjectLink_JuridicalSettings.ChildObjectId ORDER BY ObjectFloat_PriceLimit.ValueData) AS Ord
+                                             
+                                        FROM Object AS Object_JuridicalSettingsItem
+                                             INNER JOIN ObjectLink AS ObjectLink_JuridicalSettings
+                                                                   ON ObjectLink_JuridicalSettings.ObjectId = Object_JuridicalSettingsItem.Id
+                                                                  AND ObjectLink_JuridicalSettings.DescId = zc_ObjectLink_JuridicalSettingsItem_JuridicalSettings()
+                                                              --    AND (ObjectLink_JuridicalSettings.ChildObjectId = inJuridicalSettingsId OR inJuridicalSettingsId = 0)
+                                  
+                                             LEFT JOIN ObjectFloat AS ObjectFloat_Bonus
+                                                                   ON ObjectFloat_Bonus.ObjectId = Object_JuridicalSettingsItem.Id
+                                                                  AND ObjectFloat_Bonus.DescId = zc_ObjectFloat_JuridicalSettingsItem_Bonus()
+                                  
+                                             LEFT JOIN ObjectFloat AS ObjectFloat_PriceLimit
+                                                                   ON ObjectFloat_PriceLimit.ObjectId = Object_JuridicalSettingsItem.Id
+                                                                  AND ObjectFloat_PriceLimit.DescId = zc_ObjectFloat_JuridicalSettingsItem_PriceLimit()
+                                  
+                                        WHERE Object_JuridicalSettingsItem.DescId = zc_Object_JuridicalSettingsItem()
+                                          AND Object_JuridicalSettingsItem.isErased = FALSE
+                                         ) AS tmp
+                                  WHERE tmp.Ord = 1 
+                                  )
 
        SELECT 
              JuridicalSettings.JuridicalSettingsId              AS Id
@@ -123,8 +151,10 @@ BEGIN
                       , COALESCE (ObjectBoolean_isPriceClose.ValueData, FALSE)    AS isPriceClose 
                       , COALESCE (ObjectBoolean_isPriceCloseOrder.ValueData, FALSE)  AS isPriceCloseOrder
                       , COALESCE (ObjectBoolean_Site.ValueData, FALSE)            AS isSite
-                      , ObjectFloat_Bonus.ValueData                               AS Bonus 
-                      , COALESCE (ObjectFloat_PriceLimit.ValueData,0) :: TFloat   AS PriceLimit  
+                      --, ObjectFloat_Bonus.ValueData                               AS Bonus 
+                      --, COALESCE (ObjectFloat_PriceLimit.ValueData,0) :: TFloat   AS PriceLimit  
+                      , tmpJuridicalSettingsItem.Bonus
+                      , tmpJuridicalSettingsItem.PriceLimit
                       , ObjectLink_JuridicalSettings_Retail.ObjectId              AS JuridicalSettingsId
 
                       , ObjectDate_StartDate.ValueData AS StartDate
@@ -152,13 +182,14 @@ BEGIN
                                               ON ObjectBoolean_isPriceCloseOrder.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
                                              AND ObjectBoolean_isPriceCloseOrder.DescId = zc_ObjectBoolean_JuridicalSettings_isPriceCloseOrder()
 
-                      LEFT JOIN ObjectFloat AS ObjectFloat_Bonus 
+                      /*LEFT JOIN ObjectFloat AS ObjectFloat_Bonus 
                                             ON ObjectFloat_Bonus.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
                                            AND ObjectFloat_Bonus.DescId = zc_ObjectFloat_JuridicalSettings_Bonus()
      
                       LEFT JOIN ObjectFloat AS ObjectFloat_PriceLimit 
                                             ON ObjectFloat_PriceLimit.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
                                            AND ObjectFloat_PriceLimit.DescId = zc_ObjectFloat_JuridicalSettings_PriceLimit()
+                      */
                
                       LEFT JOIN ObjectBoolean AS ObjectBoolean_isBonusVirtual
                                               ON ObjectBoolean_isBonusVirtual.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
@@ -174,6 +205,8 @@ BEGIN
                       LEFT JOIN ObjectDate AS ObjectDate_EndDate 
                                            ON ObjectDate_EndDate.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
                                           AND ObjectDate_EndDate.DescId = zc_ObjectDate_Contract_End()
+
+                      LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = ObjectLink_JuridicalSettings_Retail.ObjectId
 
                  WHERE ObjectLink_JuridicalSettings_Retail.DescId = zc_ObjectLink_JuridicalSettings_Retail()
                  AND ObjectLink_JuridicalSettings_Retail.ChildObjectId = vbObjectId) 
