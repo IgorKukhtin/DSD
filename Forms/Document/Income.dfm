@@ -758,10 +758,10 @@ object IncomeForm: TIncomeForm
         end
       end
     end
-    object cxTabSheet1: TcxTabSheet
+    object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      object cxGrid1: TcxGrid
+      object GridCost: TcxGrid
         Left = 0
         Top = 0
         Width = 1056
@@ -770,7 +770,7 @@ object IncomeForm: TIncomeForm
         TabOrder = 0
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = DataSourceCost
+          DataController.DataSource = CostDS
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <>
@@ -1169,6 +1169,10 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbMIContainerCost'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1275,7 +1279,7 @@ object IncomeForm: TIncomeForm
       Category = 0
     end
     object bbInsertRecord: TdxBarButton
-      Action = InsertRecord1
+      Action = InsertRecordCost
       Category = 0
     end
     object bbCompleteCost: TdxBarButton
@@ -1306,11 +1310,9 @@ object IncomeForm: TIncomeForm
       Action = actPrintStickerTermo
       Category = 0
     end
-    object bb: TdxBarButton
-      Caption = 'New Item'
+    object bbMIContainerCost: TdxBarButton
+      Action = actMIContainerCost
       Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1348,7 +1350,7 @@ object IncomeForm: TIncomeForm
     end
     object actShowErasedCost: TBooleanStoredProcAction
       Category = 'DSDLib'
-      TabSheet = cxTabSheet1
+      TabSheet = cxTabSheetCost
       MoveParams = <>
       Enabled = False
       StoredProc = spSelect_IncomeCost_byParent
@@ -1420,7 +1422,7 @@ object IncomeForm: TIncomeForm
           StoredProc = spSelect_IncomeCost_byParent
         end>
       Caption = 'actUpdateClientDataCost'
-      DataSource = DataSourceCost
+      DataSource = CostDS
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1620,6 +1622,7 @@ object IncomeForm: TIncomeForm
     end
     object actMIContainer: TdsdOpenForm
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
@@ -1633,6 +1636,29 @@ object IncomeForm: TIncomeForm
           Name = 'Id'
           Value = Null
           Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actMIContainerCost: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetCost
+      MoveParams = <>
+      Enabled = False
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 57
+      FormName = 'TMovementItemContainerForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = CostCDS
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1710,7 +1736,7 @@ object IncomeForm: TIncomeForm
         item
           Name = 'key'
           Value = Null
-          Component = ClientDataCost
+          Component = CostCDS
           ComponentItem = 'MasterMovementId'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1718,7 +1744,7 @@ object IncomeForm: TIncomeForm
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataCost
+          Component = CostCDS
           ComponentItem = 'MasterInvNumber'
           DataType = ftString
           ParamType = ptInput
@@ -1727,7 +1753,7 @@ object IncomeForm: TIncomeForm
         item
           Name = 'OperDate'
           Value = 'NULL'
-          Component = ClientDataCost
+          Component = CostCDS
           ComponentItem = 'MasterOperDate'
           DataType = ftDateTime
           ParamType = ptInput
@@ -1736,7 +1762,7 @@ object IncomeForm: TIncomeForm
         item
           Name = 'StatusCode'
           Value = Null
-          Component = ClientDataCost
+          Component = CostCDS
           ComponentItem = 'MasterStatusCode'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1823,7 +1849,7 @@ object IncomeForm: TIncomeForm
       ShortCut = 45
       ImageIndex = 0
     end
-    object InsertRecord1: TInsertRecord
+    object InsertRecordCost: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1838,7 +1864,7 @@ object IncomeForm: TIncomeForm
     end
     object actCompleteCost: TdsdChangeMovementStatus
       Category = 'DSDLib'
-      TabSheet = cxTabSheet1
+      TabSheet = cxTabSheetCost
       MoveParams = <>
       Enabled = False
       StoredProc = spComplete_IncomeCost
@@ -1850,11 +1876,11 @@ object IncomeForm: TIncomeForm
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
       ImageIndex = 12
       Status = mtComplete
-      DataSource = DataSourceCost
+      DataSource = CostDS
     end
     object actSetErasedCost: TdsdChangeMovementStatus
       Category = 'DSDLib'
-      TabSheet = cxTabSheet1
+      TabSheet = cxTabSheetCost
       MoveParams = <>
       Enabled = False
       StoredProc = spSetErased_IncomeCost
@@ -1866,11 +1892,11 @@ object IncomeForm: TIncomeForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
       ImageIndex = 13
       Status = mtDelete
-      DataSource = DataSourceCost
+      DataSource = CostDS
     end
     object actUnCompleteCost: TdsdChangeMovementStatus
       Category = 'DSDLib'
-      TabSheet = cxTabSheet1
+      TabSheet = cxTabSheetCost
       MoveParams = <>
       Enabled = False
       StoredProc = spUnComplete_IncomeCost
@@ -1882,7 +1908,7 @@ object IncomeForm: TIncomeForm
       Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
       ImageIndex = 11
       Status = mtUncomplete
-      DataSource = DataSourceCost
+      DataSource = CostDS
     end
     object actInvoiceJournalDetailChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -3334,23 +3360,23 @@ object IncomeForm: TIncomeForm
     Left = 153
     Top = 400
   end
-  object ClientDataCost: TClientDataSet
+  object CostCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 768
     Top = 223
   end
-  object DataSourceCost: TDataSource
-    DataSet = ClientDataCost
+  object CostDS: TDataSource
+    DataSet = CostCDS
     Left = 814
     Top = 223
   end
   object spSelect_IncomeCost_byParent: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_IncomeCost_byParent'
-    DataSet = ClientDataCost
+    DataSet = CostCDS
     DataSets = <
       item
-        DataSet = ClientDataCost
+        DataSet = CostCDS
       end>
     Params = <
       item
@@ -3381,7 +3407,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'ioId'
         Value = Null
-        Component = ClientDataCost
+        Component = CostCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -3397,7 +3423,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'inMovementId'
         Value = Null
-        Component = ClientDataCost
+        Component = CostCDS
         ComponentItem = 'MasterMovementId'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3405,7 +3431,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'inComment'
         Value = Null
-        Component = ClientDataCost
+        Component = CostCDS
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
@@ -3423,7 +3449,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'inMovementId'
         Value = Null
-        Component = ClientDataCost
+        Component = CostCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3440,7 +3466,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'inMovementId'
         Value = Null
-        Component = ClientDataCost
+        Component = CostCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3457,7 +3483,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'inMovementId'
         Value = Null
-        Component = ClientDataCost
+        Component = CostCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','

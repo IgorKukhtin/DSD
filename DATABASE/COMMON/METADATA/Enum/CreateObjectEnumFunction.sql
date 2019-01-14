@@ -474,6 +474,14 @@ CREATE OR REPLACE FUNCTION zc_Enum_AccountDirection_40600() RETURNS Integer AS $
 -- 40000; "Денежные средства"; 40700; "Покупка/продажа валюты"
 CREATE OR REPLACE FUNCTION zc_Enum_AccountDirection_40700() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AccountDirection_40700' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-- 50000; "Расходы будущих периодов"; 50100; "Сотрудники"
+CREATE OR REPLACE FUNCTION zc_Enum_AccountDirection_50100() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AccountDirection_50100' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- 50000; "Расходы будущих периодов"; 50200; "ГСМ"
+CREATE OR REPLACE FUNCTION zc_Enum_AccountDirection_50200() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AccountDirection_50200' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- 50000; "Расходы будущих периодов"; 50300; "Кредиторы по услугам"
+CREATE OR REPLACE FUNCTION zc_Enum_AccountDirection_50300() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AccountDirection_50300' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
+
 -- 60000; "Прибыль будущих периодов"; 60100; "сотрудники (экспедиторы)"
 CREATE OR REPLACE FUNCTION zc_Enum_AccountDirection_60100() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AccountDirection_60100' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 -- 60000; "Прибыль будущих периодов"; 60200; "на филиалах"

@@ -37,6 +37,9 @@ BEGIN
      UPDATE _tmpItem SET AccountDirectionId =    CASE WHEN _tmpItem.AccountId <> 0
                                                            THEN _tmpItem.AccountDirectionId
 
+                                                      WHEN _tmpItem.AccountGroupId = zc_Enum_AccountGroup_50000() -- Расходы будущих периодов
+                                                           THEN _tmpItem.AccountDirectionId
+
                                                       WHEN _tmpItem.AssetId <> 0 -- Основные средства
                                                            THEN _tmpItem.AccountDirectionId
 
@@ -159,8 +162,10 @@ BEGIN
      -- 1.1.3. определяется Счет для проводок суммового учета
      UPDATE _tmpItem SET AccountId = CASE WHEN _tmpItem.AccountId <> 0
                                                THEN _tmpItem.AccountId
+
                                           WHEN _tmpItem.ObjectDescId = 0
                                                THEN zc_Enum_Account_100301() -- прибыль текущего периода
+
                                           -- WHEN _tmpItem.ObjectDescId IN (zc_Object_BankAccount(), zc_Object_Cash()) AND IsMaster = FALSE
                                           --      THEN zc_Enum_Account_110301() -- Транзит + расчетный счет + касса
 
@@ -188,6 +193,7 @@ BEGIN
                                                          WHEN zc_Enum_InfoMoney_21151()
                                                               THEN zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
                                                     END
+
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40300() AND 0 < (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem.ObjectId AND OL.DescId = zc_ObjectLink_BankAccount_Account())
                                                -- THEN zc_Enum_Account_40302() -- рассчетный овердрафт
                                                THEN (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem.ObjectId AND OL.DescId = zc_ObjectLink_BankAccount_Account())
@@ -448,6 +454,7 @@ BEGIN
      -- 2.1. определяется ContainerId для проводок суммового учета - Суммовой учет
      UPDATE _tmpItem SET ContainerId = CASE WHEN _tmpItem.ContainerId <> 0
                                                  THEN _tmpItem.ContainerId
+
                                             WHEN _tmpItem.AccountId IN (zc_Enum_Account_110201()  -- Транзит + деньги в пути
                                                                       , zc_Enum_Account_110301()) -- Транзит + расчетный счет + расчетный счет
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -460,6 +467,7 @@ BEGIN
                                                                             , inDescId_1          := zc_ContainerLinkObject_InfoMoney() -- CASE WHEN _tmpItem.ObjectDescId = zc_Object_BankAccount() THEN zc_ContainerLinkObject_BankAccount() WHEN _tmpItem.ObjectDescId = zc_Object_Cash() THEN zc_ContainerLinkObject_Cash() ELSE -1 END
                                                                             , inObjectId_1        := _tmpItem.InfoMoneyId -- _tmpItem.ObjectId
                                                                              )
+
                                             WHEN _tmpItem.AccountId IN (zc_Enum_Account_110302()) -- Транзит + расчетный счет + валютный
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                             , inParentId          := NULL
@@ -480,6 +488,7 @@ BEGIN
                                                                             , inDescId_2          := zc_ContainerLinkObject_Currency()
                                                                             , inObjectId_2        := _tmpItem.CurrencyId
                                                                              )
+
                                             WHEN _tmpItem.AccountGroupId = zc_Enum_AccountGroup_40000() -- Денежные средства
                                              AND _tmpItem.ObjectDescId IN (zc_Object_Cash(), zc_Object_BankAccount())
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -501,6 +510,7 @@ BEGIN
                                                                             , inDescId_2          := CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN NULL ELSE zc_ContainerLinkObject_Currency() END
                                                                             , inObjectId_2        := CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN NULL ELSE _tmpItem.CurrencyId END
                                                                              )
+
                                             WHEN _tmpItem.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                             , inParentId          := NULL
@@ -514,6 +524,7 @@ BEGIN
                                                                             , inDescId_2          := zc_ContainerLinkObject_Branch()
                                                                             , inObjectId_2        := _tmpItem.BranchId_ProfitLoss
                                                                              )
+
                                             WHEN _tmpItem.AssetId <> 0 -- Основные средства
                                                  THEN -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение  2)УП 3)Партии товара 4)Основные средства (для которого закуплено ОС или ТМЦ) 5)Статьи назначения 6)Статьи назначения(детализация с/с)
                                                       lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -536,6 +547,7 @@ BEGIN
                                                                             , inDescId_6          := zc_ContainerLinkObject_AssetTo()
                                                                             , inObjectId_6        := _tmpItem.AssetId
                                                                              )
+
                                             WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_100400() -- Расчеты с участниками
                                                  -- _tmpItem.ObjectDescId = zc_Object_Founder() -- Учредители
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -548,6 +560,7 @@ BEGIN
                                                                             , inDescId_1          := zc_ContainerLinkObject_Founder()
                                                                             , inObjectId_1        := _tmpItem.ObjectId -- (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = _tmpItem.InfoMoneyId AND DescId = zc_ObjectLink_Founder_InfoMoney())
                                                                              )
+
                                             WHEN _tmpItem.ObjectDescId = zc_Object_Member() -- Подотчет
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                             , inParentId          := NULL
@@ -565,6 +578,7 @@ BEGIN
                                                                             , inDescId_4          := zc_ContainerLinkObject_Car()
                                                                             , inObjectId_4        := _tmpItem.CarId -- для Физ.лица (подотчетные лица) !!!именно здесь последняя аналитика всегда значение = 0!!!
                                                                              )
+
                                             WHEN _tmpItem.ObjectDescId = zc_Object_Personal() -- ЗП
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                             , inParentId          := NULL
@@ -588,6 +602,7 @@ BEGIN
                                                                             , inDescId_7          := CASE WHEN _tmpItem.PersonalServiceListId = 0 THEN NULL ELSE zc_ContainerLinkObject_PersonalServiceList() END
                                                                             , inObjectId_7        := _tmpItem.PersonalServiceListId
                                                                              )
+
                                             WHEN _tmpItem.ObjectDescId IN (zc_Object_Juridical(), zc_Object_Partner())
                                                       -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -613,6 +628,21 @@ BEGIN
                                                                             , inObjectId_7        := CASE WHEN inMovementId = 4955377 /*vbTmp = -1*/ THEN 0    WHEN /*inMovementId IN (3470198, 3528808) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/ THEN NULL ELSE CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400() /*ГСМ*/ THEN 0 ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN CASE WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() THEN (SELECT (ObjectLink.ObjectId) FROM ObjectLink JOIN Object ON Object.Id = ObjectLink.ObjectId AND Object.isErased = FALSE WHERE ObjectLink.ChildObjectId = _tmpItem.ObjectId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) ELSE _tmpItem.ObjectId END ELSE NULL END END END -- and <> наши компании
                                                                             , inDescId_8          := CASE WHEN inMovementId = 4955377 /*vbTmp = -1*/ THEN NULL WHEN /*inMovementId IN (3470198) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/ THEN NULL ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Branch() ELSE NULL END END -- and <> наши компании
                                                                             , inObjectId_8        := CASE WHEN inMovementId = 4955377 /*vbTmp = -1*/ THEN 0    WHEN /*inMovementId IN (3470198) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/ THEN NULL ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN _tmpItem.BranchId_Balance ELSE NULL END END -- and <> наши компании
+                                                                             )
+
+                                            WHEN _tmpItem.ObjectDescId IN (zc_Object_PartionMovement())
+                                                      -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Статьи назначения 3)Партии накладной
+                                                 THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                            , inParentId          := NULL
+                                                                            , inObjectId          := _tmpItem.AccountId
+                                                                            , inJuridicalId_basis := _tmpItem.JuridicalId_Basis
+                                                                            , inBusinessId        := _tmpItem.BusinessId_Balance
+                                                                            , inObjectCostDescId  := NULL
+                                                                            , inObjectCostId      := NULL
+                                                                            , inDescId_1          := zc_ContainerLinkObject_InfoMoney()
+                                                                            , inObjectId_1        := _tmpItem.InfoMoneyId
+                                                                            , inDescId_2          := zc_ContainerLinkObject_PartionMovement()
+                                                                            , inObjectId_2        := _tmpItem.ObjectId
                                                                              )
                                        END;
      -- 2.2. определяется ContainerId для проводок суммового учета - Суммовой учет в валюте
@@ -720,18 +750,20 @@ BEGIN
             , _tmpItem.AnalyzerId                 AS AnalyzerId
             , _tmpItem.ObjectId                   AS ObjectId_Analyzer
 
+              -- !!!замена!!!
             , CASE WHEN _tmpItem.MovementDescId = zc_Movement_TransportService()
                        THEN _tmpItem.ObjectIntId_Analyzer
                    ELSE _tmpItem.UnitId
-              END AS WhereObjectId_Analyzer -- !!!замена!!!
+              END AS WhereObjectId_Analyzer
 
             , COALESCE (tmpProfitLoss.ContainerId, tmpFind.ContainerId) AS ContainerId_Analyzer -- Контейнер ОПиУ или Контейнер - корреспондент
             , COALESCE (tmpProfitLoss.AccountId,   tmpFind.AccountId)   AS AccountId_Analyzer   -- Счет ОПиУ или Счет - корреспондент
 
+              -- !!!замена!!!
             , CASE WHEN _tmpItem.MovementDescId = zc_Movement_TransportService()
                        THEN _tmpItem.UnitId
                    ELSE _tmpItem.ObjectIntId_Analyzer
-              END AS ObjectIntId_Analyzer -- !!!замена!!!
+              END AS ObjectIntId_Analyzer
 
             , _tmpItem.ObjectExtId_Analyzer       AS ObjectExtId_Analyzer
 

@@ -176,7 +176,7 @@ BEGIN
          -- теперь следуюющий
          vbIndex := vbIndex + 1;
      END LOOP;
-
+/*     
      -- сохраняем <Документ Затрат>
      PERFORM lpInsertUpdate_Movement_Cost ( ioId         := 0
                                           , inParentId   := tmp_List.MovementId    --- док приход 
@@ -205,7 +205,7 @@ BEGIN
              AND MovemenTFloat.ValueData = ioId ) AS tmp 
         LEFT JOIN tmp_List on tmp.ParentId = tmp_List.MovementId 
      WHERE tmp_List.MovementId Isnull;
-
+*/  
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);

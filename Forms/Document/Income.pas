@@ -161,15 +161,15 @@ type
     TransportChoiceGuides: TdsdGuides;
     HeaderSaver2: THeaderSaver;
     spInsertUpdateMovement_Params: TdsdStoredProc;
-    cxTabSheet1: TcxTabSheet;
-    cxGrid1: TcxGrid;
+    cxTabSheetCost: TcxTabSheet;
+    GridCost: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     clComment: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
-    ClientDataCost: TClientDataSet;
-    DataSourceCost: TDataSource;
+    CostCDS: TClientDataSet;
+    CostDS: TDataSource;
     spSelect_IncomeCost_byParent: TdsdStoredProc;
-    InsertRecord1: TInsertRecord;
+    InsertRecordCost: TInsertRecord;
     CostJournalChoiceForm: TOpenChoiceForm;
     bbInsertRecord: TdxBarButton;
     spInsertUpdate_IncomeCost: TdsdStoredProc;
@@ -207,9 +207,10 @@ type
     bbPrintSticker: TdxBarButton;
     actPrintStickerTermo: TdsdPrintAction;
     bbPrintStickerTermo: TdxBarButton;
-    bb: TdxBarButton;
+    bbMIContainerCost: TdxBarButton;
     cxLabel21: TcxLabel;
     edParValue: TcxCurrencyEdit;
+    actMIContainerCost: TdsdOpenForm;
   private
   public
   end;

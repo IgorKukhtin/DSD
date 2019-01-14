@@ -22,7 +22,12 @@ BEGIN
      IF COALESCE (ioId, 0) = 0
      THEN
          -- создается новый
-         ioId := lpInsertUpdate_Movement (ioId, zc_Movement_IncomeCost(), CAST (NEXTVAL ('Movement_IncomeCost_seq') AS TVarChar), CURRENT_DATE, inParentId);
+         ioId := lpInsertUpdate_Movement (ioId
+                                        , zc_Movement_IncomeCost()
+                                        , CAST (NEXTVAL ('Movement_IncomeCost_seq') AS TVarChar)
+                                        , (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inParentId)
+                                        , inParentId
+                                         );
 
      ELSE
          -- обновляем существующий

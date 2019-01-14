@@ -15,11 +15,13 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Income());
 
 
-     -- проводим Документ + сохранили протокол
-     PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                , inDescId     := zc_Movement_IncomeCost()
-                                , inUserId     := vbUserId
-                                 );
+     -- создаются временные таблицы - для формирование данных для проводок
+     PERFORM lpComplete_Movement_IncomeCost_CreateTemp();
+
+     -- Проводим Документ
+     PERFORM lpComplete_Movement_IncomeCost (inMovementId := inMovementId
+                                           , inUserId     := vbUserId
+                                            );
 
 END;
 $BODY$
@@ -27,7 +29,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  13.01.19                                        *
 */
 

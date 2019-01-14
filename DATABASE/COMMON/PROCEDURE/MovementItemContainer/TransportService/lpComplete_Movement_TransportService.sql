@@ -10,8 +10,8 @@ RETURNS VOID
 --  RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, JuridicalId_From Integer, isCorporate Boolean, PersonalId_From Integer, UnitId Integer, BranchId_Unit Integer, PersonalId_Packer Integer, PaidKindId Integer, ContractId Integer, ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, OperCount TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, tmpOperSumm_Packer TFloat, OperSumm_Packer TFloat, AccountDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, InfoMoneyDestinationId_isCorporate Integer, InfoMoneyId_isCorporate Integer, JuridicalId_basis Integer, BusinessId Integer, isPartionCount Boolean, isPartionSumm Boolean, PartionMovementId Integer, PartionGoodsId Integer)
 AS
 $BODY$
+  DECLARE vbIsAccount_50000 Boolean;
 BEGIN
-
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
      DELETE FROM _tmpMIReport_insert;
@@ -192,6 +192,16 @@ BEGIN
      END IF;
 
 
+     -- 2.0. !!!обязательно!!! - если это Расходы будущих периодов
+     vbIsAccount_50000:= EXISTS (SELECT 1
+                                 FROM MovementFloat
+                                      INNER JOIN Movement ON Movement.Id       = MovementFloat.MovementId
+                                                         AND Movement.DescId   = zc_Movement_IncomeCost()
+                                                         AND Movement.StatusId = zc_Enum_Status_Complete()
+                                 WHERE MovementFloat.ValueData = inMovementId
+                                   AND MovementFloat.DescId    = zc_MovementFloat_MovementId()
+                                );
+
      -- 2. заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
                          , MovementItemId, ContainerId
@@ -205,12 +215,20 @@ BEGIN
                           )
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
-             , 0 AS ObjectId
-             , 0 AS ObjectDescId                                                    -- !!!значит будет ОПиУ!!!
+               -- !!!Расходы будущих периодов или будет ОПиУ!!!
+             , CASE WHEN vbIsAccount_50000 = TRUE THEN lpInsertFind_Object_PartionMovement (inMovementId:= inMovementId, inPaymentDate:= _tmpItem.OperDate) ELSE 0 END AS ObjectId
+               -- !!!Расходы будущих периодов или будет ОПиУ!!!
+             , CASE WHEN vbIsAccount_50000 = TRUE THEN zc_Object_PartionMovement() ELSE 0 END AS ObjectDescId
              , -1 * SUM (_tmpItem.OperSumm) AS OperSumm
              , _tmpItem.MovementItemId
-             , 0 AS ContainerId                                                     -- сформируем позже
-             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId         -- сформируем позже
+               -- сформируем позже
+             , 0 AS ContainerId
+               -- Расходы будущих периодов или ...
+             , CASE WHEN vbIsAccount_50000 = TRUE THEN zc_Enum_AccountGroup_50000() ELSE 0 END AS AccountGroupId
+               -- Расходы будущих периодов - Кредиторы по услугам или ...
+             , CASE WHEN vbIsAccount_50000 = TRUE THEN zc_Enum_AccountDirection_50300() ELSE 0 END AS AccountDirectionId
+               -- сформируем позже
+             , 0 AS AccountId
 
                -- Группы ОПиУ (для затрат)
              , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossGroupId, 0) AS ProfitLossGroupId
@@ -255,6 +273,7 @@ BEGIN
         FROM _tmpItem
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection
                     ON lfObject_Unit_byProfitLossDirection.UnitId = _tmpItem.UnitId
+                   AND vbIsAccount_50000 = FALSE
         GROUP BY _tmpItem.MovementDescId
                , _tmpItem.OperDate
                , _tmpItem.MovementItemId
