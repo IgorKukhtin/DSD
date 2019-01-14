@@ -95,6 +95,7 @@
             DataBinding.FieldName = 'Bonus'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 73
           end
           object PriceLimit: TcxGridDBColumn
@@ -103,6 +104,7 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' "'#1062#1077#1085#1072' '#1076#1086'"'
+            Options.Editing = False
             Width = 70
           end
           object StartDate: TcxGridDBColumn

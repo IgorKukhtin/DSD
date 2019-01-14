@@ -518,6 +518,13 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
           Component = MasterCDS
           ComponentItem = 'ManualDiscount'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberSPId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberSPId'
+          MultiSelectSeparator = ','
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1088#1072#1073#1086#1090#1091
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074' '#1088#1072#1073#1086#1090#1091

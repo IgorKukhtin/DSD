@@ -86,7 +86,8 @@ BEGIN
     -- проверили корректность цены
     IF COALESCE (inMCSValue_min, 0) > COALESCE (inMCSValue, 0)
     THEN
-        RAISE EXCEPTION 'Ошибка.НТЗ мин. <%> Не может быть больше НТЗ <%>.', inMCSValue_min, inMCSValue;
+        RAISE EXCEPTION 'Ошибка.НТЗ мин. <%> Не может быть больше НТЗ <%>. Медикамент <%>', inMCSValue_min, inMCSValue, 
+          (SELECT ValueData FROM Object WHERE ID = inGoodsId);
     END IF;
     
     -- Если такая запись есть - достаем её ключу подр.-товар
@@ -392,7 +393,7 @@ $BODY$
 LANGUAGE plpgsql VOLATILE;
 --ALTER FUNCTION gpInsertUpdate_Object_Price (Integer, TFloat, TFloat, Integer, Integer, Boolean, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.

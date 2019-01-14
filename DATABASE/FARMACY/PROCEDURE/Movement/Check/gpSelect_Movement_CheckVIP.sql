@@ -40,7 +40,8 @@ RETURNS TABLE (
   PromoCodeID Integer,
   PromoName TVarChar,
   PromoCodeGUID TVarChar,
-  PromoCodeChangePercent TFloat
+  PromoCodeChangePercent TFloat,
+  MemberSPId Integer
  )
 AS
 $BODY$
@@ -124,16 +125,16 @@ BEGIN
             , Object_CashRegister.ValueData              AS CashRegisterName
             , MovementLinkObject_CheckMember.ObjectId    AS CashMemberId
             , CASE WHEN MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = '' THEN zc_Member_Site() ELSE Object_CashMember.ValueData END :: TVarChar AS CashMember
-	    , MovementString_Bayer.ValueData             AS Bayer
+	        , MovementString_Bayer.ValueData             AS Bayer
 
             , MovementString_BayerPhone.ValueData        AS BayerPhone
             , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
             , Object_ConfirmedKind.ValueData             AS ConfirmedKindName
             , Object_ConfirmedKindClient.ValueData       AS ConfirmedKindClientName
 
-	    , Object_DiscountExternal.Id                 AS DiscountExternalId
-	    , Object_DiscountExternal.ValueData          AS DiscountExternalName
-	    , Object_DiscountCard.ValueData              AS DiscountCardNumber
+	        , Object_DiscountExternal.Id                 AS DiscountExternalId
+	        , Object_DiscountExternal.ValueData          AS DiscountExternalName
+	        , Object_DiscountCard.ValueData              AS DiscountCardNumber
 
             , Object_PartnerMedical.Id                   AS PartnerMedicalId
             , Object_PartnerMedical.ValueData            AS PartnerMedicalName
@@ -156,6 +157,7 @@ BEGIN
             , Object_PromoCode.ValueData AS PromoName
             , MIString_GUID.ValueData AS PromoCodeGUID
             , COALESCE(MovementFloat_ChangePercent.ValueData,0)::TFloat AS PromoCodeChangePercent
+            , Object_MemberSP.Id                                        AS MemberSPId
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id 
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id 
@@ -169,9 +171,9 @@ BEGIN
                                         
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
-   	    INNER JOIN MovementBoolean AS MovementBoolean_Deferred
-		                       ON MovementBoolean_Deferred.MovementId = Movement.Id
-		                      AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+   	        INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+		                               ON MovementBoolean_Deferred.MovementId = Movement.Id
+		                              AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
@@ -189,7 +191,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
                                          ON MovementLinkObject_CheckMember.MovementId = Movement.Id
                                         AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
-  	    LEFT JOIN Object AS Object_CashMember ON Object_CashMember.Id = MovementLinkObject_CheckMember.ObjectId
+  	        LEFT JOIN Object AS Object_CashMember ON Object_CashMember.Id = MovementLinkObject_CheckMember.ObjectId
   	    
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DiscountCard
                                          ON MovementLinkObject_DiscountCard.MovementId = Movement.Id
@@ -200,7 +202,7 @@ BEGIN
             LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = ObjectLink_DiscountExternal.ChildObjectId
             LEFT JOIN Object AS Object_DiscountCard ON Object_DiscountCard.Id = MovementLinkObject_DiscountCard.ObjectId
 
-	    LEFT JOIN MovementString AS MovementString_Bayer
+	        LEFT JOIN MovementString AS MovementString_Bayer
                                      ON MovementString_Bayer.MovementId = Movement.Id
                                     AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
              LEFT JOIN MovementString AS MovementString_BayerPhone
@@ -272,6 +274,11 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ManualDiscount
                                     ON MovementFloat_ManualDiscount.MovementId =  Movement.Id
                                    AND MovementFloat_ManualDiscount.DescId = zc_MovementFloat_ManualDiscount()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSP
+                                         ON MovementLinkObject_MemberSP.MovementId = Movement.Id
+                                        AND MovementLinkObject_MemberSP.DescId = zc_MovementLinkObject_MemberSP()
+            LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = MovementLinkObject_MemberSP.ObjectId
        ;
 
 END;
