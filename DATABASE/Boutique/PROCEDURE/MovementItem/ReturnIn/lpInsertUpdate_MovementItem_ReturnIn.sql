@@ -40,11 +40,43 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
 RETURNS Integer
 AS
 $BODY$
-   DECLARE vbIsInsert Boolean;
+   DECLARE vbIsInsert     Boolean;
+   DECLARE vbOperDate_pay TDateTime;
 BEGIN
      -- проверка - связанные документы Изменять нельзя
      -- PERFORM lfCheck_Movement_Parent (inMovementId:= inMovementId, inComment:= 'изменение');
 
+
+     -- если нет прав возврат > 31 дней
+     IF NOT EXISTS (SELECT 1
+                    FROM Object AS Object_PartionMI
+                         INNER JOIN MovementItemBoolean AS MIBoolean
+                                                        ON MIBoolean.MovementItemId = Object_PartionMI.ObjectCode
+                                                       AND MIBoolean.DescId         = zc_MIBoolean_Checked()
+                                                       AND MIBoolean.ValueData      = TRUE
+                    WHERE Object_PartionMI.Id = inPartionMI_Id
+                   )
+     THEN
+         -- проверка - сколько дней прошло с момента списания кол-ва с покупателя - т.е. с момента реальной продажи
+         vbOperDate_pay:= COALESCE ((SELECT MAX (MIContainer.OperDate)
+                                     FROM ContainerLinkObject AS CLO_PartionMI
+                                          INNER JOIN Container ON Container.Id     = CLO_PartionMI.ContainerId
+                                                              AND Container.DescId = zc_Container_Count()
+                                          INNER JOIN MovementItemContainer AS MIContainer
+                                                                           ON MIContainer.ContainerId  = CLO_PartionMI.ContainerId
+                                                                          AND MIContainer.AnalyzerId   = zc_Enum_AnalyzerId_SaleCount_10100() -- Кол-во, реализация - Типы аналитик (проводки)
+                                                                          AND MIContainer.Amount       < 0
+                                     WHERE CLO_PartionMI.ObjectId = inPartionMI_Id
+                                       AND CLO_PartionMI.DescId   = zc_ContainerLinkObject_PartionMI()
+                                    ), zc_DateEnd());
+         -- 
+         IF vbOperDate_pay < CURRENT_DATE - INTERVAL '32 DAY'
+         THEN
+             RAISE EXCEPTION 'Ошибка. Нет прав делать возврат для продажи за <%>.%Прошло больше чем 31 день.', zfConvert_DateToString (vbOperDate_pay), CHR (13);
+         END IF;
+         
+     END IF;
+     
 
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;

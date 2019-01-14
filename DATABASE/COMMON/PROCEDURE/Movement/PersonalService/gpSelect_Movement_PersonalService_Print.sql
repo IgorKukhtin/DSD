@@ -475,6 +475,41 @@ BEGIN
 
                             WHERE tmpMI.PersonalId IS NULL
                            )
+       , tmpContainer_pay AS (SELECT DISTINCT
+                                     CLO_ServiceDate.ContainerId
+                                   , ObjectLink_Personal_Member.ChildObjectId AS MemberId
+                                   , CLO_Position.ObjectId AS PositionId
+                              FROM ContainerLinkObject AS CLO_PersonalServiceList
+                                   INNER JOIN ContainerLinkObject AS CLO_ServiceDate
+                                                                  ON CLO_ServiceDate.ObjectId    = vbServiceDateId
+                                                                 AND CLO_ServiceDate.DescId      = zc_ContainerLinkObject_ServiceDate()
+                                                                 AND CLO_ServiceDate.ContainerId = CLO_PersonalServiceList.ContainerId
+
+                                   INNER JOIN ContainerLinkObject AS CLO_Personal
+                                                                  ON CLO_Personal.DescId = zc_ContainerLinkObject_Personal()
+                                                                 AND CLO_Personal.ContainerId = CLO_ServiceDate.ContainerId
+                                   INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                         ON ObjectLink_Personal_Member.ObjectId = CLO_Personal.ObjectId
+                                                        AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
+                                   LEFT JOIN ContainerLinkObject AS CLO_Position
+                                                                 ON CLO_Position.ContainerId = CLO_ServiceDate.ContainerId
+                                                                AND CLO_Position.DescId     = zc_ContainerLinkObject_Position()
+                              WHERE CLO_PersonalServiceList.ObjectId = vbPersonalServiceListId
+                                AND CLO_PersonalServiceList.DescId   = zc_ContainerLinkObject_PersonalServiceList()
+                             )
+     , tmpMIContainer_pay AS (SELECT -- SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
+                                     SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance(), zc_Enum_AnalyzerId_Cash_PersonalService()) THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
+                                   , tmpContainer_pay.MemberId
+                                   , CASE WHEN inisShowAll = TRUE THEN tmpContainer_pay.PositionId ELSE 0 END AS PositionId
+                              FROM tmpContainer_pay
+                                   INNER JOIN MovementItemContainer AS MIContainer
+                                                                    ON MIContainer.ContainerId    = tmpContainer_pay.ContainerId
+                                                                   AND MIContainer.DescId         = zc_MIContainer_Summ()
+                                                                   AND MIContainer.MovementDescId = zc_Movement_Cash()
+                              GROUP BY tmpContainer_pay.MemberId
+                                     , CASE WHEN inisShowAll = TRUE THEN tmpContainer_pay.PositionId ELSE 0 END
+                             )
+     , tmpMember_findPersonal AS (SELECT * FROM  lfSelect_Object_Member_findPersonal (inSession))
           , tmpAll AS (SELECT tmpMI.Amount, tmpMI.PersonalId, tmpMI.UnitId, tmpMI.PositionId, tmpMI.MemberId , tmpMI.PersonalServiceListId
                             , tmpMI.isMain
                             , tmpMI.Comment
@@ -525,8 +560,40 @@ BEGIN
                             , 0 AS SummPhone
                         FROM tmpPersonal
                         WHERE tmpPersonal.Ord = 1
+                      UNION ALL
+                       SELECT DISTINCT
+                              0 AS Amount, tmpMember_findPersonal.PersonalId, tmpMember_findPersonal.UnitId, tmpMIContainer_pay.PositionId, tmpMIContainer_pay.MemberId
+                            , tmpMember_findPersonal.PersonalServiceListId
+                            , tmpMember_findPersonal.isMain
+                            , '' AS Comment
+                            , 0 AS Amount
+                            , 0 AS SummToPay
+                            , 0 AS SummNalog
+                            , 0 AS SummNalogRet
+                            , 0 AS SummCard
+                            , 0 AS SummCardSecond
+                            , 0 AS SummCardSecondCash
+                            , 0 AS SummService
+                            , 0 AS SummAdd
+                            , 0 AS SummAddOth
+                            , 0 AS SummHoliday
+
+                            , 0 AS SummMinus
+                            , 0 AS SummChild
+                            , 0 AS SummMinusExt
+
+                            , 0 AS SummTransportAdd
+                            , 0 AS SummTransport
+                            , 0 AS SummTransportTaxi
+                            , 0 AS SummPhone
+                        FROM tmpMIContainer_pay
+                             LEFT JOIN tmpMember_findPersonal ON tmpMember_findPersonal.MemberId = tmpMIContainer_pay.MemberId
+                             LEFT JOIN tmpMI ON tmpMI.MemberId = tmpMIContainer_pay.MemberId
+                             LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = tmpMIContainer_pay.MemberId
+                                                  AND tmpPersonal.Ord = 1
+                        WHERE tmpMI.MemberId IS NULL AND tmpPersonal.MemberId IS NULL
                       )
-       , tmpContainer_pay AS (SELECT DISTINCT
+       /*, tmpContainer_pay AS (SELECT DISTINCT
                                      CLO_ServiceDate.ContainerId
                                    , tmpAll.MemberId
                                    , CLO_Position.ObjectId AS PositionId
@@ -548,19 +615,7 @@ BEGIN
                                    LEFT JOIN ContainerLinkObject AS CLO_Position
                                                                  ON CLO_Position.ContainerId = CLO_ServiceDate.ContainerId
                                                                 AND CLO_Position.DescId     = zc_ContainerLinkObject_Position()
-                             )
-     , tmpMIContainer_pay AS (SELECT -- SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
-                                     SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance(), zc_Enum_AnalyzerId_Cash_PersonalService()) THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
-                                   , tmpContainer_pay.MemberId
-                                   , CASE WHEN inisShowAll = TRUE THEN tmpContainer_pay.PositionId ELSE 0 END AS PositionId
-                              FROM tmpContainer_pay
-                                   INNER JOIN MovementItemContainer AS MIContainer
-                                                                    ON MIContainer.ContainerId    = tmpContainer_pay.ContainerId
-                                                                   AND MIContainer.DescId         = zc_MIContainer_Summ()
-                                                                   AND MIContainer.MovementDescId = zc_Movement_Cash()
-                              GROUP BY tmpContainer_pay.MemberId
-                                     , CASE WHEN inisShowAll = TRUE THEN tmpContainer_pay.PositionId ELSE 0 END
-                             )
+                             )*/
        -- Результат
        SELECT 0 :: Integer                            AS Id
             , Object_Personal.Id                      AS PersonalId
@@ -665,6 +720,7 @@ BEGIN
           OR 0 <> tmpAll.SummAddOth
           -- OR 0 <> tmpAll.SummNalog
           -- OR 0 <> tmpAll.SummNalogRet
+          OR tmpMIContainer_pay.Amount_avance <> 0
        ORDER BY Object_Personal.ValueData
       ;
 

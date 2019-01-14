@@ -1,5 +1,5 @@
 unit Report_GoodsMI_IncomeByPartner;
-
+BUYERPARTNUMBER
 interface
 
 uses

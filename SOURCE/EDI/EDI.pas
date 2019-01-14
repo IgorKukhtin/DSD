@@ -2601,6 +2601,7 @@ procedure TEDI.InsertUpdateOrder(ORDER: IXMLORDERType;
   spHeader, spList: TdsdStoredProc);
 var
   MovementId, GoodsPropertyId: integer;
+  isMetro : Boolean;
   i: integer;
 begin
   with spHeader, ORDER do
@@ -2614,6 +2615,7 @@ begin
     Execute;
     MovementId := ParamByName('MovementId').Value;
     GoodsPropertyId := StrToInt(ParamByName('GoodsPropertyId').asString);
+    isMetro := ParamByName('isMetro').Value;
   end;
   for i := 0 to ORDER.HEAD.POSITION.Count - 1 do
     with spList, ORDER.HEAD.POSITION[i] do
@@ -2621,7 +2623,9 @@ begin
       ParamByName('inMovementId').Value := MovementId;
       ParamByName('inGoodsPropertyId').Value := GoodsPropertyId;
       ParamByName('inGoodsName').Value := CHARACTERISTIC.DESCRIPTION;
-      ParamByName('inGLNCode').Value := PRODUCTIDBUYER;
+      if isMetro = TRUE
+      then ParamByName('inGLNCode').Value := BUYERPARTNUMBER
+      else ParamByName('inGLNCode').Value := PRODUCTIDBUYER;
       ParamByName('inAmountOrder').Value := gfStrToFloat(ORDEREDQUANTITY);
       ParamByName('inPriceOrder').Value := gfStrToFloat(ORDERPRICE);
       Execute;
@@ -2811,7 +2815,7 @@ begin
   try
     // Установка ключей
     if UserSign <> ''
-    then FileName := UserSign
+    then FileName := ExtractFilePath(ParamStr(0)) + UserSign
     else FileName := ExtractFilePath(ParamStr(0)) + 'Ключ - Неграш О.В..ZS2';
 
 	  ComSigner.SetPrivateKeyFile (euKeyTypeAccountant, FileName, '24447183', false); // бухгалтер

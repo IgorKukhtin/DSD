@@ -9,6 +9,7 @@ RETURNS TABLE (MemberId Integer, PersonalId Integer
              , UnitId   Integer, PositionId Integer
              , BranchId Integer, PersonalServiceListId Integer
              , isDateOut  Boolean
+             , isMain     Boolean
              , Ord      Integer
               )
 AS
@@ -28,6 +29,7 @@ BEGIN
                                , ObjectLink_Unit_Branch.ChildObjectId         AS BranchId
                                , ObjectLink_PersonalServiceList.ChildObjectId AS PersonalServiceListId
                                , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN FALSE ELSE TRUE END AS isDateOut
+                               , COALESCE (ObjectBoolean_Main.ValueData, FALSE) AS isMain
                                , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Personal_Member.ChildObjectId
                                                     -- сортировкой определяется приоритет для выбора, т.к. выбираем с Ord = 1
                                                     ORDER BY CASE WHEN Object_Personal.isErased = FALSE THEN 0 ELSE 1 END
@@ -71,6 +73,7 @@ BEGIN
           , tmpPersonal.BranchId
           , tmpPersonal.PersonalServiceListId
           , tmpPersonal.isDateOut
+          , tmpPersonal.isMain
           , tmpPersonal.Ord :: Integer AS Ord
      FROM tmpPersonal
      WHERE tmpPersonal.Ord = 1

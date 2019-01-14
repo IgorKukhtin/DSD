@@ -84,6 +84,7 @@ type
     function Get_POSITIONNUMBER: UnicodeString;
     function Get_PRODUCT: UnicodeString;
     function Get_PRODUCTIDBUYER: UnicodeString;
+    function Get_BUYERPARTNUMBER: UnicodeString;
     function Get_ORDEREDQUANTITY: UnicodeString;
     function Get_MINIMUMORDERQUANTITY: UnicodeString;
     function Get_ORDERUNIT: UnicodeString;
@@ -93,6 +94,7 @@ type
     procedure Set_POSITIONNUMBER(Value: UnicodeString);
     procedure Set_PRODUCT(Value: UnicodeString);
     procedure Set_PRODUCTIDBUYER(Value: UnicodeString);
+    procedure Set_BUYERPARTNUMBER(Value: UnicodeString);
     procedure Set_ORDEREDQUANTITY(Value: UnicodeString);
     procedure Set_MINIMUMORDERQUANTITY(Value: UnicodeString);
     procedure Set_ORDERUNIT(Value: UnicodeString);
@@ -102,6 +104,7 @@ type
     property POSITIONNUMBER: UnicodeString read Get_POSITIONNUMBER write Set_POSITIONNUMBER;
     property PRODUCT: UnicodeString read Get_PRODUCT write Set_PRODUCT;
     property PRODUCTIDBUYER: UnicodeString read Get_PRODUCTIDBUYER write Set_PRODUCTIDBUYER;
+    property BUYERPARTNUMBER: UnicodeString read Get_BUYERPARTNUMBER write Set_BUYERPARTNUMBER;
     property ORDEREDQUANTITY: UnicodeString read Get_ORDEREDQUANTITY write Set_ORDEREDQUANTITY;
     property MINIMUMORDERQUANTITY: UnicodeString read Get_MINIMUMORDERQUANTITY write Set_MINIMUMORDERQUANTITY;
     property ORDERUNIT: UnicodeString read Get_ORDERUNIT write Set_ORDERUNIT;
@@ -199,6 +202,7 @@ type
     function Get_POSITIONNUMBER: UnicodeString;
     function Get_PRODUCT: UnicodeString;
     function Get_PRODUCTIDBUYER: UnicodeString;
+    function Get_BUYERPARTNUMBER: UnicodeString;
     function Get_ORDEREDQUANTITY: UnicodeString;
     function Get_MINIMUMORDERQUANTITY: UnicodeString;
     function Get_ORDERUNIT: UnicodeString;
@@ -208,6 +212,7 @@ type
     procedure Set_POSITIONNUMBER(Value: UnicodeString);
     procedure Set_PRODUCT(Value: UnicodeString);
     procedure Set_PRODUCTIDBUYER(Value: UnicodeString);
+    procedure Set_BUYERPARTNUMBER(Value: UnicodeString);
     procedure Set_ORDEREDQUANTITY(Value: UnicodeString);
     procedure Set_MINIMUMORDERQUANTITY(Value: UnicodeString);
     procedure Set_ORDERUNIT(Value: UnicodeString);
@@ -468,9 +473,19 @@ begin
   Result := ChildNodes['PRODUCTIDBUYER'].Text;
 end;
 
+function TXMLPOSITIONType.Get_BUYERPARTNUMBER: UnicodeString;
+begin
+  Result := ChildNodes['BUYERPARTNUMBER'].Text;
+end;
+
 procedure TXMLPOSITIONType.Set_PRODUCTIDBUYER(Value: UnicodeString);
 begin
   ChildNodes['PRODUCTIDBUYER'].NodeValue := Value;
+end;
+
+procedure TXMLPOSITIONType.Set_BUYERPARTNUMBER(Value: UnicodeString);
+begin
+  ChildNodes['BUYERPARTNUMBER'].NodeValue := Value;
 end;
 
 function TXMLPOSITIONType.Get_ORDEREDQUANTITY: UnicodeString;

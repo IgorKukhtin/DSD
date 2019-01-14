@@ -227,18 +227,18 @@ BEGIN
                                        THEN -1 * MIContainer.Amount
                                   ELSE 0
                              END) AS Summ
-                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()
+                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()
                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()
                                    AND ((MIContainer.MovementDescId = zc_Movement_ReturnOut() AND MIContainer.isActive = FALSE)
                                      OR (MIContainer.MovementDescId = zc_Movement_Income() AND MIContainer.isActive = TRUE))
-                                       THEN MIContainer.Amount
+                                       THEN 1 * MIContainer.Amount
                                   ELSE 0
                              END) AS Summ_ProfitLoss_partner
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()
                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()
                                    AND MIContainer.MovementDescId = zc_Movement_ReturnOut()
                                    AND MIContainer.isActive = TRUE
-                                       THEN -1 * MIContainer.Amount
+                                       THEN 1 * MIContainer.Amount
                                   ELSE 0
                              END) AS Summ_ProfitLoss
                  FROM MovementItemContainer AS MIContainer

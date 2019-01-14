@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIOrder(
     IN gIsDelete             Boolean   , -- виртуальный, что б в компоненте понимать - надо ли удал€ть за€вки "за сегодн€", а "за вчера" - они удал€ютс€ всегда
     IN inSession             TVarChar    -- сесси€ пользовател€
 )
-RETURNS TABLE (MovementId Integer, GoodsPropertyID Integer) --  лассификатор товаров)
+RETURNS TABLE (MovementId Integer, GoodsPropertyID Integer, isMetro Boolean) --  лассификатор товаров)
 AS
 $BODY$
    DECLARE vbUserId   Integer;
@@ -204,7 +204,13 @@ end if;
 
 
      RETURN QUERY
-     SELECT vbMovementId, vbGoodsPropertyID;
+     SELECT vbMovementId
+          , vbGoodsPropertyID
+          , CASE WHEN vbGoodsPropertyID = 83954 -- ћетро
+                      THEN TRUE
+                 ELSE FALSE
+            END :: Boolean AS isMetro
+           ;
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);

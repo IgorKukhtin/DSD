@@ -2125,6 +2125,12 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         Name = 'GoodsPropertyId'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMetro'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 168
