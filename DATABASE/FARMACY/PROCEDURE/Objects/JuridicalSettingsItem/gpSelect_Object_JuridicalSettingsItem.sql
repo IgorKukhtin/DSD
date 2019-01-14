@@ -47,8 +47,15 @@ BEGIN
        SELECT DD.Id
             , DD.JuridicalSettingsId
             , DD.Bonus 
-            , COALESCE ((SELECT max(FF.PriceLimit) FROM tmpJuridicalSettingsItem AS FF WHERE FF.PriceLimit < DD.PriceLimit AND FF.JuridicalSettingsId = DD.JuridicalSettingsId), 0) + 0.01  AS PriceLimit_min
+            , (COALESCE ((SELECT max(FF.PriceLimit) 
+                          FROM tmpJuridicalSettingsItem AS FF 
+                          WHERE FF.PriceLimit < DD.PriceLimit 
+                            AND FF.JuridicalSettingsId = DD.JuridicalSettingsId 
+                            AND FF.isErased = FALSE 
+                            AND DD.isErased = FALSE
+                            ), 0) + 0.01) :: TFloat  AS PriceLimit_min
             , DD.PriceLimit
+            , DD.isErased
        FROM tmpJuridicalSettingsItem AS DD
        ;
 

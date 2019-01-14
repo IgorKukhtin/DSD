@@ -74,7 +74,6 @@ BEGIN
                                              INNER JOIN ObjectLink AS ObjectLink_JuridicalSettings
                                                                    ON ObjectLink_JuridicalSettings.ObjectId = Object_JuridicalSettingsItem.Id
                                                                   AND ObjectLink_JuridicalSettings.DescId = zc_ObjectLink_JuridicalSettingsItem_JuridicalSettings()
-                                                              --    AND (ObjectLink_JuridicalSettings.ChildObjectId = inJuridicalSettingsId OR inJuridicalSettingsId = 0)
                                   
                                              LEFT JOIN ObjectFloat AS ObjectFloat_Bonus
                                                                    ON ObjectFloat_Bonus.ObjectId = Object_JuridicalSettingsItem.Id
@@ -233,6 +232,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.01.19         *
  18.10.18         * isPriceCloseOrder
  10.05.18         *
  21.03.18         *

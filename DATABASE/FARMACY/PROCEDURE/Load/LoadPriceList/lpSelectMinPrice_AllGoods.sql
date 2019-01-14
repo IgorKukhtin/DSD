@@ -178,6 +178,15 @@ BEGIN
     -- Установки для юр. лиц (для поставщика определяется договор и т.п)
   , JuridicalSettings AS (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId)
                          )
+    -- элементы установок юр.лиц (границы цен для бонуса)
+  , tmpJuridicalSettingsItem AS (SELECT tmp.JuridicalSettingsId
+                                      , tmp.Bonus
+                                      , tmp.PriceLimit_min
+                                      , tmp.PriceLimit
+                                 FROM JuridicalSettings
+                                      INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, '2') AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                 )
+
     -- Маркетинговый контракт
   , GoodsPromo AS (SELECT tmp.JuridicalId
                         , tmp.GoodsId        -- здесь товар "сети"
@@ -230,7 +239,7 @@ BEGIN
           , PriceList.Id                       AS PriceListMovementItemId
           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
 
-          , CASE -- если Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
+          /*, CASE -- если Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
                  WHEN COALESCE (JuridicalSettings.PriceLimit, 0) <= PriceList.Amount
                     THEN PriceList.Amount
                          -- учитывается % бонуса из Маркетинговый контракт
@@ -241,6 +250,18 @@ BEGIN
                        -- И учитывается % бонуса из Маркетинговый контракт
                     * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
             END :: TFloat AS FinalPrice
+            */
+            , CASE -- если Цена поставщика не попадает в ценовые промежутки
+                   WHEN tmpJuridicalSettingsItem.JuridicalSettingsId IS NULL
+                    THEN PriceList.Amount
+                         -- учитывается % бонуса из Маркетинговый контракт
+                       * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
+
+                   ELSE -- иначе учитывается бонус - для ТОП-позиции или НЕ ТОП-позиции
+                      (PriceList.Amount * (100 - COALESCE (tmpJuridicalSettingsItem.Bonus, 0)) / 100)
+                       -- И учитывается % бонуса из Маркетинговый контракт
+                    * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
+              END :: TFloat AS FinalPrice
 
           , MILinkObject_Goods.ObjectId        AS Partner_GoodsId
           , Object_JuridicalGoods.GoodsCode    AS Partner_GoodsCode
@@ -280,6 +301,9 @@ BEGIN
             LEFT JOIN JuridicalSettings ON JuridicalSettings.JuridicalId     = LastPriceList_View.JuridicalId 
                                        AND JuridicalSettings.MainJuridicalId = vbMainJuridicalId
                                        AND JuridicalSettings.ContractId      = LastPriceList_View.ContractId 
+            LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                              AND PriceList.Amount >= tmpJuridicalSettingsItem.PriceLimit_min
+                                              AND PriceList.Amount <= tmpJuridicalSettingsItem.PriceLimit
             -- товар "поставщика", если он есть в прайсах !!!а он есть!!!
             LEFT JOIN Object_Goods_View AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
             -- товар "сети"
@@ -437,6 +461,7 @@ ALTER FUNCTION lpSelectMinPrice_AllGoods (Integer, Integer, Integer) OWNER TO po
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 14.01.19         * tmpJuridicalSettingsItem - теперь значения Бонус берем из Итемов
  11.10.17         * add area
  16.02.16         * add isOneJuridical
  03.12.15                                                                          * 

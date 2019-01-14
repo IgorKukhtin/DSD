@@ -35,7 +35,6 @@ BEGIN
     -- Нашли у Аптеки "Главное юр лицо"
     SELECT Object_Unit_View.JuridicalId INTO vbMainJuridicalId FROM Object_Unit_View WHERE Object_Unit_View.Id = inUnitId;
 
-
     -- Результат
     RETURN QUERY
     WITH
@@ -45,6 +44,15 @@ BEGIN
     -- Установки для юр. лиц (для поставщика определяется договор и т.п)
   , JuridicalSettings AS (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId)
                          )
+    -- элементы установок юр.лиц (границы цен для бонуса)
+  , tmpJuridicalSettingsItem AS (SELECT tmp.JuridicalSettingsId
+                                      , tmp.Bonus
+                                      , tmp.PriceLimit_min
+                                      , tmp.PriceLimit
+                                 FROM JuridicalSettings
+                                      INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, '2') AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                 )
+
     -- Маркетинговый контракт
   , GoodsPromo AS (SELECT tmp.JuridicalId
                         , tmp.GoodsId        -- здесь товар "сети"
@@ -58,35 +66,36 @@ BEGIN
         SELECT tmp.MovementId
              , tmp.JuridicalId
              , tmp.ContractId
-             , COALESCE (JuridicalSettings.PriceLimit, 0) AS PriceLimit
-             , COALESCE (JuridicalSettings.Bonus, 0)      AS Bonus
+             , JuridicalSettings.JuridicalSettingsId
+             --, COALESCE (JuridicalSettings.PriceLimit, 0) AS PriceLimit
+             --, COALESCE (JuridicalSettings.Bonus, 0)      AS Bonus
         FROM
-       (-- выбираются с "макс" датой
-        SELECT *
-        FROM
-       (-- выбираются все !!!из списка "ObjectId"!!!
-        SELECT MAX (Movement.OperDate) OVER (PARTITION BY MovementLinkObject_Juridical.ObjectId, COALESCE (MovementLinkObject_Contract.ObjectId, 0)) AS Max_Date
-             , Movement.OperDate
-             , Movement.Id                                        AS MovementId
-             , MovementLinkObject_Juridical.ObjectId              AS JuridicalId
-             , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
-        FROM MovementLinkObject AS MovementLinkObject_Juridical
---                                ON MovementLinkObject_Juridical.ObjectId = tmp.ObjectId
-             INNER JOIN Movement ON Movement.Id     = MovementLinkObject_Juridical.MovementId
-                                AND Movement.DescId = zc_Movement_PriceList()
-                                AND Movement.OperDate <= inOperDate
-                                AND Movement.StatusId <> zc_Enum_Status_Erased()
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-        WHERE MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical() 
-          AND Movement.DescId = zc_Movement_PriceList()
-          AND Movement.StatusId <> zc_Enum_Status_Erased()
-       ) AS tmp
-        WHERE tmp.Max_Date = tmp.OperDate -- т.е. для договора и юр лица будет 1 документ
-       ) AS tmp
+            (-- выбираются с "макс" датой
+             SELECT *
+             FROM
+                 (-- выбираются все !!!из списка "ObjectId"!!!
+                  SELECT MAX (Movement.OperDate) OVER (PARTITION BY MovementLinkObject_Juridical.ObjectId, COALESCE (MovementLinkObject_Contract.ObjectId, 0)) AS Max_Date
+                       , Movement.OperDate
+                       , Movement.Id                                        AS MovementId
+                       , MovementLinkObject_Juridical.ObjectId              AS JuridicalId
+                       , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
+                  FROM MovementLinkObject AS MovementLinkObject_Juridical
+          --                                ON MovementLinkObject_Juridical.ObjectId = tmp.ObjectId
+                       INNER JOIN Movement ON Movement.Id     = MovementLinkObject_Juridical.MovementId
+                                          AND Movement.DescId = zc_Movement_PriceList()
+                                          AND Movement.OperDate <= inOperDate
+                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                       LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                    ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                   AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                  WHERE MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical() 
+                    AND Movement.DescId = zc_Movement_PriceList()
+                    AND Movement.StatusId <> zc_Enum_Status_Erased()
+                 ) AS tmp
+             WHERE tmp.Max_Date = tmp.OperDate -- т.е. для договора и юр лица будет 1 документ
+            ) AS tmp
         -- !!!INNER!!!
-        INNER JOIN (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId, JuridicalSettings.PriceLimit, JuridicalSettings.Bonus
+        INNER JOIN (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId , JuridicalSettings.JuridicalSettingsId--, JuridicalSettings.PriceLimit, JuridicalSettings.Bonus
                     FROM JuridicalSettings
                    ) AS JuridicalSettings ON JuridicalSettings.JuridicalId = tmp.JuridicalId
                                          AND JuridicalSettings.ContractId  = tmp.ContractId
@@ -96,8 +105,6 @@ BEGIN
        (SELECT Movement_PriceList.MovementId
              , Movement_PriceList.JuridicalId
              , Movement_PriceList.ContractId
-             , Movement_PriceList.PriceLimit
-             , Movement_PriceList.Bonus
              , MovementItem.Id     AS MovementItemId
              , MovementItem.Amount AS Price
             -- , GoodsList.GoodsId      -- здесь товар "сети"
@@ -110,6 +117,7 @@ BEGIN
              INNER JOIN MovementItemLinkObject AS MILinkObject_Goods
                                                ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                               AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
+             
             -- INNER JOIN GoodsList ON GoodsList.GoodsId_jur = MILinkObject_Goods.ObjectId -- товар "поставщика"
        )
 
@@ -121,8 +129,6 @@ BEGIN
              , MI_PriceList.MovementId
              , MI_PriceList.JuridicalId
              , MI_PriceList.ContractId
-             , MI_PriceList.PriceLimit
-             , MI_PriceList.Bonus
              , MI_PriceList.MovementItemId
              , MI_PriceList.Price
         FROM 
@@ -211,14 +217,14 @@ BEGIN
 
           , CASE WHEN 1=0
                       THEN PriceList.Amount
-                 -- если Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
-                 WHEN COALESCE (JuridicalSettings.PriceLimit, 0) <= PriceList.Amount
+                 -- если Цена поставщика не попадает в ценовые промежутки        -- если Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
+                 WHEN tmpJuridicalSettingsItem.JuridicalSettingsId IS NULL
                       THEN PriceList.Amount
                            -- учитывается % бонуса из Маркетинговый контракт
                          * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
                  
                  ELSE -- иначе учитывается бонус - для ТОП-позиции или НЕ ТОП-позиции
-                      (PriceList.Amount * (100 - COALESCE (JuridicalSettings.Bonus, 0)) / 100)
+                      (PriceList.Amount * (100 - COALESCE (tmpJuridicalSettingsItem.Bonus, 0)) / 100)
                        -- И учитывается % бонуса из Маркетинговый контракт
                     * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
             END :: TFloat AS FinalPrice
@@ -254,6 +260,11 @@ BEGIN
             LEFT JOIN JuridicalSettings ON JuridicalSettings.JuridicalId     = LastPriceList_View.JuridicalId 
                                        AND JuridicalSettings.MainJuridicalId = vbMainJuridicalId
                                        AND JuridicalSettings.ContractId      = LastPriceList_View.ContractId 
+            -- связываем с элементами  установок юр.лиц. 
+            LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                              AND PriceList.Amount >= tmpJuridicalSettingsItem.PriceLimit_min
+                                              AND PriceList.Amount <= tmpJuridicalSettingsItem.PriceLimit
+
             -- товар "поставщика", если он есть в прайсах !!!а он есть!!!
             LEFT JOIN Object_Goods_View AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
             -- товар "сети"
@@ -321,6 +332,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 14.01.19         * tmpJuridicalSettingsItem - теперь значения Бонус берем из Итемов
  04.05.16         * 
 */
 
