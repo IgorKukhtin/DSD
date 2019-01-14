@@ -853,6 +853,11 @@ CREATE OR REPLACE FUNCTION zc_Object_JuridicalSettings() RETURNS Integer AS $BOD
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_JuridicalSettings', 'Установки для юр. лиц' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_JuridicalSettings');
 
+CREATE OR REPLACE FUNCTION zc_Object_JuridicalSettingsItem() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_JuridicalSettingsItem'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_JuridicalSettingsItem', 'Элемент Установки для юр. лиц' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_JuridicalSettingsItem');
+
+
 CREATE OR REPLACE FUNCTION zc_Object_LinkGoods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_LinkGoods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_LinkGoods', '' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_LinkGoods');
@@ -1102,6 +1107,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 13.01.19         * zc_Object_JuridicalSettingsItem
  11.01.19         * zc_Object_MakerReport
  21.12.18                                                                                        * zc_Object_RecalcMCSSheduler
  11.12.18         * zc_Object_DiffKind
