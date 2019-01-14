@@ -21,7 +21,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxDropDownEdit, cxSplitter;
 
 type
   TJuridicalSettingsForm = class(TAncestorEnumForm)
@@ -67,6 +68,29 @@ type
     bbUpdateisRePriceCloseNo: TdxBarButton;
     macUpdateisPriceCloseOrder_Yes: TMultiAction;
     macUpdateisPriceCloseOrder_No: TMultiAction;
+    cxSplitter1: TcxSplitter;
+    dsdUpdateChild: TdsdUpdateDataSet;
+    dsdSetErasedChild: TdsdUpdateErased;
+    spErasedUnErasedChild: TdsdStoredProc;
+    dsdUnErasedChild: TdsdUpdateErased;
+    bbSetErasedChild: TdxBarButton;
+    bbUnErasedChild: TdxBarButton;
+    actLinkRefresh: TdsdDataSetRefresh;
+    RefreshDispatcher: TRefreshDispatcher;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    clBonus: TcxGridDBColumn;
+    clPriceLimit: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    ItemCDS: TClientDataSet;
+    ItemDS: TDataSource;
+    spSelect_JuridicalSettingsItem: TdsdStoredProc;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    clisErased: TcxGridDBColumn;
+    spInsertUpdateItem: TdsdStoredProc;
+    InsertRecord1: TInsertRecord;
+    bbInsertRecord1: TdxBarButton;
+    clPriceLimit_min: TcxGridDBColumn;
   private
     { Private declarations }
   public

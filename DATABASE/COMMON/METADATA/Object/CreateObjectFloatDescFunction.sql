@@ -1264,10 +1264,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_RecalcMCSSheduler_Week() RETURNS Integ
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_RecalcMCSSheduler(), 'zc_ObjectFloat_RecalcMCSSheduler_Week', 'День недели' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RecalcMCSSheduler_Week');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_JuridicalSettingsItem_Bonus() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_JuridicalSettingsItem_Bonus'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_JuridicalSettingsItem(), 'zc_ObjectFloat_JuridicalSettingsItem_Bonus', '% бонусирования' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_JuridicalSettingsItem_Bonus');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_JuridicalSettingsItem_PriceLimit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_JuridicalSettingsItem_PriceLimit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_JuridicalSettingsItem(), 'zc_ObjectFloat_JuridicalSettingsItem_PriceLimit', '% бонусирования' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_JuridicalSettingsItem_PriceLimit');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 13.01.19         * zc_ObjectFloat_JuridicalSettingsItem_Bonus
+                    zc_ObjectFloat_JuridicalSettingsItem_PriceLimit
  21.12.18                                                                                     * zc_ObjectFloat_RecalcMCSSheduler_Week ...
  14,12,18         * zc_ObjectFloat_DocumentTaxKind_Price
  22.10.18                                                                                     * zc_ObjectFloat_RepriceUnitSheduler_ ...

@@ -107,7 +107,7 @@ implementation
 
 {$R *.dfm}
 
-uses LocalWorkUnit, CommonData, ListDiff, ListDiffAddGoods;
+uses LocalWorkUnit, CommonData, ListDiff, ListDiffAddGoods, MainCash2;
 
 
 procedure TListGoodsForm.FilterRecord(DataSet: TDataSet; var Accept: Boolean);

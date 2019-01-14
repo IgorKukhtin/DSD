@@ -1,26 +1,26 @@
 ﻿inherited JuridicalSettingsForm: TJuridicalSettingsForm
   Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080' '#1102#1088' '#1083#1080#1094
-  ClientHeight = 311
-  ClientWidth = 985
-  ExplicitWidth = 1001
-  ExplicitHeight = 349
+  ClientHeight = 431
+  ClientWidth = 916
+  ExplicitWidth = 932
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 985
-    Height = 285
-    ExplicitWidth = 985
-    ExplicitHeight = 285
-    ClientRectBottom = 285
-    ClientRectRight = 985
+    Width = 916
+    Height = 405
+    ExplicitWidth = 916
+    ExplicitHeight = 405
+    ClientRectBottom = 405
+    ClientRectRight = 916
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 985
-      ExplicitHeight = 285
+      ExplicitWidth = 916
+      ExplicitHeight = 405
       inherited cxGrid: TcxGrid
-        Width = 985
-        Height = 285
-        ExplicitWidth = 985
-        ExplicitHeight = 285
+        Width = 677
+        Height = 405
+        ExplicitWidth = 677
+        ExplicitHeight = 405
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -189,9 +189,96 @@
           end
         end
       end
+      object cxSplitter1: TcxSplitter
+        Left = 677
+        Top = 0
+        Width = 3
+        Height = 405
+        AlignSplitter = salRight
+        AutoPosition = False
+        PositionAfterOpen = 50
+        Control = cxGrid1
+      end
+      object cxGrid1: TcxGrid
+        Left = 680
+        Top = 0
+        Width = 236
+        Height = 405
+        Align = alRight
+        PopupMenu = PopupMenu
+        TabOrder = 2
+        object cxGridDBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ItemDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.IncSearch = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object clPriceLimit_min: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089
+            DataBinding.FieldName = 'PriceLimit_min'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Options.Editing = False
+            Width = 50
+          end
+          object clPriceLimit: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1076#1086
+            DataBinding.FieldName = 'PriceLimit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 87
+          end
+          object clisErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            Options.Editing = False
+            Width = 50
+          end
+          object clBonus: TcxGridDBColumn
+            Caption = '% '#1073#1086#1085#1091#1089
+            DataBinding.FieldName = 'Bonus'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderHint = '% '#1073#1086#1085#1091#1089#1080#1088#1086#1074#1072#1085#1080#1103
+            Width = 64
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBTableView1
+        end
+      end
     end
   end
   inherited ActionList: TActionList
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelect_JuridicalSettingsItem
+        end>
+    end
     object UpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -234,6 +321,17 @@
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
+    end
+    object actLinkRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <
+        item
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -410,12 +508,75 @@
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' ('#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072') - '#1044#1072
       ImageIndex = 52
     end
+    object dsdUpdateChild: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateItem
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateItem
+        end
+        item
+          StoredProc = spSelect_JuridicalSettingsItem
+        end>
+      Caption = 'dsdUpdateChild'
+      DataSource = ItemDS
+    end
+    object dsdSetErasedChild: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErasedChild
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedChild
+        end
+        item
+          StoredProc = spSelect_JuridicalSettingsItem
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1101#1083#1077#1084#1077#1085#1090
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1101#1083#1077#1084#1077#1085#1090
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = ItemDS
+    end
+    object dsdUnErasedChild: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErasedChild
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedChild
+        end
+        item
+          StoredProc = spSelect_JuridicalSettingsItem
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = ItemDS
+    end
+    object InsertRecord1: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView1
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1101#1083#1077#1084#1077#1085#1090
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1101#1083#1077#1084#1077#1085#1090
+      ImageIndex = 0
+    end
   end
   inherited MasterDS: TDataSource
     Left = 88
     Top = 80
   end
   inherited MasterCDS: TClientDataSet
+    FilterOptions = []
     Top = 80
   end
   inherited spSelect: TdsdStoredProc
@@ -457,6 +618,22 @@
         item
           Visible = True
           ItemName = 'bbSetUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecord1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErasedChild'
         end
         item
           Visible = True
@@ -551,6 +728,22 @@
       Action = macUpdateisPriceCloseOrder_No
       Category = 0
     end
+    object bbSetErasedChild: TdxBarButton
+      Action = dsdSetErasedChild
+      Category = 0
+    end
+    object bbUnErasedChild: TdxBarButton
+      Action = dsdUnErasedChild
+      Category = 0
+    end
+    object bbInsertRecord1: TdxBarButton
+      Action = InsertRecord1
+      Category = 0
+    end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    Left = 208
+    Top = 256
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_JuridicalSettings'
@@ -753,8 +946,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 672
-    Top = 115
+    Left = 240
+    Top = 75
   end
   object spUpdate_isPriceClose_No: TdsdStoredProc
     StoredProcName = 'gpUpdate_JuridicalSettings_isPriceClose'
@@ -785,8 +978,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 672
-    Top = 171
+    Left = 264
+    Top = 203
   end
   object spUpdate_isPriceCloseOrder_Yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_JuridicalSettings_isPriceCloseOrder'
@@ -809,8 +1002,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 824
-    Top = 107
+    Left = 320
+    Top = 123
   end
   object spUpdate_isPriceCloseOrder_No: TdsdStoredProc
     StoredProcName = 'gpUpdate_JuridicalSettings_isPriceCloseOrder'
@@ -833,7 +1026,141 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 824
-    Top = 163
+    Left = 312
+    Top = 251
+  end
+  object spErasedUnErasedChild: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSet = ItemCDS
+    DataSets = <
+      item
+        DataSet = ItemCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = ItemCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 216
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actLinkRefresh
+    ComponentList = <
+      item
+        Component = MasterCDS
+      end>
+    Left = 480
+    Top = 104
+  end
+  object ItemCDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'JuridicalSettingsId'
+    MasterFields = 'Id'
+    MasterSource = MasterDS
+    PacketRecords = 0
+    Params = <>
+    Left = 800
+    Top = 80
+  end
+  object ItemDS: TDataSource
+    DataSet = ItemCDS
+    Left = 864
+    Top = 88
+  end
+  object spSelect_JuridicalSettingsItem: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_JuridicalSettingsItem'
+    DataSet = ItemCDS
+    DataSets = <
+      item
+        DataSet = ItemCDS
+      end>
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 792
+    Top = 152
+  end
+  object dsdDBViewAddOn1: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <
+      item
+      end
+      item
+      end>
+    ActionItemList = <
+      item
+        ShortCut = 13
+      end
+      item
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    SearchAsFilter = False
+    Left = 768
+    Top = 248
+  end
+  object spInsertUpdateItem: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_JuridicalSettingsItem'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = ItemCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalSettingsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBonus'
+        Value = Null
+        Component = ItemCDS
+        ComponentItem = 'Bonus'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceLimit'
+        Value = Null
+        Component = ItemCDS
+        ComponentItem = 'PriceLimit'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 720
+    Top = 123
   end
 end

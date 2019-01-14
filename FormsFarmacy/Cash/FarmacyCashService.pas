@@ -129,6 +129,8 @@ type
     ListDiffCDS: TClientDataSet;
     spSendListDiff: TdsdStoredProc;
     spLoadFTPParam: TdsdStoredProc;
+    EmployeeWorkLogCDS: TClientDataSet;
+    spEmployeeWorkLog: TdsdStoredProc;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -164,6 +166,7 @@ type
     procedure SaveRealAll;
     procedure SaveListDiff;
     procedure SendZReport;
+    procedure SendEmployeeWorkLog;
     procedure SecureUpdateVersion;
     procedure ChangeStatus(AStatus: String);
     function InitLocalStorage: Boolean;
@@ -189,7 +192,7 @@ var
   csCriticalSection_All: TRTLCriticalSection;
   AllowedConduct : Boolean = false;
   MutexDBF, MutexDBFDiff,  MutexVip, MutexRemains, MutexAlternative, MutexRefresh,
-  MutexAllowedConduct, MutexGoods, MutexDiffCDS, MutexDiffKind: THandle;
+  MutexAllowedConduct, MutexGoods, MutexDiffCDS, MutexDiffKind, MutexEmployeeWorkLog: THandle;
   LastErr: Integer;
 
   FM_SERVISE: Integer;
@@ -241,6 +244,7 @@ begin
 
         9: begin
   //           ShowMessage('запрос на выключение');
+             SendEmployeeWorkLog;
              MainCashForm2.Close;    // закрыть сервис
            end;
         10: begin    // остановить проведение чеков
@@ -547,12 +551,19 @@ begin
   LastErr := GetLastError;
   MutexRefresh := CreateMutex(nil, false, 'farmacycashMutexRefresh');
   LastErr := GetLastError;
+  MutexDiffKind := CreateMutex(nil, false, 'farmacycashMutexDiffKind');
+  LastErr := GetLastError;
+  MutexDiffCDS := CreateMutex(nil, false, 'farmacycashMutexDiffCDS');
+  LastErr := GetLastError;
+  MutexEmployeeWorkLog := CreateMutex(nil, false, 'farmacycashMutexEmployeeWorkLog');
+  LastErr := GetLastError;
   FHasError := false;
   //сгенерили гуид для определения сессии
   ChangeStatus('Установка первоначальных параметров');
 
   FormParams.ParamByName('ClosedCheckId').Value := 0;
   FormParams.ParamByName('CheckId').Value := 0;
+  FormParams.ParamByName('CashSessionId').Value := iniLocalGUIDSave(GenerateGUID);
 
   if NOT GetIniFile(F) then
   Begin
@@ -574,10 +585,10 @@ begin
                 // проведутся первые 7 чеков и будут ждать или таймер или пока не пройдет первая покупка
   SaveListDiff; // Отправляем листы отказов
   SendZReport;  // Отправляем Z отчеты
+  SendEmployeeWorkLog;  // Отправляем лога работы сотрудников
   if not FHasError then
     ChangeStatus('Получение остатков');
   FirstRemainsReceived := false;
-  FormParams.ParamByName('CashSessionId').Value := iniLocalGUIDSave(GenerateGUID);
   //PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 2); // запрос кеш сесии у приложения
   TimerGetRemains.Enabled := true;
  //}
@@ -834,6 +845,7 @@ begin
     SaveRealAll;
     SaveListDiff;
     SendZReport;
+    SendEmployeeWorkLog;
   finally
     TimerSaveReal.Enabled := True;
   end;
@@ -1537,7 +1549,7 @@ end;
 
 procedure TMainCashForm2.SaveListDiff;
 begin
-  // Отправка лисиа отказов
+  // Отправка листа отказов
   if FileExists(ListDiff_lcl) then
   begin
     Add_Log('Start MutexDiffCDS');
@@ -1568,6 +1580,7 @@ begin
     finally
       Add_Log('End MutexDiffCDS');
       ReleaseMutex(MutexDiffCDS);
+      ListDiffCDS.Close;
     end;
   end;
 end;
@@ -1683,6 +1696,82 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.SendEmployeeWorkLog;
+  var LocalVersionInfo, BaseVersionInfo: TVersionInfo;
+      OldProgram, OldServise : Boolean;
+begin
+  // Отправка лога работы сотрудников
+  if FileExists(EmployeeWorkLog_lcl) then
+  begin
+
+    OldProgram := False;
+    OldServise := False;
+
+    Add_Log('Start MutexDiffCDS');
+    WaitForSingleObject(MutexDiffCDS, INFINITE);
+    try
+      try
+
+        BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion('FarmacyCash.exe');
+        LocalVersionInfo := UnilWin.GetFileVersion(ExtractFileDir(ParamStr(0)) + '\FarmacyCash.exe');
+        if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
+           ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then OldProgram := True;
+
+        BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)));
+        LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
+        if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
+           ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then OldServise := True;
+
+        LoadLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl);
+        if not EmployeeWorkLogCDS.Active then EmployeeWorkLogCDS.Open;
+
+        EmployeeWorkLogCDS.First;
+        while not EmployeeWorkLogCDS.Eof do
+        begin
+          if not EmployeeWorkLogCDS.FieldByName('IsSend').AsBoolean then
+          begin
+            if EmployeeWorkLogCDS.RecNo = EmployeeWorkLogCDS.RecordCount then
+            begin
+              spEmployeeWorkLog.ParamByName('inOldProgram').Value := OldProgram;
+              spEmployeeWorkLog.ParamByName('inOldServise').Value := OldServise;
+            end else
+            begin
+              spEmployeeWorkLog.ParamByName('inOldProgram').Value := False;
+              spEmployeeWorkLog.ParamByName('inOldServise').Value := False;
+            end;
+            spEmployeeWorkLog.Execute;
+            EmployeeWorkLogCDS.Edit;
+            EmployeeWorkLogCDS.FieldByName('IsSend').AsBoolean := True;
+            EmployeeWorkLogCDS.Post;
+          end;
+          EmployeeWorkLogCDS.Next;
+        end;
+
+        EmployeeWorkLogCDS.First;
+        while not EmployeeWorkLogCDS.Eof do
+        begin
+          if EmployeeWorkLogCDS.FieldByName('IsSend').AsBoolean and
+            (StartOfTheDay(EmployeeWorkLogCDS.FieldByName('DateLogIn').AsDateTime) < IncDay(Date, - 7)) then
+          begin
+            EmployeeWorkLogCDS.Delete;
+            Continue;
+          end;
+          EmployeeWorkLogCDS.Next;
+        end;
+
+        SaveLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl);
+
+      Except ON E:Exception do
+        Add_Log('Ошибка отправки лога работы сотрудников:' + E.Message);
+      end;
+    finally
+      Add_Log('End MutexDiffCDS');
+      ReleaseMutex(MutexDiffCDS);
+      EmployeeWorkLogCDS.Close;
+    end;
+  end;
+end;
+
 procedure TMainCashForm2.SecureUpdateVersion;
   var LocalVersionInfo, BaseVersionInfo: TVersionInfo;
       OldProgram, OldServise : Boolean;
@@ -1691,7 +1780,7 @@ begin
   OldServise := False;
   try
     BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion('FarmacyCash.exe');
-    LocalVersionInfo := UnilWin.GetFileVersion('FarmacyCash.exe');
+    LocalVersionInfo := UnilWin.GetFileVersion(ExtractFileDir(ParamStr(0)) + '\FarmacyCash.exe');
     if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
        ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then OldProgram := True;
 
@@ -1758,6 +1847,9 @@ begin
  CloseHandle(MutexRemains);
  CloseHandle(MutexAlternative);
  CloseHandle(MutexRefresh);
+ CloseHandle(MutexDiffKind);
+ CloseHandle(MutexDiffCDS);
+ CloseHandle(MutexEmployeeWorkLog);
 end;
 
 

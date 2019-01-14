@@ -34,14 +34,28 @@ BEGIN
            , COALESCE (Log_CashRemains.OldProgram, FALSE)   AS OldProgram
            , COALESCE (Log_CashRemains.OldServise, FALSE)    AS OldServise
       FROM Log_CashRemains
-      WHERE Log_CashRemains.DateStart >= vbDateStart AND Log_CashRemains.DateStart < vbDateEnd)  
+      WHERE Log_CashRemains.DateStart >= vbDateStart AND Log_CashRemains.DateStart < vbDateEnd),
+      
+      tmpOldNew AS (
+      SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeWorkLog.CashSessionId, 
+                                             EmployeeWorkLog.UnitId,
+                                             EmployeeWorkLog.UserId ORDER BY EmployeeWorkLog.DateLogIn DESC) AS Ord
+           , EmployeeWorkLog.CashSessionId      AS CashSessionId
+           , EmployeeWorkLog.UnitId
+           , EmployeeWorkLog.UserId
+           , COALESCE (EmployeeWorkLog.OldProgram, FALSE)   AS OldProgram
+           , COALESCE (EmployeeWorkLog.OldServise, FALSE)    AS OldServise
+      FROM EmployeeWorkLog
+      WHERE EmployeeWorkLog.DateLogIn >= vbDateStart AND EmployeeWorkLog.DateLogIn < vbDateEnd)  
 
     SELECT Log_CashRemains.CashSessionId      AS CashSessionId
          , OUnit.objectcode   AS UnitCode
          , OUnit.valuedata    AS UnitName
          , OUser.objectcode   AS UserCode
          , OUser.valuedata    AS UserName
-         , to_char(MIN(Log_CashRemains.DateStart), 'HH24:MI:SS') AS LoginTime
+         , to_char(MIN(Log_CashRemains.DateStart), 'HH24:MI:SS') AS TimeLogIn
+         , to_char(MAX(Log_CashRemains.DateEnd), 'HH24:MI:SS')   AS TimeZReport
+         , Null                                                  AS TimeLogOut
          , tmpOld.OldProgram
          , tmpOld.OldServise
          , CASE WHEN tmpOld.OldProgram = True OR tmpOld.OldServise = True
@@ -58,7 +72,36 @@ BEGIN
              OUnit.objectcode, OUnit.valuedata,
              OUser.objectcode, OUser.valuedata, 
              tmpOld.OldProgram, tmpOld.OldServise
-    ORDER BY Log_CashRemains.CashSessionId, OUnit.valuedata, OUser.valuedata;
+    UNION ALL
+    
+    SELECT EmployeeWorkLog.CashSessionId      AS CashSessionId
+         , OUnit.objectcode   AS UnitCode
+         , OUnit.valuedata    AS UnitName
+         , OUser.objectcode   AS UserCode
+         , OUser.valuedata    AS UserName
+         , to_char(MIN(EmployeeWorkLog.DateLogIn), 'HH24:MI:SS') AS TimeLogIn
+         , to_char(MAX(EmployeeWorkLog.DateZReport), 'HH24:MI:SS') AS TimeZReport
+         , to_char(MAX(EmployeeWorkLog.DateLogOut), 'HH24:MI:SS') AS TimeLogOut
+         , tmpOldNew.OldProgram
+         , tmpOldNew.OldServise
+         , CASE WHEN tmpOldNew.OldProgram = True OR tmpOldNew.OldServise = True
+           THEN TRUE ELSE FALSE END AS isErased
+    FROM EmployeeWorkLog
+         INNER JOIN Object AS OUnit ON OUnit.id = EmployeeWorkLog.UnitId
+         INNER JOIN Object AS OUser ON OUser.id = EmployeeWorkLog.UserId
+         INNER JOIN tmpOld AS tmpOldNew ON tmpOldNew.CashSessionId = EmployeeWorkLog.CashSessionId 
+                                       AND tmpOldNew.UnitId = EmployeeWorkLog.UnitId
+                                       AND tmpOldNew.UserId = EmployeeWorkLog.UserId
+                                       AND tmpOldNew.Ord = 1
+    WHERE EmployeeWorkLog.DateLogIn >= vbDateStart AND EmployeeWorkLog.DateLogIn < vbDateEnd
+    GROUP BY EmployeeWorkLog.CashSessionId,
+             OUnit.objectcode, OUnit.valuedata,
+             OUser.objectcode, OUser.valuedata, 
+             tmpOldNew.OldProgram, tmpOldNew.OldServise
+             
+             
+             
+    ORDER BY 1, 2, 4; --Log_CashRemains.CashSessionId, OUnit.valuedata, OUser.valuedata;
     RETURN NEXT cur1;
 
     OPEN cur2 FOR 
@@ -81,7 +124,29 @@ BEGIN
     WHERE Log_CashRemains.DateStart >= vbDateStart AND Log_CashRemains.DateStart < vbDateEnd 
     GROUP BY Log_CashRemains.CashSessionId,
              OUnit.objectcode, OUnit.valuedata
-    ORDER BY CashSessionId, OUnit.valuedata;
+    UNION ALL
+    
+    SELECT EmployeeWorkLog.CashSessionId   AS CashSessionId
+         , OUnit.objectcode                AS UnitCode
+         , OUnit.valuedata                 AS UnitName   
+    FROM EmployeeWorkLog
+         INNER JOIN (SELECT CashSessionId
+                     FROM
+                       (SELECT CashSessionId
+                       FROM EmployeeWorkLog
+                            INNER JOIN Object AS OUnit ON OUnit.id = EmployeeWorkLog.UnitId
+                       WHERE EmployeeWorkLog.DateLogIn >= vbDateStart AND EmployeeWorkLog.DateLogIn < vbDateEnd 
+                       GROUP BY CashSessionId,
+                                OUnit.objectcode, OUnit.valuedata
+                       ORDER BY CashSessionId, OUnit.valuedata) AS T1
+                     GROUP BY CashSessionId
+                     HAVING COUNT(*) > 1) AS T2 ON T2.CashSessionId = EmployeeWorkLog.CashSessionId
+         INNER JOIN Object AS OUnit ON OUnit.id = EmployeeWorkLog.UnitId
+    WHERE EmployeeWorkLog.DateLogIn >= vbDateStart AND EmployeeWorkLog.DateLogIn < vbDateEnd 
+    GROUP BY EmployeeWorkLog.CashSessionId,
+             OUnit.objectcode, OUnit.valuedata
+    ORDER BY 1, 2; --CashSessionId, OUnit.valuedata;
+        
     RETURN NEXT cur2;
 
 END;
@@ -91,6 +156,7 @@ $BODY$
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Øàáëèé Î.Â.
+ 12.01.19         *
  06.01.19         *
  20.10.18         *
 */

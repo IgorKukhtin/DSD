@@ -70,10 +70,27 @@ inherited Log_CashRemainsForm: TLog_CashRemainsForm
             HeaderAlignmentVert = vaCenter
             Width = 134
           end
-          object LoginTime: TcxGridDBColumn
+          object TimeLogIn: TcxGridDBColumn
             Caption = #1042#1088#1077#1084#1103' '#1074#1093#1086#1076#1072
-            DataBinding.FieldName = 'LoginTime'
-            Width = 82
+            DataBinding.FieldName = 'TimeLogIn'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 67
+          end
+          object TimeZReport: TcxGridDBColumn
+            Caption = #1042#1088#1077#1084#1103' Z'#1086#1090#1095#1077#1090#1072
+            DataBinding.FieldName = 'TimeZReport'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 61
+          end
+          object TimeLogOut: TcxGridDBColumn
+            Caption = #1042#1088#1077#1084#1103' '#1074#1099#1093#1086#1076#1072
+            DataBinding.FieldName = 'TimeLogOut'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 69
           end
           object OldProgram: TcxGridDBColumn
             Caption = #1050#1072#1089#1089'.'

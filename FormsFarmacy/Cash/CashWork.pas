@@ -50,7 +50,7 @@ implementation
 
 {$R *.dfm}
 
-  uses MainCash2;
+  uses CommonData, EmployeeWorkLog, MainCash2;
 
 { TCashWorkForm }
 
@@ -84,6 +84,8 @@ begin
                  m_ZReportName + FormatDateTime('DD.MM.YY', Date) + ' ‘Õ' +
                  m_Cash.FiscalNumber  + ' π' + IntToStr(m_Cash.ZReport), m_Cash.InfoZReport);
      m_Cash.ClosureFiscal;
+     EmployeeWorkLog_ZReport;
+     if not gc_User.Local then
      try
        MainCashForm.spUpdate_CashSerialNumber.ParamByName('inFiscalNumber').Value := m_Cash.FiscalNumber;
        MainCashForm.spUpdate_CashSerialNumber.ParamByName('inSerialNumber').Value := m_Cash.SerialNumber;

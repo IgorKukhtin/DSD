@@ -52,8 +52,6 @@ type
 
   function CheckListDiffCDS : boolean;
 
-  var MutexDiffKind, MutexDiffCDS: THandle;
-
 implementation
 
 {$R *.dfm}

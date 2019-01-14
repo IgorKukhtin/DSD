@@ -33,6 +33,7 @@ function Vip_lcl: String;
 function VipList_lcl: String;
 function VipDfm_lcl: String;
 function ListDiff_lcl: String;
+function EmployeeWorkLog_lcl: String;
 
 procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
 procedure LoadLocalData(ADst: TClientDataSet; AFileName: String);
@@ -104,6 +105,11 @@ End;
 function ListDiff_lcl: String;
 Begin
   Result := ExtractFilePath(Application.ExeName) + 'ListDiff.local';
+End;
+
+function EmployeeWorkLog_lcl: String;
+Begin
+  Result := ExtractFilePath(Application.ExeName) + 'EmployeeWorkLog.local';
 End;
 
 function AddIntField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string): TVKDBFFieldDef;
