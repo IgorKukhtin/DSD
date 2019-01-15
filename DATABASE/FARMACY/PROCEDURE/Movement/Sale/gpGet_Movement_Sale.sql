@@ -75,7 +75,7 @@ BEGIN
           , COALESCE (Object_PaidKind.ValueData, NULL) ::TVarChar AS PaidKindName
           , NULL::TVarChar                                   AS Comment
 
-          , (CURRENT_DATE + interval '1 day')       ::TDateTime                  AS OperDateSP
+          , (CURRENT_DATE + interval '1 day')                ::TDateTime AS OperDateSP
           , COALESCE (Object_PartnerMedical.Id, NULL)        ::Integer   AS PartnerMedicalId
           , COALESCE (Object_PartnerMedical.ValueData, NULL) ::TVarChar  AS PartnerMedicalName
           , NULL::TVarChar                                   AS InvNumberSP
@@ -94,13 +94,25 @@ BEGIN
           , COALESCE (Object_SPKind.ValueData, NULL) ::TVarChar  AS SPKindName 
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
-            LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = CASE WHEN vbUnitId IN (183289, 183294, 377605) THEN vbUnitId ELSE 0 END    --, 183292
+
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = vbUnitId
+            
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_PartnerMedical
+                                 ON ObjectLink_Unit_PartnerMedical.ObjectId = Object_Unit.Id 
+                                AND ObjectLink_Unit_PartnerMedical.DescId = zc_ObjectLink_Unit_PartnerMedical()
+            LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = ObjectLink_Unit_PartnerMedical.ChildObjectId
+
+            LEFT JOIN Object AS Object_SPKind   ON Object_SPKind.Id   = zc_Enum_SPKind_1303()        AND COALESCE (Object_PartnerMedical.Id, 0) <> 0
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() AND COALESCE (Object_PartnerMedical.Id, 0) <> 0
+
+          /*LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = CASE WHEN vbUnitId IN (183289, 183294, 377605) THEN vbUnitId ELSE 0 END    --, 183292
             LEFT JOIN Object AS Object_SPKind   ON Object_SPKind.Id   = CASE WHEN vbUnitId IN (183289, 183294, 377605) THEN zc_Enum_SPKind_1303() ELSE 0 END
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = CASE WHEN vbUnitId IN (183289, 183294, 377605) THEN zc_Enum_PaidKind_FirstForm() ELSE 0 END
             LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = CASE WHEN vbUnitId IN (183289, 183294) THEN 3751525  --3690583 /*тест*/  --
                                                                                          WHEN vbUnitId = 377605 THEN 4212299
                                                                                          ELSE 0
-                                                                                    END
+                                                                                    END*/
+        
         ;
     ELSE
         RETURN QUERY
@@ -163,6 +175,7 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 15.01.19         *
  05.06.18         *
  08.02.17         * add SP
  15.09.16         *
