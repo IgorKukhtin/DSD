@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , RouteSortingId integer, RouteSortingName TVarChar
              , AreaId Integer, AreaName TVarChar
              , UnitRePriceId Integer, UnitRePriceName TVarChar
+             , PartnerMedicalId Integer, PartnerMedicalName TVarChar
              , TaxService TFloat, TaxServiceNigth TFloat
              , StartServiceNigth TDateTime, EndServiceNigth TDateTime
              , CreateDate TDateTime, CloseDate TDateTime
@@ -73,7 +74,10 @@ BEGIN
       
       , COALESCE (Object_UnitRePrice.Id,0)          ::Integer  AS UnitRePriceId
       , COALESCE (Object_UnitRePrice.ValueData, '') ::TVarChar AS UnitRePriceName
-           
+
+      , COALESCE (Object_PartnerMedical.Id,0)          ::Integer  AS PartnerMedicalId
+      , COALESCE (Object_PartnerMedical.ValueData, '') ::TVarChar AS PartnerMedicalName
+                 
       , ObjectFloat_TaxService.ValueData                     AS TaxService
       , ObjectFloat_TaxServiceNigth.ValueData                AS TaxServiceNigth
 
@@ -130,6 +134,11 @@ BEGIN
                              ON ObjectLink_Unit_UnitRePrice.ObjectId = Object_Unit.Id 
                             AND ObjectLink_Unit_UnitRePrice.DescId = zc_ObjectLink_Unit_UnitRePrice()
         LEFT JOIN Object AS Object_UnitRePrice ON Object_UnitRePrice.Id = ObjectLink_Unit_UnitRePrice.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_PartnerMedical
+                             ON ObjectLink_Unit_PartnerMedical.ObjectId = Object_Unit.Id 
+                            AND ObjectLink_Unit_PartnerMedical.DescId = zc_ObjectLink_Unit_PartnerMedical()
+        LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = ObjectLink_Unit_PartnerMedical.ChildObjectId
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
                                 ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
@@ -197,6 +206,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.01.19         * 
  22.10.18         *
  29.08.18         * Phone
  15.09.17         * add inisShowAll

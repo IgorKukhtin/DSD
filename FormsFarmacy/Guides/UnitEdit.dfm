@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 478
+  ClientHeight = 526
   ClientWidth = 488
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 72
-    Top = 445
+    Left = 99
+    Top = 495
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -37,8 +37,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 266
-    Top = 445
+    Left = 293
+    Top = 495
     Width = 75
     Height = 25
     Action = FormClose
@@ -326,6 +326,23 @@
     TabOrder = 40
     Width = 448
   end
+  object cxLabel19: TcxLabel
+    Left = 17
+    Top = 446
+    Caption = #1052#1077#1076'. '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1082#1084#1091' 1303'
+  end
+  object edPartnerMedical: TcxButtonEdit
+    Left = 17
+    Top = 462
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 42
+    Width = 448
+  end
   object ActionList: TActionList
     Left = 356
     Top = 358
@@ -531,6 +548,14 @@
         Name = 'inNormOfManDays'
         Value = Null
         Component = ceNormOfManDays
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerMedicalId'
+        Value = Null
+        Component = GuidesPartnerMedical
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -760,6 +785,21 @@
         Name = 'UnitRePriceName'
         Value = Null
         Component = GuidesUnitRePrice
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerMedicalId'
+        Value = Null
+        Component = GuidesPartnerMedical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerMedicalName'
+        Value = Null
+        Component = GuidesPartnerMedical
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -999,5 +1039,34 @@
       end>
     Left = 241
     Top = 392
+  end
+  object GuidesPartnerMedical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartnerMedical
+    FormNameParam.Value = 'TPartnerMedicalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartnerMedicalForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPartnerMedical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPartnerMedical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 233
+    Top = 444
   end
 end
