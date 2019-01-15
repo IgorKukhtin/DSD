@@ -80,16 +80,23 @@ BEGIN
              FROM tmp1 AS tmp
              WHERE tmp.Max_Date = tmp.OperDate -- т.е. для договора и юр лица будет 1 документ
             )
-  , tmpJuridicalSettings AS (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId, JuridicalSettings.PriceLimit, JuridicalSettings.Bonus
+  , tmpJuridicalSettings AS (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId, JuridicalSettings.JuridicalSettingsId
                              FROM JuridicalSettings
                              )
+    -- элементы установок юр.лиц (границы цен для бонуса)
+  , tmpJuridicalSettingsItem AS (SELECT tmp.JuridicalSettingsId
+                                      , tmp.Bonus
+                                      , tmp.PriceLimit_min
+                                      , tmp.PriceLimit
+                                 FROM tmpJuridicalSettings AS JuridicalSettings
+                                      INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inUserId::TVarChar) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                            
   , Movement_PriceList AS
        (-- выбираются с "нужным" договором из JuridicalSettings
         SELECT tmp.MovementId
              , tmp.JuridicalId
              , tmp.ContractId
-             , COALESCE (JuridicalSettings.PriceLimit, 0) AS PriceLimit
-             , COALESCE (JuridicalSettings.Bonus, 0)      AS Bonus
+             , JuridicalSettings.JuridicalSettingsId
         FROM tmp2 AS tmp
         -- !!!INNER!!!
         INNER JOIN tmpJuridicalSettings AS JuridicalSettings 
@@ -101,8 +108,7 @@ BEGIN
        (SELECT Movement_PriceList.MovementId
              , Movement_PriceList.JuridicalId
              , Movement_PriceList.ContractId
-             , Movement_PriceList.PriceLimit
-             , Movement_PriceList.Bonus
+             , Movement_PriceList.JuridicalSettingsId
              , MovementItem.Id     AS MovementItemId
              , MovementItem.Amount AS Price
             -- , GoodsList.GoodsId      -- здесь товар "сети"
@@ -126,8 +132,7 @@ BEGIN
              , MI_PriceList.MovementId
              , MI_PriceList.JuridicalId
              , MI_PriceList.ContractId
-             , MI_PriceList.PriceLimit
-             , MI_PriceList.Bonus
+             , MI_PriceList.JuridicalSettingsId
              , MI_PriceList.MovementItemId
              , MI_PriceList.Price
         FROM 
@@ -172,16 +177,16 @@ BEGIN
                  , PriceList.Id                       AS PriceListMovementItemId
                  , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
        
-                 , CASE WHEN 1=0
+                 , CASE WHEN 1=0 
                              THEN PriceList.Amount
-                        -- если Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
-                        WHEN COALESCE (JuridicalSettings.PriceLimit, 0) <= PriceList.Amount
+                        -- если Цена поставщика не попадает в ценовые промежутки        -- если Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
+                        WHEN tmpJuridicalSettingsItem.JuridicalSettingsId IS NULL
                              THEN PriceList.Amount
                                   -- учитывается % бонуса из Маркетинговый контракт
                                 * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
                         
                         ELSE -- иначе учитывается бонус - для ТОП-позиции или НЕ ТОП-позиции
-                             (PriceList.Amount * (100 - COALESCE (JuridicalSettings.Bonus, 0)) / 100)
+                             (PriceList.Amount * (100 - COALESCE (tmpJuridicalSettingsItem.Bonus, 0)) / 100)
                               -- И учитывается % бонуса из Маркетинговый контракт
                            * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
                    END :: TFloat AS FinalPrice
@@ -217,6 +222,10 @@ BEGIN
                    LEFT JOIN JuridicalSettings ON JuridicalSettings.JuridicalId     = LastPriceList_View.JuridicalId 
                                               AND JuridicalSettings.MainJuridicalId = vbMainJuridicalId
                                               AND JuridicalSettings.ContractId      = LastPriceList_View.ContractId 
+                   -- связываем с элементами  установок юр.лиц. 
+                   LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                                     AND PriceList.Amount >= tmpJuridicalSettingsItem.PriceLimit_min
+                                                     AND PriceList.Amount <= tmpJuridicalSettingsItem.PriceLimit
                    -- товар "поставщика", если он есть в прайсах !!!а он есть!!!
                    LEFT JOIN Object_Goods_View AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
                    -- товар "сети"

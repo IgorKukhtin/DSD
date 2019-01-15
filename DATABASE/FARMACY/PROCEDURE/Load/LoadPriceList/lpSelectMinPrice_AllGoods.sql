@@ -184,7 +184,7 @@ BEGIN
                                       , tmp.PriceLimit_min
                                       , tmp.PriceLimit
                                  FROM JuridicalSettings
-                                      INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, '2') AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                      INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inUserId::TVarChar) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
                                  )
 
     -- Маркетинговый контракт

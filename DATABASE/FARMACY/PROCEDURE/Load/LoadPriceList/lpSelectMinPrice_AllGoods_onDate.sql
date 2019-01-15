@@ -50,7 +50,7 @@ BEGIN
                                       , tmp.PriceLimit_min
                                       , tmp.PriceLimit
                                  FROM JuridicalSettings
-                                      INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, '2') AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                      INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inUserId::TVarChar) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
                                  )
 
     -- Маркетинговый контракт
@@ -95,7 +95,7 @@ BEGIN
              WHERE tmp.Max_Date = tmp.OperDate -- т.е. для договора и юр лица будет 1 документ
             ) AS tmp
         -- !!!INNER!!!
-        INNER JOIN (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId , JuridicalSettings.JuridicalSettingsId--, JuridicalSettings.PriceLimit, JuridicalSettings.Bonus
+        INNER JOIN (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId , JuridicalSettings.JuridicalSettingsId
                     FROM JuridicalSettings
                    ) AS JuridicalSettings ON JuridicalSettings.JuridicalId = tmp.JuridicalId
                                          AND JuridicalSettings.ContractId  = tmp.ContractId

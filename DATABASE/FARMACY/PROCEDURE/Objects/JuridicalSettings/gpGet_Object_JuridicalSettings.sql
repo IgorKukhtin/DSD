@@ -21,7 +21,7 @@ BEGIN
            , ObjectFloat_Bonus.ValueData
        FROM  Object AS Object_JuridicalSettings
 
-                     LEFT JOIN ObjectFloat AS ObjectFloat_Bonus 
+                LEFT JOIN ObjectFloat AS ObjectFloat_Bonus 
                                       ON ObjectFloat_Bonus.ObjectId = Object_JuridicalSettings.Id
                                      AND ObjectFloat_Bonus.DescId = zc_ObjectFloat_JuridicalSettings_Bonus()
 
