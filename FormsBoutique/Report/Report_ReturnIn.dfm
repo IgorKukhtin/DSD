@@ -4,6 +4,7 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
   ClientWidth = 1168
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -75
   ExplicitWidth = 1184
   ExplicitHeight = 463
   PixelsPerInch = 96
@@ -582,6 +583,44 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
             Visible = False
             VisibleForCustomization = False
             Width = 30
+          end
+          object OperDate_Sale: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'OperDate_Sale'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object Invnumber_Sale: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'Invnumber_Sale'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object OperDate_pay: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1086#1087#1083#1072#1095#1077#1085#1086' '#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'OperDate_pay'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm.yyyy'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' ('#1089#1087#1080#1089#1072#1085#1086' '#1089' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
+            Width = 60
+          end
+          object Days_pay: TcxGridDBColumn
+            Caption = #1044#1085#1077#1081' '#1086#1090' '#1086#1087#1083#1072#1090#1099' '#1076#1086' '#1074#1086#1079#1074#1088#1072#1090#1072
+            DataBinding.FieldName = 'Days_pay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1087#1088#1086#1096#1083#1086' '#1089' '#1084#1086#1084#1077#1085#1090#1072' '#1089#1087#1080#1089#1072#1085#1080#1103' '#1089' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1076#1086' '#1074#1086#1079#1074#1088#1072#1090#1072
+            Width = 65
           end
         end
       end

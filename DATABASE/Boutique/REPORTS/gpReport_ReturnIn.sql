@@ -72,6 +72,13 @@ RETURNS TABLE (PartionId             Integer
              , DescName_doc         TVarChar
              , OperDate_doc         TDateTime
              , InvNumber_doc        TVarChar
+
+             , OperDate_Sale        TDateTime
+             , Invnumber_Sale       TVarChar
+
+             , OperDate_pay         TDateTime
+             , Days_pay             TFloat
+
              , isChecked            Boolean
               )
 AS
@@ -187,6 +194,9 @@ BEGIN
                                 , CASE WHEN inisMovement = TRUE THEN MIConatiner.MovementId ELSE 0 END               AS MovementId_doc
                                 , CASE WHEN inIsClient   = TRUE THEN CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ() THEN MIConatiner.WhereObjectId_Analyzer ELSE tmpContainer.ClientId END ELSE NULL :: Integer END AS ClientId
 
+                                , CASE WHEN inisMovement = TRUE THEN Movement_Sale.OperDate ELSE NULL :: TDateTime END       AS OperDate_Sale
+                                , CASE WHEN inisMovement = TRUE THEN Movement_Sale.Invnumber ELSE '' END                     AS Invnumber_Sale
+
                                 , COALESCE (MIFloat_ChangePercent.ValueData, 0)         AS ChangePercent
                                 , COALESCE (MILinkObject_DiscountSaleKind.ObjectId, 0)  AS DiscountSaleKindId
 
@@ -225,12 +235,18 @@ BEGIN
 
                                 , COALESCE (MIBoolean_Checked.ValueData, FALSE)         AS isChecked
                                 , MIString_BarCode.ValueData                            AS BarCode_item
+                                
+                                , MAX (CASE WHEN MIContainer_PartionMI.OperDate IS NOT NULL
+                                            THEN MIContainer_PartionMI.OperDate
+                                       ELSE zc_DateStart()
+                                       END ) :: TDateTime AS OperDate_pay
+                                 
                            FROM Object_PartionGoods
 
                                 LEFT JOIN MovementItemContainer AS MIConatiner
                                                                 ON MIConatiner.PartionId = Object_PartionGoods.MovementItemId
                                                                AND (MIConatiner.OperDate BETWEEN inStartDate AND inEndDate)
-                                                               
+
                                 LEFT JOIN tmpContainer ON tmpContainer.ContainerId = MIConatiner.ContainerId
                                 LEFT JOIN tmpCurrency  ON tmpCurrency.CurrencyFromId = zc_Currency_Basis()
                                                       AND tmpCurrency.CurrencyToId   = Object_PartionGoods.CurrencyId
@@ -241,6 +257,10 @@ BEGIN
                                                                  ON MILinkObject_PartionMI.MovementItemId = MIConatiner.MovementItemId
                                                                 AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
                                 LEFT JOIN Object AS Object_PartionMI ON Object_PartionMI.Id = MILinkObject_PartionMI.ObjectId
+
+                                LEFT JOIN MovementItem AS MI_Sale ON MI_Sale.Id = Object_PartionMI.ObjectCode
+                                LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MI_Sale.MovementId
+
                                 LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                             ON MIFloat_ChangePercent.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MIConatiner.MovementItemId)
                                                            AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
@@ -261,6 +281,16 @@ BEGIN
                                 LEFT JOIN MovementItemString AS MIString_BarCode
                                                              ON MIString_BarCode.MovementItemId = COALESCE (Object_PartionMI.ObjectCode, MIConatiner.MovementItemId)
                                                             AND MIString_BarCode.DescId         = zc_MIString_BarCode()
+
+                                LEFT JOIN ContainerLinkObject AS CLO_PartionMI
+                                                              ON CLO_PartionMI.ObjectId = MILinkObject_PartionMI.ObjectId
+                                                             AND CLO_PartionMI.DescId   = zc_ContainerLinkObject_PartionMI()
+                                                             AND inisMovement = TRUE
+                                LEFT JOIN MovementItemContainer AS MIContainer_PartionMI
+                                                                ON MIContainer_PartionMI.ContainerId  = CLO_PartionMI.ContainerId
+                                                               AND MIContainer_PartionMI.AnalyzerId   = zc_Enum_AnalyzerId_SaleCount_10100() -- Кол-во, реализация - Типы аналитик (проводки)
+                                                               AND MIContainer_PartionMI.Amount       < 0
+                                                               AND inisMovement = TRUE
 
                            WHERE (Object_PartionGoods.PartnerId  = inPartnerId        OR inPartnerId   = 0)
                              AND (Object_PartionGoods.BrandId    = inBrandId          OR inBrandId     = 0)
@@ -294,6 +324,8 @@ BEGIN
                                   , CASE WHEN inisMovement = TRUE THEN MIConatiner.OperDate ELSE NULL :: TDateTime END 
                                   , CASE WHEN inisMovement = TRUE THEN MIConatiner.MovementId ELSE 0 END
                                   , CASE WHEN inIsClient   = TRUE THEN CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ() THEN MIConatiner.WhereObjectId_Analyzer ELSE tmpContainer.ClientId END ELSE NULL :: Integer END
+                                  , CASE WHEN inisMovement = TRUE THEN Movement_Sale.OperDate ELSE NULL :: TDateTime END
+                                  , CASE WHEN inisMovement = TRUE THEN Movement_Sale.Invnumber ELSE '' END
 
                                   , MIFloat_ChangePercent.ValueData
                                   , MILinkObject_DiscountSaleKind.ObjectId
@@ -350,6 +382,10 @@ BEGIN
                           , tmpData_all.ChangePercent
                           , tmpData_all.DiscountSaleKindId
 
+                          , tmpData_all.OperDate_Sale
+                          , tmpData_all.Invnumber_Sale
+                          , tmpData_all.OperDate_pay
+
                           , tmpData_all.UnitId_in
                           , tmpData_all.CurrencyId
 
@@ -394,7 +430,9 @@ BEGIN
                             , tmpData_all.ClientId
                             , tmpData_all.ChangePercent
                             , tmpData_all.DiscountSaleKindId
-
+                            , tmpData_all.OperDate_Sale
+                            , tmpData_all.Invnumber_Sale
+                            , tmpData_all.OperDate_pay
                             , tmpData_all.UnitId_in
                             , tmpData_all.CurrencyId
                             , tmpData_all.OperPrice
@@ -457,7 +495,13 @@ BEGIN
              , MovementDesc_Doc.ItemName          AS DescName_doc
              , Movement_Doc.OperDate              AS OperDate_doc
              , Movement_Doc.InvNumber             AS InvNumber_doc
+
+             , tmpData.OperDate_Sale  :: TDateTime
+             , tmpData.Invnumber_Sale :: TVarChar
+             , CASE WHEN tmpData.OperDate_pay = zc_DateStart() THEN NULL ELSE tmpData.OperDate_pay END  :: TDateTime AS OperDate_pay
              
+             , CASE WHEN tmpData.OperDate_pay = zc_DateStart() THEN 0 ELSE date_part('day', Movement_Doc.OperDate - tmpData.OperDate_pay) END :: TFloat AS Days_pay
+
              , tmpData.isChecked
         FROM tmpData
             --LEFT JOIN tmpDayOfWeek ON tmpDayOfWeek.Ord_dow = tmpData.OrdDay_doc

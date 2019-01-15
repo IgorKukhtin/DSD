@@ -183,7 +183,7 @@ BEGIN
                                       , tmp.PriceLimit_min
                                       , tmp.PriceLimit
                                  FROM JuridicalSettings
-                                      INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inSession) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                      INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inUserId::TVarChar) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
                                  )
     -- Список цены + ТОП + % наценки
   , GoodsPrice AS
