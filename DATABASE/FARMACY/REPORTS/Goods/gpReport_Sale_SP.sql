@@ -174,8 +174,8 @@ BEGIN
                               LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = MovementLinkObject_MemberSP.ObjectId AND Object_MemberSP.DescId = zc_Object_MemberSP()
 
                               LEFT JOIN MovementDate AS MovementDate_OperDateSP
-                                   ON MovementDate_OperDateSP.MovementId = Movement_Sale.Id
-                                  AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
+                                                     ON MovementDate_OperDateSP.MovementId = Movement_Sale.Id
+                                                    AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
 
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_GroupMemberSP
                                      ON MovementLinkObject_GroupMemberSP.MovementId = Movement_Sale.Id
@@ -410,11 +410,11 @@ BEGIN
                                                   AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
 
                          WHERE ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
-                           AND ( (COALESCE(ObjectLink_Contract_GroupMemberSP.ChildObjectId,0) = inGroupMemberSPId AND inisGroupMemberSP = FALSE AND COALESCE(inGroupMemberSPId,0) <> 0)
-                              OR (COALESCE(ObjectLink_Contract_GroupMemberSP.ChildObjectId,0) = 0/* <> inGroupMemberSPId*/ AND inisGroupMemberSP = TRUE AND COALESCE(inGroupMemberSPId,0) <> 0)
+                         /*  AND ( (COALESCE(ObjectLink_Contract_GroupMemberSP.ChildObjectId,0) = inGroupMemberSPId AND inisGroupMemberSP = FALSE AND COALESCE(inGroupMemberSPId,0) <> 0)
+                              OR (COALESCE(ObjectLink_Contract_GroupMemberSP.ChildObjectId,0) = 0 AND inisGroupMemberSP = TRUE AND COALESCE(inGroupMemberSPId,0) <> 0)
                               OR COALESCE(inGroupMemberSPId,0) = 0
                                )
-                           AND (COALESCE (ObjectFloat_PercentSP.ValueData,0) = inPercentSP OR COALESCE (inPercentSP,0) = 0)
+                           AND (COALESCE (ObjectFloat_PercentSP.ValueData,0) = inPercentSP OR COALESCE (inPercentSP,0) = 0)*/
                         )
   
  , tmpMovDetails AS (SELECT tmpSale.Id   AS MovementId
@@ -488,11 +488,14 @@ BEGIN
                        LEFT JOIN tmpContract ON tmpContract.PartnerMedicalId = tmpSale.HospitalId
                                             AND tmpContract.PartnerMedical_JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId
                                             AND tmpContract.Contract_JuridicalBasisId = tmpSale.JuridicalId
+                                            AND tmpContract.StartDate_Contract <= tmpSale.OperDate AND tmpContract.EndDate_Contract >= tmpSale.OperDate --выбираем дог. согласно датам
+                                            
+                                           /* с 01,01,2019 один договор без категорий 
                                             AND COALESCE (tmpContract.Contract_GroupMemberSPId,0) = CASE WHEN (COALESCE (tmpSale.GroupMemberSPId,0) = 4063780 AND COALESCE(inGroupMemberSPId,0) <> 0)
                                                                                                           THEN COALESCE (tmpSale.GroupMemberSPId,0)
                                                                                                          ELSE 0
                                                                                                     END                                             --4063780;6;"Дитячий"  -- test 3690580
-                                            AND tmpContract.StartDate_Contract <= tmpSale.OperDate AND tmpContract.EndDate_Contract >= tmpSale.OperDate --выбираем дог. согласно датам
+                                           */ 
                   --                          AND COALESCE (tmpContract.PercentSP,0) = tmpSale.ChangePercent
 
                           -- расчетный счет из договора
@@ -594,16 +597,16 @@ BEGIN
            , tmpMovDetails.PartnerMedical_MFO
            , tmpMovDetails.MedicFIO
            , Object_Contract.Id                  AS ContractId
-           , Object_Contract.ValueData           AS ContractName
+           , Object_Contract.ValueData :: TVarChar  AS ContractName
            , tmpMovDetails.StartDate_Contract    AS Contract_StartDate
-           , tmpMovDetails.SigningDate_Contract  AS Contract_SigningDate
+           , CASE WHEN COALESCE (Object_Contract.ValueData, '') = '' THEN NULL ELSE tmpMovDetails.SigningDate_Contract END :: TDateTime AS Contract_SigningDate
            , tmpData.InvNumber_Invoice
            , tmpData.InvNumber_Invoice_Full
            
            , FALSE                                             AS isPrintLast
         FROM tmpMI AS tmpData
              LEFT JOIN tmpMovDetails ON tmpData.MovementId = tmpMovDetails.MovementId
-                                    AND tmpData.ChangePercent = tmpMovDetails.PercentSP
+                                  --  AND tmpData.ChangePercent = tmpMovDetails.PercentSP
 
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId AND Object_Unit.DescId = zc_Object_Unit()
              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId AND Object_Juridical.DescId = zc_Object_Juridical()

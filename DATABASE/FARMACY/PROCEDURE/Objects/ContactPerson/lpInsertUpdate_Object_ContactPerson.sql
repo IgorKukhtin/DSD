@@ -24,7 +24,8 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbCode_calc Integer; 
-   DECLARE vbObjectId Integer;   
+   DECLARE vbObjectId Integer;
+   DECLARE vbCalc TFloat;
 BEGIN
 
    -- пытаемся найти код
@@ -41,6 +42,20 @@ BEGIN
    -- проверка прав уникальности для свойства <Код > + <Object> 
 --   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_ContactPerson(), vbCode_calc);
 
+   vbCalc := 0;
+   IF COALESCE (inObjectId_Partner, 0) <> 0 THEN vbCalc := vbCalc + 1; END IF;
+   IF COALESCE (inObjectId_Juridical, 0) <> 0 THEN vbCalc := vbCalc + 1; END IF;
+   IF COALESCE (inObjectId_Contract, 0) <> 0 THEN vbCalc := vbCalc + 1; END IF;
+   IF COALESCE (inObjectId_Unit, 0) <> 0 THEN vbCalc := vbCalc + 1; END IF;
+
+   -- проверка
+    -- 16.01.2019  может быть записан контакт без сылки на  <Юридическое лицо> или <Договор> или <Контрагент>
+   IF vbCalc > 1 --COALESCE (vbObjectId, 0) = 0 
+   THEN 
+       RAISE EXCEPTION 'Ошибка.Должен быть выбран только один <Объект контакта>: <Юридическое лицо> или <Договор> или <Контрагент>.'; 
+   END IF;
+   
+   -- 
    IF COALESCE (inObjectId_Partner, 0) <> 0 AND (COALESCE (inObjectId_Juridical, 0) = 0 AND COALESCE (inObjectId_Contract, 0) = 0 AND COALESCE (inObjectId_Unit, 0) = 0) 
    THEN
 	vbObjectId = COALESCE (inObjectId_Partner, 0);
@@ -61,9 +76,6 @@ BEGIN
 	vbObjectId = COALESCE (inObjectId_Unit, 0);
    END IF;
 
-
-   IF COALESCE (vbObjectId, 0) = 0 THEN RAISE EXCEPTION 'Ошибка.Должен быть выбран один <Объект контакта>: <Юридическое лицо> или <Договор> или <Контрагент>.'; END IF;
-   
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_ContactPerson(), vbCode_calc, inName);
    -- сохранили св-во <>
@@ -102,3 +114,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM lpInsertUpdate_Object_ContactPerson(ioId := 0 , inCode := 1 , inName := 'Белов' , inPhone := '4444' , Mail := 'выа@kjjkj' , Comment := '' , inPartnerId := 258441 , inJuridicalId := 0 , inContractId := 0 , inContactPersonKindId := 153272 ,  inSession := '5');
+--select * from gpInsertUpdate_Object_ContactPerson(ioId := 9877621 , inCode := 155 , inName := 'тест'::TVarChar , inPhone := '222222'::TVarChar , inMail := '22222222' ::TVarChar, inComment := 'тест' ::TVarChar, inObjectId_Partner := 0 , inObjectId_Juridical := 0 , inObjectId_Contract := 0 , inObjectId_Unit := 0 , inContactPersonKindId := 0 , inEmailId := 0 , inRetailId := 0 , inAreaId := 0 ,  inSession := '3'::TVarChar);

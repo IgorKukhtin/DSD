@@ -89,8 +89,16 @@ BEGIN
    -- сохранили свойство <сумма осн. договора>
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Contract_TotalSumm(), ioId, inTotalSumm);
    
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_Signing(), ioId, inSigningDate);
+   -- если номер договора пусто то дату подписания не записываем
+   IF COALESCE (inName, '') <> '' 
+   THEN
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_Signing(), ioId, inSigningDate);
+   ELSE 
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_Signing(), ioId, NULL);   
+   END IF;
+   
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_Start(), ioId, inStartDate);
    -- сохранили свойство <>
@@ -113,6 +121,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.01.19         *
  24.09.18         * add inMemberId
  20.08.18         * inTotalSumm
  14.02.18         *
