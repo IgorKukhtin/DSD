@@ -27,8 +27,7 @@ object MakerForm: TMakerForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 598
-    ExplicitHeight = 256
+    ExplicitTop = 28
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -49,7 +48,6 @@ object MakerForm: TMakerForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.GroupByBox = False
@@ -61,6 +59,7 @@ object MakerForm: TMakerForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 56
       end
       object Name: TcxGridDBColumn
@@ -69,6 +68,7 @@ object MakerForm: TMakerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 168
       end
       object CountryName: TcxGridDBColumn
@@ -76,6 +76,7 @@ object MakerForm: TMakerForm
         DataBinding.FieldName = 'CountryName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 147
       end
       object ContactPersonName: TcxGridDBColumn
@@ -83,8 +84,25 @@ object MakerForm: TMakerForm
         DataBinding.FieldName = 'ContactPersonName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 100
+      end
+      object Phone: TcxGridDBColumn
+        Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1082#1086#1085#1090'. '#1083#1080#1094#1086')'
+        DataBinding.FieldName = 'Phone'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 109
+      end
+      object Mail: TcxGridDBColumn
+        Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1095#1090#1072' ('#1082#1086#1085#1090'. '#1083#1080#1094#1086')'
+        DataBinding.FieldName = 'Mail'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 114
       end
       object SendPlan: TcxGridDBColumn
         Caption = #1050#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' ('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103')'
@@ -147,6 +165,7 @@ object MakerForm: TMakerForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 53
       end
     end
@@ -161,9 +180,6 @@ object MakerForm: TMakerForm
     Height = 8
     AlignSplitter = salBottom
     Control = cxGridReport
-    ExplicitLeft = -106
-    ExplicitTop = 240
-    ExplicitWidth = 859
   end
   object cxGridReport: TcxGrid
     Left = 0
@@ -172,9 +188,6 @@ object MakerForm: TMakerForm
     Height = 129
     Align = alBottom
     TabOrder = 6
-    ExplicitLeft = -106
-    ExplicitTop = 248
-    ExplicitWidth = 859
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ReportDS
@@ -561,6 +574,7 @@ object MakerForm: TMakerForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1074' '#1086#1090#1087#1088#1072#1074#1082#1077
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1074' '#1086#1090#1087#1088#1072#1074#1082#1077
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ReportDS
     end
@@ -587,9 +601,10 @@ object MakerForm: TMakerForm
         item
           StoredProc = spErasedUnErased
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1074' '#1086#1090#1087#1088#1072#1074#1082#1077
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1074' '#1086#1090#1087#1088#1072#1074#1082#1077
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ReportDS
@@ -650,6 +665,22 @@ object MakerForm: TMakerForm
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1048#1089#1082#1083#1102#1095#1077#1085#1080#1103' '#1074' '#1086#1090#1087#1088#1072#1074#1082#1077
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1048#1089#1082#1083#1102#1095#1077#1085#1080#1103' '#1074' '#1086#1090#1087#1088#1072#1074#1082#1077
       ImageIndex = 6
+      ShortCut = 16472
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_ContactPerson
+      StoredProcList = <
+        item
+          StoredProc = spInsert_ContactPerson
+        end
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -757,5 +788,57 @@ object MakerForm: TMakerForm
     SummaryItemList = <>
     Left = 288
     Top = 344
+  end
+  object spInsert_ContactPerson: TdsdStoredProc
+    StoredProcName = 'gpInsert_Object_ContactPerson_byMaker'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ContactPersonId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMakerId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ContactPersonName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPhone'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Phone'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMail'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Mail'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 576
+    Top = 123
   end
 end

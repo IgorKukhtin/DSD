@@ -85,6 +85,8 @@ type
     bbSetErasedMakerReport: TdxBarButton;
     bbSetUnErasedMakerReport: TdxBarButton;
     bbGridToExcelReport: TdxBarButton;
+    spInsert_ContactPerson: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

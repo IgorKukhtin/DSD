@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Maker(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
              , CountryId Integer, CountryCode Integer, CountryName TVarChar
              , ContactPersonId Integer, ContactPersonCode Integer, ContactPersonName TVarChar
+             , Phone TVarChar, Mail TVarChar
              , SendPlan TDateTime
              , SendReal TDateTime
              , isReport1  Boolean
@@ -33,6 +34,9 @@ $BODY$BEGIN
            , Object_ContactPerson.Id          AS ContactPersonId
            , Object_ContactPerson.ObjectCode  AS ContactPersonCode
            , Object_ContactPerson.ValueData   AS ContactPersonName
+
+           , ObjectString_Phone.ValueData     AS Phone
+           , ObjectString_Mail.ValueData      AS Mail
 
            , COALESCE (ObjectDate_SendPlan.ValueData, NULL) :: TDateTime AS SendPlan
            , COALESCE (ObjectDate_SendReal.ValueData, NULL) :: TDateTime AS SendReal
@@ -75,19 +79,25 @@ $BODY$BEGIN
                                    ON ObjectBoolean_Maker_Report4.ObjectId = Object_Maker.Id
                                   AND ObjectBoolean_Maker_Report4.DescId = zc_ObjectBoolean_Maker_Report4()
 
+           LEFT JOIN ObjectString AS ObjectString_Phone
+                                  ON ObjectString_Phone.ObjectId = Object_ContactPerson.Id 
+                                 AND ObjectString_Phone.DescId = zc_ObjectString_ContactPerson_Phone()
+           LEFT JOIN ObjectString AS ObjectString_Mail
+                                  ON ObjectString_Mail.ObjectId = Object_ContactPerson.Id 
+                                 AND ObjectString_Mail.DescId = zc_ObjectString_ContactPerson_Mail()
+
      WHERE Object_Maker.DescId = zc_Object_Maker();
   
 END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Maker(TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------*/
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 16.01.19         *
  11.01.19         *
  11.02.14         *
 */
