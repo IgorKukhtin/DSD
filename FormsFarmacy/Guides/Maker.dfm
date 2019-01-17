@@ -2,7 +2,7 @@ object MakerForm: TMakerForm
   Left = 0
   Top = 0
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
-  ClientHeight = 427
+  ClientHeight = 431
   ClientWidth = 753
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -15,19 +15,20 @@ object MakerForm: TMakerForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
     Width = 753
-    Height = 264
+    Height = 268
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 28
+    ExplicitHeight = 264
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -82,6 +83,13 @@ object MakerForm: TMakerForm
       object ContactPersonName: TcxGridDBColumn
         Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'ContactPersonName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormContactPerson
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
@@ -175,19 +183,21 @@ object MakerForm: TMakerForm
   end
   object cxSplitter1: TcxSplitter
     Left = 0
-    Top = 290
+    Top = 294
     Width = 753
     Height = 8
     AlignSplitter = salBottom
     Control = cxGridReport
+    ExplicitTop = 290
   end
   object cxGridReport: TcxGrid
     Left = 0
-    Top = 298
+    Top = 302
     Width = 753
     Height = 129
     Align = alBottom
     TabOrder = 6
+    ExplicitTop = 298
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ReportDS
@@ -371,6 +381,14 @@ object MakerForm: TMakerForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateSendPlan'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -447,6 +465,10 @@ object MakerForm: TMakerForm
     end
     object bbGridToExcelReport: TdxBarButton
       Action = actGridToExcelReport
+      Category = 0
+    end
+    object bbUpdateSendPlan: TdxBarButton
+      Action = macUpdateSendPlan
       Category = 0
     end
   end
@@ -682,6 +704,108 @@ object MakerForm: TMakerForm
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
+    object actChoiceFormContactPerson: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ContactPersonChoiceForm'
+      FormName = 'TContactPersonForm'
+      FormNameParam.Value = 'TContactPersonForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ContactPersonName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Mail'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Mail'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Phone'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Phone'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object macUpdateSendPlanList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateSendPlan
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091', '#1082#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091', '#1082#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100
+      ImageIndex = 67
+    end
+    object macUpdateSendPlan: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogUpdateSendPlan
+        end
+        item
+          Action = macUpdateSendPlanList
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091', '#1082#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091', '#1082#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100
+      ImageIndex = 67
+    end
+    object actUpdateSendPlan: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdate_SendPlan
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SendPlan
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091'/'#1074#1088#1077#1084#1103
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091'/'#1074#1088#1077#1084#1103
+      ImageIndex = 67
+      RefreshOnTabSetChanges = True
+    end
+    object ExecuteDialogUpdateSendPlan: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091', '#1082#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091', '#1082#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100
+      ImageIndex = 67
+      FormName = 'TDataTimeDialogForm'
+      FormNameParam.Value = 'TDataTimeDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = 42261d
+          Component = FormParams
+          ComponentItem = 'inSendPlan'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Maker'
@@ -840,5 +964,36 @@ object MakerForm: TMakerForm
     PackSize = 1
     Left = 576
     Top = 123
+  end
+  object spUpdate_SendPlan: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Maker_SendPlan'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSendPlan'
+        Value = 42261d
+        Component = FormParams
+        ComponentItem = 'inSendPlan'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 482
+    Top = 208
+  end
+  object FormParams: TdsdFormParams
+    Params = <>
+    Left = 160
+    Top = 221
   end
 end

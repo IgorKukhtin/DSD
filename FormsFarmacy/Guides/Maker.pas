@@ -21,7 +21,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxSplitter;
+  cxSplitter, cxButtonEdit;
 
 type
   TMakerForm = class(TParentForm)
@@ -87,6 +87,14 @@ type
     bbGridToExcelReport: TdxBarButton;
     spInsert_ContactPerson: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    actChoiceFormContactPerson: TOpenChoiceForm;
+    spUpdate_SendPlan: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    ExecuteDialogUpdateSendPlan: TExecuteDialog;
+    actUpdateSendPlan: TdsdDataSetRefresh;
+    macUpdateSendPlan: TMultiAction;
+    macUpdateSendPlanList: TMultiAction;
+    bbUpdateSendPlan: TdxBarButton;
   private
     { Private declarations }
   public
