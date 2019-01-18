@@ -9,17 +9,17 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   inherited PageControl: TcxPageControl
     Width = 955
     Height = 451
-    ExplicitWidth = 926
+    ExplicitWidth = 955
     ExplicitHeight = 451
     ClientRectBottom = 451
     ClientRectRight = 955
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 926
+      ExplicitWidth = 955
       ExplicitHeight = 451
       inherited cxGrid: TcxGrid
         Width = 955
         Height = 451
-        ExplicitWidth = 926
+        ExplicitWidth = 955
         ExplicitHeight = 451
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -256,6 +256,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1086#1076#1088#1072#1079#1076'. '#1076#1083#1103' '#1091#1088#1072#1074#1085#1080#1074#1072#1085#1080#1103' '#1094#1077#1085' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
             Width = 95
+          end
+          object PartnerMedicalName: TcxGridDBColumn
+            Caption = #1052#1077#1076'. '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1082#1084#1091' 1303'
+            DataBinding.FieldName = 'PartnerMedicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
           end
         end
       end

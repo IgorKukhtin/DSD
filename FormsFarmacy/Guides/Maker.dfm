@@ -2,7 +2,7 @@ object MakerForm: TMakerForm
   Left = 0
   Top = 0
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
-  ClientHeight = 427
+  ClientHeight = 431
   ClientWidth = 753
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -15,20 +15,19 @@ object MakerForm: TMakerForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
     Width = 753
-    Height = 264
+    Height = 268
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 598
-    ExplicitHeight = 256
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -49,7 +48,6 @@ object MakerForm: TMakerForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.GroupByBox = False
@@ -61,6 +59,7 @@ object MakerForm: TMakerForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 56
       end
       object Name: TcxGridDBColumn
@@ -69,6 +68,7 @@ object MakerForm: TMakerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 168
       end
       object CountryName: TcxGridDBColumn
@@ -76,15 +76,61 @@ object MakerForm: TMakerForm
         DataBinding.FieldName = 'CountryName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 147
       end
       object ContactPersonName: TcxGridDBColumn
         Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'ContactPersonName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormContactPerson
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 100
+      end
+      object Phone: TcxGridDBColumn
+        Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1082#1086#1085#1090'. '#1083#1080#1094#1086')'
+        DataBinding.FieldName = 'Phone'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 109
+      end
+      object Mail: TcxGridDBColumn
+        Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1095#1090#1072' ('#1082#1086#1085#1090'. '#1083#1080#1094#1086')'
+        DataBinding.FieldName = 'Mail'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 114
+      end
+      object AmountMonth: TcxGridDBColumn
+        Caption = #1055#1077#1088#1080#1086#1076'. '#1084#1077#1089#1103#1094#1077#1074
+        DataBinding.FieldName = 'AmountMonth'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1087#1077#1088#1080#1086#1076#1080#1095#1085#1086#1089#1090#1100' '#1086#1090#1087#1088#1072#1074#1082#1080'  '#1074' '#1084#1077#1089#1103#1094#1072#1093
+        Width = 70
+      end
+      object AmountDay: TcxGridDBColumn
+        Caption = #1055#1077#1088#1080#1086#1076'. '#1076#1085#1077#1081
+        DataBinding.FieldName = 'AmountDay'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1087#1077#1088#1080#1086#1076#1080#1095#1085#1086#1089#1090#1100' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1074' '#1076#1085#1103#1093
+        Options.Editing = False
+        Width = 70
       end
       object SendPlan: TcxGridDBColumn
         Caption = #1050#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' ('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103')'
@@ -103,6 +149,15 @@ object MakerForm: TMakerForm
         HeaderHint = #1050#1086#1075#1076#1072' '#1091#1089#1087#1077#1096#1085#1086' '#1087#1088#1086#1096#1083#1072' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1076#1072#1090#1072' / '#1074#1088#1077#1084#1103')'
         Options.Editing = False
         Width = 97
+      end
+      object SendLast: TcxGridDBColumn
+        Caption = #1057#1083'. '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103')'
+        DataBinding.FieldName = 'SendLast'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1076#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1083#1077#1076#1091#1102#1097#1077#1081' '#1086#1090#1087#1088#1072#1074#1082#1080
+        Options.Editing = False
+        Width = 85
       end
       object isReport1: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084'"'
@@ -147,6 +202,7 @@ object MakerForm: TMakerForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 53
       end
     end
@@ -156,25 +212,19 @@ object MakerForm: TMakerForm
   end
   object cxSplitter1: TcxSplitter
     Left = 0
-    Top = 290
+    Top = 294
     Width = 753
     Height = 8
     AlignSplitter = salBottom
     Control = cxGridReport
-    ExplicitLeft = -106
-    ExplicitTop = 240
-    ExplicitWidth = 859
   end
   object cxGridReport: TcxGrid
     Left = 0
-    Top = 298
+    Top = 302
     Width = 753
     Height = 129
     Align = alBottom
     TabOrder = 6
-    ExplicitLeft = -106
-    ExplicitTop = 248
-    ExplicitWidth = 859
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ReportDS
@@ -358,6 +408,14 @@ object MakerForm: TMakerForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateSendPlan'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -434,6 +492,10 @@ object MakerForm: TMakerForm
     end
     object bbGridToExcelReport: TdxBarButton
       Action = actGridToExcelReport
+      Category = 0
+    end
+    object bbUpdateSendPlan: TdxBarButton
+      Action = macUpdateSendPlan
       Category = 0
     end
   end
@@ -561,6 +623,7 @@ object MakerForm: TMakerForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1074' '#1086#1090#1087#1088#1072#1074#1082#1077
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1074' '#1086#1090#1087#1088#1072#1074#1082#1077
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ReportDS
     end
@@ -587,9 +650,10 @@ object MakerForm: TMakerForm
         item
           StoredProc = spErasedUnErased
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1074' '#1086#1090#1087#1088#1072#1074#1082#1077
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1074' '#1086#1090#1087#1088#1072#1074#1082#1077
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ReportDS
@@ -650,6 +714,125 @@ object MakerForm: TMakerForm
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1048#1089#1082#1083#1102#1095#1077#1085#1080#1103' '#1074' '#1086#1090#1087#1088#1072#1074#1082#1077
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1048#1089#1082#1083#1102#1095#1077#1085#1080#1103' '#1074' '#1086#1090#1087#1088#1072#1074#1082#1077
       ImageIndex = 6
+      ShortCut = 16472
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_ContactPerson
+      StoredProcList = <
+        item
+          StoredProc = spInsert_ContactPerson
+        end
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
+    object actChoiceFormContactPerson: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ContactPersonChoiceForm'
+      FormName = 'TContactPersonForm'
+      FormNameParam.Value = 'TContactPersonForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ContactPersonName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Mail'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Mail'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Phone'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Phone'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object macUpdateSendPlanList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateSendPlan
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091', '#1082#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091', '#1082#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100
+      ImageIndex = 67
+    end
+    object macUpdateSendPlan: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogUpdateSendPlan
+        end
+        item
+          Action = macUpdateSendPlanList
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091', '#1082#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091', '#1082#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100
+      ImageIndex = 67
+    end
+    object actUpdateSendPlan: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdate_SendPlan
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SendPlan
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091'/'#1074#1088#1077#1084#1103
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091'/'#1074#1088#1077#1084#1103
+      ImageIndex = 67
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
+    object ExecuteDialogUpdateSendPlan: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091', '#1082#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091', '#1082#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100
+      ImageIndex = 67
+      FormName = 'TDataTimeDialogForm'
+      FormNameParam.Value = 'TDataTimeDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = 42261d
+          Component = FormParams
+          ComponentItem = 'inSendPlan'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -757,5 +940,88 @@ object MakerForm: TMakerForm
     SummaryItemList = <>
     Left = 288
     Top = 344
+  end
+  object spInsert_ContactPerson: TdsdStoredProc
+    StoredProcName = 'gpInsert_Object_ContactPerson_byMaker'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ContactPersonId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMakerId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ContactPersonName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPhone'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Phone'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMail'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Mail'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 576
+    Top = 123
+  end
+  object spUpdate_SendPlan: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Maker_SendPlan'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSendPlan'
+        Value = 42261d
+        Component = FormParams
+        ComponentItem = 'inSendPlan'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 482
+    Top = 208
+  end
+  object FormParams: TdsdFormParams
+    Params = <>
+    Left = 160
+    Top = 221
   end
 end

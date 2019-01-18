@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_KPU()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_KPU (Integer, TDateTime, Integer, TFloat, Integer, Integer, Integer, Integer, TVarChar, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_KPU (Integer, TDateTime, Integer, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_KPU(
  INOUT ioId                    Integer    , -- Ключ объекта <Докумен>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_KPU(
     IN inDateIn                TDateTime  , -- Дата приема
  INOUT inMarkRatio             Integer    , -- Коеффициент выполнение плана по маркетингу
  INOUT inAverageCheckRatio     TFloat     , -- Коеффициент за средний чек
+ INOUT inNumberChecksRatio     TFloat     , -- Коеффициент за количество чеков
  INOUT inLateTimeRatio         Integer,
  INOUT inFinancPlanRatio       Integer,
  INOUT inIT_ExamRatio          Integer,
@@ -49,6 +51,8 @@ $BODY$
    DECLARE vbDMarkRatio            Integer;
    DECLARE vbAverageCheckRatio     TFloat;
    DECLARE vbDAverageCheckRatio    TFloat;
+   DECLARE vbNumberChecksRatio     TFloat;
+   DECLARE vbDNumberChecksRatio    TFloat;
    DECLARE vbLateTimeRatio         Integer;
    DECLARE vbDLateTimeRatio        Integer;
    DECLARE vbFinancPlanRatio       Integer;
@@ -124,13 +128,13 @@ BEGIN
                       WHERE Movement.DescId = zc_Movement_TestingUser()
                         AND MovementItem.ObjectId = vbUserId
                         AND Movement.OperDate = vbDateStart),
-       tmpPersonal AS (SELECT 
+       tmpPersonal AS (SELECT
                              ROW_NUMBER() OVER (PARTITION BY MemberId ORDER BY IsErased) AS Ord
                            , Object_Personal_View.MemberId
                            , Object_Personal_View.PersonalId
-                           , Object_Personal_View.DateIn 
+                           , Object_Personal_View.DateIn
                         FROM Object_Personal_View)
-                        
+
 
   SELECT
           tmpPersonal.DateIn
@@ -199,6 +203,7 @@ BEGIN
                 END
               END
             END::Integer               AS DMarkRatio
+
         , COALESCE (MIFloat_AverageCheckRatio.ValueData,
             CASE WHEN COALESCE (MIFloat_PrevAverageCheck.ValueData, 0) = 0
             THEN 0 ELSE ROUND((COALESCE (MIFloat_AverageCheck.ValueData, 0) / COALESCE (MIFloat_PrevAverageCheck.ValueData, 0) - 1) * 100, 1)
@@ -206,6 +211,14 @@ BEGIN
         , CASE WHEN COALESCE (MIFloat_PrevAverageCheck.ValueData, 0) = 0
             THEN 0 ELSE ROUND((COALESCE (MIFloat_AverageCheck.ValueData, 0) / COALESCE (MIFloat_PrevAverageCheck.ValueData, 0) - 1) * 100, 1)
             END::TFloat                               AS DAverageCheckRatio
+
+        , COALESCE (MIFloat_NumberChecksRatio.ValueData,
+            CASE WHEN COALESCE (MIFloat_PrevNumberChecks.ValueData, 0) = 0
+            THEN 0 ELSE ROUND((COALESCE (MIFloat_NumberChecks.ValueData, 0) / COALESCE (MIFloat_PrevNumberChecks.ValueData, 0) - 1) * 100, 1)
+            END)::TFloat                              AS NumberChecksRatio
+        , CASE WHEN COALESCE (MIFloat_PrevNumberChecks.ValueData, 0) = 0
+            THEN 0 ELSE ROUND((COALESCE (MIFloat_NumberChecks.ValueData, 0) / COALESCE (MIFloat_PrevNumberChecks.ValueData, 0) - 1) * 100, 1)
+            END::TFloat                               AS DNumberChecksRatio
 
         , COALESCE (MIFloat_LateTimeRatio.ValueData,
             MIFloat_LateTimePenalty.ValueData)::Integer    AS LateTimeRatio
@@ -256,6 +269,8 @@ BEGIN
     vbDMarkRatio,
     vbAverageCheckRatio,
     vbDAverageCheckRatio,
+    vbNumberChecksRatio,
+    vbDNumberChecksRatio,
     vbLateTimeRatio,
     vbDLateTimeRatio,
     vbFinancPlanRatio,
@@ -328,6 +343,18 @@ BEGIN
        LEFT JOIN MovementItemFloat AS MIFloat_AverageCheckRatio
                                    ON MIFloat_AverageCheckRatio.MovementItemId = MovementItem.Id
                                   AND MIFloat_AverageCheckRatio.DescId = zc_MIFloat_AverageCheckRatio()
+
+       LEFT JOIN MovementItemFloat AS MIFloat_PrevNumberChecks
+                                   ON MIFloat_PrevNumberChecks.MovementItemId = MovementItem.Id
+                                  AND MIFloat_PrevNumberChecks.DescId = zc_MIFloat_PrevNumberChecks()
+
+       LEFT JOIN MovementItemFloat AS MIFloat_NumberChecks
+                                   ON MIFloat_NumberChecks.MovementItemId = MovementItem.Id
+                                  AND MIFloat_NumberChecks.DescId = zc_MIFloat_NumberChecks()
+
+       LEFT JOIN MovementItemFloat AS MIFloat_NumberChecksRatio
+                                   ON MIFloat_NumberChecksRatio.MovementItemId = MovementItem.Id
+                                  AND MIFloat_NumberChecksRatio.DescId = zc_MIFloat_NumberChecksRatio()
 
        LEFT JOIN MovementItemFloat AS MIFloat_LateTimePenalty
                                    ON MIFloat_LateTimePenalty.MovementItemId = MovementItem.Id
@@ -491,6 +518,35 @@ BEGIN
     END IF;
   ELSE
     inAverageCheckRatio := vbAverageCheckRatio;
+  END IF;
+
+    -- Количество чеков
+  IF COALESCE (inNumberChecksRatio, 0) <> COALESCE (vbNumberChecksRatio, 0)
+  THEN
+    IF 375661 = inSession::Integer OR 4183126 = inSession::Integer OR 8001630 = inSession::Integer OR
+       948223 = inSession::Integer OR 758920 = inSession::Integer OR 5168766 = inSession::Integer
+    THEN
+      IF inNumberChecksRatio = - 1000
+      THEN
+        IF EXISTS(SELECT MovementItemId FROM MovementItemFloat WHERE DescId = zc_MIFloat_NumberChecksRatio() and MovementItemId = ioId)
+        THEN
+          DELETE FROM MovementItemFloat WHERE DescId = zc_MIFloat_NumberChecksRatio() and MovementItemId = ioId;
+        END IF;
+
+        inNumberChecksRatio := vbDNumberChecksRatio;
+      ELSE
+        if (inNumberChecksRatio > 1) OR (inNumberChecksRatio < -1)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Значение коэффициента <Количество чеков> должно быть в пределах от -1 до 1.';
+        END IF;
+
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_NumberChecksRatio(), ioId, inAverageCheckRatio);
+      END IF;
+    ELSE
+      RAISE EXCEPTION 'Изменение коэффициента <Количество чеков> вам запрещено.';
+    END IF;
+  ELSE
+    inNumberChecksRatio := vbNumberChecksRatio;
   END IF;
 
     -- Время опоздания
@@ -666,7 +722,7 @@ BEGIN
     --  Коллегия IT
   IF COALESCE (inYuriIT, 0) <> COALESCE (vbYuriIT, 0)
   THEN
-    IF 375661 = inSession::Integer
+    IF 375661 = inSession::Integer OR 3 = inSession::Integer
     THEN
       IF inYuriIT = - 1000
       THEN
@@ -693,7 +749,7 @@ BEGIN
 
   IF COALESCE (inOlegIT, 0) <> COALESCE (vbOlegIT, 0)
   THEN
-    IF 4183126 = inSession::Integer
+    IF 4183126 = inSession::Integer OR 3 = inSession::Integer
     THEN
       IF inOlegIT = - 1000
       THEN
@@ -720,7 +776,7 @@ BEGIN
 
   IF COALESCE (inMaximIT, 0) <> COALESCE (vbMaximIT, 0)
   THEN
-    IF 8001630 = inSession::Integer
+    IF 8001630 = inSession::Integer OR 3 = inSession::Integer
     THEN
       IF inMaximIT = - 1000
       THEN
@@ -745,10 +801,31 @@ BEGIN
     inMaximIT := vbMaximIT;
   END IF;
 
+  IF COALESCE (inYuriIT, 0) <> COALESCE (vbYuriIT, 0) OR COALESCE (inOlegIT, 0) <> COALESCE (vbOlegIT, 0) OR COALESCE (inMaximIT, 0) <> COALESCE (vbMaximIT, 0)
+  THEN
+
+    IF inYuriIT = inOlegIT
+    THEN
+      inCollegeITRatio := inYuriIT;
+    ELSE
+      IF inYuriIT = inMaximIT
+      THEN
+        inCollegeITRatio := inYuriIT;
+      ELSE
+        IF inOlegIT = inMaximIT
+        THEN
+          inCollegeITRatio := inOlegIT;
+        ELSE
+          inCollegeITRatio := - 1000;
+        END IF;
+      END IF;
+    END IF;
+  END IF;
+
   IF COALESCE (inCollegeITRatio, 0) <> COALESCE (vbCollegeITRatio, 0) OR
     COALESCE (inCollegeITNote, '') <> COALESCE (vbCollegeITNote, '')
   THEN
-    IF 375661 = inSession::Integer OR 4183126 = inSession::Integer OR 8001630 = inSession::Integer
+    IF 375661 = inSession::Integer OR 4183126 = inSession::Integer OR 8001630 = inSession::Integer OR 3 = inSession::Integer
     THEN
       IF inCollegeITRatio = - 1000
       THEN
@@ -757,23 +834,23 @@ BEGIN
           DELETE FROM MovementItemFloat WHERE DescId = zc_MIFloat_CollegeITRatio() and MovementItemId = ioId;
         END IF;
 
-        IF EXISTS(SELECT MovementItemId FROM MovementItemString WHERE DescId = zc_MIString_CollegeITNote() and MovementItemId = ioId)
+/*        IF EXISTS(SELECT MovementItemId FROM MovementItemString WHERE DescId = zc_MIString_CollegeITNote() and MovementItemId = ioId)
         THEN
           DELETE FROM MovementItemString WHERE DescId = zc_MIString_CollegeITNote() and MovementItemId = ioId;
-        END IF;
+        END IF; */
 
         inCollegeITRatio := Null;
-        inCollegeITNote := Null;
+--        inCollegeITNote := Null;
       ELSE
         if (inCollegeITRatio > 1) OR (inCollegeITRatio < -1)
         THEN
           RAISE EXCEPTION 'Ошибка. Значение коэффициента <Коллегия IT> должно быть в пределах от -1 до 1.';
         END IF;
 
-        IF COALESCE (inCollegeITNote, '') = ''
+/*        IF COALESCE (inCollegeITNote, '') = ''
         THEN
           RAISE EXCEPTION 'Комментарий к коэффициенту <Коллегия IT> не заполнен.';
-        END IF;
+        END IF; */
 
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CollegeITRatio(), ioId, inCollegeITRatio);
         PERFORM lpInsertUpdate_MovementItemString (zc_MIString_CollegeITNote(), ioId, inCollegeITNote);
@@ -937,6 +1014,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.
+ 16.01.19         *
  25.11.18         *
  13.11.18         *
  12.11.18         *

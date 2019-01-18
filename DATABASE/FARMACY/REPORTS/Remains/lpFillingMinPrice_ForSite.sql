@@ -102,7 +102,7 @@ BEGIN
     PriceSettings    AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval    (inUserId::TVarChar))
   , PriceSettingsTOP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsTOPInterval (inUserId::TVarChar))
     -- Установки для юр. лиц (для поставщика определяется договор и т.п) !!!для всех MainJuridicalId!!!
-  , JuridicalSettings_all AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.PriceLimit, tmp.Bonus, tmp.isPriceClose, tmp.isSite
+  , JuridicalSettings_all AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.JuridicalSettingsId, tmp.isPriceClose, tmp.isSite
                               FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId) AS tmp
                               WHERE tmp.isSite = TRUE -- мне нужно: я отметил какие участвуют в аукционе цены для показа на сайте, чтобы цены только этих договоров и участвовали
                               -- WHERE tmp.MainJuridicalId = vbMainJuridicalId
@@ -111,7 +111,7 @@ BEGIN
                                 FROM JuridicalSettings_all AS tmp
                                 WHERE tmp.isPriceClose = TRUE
                                )*/
-  , JuridicalSettings_new AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.PriceLimit, tmp.Bonus
+  , JuridicalSettings_new AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.JuridicalSettingsId
                                    , ROW_NUMBER() OVER (PARTITION BY tmp.JuridicalId ORDER BY tmp.JuridicalId, CASE WHEN tmp.isSite = TRUE THEN 0 ELSE 1 END, tmp.ContractId) AS Ord
                               FROM JuridicalSettings_all AS tmp
                               -- уже здесь ограничения
@@ -128,12 +128,21 @@ BEGIN
                   )
 
     -- Выбираем в первую очередь тот что для сайта
-  , JuridicalSettings AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.PriceLimit, tmp.Bonus
+  , JuridicalSettings AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.JuridicalSettingsId
                           FROM JuridicalSettings_new AS tmp
                           -- !!!если Временно откл. - тогда будет для всех договоров!!!
                           WHERE tmp.Ord = 1
                          )
-  , JuridicalSettings_list AS (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId, JuridicalSettings.PriceLimit, JuridicalSettings.Bonus FROM JuridicalSettings)
+  , JuridicalSettings_list AS (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId, JuridicalSettings.JuridicalSettingsId FROM JuridicalSettings)
+
+      -- элементы установок юр.лиц (границы цен для бонуса)
+  , tmpJuridicalSettingsItem AS (SELECT tmp.JuridicalSettingsId
+                                      , tmp.Bonus
+                                      , tmp.PriceLimit_min
+                                      , tmp.PriceLimit
+                                 FROM JuridicalSettings_list AS JuridicalSettings
+                                      INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inUserId::TVarChar) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                 )
     -- Список цены + ТОП
   ,  GoodsPrice AS
        (SELECT GoodsList.GoodsId, ObjectBoolean_Top.ValueData AS isTOP
@@ -158,8 +167,7 @@ BEGIN
              , MovementLinkObject_Juridical.ObjectId              AS JuridicalId
              , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
              , COALESCE (MovementLinkObject_Area.ObjectId, zc_Area_Basis()) AS AreaId
-             , COALESCE (JuridicalSettings_list.PriceLimit, 0)    AS PriceLimit
-             , COALESCE (JuridicalSettings_list.Bonus, 0)         AS Bonus
+             , JuridicalSettings_list.JuridicalSettingsId
         FROM (SELECT DISTINCT ObjectId FROM tmpGoodsList) AS tmp
              INNER JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                            ON MovementLinkObject_Juridical.ObjectId = tmp.ObjectId
@@ -186,8 +194,7 @@ BEGIN
              , tmp.ContractId
              --, COALESCE (JuridicalSettings.PriceLimit, 0) AS PriceLimit
              --, COALESCE (JuridicalSettings.Bonus, 0)      AS Bonus
-             , tmp.PriceLimit
-             , tmp.Bonus
+             , tmp.JuridicalSettingsId
         FROM*/
        (-- выбираются с "макс" датой
         SELECT *
@@ -200,8 +207,7 @@ BEGIN
              , Movement_PriceList_all.JuridicalId
              , Movement_PriceList_all.ContractId
              , Movement_PriceList_all.AreaId
-             , Movement_PriceList_all.PriceLimit
-             , Movement_PriceList_all.Bonus
+             , Movement_PriceList_all.JuridicalSettingsId
         FROM Movement_PriceList_all
        ) AS tmp
         WHERE tmp.Ord = 1 -- т.е. для договора и юр лица будет 1 документ
@@ -222,8 +228,8 @@ BEGIN
              , Movement_PriceList.JuridicalId
              , Movement_PriceList.ContractId
              , Movement_PriceList.AreaId
-             , Movement_PriceList.PriceLimit
-             , Movement_PriceList.Bonus
+             , tmpJuridicalSettingsItem.Bonus
+             , tmpJuridicalSettingsItem.PriceLimit
              , MovementItem.Id     AS MovementItemId
              , MovementItem.Amount AS Price
              , GoodsList.GoodsId      -- здесь товар "сети"
@@ -238,6 +244,10 @@ BEGIN
                                               AND MILinkObject_Goods.ObjectId      IN (SELECT DISTINCT tmpGoodsList.GoodsId_jur FROM tmpGoodsList) -- товар "поставщика"
              LEFT JOIN tmpGoodsList AS GoodsList 
                                     ON GoodsList.GoodsId_jur = MILinkObject_Goods.ObjectId -- товар "поставщика"
+
+             LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = Movement_PriceList.JuridicalSettingsId
+                                               AND MovementItem.Amount >= tmpJuridicalSettingsItem.PriceLimit_min
+                                               AND MovementItem.Amount <= tmpJuridicalSettingsItem.PriceLimit
        )
 
     -- почти финальный список
@@ -404,8 +414,9 @@ ALTER FUNCTION lpFillingMinPrice_ForSite () OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Шаблий О.В.
- 15.04.16                                        *
+               Шаблий О.В.    Фелонюк И.В.
+ 14.01.19                        *
+ 15.04.16         *
 */
 
 -- тест

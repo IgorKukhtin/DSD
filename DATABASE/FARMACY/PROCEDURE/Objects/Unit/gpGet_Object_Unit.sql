@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                AreaId Integer, AreaName TVarChar,
                UnitCategoryId Integer, UnitCategoryName TVarChar,
                UnitRePriceId Integer, UnitRePriceName TVarChar,
+               PartnerMedicalId Integer, PartnerMedicalName TVarChar,
                isLeaf boolean, 
                TaxService TFloat, TaxServiceNigth TFloat,
                StartServiceNigth TDateTime, EndServiceNigth TDateTime,
@@ -61,7 +62,10 @@ BEGIN
 
            , CAST (0 as Integer)   AS UnitRePriceId
            , CAST ('' as TVarChar) AS UnitRePriceName
-           
+
+           , CAST (0 as Integer)   AS PartnerMedicalId
+           , CAST ('' as TVarChar) AS PartnerMedicalName
+
            , false                 AS isLeaf
            , CAST (0 as TFloat)    AS TaxService
            , CAST (0 as TFloat)    AS TaxServiceNigth
@@ -108,6 +112,9 @@ BEGIN
 
       , COALESCE (Object_UnitRePrice.Id,0)          ::Integer  AS UnitRePriceId
       , COALESCE (Object_UnitRePrice.ValueData, '') ::TVarChar AS UnitRePriceName
+
+      , COALESCE (Object_PartnerMedical.Id,0)          ::Integer  AS PartnerMedicalId
+      , COALESCE (Object_PartnerMedical.ValueData, '') ::TVarChar AS PartnerMedicalName
 
       , ObjectBoolean_isLeaf.ValueData                     AS isLeaf
 
@@ -171,6 +178,11 @@ BEGIN
                             AND ObjectLink_Unit_UnitRePrice.DescId = zc_ObjectLink_Unit_UnitRePrice()
         LEFT JOIN Object AS Object_UnitRePrice ON Object_UnitRePrice.Id = ObjectLink_Unit_UnitRePrice.ChildObjectId
 
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_PartnerMedical
+                             ON ObjectLink_Unit_PartnerMedical.ObjectId = Object_Unit.Id 
+                            AND ObjectLink_Unit_PartnerMedical.DescId = zc_ObjectLink_Unit_PartnerMedical()
+        LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = ObjectLink_Unit_PartnerMedical.ChildObjectId
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
                                 ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()
@@ -229,6 +241,7 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 15.01.19         *
  22.10.18         *
  29.08.18         * Phone
  14.05.18                                                        * add NormOfManDays

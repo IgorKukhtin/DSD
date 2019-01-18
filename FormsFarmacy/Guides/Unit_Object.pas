@@ -67,6 +67,7 @@ type
     Phone: TcxGridDBColumn;
     actChoiceUnit: TOpenChoiceForm;
     UnitRePriceName: TcxGridDBColumn;
+    PartnerMedicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Maker(
  INOUT ioId              Integer   ,    -- ключ объекта <Производитель>
@@ -11,6 +12,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Maker(
     IN inContactPersonId Integer   ,    -- Контактные лица
     IN inSendPlan        TDateTime,     -- Когда планируем отправить(дата/время)
     IN inSendReal        TDateTime,     -- Когда успешно прошла отправка (дата/время)
+    IN inDay             TFloat    ,    -- периодичность отправки в дня
+    IN inMonth           TFloat    ,    -- периодичность отправки в месяцах
     IN inisReport1       Boolean,       -- отправлять "отчет по приходам"
     IN inisReport2       Boolean,       -- отправлять "отчет по продажам"
     IN inisReport3       Boolean,       -- отправлять "реализация за период с остатками на конец периода"
@@ -42,6 +45,17 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Maker_ContactPerson(), ioId, inContactPersonId);
 
+   IF COALESCE (inDay, 0) <> 0 AND COALESCE (inMonth, 0) <> 0 
+   THEN
+        RAISE EXCEPTION 'Ошибка.Должен быть выбран только один параметр периодичности <Дней> или <Месяцев>.'; 
+   END IF;
+   
+   
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Maker_Day(), ioId, inDay);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Maker_Month(), ioId, inMonth);
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Maker_SendPlan(), ioId, inSendPlan);
    -- сохранили свойство <>
@@ -66,6 +80,7 @@ $BODY$ LANGUAGE plpgsql;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.01.19         *
  11.01.19         *
  11.02.14         *  
  

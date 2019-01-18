@@ -1921,6 +1921,13 @@ inherited MainCashForm2: TMainCashForm2
           ComponentItem = 'PromoCodeChangePercent'
           DataType = ftFloat
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberSPId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MemberSPID'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -2889,6 +2896,11 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'ZReportName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberSPID'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 32

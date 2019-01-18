@@ -1588,6 +1588,13 @@ inherited CheckForm: TCheckForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'SPKindId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inSPKindId'
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'SPKindName'
         Value = Null
         Component = edSPKind

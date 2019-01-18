@@ -8,8 +8,12 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Maker(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
              , CountryId Integer, CountryCode Integer, CountryName TVarChar
              , ContactPersonId Integer, ContactPersonCode Integer, ContactPersonName TVarChar
+             , Phone TVarChar, Mail TVarChar
              , SendPlan TDateTime
              , SendReal TDateTime
+             , SendLast TDateTime
+             , AmountDay TFloat
+             , AmountMonth TFloat
              , isReport1  Boolean
              , isReport2  Boolean
              , isReport3  Boolean
@@ -34,8 +38,23 @@ $BODY$BEGIN
            , Object_ContactPerson.ObjectCode  AS ContactPersonCode
            , Object_ContactPerson.ValueData   AS ContactPersonName
 
+           , ObjectString_Phone.ValueData     AS Phone
+           , ObjectString_Mail.ValueData      AS Mail
+
            , COALESCE (ObjectDate_SendPlan.ValueData, NULL) :: TDateTime AS SendPlan
            , COALESCE (ObjectDate_SendReal.ValueData, NULL) :: TDateTime AS SendReal
+
+           , CASE WHEN COALESCE (ObjectFloat_Month.ValueData, 0) = 0 AND COALESCE (ObjectFloat_Day.ValueData, 0) = 0
+                  THEN NULL
+                  ELSE (ObjectDate_SendPlan.ValueData
+                      + CASE WHEN COALESCE (ObjectFloat_Month.ValueData, 0) <> 0 THEN (ObjectFloat_Month.ValueData ::TVarChar || ' MONTH') :: INTERVAL ELSE '0 day' END
+                      + CASE WHEN COALESCE (ObjectFloat_Day.ValueData, 0) <> 0   THEN (ObjectFloat_Day.ValueData  ::TVarChar  || ' DAY')   :: INTERVAL ELSE '0 day' END
+                        )
+             END :: TDateTime AS SendLast
+
+           , COALESCE (ObjectFloat_Day.ValueData, 0)   :: TFloat AS AmountDay
+           , COALESCE (ObjectFloat_Month.ValueData, 0) :: TFloat AS AmountMonth
+
            , COALESCE (ObjectBoolean_Maker_Report1.ValueData, FALSE) :: Boolean AS isReport1
            , COALESCE (ObjectBoolean_Maker_Report2.ValueData, FALSE) :: Boolean AS isReport2
            , COALESCE (ObjectBoolean_Maker_Report3.ValueData, FALSE) :: Boolean AS isReport3
@@ -75,19 +94,32 @@ $BODY$BEGIN
                                    ON ObjectBoolean_Maker_Report4.ObjectId = Object_Maker.Id
                                   AND ObjectBoolean_Maker_Report4.DescId = zc_ObjectBoolean_Maker_Report4()
 
+           LEFT JOIN ObjectString AS ObjectString_Phone
+                                  ON ObjectString_Phone.ObjectId = Object_ContactPerson.Id 
+                                 AND ObjectString_Phone.DescId = zc_ObjectString_ContactPerson_Phone()
+           LEFT JOIN ObjectString AS ObjectString_Mail
+                                  ON ObjectString_Mail.ObjectId = Object_ContactPerson.Id 
+                                 AND ObjectString_Mail.DescId = zc_ObjectString_ContactPerson_Mail()
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                ON ObjectFloat_Day.ObjectId = Object_Maker.Id
+                               AND ObjectFloat_Day.DescId = zc_ObjectFloat_Maker_Day()
+           LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                                ON ObjectFloat_Month.ObjectId = Object_Maker.Id
+                               AND ObjectFloat_Month.DescId = zc_ObjectFloat_Maker_Month()
+
      WHERE Object_Maker.DescId = zc_Object_Maker();
   
 END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Maker(TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------*/
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 16.01.19         *
  11.01.19         *
  11.02.14         *
 */

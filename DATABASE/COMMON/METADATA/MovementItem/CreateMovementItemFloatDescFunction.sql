@@ -1022,10 +1022,24 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_SummM6() RETURNS Integer AS $BODY$BEGIN RE
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_SummM6', 'Кол-во реализ. за 3 мес.'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummM6');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_PrevNumberChecks() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PrevNumberChecks'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_PrevNumberChecks', 'Количество чеков за предыдущий месяц' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PrevNumberChecks');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_NumberChecks() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_NumberChecks'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_NumberChecks', 'Количество чеков' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_NumberChecks');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_NumberChecksRatio() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_NumberChecksRatio'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_NumberChecksRatio', 'Коэффициент за количество чеков' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_NumberChecksRatio');
+
+
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 16.01.19                                                                                                     * zc_MIFloat_NumberChecks
  19.11.18         * zc_MIFloat_RemainsStart, zc_MIFloat_RemainsEnd
                     zc_MIFloat_SummStart, zc_MIFloat_SummEnd
                     zc_MIFloat_AmountM1, zc_MIFloat_AmountM3, zc_MIFloat_AmountM6

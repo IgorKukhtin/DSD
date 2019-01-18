@@ -478,7 +478,7 @@ type
       APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP : String;
       AOperDateSP : TDateTime;
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
-      ASummPayAdd : Currency;
+      ASummPayAdd : Currency;  AMemberSPID : integer;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 
     //проверили что есть остаток
@@ -841,6 +841,8 @@ begin
   FormParams.ParamByName('ManualDiscount').Value            := 0;
   //***02.11.18
   FormParams.ParamByName('SummPayAdd').Value                := 0;
+  //***14.01.19
+  FormParams.ParamByName('MemberSPID').Value                := 0;
 
   ClearFilterAll;
 
@@ -1500,6 +1502,8 @@ begin
                    FormParams.ParamByName('ManualDiscount').Value,
                    //***02.11.18
                    FormParams.ParamByName('SummPayAdd').Value,
+                   //***14.01.19
+                   FormParams.ParamByName('MemberSPID').Value,
 
                    True,         // NeedComplete
                    CheckNumber,  // FiscalCheckNumber
@@ -2359,6 +2363,8 @@ begin
               ,FormParams.ParamByName('ManualDiscount').Value
               //***02.11.18
               ,FormParams.ParamByName('SummPayAdd').Value
+              //***14.01.19
+              ,FormParams.ParamByName('MemberSPID').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -2437,6 +2443,8 @@ begin
               ,FormParams.ParamByName('ManualDiscount').Value
               //***02.11.18
               ,FormParams.ParamByName('SummPayAdd').Value
+              //***14.01.19
+              ,FormParams.ParamByName('MemberSPID').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -2494,7 +2502,7 @@ end;
 //***20.04.17
 procedure TMainCashForm2.actSetSPExecute(Sender: TObject);
 var
-  PartnerMedicalId, SPKindId : Integer;
+  PartnerMedicalId, SPKindId, MemberSPID : Integer;
   PartnerMedicalName, MedicSP, Ambulance, InvNumberSP, SPKindName: String;
   OperDateSP : TDateTime;
   SPTax : Currency;
@@ -2515,12 +2523,13 @@ begin
      SPTax        := Self.FormParams.ParamByName('SPTax').Value;
      SPKindId     := Self.FormParams.ParamByName('SPKindId').Value;
      SPKindName   := Self.FormParams.ParamByName('SPKindName').Value;
+     MemberSPID   := Self.FormParams.ParamByName('MemberSPID').Value;
 
      //
      if Self.FormParams.ParamByName('PartnerMedicalId').Value > 0
      then OperDateSP   := Self.FormParams.ParamByName('OperDateSP').Value
      else OperDateSP   := NOW;
-     if not DiscountDialogExecute(PartnerMedicalId, SPKindId, PartnerMedicalName, Ambulance, MedicSP, InvNumberSP, SPKindName, OperDateSP, SPTax)
+     if not DiscountDialogExecute(PartnerMedicalId, SPKindId, PartnerMedicalName, Ambulance, MedicSP, InvNumberSP, SPKindName, OperDateSP, SPTax, MemberSPID)
      then exit;
   finally
      Free;
@@ -2535,6 +2544,7 @@ begin
   FormParams.ParamByName('SPTax').Value     := SPTax;
   FormParams.ParamByName('SPKindId').Value  := SPKindId;
   FormParams.ParamByName('SPKindName').Value:= SPKindName;
+  Self.FormParams.ParamByName('MemberSPID').Value := MemberSPID;
   //
   pnlSP.Visible := InvNumberSP <> '';
   lblPartnerMedicalName.Caption:= '  ' + PartnerMedicalName; // + '  /  № амб. ' + Ambulance;
@@ -2593,6 +2603,8 @@ begin
               ,FormParams.ParamByName('ManualDiscount').Value
               //***02.11.18
               ,FormParams.ParamByName('SummPayAdd').Value
+              //***14.01.19
+              ,FormParams.ParamByName('MemberSPID').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -3670,6 +3682,8 @@ begin
   FormParams.ParamByName('ManualDiscount').Value            := 0;
   //***02.11.18
   FormParams.ParamByName('SummPayAdd').Value            := 0;
+  //***14.01.19
+  FormParams.ParamByName('MemberSPID').Value                := 0;
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -4278,7 +4292,7 @@ function TMainCashForm2.SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AMan
       APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP : String;
       AOperDateSP : TDateTime;
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
-      ASummPayAdd : Currency;
+      ASummPayAdd : Currency; AMemberSPID : integer;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: integer;
@@ -4452,7 +4466,9 @@ begin
                                          //***27.06.18
                                          AManualDiscount,          //Ручная скидка
                                          //***02.11.18
-                                         ASummPayAdd               //Доплата по чеку
+                                         ASummPayAdd,              //Доплата по чеку
+                                         //***14.01.19
+                                         AMemberSPID               //ФИО пациента
                                         ]);
       End
       else
@@ -4495,6 +4511,8 @@ begin
         FLocalDataBaseHead.FieldByName('MANUALDISC').Value := AManualDiscount; // Ручная скидка
         //***02.11.18
         FLocalDataBaseHead.FieldByName('SUMMPAYADD').Value := ASummPayAdd; // Сумма доплаты
+        //***02.11.18
+        FLocalDataBaseHead.FieldByName('MEMBERSPID').Value := AMemberSPID; // ФИО пациента
 
         FLocalDataBaseHead.Post;
       End;

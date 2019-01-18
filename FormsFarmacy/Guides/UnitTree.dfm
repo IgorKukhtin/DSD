@@ -249,6 +249,14 @@ object UnitTreeForm: TUnitTreeForm
         Options.Editing = False
         Width = 80
       end
+      object PartnerMedicalName: TcxGridDBColumn
+        Caption = #1052#1077#1076'. '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1082#1084#1091' 1303'
+        DataBinding.FieldName = 'PartnerMedicalName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

@@ -77,6 +77,10 @@ type
     actPrintIn: TdsdPrintAction;
     bbPrint: TdxBarButton;
     bbPrintin: TdxBarButton;
+    OperDate_Sale: TcxGridDBColumn;
+    Invnumber_Sale: TcxGridDBColumn;
+    OperDate_pay: TcxGridDBColumn;
+    Days_pay: TcxGridDBColumn;
   private
     { Private declarations }
   public

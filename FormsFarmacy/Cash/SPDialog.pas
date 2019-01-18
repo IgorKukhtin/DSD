@@ -42,13 +42,29 @@ type
     spGet_SPKind_def: TdsdStoredProc;
     bbSP_Prior: TcxButton;
     spGet_SP_Prior: TdsdStoredProc;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    cxLabel22: TcxLabel;
+    cxLabel23: TcxLabel;
+    cxLabel24: TcxLabel;
+    cxLabel25: TcxLabel;
+    cxLabel26: TcxLabel;
+    edMemberSP: TcxButtonEdit;
+    edPassport: TcxTextEdit;
+    edInn: TcxTextEdit;
+    edAddress: TcxTextEdit;
+    GuidesMemberSP: TdsdGuides;
+    edGroupMemberSP: TcxTextEdit;
+    spSelect_Object_MemberSP: TdsdStoredProc;
     procedure bbOkClick(Sender: TObject);
     procedure DiscountExternalGuidesAfterChoice(Sender: TObject);
     procedure bbSP_PriorClick(Sender: TObject);
+    procedure edSPKindPropertiesChange(Sender: TObject);
   private
     { Private declarations }
   public
-     function DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String; var AOperDateSP : TDateTime; var ASPTax : Currency): boolean;
+     function DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String;
+       var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer): boolean;
   end;
 
 
@@ -107,6 +123,18 @@ begin
           exit;
     end;
     //
+    if Panel2.Visible then
+    begin
+      try Key:= GuidesMemberSP.Params.ParamByName('Key').Value; except Key:= 0;end;
+      if Key = 0 then
+      begin
+            ActiveControl:=edMemberSP;
+            ShowMessage ('Внимание.Значение <ФИО пациента> не установлено.');
+            ModalResult:=mrNone; // не надо закрывать
+            exit;
+      end;
+    end;
+
     try Key:= PartnerMedicalGuides.Params.ParamByName('Key').Value; except Key:= 0;end;
     if Key = 0 then
     begin
@@ -171,7 +199,8 @@ begin
 
 end;
 
-function TSPDialogForm.DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String; var AOperDateSP : TDateTime; var ASPTax : Currency): boolean;
+function TSPDialogForm.DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String;
+  var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer): boolean;
 Begin
       edAmbulance.Text:= AAmbulance;
       edMedicSP.Text:= AMedicSP;
@@ -202,7 +231,17 @@ Begin
       else begin
                 spGet_SPKind_def.Execute;
                 SPKindGuides.Params.ParamByName('Tax').Value:= 0
-           end;
+      end;
+
+      if AMemberSPID <> 0 then
+      begin
+          GuidesMemberSP.Params.ParamByName('Key').Value      := AMemberSPID;
+          try
+            spSelect_Object_MemberSP.Execute;
+          except
+          end;
+      end;
+
       //
       Result := ShowModal = mrOK;
       //
@@ -226,6 +265,9 @@ Begin
             SPKindGuides.Params.ParamByName('Key').Value:= 0;
         end;
         ASPKindName   := SPKindGuides.Params.ParamByName('TextValue').Value;
+        if Panel2.Visible then
+          AMemberSPID := GuidesMemberSP.Params.ParamByName('Key').Value
+        else AMemberSPID := 0;
       end
       else begin
               APartnerMedicalId   := 0;
@@ -236,6 +278,7 @@ Begin
               ASPTax              := 0;
               ASPKindId           := 0;
               ASPKindName         := '';
+              AMemberSPID         := 0;
            end;
 end;
 
@@ -243,6 +286,15 @@ procedure TSPDialogForm.DiscountExternalGuidesAfterChoice(Sender: TObject);
 begin
   ActiveControl:= cePartnerMedical;
   inherited;
+end;
+
+procedure TSPDialogForm.edSPKindPropertiesChange(Sender: TObject);
+begin
+  inherited;
+//  if SPKindGuides.Params.ParamByName('Key').Value <> '' then
+//     Panel2.Visible := SPKindGuides.Params.ParamByName('Key').Value = 4823010
+//  else
+  Panel2.Visible := False;
 end;
 
 End.

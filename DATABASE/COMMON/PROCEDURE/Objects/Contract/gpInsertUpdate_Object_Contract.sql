@@ -13,6 +13,11 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarCh
                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                       , Boolean, Boolean, Boolean, Boolean, Integer, Integer, TDateTime, TDateTime, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tfloat, Tfloat, TDateTime, TDateTime, TDateTime
+                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, TDateTime, TDateTime, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
  INOUT ioId                  Integer,       -- Ключ объекта <Договор>
     IN inCode                Integer,       -- Код
@@ -52,7 +57,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inContractTermKindId  Integer  ,     -- Типы пролонгаций договоров 
     IN inCurrencyId          Integer  ,     -- Валюта
     IN inBankId              Integer  ,     -- Банк (исх.платеж)
-    IN inisDefault           Boolean  ,     -- по умолчанию
+    IN inisDefault           Boolean  ,     -- По умолчанию (для вх. платежей)
+    IN inisDefaultOut        Boolean  ,     -- По умолчанию (для исх. платежей)
     IN inisStandart          Boolean  ,     -- Типовой
 
     IN inisPersonal          Boolean  ,     -- Служебная записка
@@ -291,9 +297,10 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Contract_DayTaxSummary(), ioId, inDayTaxSummary);
 
-
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_Default(), ioId, inisDefault);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_DefaultOut(), ioId, inisDefaultOut);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_Standart(), ioId, inisStandart);
 
@@ -384,6 +391,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 18.01.19         * DefaultOut
  05.10.18         * add PartnerCode
  30.03.17         * inJuridicalInvoiceId
  03.03.17         * inDayTaxSummary

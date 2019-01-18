@@ -3,7 +3,7 @@ object Check_SPEditForm: TCheck_SPEditForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1055
-  ClientHeight = 307
+  ClientHeight = 309
   ClientWidth = 313
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@ object Check_SPEditForm: TCheck_SPEditForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 45
-    Top = 276
+    Left = 37
+    Top = 268
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Check_SPEditForm: TCheck_SPEditForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 206
-    Top = 276
+    Left = 203
+    Top = 268
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -53,40 +53,40 @@ object Check_SPEditForm: TCheck_SPEditForm
     Caption = #1044#1072#1090#1072' '#1088#1077#1094#1077#1087#1090#1072
   end
   object cxLabel14: TcxLabel
-    Left = 34
+    Left = 28
     Top = 49
     Caption = #1053#1086#1084#1077#1088' '#1088#1077#1094#1077#1087#1090#1072
   end
   object edInvNumberSP: TcxTextEdit
-    Left = 124
+    Left = 118
     Top = 48
     TabOrder = 5
     Width = 160
   end
   object cxLabel16: TcxLabel
-    Left = 34
-    Top = 89
+    Left = 28
+    Top = 181
     Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
   end
   object cxLabel17: TcxLabel
-    Left = 34
-    Top = 129
+    Left = 28
+    Top = 223
     Caption = #8470' '#1072#1084#1073#1091#1083#1072#1090#1086#1088#1080#1080' '
   end
   object edAmbulance: TcxTextEdit
-    Left = 124
-    Top = 128
+    Left = 118
+    Top = 222
     TabOrder = 8
     Width = 160
   end
   object cxLabel12: TcxLabel
-    Left = 34
-    Top = 164
+    Left = 28
+    Top = 124
     Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076'.('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
   end
   object edPartnerMedical: TcxButtonEdit
-    Left = 34
-    Top = 183
+    Left = 28
+    Top = 143
     Properties.Buttons = <
       item
         Default = True
@@ -97,8 +97,8 @@ object Check_SPEditForm: TCheck_SPEditForm
     Width = 250
   end
   object edMedicSP: TcxButtonEdit
-    Left = 124
-    Top = 88
+    Left = 115
+    Top = 180
     Properties.Buttons = <
       item
         Default = True
@@ -109,13 +109,13 @@ object Check_SPEditForm: TCheck_SPEditForm
     Width = 163
   end
   object cxLabel1: TcxLabel
-    Left = 34
-    Top = 210
+    Left = 28
+    Top = 74
     Caption = #1042#1080#1076' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072
   end
   object edSPKind: TcxButtonEdit
-    Left = 34
-    Top = 229
+    Left = 28
+    Top = 93
     Properties.Buttons = <
       item
         Default = True
@@ -126,8 +126,8 @@ object Check_SPEditForm: TCheck_SPEditForm
     Width = 250
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 263
-    Top = 114
+    Left = 281
+    Top = 106
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -139,8 +139,8 @@ object Check_SPEditForm: TCheck_SPEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 264
-    Top = 45
+    Left = 200
+    Top = 65533
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -205,7 +205,7 @@ object Check_SPEditForm: TCheck_SPEditForm
       item
         Name = 'inSPKindId'
         Value = Null
-        Component = SPKindGuides
+        Component = GuidesSPKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -213,7 +213,7 @@ object Check_SPEditForm: TCheck_SPEditForm
       item
         Name = 'inSPKindName'
         Value = Null
-        Component = SPKindGuides
+        Component = GuidesSPKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -241,8 +241,8 @@ object Check_SPEditForm: TCheck_SPEditForm
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deOperDateSP
-    Left = 16
-    Top = 52
+    Left = 282
+    Top = 12
   end
   object PartnerMedicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -309,9 +309,24 @@ object Check_SPEditForm: TCheck_SPEditForm
         ComponentItem = 'MasterUnitName'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterSPKindId'
+        Value = Null
+        Component = GuidesSPKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterSPKindName'
+        Value = Null
+        Component = GuidesSPKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 176
-    Top = 177
+    Left = 154
+    Top = 113
   end
   object MedicSPGuides: TdsdGuides
     KeyField = 'Id'
@@ -394,11 +409,26 @@ object Check_SPEditForm: TCheck_SPEditForm
         ComponentItem = 'MasterUnitName'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterSPKindId'
+        Value = Null
+        Component = GuidesSPKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterSPKindName'
+        Value = Null
+        Component = GuidesSPKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 168
-    Top = 73
+    Left = 210
+    Top = 177
   end
-  object SPKindGuides: TdsdGuides
+  object GuidesSPKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edSPKind
     FormNameParam.Value = 'TSPKindForm'
@@ -410,7 +440,7 @@ object Check_SPEditForm: TCheck_SPEditForm
       item
         Name = 'Key'
         Value = ''
-        Component = SPKindGuides
+        Component = GuidesSPKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -418,13 +448,13 @@ object Check_SPEditForm: TCheck_SPEditForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = SPKindGuides
+        Component = GuidesSPKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 152
-    Top = 225
+    Left = 186
+    Top = 73
   end
 end

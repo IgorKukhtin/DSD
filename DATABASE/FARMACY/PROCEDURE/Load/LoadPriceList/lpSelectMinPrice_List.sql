@@ -77,7 +77,9 @@ BEGIN
     PriceSettings    AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval    (inUserId::TVarChar))
   , PriceSettingsTOP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsTOPInterval (inUserId::TVarChar))
     -- Установки для юр. лиц (для поставщика определяется договор и т.п) !!!для всех MainJuridicalId!!!
-  , JuridicalSettings_all AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.PriceLimit, tmp.Bonus, tmp.isPriceClose, tmp.isSite
+  , JuridicalSettings_all AS (SELECT tmp.JuridicalId, tmp.ContractId
+                                   , tmp.isPriceClose, tmp.isSite
+                                   , tmp.JuridicalSettingsId
                               FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId) AS tmp
                               WHERE tmp.isSite = TRUE -- мне нужно: я отметил какие участвуют в аукционе цены для показа на сайте, чтобы цены только этих договоров и участвовали
                               -- WHERE tmp.MainJuridicalId = vbMainJuridicalId
@@ -86,8 +88,9 @@ BEGIN
                                 FROM JuridicalSettings_all AS tmp
                                 WHERE tmp.isPriceClose = TRUE
                                )*/
-  , JuridicalSettings_new AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.PriceLimit, tmp.Bonus
+  , JuridicalSettings_new AS (SELECT tmp.JuridicalId, tmp.ContractId
                                    , ROW_NUMBER() OVER (PARTITION BY tmp.JuridicalId ORDER BY tmp.JuridicalId, CASE WHEN tmp.isSite = TRUE THEN 0 ELSE 1 END, tmp.ContractId) AS Ord
+                                   , tmp.JuridicalSettingsId
                               FROM JuridicalSettings_all AS tmp
                               -- уже здесь ограничения
                               -- WHERE tmp.isPriceClose = FALSE -- ублал, т.к. tmp.isSite = TRUE
@@ -103,12 +106,21 @@ BEGIN
                   )
 
     -- Выбираем в первую очередь тот что для сайта
-  , JuridicalSettings AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.PriceLimit, tmp.Bonus
+  , JuridicalSettings AS (SELECT tmp.JuridicalId, tmp.ContractId
+                               , tmp.JuridicalSettingsId
                           FROM JuridicalSettings_new AS tmp
                           -- !!!если Временно откл. - тогда будет для всех договоров!!!
                           WHERE tmp.Ord = 1
                          )
-  , JuridicalSettings_list AS (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId, JuridicalSettings.PriceLimit, JuridicalSettings.Bonus FROM JuridicalSettings)
+  , JuridicalSettings_list AS (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId, JuridicalSettings.JuridicalSettingsId FROM JuridicalSettings)
+      -- элементы установок юр.лиц (границы цен для бонуса)
+  , tmpJuridicalSettingsItem AS (SELECT tmp.JuridicalSettingsId
+                                      , tmp.Bonus
+                                      , tmp.PriceLimit_min
+                                      , tmp.PriceLimit
+                                 FROM JuridicalSettings_list AS JuridicalSettings
+                                      INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inUserId::TVarChar) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                 )
     -- Список товаров + коды ...
   , GoodsList_all AS
        (SELECT _tmpGoodsMinPrice_List.GoodsId               AS GoodsId      -- здесь товар "сети"
@@ -164,8 +176,7 @@ BEGIN
              , MovementLinkObject_Juridical.ObjectId              AS JuridicalId
              , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
              , COALESCE (MovementLinkObject_Area.ObjectId, zc_Area_Basis()) AS AreaId
-             , COALESCE (JuridicalSettings_list.PriceLimit, 0)    AS PriceLimit
-             , COALESCE (JuridicalSettings_list.Bonus, 0)         AS Bonus
+             , JuridicalSettings_list.JuridicalSettingsId
         FROM (SELECT DISTINCT ObjectId FROM GoodsList) AS tmp
              INNER JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                            ON MovementLinkObject_Juridical.ObjectId = tmp.ObjectId
@@ -186,32 +197,22 @@ BEGIN
        )
     -- Список Последних цен (поставщика) !!!по документам!!! (т.е. последний документ а не последняя найденная цена)
   , Movement_PriceList AS
-       /*(-- выбираются с "нужным" договором из JuridicalSettings
-        SELECT tmp.MovementId
-             , tmp.JuridicalId
-             , tmp.ContractId
-             --, COALESCE (JuridicalSettings.PriceLimit, 0) AS PriceLimit
-             --, COALESCE (JuridicalSettings.Bonus, 0)      AS Bonus
-             , tmp.PriceLimit
-             , tmp.Bonus
-        FROM*/
-       (-- выбираются с "макс" датой
-        SELECT *
-        FROM
-       (-- выбираются все !!!из списка "ObjectId"!!!
-        SELECT --  № п/п
-               ROW_NUMBER() OVER (PARTITION BY Movement_PriceList_all.AreaId, Movement_PriceList_all.JuridicalId, Movement_PriceList_all.ContractId ORDER BY Movement_PriceList_all.OperDate DESC) AS Ord
-             , Movement_PriceList_all.OperDate
-             , Movement_PriceList_all.MovementId
-             , Movement_PriceList_all.JuridicalId
-             , Movement_PriceList_all.ContractId
-             , Movement_PriceList_all.AreaId
-             , Movement_PriceList_all.PriceLimit
-             , Movement_PriceList_all.Bonus
-        FROM Movement_PriceList_all
-       ) AS tmp
-        WHERE tmp.Ord = 1 -- т.е. для договора и юр лица будет 1 документ
-       ) /*AS tmp*/
+             (-- выбираются с "макс" датой
+              SELECT *
+              FROM
+                  (-- выбираются все !!!из списка "ObjectId"!!!
+                   SELECT --  № п/п
+                          ROW_NUMBER() OVER (PARTITION BY Movement_PriceList_all.AreaId, Movement_PriceList_all.JuridicalId, Movement_PriceList_all.ContractId ORDER BY Movement_PriceList_all.OperDate DESC) AS Ord
+                        , Movement_PriceList_all.OperDate
+                        , Movement_PriceList_all.MovementId
+                        , Movement_PriceList_all.JuridicalId
+                        , Movement_PriceList_all.ContractId
+                        , Movement_PriceList_all.AreaId
+                        , Movement_PriceList_all.JuridicalSettingsId
+                   FROM Movement_PriceList_all
+                  ) AS tmp
+              WHERE tmp.Ord = 1 -- т.е. для договора и юр лица будет 1 документ
+             ) /*AS tmp*/
         -- !!!INNER!!!
         /*INNER JOIN JuridicalSettings_list AS JuridicalSettings ON JuridicalSettings.JuridicalId = tmp.JuridicalId
                                          AND JuridicalSettings.ContractId  = tmp.ContractId*/
@@ -228,10 +229,10 @@ BEGIN
              , Movement_PriceList.JuridicalId
              , Movement_PriceList.ContractId
              , Movement_PriceList.AreaId
-             , Movement_PriceList.PriceLimit
-             , Movement_PriceList.Bonus
-             , MovementItem.Id     AS MovementItemId
-             , MovementItem.Amount AS Price
+             , tmpJuridicalSettingsItem.Bonus
+             , tmpJuridicalSettingsItem.PriceLimit
+             , MovementItem.Id         AS MovementItemId
+             , MovementItem.Amount     AS Price
              , GoodsList.GoodsId      -- здесь товар "сети"
              , GoodsList.GoodsId_main -- здесь "общий" товар
              , GoodsList.GoodsId_jur  -- здесь товар "поставщика"
@@ -243,6 +244,10 @@ BEGIN
                                               AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
                                               AND MILinkObject_Goods.ObjectId      IN (SELECT GoodsList.GoodsId_jur FROM GoodsList) -- товар "поставщика"
              LEFT JOIN GoodsList ON GoodsList.GoodsId_jur = MILinkObject_Goods.ObjectId -- товар "поставщика"
+             
+             LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = Movement_PriceList.JuridicalSettingsId
+                                               AND MovementItem.Amount >= tmpJuridicalSettingsItem.PriceLimit_min
+                                               AND MovementItem.Amount <= tmpJuridicalSettingsItem.PriceLimit
        )
 
     -- почти финальный список
@@ -263,18 +268,7 @@ BEGIN
       , ddd.JuridicalName 
       , ddd.Deferment
       , ddd.PriceListMovementItemId
-/* * /      
-      , CASE -- если Дней отсрочки по договору = 0
-             WHEN ddd.Deferment = 0
-                  THEN FinalPrice
-             -- если ТОП-позиция
-             WHEN ddd.isTOP = TRUE
-                  THEN FinalPrice * (100 - COALESCE (PriceSettingsTOP.Percent, 0)) / 100
-             -- иначе учитывает % из Установки для ценовых групп (что б уравновесить ... )
-             ELSE FinalPrice * (100 - PriceSettings.Percent) / 100
-
-        END :: TFloat AS SuperFinalPrice
-/ */     
+    
       , CASE -- если Дней отсрочки по договору = 0 + ТОП-позиция учитывает % из ... (что б уравновесить ... )
              WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
                   THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
@@ -405,6 +399,7 @@ ALTER FUNCTION lpSelectMinPrice_List (Integer, Integer, Integer) OWNER TO postgr
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 14.01.19         * tmpJuridicalSettingsItem - теперь значения Бонус берем из Итемов
  15.04.16                                        *
 */
 

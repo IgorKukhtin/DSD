@@ -80,6 +80,9 @@ type
     cxLabel18: TcxLabel;
     edUnitRePrice: TcxButtonEdit;
     GuidesUnitRePrice: TdsdGuides;
+    cxLabel19: TcxLabel;
+    edPartnerMedical: TcxButtonEdit;
+    GuidesPartnerMedical: TdsdGuides;
   private
     { Private declarations }
   public

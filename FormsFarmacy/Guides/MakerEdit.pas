@@ -44,6 +44,10 @@ type
     cbReport2: TcxCheckBox;
     cbReport3: TcxCheckBox;
     cbReport4: TcxCheckBox;
+    cxLabel5: TcxLabel;
+    edAmountDay: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
+    edAmountMonth: TcxCurrencyEdit;
   private
     { Private declarations }
   public

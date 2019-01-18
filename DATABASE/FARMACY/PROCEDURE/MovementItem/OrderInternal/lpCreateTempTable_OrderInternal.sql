@@ -79,6 +79,15 @@ BEGIN
               , PriceSettingsTOP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsTOPInterval (inUserId::TVarChar))
 
               , JuridicalSettings AS (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId) AS T WHERE T.MainJuridicalId = vbMainJuridicalId)
+                -- элементы установок юр.лиц (границы цен для бонуса)
+              , tmpJuridicalSettingsItem AS (SELECT tmp.JuridicalSettingsId
+                                                  , tmp.Bonus
+                                                  , tmp.PriceLimit_min
+                                                  , tmp.PriceLimit
+                                             FROM JuridicalSettings
+                                                  INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inUserId::TVarChar) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                             )
+
               , JuridicalArea AS (SELECT DISTINCT ObjectLink_JuridicalArea_Juridical.ChildObjectId AS JuridicalId
                                   FROM ObjectLink AS ObjectLink_JuridicalArea_Juridical
                                        INNER JOIN Object AS Object_JuridicalArea ON Object_JuridicalArea.Id       = ObjectLink_JuridicalArea_Juridical.ObjectId
@@ -216,21 +225,21 @@ BEGIN
                   , MovementItemLastPriceList_View.MovementItemId AS PriceListMovementItemId
                   , MovementItemLastPriceList_View.PartionGoodsDate
                   , MIN (MovementItemLastPriceList_View.Price) OVER (PARTITION BY MovementItemOrder.Id ORDER BY MovementItemLastPriceList_View.PartionGoodsDate DESC) AS MinPrice
-                  , CASE 
-                      -- если Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
-                      WHEN COALESCE (JuridicalSettings.PriceLimit, 0) <= MovementItemLastPriceList_View.Price
+                  , CASE
+                      -- -- если Цена поставщика не попадает в ценовые промежутки (до какой цены учитывать бонус при расчете миним. цены)
+                      WHEN tmpJuridicalSettingsItem.JuridicalSettingsId IS NULL
                            THEN MovementItemLastPriceList_View.Price
                                -- И учитывается % бонуса из Маркетинговый контракт
                              * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
-        
+
                       ELSE -- иначе учитывается бонус - для ТОП-позиции или НЕ ТОП-позиции
-                           (MovementItemLastPriceList_View.Price * (100 - COALESCE(JuridicalSettings.Bonus, 0)) / 100) :: TFloat 
+                           (MovementItemLastPriceList_View.Price * (100 - COALESCE(tmpJuridicalSettingsItem.Bonus, 0)) / 100) :: TFloat
                             -- И учитывается % бонуса из Маркетинговый контракт
                           * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
-                    END AS FinalPrice          
-                  , CASE WHEN COALESCE (JuridicalSettings.PriceLimit, 0) <= MovementItemLastPriceList_View.Price
+                    END AS FinalPrice
+                  , CASE WHEN tmpJuridicalSettingsItem.JuridicalSettingsId IS NULL 
                               THEN 0
-                         ELSE COALESCE(JuridicalSettings.Bonus, 0)
+                         ELSE COALESCE(tmpJuridicalSettingsItem.Bonus, 0)
                     END :: TFloat AS Bonus
         
                   , MovementItemLastPriceList_View.GoodsId         
@@ -262,7 +271,10 @@ BEGIN
 
                     LEFT JOIN JuridicalSettings ON JuridicalSettings.JuridicalId = MovementItemLastPriceList_View.JuridicalId 
                                                AND JuridicalSettings.ContractId  = MovementItemLastPriceList_View.ContractId
-                                                             
+                    LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                                      AND MovementItemLastPriceList_View.Price >= tmpJuridicalSettingsItem.PriceLimit_min
+                                                      AND MovementItemLastPriceList_View.Price <= tmpJuridicalSettingsItem.PriceLimit
+
                     -- товар "поставщика", если он есть в прайсах !!!а он есть!!!
                              --LEFT JOIN Object AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
                     --LEFT JOIN ObjectString AS ObjectString_GoodsCode ON ObjectString_GoodsCode.ObjectId = MILinkObject_Goods.ObjectId
@@ -308,6 +320,7 @@ ALTER FUNCTION lpCreateTempTable_OrderInternal (Integer, Integer, Integer, Integ
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.01.19         *
  19.10.18         * isPriceClose заменила на isPriceCloseOrder
  23.03.15                         *  
  17.02.15                         *  JuridicalSettings с бонусом и закрытием прайсов

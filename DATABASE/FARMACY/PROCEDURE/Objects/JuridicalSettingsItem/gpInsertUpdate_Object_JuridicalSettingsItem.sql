@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_Object_ImportTypeItems()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettingsItem (Integer, Integer, TFloat, TFloat, TVarchar);
-                        gpinsertupdate_object_juridicalsettingstem
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalSettingsItem(
  INOUT ioId                      Integer ,   -- ключ объекта <>
     IN inJuridicalSettingsId     Integer ,
@@ -16,6 +16,11 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ImportTypeItems());
    vbUserId := lpGetUserBySession (inSession); 
+
+   -- проверка <>
+   IF COALESCE (inJuridicalSettingsId, 0) = 0 THEN
+      RAISE EXCEPTION 'Ошибка.Установка юр.лиц не сохранена';
+   END IF;
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_JuridicalSettingsItem(), 0, '');

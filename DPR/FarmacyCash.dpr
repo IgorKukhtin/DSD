@@ -96,7 +96,7 @@ uses
   Pos_ECRCommX_BPOS1Lib in '..\FormsFarmacy\Cash\Pos_ECRCommX_BPOS1Lib.pas',
   PosFactory in '..\FormsFarmacy\Cash\PosFactory.pas',
   PosInterface in '..\FormsFarmacy\Cash\PosInterface.pas',
-  dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas';
+  EmployeeWorkLog in '..\FormsFarmacy\Cash\EmployeeWorkLog.pas';
 
 {$R *.res}
 

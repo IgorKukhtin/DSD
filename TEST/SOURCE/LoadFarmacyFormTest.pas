@@ -315,10 +315,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataTimeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDataTimeDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheck_SPEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheck_SPEditForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckNoCashRegisterForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckNoCashRegisterForm');
 
@@ -1661,11 +1661,11 @@ end;
 
 procedure TLoadFormTest.LoadSPObjectFormTest;
 begin
-  {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSP_ObjectForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMedicSP_ObjectForm');
     exit;
-
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSPForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMedicSPForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSPEditForm'));

@@ -753,7 +753,7 @@ BEGIN
              , CAST (ROW_NUMBER() OVER (PARTITION BY Object_PartnerMedical.Id/*, Object_Unit.Id*/ ORDER BY Object_PartnerMedical.ValueData, /*Object_Unit.ValueData,*/ tmpGoodsSP.IntenalSPName, tmpData.OperDate ) AS Integer) AS NumLine    --PARTITION BY Object_Juridical.ValueData
              , CAST (tmpCountR.CountInvNumberSP AS Integer) AS CountInvNumberSP
 
-             , COALESCE (tmpParam.JuridicalFullName, Object_Juridical.ValueData ) :: TVarChar  AS JuridicalFullName
+             , COALESCE (tmpParam.JuridicalFullName, tmpParamDepartment.JuridicalFullName, Object_Juridical.ValueData ) :: TVarChar  AS JuridicalFullName
              
              , COALESCE (tmpParam.JuridicalAddress, tmpParamDepartment.JuridicalAddress) :: TVarChar  AS JuridicalAddress
              , COALESCE (tmpParam.OKPO, tmpParamDepartment.OKPO)                        :: TVarChar  AS OKPO
@@ -779,9 +779,9 @@ BEGIN
              , COALESCE (tmpParam.PartnerMedical_MainName_Cut, tmpParam.PartnerMedical_MainName) :: TVarChar  AS PartnerMedical_MainName_Cut
              
              , tmpParam.PartnerMedical_ContractId                                       AS ContractId
-             , COALESCE (tmpParam.PartnerMedical_ContractName, '')         ::TVarChar   AS ContractName
+             , COALESCE (tmpParam.PartnerMedical_ContractName, '')     ::TVarChar   AS ContractName
              , (CASE WHEN COALESCE (tmpParam.PartnerMedical_Contract_StartDate, Null) <> '01.01.2100' THEN COALESCE (tmpParam.PartnerMedical_Contract_StartDate, Null) ELSE NULL END) :: TDateTime AS Contract_StartDate
-             , COALESCE (tmpParam.PartnerMedical_Contract_SigningDate, Null) :: TDateTime AS Contract_SigningDate
+             , CASE WHEN COALESCE (tmpParam.PartnerMedical_ContractName, '') = '' THEN NULL ELSE COALESCE (tmpParam.PartnerMedical_Contract_SigningDate, Null) END  :: TDateTime AS Contract_SigningDate
 
              -----
              , tmpParamDepartment.DepartmentId
@@ -795,9 +795,9 @@ BEGIN
              , tmpParamDepartment.Department_MainName    ::TVarChar
              , COALESCE (tmpParamDepartment.Department_MainName_Cut, tmpParamDepartment.Department_MainName) :: TVarChar  AS Department_MainName_Cut
              , tmpParamDepartment.Department_ContractId                                                                   AS ContractId_Department
-             , COALESCE (tmpParamDepartment.Department_ContractName, '')                                     ::TVarChar   AS ContractName_Department
+             , COALESCE (tmpParamDepartment.Department_ContractName, '')   ::TVarChar   AS ContractName_Department
              , (CASE WHEN COALESCE (tmpParamDepartment.Department_Contract_StartDate, Null) <> '01.01.2100' THEN COALESCE (tmpParamDepartment.Department_Contract_StartDate, Null) ELSE NULL END) :: TDateTime AS Contract_StartDate_Department
-             , COALESCE (tmpParamDepartment.Department_Contract_SigningDate, Null)                           :: TDateTime AS Contract_SigningDate_Department
+             , CASE WHEN COALESCE (tmpParamDepartment.Department_ContractName, '') = '' THEN NULL ELSE COALESCE (tmpParamDepartment.Department_Contract_SigningDate, Null) END                    :: TDateTime AS Contract_SigningDate_Department
              -----
              , tmpData.MedicSPName
              , tmpData.InvNumberSP

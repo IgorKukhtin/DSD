@@ -32,7 +32,7 @@ RETURNS TABLE (Id Integer
              , UpdateDate TDateTime
              , LastDate TDateTime
              , isLast Boolean
-             , isDefault Boolean
+             , isDefault Boolean, isDefaultOut Boolean
              , isStandart Boolean
              , isPersonal Boolean
              , isUnique Boolean
@@ -129,8 +129,9 @@ BEGIN
            , ObjectDate_GoodsListIncome_Last.ValueData          ::TDateTime AS LastDate 
            , COALESCE (ObjectBoolean_GoodsListIncome_Last.ValueData, False) AS isLast
 
-           , COALESCE (ObjectBoolean_Default.ValueData, False)  AS isDefault
-           , COALESCE (ObjectBoolean_Standart.ValueData, False) AS isStandart
+           , COALESCE (ObjectBoolean_Default.ValueData, False)      AS isDefault
+           , COALESCE (ObjectBoolean_DefaultOut.ValueData, False)   AS isDefaultOut
+           , COALESCE (ObjectBoolean_Standart.ValueData, False)     AS isStandart
 
            , COALESCE (ObjectBoolean_Personal.ValueData, False) AS isPersonal
            , COALESCE (ObjectBoolean_Unique.ValueData, False)   AS isUnique
@@ -200,6 +201,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
                                 ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_DefaultOut
+                                ON ObjectBoolean_DefaultOut.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_DefaultOut.DescId = zc_ObjectBoolean_Contract_DefaultOut()
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Standart
                                 ON ObjectBoolean_Standart.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Standart.DescId = zc_ObjectBoolean_Contract_Standart()
@@ -250,6 +255,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.01.19         * DefaultOut
  05.05.17         *
  30.03.17         *
 */

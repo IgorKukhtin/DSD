@@ -98,6 +98,7 @@ BEGIN
                      , MI_Master.ObjectId                  AS GoodsId
                      , MI_Master.PartionId                 AS PartionId
                      , MI_Master.Id                        AS MI_Id_Sale
+                     , MI_Master.Id                        AS MI_Id
                      , COALESCE (MIFloat_ChangePercent.ValueData, 0)  AS ChangePercent
                      , COALESCE (MIFloat_OperPriceList.ValueData, 0)  AS OperPriceList
                      , MI_Master.Amount                               AS Amount
@@ -189,6 +190,7 @@ BEGIN
                          , MI_Master.ObjectId                  AS GoodsId
                          , MI_Master.PartionId                 AS PartionId
                          , MI_Sale.Id                          AS MI_Id_Sale
+                         , MI_Master.Id                        AS MI_Id
                          , COALESCE (MIFloat_ChangePercent.ValueData, 0)         AS ChangePercent
                          , COALESCE (MIFloat_OperPriceList.ValueData, 0)         AS OperPriceList
                          , (MI_Master.Amount) * (-1)                             AS Amount
@@ -269,6 +271,7 @@ BEGIN
                           , tmp.GoodsId
                           , tmp.PartionId
                           , tmp.MI_Id_Sale
+                          , tmp.MI_Id
                           , tmp.ChangePercent
                           , tmp.OperPriceList
                           , tmp.Amount
@@ -297,6 +300,7 @@ BEGIN
                           , tmp.GoodsId
                           , tmp.PartionId
                           , tmp.MI_Id_Sale
+                          , tmp.MI_Id
                           , tmp.ChangePercent
                           , tmp.OperPriceList
                           , tmp.Amount
@@ -313,6 +317,7 @@ BEGIN
                     )
     -- cуммы оплат / возврата по валютам
     , tmpMI_Child AS (SELECT tmpData.MovementId
+                           , COALESCE (MovementItem.ParentId, 0) AS ParentId
                            , SUM (CASE WHEN MovementItem.ParentId IS NULL
                                             -- Расчетная сумма в грн для обмен
                                             THEN -1 * zfCalc_CurrencyFrom (MovementItem.Amount, MIFloat_CurrencyValue.ValueData, MIFloat_ParValue.ValueData)
@@ -324,7 +329,7 @@ BEGIN
                            , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN MovementItem.Amount ELSE 0 END) AS Amount_EUR
                            , SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() THEN MovementItem.Amount ELSE 0 END) AS Amount_Bank
                            --, MovementItem.isErased
-                      FROM tmpData
+                      FROM (SELECT DISTINCT tmpData.MovementId FROM tmpData) AS tmpData
                             JOIN MovementItem ON MovementItem.MovementId = tmpData.MovementId
                                              AND MovementItem.DescId     = zc_MI_Child()
                                              AND MovementItem.isErased   = FALSE
@@ -339,6 +344,7 @@ BEGIN
                                                         ON MIFloat_ParValue.MovementItemId = MovementItem.Id
                                                        AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
                       GROUP BY tmpData.MovementId
+                             , COALESCE (MovementItem.ParentId, 0)
                      )
 
         -- результат
@@ -432,6 +438,7 @@ BEGIN
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
 
             LEFT JOIN tmpMI_Child ON tmpMI_Child.MovementId = tmpData.MovementId
+                                 AND tmpMI_Child.ParentId = tmpData.MI_Id
            ;
 
 END;
@@ -440,7 +447,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  23.04.18         *
  10.04.18         *
  19.02.18         *

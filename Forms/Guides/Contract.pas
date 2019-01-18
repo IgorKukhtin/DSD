@@ -212,7 +212,7 @@ type
     Panel1: TPanel;
     ContractSendName: TcxGridDBColumn;
     ContractSendChoiceForm: TOpenChoiceForm;
-    spUpdateVat: TdsdStoredProc;
+    spUpdateDefaultOut: TdsdStoredProc;
     actUpdateVat: TdsdExecStoredProc;
     bbCustom: TdxBarButton;
     isVat: TcxGridDBColumn;
@@ -220,6 +220,9 @@ type
     JuridicalInvoiceName: TcxGridDBColumn;
     JuridicalInvoiceChoiceForm: TOpenChoiceForm;
     clPartnerCode: TcxGridDBColumn;
+    spUpdateVat: TdsdStoredProc;
+    actUpdateDefaultOut: TdsdExecStoredProc;
+    bbUpdateDefaultOut: TdxBarButton;
 
   private
     { Private declarations }

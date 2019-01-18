@@ -634,6 +634,17 @@ object ContractForm: TContractForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
+        Options.Editing = False
+        Width = 40
+      end
+      object IsDefaultOut: TcxGridDBColumn
+        Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1080#1089#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
+        DataBinding.FieldName = 'isDefaultOut'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1080#1089#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
         Options.Editing = False
         Width = 40
       end
@@ -1280,6 +1291,14 @@ object ContractForm: TContractForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateDefaultOut'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocol'
         end
         item
@@ -1512,6 +1531,10 @@ object ContractForm: TContractForm
     end
     object bbCustom: TdxBarButton
       Action = actUpdateVat
+      Category = 0
+    end
+    object bbUpdateDefaultOut: TdxBarButton
+      Action = actUpdateDefaultOut
       Category = 0
     end
   end
@@ -2560,6 +2583,22 @@ object ContractForm: TContractForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "C'#1090#1072#1074#1082#1072' 0% ('#1090#1072#1084#1086#1078#1085#1103') '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
+    object actUpdateDefaultOut: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateDefaultOut
+      StoredProcList = <
+        item
+          StoredProc = spUpdateDefaultOut
+        end
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1080#1089#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081') '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1080#1089#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081') '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 76
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Contract'
@@ -3125,13 +3164,39 @@ object ContractForm: TContractForm
     Left = 912
     Top = 384
   end
+  object spUpdateDefaultOut: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Contract_isDefaultOut'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId '
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDefaultOut'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isDefaultOut'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 472
+    Top = 259
+  end
   object spUpdateVat: TdsdStoredProc
     StoredProcName = 'gpUpdateObject_Contract_isVat'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId '
+        Name = 'inId '
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
@@ -3148,7 +3213,7 @@ object ContractForm: TContractForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 328
-    Top = 259
+    Left = 320
+    Top = 235
   end
 end

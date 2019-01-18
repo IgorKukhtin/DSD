@@ -74,6 +74,7 @@ type
     ProvinceCityName: TcxGridDBColumn;
     AreaName: TcxGridDBColumn;
     MemberName: TcxGridDBColumn;
+    PartnerMedicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

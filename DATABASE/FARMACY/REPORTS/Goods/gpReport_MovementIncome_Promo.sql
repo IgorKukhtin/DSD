@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_PriceList()
+  -- Function: gpReport_MovementIncome_Promo()
 
 DROP FUNCTION IF EXISTS gpReport_MovementIncome_Promo (Integer, TDateTime, TDateTime, TVarChar);
 
@@ -27,6 +27,8 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
              , Price TFloat            --Цена в документе
              , PriceWithVAT TFloat     --Цена прихода с НДС 
              , PriceSale TFloat        --Цена продажи
+             , PriceSIP TFloat         --Цена СИП
+             , SummSIP TFloat          --Сумма СИП
              , PartionGoods TVarChar   --№ серии препарата
              , ExpirationDate TDateTime--Срок годности
              , PaymentDate TDateTime   --Дата оплаты
@@ -53,6 +55,7 @@ BEGIN
                         , MI_Goods.ObjectId                  AS GoodsId
                         , MovementDate_StartPromo.ValueData  AS StartDate_Promo
                         , MovementDate_EndPromo.ValueData    AS EndDate_Promo
+                        , MIFloat_Price.ValueData            AS Price
                         , COALESCE (MIBoolean_Checked.ValueData, FALSE)                                           ::Boolean  AS isChecked
                         , CASE WHEN COALESCE (MIBoolean_Checked.ValueData, FALSE) = TRUE THEN FALSE ELSE TRUE END ::Boolean  AS isReport
                    FROM Movement
@@ -71,6 +74,9 @@ BEGIN
                      INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
                                                         AND MI_Goods.DescId = zc_MI_Master()
                                                         AND MI_Goods.isErased = FALSE
+                     LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                 ON MIFloat_Price.MovementItemId = MI_Goods.Id
+                                                AND MIFloat_Price.DescId = zc_MIFloat_Price()
                      LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
                                                    ON MIBoolean_Checked.MovementItemId = MI_Goods.Id
                                                   AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
@@ -87,6 +93,7 @@ BEGIN
                                   , MIContainer.MovementItemId        AS MovementItemId
                                   , MIContainer.ObjectId_analyzer     AS GoodsId
                                   , COALESCE (MIContainer.Amount, 0)  AS Amount
+                                  , tmpMIPromo.Price                  AS PriceSIP
                                   , tmpMIPromo.isChecked
                                   , tmpMIPromo.isReport
                              FROM Movement 
@@ -113,6 +120,7 @@ BEGIN
                                      , MovementItem.Id                 AS MovementItemId
                                      , MovementItem.ObjectId           AS GoodsId
                                      , COALESCE (MovementItem.Amount)  AS Amount
+                                     , tmpMIPromo.Price                AS PriceSIP
                                      , tmpMIPromo.isChecked
                                      , tmpMIPromo.isReport
                                 FROM Movement 
@@ -143,6 +151,7 @@ BEGIN
                                 , Movement.GoodsId
                                 , MIFloat_Price.ValueData                 ::TFloat    AS Price  
                                 , COALESCE (MIFloat_PriceSale.ValueData,0)::TFloat    AS PriceSale
+                                , Movement.PriceSIP                                   AS PriceSIP
                                 , COALESCE (MIFloat_AmountManual.ValueData, Movement.Amount)  AS Amount
                                 , Movement.isChecked
                                 , Movement.isReport
@@ -169,6 +178,7 @@ BEGIN
                                  , Movement.GoodsId
                                  , MIFloat_Price.ValueData                 ::TFloat  AS Price  
                                  , COALESCE (MIFloat_PriceSale.ValueData,0)::TFloat  AS PriceSale
+                                 , Movement.PriceSIP                                 AS PriceSIP
                                  , COALESCE (MIFloat_AmountManual.ValueData, Movement.Amount)  AS Amount
                                  , Movement.isChecked
                                  , Movement.isReport
@@ -195,6 +205,7 @@ BEGIN
                       , tmpMovMIComplete.GoodsId
                       , tmpMovMIComplete.Price  
                       , tmpMovMIComplete.PriceSale
+                      , tmpMovMIComplete.PriceSIP
                       , tmpMovMIComplete.Amount
                       , tmpMovMIComplete.isChecked
                       , tmpMovMIComplete.isReport
@@ -209,6 +220,7 @@ BEGIN
                       , tmpMovMI_UnComplete.GoodsId
                       , tmpMovMI_UnComplete.Price  
                       , tmpMovMI_UnComplete.PriceSale
+                      , tmpMovMI_UnComplete.PriceSIP
                       , tmpMovMI_UnComplete.Amount
                       , tmpMovMI_UnComplete.isChecked
                       , tmpMovMI_UnComplete.isReport
@@ -372,6 +384,9 @@ BEGIN
 
             , tmpMovMI.PriceSale  
             
+            , tmpMovMI.PriceSIP
+            , Round(tmpMovMI.Amount * tmpMovMI.PriceSIP, 2) ::TFloat  AS SummSIP
+            
             , COALESCE (MIString_PartionGoods.ValueData, '')             :: TVarChar  AS PartionGoods
             , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateStart()) :: TDateTime AS ExpirationDate
          
@@ -405,7 +420,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В. 
+ 17.01.19                                                                                    *
  20.02.18         *
  07.11.16         *
 */

@@ -29,9 +29,11 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,Price TFloat            --Цена в документе
               ,PriceWithVAT TFloat     --Цена прихода с НДС 
               ,PriceSale TFloat        --Цена продажи
+              , PriceSIP TFloat         --Цена СИП
               ,Summa TFloat
               ,SummaWithVAT TFloat
               ,SummaSale TFloat
+              ,SummSIP TFloat          --Сумма СИП
 
               ,Comment  TVarChar       --Комментарий к документу
               ,PartionGoods TVarChar   --№ серии препарата
@@ -69,6 +71,7 @@ BEGIN
                                    MI_Goods.ObjectId  AS GoodsId        -- здесь товар
                                  , MovementDate_StartPromo.ValueData  AS StartDate_Promo
                                  , MovementDate_EndPromo.ValueData    AS EndDate_Promo 
+                                 , MIFloat_Price.ValueData            AS Price
                                  , COALESCE (MIBoolean_Checked.ValueData, FALSE)                                           ::Boolean  AS isChecked
                                  , CASE WHEN COALESCE (MIBoolean_Checked.ValueData, FALSE) = TRUE THEN FALSE ELSE TRUE END ::Boolean  AS isReport
                             FROM Movement
@@ -85,6 +88,9 @@ BEGIN
                               INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
                                                                  AND MI_Goods.DescId = zc_MI_Master()
                                                                  AND MI_Goods.isErased = FALSE
+                              LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                          ON MIFloat_Price.MovementItemId = MI_Goods.Id
+                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
                               LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
                                                             ON MIBoolean_Checked.MovementItemId = MI_Goods.Id
                                                            AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
@@ -95,6 +101,7 @@ BEGIN
    ,  tmpGoods_All AS (SELECT ObjectLink_Child_R.ChildObjectId  AS GoodsId        -- здесь товар
                             , tmpGoodsPromo.StartDate_Promo
                             , tmpGoodsPromo.EndDate_Promo 
+                            , tmpGoodsPromo.Price               AS PriceSIP
                             , tmpGoodsPromo.isChecked
                             , tmpGoodsPromo.isReport
                        FROM tmpGoodsPromo
@@ -115,6 +122,7 @@ BEGIN
     ,   tmpListGodsMarket AS (SELECT DISTINCT tmpGoods_All.GoodsId
                                    , tmpGoods_All.StartDate_Promo 
                                    , tmpGoods_All.EndDate_Promo
+                                   , tmpGoods_All.PriceSIP 
                                    , tmpGoods_All.isChecked
                                    , tmpGoods_All.isReport
                               FROM tmpGoods_All
@@ -127,6 +135,7 @@ BEGIN
                               , COALESCE (MIContainer.AnalyzerId,0)  AS MovementItemId_Income
                               , COALESCE (MIContainer.WhereObjectId_analyzer,0) AS UnitId
                               , MIContainer.ObjectId_analyzer AS GoodsId
+                              , tmpListGodsMarket.PriceSIP 
                               , tmpListGodsMarket.isChecked
                               , tmpListGodsMarket.isReport
 
@@ -154,6 +163,7 @@ BEGIN
                                 , COALESCE (MIContainer.WhereObjectId_analyzer,0)
                                 , COALESCE (MIContainer.AnalyzerId,0)
                                 , MIContainer.ObjectId_analyzer 
+                                , tmpListGodsMarket.PriceSIP
                                 , tmpListGodsMarket.isChecked
                                 , tmpListGodsMarket.isReport
                          HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
@@ -164,6 +174,7 @@ BEGIN
                               , tmp.UnitId 
                               , tmp.MovementItemId_Income
                               , tmp.GoodsId
+                              , tmp.PriceSIP 
                               , tmp.isChecked
                               , tmp.isReport
                               , tmp.Amount
@@ -202,6 +213,7 @@ BEGIN
                           , tmpData_all.UnitId
                           , tmpData_all.JuridicalId_Income
                           , tmpData_all.GoodsId
+                          , tmpData_all.PriceSIP
                           , tmpData_all.isChecked
                           , tmpData_all.isReport
                           , MIString_PartionGoods.ValueData          AS PartionGoods
@@ -238,6 +250,7 @@ BEGIN
                             , tmpData_all.UnitId
                             , MIString_PartionGoods.ValueData
                             , MIDate_ExpirationDate.ValueData
+                            , tmpData_all.PriceSIP
                             , tmpData_all.isChecked
                             , tmpData_all.isReport
                     )
@@ -322,10 +335,12 @@ BEGIN
             , CASE WHEN tmpData.TotalAmount <> 0 THEN tmpData.Summa / tmpData.TotalAmount ELSE 0 END        :: TFloat AS Price
             , CASE WHEN tmpData.TotalAmount <> 0 THEN tmpData.SummaWithVAT / tmpData.TotalAmount ELSE 0 END :: TFloat AS PriceWithVAT
             , CASE WHEN tmpData.TotalAmount <> 0 THEN tmpData.SummaSale    / tmpData.TotalAmount ELSE 0 END :: TFloat AS PriceSale
+            , tmpData.PriceSIP
 
             , tmpData.Summa        :: TFloat
             , tmpData.SummaWithVAT :: TFloat
             , tmpData.SummaSale    :: TFloat
+            , Round(tmpData.TotalAmount * tmpData.PriceSIP, 2) ::TFloat  AS SummSIP
 
             , MovementString_Comment.ValueData  :: TVarChar AS Comment
 
@@ -359,7 +374,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В. 
+ 17.01.19                                                      *
  12.11.18         *
  22.10.18         *
  07.01.18         *

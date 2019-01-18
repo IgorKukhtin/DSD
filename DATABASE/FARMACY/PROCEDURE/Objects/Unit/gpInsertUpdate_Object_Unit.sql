@@ -12,6 +12,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
@@ -35,6 +36,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inUnitCategoryId          Integer   ,    -- ссылка на категорию 
     IN inUnitRePriceId           Integer   ,    -- ссылка на подразделение 
     IN inNormOfManDays           Integer   ,    -- Норма человекодней в месяце
+    IN inPartnerMedicalId        Integer   ,    -- Мед.учреждение для пкму 1303
     IN inSession                 TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -135,6 +137,9 @@ BEGIN
    -- сохранили связь с подразделением
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_UnitRePrice(), ioId, inUnitRePriceId);
    
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_PartnerMedical(), ioId, inPartnerMedicalId);
+
    IF inCreateDate <> (CURRENT_DATE + INTERVAL '1 DAY')
    THEN
        -- сохранили свойство <>
@@ -169,6 +174,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 15.01.19         *
  22.10.18         *
  29.08.18         * Phone
  14.05.18                                                        * add NormOfManDays               

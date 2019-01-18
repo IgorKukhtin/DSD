@@ -41,7 +41,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , BankId Integer, BankName TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
-             , isDefault Boolean
+             , isDefault Boolean, isDefaultOut Boolean
              , isStandart Boolean
              , isPersonal Boolean
              , isUnique Boolean
@@ -74,99 +74,95 @@ BEGIN
        
            , Object_ContractPartner.isErased    AS isErased
 
+           , ObjectString_InvNumberArchive.ValueData   AS InvNumberArchive
 
-         , ObjectString_InvNumberArchive.ValueData   AS InvNumberArchive
-
-       , View_Contract_InvNumber_Key.ContractKeyId
-       , View_Contract_InvNumber_Key.ContractId_Key        AS ContractId_Key
-       , View_Contract_InvNumber_Key.ContractCode          AS Code_Key
-       , View_Contract_InvNumber_Key.InvNumber             AS InvNumber_Key
-       , View_Contract_InvNumber_Key.ContractStateKindCode AS ContractStateKindCode_Key
-
-       , ObjectString_Comment.ValueData            AS Comment 
-       , ObjectString_BankAccount.ValueData        AS BankAccountExternal
-       , ObjectString_GLNCode.ValueData            AS GLNCode 
-
-       , ObjectDate_Signing.ValueData AS SigningDate
-       , Object_Contract_View.StartDate
-       , Object_Contract_View.EndDate
-       
-       , Object_ContractKind.Id          AS ContractKindId
-       , Object_ContractKind.ValueData   AS ContractKindName
-       , Object_Juridical.Id             AS JuridicalId
-       , Object_Juridical.ObjectCode     AS JuridicalCode
-       , Object_Juridical.ValueData      AS JuridicalName
-       , Object_JuridicalGroup.ValueData AS JuridicalGroupName
-
-       , Object_JuridicalBasis.Id           AS JuridicalBasisId
-       , Object_JuridicalBasis.ValueData    AS JuridicalBasisName
-
-       , Object_JuridicalDocument.Id             AS JuridicalDocumentId
-       , Object_JuridicalDocument.ObjectCode     AS JuridicalDocumentCode
-       , Object_JuridicalDocument.ValueData      AS JuridicalDocumentName
-
-       , Object_PaidKind.Id            AS PaidKindId
-       , Object_PaidKind.ValueData     AS PaidKindName
-
-       , Object_InfoMoney_View.InfoMoneyGroupCode
-       , Object_InfoMoney_View.InfoMoneyGroupName
-       , Object_InfoMoney_View.InfoMoneyDestinationCode
-       , Object_InfoMoney_View.InfoMoneyDestinationName
-       , Object_InfoMoney_View.InfoMoneyId
-       , Object_InfoMoney_View.InfoMoneyCode
-       , Object_InfoMoney_View.InfoMoneyName
-
-       , Object_Personal_View.PersonalId    AS PersonalId
-       , Object_Personal_View.PersonalCode  AS PersonalCode
-       , Object_Personal_View.PersonalName  AS PersonalName
-       
-       , Object_PersonalTrade.PersonalId    AS PersonalTradeId
-       , Object_PersonalTrade.PersonalCode  AS PersonalTradeCode
-       , Object_PersonalTrade.PersonalName  AS PersonalTradeName
-
-       , Object_PersonalCollation.PersonalId    AS PersonalCollationId
-       , Object_PersonalCollation.PersonalCode  AS PersonalCollationCode
-       , Object_PersonalCollation.PersonalName  AS PersonalCollationName
-
-       , Object_BankAccount.Id              AS BankAccountId
-       , Object_BankAccount.ValueData       AS BankAccountName
-
-       , Object_Contract_View.ContractTagId
-       , Object_Contract_View.ContractTagName
-       , Object_Contract_View.ContractTagGroupName
-
-       , Object_AreaContract.Id             AS AreaContractId
-       , Object_AreaContract.ValueData      AS AreaContractName
-
-       , Object_ContractArticle.Id          AS ContractArticleId
-       , Object_ContractArticle.ValueData   AS ContractArticleName
-
-       , Object_Contract_View.ContractStateKindId
-       , Object_Contract_View.ContractStateKindCode
-
-       , ObjectHistory_JuridicalDetails_View.OKPO
-
-       , Object_Bank.Id          AS BankId
-       , Object_Bank.ValueData   AS BankName
-
-       , Object_Insert.ValueData   AS InsertName
-       , Object_Update.ValueData   AS UpdateName
-       , ObjectDate_Protocol_Insert.ValueData AS InsertDate
-       , ObjectDate_Protocol_Update.ValueData AS UpdateDate
-       
-       , COALESCE (ObjectBoolean_Default.ValueData, False)  AS isDefault
-       , COALESCE (ObjectBoolean_Standart.ValueData, False) AS isStandart
-
-       , COALESCE (ObjectBoolean_Personal.ValueData, False) AS isPersonal
-       , COALESCE (ObjectBoolean_Unique.ValueData, False)   AS isUnique
-       
-       , ObjectFloat_DocumentCount.ValueData AS DocumentCount
-       , ObjectDate_Document.ValueData AS DateDocument
-
-
-
-
+           , View_Contract_InvNumber_Key.ContractKeyId
+           , View_Contract_InvNumber_Key.ContractId_Key        AS ContractId_Key
+           , View_Contract_InvNumber_Key.ContractCode          AS Code_Key
+           , View_Contract_InvNumber_Key.InvNumber             AS InvNumber_Key
+           , View_Contract_InvNumber_Key.ContractStateKindCode AS ContractStateKindCode_Key
+    
+           , ObjectString_Comment.ValueData            AS Comment 
+           , ObjectString_BankAccount.ValueData        AS BankAccountExternal
+           , ObjectString_GLNCode.ValueData            AS GLNCode 
+    
+           , ObjectDate_Signing.ValueData AS SigningDate
+           , Object_Contract_View.StartDate
+           , Object_Contract_View.EndDate
            
+           , Object_ContractKind.Id          AS ContractKindId
+           , Object_ContractKind.ValueData   AS ContractKindName
+           , Object_Juridical.Id             AS JuridicalId
+           , Object_Juridical.ObjectCode     AS JuridicalCode
+           , Object_Juridical.ValueData      AS JuridicalName
+           , Object_JuridicalGroup.ValueData AS JuridicalGroupName
+    
+           , Object_JuridicalBasis.Id           AS JuridicalBasisId
+           , Object_JuridicalBasis.ValueData    AS JuridicalBasisName
+    
+           , Object_JuridicalDocument.Id             AS JuridicalDocumentId
+           , Object_JuridicalDocument.ObjectCode     AS JuridicalDocumentCode
+           , Object_JuridicalDocument.ValueData      AS JuridicalDocumentName
+    
+           , Object_PaidKind.Id            AS PaidKindId
+           , Object_PaidKind.ValueData     AS PaidKindName
+    
+           , Object_InfoMoney_View.InfoMoneyGroupCode
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationCode
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyId
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyName
+    
+           , Object_Personal_View.PersonalId    AS PersonalId
+           , Object_Personal_View.PersonalCode  AS PersonalCode
+           , Object_Personal_View.PersonalName  AS PersonalName
+           
+           , Object_PersonalTrade.PersonalId    AS PersonalTradeId
+           , Object_PersonalTrade.PersonalCode  AS PersonalTradeCode
+           , Object_PersonalTrade.PersonalName  AS PersonalTradeName
+    
+           , Object_PersonalCollation.PersonalId    AS PersonalCollationId
+           , Object_PersonalCollation.PersonalCode  AS PersonalCollationCode
+           , Object_PersonalCollation.PersonalName  AS PersonalCollationName
+    
+           , Object_BankAccount.Id              AS BankAccountId
+           , Object_BankAccount.ValueData       AS BankAccountName
+    
+           , Object_Contract_View.ContractTagId
+           , Object_Contract_View.ContractTagName
+           , Object_Contract_View.ContractTagGroupName
+    
+           , Object_AreaContract.Id             AS AreaContractId
+           , Object_AreaContract.ValueData      AS AreaContractName
+    
+           , Object_ContractArticle.Id          AS ContractArticleId
+           , Object_ContractArticle.ValueData   AS ContractArticleName
+    
+           , Object_Contract_View.ContractStateKindId
+           , Object_Contract_View.ContractStateKindCode
+    
+           , ObjectHistory_JuridicalDetails_View.OKPO
+    
+           , Object_Bank.Id          AS BankId
+           , Object_Bank.ValueData   AS BankName
+    
+           , Object_Insert.ValueData              AS InsertName
+           , Object_Update.ValueData              AS UpdateName
+           , ObjectDate_Protocol_Insert.ValueData AS InsertDate
+           , ObjectDate_Protocol_Update.ValueData AS UpdateDate
+           
+           , COALESCE (ObjectBoolean_Default.ValueData, False)      AS isDefault
+           , COALESCE (ObjectBoolean_DefaultOut.ValueData, False)   AS isDefaultOut
+           , COALESCE (ObjectBoolean_Standart.ValueData, False)     AS isStandart
+    
+           , COALESCE (ObjectBoolean_Personal.ValueData, False) AS isPersonal
+           , COALESCE (ObjectBoolean_Unique.ValueData, False)   AS isUnique
+           
+           , ObjectFloat_DocumentCount.ValueData AS DocumentCount
+           , ObjectDate_Document.ValueData       AS DateDocument
+         
        FROM Object AS Object_ContractPartner
            -- LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON NOT vbAccessKeyAll AND tmpRoleAccessKey.AccessKeyId = Object_ContractPartner.AccessKeyId
                                                             
@@ -216,6 +212,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
                                 ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_DefaultOut
+                                ON ObjectBoolean_DefaultOut.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_DefaultOut.DescId = zc_ObjectBoolean_Contract_DefaultOut()
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Standart
                                 ON ObjectBoolean_Standart.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Standart.DescId = zc_ObjectBoolean_Contract_Standart()
@@ -311,6 +311,7 @@ ALTER FUNCTION gpSelect_Object_ContractPartner_All(TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.01.19         * DefaultOut
  19.01.15         * add ÔÓÎˇ ‰Ó„Ó‚Ó‡
  16.01.15         * 
 */

@@ -324,24 +324,25 @@ end;
 
 procedure TLoadFormTest.LoadContractFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionValueForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerOrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerOrderForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
+  {
   // Состояние договора
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractStateKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractStateKindForm');

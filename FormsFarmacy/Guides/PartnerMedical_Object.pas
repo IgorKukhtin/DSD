@@ -70,6 +70,9 @@ type
     deOperDate: TcxDateEdit;
     RefreshDispatcher: TRefreshDispatcher;
     DepartmentName: TcxGridDBColumn;
+    cxLabel1: TcxLabel;
+    edSPKind: TcxButtonEdit;
+    GuidesSPKind: TdsdGuides;
   private
     { Private declarations }
   public

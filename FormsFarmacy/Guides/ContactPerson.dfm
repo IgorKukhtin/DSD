@@ -4,7 +4,7 @@ inherited ContactPersonForm: TContactPersonForm
   ClientWidth = 936
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 952
-  ExplicitHeight = 374
+  ExplicitHeight = 373
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -189,6 +189,14 @@ inherited ContactPersonForm: TContactPersonForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Mail'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Phone'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Phone'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
