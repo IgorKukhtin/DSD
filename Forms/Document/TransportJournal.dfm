@@ -79,6 +79,16 @@ object TransportJournalForm: TTransportJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = HoursAdd
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountCost
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountMemberCost
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -90,6 +100,16 @@ object TransportJournalForm: TTransportJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = HoursAdd
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountCost
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountMemberCost
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -258,6 +278,26 @@ object TransportJournalForm: TTransportJournalForm
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object AmountCost: TcxGridDBColumn
+        Caption = #1047#1072#1090#1088#1072#1090#1099' '#1043#1057#1052
+        DataBinding.FieldName = 'AmountCost'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object AmountMemberCost: TcxGridDBColumn
+        Caption = #1047#1072#1090#1088#1072#1090#1099' ('#1092#1080#1079'.'#1083#1080#1094#1086')'
+        DataBinding.FieldName = 'AmountMemberCost'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -859,6 +899,9 @@ object TransportJournalForm: TTransportJournalForm
       ReportNameParam.Value = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' - '#1057#1073#1099#1090
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintTo: TdsdPrintAction
       Category = 'DSDLib'
@@ -890,6 +933,9 @@ object TransportJournalForm: TTransportJournalForm
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'

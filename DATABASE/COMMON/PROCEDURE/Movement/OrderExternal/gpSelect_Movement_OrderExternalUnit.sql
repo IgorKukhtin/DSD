@@ -35,11 +35,19 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 AS
 $BODY$
    DECLARE vbUserId Integer;
+
+   DECLARE vbObjectId_Branch_Constraint Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderExternal());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- Результат
+     vbObjectId_Branch_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
+
+
+     -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -54,6 +62,7 @@ BEGIN
                          UNION SELECT tmpRoleAccessKey_all.AccessKeyId FROM tmpRoleAccessKey_all WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll) GROUP BY tmpRoleAccessKey_all.AccessKeyId
                          UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
                               )
+         , tmpUnit AS (SELECT ObjectLink.ObjectId AS UnitId FROM ObjectLink WHERE ObjectLink.ChildObjectId = vbObjectId_Branch_Constraint AND ObjectLink.DescId = zc_ObjectLink_Unit_Branch())
        SELECT
              Movement.Id                                    AS Id
            , Movement.InvNumber                             AS InvNumber
@@ -114,13 +123,13 @@ BEGIN
            , COALESCE(MovementLinkMovement_Order.MovementId, 0) <> 0 AS isEDI
            , MovementString_Comment.ValueData       AS Comment
 
-       FROM (SELECT Movement.id
+       FROM (SELECT Movement.Id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.StatusId = tmpStatus.StatusId
-                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             ) AS tmpMovement
 
-            LEFT JOIN Movement ON Movement.id = tmpMovement.id
+            LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
+            LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -156,11 +165,13 @@ BEGIN
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             INNER JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
                                             AND Object_From.DescId = zc_Object_Unit()
+            LEFT JOIN tmpUnit AS tmpUnit_from ON tmpUnit_from.UnitId = MovementLinkObject_From.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            LEFT JOIN tmpUnit AS tmpUnit_to ON tmpUnit_to.UnitId = MovementLinkObject_To.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
                                          ON MovementLinkObject_Personal.MovementId = Movement.Id
@@ -177,10 +188,10 @@ BEGIN
                                         AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaIdKind
+                                         ON MovementLinkObject_PaIdKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_PaIdKind.DescId = zc_MovementLinkObject_PaIdKind()
+            LEFT JOIN Object AS Object_PaIdKind ON Object_PaIdKind.Id = MovementLinkObject_PaIdKind.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -240,17 +251,18 @@ BEGIN
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
-            ;
+
+       WHERE tmpRoleAccessKey.AccessKeyId > 0 OR tmpUnit_from.UnitId > 0 OR tmpUnit_to.UnitId > 0
+      ;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpSelect_Movement_OrderExternalUnit (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 05.10.16         * add inJuridicalBasisId
+ 05.10.16         * add inJurIdicalBasisId
  21.05.15         * add Retail, Partner
  19.02.15         * add OperDateStart, OperDateEnd
  20.10.14                                        * add isEDI
@@ -260,4 +272,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderExternalUnit (inStartDate:= '01.01.2014', inEndDate:= '08.08.2014', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_OrderExternalUnit (inStartDate:= '01.01.2019', inEndDate:= '01.01.2019', inJuridicalBasisId:= 0, inIsErased := FALSE, inSession:= '2')

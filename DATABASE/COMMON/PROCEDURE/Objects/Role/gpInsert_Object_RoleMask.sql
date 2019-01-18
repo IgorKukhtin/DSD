@@ -1,6 +1,6 @@
 -- Function: gpInsert_Object_RoleMask()
 
--- DROP FUNCTION gpInsert_Object_RoleMask();
+-- DROP FUNCTION gpInsert_Object_RoleMask (Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Object_RoleMask(
  INOUT ioId	            Integer   ,     -- ключ объекта <Действия> 
@@ -44,14 +44,14 @@ BEGIN
                                            , inSession := inSession)
    FROM gpSelect_Object_RoleProcess(inSession) AS tmp
    WHERE tmp.roleId = ioId; 
-   
+/*   
    PERFORM gpInsertUpdate_Object_UserRole (ioId := 0 
                                         , inUserId := tmp.id
                                         , inRoleId := vbId
                                         , inSession := inSession)
    FROM gpSelect_Object_RoleUser(inSession) AS tmp
    WHERE tmp.roleId = ioId;
- 
+ */
 
 
    --select * from gpInsertUpdate_Object_UserRole(ioId := 14257 , inUserId := 78433 , RoleId := 9805 ,  inSession := '5');

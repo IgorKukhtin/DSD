@@ -767,6 +767,14 @@ BEGIN
           ) AS tmp;
 
 
+     -- 5.0. сохранили  "Сумма затрат" - расчет для удобства отображения в журналах
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCost(), inMovementId, tmp.AmountCost)
+           , lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountMemberCost(), inMovementId, tmp.AmountMemberCost)
+     FROM (SELECT (SELECT SUM (_tmpItem_TransportSumm_Transport.OperSumm) FROM _tmpItem_TransportSumm_Transport) AS AmountCost
+                , (SELECT SUM (tmpItem.OperSumm_Add + tmpItem.OperSumm_AddLong + tmpItem.OperSumm_Taxi) FROM _tmpItem_SummPersonal AS tmpItem) AS AmountMemberCost
+          ) AS tmp
+     ;
+
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
 

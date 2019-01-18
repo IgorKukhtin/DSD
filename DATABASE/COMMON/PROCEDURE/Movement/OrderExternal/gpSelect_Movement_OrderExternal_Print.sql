@@ -52,7 +52,7 @@ BEGIN
           , COALESCE (MovementLinkObject_From.ObjectId, 0)           AS FromId
           , COALESCE (MovementLinkObject_To.ObjectId, 0)             AS UnitId
           , ObjectLink_Partner_Juridical.ChildObjectId               AS JuridicalId
-          , CASE WHEN Movement.AccessKeyId = zc_Enum_Process_AccessKey_DocumentKiev() THEN TRUE ELSE FALSE END AS isOrderByLine
+          , CASE WHEN Movement.AccessKeyId IN (zc_Enum_Process_AccessKey_DocumentKiev(), zc_Enum_Process_AccessKey_DocumentLviv()) THEN TRUE ELSE FALSE END AS isOrderByLine
             INTO vbDescId, vbStatusId, vbOperDate, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
                , vbGoodsPropertyId, vbGoodsPropertyId_basis, vbContractId, vbRetailId, vbFromId, vbUnitId, vbJuridicalId, vbIsOrderByLine
      FROM Movement

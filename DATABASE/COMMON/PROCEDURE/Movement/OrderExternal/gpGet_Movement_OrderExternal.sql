@@ -125,6 +125,9 @@ BEGIN
                                                                     WHEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbObjectId_Branch_Constraint) = 9  -- филиал Харьков
                                                                          THEN 8425 -- Склад ГП ф.Харьков
 
+                                                                    WHEN (SELECT Object.ObjectCode FROM Object WHERE Object.Id = vbObjectId_Branch_Constraint) = 12 -- филиал Lviv
+                                                                         THEN 3080691 -- Склад ГП ф.Львов
+
                                                                     ELSE 8459 -- Склад Реализации
                                                                END
                LEFT JOIN Object AS Object_StoreMain ON Object_StoreMain.Id = 8459 -- Склад Реализации

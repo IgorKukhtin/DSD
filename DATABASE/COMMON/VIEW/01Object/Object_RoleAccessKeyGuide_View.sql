@@ -15,6 +15,10 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideKiev()
                     THEN 257164 -- покупатели Киев
 
+               WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideLviv()
+                    -- THEN 257164 -- покупатели Киев
+                    THEN 280271 -- покупатели Львов
+
                WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideNikolaev()
                     THEN 257165 -- покупатели Николаев (Херсон)
 
@@ -50,6 +54,9 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
 
                WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideKiev()
                     THEN 8379 -- филиал Киев
+
+               WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideLviv()
+                    THEN 3080683 -- филиал Львов
 
                WHEN tmpAccessKey.AccessKeyId_Guide = zc_Enum_Process_AccessKey_GuideNikolaev()
                     THEN 8373 -- филиал Николаев (Херсон)
@@ -91,6 +98,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
    FROM (SELECT UserId
               , MAX (CASE WHEN AccessKeyId IN (zc_Enum_Process_AccessKey_GuideDnepr()
                                              , zc_Enum_Process_AccessKey_GuideKiev()
+                                             , zc_Enum_Process_AccessKey_GuideLviv()
                                              , zc_Enum_Process_AccessKey_GuideKrRog()
                                              , zc_Enum_Process_AccessKey_GuideNikolaev()
                                              , zc_Enum_Process_AccessKey_GuideKharkov()
@@ -131,6 +139,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
                                              , zc_Enum_Process_AccessKey_PersonalServiceOther()
 
                                              , zc_Enum_Process_AccessKey_PersonalServiceKiev()
+                                             , zc_Enum_Process_AccessKey_PersonalServiceLviv()
                                              , zc_Enum_Process_AccessKey_PersonalServiceKrRog()
                                              , zc_Enum_Process_AccessKey_PersonalServiceNikolaev()
                                              , zc_Enum_Process_AccessKey_PersonalServiceKharkov()
@@ -211,6 +220,9 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyGuide_View AS
 
                                                                      OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceKiev()
                                                                      AND BranchId = 8379 -- филиал Киев
+                                                                        )
+                                                                     OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceLviv()
+                                                                     AND BranchId = 3080683 -- филиал Львов
                                                                         )
                                                                      OR (AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceKrRog()
                                                                      AND BranchId = 8377 -- филиал Кр.Рог

@@ -18,6 +18,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
                              , CASE WHEN Id IN (zc_Enum_Process_AccessKey_CashDnepr()
                                               , zc_Enum_Process_AccessKey_CashOfficialDnepr()
                                               , zc_Enum_Process_AccessKey_CashKiev()
+                                              , zc_Enum_Process_AccessKey_CashLviv()
                                               , zc_Enum_Process_AccessKey_CashKrRog()
                                               , zc_Enum_Process_AccessKey_CashNikolaev()
                                               , zc_Enum_Process_AccessKey_CashKharkov()
@@ -32,6 +33,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
                              , CASE WHEN Id IN (zc_Enum_Process_AccessKey_DocumentBread()
                                               , zc_Enum_Process_AccessKey_DocumentDnepr()
                                               , zc_Enum_Process_AccessKey_DocumentKiev()
+                                              , zc_Enum_Process_AccessKey_DocumentLviv()
                                               , zc_Enum_Process_AccessKey_DocumentZaporozhye()
                                               , zc_Enum_Process_AccessKey_DocumentOdessa()
                                               , zc_Enum_Process_AccessKey_DocumentKrRog()
@@ -44,6 +46,7 @@ CREATE OR REPLACE VIEW Object_RoleAccessKeyDocument_View AS
                                END AS isMovement
                              , CASE WHEN Id IN (zc_Enum_Process_AccessKey_TrasportDnepr()
                                               , zc_Enum_Process_AccessKey_TrasportKiev()
+                                              , zc_Enum_Process_AccessKey_TrasportLviv()
                                               , zc_Enum_Process_AccessKey_TrasportKrRog()
                                               , zc_Enum_Process_AccessKey_TrasportNikolaev()
                                               , zc_Enum_Process_AccessKey_TrasportKharkov()

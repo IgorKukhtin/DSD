@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_TrasportCherkassi() RETURNS
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_TrasportDoneck() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_TrasportDoneck' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_TrasportZaporozhye() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_TrasportZaporozhye' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_TrasportOdessa() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_TrasportOdessa' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_TrasportLviv() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_TrasportLviv' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_GuideAll() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_GuideAll' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_GuideCommerce() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_GuideCommerce' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -27,6 +28,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_GuideCherkassi() RETURNS In
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_GuideDoneck() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_GuideDoneck' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_GuideZaporozhye() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_GuideZaporozhye' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_GuideOdessa() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_GuideOdessa' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_GuideLviv() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_GuideLviv' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_GuideTech() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_GuideTech' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
@@ -48,6 +50,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PersonalServiceCherkassi() 
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PersonalServiceDoneck() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_PersonalServiceDoneck' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PersonalServiceOdessa() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_PersonalServiceOdessa' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PersonalServiceZaporozhye() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_PersonalServiceZaporozhye' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PersonalServiceLviv() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_PersonalServiceLviv' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashAll() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashAll' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -61,10 +64,12 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashCherkassi() RETURNS Int
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashDoneck() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashDoneck' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashOdessa() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashOdessa' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashZaporozhye() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashZaporozhye' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashLviv() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashLviv' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceDnepr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_ServiceDnepr' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceKiev() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_ServiceKiev' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 -- CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceZaporozhye() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_ServiceZaporozhye' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceLviv() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_ServiceLviv' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_DocumentAll() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_DocumentAll' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_DocumentTaxAll() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_DocumentTaxAll' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -79,6 +84,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_DocumentKrRog() RETURNS Int
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_DocumentNikolaev() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_DocumentNikolaev' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_DocumentKharkov() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_DocumentKharkov' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_DocumentCherkassi() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_DocumentCherkassi' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_DocumentLviv() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_DocumentLviv' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 DO $$
 BEGIN
@@ -525,6 +531,47 @@ BEGIN
                                    , inName:= 'ЗП Zaporozhye (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_PersonalServiceZaporozhye');
                                    
+
+ -- zc_Object_Branch, по Филиалу ограничиваются Документы и Справочники для Транспорта
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_TrasportLviv()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 3
+                                   , inName:= 'Транспорт Львов (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_TrasportLviv');
+
+ -- по Филиалу ограничиваются Документы для Кассы
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_CashLviv()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 21
+                                   , inName:= 'Касса Львов (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_CashLviv');
+
+ -- по Филиалу ограничиваются Документы для Услуг
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_ServiceLviv()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 32
+                                   , inName:= 'Услуги Львов (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_ServiceLviv');
+
+ -- по Филиалу ограничиваются Документы для товаров
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_DocumentLviv()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 42
+                                   , inName:= 'Документы товарные Львов (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_DocumentLviv');
+ -- Lviv, ограничения в справочниках
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_GuideLviv()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 103
+                                   , inName:= 'Справочники Львов (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_GuideLviv');
+ -- ЗП Lviv, ограничения в справочниках + документах
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_PersonalServiceLviv()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 221
+                                   , inName:= 'ЗП Львов (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_PersonalServiceLviv');
+
 /*
  -- заливка прав 
  PERFORM gpInsertUpdate_Object_RoleProcess2 (ioId        := tmpData.RoleRightId
@@ -548,6 +595,7 @@ BEGIN
  WHERE tmpData.RoleId IS NULL
  ;
 */
+
  
 END $$;
 

@@ -273,10 +273,11 @@ BEGIN
            , Object_Unit.Id             AS UnitId
            , Object_Unit.ValueData      AS UnitName
 
-           , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
+           /*, CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                         ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
-                   END AS TFloat) AS AmountSumm
+                   END AS TFloat) AS AmountSumm*/
+           , MIFloat_SummPriceList.ValueData AS AmountSumm
 
            , MIFloat_CountPack.ValueData        AS CountPack
            , MIFloat_WeightTotal.ValueData      AS WeightTotal
@@ -335,6 +336,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = MovementItem.ObjectId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_SummPriceList
+                                        ON MIFloat_SummPriceList.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummPriceList.DescId = zc_MIFloat_SummPriceList()
 
             LEFT JOIN MovementItemFloat AS MIFloat_CountPack
                                         ON MIFloat_CountPack.MovementItemId = MovementItem.Id

@@ -122,6 +122,8 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    AmountCost: TcxGridDBColumn;
+    AmountMemberCost: TcxGridDBColumn;
   private
   public
   end;

@@ -40,6 +40,15 @@ BEGIN
                                              )
                             THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportKiev())
 
+                       -- филиал - Lviv
+                       WHEN inAccessKeyId IN (zc_Enum_Process_AccessKey_DocumentLviv()
+                                            , zc_Enum_Process_AccessKey_CashLviv()
+                                            , zc_Enum_Process_AccessKey_PersonalServiceLviv()
+                                            -- , zc_Enum_Process_AccessKey_ServiceLviv()
+                                            , zc_Enum_Process_AccessKey_TrasportLviv()
+                                             )
+                            THEN (SELECT Id FROM Object WHERE DescId = zc_Object_Branch() AND AccessKeyId = zc_Enum_Process_AccessKey_TrasportLviv())
+
                        -- филиал - Odessa
                        WHEN inAccessKeyId IN (zc_Enum_Process_AccessKey_DocumentOdessa()
                                             , zc_Enum_Process_AccessKey_CashOdessa()

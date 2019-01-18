@@ -316,6 +316,8 @@ BEGIN
                                  , 128902 -- ФОЗЗИ  ФУД, Запорожье Ленина,147
                                  , 128903 -- ФОЗЗИ  ФУД, Запорожье,ул.Иванова,1а
                                   )
+          OR ObjectLink_Partner_Juridical.ChildObjectId IN (408130 -- АГРО СИРОВИНА ТОВ
+                                                           )
          )
   UNION ALL
    SELECT
@@ -669,6 +671,8 @@ BEGIN
                                  , 128902 -- ФОЗЗИ  ФУД, Запорожье Ленина,147
                                  , 128903 -- ФОЗЗИ  ФУД, Запорожье,ул.Иванова,1а
                                   )
+          OR ObjectLink_Partner_Juridical.ChildObjectId IN (408130 -- АГРО СИРОВИНА ТОВ
+                                                           )
          )
 
   UNION ALL

@@ -57,8 +57,11 @@ BEGIN
    vbIsBranch_Kharkov:= EXISTS (SELECT 1
                                 FROM Object_RoleAccessKeyGuide_View 
                                 WHERE Object_RoleAccessKeyGuide_View.BranchId <> 0
-                                  AND Object_RoleAccessKeyGuide_View.AccessKeyId_guide = zc_Enum_Process_AccessKey_GuideKharkov()
-                               );
+                                  -- AND Object_RoleAccessKeyGuide_View.AccessKeyId_guide IN (zc_Enum_Process_AccessKey_GuideKharkov(), zc_Enum_Process_AccessKey_GuideLviv())
+                                  AND Object_RoleAccessKeyGuide_View.AccessKeyId_guide IN (zc_Enum_Process_AccessKey_GuideKharkov())
+                               )
+                    AND vbObjectId_Constraint <> 3080683 -- филиал Ћьвов
+                   ;
 
 
 

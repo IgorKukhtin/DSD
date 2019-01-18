@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , StartRunPlan TDateTime, EndRunPlan TDateTime, StartRun TDateTime, EndRun TDateTime
              , HoursWork TFloat, HoursAdd TFloat
+             , AmountCost TFloat, AmountMemberCost TFloat
              , Comment TVarChar
              , BranchCode Integer, BranchName TVarChar
              , CarName TVarChar, CarModelName TVarChar, CarTrailerName TVarChar
@@ -63,6 +64,9 @@ BEGIN
            , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat) AS HoursWork
            , MovementFloat_HoursAdd.ValueData      AS HoursAdd
                       
+           , MovementFloat_AmountCost.ValueData       AS AmountCost
+           , MovementFloat_AmountMemberCost.ValueData AS AmountMemberCost
+
            , MovementString_Comment.ValueData      AS Comment
 
            , View_Unit.BranchCode
@@ -110,6 +114,13 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_HoursAdd
                                     ON MovementFloat_HoursAdd.MovementId =  Movement.Id
                                    AND MovementFloat_HoursAdd.DescId = zc_MovementFloat_HoursAdd()
+
+             LEFT JOIN MovementFloat AS MovementFloat_AmountCost
+                                     ON MovementFloat_AmountCost.MovementId = Movement.Id
+                                    AND MovementFloat_AmountCost.DescId     = zc_MovementFloat_AmountCost()
+             LEFT JOIN MovementFloat AS MovementFloat_AmountMemberCost
+                                     ON MovementFloat_AmountMemberCost.MovementId = Movement.Id
+                                    AND MovementFloat_AmountMemberCost.DescId     = zc_MovementFloat_AmountMemberCost()
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId =  Movement.Id
@@ -179,4 +190,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Transport (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Transport (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inJuridicalBasisId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

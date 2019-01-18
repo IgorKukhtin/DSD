@@ -244,7 +244,10 @@ BEGIN
 
    WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
            OR tmpListBranch_Constraint.JuridicalId > 0
-           OR vbIsConstraint = FALSE)
+           OR vbIsConstraint = FALSE
+           OR Object_Juridical.Id IN (408130 -- юцпн яхпнбхмю рнб
+                                     )
+         )
    ;
 
 END;

@@ -916,3 +916,4 @@ ALTER FUNCTION gpSelect_Movement_Sale_EDI (Integer,TVarChar) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId := 8467386, inSession:= zfCalc_UserAdmin());
+-- FETCH ALL "<unnamed portal 1>";

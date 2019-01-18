@@ -53,6 +53,7 @@ $BODY$
   DECLARE vbBusinessId_From Integer;
 
   DECLARE vbBranchId_To Integer;
+  DECLARE vbUnitdId_To_find Integer;
 /*
   DECLARE vbUnitId_To Integer;
   DECLARE vbMemberId_To Integer;
@@ -174,6 +175,21 @@ BEGIN
                           THEN TRUE
                           ELSE FALSE
                      END;
+
+     -- !!!обязательно - если в строчной части 1 значение, тогда ТОЛЬКО его!!!
+     vbUnitdId_To_find:=(SELECT CASE WHEN tmp.Id_min = tmp.Id_max THEN tmp.Id_max ELSE 0 END
+                         FROM (SELECT MIN (CASE WHEN MILinkObject_Unit.ObjectId > 0 THEN MILinkObject_Unit.ObjectId ELSE 0 END) AS Id_min
+                                    , MAX (CASE WHEN MILinkObject_Unit.ObjectId > 0 THEN MILinkObject_Unit.ObjectId ELSE 0 END) AS Id_max
+                               FROM Movement
+                                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
+                                    JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
+                                                               AND MILinkObject_Unit.ObjectId       <> vbUnitId_From
+                                                               AND MILinkObject_Unit.ObjectId       <> 0
+                               WHERE Movement.Id = inMovementId
+                              ) AS tmp
+                        );
 
 
      -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -353,8 +369,8 @@ BEGIN
                   , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)      AS isPartionCount
                   , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)       AS isPartionSumm
 
-                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN COALESCE (MILinkObject_Unit.ObjectId, MovementLinkObject_To.ObjectId) ELSE 0 END, 0) AS UnitId_To
-                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Member() THEN COALESCE (MILinkObject_Unit.ObjectId, MovementLinkObject_To.ObjectId) ELSE 0 END, 0) AS MemberId_To
+                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN COALESCE (MILinkObject_Unit.ObjectId, COALESCE (MovementLinkObject_To.ObjectId, vbUnitdId_To_find)) ELSE 0 END, 0) AS UnitId_To
+                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Member() THEN COALESCE (MILinkObject_Unit.ObjectId, COALESCE (MovementLinkObject_To.ObjectId, vbUnitdId_To_find)) ELSE 0 END, 0) AS MemberId_To
                   , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Branch.ChildObjectId WHEN Object_To.DescId = zc_Object_Member() THEN 0 ELSE 0 END, 0) AS BranchId_To
                   , COALESCE (ObjectLink_UnitTo_AccountDirection.ChildObjectId, 0) AS AccountDirectionId_To  -- Аналитики счетов - направления !!!обрабатываются только для подразделения!!!
                   , COALESCE (ObjectBoolean_PartionDate_To.ValueData, FALSE) AS isPartionDate_UnitTo
@@ -419,7 +435,8 @@ BEGIN
                    LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                 ON MovementLinkObject_To.MovementId = Movement.Id
                                                AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                   LEFT JOIN Object AS Object_To ON Object_To.Id = COALESCE (MILinkObject_Unit.ObjectId, MovementLinkObject_To.ObjectId)
+                                               AND vbUnitdId_To_find = 0
+                   LEFT JOIN Object AS Object_To ON Object_To.Id = COALESCE (MILinkObject_Unit.ObjectId, COALESCE (MovementLinkObject_To.ObjectId, vbUnitdId_To_find))
 
                    LEFT JOIN ObjectLink AS ObjectLink_UnitTo_HistoryCost
                                         ON ObjectLink_UnitTo_HistoryCost.ObjectId = Object_To.Id

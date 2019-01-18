@@ -195,7 +195,7 @@ BEGIN
                 , SUM (tmpContainer.AmountPartner * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END) AS AmountPartner_Weight
                 , SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpContainer.Amount        ELSE 0 END) AS Amount_Sh
                 , SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpContainer.AmountPartner ELSE 0 END) AS AmountPartner_Sh
-                , SUM (tmpContainer.Summ - tmpContainer.Summ_ProfitLoss) AS Summ
+                , SUM (tmpContainer.Summ + tmpContainer.Summ_ProfitLoss) AS Summ
                 , SUM (tmpContainer.Summ_ProfitLoss + tmpContainer.Summ_ProfitLoss_partner) AS Summ_ProfitLoss
 
            FROM (SELECT MIContainer.ContainerId                        AS ContainerId
