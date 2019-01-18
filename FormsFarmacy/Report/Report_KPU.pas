@@ -71,6 +71,9 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint_UserTimePenalty: TdsdStoredProc;
+    PrevNumberChecks: TcxGridDBBandedColumn;
+    NumberChecks: TcxGridDBBandedColumn;
+    NumberChecksRatio: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

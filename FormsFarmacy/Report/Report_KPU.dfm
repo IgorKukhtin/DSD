@@ -82,6 +82,10 @@ inherited Report_KPUForm: TReport_KPUForm
               Caption = #1057#1088#1077#1076#1085#1080#1081' '#1095#1077#1082
             end
             item
+              Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1095#1077#1082#1086#1074
+              Width = 170
+            end
+            item
               Caption = #1042#1088#1077#1084#1103' '#1086#1087#1086#1079#1076#1072#1085#1080#1103
               Width = 66
             end
@@ -283,13 +287,43 @@ inherited Report_KPUForm: TReport_KPUForm
             Position.ColIndex = 2
             Position.RowIndex = 0
           end
-          object LateTimeRatio: TcxGridDBBandedColumn
+          object PrevNumberChecks: TcxGridDBBandedColumn
+            Caption = #1087#1088#1086#1096#1083#1099#1081' '#1084#1077#1089#1103#1094
+            DataBinding.FieldName = 'PrevNumberChecks'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Position.BandIndex = 3
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object NumberChecks: TcxGridDBBandedColumn
+            Caption = #1090#1077#1082#1091#1097#1080#1081' '#1084#1077#1089#1103#1094
+            DataBinding.FieldName = 'NumberChecks'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Position.BandIndex = 3
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object NumberChecksRatio: TcxGridDBBandedColumn
             Caption = '3. '#1050#1086#1101#1092'.'
+            DataBinding.FieldName = 'NumberChecksRatio'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 39
+            Position.BandIndex = 3
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object LateTimeRatio: TcxGridDBBandedColumn
+            Caption = '4. '#1050#1086#1101#1092'.'
             DataBinding.FieldName = 'LateTimeRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 61
-            Position.BandIndex = 3
+            Position.BandIndex = 4
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
@@ -300,7 +334,7 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 62
-            Position.BandIndex = 4
+            Position.BandIndex = 5
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
@@ -311,17 +345,17 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 63
-            Position.BandIndex = 4
+            Position.BandIndex = 5
             Position.ColIndex = 1
             Position.RowIndex = 0
           end
           object FinancPlanRatio: TcxGridDBBandedColumn
-            Caption = '4. '#1050#1086#1101#1092'.'
+            Caption = '5. '#1050#1086#1101#1092'.'
             DataBinding.FieldName = 'FinancPlanRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 37
-            Position.BandIndex = 4
+            Position.BandIndex = 5
             Position.ColIndex = 2
             Position.RowIndex = 0
           end
@@ -332,7 +366,7 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 52
-            Position.BandIndex = 5
+            Position.BandIndex = 6
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
@@ -345,7 +379,7 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 56
-            Position.BandIndex = 5
+            Position.BandIndex = 6
             Position.ColIndex = 1
             Position.RowIndex = 0
           end
@@ -356,7 +390,7 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 58
-            Position.BandIndex = 5
+            Position.BandIndex = 6
             Position.ColIndex = 2
             Position.RowIndex = 0
           end
@@ -367,27 +401,27 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 59
-            Position.BandIndex = 5
+            Position.BandIndex = 6
             Position.ColIndex = 3
             Position.RowIndex = 0
           end
           object IT_ExamRatio: TcxGridDBBandedColumn
-            Caption = '5. '#1050#1086#1101#1092'.'
+            Caption = '6. '#1050#1086#1101#1092'.'
             DataBinding.FieldName = 'IT_ExamRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 39
-            Position.BandIndex = 5
+            Position.BandIndex = 6
             Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object ComplaintsRatio: TcxGridDBBandedColumn
-            Caption = '6. '#1050#1086#1101#1092'.'
+            Caption = '7. '#1050#1086#1101#1092'.'
             DataBinding.FieldName = 'ComplaintsRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 39
-            Position.BandIndex = 6
+            Position.BandIndex = 7
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
@@ -398,17 +432,17 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 162
-            Position.BandIndex = 6
+            Position.BandIndex = 7
             Position.ColIndex = 1
             Position.RowIndex = 0
           end
           object DirectorRatio: TcxGridDBBandedColumn
-            Caption = '7. '#1050#1086#1101#1092'.'
+            Caption = '8. '#1050#1086#1101#1092'.'
             DataBinding.FieldName = 'DirectorRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 39
-            Position.BandIndex = 7
+            Position.BandIndex = 8
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
@@ -419,7 +453,7 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 178
-            Position.BandIndex = 7
+            Position.BandIndex = 8
             Position.ColIndex = 1
             Position.RowIndex = 0
           end
@@ -429,7 +463,7 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 36
-            Position.BandIndex = 8
+            Position.BandIndex = 9
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
@@ -439,7 +473,7 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 34
-            Position.BandIndex = 8
+            Position.BandIndex = 9
             Position.ColIndex = 1
             Position.RowIndex = 0
           end
@@ -449,17 +483,18 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 40
-            Position.BandIndex = 8
+            Position.BandIndex = 9
             Position.ColIndex = 2
             Position.RowIndex = 0
           end
           object CollegeITRatio: TcxGridDBBandedColumn
-            Caption = '8. '#1050#1086#1101#1092'.'
+            Caption = '9. '#1050#1086#1101#1092'.'
             DataBinding.FieldName = 'CollegeITRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 36
-            Position.BandIndex = 8
+            Position.BandIndex = 9
             Position.ColIndex = 3
             Position.RowIndex = 0
           end
@@ -470,17 +505,17 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 206
-            Position.BandIndex = 8
+            Position.BandIndex = 9
             Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object VIPDepartRatio: TcxGridDBBandedColumn
-            Caption = '9. '#1050#1086#1101#1092'.'
+            Caption = '10. '#1050#1086#1101#1092'.'
             DataBinding.FieldName = 'VIPDepartRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 38
-            Position.BandIndex = 9
+            Position.BandIndex = 10
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
@@ -491,7 +526,7 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 190
-            Position.BandIndex = 9
+            Position.BandIndex = 10
             Position.ColIndex = 1
             Position.RowIndex = 0
           end
@@ -501,7 +536,7 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
-            Position.BandIndex = 10
+            Position.BandIndex = 11
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
@@ -511,17 +546,17 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
-            Position.BandIndex = 10
+            Position.BandIndex = 11
             Position.ColIndex = 1
             Position.RowIndex = 0
           end
           object ControlRGRatio: TcxGridDBBandedColumn
-            Caption = '10. '#1050#1086#1101#1092'.'
+            Caption = '11. '#1050#1086#1101#1092'.'
             DataBinding.FieldName = 'ControlRGRatio'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 46
-            Position.BandIndex = 10
+            Position.BandIndex = 11
             Position.ColIndex = 2
             Position.RowIndex = 0
           end
@@ -532,7 +567,7 @@ inherited Report_KPUForm: TReport_KPUForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 183
-            Position.BandIndex = 10
+            Position.BandIndex = 11
             Position.ColIndex = 3
             Position.RowIndex = 0
           end
@@ -943,6 +978,15 @@ inherited Report_KPUForm: TReport_KPUForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AverageCheckRatio'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumberChecksRatio'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NumberChecksRatio'
         DataType = ftFloat
         ParamType = ptInputOutput
         MultiSelectSeparator = ','

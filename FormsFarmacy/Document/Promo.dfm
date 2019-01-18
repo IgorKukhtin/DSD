@@ -4,7 +4,7 @@ inherited PromoForm: TPromoForm
   ClientWidth = 979
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
   ExplicitWidth = 995
-  ExplicitHeight = 602
+  ExplicitHeight = 603
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -73,7 +73,7 @@ inherited PromoForm: TPromoForm
             HeaderAlignmentVert = vaCenter
           end
           object Price: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
+            Caption = #1062#1077#1085#1072' '#1057#1048#1055
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
@@ -81,7 +81,7 @@ inherited PromoForm: TPromoForm
             HeaderAlignmentVert = vaCenter
           end
           object Summ: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
+            Caption = #1057#1091#1084#1084#1072' '#1057#1048#1055
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
@@ -467,6 +467,7 @@ inherited PromoForm: TPromoForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     inherited actRefresh: TdsdDataSetRefresh

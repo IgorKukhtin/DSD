@@ -1321,7 +1321,7 @@ end;
 //***20.04.17
 procedure TMainCashForm.actSetSPExecute(Sender: TObject);
 var
-  PartnerMedicalId, SPKindId : Integer;
+  PartnerMedicalId, SPKindId, MemberSPID : Integer;
   PartnerMedicalName, MedicSP, Ambulance, InvNumberSP, SPKindName: String;
   OperDateSP : TDateTime;
   SPTax : Currency;
@@ -1342,12 +1342,12 @@ begin
      SPTax        := Self.FormParams.ParamByName('SPTax').Value;
      SPKindId     := Self.FormParams.ParamByName('SPKindId').Value;
      SPKindName   := Self.FormParams.ParamByName('SPKindName').Value;
-
+     MemberSPID   := Self.FormParams.ParamByName('MemberSPID').Value;
      //
      if Self.FormParams.ParamByName('PartnerMedicalId').Value > 0
      then OperDateSP   := Self.FormParams.ParamByName('OperDateSP').Value
      else OperDateSP   := NOW;
-     if not DiscountDialogExecute(PartnerMedicalId, SPKindId, PartnerMedicalName, Ambulance, MedicSP, InvNumberSP, SPKindName, OperDateSP, SPTax)
+     if not DiscountDialogExecute(PartnerMedicalId, SPKindId, PartnerMedicalName, Ambulance, MedicSP, InvNumberSP, SPKindName, OperDateSP, SPTax, MemberSPID)
      then exit;
   finally
      Free;
@@ -1362,6 +1362,7 @@ begin
   FormParams.ParamByName('SPTax').Value     := SPTax;
   FormParams.ParamByName('SPKindId').Value  := SPKindId;
   FormParams.ParamByName('SPKindName').Value:= SPKindName;
+  Self.FormParams.ParamByName('MemberSPID').Value := MemberSPID;
   //
   pnlSP.Visible := InvNumberSP <> '';
   lblPartnerMedicalName.Caption:= '  ' + PartnerMedicalName; // + '  /  Й рьс. ' + Ambulance;
