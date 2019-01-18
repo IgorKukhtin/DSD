@@ -11,6 +11,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ContactPersonId Integer, ContactPersonCode Integer, ContactPersonName TVarChar
              , SendPlan TDateTime
              , SendReal TDateTime
+             , AmountDay TFloat
+             , AmountMonth TFloat
              , isReport1  Boolean
              , isReport2  Boolean
              , isReport3  Boolean
@@ -41,6 +43,10 @@ BEGIN
 
            , NULL  :: TDateTime AS SendPlan
            , NULL  :: TDateTime AS SendReal
+
+           , NULL  :: TFloat    AS AmountDay
+           , NULL  :: TFloat    AS AmountMonth
+
            , FALSE :: Boolean   AS isReport1
            , FALSE :: Boolean   AS isReport2
            , FALSE :: Boolean   AS isReport3
@@ -65,6 +71,10 @@ BEGIN
 
            , COALESCE (ObjectDate_SendPlan.ValueData, NULL) :: TDateTime AS SendPlan
            , COALESCE (ObjectDate_SendReal.ValueData, NULL) :: TDateTime AS SendReal
+
+           , COALESCE (ObjectFloat_Day.ValueData, NULL)   :: TFloat AS AmountDay
+           , COALESCE (ObjectFloat_Month.ValueData, NULL) :: TFloat AS AmountMonth
+
            , COALESCE (ObjectBoolean_Maker_Report1.ValueData, FALSE) :: Boolean AS isReport1
            , COALESCE (ObjectBoolean_Maker_Report2.ValueData, FALSE) :: Boolean AS isReport2
            , COALESCE (ObjectBoolean_Maker_Report3.ValueData, FALSE) :: Boolean AS isReport3
@@ -104,6 +114,13 @@ BEGIN
                                    ON ObjectBoolean_Maker_Report4.ObjectId = Object_Maker.Id
                                   AND ObjectBoolean_Maker_Report4.DescId = zc_ObjectBoolean_Maker_Report4()
 
+           LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                 ON ObjectFloat_Day.ObjectId = Object_Maker.Id
+                                AND ObjectFloat_Day.DescId = zc_ObjectFloat_Maker_Day()
+           LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                                 ON ObjectFloat_Month.ObjectId = Object_Maker.Id
+                                AND ObjectFloat_Month.DescId = zc_ObjectFloat_Maker_Month()
+
        WHERE Object_Maker.Id = inId;
       
    END IF;
@@ -117,6 +134,7 @@ ALTER FUNCTION gpGet_Object_Maker(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.01.19         *
  11.01.19         *
  11.02.14         *  
 

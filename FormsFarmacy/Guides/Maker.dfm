@@ -28,7 +28,6 @@ object MakerForm: TMakerForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitHeight = 264
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -112,6 +111,27 @@ object MakerForm: TMakerForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 114
       end
+      object AmountMonth: TcxGridDBColumn
+        Caption = #1055#1077#1088#1080#1086#1076'. '#1084#1077#1089#1103#1094#1077#1074
+        DataBinding.FieldName = 'AmountMonth'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1087#1077#1088#1080#1086#1076#1080#1095#1085#1086#1089#1090#1100' '#1086#1090#1087#1088#1072#1074#1082#1080'  '#1074' '#1084#1077#1089#1103#1094#1072#1093
+        Width = 70
+      end
+      object AmountDay: TcxGridDBColumn
+        Caption = #1055#1077#1088#1080#1086#1076'. '#1076#1085#1077#1081
+        DataBinding.FieldName = 'AmountDay'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1087#1077#1088#1080#1086#1076#1080#1095#1085#1086#1089#1090#1100' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1074' '#1076#1085#1103#1093
+        Options.Editing = False
+        Width = 70
+      end
       object SendPlan: TcxGridDBColumn
         Caption = #1050#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' ('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103')'
         DataBinding.FieldName = 'SendPlan'
@@ -129,6 +149,15 @@ object MakerForm: TMakerForm
         HeaderHint = #1050#1086#1075#1076#1072' '#1091#1089#1087#1077#1096#1085#1086' '#1087#1088#1086#1096#1083#1072' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1076#1072#1090#1072' / '#1074#1088#1077#1084#1103')'
         Options.Editing = False
         Width = 97
+      end
+      object SendLast: TcxGridDBColumn
+        Caption = #1057#1083'. '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103')'
+        DataBinding.FieldName = 'SendLast'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1076#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1083#1077#1076#1091#1102#1097#1077#1081' '#1086#1090#1087#1088#1072#1074#1082#1080
+        Options.Editing = False
+        Width = 85
       end
       object isReport1: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084'"'
@@ -188,7 +217,6 @@ object MakerForm: TMakerForm
     Height = 8
     AlignSplitter = salBottom
     Control = cxGridReport
-    ExplicitTop = 290
   end
   object cxGridReport: TcxGrid
     Left = 0
@@ -197,7 +225,6 @@ object MakerForm: TMakerForm
     Height = 129
     Align = alBottom
     TabOrder = 6
-    ExplicitTop = 298
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ReportDS
@@ -780,6 +807,7 @@ object MakerForm: TMakerForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091'/'#1074#1088#1077#1084#1103
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091'/'#1074#1088#1077#1084#1103
       ImageIndex = 67
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object ExecuteDialogUpdateSendPlan: TExecuteDialog

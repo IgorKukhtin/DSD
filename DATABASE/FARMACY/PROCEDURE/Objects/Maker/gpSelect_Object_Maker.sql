@@ -11,6 +11,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Phone TVarChar, Mail TVarChar
              , SendPlan TDateTime
              , SendReal TDateTime
+             , SendLast TDateTime
+             , AmountDay TFloat
+             , AmountMonth TFloat
              , isReport1  Boolean
              , isReport2  Boolean
              , isReport3  Boolean
@@ -40,6 +43,18 @@ $BODY$BEGIN
 
            , COALESCE (ObjectDate_SendPlan.ValueData, NULL) :: TDateTime AS SendPlan
            , COALESCE (ObjectDate_SendReal.ValueData, NULL) :: TDateTime AS SendReal
+
+           , CASE WHEN COALESCE (ObjectFloat_Month.ValueData, 0) = 0 AND COALESCE (ObjectFloat_Day.ValueData, 0) = 0
+                  THEN NULL
+                  ELSE (ObjectDate_SendPlan.ValueData
+                      + CASE WHEN COALESCE (ObjectFloat_Month.ValueData, 0) <> 0 THEN (ObjectFloat_Month.ValueData ::TVarChar || ' MONTH') :: INTERVAL ELSE '0 day' END
+                      + CASE WHEN COALESCE (ObjectFloat_Day.ValueData, 0) <> 0   THEN (ObjectFloat_Day.ValueData  ::TVarChar  || ' DAY')   :: INTERVAL ELSE '0 day' END
+                        )
+             END :: TDateTime AS SendLast
+
+           , COALESCE (ObjectFloat_Day.ValueData, 0)   :: TFloat AS AmountDay
+           , COALESCE (ObjectFloat_Month.ValueData, 0) :: TFloat AS AmountMonth
+
            , COALESCE (ObjectBoolean_Maker_Report1.ValueData, FALSE) :: Boolean AS isReport1
            , COALESCE (ObjectBoolean_Maker_Report2.ValueData, FALSE) :: Boolean AS isReport2
            , COALESCE (ObjectBoolean_Maker_Report3.ValueData, FALSE) :: Boolean AS isReport3
@@ -85,6 +100,13 @@ $BODY$BEGIN
            LEFT JOIN ObjectString AS ObjectString_Mail
                                   ON ObjectString_Mail.ObjectId = Object_ContactPerson.Id 
                                  AND ObjectString_Mail.DescId = zc_ObjectString_ContactPerson_Mail()
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                ON ObjectFloat_Day.ObjectId = Object_Maker.Id
+                               AND ObjectFloat_Day.DescId = zc_ObjectFloat_Maker_Day()
+           LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                                ON ObjectFloat_Month.ObjectId = Object_Maker.Id
+                               AND ObjectFloat_Month.DescId = zc_ObjectFloat_Maker_Month()
 
      WHERE Object_Maker.DescId = zc_Object_Maker();
   

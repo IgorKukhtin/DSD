@@ -21,7 +21,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxSplitter, cxButtonEdit;
+  cxSplitter, cxButtonEdit, cxCurrencyEdit;
 
 type
   TMakerForm = class(TParentForm)
@@ -95,6 +95,9 @@ type
     macUpdateSendPlan: TMultiAction;
     macUpdateSendPlanList: TMultiAction;
     bbUpdateSendPlan: TdxBarButton;
+    AmountMonth: TcxGridDBColumn;
+    AmountDay: TcxGridDBColumn;
+    SendLast: TcxGridDBColumn;
   private
     { Private declarations }
   public

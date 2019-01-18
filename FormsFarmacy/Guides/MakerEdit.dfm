@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1053#1086#1074#1099#1081' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
-  ClientHeight = 416
+  ClientHeight = 438
   ClientWidth = 372
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 79
-    Top = 383
+    Top = 399
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 229
-    Top = 383
+    Top = 399
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -127,7 +127,7 @@
   end
   object cbReport1: TcxCheckBox
     Left = 40
-    Top = 259
+    Top = 282
     Caption = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084'"'
     ParentShowHint = False
     ShowHint = True
@@ -136,7 +136,7 @@
   end
   object cbReport2: TcxCheckBox
     Left = 40
-    Top = 286
+    Top = 309
     Caption = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084'"'
     ParentShowHint = False
     ShowHint = True
@@ -145,7 +145,7 @@
   end
   object cbReport3: TcxCheckBox
     Left = 40
-    Top = 313
+    Top = 336
     Hint = ' '#9#1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1086#1089#1090#1072#1090#1082#1072#1084#1080' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072'"'
     Caption = ' '#9#1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1086#1089#1090'. '#1085#1072' '#1082#1086#1085'. '#1087#1077#1088#1080#1086#1076#1072'"'
     ParentShowHint = False
@@ -155,13 +155,41 @@
   end
   object cbReport4: TcxCheckBox
     Left = 40
-    Top = 339
+    Top = 362
     Hint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
     Caption = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 17
     Width = 270
+  end
+  object cxLabel5: TcxLabel
+    Left = 40
+    Top = 237
+    Caption = #1055#1077#1088#1080#1086#1076'-'#1089#1090#1100' '#1086#1090#1087#1088'. '#1074' '#1076#1085#1103#1093
+  end
+  object edAmountDay: TcxCurrencyEdit
+    Left = 40
+    Top = 255
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    Properties.ReadOnly = False
+    TabOrder = 19
+    Width = 145
+  end
+  object cxLabel6: TcxLabel
+    Left = 191
+    Top = 237
+    Caption = #1055#1077#1088#1080#1086#1076'-'#1089#1090#1100' '#1086#1090#1087#1088'. '#1074' '#1084#1077#1089#1103#1094#1072#1093
+  end
+  object edAmountMonth: TcxCurrencyEdit
+    Left = 191
+    Top = 255
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    Properties.ReadOnly = False
+    TabOrder = 21
+    Width = 145
   end
   object ActionList: TActionList
     Left = 272
@@ -253,6 +281,22 @@
         Value = 'NULL'
         Component = edSendReal
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDay'
+        Value = Null
+        Component = edAmountDay
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMonth'
+        Value = Null
+        Component = edAmountMonth
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -371,6 +415,20 @@
         Value = 'NULL'
         Component = edSendReal
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountDay'
+        Value = Null
+        Component = edAmountDay
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountMonth'
+        Value = Null
+        Component = edAmountMonth
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item

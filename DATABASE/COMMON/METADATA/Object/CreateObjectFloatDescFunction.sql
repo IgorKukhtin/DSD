@@ -1272,9 +1272,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_JuridicalSettingsItem_PriceLimit() RET
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_JuridicalSettingsItem(), 'zc_ObjectFloat_JuridicalSettingsItem_PriceLimit', '% бонусирования' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_JuridicalSettingsItem_PriceLimit');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Maker_Day() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Maker_Day'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Maker(), 'zc_ObjectFloat_Maker_Day', 'периодичность отправки в дня' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Maker_Day');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Maker_Month() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Maker_Month'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Maker(), 'zc_ObjectFloat_Maker_Month', 'периодичность отправки в месяцах' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Maker_Month');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 18.01.19         * zc_ObjectFloat_Maker_Day
+                    zc_ObjectFloat_Maker_Month
  13.01.19         * zc_ObjectFloat_JuridicalSettingsItem_Bonus
                     zc_ObjectFloat_JuridicalSettingsItem_PriceLimit
  21.12.18                                                                                     * zc_ObjectFloat_RecalcMCSSheduler_Week ...
