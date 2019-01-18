@@ -43,7 +43,7 @@ type
     MedicSPGuides: TdsdGuides;
     cxLabel1: TcxLabel;
     edSPKind: TcxButtonEdit;
-    SPKindGuides: TdsdGuides;
+    GuidesSPKind: TdsdGuides;
   private
     { Private declarations }
   public

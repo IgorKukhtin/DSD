@@ -3,7 +3,7 @@ object PartnerMedical_ObjectForm: TPartnerMedical_ObjectForm
   Top = 0
   Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077
   ClientHeight = 279
-  ClientWidth = 720
+  ClientWidth = 796
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object PartnerMedical_ObjectForm: TPartnerMedical_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 61
-    Width = 720
+    Width = 796
     Height = 218
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 720
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -74,7 +75,7 @@ object PartnerMedical_ObjectForm: TPartnerMedical_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 90
+        Width = 114
       end
       object DepartmentName: TcxGridDBColumn
         Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' '#1086#1093#1088#1072#1085#1099' '#1079#1076#1086#1088#1086#1074#1100#1103
@@ -101,12 +102,13 @@ object PartnerMedical_ObjectForm: TPartnerMedical_ObjectForm
   object Panel: TPanel
     Left = 0
     Top = 0
-    Width = 720
+    Width = 796
     Height = 35
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 720
     object cxLabel6: TcxLabel
-      Left = 6
+      Left = 4
       Top = 9
       AutoSize = False
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
@@ -114,7 +116,7 @@ object PartnerMedical_ObjectForm: TPartnerMedical_ObjectForm
       Width = 91
     end
     object edUnit: TcxButtonEdit
-      Left = 96
+      Left = 93
       Top = 8
       Properties.Buttons = <
         item
@@ -126,24 +128,44 @@ object PartnerMedical_ObjectForm: TPartnerMedical_ObjectForm
       Width = 297
     end
     object cxLabel2: TcxLabel
-      Left = 432
+      Left = 401
       Top = 9
       Caption = #1053#1072' '#1076#1072#1090#1091':'
     end
     object deOperDate: TcxDateEdit
-      Left = 478
+      Left = 448
       Top = 8
       EditValue = 43101d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 3
-      Width = 85
+      Width = 81
     end
+  end
+  object cxLabel1: TcxLabel
+    Left = 545
+    Top = 9
+    AutoSize = False
+    Caption = #1057#1086#1094'. '#1087#1088#1086#1077#1082#1090':'
+    Height = 17
+    Width = 72
+  end
+  object edSPKind: TcxButtonEdit
+    Left = 615
+    Top = 8
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 177
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 48
-    Top = 96
+    Left = 88
+    Top = 104
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
@@ -496,10 +518,18 @@ object PartnerMedical_ObjectForm: TPartnerMedical_ObjectForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSPKind'
+        Value = Null
+        Component = GuidesSPKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 40
-    Top = 208
+    Left = 56
+    Top = 216
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 160
@@ -519,8 +549,8 @@ object PartnerMedical_ObjectForm: TPartnerMedical_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 488
-    Top = 96
+    Left = 544
+    Top = 112
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -576,7 +606,8 @@ object PartnerMedical_ObjectForm: TPartnerMedical_ObjectForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 240
+    Left = 248
+    Top = 8
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -601,9 +632,24 @@ object PartnerMedical_ObjectForm: TPartnerMedical_ObjectForm
         Component = deOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterSPKindId'
+        Value = Null
+        Component = GuidesSPKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterSPKindName'
+        Value = Null
+        Component = GuidesSPKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 512
-    Top = 136
+    Top = 168
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -615,8 +661,39 @@ object PartnerMedical_ObjectForm: TPartnerMedical_ObjectForm
       end
       item
         Component = deOperDate
+      end
+      item
+        Component = GuidesSPKind
       end>
     Left = 440
     Top = 112
+  end
+  object GuidesSPKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edSPKind
+    FormNameParam.Value = 'TSPKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TSPKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesSPKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesSPKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 688
   end
 end

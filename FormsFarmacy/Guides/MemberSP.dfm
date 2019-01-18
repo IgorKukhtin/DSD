@@ -148,7 +148,7 @@ object MemberSPForm: TMemberSPForm
         end>
       Properties.ReadOnly = True
       TabOrder = 0
-      Width = 450
+      Width = 358
     end
   end
   object DataSource: TDataSource

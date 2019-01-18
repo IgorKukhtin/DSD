@@ -1672,9 +1672,20 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterSPKindId'
+        Value = '4823010'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterSPKindName'
+        Value = #1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 1303'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 584
-    Top = 152
+    Left = 496
+    Top = 40
   end
   object GuidesGroupMemberSP: TdsdGuides
     KeyField = 'Id'
@@ -1853,8 +1864,8 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 664
-    Top = 72
+    Left = 640
+    Top = 56
   end
   object spSelectPrintCheck: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Print'

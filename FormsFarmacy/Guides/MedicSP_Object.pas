@@ -84,6 +84,9 @@ type
     cxLabel2: TcxLabel;
     deOperDate: TcxDateEdit;
     GuidesUnit: TdsdGuides;
+    cxLabel3: TcxLabel;
+    edSPKind: TcxButtonEdit;
+    GuidesSPKind: TdsdGuides;
   private
     { Private declarations }
   public

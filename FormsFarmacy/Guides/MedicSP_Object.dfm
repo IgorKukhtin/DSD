@@ -3,7 +3,7 @@ object MedicSP_ObjectForm: TMedicSP_ObjectForm
   Top = 0
   Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
   ClientHeight = 344
-  ClientWidth = 618
+  ClientWidth = 615
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object MedicSP_ObjectForm: TMedicSP_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 91
-    Width = 618
+    Width = 615
     Height = 253
     Align = alClient
     PopupMenu = pmGrid
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 618
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -86,10 +87,11 @@ object MedicSP_ObjectForm: TMedicSP_ObjectForm
   object Panel: TPanel
     Left = 0
     Top = 0
-    Width = 618
+    Width = 615
     Height = 65
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 618
     object cxLabel6: TcxLabel
       Left = 6
       Top = 9
@@ -108,7 +110,7 @@ object MedicSP_ObjectForm: TMedicSP_ObjectForm
         end>
       Properties.ReadOnly = True
       TabOrder = 0
-      Width = 450
+      Width = 310
     end
     object cxLabel1: TcxLabel
       Left = 7
@@ -131,18 +133,38 @@ object MedicSP_ObjectForm: TMedicSP_ObjectForm
       Width = 297
     end
     object cxLabel2: TcxLabel
-      Left = 424
-      Top = 36
+      Left = 472
+      Top = 9
       Caption = #1053#1072' '#1076#1072#1090#1091':'
     end
     object deOperDate: TcxDateEdit
-      Left = 479
-      Top = 35
+      Left = 527
+      Top = 8
       EditValue = 43101d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 5
       Width = 85
+    end
+    object cxLabel3: TcxLabel
+      Left = 414
+      Top = 36
+      AutoSize = False
+      Caption = #1057#1086#1094'. '#1087#1088#1086#1077#1082#1090':'
+      Height = 17
+      Width = 72
+    end
+    object edSPKind: TcxButtonEdit
+      Left = 492
+      Top = 35
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 120
     end
   end
   object DataSource: TDataSource
@@ -690,6 +712,21 @@ object MedicSP_ObjectForm: TMedicSP_ObjectForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterSPKindId'
+        Value = Null
+        Component = GuidesSPKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterSPKindName'
+        Value = Null
+        Component = GuidesSPKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 296
   end
@@ -743,6 +780,21 @@ object MedicSP_ObjectForm: TMedicSP_ObjectForm
         Name = 'MasterUnitName'
         Value = Null
         Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterSPKindId'
+        Value = Null
+        Component = GuidesSPKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterSPKindName'
+        Value = Null
+        Component = GuidesSPKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -826,6 +878,35 @@ object MedicSP_ObjectForm: TMedicSP_ObjectForm
         MultiSelectSeparator = ','
       end>
     Left = 184
+    Top = 32
+  end
+  object GuidesSPKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edSPKind
+    FormNameParam.Value = 'TSPKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TSPKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesSPKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesSPKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 544
     Top = 32
   end
 end

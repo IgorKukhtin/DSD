@@ -6,7 +6,7 @@ inherited SPDialogForm: TSPDialogForm
   ClientWidth = 577
   Position = poScreenCenter
   ExplicitWidth = 583
-  ExplicitHeight = 256
+  ExplicitHeight = 255
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel [0]
@@ -229,13 +229,15 @@ inherited SPDialogForm: TSPDialogForm
     OnClick = bbSP_PriorClick
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Top = 56
+    Left = 251
+    Top = 72
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 8
     Top = 64
   end
   inherited ActionList: TActionList
+    Left = 199
     Top = 63
   end
   inherited FormParams: TdsdFormParams
@@ -257,7 +259,7 @@ inherited SPDialogForm: TSPDialogForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 104
+    Left = 88
     Top = 56
   end
   object PartnerMedicalGuides: TdsdGuides
@@ -322,6 +324,21 @@ inherited SPDialogForm: TSPDialogForm
         Value = Null
         Component = FormParams
         ComponentItem = 'MasterUnitName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterSPKindId'
+        Value = Null
+        Component = SPKindGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterSPKindName'
+        Value = Null
+        Component = SPKindGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -406,6 +423,21 @@ inherited SPDialogForm: TSPDialogForm
         Value = Null
         Component = FormParams
         ComponentItem = 'MasterUnitName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterSPKindId'
+        Value = Null
+        Component = SPKindGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterSPKindName'
+        Value = Null
+        Component = SPKindGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -594,7 +626,7 @@ inherited SPDialogForm: TSPDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 160
+    Left = 128
     Top = 104
   end
   object spSelect_Object_MemberSP: TdsdStoredProc
