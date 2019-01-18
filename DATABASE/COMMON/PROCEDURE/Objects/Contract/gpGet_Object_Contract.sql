@@ -38,7 +38,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , CurrencyId Integer, CurrencyName TVarChar
 
              , BankId Integer, BankName TVarChar
-             , isDefault Boolean
+             , isDefault Boolean, isDefaultOut Boolean
              , isStandart Boolean
 
              , isPersonal Boolean
@@ -133,6 +133,7 @@ BEGIN
            , '' :: TVarChar   AS BankName
            
            , CAST (false as Boolean)   AS isDefault 
+           , CAST (false as Boolean)   AS isDefaultOut
            , CAST (false as Boolean)   AS isStandart
 
            , CAST (false as Boolean)   AS isPersonal 
@@ -231,11 +232,12 @@ BEGIN
            , Object_Bank.Id          AS BankId
            , Object_Bank.ValueData   AS BankName
 
-           , COALESCE (ObjectBoolean_Default.ValueData, False)  AS isDefault
-           , COALESCE (ObjectBoolean_Standart.ValueData, False)  AS isStandart
+           , COALESCE (ObjectBoolean_Default.ValueData, False)     AS isDefault
+           , COALESCE (ObjectBoolean_DefaultOut.ValueData, False)  AS isDefaultOut
+           , COALESCE (ObjectBoolean_Standart.ValueData, False)    AS isStandart
 
            , COALESCE (ObjectBoolean_Personal.ValueData, False)  AS isPersonal
-           , COALESCE (ObjectBoolean_Unique.ValueData, False)  AS isUnique
+           , COALESCE (ObjectBoolean_Unique.ValueData, False)    AS isUnique
            
            , Object_PriceList.Id         AS PriceListId 
            , Object_PriceList.ValueData  AS PriceListName 
@@ -293,6 +295,10 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
                                     ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
                                    AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_DefaultOut
+                                    ON ObjectBoolean_DefaultOut.ObjectId = Object_Contract_View.ContractId
+                                   AND ObjectBoolean_DefaultOut.DescId = zc_ObjectBoolean_Contract_DefaultOut()
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Standart
                                     ON ObjectBoolean_Standart.ObjectId = Object_Contract_View.ContractId
@@ -407,6 +413,7 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.01.19         * add isDefaultOut
  05.10.18         * add PartnerCode
  30.06.17         * add JuridicalInvoice
  03.03.17         * DayTaxSummary

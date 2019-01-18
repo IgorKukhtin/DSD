@@ -51,7 +51,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , BankId Integer, BankName TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
-             , isDefault Boolean
+             , isDefault Boolean, isDefaultOut Boolean
              , isStandart Boolean
              , isPersonal Boolean
              , isUnique Boolean
@@ -225,6 +225,7 @@ BEGIN
        , ObjectDate_Protocol_Update.ValueData AS UpdateDate
        
        , COALESCE (ObjectBoolean_Default.ValueData, False)  AS isDefault
+       , COALESCE (ObjectBoolean_DefaultOut.ValueData, False)  AS isDefaultOut
        , COALESCE (ObjectBoolean_Standart.ValueData, False) AS isStandart
 
        , COALESCE (ObjectBoolean_Personal.ValueData, False) AS isPersonal
@@ -291,6 +292,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
                                 ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_DefaultOut
+                                ON ObjectBoolean_DefaultOut.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_DefaultOut.DescId = zc_ObjectBoolean_Contract_DefaultOut()
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Standart
                                 ON ObjectBoolean_Standart.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Standart.DescId = zc_ObjectBoolean_Contract_Standart()
@@ -442,6 +447,7 @@ ALTER FUNCTION gpSelect_Object_Contract (TDateTime, TDateTime, Boolean, Boolean,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 18.01.19         * add isDefaultOut
  05.10.18         * add PartnerCode
  30.06.17         * add JuridicalInvoice
  03.03.17         * DayTaxSummary

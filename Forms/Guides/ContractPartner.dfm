@@ -6,7 +6,7 @@ inherited ContractPartnerForm: TContractPartnerForm
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 789
-  ExplicitHeight = 413
+  ExplicitHeight = 412
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -446,6 +446,17 @@ inherited ContractPartnerForm: TContractPartnerForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
+            Options.Editing = False
+            Width = 40
+          end
+          object IsDefaultOut: TcxGridDBColumn
+            Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1080#1089#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
+            DataBinding.FieldName = 'isDefaultOut'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1080#1089#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
             Options.Editing = False
             Width = 40
           end

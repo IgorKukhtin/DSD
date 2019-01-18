@@ -41,7 +41,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , InfoMoneyCode_Send Integer, InfoMoneyName_Send TVarChar
              , JuridicalCode_Send Integer, JuridicalName_Send TVarChar
 
-             , isDefault Boolean, isStandart Boolean
+             , isDefault Boolean, isDefaultOut Boolean, isStandart Boolean
              , isPersonal Boolean, isUnique Boolean
              , isErased Boolean 
               )
@@ -134,8 +134,9 @@ BEGIN
        , Object_JuridicalSend.ObjectCode      AS JuridicalCode_Send
        , Object_JuridicalSend.ValueData       AS JuridicalName_Send 
 
-       , COALESCE (ObjectBoolean_Default.ValueData, False)   AS isDefault
-       , COALESCE (ObjectBoolean_Standart.ValueData, False)  AS isStandart
+       , COALESCE (ObjectBoolean_Default.ValueData, False)      AS isDefault
+       , COALESCE (ObjectBoolean_DefaultOut.ValueData, False)   AS isDefaultOut
+       , COALESCE (ObjectBoolean_Standart.ValueData, False)     AS isStandart
 
        , COALESCE (ObjectBoolean_Personal.ValueData, False)  AS isPersonal
        , COALESCE (ObjectBoolean_Unique.ValueData, False)    AS isUnique
@@ -167,6 +168,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
                                 ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_DefaultOut
+                                ON ObjectBoolean_DefaultOut.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_DefaultOut.DescId = zc_ObjectBoolean_Contract_DefaultOut()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Standart
                                 ON ObjectBoolean_Standart.ObjectId = Object_Contract_View.ContractId
@@ -278,6 +283,7 @@ ALTER FUNCTION gpSelect_Object_ContractConditionValue (TVarChar) OWNER TO postgr
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 18.01.19         * DefaultOut
  13.04.16         *
  02.03.16         *
  23.05.14         * add zc_ObjectBoolean_Contract_Personal

@@ -32,7 +32,7 @@ RETURNS TABLE (Id Integer
              , OKPO TVarChar
 
              , UpdateDate TDateTime
-             , isDefault Boolean
+             , isDefault Boolean, isDefaultOut Boolean
              , isStandart Boolean
              , isPersonal Boolean
              , isUnique Boolean
@@ -127,8 +127,9 @@ BEGIN
 
            , ObjectDate_Protocol_Update.ValueData AS UpdateDate
 
-           , COALESCE (ObjectBoolean_Default.ValueData, False)  AS isDefault
-           , COALESCE (ObjectBoolean_Standart.ValueData, False) AS isStandart
+           , COALESCE (ObjectBoolean_Default.ValueData, False)     AS isDefault
+           , COALESCE (ObjectBoolean_DefaultOut.ValueData, False)  AS isDefaultOut
+           , COALESCE (ObjectBoolean_Standart.ValueData, False)    AS isStandart
 
            , COALESCE (ObjectBoolean_Personal.ValueData, False) AS isPersonal
            , COALESCE (ObjectBoolean_Unique.ValueData, False)   AS isUnique
@@ -190,6 +191,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
                                 ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_DefaultOut
+                                ON ObjectBoolean_DefaultOut.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_DefaultOut.DescId = zc_ObjectBoolean_Contract_DefaultOut()
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Standart
                                 ON ObjectBoolean_Standart.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Standart.DescId = zc_ObjectBoolean_Contract_Standart()
@@ -242,6 +247,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.01.19         * DefaultOut
  25.05.18         *
  05.05.17         *
  06.12.16         *
@@ -249,4 +255,4 @@ $BODY$
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Object_GoodsListSale (0, 0, 0, FALSE, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_GoodsListSale (0, 0, 0,0, FALSE, zfCalc_UserAdmin())

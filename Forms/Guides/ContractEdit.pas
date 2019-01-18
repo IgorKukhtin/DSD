@@ -186,6 +186,7 @@ type
     JuridicalInvoiceGuides: TdsdGuides;
     cxLabel35: TcxLabel;
     edPartnerCode: TcxTextEdit;
+    cbisDefaultOut: TcxCheckBox;
   private
     { Private declarations }
   public

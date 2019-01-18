@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , AreaName TVarChar
              , ContractArticleName TVarChar
              , ContractStateKindCode Integer 
-             , isDefault Boolean
+             , isDefault Boolean, isDefaultOut Boolean
              , isStandart Boolean
              , isPersonal Boolean
              , isUnique Boolean
@@ -66,8 +66,9 @@ BEGIN
 
        , Object_Contract_View.ContractStateKindCode
 
-       , COALESCE (ObjectBoolean_Default.ValueData, False)  AS isDefault
-       , COALESCE (ObjectBoolean_Standart.ValueData, False) AS isStandart
+       , COALESCE (ObjectBoolean_Default.ValueData, False)      AS isDefault
+       , COALESCE (ObjectBoolean_DefaultOut.ValueData, False)   AS isDefaultOut
+       , COALESCE (ObjectBoolean_Standart.ValueData, False)     AS isStandart
 
        , COALESCE (ObjectBoolean_Personal.ValueData, False) AS isPersonal
        , COALESCE (ObjectBoolean_Unique.ValueData, False)   AS isUnique
@@ -83,6 +84,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
                                 ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_DefaultOut
+                                ON ObjectBoolean_DefaultOut.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_DefaultOut.DescId = zc_ObjectBoolean_Contract_DefaultOut()
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Standart
                                 ON ObjectBoolean_Standart.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Standart.DescId = zc_ObjectBoolean_Contract_Standart()
@@ -138,6 +143,7 @@ ALTER FUNCTION gpSelect_Object_ContractJuridical (Integer, TVarChar) OWNER TO po
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 18.01.19         * DefaultOut
  08.09.14                                        * add Object_RoleAccessKeyGuide_View
  23.05.14                                        * add ObjectBoolean...
  20.05.14                                        * !!!ContractKindName - всегда!!!
