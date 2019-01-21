@@ -860,17 +860,12 @@ end;
 procedure TdsdDBViewAddOn.OnCustomDrawCell(Sender: TcxCustomGridTableView;
   ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
   var ADone: Boolean);
-var Column: TcxGridColumn; i, j : integer;
+var Column: TcxGridColumn; i, j : integer; bManual : boolean;
 begin
-  if AViewInfo.Focused then begin
-     ACanvas.Brush.Color := clHighlight;
-     if SearchAsFilter then
-        ACanvas.Font.Color := clHighlightText
-     else
-        ACanvas.Font.Color := clYellow;
-  end;
 
-  if FKeepSelectColor and AViewInfo.Selected then begin
+  bManual := False;
+
+  if FKeepSelectColor and (AViewInfo.Selected or AViewInfo.Focused) then begin
     // Работаем с условиями
     try
       for i := 0 to ColorRuleList.Count - 1 do
@@ -884,15 +879,18 @@ begin
                 if not VarIsNull(ARecord.Values[ValueBoldColumn.Index]) then
                 isBold_calc:= AnsiUpperCase(ARecord.Values[ValueBoldColumn.Index]) = AnsiUpperCase('true');}
              //
+
              if Assigned(ValueColumn) and (AViewInfo.GridRecord.ValueCount > ValueColumn.Index) then
                 if not VarIsNull(AViewInfo.GridRecord.Values[ValueColumn.Index]) then begin
                    ACanvas.Font.Color := AViewInfo.GridRecord.Values[ValueColumn.Index];
+                   bManual := True;
                 end;
              if Assigned(BackGroundValueColumn) and (AViewInfo.GridRecord.ValueCount > BackGroundValueColumn.Index) then
                 if not VarIsNull(AViewInfo.GridRecord.Values[BackGroundValueColumn.Index]) then begin
                 begin
                   j := BackGroundValueColumn.Index;
                   ACanvas.Brush.Color := AViewInfo.GridRecord.Values[BackGroundValueColumn.Index];
+                  bManual := True;
                 end;
                 end;
              end;
@@ -907,16 +905,27 @@ begin
              if Assigned(ValueColumn) then
                 if not VarIsNull(AViewInfo.GridRecord.Values[ValueColumn.Index]) then begin
                    ACanvas.Font.Color := AViewInfo.GridRecord.Values[ValueColumn.Index];
+                   bManual := True;
                 end;
              if Assigned(BackGroundValueColumn) then
                 if not VarIsNull(AViewInfo.GridRecord.Values[BackGroundValueColumn.Index]) then begin
                    ACanvas.Brush.Color := AViewInfo.GridRecord.Values[BackGroundValueColumn.Index];
+                   ACanvas.Font.Color := clWindowText;
+                   bManual := True;
                 end;
           end;
         end;
     except
       on E: Exception do ShowMessage(E.Message + ' ' +IntToStr(AViewInfo.GridRecord.ValueCount)  + ' ' +  IntToStr(J));
     end;
+  end;
+
+  if not bManual and AViewInfo.Focused then begin
+     ACanvas.Brush.Color := clHighlight;
+     if SearchAsFilter then
+        ACanvas.Font.Color := clHighlightText
+     else
+        ACanvas.Font.Color := clYellow;
   end;
 
   // работаем со свойством Удален
