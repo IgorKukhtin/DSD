@@ -868,9 +868,9 @@ begin
         ACanvas.Font.Color := clHighlightText
      else
         ACanvas.Font.Color := clYellow;
-  end else if FKeepSelectColor and AViewInfo.Selected then begin
-    ACanvas.Font.Color :=  clWindowText;
-    ACanvas.Brush.Color := clWindow;
+  end;
+
+  if FKeepSelectColor and AViewInfo.Selected then begin
     // Работаем с условиями
     try
       for i := 0 to ColorRuleList.Count - 1 do
