@@ -1332,6 +1332,8 @@ end if;*/
 
 
 
+
+
      -- !!!!!!!!!!!!!!
      -- !!!Проводки!!!
      -- !!!!!!!!!!!!!!
@@ -1360,6 +1362,7 @@ end if;*/
           ELSE -- <Перемещение по цене>
                IF vbMovementDescId = zc_Movement_SendOnPrice()
                THEN
+
                    -- создаются временные таблицы - для формирование данных для проводок - <Перемещение по цене>
                    PERFORM lpComplete_Movement_SendOnPrice_CreateTemp();
                    -- Проводим Документ

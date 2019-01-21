@@ -192,6 +192,105 @@ BEGIN
                         );
 
 
+
+
+-- !!! ВРЕМЕННО !!!
+IF inUserId = 5 AND 1=0 THEN
+    RAISE EXCEPTION 'Admin - Test = OK : %', SELECT
+                    distinct COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN COALESCE (MILinkObject_Unit.ObjectId, COALESCE (MovementLinkObject_To.ObjectId, vbUnitdId_To_find)) ELSE 0 END, 0) AS UnitId_To
+              FROM Movement
+                   JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
+
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                    ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
+                                                   AND MILinkObject_Unit.ObjectId       <> vbUnitId_From
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                    ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+
+                   LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
+                                               ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
+                                              AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
+                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+
+                   LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                   LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                               ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                              AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
+                   LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                               AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                              ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
+                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+
+                   LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
+                                           ON ObjectBoolean_PartionCount.ObjectId = MovementItem.ObjectId
+                                          AND ObjectBoolean_PartionCount.DescId = zc_ObjectBoolean_Goods_PartionCount()
+                   LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionSumm
+                                           ON ObjectBoolean_PartionSumm.ObjectId = MovementItem.ObjectId
+                                          AND ObjectBoolean_PartionSumm.DescId = zc_ObjectBoolean_Goods_PartionSumm()
+
+                   LEFT JOIN ObjectLink AS ObjectLink_Goods_Business
+                                        ON ObjectLink_Goods_Business.ObjectId = MovementItem.ObjectId
+                                       AND ObjectLink_Goods_Business.DescId = zc_ObjectLink_Goods_Business()
+                   LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                        ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                       AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                   LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
+                   LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= vbOperDate) -- по "Дате склад"
+                          AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = MovementItem.ObjectId
+
+                   LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                ON MovementLinkObject_To.MovementId = Movement.Id
+                                               AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                               AND vbUnitdId_To_find = 0
+                   LEFT JOIN Object AS Object_To ON Object_To.Id = COALESCE (MILinkObject_Unit.ObjectId, COALESCE (MovementLinkObject_To.ObjectId, vbUnitdId_To_find))
+
+                   LEFT JOIN ObjectLink AS ObjectLink_UnitTo_HistoryCost
+                                        ON ObjectLink_UnitTo_HistoryCost.ObjectId = Object_To.Id
+                                       AND ObjectLink_UnitTo_HistoryCost.DescId = zc_ObjectLink_Unit_HistoryCost()
+
+                   LEFT JOIN ObjectLink AS ObjectLink_UnitTo_Branch
+                                        ON ObjectLink_UnitTo_Branch.ObjectId = COALESCE (MILinkObject_Unit.ObjectId, MovementLinkObject_To.ObjectId)
+                                       AND ObjectLink_UnitTo_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                       AND Object_To.DescId = zc_Object_Unit()
+                   LEFT JOIN ObjectLink AS ObjectLink_UnitTo_AccountDirection
+                                        ON ObjectLink_UnitTo_AccountDirection.ObjectId = COALESCE (MILinkObject_Unit.ObjectId, MovementLinkObject_To.ObjectId)
+                                       AND ObjectLink_UnitTo_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
+                                       AND Object_To.DescId = zc_Object_Unit()
+                   LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate_To
+                                           ON ObjectBoolean_PartionDate_To.ObjectId = COALESCE (MILinkObject_Unit.ObjectId, MovementLinkObject_To.ObjectId)
+                                          AND ObjectBoolean_PartionDate_To.DescId = zc_ObjectBoolean_Unit_PartionDate()
+                                          AND Object_To.DescId = zc_Object_Unit()
+                   LEFT JOIN ObjectLink AS ObjectLink_UnitTo_Juridical
+                                        ON ObjectLink_UnitTo_Juridical.ObjectId = COALESCE (MILinkObject_Unit.ObjectId, MovementLinkObject_To.ObjectId)
+                                       AND ObjectLink_UnitTo_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                                       AND Object_To.DescId = zc_Object_Unit()
+                   LEFT JOIN ObjectLink AS ObjectLink_UnitTo_Business
+                                        ON ObjectLink_UnitTo_Business.ObjectId = COALESCE (MILinkObject_Unit.ObjectId, MovementLinkObject_To.ObjectId)
+                                       AND ObjectLink_UnitTo_Business.DescId = zc_ObjectLink_Unit_Business()
+                                       AND Object_To.DescId = zc_Object_Unit()
+
+              WHERE Movement.Id = inMovementId
+                AND Movement.DescId = zc_Movement_SendOnPrice()
+                AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+             ) 
+   ;
+END IF;
+
+
+
      -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId, isLossMaterials
                          , MIContainerId_To, ContainerId_GoodsFrom, ContainerId_GoodsTo, ContainerId_GoodsTransit_01, ContainerId_GoodsTransit_02, ContainerId_GoodsTransit_53, GoodsId, GoodsKindId, AssetId, PartionGoods, PartionGoodsDate
@@ -370,7 +469,7 @@ BEGIN
                   , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)       AS isPartionSumm
 
                   , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN COALESCE (MILinkObject_Unit.ObjectId, COALESCE (MovementLinkObject_To.ObjectId, vbUnitdId_To_find)) ELSE 0 END, 0) AS UnitId_To
-                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Member() THEN COALESCE (MILinkObject_Unit.ObjectId, COALESCE (MovementLinkObject_To.ObjectId, vbUnitdId_To_find)) ELSE 0 END, 0) AS MemberId_To
+                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Member() THEN COALESCE (MILinkObject_Unit.ObjectId, COALESCE (MovementLinkObject_To.ObjectId, 0)) ELSE 0 END, 0) AS MemberId_To
                   , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Branch.ChildObjectId WHEN Object_To.DescId = zc_Object_Member() THEN 0 ELSE 0 END, 0) AS BranchId_To
                   , COALESCE (ObjectLink_UnitTo_AccountDirection.ChildObjectId, 0) AS AccountDirectionId_To  -- Аналитики счетов - направления !!!обрабатываются только для подразделения!!!
                   , COALESCE (ObjectBoolean_PartionDate_To.ValueData, FALSE) AS isPartionDate_UnitTo

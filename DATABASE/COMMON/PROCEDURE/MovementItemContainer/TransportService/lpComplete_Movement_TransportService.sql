@@ -197,7 +197,8 @@ BEGIN
                                  FROM MovementFloat
                                       INNER JOIN Movement ON Movement.Id       = MovementFloat.MovementId
                                                          AND Movement.DescId   = zc_Movement_IncomeCost()
-                                                         AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                      -- AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                         AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  WHERE MovementFloat.ValueData = inMovementId
                                    AND MovementFloat.DescId    = zc_MovementFloat_MovementId()
                                 );

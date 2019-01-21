@@ -214,6 +214,12 @@ BEGIN
                                                          THEN zc_Movement_Send()
                                                     WHEN Object_From.DescId = zc_Object_ArticleLoss()
                                                          THEN zc_Movement_Loss()
+
+                                                    WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
+                                                     AND tmpMovement.FromId = 3080691 -- Ñךכאה ÃÏ פ.Ëüגמג
+                                                     AND tmpMovement.ToId   = 8411    -- Ñךכאה ÃÏ פ.Êטוג
+                                                         THEN zc_Movement_Send()
+
                                                     WHEN Object_From.DescId = zc_Object_Unit()
                                                          THEN zc_Movement_SendOnPrice()
                                                     ELSE tmpMovement.DescId

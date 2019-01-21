@@ -14,10 +14,6 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Income());
 
-
-     -- создаются временные таблицы - для формирование данных для проводок
-     PERFORM lpComplete_Movement_IncomeCost_CreateTemp();
-
      -- Проводим Документ
      PERFORM lpComplete_Movement_IncomeCost (inMovementId := inMovementId
                                            , inUserId     := vbUserId
