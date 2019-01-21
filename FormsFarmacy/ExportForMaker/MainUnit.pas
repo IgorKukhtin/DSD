@@ -118,8 +118,8 @@ begin
     begin
       ReportIncome;
       ReportCheck;
-      btnExportClick;
-      btnSendMailClick;
+      btnExportClick(Sender);
+      btnSendMailClick(Sender);
       qryMaker.Next;
       Application.ProcessMessages;
     end;
@@ -226,29 +226,28 @@ end;
 
 procedure TMainForm.ReportCheck;
 begin
-  Add_Log('Начало Формирования отчета по приходам ' + qryMaker.FieldByName('Name').AsString);
-  FileName := 'Отчет по приходам';
+  Add_Log('Начало Формирования отчета по продажам ' + qryMaker.FieldByName('Name').AsString);
+  FileName := 'Отчет по продажам';
 
   qryReport_Upload.Close;
   qryReport_Upload.SQL.Text :=
     'select '#13#10 +
     '  Code AS "Код", '#13#10 +
     '  Name AS "Название", '#13#10 +
-    '  NDS AS "НДС", '#13#10 +
+    '  NDS  AS "НДС", '#13#10 +
     '  PriceWithVAT AS "Цена прихода с НДС", '#13#10 +
-    '  Price AS "Цена прихода (без НДС)", '#13#10 +
+    '  TotalAmount AS "Итого кол-во", '#13#10 +
+    '  SummaWithVAT AS "Сумма, в ценах прихода с НДС", '#13#10 +
     '  PriceSIP AS "Цена СИП", '#13#10 +
-    '  Amount AS "Итого кол-во", '#13#10 +
     '  SummSIP AS "Сумма СИП", '#13#10 +
     '  StatusName AS "Статус", '#13#10 +
     '  ItemName AS "Тип документа", '#13#10 +
+    '  MainJuridicalName AS "Наше юр. лицо", '#13#10 +
     '  UnitName AS "Подразделение", '#13#10 +
     '  OperDate AS "Дата", '#13#10 +
     '  InvNumber AS "№ документа", '#13#10 +
-    '  JuridicalName AS "Поставщик", '#13#10 +
-    '  RetailName AS "Торговая сеть", '#13#10 +
-    '  MainJuridicalName AS "Наше юр. лицо" '#13#10 +
-    'from gpReport_MovementIncome_Promo(:inMaker, :inStartDate, :inEndDate, ''3'')';
+    '  JuridicalName AS "Поставщик" '#13#10 +
+    'from gpReport_MovementCheck_Promo(:inMaker, :inStartDate, :inEndDate, ''3'')';
 
   qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
   qryReport_Upload.Params.ParamByName('inStartDate').Value := IncMonth(Date, - 1);
@@ -262,7 +261,7 @@ procedure TMainForm.pmClick(Sender: TObject);
 begin
   case TMenuItem(Sender).Tag of
     0 : ReportIncome;
-    1 : ;
+    1 : ReportCheck;
   end;
 end;
 

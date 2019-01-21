@@ -3,7 +3,7 @@ inherited OrderExternalForm: TOrderExternalForm
   ClientHeight = 611
   ClientWidth = 820
   ExplicitWidth = 836
-  ExplicitHeight = 649
+  ExplicitHeight = 650
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -21,8 +21,6 @@ inherited OrderExternalForm: TOrderExternalForm
       inherited cxGrid: TcxGrid
         Width = 820
         Height = 436
-        ExplicitLeft = 12
-        ExplicitTop = 3
         ExplicitWidth = 820
         ExplicitHeight = 436
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1456,11 +1454,11 @@ inherited OrderExternalForm: TOrderExternalForm
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnitForm'
-    PositionDataSet = 'ClientGridDataSet'
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'TreeDataSet'
     Params = <
       item
         Name = 'Key'

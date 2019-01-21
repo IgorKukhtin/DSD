@@ -395,6 +395,9 @@ function TdsdExportToXLS.LocalExecute: Boolean;
        xlMedium = -4138;
        xlLandscape = 2;
        xlPortrait = 1;
+       xlMaximized = -4137;
+       xlMinimized = -4140;
+       xlNormal = -4143;
 
   function GetThousandSeparator : string;
   begin
@@ -683,16 +686,12 @@ begin
       xlBook.SaveAs(ExtractFilePath(ParamStr(0)) + FFileName)
     else xlBook.SaveAs(ExtractFilePath(ParamStr(0)) + 'ExportToXLS');
     xlApp.Application.ScreenUpdating := true;
-    xlApp.WindowState := $FFFFEFD4;
-    xlApp.WindowState := $FFFFEFD7 or $FFFFEFD1;
+    xlApp.WindowState := xlMinimized;
+    xlApp.WindowState := xlMaximized or xlNormal;
     xlApp.Visible := True;
   finally
 
   end;
 end;
-
-initialization
-
-  System.Variants.DispatchUnsignedAsSigned := True;
 
 end.

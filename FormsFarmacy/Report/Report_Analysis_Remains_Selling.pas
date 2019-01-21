@@ -121,6 +121,9 @@ type
     Panel7: TPanel;
     cxButton3: TcxButton;
     actAddGoods: TAction;
+    cxDBPivotGridField11: TcxDBPivotGridField;
+    cxDBPivotGridField12: TcxDBPivotGridField;
+    cxDBPivotGridField13: TcxDBPivotGridField;
     procedure actSetGoodsExecute(Sender: TObject);
     procedure actSetPromoExecute(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
