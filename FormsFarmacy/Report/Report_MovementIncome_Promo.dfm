@@ -36,6 +36,11 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = Name
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummSIP
             end>
           OptionsData.Editing = False
           Styles.Content = nil

@@ -124,10 +124,17 @@ begin
         with StringList do begin
            if FileExists(ReplaceStr(ConnectionPath,'\farmacy_init.php','\farmacy_initRep.php')) = TRUE
            then LoadFromFile(ReplaceStr(ConnectionPath,'\farmacy_init.php','\farmacy_initRep.php'));
-           fFind:=false;
-           if Count = StringListConnection.Count then
-             for i:=0 to Count-1
-             do fFind:= (fFind) or (StringList[i] = StringListConnection.Strings[i]);
+           fFind:=Count <> 0;
+           if fFind then
+           begin
+             if Count = StringListConnection.Count then
+               for i:=0 to Count-1 do
+               begin
+                 fFind:= Strings[i] = StringListConnection.Strings[i];
+                 if fFind = FALSE then Break;
+               end
+             else fFind:=False;
+           end;
            StringList.Free;
            StringListConnection.Free;
         end;

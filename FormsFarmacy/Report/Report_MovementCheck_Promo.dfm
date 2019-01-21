@@ -114,6 +114,11 @@ inherited Report_MovementCheck_PromoForm: TReport_MovementCheck_PromoForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummSIP
             end>
           Styles.Content = nil
           Styles.Inactive = nil
