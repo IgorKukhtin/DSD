@@ -11,7 +11,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , AccountDirectionId Integer, AccountDirectionCode Integer, AccountDirectionName TVarChar
              , InfoMoneyCode Integer, InfoMoneyDestinationCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyDestinationId Integer, InfoMoneyId Integer
              , AccountKindId Integer, AccountKindCode Integer, AccountKindName TVarChar
-             , onComplete Boolean, isErased Boolean
+             , onComplete Boolean, isPrintDetail Boolean
+             , isErased Boolean
               )
 AS
 $BODY$
@@ -49,6 +50,7 @@ BEGIN
            , View_Account.AccountKindName
 
            , View_Account.onComplete
+           , View_Account.isPrintDetail
            , View_Account.isErased
 
        FROM Object_Account_View AS View_Account;
@@ -61,7 +63,8 @@ ALTER FUNCTION gpSelect_Object_Account (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.01.19          * isPrintDetail
  02.11.13                                        * add Object_Account.ObjectCode < 100000
  29.10.13                                        * add Object_InfoMoney_View
  04.07.13          * + onComplete... +AccountKind...

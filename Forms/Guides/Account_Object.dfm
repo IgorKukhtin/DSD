@@ -138,6 +138,16 @@ object Account_ObjectForm: TAccount_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 25
       end
+      object isPrintDetail: TcxGridDBColumn
+        Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1088#1080' '#1087#1077#1095#1072#1090#1080
+        DataBinding.FieldName = 'isPrintDetail'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1088#1072#1079#1074#1077#1088#1085#1091#1090#1099#1084' '#1087#1088#1080' '#1087#1077#1095#1072#1090#1080
+        Options.Editing = False
+        Width = 40
+      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'

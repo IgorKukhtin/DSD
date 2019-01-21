@@ -18,10 +18,18 @@ RETURNS TABLE (RootName TVarChar, AccountCode Integer, AccountGroupName TVarChar
              , AmountActiveStart TFloat, AmountPassiveStart TFloat, AmountActiveEnd TFloat, AmountPassiveEnd TFloat
              , CountStart TFloat, CountDebet TFloat, CountKredit TFloat, CountEnd TFloat
              , ContainerId Integer
+             , isPrintDetail Boolean
+             , RootName_Detail TVarChar
+             , AccountGroupName_Detail TVarChar
+             , AccountName_Detail TVarChar
+             , Num_Detail Integer
+             , Koeff_50401 Integer
               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAccountName_70301 TVarChar;
+   DECLARE vbAccountGroupName_70301 TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Balance());
@@ -41,6 +49,15 @@ end if;*/
          RETURN;
      END IF;
 
+     SELECT Object.ValueData , Object_AccountGroup.ValueData
+     INTO vbAccountName_70301
+        , vbAccountGroupName_70301
+     FROM Object 
+       LEFT JOIN ObjectLink AS ObjectLink_Account_AccountGroup
+                            ON ObjectLink_Account_AccountGroup.ObjectId = Object.Id 
+                           AND ObjectLink_Account_AccountGroup.DescId = zc_ObjectLink_Account_AccountGroup()
+       LEFT JOIN Object AS Object_AccountGroup ON Object_AccountGroup.Id = ObjectLink_Account_AccountGroup.ChildObjectId
+     WHERE Object.DescId = zc_Object_Account() AND Object.ObjectCode = 70301;
 
      -- Результат
      RETURN QUERY
@@ -171,6 +188,19 @@ end if;*/
            , CAST (tmpReportOperation.CountRemainsEnd AS TFloat) AS CountEnd
 
            , tmpReportOperation.ContainerId :: Integer AS ContainerId
+           
+           , COALESCE (Object_Account_View.isPrintDetail, FALSE) :: Boolean AS isPrintDetail
+           , CAST (CASE WHEN Object_Account_View.AccountCode >= 70000 OR Object_Account_View.AccountCode = 50401 THEN 'ПАССИВЫ' ELSE 'АКТИВЫ' END AS TVarChar) AS RootName_Detail
+          
+           , CASE WHEN Object_Account_View.AccountId = zc_Enum_Account_50401() THEN vbAccountGroupName_70301 ELSE Object_Account_View.AccountGroupName_original END :: TVarChar  AS  AccountGroupName_Detail
+          
+           , CASE WHEN COALESCE (Object_Account_View.isPrintDetail, FALSE) = FALSE 
+                  THEN 'Прочее' 
+                  ELSE CASE WHEN Object_Account_View.AccountId = zc_Enum_Account_50401() THEN vbAccountName_70301 ELSE Object_Account_View.AccountName_original END 
+                  END  :: TVarChar AS AccountName_Detail
+           
+           , CASE WHEN COALESCE (Object_Account_View.isPrintDetail, FALSE) = FALSE THEN 999 ELSE 1 END :: integer AS Num_Detail
+           , CASE WHEN Object_Account_View.AccountId = zc_Enum_Account_50401() THEN -1 ELSE 1 END :: integer AS Koeff_50401
        FROM
            tmpAccountAll AS Object_Account_View
            LEFT JOIN
@@ -346,6 +376,7 @@ ALTER FUNCTION gpReport_Balance (TDateTime, TDateTime, TVarChar) OWNER TO postgr
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.01.19         *
  04.05.14                                        * add BankAccountId and CashId
  29.03.14                                        * add PaidKindName
  27.01.14                                        * add zc_ContainerLinkObject_JuridicalBasis and zc_ContainerLinkObject_Business

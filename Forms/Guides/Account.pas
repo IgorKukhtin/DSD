@@ -65,6 +65,7 @@ type
     AccountName_All: TcxGridDBColumn;
     onComplete: TcxGridDBColumn;
     InfoMoneyCode: TcxGridDBColumn;
+    isPrintDetail: TcxGridDBColumn;
   private
     { Private declarations }
   public

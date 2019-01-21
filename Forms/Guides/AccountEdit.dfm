@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1095#1077#1090'>'
-  ClientHeight = 350
-  ClientWidth = 389
+  ClientHeight = 396
+  ClientWidth = 362
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 40
-    Top = 316
+    Left = 62
+    Top = 356
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 238
-    Top = 316
+    Left = 240
+    Top = 356
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -125,6 +125,16 @@
     TabOrder = 13
     Width = 273
   end
+  object cbisPrintDetail: TcxCheckBox
+    Left = 40
+    Top = 313
+    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1080#1089#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
+    Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1088#1072#1079#1074#1077#1088#1085#1091#1090#1099#1084' '#1087#1088#1080' '#1087#1077#1095#1072#1090#1080
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 14
+    Width = 209
+  end
   object ActionList: TActionList
     Left = 16
     Top = 32
@@ -145,10 +155,12 @@
     end
     object dsdFormClose1: TdsdFormClose
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -168,12 +180,14 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -181,31 +195,45 @@
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountGroupId'
         Value = ''
         Component = AccountGroupGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountDirectionId'
         Value = ''
         Component = AccountDirectionGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyDestinationId'
         Value = ''
         Component = InfoMoneyDestinationGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPrintDetail'
+        Value = Null
+        Component = cbisPrintDetail
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 240
     Top = 48
   end
@@ -215,9 +243,10 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
-    Left = 296
-    Top = 24
+    Left = 336
+    Top = 72
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Account'
@@ -230,23 +259,27 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupId'
         Value = ''
         Component = AccountGroupGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupName'
@@ -254,43 +287,58 @@
         Component = AccountGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountDirectionId'
         Value = ''
         Component = AccountDirectionGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountDirectionName'
         Value = ''
         Component = AccountDirectionGuides
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyDestinationId'
         Value = ''
         Component = InfoMoneyDestinationGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyDestinationName'
         Value = ''
         Component = InfoMoneyDestinationGuides
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPrintDetail'
+        Value = Null
+        Component = cbisPrintDetail
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 328
     Top = 80
   end
@@ -299,6 +347,7 @@
     LookupControl = ceAccountGroup
     FormNameParam.Value = 'TAccountGroupForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccountGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -308,6 +357,7 @@
         Component = AccountGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -316,6 +366,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 328
     Top = 125
@@ -325,6 +376,7 @@
     LookupControl = ceAccountDirection
     FormNameParam.Value = 'TAccountDirectionForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccountDirectionForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -334,6 +386,7 @@
         Component = AccountDirectionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -342,6 +395,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 328
     Top = 173
@@ -362,6 +416,7 @@
     Top = 64
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 16
     Top = 136
   end
   object InfoMoneyDestinationGuides: TdsdGuides
@@ -369,6 +424,7 @@
     LookupControl = ceInfoMoneyDestination
     FormNameParam.Value = 'TInfoMoneyDestinationForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoneyDestinationForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -378,6 +434,7 @@
         Component = InfoMoneyDestinationGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -386,6 +443,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 336
     Top = 229
@@ -395,6 +453,7 @@
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -404,6 +463,7 @@
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -411,6 +471,7 @@
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 336
     Top = 269

@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_Account (Integer, TVarChar)
 
--- DROP FUNCTION gpInsertUpdate_Object_Account (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Account (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Account (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Account(
  INOUT ioId                     Integer,    -- ключ объекта <Счет>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Account(
     IN inAccountDirectionId     Integer,    -- Аналитика счета (место)
     IN inInfoMoneyDestinationId Integer,    -- Аналитика счета (назначение)
     IN inInfoMoneyId            Integer,    -- Управленческие аналитики
+    IN inIsPrintDetail          Boolean,    -- Показать развернутым при печати
     IN inSession                TVarChar    -- сессия пользователя
 )
   RETURNS Integer AS
@@ -54,17 +56,21 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Account_InfoMoney(), ioId, inInfoMoneyId);
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Account_AccountKind(), ioId, vbAccountKindId);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Account_PrintDetail(), ioId, inIsPrintDetail);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Account (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar)  OWNER TO postgres;
+
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.01.19         * inIsPrintDetail
  18.04.14                                        * rem !!! это временно !!!
  31.01.14                                        * add zc_ObjectBoolean_Account_onComplete
  25.08.13                                        * !!! это временно !!!
