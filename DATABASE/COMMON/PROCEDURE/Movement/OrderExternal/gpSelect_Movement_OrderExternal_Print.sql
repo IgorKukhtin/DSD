@@ -374,6 +374,7 @@ BEGIN
              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0)  AS GoodsKindId
              , Object_GoodsPropertyValue.ValueData  AS Name
              , ObjectFloat_Amount.ValueData         AS Amount
+             , ObjectFloat_BoxCount.ValueData       AS BoxCount
              , ObjectString_BarCode.ValueData       AS BarCode
              , ObjectString_Article.ValueData       AS Article
              , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
@@ -388,6 +389,10 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_Amount
                                    ON ObjectFloat_Amount.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                   AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_BoxCount
+                                   ON ObjectFloat_BoxCount.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                  AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_GoodsPropertyValue_BoxCount()
 
              LEFT JOIN ObjectString AS ObjectString_BarCode
                                     ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -422,6 +427,7 @@ BEGIN
      , tmpObject_GoodsPropertyValueGroup AS
        (SELECT tmpObject_GoodsPropertyValue.GoodsId
              , tmpObject_GoodsPropertyValue.Article
+             , tmpObject_GoodsPropertyValue.BoxCount
         FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' OR ArticleGLN <> '' GROUP BY GoodsId
              ) AS tmpGoodsProperty_find
              LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
@@ -534,6 +540,13 @@ BEGIN
            , Object_Goods.ValueData                     AS GoodsName
            , CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END AS GoodsName_two
            , COALESCE (tmpObject_GoodsPropertyValue.CodeSticker, '') :: TVarChar  AS CodeSticker
+           
+           , CASE WHEN COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0) > 0
+                       THEN CAST ((tmpMI.Amount + tmpMI.AmountSecond) / COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0) AS NUMERIC (16, 4))
+                  ELSE 0
+             END AS AmountBox
+          
+           , COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0)     :: TFloat    AS BoxCount
            , Object_GoodsKind.ValueData      AS GoodsKindName
            , Object_Measure.ValueData        AS MeasureName
 
@@ -552,7 +565,7 @@ BEGIN
            , tmpMI.Summ :: TFloat AS SummPVAT
 
            , COALESCE (tmpRemains.Amount, 0)  :: TFloat AS AmountRemains
-
+           
        FROM (SELECT tmpMI.MovementItemId
                   , tmpMI.GoodsId
                   , tmpMI.GoodsKindId
@@ -623,6 +636,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 21.01.19         * BoxCount
  25.07.18         * CodeSticker
  27.03.18         * add inIsJuridical
  02.11.14                                        *
