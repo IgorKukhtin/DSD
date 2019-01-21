@@ -232,7 +232,9 @@ begin
     Instance.FReportList := TStringList.Create;
     Instance.FConnectionList := TConnectionList.Create;
 
-    lConnectionPathRep := ReplaceStr(ConnectionPath, '\init.php', '\initRep.php');
+    if Pos('\farmacy_init.php', ConnectionPath) > 0 then
+      lConnectionPathRep := ReplaceStr(ConnectionPath, '\farmacy_init.php', '\farmacy_initRep.php')
+    else lConnectionPathRep := ReplaceStr(ConnectionPath, '\init.php', '\initRep.php');
 
     Instance.FConnectionList.AddFromFile(ConnectionPath, ctMain);
     if (lConnectionPathRep <> ConnectionPath) and FileExists(lConnectionPathRep) then
@@ -438,8 +440,9 @@ begin
     if CString = '' then
       if FConnectionList.CurrentConnection[CType] <> nil then
         CString := FConnectionList.CurrentConnection[CType].CString
-      else
-        CString := FConnectionList.FirstConnection(CType).CString;
+      else if FConnectionList.FirstConnection(CType) <> nil then
+        CString := FConnectionList.FirstConnection(CType).CString
+      else CString := FConnectionList.CurrentConnection[ctMain].CString;
 
     try
       repeat

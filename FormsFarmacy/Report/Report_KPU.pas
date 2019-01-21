@@ -74,6 +74,7 @@ type
     PrevNumberChecks: TcxGridDBBandedColumn;
     NumberChecks: TcxGridDBBandedColumn;
     NumberChecksRatio: TcxGridDBBandedColumn;
+    Color_Calc_Font: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

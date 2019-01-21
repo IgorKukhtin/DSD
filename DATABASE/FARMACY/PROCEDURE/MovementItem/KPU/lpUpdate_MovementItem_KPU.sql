@@ -95,6 +95,10 @@ BEGIN
             CASE WHEN COALESCE (MIFloat_PrevAverageCheck.ValueData, 0) = 0
             THEN 0 ELSE ROUND((COALESCE (MIFloat_AverageCheck.ValueData, 0) / COALESCE (MIFloat_PrevAverageCheck.ValueData, 0) - 1) * 100, 1)
             END)
+        + COALESCE (MIFloat_NumberChecksRatio.ValueData,
+            CASE WHEN COALESCE (MIFloat_PrevNumberChecks.ValueData, 0) = 0
+            THEN 0 ELSE ROUND((COALESCE (MIFloat_NumberChecks.ValueData, 0) / COALESCE (MIFloat_PrevNumberChecks.ValueData, 0) - 1) * 100, 1)
+            END)
         + COALESCE (MIFloat_LateTimeRatio.ValueData, MIFloat_LateTimePenalty.ValueData, 0)
         + COALESCE (MIFloat_FinancPlanRatio.ValueData,
             CASE WHEN COALESCE (MIFloat_FinancPlan.ValueData, 0) = 0 or COALESCE (MIFloat_FinancPlanFact.ValueData, 0) = 0
@@ -148,6 +152,18 @@ BEGIN
        LEFT JOIN MovementItemFloat AS MIFloat_AverageCheckRatio
                                    ON MIFloat_AverageCheckRatio.MovementItemId = MovementItem.Id
                                   AND MIFloat_AverageCheckRatio.DescId = zc_MIFloat_AverageCheckRatio()
+
+       LEFT JOIN MovementItemFloat AS MIFloat_PrevNumberChecks
+                                   ON MIFloat_PrevNumberChecks.MovementItemId = MovementItem.Id
+                                  AND MIFloat_PrevNumberChecks.DescId = zc_MIFloat_PrevNumberChecks()
+
+       LEFT JOIN MovementItemFloat AS MIFloat_NumberChecks
+                                   ON MIFloat_NumberChecks.MovementItemId = MovementItem.Id
+                                  AND MIFloat_NumberChecks.DescId = zc_MIFloat_NumberChecks()
+
+       LEFT JOIN MovementItemFloat AS MIFloat_NumberChecksRatio
+                                   ON MIFloat_NumberChecksRatio.MovementItemId = MovementItem.Id
+                                  AND MIFloat_NumberChecksRatio.DescId = zc_MIFloat_NumberChecksRatio()
 
        LEFT JOIN MovementItemFloat AS MIFloat_LateTimePenalty
                                    ON MIFloat_LateTimePenalty.MovementItemId = MovementItem.Id

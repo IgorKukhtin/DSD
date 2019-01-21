@@ -3,6 +3,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
   ClientWidth = 806
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 822
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -35,6 +36,11 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = Name
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummSIP
             end>
           OptionsData.Editing = False
           Styles.Content = nil
@@ -274,6 +280,24 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             VisibleForCustomization = False
             Width = 78
+          end
+          object PriceSIP: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1057#1048#1055
+            DataBinding.FieldName = 'PriceSIP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object SummSIP: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1057#1048#1055
+            DataBinding.FieldName = 'SummSIP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
         end
       end

@@ -72,6 +72,7 @@ inherited Report_KPUForm: TReport_KPUForm
           Bands = <
             item
               Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+              FixedKind = fkLeft
               Width = 481
             end
             item
@@ -578,6 +579,13 @@ inherited Report_KPUForm: TReport_KPUForm
             Position.ColIndex = 6
             Position.RowIndex = 0
           end
+          object Color_Calc_Font: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_Calc_Font'
+            Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 7
+            Position.RowIndex = 0
+          end
         end
         inherited cxGridLevel: TcxGridLevel
           GridView = cxGridDBBandedTableView1
@@ -919,6 +927,7 @@ inherited Report_KPUForm: TReport_KPUForm
       end>
     ColorRuleList = <
       item
+        ValueColumn = Color_Calc_Font
         BackGroundValueColumn = Color_Calc
         ColorValueList = <>
       end>

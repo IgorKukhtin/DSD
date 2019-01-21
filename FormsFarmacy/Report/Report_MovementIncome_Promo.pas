@@ -44,6 +44,8 @@ type
     BranchDate: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    PriceSIP: TcxGridDBColumn;
+    SummSIP: TcxGridDBColumn;
   private
     { Private declarations }
   public
