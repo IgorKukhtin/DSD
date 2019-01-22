@@ -162,13 +162,13 @@ BEGIN
                                                                AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
                                                                AND (CLO_Client.ObjectId = inClientId OR inClientId = 0)
                             WHERE Container.DescId   = zc_Container_Count()
-                              AND Container.WhereObjectId = inUnitId
+                              AND (Container.WhereObjectId = inUnitId OR inUnitId = 0)
                            UNION ALL
                             SELECT Container.Id         AS ContainerId
                                  , 0                    AS ClientId
                             FROM Container
                             WHERE Container.DescId   = zc_Container_Summ()
-                              AND Container.WhereObjectId = inUnitId
+                              AND (Container.WhereObjectId = inUnitId OR inUnitId = 0)
                               AND Container.ObjectId = zc_Enum_Account_100301 () -- прибыль текущего периода
                            )
          , tmpData_all AS (SELECT Object_PartionGoods.MovementItemId AS PartionId
@@ -299,7 +299,7 @@ BEGIN
                              AND (MIConatiner.ContainerId        > 0                  )
                              AND (tmpContainer.ContainerId       > 0                  OR MIConatiner.PartionId IS NULL)
                              AND MIConatiner.MovementDescId = zc_Movement_ReturnIn()
-                             AND inUnitId = MIConatiner.ObjectExtId_Analyzer
+                             AND (inUnitId = MIConatiner.ObjectExtId_Analyzer OR inUnitId = 0)
                              AND (inClientId = 0 OR inClientId = CASE WHEN MIConatiner.DescId = zc_MIContainer_Summ() THEN MIConatiner.WhereObjectId_Analyzer ELSE tmpContainer.ClientId END )
                       
                            GROUP BY Object_PartionGoods.MovementItemId
@@ -544,6 +544,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 22.01.19         *
  27.04.18         *
 */
 
