@@ -25,10 +25,9 @@ BEGIN
      vbUserId := inSession;
 
      RETURN QUERY
-      SELECT Movement.Id
-           , Movement.InvNumber
-           , Movement.OperDate
-           , Movement.StatusId
+      SELECT Movement_ReturnIn.Id
+           , Movement_ReturnIn.InvNumber
+           , COALESCE (Movement_ReturnIn.OperDate, CURRENT_DATE) :: TDateTime AS OperDate
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
            , MovementFloat_TotalCount.ValueData         AS TotalCount
@@ -41,32 +40,32 @@ BEGIN
            
            , MovementString_FiscalCheckNumber.ValueData AS FiscalCheckNumber
 
-      FROM Movement 
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+      FROM Movement AS Movement_ReturnIn
+            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_ReturnIn.StatusId
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId = Movement.Id
+                                    ON MovementFloat_TotalCount.MovementId = Movement_ReturnIn.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                    ON MovementFloat_TotalSumm.MovementId = Movement_ReturnIn.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                         ON MovementLinkObject_Unit.MovementId = Movement_ReturnIn.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
-                                         ON MovementLinkObject_CashRegister.MovementId = Movement.Id
+                                         ON MovementLinkObject_CashRegister.MovementId = Movement_ReturnIn.Id
                                         AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
             LEFT JOIN Object AS Object_CashRegister ON Object_CashRegister.Id = MovementLinkObject_CashRegister.ObjectId
 
             LEFT OUTER JOIN MovementString AS MovementString_FiscalCheckNumber
-                                           ON MovementString_FiscalCheckNumber.MovementId = Movement.ID
+                                           ON MovementString_FiscalCheckNumber.MovementId = Movement_ReturnIn.Id
                                           AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
        WHERE Movement_ReturnIn.Id = inMovementId
-         AND Movement.DescId = zc_Movement_Check()
+         AND Movement_ReturnIn.DescId = zc_Movement_ReturnIn()
       ;
 
 END;

@@ -479,6 +479,8 @@ type
     miReport_Movement_ListDiff: TMenuItem;
     actRecalcMCSSheduler: TdsdOpenForm;
     N178: TMenuItem;
+    actReturnInJournal: TdsdOpenForm;
+    miReturnInJournal: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
