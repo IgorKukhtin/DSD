@@ -242,7 +242,7 @@ BEGIN
 
                                  WHERE Movement_Income.DescId = zc_Movement_Income()
                                    AND Movement_Income.StatusId = zc_Enum_Status_UnComplete()
-                                   AND date_trunc('day', Movement_Income.OperDate) = CURRENT_DATE
+                                   -- AND date_trunc('day', Movement_Income.OperDate) = CURRENT_DATE
 	                                 GROUP BY MI_Income.ObjectId
                                         , MovementLinkObject_To.ObjectId
                               )
