@@ -354,6 +354,10 @@ BEGIN
                                                                 AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                    INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
      
+                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_SPKind
+                                                                ON MovementLinkObject_SPKind.MovementId = Movement_Check.Id
+                                                               AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+                                                           
                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
                                                                 ON MovementLinkObject_PartnerMedical.MovementId = Movement_Check.Id
                                                                AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
@@ -362,6 +366,7 @@ BEGIN
                                 AND Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY'
                                 AND Movement_Check.StatusId = zc_Enum_Status_Complete()
                                 AND (MovementLinkObject_PartnerMedical.ObjectId = inHospitalId OR inHospitalId = 0)
+                                AND COALESCE (MovementLinkObject_SPKind.ObjectId, 0) <> zc_Enum_SPKind_1303()
                               )
 
 
