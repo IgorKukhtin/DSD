@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_RetutnIn(
     IN inFiscalCheckNumber     TVarChar   , -- 
     IN inSession               TVarChar     -- сессия пользователя
 )
-RETURNS Record AS
+RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN

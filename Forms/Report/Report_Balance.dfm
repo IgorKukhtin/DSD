@@ -62,7 +62,7 @@ object Report_BalanceForm: TReport_BalanceForm
     Align = alClient
     DataSource = DataSource
     Groups = <>
-    TabOrder = 3
+    TabOrder = 1
     object pvRootName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 0
@@ -387,7 +387,7 @@ object Report_BalanceForm: TReport_BalanceForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbReport_Account'
         end
         item
           Visible = True
@@ -412,6 +412,14 @@ object Report_BalanceForm: TReport_BalanceForm
         item
           Visible = True
           ItemName = 'bbPrint2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint3'
         end
         item
           Visible = True
@@ -476,9 +484,13 @@ object Report_BalanceForm: TReport_BalanceForm
       Action = macReport_AccountMotion
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbReport_Account: TdxBarButton
       Action = macReport_Account
       Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091'>'
+      Category = 0
+    end
+    object bbPrint3: TdxBarButton
+      Action = actPrint3
       Category = 0
     end
   end
@@ -807,6 +819,78 @@ object Report_BalanceForm: TReport_BalanceForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actPrint3: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42370d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42370d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1044#1077#1073#1077#1090'/'#1050#1088#1077#1076#1080#1090') '#1089#1074#1077#1088#1085#1091#1090#1086
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1044#1077#1073#1077#1090'/'#1050#1088#1077#1076#1080#1090') '#1089#1074#1077#1088#1085#1091#1090#1086
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = ClientDataSet
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 
+            'RootName_Detail;AccountGroupName_Detail;AccountDirectionName_Det' +
+            'ail;AccountName_Detail;Num_Detail'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1059#1055' '#1041#1072#1083#1072#1085#1089' ('#1044#1077#1073#1077#1090' '#1050#1088#1077#1076#1080#1090') '#1089#1074#1077#1088#1085#1091#1090#1086
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1059#1055' '#1041#1072#1083#1072#1085#1089' ('#1044#1077#1073#1077#1090' '#1050#1088#1077#1076#1080#1090') '#1089#1074#1077#1088#1085#1091#1090#1086
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint2: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -847,7 +931,6 @@ object Report_BalanceForm: TReport_BalanceForm
       Caption = #1055#1077#1095#1072#1090#1100' ('#1044#1077#1073#1077#1090'/'#1050#1088#1077#1076#1080#1090')'
       Hint = #1055#1077#1095#1072#1090#1100' ('#1044#1077#1073#1077#1090'/'#1050#1088#1077#1076#1080#1090')'
       ImageIndex = 3
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = ClientDataSet

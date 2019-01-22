@@ -233,7 +233,10 @@ begin
   // Отчеты УП
   LoadReportFromFile('Отчет УП ОПиУ', ReportPath + '\Отчеты (УП)\Отчет УП ОПиУ.fr3');
   LoadReportFromFile('Отчет УП Баланс', ReportPath + '\Отчеты (УП)\Отчет УП Баланс.fr3');
+  }
+  LoadReportFromFile('Отчет УП Баланс (Дебет Кредит) свернуто', ReportPath + '\Отчеты (УП)\Отчет УП Баланс (Дебет Кредит) свернуто.fr3');
   exit;
+  {
   // Отчеты производство
   LoadReportFromFile('Отчет_Приход_Расход_производство_разделение', ReportPath + '\Отчеты (производство)\Отчет_Приход_Расход_производство_разделение.fr3');
   LoadReportFromFile('Отчет_Приход_Расход_производство_разделение_Итог', ReportPath + '\Отчеты (производство)\Отчет_Приход_Расход_производство_разделение_Итог.fr3');
@@ -364,10 +367,10 @@ begin
 
   LoadReportFromFile('PrintMovement_OrderIncomeSnab', ReportPath + '\Товарный Учет\PrintMovement_OrderIncomeSnab.fr3');
   exit;
-   }
+
   LoadReportFromFile('PrintMovement_OrderExternal', ReportPath + '\Товарный Учет\PrintMovement_OrderExternal.fr3');
   exit;
-   {
+
   LoadReportFromFile('PrintMovement_Loss', ReportPath + '\Товарный Учет\PrintMovement_Loss.fr3');
   exit;
 

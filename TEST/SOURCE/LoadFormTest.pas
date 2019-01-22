@@ -1722,9 +1722,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsBalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsBalanceDialogForm');
  exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceDialogForm');
 
@@ -2320,6 +2322,7 @@ end;
 
 procedure TLoadFormTest.LoadAccountFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountGroupEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountGroupForm'));
@@ -2337,15 +2340,18 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TAccountDirection_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountDirection_ObjectDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountDirection_ObjectDescForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccount_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccount_ObjectForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccount_ObjectDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccount_ObjectDescForm');
+
 end;
 
 procedure TLoadFormTest.LoadProfitLossFormTest;

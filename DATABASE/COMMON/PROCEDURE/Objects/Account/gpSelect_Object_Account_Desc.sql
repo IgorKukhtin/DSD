@@ -12,7 +12,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , AccountDirectionId Integer, AccountDirectionCode Integer, AccountDirectionName TVarChar
              , InfoMoneyCode Integer, InfoMoneyDestinationCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyDestinationId Integer, InfoMoneyId Integer
              , AccountKindId Integer, AccountKindCode Integer, AccountKindName TVarChar
-             , onComplete Boolean, isErased Boolean
+             , onComplete Boolean
+             , isPrintDetail Boolean
+             , isErased Boolean
               )
 AS
 $BODY$

@@ -41,7 +41,6 @@ object AccountForm: TAccountForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderHeight = 40
@@ -52,6 +51,7 @@ object AccountForm: TAccountForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 56
       end
       object AccountName_All: TcxGridDBColumn
@@ -60,6 +60,7 @@ object AccountForm: TAccountForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 150
       end
       object AccountGroupCode: TcxGridDBColumn
@@ -68,6 +69,7 @@ object AccountForm: TAccountForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object AccountGroupName: TcxGridDBColumn
@@ -75,6 +77,7 @@ object AccountForm: TAccountForm
         DataBinding.FieldName = 'AccountGroupName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object AccountDirectionCode: TcxGridDBColumn
@@ -83,6 +86,7 @@ object AccountForm: TAccountForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object AccountDirectionName: TcxGridDBColumn
@@ -90,6 +94,7 @@ object AccountForm: TAccountForm
         DataBinding.FieldName = 'AccountDirectionName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 120
       end
       object Name: TcxGridDBColumn
@@ -97,6 +102,7 @@ object AccountForm: TAccountForm
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object InfoMoneyGroupName: TcxGridDBColumn
@@ -105,6 +111,7 @@ object AccountForm: TAccountForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object InfoMoneyDestinationName: TcxGridDBColumn
@@ -113,6 +120,7 @@ object AccountForm: TAccountForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 90
       end
       object InfoMoneyCode: TcxGridDBColumn
@@ -120,6 +128,7 @@ object AccountForm: TAccountForm
         DataBinding.FieldName = 'InfoMoneyCode'
         Visible = False
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
       end
       object InfoMoneyName: TcxGridDBColumn
@@ -128,6 +137,7 @@ object AccountForm: TAccountForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object onComplete: TcxGridDBColumn
@@ -136,7 +146,16 @@ object AccountForm: TAccountForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 25
+      end
+      object isPrintDetail: TcxGridDBColumn
+        Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1088#1080' '#1087#1077#1095#1072#1090#1080
+        DataBinding.FieldName = 'isPrintDetail'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1088#1072#1079#1074#1077#1088#1085#1091#1090#1099#1084' '#1087#1088#1080' '#1087#1077#1095#1072#1090#1080
+        Width = 40
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -145,6 +164,7 @@ object AccountForm: TAccountForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 40
       end
     end
@@ -396,6 +416,18 @@ object AccountForm: TAccountForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
@@ -489,5 +521,31 @@ object AccountForm: TAccountForm
     PackSize = 1
     Left = 280
     Top = 216
+  end
+  object spUpdate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Account_PrintDetail'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPrintDetail'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'IsPrintDetail'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 459
+    Top = 118
   end
 end

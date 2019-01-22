@@ -1,8 +1,8 @@
--- Function: gpInsertUpdate_MovementItem_ReturnIn_Site()
+-- Function: gpInsertUpdate_MovementItem_ReturnIn()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn_Site (Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn_Site(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
  INOUT ioId                  Integer   , -- Ключ объекта <строка документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары

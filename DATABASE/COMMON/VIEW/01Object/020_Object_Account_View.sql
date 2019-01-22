@@ -53,6 +53,8 @@ AS
 
            , ObjectBoolean_onComplete.ValueData AS onComplete
            , Object_Account.isErased            AS isErased
+
+           , COALESCE (ObjectBoolean_PrintDetail.ValueData, FALSE) :: Boolean AS isPrintDetail
            
        FROM Object AS Object_Account
             LEFT JOIN ObjectLink AS ObjectLink_Account_AccountGroup
@@ -78,7 +80,10 @@ AS
             LEFT JOIN ObjectBoolean AS ObjectBoolean_onComplete
                                     ON ObjectBoolean_onComplete.ObjectId = Object_Account.Id 
                                    AND ObjectBoolean_onComplete.DescId = zc_ObjectBoolean_Account_onComplete()
-                                   
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_PrintDetail
+                                    ON ObjectBoolean_PrintDetail.ObjectId = Object_Account.Id 
+                                   AND ObjectBoolean_PrintDetail.DescId = zc_ObjectBoolean_Account_PrintDetail()
+
             LEFT JOIN ObjectLink AS ObjectLink_Account_AccountKind
                                  ON ObjectLink_Account_AccountKind.ObjectId = Object_Account.Id
                                 AND ObjectLink_Account_AccountKind.DescId = zc_ObjectLink_Account_AccountKind()
@@ -92,6 +97,7 @@ ALTER TABLE Object_Account_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.01.19         * isPrintDetail
  07.11.13                        * add Object_InfoMoneyDestination_View
  08.10.13                        *
 */

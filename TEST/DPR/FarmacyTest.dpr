@@ -648,7 +648,10 @@ uses
   Maker in '..\..\FormsFarmacy\Guides\Maker.pas' {MakerForm: TParentForm},
   MakerEdit in '..\..\FormsFarmacy\Guides\MakerEdit.pas' {MakerEditForm: TParentForm},
   MakerReportEdit in '..\..\FormsFarmacy\Guides\MakerReportEdit.pas' {MakerReportEditForm: TParentForm},
-  Maker_Object in '..\..\FormsFarmacy\Guides\Maker_Object.pas' {Maker_ObjectForm: TParentForm};
+  Maker_Object in '..\..\FormsFarmacy\Guides\Maker_Object.pas' {Maker_ObjectForm: TParentForm},
+  ReturnIn in '..\..\FormsFarmacy\Document\ReturnIn.pas' {ReturnInForm: TParentForm},
+  ReturnInJournal in '..\..\FormsFarmacy\Document\ReturnInJournal.pas' {ReturnInJournalForm: TParentForm},
+  CheckItemJournal in '..\..\FormsFarmacy\Document\CheckItemJournal.pas' {CheckItemJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
