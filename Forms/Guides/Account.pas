@@ -66,6 +66,8 @@ type
     onComplete: TcxGridDBColumn;
     InfoMoneyCode: TcxGridDBColumn;
     isPrintDetail: TcxGridDBColumn;
+    spUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

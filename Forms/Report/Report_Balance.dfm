@@ -62,7 +62,7 @@ object Report_BalanceForm: TReport_BalanceForm
     Align = alClient
     DataSource = DataSource
     Groups = <>
-    TabOrder = 2
+    TabOrder = 1
     object pvRootName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 0
@@ -864,8 +864,8 @@ object Report_BalanceForm: TReport_BalanceForm
           DataSet = ClientDataSet
           UserName = 'frxDBDItems'
           IndexFieldNames = 
-            'RootName_Detail;AccountGroupName_Detail;AccountDirectionName_ori' +
-            'ginal;AccountName_Detail;Num_Detail'
+            'RootName_Detail;AccountGroupName_Detail;AccountDirectionName_Det' +
+            'ail;AccountName_Detail;Num_Detail'
         end>
       Params = <
         item

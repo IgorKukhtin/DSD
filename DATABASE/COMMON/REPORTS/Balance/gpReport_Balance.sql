@@ -20,8 +20,12 @@ RETURNS TABLE (RootName TVarChar, AccountCode Integer, AccountGroupName TVarChar
              , ContainerId Integer
              , isPrintDetail Boolean
              , RootName_Detail TVarChar
+             , AccountDirectionName_Detail TVarChar
              , AccountGroupName_Detail TVarChar
              , AccountName_Detail TVarChar
+             , AccountDirectionName_print TVarChar
+             , AccountGroupName_print TVarChar
+             , AccountName_print TVarChar
              , Num_Detail Integer
              , Koeff_50401 Integer
               )
@@ -30,6 +34,10 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccountName_70301 TVarChar;
    DECLARE vbAccountGroupName_70301 TVarChar;
+   DECLARE vbAccountDirectionName_70301 TVarChar;
+   DECLARE vbAccountName_print  TVarChar;
+   DECLARE vbAccountGroupName_print  TVarChar;
+   DECLARE vbAccountDirectionName_print  TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Balance());
@@ -49,15 +57,17 @@ end if;*/
          RETURN;
      END IF;
 
-     SELECT Object.ValueData , Object_AccountGroup.ValueData
+     SELECT  Object_Account_View.AccountName, Object_Account_View.AccountGroupName, Object_Account_View.AccountDirectionName
+           , Object_Account_View.AccountName_original, Object_Account_View.AccountGroupName_original, Object_Account_View.AccountDirectionName_original
      INTO vbAccountName_70301
         , vbAccountGroupName_70301
-     FROM Object 
-       LEFT JOIN ObjectLink AS ObjectLink_Account_AccountGroup
-                            ON ObjectLink_Account_AccountGroup.ObjectId = Object.Id 
-                           AND ObjectLink_Account_AccountGroup.DescId = zc_ObjectLink_Account_AccountGroup()
-       LEFT JOIN Object AS Object_AccountGroup ON Object_AccountGroup.Id = ObjectLink_Account_AccountGroup.ChildObjectId
-     WHERE Object.DescId = zc_Object_Account() AND Object.ObjectCode = 70301;
+        , vbAccountDirectionName_70301
+        , vbAccountName_print
+        , vbAccountGroupName_print
+        , vbAccountDirectionName_print
+     FROM Object_Account_View 
+       
+     WHERE  Object_Account_View.AccountCode = 70301;
 
      -- Результат
      RETURN QUERY
@@ -190,15 +200,26 @@ end if;*/
            , tmpReportOperation.ContainerId :: Integer AS ContainerId
            
            , COALESCE (Object_Account_View.isPrintDetail, FALSE) :: Boolean AS isPrintDetail
+           -- для сортировки
            , CAST (CASE WHEN Object_Account_View.AccountCode >= 70000 OR Object_Account_View.AccountCode = 50401 THEN 'ПАССИВЫ' ELSE 'АКТИВЫ' END AS TVarChar) AS RootName_Detail
-          
-           , CASE WHEN Object_Account_View.AccountId = zc_Enum_Account_50401() THEN vbAccountGroupName_70301 ELSE Object_Account_View.AccountGroupName_original END :: TVarChar  AS  AccountGroupName_Detail
+           , CASE WHEN Object_Account_View.AccountId = zc_Enum_Account_50401() THEN vbAccountDirectionName_70301 ELSE Object_Account_View.AccountDirectionName END :: TVarChar  AS  AccountDirectionName_Detail
+           , CASE WHEN Object_Account_View.AccountId = zc_Enum_Account_50401() THEN vbAccountGroupName_70301 ELSE Object_Account_View.AccountGroupName END :: TVarChar  AS  AccountGroupName_Detail
           
            , CASE WHEN COALESCE (Object_Account_View.isPrintDetail, FALSE) = FALSE 
                   THEN 'Прочее' 
-                  ELSE CASE WHEN Object_Account_View.AccountId = zc_Enum_Account_50401() THEN vbAccountName_70301 ELSE Object_Account_View.AccountName_original END 
+                  ELSE CASE WHEN Object_Account_View.AccountId = zc_Enum_Account_50401() THEN vbAccountName_70301 ELSE Object_Account_View.AccountName END 
                   END  :: TVarChar AS AccountName_Detail
-           
+                  
+           -- для вывода на печать
+           , CASE WHEN Object_Account_View.AccountId = zc_Enum_Account_50401() THEN vbAccountDirectionName_print ELSE Object_Account_View.AccountDirectionName_original END :: TVarChar  AS  AccountDirectionName__print
+           , CASE WHEN Object_Account_View.AccountId = zc_Enum_Account_50401() THEN vbAccountGroupName_print ELSE Object_Account_View.AccountGroupName_original END         :: TVarChar  AS  AccountGroupName__print
+          
+           , CASE WHEN COALESCE (Object_Account_View.isPrintDetail, FALSE) = FALSE 
+                  THEN 'Прочее' 
+                  ELSE CASE WHEN Object_Account_View.AccountId = zc_Enum_Account_50401() THEN vbAccountName_print ELSE Object_Account_View.AccountName_original END 
+                  END  :: TVarChar AS AccountName__print
+
+
            , CASE WHEN COALESCE (Object_Account_View.isPrintDetail, FALSE) = FALSE THEN 999 ELSE 1 END :: integer AS Num_Detail
            , CASE WHEN Object_Account_View.AccountId = zc_Enum_Account_50401() THEN -1 ELSE 1 END :: integer AS Koeff_50401
        FROM
