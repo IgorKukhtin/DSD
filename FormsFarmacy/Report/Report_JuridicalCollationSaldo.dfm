@@ -1,29 +1,32 @@
-inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
-  Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
-  ClientHeight = 389
-  ClientWidth = 893
-  ExplicitWidth = 909
-  ExplicitHeight = 428
+inherited Report_JuridicalCollationSaldoForm: TReport_JuridicalCollationSaldoForm
+  Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'. '#1054#1089#1090#1072#1090#1082#1080' '#1085#1072' '#1076#1072#1090#1091'>'
+  ClientHeight = 499
+  ClientWidth = 625
+  AddOnFormData.Params = FormParams
+  ExplicitWidth = 641
+  ExplicitHeight = 538
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 77
-    Width = 893
-    Height = 312
+    Top = 59
+    Width = 625
+    Height = 440
     TabOrder = 3
-    ExplicitTop = 77
-    ExplicitWidth = 893
-    ExplicitHeight = 312
-    ClientRectBottom = 312
-    ClientRectRight = 893
+    ExplicitTop = 59
+    ExplicitWidth = 625
+    ExplicitHeight = 330
+    ClientRectBottom = 440
+    ClientRectRight = 625
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 893
-      ExplicitHeight = 312
+      ExplicitTop = -7
+      ExplicitWidth = 625
+      ExplicitHeight = 440
       inherited cxGrid: TcxGrid
-        Width = 893
-        Height = 312
-        ExplicitWidth = 893
-        ExplicitHeight = 312
+        Width = 625
+        Height = 288
+        ExplicitTop = -7
+        ExplicitWidth = 625
+        ExplicitHeight = 289
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -35,73 +38,27 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
               Format = ',0.00##'
               Kind = skSum
               Column = Kredit
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = StartRemains
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = EndRemains
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.FooterMultiSummaries = True
-          OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object ItemName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'ItemName'
+          object Name: TcxGridDBColumn
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1082#1083#1080#1077#1085#1090')'
+            DataBinding.FieldName = 'Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 95
-          end
-          object InvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'InvNumber'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object InvNumberPartner: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1072#1088#1090#1085#1077#1088#1072
-            DataBinding.FieldName = 'InvNumberPartner'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object OperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072
-            DataBinding.FieldName = 'OperDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object StartRemains: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#1076#1086#1083#1075
-            DataBinding.FieldName = 'StartRemains'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
+            Width = 367
           end
           object Debet: TcxGridDBColumn
-            Caption = #1044#1077#1073#1077#1090' ('#1054#1087#1083#1072#1090#1072')'
+            Caption = #1055#1045#1056#1045#1055#1051#1040#1058#1040
             DataBinding.FieldName = 'Debet'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -109,10 +66,10 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 91
           end
           object Kredit: TcxGridDBColumn
-            Caption = #1050#1088#1077#1076#1080#1090' ('#1055#1088#1080#1093#1086#1076')'
+            Caption = #1044#1054#1051#1043
             DataBinding.FieldName = 'Kredit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -120,11 +77,90 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 87
           end
-          object EndRemains: TcxGridDBColumn
-            Caption = #1050#1086#1085'. '#1076#1086#1083#1075
-            DataBinding.FieldName = 'EndRemains'
+        end
+      end
+      object cxGridSaldo: TcxGrid
+        Left = 0
+        Top = 288
+        Width = 625
+        Height = 152
+        Align = alBottom
+        PopupMenu = PopupMenu
+        TabOrder = 1
+        object cxGridDBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = SaldoDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SaldoSummaWith
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SaldoSummaNDS
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SaldoSumma
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.FooterMultiSummaries = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object SaldoNDSKindName: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1074#1080#1076#1091' '#1053#1044#1057
+            DataBinding.FieldName = 'NDSKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 289
+          end
+          object SaldoSummaWith: TcxGridDBColumn
+            Caption = #1041#1045#1047' '#1053#1044#1057
+            DataBinding.FieldName = 'SummaWith'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object SaldoSummaNDS: TcxGridDBColumn
+            Caption = #1053#1044#1057
+            DataBinding.FieldName = 'SummaNDS'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object SaldoSumma: TcxGridDBColumn
+            Caption = #1089' '#1053#1044#1057
+            DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; '
@@ -133,65 +169,18 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Options.Editing = False
             Width = 80
           end
-          object FromName: TcxGridDBColumn
-            Caption = #1054#1090' '#1050#1086#1075#1086
-            DataBinding.FieldName = 'FromName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 90
-          end
-          object ToName: TcxGridDBColumn
-            Caption = #1050#1086#1084#1091
-            DataBinding.FieldName = 'ToName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 90
-          end
-          object OperationSort: TcxGridDBColumn
-            Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072
-            DataBinding.FieldName = 'OperationSort'
-            Visible = False
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 55
-          end
-          object PaymentDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaymentDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object DateLastPay: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091
-            DataBinding.FieldName = 'DateLastPay'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object BranchDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1074' '#1072#1087#1090#1077#1082#1077
-            DataBinding.FieldName = 'BranchDate'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 60
-          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBTableView1
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 893
-    Height = 51
-    ExplicitWidth = 893
-    ExplicitHeight = 51
+    Width = 625
+    Height = 33
+    ExplicitWidth = 625
+    ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 118
       EditValue = 41640d
@@ -203,25 +192,24 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Top = 25
       EditValue = 41640d
       Properties.SaveTime = False
+      Visible = False
       ExplicitLeft = 118
       ExplicitTop = 25
     end
     inherited cxLabel1: TcxLabel
       Left = 25
+      Caption = #1053#1072' '#1076#1072#1090#1091':'
       ExplicitLeft = 25
+      ExplicitWidth = 49
     end
     inherited cxLabel2: TcxLabel
       Left = 6
       Top = 26
+      Visible = False
       ExplicitLeft = 6
       ExplicitTop = 26
     end
-    object cxLabel6: TcxLabel
-      Left = 231
-      Top = 6
-      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1082#1083#1080#1077#1085#1090'):'
-    end
-    object edJuridical: TcxButtonEdit
+    object edJuridicalBasis: TcxButtonEdit
       Left = 386
       Top = 5
       Properties.Buttons = <
@@ -230,24 +218,12 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 5
-      Width = 210
-    end
-    object edJuridicalBasis: TcxButtonEdit
-      Left = 386
-      Top = 25
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 6
+      TabOrder = 4
       Width = 210
     end
     object cxLabel3: TcxLabel
       Left = 231
-      Top = 26
+      Top = 6
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1085#1072#1096#1077'):'
     end
   end
@@ -265,12 +241,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end
       item
         Component = JuridicalBasisGuide
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = JuridicalGuides
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -1031,74 +1001,29 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actJuridicalCollationSaldo: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1054#1089#1090#1072#1090#1082#1080' '#1085#1072' '#1076#1072#1090#1091
-      ImageIndex = 75
-      FormName = 'TReport_JuridicalCollationSaldoForm'
-      FormNameParam.Value = 'TReport_JuridicalCollationSaldoForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inJuridicalBasis'
-          Value = Null
-          Component = JuridicalBasisGuide
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inJuridicalBasisName'
-          Value = Null
-          Component = JuridicalBasisGuide
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inStart'
-          Value = 'NULL'
-          Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
   end
   inherited MasterDS: TDataSource
     Top = 164
   end
   inherited MasterCDS: TClientDataSet
-    IndexFieldNames = 'OperationSort;ItemName;OperDate'
     Top = 132
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_JuridicalCollation'
+    StoredProcName = 'gpReport_JuridicalCollationSaldo'
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end
+      item
+        DataSet = SalsoCDS
+      end>
+    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inStartDate'
         Value = 41640d
         Component = deStart
         DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalId'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1137,7 +1062,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenDocument'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -1145,31 +1070,11 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbPrintOfficial'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintCurrency'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintTurnover'
         end
         item
           Visible = True
@@ -1182,10 +1087,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton1'
         end>
     end
     object bbOpenDocument: TdxBarButton
@@ -1212,10 +1113,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Category = 0
       Visible = ivNever
     end
-    object dxBarButton1: TdxBarButton
-      Action = actJuridicalCollationSaldo
-      Category = 0
-    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -1238,41 +1135,12 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = PeriodChoice
       end
       item
-        Component = JuridicalGuides
       end
       item
         Component = JuridicalBasisGuide
       end>
     Left = 408
     Top = 72
-  end
-  object JuridicalGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edJuridical
-    FormNameParam.Value = 'TJuridical_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 624
   end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
@@ -1302,9 +1170,25 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'FormName'
+        Name = 'inJuridicalBasis'
         Value = Null
+        Component = JuridicalBasisGuide
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalBasisName'
+        Value = Null
+        Component = JuridicalBasisGuide
+        ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStart'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 192
@@ -1326,8 +1210,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Name = 'inJuridicalId'
         Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1409,7 +1291,18 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 688
-    Top = 16
+    Left = 480
+  end
+  object SaldoDS: TDataSource
+    DataSet = SalsoCDS
+    Left = 416
+    Top = 292
+  end
+  object SalsoCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 384
+    Top = 260
   end
 end

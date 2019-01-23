@@ -1,4 +1,4 @@
-unit Report_JuridicalCollation;
+unit Report_JuridicalCollationSaldo;
 
 interface
 
@@ -17,17 +17,12 @@ uses
   dxSkinsdxBarPainter;
 
 type
-  TReport_JuridicalCollationForm = class(TAncestorReportForm)
-    ItemName: TcxGridDBColumn;
-    InvNumber: TcxGridDBColumn;
+  TReport_JuridicalCollationSaldoForm = class(TAncestorReportForm)
+    Name: TcxGridDBColumn;
     Debet: TcxGridDBColumn;
     Kredit: TcxGridDBColumn;
-    OperDate: TcxGridDBColumn;
     actPrintOfficial: TdsdPrintAction;
     bbPrintOfficial: TdxBarButton;
-    cxLabel6: TcxLabel;
-    edJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
     getMovementForm: TdsdStoredProc;
     FormParams: TdsdFormParams;
     actOpenForm: TdsdOpenForm;
@@ -37,24 +32,22 @@ type
     spJuridicalBalance: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    StartRemains: TcxGridDBColumn;
-    EndRemains: TcxGridDBColumn;
-    FromName: TcxGridDBColumn;
-    ToName: TcxGridDBColumn;
     actPrintTurnover: TdsdPrintAction;
     bbPrintTurnover: TdxBarButton;
-    OperationSort: TcxGridDBColumn;
-    InvNumberPartner: TcxGridDBColumn;
     actPrintCurrency: TdsdPrintAction;
     bbPrintCurrency: TdxBarButton;
     edJuridicalBasis: TcxButtonEdit;
     cxLabel3: TcxLabel;
     JuridicalBasisGuide: TdsdGuides;
-    PaymentDate: TcxGridDBColumn;
-    DateLastPay: TcxGridDBColumn;
-    BranchDate: TcxGridDBColumn;
-    dxBarButton1: TdxBarButton;
-    actJuridicalCollationSaldo: TdsdOpenForm;
+    SaldoDS: TDataSource;
+    SalsoCDS: TClientDataSet;
+    cxGridSaldo: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    SaldoNDSKindName: TcxGridDBColumn;
+    SaldoSummaWith: TcxGridDBColumn;
+    SaldoSummaNDS: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    SaldoSumma: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -68,6 +61,6 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_JuridicalCollationForm)
+  RegisterClass(TReport_JuridicalCollationSaldoForm)
 
 end.

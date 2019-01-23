@@ -651,7 +651,8 @@ uses
   Maker_Object in '..\..\FormsFarmacy\Guides\Maker_Object.pas' {Maker_ObjectForm: TParentForm},
   ReturnIn in '..\..\FormsFarmacy\Document\ReturnIn.pas' {ReturnInForm: TParentForm},
   ReturnInJournal in '..\..\FormsFarmacy\Document\ReturnInJournal.pas' {ReturnInJournalForm: TParentForm},
-  CheckItemJournal in '..\..\FormsFarmacy\Document\CheckItemJournal.pas' {CheckItemJournalForm: TParentForm};
+  CheckItemJournal in '..\..\FormsFarmacy\Document\CheckItemJournal.pas' {CheckItemJournalForm: TParentForm},
+  Report_JuridicalCollationSaldo in '..\..\FormsFarmacy\Report\Report_JuridicalCollationSaldo.pas' {Report_JuridicalCollationSaldoForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

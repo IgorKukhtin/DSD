@@ -653,12 +653,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ListDiffForm'));
+    {TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ListDiffForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ListDiffForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ListDiffDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ListDiffDialogForm');
     exit;
-   {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_GoodsPriceChangeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Check_GoodsPriceChangeForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_GoodsPriceChangeDialogForm'));
@@ -813,9 +813,13 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSoldForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldForm');
+    }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalCollationForm');
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationSaldoForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalCollationSaldoForm');
+     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionMoveForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionMoveForm');
 
