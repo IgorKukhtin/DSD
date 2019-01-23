@@ -1619,6 +1619,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckItemJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckItemJournalForm');
 end;
 
 procedure TLoadFormTest.LoadSendFormTest;
