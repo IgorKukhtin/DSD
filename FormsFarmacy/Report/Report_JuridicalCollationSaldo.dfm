@@ -14,19 +14,17 @@ inherited Report_JuridicalCollationSaldoForm: TReport_JuridicalCollationSaldoFor
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 625
-    ExplicitHeight = 330
+    ExplicitHeight = 440
     ClientRectBottom = 440
     ClientRectRight = 625
     inherited tsMain: TcxTabSheet
-      ExplicitTop = -7
       ExplicitWidth = 625
       ExplicitHeight = 440
       inherited cxGrid: TcxGrid
         Width = 625
         Height = 288
-        ExplicitTop = -7
         ExplicitWidth = 625
-        ExplicitHeight = 289
+        ExplicitHeight = 288
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -1001,6 +999,224 @@ inherited Report_JuridicalCollationSaldoForm: TReport_JuridicalCollationSaldoFor
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrintAll: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecStoredProc_PrintAll
+        end
+        item
+          Action = actExportToXLS_PrintAll
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1086#1089#1090#1072#1090#1082#1086#1074' '#1085#1072' '#1076#1072#1090#1091
+      Hint = #1055#1077#1095#1072#1090#1100' '#1086#1089#1090#1072#1090#1082#1086#1074' '#1085#1072' '#1076#1072#1090#1091
+      ImageIndex = 3
+    end
+    object actExecStoredProc_PrintAll: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = 'actExecStoredProc_PrintAll'
+    end
+    object actExportToXLS_PrintAll: TdsdExportToXLS
+      Category = 'DSDLib'
+      MoveParams = <>
+      ItemsDataSet = PrintItemsCDS
+      TitleDataSet = PrintHeaderCDS
+      TitleHeight = 1.500000000000000000
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -16
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = [fsBold]
+      HeaderFont.Charset = DEFAULT_CHARSET
+      HeaderFont.Color = clWindowText
+      HeaderFont.Height = -11
+      HeaderFont.Name = 'Tahoma'
+      HeaderFont.Style = [fsBold]
+      Footer = False
+      ColumnParams = <
+        item
+          Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1082#1083#1080#1077#1085#1090')'
+          FieldName = 'Title'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 40
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1055#1045#1056#1045#1055#1051#1040#1058#1040
+          FieldName = 'Debet'
+          DataType = ftFloat
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 12
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1044#1054#1051#1043
+          FieldName = 'Kredit'
+          DataType = ftFloat
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 12
+          CalcColumnLists = <>
+        end
+        item
+          FieldName = 'Summa'
+          DataType = ftFloat
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 12
+          CalcColumnLists = <>
+        end>
+      Caption = 'actExportToXLS_PrintAll'
+    end
+    object actPrintGoods: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecStoredProc_PrintGoods
+        end
+        item
+          Action = actExportToXLS_PrintGoods
+        end>
+      Caption = #1054#1089#1090#1072#1090#1082#1080' '#1090#1086#1074#1072#1088#1086#1074' '#1085#1072' '#1076#1072#1090#1091
+      Hint = #1054#1089#1090#1072#1090#1082#1080' '#1090#1086#1074#1072#1088#1086#1074' '#1085#1072' '#1076#1072#1090#1091
+      ImageIndex = 16
+    end
+    object actExecStoredProc_PrintGoods: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectPrintGoods
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintGoods
+        end>
+      Caption = 'actExecStoredProc_PrintGoods'
+    end
+    object actExportToXLS_PrintGoods: TdsdExportToXLS
+      Category = 'DSDLib'
+      MoveParams = <>
+      ItemsDataSet = PrintItemsCDS
+      TitleDataSet = PrintHeaderCDS
+      TitleHeight = 1.000000000000000000
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -16
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = [fsBold]
+      HeaderFont.Charset = DEFAULT_CHARSET
+      HeaderFont.Color = clWindowText
+      HeaderFont.Height = -11
+      HeaderFont.Name = 'Tahoma'
+      HeaderFont.Style = [fsBold]
+      ColumnParams = <
+        item
+          Caption = #1050#1086#1076
+          FieldName = 'Code'
+          DataType = ftInteger
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 5
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072
+          FieldName = 'Name'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 30
+          CalcColumnLists = <>
+        end
+        item
+          Caption = '% '#1053#1044#1057
+          FieldName = 'NDSKindName'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 7
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1041#1045#1047' '#1053#1044#1057
+          FieldName = 'SummaWith'
+          DataType = ftFloat
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 13
+          CalcColumnLists = <>
+          Kind = skSumma
+        end
+        item
+          Caption = #1053#1044#1057
+          FieldName = 'SummaNDS'
+          DataType = ftFloat
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 13
+          CalcColumnLists = <>
+          Kind = skSumma
+        end
+        item
+          Caption = #1089' '#1053#1044#1057
+          FieldName = 'Summa'
+          DataType = ftFloat
+          DecimalPlace = 2
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 13
+          CalcColumnLists = <>
+          Kind = skSumma
+        end>
+      Caption = 'actExportToXLS_PrintGoods'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 164
@@ -1074,15 +1290,23 @@ inherited Report_JuridicalCollationSaldoForm: TReport_JuridicalCollationSaldoFor
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
@@ -1112,6 +1336,14 @@ inherited Report_JuridicalCollationSaldoForm: TReport_JuridicalCollationSaldoFor
       Action = actPrintCurrency
       Category = 0
       Visible = ivNever
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actPrintAll
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actPrintGoods
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1295,14 +1527,108 @@ inherited Report_JuridicalCollationSaldoForm: TReport_JuridicalCollationSaldoFor
   end
   object SaldoDS: TDataSource
     DataSet = SalsoCDS
-    Left = 416
-    Top = 292
+    Left = 136
+    Top = 420
   end
   object SalsoCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 384
-    Top = 260
+    Left = 104
+    Top = 388
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 508
+    Top = 193
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 508
+    Top = 142
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpReport_JuridicalCollationSaldoPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridical_BasisId'
+        Value = Null
+        Component = JuridicalBasisGuide
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridical_BasisName'
+        Value = Null
+        Component = JuridicalBasisGuide
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 415
+    Top = 144
+  end
+  object spSelectPrintGoods: TdsdStoredProc
+    StoredProcName = 'gpReport_JuridicalCollationSaldoPrintGoods'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41640d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridical_BasisId'
+        Value = ''
+        Component = JuridicalBasisGuide
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridical_BasisName'
+        Value = ''
+        Component = JuridicalBasisGuide
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 415
+    Top = 200
   end
 end

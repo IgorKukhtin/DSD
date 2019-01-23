@@ -14,7 +14,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCurrencyEdit, DataModul, frxClass, frxDBSet, dsdGuides, cxButtonEdit,
   dxSkinsCore, cxImageComboBox, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, dsdExportToXLSAction;
 
 type
   TReport_JuridicalCollationSaldoForm = class(TAncestorReportForm)
@@ -48,6 +48,18 @@ type
     SaldoSummaNDS: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     SaldoSumma: TcxGridDBColumn;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
+    dxBarButton1: TdxBarButton;
+    dxBarButton2: TdxBarButton;
+    actExportToXLS_PrintAll: TdsdExportToXLS;
+    actExportToXLS_PrintGoods: TdsdExportToXLS;
+    actPrintAll: TMultiAction;
+    actPrintGoods: TMultiAction;
+    actExecStoredProc_PrintAll: TdsdExecStoredProc;
+    actExecStoredProc_PrintGoods: TdsdExecStoredProc;
+    spSelectPrintGoods: TdsdStoredProc;
   private
     { Private declarations }
   public
