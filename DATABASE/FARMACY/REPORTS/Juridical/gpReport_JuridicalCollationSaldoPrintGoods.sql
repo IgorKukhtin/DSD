@@ -40,7 +40,8 @@ BEGIN
                                                       AND ObjectLink_Unit_Juridical.ObjectId = Container.WhereObjectId
 
                             WHERE ObjectLink_Unit_Juridical.ChildObjectId = inJuridical_BasisId
-                              AND Container.DescId = zc_Container_Count())
+                              AND Container.DescId = zc_Container_Count()
+                              AND Container.Amount <> 0)
 
          , tmpContainerSumm AS (SELECT tmpContainer.ContainerId
                                      , tmpContainer.ObjectId

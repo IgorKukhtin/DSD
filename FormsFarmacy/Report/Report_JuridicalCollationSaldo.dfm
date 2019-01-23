@@ -1290,10 +1290,6 @@ inherited Report_JuridicalCollationSaldoForm: TReport_JuridicalCollationSaldoFor
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
