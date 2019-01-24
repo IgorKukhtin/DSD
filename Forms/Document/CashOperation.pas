@@ -69,6 +69,10 @@ type
     cxLabel21: TcxLabel;
     edCar: TcxButtonEdit;
     GuidesCar: TdsdGuides;
+    PopupMenu: TPopupMenu;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    actOpenPositionForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

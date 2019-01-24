@@ -3,6 +3,7 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
   ClientHeight = 365
   ClientWidth = 563
+  PopupMenu = PopupMenu
   AddOnFormData.isSingle = False
   ExplicitWidth = 569
   ExplicitHeight = 393
@@ -379,6 +380,34 @@
     inherited actRefresh: TdsdDataSetRefresh [1]
     end
     inherited FormClose: TdsdFormClose [2]
+    end
+    object actOpenPositionForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenPositionForm'
+      ImageIndex = 7
+      FormName = 'TPositionForm'
+      FormNameParam.Value = 'TPositionForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = PersonalGuides
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = PersonalGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited FormParams: TdsdFormParams
@@ -1240,7 +1269,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 152
-    Top = 125
+    Top = 109
   end
   object MemberGuides: TdsdGuides
     KeyField = 'Id'
@@ -1473,5 +1502,17 @@
       end>
     Left = 96
     Top = 278
+  end
+  object PopupMenu: TPopupMenu
+    Images = dmMain.ImageList
+    Left = 472
+    Top = 304
+    object N3: TMenuItem
+      Action = actOpenPositionForm
+      Caption = #1042#1099#1073#1088#1072#1090#1100' '#1076#1086#1083#1078#1085#1086#1089#1090#1100
+    end
+    object N4: TMenuItem
+      Caption = '-'
+    end
   end
 end

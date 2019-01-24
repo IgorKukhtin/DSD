@@ -2,7 +2,7 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
   Left = 0
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1087#1080#1089#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' - '#1047#1072#1090#1088#1072#1090'>'
-  ClientHeight = 381
+  ClientHeight = 444
   ClientWidth = 809
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -60,7 +60,7 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
     Left = 0
     Top = 57
     Width = 809
-    Height = 324
+    Height = 387
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
@@ -475,6 +475,18 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
           ItemName = 'bbStatic'
         end
         item
+          Visible = True
+          ItemName = 'bbOpenFormIncome'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormTransport'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormService'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
@@ -535,14 +547,18 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
       Category = 0
     end
     object bbInsert: TdxBarButton
-      Action = actInsert
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Category = 0
+      Visible = ivAlways
       ImageIndex = 0
+      ShortCut = 45
     end
     object bbEdit: TdxBarButton
-      Action = actUpdate
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Category = 0
+      Visible = ivAlways
       ImageIndex = 1
+      ShortCut = 115
     end
     object bbComplete: TdxBarButton
       Action = actComplete
@@ -585,11 +601,71 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
       Action = dsdChoiceGuides
       Category = 0
     end
+    object bbOpenFormIncome: TdxBarButton
+      Action = actOpenFormIncome
+      Category = 0
+      ImageIndex = 24
+    end
+    object bbOpenFormTransport: TdxBarButton
+      Action = macOpenFormTransport
+      Category = 0
+      ImageIndex = 25
+    end
+    object bbOpenFormService: TdxBarButton
+      Action = macOpenFormService
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 288
     Top = 144
+    object actOpenFormIncome: TdsdOpenForm
+      Category = 'OpenForm'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1080#1093#1086#1076'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1080#1093#1086#1076'>'
+      ImageIndex = 29
+      FormName = 'TIncomeForm'
+      FormNameParam.Value = 'TIncomeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MovementId_Income'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42094d
+          Component = ClientDataSet
+          ComponentItem = 'OperDate_Income'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actCheckDescService: TdsdExecStoredProc
+      Category = 'OpenForm'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCheckDescService
+      StoredProcList = <
+        item
+          StoredProc = spCheckDescService
+        end>
+      Caption = 'actCheckRight'
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -612,6 +688,55 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object actOpenFormService: TdsdOpenForm
+      Category = 'OpenForm'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
+      ImageIndex = 29
+      FormName = 'TTransportServiceForm'
+      FormNameParam.Value = 'TTransportServiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MasterMovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = ClientDataSet
+          ComponentItem = 'MasterOperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object macOpenFormService: TMultiAction
+      Category = 'OpenForm'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCheckDescService
+        end
+        item
+          Action = actOpenFormService
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
+      ImageIndex = 29
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -661,33 +786,6 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actInsert: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
-      FormName = 'TIncomeForm'
-      FormNameParam.Value = 'TIncomeForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 'NULL'
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
     object MovementProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -717,42 +815,6 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
-    end
-    object actUpdate: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      ShortCut = 115
-      FormName = 'TOrderIncomeForm'
-      FormNameParam.Value = 'TOrderIncomeForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 'NULL'
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      ActionType = acUpdate
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
     end
     object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
@@ -1090,6 +1152,66 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actCheckDescTransport: TdsdExecStoredProc
+      Category = 'OpenForm'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCheckDescTransport
+      StoredProcList = <
+        item
+          StoredProc = spCheckDescTransport
+        end>
+      Caption = 'actCheckRight'
+    end
+    object actOpenFormTransport: TdsdOpenForm
+      Category = 'OpenForm'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
+      ImageIndex = 29
+      FormName = 'TTransportForm'
+      FormNameParam.Value = 'TTransportForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MasterMovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42094d
+          Component = ClientDataSet
+          ComponentItem = 'MasterOperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object macOpenFormTransport: TMultiAction
+      Category = 'OpenForm'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCheckDescTransport
+        end
+        item
+          Action = actOpenFormTransport
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
+      ImageIndex = 29
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_IncomeCost'
@@ -1157,10 +1279,12 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
     Left = 360
     Top = 136
     object N3: TMenuItem
-      Action = actInsert
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
     end
     object N2: TMenuItem
-      Action = actUpdate
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
     end
     object N4: TMenuItem
       Caption = '-'
@@ -1238,7 +1362,6 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
     OnDblClickActionList = <>
     ActionItemList = <
       item
-        Action = actUpdate
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
@@ -1393,5 +1516,53 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
     PackSize = 1
     Left = 704
     Top = 40
+  end
+  object spCheckDescTransport: TdsdStoredProc
+    StoredProcName = 'gpCheckDesc_Movement_IncomeCost'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDescId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'DescId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode_open'
+        Value = 'zc_Movement_Transport'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 416
+    Top = 304
+  end
+  object spCheckDescService: TdsdStoredProc
+    StoredProcName = 'gpCheckDesc_Movement_IncomeCost'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDescId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'DescId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode_open'
+        Value = 'zc_Movement_TransportService'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 584
+    Top = 312
   end
 end

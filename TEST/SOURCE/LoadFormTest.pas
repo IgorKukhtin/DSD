@@ -301,6 +301,7 @@ end;
 
 procedure TLoadFormTest.LoadCashFormTest;
 begin
+{
  // TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashForm'));
  // TdsdFormStorageFactory.GetStorage.Load('TCashForm');
  // TdsdFormStorageFactory.GetStorage.Save(GetForm('TCash_ObjectForm'));
@@ -312,14 +313,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCashJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashJournalUserForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashOperationForm');
   exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCash_PersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCash_PersonalForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCash_PersonalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCash_PersonalJournalForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadContractFormTest;

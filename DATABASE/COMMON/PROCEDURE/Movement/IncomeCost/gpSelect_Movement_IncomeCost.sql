@@ -11,13 +11,13 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomeCost(
 )
 RETURNS TABLE (Id Integer, MasterMovementId integer, InvNumber Integer, MasterInvNumber Integer, MasterOperDate TDateTime
              , StatusCode Integer, StatusName TVarChar, MasterStatusCode Integer, MasterStatusName TVarChar
-             , ItemName TVarChar
+             , DescId Integer, ItemName TVarChar
              , Comment TVarChar
              , MasterComment TVarChar
              , MovementId_Income Integer
              , InvNumber_Income Integer
              , OperDate_Income TDateTime
-             , ItemName_Income TVarChar
+             , DescId_Income Integer,ItemName_Income TVarChar
              , StatusCode_Income Integer
              , AmountCost TFloat, AmountCost_Master TFloat
              , JuridicalCode Integer, JuridicalName TVarChar
@@ -49,6 +49,7 @@ BEGIN
                , Object_Status.ValueData                       AS StatusName
                , Object_StatusMaster.ObjectCode                AS MasterStatusCode
                , Object_StatusMaster.ValueData                 AS MasterStatusName
+               , MovementDescMaster.Id                         AS DescId
                , MovementDescMaster.ItemName                   AS ItemName
                , MovementString_Comment.ValueData              AS Comment
                , MovementString_CommentMaster.ValueData        AS MasterComment
@@ -56,6 +57,7 @@ BEGIN
                , Movement_Income.Id                                   AS MovementId_Income
                , zfConvert_StringToNumber (Movement_Income.InvNumber) AS InvNumber_Income
                , Movement_Income.OperDate                             AS OperDate_Income
+               , MovementDescIncome.Id                                AS DescId_Income
                , MovementDescIncome.ItemName                          AS ItemName_Income
                , Object_StatusIncome.ObjectCode                       AS StatusCode_Income
                
