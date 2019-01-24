@@ -62,9 +62,9 @@ BEGIN
 
 
      -- определяется
-     SELECT CASE WHEN ObjectString_UserSign.ValueData <> '' THEN ObjectString_UserSign.ValueData ELSE 'Ключ - Неграш О.В..ZS2'                                                   END AS UserSign
-          , CASE WHEN ObjectString_UserSeal.ValueData <> '' THEN ObjectString_UserSeal.ValueData ELSE 'Ключ - для в_дтиску - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2'   END AS UserSeal
-          , CASE WHEN ObjectString_UserKey.ValueData  <> '' THEN ObjectString_UserKey.ValueData  ELSE 'Ключ - для шифрування - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2' END AS UserKey
+     SELECT CASE WHEN ObjectString_UserSign.ValueData <> '' THEN ObjectString_UserSign.ValueData ELSE '24447183_3524907224_SS181220125402.ZS2' /*'Ключ - Неграш О.В..ZS2'*/                                                  END AS UserSign
+          , CASE WHEN ObjectString_UserSeal.ValueData <> '' THEN ObjectString_UserSeal.ValueData ELSE '24447183_S181220141414.ZS2' /*'Ключ - для в_дтиску - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2'*/   END AS UserSeal
+          , CASE WHEN ObjectString_UserKey.ValueData  <> '' THEN ObjectString_UserKey.ValueData  ELSE '24447183_C181220141414.ZS2' /*'Ключ - для шифрування - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2'*/ END AS UserKey
             INTO vbUserSign, vbUserSeal, vbUserKey
      FROM Object AS Object_User
           LEFT JOIN ObjectString AS ObjectString_UserSign

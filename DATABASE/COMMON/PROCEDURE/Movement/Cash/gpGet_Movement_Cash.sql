@@ -70,6 +70,7 @@ BEGIN
                              WHERE Movement.DescId   = zc_Movement_Currency()
                                AND Movement.OperDate <= inOperDate
                                AND Movement.StatusId = zc_Enum_Status_Complete()
+                               AND inCurrencyId <> zc_Enum_Currency_Basis()
                             )
            , tmpCurrency AS (SELECT -- Курс
                                     tmpCurrency2.Amount
@@ -111,6 +112,7 @@ BEGIN
                              WHERE Movement.DescId   = zc_Movement_Cash()
                                AND Movement.OperDate BETWEEN inOperDate - INTERVAL '10 DAY' AND inOperDate
                                AND Movement.StatusId = zc_Enum_Status_Complete()
+                               AND inCurrencyId <> zc_Enum_Currency_Basis()
                             )
       ,  tmpMovementCash AS (SELECT tmpMovementCash2.CurrencyValue
                                   , tmpMovementCash2.ParValue

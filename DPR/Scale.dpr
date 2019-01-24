@@ -91,7 +91,8 @@ uses
   dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas',
   Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
   Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas',
-  dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas';
+  dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
+  DialogDateValue in '..\Scale\DialogDateValue.pas' {DialogDateValueForm};
 
 {$R *.res}
 

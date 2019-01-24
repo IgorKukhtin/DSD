@@ -70,7 +70,7 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<Debugger_RunParams>Scale_SPEC_z.ini ves=1.2345</Debugger_RunParams>
+			<Debugger_RunParams>Scale.ini ves=1.2345</Debugger_RunParams>
 			<Icon_MainIcon>0203.ico</Icon_MainIcon>
 			<VerInfo_Release>5</VerInfo_Release>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
@@ -236,6 +236,9 @@
 			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXLSAction.pas"/>
+			<DCCReference Include="..\Scale\DialogDateValue.pas">
+				<Form>DialogDateValueForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

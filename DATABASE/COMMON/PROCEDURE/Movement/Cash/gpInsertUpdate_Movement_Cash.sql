@@ -44,6 +44,53 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
 
 
+     -- Заработная плата
+     IF EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId = zc_Object_Personal())
+     THEN
+         -- !!!замена!!!
+         inMoneyPlaceId:= (WITH tmpServiceDate AS (SELECT lpInsertFind_Object_ServiceDate (inOperDate:= DATE_TRUNC ('MONTH', inServiceDate)) AS ServiceDateId)
+                              , tmpContainer AS (SELECT DISTINCT CLO_Personal.ObjectId AS Personal
+                                                 FROM Container
+                                                      INNER JOIN ContainerLinkObject AS CLO_Personal
+                                                                                     ON CLO_Personal.ContainerId = Container.Id
+                                                                                    AND CLO_Personal.DescId      = zc_ContainerLinkObject_Personal()
+                                                      INNER JOIN ObjectLink AS ObjectLink_Member
+                                                                            ON ObjectLink_Member.ObjectId      = CLO_Personal.ObjectId
+                                                                           AND ObjectLink_Member.DescId        = zc_ObjectLink_Personal_Member()
+                                                                           AND ObjectLink_Member.ChildObjectId = (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inMoneyPlaceId AND OL.DescId = zc_ObjectLink_Personal_Member())
+                                                      INNER JOIN ContainerLinkObject AS CLO_InfoMoney
+                                                                                     ON CLO_InfoMoney.ContainerId = Container.Id
+                                                                                    AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()
+                                                                                    AND CLO_InfoMoney.ObjectId    = inInfoMoneyId
+                                                      INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                                                     ON CLO_Unit.ContainerId = Container.Id
+                                                                                    AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                                                                    AND CLO_Unit.ObjectId    = inUnitId
+                                                      INNER JOIN ContainerLinkObject AS CLO_Position
+                                                                                     ON CLO_Position.ContainerId = Container.Id
+                                                                                    AND CLO_Position.DescId      = zc_ContainerLinkObject_Position()
+                                                                                    AND CLO_Position.ObjectId    = inPositionId
+                                                      INNER JOIN ContainerLinkObject AS CLO_ServiceDate
+                                                                                     ON CLO_ServiceDate.ContainerId = Container.Id
+                                                                                    AND CLO_ServiceDate.DescId      = zc_ContainerLinkObject_ServiceDate()
+                                                      INNER JOIN tmpServiceDate ON tmpServiceDate.ServiceDateId = CLO_ServiceDate.ObjectId
+                                                      -- LEFT JOIN ContainerLinkObject AS CLO_PersonalServiceList
+                                                      --                               ON CLO_PersonalServiceList.ContainerId = Container.Id
+                                                      --                              AND CLO_PersonalServiceList.DescId      = zc_ContainerLinkObject_PersonalServiceList()
+                                                      --                              AND CLO_PersonalServiceList.ObjectId    = 
+                                                 WHERE Container.DescId = zc_Container_Summ()
+                                                   AND Container.Amount <> 0
+                                                   AND inServiceDate < '01.01.2018'
+                                                 LIMIT 1
+                                                )
+                           SELECT tmpContainer.PersonalId FROM tmpContainer
+                          UNION
+                           SELECT inMoneyPlaceId WHERE NOT EXISTS (SELECT 1 FROM tmpContainer)
+                          );
+
+     END IF;
+
+
      -- Блокируем ему просмотр за ДРУГОЙ период
      IF EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_CashReplace() AND UserId = vbUserId)
         AND (NOT (inOperDate BETWEEN zc_DateStart_Role_CashReplace() AND zc_DateEnd_Role_CashReplace())

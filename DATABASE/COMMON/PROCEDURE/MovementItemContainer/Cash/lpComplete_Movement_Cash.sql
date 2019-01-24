@@ -37,6 +37,17 @@ BEGIN
         ;
          -- !!!ВРЕМЕННО!!! - сохранили связь с <Ведомости начисления> + <Должность>
          IF vbPersonalServiceListId <> 0
+            AND (EXISTS (SELECT 1
+                        FROM MovementItem
+                             INNER JOIN MovementItemLinkObject AS MILO
+                                                               ON MILO.MovementItemId = MovementItem.Id
+                                                              AND MILO.DescId         = zc_MILinkObject_InfoMoney()
+                                                              AND MILO.ObjectId       = zc_Enum_InfoMoney_60101() -- Заработная плата
+                        WHERE MovementItem.MovementId = inMovementId
+                          AND MovementItem.DescId     = zc_MI_Master()
+                       )
+              OR vbServiceDate >= '01.01.2019'
+                )
          THEN
              --
              PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalServiceList(), inMovementId, vbPersonalServiceListId);

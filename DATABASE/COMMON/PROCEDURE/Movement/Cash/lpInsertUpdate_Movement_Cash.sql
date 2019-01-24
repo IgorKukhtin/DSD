@@ -145,6 +145,9 @@ BEGIN
 
 
      IF EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMoneyPlaceId AND Object.DescId = zc_Object_Personal())
+        AND (inInfoMoneyId = zc_Enum_InfoMoney_60101() -- Заработная плата
+          OR inServiceDate >= '01.01.2019'
+            )
      THEN
          -- пока определяется "из справочника", доработать - вывести на форму
          vbPersonalServiceListId:= (SELECT ObjectLink_Personal_PersonalServiceList.ChildObjectId
