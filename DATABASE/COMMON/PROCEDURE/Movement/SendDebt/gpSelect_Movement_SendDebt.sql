@@ -30,7 +30,12 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , ItemToName TVarChar, ToOKPO TVarChar
              , PaidKindToId Integer, PaidKindToName TVarChar
              , BranchToName TVarChar
-             
+
+             , CurrencyId    Integer
+             , CurrencyName  TVarChar
+             , CurrencyValue TFloat
+             , ParValue      TFloat
+
              , Amount TFloat
              , Comment TVarChar
              , isCopy Boolean
@@ -52,6 +57,7 @@ BEGIN
           , tmpMI AS (SELECT * FROM MovementItem WHERE MovementItem.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement))
           , tmpMILO AS (SELECT * FROM MovementItemLinkObject WHERE MovementItemLinkObject.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI))
           , tmpMIString AS (SELECT * FROM MovementItemString WHERE MovementItemString.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI))
+          , tmpMIFloat AS (SELECT * FROM MovementItemFloat WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI))
           
        SELECT
               Movement.Id
@@ -102,6 +108,11 @@ BEGIN
             , Object_PaidKind_To.ValueData           AS PaidKindToName
             , Object_Branch_To.ValueData             AS BranchToName
 
+            , Object_Currency.Id                        AS CurrencyId
+            , Object_Currency.ValueData                 AS CurrencyName
+            , MIFloat_CurrencyValue.ValueData :: TFloat AS CurrencyValue
+            , MIFloat_ParValue.ValueData      :: TFloat AS ParValue
+
             , MI_Master.Amount             AS Amount
             , MIString_Comment.ValueData  AS Comment
             , COALESCE(MovementBoolean_isCopy.ValueData, FALSE) AS isCopy
@@ -130,29 +141,40 @@ BEGIN
             LEFT JOIN tmpJuridicalDetails AS ObjectHistory_JuridicalDetails_From ON ObjectHistory_JuridicalDetails_From.JuridicalId = COALESCE (ObjectLink_Partner_JuridicalFrom.ChildObjectId, Object_Juridical_From.Id)
 
             LEFT JOIN tmpMILO AS MILinkObject_InfoMoney_From
-                                             ON MILinkObject_InfoMoney_From.MovementItemId = MI_Master.Id
-                                            AND MILinkObject_InfoMoney_From.DescId = zc_MILinkObject_InfoMoney()
+                              ON MILinkObject_InfoMoney_From.MovementItemId = MI_Master.Id
+                             AND MILinkObject_InfoMoney_From.DescId = zc_MILinkObject_InfoMoney()
             LEFT JOIN tmpInfoMoney AS View_InfoMoney_From ON View_InfoMoney_From.InfoMoneyId = MILinkObject_InfoMoney_From.ObjectId
 
             LEFT JOIN tmpMILO AS MILinkObject_Contract_From
-                                             ON MILinkObject_Contract_From.MovementItemId = MI_Master.Id
-                                            AND MILinkObject_Contract_From.DescId = zc_MILinkObject_Contract()
+                              ON MILinkObject_Contract_From.MovementItemId = MI_Master.Id
+                             AND MILinkObject_Contract_From.DescId = zc_MILinkObject_Contract()
             LEFT JOIN tmpContract AS View_Contract_InvNumber_From ON View_Contract_InvNumber_From.ContractId = MILinkObject_Contract_From.ObjectId
 
             LEFT JOIN tmpMILO AS MILinkObject_PaidKind_From
-                                             ON MILinkObject_PaidKind_From.MovementItemId = MI_Master.Id
-                                            AND MILinkObject_PaidKind_From.DescId = zc_MILinkObject_PaidKind()
+                              ON MILinkObject_PaidKind_From.MovementItemId = MI_Master.Id
+                             AND MILinkObject_PaidKind_From.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind_From ON Object_PaidKind_From.Id = MILinkObject_PaidKind_From.ObjectId
 
             LEFT JOIN tmpMILO AS MILinkObject_Branch_From
-                                             ON MILinkObject_Branch_From.MovementItemId = MI_Master.Id
-                                            AND MILinkObject_Branch_From.DescId = zc_MILinkObject_Branch()
+                              ON MILinkObject_Branch_From.MovementItemId = MI_Master.Id
+                             AND MILinkObject_Branch_From.DescId = zc_MILinkObject_Branch()
             LEFT JOIN Object AS Object_Branch_From ON Object_Branch_From.Id = MILinkObject_Branch_From.ObjectId
 
             LEFT JOIN tmpMIString AS MIString_Comment
                                   ON MIString_Comment.MovementItemId = MI_Master.Id 
                                  AND MIString_Comment.DescId         = zc_MIString_Comment()
 
+            LEFT JOIN tmpMILO AS MILinkObject_Currency
+                              ON MILinkObject_Currency.MovementItemId = MI_Master.Id
+                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
+
+            LEFT JOIN tmpMIFloat AS MIFloat_CurrencyValue
+                                 ON MIFloat_CurrencyValue.MovementItemId = MI_Master.Id
+                                AND MIFloat_CurrencyValue.DescId = zc_MIFloat_CurrencyValue()
+            LEFT JOIN tmpMIFloat AS MIFloat_ParValue
+                                 ON MIFloat_ParValue.MovementItemId = MI_Master.Id
+                                AND MIFloat_ParValue.DescId = zc_MIFloat_ParValue()
 
             LEFT JOIN tmpMI AS MI_Child ON MI_Child.MovementId = Movement.Id
                                        AND MI_Child.DescId     = zc_MI_Child()

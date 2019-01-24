@@ -1034,11 +1034,14 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_NumberChecksRatio() RETURNS Integer AS $BO
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_NumberChecksRatio', 'Коэффициент за количество чеков' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_NumberChecksRatio');
 
-
-  
+CREATE OR REPLACE FUNCTION zc_MIFloat_CurrencyValue() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_CurrencyValue'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_CurrencyValue', 'Курс' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_CurrencyValue');
+ 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 24.01.19         * zc_MIFloat_CurrencyValue
  16.01.19                                                                                                     * zc_MIFloat_NumberChecks
  19.11.18         * zc_MIFloat_RemainsStart, zc_MIFloat_RemainsEnd
                     zc_MIFloat_SummStart, zc_MIFloat_SummEnd

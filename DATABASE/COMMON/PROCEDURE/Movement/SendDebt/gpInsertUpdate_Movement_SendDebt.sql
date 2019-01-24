@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendDebt (Integer, TVarChar, TDateTime, Integer, Integer, Tfloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendDebt (Integer, TVarChar, TDateTime, Integer, Integer, Tfloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendDebt (Integer, TVarChar, TDateTime, Integer, Integer, Tfloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendDebt (Integer, TVarChar, TDateTime, Integer, Integer, Tfloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SendDebt(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -13,6 +14,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SendDebt(
  INOUT ioChildId             Integer   , -- Ключ объекта <Элемент документа>
 
     IN inAmount              TFloat    , -- сумма  
+    IN inCurrencyValue       TFloat    , -- Курс  
+    IN inParValue            TFloat    , -- Номинал валюты для которой вводится курс  
     
     IN inJuridicalFromId     Integer   , -- Юр.лицо
     IN inPartnerFromId       Integer   , -- Контрагент
@@ -27,6 +30,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SendDebt(
     IN inPaidKindToId        Integer   , -- Вид форм оплаты
     IN inInfoMoneyToId       Integer   , -- Статьи назначения
     IN inBranchToId          Integer   , -- 
+    IN inCurrencyId          Integer   , -- валюта
 
     IN inComment             TVarChar  , -- Примечание
     
@@ -119,6 +123,13 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), ioMasterId, inBranchFromId);
 
 
+     -- сохранили связь с <Валютой>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), ioMasterId, inCurrencyId); 
+     -- сохранили свойство <Курс>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValue(), ioMasterId, inCurrencyValue);
+     -- сохранили свойство <Номинал>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(), ioMasterId, inParValue);
+
      -- сохранили свойство <Комментарий>
      PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioMasterId, inComment);
 
@@ -158,6 +169,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 24.01.19         * add inCurrencyId, inCurrencyValue, inParValue
  12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp
  24.09.14                                        * add inPartner...
  12.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...
@@ -169,4 +181,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_SendDebt (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inAmount:= 20, inFromId:= 1, inToId:= 1, inPaidKindId:= 1,  inInfoMoneyId:= 0, inUnitId:= 0, inServiceDate:= '01.01.2013', inSession:= '2')
+-- 

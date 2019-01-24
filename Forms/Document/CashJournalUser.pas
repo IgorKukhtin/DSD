@@ -61,6 +61,8 @@ type
     bbPrint_byElements_byComments: TdxBarButton;
     actPrint_byComments: TdsdPrintAction;
     bbPrint_byComments: TdxBarButton;
+    actPrint_byService: TdsdPrintAction;
+    bbPrint_byService: TdxBarButton;
   private
     { Private declarations }
   public

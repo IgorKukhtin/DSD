@@ -129,11 +129,6 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = AmountCost
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = AmountCost_Master
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -145,11 +140,6 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = AmountCost
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = AmountCost_Master
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -281,6 +271,7 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
       object AmountCost_Master: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
         DataBinding.FieldName = 'AmountCost_Master'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
