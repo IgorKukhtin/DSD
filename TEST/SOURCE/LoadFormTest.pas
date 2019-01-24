@@ -429,6 +429,10 @@ end;
 
 procedure TLoadFormTest.LoadCostFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeCostJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeCostJournalForm');
+  //
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCostJournalChoicebyIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCostJournalChoicebyIncomeForm');
   exit;

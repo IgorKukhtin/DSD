@@ -1,4 +1,4 @@
-unit CheckItemJournal;
+unit CheckItemJournal1;
 
 interface
 
@@ -43,26 +43,36 @@ type
     colBayer: TcxGridDBColumn;
     colCashMember: TcxGridDBColumn;
     colFiscalCheckNumber: TcxGridDBColumn;
+    colNotMCS: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
-    colTotalSummChangePercent: TcxGridDBColumn;
+    clTotalSummChangePercent: TcxGridDBColumn;
+    clDiscountCardName: TcxGridDBColumn;
+    DiscountExternalName: TcxGridDBColumn;
     IsDeferred: TcxGridDBColumn;
-    colBayerPhone: TcxGridDBColumn;
+    BayerPhone: TcxGridDBColumn;
     InvNumberOrder: TcxGridDBColumn;
+    ConfirmedKindName: TcxGridDBColumn;
+    ConfirmedKindClientName: TcxGridDBColumn;
+    CommentError: TcxGridDBColumn;
     actShowMessage: TShowMessageAction;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
-    actPrint: TdsdPrintAction;
-    PrintDialog: TExecuteDialog;
-    macPrint: TMultiAction;
     bbPrint: TdxBarButton;
-    colTotalSummPayAdd: TcxGridDBColumn;
-    actCashSummaForDey: TdsdOpenForm;
+    clPartnerMedicalName: TcxGridDBColumn;
+    clOperDateSP: TcxGridDBColumn;
+    clInvNumberSP: TcxGridDBColumn;
+    clMedicSP: TcxGridDBColumn;
+    edIsSP: TcxCheckBox;
+    edIsVip: TcxCheckBox;
+    InvNumber_PromoCode_Full: TcxGridDBColumn;
+    GUID_PromoCode: TcxGridDBColumn;
+    TotalSummPayAdd: TcxGridDBColumn;
     bbChoiceGuides: TdxBarButton;
-    cxLabel4: TcxLabel;
     edGoods: TcxButtonEdit;
-    actChoiceGuides: TdsdChoiceGuides;
     GuidesGoods: TdsdGuides;
+    cxLabel4: TcxLabel;
+    actChoiceGuides: TdsdChoiceGuides;
   private
     { Private declarations }
   public

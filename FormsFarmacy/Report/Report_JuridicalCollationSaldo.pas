@@ -1,4 +1,4 @@
-unit Report_JuridicalCollation;
+unit Report_JuridicalCollationSaldo;
 
 interface
 
@@ -14,20 +14,15 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCurrencyEdit, DataModul, frxClass, frxDBSet, dsdGuides, cxButtonEdit,
   dxSkinsCore, cxImageComboBox, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, dsdExportToXLSAction;
 
 type
-  TReport_JuridicalCollationForm = class(TAncestorReportForm)
-    ItemName: TcxGridDBColumn;
-    InvNumber: TcxGridDBColumn;
+  TReport_JuridicalCollationSaldoForm = class(TAncestorReportForm)
+    Name: TcxGridDBColumn;
     Debet: TcxGridDBColumn;
     Kredit: TcxGridDBColumn;
-    OperDate: TcxGridDBColumn;
     actPrintOfficial: TdsdPrintAction;
     bbPrintOfficial: TdxBarButton;
-    cxLabel6: TcxLabel;
-    edJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
     getMovementForm: TdsdStoredProc;
     FormParams: TdsdFormParams;
     actOpenForm: TdsdOpenForm;
@@ -37,24 +32,34 @@ type
     spJuridicalBalance: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    StartRemains: TcxGridDBColumn;
-    EndRemains: TcxGridDBColumn;
-    FromName: TcxGridDBColumn;
-    ToName: TcxGridDBColumn;
     actPrintTurnover: TdsdPrintAction;
     bbPrintTurnover: TdxBarButton;
-    OperationSort: TcxGridDBColumn;
-    InvNumberPartner: TcxGridDBColumn;
     actPrintCurrency: TdsdPrintAction;
     bbPrintCurrency: TdxBarButton;
     edJuridicalBasis: TcxButtonEdit;
     cxLabel3: TcxLabel;
     JuridicalBasisGuide: TdsdGuides;
-    PaymentDate: TcxGridDBColumn;
-    DateLastPay: TcxGridDBColumn;
-    BranchDate: TcxGridDBColumn;
+    SaldoDS: TDataSource;
+    SalsoCDS: TClientDataSet;
+    cxGridSaldo: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    SaldoNDSKindName: TcxGridDBColumn;
+    SaldoSummaWith: TcxGridDBColumn;
+    SaldoSummaNDS: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    SaldoSumma: TcxGridDBColumn;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
-    actJuridicalCollationSaldo: TdsdOpenForm;
+    dxBarButton2: TdxBarButton;
+    actExportToXLS_PrintAll: TdsdExportToXLS;
+    actExportToXLS_PrintGoods: TdsdExportToXLS;
+    actPrintAll: TMultiAction;
+    actPrintGoods: TMultiAction;
+    actExecStoredProc_PrintAll: TdsdExecStoredProc;
+    actExecStoredProc_PrintGoods: TdsdExecStoredProc;
+    spSelectPrintGoods: TdsdStoredProc;
   private
     { Private declarations }
   public
@@ -68,6 +73,6 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_JuridicalCollationForm)
+  RegisterClass(TReport_JuridicalCollationSaldoForm)
 
 end.

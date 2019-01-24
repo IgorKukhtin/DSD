@@ -27,7 +27,6 @@ object PartnerMedical_ObjectForm: TPartnerMedical_ObjectForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 720
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -105,8 +104,7 @@ object PartnerMedical_ObjectForm: TPartnerMedical_ObjectForm
     Width = 796
     Height = 35
     Align = alTop
-    TabOrder = 5
-    ExplicitWidth = 720
+    TabOrder = 4
     object cxLabel6: TcxLabel
       Left = 4
       Top = 9
@@ -445,6 +443,48 @@ object PartnerMedical_ObjectForm: TPartnerMedical_ObjectForm
         end
         item
           Name = 'MedicSPName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MedicSPName'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GuidesMemberSPId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MedicSPId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GuidesMemberSPName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MedicSPName'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GroupMemberSP'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MedicSPName'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Passport'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MedicSPName'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Inn'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MedicSPName'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'eAddress'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'MedicSPName'

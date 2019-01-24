@@ -124,6 +124,14 @@ inherited ReturnInForm: TReturnInForm
           object InvNumber_Check_Full: TcxGridDBColumn
             Caption = #1050#1072#1089#1089#1086#1074#1099#1081' '#1095#1077#1082
             DataBinding.FieldName = 'InvNumber_Check_Full'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOpenChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1069#1083#1077#1084#1077#1085#1090' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1050#1072#1089#1089#1086#1074#1099#1081' '#1095#1077#1082
@@ -201,6 +209,7 @@ inherited ReturnInForm: TReturnInForm
       Left = 577
       Top = 44
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+      Visible = False
     end
     object edPaidKind: TcxButtonEdit
       Left = 577
@@ -211,6 +220,7 @@ inherited ReturnInForm: TReturnInForm
           Kind = bkEllipsis
         end>
       TabOrder = 11
+      Visible = False
       Width = 100
     end
     object cxLabel4: TcxLabel
@@ -452,11 +462,56 @@ inherited ReturnInForm: TReturnInForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'actOpenChoiceForm'
-      FormName = 'TIncomeJournalForm'
-      FormNameParam.Value = 'TIncomeJournalForm'
+      FormName = 'TCheckItemJournalForm'
+      FormNameParam.Value = 'TCheckItemJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'MasterUnitId'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterUnitName'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterGoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterGoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovemetItemId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MI_Id_Check'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_Check_Full'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
   end
@@ -868,8 +923,8 @@ inherited ReturnInForm: TReturnInForm
     Top = 248
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    Left = 550
-    Top = 256
+    Left = 614
+    Top = 344
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_ReturnIn'

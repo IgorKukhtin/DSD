@@ -1000,6 +1000,8 @@ type
     actReport_HolidayCompensation: TdsdOpenForm;
     miReport_HolidayCompensation: TMenuItem;
     N200: TMenuItem;
+    actIncomeCost: TdsdOpenForm;
+    miIncomeCost: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

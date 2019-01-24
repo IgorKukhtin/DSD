@@ -379,6 +379,7 @@ function TdsdExportToXLS.LocalExecute: Boolean;
      nDataCount,   // Количество строк данных
      nColumnCount, // Количество колонок
      I, J : Integer;
+     nCurr : Extended;
 
  const xlLeft = - 4131;
        xlRight = -4152;
@@ -565,7 +566,11 @@ begin
                 ftAutoInc, ftLargeint : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsExtended;
                 ftSmallint, ftInteger, ftWord, ftBytes : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsInteger;
                 ftDate, ftTime, ftDateTime : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsDateTime;
-                ftFloat, ftCurrency, ftBCD : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsExtended;
+                ftFloat, ftCurrency, ftBCD : if FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).DataType in [ftFloat, ftCurrency, ftBCD] then
+                                               xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsExtended
+                                             else if TryStrToFloat(StringReplace(FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString, '.',
+                                                    FormatSettings.DecimalSeparator, [rfReplaceAll]), nCurr) then xlRange.Value := nCurr
+                                                  else xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString;
                 ftBoolean : xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsBoolean;
                 else xlRange.Value := FItemsDataSet.FieldByName(FColumnParams.Items[I].FieldName).AsString;
               end;
