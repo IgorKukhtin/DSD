@@ -54,6 +54,7 @@ type
     pmExecute: TPopupMenu;
     N1: TMenuItem;
     N2: TMenuItem;
+    qrySetDateSend: TZQuery;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -117,9 +118,24 @@ begin
     while not qryMaker.Eof do
     begin
       ReportIncome;
+      btnExportClick(Sender);
+      btnSendMailClick(Sender);
+
       ReportCheck;
       btnExportClick(Sender);
       btnSendMailClick(Sender);
+
+      try
+        qrySetDateSend.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
+        qrySetDateSend.ExecSQL;
+      except
+        on E: Exception do
+        begin
+          Add_Log(E.Message);
+          exit;
+        end;
+      end;
+
       qryMaker.Next;
       Application.ProcessMessages;
     end;
@@ -218,8 +234,8 @@ begin
     'from gpReport_MovementIncome_Promo(:inMaker, :inStartDate, :inEndDate, ''3'')';
 
   qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
-  qryReport_Upload.Params.ParamByName('inStartDate').Value := IncMonth(Date, - 1);
-  qryReport_Upload.Params.ParamByName('inEndDate').Value := Date;
+  qryReport_Upload.Params.ParamByName('inStartDate').Value := IncDay(IncMonth(Date, - 1), - 1);
+  qryReport_Upload.Params.ParamByName('inEndDate').Value := IncDay(Date, - 1);
 
   OpenAndFormatSQL;
 end;
@@ -247,11 +263,12 @@ begin
     '  OperDate AS "Дата", '#13#10 +
     '  InvNumber AS "№ документа", '#13#10 +
     '  JuridicalName AS "Поставщик" '#13#10 +
-    'from gpReport_MovementCheck_Promo(:inMaker, :inStartDate, :inEndDate, ''3'')';
+    'from gpReport_MovementCheck_Promo(:inMaker, :inStartDate, :inEndDate, ''3'')'#13#10 +
+    'where isSendMaker = True';
 
   qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
-  qryReport_Upload.Params.ParamByName('inStartDate').Value := IncMonth(Date, - 1);
-  qryReport_Upload.Params.ParamByName('inEndDate').Value := Date;
+  qryReport_Upload.Params.ParamByName('inStartDate').Value := IncDay(IncMonth(Date, - 1), - 1);
+  qryReport_Upload.Params.ParamByName('inEndDate').Value := IncDay(Date, - 1);
 
   OpenAndFormatSQL;
 end;
@@ -318,8 +335,8 @@ begin
        qryMailParam.FieldByName('Mail_User').AsString,
        [qryMaker.FieldByName('Mail').AsString],
        qryMailParam.FieldByName('Mail_From').AsString,
-       FileName,
-       FileName,
+       FileName + ' за период с ' + FormatDateTime('dd.mm.yyyy', IncDay(IncMonth(Date, - 1), - 1)) + ' по ' + FormatDateTime('dd.mm.yyyy', IncDay(Date, - 1)),
+       '',
        [SavePath + FileName + '.xls']) then
   begin
     try

@@ -311,4 +311,25 @@ object MainForm: TMainForm
       OnClick = pmClick
     end
   end
+  object qrySetDateSend: TZQuery
+    Connection = ZConnection1
+    SQL.Strings = (
+      
+        'select * from lpInsertUpdate_ObjectDate (zc_ObjectDate_Maker_Sen' +
+        'dReal(), :inMaker, CURRENT_TIMESTAMP);')
+    Params = <
+      item
+        DataType = ftUnknown
+        Name = 'inMaker'
+        ParamType = ptUnknown
+      end>
+    Left = 144
+    Top = 448
+    ParamData = <
+      item
+        DataType = ftUnknown
+        Name = 'inMaker'
+        ParamType = ptUnknown
+      end>
+  end
 end

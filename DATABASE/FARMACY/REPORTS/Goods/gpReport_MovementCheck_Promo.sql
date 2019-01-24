@@ -42,6 +42,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
 
               , isChecked  Boolean      -- для маркетинга
               , isReport   Boolean      -- для отчета              
+              , isSendMaker Boolean     -- для отчета производителю
               )
 AS
 $BODY$
@@ -310,7 +311,21 @@ BEGIN
                           WHERE ObjectLink_Unit_Juridical.ObjectId IN (SELECT DISTINCT tmpData.UnitId FROM tmpData)
                                   AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                          )
+  , tmpMakerReport AS (SELECT DISTINCT OL_MakerReport_Juridical.ChildObjectid AS JuridicalId
+                       FROM ObjectLink AS OL_MakerReport_Maker
 
+                            INNER JOIN Object AS Object_MakerReport
+                                              ON Object_MakerReport.Id = OL_MakerReport_Maker.ObjectId 
+
+                            INNER JOIN ObjectLink AS OL_MakerReport_Juridical
+                                                  ON OL_MakerReport_Juridical.DescId = zc_ObjectLink_MakerReport_Juridical() 
+                                                 AND OL_MakerReport_Maker.ObjectId = OL_MakerReport_Juridical.ObjectId 
+                                                 AND COALESCE (OL_MakerReport_Maker.ChildObjectid, 0) <> 0
+
+                       WHERE OL_MakerReport_Maker.DescId = zc_ObjectLink_MakerReport_Maker() 
+                         AND COALESCE (OL_MakerReport_Maker.ChildObjectid, inMakerId) = inMakerId
+                         AND Object_MakerReport.isErased = False
+                       )
 
       -- Результат
       SELECT Movement.Id                              AS MovementId
@@ -351,6 +366,8 @@ BEGIN
 
             , tmpData.isChecked    :: Boolean
             , tmpData.isReport     :: Boolean
+            , CASE WHEN COALESCE(MakerReport.JuridicalId, 0) = 0 THEN True ELSE False END  AS isSendMaker  
+
      FROM tmpData 
         LEFT JOIN tmpMovement AS Movement ON Movement.Id = tmpData.MovementId_Check
         LEFT JOIN tmpUnitParam ON tmpUnitParam.UnitId = tmpData.UnitId
@@ -366,6 +383,9 @@ BEGIN
                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
         
         LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = tmpData.GoodsId
+
+        LEFT JOIN tmpMakerReport AS MakerReport
+                                 ON MakerReport.JuridicalId = tmpData.JuridicalId_Income
      ;
 
 END;
@@ -375,6 +395,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В. 
+ 24.01.19                                                      *
  17.01.19                                                      *
  12.11.18         *
  22.10.18         *
@@ -387,3 +408,4 @@ $BODY$
 
 -- тест
 --select * from gpReport_MovementCheck_Promo(inMakerId := 2336655 , inStartDate := ('01.11.2016')::TDateTime , inEndDate := ('30.11.2016')::TDateTime ,  inSession := '3');
+-- select * from gpReport_MovementCheck_Promo(6145049, '01.12.2018', '01.01.2019', '3')	
