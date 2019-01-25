@@ -120,6 +120,8 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+  LoadReportFromFile('Начисления услуг', ReportPath + '\Финансовый Учет\Начисления услуг.fr3');
+  exit;
   LoadReportFromFile('По кассе (по услугам)', ReportPath + '\Финансовый Учет\По кассе (по услугам).fr3');
   exit;
   {
