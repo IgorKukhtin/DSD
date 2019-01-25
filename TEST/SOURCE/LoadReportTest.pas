@@ -120,11 +120,12 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+  {
   LoadReportFromFile('Начисления услуг', ReportPath + '\Финансовый Учет\Начисления услуг.fr3');
   exit;
   LoadReportFromFile('По кассе (по услугам)', ReportPath + '\Финансовый Учет\По кассе (по услугам).fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintMovement_MemberHoliday', ReportPath + '\Персонал\PrintMovement_MemberHoliday.fr3');
   exit;
   LoadReportFromFile('По кассе (с комментариями)', ReportPath + '\Финансовый Учет\По кассе (с комментариями).fr3');
@@ -167,8 +168,10 @@ begin
 
   LoadReportFromFile('Обороты по юр лицам - поставщики(факт)', ReportPath + '\Отчеты (финансы)\Обороты по юр лицам - поставщики(факт).fr3');
   LoadReportFromFile('Обороты по контрагентам - поставщики(факт)', ReportPath + '\Отчеты (финансы)\Обороты по контрагентам - поставщики(факт).fr3');
-
-  LoadReportFromFile('Aкт сверки по контрагенту (тара)', ReportPath + '\Отчеты (товарные)\Aкт сверки по контрагенту (тара).fr3');
+  }
+  LoadReportFromFile('Обороты по контрагентам - поставщики(статьи)', ReportPath + '\Отчеты (финансы)\Обороты по контрагентам - поставщики(статьи).fr3');
+  exit;
+  {LoadReportFromFile('Aкт сверки по контрагенту (тара)', ReportPath + '\Отчеты (товарные)\Aкт сверки по контрагенту (тара).fr3');
   exit;
 
   LoadReportFromFile('Акт сверки (бухгалтерский)', ReportPath + '\Отчеты (финансы)\Акт сверки (бухгалтерский).fr3');
