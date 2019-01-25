@@ -483,6 +483,43 @@ inherited ServiceJournalForm: TServiceJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actPrint_byServiceShot: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1080' '#1087#1086' '#1089#1090#1072#1090#1100#1103#1084
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1091#1089#1083#1091#1075#1072#1084
+      ImageIndex = 19
+      DataSets = <
+        item
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'InfoMoneyName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1091#1089#1083#1091#1075'('#1080#1090#1086#1075#1080')'
+      ReportNameParam.Value = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1091#1089#1083#1091#1075'('#1080#1090#1086#1075#1080')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint_byService: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -633,7 +670,15 @@ inherited ServiceJournalForm: TServiceJournalForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbPrint_byService'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_byServiceShot'
         end
         item
           Visible = True
@@ -660,8 +705,12 @@ inherited ServiceJournalForm: TServiceJournalForm
       Action = actReCompleteAll
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbPrint_byService: TdxBarButton
       Action = actPrint_byService
+      Category = 0
+    end
+    object bbPrint_byServiceShot: TdxBarButton
+      Action = actPrint_byServiceShot
       Category = 0
     end
   end

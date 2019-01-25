@@ -50,7 +50,9 @@ type
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     actPrint_byService: TdsdPrintAction;
-    bb: TdxBarButton;
+    bbPrint_byService: TdxBarButton;
+    actPrint_byServiceShot: TdsdPrintAction;
+    bbPrint_byServiceShot: TdxBarButton;
   private
     { Private declarations }
   public
