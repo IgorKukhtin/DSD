@@ -23,6 +23,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,InvNumber TVarChar      --№ документа
               ,StatusName TVarChar     --Состояние документа
               ,UnitName TVarChar       --Подразделение
+              ,MainJuridicalId integer  --Наше Юр. лицо
               ,MainJuridicalName TVarChar  --Наше Юр. лицо
               ,JuridicalName TVarChar  --Юр. лицо
               ,RetailName TVarChar     --Торговая сеть
@@ -297,6 +298,7 @@ BEGIN
       
        , tmpUnitParam AS (SELECT Object_Unit.Id                           AS UnitId
                                , Object_Unit.ValueData                    AS UnitName
+                               , Object_MainJuridical.Id                  AS MainJuridicalId
                                , Object_MainJuridical.ValueData           AS MainJuridicalName
                                , Object_Retail.ValueData                  AS RetailName 
                           FROM ObjectLink AS ObjectLink_Unit_Juridical
@@ -344,6 +346,7 @@ BEGIN
             , Movement.InvNumber                       AS InvNumber
             , Movement.StatusName                      AS StatusName
             , tmpUnitParam.UnitName                    AS UnitName
+            , tmpUnitParam.MainJuridicalId             AS MainJuridicalId
             , tmpUnitParam.MainJuridicalName           AS MainJuridicalName
             , Object_From.ValueData                    AS JuridicalName
             , tmpUnitParam.RetailName                  AS RetailName 
@@ -395,6 +398,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В. 
+ 27.01.19                                                      *
  24.01.19                                                      *
  17.01.19                                                      *
  12.11.18         *
@@ -408,4 +412,4 @@ $BODY$
 
 -- тест
 --select * from gpReport_MovementCheck_Promo(inMakerId := 2336655 , inStartDate := ('01.11.2016')::TDateTime , inEndDate := ('30.11.2016')::TDateTime ,  inSession := '3');
--- select * from gpReport_MovementCheck_Promo(6145049, '01.12.2018', '01.01.2019', '3')	
+-- select * from gpReport_MovementCheck_Promo(6145049, '01.12.2018', '01.01.2019', '3') 

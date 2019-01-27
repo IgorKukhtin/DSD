@@ -21,6 +21,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
              , OperDate TDateTime      --Дата документа
              , InvNumber TVarChar      --№ документа
              , UnitName TVarChar       --Подразделение
+             , MainJuridicalId Integer  --Наше Юр. лицо
              , MainJuridicalName TVarChar  --Наше Юр. лицо
              , JuridicalName TVarChar  --Юр. лицо
              , RetailName TVarChar     --Торговая сеть
@@ -247,6 +248,7 @@ BEGIN
   -- получаем свойства Документов
   , tmpMov AS (SELECT  tmpMovMI.MovementId           
                      , Object_Unit.ValueData                    AS UnitName
+                     , Object_MainJuridical.Id                  AS MainJuridicalId
                      , Object_MainJuridical.ValueData           AS MainJuridicalName
                      , Object_From.ValueData                    AS JuridicalName
                      , Object_Retail.ValueData                  AS RetailName 
@@ -374,6 +376,7 @@ BEGIN
             , tmpMovMI.OperDate
             , tmpMovMI.InvNumber
             , tmpMov.UnitName
+            , tmpMov.MainJuridicalId
             , tmpMov.MainJuridicalName
             , tmpMov.JuridicalName
             , tmpMov.RetailName 
@@ -421,6 +424,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В. 
+ 27.01.19                                                                                    *
  17.01.19                                                                                    *
  20.02.18         *
  07.11.16         *
@@ -429,4 +433,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpReport_MovementIncome_Promo_22 (inMakerId:= 2336655, inStartDate:= '21.11.2016', inEndDate:= '25.11.2016', inSession:= '2')
 --SELECT * FROM gpReport_MovementIncome_Promo_22 (inMakerId:= 2336655, inStartDate:= '01.12.2016', inEndDate:= '03.12.2016', inSession:= '2')
---select * from gpReport_MovementIncome_Promo(inMakerId := 2336599 , inStartDate := ('01.01.2018')::TDateTime , inEndDate := ('01.03.2018')::TDateTime ,  inSession := '3'::TVarChar);
+--select * from gpReport_MovementIncome_Promo(inMakerId := 6145049  , inStartDate := ('01.12.2018')::TDateTime , inEndDate := ('01.01.2019')::TDateTime ,  inSession := '3'::TVarChar);

@@ -65,6 +65,8 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     ExternalUnit: TcxGridDBColumn;
+    actCheckJournalDiscountExternal: TdsdOpenForm;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public
