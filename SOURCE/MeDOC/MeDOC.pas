@@ -888,8 +888,9 @@ begin
   // Зведена податкова накладна
   if HeaderDataSet.FieldByName('TaxKind').asString = '4'
   then
-      ZVIT.DECLARBODY.R01G1 := StrToInt(HeaderDataSet.FieldByName('TaxKind').AsString)
-  else begin
+      ZVIT.DECLARBODY.R01G1 := StrToInt(HeaderDataSet.FieldByName('TaxKind').AsString);
+  // else
+  begin
       // ZVIT.DECLARBODY.ChildNodes['R01G1'].SetAttributeNS('nil', NS_URI, true);
       // Складена на операції, звільнені від оподаткування
       //****ZVIT.DECLARBODY.ChildNodes['R03G10S'].SetAttributeNS('nil', NS_URI, true);
@@ -921,23 +922,41 @@ begin
 
   ZVIT.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('INN_To').AsString;
   // № Філії покупця
-  if HeaderDataSet.FieldByName('InvNumberBranch_From').AsString <> ''
+  if HeaderDataSet.FieldByName('InvNumberBranch_To').AsString <> ''
   then ZVIT.DECLARBODY.HFBUY := StrToInt(HeaderDataSet.FieldByName('InvNumberBranch_To').AsString)
   else ZVIT.DECLARBODY.ChildNodes['HFBUY'].SetAttributeNS('nil', NS_URI, true);
 
   ZVIT.DECLARBODY.HTINBUY := HeaderDataSet.FieldByName('OKPO_To').AsString;
 
+  // Загальна сума коштів, що підлягають сплаті з урахуванням податку на додану вартість
   ZVIT.DECLARBODY.R04G11  := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
-  ZVIT.DECLARBODY.R03G11  := ReplaceStr(FormatFloat('0.00####', HeaderDataSet.FieldByName('SummVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
-  ZVIT.DECLARBODY.R03G7   := ReplaceStr(FormatFloat('0.00####', HeaderDataSet.FieldByName('SummVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+
+  // Загальна сума податку на додану вартість, у тому числі:
+  if (HeaderDataSet.FieldByName('VATPercent').AsFloat < 100)
+  then ZVIT.DECLARBODY.R03G11  := ReplaceStr(FormatFloat('0.00####', HeaderDataSet.FieldByName('SummVAT').AsFloat), FormatSettings.DecimalSeparator, '.')
+  else ZVIT.DECLARBODY.ChildNodes['R03G11'].SetAttributeNS('nil', NS_URI, true);
+  // Загальна сума податку на додану вартість за основною ставкою
+  if (HeaderDataSet.FieldByName('VATPercent').AsFloat < 100)
+  then ZVIT.DECLARBODY.R03G7   := ReplaceStr(FormatFloat('0.00####', HeaderDataSet.FieldByName('SummVAT').AsFloat), FormatSettings.DecimalSeparator, '.')
+  else ZVIT.DECLARBODY.ChildNodes['R03G7'].SetAttributeNS('nil', NS_URI, true);
+  // Загальна сума податку на додану вартість за ставкою 7%
   ZVIT.DECLARBODY.ChildNodes['R03G109'].SetAttributeNS('nil', NS_URI, true);
+  // Усього обсяги постачання за основною ставкою (код ставки 20)
+  if (HeaderDataSet.FieldByName('VATPercent').AsFloat < 100)
+  then ZVIT.DECLARBODY.R01G7 := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT').AsFloat), FormatSettings.DecimalSeparator, '.')
+  else ZVIT.DECLARBODY.ChildNodes['R01G7'].SetAttributeNS('nil', NS_URI, true);;
 
-  ZVIT.DECLARBODY.R01G7 := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
-
+  // Загальна сума податку на додану вартість за ставкою 7%
   ZVIT.DECLARBODY.ChildNodes['R01G109'].SetAttributeNS('nil', NS_URI, true);
-  ZVIT.DECLARBODY.ChildNodes['R01G9'].SetAttributeNS('nil', NS_URI, true);
+  // Усього обсяги постачання при експорті товарів за ставкою 0% (код ставки 901)
+  if (HeaderDataSet.FieldByName('VATPercent').AsFloat < 100)
+  then ZVIT.DECLARBODY.ChildNodes['R01G9'].SetAttributeNS('nil', NS_URI, true)
+  else ZVIT.DECLARBODY.R01G9 := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+  // Усього обсяги постачання на митній території України за ставкою 0% (код ставки 902)
   ZVIT.DECLARBODY.ChildNodes['R01G8'].SetAttributeNS('nil', NS_URI, true);
+  // Усього обсяги операцій, звільнених від оподаткування (код ставки 903)
   ZVIT.DECLARBODY.ChildNodes['R01G10'].SetAttributeNS('nil', NS_URI, true);
+  // Дані щодо зворотної (заставної) тари
   ZVIT.DECLARBODY.ChildNodes['R02G11'].SetAttributeNS('nil', NS_URI, true);
 
   with ItemsDataSet do
@@ -1193,14 +1212,17 @@ begin
      i := 1;
      while not EOF do
      begin
-          if (FieldByName('Amount').AsFloat <> 0) and (FieldByName('PriceNoVAT').AsFloat <> 0)then
+          if (FieldByName('Amount').AsFloat <> 0) and (FieldByName('PriceNoVAT').AsFloat <> 0)
+          then
           begin
           //Сума податку на додану вартість
           with ZVIT.DECLARBODY.RXXXXG11_10.Add do
           begin
             ROWNUM := i;
             //Nil_ := false;
-            NodeValue := ReplaceStr(FormatFloat('0.00####', FieldByName('SummVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+            if (HeaderDataSet.FieldByName('VATPercent').AsFloat < 100)
+            then NodeValue := ReplaceStr(FormatFloat('0.00####', FieldByName('SummVAT').AsFloat), FormatSettings.DecimalSeparator, '.')
+            else SetAttributeNS('nil', NS_URI, true);
           end;
           //
           inc(i);

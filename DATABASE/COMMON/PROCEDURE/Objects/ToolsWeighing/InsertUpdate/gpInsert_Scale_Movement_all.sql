@@ -52,14 +52,23 @@ BEGIN
 
 
 -- для теста
-/*if inMovementId in (8351040)
+if vbUserId = 5 and 1=0
 then
     --
-    update MovementLinkMovement set MovementChildId = null where MovementLinkMovement.DescId = zc_MovementLinkMovement_Order() and
-           MovementLinkMovement.MovementId = (select Movement.ParentId from Movement where Movement.Id = inMovementId);
+    --update MovementLinkMovement set MovementChildId = null where MovementLinkMovement.DescId = zc_MovementLinkMovement_Order() and
+      --     MovementLinkMovement.MovementId = (select Movement.ParentId from Movement where Movement.Id = inMovementId);
+
+
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), MovementItem.Id, null)
+     from MovementItem 
+     where  MovementItem.MovementId = 12175588 ;
+    --
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), MovementItem.Id, 0)
+     from MovementItem 
+     where  MovementItem.MovementId = 12175588 ;
     --
     update Movement set statusId = zc_Enum_Status_UnComplete(), ParentId = null where Movement.Id = inMovementId;
-end if;*/
+end if;
 
 
      -- проверка
@@ -79,19 +88,19 @@ end if;*/
 
 
      -- проверка - договор не Маркетинг
-     IF (SELECT 1
-         FROM MovementLinkMovement AS MovementLinkMovement_Order
-              LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                           ON MovementLinkObject_Contract.MovementId = MovementLinkMovement_Order.MovementChildId
-                                          AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-              LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
-                                   ON ObjectLink_Contract_InfoMoney.ObjectId = MovementLinkObject_Contract.ObjectId
-                                  AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
-              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
-         WHERE MovementLinkMovement_Order.MovementId = inMovementId
-           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
-           AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Общефирменные + Маркетинг
-        )
+     IF EXISTS(SELECT 1
+               FROM MovementLinkMovement AS MovementLinkMovement_Order
+                    LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                 ON MovementLinkObject_Contract.MovementId = MovementLinkMovement_Order.MovementChildId
+                                                AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                    LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                         ON ObjectLink_Contract_InfoMoney.ObjectId = MovementLinkObject_Contract.ObjectId
+                                        AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                    LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Contract_InfoMoney.ChildObjectId
+               WHERE MovementLinkMovement_Order.MovementId = inMovementId
+                 AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                 AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Общефирменные + Маркетинг
+              )
      THEN
          RAISE EXCEPTION 'Ошибка.В заявке указан неправильный № договора = <%> <%>.', lfGet_Object_ValueData ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_Contract())), lfGet_Object_ValueData (zc_Enum_InfoMoneyDestination_21500());
      END IF;
@@ -506,7 +515,28 @@ end if;*/
           -- это "некоторые филиалы", иначе приход = расход !!!временно, т.к. должны быть все!!!
           vbIsUnitCheck:= TRUE; -- EXISTS (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO JOIN _tmpUnit_check ON _tmpUnit_check.UnitId = MLO.ObjectId WHERE MLO.MovementId = inMovementId AND MLO.DescId IN (zc_MovementLinkObject_From(), zc_MovementLinkObject_To()));
           -- это "приход" на "некоторые филиалы"
-          vbIsSendOnPriceIn:= CASE WHEN vbBranchId = zc_Branch_Basis() AND EXISTS (SELECT MLO_From.ObjectId FROM MovementLinkObject AS MLO_From INNER JOIN ObjectLink ON ObjectLink.ObjectId = MLO_From.ObjectId AND ObjectLink.DescId = zc_ObjectLink_Unit_Branch() AND COALESCE (ObjectLink.ChildObjectId, zc_Branch_Basis()) <> zc_Branch_Basis() WHERE MLO_From.MovementId = inMovementId AND MLO_From.DescId = zc_MovementLinkObject_From())
+          vbIsSendOnPriceIn:= (WITH tmpUnit_Branch AS (SELECT OL.ObjectId AS UnitId
+                                                       FROM ObjectLink AS OL
+                                                       WHERE OL.ChildObjectId = vbBranchId
+                                                         AND OL.DescId        = zc_ObjectLink_Unit_Branch()
+                                                      UNION
+                                                       -- Склады
+                                                       SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8453) AS lfSelect
+                                                       WHERE vbBranchId = zc_Branch_Basis()
+                                                      )
+                                     , tmpMLO_From AS (SELECT MLO_From.ObjectId FROM MovementLinkObject AS MLO_From WHERE MLO_From.MovementId = inMovementId AND MLO_From.DescId = zc_MovementLinkObject_From()
+                                                      )
+                                       , tmpMLO_To AS (SELECT MLO_To.ObjectId   FROM MovementLinkObject AS MLO_To   WHERE MLO_To.MovementId   = inMovementId AND MLO_To.DescId   = zc_MovementLinkObject_To()
+                                                      )
+                               SELECT CASE -- будет расход с него
+                                           WHEN (SELECT tmpMLO_From.ObjectId FROM tmpMLO_From) IN (SELECT tmpUnit_Branch.UnitId FROM tmpUnit_Branch)
+                                                THEN FALSE
+                                           -- будет приход на него
+                                           WHEN (SELECT tmpMLO_To.ObjectId   FROM tmpMLO_To)   IN (SELECT tmpUnit_Branch.UnitId FROM tmpUnit_Branch)
+                                                THEN TRUE
+                                      END
+                              );
+                              /*CASE WHEN vbBranchId = zc_Branch_Basis() AND EXISTS (SELECT MLO_From.ObjectId FROM MovementLinkObject AS MLO_From INNER JOIN ObjectLink ON ObjectLink.ObjectId = MLO_From.ObjectId AND ObjectLink.DescId = zc_ObjectLink_Unit_Branch() AND COALESCE (ObjectLink.ChildObjectId, zc_Branch_Basis()) <> zc_Branch_Basis() WHERE MLO_From.MovementId = inMovementId AND MLO_From.DescId = zc_MovementLinkObject_From())
                                         THEN TRUE -- для главного - приход на него
                                    WHEN vbBranchId = zc_Branch_Basis() AND EXISTS (SELECT MLO_To.ObjectId   FROM MovementLinkObject AS MLO_To   INNER JOIN ObjectLink ON ObjectLink.ObjectId = MLO_To.ObjectId   AND ObjectLink.DescId = zc_ObjectLink_Unit_Branch() AND COALESCE (ObjectLink.ChildObjectId, zc_Branch_Basis()) <> zc_Branch_Basis() WHERE MLO_To.MovementId = inMovementId   AND MLO_To.DescId   = zc_MovementLinkObject_To())
                                         THEN FALSE -- для главного - расход с него
@@ -514,7 +544,7 @@ end if;*/
                                         THEN TRUE -- для филиала - приход на него
                                    WHEN EXISTS (SELECT MLO_From.ObjectId FROM MovementLinkObject AS MLO_From INNER JOIN ObjectLink ON ObjectLink.ObjectId = MLO_From.ObjectId AND ObjectLink.DescId = zc_ObjectLink_Unit_Branch() AND COALESCE (ObjectLink.ChildObjectId, zc_Branch_Basis()) <> zc_Branch_Basis() WHERE MLO_From.MovementId = inMovementId AND MLO_From.DescId = zc_MovementLinkObject_From())
                                         THEN FALSE -- для филиала - расход с него
-                              END;
+                              END;*/
 
           IF vbBranchId <> zc_Branch_Basis() -- OR vbIsSendOnPriceIn = TRUE
           THEN

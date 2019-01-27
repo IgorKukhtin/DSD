@@ -20,16 +20,25 @@ inherited GlobalConstForm: TGlobalConstForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colValueText: TcxGridDBColumn
+          object ValueText: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1076#1072#1090#1099
             DataBinding.FieldName = 'ValueText'
             Options.Editing = False
             Width = 246
           end
-          object colDate: TcxGridDBColumn
+          object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
             Width = 103
+          end
+          object EnumName: TcxGridDBColumn
+            Caption = 'Enum'
+            DataBinding.FieldName = 'EnumName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
         end
       end

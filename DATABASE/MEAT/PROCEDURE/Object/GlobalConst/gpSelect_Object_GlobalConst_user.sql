@@ -30,7 +30,7 @@ BEGIN
             LEFT JOIN ObjectString ON ObjectString.ObjectId = Object_GlobalConst.Id
                                   AND ObjectString.DescId = zc_ObjectString_Enum()
        WHERE Object_GlobalConst.DescId = zc_Object_GlobalConst()
-         AND Object_GlobalConst.ObjectCode < 100
+         AND (Object_GlobalConst.ObjectCode < 100 OR tmpUser_Admin.Id = 1)
          AND (tmpRoleAccessKey_all.AccessKeyId > 0 OR tmpUser_Admin.Id = 1)
        ORDER BY 1
       ;

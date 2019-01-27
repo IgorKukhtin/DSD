@@ -68,16 +68,37 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-       WITH tmpMovement AS (SELECT tmpMovement.Id
+       WITH tmpUnit_Branch AS (SELECT OL.ObjectId AS UnitId
+                               FROM ObjectLink AS OL
+                               WHERE OL.ChildObjectId = vbBranchId
+                                 AND OL.DescId        = zc_ObjectLink_Unit_Branch()
+                              UNION
+                               -- Склады
+                               SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8453) AS lfSelect
+                               WHERE vbBranchId = zc_Branch_Basis()
+                              )
+          , tmpMovement AS (SELECT tmpMovement.Id
                                  , tmpMovement.InvNumber
                                  , tmpMovement.DescId
                                  , tmpMovement.OperDate
-                                 , MovementLinkObject_Contract.ObjectId       AS ContractId
-                                 , CASE WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
+
+                                   -- ContractId
+                                 , MovementLinkObject_Contract.ObjectId AS ContractId
+ 
+                                   -- От кого
+                                 , CASE -- Для заявки поставщику
+                                        WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
+                                        
                                              THEN MovementLinkObject_Unit.ObjectId
+
+                                        -- Для остальных - Заявка покупателя или SendOnPrice
                                         ELSE MovementLinkObject_From.ObjectId
+
                                    END AS FromId
-                                 , CASE WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
+
+                                   -- Кому
+                                 , CASE -- Для заявки поставщику
+                                        WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
                                              THEN (SELECT OL.ObjectId
                                                    FROM MovementLinkObject AS MLO
                                                         INNER JOIN ObjectLink AS OL ON OL.ChildObjectId = MLO.ObjectId AND OL.DescId = zc_ObjectLink_Partner_Juridical()
@@ -85,16 +106,45 @@ BEGIN
                                                    WHERE MLO.MovementId = tmpMovement.Id
                                                      AND MLO.DescId     = zc_MovementLinkObject_Juridical()
                                                    LIMIT 1)
+                                        -- Для Склад специй + Склад запчастей
                                         WHEN MovementLinkObject_From.ObjectId = MovementLinkObject_To.ObjectId
                                          AND inBranchCode BETWEEN 301 AND 310
                                          AND tmpMovement.DescId = zc_Movement_OrderInternal()
                                              THEN 8455 -- Склад специй
+
+                                        -- Для остальных - Заявка покупателя или SendOnPrice
                                         ELSE MovementLinkObject_To.ObjectId
+
                                    END AS ToId
+
+                                   -- JuridicalId
                                  , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                                   -- GoodsPropertyId
                                  , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, ObjectLink_Partner_Juridical.ChildObjectId, ObjectLink_Partner_Juridical.ObjectId) AS GoodsPropertyId
+
                                    -- вот таким сложным CASE определяется приход или расход
-                                 , CASE WHEN ObjectLink_UnitFrom_Branch.ChildObjectId = vbBranchId
+                                 , CASE -- для всех - расход с него !!!блокируется!!!
+                                        WHEN tmpUnit_Branch_From.UnitId > 0
+                                         AND tmpMovement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_SendOnPrice())
+                                             THEN NULL
+
+                                        -- для всех - заявка на него
+                                        WHEN tmpUnit_Branch_To.UnitId > 0
+                                         AND tmpMovement.DescId = zc_Movement_OrderExternal()
+                                             THEN FALSE -- будет расход с него
+
+                                        -- для всех - SendOnPrice на него
+                                        WHEN tmpUnit_Branch_To.UnitId > 0
+                                         AND tmpMovement.DescId = zc_Movement_SendOnPrice()
+                                             THEN TRUE -- будет приход на него
+
+                                        /*WHEN MovementLinkObject_From.ObjectId = 3080691 -- Склад ГП ф.Львов
+                                         AND MovementLinkObject_To.ObjectId   = 8411    -- Склад ГП ф.Киев
+                                         AND tmpMovement.DescId = zc_Movement_OrderInternal()
+                                             THEN FALSE -- для Киев - расход с него
+                                        */
+
+                                        /*WHEN ObjectLink_UnitFrom_Branch.ChildObjectId = vbBranchId
                                              THEN NULL -- FALSE -- для филиала - расход с него !!!блокируется!!!
                                         WHEN ObjectLink_UnitTo_Branch.ChildObjectId = vbBranchId
                                              THEN TRUE -- для филиала - приход на него
@@ -102,7 +152,10 @@ BEGIN
                                              THEN NULL -- FALSE -- для главного - расход с него !!!блокируется!!!
                                         WHEN ObjectLink_UnitFrom_Branch.ChildObjectId > 0
                                              THEN TRUE -- для главного - приход на него
+                                        */
+
                                    END AS isSendOnPriceIn
+
                             FROM (-- по Ш/К
                                   SELECT Movement.Id
                                        , Movement.InvNumber
@@ -178,6 +231,9 @@ BEGIN
                                  LEFT JOIN ObjectLink AS ObjectLink_UnitTo_Branch
                                                       ON ObjectLink_UnitTo_Branch.ObjectId = MovementLinkObject_To.ObjectId
                                                      AND ObjectLink_UnitTo_Branch.DescId = zc_ObjectLink_Unit_Branch()
+
+                                 LEFT JOIN tmpUnit_Branch AS tmpUnit_Branch_From ON tmpUnit_Branch_From.UnitId = MovementLinkObject_From.ObjectId
+                                 LEFT JOIN tmpUnit_Branch AS tmpUnit_Branch_To   ON tmpUnit_Branch_To.UnitId   = MovementLinkObject_To.ObjectId
                            )
            , tmpMovement_find AS (SELECT tmpMovement.Id
                                        , MovementLinkMovement_Order.MovementId AS MovementId_get
@@ -208,22 +264,24 @@ BEGIN
                                   )
       , tmpMovementDescNumber AS (SELECT tmpSelect.Number AS MovementDescNumber
                                        , tmp.MovementId
-                                  FROM (SELECT CASE WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
+                                  FROM (SELECT -- !!!замена!!!
+                                               CASE WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
                                                          THEN zc_Movement_Income()
                                                     WHEN tmpMovement.DescId = zc_Movement_OrderInternal()
                                                          THEN zc_Movement_Send()
                                                     WHEN Object_From.DescId = zc_Object_ArticleLoss()
                                                          THEN zc_Movement_Loss()
-
-                                                    WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
+                                                    /*WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
                                                      AND tmpMovement.FromId = 3080691 -- Склад ГП ф.Львов
                                                      AND tmpMovement.ToId   = 8411    -- Склад ГП ф.Киев
-                                                         THEN zc_Movement_Send()
-
+                                                         THEN zc_Movement_Send()*/
                                                     WHEN Object_From.DescId = zc_Object_Unit()
                                                          THEN zc_Movement_SendOnPrice()
+
                                                     ELSE tmpMovement.DescId
+
                                                END AS MovementDescId
+
                                              , tmpMovement.DescId AS MovementDescId_original
                                              , tmpMovement.FromId
                                              , tmpMovement.ToId
@@ -238,47 +296,73 @@ BEGIN
                                        ) AS tmp
                                        INNER JOIN gpSelect_Object_ToolsWeighing_MovementDesc (inBranchCode:= inBranchCode
                                                                                             , inSession   := inSession
-                                                                                             ) AS tmpSelect ON tmpSelect.MovementDescId = tmp.MovementDescId
-                                                                                                           AND tmpSelect.FromId = CASE WHEN tmp.MovementDescId = zc_Movement_Income()
-                                                                                                                                            THEN 0 -- для Прихода от поставщика
-                                                                                                                                       WHEN tmp.MovementDescId = zc_Movement_Send()
-                                                                                                                                            THEN tmp.ToId -- для Перемещения
-                                                                                                                                       WHEN tmp.MovementDescId = zc_Movement_Loss()
-                                                                                                                                            THEN tmp.ToId -- для списания
-                                                                                                                                       WHEN tmp.MovementDescId = zc_Movement_SendOnPrice() AND tmp.MovementDescId_original = zc_Movement_OrderExternal()
-                                                                                                                                            THEN tmp.ToId -- для SendOnPrice по заявке
-
-                                                                                                                                       WHEN vbBranchId = zc_Branch_Basis() AND tmp.isSendOnPriceIn = FALSE
-                                                                                                                                            THEN tmp.FromId -- для главного - расход с него
-                                                                                                                                       WHEN vbBranchId = zc_Branch_Basis() AND tmp.isSendOnPriceIn = TRUE
-                                                                                                                                            THEN 0 -- для главного - приход на него, а здесь 0 т.к. он выбирается из справочника
-                                                                                                                                       WHEN tmp.isSendOnPriceIn = TRUE
-                                                                                                                                            THEN tmp.FromId -- для филиала - приход на него, а здесь FromId т.к. не выбирается
-                                                                                                                                       WHEN tmp.isSendOnPriceIn = FALSE
-                                                                                                                                            THEN tmp.FromId -- для для филиала - расход с него
-                                                                                                                                  END
-                                                                                                           AND tmpSelect.ToId   = CASE WHEN tmp.MovementDescId = zc_Movement_Income()
-                                                                                                                                            THEN tmp.FromId -- для Прихода от поставщика
-                                                                                                                                       WHEN tmp.MovementDescId = zc_Movement_Send()
-                                                                                                                                            THEN tmp.FromId -- для Перемещения
-                                                                                                                                       WHEN tmp.MovementDescId = zc_Movement_Loss()
-                                                                                                                                            THEN 0 -- для списания здесь 0 т.к. он выбирается из справочника
-                                                                                                                                       WHEN tmp.MovementDescId = zc_Movement_SendOnPrice() AND tmp.MovementDescId_original = zc_Movement_OrderExternal()
-                                                                                                                                            THEN 0 -- для SendOnPrice по заявке
-
-                                                                                                                                       WHEN vbBranchId = zc_Branch_Basis() AND tmp.isSendOnPriceIn = FALSE
-                                                                                                                                            THEN 0 -- для главного - расход с него, а здесь 0 т.к. он выбирается из справочника
-                                                                                                                                       WHEN vbBranchId = zc_Branch_Basis() AND tmp.isSendOnPriceIn = TRUE
-                                                                                                                                            THEN tmp.ToId -- для главного - приход на него
-                                                                                                                                       WHEN tmp.isSendOnPriceIn = TRUE
-                                                                                                                                            THEN tmp.ToId -- для филиала - приход на него
-                                                                                                                                       WHEN tmp.isSendOnPriceIn = FALSE
-                                                                                                                                            THEN tmp.ToId -- для для филиала - расход с него, а здесь ToId т.к. не выбирается
-                                                                                                                                  END
-                                                                                                           AND COALESCE (tmpSelect.PaidKindId, 0) = CASE WHEN tmp.MovementDescId = zc_Movement_Income()
-                                                                                                                                                              THEN (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = tmp.MovementId AND MLO.DescId = zc_MovementLinkObject_PaidKind())
-                                                                                                                                                         ELSE COALESCE (tmpSelect.PaidKindId, 0)
-                                                                                                                                                    END
+                                                                                             )
+                                                   AS tmpSelect ON tmpSelect.MovementDescId = tmp.MovementDescId
+                                                               AND tmpSelect.FromId = CASE -- для Прихода от поставщика
+                                                                                           WHEN tmp.MovementDescId = zc_Movement_Income()
+                                                                                                THEN 0
+                                                                                           -- для Перемещения
+                                                                                           WHEN tmp.MovementDescId = zc_Movement_Send()
+                                                                                                THEN tmp.ToId
+                                                                                           -- для списания
+                                                                                           WHEN tmp.MovementDescId = zc_Movement_Loss()
+                                                                                                THEN tmp.ToId
+--    WHEN tmp.MovementDescId = zc_Movement_SendOnPrice()
+--     AND tmp.FromId = 3080691 -- Склад ГП ф.Львов
+--     AND tmp.ToId   = 8411    -- Склад ГП ф.Киев
+--         THEN tmp.ToId
+                                                                                           -- для ЛЮБОГО SendOnPrice по заявке
+                                                                                           WHEN tmp.MovementDescId = zc_Movement_SendOnPrice() AND tmp.MovementDescId_original = zc_Movement_OrderExternal()
+                                                                                                THEN tmp.ToId
+                                                                                           -- для главного - расход с него
+                                                                                           WHEN vbBranchId = zc_Branch_Basis() AND tmp.isSendOnPriceIn = FALSE
+                                                                                                THEN tmp.FromId
+                                                                                           -- для главного - приход на него, а здесь 0 т.к. он выбирается из справочника
+                                                                                           WHEN vbBranchId = zc_Branch_Basis() AND tmp.isSendOnPriceIn = TRUE
+                                                                                                THEN 0
+                                                                                           -- для филиала - приход на него, а здесь FromId т.к. не выбирается
+                                                                                           WHEN tmp.isSendOnPriceIn = TRUE
+                                                                                                THEN tmp.FromId
+                                                                                           -- для для филиала - расход с него
+                                                                                           WHEN tmp.isSendOnPriceIn = FALSE
+                                                                                                THEN tmp.FromId
+                                                                                      END
+                                                               AND tmpSelect.ToId   = CASE -- для Прихода от поставщика
+                                                                                           WHEN tmp.MovementDescId = zc_Movement_Income()
+                                                                                                THEN tmp.FromId
+                                                                                           -- для Перемещения
+                                                                                           WHEN tmp.MovementDescId = zc_Movement_Send()
+                                                                                                THEN tmp.FromId
+                                                                                           -- для списания здесь 0 т.к. он выбирается из справочника
+                                                                                           WHEN tmp.MovementDescId = zc_Movement_Loss()
+                                                                                                THEN 0
+--    WHEN tmp.MovementDescId = zc_Movement_SendOnPrice()
+--     AND tmp.FromId = 3080691 -- Склад ГП ф.Львов
+--     AND tmp.ToId   = 8411    -- Склад ГП ф.Киев
+--         THEN tmp.FromId
+                                                                                           -- для главного SendOnPrice по заявке
+                                                                                           WHEN vbBranchId = zc_Branch_Basis() AND tmp.MovementDescId = zc_Movement_SendOnPrice() AND tmp.MovementDescId_original = zc_Movement_OrderExternal()
+                                                                                                THEN 0
+                                                                                           -- для филиала SendOnPrice по заявке
+                                                                                           WHEN tmp.MovementDescId = zc_Movement_SendOnPrice() AND tmp.MovementDescId_original = zc_Movement_OrderExternal()
+                                                                                                THEN tmp.FromId
+                                                                                           -- для главного - расход с него, а здесь 0 т.к. он выбирается из справочника
+                                                                                           WHEN vbBranchId = zc_Branch_Basis() AND tmp.isSendOnPriceIn = FALSE
+                                                                                                THEN 0
+                                                                                           -- для главного - приход на него
+                                                                                           WHEN vbBranchId = zc_Branch_Basis() AND tmp.isSendOnPriceIn = TRUE
+                                                                                                THEN tmp.ToId
+                                                                                           -- для филиала - приход на него
+                                                                                           WHEN tmp.isSendOnPriceIn = TRUE
+                                                                                                THEN tmp.ToId
+                                                                                           -- для для филиала - расход с него, а здесь ToId т.к. не выбирается
+                                                                                           WHEN tmp.isSendOnPriceIn = FALSE
+                                                                                                THEN tmp.ToId
+                                                                                      END
+                                                               AND COALESCE (tmpSelect.PaidKindId, 0) = CASE WHEN tmp.MovementDescId = zc_Movement_Income()
+                                                                                                                  THEN (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = tmp.MovementId AND MLO.DescId = zc_MovementLinkObject_PaidKind())
+                                                                                                             ELSE COALESCE (tmpSelect.PaidKindId, 0)
+                                                                                                        END
                                  )
        SELECT tmpMovement.Id                                 AS MovementId
             , tmpMovement.DescId                             AS MovementDescId_order
@@ -291,14 +375,24 @@ BEGIN
             , CASE WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
                         THEN zc_Movement_Income()
                    WHEN tmpMovement.DescId = zc_Movement_OrderInternal()
-                        THEN  zc_Movement_Send()
+                        THEN zc_Movement_Send()
                    WHEN Object_From.DescId = zc_Object_ArticleLoss()
                         THEN zc_Movement_Loss()
+
+                   /*WHEN (tmpMovement.DescId = zc_Movement_OrderExternal()
+                    AND tmpMovement.FromId = 3080691 -- Склад ГП ф.Львов
+                    AND tmpMovement.ToId   = 8411    -- Склад ГП ф.Киев
+                    ) -- or inSession = '5'
+                        THEN zc_Movement_Send()*/
+
                    WHEN Object_From.DescId = zc_Object_Unit()
                         THEN zc_Movement_SendOnPrice()
+
                    WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
                         THEN zc_Movement_Sale()
+
                    ELSE tmpMovement.DescId
+
               END AS MovementDescId
             , Object_From.Id                                 AS FromId
             , Object_From.ObjectCode                         AS FromCode

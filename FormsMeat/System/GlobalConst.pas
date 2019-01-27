@@ -15,12 +15,13 @@ uses
 
 type
   TGlobalConstForm = class(TAncestorDBGridForm)
-    colValueText: TcxGridDBColumn;
+    ValueText: TcxGridDBColumn;
     spUpdateGlobalConst: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    colDate: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    EnumName: TcxGridDBColumn;
   private
     { Private declarations }
   public

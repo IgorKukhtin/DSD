@@ -111,8 +111,9 @@ BEGIN
      END IF;
 
      -- !!! Глобальные константы
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_Marion(),  inDescId:= zc_Object_GlobalConst(), inCode:= 1, inName:= 'Коды Мариона', inEnumName:= 'zc_Enum_GlobalConst_Marion');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_BarCode(),  inDescId:= zc_Object_GlobalConst(), inCode:= 2, inName:= 'Штрих-коды', inEnumName:= 'zc_Enum_GlobalConst_BarCode');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_Marion(),       inDescId:= zc_Object_GlobalConst(), inCode:= 1, inName:= 'Коды Мариона',     inEnumName:= 'zc_Enum_GlobalConst_Marion');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_BarCode(),      inDescId:= zc_Object_GlobalConst(), inCode:= 2, inName:= 'Штрих-коды',       inEnumName:= 'zc_Enum_GlobalConst_BarCode');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_SiteDiscount(), inDescId:= zc_Object_GlobalConst(), inCode:= 3, inName:= 'скидка для сайта', inEnumName:= 'zc_Enum_GlobalConst_SiteDiscount');
 
      -- !!! формы оплаты
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_FirstForm(),  inDescId:= zc_Object_PaidKind(), inCode:= 1, inName:= 'БН', inEnumName:= 'zc_Enum_PaidKind_FirstForm');
@@ -447,7 +448,7 @@ BEGIN
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
-                                                      inSession           := vbUserId::TVarChar);
+                                                      inSession          := vbUserId::TVarChar);
     
     vbImportTypeItemId := 0;
     Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inGoodsCode';

@@ -266,25 +266,6 @@ BEGIN
              AND View_Contract.isErased   = FALSE
              AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm();
 
-           -- 1.2. находим свойство <Договор> "по умолчанию" для остальных
-           IF COALESCE (vbContractId, 0) = 0
-           THEN
-               SELECT MAX (View_Contract.ContractId) INTO vbContractId
-               FROM _tmpContract_find AS View_Contract
-                    INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
-                                                    AND InfoMoneyGroupId NOT IN (zc_Enum_InfoMoneyGroup_30000()) -- Доходы
-                                                    AND InfoMoneyGroupId NOT IN (zc_Enum_InfoMoneyGroup_10000()) -- Основное сырье
-                                                    AND InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_21500()) -- Общефирменные + Маркетинг
-                    INNER JOIN ObjectBoolean AS ObjectBoolean_Default
-                                             ON ObjectBoolean_Default.ObjectId  = View_Contract.ContractId
-                                            AND ObjectBoolean_Default.DescId    = zc_ObjectBoolean_Contract_Default()
-                                            AND ObjectBoolean_Default.ValueData = TRUE
-               WHERE View_Contract.JuridicalId = vbJuridicalId
-                 AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-                 AND View_Contract.isErased = FALSE
-                 AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm();
-           END IF;
-
         END IF;
     
 
@@ -313,8 +294,8 @@ BEGIN
                                                       OR InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500()) -- Общефирменные + Маркетинг
                                                         )
                     INNER JOIN ObjectBoolean AS ObjectBoolean_Default
-                                             ON ObjectBoolean_Default.ObjectId = View_Contract.ContractId
-                                            AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
+                                             ON ObjectBoolean_Default.ObjectId  = View_Contract.ContractId
+                                            AND ObjectBoolean_Default.DescId    = zc_ObjectBoolean_Contract_Default()
                                             AND ObjectBoolean_Default.ValueData = TRUE
                WHERE View_Contract.JuridicalId = vbJuridicalId
                  AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
@@ -325,6 +306,26 @@ BEGIN
         END IF;
     
     
+        -- 3.0. ЕСЛИ НЕ НАШЛИ - находим свойство <Договор> "по умолчанию" для остальных
+        IF COALESCE (vbContractId, 0) = 0
+        THEN
+            SELECT MAX (View_Contract.ContractId) INTO vbContractId
+            FROM _tmpContract_find AS View_Contract
+                 INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
+                                                 AND InfoMoneyGroupId NOT IN (zc_Enum_InfoMoneyGroup_30000()) -- Доходы
+                                                 AND InfoMoneyGroupId NOT IN (zc_Enum_InfoMoneyGroup_10000()) -- Основное сырье
+                                                 AND InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_21500()) -- Общефирменные + Маркетинг
+                 INNER JOIN ObjectBoolean AS ObjectBoolean_Default
+                                          ON ObjectBoolean_Default.ObjectId  = View_Contract.ContractId
+                                         AND ObjectBoolean_Default.DescId    = zc_ObjectBoolean_Contract_Default()
+                                         AND ObjectBoolean_Default.ValueData = TRUE
+            WHERE View_Contract.JuridicalId = vbJuridicalId
+              AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+              AND View_Contract.isErased = FALSE
+              AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm();
+        END IF;
+
+
         -- 1.4. Находим <УП статья назначения> !!!всегда!!! у Договора
         IF vbContractId <> 0
         THEN

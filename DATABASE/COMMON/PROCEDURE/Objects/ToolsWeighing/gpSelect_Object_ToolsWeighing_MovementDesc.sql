@@ -176,7 +176,26 @@ BEGIN
       ;
 
     -- можно расчитать и в пред. запросе, но не хочется его нагромождать
-    UPDATE _tmpToolsWeighing SET OrderById = 1000 * CASE WHEN vbBranchId = zc_Branch_Basis() AND _tmpToolsWeighing.isSendOnPriceIn = FALSE
+    UPDATE _tmpToolsWeighing SET OrderById = 1000 * CASE WHEN _tmpToolsWeighing.FromId = 8411    -- Склад ГП ф.Киев
+                                                          AND _tmpToolsWeighing.ToId   = 3080691 -- Склад ГП ф.Львов
+                                                          AND inBranchCode = 2
+                                                              THEN 71 -- 
+                                                         WHEN _tmpToolsWeighing.FromId = 3080691 -- Склад ГП ф.Львов
+                                                          AND _tmpToolsWeighing.ToId   = 8411    -- Склад ГП ф.Киев
+                                                          AND inBranchCode = 2
+                                                              THEN 72 -- 
+
+                                                         WHEN _tmpToolsWeighing.FromId = 8411    -- Склад ГП ф.Киев
+                                                          AND _tmpToolsWeighing.ToId   = 3080691 -- Склад ГП ф.Львов
+                                                          AND inBranchCode = 12
+                                                              THEN 73 -- 
+                                                         WHEN _tmpToolsWeighing.FromId = 3080691 -- Склад ГП ф.Львов
+                                                          AND _tmpToolsWeighing.ToId   = 8411    -- Склад ГП ф.Киев
+                                                          AND inBranchCode = 12
+                                                              THEN 74 -- 
+
+                                                         
+                                                         WHEN vbBranchId = zc_Branch_Basis() AND _tmpToolsWeighing.isSendOnPriceIn = FALSE
                                                               THEN 60 -- для главного - расход с него, будет в списке раньше
                                                          WHEN vbBranchId = zc_Branch_Basis()
                                                               THEN 70 -- для главного - приход на него, будет в списке позже
@@ -184,7 +203,25 @@ BEGIN
                                                               THEN 60 -- для филиала - приход на него, будет в списке раньше
                                                          ELSE 70 -- для филиала - расход с него, будет в списке позже
                                                     END
-                               , ItemName = CASE WHEN _tmpToolsWeighing.MovementDescId = zc_Movement_SendOnPrice()
+                               , ItemName = CASE WHEN _tmpToolsWeighing.FromId = 8411    -- Склад ГП ф.Киев
+                                                  AND _tmpToolsWeighing.ToId   = 3080691 -- Склад ГП ф.Львов
+                                                  AND inBranchCode = 2
+                                                      THEN 'Расход с филиала'
+                                                 WHEN _tmpToolsWeighing.FromId = 3080691 -- Склад ГП ф.Львов
+                                                  AND _tmpToolsWeighing.ToId   = 8411    -- Склад ГП ф.Киев
+                                                  AND inBranchCode = 2
+                                                      THEN 'Возврат на филиал'
+
+                                                 WHEN _tmpToolsWeighing.FromId = 8411    -- Склад ГП ф.Киев
+                                                  AND _tmpToolsWeighing.ToId   = 3080691 -- Склад ГП ф.Львов
+                                                  AND inBranchCode = 12
+                                                      THEN 'Приход на филиал'
+                                                 WHEN _tmpToolsWeighing.FromId = 3080691 -- Склад ГП ф.Львов
+                                                  AND _tmpToolsWeighing.ToId   = 8411    -- Склад ГП ф.Киев
+                                                  AND inBranchCode = 12
+                                                      THEN 'Возврат с филиала'
+
+                                                 WHEN _tmpToolsWeighing.MovementDescId = zc_Movement_SendOnPrice()
                                                   AND _tmpToolsWeighing.isSendOnPriceIn = FALSE
                                                   AND vbBranchId = zc_Branch_Basis()
                                                       THEN 'Расход на филиал'
@@ -350,6 +387,16 @@ BEGIN
             , 0                                   AS ColorGridValue
             , CASE WHEN tmp.isReWork        = TRUE
                         THEN 'ПЕРЕРАБОТКА'
+
+                   WHEN tmp.OrderById = 71000
+                        THEN 'Расход с филиала'
+                   WHEN tmp.OrderById = 72000
+                        THEN 'Возврат на филиал'
+                   WHEN tmp.OrderById = 73000
+                        THEN 'Приход на филиал'
+                   WHEN tmp.OrderById = 74000
+                        THEN 'Возврат с филиала'
+
                    WHEN tmp.MovementDescId = zc_Movement_SendOnPrice()
                     AND tmp.isSendOnPriceIn = FALSE
                     AND vbBranchId = zc_Branch_Basis()

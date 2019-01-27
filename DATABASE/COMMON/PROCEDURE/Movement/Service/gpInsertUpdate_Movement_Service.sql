@@ -49,7 +49,7 @@ BEGIN
 
      -- проверка
      IF ((COALESCE(ioAmountIn, 0) = 0) AND (COALESCE(ioAmountOut, 0) = 0))  
-     OR ((COALESCE(ioAmountCurrencyDebet, 0) = 0) AND (COALESCE(ioAmountCurrencyKredit, 0) = 0))
+     -- OR ((COALESCE(ioAmountCurrencyDebet, 0) = 0) AND (COALESCE(ioAmountCurrencyKredit, 0) = 0))
      THEN
         RAISE EXCEPTION '¬ведите сумму.';
      END IF;
