@@ -59,7 +59,6 @@ object SendDebtJournalForm: TSendDebtJournalForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitHeight = 338
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -249,6 +248,28 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
+      end
+      object CurrencyName: TcxGridDBColumn
+        Caption = #1042#1072#1083#1102#1090#1072
+        DataBinding.FieldName = 'CurrencyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 51
+      end
+      object CurrencyValue: TcxGridDBColumn
+        Caption = #1050#1091#1088#1089
+        DataBinding.FieldName = 'CurrencyValue'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 43
+      end
+      object ParValue: TcxGridDBColumn
+        Caption = #1053#1086#1084#1080#1085#1072#1083
+        DataBinding.FieldName = 'ParValue'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 59
       end
       object InfoMoneyFromCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' ('#1044')'
@@ -1376,8 +1397,8 @@ object SendDebtJournalForm: TSendDebtJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 975
-    Top = 24
+    Left = 967
+    Top = 120
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'
@@ -1401,6 +1422,6 @@ object SendDebtJournalForm: TSendDebtJournalForm
       end>
     PackSize = 1
     Left = 824
-    Top = 48
+    Top = 128
   end
 end

@@ -140,6 +140,8 @@ type
     cbPartionMovement: TcxCheckBox;
     ContractJuridicalDocCode: TcxGridDBColumn;
     ContractJuridicalDocName: TcxGridDBColumn;
+    actPrintIncomePartnerService: TdsdPrintAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

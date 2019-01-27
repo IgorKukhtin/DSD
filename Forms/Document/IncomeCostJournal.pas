@@ -37,10 +37,8 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
     dsdStoredProc: TdsdStoredProc;
-    actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
@@ -94,6 +92,18 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    spCheckDescTransport: TdsdStoredProc;
+    actCheckDescTransport: TdsdExecStoredProc;
+    actOpenFormTransport: TdsdOpenForm;
+    macOpenFormTransport: TMultiAction;
+    spCheckDescService: TdsdStoredProc;
+    actOpenFormIncome: TdsdOpenForm;
+    bbOpenFormIncome: TdxBarButton;
+    bbOpenFormTransport: TdxBarButton;
+    bbOpenFormService: TdxBarButton;
+    actCheckDescService: TdsdExecStoredProc;
+    macOpenFormService: TMultiAction;
+    actOpenFormService: TdsdOpenForm;
   private
   public
   end;

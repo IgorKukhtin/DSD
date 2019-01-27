@@ -26,7 +26,12 @@ RETURNS TABLE (Id Integer, MI_MasterId Integer, MI_ChildId Integer
 
              , PaidKindToId Integer, PaidKindToName TVarChar
              , BranchToId Integer, BranchToName TVarChar
-             
+
+             , CurrencyId    Integer
+             , CurrencyName  TVarChar
+             , CurrencyValue TFloat
+             , ParValue      TFloat
+
              , Amount TFloat
              , Comment TVarChar
               )
@@ -84,6 +89,11 @@ BEGIN
             , 0            AS BranchToId
             , ''::TVarChar AS BranchToName
 
+            , 0            AS CurrencyId
+            , ''::TVarChar AS CurrencyName
+            , 0 ::TFloat   AS CurrencyValue
+            , 1 ::TFloat   AS ParValue
+
             , 0::TFloat  AS Amount
             , ''::TVarChar AS Comment
 
@@ -94,9 +104,10 @@ BEGIN
      ELSE
      RETURN QUERY 
        WITH tmpMI AS (SELECT * FROM MovementItem WHERE MovementItem.MovementId = inMovementId)
-          , tmpMILO AS (SELECT * FROM MovementItemLinkObject WHERE MovementItemLinkObject.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI))
-          , tmpMIString AS (SELECT * FROM MovementItemString WHERE MovementItemString.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI))
-          , tmpInfoMoney AS (SELECT * FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId IN (SELECT tmpMILO.ObjectId FROM tmpMILO))
+          , tmpMILO     AS (SELECT * FROM MovementItemLinkObject WHERE MovementItemLinkObject.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI))
+          , tmpMIString AS (SELECT * FROM MovementItemString     WHERE MovementItemString.MovementItemId     IN (SELECT tmpMI.Id FROM tmpMI))
+          , tmpMIFloat  AS (SELECT * FROM MovementItemFloat      WHERE MovementItemFloat.MovementItemId      IN (SELECT tmpMI.Id FROM tmpMI))
+          , tmpInfoMoney AS (SELECT * FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId     IN (SELECT tmpMILO.ObjectId FROM tmpMILO))
           , tmpContract AS (SELECT * FROM Object_Contract_InvNumber_View WHERE Object_Contract_InvNumber_View.ContractId IN (SELECT tmpMILO.ObjectId FROM tmpMILO))
        SELECT
               Movement.Id
@@ -142,6 +153,11 @@ BEGIN
             , Object_Branch_To.Id                    AS BranchToId
             , Object_Branch_To.ValueData             AS BranchToName
 
+            , Object_Currency.Id                        AS CurrencyId
+            , Object_Currency.ValueData                 AS CurrencyName
+            , MIFloat_CurrencyValue.ValueData :: TFloat AS CurrencyValue
+            , MIFloat_ParValue.ValueData      :: TFloat AS ParValue
+
             , MI_Master.Amount            AS Amount
             , MIString_Comment.ValueData  AS Comment
            
@@ -163,28 +179,39 @@ BEGIN
             LEFT JOIN tmpInfoMoney AS View_InfoMoney_From ON View_InfoMoney_From.InfoMoneyId = MILinkObject_InfoMoney_From.ObjectId
 
             LEFT JOIN tmpMILO AS MILinkObject_Contract_From
-                                             ON MILinkObject_Contract_From.MovementItemId = MI_Master.Id
-                                            AND MILinkObject_Contract_From.DescId = zc_MILinkObject_Contract()
+                              ON MILinkObject_Contract_From.MovementItemId = MI_Master.Id
+                             AND MILinkObject_Contract_From.DescId = zc_MILinkObject_Contract()
             LEFT JOIN tmpContract AS View_Contract_InvNumber_From ON View_Contract_InvNumber_From.ContractId = MILinkObject_Contract_From.ObjectId
 
             LEFT JOIN tmpMILO AS MILinkObject_PaidKind_From
-                                             ON MILinkObject_PaidKind_From.MovementItemId = MI_Master.Id
-                                            AND MILinkObject_PaidKind_From.DescId = zc_MILinkObject_PaidKind()
+                              ON MILinkObject_PaidKind_From.MovementItemId = MI_Master.Id
+                             AND MILinkObject_PaidKind_From.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind_From ON Object_PaidKind_From.Id = MILinkObject_PaidKind_From.ObjectId
 
             LEFT JOIN tmpMILO AS MILinkObject_Branch_From
-                                             ON MILinkObject_Branch_From.MovementItemId = MI_Master.Id
-                                            AND MILinkObject_Branch_From.DescId = zc_MILinkObject_Branch()
+                              ON MILinkObject_Branch_From.MovementItemId = MI_Master.Id
+                             AND MILinkObject_Branch_From.DescId = zc_MILinkObject_Branch()
             LEFT JOIN Object AS Object_Branch_From ON Object_Branch_From.Id = MILinkObject_Branch_From.ObjectId
 
 
             LEFT JOIN tmpMIString AS MIString_Comment
-                                         ON MIString_Comment.MovementItemId = MI_Master.Id
-                                        AND MIString_Comment.DescId = zc_MIString_Comment()
+                                  ON MIString_Comment.MovementItemId = MI_Master.Id
+                                 AND MIString_Comment.DescId = zc_MIString_Comment()
 
-            
+            LEFT JOIN tmpMILO AS MILinkObject_Currency
+                              ON MILinkObject_Currency.MovementItemId = MI_Master.Id
+                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
+
+            LEFT JOIN tmpMIFloat AS MIFloat_CurrencyValue
+                                 ON MIFloat_CurrencyValue.MovementItemId = MI_Master.Id
+                                AND MIFloat_CurrencyValue.DescId = zc_MIFloat_CurrencyValue()
+            LEFT JOIN tmpMIFloat AS MIFloat_ParValue
+                                 ON MIFloat_ParValue.MovementItemId = MI_Master.Id
+                                AND MIFloat_ParValue.DescId = zc_MIFloat_ParValue()
+
             LEFT JOIN tmpMI AS MI_Child ON MI_Child.MovementId = Movement.Id
-                                         AND MI_Child.DescId     = zc_MI_Child()
+                                       AND MI_Child.DescId     = zc_MI_Child()
                                          
             LEFT JOIN ObjectLink AS ObjectLink_PartnerTo_Juridical
                                  ON ObjectLink_PartnerTo_Juridical.ObjectId = MI_Child.ObjectId
@@ -193,23 +220,23 @@ BEGIN
             LEFT JOIN Object AS Object_Juridical_To ON Object_Juridical_To.Id = COALESCE (ObjectLink_PartnerTo_Juridical.ChildObjectId, MI_Child.ObjectId)
 
             LEFT JOIN tmpMILO AS MILinkObject_InfoMoney_To
-                                             ON MILinkObject_InfoMoney_To.MovementItemId = MI_Child.Id
-                                            AND MILinkObject_InfoMoney_To.DescId = zc_MILinkObject_InfoMoney()
+                              ON MILinkObject_InfoMoney_To.MovementItemId = MI_Child.Id
+                             AND MILinkObject_InfoMoney_To.DescId = zc_MILinkObject_InfoMoney()
             LEFT JOIN tmpInfoMoney AS View_InfoMoney_To ON View_InfoMoney_To.InfoMoneyId = MILinkObject_InfoMoney_To.ObjectId
 
             LEFT JOIN tmpMILO AS MILinkObject_Contract_To
-                                             ON MILinkObject_Contract_To.MovementItemId = MI_Child.Id
-                                            AND MILinkObject_Contract_To.DescId = zc_MILinkObject_Contract()
+                              ON MILinkObject_Contract_To.MovementItemId = MI_Child.Id
+                             AND MILinkObject_Contract_To.DescId = zc_MILinkObject_Contract()
             LEFT JOIN tmpContract AS View_Contract_InvNumber_To ON View_Contract_InvNumber_To.ContractId = MILinkObject_Contract_To.ObjectId
 
             LEFT JOIN tmpMILO AS MILinkObject_PaidKind_To
-                                             ON MILinkObject_PaidKind_To.MovementItemId = MI_Child.Id
-                                            AND MILinkObject_PaidKind_To.DescId = zc_MILinkObject_PaidKind()
+                              ON MILinkObject_PaidKind_To.MovementItemId = MI_Child.Id
+                             AND MILinkObject_PaidKind_To.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind_To ON Object_PaidKind_To.Id = MILinkObject_PaidKind_To.ObjectId
 
             LEFT JOIN tmpMILO AS MILinkObject_Branch_To
-                                             ON MILinkObject_Branch_To.MovementItemId = MI_Child.Id
-                                            AND MILinkObject_Branch_To.DescId = zc_MILinkObject_Branch()
+                              ON MILinkObject_Branch_To.MovementItemId = MI_Child.Id
+                             AND MILinkObject_Branch_To.DescId = zc_MILinkObject_Branch()
             LEFT JOIN Object AS Object_Branch_To ON Object_Branch_To.Id = MILinkObject_Branch_To.ObjectId
 
                                     

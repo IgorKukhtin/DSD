@@ -57,6 +57,13 @@ type
     ceBranchTo: TcxButtonEdit;
     cxLabel15: TcxLabel;
     BranchToGuides: TdsdGuides;
+    cxLabel16: TcxLabel;
+    ceCurrencyValue: TcxCurrencyEdit;
+    ceParValue: TcxCurrencyEdit;
+    cxLabel17: TcxLabel;
+    ceCurrency: TcxButtonEdit;
+    cxLabel18: TcxLabel;
+    CurrencyGuides: TdsdGuides;
   private
     { Private declarations }
   public
