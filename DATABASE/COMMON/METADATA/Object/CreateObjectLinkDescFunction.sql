@@ -1953,6 +1953,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalSettingsItem_JuridicalSettings
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_JuridicalSettingsItem_JuridicalSettings', 'Ссылка на Установки для юр. лиц', zc_Object_JuridicalSettingsItem(), zc_Object_JuridicalSettings() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalSettingsItem_JuridicalSettings');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_SettingsServiceItem_SettingsService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SettingsServiceItem_SettingsService'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_SettingsServiceItem_SettingsService', 'Связь с Ограничение на просмотр журнала услуг', zc_Object_SettingsServiceItem(), zc_Object_SettingsService() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SettingsServiceItem_SettingsService');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_SettingsServiceItem_InfoMoneyDestination() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SettingsServiceItem_InfoMoneyDestination'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_SettingsServiceItem_InfoMoneyDestination', 'Связь с Управленческие назначения', zc_Object_SettingsServiceItem(), zc_Object_InfoMoneyDestination() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SettingsServiceItem_InfoMoneyDestination');
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!

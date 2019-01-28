@@ -4,6 +4,7 @@ inherited ServiceJournalForm: TServiceJournalForm
   ClientWidth = 1020
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1036
   ExplicitHeight = 451
   PixelsPerInch = 96
@@ -493,7 +494,7 @@ inherited ServiceJournalForm: TServiceJournalForm
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'InfoMoneyName'
+          IndexFieldNames = 'InfoMoneyName; UnitName'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -590,6 +591,23 @@ inherited ServiceJournalForm: TServiceJournalForm
         Value = Null
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSettingsServiceId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SettingsServiceId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsWith'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isWith'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -753,6 +771,41 @@ inherited ServiceJournalForm: TServiceJournalForm
       end>
     Left = 80
     Top = 176
+  end
+  inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Key'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SettingsServiceId'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isWith'
+        Value = 'false'
+        MultiSelectSeparator = ','
+      end>
+    Left = 392
+    Top = 200
   end
   object spMovementReCompleteAll: TdsdStoredProc
     StoredProcName = 'gpCompletePeriod_Movement_Service'
