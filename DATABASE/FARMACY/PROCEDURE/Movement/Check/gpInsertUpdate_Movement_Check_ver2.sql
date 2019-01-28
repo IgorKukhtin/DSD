@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_Movement_Check_ver2()
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ ЧЕК>
@@ -27,6 +27,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
     IN inManualDiscount      Integer   , -- Ручная скидка
     IN inTotalSummPayAdd     TFloat    , -- Доплата по чеку
     IN inMemberSPID          Integer   , -- ФИО пациента
+    IN inSiteDiscount        Boolean   , -- Скидка через сайт
     IN inUserSession	     TVarChar  , -- сессия пользователя под которой создан чек в программе
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -176,19 +177,23 @@ BEGIN
 	   PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementItemId(), ioId, inPromoCodeId);
 	END IF;
     -- сохранили Ручную скидку
-    IF inManualDiscount <> 0 THEN
+    IF inManualDiscount <> 0 OR EXISTS(SELECT 1 FROM MovementFloat WHERE DescId = zc_MovementFloat_ManualDiscount() AND MovementId = ioId) THEN
 	   PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ManualDiscount(), ioId, inManualDiscount);
 	END IF;
     -- сохранили Доплату по чеку
-    IF inTotalSummPayAdd <> 0 THEN
+    IF inTotalSummPayAdd <> 0 OR EXISTS(SELECT 1 FROM MovementFloat WHERE DescId = zc_MovementFloat_TotalSummPayAdd() AND MovementId = ioId) THEN
 	   PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPayAdd(), ioId, inTotalSummPayAdd);
 	END IF;
-    
+
     -- сохранили связь с <>
-    IF inMemberSPID <> 0 THEN
+    IF inMemberSPID <> 0 OR EXISTS(SELECT 1 FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_MemberSP() AND MovementId = ioId) THEN
       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_MemberSP(), ioId, inMemberSPID);
 	END IF;
-    
+
+    IF COALESCE(inSiteDiscount, False) = True OR EXISTS(SELECT 1 FROM MovementBoolean WHERE DescId = zc_MovementBoolean_Site() AND MovementId = ioId) THEN
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Site(), ioId, inSiteDiscount);
+	END IF;
+
 
     IF vbIsInsert = TRUE
       THEN
@@ -216,6 +221,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Подмогильный В.В.   Шаблий О.В.
+ 28.11.18                                                                                                         * add SiteDiscount
  02.11.18                                                                                                         * add TotalSummPayAdd
  29.06.18                                                                                                         * add ManualDiscount
  05.02.18                                                                                         * add PromoCode

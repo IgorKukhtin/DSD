@@ -55,11 +55,6 @@ BEGIN
     -- для Теста
     -- IF inSession = '3' then vbUnitId:= 1781716; END IF;
     
-    -- Добавляем в лог обновлений остатков
-    INSERT INTO Log_CashRemains (CashSessionId, DateStart, FullRemains, UserId, UnitId, RetailId)
-      VALUES (inCashSessionId, CURRENT_TIMESTAMP, True, vbUserId, vbUnitId, vbRetailId);
-    
-
     vbObjectId := COALESCE(lpGet_DefaultValue('zc_Object_Retail', vbUserId), '0');
 
     -- Объявили новую сессию кассового места / обновили дату последнего обращения
