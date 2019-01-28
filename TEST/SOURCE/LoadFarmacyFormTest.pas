@@ -111,6 +111,7 @@ type
     procedure LoadServiceFormTest;
     procedure LoadSendFormTest;
     procedure LoadSendOnPriceFormTest;
+    procedure LoadSystemFormTest;
     procedure LoadSPObjectFormTest;
     procedure LoadSPKindFormTest;
     procedure LoadSheetWorkTimeFormTest;
@@ -1680,6 +1681,12 @@ procedure TLoadFormTest.LoadSPKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSPKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSPKindForm');
+end;
+
+procedure TLoadFormTest.LoadSystemFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGlobalConstForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGlobalConstForm');
 end;
 
 procedure TLoadFormTest.LoadSPObjectFormTest;
