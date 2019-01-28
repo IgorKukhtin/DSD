@@ -202,6 +202,14 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 65
           end
+          object isSite: TcxGridDBColumn
+            Caption = #1063#1077#1088#1077#1079' '#1089#1072#1081#1090
+            DataBinding.FieldName = 'isSite'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 65
+          end
           object InvNumberOrder: TcxGridDBColumn
             Caption = #8470' '#1079#1072#1082#1072#1079#1072' ('#1089#1072#1081#1090')'
             DataBinding.FieldName = 'InvNumberOrder'

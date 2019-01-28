@@ -302,13 +302,14 @@ end;
 
 procedure TLoadFormTest.LoadCheckFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalDiscountExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalDiscountExternalForm');
   Exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSPChoiceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberSPChoiceDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalForm');
   {TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalUserForm'));
@@ -322,10 +323,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataTimeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDataTimeDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheck_SPEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheck_SPEditForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckNoCashRegisterForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckNoCashRegisterForm');
 

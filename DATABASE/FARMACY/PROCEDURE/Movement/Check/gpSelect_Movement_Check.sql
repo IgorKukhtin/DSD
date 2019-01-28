@@ -16,7 +16,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Check(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer
              , TotalCount TFloat, TotalSumm TFloat, TotalSummPayAdd TFloat, TotalSummChangePercent TFloat
              , UnitName TVarChar, CashRegisterName TVarChar, PaidTypeName TVarChar
-             , CashMember TVarChar, Bayer TVarChar, FiscalCheckNumber TVarChar, NotMCS Boolean, IsDeferred Boolean
+             , CashMember TVarChar, Bayer TVarChar, FiscalCheckNumber TVarChar
+             , NotMCS Boolean, IsDeferred Boolean
+             , isSite Boolean
              , DiscountCardName TVarChar, DiscountExternalName TVarChar
              , BayerPhone TVarChar
              , InvNumberOrder TVarChar
@@ -94,6 +96,7 @@ BEGIN
            , MovementString_FiscalCheckNumber.ValueData         AS FiscalCheckNumber
            , COALESCE(MovementBoolean_NotMCS.ValueData,FALSE)   AS NotMCS
            , Movement_Check.IsDeferred                          AS IsDeferred
+           , COALESCE(MovementBoolean_Site.ValueData,FALSE) :: Boolean AS isSite
            , Object_DiscountCard.ValueData                      AS DiscountCardName
            , Object_DiscountExternal.ValueData                  AS DiscountExternalName
            , MovementString_BayerPhone.ValueData                AS BayerPhone
@@ -213,10 +216,16 @@ BEGIN
              LEFT JOIN MovementBoolean AS MovementBoolean_NotMCS
                                        ON MovementBoolean_NotMCS.MovementId = Movement_Check.Id
                                       AND MovementBoolean_NotMCS.DescId = zc_MovementBoolean_NotMCS()
+
+             LEFT JOIN MovementBoolean AS MovementBoolean_Site
+                                       ON MovementBoolean_Site.MovementId = Movement_Check.Id
+                                      AND MovementBoolean_Site.DescId = zc_MovementBoolean_Site()
+                                      
 	    /* LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                        ON MovementBoolean_Deferred.MovementId = Movement_Check.Id
                                       AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
             */
+            
              LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
                                           ON MovementLinkObject_CashRegister.MovementId = Movement_Check.Id
                                          AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
@@ -311,7 +320,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В. 
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В. +
+ 28.01.19         * add isSite
  02.10.18                                                                                    * add TotalSummPayAdd
  14.12.17         * add PromoCode
  11.09.17         *
