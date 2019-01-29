@@ -482,7 +482,7 @@ type
     actReturnInJournal: TdsdOpenForm;
     miReturnInJournal: TMenuItem;
     actGlobalConst: TdsdOpenForm;
-    N179: TMenuItem;
+    miGlobalConst: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

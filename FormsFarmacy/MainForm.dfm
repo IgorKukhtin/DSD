@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 229
+  ExplicitHeight = 226
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -2574,8 +2574,8 @@ inherited MainForm: TMainForm
     object actRecalcMCSSheduler: TdsdOpenForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
-      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1097#1080#1082' '#1087#1077#1088#1077#1097#1077#1090#1072' '#1053#1058#1047
-      Hint = #1055#1083#1072#1085#1080#1088#1086#1074#1097#1080#1082' '#1087#1077#1088#1077#1097#1077#1090#1072' '#1053#1058#1047
+      Caption = #1055#1083#1072#1085#1080#1088#1086#1074#1097#1080#1082' '#1087#1077#1088#1077#1089#1095#1077#1090#1072' '#1053#1058#1047
+      Hint = #1055#1083#1072#1085#1080#1088#1086#1074#1097#1080#1082' '#1087#1077#1088#1077#1089#1095#1077#1090#1072' '#1053#1058#1047
       FormName = 'TRecalcMCSShedulerForm'
       FormNameParam.Value = 'TRecalcMCSShedulerForm'
       FormNameParam.DataType = ftString
@@ -3388,7 +3388,7 @@ inherited MainForm: TMainForm
       object miImportExportLink: TMenuItem [22]
         Action = actImportExportLink
       end
-      object N179: TMenuItem [23]
+      object miGlobalConst: TMenuItem [23]
         Action = actGlobalConst
       end
       object FarmacyCash1: TMenuItem [25]
@@ -3411,7 +3411,7 @@ inherited MainForm: TMainForm
       object N173: TMenuItem [31]
         Action = actRepriceUnitSheduler
       end
-      object N180: TMenuItem [32]
+      object miRecalcMCSSheduler: TMenuItem [32]
         Action = actRecalcMCSSheduler
       end
     end
