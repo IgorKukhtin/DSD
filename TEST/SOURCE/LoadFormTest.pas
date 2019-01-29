@@ -2645,7 +2645,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRoute_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRouteEditForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteMemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRouteMemberForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteMemberEditForm'));

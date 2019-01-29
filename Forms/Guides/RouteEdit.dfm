@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'>'
-  ClientHeight = 494
+  ClientHeight = 534
   ClientWidth = 361
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -24,12 +24,12 @@
   end
   object cxLabel1: TcxLabel
     Left = 32
-    Top = 63
+    Top = 68
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 62
-    Top = 462
+    Top = 498
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 206
-    Top = 462
+    Top = 498
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -75,7 +75,7 @@
   end
   object cxLabel7: TcxLabel
     Left = 32
-    Top = 159
+    Top = 160
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object cxLabel2: TcxLabel
@@ -97,7 +97,7 @@
   end
   object cxLabel3: TcxLabel
     Left = 32
-    Top = 251
+    Top = 254
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1079#1072
   end
   object ceFreight: TcxButtonEdit
@@ -153,7 +153,7 @@
   end
   object edRateSumma: TcxCurrencyEdit
     Left = 32
-    Top = 376
+    Top = 372
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
@@ -163,13 +163,13 @@
   end
   object cxLabel6: TcxLabel
     Left = 32
-    Top = 404
+    Top = 398
     Hint = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
     Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073'.)'
   end
   object edRatePrice: TcxCurrencyEdit
     Left = 32
-    Top = 427
+    Top = 416
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
@@ -185,7 +185,7 @@
   end
   object edTimePrice: TcxCurrencyEdit
     Left = 173
-    Top = 376
+    Top = 372
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
@@ -195,19 +195,37 @@
   end
   object cxLabel9: TcxLabel
     Left = 173
-    Top = 404
+    Top = 398
     Hint = #1057#1091#1084#1084#1072' '#1076#1086#1087#1083#1072#1090#1072' ('#1076#1072#1083#1100#1085#1086#1073'.)'
     Caption = #1057#1091#1084#1084#1072' '#1076#1086#1087'. ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
   end
   object edRateSummaAdd: TcxCurrencyEdit
     Left = 173
-    Top = 427
+    Top = 416
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
     TabOrder = 23
-    Width = 129
+    Width = 132
+  end
+  object cxLabel10: TcxLabel
+    Left = 32
+    Top = 444
+    Hint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1093' '#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088#1091
+    Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1072#1085#1076'. '#1101#1082#1089#1087'.'
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object edRateSummaExp: TcxCurrencyEdit
+    Left = 32
+    Top = 463
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    TabOrder = 25
+    Width = 132
   end
   object ActionList: TActionList
     Left = 328
@@ -297,6 +315,14 @@
         Name = 'inRateSummaAdd'
         Value = Null
         Component = edRateSummaAdd
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRateSummaExp'
+        Value = Null
+        Component = edRateSummaExp
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -478,6 +504,13 @@
         Name = 'RateSummaAdd'
         Value = Null
         Component = edRateSummaAdd
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RateSummaExp'
+        Value = Null
+        Component = edRateSummaExp
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

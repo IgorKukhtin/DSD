@@ -32,18 +32,18 @@ BEGIN
      OPEN cur2 FOR
      WITH tmpEmployeeSchedule AS (SELECT tmpCurrOperDate.OperDate::TDateTime
             , DateIn.Value
-            , Min(Log_CashRemains.DateStart)::TDateTime AS DateStart
+            , Min(EmployeeWorkLog.DateLogIn)::TDateTime AS DateStart
             , DateIn.HourIn
-            , ((date_part('hour', Min(Log_CashRemains.DateStart)) - COALESCE(DateIn.HourIn, 8)) * 60 +
-              date_part('minute', Min(Log_CashRemains.DateStart)))::Integer                                  AS MinutePenalty
+            , ((date_part('hour', Min(EmployeeWorkLog.DateLogIn)) - COALESCE(DateIn.HourIn, 8)) * 60 +
+              date_part('minute', Min(EmployeeWorkLog.DateLogIn)))::Integer                                  AS MinutePenalty
 
        FROM tmpCurrOperDate
             LEFT JOIN gpSelect_MovementItem_EmployeeSchedule_KPU(vbOperDate, inSession) AS DateIn
                                                                                         ON DateIn.UserID = inUserID
                                                                                        AND DateIn.Date = tmpCurrOperDate.OperDate
-            LEFT JOIN Log_CashRemains ON Log_CashRemains.UserId = inUserID
-                                     AND Log_CashRemains.DateStart >= tmpCurrOperDate.OperDate
-                                     AND Log_CashRemains.DateStart < tmpCurrOperDate.OperDate + INTERVAL '1 DAY'
+            LEFT JOIN EmployeeWorkLog ON EmployeeWorkLog.UserId = inUserID
+                                     AND EmployeeWorkLog.DateLogIn >= tmpCurrOperDate.OperDate
+                                     AND EmployeeWorkLog.DateLogIn < tmpCurrOperDate.OperDate + INTERVAL '1 DAY'
        GROUP BY tmpCurrOperDate.OperDate
               , DateIn.Value
               , DateIn.HourIn)
@@ -71,6 +71,7 @@ ALTER FUNCTION gpSelect_UserTimePenalty (TDateTime, Integer, TVarChar, TVarChar)
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Øàáëèé Î.Â.
+ 28.01.19                                                       *
  11.01.19                                                       *
  09.01.19                                                       *
 */

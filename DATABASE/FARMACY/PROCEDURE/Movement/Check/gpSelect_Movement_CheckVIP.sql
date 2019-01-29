@@ -61,7 +61,7 @@ BEGIN
      END IF;
      vbUnitId := vbUnitKey::Integer;
      
-     vbSiteDiscount := gpGet_GlobalConst_SiteDiscount(inSession);
+     vbSiteDiscount := COALESCE (gpGet_GlobalConst_SiteDiscount(inSession), 0);
 
      RETURN QUERY
        WITH
