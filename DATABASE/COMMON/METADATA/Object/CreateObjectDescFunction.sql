@@ -1088,6 +1088,13 @@ CREATE OR REPLACE FUNCTION zc_Object_RecalcMCSSheduler() RETURNS Integer AS $BOD
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_RecalcMCSSheduler', 'Планировщик перещета НТЗ' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_RecalcMCSSheduler');
 
+CREATE OR REPLACE FUNCTION zc_Object_SettingsService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_SettingsService'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_SettingsService', 'Ограничение на просмотр журнала услуг' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_SettingsService');
+
+CREATE OR REPLACE FUNCTION zc_Object_SettingsServiceItem() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_SettingsServiceItem'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_SettingsServiceItem', 'Ограничение на просмотр журнала услуг (элементы)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_SettingsServiceItem');
 
 
 
@@ -1107,6 +1114,9 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 28.01.19         * zc_Object_SettingsService
+                    zc_Object_SettingsServiceItem
+                    
  13.01.19         * zc_Object_JuridicalSettingsItem
  11.01.19         * zc_Object_MakerReport
  21.12.18                                                                                        * zc_Object_RecalcMCSSheduler

@@ -7,14 +7,14 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_CheckVIP(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
-  Id Integer, 
-  InvNumber TVarChar, 
-  OperDate TDateTime, 
+  Id Integer,
+  InvNumber TVarChar,
+  OperDate TDateTime,
   StatusId Integer,
-  StatusCode Integer, 
-  TotalCount TFloat, 
-  TotalSumm TFloat, 
-  UnitName TVarChar, 
+  StatusCode Integer,
+  TotalCount TFloat,
+  TotalSumm TFloat,
+  UnitName TVarChar,
   CashRegisterName TVarChar,
   CashMemberId Integer,
   CashMember TVarCHar,
@@ -41,13 +41,15 @@ RETURNS TABLE (
   PromoName TVarChar,
   PromoCodeGUID TVarChar,
   PromoCodeChangePercent TFloat,
-  MemberSPId Integer
+  MemberSPId Integer,
+  SiteDiscount TFloat
  )
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
+   DECLARE vbSiteDiscount TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
@@ -56,15 +58,17 @@ BEGIN
      vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
      IF vbUnitKey = '' THEN
         vbUnitKey := '0';
-     END IF;   
+     END IF;
      vbUnitId := vbUnitKey::Integer;
+     
+     vbSiteDiscount := gpGet_GlobalConst_SiteDiscount(inSession);
 
      RETURN QUERY
        WITH
            tmpStatus AS (SELECT zc_Enum_Status_UnComplete() AS StatusId UNION ALL SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE)
-  
+
        , tmpMovAll AS (SELECT Movement.Id
-                      FROM Movement 
+                      FROM Movement
                             INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
                             INNER JOIN MovementBoolean AS MovementBoolean_Deferred
                                                        ON Movement.Id = MovementBoolean_Deferred.MovementId
@@ -74,8 +78,8 @@ BEGIN
                     )
        , tmpMov AS (SELECT Movement.Id
                            , MovementLinkObject_Unit.ObjectId AS UnitId
-                      FROM tmpMovAll AS Movement 
-         
+                      FROM tmpMovAll AS Movement
+
                         INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
@@ -113,7 +117,7 @@ BEGIN
                             INNER JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI_all.GoodsId
                                                  AND tmpRemains.UnitId  = tmpMI_all.UnitId
                       )
-         
+
        SELECT Movement.Id
             , Movement.InvNumber
             , Movement.OperDate
@@ -158,17 +162,18 @@ BEGIN
             , MIString_GUID.ValueData AS PromoCodeGUID
             , COALESCE(MovementFloat_ChangePercent.ValueData,0)::TFloat AS PromoCodeChangePercent
             , Object_MemberSP.Id                                        AS MemberSPId
+            , CASE WHEN COALESCE(MovementBoolean_Site.ValueData, False) = True THEN vbSiteDiscount ELSE 0 END::TFloat  AS SiteDiscount
        FROM tmpMov
-            LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id 
-            LEFT JOIN Movement ON Movement.Id = tmpMov.Id 
-                               
-                              
+            LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
+            LEFT JOIN Movement ON Movement.Id = tmpMov.Id
+
+
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                        
+
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
    	        INNER JOIN MovementBoolean AS MovementBoolean_Deferred
@@ -182,7 +187,7 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-				      
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
                                          ON MovementLinkObject_CashRegister.MovementId = Movement.Id
                                         AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
@@ -192,7 +197,7 @@ BEGIN
                                          ON MovementLinkObject_CheckMember.MovementId = Movement.Id
                                         AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
   	        LEFT JOIN Object AS Object_CashMember ON Object_CashMember.Id = MovementLinkObject_CheckMember.ObjectId
-  	    
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DiscountCard
                                          ON MovementLinkObject_DiscountCard.MovementId = Movement.Id
                                         AND MovementLinkObject_DiscountCard.DescId = zc_MovementLinkObject_DiscountCard()
@@ -252,7 +257,7 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                     ON MovementFloat_MovementItemId.MovementId = Movement.Id
                                    AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
-            LEFT JOIN MovementItem AS MI_PromoCode 
+            LEFT JOIN MovementItem AS MI_PromoCode
                                    ON MI_PromoCode.Id       = MovementFloat_MovementItemId.ValueData :: Integer
                                   AND MI_PromoCode.isErased = FALSE
             LEFT JOIN Movement AS Movement_PromoCode ON Movement_PromoCode.Id = MI_PromoCode.MovementId
@@ -266,10 +271,10 @@ BEGIN
                                          ON MovementLinkObject_PromoCode.MovementId = Movement_PromoCode.Id
                                         AND MovementLinkObject_PromoCode.DescId = zc_MovementLinkObject_PromoCode()
             LEFT JOIN Object AS Object_PromoCode ON Object_PromoCode.Id = MovementLinkObject_PromoCode.ObjectId
-            
+
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                     ON MovementFloat_ChangePercent.MovementId = Movement_PromoCode.Id
-                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()                        
+                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
             LEFT JOIN MovementFloat AS MovementFloat_ManualDiscount
                                     ON MovementFloat_ManualDiscount.MovementId =  Movement.Id
@@ -279,6 +284,11 @@ BEGIN
                                          ON MovementLinkObject_MemberSP.MovementId = Movement.Id
                                         AND MovementLinkObject_MemberSP.DescId = zc_MovementLinkObject_MemberSP()
             LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = MovementLinkObject_MemberSP.ObjectId
+
+   	        LEFT JOIN MovementBoolean AS MovementBoolean_Site
+		                               ON MovementBoolean_Site.MovementId = Movement.Id
+		                              AND MovementBoolean_Site.DescId = zc_MovementBoolean_Site()
+
        ;
 
 END;
@@ -294,12 +304,12 @@ ALTER FUNCTION gpSelect_Movement_CheckVIP (Boolean, TVarChar) OWNER TO postgres;
  10.08.16                                                                     * оптимизация
  07.04.16         * ушли от вьюхи
  12.09.2015                                                                   *[17:23] Кухтин Игорь: вторую кнопку закрыть и перекинуть их в запрос ВИП
- 04.07.15                                                                     * 
+ 04.07.15                                                                     *
 */
 
 /*
 update MovementBoolean set  ValueData = FALSE
-from Movement 
+from Movement
 where Movement.Id = MovementBoolean.MovementId
   AND Movement.StatusId <> zc_Enum_Status_UnComplete()
   AND Movement.DescId = zc_Movement_Check()

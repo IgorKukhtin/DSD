@@ -3,13 +3,18 @@
 DROP FUNCTION IF EXISTS gpSelect_Movement_Service (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Service (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Service (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Service (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Service (TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Service(
-    IN inStartDate        TDateTime , --
-    IN inEndDate          TDateTime , --
-    IN inJuridicalBasisId Integer   , -- Главное юр.лицо
-    IN inIsErased         Boolean   ,
-    IN inSession          TVarChar    -- сессия пользователя
+    IN inStartDate         TDateTime , --
+    IN inEndDate           TDateTime , --
+    IN inJuridicalBasisId  Integer   , -- Главное юр.лицо
+    IN inSettingsServiceId Integer   , -- 
+    IN inIsWith            Boolean   , -- исключать inSettingsServiceId Да/Нет
+    IN inIsErased          Boolean   ,
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
@@ -58,6 +63,31 @@ BEGIN
                            WHERE MovementFloat.DescId = zc_MovementFloat_MovementId()
                            GROUP BY MovementFloat.ValueData
                          )
+
+           , tmpInfoMoneyDestination AS (SELECT DISTINCT ObjectLink_InfoMoneyDestination.ChildObjectId  AS InfoMoneyDestinationId
+                                    FROM Object AS Object_SettingsService
+                                        INNER JOIN ObjectLink AS ObjectLink_SettingsService
+                                                              ON ObjectLink_SettingsService.ChildObjectId = Object_SettingsService.Id
+                                                             AND ObjectLink_SettingsService.DescId = zc_ObjectLink_SettingsServiceItem_SettingsService()
+                                        INNER JOIN ObjectLink AS ObjectLink_InfoMoneyDestination
+                                                              ON ObjectLink_InfoMoneyDestination.DescId = zc_ObjectLink_SettingsServiceItem_InfoMoneyDestination()
+                                                             AND ObjectLink_InfoMoneyDestination.ObjectId = ObjectLink_SettingsService.ObjectId
+                                        INNER JOIN Object AS Object_SettingsServiceItem 
+                                                          ON Object_SettingsServiceItem.Id = ObjectLink_SettingsService.ObjectId
+                                                         AND Object_SettingsServiceItem.isErased = FALSE
+                                    WHERE Object_SettingsService.DescId = zc_Object_SettingsService()
+                                      AND (Object_SettingsService.Id = inSettingsServiceId AND inSettingsServiceId <> 0) --3175171 --
+                                      AND Object_SettingsService.isErased = FALSE
+                                    )
+
+           , tmpInfoMoney_View AS (SELECT Object_InfoMoney_View.*
+                                   FROM Object_InfoMoney_View
+                                        LEFT JOIN tmpInfoMoneyDestination ON tmpInfoMoneyDestination.InfoMoneyDestinationId = Object_InfoMoney_View.InfoMoneyDestinationId
+                                   WHERE (COALESCE (tmpInfoMoneyDestination.InfoMoneyDestinationId,0) <> 0 AND inSettingsServiceId <> 0 AND inIsWith = TRUE)
+                                      OR (COALESCE (tmpInfoMoneyDestination.InfoMoneyDestinationId,0) = 0 AND inSettingsServiceId <> 0 AND inIsWith = FALSE)
+                                      OR inSettingsServiceId = 0
+                                   )
+
        SELECT
              Movement.Id                                    AS Id
            , Movement.InvNumber                             AS InvNumber
@@ -149,10 +179,17 @@ BEGIN
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                             ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+
+            INNER JOIN tmpInfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+            
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = MovementItem.ObjectId
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementItem.ObjectId)
+
 
             LEFT JOIN MovementItemString AS MIString_Comment 
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
@@ -175,10 +212,7 @@ BEGIN
                                      ON MovementString_InvNumberPartner_Invoice.MovementId =  Movement_Invoice.Id
                                     AND MovementString_InvNumberPartner_Invoice.DescId = zc_MovementString_InvNumberPartner()
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
-                                         ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
-                                        AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                          ON MILinkObject_Contract.MovementItemId = MovementItem.Id
@@ -206,11 +240,11 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Service (TDateTime, TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 28.01.19         * add inSettingsServiceId
  01.08.17         *
  06.10.16         * add inJuridicalBasisId
  27.08.16         * add MILinkObject_Asset
@@ -228,4 +262,6 @@ ALTER FUNCTION gpSelect_Movement_Service (TDateTime, TDateTime, Integer, Boolean
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Service (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Service (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inJuridicalBasisId:=0, inSettingsServiceId := 3175171, inIsWith:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+--3175171
+

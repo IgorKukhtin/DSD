@@ -1060,7 +1060,10 @@ uses
   Report_Goods_byMovementReal in '..\..\Forms\Report\Report_Goods_byMovementReal.pas' {Report_Goods_byMovementRealForm: TParentForm},
   Member_Choice in '..\..\Forms\Guides\Member_Choice.pas' {Member_ChoiceForm: TParentForm},
   Report_Goods_byMovementRealDialog in '..\..\Forms\Report\Report_Goods_byMovementRealDialog.pas' {Report_Goods_byMovementRealDialogForm: TParentForm},
-  IncomeCostJournal in '..\..\Forms\Document\IncomeCostJournal.pas' {IncomeCostJournalForm: TParentForm};
+  IncomeCostJournal in '..\..\Forms\Document\IncomeCostJournal.pas' {IncomeCostJournalForm: TParentForm},
+  SettingsService in '..\..\Forms\Guides\SettingsService.pas' {SettingsServiceForm: TParentForm},
+  SettingsServiceItemEdit in '..\..\Forms\Guides\SettingsServiceItemEdit.pas' {SettingsServiceItemEditForm: TParentForm},
+  SettingsService_Object in '..\..\Forms\Guides\SettingsService_Object.pas' {SettingsService_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

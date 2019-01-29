@@ -1,11 +1,12 @@
-inherited CheckJournalForm: TCheckJournalForm
-  Caption = #1050#1072#1089#1089#1086#1074#1099#1077' '#1095#1077#1082#1080
+inherited CheckJournalDiscountExternalForm: TCheckJournalDiscountExternalForm
+  Caption = #1050#1072#1089#1089#1086#1074#1099#1077' '#1095#1077#1082#1080' '#1087#1086' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1084' '#1087#1088#1086#1077#1082#1090#1072#1084
   ClientHeight = 554
   ClientWidth = 896
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 912
-  ExplicitHeight = 592
+  ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -197,14 +198,6 @@ inherited CheckJournalForm: TCheckJournalForm
           object IsDeferred: TcxGridDBColumn
             Caption = #1054#1090#1083#1086#1078#1077#1085
             DataBinding.FieldName = 'IsDeferred'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 65
-          end
-          object isSite: TcxGridDBColumn
-            Caption = #1063#1077#1088#1077#1079' '#1089#1072#1081#1090
-            DataBinding.FieldName = 'isSite'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -411,21 +404,22 @@ inherited CheckJournalForm: TCheckJournalForm
       Top = 29
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
-    object edIsSP: TcxCheckBox
-      Left = 406
-      Top = 5
-      Action = actRefresh
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1057#1055' '#1095#1077#1082#1080
+    object ceDiscountExternal: TcxButtonEdit
+      Left = 520
+      Top = 28
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
       TabOrder = 6
-      Width = 155
+      Width = 296
     end
-    object edIsVip: TcxCheckBox
-      Left = 406
+    object cxLabel4: TcxLabel
+      Left = 416
       Top = 29
-      Action = actRefresh
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1042#1048#1055' '#1095#1077#1082#1080
-      TabOrder = 7
-      Width = 171
+      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1055#1088#1086#1077#1082#1090#1072
     end
   end
   inherited ActionList: TActionList
@@ -509,20 +503,16 @@ inherited CheckJournalForm: TCheckJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_UserUnit
       StoredProcList = <
         item
-          StoredProc = spGet_UserUnit
         end>
       Caption = 'actGet_UserUnit'
     end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_UserUnit
       StoredProcList = <
         item
-          StoredProc = spGet_UserUnit
         end
         item
           StoredProc = spSelect
@@ -714,7 +704,7 @@ inherited CheckJournalForm: TCheckJournalForm
     end
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Check'
+    StoredProcName = 'gpSelect_Movement_Check_DiscountExternal'
     Params = <
       item
         Name = 'inStartDate'
@@ -733,34 +723,18 @@ inherited CheckJournalForm: TCheckJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsErased'
-        Value = False
-        Component = actShowErased
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsSP'
-        Value = Null
-        Component = edIsSP
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsVip'
-        Value = Null
-        Component = edIsVip
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inUnitId'
         Value = Null
         Component = FormParams
         ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscountExternal'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DiscountExternalID'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -784,10 +758,6 @@ inherited CheckJournalForm: TCheckJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbShowErased'
-        end
-        item
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -801,10 +771,6 @@ inherited CheckJournalForm: TCheckJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -825,10 +791,6 @@ inherited CheckJournalForm: TCheckJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton1'
         end>
     end
     inherited bbInsert: TdxBarButton
@@ -908,6 +870,33 @@ inherited CheckJournalForm: TCheckJournalForm
         Value = Null
         Component = UnitGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountExternalID'
+        Value = Null
+        Component = GuidesDiscountExternal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountExternalName'
+        Value = Null
+        Component = GuidesDiscountExternal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
   end
@@ -959,41 +948,6 @@ inherited CheckJournalForm: TCheckJournalForm
       end>
     Left = 360
     Top = 24
-  end
-  object rdUnit: TRefreshDispatcher
-    IdParam.Value = Null
-    IdParam.MultiSelectSeparator = ','
-    RefreshAction = actRefresh
-    ComponentList = <
-      item
-        Component = UnitGuides
-      end>
-    Left = 288
-    Top = 16
-  end
-  object spGet_UserUnit: TdsdStoredProc
-    StoredProcName = 'gpGet_UserUnit'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'UnitId'
-        Value = Null
-        Component = UnitGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
-        Value = Null
-        Component = UnitGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 432
-    Top = 424
   end
   object dsdStoredProc1: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_Income'
@@ -1053,5 +1007,35 @@ inherited CheckJournalForm: TCheckJournalForm
     PackSize = 1
     Left = 648
     Top = 232
+  end
+  object GuidesDiscountExternal: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceDiscountExternal
+    FormNameParam.Value = 'TDiscountExternal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TDiscountExternal_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesDiscountExternal
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesDiscountExternal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 641
+    Top = 27
   end
 end

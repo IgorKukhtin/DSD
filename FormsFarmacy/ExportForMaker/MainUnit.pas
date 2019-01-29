@@ -117,22 +117,30 @@ begin
     qryMaker.First;
     while not qryMaker.Eof do
     begin
-      ReportIncome;
-      btnExportClick(Sender);
-      btnSendMailClick(Sender);
 
-      ReportCheck;
-      btnExportClick(Sender);
-      btnSendMailClick(Sender);
+      if qryMaker.FieldByName('isReport1').AsBoolean then
+      begin
+        ReportIncome;
+        btnExportClick(Sender);
+        btnSendMailClick(Sender);
+      end;
+
+      if qryMaker.FieldByName('isReport2').AsBoolean then
+      begin
+        ReportCheck;
+        btnExportClick(Sender);
+        btnSendMailClick(Sender);
+      end;
 
       try
         qrySetDateSend.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
+        qrySetDateSend.Params.ParamByName('inAddMonth').Value :=  1;
+        qrySetDateSend.Params.ParamByName('inAddDay').Value :=  0;
         qrySetDateSend.ExecSQL;
       except
         on E: Exception do
         begin
           Add_Log(E.Message);
-          exit;
         end;
       end;
 
@@ -212,7 +220,8 @@ begin
   Add_Log('Начало Формирования отчета по приходам ' + qryMaker.FieldByName('Name').AsString);
   FileName := 'Отчет по приходам';
 
-  qryReport_Upload.Close;
+  if qryReport_Upload.Active then qryReport_Upload.Close;
+  if grtvMaker.ColumnCount > 0 then grtvMaker.ClearItems;
   qryReport_Upload.SQL.Text :=
     'select '#13#10 +
     '  Code AS "Код", '#13#10 +
@@ -231,11 +240,12 @@ begin
     '  JuridicalName AS "Поставщик", '#13#10 +
     '  RetailName AS "Торговая сеть", '#13#10 +
     '  MainJuridicalName AS "Наше юр. лицо" '#13#10 +
-    'from gpReport_MovementIncome_Promo(:inMaker, :inStartDate, :inEndDate, ''3'')';
+    'from gpReport_MovementIncome_Promo(:inMaker, :inStartDate, :inEndDate, ''3'') '#13#10 +
+    'where MainJuridicalId not in (5603474, 2141038, 393047, 3031067)';
 
   qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
-  qryReport_Upload.Params.ParamByName('inStartDate').Value := IncDay(IncMonth(Date, - 1), - 1);
-  qryReport_Upload.Params.ParamByName('inEndDate').Value := IncDay(Date, - 1);
+  qryReport_Upload.Params.ParamByName('inStartDate').Value := IncMonth(IncDay(Date, 1 - DayOf(Date)), - 1);
+  qryReport_Upload.Params.ParamByName('inEndDate').Value := IncDay(Date, - DayOf(Date));
 
   OpenAndFormatSQL;
 end;
@@ -245,7 +255,8 @@ begin
   Add_Log('Начало Формирования отчета по продажам ' + qryMaker.FieldByName('Name').AsString);
   FileName := 'Отчет по продажам';
 
-  qryReport_Upload.Close;
+  if qryReport_Upload.Active then qryReport_Upload.Close;
+  if grtvMaker.ColumnCount > 0 then grtvMaker.ClearItems;
   qryReport_Upload.SQL.Text :=
     'select '#13#10 +
     '  Code AS "Код", '#13#10 +
@@ -264,11 +275,11 @@ begin
     '  InvNumber AS "№ документа", '#13#10 +
     '  JuridicalName AS "Поставщик" '#13#10 +
     'from gpReport_MovementCheck_Promo(:inMaker, :inStartDate, :inEndDate, ''3'')'#13#10 +
-    'where isSendMaker = True';
+    'where isSendMaker = True and MainJuridicalId not in (5603474, 2141038, 393047, 3031067)';
 
   qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
-  qryReport_Upload.Params.ParamByName('inStartDate').Value := IncDay(IncMonth(Date, - 1), - 1);
-  qryReport_Upload.Params.ParamByName('inEndDate').Value := IncDay(Date, - 1);
+  qryReport_Upload.Params.ParamByName('inStartDate').Value := IncMonth(IncDay(Date, 1 - DayOf(Date)), - 1);
+  qryReport_Upload.Params.ParamByName('inEndDate').Value := IncDay(Date, - DayOf(Date));
 
   OpenAndFormatSQL;
 end;
@@ -329,13 +340,16 @@ begin
 
   if not FileExists(SavePath + FileName + '.xls') then Exit;
 
+
   if SendMail(qryMailParam.FieldByName('Mail_Host').AsString,
        qryMailParam.FieldByName('Mail_Port').AsInteger,
        qryMailParam.FieldByName('Mail_Password').AsString,
        qryMailParam.FieldByName('Mail_User').AsString,
        [qryMaker.FieldByName('Mail').AsString],
        qryMailParam.FieldByName('Mail_From').AsString,
-       FileName + ' за период с ' + FormatDateTime('dd.mm.yyyy', IncDay(IncMonth(Date, - 1), - 1)) + ' по ' + FormatDateTime('dd.mm.yyyy', IncDay(Date, - 1)),
+       FileName + ' за период с ' +
+         FormatDateTime('dd.mm.yyyy', IncMonth(IncDay(Date, 1 - DayOf(Date)), - 1)) + ' по ' +
+         FormatDateTime('dd.mm.yyyy', IncDay(Date, - DayOf(Date))),
        '',
        [SavePath + FileName + '.xls']) then
   begin

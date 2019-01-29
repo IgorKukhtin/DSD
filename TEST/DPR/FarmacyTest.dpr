@@ -652,7 +652,9 @@ uses
   ReturnIn in '..\..\FormsFarmacy\Document\ReturnIn.pas' {ReturnInForm: TParentForm},
   ReturnInJournal in '..\..\FormsFarmacy\Document\ReturnInJournal.pas' {ReturnInJournalForm: TParentForm},
   CheckItemJournal in '..\..\FormsFarmacy\Document\CheckItemJournal.pas' {CheckItemJournalForm: TParentForm},
-  Report_JuridicalCollationSaldo in '..\..\FormsFarmacy\Report\Report_JuridicalCollationSaldo.pas' {Report_JuridicalCollationSaldoForm: TParentForm};
+  Report_JuridicalCollationSaldo in '..\..\FormsFarmacy\Report\Report_JuridicalCollationSaldo.pas' {Report_JuridicalCollationSaldoForm: TParentForm},
+  CheckJournalDiscountExternal in '..\..\Forms\Document\CheckJournalDiscountExternal.pas',
+  GlobalConst in '..\..\FormsFarmacy\System\GlobalConst.pas' {GlobalConstForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

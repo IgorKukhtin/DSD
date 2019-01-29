@@ -315,12 +315,22 @@ object MainForm: TMainForm
     Connection = ZConnection1
     SQL.Strings = (
       
-        'select * from lpInsertUpdate_ObjectDate (zc_ObjectDate_Maker_Sen' +
-        'dReal(), :inMaker, CURRENT_TIMESTAMP);')
+        'select * from gpUpdate_Object_Maker_SendDate (:inMaker, :inAddMo' +
+        'nth, :inAddDay, '#39'3'#39');')
     Params = <
       item
         DataType = ftUnknown
         Name = 'inMaker'
+        ParamType = ptUnknown
+      end
+      item
+        DataType = ftUnknown
+        Name = 'inAddMonth'
+        ParamType = ptUnknown
+      end
+      item
+        DataType = ftUnknown
+        Name = 'inAddDay'
         ParamType = ptUnknown
       end>
     Left = 144
@@ -329,6 +339,16 @@ object MainForm: TMainForm
       item
         DataType = ftUnknown
         Name = 'inMaker'
+        ParamType = ptUnknown
+      end
+      item
+        DataType = ftUnknown
+        Name = 'inAddMonth'
+        ParamType = ptUnknown
+      end
+      item
+        DataType = ftUnknown
+        Name = 'inAddDay'
         ParamType = ptUnknown
       end>
   end

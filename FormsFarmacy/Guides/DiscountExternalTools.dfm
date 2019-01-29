@@ -260,6 +260,10 @@ object DiscountExternalToolsForm: TDiscountExternalToolsForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end>
       OneOnRow = True
       Row = 0
@@ -304,6 +308,10 @@ object DiscountExternalToolsForm: TDiscountExternalToolsForm
     end
     object bbProtocolOpenForm: TdxBarButton
       Action = ProtocolOpenForm
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actCheckJournalDiscountExternal
       Category = 0
     end
   end
@@ -492,6 +500,49 @@ object DiscountExternalToolsForm: TDiscountExternalToolsForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actCheckJournalDiscountExternal: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1050#1072#1089#1089#1086#1074#1099#1077' '#1095#1077#1082#1080' '#1087#1086' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1084' '#1087#1088#1086#1077#1082#1090#1072#1084
+      Hint = #1050#1072#1089#1089#1086#1074#1099#1077' '#1095#1077#1082#1080' '#1087#1086' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1084' '#1087#1088#1086#1077#1082#1090#1072#1084
+      ImageIndex = 28
+      FormName = 'TCheckJournalDiscountExternalForm'
+      FormNameParam.Value = 'TCheckJournalDiscountExternalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountExternalID'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DiscountExternalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountExternalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DiscountExternalName'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False

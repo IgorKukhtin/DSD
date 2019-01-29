@@ -1,24 +1,18 @@
--- Function: gpSelect_Movement_OrderInternal()
+-- Function: gpSelect_Movement_Check_DiscountExternal()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, Boolean, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Check_DiscountExternal (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_Check(
-    IN inStartDate     TDateTime , --
-    IN inEndDate       TDateTime , --
-    IN inIsErased      Boolean ,
-    IN inIsSP          Boolean ,   -- Показать только СПчеки
-    IN inIsVip         Boolean ,   -- Показать только ВИПчеки
-    IN inUnitId        Integer,    -- Подразделение
-    IN inSession       TVarChar    -- сессия пользователя
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Check_DiscountExternal(
+    IN inStartDate        TDateTime , --
+    IN inEndDate          TDateTime , --
+    IN inUnitId           Integer,    -- Подразделение
+    IN inDiscountExternal Integer,    -- Подразделение
+    IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer
              , TotalCount TFloat, TotalSumm TFloat, TotalSummPayAdd TFloat, TotalSummChangePercent TFloat
              , UnitName TVarChar, CashRegisterName TVarChar, PaidTypeName TVarChar
-             , CashMember TVarChar, Bayer TVarChar, FiscalCheckNumber TVarChar
-             , NotMCS Boolean, IsDeferred Boolean
-             , isSite Boolean
+             , CashMember TVarChar, Bayer TVarChar, FiscalCheckNumber TVarChar, NotMCS Boolean, IsDeferred Boolean
              , DiscountCardName TVarChar, DiscountExternalName TVarChar
              , BayerPhone TVarChar
              , InvNumberOrder TVarChar
@@ -46,7 +40,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
-   DECLARE vbRetailId Integer;   
+   DECLARE vbRetailId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
@@ -65,21 +59,14 @@ BEGIN
                       INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                             ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                   WHERE ObjectLink_Unit_Juridical.ObjectId = inUnitId
+                   WHERE (ObjectLink_Unit_Juridical.ObjectId = inUnitId or COALESCE(inUnitId, 0) = 0)
                      AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                    )
                    END;
 
      -- Результат
      RETURN QUERY
-       WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
-                         UNION
-                          SELECT zc_Enum_Status_UnComplete() AS StatusId
-                         UNION
-                          SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
-                         )
-
-         SELECT       
+         SELECT
              Movement_Check.Id
            , Movement_Check.InvNumber
            , Movement_Check.OperDate
@@ -90,13 +77,12 @@ BEGIN
            , MovementFloat_TotalSummChangePercent.ValueData     AS TotalSummChangePercent
            , Object_Unit.ValueData                              AS UnitName
            , Object_CashRegister.ValueData                      AS CashRegisterName
-           , Object_PaidType.ValueData                          AS PaidTypeName 
+           , Object_PaidType.ValueData                          AS PaidTypeName
            , CASE WHEN MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = '' THEN zc_Member_Site() ELSE Object_CashMember.ValueData END :: TVarChar AS CashMember
            , MovementString_Bayer.ValueData                     AS Bayer
            , MovementString_FiscalCheckNumber.ValueData         AS FiscalCheckNumber
            , COALESCE(MovementBoolean_NotMCS.ValueData,FALSE)   AS NotMCS
            , Movement_Check.IsDeferred                          AS IsDeferred
-           , COALESCE(MovementBoolean_Site.ValueData,FALSE) :: Boolean AS isSite
            , Object_DiscountCard.ValueData                      AS DiscountCardName
            , Object_DiscountExternal.ValueData                  AS DiscountExternalName
            , MovementString_BayerPhone.ValueData                AS BayerPhone
@@ -114,8 +100,8 @@ BEGIN
            , MovementString_MedicSP.ValueData                   AS MedicSPName
            , MovementString_Ambulance.ValueData                 AS Ambulance
            , Object_SPKind.ValueData                            AS SPKindName
-           , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar )     :: TVarChar  AS InvNumber_Invoice_Full 
-           
+           , ('№ ' || Movement_Invoice.InvNumber || ' от ' || Movement_Invoice.OperDate  :: Date :: TVarChar )     :: TVarChar  AS InvNumber_Invoice_Full
+
            , Object_Status_PromoCode.ObjectCode                 AS StatusCode_PromoCode
            , ('№ ' || Movement_PromoCode.InvNumber || ' от ' || Movement_PromoCode.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_PromoCode_Full
            , MIString_GUID.ValueData                 ::TVarChar AS GUID_PromoCode
@@ -135,46 +121,50 @@ BEGIN
                    , MovementLinkObject_CheckMember.ObjectId             AS MemberId
                    , COALESCE(MovementBoolean_Deferred.ValueData, False) AS IsDeferred
               FROM Movement
-                   INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+
+
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_DiscountCard
+                                                 ON MovementLinkObject_DiscountCard.MovementId = Movement.ID
+                                                AND MovementLinkObject_DiscountCard.DescId = zc_MovementLinkObject_DiscountCard()
+
+                   INNER JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                         ON ObjectLink_DiscountExternal.ObjectId = MovementLinkObject_DiscountCard.ObjectId
+                                        AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountCard_Object()
+
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
 
                    LEFT JOIN MovementString AS MovementString_CommentError
                                             ON MovementString_CommentError.MovementId = Movement.Id
                                            AND MovementString_CommentError.DescId = zc_MovementString_CommentError()
                    LEFT JOIN MovementString AS MovementString_InvNumberSP
                                             ON MovementString_InvNumberSP.MovementId = Movement.Id
-                                           AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP() 
-                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()    
-                                                                         
+                                           AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
+
                    LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
                                                 ON MovementLinkObject_CheckMember.MovementId = Movement.Id
                                                AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
                    LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                              ON MovementBoolean_Deferred.MovementId = Movement.Id
                                             AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
-   		                      
-              WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate) 
+
+              WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate)
                 AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
                 AND Movement.DescId = zc_Movement_Check()
-                AND (MovementLinkObject_Unit.ObjectId = inUnitId 
-                     OR (inUnitId = 0 AND inIsSP = FALSE AND inIsVip = FALSE AND (MovementString_CommentError.ValueData <> '' 
-                                                                               OR MovementString_InvNumberSP.ValueData <> '' 
-                                                                               OR MovementLinkObject_CheckMember.ObjectId > 0
-                                                                                  )
-                         )
-                     OR (inUnitId = 0 AND inIsSP = TRUE  AND MovementString_InvNumberSP.ValueData <> '')
-                     OR (inUnitId = 0 AND inIsVip = TRUE AND (MovementLinkObject_CheckMember.ObjectId > 0 OR COALESCE(MovementBoolean_Deferred.ValueData, False) = TRUE))
-                     )
-                AND vbRetailId = vbObjectId
-           ) AS Movement_Check 
+                AND (ObjectLink_DiscountExternal.ChildObjectId = inDiscountExternal 
+                 OR COALESCE (ObjectLink_DiscountExternal.ChildObjectId, 0) <> 0 AND COALESCE (inDiscountExternal, 0) = 0)
+                AND (MovementLinkObject_Unit.ObjectId = inUnitId OR COALESCE (inUnitId, 0) = 0)
+                AND  Movement.StatusId = zc_Enum_Status_Complete()
+--                AND vbRetailId = vbObjectId
+           ) AS Movement_Check
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Check.StatusId
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement_Check.UnitId
 
              LEFT JOIN MovementDate AS MovementDate_OperDateSP
                                     ON MovementDate_OperDateSP.MovementId = Movement_Check.Id
                                    AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
- 
+
              LEFT JOIN MovementDate AS MovementDate_Insert
                                     ON MovementDate_Insert.MovementId = Movement_Check.Id
                                    AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -182,7 +172,7 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                      ON MovementFloat_TotalCount.MovementId = Movement_Check.Id
                                     AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
- 
+
              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                      ON MovementFloat_TotalSumm.MovementId =  Movement_Check.Id
                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
@@ -192,11 +182,11 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_TotalSummChangePercent
                                      ON MovementFloat_TotalSummChangePercent.MovementId =  Movement_Check.Id
                                     AND MovementFloat_TotalSummChangePercent.DescId = zc_MovementFloat_TotalSummChangePercent()
- 
+
              LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                       ON MovementString_InvNumberOrder.MovementId = Movement_Check.Id
                                      AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
-	     LEFT JOIN MovementString AS MovementString_Bayer
+	         LEFT JOIN MovementString AS MovementString_Bayer
                                       ON MovementString_Bayer.MovementId = Movement_Check.Id
                                      AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
              LEFT JOIN MovementString AS MovementString_BayerPhone
@@ -216,25 +206,15 @@ BEGIN
              LEFT JOIN MovementBoolean AS MovementBoolean_NotMCS
                                        ON MovementBoolean_NotMCS.MovementId = Movement_Check.Id
                                       AND MovementBoolean_NotMCS.DescId = zc_MovementBoolean_NotMCS()
-
-             LEFT JOIN MovementBoolean AS MovementBoolean_Site
-                                       ON MovementBoolean_Site.MovementId = Movement_Check.Id
-                                      AND MovementBoolean_Site.DescId = zc_MovementBoolean_Site()
-                                      
-	    /* LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
-                                       ON MovementBoolean_Deferred.MovementId = Movement_Check.Id
-                                      AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
-            */
-            
              LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
                                           ON MovementLinkObject_CashRegister.MovementId = Movement_Check.Id
                                          AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
              LEFT JOIN Object AS Object_CashRegister ON Object_CashRegister.Id = MovementLinkObject_CashRegister.ObjectId
- 
+
    	         LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidType
                                           ON MovementLinkObject_PaidType.MovementId = Movement_Check.Id
                                          AND MovementLinkObject_PaidType.DescId = zc_MovementLinkObject_PaidType()
-             LEFT JOIN Object AS Object_PaidType ON Object_PaidType.Id = MovementLinkObject_PaidType.ObjectId								  
+             LEFT JOIN Object AS Object_PaidType ON Object_PaidType.Id = MovementLinkObject_PaidType.ObjectId
 
  	         LEFT JOIN Object AS Object_CashMember ON Object_CashMember.Id = Movement_Check.MemberId
 
@@ -247,11 +227,11 @@ BEGIN
                                           ON MovementLinkObject_ConfirmedKind.MovementId = Movement_Check.Id
                                          AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
              LEFT JOIN Object AS Object_ConfirmedKind ON Object_ConfirmedKind.Id = MovementLinkObject_ConfirmedKind.ObjectId
-                        
+
              LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKindClient
                                           ON MovementLinkObject_ConfirmedKindClient.MovementId = Movement_Check.Id
                                          AND MovementLinkObject_ConfirmedKindClient.DescId = zc_MovementLinkObject_ConfirmedKindClient()
-             LEFT JOIN Object AS Object_ConfirmedKindClient ON Object_ConfirmedKindClient.Id = MovementLinkObject_ConfirmedKindClient.ObjectId 
+             LEFT JOIN Object AS Object_ConfirmedKindClient ON Object_ConfirmedKindClient.Id = MovementLinkObject_ConfirmedKindClient.ObjectId
 
              LEFT JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
                                           ON MovementLinkObject_PartnerMedical.MovementId = Movement_Check.Id
@@ -267,11 +247,11 @@ BEGIN
                                   ON ObjectLink_DiscountExternal.ObjectId = Object_DiscountCard.Id
                                  AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountCard_Object()
              LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = ObjectLink_DiscountExternal.ChildObjectId
-                           
+
              LEFT JOIN MovementLinkObject AS MLO_Insert
                                           ON MLO_Insert.MovementId = Movement_Check.Id
                                          AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
              LEFT JOIN MovementLinkMovement AS MLM_Child
                                             ON MLM_Child.MovementId = Movement_Check.Id
@@ -282,7 +262,7 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                     ON MovementFloat_MovementItemId.MovementId = Movement_Check.Id
                                    AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
-            LEFT JOIN MovementItem AS MI_PromoCode 
+            LEFT JOIN MovementItem AS MI_PromoCode
                                    ON MI_PromoCode.Id       = MovementFloat_MovementItemId.ValueData :: Integer
                                   AND MI_PromoCode.isErased = FALSE
             LEFT JOIN Movement AS Movement_PromoCode ON Movement_PromoCode.Id = MI_PromoCode.MovementId
@@ -309,32 +289,18 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_MemberSP_GroupMemberSP
                                  ON ObjectLink_MemberSP_GroupMemberSP.ObjectId = MovementLinkObject_MemberSP.ObjectId
                                 AND ObjectLink_MemberSP_GroupMemberSP.DescId = zc_ObjectLink_MemberSP_GroupMemberSP()
-            LEFT JOIN Object AS Object_GroupMemberSP ON Object_GroupMemberSP.Id = ObjectLink_MemberSP_GroupMemberSP.ChildObjectId
+            LEFT JOIN Object AS Object_GroupMemberSP ON Object_GroupMemberSP.Id = ObjectLink_MemberSP_GroupMemberSP.ChildObjectId;
 
-      ;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В. +
- 28.01.19         * add isSite
- 02.10.18                                                                                    * add TotalSummPayAdd
- 14.12.17         * add PromoCode
- 11.09.17         *
- 04.08.17         * без вьюхи
- 18.04.17         * add Movement_Invoice
- 06.10.16         * add InsertName, InsertDate
- 25.08.16         *
- 21.07.16         *
- 05.05.16         *
- 07.08.15                                                                        *
- 08.05.15                         * 
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В.
+ 25.01.19                                                                                    *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Check (inStartDate:= '01.08.2017', inEndDate:= '01.08.2017', inIsErased := FALSE, inIsSP := FALSE, inIsVip := FALSE, inUnitId:= 1, inSession:= '2')
-
+-- SELECT * FROM gpSelect_Movement_Check_DiscountExternal (inStartDate := ('01.01.2011')::TDateTime , inEndDate := ('25.01.2019')::TDateTime, inUnitId:= 0 , inDiscountExternal := 2807930, inSession:= '3')

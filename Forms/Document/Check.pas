@@ -106,6 +106,7 @@ type
     macUpdateMemberSp: TMultiAction;
     bbUpdateMemberSp: TdxBarButton;
     ExecuteDialogUpdateMemberSp: TExecuteDialog;
+    cbSite: TcxCheckBox;
   private
     { Private declarations }
   public

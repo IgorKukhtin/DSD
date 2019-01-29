@@ -461,6 +461,17 @@ inherited CheckForm: TCheckForm
       TabOrder = 33
       Width = 198
     end
+    object cbSite: TcxCheckBox
+      Left = 102
+      Top = 73
+      Hint = #1095#1077#1088#1077#1079' '#1089#1072#1081#1090
+      Caption = #1089#1072#1081#1090
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 34
+      Width = 47
+    end
   end
   object edInvNumberOrder: TcxTextEdit [2]
     Left = 155
@@ -1507,6 +1518,13 @@ inherited CheckForm: TCheckForm
         Name = 'NotMCS'
         Value = Null
         Component = chbNotMCS
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSite'
+        Value = Null
+        Component = cbSite
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end

@@ -12,7 +12,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , TotalCount TFloat, TotalSumm TFloat, TotalSummPayAdd TFloat
              , UnitId Integer, UnitName TVarChar
              , CashRegisterName TVarChar, PaidKindName TVarChar, PaidTypeName TVarChar
-             , CashMember TVarChar, Bayer TVarChar, FiscalCheckNumber TVarChar, NotMCS Boolean
+             , CashMember TVarChar, Bayer TVarChar, FiscalCheckNumber TVarChar
+             , NotMCS Boolean
+             , isSite Boolean
              , DiscountCardName TVarChar
              , BayerPhone TVarChar
              , InvNumberOrder TVarChar
@@ -64,6 +66,7 @@ BEGIN
            , Movement_Check.Bayer
            , Movement_Check.FiscalCheckNumber
            , Movement_Check.NotMCS
+           , COALESCE(MovementBoolean_Site.ValueData,FALSE) :: Boolean AS isSite
            , (Movement_Check.DiscountCardName || ' ' || COALESCE (Object_DiscountExternal.ValueData, '')) :: TVarChar AS DiscountCardName
            , Movement_Check.BayerPhone
            , Movement_Check.InvNumberOrder
@@ -119,6 +122,11 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_Passport
                                     ON ObjectString_Passport.ObjectId = Movement_Check.MemberSPId
                                    AND ObjectString_Passport.DescId = zc_ObjectString_MemberSP_Passport()
+
+             LEFT JOIN MovementBoolean AS MovementBoolean_Site
+                                       ON MovementBoolean_Site.MovementId = Movement_Check.Id
+                                      AND MovementBoolean_Site.DescId = zc_MovementBoolean_Site()
+
              LEFT JOIN ObjectLink AS ObjectLink_MemberSP_GroupMemberSP
                                   ON ObjectLink_MemberSP_GroupMemberSP.ObjectId = Movement_Check.MemberSPId
                                  AND ObjectLink_MemberSP_GroupMemberSP.DescId = zc_ObjectLink_MemberSP_GroupMemberSP()
@@ -134,6 +142,7 @@ ALTER FUNCTION gpGet_Movement_Check (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 28.01.19         * add isSite
  11.01.19         * add MemberSP
  02.10.18                                                                      * add TotalSummPayAdd
  29.06.18                                                                      * add ManualDiscount

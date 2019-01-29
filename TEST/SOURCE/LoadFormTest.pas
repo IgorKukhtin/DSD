@@ -161,6 +161,7 @@ type
     procedure LoadSendOnPriceFormTest;
     procedure LoadServiceDocumentFormTest;
     procedure LoadServiceFormTest;
+    procedure LoadSettingsServiceFormTest;
     procedure LoadSignInternalFormTest;
     procedure LoadSheetWorkTimeFormTest;
     procedure LoadStaffListFormTest;
@@ -875,6 +876,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TServiceJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TServiceForm');
+end;
+
+procedure TLoadFormTest.LoadSettingsServiceFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSettingsServiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSettingsServiceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSettingsServiceItemEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSettingsServiceItemEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSettingsService_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSettingsService_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
