@@ -1,13 +1,15 @@
 -- Function: gpUpdate_Object_Retail_GLNCode()
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_Retail_GLNCode (Integer, TVarChar, TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Object_Retail_GLNCode (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpUpdate_Object_Retail_GLNCode (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Retail_GLNCode (Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Retail_GLNCode(
  INOUT ioId                    Integer   ,  -- ключ объекта <Торговая сеть> 
     IN inGLNCode               TVarChar  ,  -- Код GLN - Получатель
     IN inGLNCodeCorporate      TVarChar  ,  -- Код GLN - Поставщик 
+    IN inOKPO                  TVarChar  ,  -- ОКПО для налог. документов
     IN inGoodsPropertyId       Integer   ,  -- Классификаторы свойств товаров
     IN inPersonalMarketingId   Integer   ,     -- Сотрудник (Ответственный представитель маркетингового отдела)
     IN inPersonalTradeId       Integer   ,     -- Сотрудник (Ответственный представитель коммерческого отдела)
@@ -24,6 +26,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Retail_GLNCode(), ioId, inGLNCode);
    -- сохранили св-во <Код GLN - Поставщик>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Retail_GLNCodeCorporate(), ioId, inGLNCodeCorporate);
+
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Retail_OKPO(), ioId, inOKPO);
 
    -- сохранили связь с <Сотрудник (Ответственный представитель маркетингового отдела)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_PersonalMarketing(), ioId, inPersonalMarketingId);  
@@ -46,6 +51,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.01.19         *
  18.03.15         *
 */
 

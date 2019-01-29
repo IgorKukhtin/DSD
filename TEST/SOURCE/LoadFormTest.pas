@@ -3062,6 +3062,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRetailForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRetailEditForm');
+  exit;
     // Торговая сеть (отчет)
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailReportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRetailReportForm');
