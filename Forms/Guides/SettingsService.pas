@@ -38,8 +38,7 @@ type
     actShowAll: TBooleanStoredProcAction;
     actProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpen: TdxBarButton;
-    spUpdate_isPriceClose_Yes: TdsdStoredProc;
-    spUpdate_isPriceClose_No: TdsdStoredProc;
+    spUpdateItem_isErased: TdsdStoredProc;
     bbUpdate: TdxBarButton;
     cxSplitter1: TcxSplitter;
     dsdUpdateChild: TdsdUpdateDataSet;
@@ -69,6 +68,14 @@ type
     bbInsertRecord: TdxBarButton;
     actInsert: TdsdInsertUpdateAction;
     actUpdate: TdsdInsertUpdateAction;
+    actInsertUpdateItem: TdsdExecStoredProc;
+    macInsertUpdateItem: TMultiAction;
+    macInsertUpdateItem_list: TMultiAction;
+    actErasedUnErasedChild: TdsdExecStoredProc;
+    macErasedUnErasedChild: TMultiAction;
+    macErasedUnErasedChild_list: TMultiAction;
+    bbInsertUpdateItem_list: TdxBarButton;
+    bbErasedUnErasedChild_list: TdxBarButton;
   private
     { Private declarations }
   public

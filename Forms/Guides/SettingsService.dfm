@@ -452,6 +452,78 @@ inherited SettingsServiceForm: TSettingsServiceForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object actInsertUpdateItem: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateItem
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateItem
+        end>
+      Caption = 'actInsertUpdateItem'
+    end
+    object macInsertUpdateItem: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdateItem
+        end>
+      View = cxGridDBTableView1
+      Caption = 'macInsertUpdateItem'
+    end
+    object macInsertUpdateItem_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macInsertUpdateItem
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1054#1090#1084#1077#1090#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103'?'
+      InfoAfterExecute = #1053#1072#1079#1085#1072#1095#1077#1085#1080#1103' '#1086#1090#1084#1077#1095#1077#1085#1099
+      Caption = 'macInsertUpdateItem_list'
+      ImageIndex = 76
+    end
+    object actErasedUnErasedChild: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateItem_isErased
+      StoredProcList = <
+        item
+          StoredProc = spUpdateItem_isErased
+        end>
+      Caption = 'actErasedUnErasedChild'
+    end
+    object macErasedUnErasedChild: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actErasedUnErasedChild
+        end>
+      View = cxGridDBTableView1
+      Caption = 'macInsertUpdateItem'
+    end
+    object macErasedUnErasedChild_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macErasedUnErasedChild
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1057#1085#1103#1090#1100' '#1086#1090#1084#1077#1090#1082#1080' '#1091' '#1074#1099#1073#1088#1072#1085#1085#1099#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081'?'
+      InfoAfterExecute = #1054#1090#1084#1077#1090#1082#1080' '#1089#1085#1103#1090#1099
+      Caption = 'macInsertUpdateItem_list'
+      ImageIndex = 77
+    end
   end
   inherited MasterDS: TDataSource
     Left = 88
@@ -530,6 +602,22 @@ inherited SettingsServiceForm: TSettingsServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertUpdateItem_list'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErasedUnErasedChild_list'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -589,6 +677,14 @@ inherited SettingsServiceForm: TSettingsServiceForm
       Action = InsertRecord
       Category = 0
     end
+    object bbInsertUpdateItem_list: TdxBarButton
+      Action = macInsertUpdateItem_list
+      Category = 0
+    end
+    object bbErasedUnErasedChild_list: TdxBarButton
+      Action = macErasedUnErasedChild_list
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 208
@@ -625,8 +721,8 @@ inherited SettingsServiceForm: TSettingsServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 152
-    Top = 152
+    Left = 160
+    Top = 144
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'lpInsertUpdate_Object_ContractSettings'
@@ -666,72 +762,25 @@ inherited SettingsServiceForm: TSettingsServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 264
-    Top = 152
+    Left = 288
+    Top = 176
   end
-  object spUpdate_isPriceClose_Yes: TdsdStoredProc
-    StoredProcName = 'gpUpdate_JuridicalSettings_isPriceClose'
+  object spUpdateItem_isErased: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_isErased'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
+        Name = 'inObjectId'
         Value = Null
-        Component = MasterCDS
+        Component = ItemCDS
         ComponentItem = 'Id'
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisPriceClose'
-        Value = 'FALSE'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outisPriceClose'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isPriceClose'
-        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 496
     Top = 187
-  end
-  object spUpdate_isPriceClose_No: TdsdStoredProc
-    StoredProcName = 'gpUpdate_JuridicalSettings_isPriceClose'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisPriceClose'
-        Value = 'TRUE'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outisPriceClose'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isPriceClose'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 496
-    Top = 267
   end
   object spErasedUnErasedChild: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -751,8 +800,8 @@ inherited SettingsServiceForm: TSettingsServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 840
-    Top = 216
+    Left = 696
+    Top = 208
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -861,7 +910,7 @@ inherited SettingsServiceForm: TSettingsServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 720
-    Top = 123
+    Left = 704
+    Top = 115
   end
 end
