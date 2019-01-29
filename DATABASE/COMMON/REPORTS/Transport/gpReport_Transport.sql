@@ -107,7 +107,9 @@ BEGIN
                                                                     ELSE 4
                                                                END
                                                      ) = 1
-                                             THEN COALESCE (MIFloat_RatePrice.ValueData, 0) * (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_DistanceFuelChild.ValueData, 0)) + COALESCE (MIFloat_RateSummaAdd.ValueData, 0) ELSE 0 END AS SumTransportAddLong
+                                             THEN COALESCE (MIFloat_RatePrice.ValueData, 0) * (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_DistanceFuelChild.ValueData, 0))
+                                                + COALESCE (MIFloat_RateSummaAdd.ValueData, 0) + COALESCE (MIFloat_RateSummaExp.ValueData, 0)
+                                        ELSE 0 END AS SumTransportAddLong
                                  , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
                                                       ORDER BY CASE WHEN MIBoolean_MasterFuel.ValueData = TRUE AND MIContainer.Amount <> 0
                                                                          THEN 1
@@ -204,6 +206,9 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_RateSummaAdd
                                                              ON MIFloat_RateSummaAdd.MovementItemId =  MovementItem.Id
                                                             AND MIFloat_RateSummaAdd.DescId = zc_MIFloat_RateSummaAdd()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_RateSummaExp
+                                                             ON MIFloat_RateSummaExp.MovementItemId =  MovementItem.Id
+                                                            AND MIFloat_RateSummaExp.DescId = zc_MIFloat_RateSummaExp()
                                  LEFT JOIN MovementItemFloat AS MIFloat_Taxi
                                                              ON MIFloat_Taxi.MovementItemId =  MovementItem.Id
                                                             AND MIFloat_Taxi.DescId = zc_MIFloat_Taxi()
@@ -320,7 +325,9 @@ BEGIN
                                                                     ELSE 4
                                                                END
                                                      ) = 1
-                                             THEN COALESCE (MIFloat_RatePrice.ValueData, 0) * (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_DistanceFuelChild.ValueData, 0)) + COALESCE (MIFloat_RateSummaAdd.ValueData, 0) ELSE 0 END AS SumTransportAddLong
+                                             THEN COALESCE (MIFloat_RatePrice.ValueData, 0) * (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_DistanceFuelChild.ValueData, 0)) 
+                                                + COALESCE (MIFloat_RateSummaAdd.ValueData, 0) + COALESCE (MIFloat_RateSummaExp.ValueData, 0)
+                                        ELSE 0 END AS SumTransportAddLong
                                  , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
                                                       ORDER BY CASE WHEN MIBoolean_MasterFuel.ValueData = TRUE AND MIContainer.Amount <> 0
                                                                          THEN 1
@@ -383,6 +390,10 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_RateSummaAdd
                                                              ON MIFloat_RateSummaAdd.MovementItemId =  MovementItem.Id
                                                             AND MIFloat_RateSummaAdd.DescId = zc_MIFloat_RateSummaAdd()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_RateSummaExp
+                                                             ON MIFloat_RateSummaExp.MovementItemId =  MovementItem.Id
+                                                            AND MIFloat_RateSummaExp.DescId = zc_MIFloat_RateSummaExp()
+
                                  LEFT JOIN MovementItemFloat AS MIFloat_TaxiMore
                                                              ON MIFloat_TaxiMore.MovementItemId =  MovementItem.Id
                                                             AND MIFloat_TaxiMore.DescId = zc_MIFloat_TaxiMore()

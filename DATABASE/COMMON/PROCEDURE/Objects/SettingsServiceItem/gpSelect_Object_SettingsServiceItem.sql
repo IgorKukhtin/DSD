@@ -63,7 +63,7 @@ BEGIN
          , tmpInfoMoney.InfoMoneyId
          , tmpInfoMoney.InfoMoneyCode
          , tmpInfoMoney.InfoMoneyName
-         , CASE WHEN Object_SettingsServiceItem.Id IS NULL THEN FALSE ELSE TRUE END AS isSave
+         , CASE WHEN Object_SettingsServiceItem.Id IS NULL OR Object_SettingsServiceItem.isErased = TRUE THEN FALSE ELSE TRUE END AS isSave
          , Object_SettingsServiceItem.isErased         AS isErased
         
     FROM Object AS Object_SettingsService
@@ -121,7 +121,7 @@ BEGIN
              , tmpInfoMoney.InfoMoneyId
              , tmpInfoMoney.InfoMoneyCode
              , tmpInfoMoney.InfoMoneyName
-             , TRUE                                      AS isSave
+             , CASE WHEN Object_SettingsServiceItem.isErased = TRUE THEN FALSE ELSE TRUE END AS isSave
              , Object_SettingsServiceItem.isErased       AS isErased
             
         FROM Object AS Object_SettingsServiceItem

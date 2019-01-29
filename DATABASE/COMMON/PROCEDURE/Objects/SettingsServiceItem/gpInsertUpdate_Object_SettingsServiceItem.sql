@@ -48,7 +48,13 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_SettingsServiceItem_InfoMoneyDestination(), ioId, inInfoMoneyDestinationId);
 
-       
+    
+   -- если элемент был помечен на удаление восстанавливаем его
+   IF (SELECT Object.isErased FROM Object WHERE Object.Id = ioId) = TRUE
+   THEN
+       PERFORM lpUpdate_Object_isErased (inObjectId:= ioId, inUserId:= vbUserId);
+   END IF;
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 END;$BODY$

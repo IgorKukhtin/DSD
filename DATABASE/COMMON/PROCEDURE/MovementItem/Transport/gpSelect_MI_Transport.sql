@@ -44,6 +44,7 @@ BEGIN
             , MIFloat_Taxi.ValueData                                 AS Taxi
             , COALESCE (MIFloat_TaxiMore.ValueData, 0)     :: TFloat AS TaxiMore
             , COALESCE (MIFloat_RateSummaAdd.ValueData, 0) :: TFloat AS RateSummaAdd
+            , COALESCE (MIFloat_RateSummaExp.ValueData, 0) :: TFloat AS RateSummaExp
 
             , Object_Freight.Id           AS FreightId
             , Object_Freight.ValueData    AS FreightName
@@ -104,7 +105,11 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_RateSummaAdd
                                          ON MIFloat_RateSummaAdd.MovementItemId = MovementItem.Id
                                         AND MIFloat_RateSummaAdd.DescId = zc_MIFloat_RateSummaAdd()
-                                        
+
+             LEFT JOIN MovementItemFloat AS MIFloat_RateSummaExp
+                                         ON MIFloat_RateSummaExp.MovementItemId = MovementItem.Id
+                                        AND MIFloat_RateSummaExp.DescId = zc_MIFloat_RateSummaExp()
+
              LEFT JOIN MovementItemString AS MIString_Comment
                                           ON MIString_Comment.MovementItemId = MovementItem.Id 
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -427,6 +432,7 @@ ALTER FUNCTION gpSelect_MI_Transport (Integer, Boolean, Boolean, TVarChar) OWNER
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 29.01.19         * add RateSummaExp
  24.10.17         * add RateSummaAdd
  02.02.17         * add TaxiMore
  17.04.16         *

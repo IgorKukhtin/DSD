@@ -228,12 +228,6 @@
           Name = 'SettingsServiceId'
           Value = '3175171'
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isWith'
-          Value = 'True'
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -4654,13 +4648,7 @@
       GuiParams = <
         item
           Name = 'SettingsServiceId'
-          Value = '3175171'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isWith'
-          Value = 'false'
-          DataType = ftBoolean
+          Value = '-3175171'
           MultiSelectSeparator = ','
         end>
       isShowModal = False

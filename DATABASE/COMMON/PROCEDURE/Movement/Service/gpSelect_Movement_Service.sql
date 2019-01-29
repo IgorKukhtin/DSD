@@ -3,16 +3,16 @@
 DROP FUNCTION IF EXISTS gpSelect_Movement_Service (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Service (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Service (TDateTime, TDateTime, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_Service (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Service (TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Service (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Service(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
     IN inJuridicalBasisId  Integer   , -- Главное юр.лицо
-    IN inSettingsServiceId Integer   , -- 
-    IN inIsWith            Boolean   , -- исключать inSettingsServiceId Да/Нет
+    IN inSettingsServiceId Integer   , --  inSettingsServiceId > 0 тогда ограничение, если < 0 - тогда исключение
+    --IN inIsWith            Boolean   , -- исключать inSettingsServiceId Да/Нет
     IN inIsErased          Boolean   ,
     IN inSession           TVarChar    -- сессия пользователя
 )
@@ -76,15 +76,15 @@ BEGIN
                                                           ON Object_SettingsServiceItem.Id = ObjectLink_SettingsService.ObjectId
                                                          AND Object_SettingsServiceItem.isErased = FALSE
                                     WHERE Object_SettingsService.DescId = zc_Object_SettingsService()
-                                      AND (Object_SettingsService.Id = inSettingsServiceId AND inSettingsServiceId <> 0) --3175171 --
+                                      AND (Object_SettingsService.Id = ABS(inSettingsServiceId) AND inSettingsServiceId <> 0) --3175171 --
                                       AND Object_SettingsService.isErased = FALSE
                                     )
 
            , tmpInfoMoney_View AS (SELECT Object_InfoMoney_View.*
                                    FROM Object_InfoMoney_View
                                         LEFT JOIN tmpInfoMoneyDestination ON tmpInfoMoneyDestination.InfoMoneyDestinationId = Object_InfoMoney_View.InfoMoneyDestinationId
-                                   WHERE (COALESCE (tmpInfoMoneyDestination.InfoMoneyDestinationId,0) <> 0 AND inSettingsServiceId <> 0 AND inIsWith = TRUE)
-                                      OR (COALESCE (tmpInfoMoneyDestination.InfoMoneyDestinationId,0) = 0 AND inSettingsServiceId <> 0 AND inIsWith = FALSE)
+                                   WHERE (COALESCE (tmpInfoMoneyDestination.InfoMoneyDestinationId,0) <> 0 AND inSettingsServiceId > 0)
+                                      OR (COALESCE (tmpInfoMoneyDestination.InfoMoneyDestinationId,0) = 0 AND inSettingsServiceId < 0)
                                       OR inSettingsServiceId = 0
                                    )
 
