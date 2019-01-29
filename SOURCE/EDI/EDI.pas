@@ -2815,7 +2815,9 @@ begin
   try
     // Установка ключей
     if UserSign <> ''
-    then FileName := ExtractFilePath(ParamStr(0)) + UserSign
+    then if ExtractFilePath(UserSign) <> ''
+         then FileName := UserSign
+         else FileName := ExtractFilePath(ParamStr(0)) + UserSign
     else FileName := ExtractFilePath(ParamStr(0)) + 'Ключ - Неграш О.В..ZS2';
 
 	  ComSigner.SetPrivateKeyFile (euKeyTypeAccountant, FileName, '24447183', false); // бухгалтер

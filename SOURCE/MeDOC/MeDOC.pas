@@ -951,7 +951,7 @@ begin
   // ”сього обс€ги постачанн€ при експорт≥ товар≥в за ставкою 0% (код ставки 901)
   if (HeaderDataSet.FieldByName('VATPercent').AsFloat < 100)
   then ZVIT.DECLARBODY.ChildNodes['R01G9'].SetAttributeNS('nil', NS_URI, true)
-  else ZVIT.DECLARBODY.R01G9 := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummMVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+  else ZVIT.DECLARBODY.R01G9 := ReplaceStr(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
   // ”сього обс€ги постачанн€ на митн≥й територ≥њ ”крањни за ставкою 0% (код ставки 902)
   ZVIT.DECLARBODY.ChildNodes['R01G8'].SetAttributeNS('nil', NS_URI, true);
   // ”сього обс€ги операц≥й, зв≥льнених в≥д оподаткуванн€ (код ставки 903)
