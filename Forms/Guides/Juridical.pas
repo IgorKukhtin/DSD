@@ -99,6 +99,7 @@ type
     isPriceWithVAT: TcxGridDBColumn;
     isGUID: TcxGridDBColumn;
     GUID: TcxGridDBColumn;
+    INN: TcxGridDBColumn;
   private
     { Private declarations }
   public

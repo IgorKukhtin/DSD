@@ -23,7 +23,7 @@ BEGIN
      vbOperDate_to:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbOperDate_to);
 
 
-     -- Перепроведение, что б "затраты" оказались в "Расходы будущих периодов"
+     -- Перепроведение, что б "затраты" оказались во ВСЕХ "Расходы будущих периодов"
      IF vbMovementDescId_from = zc_Movement_TransportService() -- AND 1=0
      THEN
          PERFORM gpReComplete_Movement_TransportService (inMovementId, inUserId :: TVarChar);
@@ -63,9 +63,16 @@ BEGIN
         GROUP BY CLO_InfoMoney.ObjectId
         ;
      -- определили документы в которые надо распределить "затрат"
-     INSERT INTO _tmpItem_To (MovementId_cost, MovementId_in, InfoMoneyId, OperSumm, OperSumm_calc)
+     INSERT INTO _tmpItem_To (MovementId_cost, MovementId_in, InfoMoneyId, OperCount, OperSumm, OperSumm_calc)
         -- Расходы будущих периодов
-        SELECT Movement.Id AS MovementId_cost, Movement_Income.Id AS MovementId_in, _tmpItem_From.InfoMoneyId, MovementFloat_TotalSumm.ValueData AS OperSumm, 0 AS OperSumm_calc
+        SELECT Movement.Id AS MovementId_cost, Movement_Income.Id AS MovementId_in, _tmpItem_From.InfoMoneyId
+               -- ВЕС
+             , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                              THEN MovementItem.Amount * COALESCE (ObjectFloat_Weight.ValueData, 0)
+                         ELSE MovementItem.Amount
+                    END) AS OperCount
+             , 0 /*MovementFloat_TotalSumm.ValueData*/ AS OperSumm
+             , 0 AS OperSumm_calc
         FROM MovementFloat
              INNER JOIN Movement ON Movement.Id = MovementFloat.MovementId
                                 AND (Movement.StatusId = zc_Enum_Status_Complete()
@@ -73,22 +80,33 @@ BEGIN
              INNER JOIN Movement AS Movement_Income ON Movement_Income.Id       = Movement.ParentId
                                                    AND Movement_Income.DescId   = zc_Movement_Income()
                                                    AND Movement_Income.StatusId = zc_Enum_Status_Complete()
-             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+             INNER JOIN MovementItem ON MovementItem.Id       = Movement_Income.MovementId
+                                    AND MovementItem.DescId   = zc_MI_Master()
+                                    AND MovementItem.isErased = FALSE
+             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                   ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
+                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                                  AND tmpMI.DescId = zc_MI_Master()
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+             /*LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                      ON MovementFloat_TotalSumm.MovementId = Movement_Income.Id
-                                    AND MovementFloat_TotalSumm.DescId     = zc_MovementFloat_TotalSumm()
+                                    AND MovementFloat_TotalSumm.DescId     = zc_MovementFloat_TotalSumm()*/
              CROSS JOIN _tmpItem_From
         WHERE MovementFloat.ValueData = vbMovementId_from
           AND MovementFloat.DescId    = zc_MovementFloat_MovementId()
+        GROUP BY Movement.Id, Movement_Income.Id, _tmpItem_From.InfoMoneyId
         ;
 
      -- распределение "затрат"
      UPDATE _tmpItem_To SET OperSumm_calc = tmp.OperSumm_calc
-     FROM (WITH tmpItem_To_summ AS (SELECT _tmpItem_To.InfoMoneyId, SUM (_tmpItem_To.OperSumm) AS OperSumm FROM _tmpItem_To GROUP BY _tmpItem_To.InfoMoneyId)
+     FROM (WITH tmpItem_To_summ AS (SELECT _tmpItem_To.InfoMoneyId, SUM (_tmpItem_To.OperCount) AS OperCount FROM _tmpItem_To GROUP BY _tmpItem_To.InfoMoneyId)
                        , tmpRes AS (SELECT _tmpItem_To.MovementId_cost
                                          , _tmpItem_To.InfoMoneyId
-                                         , CAST (_tmpItem_From.OperSumm * _tmpItem_To.OperSumm / tmpItem_To_summ.OperSumm AS Numeric(16, 2)) AS OperSumm_calc
+                                         , CAST (_tmpItem_From.OperSumm * _tmpItem_To.OperCount / tmpItem_To_summ.OperCount AS Numeric(16, 2)) AS OperSumm_calc
                                            -- № п/п
-                                         , ROW_NUMBER() OVER (PARTITION BY _tmpItem_To.InfoMoneyId ORDER BY _tmpItem_To.OperSumm DESC) AS Ord
+                                         , ROW_NUMBER() OVER (PARTITION BY _tmpItem_To.InfoMoneyId ORDER BY _tmpItem_To.OperCount DESC) AS Ord
                                     FROM _tmpItem_To
                                          INNER JOIN tmpItem_To_summ ON tmpItem_To_summ.InfoMoneyId = _tmpItem_To.InfoMoneyId
                                                                    AND tmpItem_To_summ.OperSumm    <> 0

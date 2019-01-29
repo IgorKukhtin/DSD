@@ -70,6 +70,14 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 70
       end
+      object INN: TcxGridDBColumn
+        Caption = #1048#1053#1053
+        DataBinding.FieldName = 'INN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object InvNumberBranch: TcxGridDBColumn
         Caption = #8470' '#1092#1080#1083#1080#1072#1083#1072
         DataBinding.FieldName = 'InvNumberBranch'

@@ -13,7 +13,7 @@ BEGIN
      -- таблица - затраты
      CREATE TEMP TABLE _tmpItem_From (InfoMoneyId Integer, OperSumm TFloat);
      -- таблица - затраты
-     CREATE TEMP TABLE _tmpItem_To (MovementId_cost Integer, MovementId_in Integer, InfoMoneyId Integer, OperSumm TFloat, OperSumm_calc TFloat);
+     CREATE TEMP TABLE _tmpItem_To (MovementId_cost Integer, MovementId_in Integer, InfoMoneyId Integer, OperCount TFloat, OperSumm TFloat, OperSumm_calc TFloat);
 
 
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках

@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
                InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar,
                InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar,
-               OKPO TVarChar, InvNumberBranch TVarChar,
+               OKPO TVarChar, INN TVarChar, InvNumberBranch TVarChar,
                PriceListId Integer, PriceListName TVarChar,
                PriceListPromoId Integer, PriceListPromoName TVarChar,
                PriceListId_Prior Integer, PriceListName_Prior TVarChar,
@@ -122,6 +122,7 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyName_all
 
        , ObjectHistory_JuridicalDetails_View.OKPO
+       , ObjectHistory_JuridicalDetails_View.INN
        , ObjectHistory_JuridicalDetails_View.InvNumberBranch
 
        , Object_PriceList.Id         AS PriceListId

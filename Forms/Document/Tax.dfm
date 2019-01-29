@@ -2,8 +2,9 @@ inherited TaxForm: TTaxForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 668
   ClientWidth = 1067
+  ExplicitLeft = -294
   ExplicitWidth = 1083
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -178,7 +179,6 @@ inherited TaxForm: TTaxForm
     Width = 1067
     Height = 137
     TabOrder = 3
-    ExplicitLeft = -40
     ExplicitWidth = 1067
     ExplicitHeight = 137
     inherited edInvNumber: TcxTextEdit
@@ -431,7 +431,7 @@ inherited TaxForm: TTaxForm
   object cxLabel11: TcxLabel [4]
     Left = 869
     Top = 85
-    Caption = #1048#1053#1053' '#1076#1083#1103' '#1042#1089#1077#1093' '#1080#1083#1080' 1-'#1086#1075#1086' '#1076#1086#1082'.'
+    Caption = #1048#1053#1053' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082'. / '#1080#1085#1072#1095#1077' '#1076#1083#1103' '#1042#1089#1077#1093
   end
   object edINN: TcxTextEdit [5]
     Left = 869
