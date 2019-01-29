@@ -27,8 +27,14 @@ BEGIN
    -- сохранили св-во <Код GLN - Поставщик>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Retail_GLNCodeCorporate(), ioId, inGLNCodeCorporate);
 
-   -- сохранили св-во <>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Retail_OKPO(), ioId, inOKPO);
+   IF inOKPO = ''
+   THEN
+       -- сохранили св-во <>
+       PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Retail_OKPO(), ioId, NULL);
+   ELSE
+       -- сохранили св-во <>
+       PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Retail_OKPO(), ioId, inOKPO);
+   END IF;
 
    -- сохранили связь с <Сотрудник (Ответственный представитель маркетингового отдела)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Retail_PersonalMarketing(), ioId, inPersonalMarketingId);  

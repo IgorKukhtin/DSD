@@ -44,8 +44,15 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Retail_GLNCode(), ioId, inGLNCode);
    -- сохранили св-во <Код GLN - Поставщик>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Retail_GLNCodeCorporate(), ioId, inGLNCodeCorporate);
-   -- сохранили св-во <>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Retail_OKPO(), ioId, inOKPO);
+   
+   IF inOKPO = ''
+   THEN
+       -- сохранили св-во <>
+       PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Retail_OKPO(), ioId, NULL);
+   ELSE
+       -- сохранили св-во <>
+       PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Retail_OKPO(), ioId, inOKPO);
+   END IF;
 
    -- сохранили св-во <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Retail_OperDateOrder(), ioId, inOperDateOrder);

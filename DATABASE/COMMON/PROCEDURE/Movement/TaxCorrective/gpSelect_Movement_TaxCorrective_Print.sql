@@ -882,7 +882,7 @@ BEGIN
            , CASE WHEN vbOperDate_begin >= '01.12.2018' 
                    AND OH_JuridicalDetails_From.INN IN ('100000000000', '300000000000')
                   THEN ''
-                  ELSE OH_JuridicalDetails_From.OKPO
+                  ELSE COALESCE (ObjectString_Retail_OKPO.ValueData, OH_JuridicalDetails_From.OKPO)
              END :: TVarChar AS OKPO_From
            , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) IN ('100000000000', '300000000000')
                   THEN ''
@@ -1080,6 +1080,14 @@ BEGIN
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
                                                                 ON OH_JuridicalDetails_From.JuridicalId = tmpMovement_Data.FromId
                                                                AND COALESCE (tmpMLM_Child.OperDate_Child, tmpMI.OperDate) >= OH_JuridicalDetails_From.StartDate AND COALESCE (tmpMLM_Child.OperDate_Child, tmpMI.OperDate) < OH_JuridicalDetails_From.EndDate
+
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = OH_JuridicalDetails_From.JuridicalId
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+            LEFT JOIN ObjectString AS ObjectString_Retail_OKPO
+                                   ON ObjectString_Retail_OKPO.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                                  AND ObjectString_Retail_OKPO.DescId = zc_ObjectString_Retail_OKPO()
+                                  
 
             LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = tmpMI.GoodsGroupId
             LEFT JOIN tmpTaxImport ON tmpTaxImport.GoodsGroupId = tmpMI.GoodsGroupId

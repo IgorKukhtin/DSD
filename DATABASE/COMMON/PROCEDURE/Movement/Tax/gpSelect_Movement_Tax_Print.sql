@@ -365,7 +365,7 @@ order by 4*/
            , CASE WHEN vbOperDate_begin >= '01.12.2018' 
                    AND COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) IN ('100000000000', '300000000000')
                   THEN ''
-                  ELSE OH_JuridicalDetails_To.OKPO
+                  ELSE COALESCE (ObjectString_Retail_OKPO.ValueData, OH_JuridicalDetails_To.OKPO)
              END :: TVarChar AS OKPO_To
            , CASE WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) IN ('100000000000', '300000000000')
                   THEN ''
@@ -445,14 +445,14 @@ order by 4*/
            , CASE WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
                     OR vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                     OR vbCalcNDSPayer_INN <> ''
-                    OR (vbOperDate_begin >= '01.12.2018' AND OH_JuridicalDetails_To.OKPO = '100000000000')
+                    OR (vbOperDate_begin >= '01.12.2018' AND COALESCE (ObjectString_Retail_OKPO.ValueData, OH_JuridicalDetails_To.OKPO) = '100000000000')
                    THEN 'X' 
                    ELSE '' END                  AS NotNDSPayer
 
            , CASE WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
                     OR vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
                     OR vbCalcNDSPayer_INN <> ''
-                    OR (vbOperDate_begin >= '01.12.2018' AND OH_JuridicalDetails_To.OKPO = '100000000000')
+                    OR (vbOperDate_begin >= '01.12.2018' AND COALESCE (ObjectString_Retail_OKPO.ValueData, OH_JuridicalDetails_To.OKPO) = '100000000000')
                   THEN TRUE ELSE FALSE END :: Boolean   AS isNotNDSPayer
 
              -- 1 - (зазначається відповідний тип причини)
@@ -460,7 +460,7 @@ order by 4*/
                        THEN '0'
                   WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
                     OR vbCalcNDSPayer_INN <> ''
-                    OR (vbOperDate_begin >= '01.12.2018' AND OH_JuridicalDetails_To.OKPO = '100000000000')
+                    OR (vbOperDate_begin >= '01.12.2018' AND COALESCE (ObjectString_Retail_OKPO.ValueData, OH_JuridicalDetails_To.OKPO) = '100000000000')
                        THEN '0'
              END AS NotNDSPayerC1
              -- 2 - (зазначається відповідний тип причини)
@@ -468,7 +468,7 @@ order by 4*/
                        THEN '7'
                   WHEN COALESCE (MovementString_ToINN.ValueData, OH_JuridicalDetails_To.INN) = vbNotNDSPayer_INN
                     OR vbCalcNDSPayer_INN <> ''
-                    OR (vbOperDate_begin >= '01.12.2018' AND OH_JuridicalDetails_To.OKPO = '100000000000')
+                    OR (vbOperDate_begin >= '01.12.2018' AND COALESCE (ObjectString_Retail_OKPO.ValueData, OH_JuridicalDetails_To.OKPO) = '100000000000')
                        THEN '2'
              END AS NotNDSPayerC2
 
@@ -600,6 +600,10 @@ order by 4*/
             LEFT JOIN ObjectString AS ObjectString_Retail_GLNCodeCorporate
                                    ON ObjectString_Retail_GLNCodeCorporate.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
                                   AND ObjectString_Retail_GLNCodeCorporate.DescId = zc_ObjectString_Retail_GLNCodeCorporate()
+
+            LEFT JOIN ObjectString AS ObjectString_Retail_OKPO
+                                   ON ObjectString_Retail_OKPO.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                                  AND ObjectString_Retail_OKPO.DescId = zc_ObjectString_Retail_OKPO()
 
             LEFT JOIN ObjectString AS ObjectString_JuridicalFrom_GLNCode
                                    ON ObjectString_JuridicalFrom_GLNCode.ObjectId = OH_JuridicalDetails_From.JuridicalId
@@ -1025,6 +1029,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.01.19         *
  05.11.18         *
  04.03.18         * MovementString_ToINN.ValueData
  10.03.17         *
