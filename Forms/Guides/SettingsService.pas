@@ -41,8 +41,6 @@ type
     spUpdate_isPriceClose_Yes: TdsdStoredProc;
     spUpdate_isPriceClose_No: TdsdStoredProc;
     bbUpdate: TdxBarButton;
-    spUpdate_isPriceCloseOrder_Yes: TdsdStoredProc;
-    spUpdate_isPriceCloseOrder_No: TdsdStoredProc;
     cxSplitter1: TcxSplitter;
     dsdUpdateChild: TdsdUpdateDataSet;
     dsdSetErasedChild: TdsdUpdateErased;

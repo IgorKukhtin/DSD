@@ -603,20 +603,17 @@ inherited ServiceJournalForm: TServiceJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsWith'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'isWith'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inIsErased'
         Value = False
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 96
@@ -800,8 +797,8 @@ inherited ServiceJournalForm: TServiceJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isWith'
         Value = 'false'
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 392

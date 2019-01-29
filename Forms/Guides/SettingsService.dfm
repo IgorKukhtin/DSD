@@ -698,8 +698,8 @@ inherited SettingsServiceForm: TSettingsServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 240
-    Top = 75
+    Left = 496
+    Top = 187
   end
   object spUpdate_isPriceClose_No: TdsdStoredProc
     StoredProcName = 'gpUpdate_JuridicalSettings_isPriceClose'
@@ -730,56 +730,8 @@ inherited SettingsServiceForm: TSettingsServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 264
-    Top = 203
-  end
-  object spUpdate_isPriceCloseOrder_Yes: TdsdStoredProc
-    StoredProcName = 'gpUpdate_JuridicalSettings_isPriceCloseOrder'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisPriceCloseOrder'
-        Value = 'TRUE'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 320
-    Top = 123
-  end
-  object spUpdate_isPriceCloseOrder_No: TdsdStoredProc
-    StoredProcName = 'gpUpdate_JuridicalSettings_isPriceCloseOrder'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisPriceCloseOrder'
-        Value = 'FALSE'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 312
-    Top = 251
+    Left = 496
+    Top = 267
   end
   object spErasedUnErasedChild: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
