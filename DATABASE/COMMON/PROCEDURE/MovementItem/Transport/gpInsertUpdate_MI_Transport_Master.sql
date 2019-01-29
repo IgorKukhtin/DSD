@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_MI_Transport_Master()
 
-DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,  TFloat,Integer, Integer, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,  TFloat,Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
@@ -21,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
     IN inTaxi                      TFloat    , -- Сумма на такси
     IN inTaxiMore                  TFloat    , -- Сумма на такси(водитель дополнительный)
  INOUT ioRateSummaAdd              TFloat    , -- Сумма доплаты(дальнобойные)
+    IN inRateSummaExp              TFloat    , -- Сумма командировочных экспедитору
    OUT outRatePrice_Calc           TFloat    , -- Сумма грн (дальнобойные)
     IN inFreightId                 Integer   , -- Название груза
     IN inRouteKindId_Freight       Integer   , -- Типы маршрутов(груз)
@@ -160,6 +162,8 @@ BEGIN
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TimePrice(), ioId, inTimePrice);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RateSummaAdd(), ioId, ioRateSummaAdd);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RateSummaExp(), ioId, inRateSummaExp);
 
    IF COALESCE (inTimePrice,0) <> 0 -- OR 1=1 -- !!!временно - что б всегда!!!
    THEN

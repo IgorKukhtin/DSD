@@ -381,6 +381,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = RateSummaAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RateSummaExp
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -441,6 +446,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = RateSummaAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RateSummaExp
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.GoToNextCellOnEnter = True
@@ -637,6 +647,17 @@
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1093
+            Width = 67
+          end
+          object RateSummaExp: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1072#1085#1076'. '#1101#1082#1089#1087'., '#1075#1088#1085'.'
+            DataBinding.FieldName = 'RateSummaExp'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1093' '#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088#1091
             Width = 67
           end
           object Taxi: TcxGridDBColumn
@@ -1510,7 +1531,7 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 137
+    Left = 169
     Top = 226
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1642,6 +1663,9 @@
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintTo: TdsdPrintAction
       Category = 'DSDLib'
@@ -1678,6 +1702,9 @@
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintAdmin: TdsdPrintAction
       Category = 'DSDLib'
@@ -1705,6 +1732,9 @@
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -1958,6 +1988,14 @@
           Value = Null
           Component = MasterCDS
           ComponentItem = 'RateSummaAdd'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RateSummaExp'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RateSummaExp'
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
@@ -2884,6 +2922,15 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inRateSummaExp'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'RateSummaExp'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outRatePrice_Calc'
         Value = Null
         Component = MasterCDS
@@ -3389,8 +3436,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 98
-    Top = 309
+    Left = 154
+    Top = 317
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -3732,8 +3779,8 @@
     Top = 267
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 143
-    Top = 214
+    Left = 191
+    Top = 254
   end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -4053,8 +4100,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 75
-    Top = 314
+    Left = 115
+    Top = 306
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -4307,8 +4354,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 130
-    Top = 349
+    Left = 162
+    Top = 365
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
