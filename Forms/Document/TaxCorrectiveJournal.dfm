@@ -218,6 +218,23 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
+          object OKPO_Retail: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054' '#1076#1083#1103' '#1090#1086#1088#1075'. '#1089#1077#1090#1080
+            DataBinding.FieldName = 'OKPO_Retail'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object isOKPO_Retail: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054' '#1076#1083#1103' '#1090#1086#1088#1075'. '#1089#1077#1090#1080
+            DataBinding.FieldName = 'isOKPO_Retail'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1050#1055#1054' '#1076#1083#1103' '#1090#1086#1088#1075'. '#1089#1077#1090#1080' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 50
+          end
           object INN_From: TcxGridDBColumn
             Caption = #1048#1053#1053
             DataBinding.FieldName = 'INN_From'

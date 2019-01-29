@@ -1059,13 +1059,15 @@ end;
 
 procedure TLoadFormTest.LoadTaxFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxForm');
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxJournalForm'));
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxJournalForm');
+  exit;
    //08.04.14 Dima
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxJournalChoiceForm');
 
@@ -1082,8 +1084,10 @@ end;
 
 procedure TLoadFormTest.LoadTaxCorrectiveTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxCorrectiveForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxCorrectiveForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxCorrectiveJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxCorrectiveJournalForm');
 end;

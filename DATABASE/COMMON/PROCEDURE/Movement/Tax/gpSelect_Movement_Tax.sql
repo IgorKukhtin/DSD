@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , TotalCount TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , InvNumberPartner Integer
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, OKPO_To TVarChar
+             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, OKPO_To TVarChar, OKPO_Retail TVarChar
              , INN_To TVarChar
              , UnitCode Integer, UnitName TVarChar, PartnerCode Integer, PartnerName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , isMedoc Boolean
              , isCopy Boolean
              , isINN Boolean
+             , isOKPO_Retail Boolean
              , Comment TVarChar 
              , PersonalSigningName TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
@@ -83,6 +84,7 @@ BEGIN
            , Object_To.Id                      		    AS ToId
            , Object_To.ValueData               		    AS ToName
            , ObjectHistory_JuridicalDetails_View.OKPO       AS OKPO_To
+           , ObjectString_Retail_OKPO.ValueData             AS OKPO_Retail
            , CASE WHEN Movement.Id IN (-- Tax
                                        6922620
                                      , 6922564
@@ -137,6 +139,7 @@ BEGIN
            , COALESCE (MovementBoolean_Medoc.ValueData, FALSE)                 AS isMedoc
            , COALESCE (MovementBoolean_isCopy.ValueData, FALSE)    :: Boolean  AS isCopy
            , CASE WHEN COALESCE (MovementString_ToINN.ValueData, '') <> '' THEN TRUE ELSE FALSE END AS isINN
+           , CASE WHEN COALESCE (ObjectString_Retail_OKPO.ValueData, '') <> '' THEN TRUE ELSE FALSE END AS isOKPO_Retail
            , MovementString_Comment.ValueData         AS Comment
 
            , COALESCE (Object_PersonalSigning.PersonalName, COALESCE (Object_PersonalBookkeeper_View.PersonalName, ''))  ::TVarChar    AS PersonalSigningName
@@ -225,6 +228,13 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_To.Id
+
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectHistory_JuridicalDetails_View.JuridicalId
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+            LEFT JOIN ObjectString AS ObjectString_Retail_OKPO
+                                   ON ObjectString_Retail_OKPO.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                                  AND ObjectString_Retail_OKPO.DescId = zc_ObjectString_Retail_OKPO()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
