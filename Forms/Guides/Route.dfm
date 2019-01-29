@@ -53,31 +53,31 @@ object RouteForm: TRouteForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 54
+        Width = 43
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 176
+        Width = 142
       end
       object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentVert = vaCenter
-        Width = 125
+        Width = 101
       end
       object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentVert = vaCenter
-        Width = 142
+        Width = 114
       end
       object RouteKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
         DataBinding.FieldName = 'RouteKindName'
         HeaderAlignmentVert = vaCenter
-        Width = 92
+        Width = 74
       end
       object FreightName: TcxGridDBColumn
         Caption = #1043#1088#1091#1079
@@ -91,7 +91,7 @@ object RouteForm: TRouteForm
         DataBinding.FieldName = 'RouteGroupName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 89
+        Width = 72
       end
       object RateSumma: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076'.'
@@ -103,7 +103,7 @@ object RouteForm: TRouteForm
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1093
         Options.Editing = False
-        Width = 74
+        Width = 59
       end
       object TimePrice: TcxGridDBColumn
         Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1095' ('#1082#1086#1084#1084#1072#1085#1076'.)'
@@ -115,7 +115,7 @@ object RouteForm: TRouteForm
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
         Options.Editing = False
-        Width = 104
+        Width = 84
       end
       object RatePrice: TcxGridDBColumn
         Caption = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073'.)'
@@ -127,7 +127,7 @@ object RouteForm: TRouteForm
         HeaderGlyphAlignmentHorz = taCenter
         HeaderHint = #1057#1090#1072#1074#1082#1072' '#1075#1088#1085'/'#1082#1084' ('#1076#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077')'
         Options.Editing = False
-        Width = 104
+        Width = 84
       end
       object RateSummaAdd: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1076#1086#1087#1083#1072#1090#1072' ('#1076#1072#1083#1100#1085#1086#1073'.)'
@@ -137,7 +137,18 @@ object RouteForm: TRouteForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 104
+        Width = 83
+      end
+      object RateSummaExp: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1072#1085#1076'. '#1101#1082#1089#1087'.'
+        DataBinding.FieldName = 'RateSummaExp'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1093' '#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088#1091
+        Options.Editing = False
+        Width = 95
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -525,6 +536,14 @@ object RouteForm: TRouteForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'RateSummaAdd'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RateSummaExp'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'RateSummaExp'
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>

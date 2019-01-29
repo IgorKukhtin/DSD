@@ -60,6 +60,8 @@ type
     edTimePrice: TcxCurrencyEdit;
     cxLabel9: TcxLabel;
     edRateSummaAdd: TcxCurrencyEdit;
+    cxLabel10: TcxLabel;
+    edRateSummaExp: TcxCurrencyEdit;
 
   private
     { Private declarations }

@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Route(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , RateSumma Tfloat, RatePrice Tfloat, TimePrice Tfloat, RateSummaAdd Tfloat
+             , RateSumma Tfloat, RatePrice Tfloat, TimePrice Tfloat
+             , RateSummaAdd Tfloat, RateSummaExp Tfloat
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , RouteKindId Integer, RouteKindCode Integer, RouteKindName TVarChar
@@ -32,6 +33,7 @@ $BODY$BEGIN
            , CAST (0 as TFloat)   AS RatePrice
            , CAST (0 as TFloat)   AS TimePrice
            , CAST (0 as TFloat)   AS RateSummaAdd
+           , CAST (0 as TFloat)   AS RateSummaExp
                       
            , CAST (0 as Integer)   AS UnitId 
            , CAST (0 as Integer)   AS UnitCode
@@ -67,6 +69,7 @@ $BODY$BEGIN
            , ObjectFloat_RatePrice.ValueData    AS RatePrice
            , ObjectFloat_TimePrice.ValueData    AS TimePrice
            , ObjectFloat_RateSummaAdd.ValueData AS RateSummaAdd
+           , ObjectFloat_RateSummaExp.ValueData AS RateSummaExp
                       
            , Object_Unit.Id         AS UnitId 
            , Object_Unit.ObjectCode AS UnitCode
@@ -105,6 +108,9 @@ $BODY$BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_RateSummaAdd
                                   ON ObjectFloat_RateSummaAdd.ObjectId = Object_Route.Id
                                  AND ObjectFloat_RateSummaAdd.DescId = zc_ObjectFloat_Route_RateSummaAdd()
+            LEFT JOIN ObjectFloat AS ObjectFloat_RateSummaExp
+                                  ON ObjectFloat_RateSummaExp.ObjectId = Object_Route.Id
+                                 AND ObjectFloat_RateSummaExp.DescId = zc_ObjectFloat_Route_RateSummaExp()
 
             LEFT JOIN ObjectLink AS ObjectLink_Route_Unit ON ObjectLink_Route_Unit.ObjectId = Object_Route.Id
                                                          AND ObjectLink_Route_Unit.DescId = zc_ObjectLink_Route_Unit()
@@ -139,6 +145,7 @@ ALTER FUNCTION gpGet_Object_Route (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.01.19         * add RateSummaExp
  24.10.17         * add RateSummaAdd
  24.05.16         * add TimePrice
  20.04.15         * RouteGroup                
