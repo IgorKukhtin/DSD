@@ -120,10 +120,10 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-
+  {
   LoadReportFromFile('Начисления услуг(итоги)', ReportPath + '\Финансовый Учет\Начисления услуг(итоги).fr3');
   LoadReportFromFile('Начисления услуг', ReportPath + '\Финансовый Учет\Начисления услуг.fr3');
-  {exit;
+  exit;
   LoadReportFromFile('По кассе (по услугам)', ReportPath + '\Финансовый Учет\По кассе (по услугам).fr3');
   exit;
 
@@ -153,8 +153,10 @@ begin
   LoadReportFromFile('Отчет движение по товару (Итого)', ReportPath + '\Отчеты (товарные)\Отчет движение по товару (Итого).fr3');
   LoadReportFromFile('Отчет движение по товару (МО)', ReportPath + '\Отчеты (товарные)\Отчет движение по товару (МО).fr3');
   LoadReportFromFile('Отчет движение по товару (Авто)', ReportPath + '\Отчеты (товарные)\Отчет движение по товару (Авто).fr3');
+  }
+  LoadReportFromFile('Отчет движение по товару (по подразделениям)', ReportPath + '\Отчеты (товарные)\Отчет движение по товару (по подразделениям).fr3');
   exit;
-
+  {
   // Другие
   LoadReportFromFile('Шаблон по точкам доставки', ReportPath + '\Отчеты (товарные)\Шаблон по точкам доставки.fr3');
 
