@@ -17,12 +17,20 @@ $BODY$
    DECLARE vbStatusId Integer;
    DECLARE vbDescId Integer;
 
+   DECLARE vbMemberId      Integer;
+   DECLARE vbMemberTradeId Integer;
+
    DECLARE Cursor1 refcursor;
    DECLARE Cursor2 refcursor;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Reestr());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- Определяется
+     vbMemberId     := COALESCE ((SELECT ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inPersonalId      AND OL.DescId = zc_ObjectLink_Personal_Member()), 0);
+     vbMemberTradeId:= COALESCE ((SELECT ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inPersonalTradeId AND OL.DescId = zc_ObjectLink_Personal_Member()), 0);
 
      -- Результат
      OPEN Cursor1 FOR
@@ -151,14 +159,24 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
                                  ON ObjectLink_Partner_Personal.ObjectId = Object_From.Id
                                 AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
-            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Partner_Personal.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                 ON ObjectLink_Personal_Member.ObjectId = ObjectLink_Partner_Personal.ChildObjectId
+                                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Personal_Member.ChildObjectId -- ObjectLink_Partner_Personal.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
                                  ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_From.Id
                                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-            LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_Partner_PersonalTrade.ChildObjectId
-       WHERE (Object_Personal.Id = inPersonalId OR inPersonalId = 0)
-         AND (Object_PersonalTrade.Id = inPersonalTradeId OR inPersonalTradeId = 0)
+            LEFT JOIN ObjectLink AS ObjectLink_PersonalTrade_Member
+                                 ON ObjectLink_PersonalTrade_Member.ObjectId = ObjectLink_Partner_PersonalTrade.ChildObjectId
+                                AND ObjectLink_PersonalTrade_Member.DescId = zc_ObjectLink_Personal_Member()
+            LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_PersonalTrade_Member.ChildObjectId -- ObjectLink_Partner_PersonalTrade.ChildObjectId
+
+    -- WHERE (Object_Personal.Id      = inPersonalId      OR inPersonalId      = 0)
+    --   AND (Object_PersonalTrade.Id = inPersonalTradeId OR inPersonalTradeId = 0)
+       WHERE (Object_Personal.Id      = vbMemberId        OR vbMemberId        = 0)
+         AND (Object_PersonalTrade.Id = vbMemberTradeId   OR vbMemberTradeId   = 0)
+
        ORDER BY Object_From.ValueData
               , MovementDate_OperDatePartner.ValueData
 ;

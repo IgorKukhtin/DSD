@@ -25,12 +25,20 @@ $BODY$
    DECLARE vbDateDescId     Integer;
    DECLARE vbMILinkObjectId Integer;
 
+   DECLARE vbMemberId      Integer;
+   DECLARE vbMemberTradeId Integer;
+
    DECLARE Cursor1 refcursor;
    DECLARE Cursor2 refcursor;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Reestr());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- Определяется
+     vbMemberId     := COALESCE ((SELECT ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inPersonalId      AND OL.DescId = zc_ObjectLink_Personal_Member()), 0);
+     vbMemberTradeId:= COALESCE ((SELECT ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inPersonalTradeId AND OL.DescId = zc_ObjectLink_Personal_Member()), 0);
 
   /*  -- очень важная проверка
     IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
@@ -246,12 +254,18 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
                                  ON ObjectLink_Partner_Personal.ObjectId = Object_To.Id
                                 AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
-            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Partner_Personal.ChildObjectId -- AND Object_Personal.DescId = zc_Object_Personal()
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                 ON ObjectLink_Personal_Member.ObjectId = ObjectLink_Partner_Personal.ChildObjectId
+                                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Personal_Member.ChildObjectId -- ObjectLink_Partner_Personal.ChildObjectId -- AND Object_Personal.DescId = zc_Object_Personal()
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
                                  ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_To.Id
                                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-            LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_Partner_PersonalTrade.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_PersonalTrade_Member
+                                 ON ObjectLink_PersonalTrade_Member.ObjectId = ObjectLink_Partner_PersonalTrade.ChildObjectId
+                                AND ObjectLink_PersonalTrade_Member.DescId = zc_ObjectLink_Personal_Member()
+            LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_PersonalTrade_Member.ChildObjectId -- ObjectLink_Partner_PersonalTrade.ChildObjectId
 
        WHERE (inIsReestrKind = TRUE AND MovementLinkObject_ReestrKind.ObjectId = inReestrKindId) 
            OR inIsReestrKind = FALSE
@@ -260,8 +274,10 @@ BEGIN
       )
       SELECT *
       FROM tmpData
-      WHERE (tmpData.PersonalId      = inPersonalId      OR inPersonalId      = 0)
-        AND (tmpData.PersonalTradeId = inPersonalTradeId OR inPersonalTradeId = 0)
+   -- WHERE (tmpData.PersonalId      = inPersonalId      OR inPersonalId      = 0)
+   --   AND (tmpData.PersonalTradeId = inPersonalTradeId OR inPersonalTradeId = 0)
+      WHERE (tmpData.PersonalId      = vbMemberId        OR vbMemberId      = 0)
+        AND (tmpData.PersonalTradeId = vbMemberTradeId   OR vbMemberTradeId = 0)
       ORDER BY tmpData.ToName
              , tmpData.OperDatePartner
       ;
@@ -281,7 +297,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Movement_ReestrPeriod_Print(inStartDate := ('26.12.2016')::TDateTime , inEndDate := ('31.12.2016')::TDateTime , inReestrKindId := 640043 , inPersonalId := 0 , inPersonalTradeId := 0 , inIsReestrKind := 'False' , inIsShowAll := 'True' ,  inSession := '5');
---select * from gpSelect_Movement_ReestrPeriod_Print(inStartDate := ('26.12.2016')::TDateTime , inEndDate := ('31.12.2016')::TDateTime , inReestrKindId := 640043 , inPersonalId := 149834, inPersonalTradeId := 0  , inIsReestrKind := 'False' , inIsShowAll := 'True' ,  inSession := '5');
---FETCH ALL "<unnamed portal 37>";
---149834
+-- SELECT * FROM gpSelect_Movement_ReestrPeriod_Print(inStartDate := ('26.12.2016')::TDateTime , inEndDate := ('31.12.2016')::TDateTime , inReestrKindId := 640043 , inPersonalId := 0 , inPersonalTradeId := 0 , inIsReestrKind := 'False' , inIsShowAll := 'True' ,  inSession := '5'); --FETCH ALL "<unnamed portal 37>";
