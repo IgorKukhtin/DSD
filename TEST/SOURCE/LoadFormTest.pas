@@ -1722,10 +1722,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SupplyBalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SupplyBalanceDialogForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsDialogForm');
 
@@ -1999,11 +1999,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalCompleteDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalCompleteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalCompleteForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InternalForm');
   exit;
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InternalDialogForm'));
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InternalDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InternalDialogForm');
 
   //Отчет Проверка кол-ва в привязке возврата
