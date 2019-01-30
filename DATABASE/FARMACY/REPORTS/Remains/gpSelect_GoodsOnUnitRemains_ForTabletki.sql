@@ -10,8 +10,8 @@ RETURNS TABLE (RowData TBlob)
 AS
 $BODY$
    DECLARE vbUserId Integer;
-
    DECLARE vbOperDate_Begin1 TDateTime;
+   DECLARE vbSiteDiscount TFloat;
 BEGIN
     -- сразу запомнили время начала выполнения Проц.
     vbOperDate_Begin1:= CLOCK_TIMESTAMP();
@@ -19,6 +19,7 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpGetUserBySession (inSession);
     vbUserId:= inSession :: Integer;
+    vbSiteDiscount := COALESCE (gpGet_GlobalConst_SiteDiscount(inSession), 0);
 
     CREATE TEMP TABLE _Result(RowData TBlob) ON COMMIT DROP;
 
@@ -100,7 +101,10 @@ BEGIN
                      INNER JOIN Object AS Object_Goods ON Object_Goods.Id = Remains.ObjectId
                 GROUP BY Object_Goods.ObjectCode
                )
- , tmpPrice AS (SELECT Object_Price_View.GoodsId, Object_Price_View.Price
+ , tmpPrice AS (SELECT Object_Price_View.GoodsId
+                     , Object_Price_View.Price AS Price
+                     , CASE WHEN vbSiteDiscount = 0 THEN Object_Price_View.Price 
+                        ELSE ROUND(Object_Price_View.Price * (100.0 - vbSiteDiscount) / 100.0, 1) END::TFloat AS PriceReserve
                 FROM Object_Price_View
                 WHERE Object_Price_View.GoodsId IN (SELECT DISTINCT Remains.ObjectId FROM Remains)
                   AND Object_Price_View.UnitId  = inUnitId
@@ -114,7 +118,7 @@ BEGIN
          ||'" Producer="'||replace(replace(replace(COALESCE(Remains.MakerName,''),'"',''),'&','&amp;'),'''','')
             ||'" Price="'||to_char(Object_Price.Price,'FM9999990.00')
          ||'" Quantity="'||CAST((Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0)) AS TVarChar)
-     ||'" PriceReserve="'||to_char(Object_Price.Price,'FM9999990.00')
+     ||'" PriceReserve="'||to_char(Object_Price.PriceReserve,'FM9999990.00')
      ||'" />'
 
       FROM Remains
@@ -188,6 +192,7 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_ForTabletki (Integer, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В.
+ 29.01.19                                                                                      *
  23.07.18                                                                                      *
  24.05.18                                                                                      *
  29.03.18                                                                                      *

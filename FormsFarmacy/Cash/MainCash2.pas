@@ -1069,8 +1069,8 @@ procedure TMainCashForm2.pm_VIP1Click(Sender: TObject);
 begin
   inherited;
   case TMenuItem(Sender).Tag of
-    0 : if actLoadVIP.Execute then LoadVIPCheck;
-    1 : if actLoadVIP_Search.Execute then LoadVIPCheck;
+    0 : if actLoadVIP.Execute and (FormParams.ParamByName('CheckId').Value > 0) then LoadVIPCheck;
+    1 : if actLoadVIP_Search.Execute and (FormParams.ParamByName('CheckId').Value > 0) then LoadVIPCheck;
   end;
 
   //
