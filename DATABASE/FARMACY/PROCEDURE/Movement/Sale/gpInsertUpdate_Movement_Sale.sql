@@ -38,7 +38,7 @@ BEGIN
       THEN
           inMemberSP:= TRIM (COALESCE (inMemberSP, ''));
 
-          vbMemberSPId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_MemberSP() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inMemberSP) LIMIT 1);
+          vbMemberSPId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_MemberSP() and UPPER(TRIM (CAST (Object.ValueData AS TVarChar))) LIKE UPPER(inMemberSP) LIMIT 1);
           
           
           IF COALESCE (vbMemberSPId,0) = 0
