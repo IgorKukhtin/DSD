@@ -303,11 +303,12 @@ end if;*/
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
                                               ON ContainerLinkObject_InfoMoney.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                /*LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
+                -- !!!прибыль текущего периода!!!
+                LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
                                               ON ContainerLinkObject_InfoMoneyDetail.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
-                                             AND ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401() -- прибыль текущего периода
-                                             */
+                                             AND ContainerLinkObject_InfoMoneyDetail.ObjectId = zc_Enum_InfoMoney_80401()
+
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Cash
                                               ON ContainerLinkObject_Cash.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_Cash.DescId = zc_ContainerLinkObject_Cash()
@@ -341,7 +342,9 @@ end if;*/
                 /*LEFT JOIN ContainerLinkObject AS ContainerLO_Business
                                               ON ContainerLO_Business.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLO_Business.DescId = zc_ContainerLinkObject_Business()*/
-            -- WHERE ContainerLinkObject_InfoMoneyDetail.ContainerId IS NULL
+            -- !!!прибыль текущего периода!!!
+            WHERE ContainerLinkObject_InfoMoneyDetail.ContainerId IS NULL
+
             GROUP BY tmpMIContainer_Remains.AccountId
                    , ContainerLinkObject_InfoMoney.ObjectId
                    -- , ContainerLinkObject_InfoMoneyDetail.ObjectId
