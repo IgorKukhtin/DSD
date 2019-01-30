@@ -227,9 +227,9 @@ inherited MainCashForm2: TMainCashForm2
   end
   object MainPanel: TPanel [2]
     Left = 0
-    Top = 119
+    Top = 140
     Width = 784
-    Height = 219
+    Height = 198
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
@@ -237,7 +237,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 0
       Top = 21
       Width = 784
-      Height = 165
+      Height = 144
       Align = alClient
       TabOrder = 0
       object MainGridDBTableView: TcxGridDBTableView
@@ -749,7 +749,7 @@ inherited MainCashForm2: TMainCashForm2
     end
     object SearchPanel: TPanel
       Left = 0
-      Top = 186
+      Top = 165
       Width = 784
       Height = 33
       Align = alBottom
@@ -883,7 +883,7 @@ inherited MainCashForm2: TMainCashForm2
         ParentFont = False
       end
       object lblMoneyInCash: TcxLabel
-        Left = 672
+        Left = 673
         Top = 7
         Caption = '0.00'
         ParentFont = False
@@ -1184,7 +1184,7 @@ inherited MainCashForm2: TMainCashForm2
     end
     object edPrice: TcxCurrencyEdit
       Left = 569
-      Top = -5
+      Top = -1
       Properties.DisplayFormat = ',0.00;-,0.00'
       TabOrder = 0
       Width = 60
@@ -1251,10 +1251,9 @@ inherited MainCashForm2: TMainCashForm2
       TabOrder = 1
       object Label6: TLabel
         Left = 0
-        Top = 0
+        Top = 2
         Width = 137
-        Height = 19
-        Align = alLeft
+        Height = 13
         Caption = #1040#1074#1090#1086' '#1053#1058#1047' '#1085#1072' '#1082#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' : '
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clGray
@@ -1262,11 +1261,10 @@ inherited MainCashForm2: TMainCashForm2
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        ExplicitHeight = 13
       end
       object edDays: TcxCurrencyEdit
         Left = 138
-        Top = -2
+        Top = -1
         EditValue = 0.000000000000000000
         Properties.DecimalPlaces = 2
         Properties.DisplayFormat = ',0;-,0'
@@ -1464,6 +1462,7 @@ inherited MainCashForm2: TMainCashForm2
     ParentBackground = False
     TabOrder = 8
     Visible = False
+    OnClick = actSetSiteDiscountExecute
     object Label9: TLabel
       Left = 1
       Top = 1
@@ -1500,6 +1499,78 @@ inherited MainCashForm2: TMainCashForm2
       Properties.ReadOnly = True
       TabOrder = 0
       Width = 60
+    end
+    object cxButton2: TcxButton
+      Left = 751
+      Top = 1
+      Width = 32
+      Height = 19
+      Align = alRight
+      OptionsImage.ImageIndex = 52
+      OptionsImage.Images = dmMain.ImageList
+      TabOrder = 1
+      TabStop = False
+      OnClick = actManualDiscountExecute
+    end
+  end
+  object pnlSiteDiscount: TPanel [9]
+    Left = 0
+    Top = 119
+    Width = 784
+    Height = 21
+    Align = alTop
+    Color = 15656679
+    ParentBackground = False
+    TabOrder = 9
+    Visible = False
+    object Label16: TLabel
+      Left = 1
+      Top = 1
+      Width = 127
+      Height = 19
+      Align = alLeft
+      Caption = '     '#1057#1082#1080#1076#1082#1072' '#171#1095#1077#1088#1077#1079' '#1089#1072#1081#1090#187'.'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      ExplicitHeight = 13
+    end
+    object Label17: TLabel
+      Left = 522
+      Top = 2
+      Width = 41
+      Height = 13
+      Align = alCustom
+      Caption = #1057#1082#1080#1076#1082#1072' '
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object edSiteDiscount: TcxCurrencyEdit
+      Left = 567
+      Top = 0
+      Properties.DisplayFormat = ',0.00;-,0.00'
+      Properties.ReadOnly = True
+      TabOrder = 0
+      Width = 60
+    end
+    object cxButton3: TcxButton
+      Left = 751
+      Top = 1
+      Width = 32
+      Height = 19
+      Align = alRight
+      OptionsImage.ImageIndex = 52
+      OptionsImage.Images = dmMain.ImageList
+      TabOrder = 1
+      TabStop = False
+      OnClick = actSetSiteDiscountExecute
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1927,6 +1998,14 @@ inherited MainCashForm2: TMainCashForm2
           Value = Null
           Component = FormParams
           ComponentItem = 'MemberSPID'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SiteDiscount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SiteDiscount'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -2392,6 +2471,52 @@ inherited MainCashForm2: TMainCashForm2
           Component = FormParams
           ComponentItem = 'ManualDiscount'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoCodeID'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PromoCodeID'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PromoName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoCodeGUID'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PromoCodeGUID'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoCodeChangePercent'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PromoCodeChangePercent'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberSPId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MemberSPID'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SiteDiscount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SiteDiscount'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -2433,6 +2558,10 @@ inherited MainCashForm2: TMainCashForm2
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
+    end
+    object actSetSiteDiscount: TAction
+      Caption = #1057#1082#1080#1076#1082#1072' '#1095#1077#1088#1077#1079' '#1089#1072#1081#1090
+      OnExecute = actSetSiteDiscountExecute
     end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
@@ -2588,7 +2717,7 @@ inherited MainCashForm2: TMainCashForm2
     Top = 32
   end
   object PopupMenu: TPopupMenu
-    Left = 104
+    Left = 112
     Top = 264
     object N1: TMenuItem
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
@@ -2700,6 +2829,10 @@ inherited MainCashForm2: TMainCashForm2
     end
     object miManualDiscount: TMenuItem
       Action = actManualDiscount
+    end
+    object N21: TMenuItem
+      Action = actSetSiteDiscount
+      Visible = False
     end
     object miPrintNotFiscalCheck: TMenuItem
       Caption = #1055#1077#1095#1072#1090#1100' '#1085#1077#1092#1080#1089#1082#1072#1083#1100#1085#1086#1075#1086' '#1095#1077#1082#1072
@@ -2901,6 +3034,12 @@ inherited MainCashForm2: TMainCashForm2
       item
         Name = 'MemberSPID'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SiteDiscount'
+        Value = Null
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 32
@@ -3724,5 +3863,20 @@ inherited MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 480
     Top = 176
+  end
+  object spGlobalConst_SiteDiscount: TdsdStoredProc
+    StoredProcName = 'gpGet_GlobalConst_SiteDiscount '
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'gpget_globalconst_sitediscount'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 56
   end
 end

@@ -6,7 +6,7 @@ inherited SPDialogForm: TSPDialogForm
   ClientWidth = 577
   Position = poScreenCenter
   ExplicitWidth = 583
-  ExplicitHeight = 255
+  ExplicitHeight = 256
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel [0]
@@ -49,6 +49,7 @@ inherited SPDialogForm: TSPDialogForm
       Properties.Nullstring = '<'#1044#1083#1103' '#1074#1099#1073#1086#1088#1072' '#1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1075#1086' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1103' '#1085#1072#1078#1084#1080#1090#1077' [Ctrl+Enter]>'
       Properties.ReadOnly = True
       Properties.UseNullString = True
+      Properties.OnChange = cePartnerMedicalPropertiesChange
       TabOrder = 0
       Text = '<'#1044#1083#1103' '#1074#1099#1073#1086#1088#1072' '#1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1075#1086' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1103' '#1085#1072#1078#1084#1080#1090#1077' [Ctrl+Enter]>'
       Width = 265
@@ -86,7 +87,7 @@ inherited SPDialogForm: TSPDialogForm
     end
     object edMedicSP: TcxButtonEdit
       Left = 16
-      Top = 74
+      Top = 76
       Properties.Buttons = <
         item
           Default = True
@@ -341,6 +342,55 @@ inherited SPDialogForm: TSPDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GuidesMemberSPId'
+        Value = Null
+        Component = GuidesMemberSP
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GuidesMemberSPName'
+        Value = Null
+        Component = GuidesMemberSP
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GroupMemberSP'
+        Value = Null
+        Component = edGroupMemberSP
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Passport'
+        Value = Null
+        Component = edPassport
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Inn'
+        Value = Null
+        Component = edInn
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'eAddress'
+        Value = Null
+        Component = edAddress
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 120
     Top = 16
@@ -543,6 +593,64 @@ inherited SPDialogForm: TSPDialogForm
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSPKindId'
+        Value = Null
+        Component = SPKindGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSPKindName'
+        Value = Null
+        Component = SPKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMemberSPId'
+        Value = Null
+        Component = GuidesMemberSP
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMemberSPName'
+        Value = Null
+        Component = GuidesMemberSP
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGroupMemberSP'
+        Value = Null
+        Component = edGroupMemberSP
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPassport'
+        Value = Null
+        Component = edPassport
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInn'
+        Value = Null
+        Component = edInn
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAddress'
+        Value = Null
+        Component = edAddress
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 312
@@ -592,12 +700,14 @@ inherited SPDialogForm: TSPDialogForm
       item
         Name = 'MasterPartnerMedicalId'
         Value = ''
+        Component = PartnerMedicalGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterPartnerMedicalName'
         Value = ''
+        Component = PartnerMedicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','

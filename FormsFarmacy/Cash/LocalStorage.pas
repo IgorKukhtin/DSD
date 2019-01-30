@@ -68,6 +68,8 @@ begin
       AddFloatField(LocalDataBaseHead,  'SUMMPAYADD');  //Доплата по чеку
       //***14.01.19
       AddIntField(LocalDataBaseHead,  'MEMBERSPID');  //ФИО пациента
+      //***14.01.19
+      AddBoolField(LocalDataBaseHead,  'SITEDISC');  //Дисконт через сайт
 
       LocalDataBaseHead.CreateTable;
     end
@@ -127,6 +129,9 @@ begin
         //***14.01.19
         if FindField('MEMBERSPID') = nil then
           AddIntField(LFieldDefs,  'MEMBERSPID');
+        //***28.01.19
+        if FindField('SITEDISC') = nil then
+          AddBoolField(LFieldDefs,  'SITEDISC');
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -178,7 +183,9 @@ begin
         //***02.10.18
         (FindField('SUMMPAYADD') = nil) or
         //***14.01.19
-        (FindField('MEMBERSPID') = nil));
+        (FindField('MEMBERSPID') = nil) or
+        //***14.01.19
+        (FindField('SITEDISC') = nil));
 
       Close;
 
