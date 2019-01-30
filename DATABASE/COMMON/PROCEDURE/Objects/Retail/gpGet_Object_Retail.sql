@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Retail(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , OperDateOrder Boolean
              , GLNCode TVarChar, GLNCodeCorporate TVarChar
+             , OKPO TVarChar
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
              , PersonalMarketingId Integer, PersonalMarketingName TVarChar
              , PersonalTradeId Integer, PersonalTradeName TVarChar
@@ -29,6 +30,7 @@ BEGIN
            , CAST (FALSE AS Boolean) AS OperDateOrder
            , CAST ('' as TVarChar)   AS GLNCode
            , CAST ('' as TVarChar)   AS GLNCodeCorporate
+           , CAST ('' as TVarChar)   AS OKPO
            , CAST (0 as Integer)     AS GoodsPropertyId 
            , CAST ('' as TVarChar)   AS GoodsPropertyName      
 
@@ -49,6 +51,7 @@ BEGIN
  
            , GLNCode.ValueData               AS GLNCode
            , GLNCodeCorporate.ValueData      AS GLNCodeCorporate
+           , ObjectString_OKPO.ValueData     AS OKPO
            , Object_GoodsProperty.Id         AS GoodsPropertyId
            , Object_GoodsProperty.ValueData  AS GoodsPropertyName    
            , Object_PersonalMarketing.Id         AS PersonalMarketingId
@@ -65,9 +68,13 @@ BEGIN
                                ON GLNCodeCorporate.ObjectId = Object_Retail.Id 
                               AND GLNCodeCorporate.DescId = zc_ObjectString_Retail_GLNCodeCorporate()
 
-         LEFT JOIN ObjectBoolean AS ObjectBoolean_OperDateOrder
-                                 ON ObjectBoolean_OperDateOrder.ObjectId = Object_Retail.Id 
-                                AND ObjectBoolean_OperDateOrder.DescId = zc_ObjectBoolean_Retail_OperDateOrder() 
+        LEFT JOIN ObjectString AS ObjectString_OKPO
+                               ON ObjectString_OKPO.ObjectId = Object_Retail.Id 
+                              AND ObjectString_OKPO.DescId = zc_ObjectString_Retail_OKPO()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_OperDateOrder
+                                ON ObjectBoolean_OperDateOrder.ObjectId = Object_Retail.Id 
+                               AND ObjectBoolean_OperDateOrder.DescId = zc_ObjectBoolean_Retail_OperDateOrder() 
     
         LEFT JOIN ObjectLink AS ObjectLink_Retail_GoodsProperty
                              ON ObjectLink_Retail_GoodsProperty.ObjectId = Object_Retail.Id 

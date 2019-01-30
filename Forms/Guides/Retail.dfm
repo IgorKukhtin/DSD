@@ -2,8 +2,8 @@ object RetailForm: TRetailForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100'>'
-  ClientHeight = 376
-  ClientWidth = 676
+  ClientHeight = 390
+  ClientWidth = 695
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,8 +20,8 @@ object RetailForm: TRetailForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 676
-    Height = 350
+    Width = 695
+    Height = 364
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
@@ -59,6 +59,14 @@ object RetailForm: TRetailForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 129
+      end
+      object OKPO: TcxGridDBColumn
+        Caption = #1054#1050#1055#1054
+        DataBinding.FieldName = 'OKPO'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1050#1055#1054' '#1076#1083#1103' '#1085#1072#1083#1086#1075'. '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+        Width = 102
       end
       object GLNCode: TcxGridDBColumn
         Caption = #1050#1086#1076' GLN '#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100
@@ -624,6 +632,15 @@ object RetailForm: TRetailForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'GLNCodeCorporate'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOKPO'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'OKPO'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

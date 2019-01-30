@@ -91,6 +91,9 @@ type
     actPrintArticleLoss: TdsdPrintAction;
     bbPrintArticleLoss: TdxBarButton;
     Amount_Send_pl: TcxGridDBColumn;
+    cbComment: TcxCheckBox;
+    actPrintComment: TdsdPrintAction;
+    bbPrintComment: TdxBarButton;
   private
     { Private declarations }
   public

@@ -419,6 +419,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Retail_GLNCodeCorporate() RETURNS Int
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Retail_GLNCodeCorporate', zc_Object_Retail(), ' КодGLN - Поставщик' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Retail_GLNCodeCorporate');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Retail_OKPO() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Retail_OKPO'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Retail_OKPO', zc_Object_Retail(), 'ОКПО для налог. документов' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Retail_OKPO');
+
 ---zc_Object_GoodsQuality
 
 CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsQuality_Value1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsQuality_Value1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -902,6 +906,7 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 29.01.19         * zc_ObjectString_Retail_OKPO
  11.10.19                                                                                                         * zc_ObjectString_CashRegister_SerialNumber
  17.12.18         * zc_ObjectString_GoodsPropertyValue_Quality2
                     zc_ObjectString_GoodsPropertyValue_Quality10

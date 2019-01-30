@@ -42,6 +42,8 @@ type
     cxLabel7: TcxLabel;
     cePersonalTrade: TcxButtonEdit;
     PersonalTradeGuides: TdsdGuides;
+    cxLabel8: TcxLabel;
+    edOKPO: TcxTextEdit;
   private
     { Private declarations }
   public

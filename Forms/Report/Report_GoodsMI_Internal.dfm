@@ -5,9 +5,8 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -286
   ExplicitWidth = 1092
-  ExplicitHeight = 387
+  ExplicitHeight = 390
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -559,6 +558,14 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
         end
       end
       object cbLocation: TcxCheckBox
@@ -704,7 +711,18 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
       Caption = #1042#1057#1045' '#1052#1072#1090#1077#1088#1080#1072#1083#1100#1085#1086' '#1086#1090#1074#1077#1089#1090#1074#1077#1085#1085#1099#1077
       Properties.ReadOnly = False
       TabOrder = 13
-      Width = 196
+      Width = 195
+    end
+    object cbComment: TcxCheckBox
+      Left = 986
+      Top = 32
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077
+      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+      ParentShowHint = False
+      Properties.ReadOnly = False
+      ShowHint = True
+      TabOrder = 14
+      Width = 89
     end
   end
   object cxLabel7: TcxLabel [2]
@@ -1023,6 +1041,9 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -1148,6 +1169,137 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintComment: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42370d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42370d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProcList = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+      ImageIndex = 15
+      DataSets = <
+        item
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionGoods'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = FromGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = ''
+          Component = ToGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isLocation'
+          Value = 'False'
+          Component = cbLocation
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = 'False'
+          Component = cbGoodsKind
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartionGoods'
+          Value = 'False'
+          Component = cbPartionGoods
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DescName'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'InDescName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -1224,6 +1376,14 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = cbComment
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 208
@@ -1292,6 +1452,14 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintComment'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1330,6 +1498,10 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
     end
     object bbPrintArticleLoss: TdxBarButton
       Action = actPrintArticleLoss
+      Category = 0
+    end
+    object bbPrintComment: TdxBarButton
+      Action = actPrintComment
       Category = 0
     end
   end

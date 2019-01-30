@@ -4,9 +4,8 @@ inherited TaxJournalForm: TTaxJournalForm
   ClientWidth = 1110
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
-  ExplicitLeft = -109
   ExplicitWidth = 1126
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -181,6 +180,23 @@ inherited TaxJournalForm: TTaxJournalForm
             DataBinding.FieldName = 'OKPO_To'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object OKPO_Retail: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054' '#1076#1083#1103' '#1090#1086#1088#1075'. '#1089#1077#1090#1080
+            DataBinding.FieldName = 'OKPO_Retail'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object isOKPO_Retail: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054' '#1076#1083#1103' '#1090#1086#1088#1075'. '#1089#1077#1090#1080
+            DataBinding.FieldName = 'isOKPO_Retail'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1050#1055#1054' '#1076#1083#1103' '#1090#1086#1088#1075'. '#1089#1077#1090#1080' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
             Width = 50
           end
           object INN_To: TcxGridDBColumn
@@ -800,6 +816,9 @@ inherited TaxJournalForm: TTaxJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintTax_Client: TdsdPrintAction
       Category = 'DSDLib'
@@ -841,6 +860,9 @@ inherited TaxJournalForm: TTaxJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actGetReporNameTax: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1333,6 +1355,7 @@ inherited TaxJournalForm: TTaxJournalForm
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 26
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object ExecuteDialogINN: TExecuteDialog

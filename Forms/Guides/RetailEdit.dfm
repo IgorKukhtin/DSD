@@ -2,7 +2,7 @@ object RetailEditForm: TRetailEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100'>'
-  ClientHeight = 397
+  ClientHeight = 441
   ClientWidth = 347
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object RetailEditForm: TRetailEditForm
   end
   object cxButton1: TcxButton
     Left = 55
-    Top = 364
+    Top = 407
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object RetailEditForm: TRetailEditForm
   end
   object cxButton2: TcxButton
     Left = 207
-    Top = 364
+    Top = 407
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -72,12 +72,12 @@ object RetailEditForm: TRetailEditForm
   end
   object cxLabel4: TcxLabel
     Left = 10
-    Top = 193
+    Top = 236
     Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
   end
   object ceGoodsProperty: TcxButtonEdit
     Left = 10
-    Top = 214
+    Top = 257
     Properties.Buttons = <
       item
         Default = True
@@ -107,12 +107,12 @@ object RetailEditForm: TRetailEditForm
   end
   object cxLabel6: TcxLabel
     Left = 10
-    Top = 244
+    Top = 287
     Caption = #1054#1090#1074'. '#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1086#1075#1086' '#1086#1090#1076#1077#1083#1072
   end
   object cePersonalMarketing: TcxButtonEdit
     Left = 8
-    Top = 267
+    Top = 310
     Properties.Buttons = <
       item
         Default = True
@@ -124,12 +124,12 @@ object RetailEditForm: TRetailEditForm
   end
   object cxLabel7: TcxLabel
     Left = 10
-    Top = 300
+    Top = 343
     Caption = #1054#1090#1074'. '#1089#1086#1090#1088#1091#1076#1085#1080#1082' '#1082#1086#1084#1084#1077#1088#1095#1077#1089#1082#1086#1075#1086' '#1086#1090#1076#1077#1083#1072
   end
   object cePersonalTrade: TcxButtonEdit
     Left = 8
-    Top = 323
+    Top = 366
     Properties.Buttons = <
       item
         Default = True
@@ -137,6 +137,17 @@ object RetailEditForm: TRetailEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 16
+    Width = 311
+  end
+  object cxLabel8: TcxLabel
+    Left = 10
+    Top = 189
+    Caption = #1054#1050#1055#1054' '#1076#1083#1103' '#1085#1072#1083#1086#1075'. '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+  end
+  object edOKPO: TcxTextEdit
+    Left = 10
+    Top = 209
+    TabOrder = 18
     Width = 311
   end
   object ActionList: TActionList
@@ -182,12 +193,14 @@ object RetailEditForm: TRetailEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = edCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -195,6 +208,7 @@ object RetailEditForm: TRetailEditForm
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDateOrder'
@@ -202,6 +216,7 @@ object RetailEditForm: TRetailEditForm
         Component = cbOperDateOrder
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGLNCode'
@@ -209,6 +224,7 @@ object RetailEditForm: TRetailEditForm
         Component = edGLNCode
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGLNCodeCorporate'
@@ -216,6 +232,15 @@ object RetailEditForm: TRetailEditForm
         Component = edGLNCodeCorporate
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOKPO'
+        Value = Null
+        Component = edOKPO
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsPropertyId'
@@ -223,6 +248,7 @@ object RetailEditForm: TRetailEditForm
         Component = GoodsPropertyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalMarketingId'
@@ -230,6 +256,7 @@ object RetailEditForm: TRetailEditForm
         Component = PersonalMarketingGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalTradeId'
@@ -237,6 +264,7 @@ object RetailEditForm: TRetailEditForm
         Component = PersonalTradeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 104
@@ -248,6 +276,7 @@ object RetailEditForm: TRetailEditForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 96
     Top = 8
@@ -263,41 +292,55 @@ object RetailEditForm: TRetailEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = edCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDateOrder'
         Value = Null
         Component = cbOperDateOrder
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GLNCode'
         Value = ''
         Component = edGLNCode
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GLNCodeCorporate'
         Value = Null
         Component = edGLNCodeCorporate
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OKPO'
+        Value = Null
+        Component = edOKPO
+        DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsPropertyId'
         Value = Null
         Component = GoodsPropertyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsPropertyName'
@@ -305,12 +348,14 @@ object RetailEditForm: TRetailEditForm
         Component = GoodsPropertyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalMarketingId'
         Value = Null
         Component = PersonalMarketingGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalMarketingName'
@@ -318,12 +363,14 @@ object RetailEditForm: TRetailEditForm
         Component = PersonalMarketingGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalTradeId'
         Value = Null
         Component = PersonalTradeGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalTradeName'
@@ -331,6 +378,7 @@ object RetailEditForm: TRetailEditForm
         Component = PersonalTradeGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 224
@@ -360,6 +408,7 @@ object RetailEditForm: TRetailEditForm
     LookupControl = ceGoodsProperty
     FormNameParam.Value = 'TGoodsPropertyForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsPropertyForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -370,6 +419,7 @@ object RetailEditForm: TRetailEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -378,15 +428,17 @@ object RetailEditForm: TRetailEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 128
-    Top = 192
+    Top = 235
   end
   object PersonalMarketingGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePersonalMarketing
     FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -397,6 +449,7 @@ object RetailEditForm: TRetailEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -405,15 +458,17 @@ object RetailEditForm: TRetailEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 151
-    Top = 247
+    Top = 290
   end
   object PersonalTradeGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePersonalTrade
     FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -424,6 +479,7 @@ object RetailEditForm: TRetailEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -432,8 +488,9 @@ object RetailEditForm: TRetailEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 175
-    Top = 303
+    Top = 346
   end
 end

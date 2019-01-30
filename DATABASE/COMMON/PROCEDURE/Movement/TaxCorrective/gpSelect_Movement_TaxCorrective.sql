@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , TotalCount TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , InvNumberPartner Integer
-             , FromId Integer, FromName TVarChar, OKPO_From TVarChar, INN_From TVarChar, ToId Integer, ToName TVarChar
+             , FromId Integer, FromName TVarChar, OKPO_From TVarChar, OKPO_Retail TVarChar, INN_From TVarChar, ToId Integer, ToName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
@@ -31,6 +31,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , isMedoc Boolean
              , isCopy Boolean
              , isINN Boolean
+             , isOKPO_Retail Boolean
              , Comment TVarChar
              , PersonalSigningName TVarChar
              , isNPP_calc Boolean, DateisNPP_calc TDateTime
@@ -82,7 +83,8 @@ BEGIN
            , zfConvert_StringToNumber (MovementString_InvNumberPartner.ValueData) AS InvNumberPartner
            , Object_From.Id                    		    AS FromId
            , Object_From.ValueData             		    AS FromName
-           , ObjectHistory_JuridicalDetails_View.OKPO   AS OKPO_From
+           , ObjectHistory_JuridicalDetails_View.OKPO       AS OKPO_From
+           , ObjectString_Retail_OKPO.ValueData             AS OKPO_Retail
            , CASE WHEN Movement.Id IN (-- Corr
                                        7943509
                                      , 8066170
@@ -155,6 +157,7 @@ BEGIN
            , COALESCE (MovementBoolean_Medoc.ValueData, FALSE)    :: Boolean  AS isMedoc
            , COALESCE(MovementBoolean_isCopy.ValueData, FALSE)    :: Boolean  AS isCopy
            , CASE WHEN COALESCE (MovementString_FromINN.ValueData, '') <> '' THEN TRUE ELSE FALSE END AS isINN
+           , CASE WHEN COALESCE (ObjectString_Retail_OKPO.ValueData, '') <> '' THEN TRUE ELSE FALSE END AS isOKPO_Retail
            , MovementString_Comment.ValueData                                 AS Comment
 
            , COALESCE (Object_PersonalSigning.PersonalName, COALESCE (Object_PersonalBookkeeper_View.PersonalName, ''))  ::TVarChar    AS PersonalSigningName
@@ -258,6 +261,13 @@ BEGIN
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_From.Id
+
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectHistory_JuridicalDetails_View.JuridicalId
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+            LEFT JOIN ObjectString AS ObjectString_Retail_OKPO
+                                   ON ObjectString_Retail_OKPO.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                                  AND ObjectString_Retail_OKPO.DescId = zc_ObjectString_Retail_OKPO()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id

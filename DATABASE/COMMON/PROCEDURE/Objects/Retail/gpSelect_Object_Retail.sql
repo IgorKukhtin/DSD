@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Retail(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , OperDateOrder Boolean
              , GLNCode TVarChar, GLNCodeCorporate TVarChar
+             , OKPO TVarChar
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
              , PersonalMarketingId Integer, PersonalMarketingName TVarChar
              , PersonalTradeId Integer, PersonalTradeName TVarChar
@@ -27,6 +28,7 @@ BEGIN
  
            , GLNCode.ValueData               AS GLNCode
            , GLNCodeCorporate.ValueData      AS GLNCodeCorporate
+           , ObjectString_OKPO.ValueData     AS OKPO
            , Object_GoodsProperty.Id         AS GoodsPropertyId
            , Object_GoodsProperty.ValueData  AS GoodsPropertyName     
            , Object_PersonalMarketing.Id         AS PersonalMarketingId
@@ -42,9 +44,13 @@ BEGIN
                                ON GLNCodeCorporate.ObjectId = Object_Retail.Id 
                               AND GLNCodeCorporate.DescId = zc_ObjectString_Retail_GLNCodeCorporate()
 
-         LEFT JOIN ObjectBoolean AS ObjectBoolean_OperDateOrder
-                                 ON ObjectBoolean_OperDateOrder.ObjectId = Object_Retail.Id 
-                                AND ObjectBoolean_OperDateOrder.DescId = zc_ObjectBoolean_Retail_OperDateOrder() 
+        LEFT JOIN ObjectString AS ObjectString_OKPO
+                               ON ObjectString_OKPO.ObjectId = Object_Retail.Id 
+                              AND ObjectString_OKPO.DescId = zc_ObjectString_Retail_OKPO()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_OperDateOrder
+                                ON ObjectBoolean_OperDateOrder.ObjectId = Object_Retail.Id 
+                               AND ObjectBoolean_OperDateOrder.DescId = zc_ObjectBoolean_Retail_OperDateOrder() 
     
         LEFT JOIN ObjectLink AS ObjectLink_Retail_GoodsProperty
                              ON ObjectLink_Retail_GoodsProperty.ObjectId = Object_Retail.Id 
@@ -70,6 +76,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 29.01.19         * add OKPO
  24.11.15         * add PersonalMarketing
  20.05.15         *
  02.04.15         * add OperDateOrder

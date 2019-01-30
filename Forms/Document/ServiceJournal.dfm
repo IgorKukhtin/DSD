@@ -531,7 +531,7 @@ inherited ServiceJournalForm: TServiceJournalForm
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'InfoMoneyName;JuridicalName;Comment'
+          IndexFieldNames = 'InfoMoneyName;UnitName;JuridicalName;Comment'
           GridView = cxGridDBTableView
         end>
       Params = <

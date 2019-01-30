@@ -1059,13 +1059,15 @@ end;
 
 procedure TLoadFormTest.LoadTaxFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxForm');
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxJournalForm'));
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxJournalForm');
+  exit;
    //08.04.14 Dima
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxJournalChoiceForm');
 
@@ -1082,8 +1084,10 @@ end;
 
 procedure TLoadFormTest.LoadTaxCorrectiveTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxCorrectiveForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxCorrectiveForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxCorrectiveJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxCorrectiveJournalForm');
 end;
@@ -1852,12 +1856,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnInUnitNewForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnInUnitNewForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSoldForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSoldDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldDialogForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalCollationForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationDialogForm'));
@@ -1995,11 +1999,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalCompleteDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalCompleteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalCompleteForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InternalForm');
   exit;
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InternalDialogForm'));
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InternalDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InternalDialogForm');
 
   //Отчет Проверка кол-ва в привязке возврата
@@ -3062,6 +3066,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRetailForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRetailEditForm');
+  exit;
     // Торговая сеть (отчет)
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailReportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRetailReportForm');

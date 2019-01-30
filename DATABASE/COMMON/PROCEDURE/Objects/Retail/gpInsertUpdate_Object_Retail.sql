@@ -2,8 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
-
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Retail(
  INOUT ioId                    Integer   ,     -- ключ объекта <Торговая сеть> 
@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Retail(
     IN inOperDateOrder         Boolean   ,     --
     IN inGLNCode               TVarChar  ,     -- Код GLN - Получатель
     IN inGLNCodeCorporate      TVarChar  ,     -- Код GLN - Поставщик 
+    IN inOKPO                  TVarChar  ,     -- ОКПО для налог. документов
     IN inGoodsPropertyId       Integer   ,     -- Классификаторы свойств товаров
     IN inPersonalMarketingId   Integer   ,     -- Сотрудник (Ответственный представитель маркетингового отдела)
     IN inPersonalTradeId       Integer   ,     -- Сотрудник (Ответственный представитель коммерческого отдела)
@@ -43,6 +44,15 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Retail_GLNCode(), ioId, inGLNCode);
    -- сохранили св-во <Код GLN - Поставщик>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Retail_GLNCodeCorporate(), ioId, inGLNCodeCorporate);
+   
+   IF inOKPO = ''
+   THEN
+       -- сохранили св-во <>
+       PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Retail_OKPO(), ioId, NULL);
+   ELSE
+       -- сохранили св-во <>
+       PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Retail_OKPO(), ioId, inOKPO);
+   END IF;
 
    -- сохранили св-во <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Retail_OperDateOrder(), ioId, inOperDateOrder);
@@ -61,13 +71,13 @@ BEGIN
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpInsertUpdate_Object_Retail (Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.01.19         * add OKPO
  24.11.15         * add inPersonalMarketingId
  02.04.15         * add inOperDateOrder
  19.02.15         * add inGoodsPropertyId
