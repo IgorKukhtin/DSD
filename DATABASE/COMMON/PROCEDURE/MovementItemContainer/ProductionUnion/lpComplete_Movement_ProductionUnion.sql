@@ -1146,7 +1146,7 @@ END IF;
                                  );
                                  
      -- кроме Админа
-     IF inUserId = zfCalc_UserAdmin() :: Integer
+     IF inUserId <> zfCalc_UserAdmin() :: Integer
      THEN
          -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Производство" - !!!важно - здесь очищается ВСЕ, поэтому делаем ПОСЛЕ проводок!!!
          PERFORM lpComplete_Movement_ProductionUnion_Recalc (inMovementId := inMovementId

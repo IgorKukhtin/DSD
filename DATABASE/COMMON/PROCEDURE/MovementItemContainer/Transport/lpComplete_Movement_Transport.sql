@@ -326,10 +326,23 @@ BEGIN
                                       , ContainerId_ProfitLoss, ContainerId_50000, AccountId_50000
                                        )
         SELECT _tmpItem.MovementItemId_parent            AS MovementItemId
-             , COALESCE (MIFloat_RateSumma.ValueData, 0) AS OperSumm_Add
-             , COALESCE (MIFloat_RatePrice.ValueData, 0) * (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_DistanceFuelChild.ValueData, 0))
-             + COALESCE (MIFloat_RateSummaAdd.ValueData, 0) AS OperSumm_AddLong
-             , CASE WHEN MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriverMore() THEN COALESCE (MIFloat_TaxiMore.ValueData, 0) ELSE COALESCE (MIFloat_Taxi.ValueData, 0) END AS OperSumm_Taxi
+             , CASE WHEN MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_Personal()
+                         THEN COALESCE (MIFloat_RateSummaExp.ValueData, 0)
+                    ELSE COALESCE (MIFloat_RateSumma.ValueData, 0)
+               END AS OperSumm_Add
+
+             , CASE WHEN MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_Personal()
+                         THEN 0
+                    ELSE COALESCE (MIFloat_RatePrice.ValueData, 0) * (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_DistanceFuelChild.ValueData, 0))
+                       + COALESCE (MIFloat_RateSummaAdd.ValueData, 0)
+               END AS OperSumm_AddLong
+
+             , CASE WHEN MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_Personal()
+                         THEN 0
+                    WHEN MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriverMore()
+                         THEN COALESCE (MIFloat_TaxiMore.ValueData, 0)
+                    ELSE COALESCE (MIFloat_Taxi.ValueData, 0)
+               END AS OperSumm_Taxi
 
                -- для Сотрудника (ЗП)
              , lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -452,7 +465,10 @@ BEGIN
                                          AND MovementLinkObject_PersonalDriver_check.ObjectId   > 0 
              LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                           ON MovementLinkObject_PersonalDriver.MovementId = inMovementId
-                                         AND MovementLinkObject_PersonalDriver.DescId     IN (zc_MovementLinkObject_PersonalDriver(), zc_MovementLinkObject_PersonalDriverMore())
+                                         AND MovementLinkObject_PersonalDriver.DescId     IN (zc_MovementLinkObject_PersonalDriver()
+                                                                                            , zc_MovementLinkObject_PersonalDriverMore()
+                                                                                            , zc_MovementLinkObject_Personal()
+                                                                                             )
                                          AND MovementLinkObject_PersonalDriver.ObjectId   > 0 
                                          AND (MovementLinkObject_PersonalDriver.ObjectId   <> COALESCE (MovementLinkObject_PersonalDriver_check.ObjectId ,0)
                                            OR MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
@@ -494,11 +510,14 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_TaxiMore
                                          ON MIFloat_TaxiMore.MovementItemId = _tmpItem.MovementItemId_parent
                                         AND MIFloat_TaxiMore.DescId = zc_MIFloat_TaxiMore()
+             LEFT JOIN MovementItemFloat AS MIFloat_RateSummaExp
+                                         ON MIFloat_RateSummaExp.MovementItemId = _tmpItem.MovementItemId_parent
+                                        AND MIFloat_RateSummaExp.DescId         = zc_MIFloat_RateSummaExp()
 
-        WHERE MIFloat_RateSumma.ValueData <> 0
-           OR MIFloat_RatePrice.ValueData <> 0
+        WHERE MIFloat_RatePrice.ValueData <> 0
            OR MIFloat_RateSummaAdd.ValueData <> 0
-           OR CASE WHEN MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriverMore() THEN COALESCE (MIFloat_TaxiMore.ValueData, 0) ELSE COALESCE (MIFloat_Taxi.ValueData, 0) END <> 0
+           OR CASE WHEN MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriverMore() THEN COALESCE (MIFloat_TaxiMore.ValueData, 0)     ELSE COALESCE (MIFloat_Taxi.ValueData, 0)      END <> 0
+           OR CASE WHEN MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_Personal()           THEN COALESCE (MIFloat_RateSummaExp.ValueData, 0) ELSE COALESCE (MIFloat_RateSumma.ValueData, 0) END <> 0
        ;
 
 
