@@ -352,15 +352,16 @@ BEGIN
                   THEN FALSE
              WHEN COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isPriceFix = TRUE OR ResultSet.PriceFix_Goods <> 0)
                   THEN TRUE
-             WHEN -- COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isIncome = TRUE /*OR ResultSet.isTop_calc = TRUE*/ OR ResultSet.isPriceFix = TRUE OR ResultSet.PriceFix_Goods <> 0)
-                  COALESCE (inUnitId_to, 0) = 0 AND ResultSet.isIncome = TRUE
-                  THEN FALSE
+-- Отмена НЕ ПЕРЕОЦЕНИВАТЬ товар который пришел на точку сегодня
+--             WHEN -- COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isIncome = TRUE /*OR ResultSet.isTop_calc = TRUE*/ OR ResultSet.isPriceFix = TRUE OR ResultSet.PriceFix_Goods <> 0)
+--                  COALESCE (inUnitId_to, 0) = 0 AND ResultSet.isIncome = TRUE
+--                  THEN FALSE
              WHEN COALESCE (inUnitId_to, 0) = 0
                   THEN TRUE
 
              WHEN inUnitId_to <> 0 AND (ResultSet.MinExpirationDate < (CURRENT_DATE + Interval '6 MONTH') 
                                     OR  ResultSet.MinExpirationDate_to < (CURRENT_DATE + Interval '6 MONTH')
-                                    OR  ResultSet.isIncome = TRUE)
+                                    /*OR  ResultSet.isIncome = TRUE */)
                   THEN FALSE
 
              WHEN inUnitId_to <> 0 

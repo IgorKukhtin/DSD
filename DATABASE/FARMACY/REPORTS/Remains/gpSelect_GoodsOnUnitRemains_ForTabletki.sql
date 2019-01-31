@@ -104,7 +104,7 @@ BEGIN
  , tmpPrice AS (SELECT Object_Price_View.GoodsId
                      , Object_Price_View.Price AS Price
                      , CASE WHEN vbSiteDiscount = 0 THEN Object_Price_View.Price 
-                        ELSE ROUND(Object_Price_View.Price * (100.0 - vbSiteDiscount) / 100.0, 1) END::TFloat AS PriceReserve
+                        ELSE CEIL(Object_Price_View.Price * (100.0 - vbSiteDiscount) / 10.0) / 10.0 END::TFloat AS PriceReserve
                 FROM Object_Price_View
                 WHERE Object_Price_View.GoodsId IN (SELECT DISTINCT Remains.ObjectId FROM Remains)
                   AND Object_Price_View.UnitId  = inUnitId
