@@ -1392,7 +1392,7 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 84
+    Left = 100
     Top = 200
   end
   object InvoiceGuides: TdsdGuides

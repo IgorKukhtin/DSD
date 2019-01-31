@@ -167,6 +167,11 @@ object Report_TransportForm: TReport_TransportForm
           Format = ',0.##'
           Kind = skSum
           Column = TotalCountKg_Reestr
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = SumRateExp
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -289,6 +294,11 @@ object Report_TransportForm: TReport_TransportForm
           Format = ',0.##'
           Kind = skSum
           Column = TotalCountKg_Reestr
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = SumRateExp
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -349,7 +359,7 @@ object Report_TransportForm: TReport_TransportForm
         Width = 53
       end
       object PersonalDriverName: TcxGridDBColumn
-        Caption = #1042#1086#1076#1080#1090#1077#1083#1100
+        Caption = #1042#1086#1076#1080#1090#1077#1083#1100'/ '#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088
         DataBinding.FieldName = 'PersonalDriverName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -420,6 +430,17 @@ object Report_TransportForm: TReport_TransportForm
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
+      object SumRateExp: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072', '#1075#1088#1085'. ('#1069#1082#1089#1087'. '#1050#1086#1084#1072#1085#1076'.)'
+        DataBinding.FieldName = 'SumRateExp'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1091#1084#1084#1072', '#1075#1088#1085'. ('#1069#1082#1089#1087#1077#1076#1080#1090#1086#1088' '#1050#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077')'
         Width = 60
       end
       object StartOdometre: TcxGridDBColumn

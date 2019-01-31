@@ -24,7 +24,7 @@ RETURNS TABLE (InvNumberTransport Integer, OperDate TDateTime
              , ColdHour TFloat, ColdDistance TFloat
              , AmountFuel TFloat, AmountColdHour TFloat, AmountColdDistance TFloat
              , Amount_Distance_calc TFloat, Amount_ColdHour_calc TFloat, Amount_ColdDistance_calc TFloat
-             , SumTransportAdd TFloat, SumTransportAddLong TFloat, SumTransportTaxi TFloat
+             , SumTransportAdd TFloat, SumTransportAddLong TFloat, SumTransportTaxi TFloat, SumRateExp TFloat
              , CountDoc_Reestr TFloat, TotalCountKg_Reestr TFloat, InvNumber_Reestr TVarChar
               )
 AS
@@ -108,7 +108,7 @@ BEGIN
                                                                END
                                                      ) = 1
                                              THEN COALESCE (MIFloat_RatePrice.ValueData, 0) * (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_DistanceFuelChild.ValueData, 0))
-                                                + COALESCE (MIFloat_RateSummaAdd.ValueData, 0) + COALESCE (MIFloat_RateSummaExp.ValueData, 0)
+                                                + COALESCE (MIFloat_RateSummaAdd.ValueData, 0)
                                         ELSE 0 END AS SumTransportAddLong
                                  , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
                                                       ORDER BY CASE WHEN MIBoolean_MasterFuel.ValueData = TRUE AND MIContainer.Amount <> 0
@@ -121,6 +121,21 @@ BEGIN
                                                                END
                                                      ) = 1
                                              THEN COALESCE (MIFloat_Taxi.ValueData, 0) ELSE 0 END AS SumTransportTaxi
+
+                                 , CASE WHEN COALESCE (MovementLinkObject_Personal.ObjectId, 0) = 0
+                                        THEN CASE WHEN ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
+                                                                          ORDER BY CASE WHEN MIBoolean_MasterFuel.ValueData = TRUE AND MIContainer.Amount <> 0
+                                                                                             THEN 1
+                                                                                        WHEN MIContainer.Amount <> 0
+                                                                                             THEN 2
+                                                                                        WHEN MIBoolean_MasterFuel.ValueData = TRUE
+                                                                                             THEN 3
+                                                                                        ELSE 4
+                                                                                   END
+                                                                         ) = 1
+                                                  THEN COALESCE (MIFloat_RateSummaExp.ValueData, 0) ELSE 0 END
+                                        ELSE 0
+                                   END AS SumRateExp
 
                                  , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
                                                       ORDER BY CASE WHEN MIBoolean_MasterFuel.ValueData = TRUE AND MIContainer.Amount <> 0
@@ -186,6 +201,12 @@ BEGIN
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                                               ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
                                                              AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
+
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
+                                                              ON MovementLinkObject_Personal.MovementId = Movement.Id
+                                                             AND MovementLinkObject_Personal.DescId     = zc_MovementLinkObject_Personal()
+                                                             --AND MovementLinkObject_Personal.ObjectId   > 0
+
                                  LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId     = zc_MI_Master()
                                                        AND MovementItem.isErased   = FALSE
@@ -326,7 +347,7 @@ BEGIN
                                                                END
                                                      ) = 1
                                              THEN COALESCE (MIFloat_RatePrice.ValueData, 0) * (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_DistanceFuelChild.ValueData, 0)) 
-                                                + COALESCE (MIFloat_RateSummaAdd.ValueData, 0) + COALESCE (MIFloat_RateSummaExp.ValueData, 0)
+                                                + COALESCE (MIFloat_RateSummaAdd.ValueData, 0)
                                         ELSE 0 END AS SumTransportAddLong
                                  , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
                                                       ORDER BY CASE WHEN MIBoolean_MasterFuel.ValueData = TRUE AND MIContainer.Amount <> 0
@@ -339,7 +360,7 @@ BEGIN
                                                                END
                                                      ) = 1
                                              THEN COALESCE (MIFloat_TaxiMore.ValueData, 0) ELSE 0 END AS SumTransportTaxi
-
+                                 , 0 AS SumRateExp
                                  , 0 AS StartOdometre
                                  , 0 AS EndOdometre
 
@@ -390,9 +411,6 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_RateSummaAdd
                                                              ON MIFloat_RateSummaAdd.MovementItemId =  MovementItem.Id
                                                             AND MIFloat_RateSummaAdd.DescId = zc_MIFloat_RateSummaAdd()
-                                 LEFT JOIN MovementItemFloat AS MIFloat_RateSummaExp
-                                                             ON MIFloat_RateSummaExp.MovementItemId =  MovementItem.Id
-                                                            AND MIFloat_RateSummaExp.DescId = zc_MIFloat_RateSummaExp()
 
                                  LEFT JOIN MovementItemFloat AS MIFloat_TaxiMore
                                                              ON MIFloat_TaxiMore.MovementItemId =  MovementItem.Id
@@ -460,6 +478,77 @@ BEGIN
                               AND (MI.ParentId IS NULL OR MI.Amount <> 0 OR MIFloat_StartAmountFuel.ValueData <> 0
                                 OR MIFloat_Weight.ValueData <> 0 OR MIFloat_WeightTransport.ValueData <> 0
                                   )
+                           UNION ALL
+                           -- єкспедитор
+                            SELECT Movement.Id AS MovementId
+                                 , Movement.InvNumber
+                                 , Movement.OperDate
+                                 , MovementLinkObject_Car.ObjectId AS CarId
+                                 , MovementLinkObject_Personal.ObjectId AS PersonalDriverId
+
+                                 , 1 AS Ord
+
+                                 , 0 AS DistanceFuel
+
+                                 , MovementItem.ObjectId AS RouteId
+                                 , MILinkObject_RouteKind.ObjectId AS RouteKindId
+
+                                 , 0 AS Weight
+                                 , 0 AS WeightTransport
+                                 , 0 AS SumTransportAdd
+                                 , 0 AS SumTransportAddLong
+                                 , 0 AS SumTransportTaxi
+
+                                 , COALESCE (MIFloat_RateSummaExp.ValueData, 0) AS SumRateExp
+
+                                 , 0 AS StartOdometre
+                                 , 0 AS EndOdometre
+
+                                 , 0 AS RateFuelKindId
+                                 , 0 AS FuelId
+
+                                 , 0 AS RateFuelKindTax
+
+                                 , 0 AS AmountFuel_Start
+                                 , 0 AS AmountFuel_Out
+
+                                 , 0 AS ColdHour
+                                 , 0 AS ColdDistance
+
+                                 , 0 AS AmountFuel
+                                 , 0 AS AmountColdHour
+                                 , 0 AS AmountColdDistance
+
+                                 , 0 AS Amount_Distance_calc
+                                 , 0 AS Amount_ColdHour_calc
+                                 , 0 AS Amount_ColdDistance_calc
+
+                            FROM Movement
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
+                                                              ON MovementLinkObject_Car.MovementId = Movement.Id
+                                                             AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+                                 INNER JOIN MovementLinkObject AS MovementLinkObject_Personal
+                                                               ON MovementLinkObject_Personal.MovementId = Movement.Id
+                                                              AND MovementLinkObject_Personal.DescId     = zc_MovementLinkObject_Personal()
+                                                              AND MovementLinkObject_Personal.ObjectId   > 0
+
+                                 LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                       AND MovementItem.DescId     = zc_MI_Master()
+                                                       AND MovementItem.isErased   = FALSE
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_RateSummaExp
+                                                             ON MIFloat_RateSummaExp.MovementItemId =  MovementItem.Id
+                                                            AND MIFloat_RateSummaExp.DescId = zc_MIFloat_RateSummaExp()
+
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_RouteKind
+                                                                  ON MILinkObject_RouteKind.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_RouteKind.DescId = zc_MILinkObject_RouteKind()
+
+                            WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                              AND Movement.DescId = zc_Movement_Transport()
+                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                              AND COALESCE (MIFloat_RateSummaExp.ValueData, 0) <> 0
+
                            )
          -- вытаскиваем из реестра виз кол-во накладных и вес
          , tmpDataReestr AS (SELECT tmp.MovementId                                            AS MovementId
@@ -528,6 +617,7 @@ BEGIN
              , MAX (tmpFuel.SumTransportAdd)          :: TFloat AS SumTransportAdd
              , MAX (tmpFuel.SumTransportAddLong)      :: TFloat AS SumTransportAddLong
              , MAX (tmpFuel.SumTransportTaxi)         :: TFloat AS SumTransportTaxi
+             , MAX (tmpFuel.SumRateExp)               :: TFloat AS SumRateExp
 
              , MAX (tmpDataReestr.CountDoc)           :: TFloat   AS CountDoc_Reestr
              , MAX (tmpDataReestr.TotalCountKg)       :: TFloat   AS TotalCountKg_Reestr
@@ -571,6 +661,7 @@ BEGIN
                    , MAX (tmpAll.SumTransportAdd)          AS SumTransportAdd
                    , MAX (tmpAll.SumTransportAddLong)      AS SumTransportAddLong
                    , MAX (tmpAll.SumTransportTaxi)         AS SumTransportTaxi
+                   , MAX (tmpAll.SumRateExp)               AS SumRateExp
                    
                    , ROW_NUMBER() OVER (PARTITION BY tmpAll.MovementId ORDER BY tmpAll.MovementId, MAX (tmpAll.Weight) desc) AS Ord
               FROM
@@ -612,6 +703,7 @@ BEGIN
                    , tmpTransport.SumTransportAdd
                    , tmpTransport.SumTransportAddLong
                    , tmpTransport.SumTransportTaxi
+                   , tmpTransport.SumRateExp
 
               FROM tmpTransport
              UNION ALL
@@ -651,6 +743,7 @@ BEGIN
                    , 0 AS SumTransportAdd
                    , 0 AS SumTransportAddLong
                    , 0 AS SumTransportTaxi
+                   , 0 AS SumRateExp
 
               FROM Container
                    -- так ограничили приходы только на Автомобиль
@@ -731,6 +824,7 @@ ALTER FUNCTION gpReport_Transport (TDateTime, TDateTime, Integer, Integer, TVarC
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 31.01.19         *
  21.06.18         * add tmpDataReestr
  07.07.14                                       * add Weight and WeightTransport
  09.02.14         * ограничения для zc_Branch_Basis()

@@ -53,7 +53,53 @@ end if;
     RETURN QUERY
 
     WITH
-    tmpReport AS (SELECT tmp.MemberId
+     tmpUserAll AS (SELECT UserId FROM Constant_User_LevelMax01_View WHERE UserId = vbUserId /*AND UserId <> 9464*/) -- Документы-меню (управленцы) AND <> Рудик Н.В. + ЗП просмотр ВСЕ
+   , tmpMemberPersonalServiceList AS (SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+                                     FROM ObjectLink AS ObjectLink_User_Member
+                                          INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
+                                                                ON ObjectLink_MemberPersonalServiceList.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                                               AND ObjectLink_MemberPersonalServiceList.DescId        = zc_ObjectLink_MemberPersonalServiceList_Member()
+                                          LEFT JOIN ObjectBoolean ON ObjectBoolean.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                                                 AND ObjectBoolean.DescId   = zc_ObjectBoolean_MemberPersonalServiceList_All()
+                                          LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList
+                                                               ON ObjectLink_PersonalServiceList.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                                              AND ObjectLink_PersonalServiceList.DescId   = zc_ObjectLink_MemberPersonalServiceList_PersonalServiceList()
+                                          LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                                                                        AND (Object_PersonalServiceList.Id    = ObjectLink_PersonalServiceList.ChildObjectId
+                                                                                          OR ObjectBoolean.ValueData          = TRUE)
+                                     WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                                       AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                                    UNION
+                                     SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+                                     FROM ObjectLink AS ObjectLink_User_Member
+                                          INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
+                                                                ON ObjectLink_PersonalServiceList_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                                               AND ObjectLink_PersonalServiceList_Member.DescId        = zc_ObjectLink_PersonalServiceList_Member()
+                                          LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                                                                        AND Object_PersonalServiceList.Id     = ObjectLink_PersonalServiceList_Member.ObjectId
+                                     WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                                       AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                                    UNION
+                                     -- Админ и другие видят ВСЕХ
+                                     SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+                                     FROM Object AS Object_PersonalServiceList
+                                     WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                       AND EXISTS (SELECT 1 FROM tmpUserAll)
+                                    UNION
+                                     -- Админ и другие видят ВСЕХ
+                                     SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+                                     FROM Object AS Object_PersonalServiceList
+                                     WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                       AND EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceAdmin())
+                                    /*UNION
+                                     -- "ЗП филиалов" видят "Галат Е.Н."
+                                     SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+                                     FROM Object AS Object_PersonalServiceList
+                                     WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                       AND vbUserId = 106593*/
+                                    )
+
+  , tmpReport AS (SELECT tmp.MemberId
                        , tmp.PersonalId
                        , tmp.PersonalCode
                        , tmp.PersonalName
@@ -77,14 +123,14 @@ end if;
                     FROM gpReport_HolidayPersonal (inStartDate:= inStartDate, inUnitId:= inUnitId, inMemberId:= inMemberId, inisDetail:= FALSE, inSession:= inSession) AS tmp
                    )
 
-  , tmpMovement AS (SELECT Movement.Id                                                                          -- итого отработано
+  , tmpMovement AS (SELECT Movement.Id
                     FROM Movement
                     WHERE Movement.OperDate BETWEEN inStartDate - INTERVAL '1 YEAR' AND inStartDate - INTERVAL '1 DAY' 
                       AND Movement.DescId = zc_Movement_PersonalService()
                       AND Movement.StatusId = zc_Enum_Status_Complete()
                     )
   
-  , tmpPersonalService AS (SELECT ObjectLink_Personal_Member.ChildObjectId  AS MemberId
+  , tmpPersonalService AS (SELECT ObjectLink_Personal_Member.ChildObjectId        AS MemberId
                                 , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0)) AS Amount
                            FROM tmpMovement AS Movement
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -99,10 +145,18 @@ end if;
                                                       ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
                                                      AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
                                                      AND (ObjectLink_Personal_Member.ChildObjectId = inMemberId OR inMemberId = 0)
-                                               
+
+                                LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                                     ON ObjectLink_Personal_PersonalServiceList.ObjectId = MovementItem.ObjectId
+                                                    AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+
+                                LEFT JOIN tmpMemberPersonalServiceList ON tmpMemberPersonalServiceList.PersonalServiceListId = ObjectLink_Personal_PersonalServiceList.ChildObjectId
+
                                 LEFT JOIN MovementItemFloat AS MIFloat_SummToPay
                                                             ON MIFloat_SummToPay.MovementItemId = MovementItem.Id
                                                            AND MIFloat_SummToPay.DescId = zc_MIFloat_SummToPay()
+
+                           WHERE tmpMemberPersonalServiceList.PersonalServiceListId > 0
                            GROUP BY ObjectLink_Personal_Member.ChildObjectId
                            )
 
@@ -141,5 +195,11 @@ END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 30.01.19         *
+ 25.12.18         *
+*/
 -- тест
 -- select * from gpReport_HolidayCompensation(inStartDate := ('01.01.2019')::TDateTime , inUnitId := 8384 , inMemberId := 442269 ,  inSession := '5');
