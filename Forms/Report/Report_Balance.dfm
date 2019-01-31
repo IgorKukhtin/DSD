@@ -63,6 +63,8 @@ object Report_BalanceForm: TReport_BalanceForm
     DataSource = DataSource
     Groups = <>
     TabOrder = 1
+    ExplicitLeft = 101
+    ExplicitTop = 65
     object pvRootName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 0
@@ -292,6 +294,14 @@ object Report_BalanceForm: TReport_BalanceForm
     TabOrder = 6
     Width = 101
   end
+  object cbGroup: TcxCheckBox
+    Left = 241
+    Top = 179
+    Caption = ' '#1072#1082#1090#1080#1074'/'#1087#1072#1089#1089#1080#1074
+    Properties.ReadOnly = False
+    TabOrder = 7
+    Width = 96
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 120
@@ -403,14 +413,6 @@ object Report_BalanceForm: TReport_BalanceForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStaticText'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrint2'
         end
         item
@@ -428,6 +430,14 @@ object Report_BalanceForm: TReport_BalanceForm
         item
           Visible = True
           ItemName = 'bbcbTotal'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGroup'
         end
         item
           Visible = True
@@ -492,6 +502,13 @@ object Report_BalanceForm: TReport_BalanceForm
     object bbPrint3: TdxBarButton
       Action = actPrint3
       Category = 0
+    end
+    object bbGroup: TdxBarControlContainerItem
+      Caption = 'bbGroup'
+      Category = 0
+      Hint = 'bbGroup'
+      Visible = ivAlways
+      Control = cbGroup
     end
   end
   object ActionList: TActionList
@@ -881,6 +898,13 @@ object Report_BalanceForm: TReport_BalanceForm
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGroup'
+          Value = Null
+          Component = cbGroup
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1059#1055' '#1041#1072#1083#1072#1085#1089' ('#1044#1077#1073#1077#1090' '#1050#1088#1077#1076#1080#1090') '#1089#1074#1077#1088#1085#1091#1090#1086
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1059#1055' '#1041#1072#1083#1072#1085#1089' ('#1044#1077#1073#1077#1090' '#1050#1088#1077#1076#1080#1090') '#1089#1074#1077#1088#1085#1091#1090#1086
@@ -956,6 +980,13 @@ object Report_BalanceForm: TReport_BalanceForm
           Name = 'isTotal'
           Value = Null
           Component = cbTotal
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGroup'
+          Value = Null
+          Component = cbGroup
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1036,6 +1067,13 @@ object Report_BalanceForm: TReport_BalanceForm
           Component = cbTotal
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGroup'
+          Value = Null
+          Component = cbGroup
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1059#1055' '#1041#1072#1083#1072#1085#1089
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1059#1055' '#1041#1072#1083#1072#1085#1089
@@ -1076,7 +1114,8 @@ object Report_BalanceForm: TReport_BalanceForm
     Top = 288
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 528
+    Left = 800
+    Top = 8
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -1285,6 +1324,6 @@ object Report_BalanceForm: TReport_BalanceForm
         MultiSelectSeparator = ','
       end>
     Left = 360
-    Top = 184
+    Top = 208
   end
 end

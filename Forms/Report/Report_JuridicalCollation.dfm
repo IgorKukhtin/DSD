@@ -3,6 +3,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   ClientHeight = 423
   ClientWidth = 1156
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1172
   ExplicitHeight = 461
   PixelsPerInch = 96
@@ -2210,9 +2211,126 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         DataType = ftDateTime
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAccountId'
+        Value = Null
+        Component = GuidesAccount
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAccountName'
+        Value = Null
+        Component = GuidesAccount
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyName'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalName'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerName'
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPaidKindName'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = GuidesContract
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractName'
+        Value = Null
+        Component = GuidesContract
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 192
-    Top = 144
+    Left = 256
+    Top = 192
   end
   object spJuridicalBalance: TdsdStoredProc
     StoredProcName = 'gpReport_JuridicalBalance'
@@ -2417,6 +2535,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPartner
+    Key = '0'
     FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','

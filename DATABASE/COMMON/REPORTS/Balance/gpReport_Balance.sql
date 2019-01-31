@@ -286,17 +286,17 @@ end if;*/
                       , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
                       -- , COALESCE (SUM (CASE WHEN  MIContainer.isActive = TRUE  AND COALESCE (MIContainer.AccountId, 0) <> zc_Enum_Account_100301()  AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  1 * MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
                       -- , COALESCE (SUM (CASE WHEN (MIContainer.isActive = FALSE OR  COALESCE (MIContainer.AccountId, 0) =  zc_Enum_Account_100301()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
-                      , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS AmountRemainsStart
+                      , COALESCE (Container.Amount,0) - COALESCE (SUM (MIContainer.Amount), 0) AS AmountRemainsStart
                  FROM Container
                       LEFT JOIN MovementItemContainer AS MIContainer
                                                       ON MIContainer.Containerid = Container.Id
                                                      AND MIContainer.OperDate >= inStartDate
                  WHERE Container.DescId = zc_Container_Summ()
                  GROUP BY Container.ObjectId
-                        , Container.Amount
+                        , COALESCE (Container.Amount,0)
                         , Container.Id
                         -- , Container.ParentId
-                 HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0) -- AmountRemainsStart <> 0
+                 HAVING (COALESCE (Container.Amount,0) - COALESCE (SUM (MIContainer.Amount), 0) <> 0) -- AmountRemainsStart <> 0
                      OR (COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountDebet <> 0
                      OR (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountKredit <> 0
                 ) AS tmpMIContainer_Remains

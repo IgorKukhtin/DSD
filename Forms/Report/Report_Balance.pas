@@ -90,6 +90,8 @@ type
     bbReport_Account: TdxBarButton;
     actPrint3: TdsdPrintAction;
     bbPrint3: TdxBarButton;
+    cbGroup: TcxCheckBox;
+    bbGroup: TdxBarControlContainerItem;
   private
   public
   end;
