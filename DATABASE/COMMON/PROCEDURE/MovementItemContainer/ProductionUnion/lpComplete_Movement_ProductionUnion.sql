@@ -514,8 +514,6 @@ BEGIN
        ;
 
 
-
-
      -- формируются Партии товара для Master(ПРИХОД)-элементы, ЕСЛИ надо ...
      UPDATE _tmpItem_pr SET PartionGoodsId = CASE WHEN vbOperDate >= zc_DateStart_PartionGoods()
                                                 AND vbAccountDirectionId_To = zc_Enum_AccountDirection_20200() -- Запасы + на складах
@@ -1146,6 +1144,17 @@ END IF;
                                 , inDescId     := zc_Movement_ProductionUnion()
                                 , inUserId     := inUserId
                                  );
+                                 
+     -- кроме Админа
+     IF inUserId = zfCalc_UserAdmin() :: Integer
+     THEN
+         -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Производство" - !!!важно - здесь очищается ВСЕ, поэтому делаем ПОСЛЕ проводок!!!
+         PERFORM lpComplete_Movement_ProductionUnion_Recalc (inMovementId := inMovementId
+                                                           , inUnitId     := vbUnitId_From
+                                                           , inUserId     := inUserId
+                                                            );
+     END IF;
+
 
 END;
 $BODY$
