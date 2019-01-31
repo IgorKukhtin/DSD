@@ -60,6 +60,7 @@ type
     procedure DiscountExternalGuidesAfterChoice(Sender: TObject);
     procedure bbSP_PriorClick(Sender: TObject);
     procedure edSPKindPropertiesChange(Sender: TObject);
+    procedure cePartnerMedicalPropertiesChange(Sender: TObject);
   private
     { Private declarations }
   public
@@ -199,6 +200,14 @@ begin
 
 end;
 
+procedure TSPDialogForm.cePartnerMedicalPropertiesChange(Sender: TObject);
+begin
+  inherited;
+  if PartnerMedicalGuides.Params.ParamByName('Key').Value <> 0 then
+     GuidesMemberSP.DisableGuidesOpen := False
+  else GuidesMemberSP.DisableGuidesOpen := True;
+end;
+
 function TSPDialogForm.DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String;
   var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer): boolean;
 Begin
@@ -241,6 +250,8 @@ Begin
           except
           end;
       end;
+
+      GuidesMemberSP.DisableGuidesOpen := True;
 
       //
       Result := ShowModal = mrOK;
@@ -291,10 +302,9 @@ end;
 procedure TSPDialogForm.edSPKindPropertiesChange(Sender: TObject);
 begin
   inherited;
-//  if SPKindGuides.Params.ParamByName('Key').Value <> '' then
-//     Panel2.Visible := SPKindGuides.Params.ParamByName('Key').Value = 4823010
-//  else
-  Panel2.Visible := False;
+  if SPKindGuides.Params.ParamByName('Key').Value <> '' then
+     Panel2.Visible := SPKindGuides.Params.ParamByName('Key').Value = 4823010
+  else Panel2.Visible := False;
 end;
 
 End.

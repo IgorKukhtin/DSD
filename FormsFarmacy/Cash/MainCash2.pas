@@ -337,6 +337,15 @@ type
     CashListDiffCDS: TClientDataSet;
     spSelect_CashListDiffGoods: TdsdStoredProc;
     spUpdate_CashSerialNumber: TdsdStoredProc;
+    actSetSiteDiscount: TAction;
+    N21: TMenuItem;
+    pnlSiteDiscount: TPanel;
+    Label16: TLabel;
+    Label17: TLabel;
+    edSiteDiscount: TcxCurrencyEdit;
+    spGlobalConst_SiteDiscount: TdsdStoredProc;
+    cxButton2: TcxButton;
+    cxButton3: TcxButton;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -420,6 +429,7 @@ type
       Sender: TcxCustomGridTableView; APrevFocusedRecord,
       AFocusedRecord: TcxCustomGridRecord;
       ANewItemRecordFocusingChanged: Boolean);
+    procedure actSetSiteDiscountExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -478,7 +488,7 @@ type
       APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP : String;
       AOperDateSP : TDateTime;
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
-      ASummPayAdd : Currency;  AMemberSPID : integer;
+      ASummPayAdd : Currency;  AMemberSPID : integer; ASiteDiscount : Currency;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 
     //проверили что есть остаток
@@ -499,6 +509,7 @@ type
     procedure ClearFilterAll;
     // Загружает VIP чек
     procedure LoadVIPCheck;
+    procedure SetSiteDiscount(ASiteDiscount : Currency);
 
   public
     procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String; var AOperDateSP : TDateTime);
@@ -843,6 +854,8 @@ begin
   FormParams.ParamByName('SummPayAdd').Value                := 0;
   //***14.01.19
   FormParams.ParamByName('MemberSPID').Value                := 0;
+  //***28.01.19
+  FormParams.ParamByName('SiteDiscount').Value              := 0;
 
   ClearFilterAll;
 
@@ -869,6 +882,8 @@ begin
   pnlManualDiscount.Visible := false;
   edManualDiscount.Value := 0;
   edPromoCode.Text := '';
+  pnlSiteDiscount.Visible := false;
+  edSiteDiscount.Value := 0;
 end;
 
 procedure TMainCashForm2.actClearMoneyExecute(Sender: TObject);
@@ -957,11 +972,13 @@ begin
   if (FormParams.ParamByName('BayerPhone').AsString <> '')
   then lblBayer.Caption := lblBayer.Caption + ' * ' + FormParams.ParamByName('BayerPhone').AsString;
 
+
   if FormParams.ParamByName('PromoCodeId').Value <> 0 then
     SetPromoCode(FormParams.ParamByName('PromoCodeId').Value,
       FormParams.ParamByName('PromoName').AsString,
       FormParams.ParamByName('PromoCodeGUID').AsString,
       FormParams.ParamByName('PromoCodeChangePercent').Value);
+  if FormParams.ParamByName('SiteDiscount').Value > 0 then SetSiteDiscount(FormParams.ParamByName('SiteDiscount').Value);
 
   //***30.06.18
   if FormParams.ParamByName('ManualDiscount').Value > 0 then
@@ -1052,8 +1069,8 @@ procedure TMainCashForm2.pm_VIP1Click(Sender: TObject);
 begin
   inherited;
   case TMenuItem(Sender).Tag of
-    0 : if actLoadVIP.Execute then LoadVIPCheck;
-    1 : if actLoadVIP_Search.Execute then LoadVIPCheck;
+    0 : if actLoadVIP.Execute and (FormParams.ParamByName('CheckId').Value > 0) then LoadVIPCheck;
+    1 : if actLoadVIP_Search.Execute and (FormParams.ParamByName('CheckId').Value > 0) then LoadVIPCheck;
   end;
 
   //
@@ -1255,35 +1272,46 @@ end;
 procedure TMainCashForm2.actManualDiscountExecute(Sender: TObject);
   var S : string; I, nRecNo : integer;
 begin
-  if (Self.FormParams.ParamByName('SPTax').Value <> 0)
-     and (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
+  if not (Sender is tcxButton) then
   begin
-    ShowMessage('Применен соц проект.'#13#10'Для променениея ручной скидки обнулите чек и набрать позиции заново..');
-    Exit;
-  end;
 
-  if (DiscountServiceForm.gCode = 2) then
-  begin
-    ShowMessage('Применен дисконт.'#13#10'Для променениея ручной скидки обнулите чек и набрать позиции заново..');
-    Exit;
-  end;
-
-  if FormParams.ParamByName('PromoCodeGUID').Value <> '' then
-  begin
-    ShowMessage('Установлен промокод.'#13#10'Для променениея ручной скидки обнулите промокод..');
-    Exit;
-  end;
-
-  S := '';
-  while True do
-  begin
-    if not InputQuery('Ручная скидка', 'Процент скидки: ', S) then Exit;
-    if S = '' then Exit;
-    if not TryStrToInt(S, I) or (I < 0) or (I > 50) then
+    if (Self.FormParams.ParamByName('SPTax').Value <> 0)
+       and (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
     begin
-      ShowMessage('Должно быть число от 0 до 50.');
-    end else Break;
-  end;
+      ShowMessage('Применен соц проект.'#13#10'Для променениея ручной скидки обнулите чек и набрать позиции заново..');
+      Exit;
+    end;
+
+    if (DiscountServiceForm.gCode = 2) then
+    begin
+      ShowMessage('Применен дисконт.'#13#10'Для променениея ручной скидки обнулите чек и набрать позиции заново..');
+      Exit;
+    end;
+
+    if FormParams.ParamByName('PromoCodeGUID').Value <> '' then
+    begin
+      ShowMessage('Установлен промокод.'#13#10'Для променениея ручной скидки обнулите промокод..');
+      Exit;
+    end;
+
+    if FormParams.ParamByName('SiteDiscount').Value <> 0
+     then
+    begin
+      ShowMessage('Установлена скидка через сайт.'#13#10'Для променениея ручной скидки обнулите скидку через сайт..');
+      Exit;
+    end;
+
+    S := '';
+    while True do
+    begin
+      if not InputQuery('Ручная скидка', 'Процент скидки: ', S) then Exit;
+      if S = '' then Exit;
+      if not TryStrToInt(S, I) or (I < 0) or (I > 50) then
+      begin
+        ShowMessage('Должно быть число от 0 до 50.');
+      end else Break;
+    end;
+  end else I := 0;
 
   FormParams.ParamByName('ManualDiscount').Value := I;
   pnlManualDiscount.Visible := FormParams.ParamByName('ManualDiscount').Value > 0;
@@ -1391,6 +1419,12 @@ begin
     (FormParams.ParamByName('ConfirmedKindName').AsString = 'Не подтвержден') then
   begin
     ShowMessage('Ошибка.VIP-чек <Не подтвержден>.');
+    Exit;
+  end;
+
+  if (FormParams.ParamByName('CheckId').Value = 0) and (FormParams.ParamByName('SiteDiscount').Value > 0) then
+  begin
+    ShowMessage('Ошибка.Установлен признак <Скидка через сайт> необходимо установить VIP-чек.');
     Exit;
   end;
 
@@ -1504,6 +1538,8 @@ begin
                    FormParams.ParamByName('SummPayAdd').Value,
                    //***14.01.19
                    FormParams.ParamByName('MemberSPID').Value,
+                   //***28.01.19
+                   FormParams.ParamByName('SiteDiscount').Value,
 
                    True,         // NeedComplete
                    CheckNumber,  // FiscalCheckNumber
@@ -1974,8 +2010,18 @@ begin
       begin
         checkCDS.Edit;
         checkCDS.FieldByName('Price').asCurrency    := GetPrice(checkCDS.FieldByName('PriceSale').asCurrency,
-                                                                Self.FormParams.ParamByName('PromoCodeChangePercent').Value);
-        checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('PromoCodeChangePercent').Value;
+                                                                Self.FormParams.ParamByName('PromoCodeChangePercent').Value + Self.FormParams.ParamByName('SiteDiscount').Value);
+        checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('PromoCodeChangePercent').Value + Self.FormParams.ParamByName('SiteDiscount').Value;
+        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency);
+        checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency) -
+          CheckCDS.FieldByName('Summ').asCurrency;
+        checkCDS.Post;
+      end else if Self.FormParams.ParamByName('SiteDiscount').Value > 0 then
+      begin
+        checkCDS.Edit;
+        checkCDS.FieldByName('Price').asCurrency    := GetPrice(checkCDS.FieldByName('PriceSale').asCurrency,
+                                                                Self.FormParams.ParamByName('SiteDiscount').Value);
+        checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('SiteDiscount').Value;
         CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency);
         checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency) -
           CheckCDS.FieldByName('Summ').asCurrency;
@@ -2365,6 +2411,8 @@ begin
               ,FormParams.ParamByName('SummPayAdd').Value
               //***14.01.19
               ,FormParams.ParamByName('MemberSPID').Value
+              //***28.01.19
+              ,FormParams.ParamByName('SiteDiscount').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -2445,6 +2493,8 @@ begin
               ,FormParams.ParamByName('SummPayAdd').Value
               //***14.01.19
               ,FormParams.ParamByName('MemberSPID').Value
+              //***28.01.19
+              ,FormParams.ParamByName('SiteDiscount').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -2471,6 +2521,13 @@ var
   DiscountExternalName,DiscountCardNumber: String;
   lMsg: String;
 begin
+
+  if pnlManualDiscount.Visible or pnlPromoCode.Visible or pnlSiteDiscount.Visible then
+  Begin
+    ShowMessage('В текущем чеке применена скидка. Сначала очистите чек!');
+    exit;
+  End;
+
   with TDiscountDialogForm.Create(nil) do
   try
      DiscountExternalId  := Self.FormParams.ParamByName('DiscountExternalId').Value;
@@ -2499,7 +2556,100 @@ begin
   edDiscountAmount.Visible := lblAmount.Visible;
 end;
 
-//***20.04.17
+//***28.01.19
+
+procedure TMainCashForm2.SetSiteDiscount(ASiteDiscount : Currency);
+  var nRecNo : Integer;
+begin
+
+  FormParams.ParamByName('SiteDiscount').Value := ASiteDiscount;
+  pnlSiteDiscount.Visible := FormParams.ParamByName('SiteDiscount').Value > 0;
+  edSiteDiscount.Value := FormParams.ParamByName('SiteDiscount').Value;
+
+  CheckCDS.DisableControls;
+  CheckCDS.Filtered := False;
+  nRecNo := CheckCDS.RecNo;
+  try
+
+    CheckCDS.First;
+    while not CheckCDS.Eof do
+    begin
+
+      if (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and
+        CheckIfGoodsIdInPromo(Self.FormParams.ParamByName('PromoCodeID').Value, checkCDS.FieldByName('GoodsId').AsInteger) then
+      begin
+        checkCDS.Edit;
+        checkCDS.FieldByName('Price').asCurrency    := GetPrice(checkCDS.FieldByName('PriceSale').asCurrency,
+                                                                Self.FormParams.ParamByName('PromoCodeChangePercent').Value + Self.FormParams.ParamByName('SiteDiscount').Value);
+        checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('PromoCodeChangePercent').Value + Self.FormParams.ParamByName('SiteDiscount').Value;
+        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency);
+        checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency) -
+          CheckCDS.FieldByName('Summ').asCurrency;
+        checkCDS.Post;
+      end else if FormParams.ParamByName('SiteDiscount').Value > 0 then
+      begin
+        checkCDS.Edit;
+        checkCDS.FieldByName('Price').asCurrency    := GetPrice(checkCDS.FieldByName('PriceSale').asCurrency,
+                                                                Self.FormParams.ParamByName('SiteDiscount').Value);
+        checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('SiteDiscount').Value;
+        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency);
+        checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency) -
+          CheckCDS.FieldByName('Summ').asCurrency;
+        checkCDS.Post;
+      end else
+      begin
+        checkCDS.Edit;
+        checkCDS.FieldByName('Price').asCurrency    := checkCDS.FieldByName('PriceSale').asCurrency;
+        checkCDS.FieldByName('ChangePercent').asCurrency     := 0;
+        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
+        checkCDS.FieldByName('SummChangePercent').asCurrency :=  0;
+        checkCDS.Post;
+      end;
+      CheckCDS.Next;
+    end;
+  finally
+    CheckCDS.RecNo := nRecNo;
+    CheckCDS.Filtered := True;
+    CheckCDS.EnableControls;
+  end;
+  CalcTotalSumm;
+end;
+
+procedure TMainCashForm2.actSetSiteDiscountExecute(Sender: TObject);
+  var nRecNo : Integer; nSiteDiscount : Currency;
+begin
+  if (Self.FormParams.ParamByName('SPTax').Value <> 0)
+     and (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
+  begin
+    ShowMessage('Применен соц проект.'#13#10'Для променениея скидка через сайт обнулите чек и набрать позиции заново..');
+    Exit;
+  end;
+
+  if (DiscountServiceForm.gCode = 2) then
+  begin
+    ShowMessage('Применен дисконт.'#13#10'Для променениея скидка через сайт обнулите чек и набрать позиции заново..');
+    Exit;
+  end;
+
+  nSiteDiscount := 0;
+  if pnlSiteDiscount.Visible then
+  begin
+    if MessageDlg('Убрать скидку через сайт?',mtConfirmation,mbYesNo,0)<>mrYes then exit;
+  end else
+  begin
+    try
+      spGlobalConst_SiteDiscount.Execute;
+      if spGlobalConst_SiteDiscount.Params.Items[0].Value <> Null then
+        nSiteDiscount := spGlobalConst_SiteDiscount.Params.Items[0].AsFloat
+      else nSiteDiscount := 0;
+    except on E: Exception do
+      ShowMessage('Ошибка получения скидки через сайт: ' + #13#10 + E.Message);
+    end;
+  end;
+
+  SetSiteDiscount(nSiteDiscount);
+end;
+
 procedure TMainCashForm2.actSetSPExecute(Sender: TObject);
 var
   PartnerMedicalId, SPKindId, MemberSPID : Integer;
@@ -2507,7 +2657,8 @@ var
   OperDateSP : TDateTime;
   SPTax : Currency;
 begin
-  if (not CheckCDS.IsEmpty) and (Self.FormParams.ParamByName('InvNumberSP').Value = '') then
+  if (not CheckCDS.IsEmpty) and (Self.FormParams.ParamByName('InvNumberSP').Value = '') or
+    pnlManualDiscount.Visible or pnlPromoCode.Visible or pnlSiteDiscount.Visible then
   Begin
     ShowMessage('Текущий чек не пустой. Сначала очистите чек!');
     exit;
@@ -2605,6 +2756,8 @@ begin
               ,FormParams.ParamByName('SummPayAdd').Value
               //***14.01.19
               ,FormParams.ParamByName('MemberSPID').Value
+              //***14.01.19
+              ,FormParams.ParamByName('SiteDiscount').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -3103,13 +3256,20 @@ begin
                // цена БЕЗ скидки
                lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
                // цена СО скидкой
-               lPrice_bySoldRegim := GetPrice(SourceClientDataSet.FieldByName('Price').asCurrency, Self.FormParams.ParamByName('PromoCodeChangePercent').Value);
+               lPrice_bySoldRegim := GetPrice(SourceClientDataSet.FieldByName('Price').asCurrency,
+                 Self.FormParams.ParamByName('PromoCodeChangePercent').Value + Self.FormParams.ParamByName('SiteDiscount').Value);
              end else if (Self.FormParams.ParamByName('ManualDiscount').Value > 0) then
              begin
                // цена БЕЗ скидки
                lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
                // цена СО скидкой
                lPrice_bySoldRegim := GetPrice(SourceClientDataSet.FieldByName('Price').asCurrency, Self.FormParams.ParamByName('ManualDiscount').Value);
+             end else if (Self.FormParams.ParamByName('SiteDiscount').Value > 0) then
+             begin
+               // цена БЕЗ скидки
+               lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
+               // цена СО скидкой
+               lPrice_bySoldRegim := GetPrice(SourceClientDataSet.FieldByName('Price').asCurrency, Self.FormParams.ParamByName('SiteDiscount').Value);
              end else
                   begin
                       // Если есть цена со скидкой
@@ -3234,12 +3394,17 @@ begin
               end
          else if (Self.FormParams.ParamByName('PromoCodeID').Value > 0)
          then begin
-                 lChangePercent     := Self.FormParams.ParamByName('PromoCodeChangePercent').Value;
+                 lChangePercent     := Self.FormParams.ParamByName('PromoCodeChangePercent').Value + Self.FormParams.ParamByName('SiteDiscount').Value;
                  lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim);
               end
          else  if (Self.FormParams.ParamByName('ManualDiscount').Value > 0) then
               begin
                  lChangePercent     := Self.FormParams.ParamByName('ManualDiscount').Value;
+                 lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim);
+              end
+         else  if (Self.FormParams.ParamByName('SiteDiscount').Value > 0) then
+              begin
+                 lChangePercent     := Self.FormParams.ParamByName('SiteDiscount').Value;
                  lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim);
               end
          else if Assigned(SourceClientDataSet.FindField('PriceChange')) and
@@ -3681,9 +3846,11 @@ begin
   //***27.06.18
   FormParams.ParamByName('ManualDiscount').Value            := 0;
   //***02.11.18
-  FormParams.ParamByName('SummPayAdd').Value            := 0;
+  FormParams.ParamByName('SummPayAdd').Value                := 0;
   //***14.01.19
   FormParams.ParamByName('MemberSPID').Value                := 0;
+  //***28.01.19
+  FormParams.ParamByName('SiteDiscount').Value              := 0;
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -3706,6 +3873,8 @@ begin
   pnlManualDiscount.Visible := false;
   edManualDiscount.Value := 0;
   edPromoCode.Text := '';
+  pnlSiteDiscount.Visible := false;
+  edSiteDiscount.Value := 0;
   try
     CheckCDS.EmptyDataSet;
   finally
@@ -4231,9 +4400,21 @@ begin
            // на всяк случай - УСТАНОВИМ скидку еще разок
             checkCDS.FieldByName('PriceSale').asCurrency:= RemainsCDS.FieldByName('Price').asCurrency;
             checkCDS.FieldByName('Price').asCurrency    := GetPrice(RemainsCDS.FieldByName('Price').asCurrency,
-                                                                    Self.FormParams.ParamByName('PromoCodeChangePercent').Value);
+                                                                    Self.FormParams.ParamByName('PromoCodeChangePercent').Value + Self.FormParams.ParamByName('SiteDiscount').Value);
             // и УСТАНОВИМ скидку
-            checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('PromoCodeChangePercent').Value;
+            checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('PromoCodeChangePercent').Value + Self.FormParams.ParamByName('SiteDiscount').Value;
+            checkCDS.FieldByName('SummChangePercent').asCurrency :=
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency) -
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
+        end else
+        if (Self.FormParams.ParamByName('SiteDiscount').Value > 0) then
+        begin
+           // на всяк случай - УСТАНОВИМ скидку еще разок
+            checkCDS.FieldByName('PriceSale').asCurrency:= RemainsCDS.FieldByName('Price').asCurrency;
+            checkCDS.FieldByName('Price').asCurrency    := GetPrice(RemainsCDS.FieldByName('Price').asCurrency,
+                                                                   Self.FormParams.ParamByName('SiteDiscount').Value);
+            // и УСТАНОВИМ скидку
+            checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('SiteDiscount').Value;
             checkCDS.FieldByName('SummChangePercent').asCurrency :=
                 GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency) -
                 GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
@@ -4292,7 +4473,7 @@ function TMainCashForm2.SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AMan
       APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP : String;
       AOperDateSP : TDateTime;
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
-      ASummPayAdd : Currency; AMemberSPID : integer;
+      ASummPayAdd : Currency; AMemberSPID : integer; ASiteDiscount : currency;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: integer;
@@ -4468,7 +4649,9 @@ begin
                                          //***02.11.18
                                          ASummPayAdd,              //Доплата по чеку
                                          //***14.01.19
-                                         AMemberSPID               //ФИО пациента
+                                         AMemberSPID,               //ФИО пациента
+                                         //***28.01.19
+                                         ASiteDiscount > 0
                                         ]);
       End
       else
@@ -4513,6 +4696,8 @@ begin
         FLocalDataBaseHead.FieldByName('SUMMPAYADD').Value := ASummPayAdd; // Сумма доплаты
         //***02.11.18
         FLocalDataBaseHead.FieldByName('MEMBERSPID').Value := AMemberSPID; // ФИО пациента
+        //***28.01.19
+        FLocalDataBaseHead.FieldByName('SITEDISC').Value := (ASiteDiscount > 0); // Дисконт через сайт
 
         FLocalDataBaseHead.Post;
       End;

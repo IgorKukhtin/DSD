@@ -27,10 +27,12 @@ $BODY$
 
    DECLARE vbMovementID Integer;
    DECLARE vbMovementItemID Integer;
+   DECLARE vbSiteDiscount TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_...());
     vbUserId := lpGetUserBySession (inSession);
+    vbSiteDiscount := COALESCE (gpGet_GlobalConst_SiteDiscount(inSession), 0);
 
     IF inDate is null
     THEN
@@ -110,6 +112,10 @@ BEGIN
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Deferred(), ioId, TRUE);
 	-- сохранили Id промокода
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementItemId(), ioId, vbMovementItemID);
+    IF COALESCE(vbSiteDiscount, 0) <> 0 THEN
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Site(), ioId, True);
+	END IF;
+    
 
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
@@ -121,10 +127,11 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.
- 17.17.18                                                                       *
+ 30.01.19        *
+ 17.17.18        *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_CheckPromoCode_Site (ioId := 0, inUnitId := 183292, inDate := NULL::TDateTime, inBayer := 'Test Bayer'::TVarChar, inBayerPhone:= '11-22-33', inInvNumberOrder:= '12345', inManagerName:= '5', inGUID := 'bfe7b985', inSession := '3'); -- Аптека_1 пр_Правды_6
+-- SELECT * FROM gpInsertUpdate_Movement_CheckPromoCode_Site (ioId := 0, inUnitId := 183292, inDate := NULL::TDateTime, inBayer := 'Test Bayer'::TVarChar, inBayerPhone:= '11-22-33', inInvNumberOrder:= '12345', inManagerName:= '5', inGUID := '68f0bcd0', inSession := '3'); -- Аптека_1 пр_Правды_6
 
 

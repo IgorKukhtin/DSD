@@ -59,6 +59,8 @@ type
     SUMMPAYADD  : Currency;       //Ручная скидка
     //***21.06.18
     MEMBERSPID  : Integer;       //ФИО пациента
+    //***28.01.19
+    SITEDISC  : boolean;       //Дисконт через сайт
   end;
   TBodyRecord = record
     ID: Integer;            //ид записи
@@ -1065,6 +1067,8 @@ begin
                 SUMMPAYADD := FieldByName('SUMMPAYADD').AsCurrency;
                 // ***14.01.19
                 MEMBERSPID := FieldByName('MEMBERSPID').AsInteger;
+                // ***28.01.19
+                SITEDISC := FieldByName('SITEDISC').AsBoolean;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1191,8 +1195,10 @@ begin
                   dsdSave.Params.AddParam('inManualDiscount', ftInteger, ptInput, Head.MANUALDISC);
                   // ***02.11.18
                   dsdSave.Params.AddParam('inSummPayAdd', ftFloat, ptInput, Head.SUMMPAYADD);
-                  // ***14.01.18
+                  // ***14.01.19
                   dsdSave.Params.AddParam('inMemberSPID', ftInteger, ptInput, Head.MEMBERSPID);
+                  // ***28.01.19
+                  dsdSave.Params.AddParam('inSiteDiscount', ftBoolean, ptInput, Head.SITEDISC);
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 

@@ -23,10 +23,12 @@ $BODY$
    DECLARE vbCashRegisterId Integer;
    DECLARE vbPaidTypeId Integer;
    DECLARE vbManagerId Integer;
+   DECLARE vbSiteDiscount TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_...());
     vbUserId := lpGetUserBySession (inSession);
+    vbSiteDiscount := COALESCE (gpGet_GlobalConst_SiteDiscount(inSession), 0);
 
     IF inDate is null
     THEN
@@ -95,6 +97,9 @@ BEGIN
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberOrder(), ioId, inInvNumberOrder);
     -- Отмечаем документ как отложенный
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Deferred(), ioId, TRUE);
+    IF COALESCE(vbSiteDiscount, 0) <> 0 THEN
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Site(), ioId, True);
+	END IF;
 
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
@@ -105,7 +110,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В.
+ 29.01.19                                                                                      *
  17.12.15                                                                       *
 */
 

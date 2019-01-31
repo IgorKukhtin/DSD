@@ -67,10 +67,10 @@ $BODY$
    DECLARE vbOperDate_Begin2 TDateTime;
    DECLARE vbOperDate_Begin3 TDateTime;
    DECLARE vbOperDate_Begin4 TDateTime;
+   DECLARE vbSiteDiscount TFloat;
 BEGIN
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_Begin1:= CLOCK_TIMESTAMP();
-
 
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
@@ -79,6 +79,7 @@ BEGIN
 
     -- определяется <Торговая сеть>
     vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', ABS (vbUserId));
+    vbSiteDiscount := COALESCE (gpGet_GlobalConst_SiteDiscount(inSession), 0);
 
 
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpgoodsminprice_list')
@@ -473,7 +474,8 @@ BEGIN
           , Price_Unit AS
                (SELECT Price_Unit_all.UnitId
                      , Price_Unit_all.GoodsId
-                     , ROUND (Price_Unit_all.Price, 2) :: TFloat AS Price
+                     , ROUND (CASE WHEN vbSiteDiscount = 0 THEN Price_Unit_all.Price 
+                        ELSE ROUND(Price_Unit_all.Price * (100.0 - vbSiteDiscount) / 100.0, 1) END, 2) :: TFloat AS Price
                 FROM Price_Unit_all
                      -- INNER JOIN _tmpUnitMinPrice_List ON _tmpUnitMinPrice_List.UnitId = Price_Unit_all.UnitId
                )
@@ -693,7 +695,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 30.01.19                                                                    *
  19.04.16                                        *
 */
 
