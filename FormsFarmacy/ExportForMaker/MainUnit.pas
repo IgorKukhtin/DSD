@@ -381,7 +381,7 @@ begin
     ZConnection1.Database := Ini.ReadString('Connect', 'DataBase', 'farmacy');
     Ini.WriteString('Connect', 'DataBase', ZConnection1.Database);
 
-    ZConnection1.HostName := Ini.ReadString('Connect', 'HostName', '9172.17.2.2');
+    ZConnection1.HostName := Ini.ReadString('Connect', 'HostName', '172.17.2.5');
     Ini.WriteString('Connect', 'HostName', ZConnection1.HostName);
 
     ZConnection1.User := Ini.ReadString('Connect', 'User', 'postgres');
