@@ -32,6 +32,7 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbMovementItemId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbSummPay_invoice TFloat;
 BEGIN
 
      -- проверка
@@ -45,28 +46,35 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Счет № <%> от <%> уже полностью оплачен.Выберите другой.', (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId_Invoice), DATE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId_Invoice));
      END IF;
 
-     -- проверка что сумма по счету должна быть >= чем итого сумма всех оплат
-     IF COALESCE (inMovementId_Invoice, 0) <> 0 AND EXISTS (SELECT 1 
-                                                            FROM MovementLinkMovement AS MLM_Invoice
-                                                                 INNER JOIN Movement ON Movement.Id = MLM_Invoice.MovementId
-                                                                                    AND Movement.DescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
-                                                                                    AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                                                    AND Movement.Id <> ioId
-                                                                 LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                                                                         ON MovementFloat_TotalSumm.MovementId = MLM_Invoice.MovementChildId
-                                                                                        AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-                                                                 LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
-                                                                                       AND MovementItem.DescId = zc_MI_Master()
-
-                                                            WHERE MLM_Invoice.MovementChildId = inMovementId_Invoice
-                                                              AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()   
-                                                            GROUP BY MovementFloat_TotalSumm.ValueData
-                                                            HAVING MovementFloat_TotalSumm.ValueData < (SUM (CASE WHEN MovementItem.Amount < 0 THEN -1 * MovementItem.Amount ELSE 0 END) 
-                                                                                                      + CASE WHEN inAmount < 0 THEN -1 * inAmount ELSE 0 END)
-                                                            )
+     -- итого сумма всех оплат по счету
+     IF inMovementId_Invoice > 0
      THEN
-        RAISE EXCEPTION 'Ошибка.Итого сумма оплат превышает сумму Счета № <%> от <%> .', (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId_Invoice), DATE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId_Invoice));
+         vbSummPay_invoice:= -1 * inAmount
+                           + COALESCE ((SELECT -1 * SUM (MovementItem.Amount)
+                                        FROM MovementLinkMovement AS MLM_Invoice
+                                             INNER JOIN Movement ON Movement.Id = MLM_Invoice.MovementId
+                                                                AND Movement.DescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+                                                                AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                                AND Movement.Id <> ioId
+                                             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                                   AND MovementItem.DescId = zc_MI_Master()
+          
+                                        WHERE MLM_Invoice.MovementChildId = inMovementId_Invoice
+                                          AND MLM_Invoice.DescId          = zc_MovementLinkMovement_Invoice()   
+                                       ), 0);
      END IF;
+
+     -- проверка что сумма по счету должна быть >= чем итого сумма всех оплат
+     IF COALESCE (inMovementId_Invoice, 0) <> 0 AND vbSummPay_invoice > COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId_Invoice AND MF.DescId = zc_MovementFloat_TotalSumm()), 0)
+     THEN
+        RAISE EXCEPTION 'Ошибка.В счете № <%> от <%> сумма = <%>, меньше чем Итого сумма оплат = <%>.'
+                       , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId_Invoice)
+                       , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId_Invoice))
+                       , zfConvert_FloatToString ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId_Invoice AND MF.DescId = zc_MovementFloat_TotalSumm()))
+                       , zfConvert_FloatToString (vbSummPay_invoice)
+                        ;
+     END IF;
+     
           
 
      -- проверка (для юр.лица только)

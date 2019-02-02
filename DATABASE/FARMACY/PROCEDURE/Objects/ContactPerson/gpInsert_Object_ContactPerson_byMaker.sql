@@ -19,26 +19,28 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Insert_Object_ContactPerson());
    
-   IF COALESCE (inId, 0) <> 0
+
+   IF inId <> 0
    THEN 
-       RAISE EXCEPTION 'Ошибка.Контактное лицо уже выбрано. Вносить можно только новые контакты'; 
+       vbId := inId;
+       -- RAISE EXCEPTION 'Ошибка.Контактное лицо уже выбрано. Вносить можно только новые контакты'; 
+   ELSE
+       -- пробую найти контактное лицо в уже сохраненных
+       vbId := (SELECT Object_ContactPerson.Id
+                FROM Object AS Object_ContactPerson
+                     LEFT JOIN ObjectString AS ObjectString_Phone
+                                            ON ObjectString_Phone.ObjectId = Object_ContactPerson.Id 
+                                           AND ObjectString_Phone.DescId = zc_ObjectString_ContactPerson_Phone()
+                     LEFT JOIN ObjectString AS ObjectString_Mail
+                                            ON ObjectString_Mail.ObjectId = Object_ContactPerson.Id 
+                                           AND ObjectString_Mail.DescId = zc_ObjectString_ContactPerson_Mail()
+                WHERE Object_ContactPerson.DescId = zc_Object_ContactPerson()
+                  -- AND UPPER (TRIM (Object_ContactPerson.ValueData)) = UPPER (TRIM (inName))
+                  -- AND UPPER (TRIM (ObjectString_Phone.ValueData)) = UPPER (TRIM (inPhone))
+                  AND UPPER (TRIM (ObjectString_Mail.ValueData)) = UPPER (TRIM (inMail))
+                );
    END IF;
 
-   -- пробую найти контактное лицо в уже сохраненных
-   vbId := (SELECT Object_ContactPerson.Id
-            FROM Object AS Object_ContactPerson
-                 LEFT JOIN ObjectString AS ObjectString_Phone
-                                        ON ObjectString_Phone.ObjectId = Object_ContactPerson.Id 
-                                       AND ObjectString_Phone.DescId = zc_ObjectString_ContactPerson_Phone()
-                 LEFT JOIN ObjectString AS ObjectString_Mail
-                                        ON ObjectString_Mail.ObjectId = Object_ContactPerson.Id 
-                                       AND ObjectString_Mail.DescId = zc_ObjectString_ContactPerson_Mail()
-            WHERE Object_ContactPerson.DescId = zc_Object_ContactPerson()
-              AND UPPER (TRIM (Object_ContactPerson.ValueData)) = UPPER (TRIM (inName))
-              AND UPPER (TRIM (ObjectString_Phone.ValueData)) = UPPER (TRIM (inPhone))
-              AND UPPER (TRIM (ObjectString_Mail.ValueData)) = UPPER (TRIM (inMail))
-            );
-   
    IF COALESCE (vbId, 0) = 0
    THEN 
        -- сохранили <Объект>

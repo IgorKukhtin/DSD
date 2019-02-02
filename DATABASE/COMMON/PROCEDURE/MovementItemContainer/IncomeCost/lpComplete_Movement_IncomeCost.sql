@@ -45,8 +45,6 @@ BEGIN
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
      DELETE FROM _tmpMIReport_insert;
-     -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     DELETE FROM _tmpItem;
 
 
 
@@ -137,7 +135,7 @@ BEGIN
 
      -- проводки только для !!!ОДНОГО!!! zc_Movement_IncomeCost = inMovementId
      INSERT INTO _tmpItem (MovementItemId, ContainerId_Goods, ContainerId_summ, AccountId, Amount, OperSumm, OperSumm_calc, InfoMoneyId)
-        WITH -- товары к которым добавляется сумма "затрат"
+        WITH -- товары Из прихода, к которым добавляется сумма "затрат"
              tmpMIContainer_all AS (SELECT MIContainer.*
                                     FROM MovementItemContainer AS MIContainer
                                     WHERE MIContainer.MovementId = vbMovementId_to
@@ -154,14 +152,14 @@ BEGIN
                                    AND tmpMIContainer_Count.Amount > 0
                                 )
              -- распределение "затрат"
-           , tmpItem_To_summ AS (SELECT SUM (tmpMIContainer.OperSumm) AS OperSumm FROM tmpMIContainer)
+           , tmpItem_To_summ AS (SELECT SUM (tmpMIContainer.Amount) AS Amount FROM tmpMIContainer)
                     , tmpRes AS (SELECT tmpMIContainer.*
                                       , _tmpItem_To.InfoMoneyId
-                                      , CAST (_tmpItem_To.OperSumm_calc * tmpMIContainer.OperSumm / tmpItem_To_summ.OperSumm AS Numeric(16, 2)) AS OperSumm_calc
+                                      , CAST (_tmpItem_To.OperSumm_calc * tmpMIContainer.Amount / tmpItem_To_summ.Amount AS Numeric(16, 2)) AS OperSumm_calc
                                         -- № п/п
-                                      , ROW_NUMBER() OVER (PARTITION BY _tmpItem_To.InfoMoneyId ORDER BY tmpMIContainer.OperSumm DESC) AS Ord
+                                      , ROW_NUMBER() OVER (PARTITION BY _tmpItem_To.InfoMoneyId ORDER BY tmpMIContainer.Amount DESC) AS Ord
                                  FROM tmpMIContainer
-                                      INNER JOIN tmpItem_To_summ ON tmpItem_To_summ.OperSumm    <> 0
+                                      INNER JOIN tmpItem_To_summ ON tmpItem_To_summ.Amount    <> 0
                                       INNER JOIN _tmpItem_To     ON _tmpItem_To.MovementId_cost = inMovementId
                                 )
                        , tmpDiff AS (SELECT tmpRes_summ.InfoMoneyId

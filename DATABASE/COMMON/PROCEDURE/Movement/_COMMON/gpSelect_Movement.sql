@@ -44,7 +44,7 @@ BEGIN
      -- определяется уровень доступа
      vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
      -- !!!меняется параметр!!!
-     IF vbObjectId_Constraint > 0 THEN inBranchId:= vbObjectId_Constraint; END IF;
+     IF vbObjectId_Constraint > 0 AND inPaidKindId <> zc_Enum_PaidKind_FirstForm() THEN inBranchId:= vbObjectId_Constraint; END IF;
 
 
      --
