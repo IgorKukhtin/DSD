@@ -475,7 +475,7 @@ BEGIN
                (SELECT Price_Unit_all.UnitId
                      , Price_Unit_all.GoodsId
                      , ROUND (CASE WHEN vbSiteDiscount = 0 THEN Price_Unit_all.Price 
-                        ELSE ROUND(Price_Unit_all.Price * (100.0 - vbSiteDiscount) / 100.0, 1) END, 2) :: TFloat AS Price
+                        ELSE CEIL(Price_Unit_all.Price * (100.0 - vbSiteDiscount) / 10.0) / 10.0 END, 2) :: TFloat AS Price
                 FROM Price_Unit_all
                      -- INNER JOIN _tmpUnitMinPrice_List ON _tmpUnitMinPrice_List.UnitId = Price_Unit_all.UnitId
                )

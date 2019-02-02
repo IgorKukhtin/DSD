@@ -236,8 +236,8 @@ begin
   LoadReportFromFile('Отчет по товару (статьи списания)', ReportPath + '\Отчеты (товарные)\Отчет по товару (статьи списания).fr3');
   }
   LoadReportFromFile('Отчет по товару (примечание)', ReportPath + '\Отчеты (товарные)\Отчет по товару (примечание).fr3');
-  exit;
-  {
+  {exit;
+
   LoadReportFromFile('Отчет по просрочке', ReportPath + '\Отчеты (Отчеты (товарные)\Отчет по просрочке.fr3');
 
   LoadReportFromFile('Отчет По Отгрузкам', ReportPath + '\Отчеты (товарные)\Отчет По Отгрузкам.fr3');
@@ -246,6 +246,7 @@ begin
   LoadReportFromFile('Отчет УП ОПиУ', ReportPath + '\Отчеты (УП)\Отчет УП ОПиУ.fr3');
   LoadReportFromFile('Отчет УП Баланс', ReportPath + '\Отчеты (УП)\Отчет УП Баланс.fr3');
   }
+  LoadReportFromFile('Отчет УП Баланс (Дебет Кредит)', ReportPath + '\Отчеты (УП)\Отчет УП Баланс (Дебет Кредит).fr3');
   LoadReportFromFile('Отчет УП Баланс (Дебет Кредит) свернуто', ReportPath + '\Отчеты (УП)\Отчет УП Баланс (Дебет Кредит) свернуто.fr3');
   exit;
   {

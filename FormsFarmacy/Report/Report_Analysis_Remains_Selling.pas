@@ -124,6 +124,9 @@ type
     cxDBPivotGridField11: TcxDBPivotGridField;
     cxDBPivotGridField12: TcxDBPivotGridField;
     cxDBPivotGridField13: TcxDBPivotGridField;
+    cxDBPivotGridField14: TcxDBPivotGridField;
+    cxDBPivotGridField15: TcxDBPivotGridField;
+    cxDBPivotGridField16: TcxDBPivotGridField;
     procedure actSetGoodsExecute(Sender: TObject);
     procedure actSetPromoExecute(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

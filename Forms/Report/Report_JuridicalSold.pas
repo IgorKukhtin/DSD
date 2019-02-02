@@ -141,7 +141,21 @@ type
     ContractJuridicalDocCode: TcxGridDBColumn;
     ContractJuridicalDocName: TcxGridDBColumn;
     actPrintIncomePartnerService: TdsdPrintAction;
-    bb: TdxBarButton;
+    bbPrintIncomePartnerService: TdxBarButton;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
+    spSavePrintObject: TdsdStoredProc;
+    actSPSaveObject: TdsdExecStoredProc;
+    spJuridicalBalance: TdsdStoredProc;
+    actPrintReportCollation11: TdsdPrintAction;
+    macPrintReportCollation: TMultiAction;
+    bbPrintReportCollation: TdxBarButton;
+    spReport_JuridicalCollation: TdsdStoredProc;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    actReport_JuridicalCollation: TdsdExecStoredProc;
+    actJuridicalBalance: TdsdExecStoredProc;
+    actPrintReportCollation: TdsdPrintAction;
   private
     { Private declarations }
   public

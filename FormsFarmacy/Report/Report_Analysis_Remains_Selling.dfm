@@ -422,6 +422,8 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
     Groups = <>
     OptionsView.RowGrandTotalWidth = 252
     TabOrder = 8
+    ExplicitLeft = 2
+    ExplicitTop = 56
     object cxDBPivotGridField1: TcxDBPivotGridField
       AreaIndex = 0
       AllowedAreas = [faColumn, faRow, faFilter]
@@ -551,6 +553,36 @@ object Report_Analysis_Remains_SellingForm: TReport_Analysis_Remains_SellingForm
       DisplayFormat = '0.00'
       Visible = True
       UniqueName = #1057#1091#1084#1084#1072' '#1057#1048#1055
+    end
+    object cxDBPivotGridField14: TcxDBPivotGridField
+      AreaIndex = 9
+      AllowedAreas = [faFilter, faData]
+      IsCaptionAssigned = True
+      Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057
+      DataBinding.FieldName = 'Price'
+      DisplayFormat = '0.00'
+      Visible = True
+      UniqueName = #1062#1077#1085#1072' '#1089' '#1053#1044#1057
+    end
+    object cxDBPivotGridField15: TcxDBPivotGridField
+      AreaIndex = 10
+      AllowedAreas = [faFilter, faData]
+      IsCaptionAssigned = True
+      Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1089' '#1053#1044#1057
+      DataBinding.FieldName = 'Summ'
+      DisplayFormat = '0.00'
+      Visible = True
+      UniqueName = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1089' '#1053#1044#1057
+    end
+    object cxDBPivotGridField16: TcxDBPivotGridField
+      AreaIndex = 11
+      AllowedAreas = [faFilter, faData]
+      IsCaptionAssigned = True
+      Caption = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1082#1072' '#1089' '#1053#1044#1057
+      DataBinding.FieldName = 'SummSaldo'
+      DisplayFormat = '0.00'
+      Visible = True
+      UniqueName = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1082#1072' '#1089' '#1053#1044#1057
     end
   end
   object DataSource: TDataSource
