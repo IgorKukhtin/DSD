@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 0
   AutoSize = True
   Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1077#1081
-  ClientHeight = 543
+  ClientHeight = 566
   ClientWidth = 909
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,7 +20,7 @@ object MainForm: TMainForm
     Left = 0
     Top = 235
     Width = 909
-    Height = 308
+    Height = 331
     Align = alClient
     TabOrder = 1
     object grtvMaker: TcxGridDBTableView
@@ -35,6 +35,7 @@ object MainForm: TMainForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.CellTextMaxLineCount = 100
+      OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
     end
@@ -117,6 +118,7 @@ object MainForm: TMainForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
+      OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 60
       OptionsView.Indicator = True
@@ -148,6 +150,12 @@ object MainForm: TMainForm
       object ContactPersonName: TcxGridDBColumn
         Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'ContactPersonName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -173,6 +181,28 @@ object MainForm: TMainForm
         Options.Editing = False
         Width = 114
       end
+      object AmountMonth: TcxGridDBColumn
+        Caption = #1055#1077#1088#1080#1086#1076'. '#1084#1077#1089#1103#1094#1077#1074
+        DataBinding.FieldName = 'AmountMonth'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1087#1077#1088#1080#1086#1076#1080#1095#1085#1086#1089#1090#1100' '#1086#1090#1087#1088#1072#1074#1082#1080'  '#1074' '#1084#1077#1089#1103#1094#1072#1093
+        Options.Editing = False
+        Width = 70
+      end
+      object AmountDay: TcxGridDBColumn
+        Caption = #1055#1077#1088#1080#1086#1076'. '#1076#1085#1077#1081
+        DataBinding.FieldName = 'AmountDay'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1087#1077#1088#1080#1086#1076#1080#1095#1085#1086#1089#1090#1100' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1074' '#1076#1085#1103#1093
+        Options.Editing = False
+        Width = 70
+      end
       object SendPlan: TcxGridDBColumn
         Caption = #1050#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' ('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103')'
         DataBinding.FieldName = 'SendPlan'
@@ -190,6 +220,15 @@ object MainForm: TMainForm
         HeaderHint = #1050#1086#1075#1076#1072' '#1091#1089#1087#1077#1096#1085#1086' '#1087#1088#1086#1096#1083#1072' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1076#1072#1090#1072' / '#1074#1088#1077#1084#1103')'
         Options.Editing = False
         Width = 97
+      end
+      object SendLast: TcxGridDBColumn
+        Caption = #1057#1083'. '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103')'
+        DataBinding.FieldName = 'SendLast'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1076#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1083#1077#1076#1091#1102#1097#1077#1081' '#1086#1090#1087#1088#1072#1074#1082#1080
+        Options.Editing = False
+        Width = 85
       end
       object isReport1: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084'"'
@@ -258,13 +297,16 @@ object MainForm: TMainForm
   object qryMaker: TZQuery
     Connection = ZConnection1
     SQL.Strings = (
-      'select * from gpSelect_Object_Maker( '#39'3'#39') '
+      'select * from gpSelect_Object_Maker( '#39'3'#39')'
       
         'WHERE SendPlan <= CURRENT_TIMESTAMP AND (SendReal < SendPlan OR ' +
-        'SendReal IS NULL) AND '
+        'SendReal IS NULL) AND'
       
         '(COALESCE (isReport1, FALSE) = TRUE OR COALESCE (isReport2, FALS' +
-        'E) = TRUE);')
+        'E) = TRUE OR'
+      
+        'COALESCE (isReport3, FALSE) = TRUE OR COALESCE (isReport4, FALSE' +
+        ') = TRUE);')
     Params = <>
     Left = 144
     Top = 384
@@ -308,6 +350,16 @@ object MainForm: TMainForm
     object N2: TMenuItem
       Tag = 1
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084
+      OnClick = pmClick
+    end
+    object N3: TMenuItem
+      Tag = 2
+      Caption = #1054#1090#1095#1077#1090' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1086#1089#1090#1072#1090#1082#1086#1084' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072
+      OnClick = pmClick
+    end
+    object N4: TMenuItem
+      Tag = 3
+      Caption = #1054#1090#1095#1077#1090' '#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082
       OnClick = pmClick
     end
   end

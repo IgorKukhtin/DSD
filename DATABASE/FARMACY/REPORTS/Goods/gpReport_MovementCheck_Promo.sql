@@ -25,6 +25,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,UnitName TVarChar       --Подразделение
               ,MainJuridicalId integer  --Наше Юр. лицо
               ,MainJuridicalName TVarChar  --Наше Юр. лицо
+              ,JuridicalId integer     --Юр. лицо
               ,JuridicalName TVarChar  --Юр. лицо
               ,RetailName TVarChar     --Торговая сеть
               ,Price TFloat            --Цена в документе
@@ -313,19 +314,19 @@ BEGIN
                           WHERE ObjectLink_Unit_Juridical.ObjectId IN (SELECT DISTINCT tmpData.UnitId FROM tmpData)
                                   AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                          )
-  , tmpMakerReport AS (SELECT DISTINCT OL_MakerReport_Juridical.ChildObjectid AS JuridicalId
-                       FROM ObjectLink AS OL_MakerReport_Maker
+  , tmpMakerReport AS (SELECT DISTINCT ObjectLink_Juridical.ChildObjectId AS JuridicalId
+                       FROM Object AS Object_MakerReport
+   
+                            LEFT JOIN ObjectLink AS ObjectLink_Maker 
+                                ON ObjectLink_Maker.ObjectId = Object_MakerReport.Id 
+                               AND ObjectLink_Maker.DescId = zc_ObjectLink_MakerReport_Maker()
 
-                            INNER JOIN Object AS Object_MakerReport
-                                              ON Object_MakerReport.Id = OL_MakerReport_Maker.ObjectId 
+                            INNER JOIN ObjectLink AS ObjectLink_Juridical 
+                                ON ObjectLink_Juridical.ObjectId = Object_MakerReport.Id 
+                               AND ObjectLink_Juridical.DescId = zc_ObjectLink_MakerReport_Juridical()
 
-                            INNER JOIN ObjectLink AS OL_MakerReport_Juridical
-                                                  ON OL_MakerReport_Juridical.DescId = zc_ObjectLink_MakerReport_Juridical() 
-                                                 AND OL_MakerReport_Maker.ObjectId = OL_MakerReport_Juridical.ObjectId 
-                                                 AND COALESCE (OL_MakerReport_Maker.ChildObjectid, 0) <> 0
-
-                       WHERE OL_MakerReport_Maker.DescId = zc_ObjectLink_MakerReport_Maker() 
-                         AND COALESCE (OL_MakerReport_Maker.ChildObjectid, inMakerId) = inMakerId
+                       WHERE Object_MakerReport.DescId = zc_Object_MakerReport()
+                         AND COALESCE (ObjectLink_Maker.ChildObjectid, inMakerId) = inMakerId
                          AND Object_MakerReport.isErased = False
                        )
 
@@ -348,6 +349,7 @@ BEGIN
             , tmpUnitParam.UnitName                    AS UnitName
             , tmpUnitParam.MainJuridicalId             AS MainJuridicalId
             , tmpUnitParam.MainJuridicalName           AS MainJuridicalName
+            , Object_From.Id                           AS JuridicalId
             , Object_From.ValueData                    AS JuridicalName
             , tmpUnitParam.RetailName                  AS RetailName 
             , CASE WHEN tmpData.TotalAmount <> 0 THEN tmpData.Summa / tmpData.TotalAmount ELSE 0 END        :: TFloat AS Price
@@ -398,6 +400,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В. 
+ 01.02.19                                                      *
  27.01.19                                                      *
  24.01.19                                                      *
  17.01.19                                                      *
@@ -412,4 +415,4 @@ $BODY$
 
 -- тест
 --select * from gpReport_MovementCheck_Promo(inMakerId := 2336655 , inStartDate := ('01.11.2016')::TDateTime , inEndDate := ('30.11.2016')::TDateTime ,  inSession := '3');
--- select * from gpReport_MovementCheck_Promo(6145049, '01.12.2018', '01.01.2019', '3') 
+-- select * from gpReport_MovementCheck_Promo(2336605 , '01.01.2019', '31.01.2019', '3') 

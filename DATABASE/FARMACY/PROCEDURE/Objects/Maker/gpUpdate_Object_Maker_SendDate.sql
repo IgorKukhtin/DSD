@@ -31,11 +31,27 @@ BEGIN
      FROM ObjectDate 
      WHERE ObjectDate.DescId = zc_ObjectDate_Maker_SendPlan() and ObjectDate.ObjectId = ioId;
      
-     IF COALESCE (inAddMonth, 0) <> 0 
+     IF COALESCE (inAddDay, 0) = 0 
      THEN
-       vbSendPlan := vbSendPlan + inAddMonth * interval '1 month';
+       IF COALESCE (inAddMonth, 0) <> 0 
+       THEN
+         vbSendPlan := vbSendPlan + inAddMonth * interval '1 month';
+       ELSE
+         vbSendPlan := vbSendPlan + interval '1 month';       
+       END IF;
      ELSE
-       vbSendPlan := vbSendPlan + inAddDay * interval '1 day';     
+       IF COALESCE (inAddDay, 0) = 15
+       THEN
+         IF date_part('day', vbSendPlan) < 16
+         THEN
+           vbSendPlan := vbSendPlan + inAddDay * interval '1 day';     
+         ELSE
+           vbSendPlan := vbSendPlan - inAddDay * interval '1 day';     
+           vbSendPlan := vbSendPlan + interval '1 month';         
+         END IF;
+       ELSE
+         vbSendPlan := vbSendPlan + inAddDay * interval '1 day';     
+       END IF;
      END IF;
 
      -- сохранили свойство <>

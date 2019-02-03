@@ -23,6 +23,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
              , UnitName TVarChar       --Подразделение
              , MainJuridicalId Integer  --Наше Юр. лицо
              , MainJuridicalName TVarChar  --Наше Юр. лицо
+             , JuridicalId Integer     --Юр. лицо
              , JuridicalName TVarChar  --Юр. лицо
              , RetailName TVarChar     --Торговая сеть
              , Price TFloat            --Цена в документе
@@ -38,6 +39,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
              , InsertDate TDateTime    --Дата (созд.)
              , isChecked  Boolean      -- для маркетинга
              , isReport   Boolean      -- для отчета
+             , isSendMaker Boolean     -- для отчета производителю
               )
 
 AS
@@ -250,6 +252,7 @@ BEGIN
                      , Object_Unit.ValueData                    AS UnitName
                      , Object_MainJuridical.Id                  AS MainJuridicalId
                      , Object_MainJuridical.ValueData           AS MainJuridicalName
+                     , Object_From.Id                           AS JuridicalId
                      , Object_From.ValueData                    AS JuridicalName
                      , Object_Retail.ValueData                  AS RetailName 
                      , MovementDate_Payment.ValueData           AS PaymentDate
@@ -360,6 +363,21 @@ BEGIN
                                             ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
                                            AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                  )
+  , tmpMakerReport AS (SELECT DISTINCT ObjectLink_Juridical.ChildObjectId AS JuridicalId
+                       FROM Object AS Object_MakerReport
+   
+                            LEFT JOIN ObjectLink AS ObjectLink_Maker 
+                                ON ObjectLink_Maker.ObjectId = Object_MakerReport.Id 
+                               AND ObjectLink_Maker.DescId = zc_ObjectLink_MakerReport_Maker()
+
+                            INNER JOIN ObjectLink AS ObjectLink_Juridical 
+                                ON ObjectLink_Juridical.ObjectId = Object_MakerReport.Id 
+                               AND ObjectLink_Juridical.DescId = zc_ObjectLink_MakerReport_Juridical()
+
+                       WHERE Object_MakerReport.DescId = zc_Object_MakerReport()
+                         AND COALESCE (ObjectLink_Maker.ChildObjectid, inMakerId) = inMakerId
+                         AND Object_MakerReport.isErased = False
+                       )
 
       -- результат
       SELECT  tmpMovMI.MovementId
@@ -378,6 +396,7 @@ BEGIN
             , tmpMov.UnitName
             , tmpMov.MainJuridicalId
             , tmpMov.MainJuridicalName
+            , tmpMov.JuridicalId
             , tmpMov.JuridicalName
             , tmpMov.RetailName 
             , tmpMovMI.Price
@@ -400,6 +419,7 @@ BEGIN
             
             , tmpMovMI.isChecked
             , tmpMovMI.isReport
+            , CASE WHEN COALESCE(MakerReport.JuridicalId, 0) = 0 THEN True ELSE False END  AS isSendMaker  
             
       FROM tmpMovMI 
            LEFT JOIN tmpGoods ON tmpGoods.GoodsId = tmpMovMI.GoodsId
@@ -415,6 +435,9 @@ BEGIN
      
            LEFT JOIN tmpMovementItemString AS MIString_PartionGoods
                                            ON MIString_PartionGoods.MovementItemId = tmpMovMI.MovementItemId
+
+          LEFT JOIN tmpMakerReport AS MakerReport
+                                   ON MakerReport.JuridicalId = MILinkObject_Goods.ObjectId
 ;
 
 END;
@@ -424,6 +447,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В. 
+ 01.02.19                                                      *
  27.01.19                                                                                    *
  17.01.19                                                                                    *
  20.02.18         *
