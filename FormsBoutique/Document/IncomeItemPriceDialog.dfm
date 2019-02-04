@@ -169,7 +169,7 @@ object IncomeItemPriceDialogForm: TIncomeItemPriceDialogForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 144
-    Top = 24
+    Left = 128
+    Top = 16
   end
 end

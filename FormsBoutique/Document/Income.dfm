@@ -623,6 +623,13 @@ object IncomeForm: TIncomeForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersent'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 102
     Top = 183
@@ -788,6 +795,14 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -935,6 +950,12 @@ object IncomeForm: TIncomeForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1093'. '#1080' '#1087#1088#1086#1076#1072#1078#1080
       Category = 0
     end
+    object bb: TdxBarButton
+      Action = macUpdate_PriceWithoutPersent_List
+      Category = 0
+      Hint = #1059#1084#1077#1085#1100#1096#1080#1090#1100' '#1074#1093'.'#1094#1077#1085#1099' '#1085#1072' %'
+      ImageIndex = 56
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -955,6 +976,45 @@ object IncomeForm: TIncomeForm
     Images = dmMain.ImageList
     Left = 51
     Top = 231
+    object actUpdate_MI_Income_Price: TdsdExecStoredProc
+      Category = 'UpdatePricePersent'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_Income_Price
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_Income_Price
+        end>
+      Caption = #1084#1077#1085#1103#1077#1090' '#1094#1077#1085#1091' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1076#1074#1080#1078#1077#1085#1080#1103#1093
+      Hint = #1084#1077#1085#1103#1077#1090' '#1094#1077#1085#1091' '#1087#1088#1086#1076#1072#1078#1080' '#1074' '#1076#1074#1080#1078#1077#1085#1080#1103#1093
+      ImageIndex = 56
+    end
+    object actUpdate_PriceWithoutPersent: TdsdExecStoredProc
+      Category = 'UpdatePricePersent'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PriceWithoutPersent
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PriceWithoutPersent
+        end>
+      Caption = #1088#1072#1089#1095#1077#1090' '#1074#1093'. '#1094#1077#1085#1099' '#1073#1077#1079' '#1087#1088#1086#1094#1077#1085#1090#1072
+      Hint = #1088#1072#1089#1095#1077#1090' '#1074#1093'. '#1094#1077#1085#1099' '#1073#1077#1079' '#1087#1088#1086#1094#1077#1085#1090#1072
+      ImageIndex = 56
+    end
+    object actGet_MI_Income_OperPriceList: TdsdExecStoredProc
+      Category = 'UpdatePricePersent'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_MI_Income_OperPriceList
+      StoredProcList = <
+        item
+          StoredProc = spGet_MI_Income_OperPriceList
+        end>
+      Caption = #1087#1086#1083#1091#1095#1080#1090#1100' '#1094#1077#1085#1091' '#1087#1088#1086#1076#1072#1078#1080
+      Hint = #1087#1086#1083#1091#1095#1080#1090#1100' '#1094#1077#1085#1091' '#1087#1088#1086#1076#1072#1078#1080
+      ImageIndex = 56
+    end
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -968,6 +1028,23 @@ object IncomeForm: TIncomeForm
       Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 14
       ShortCut = 113
+    end
+    object macUpdate_PriceWithoutPersent_List: TMultiAction
+      Category = 'UpdatePricePersent'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPersentDialog1
+        end
+        item
+          Action = macUpdate_PriceWithoutPersent
+        end
+        item
+          Action = actRefreshMI
+        end>
+      QuestionBeforeExecute = #1059#1084#1077#1085#1100#1096#1080#1090#1100' '#1074#1093'.'#1094#1077#1085#1099' '#1085#1072' %?'
+      InfoAfterExecute = #1062#1077#1085#1099' '#1080#1079#1084#1077#1085#1077#1085#1099
+      Caption = 'macUpdate_PriceWithoutPersent'
     end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -988,6 +1065,32 @@ object IncomeForm: TIncomeForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       ImageIndexTrue = 65
       ImageIndexFalse = 64
+    end
+    object actPersentDialog: TdsdOpenForm
+      Category = 'UpdatePricePersent'
+      MoveParams = <>
+      Caption = #1080#1079#1084#1077#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1091' '#1085#1072' %'
+      Hint = #1080#1079#1084#1077#1085#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1091' '#1085#1072' %'
+      FormName = 'TDiscountPersentDialogForm'
+      FormNameParam.Value = 'TDiscountPersentDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'ParamValue'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inPersent'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ParamName'
+          Value = '% '#1080#1079#1084'. '#1074#1093'. '#1094#1077#1085#1099
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -1969,6 +2072,51 @@ object IncomeForm: TIncomeForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object macUpdate_PriceWithoutPersent: TMultiAction
+      Category = 'UpdatePricePersent'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_PriceWithoutPersent
+        end
+        item
+          Action = actGet_MI_Income_OperPriceList
+        end
+        item
+          Action = actUpdate_MI_Income_Price
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdate_PriceWithoutPersent'
+    end
+    object actPersentDialog1: TExecuteDialog
+      Category = 'UpdatePricePersent'
+      MoveParams = <>
+      Caption = #1091#1084#1077#1085#1100#1096#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1091' '#1085#1072' %'
+      Hint = #1091#1084#1077#1085#1100#1096#1080#1090#1100' '#1074#1093'. '#1094#1077#1085#1091' '#1085#1072' %'
+      ImageIndex = 35
+      FormName = 'TDiscountPersentDialogForm'
+      FormNameParam.Value = 'TDiscountPersentDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'ParamValue'
+          Value = 0.000000000000000000
+          Component = FormParams
+          ComponentItem = 'inPersent'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ParamName'
+          Value = '% '#1080#1079#1084'. '#1074#1093'. '#1094#1077#1085#1099
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
     end
   end
   object MasterDS: TDataSource
@@ -2957,7 +3105,7 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 472
+    Left = 464
     Top = 368
   end
   object PeriodChoice: TPeriodChoice
@@ -3048,5 +3196,144 @@ object IncomeForm: TIncomeForm
     PackSize = 1
     Left = 44
     Top = 376
+  end
+  object spGet_MI_Income_OperPriceList: TdsdStoredProc
+    StoredProcName = 'gpGet_MI_Income_OperPriceList'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsName'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'GoodsName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPrice'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountForPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountForPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioOperPriceList'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPriceList'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioOperPriceList'
+        Value = True
+        Component = FormParams
+        ComponentItem = 'OperPriceList'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 352
+    Top = 400
+  end
+  object spUpdate_MI_Income_Price: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Income_Price'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPrice'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPriceList'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperPriceList'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 280
+    Top = 400
+  end
+  object spUpdate_PriceWithoutPersent: TdsdStoredProc
+    StoredProcName = 'gpUpdate_PriceWithoutPersent'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inPersent'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inPersent'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperPrice'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 160
+    Top = 408
   end
 end

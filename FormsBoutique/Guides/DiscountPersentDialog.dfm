@@ -73,8 +73,8 @@ object DiscountPersentDialogForm: TDiscountPersentDialogForm
     Width = 179
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 206
-    Top = 56
+    Left = 158
+    Top = 64
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -96,7 +96,7 @@ object DiscountPersentDialogForm: TDiscountPersentDialogForm
         Value = Null
         Component = ceValue
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -107,11 +107,11 @@ object DiscountPersentDialogForm: TDiscountPersentDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 118
+    Left = 86
     Top = 19
   end
   object ActionList: TActionList
-    Left = 219
+    Left = 179
     Top = 17
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -121,7 +121,6 @@ object DiscountPersentDialogForm: TDiscountPersentDialogForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end
