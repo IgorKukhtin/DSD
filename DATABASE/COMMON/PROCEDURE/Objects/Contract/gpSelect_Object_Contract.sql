@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , ContractKeyId Integer, ContractId_Key Integer, Code_Key Integer
              , InvNumber_Key TVarChar, ContractStateKindCode_Key Integer
 
-             , Comment TVarChar, BankAccountExternal TVarChar
+             , Comment TVarChar, BankAccountExternal TVarChar, BankAccountPartner TVarChar
              , GLNCode TVarChar, PartnerCode TVarChar
              , Term TFloat, EndDate_Term TDateTime
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
@@ -63,7 +63,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , PriceListId Integer, PriceListName TVarChar
              -- , PriceListPromoId Integer, PriceListPromoName TVarChar
              -- , StartPromo TDateTime, EndPromo TDateTime
-             
+
              , isErased Boolean 
               )
 AS
@@ -120,6 +120,7 @@ BEGIN
                                        AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
                                      GROUP BY ObjectLink_Contract_Juridical.ChildObjectId
                                     )
+
    SELECT
          Object_Contract_View.ContractId   AS Id
        , Object_Contract_View.ContractCode AS Code
@@ -134,6 +135,7 @@ BEGIN
 
        , ObjectString_Comment.ValueData            AS Comment 
        , ObjectString_BankAccount.ValueData        AS BankAccountExternal
+       , ObjectString_BankAccountPartner.ValueData AS BankAccountPartner
        , ObjectString_GLNCode.ValueData            AS GLNCode
        , ObjectString_PartnerCode.ValueData        AS PartnerCode
        , Object_Contract_View.Term
@@ -281,7 +283,11 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_BankAccount
                                ON ObjectString_BankAccount.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_BankAccount.DescId = zc_objectString_Contract_BankAccount()
-                              
+
+        LEFT JOIN ObjectString AS ObjectString_BankAccountPartner
+                               ON ObjectString_BankAccountPartner.ObjectId = Object_Contract_View.ContractId
+                              AND ObjectString_BankAccountPartner.DescId = zc_objectString_Contract_BankAccountPartner()
+
         LEFT JOIN ObjectString AS ObjectString_GLNCode
                                ON ObjectString_GLNCode.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_GLNCode.DescId = zc_objectString_Contract_GLNCode()
@@ -313,7 +319,7 @@ BEGIN
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
         LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
-        
+
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Contract_View.JuridicalId
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
@@ -333,7 +339,7 @@ BEGIN
                              ON ObjectLink_Contract_PersonalTrade.ObjectId = Object_Contract_View.ContractId 
                             AND ObjectLink_Contract_PersonalTrade.DescId = zc_ObjectLink_Contract_PersonalTrade()
         LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = ObjectLink_Contract_PersonalTrade.ChildObjectId
-        
+
         LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalCollation
                              ON ObjectLink_Contract_PersonalCollation.ObjectId = Object_Contract_View.ContractId 
                             AND ObjectLink_Contract_PersonalCollation.DescId = zc_ObjectLink_Contract_PersonalCollation()
@@ -348,7 +354,7 @@ BEGIN
                              ON ObjectLink_Contract_BankAccount.ObjectId = Object_Contract_View.ContractId 
                             AND ObjectLink_Contract_BankAccount.DescId = zc_ObjectLink_Contract_BankAccount()
         LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_Contract_BankAccount.ChildObjectId
-                
+
         LEFT JOIN ObjectLink AS ObjectLink_Contract_AreaContract
                              ON ObjectLink_Contract_AreaContract.ObjectId = Object_Contract_View.ContractId 
                             AND ObjectLink_Contract_AreaContract.DescId = zc_ObjectLink_Contract_AreaContract()
@@ -404,12 +410,12 @@ BEGIN
         LEFT JOIN ObjectDate AS ObjectDate_EndPromo
                              ON ObjectDate_EndPromo.ObjectId = Object_Contract_View.ContractId
                             AND ObjectDate_EndPromo.DescId = zc_ObjectDate_Contract_EndPromo()*/
-                                
+
         LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
                              ON ObjectLink_Contract_PriceList.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
         LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_Contract_PriceList.ChildObjectId
- 
+
         LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
                              ON ObjectLink_Contract_Currency.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
@@ -447,6 +453,7 @@ ALTER FUNCTION gpSelect_Object_Contract (TDateTime, TDateTime, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 04.02.19         * BankAccountPartner
  18.01.19         * add isDefaultOut
  05.10.18         * add PartnerCode
  30.06.17         * add JuridicalInvoice

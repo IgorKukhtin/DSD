@@ -78,6 +78,8 @@ object ContractForm: TContractForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 104
+    ExplicitTop = 62
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -526,6 +528,15 @@ object ContractForm: TContractForm
       object BankAccountExternal: TcxGridDBColumn
         Caption = #1056'.'#1089#1095#1077#1090' ('#1080#1089#1093'.'#1087#1083#1072#1090#1077#1078')'
         DataBinding.FieldName = 'BankAccountExternal'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 47
+      end
+      object BankAccountPartner: TcxGridDBColumn
+        Caption = #1088#1072#1089#1095'.'#1089#1095#1077#1090' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
+        DataBinding.FieldName = 'BankAccountPartner'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

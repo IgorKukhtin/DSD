@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Contract(
 )
 RETURNS TABLE (Id Integer, Code Integer
              , InvNumber TVarChar, InvNumberArchive TVarChar
-             , Comment TVarChar, BankAccountExternal TVarChar
+             , Comment TVarChar, BankAccountExternal TVarChar,BankAccountPartner TVarChar
              , GLNCode TVarChar, PartnerCode TVarChar
              , Term TFloat, DayTaxSummary TFloat
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
@@ -67,6 +67,7 @@ BEGIN
            , '' :: TVarChar   AS InvNumberArchive
            , '' :: TVarChar   AS Comment
            , '' :: TVarChar   AS BankAccountExternal
+           , '' :: TVarChar   AS BankAccountPartner
            , '' :: TVarChar   AS GLNCode
            , '' :: TVarChar   AS PartnerCode
 
@@ -166,6 +167,7 @@ BEGIN
            , ObjectString_InvNumberArchive.ValueData AS InvNumberArchive
            , ObjectString_Comment.ValueData          AS Comment
            , ObjectString_BankAccount.ValueData      AS BankAccountExternal
+           , ObjectString_BankAccountPartner.ValueData AS BankAccountPartner
            , ObjectString_GLNCode.ValueData          AS GLNCode
            , ObjectString_PartnerCode.ValueData      AS PartnerCode
            , ObjectFloat_Term.ValueData              AS Term
@@ -276,7 +278,11 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_BankAccount
                                    ON ObjectString_BankAccount.ObjectId = Object_Contract_View.ContractId
                                   AND ObjectString_BankAccount.DescId = zc_objectString_Contract_BankAccount()
-                                  
+
+            LEFT JOIN ObjectString AS ObjectString_BankAccountPartner
+                                   ON ObjectString_BankAccountPartner.ObjectId = Object_Contract_View.ContractId
+                                  AND ObjectString_BankAccountPartner.DescId = zc_objectString_Contract_BankAccountPartner()
+
             LEFT JOIN ObjectString AS ObjectString_GLNCode
                                    ON ObjectString_GLNCode.ObjectId = Object_Contract_View.ContractId
                                   AND ObjectString_GLNCode.DescId = zc_objectString_Contract_GLNCode()                                  
@@ -313,8 +319,8 @@ BEGIN
                                    AND ObjectBoolean_Unique.DescId = zc_ObjectBoolean_Contract_Unique()
 
             LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
-                            ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId
-                           AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+                                 ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId
+                                AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
             LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Contract_Personal.ChildObjectId               
 
             LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalTrade
@@ -336,7 +342,7 @@ BEGIN
                                  ON ObjectLink_Contract_BankAccount.ObjectId = Object_Contract_View.ContractId 
                                 AND ObjectLink_Contract_BankAccount.DescId = zc_ObjectLink_Contract_BankAccount()
             LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_Contract_BankAccount.ChildObjectId
-                
+
             LEFT JOIN ObjectLink AS ObjectLink_Contract_AreaContract
                                  ON ObjectLink_Contract_AreaContract.ObjectId = Object_Contract_View.ContractId 
                                 AND ObjectLink_Contract_AreaContract.DescId = zc_ObjectLink_Contract_AreaContract()
@@ -413,6 +419,7 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 04.02.19         * add BankAccountIn
  18.01.19         * add isDefaultOut
  05.10.18         * add PartnerCode
  30.06.17         * add JuridicalInvoice

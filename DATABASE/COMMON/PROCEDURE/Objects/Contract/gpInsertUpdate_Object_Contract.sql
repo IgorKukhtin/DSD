@@ -13,7 +13,13 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarCh
                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                       , Boolean, Boolean, Boolean, Boolean, Integer, Integer, TDateTime, TDateTime, TVarChar);
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tfloat, Tfloat, TDateTime, TDateTime, TDateTime
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Tfloat, Tfloat, TDateTime, TDateTime, TDateTime
+                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, TDateTime, TDateTime, TVarChar);
+*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                      , Tfloat, Tfloat, TDateTime, TDateTime, TDateTime
                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                       , Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, TDateTime, TDateTime, TVarChar);
@@ -25,6 +31,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inInvNumberArchive    TVarChar,      -- Номер архивирования
     IN inComment             TVarChar,      -- Примечание
     IN inBankAccountExternal TVarChar,      -- р.счет (исх.платеж)
+    IN inBankAccountPartner  TVarChar,      -- р.счет (вх.платеж)
     IN inGLNCode             TVarChar,      -- Код GLN  
     IN inPartnerCode         TVarChar,      -- Код поставщика
     IN inTerm                Tfloat  ,      -- Период пролонгации
@@ -48,7 +55,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inPersonalTradeId     Integer  ,     -- Сотрудник (торговый)
     IN inPersonalCollationId Integer  ,     -- Сотрудник (сверка)
     IN inPersonalSigningId   Integer  ,     -- Сотрудник (подписант)
-    IN inBankAccountId       Integer  ,     -- Расчетный счет (вх.платеж)
+    IN inBankAccountId       Integer  ,     -- Расчетный счет (исх.платеж)
     IN inContractTagId       Integer  ,     -- Признак договора
     
     IN inAreaContractId      Integer  ,     -- Регион
@@ -287,6 +294,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_Comment(), ioId, inComment);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_BankAccount(), ioId, inBankAccountExternal);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_BankAccountPartner(), ioId, inBankAccountPartner);
+
    -- сохранили свойство <Код GLN>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_GLNCode(), ioId, inGLNCode);
    -- сохранили свойство <Код поставщика>
@@ -391,6 +401,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.02.19         * inBankAccountPartner
  18.01.19         * DefaultOut
  05.10.18         * add PartnerCode
  30.03.17         * inJuridicalInvoiceId
