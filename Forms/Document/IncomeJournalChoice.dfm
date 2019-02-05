@@ -4,10 +4,8 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
   ClientWidth = 1110
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -383
-  ExplicitTop = -81
   ExplicitWidth = 1126
-  ExplicitHeight = 574
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -606,6 +604,21 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
           Value = Null
           Component = cxGridDBTableView
           ComponentItem = 'colInvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ToId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ToName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGridExportLink, cxGraphics, Math,
+  System.Win.ComObj, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGridExportLink, cxGraphics, Math,
   cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
@@ -16,7 +16,7 @@ uses
   IdMessage, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
   IdExplicitTLSClientServerBase, IdMessageClient, IdSMTPBase, IdSMTP,
   Vcl.ActnList, IdText, IdSSLOpenSSL, IdGlobal, strUtils, IdAttachmentFile,
-  IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils;
+  IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit;
 
 type
   TMainForm = class(TForm)
@@ -55,6 +55,8 @@ type
     N1: TMenuItem;
     N2: TMenuItem;
     qrySetDateSend: TZQuery;
+    N3: TMenuItem;
+    N4: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -65,6 +67,10 @@ type
     procedure pmClick(Sender: TObject);
   private
     { Private declarations }
+    RepType : integer;
+    DateStart : TDateTime;
+    DateEnd : TDateTime;
+
     FileName: String;
     SavePath: String;
 
@@ -80,8 +86,14 @@ type
     { Public declarations }
     procedure Add_Log(AMessage:String);
     procedure OpenAndFormatSQL;
+    procedure SetDateParams;
+
     procedure ReportIncome;
     procedure ReportCheck;
+    procedure ReportIncomeConsumptionBalance;
+    procedure ReportAnalysisRemainsSelling;
+
+    procedure ExportAnalysisRemainsSelling;
   end;
 
 var
@@ -90,6 +102,13 @@ var
 implementation
 
 {$R *.dfm}
+
+function GetThousandSeparator : string;
+begin
+  if FormatSettings.ThousandSeparator = #160 then Result := ' '
+  else Result := FormatSettings.ThousandSeparator;
+end;
+
 
 procedure TMainForm.Add_Log(AMessage: String);
 var
@@ -118,6 +137,8 @@ begin
     while not qryMaker.Eof do
     begin
 
+      SetDateParams;
+
       if qryMaker.FieldByName('isReport1').AsBoolean then
       begin
         ReportIncome;
@@ -132,10 +153,24 @@ begin
         btnSendMailClick(Sender);
       end;
 
+      if qryMaker.FieldByName('isReport3').AsBoolean then
+      begin
+        ReportAnalysisRemainsSelling;
+        btnExportClick(Sender);
+        btnSendMailClick(Sender);
+      end;
+
+      if qryMaker.FieldByName('isReport4').AsBoolean then
+      begin
+        ReportIncomeConsumptionBalance;;
+        btnExportClick(Sender);
+        btnSendMailClick(Sender);
+      end;
+
       try
         qrySetDateSend.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
-        qrySetDateSend.Params.ParamByName('inAddMonth').Value :=  1;
-        qrySetDateSend.Params.ParamByName('inAddDay').Value :=  0;
+        qrySetDateSend.Params.ParamByName('inAddMonth').Value :=  qryMaker.FieldByName('AmountMonth').AsInteger;
+        qrySetDateSend.Params.ParamByName('inAddDay').Value :=  qryMaker.FieldByName('AmountDay').AsInteger;
         qrySetDateSend.ExecSQL;
       except
         on E: Exception do
@@ -222,6 +257,8 @@ begin
 
   if qryReport_Upload.Active then qryReport_Upload.Close;
   if grtvMaker.ColumnCount > 0 then grtvMaker.ClearItems;
+  if grtvMaker.DataController.Summary.FooterSummaryItems.Count > 0 then
+    grtvMaker.DataController.Summary.FooterSummaryItems.Clear;
   qryReport_Upload.SQL.Text :=
     'select '#13#10 +
     '  Code AS "Код", '#13#10 +
@@ -241,13 +278,28 @@ begin
     '  RetailName AS "Торговая сеть", '#13#10 +
     '  MainJuridicalName AS "Наше юр. лицо" '#13#10 +
     'from gpReport_MovementIncome_Promo(:inMaker, :inStartDate, :inEndDate, ''3'') '#13#10 +
-    'where MainJuridicalId not in (5603474, 2141038, 393047, 3031067)';
+    'where isSendMaker = True and MainJuridicalId not in (2141104, 3031071, 5603546, 377601)';
 
   qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
-  qryReport_Upload.Params.ParamByName('inStartDate').Value := IncMonth(IncDay(Date, 1 - DayOf(Date)), - 1);
-  qryReport_Upload.Params.ParamByName('inEndDate').Value := IncDay(Date, - DayOf(Date));
+  qryReport_Upload.Params.ParamByName('inStartDate').Value := DateStart;
+  qryReport_Upload.Params.ParamByName('inEndDate').Value := DateEnd;
 
   OpenAndFormatSQL;
+
+  if grtvMaker.ColumnCount = 0 then Exit;
+
+  with TcxGridDBTableSummaryItem(grtvMaker.DataController.Summary.FooterSummaryItems.Add) do
+  begin
+    Column := grtvMaker.Columns[6];
+    Format := '0.###';
+    Kind := skSum;
+  end;
+  with TcxGridDBTableSummaryItem(grtvMaker.DataController.Summary.FooterSummaryItems.Add) do
+  begin
+    Column := grtvMaker.Columns[7];
+    Format := '0.###';
+    Kind := skSum;
+  end;
 end;
 
 procedure TMainForm.ReportCheck;
@@ -257,6 +309,8 @@ begin
 
   if qryReport_Upload.Active then qryReport_Upload.Close;
   if grtvMaker.ColumnCount > 0 then grtvMaker.ClearItems;
+  if grtvMaker.DataController.Summary.FooterSummaryItems.Count > 0 then
+    grtvMaker.DataController.Summary.FooterSummaryItems.Clear;
   qryReport_Upload.SQL.Text :=
     'select '#13#10 +
     '  Code AS "Код", '#13#10 +
@@ -275,21 +329,145 @@ begin
     '  InvNumber AS "№ документа", '#13#10 +
     '  JuridicalName AS "Поставщик" '#13#10 +
     'from gpReport_MovementCheck_Promo(:inMaker, :inStartDate, :inEndDate, ''3'')'#13#10 +
-    'where isSendMaker = True and MainJuridicalId not in (5603474, 2141038, 393047, 3031067)';
+    'where isSendMaker = True and MainJuridicalId not in (2141104, 3031071, 5603546, 377601)';
 
   qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
-  qryReport_Upload.Params.ParamByName('inStartDate').Value := IncMonth(IncDay(Date, 1 - DayOf(Date)), - 1);
-  qryReport_Upload.Params.ParamByName('inEndDate').Value := IncDay(Date, - DayOf(Date));
+  qryReport_Upload.Params.ParamByName('inStartDate').Value := DateStart;
+  qryReport_Upload.Params.ParamByName('inEndDate').Value := DateEnd;
 
   OpenAndFormatSQL;
+
+  if grtvMaker.ColumnCount = 0 then Exit;
+
+  with TcxGridDBTableSummaryItem(grtvMaker.DataController.Summary.FooterSummaryItems.Add) do
+  begin
+    Column := grtvMaker.Columns[4];
+    Format := '0.###';
+    Kind := skSum;
+  end;
+  with TcxGridDBTableSummaryItem(grtvMaker.DataController.Summary.FooterSummaryItems.Add) do
+  begin
+    Column := grtvMaker.Columns[5];
+    Format := '0.###';
+    Kind := skSum;
+  end;
+  with TcxGridDBTableSummaryItem(grtvMaker.DataController.Summary.FooterSummaryItems.Add) do
+  begin
+    Column := grtvMaker.Columns[7];
+    Format := '0.###';
+    Kind := skSum;
+  end;
+
+end;
+
+procedure TMainForm.ReportAnalysisRemainsSelling;
+  var I : integer;
+begin
+  Add_Log('Начало Формирования отчета реализация за период с остатком на конец периода ' + qryMaker.FieldByName('Name').AsString);
+  FileName := 'Отчет реализация за период с остатком на конец периода';
+
+  if qryReport_Upload.Active then qryReport_Upload.Close;
+  if grtvMaker.ColumnCount > 0 then grtvMaker.ClearItems;
+  if grtvMaker.DataController.Summary.FooterSummaryItems.Count > 0 then
+    grtvMaker.DataController.Summary.FooterSummaryItems.Clear;
+  qryReport_Upload.SQL.Text :=
+    'select * '#13#10 +
+    'from gpSelect_Export_AnalysisRemainsSelling (:inStartDate, :inEndDate, :inMaker, ''3'')';
+
+  qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
+  qryReport_Upload.Params.ParamByName('inStartDate').Value := DateStart;
+  qryReport_Upload.Params.ParamByName('inEndDate').Value := DateEnd;
+
+  OpenAndFormatSQL;
+end;
+
+procedure TMainForm.ReportIncomeConsumptionBalance;
+  var I : integer;
+begin
+  Add_Log('Начало Формирования отчета приход расход остаток ' + qryMaker.FieldByName('Name').AsString);
+  FileName := 'Отчет приход расход остаток';
+
+  if qryReport_Upload.Active then qryReport_Upload.Close;
+  if grtvMaker.ColumnCount > 0 then grtvMaker.ClearItems;
+  if grtvMaker.DataController.Summary.FooterSummaryItems.Count > 0 then
+    grtvMaker.DataController.Summary.FooterSummaryItems.Clear;
+  qryReport_Upload.SQL.Text :=
+    'select '#13#10 +
+    '  ParentName AS "Организация", '#13#10 +
+    '  UnitName AS "Аптека", '#13#10 +
+    '  GoodsId AS "Код", '#13#10 +
+    '  GoodsName AS "Наименование медикамента", '#13#10 +
+    '  AmountIncome AS "Приход количество, шт", '#13#10 +
+    '  AmountIncomeSumWith AS "Приход сумма без НДС, грн", '#13#10 +
+    '  AmountCheck AS "Реализация количество, шт", '#13#10 +
+    '  AmountCheckSumJuridical AS "Реализация сумма закупке с НДС, грн", '#13#10 +
+    '  SaldoOut AS "Остаток количество, шт", '#13#10 +
+    '  SummaOut AS "Остаток сумма с НДС, грн" '#13#10 +
+    'from gpSelect_Export_IncomeConsumptionBalance (:inStartDate, :inEndDate, :inMaker, ''3'')';
+
+  qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
+  qryReport_Upload.Params.ParamByName('inStartDate').Value := DateStart;
+  qryReport_Upload.Params.ParamByName('inEndDate').Value := DateEnd;
+
+  OpenAndFormatSQL;
+
+  if grtvMaker.ColumnCount = 0 then Exit;
+
+  for I := 4 to 9 do
+    with TcxGridDBTableSummaryItem(grtvMaker.DataController.Summary.FooterSummaryItems.Add) do
+    begin
+      Column := grtvMaker.Columns[I];
+      Format := '0.###';
+      Kind := skSum;
+    end;
+end;
+
+procedure TMainForm.SetDateParams;
+begin
+  if qryReport_Upload.Active then qryReport_Upload.Close;
+  if grtvMaker.ColumnCount > 0 then grtvMaker.ClearItems;
+  if grtvMaker.DataController.Summary.FooterSummaryItems.Count > 0 then
+    grtvMaker.DataController.Summary.FooterSummaryItems.Clear;
+
+  if qryMaker.FieldByName('AmountDay').AsInteger <> 0 then
+  begin
+     if qryMaker.FieldByName('AmountDay').AsInteger = 15 then
+     begin
+       if DayOf(qryMaker.FieldByName('SendPlan').AsDateTime) < 16 then
+       begin
+         DateEnd := IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
+         DateStart := IncDay(StartOfTheMonth(DateEnd), 15);
+       end else
+       begin
+         DateStart := StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime);
+         DateEnd := IncDay(DateStart, 14);
+       end;
+     end else
+     begin
+       DateEnd := IncDay(StartOfTheDay(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
+       DateStart := IncDay(DateEnd, 1 - qryMaker.FieldByName('AmountDay').AsInteger);
+     end;
+  end else
+  begin
+    DateEnd := IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
+    DateStart := StartOfTheMonth(DateEnd);
+    if qryMaker.FieldByName('AmountMonth').AsInteger > 1 then
+      DateStart := IncMonth(DateStart, 1 - qryMaker.FieldByName('AmountMonth').AsInteger);
+  end;
 end;
 
 
 procedure TMainForm.pmClick(Sender: TObject);
 begin
-  case TMenuItem(Sender).Tag of
+
+  RepType := TMenuItem(Sender).Tag;
+  SetDateParams;
+
+  case RepType of
     0 : ReportIncome;
     1 : ReportCheck;
+    2 : ReportAnalysisRemainsSelling;
+    3 : ReportIncomeConsumptionBalance;
   end;
 end;
 
@@ -300,10 +478,304 @@ begin
 
   if qryReport_Upload.Active then qryReport_Upload.Close;
   if grtvMaker.ColumnCount > 0 then grtvMaker.ClearItems;
-
+  if grtvMaker.DataController.Summary.FooterSummaryItems.Count > 0 then
+    grtvMaker.DataController.Summary.FooterSummaryItems.Clear;
 
   APoint := btnExecute.ClientToScreen(Point(0, btnExecute.ClientHeight));
   pmExecute.Popup(APoint.X, APoint.Y);
+end;
+
+procedure TMainForm.ExportAnalysisRemainsSelling;
+  var lGoods, lUnit : TStringList; I, J : Integer;
+      xlApp, xlBook, xlSheet, xlRange: OLEVariant;
+      arrSum : array of array of Extended; bSIP : boolean;
+
+  const xlLeft = - 4131;
+        xlRight = -4152;
+        xlCenter = -4108;
+        xlTop = -4160;
+        xlBottom = -4107;
+        xlEdgeLeft = 7;
+        xlEdgeTop = 8;
+        xlEdgeBottom = 9;
+        xlEdgeRight = 10;
+        xlInsideVertical = 11;
+        xlInsideHorizontal = 12;
+        xlThin = 2;
+        xlMedium = -4138;
+        xlLandscape = 2;
+        xlPortrait = 1;
+        xlMaximized = -4137;
+        xlMinimized = -4140;
+        xlNormal = -4143;
+        xlExcel9795 = 43;
+        xlExcel8 = 56;
+begin
+  qryReport_Upload.DisableControls;
+  lGoods := TStringList.Create;
+  lGoods.Sorted := True;
+  lUnit := TStringList.Create;
+  lUnit.Sorted := True;
+  try
+
+    qryReport_Upload.First;
+    while not qryReport_Upload.Eof do
+    begin
+      if not lGoods.Find(qryReport_Upload.FieldByName('GoodsName').AsString, I) then lGoods.Add(qryReport_Upload.FieldByName('GoodsName').AsString);
+      if not lUnit.Find(qryReport_Upload.FieldByName('UnitName').AsString, I) then lUnit.Add(qryReport_Upload.FieldByName('UnitName').AsString);
+      qryReport_Upload.Next;
+    end;
+
+    try
+      xlApp := GetActiveOleObject('Excel.Application');
+    except
+      try
+        xlApp:=CreateOleObject('Excel.Application');
+      except
+        Exit;
+      end;
+    end;
+
+    SetLength(arrSum, lUnit.Count, 6);
+
+    try
+      xlApp.Application.ScreenUpdating := false;
+      xlApp.DisplayAlerts := false;
+      xlBook := xlApp.WorkBooks.Add;
+      xlSheet := xlBook.ActiveSheet;
+      xlSheet.PageSetup.Orientation := xlLandscape;
+      xlSheet.Rows[1].RowHeight := xlSheet.Rows[1].RowHeight * 3;
+      xlSheet.Rows[2].RowHeight := xlSheet.Rows[2].RowHeight * 4;
+      xlSheet.Columns[1].ColumnWidth := 40;
+      xlSheet.Columns[2].ColumnWidth := 10;
+
+      xlRange := xlSheet.Range[xlSheet.Cells[1, 1], xlSheet.Cells[1, 2]];
+      xlRange.Merge;
+      xlRange := xlSheet.Cells[1, 1];
+      xlRange.Value := 'Медикамент';
+      xlRange.HorizontalAlignment := xlCenter;
+      xlRange.VerticalAlignment := xlCenter;
+      xlRange.WrapText:=true;
+      xlRange.Font.Bold := True;
+
+      xlRange := xlSheet.Cells[2, 1];
+      xlRange.Value := 'Название';
+      xlRange.HorizontalAlignment := xlCenter;
+      xlRange.VerticalAlignment := xlCenter;
+      xlRange.WrapText:=true;
+      xlRange.Font.Bold := True;
+
+      xlRange := xlSheet.Cells[2, 2];
+      xlRange.Value := 'Код';
+      xlRange.HorizontalAlignment := xlCenter;
+      xlRange.VerticalAlignment := xlCenter;
+      xlRange.WrapText:=true;
+      xlRange.Font.Bold := True;
+
+      for I := 0 to lUnit.Count - 1 do
+      begin
+        xlRange := xlSheet.Range[xlSheet.Cells[1, 2 * I + 3], xlSheet.Cells[1, 2 * I + 4]];
+        xlRange.Merge;
+        xlRange := xlSheet.Cells[1, 2 * I + 3];
+        xlRange.Value := lUnit.Strings[I];
+        xlRange.HorizontalAlignment := xlCenter;
+        xlRange.VerticalAlignment := xlCenter;
+        xlRange.WrapText:=true;
+        xlRange.Font.Bold := True;
+        xlSheet.Columns[2 * I + 3].ColumnWidth := 12;
+        xlSheet.Columns[2 * I + 4].ColumnWidth := 12;
+
+        xlRange := xlSheet.Cells[2, 2 * I + 3];
+        xlRange.Value := 'Реализация';
+        xlRange.HorizontalAlignment := xlCenter;
+        xlRange.VerticalAlignment := xlCenter;
+        xlRange.WrapText:=true;
+        xlRange.Font.Bold := True;
+
+        xlRange := xlSheet.Cells[2, 2 * I + 4];
+        xlRange.Value := 'Остаток';
+        xlRange.HorizontalAlignment := xlCenter;
+        xlRange.VerticalAlignment := xlCenter;
+        xlRange.WrapText:=true;
+        xlRange.Font.Bold := True;
+      end;
+
+      for I := 0 to lGoods.Count - 1 do
+      begin
+        xlRange := xlSheet.Cells[I + 3, 1];
+        xlRange.Value := lGoods.Strings[I];
+        xlRange.VerticalAlignment := xlCenter;
+        xlRange.HorizontalAlignment := xlLeft;
+        xlRange.Font.Bold := True;
+        xlRange := xlSheet.Cells[I + 3, 2];
+        if qryReport_Upload.Locate('GoodsName', lGoods.Strings[I], [loCaseInsensitive]) then
+          xlRange.Value := qryReport_Upload.FieldByName('GoodsId').AsInteger;
+        xlRange.VerticalAlignment := xlCenter;
+        xlRange.HorizontalAlignment := xlRight;
+        xlRange.Font.Bold := True;
+      end;
+
+      qryReport_Upload.First;
+      while not qryReport_Upload.Eof do
+      begin
+        if lGoods.Find(qryReport_Upload.FieldByName('GoodsName').AsString, I) and
+          lUnit.Find(qryReport_Upload.FieldByName('UnitName').AsString, J) then
+        begin
+          if not qryReport_Upload.FieldByName('Amount').IsNull then
+          begin
+            xlRange := xlSheet.Cells[I + 3, 2 * J + 3];
+            xlRange.Value := qryReport_Upload.FieldByName('Amount').AsExtended;
+          end;
+          if not qryReport_Upload.FieldByName('OutSaldo').IsNull then
+          begin
+            xlRange := xlSheet.Cells[I + 3, 2 * J + 4];
+            xlRange.Value := qryReport_Upload.FieldByName('OutSaldo').AsExtended;
+          end;
+          arrSum[I][0] := arrSum[I][0] + qryReport_Upload.FieldByName('Amount').AsCurrency;
+          arrSum[I][1] := arrSum[I][1] + qryReport_Upload.FieldByName('OutSaldo').AsCurrency;
+          arrSum[I][2] := arrSum[I][2] + qryReport_Upload.FieldByName('Summ').AsCurrency;
+          arrSum[I][3] := arrSum[I][3] + qryReport_Upload.FieldByName('SummSaldo').AsCurrency;
+          arrSum[I][4] := arrSum[I][4] + qryReport_Upload.FieldByName('SummSIP').AsCurrency;
+          arrSum[I][5] := arrSum[I][5] + qryReport_Upload.FieldByName('SummSaldoSIP').AsCurrency;
+        end;
+        qryReport_Upload.Next;
+      end;
+
+      bSIP := False;
+      for I := 0 to lGoods.Count - 1 do
+      begin
+        for j := 0 to 5 do
+        if arrSum[I][J] <> 0 then
+        begin
+          if j > 3 then bSIP := True;
+          xlRange := xlSheet.Cells[I + 3, lUnit.Count * 2 + 3 + j];
+          xlRange.Value := arrSum[I][J];
+        end;
+      end;
+
+      if bSIP then
+        xlRange := xlSheet.Range[xlSheet.Cells[1, lUnit.Count * 2 + 3], xlSheet.Cells[1, lUnit.Count * 2 + 8]]
+      else xlRange := xlSheet.Range[xlSheet.Cells[1, lUnit.Count * 2 + 3], xlSheet.Cells[1, lUnit.Count * 2 + 6]];
+      xlRange.Merge;
+      xlRange := xlSheet.Cells[1, lUnit.Count * 2 + 3];
+      xlRange.Value := 'Общий итог';
+      xlRange.HorizontalAlignment := xlCenter;
+      xlRange.VerticalAlignment := xlCenter;
+      xlRange.WrapText:=true;
+      xlRange.Font.Bold := True;
+
+      xlRange := xlSheet.Cells[2, lUnit.Count * 2 + 3];
+      xlRange.Value := 'Реализация';
+      xlRange.HorizontalAlignment := xlCenter;
+      xlRange.VerticalAlignment := xlCenter;
+      xlRange.WrapText:=true;
+      xlRange.Font.Bold := True;
+      xlSheet.Columns[lUnit.Count * 2 + 3].ColumnWidth := 12;
+
+      xlRange := xlSheet.Cells[2, lUnit.Count * 2 + 4];
+      xlRange.Value := 'Остаток';
+      xlRange.HorizontalAlignment := xlCenter;
+      xlRange.VerticalAlignment := xlCenter;
+      xlRange.WrapText:=true;
+      xlRange.Font.Bold := True;
+      xlSheet.Columns[lUnit.Count * 2 + 4].ColumnWidth := 12;
+
+      xlRange := xlSheet.Cells[2, lUnit.Count * 2 + 5];
+      xlRange.Value := 'сумма продаж в ценах с ндс';
+      xlRange.HorizontalAlignment := xlCenter;
+      xlRange.VerticalAlignment := xlCenter;
+      xlRange.WrapText:=true;
+      xlRange.Font.Bold := True;
+      xlSheet.Columns[lUnit.Count * 2 + 5].ColumnWidth := 12;
+
+      xlRange := xlSheet.Cells[2, lUnit.Count * 2 + 6];
+      xlRange.Value := 'сумма остатка в ценах с ндс';
+      xlRange.HorizontalAlignment := xlCenter;
+      xlRange.VerticalAlignment := xlCenter;
+      xlRange.WrapText:=true;
+      xlRange.Font.Bold := True;
+      xlSheet.Columns[lUnit.Count * 2 + 6].ColumnWidth := 12;
+
+      if bSIP then
+      begin
+        xlRange := xlSheet.Cells[2, lUnit.Count * 2 + 7];
+        xlRange.Value := 'сумма продаж в сип ценах';
+        xlRange.HorizontalAlignment := xlCenter;
+        xlRange.VerticalAlignment := xlCenter;
+        xlRange.WrapText:=true;
+        xlRange.Font.Bold := True;
+        xlSheet.Columns[lUnit.Count * 2 + 7].ColumnWidth := 12;
+
+        xlRange := xlSheet.Cells[2, lUnit.Count * 2 + 8];
+        xlRange.Value := 'сумма остатка в сип ценах';
+        xlRange.HorizontalAlignment := xlCenter;
+        xlRange.VerticalAlignment := xlCenter;
+        xlRange.WrapText:=true;
+        xlRange.Font.Bold := True;
+        xlSheet.Columns[lUnit.Count * 2 + 8].ColumnWidth := 12;
+      end;
+
+        // Рисуем рамку вокруг шапки
+      if bSIP then
+        xlRange := xlSheet.Range[xlSheet.Cells[1, 1], xlSheet.Cells[2, lUnit.Count * 2 + 8]]
+      else xlRange := xlSheet.Range[xlSheet.Cells[1, 1], xlSheet.Cells[2, lUnit.Count * 2 + 6]];
+      xlRange.Borders[xlEdgeLeft].Weight := xlMedium;
+      xlRange.Borders[xlEdgeTop].Weight := xlMedium;
+      xlRange.Borders[xlEdgeRight].Weight := xlMedium;
+      xlRange.Borders[xlEdgeBottom].Weight := xlMedium;
+      xlRange.Borders[xlInsideVertical].Weight := xlThin;
+      xlRange.Borders[xlInsideHorizontal].Weight := xlThin;
+
+        // Рисуем рамку вокруг данных
+      if bSIP then
+        xlRange := xlSheet.Range[xlSheet.Cells[3, 1], xlSheet.Cells[lGoods.Count + 2, lUnit.Count * 2 + 8]]
+      else xlRange := xlSheet.Range[xlSheet.Cells[3, 1], xlSheet.Cells[lGoods.Count + 2, lUnit.Count * 2 + 6]];
+      xlRange.Borders[xlEdgeLeft].Weight := xlMedium;
+      xlRange.Borders[xlEdgeTop].Weight := xlMedium;
+      xlRange.Borders[xlEdgeRight].Weight := xlMedium;
+      xlRange.Borders[xlEdgeBottom].Weight := xlMedium;
+      xlRange.Borders[xlInsideVertical].Weight := xlThin;
+      xlRange.Borders[xlInsideHorizontal].Weight := xlThin;
+
+      xlRange := xlSheet.Range[xlSheet.Cells[lGoods.Count + 3, 1], xlSheet.Cells[lGoods.Count + 3, 2]];
+      xlRange.Merge;
+      xlRange := xlSheet.Cells[lGoods.Count + 3, 1];
+      xlRange.Value := 'Общий итог';
+      xlRange.HorizontalAlignment := xlLeft;
+      xlRange.VerticalAlignment := xlCenter;
+      xlRange.WrapText:=true;
+      xlRange.Font.Bold := True;
+
+      if bSIP then
+        xlRange := xlSheet.Range[xlSheet.Cells[lGoods.Count + 3, 3], xlSheet.Cells[lGoods.Count + 3, lUnit.Count * 2 + 8]]
+      else xlRange := xlSheet.Range[xlSheet.Cells[lGoods.Count + 3, 3], xlSheet.Cells[lGoods.Count + 3, lUnit.Count * 2 + 6]];
+      xlRange.FormulaR1C1 := '=SUM(R[-' + IntToStr(lGoods.Count) + ']C:R[-1]C)';
+
+        // Рисуем рамку вокруг итогов
+      if bSIP then
+        xlRange := xlSheet.Range[xlSheet.Cells[lGoods.Count + 3, 1], xlSheet.Cells[lGoods.Count + 3, lUnit.Count * 2 + 8]]
+      else xlRange := xlSheet.Range[xlSheet.Cells[lGoods.Count + 3, 1], xlSheet.Cells[lGoods.Count + 3, lUnit.Count * 2 + 6]];
+      xlRange.Borders[xlEdgeLeft].Weight := xlMedium;
+      xlRange.Borders[xlEdgeTop].Weight := xlMedium;
+      xlRange.Borders[xlEdgeRight].Weight := xlMedium;
+      xlRange.Borders[xlEdgeBottom].Weight := xlMedium;
+      xlRange.Borders[xlInsideVertical].Weight := xlThin;
+      xlRange.Borders[xlInsideHorizontal].Weight := xlThin;
+
+      xlBook.SaveAs(SavePath + FileName, xlExcel8);
+      xlApp.Application.ScreenUpdating := true;
+      xlBook.Close;
+      xlApp.Quit;
+      xlApp := Unassigned;
+    finally
+      SetLength(arrSum, 0, 0);
+    end;
+  finally
+    lGoods.Free;
+    lUnit.Free;
+    qryReport_Upload.First;
+    qryReport_Upload.EnableControls;
+  end;
 end;
 
 procedure TMainForm.btnExportClick(Sender: TObject);
@@ -320,7 +792,8 @@ begin
   end;
 
   // обычный отчет
-
+  if RepType = 2 then ExportAnalysisRemainsSelling
+  else
   try
     try
       ExportGridToExcel(SavePath + FileName, grReportMaker);
@@ -347,9 +820,8 @@ begin
        qryMailParam.FieldByName('Mail_User').AsString,
        [qryMaker.FieldByName('Mail').AsString],
        qryMailParam.FieldByName('Mail_From').AsString,
-       FileName + ' за период с ' +
-         FormatDateTime('dd.mm.yyyy', IncMonth(IncDay(Date, 1 - DayOf(Date)), - 1)) + ' по ' +
-         FormatDateTime('dd.mm.yyyy', IncDay(Date, - DayOf(Date))),
+       FileName + ' за период с ' + FormatDateTime('dd.mm.yyyy', DateStart) + ' по ' +
+                                    FormatDateTime('dd.mm.yyyy', DateEnd),
        '',
        [SavePath + FileName + '.xls']) then
   begin

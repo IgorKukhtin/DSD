@@ -16,6 +16,7 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -335,7 +336,7 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
         Width = 70
       end
       object JuridicalName: TcxGridDBColumn
-        Caption = #1070#1088'.'#1083#1080#1094#1086' / '#1052#1072#1088#1097#1088#1091#1090
+        Caption = #1070#1088'.'#1083#1080#1094#1086' / '#1052#1072#1088#1096#1088#1091#1090
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -467,18 +468,13 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenFormIncome'
+          ItemName = 'bbInsert'
         end
         item
           Visible = True
-          ItemName = 'bbOpenFormTransport'
+          ItemName = 'bbEdit'
         end
         item
-          Visible = True
-          ItemName = 'bbOpenFormService'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -513,6 +509,22 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenFormIncome'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormTransport'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormService'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -538,18 +550,12 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
       Category = 0
     end
     object bbInsert: TdxBarButton
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Action = actInsert
       Category = 0
-      Visible = ivAlways
-      ImageIndex = 0
-      ShortCut = 45
     end
     object bbEdit: TdxBarButton
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Action = actUpdate
       Category = 0
-      Visible = ivAlways
-      ImageIndex = 1
-      ShortCut = 115
     end
     object bbComplete: TdxBarButton
       Action = actComplete
@@ -1202,6 +1208,77 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
       ImageIndex = 29
+    end
+    object actInsert: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TIncomeCostForm'
+      FormNameParam.Value = 'TIncomeCostForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 43466d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TIncomeCostForm'
+      FormNameParam.Value = 'TIncomeCostForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 43466d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
   end
   object dsdStoredProc: TdsdStoredProc

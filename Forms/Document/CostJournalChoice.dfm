@@ -5,7 +5,7 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1094
-  ExplicitHeight = 516
+  ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -243,6 +243,28 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
       Enabled = False
       FormName = 'actUpdate'
       FormNameParam.Value = 'actUpdate'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
     end
     inherited actUnComplete: TdsdChangeMovementStatus
       Enabled = False

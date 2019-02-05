@@ -436,6 +436,8 @@ procedure TLoadFormTest.LoadCostFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeCostJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeCostJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeCostForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeCostForm');
   //
   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCostJournalChoicebyIncomeForm'));
@@ -718,12 +720,13 @@ end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
-  {//
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeFuelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeFuelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeFuelJournalForm'));
@@ -737,9 +740,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePartnerJournalForm');
   //
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalChoiceForm');
-   }
 end;
 procedure TLoadFormTest.LoadIncomeAssetFormTest;
 begin
@@ -1748,8 +1751,8 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
-  {exit;
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceDialogForm');
 

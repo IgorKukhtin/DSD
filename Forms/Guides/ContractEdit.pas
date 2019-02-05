@@ -187,6 +187,8 @@ type
     cxLabel35: TcxLabel;
     edPartnerCode: TcxTextEdit;
     cbisDefaultOut: TcxCheckBox;
+    cxLabel36: TcxLabel;
+    edBankAccountPartner: TcxTextEdit;
   private
     { Private declarations }
   public

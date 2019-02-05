@@ -173,6 +173,17 @@ type
     actUpdatePrice: TdsdExecStoredProc;
     bbUpdatePrice: TdxBarButton;
     actIncomeItemPriceDialog: TdsdOpenForm;
+    actPersentDialog: TdsdOpenForm;
+    spGet_MI_Income_OperPriceList: TdsdStoredProc;
+    spUpdate_MI_Income_Price: TdsdStoredProc;
+    spUpdate_PriceWithoutPersent: TdsdStoredProc;
+    actGet_MI_Income_OperPriceList: TdsdExecStoredProc;
+    actUpdate_MI_Income_Price: TdsdExecStoredProc;
+    actUpdate_PriceWithoutPersent: TdsdExecStoredProc;
+    macUpdate_PriceWithoutPersent: TMultiAction;
+    macUpdate_PriceWithoutPersent_List: TMultiAction;
+    bb: TdxBarButton;
+    actPersentDialog1: TExecuteDialog;
   private
   public
   end;
