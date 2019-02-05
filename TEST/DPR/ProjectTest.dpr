@@ -1063,7 +1063,8 @@ uses
   IncomeCostJournal in '..\..\Forms\Document\IncomeCostJournal.pas' {IncomeCostJournalForm: TParentForm},
   SettingsService in '..\..\Forms\Guides\SettingsService.pas' {SettingsServiceForm: TParentForm},
   SettingsServiceItemEdit in '..\..\Forms\Guides\SettingsServiceItemEdit.pas' {SettingsServiceItemEditForm: TParentForm},
-  SettingsService_Object in '..\..\Forms\Guides\SettingsService_Object.pas' {SettingsService_ObjectForm: TParentForm};
+  SettingsService_Object in '..\..\Forms\Guides\SettingsService_Object.pas' {SettingsService_ObjectForm: TParentForm},
+  IncomeCost in '..\..\Forms\Document\IncomeCost.pas' {IncomeCostForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

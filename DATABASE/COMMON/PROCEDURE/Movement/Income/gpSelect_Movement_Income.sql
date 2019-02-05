@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCountPartner TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , TotalSummPacker TFloat, TotalSummSpending TFloat, TotalSummVAT TFloat
              , CurrencyValue TFloat, ParValue TFloat
-             , FromName TVarChar, ItemName_from TVarChar, ToName TVarChar, ItemName_to TVarChar
+             , FromName TVarChar, ItemName_from TVarChar, ToId Integer, ToName TVarChar, ItemName_to TVarChar
              , PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , JuridicalName_From TVarChar, OKPO_From TVarChar
@@ -90,6 +90,7 @@ BEGIN
 
            , Object_From.ValueData                       AS FromName
            , ObjectDesc_from.ItemName                    AS ItemName_from
+           , Object_To.Id                                AS ToId
            , Object_To.ValueData                         AS ToName
            , ObjectDesc_to.ItemName                      AS ItemName_to
            , Object_PaidKind.ValueData                   AS PaidKindName

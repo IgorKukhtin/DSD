@@ -104,6 +104,8 @@ type
     actCheckDescService: TdsdExecStoredProc;
     macOpenFormService: TMultiAction;
     actOpenFormService: TdsdOpenForm;
+    actInsert: TdsdInsertUpdateAction;
+    actUpdate: TdsdInsertUpdateAction;
   private
   public
   end;
