@@ -9,10 +9,13 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_IncomeCost(
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbMovementId_from     Integer;
-   DECLARE vbMovementDescId_from Integer;
-   DECLARE vbMovementId_to       Integer;
-   DECLARE vbOperDate_to         TDateTime;
+   DECLARE vbMovementId_from       Integer;
+   DECLARE vbMovementDescId_from   Integer;
+   DECLARE vbMovementId_to         Integer;
+   DECLARE vbOperDate_to           TDateTime;
+   DECLARE vbUnitId                Integer;
+   DECLARE vbJuridicalId_Basis     Integer;
+   DECLARE vbAccountDirectionId_To Integer;
 BEGIN
      -- нашли документ из которого надо взять сумму "затрат"
      vbMovementId_from:= (SELECT MovementFloat.ValueData :: Integer FROM MovementFloat WHERE MovementFloat.MovementId = inMovementId AND MovementFloat.DescId = zc_MovementFloat_MovementId());
@@ -20,19 +23,34 @@ BEGIN
 
      -- нашли документ, для товаров которого добавляется сумма "затрат" - !!!но они сформируются в inMovementId!!!
      vbMovementId_to:= (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = inMovementId);
-     vbOperDate_to:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbOperDate_to);
+     vbOperDate_to:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_to);
+     --
+     SELECT MovementLinkObject_To.ObjectId                   AS UnitId
+          , ObjectLink_UnitTo_Juridical.ChildObjectId        AS JuridicalId_Basis
+          , ObjectLink_UnitTo_AccountDirection.ChildObjectId AS AccountDirectionId_To
+            INTO vbUnitId, vbJuridicalId_Basis, vbAccountDirectionId_To
+     FROM MovementLinkObject AS MovementLinkObject_To
+          LEFT JOIN ObjectLink AS ObjectLink_UnitTo_Juridical
+                               ON ObjectLink_UnitTo_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                              AND ObjectLink_UnitTo_Juridical.DescId   = zc_ObjectLink_Unit_Juridical()
+          LEFT JOIN ObjectLink AS ObjectLink_UnitTo_AccountDirection
+                               ON ObjectLink_UnitTo_AccountDirection.ObjectId = MovementLinkObject_To.ObjectId
+                              AND ObjectLink_UnitTo_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
+     WHERE MovementLinkObject_To.MovementId = vbMovementId_to
+       AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+     ;
 
 
      -- Перепроведение, что б "затраты" оказались во ВСЕХ "Расходы будущих периодов"
      IF vbMovementDescId_from = zc_Movement_TransportService() -- AND 1=0
      THEN
-         PERFORM gpReComplete_Movement_TransportService (inMovementId, inUserId :: TVarChar);
+         PERFORM gpReComplete_Movement_TransportService (vbMovementId_from, inUserId :: TVarChar);
          --
          DROP TABLE _tmpItem;
 
      ELSEIF vbMovementDescId_from = zc_Movement_Transport() -- AND 1=0
      THEN
-         PERFORM gpReComplete_Movement_Transport (inMovementId, NULL, inUserId :: TVarChar);
+         PERFORM gpReComplete_Movement_Transport (vbMovementId_from, NULL, inUserId :: TVarChar);
          --
          DROP TABLE _tmpItem;
 
@@ -78,13 +96,12 @@ BEGIN
              INNER JOIN Movement AS Movement_Income ON Movement_Income.Id       = Movement.ParentId
                                                    AND Movement_Income.DescId   = zc_Movement_Income()
                                                    AND Movement_Income.StatusId = zc_Enum_Status_Complete()
-             INNER JOIN MovementItem ON MovementItem.Id       = Movement_Income.MovementId
+             INNER JOIN MovementItem ON MovementItem.Id       = Movement_Income.Id
                                     AND MovementItem.DescId   = zc_MI_Master()
                                     AND MovementItem.isErased = FALSE
              LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                    ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
                                   AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-                                  AND tmpMI.DescId = zc_MI_Master()
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                   ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -107,7 +124,7 @@ BEGIN
                                          , ROW_NUMBER() OVER (PARTITION BY _tmpItem_To.InfoMoneyId ORDER BY _tmpItem_To.OperCount DESC) AS Ord
                                     FROM _tmpItem_To
                                          INNER JOIN tmpItem_To_summ ON tmpItem_To_summ.InfoMoneyId = _tmpItem_To.InfoMoneyId
-                                                                   AND tmpItem_To_summ.OperSumm    <> 0
+                                                                   AND tmpItem_To_summ.OperCount   <> 0
                                          INNER JOIN _tmpItem_From   ON _tmpItem_From.InfoMoneyId    = _tmpItem_To.InfoMoneyId
                                    )
                        , tmpDiff AS (SELECT tmpRes_summ.InfoMoneyId
@@ -134,7 +151,6 @@ BEGIN
 
 
      -- проводки только для !!!ОДНОГО!!! zc_Movement_IncomeCost = inMovementId
-     INSERT INTO _tmpItem (MovementItemId, ContainerId_Goods, ContainerId_summ, AccountId, Amount, OperSumm, OperSumm_calc, InfoMoneyId)
         WITH -- товары Из прихода, к которым добавляется сумма "затрат"
              tmpMIContainer_all AS (SELECT MIContainer.*
                                     FROM MovementItemContainer AS MIContainer
@@ -142,12 +158,14 @@ BEGIN
                                    )
             , tmpMIContainer AS (SELECT tmpMIContainer_Count.MovementItemId
                                       , tmpMIContainer_Count.ContainerId
+                                      , tmpMIContainer_Count.ObjectId_Analyzer    AS GoodsId
+                                      , tmpMIContainer_Count.ObjectIntId_Analyzer AS GoodsKindId
                                       , tmpMIContainer_Count.Amount
                                       , tmpMIContainer_Summ.OperSumm
-                                 FROM tmpMIContainer AS tmpMIContainer_Count
-                                      LEFT JOIN (SELECT tmpMIContainer.MovementItemId SUM (tmpMIContainer.Amount) AS OperSumm FROM tmpMIContainer WHERE tmpMIContainer.DescId = zc_MIContainer_Summ() AND tmpMIContainer.Amount > 0 GROUP BY tmpMIContainer.MovementItemId
+                                 FROM tmpMIContainer_all AS tmpMIContainer_Count
+                                      LEFT JOIN (SELECT tmpMIContainer_all.MovementItemId, SUM (tmpMIContainer_all.Amount) AS OperSumm FROM tmpMIContainer_all WHERE tmpMIContainer_all.DescId = zc_MIContainer_Summ() AND tmpMIContainer_all.Amount > 0 GROUP BY tmpMIContainer_all.MovementItemId
                                                 ) AS tmpMIContainer_Summ
-                                                  ON tmpMIContainer_Summ.MovementItemId = tmpMIContainer.MovementItemId
+                                                  ON tmpMIContainer_Summ.MovementItemId = tmpMIContainer_Count.MovementItemId
                                  WHERE tmpMIContainer_Count.DescId = zc_MIContainer_Count()
                                    AND tmpMIContainer_Count.Amount > 0
                                 )
@@ -169,22 +187,64 @@ BEGIN
                                          INNER JOIN _tmpItem_To ON _tmpItem_To.InfoMoneyId = tmpRes_summ.InfoMoneyId
                                     WHERE _tmpItem_To.OperSumm_calc <> tmpRes_summ.OperSumm_calc
                                    )
+     INSERT INTO _tmpItem (MovementItemId, ContainerId_Goods, ContainerId_summ
+                         , GoodsId, GoodsKindId
+                         , OperCount, OperSumm, OperSumm_calc
+                         , AccountId, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId, InfoMoneyId_Detail
+                         , isPartionCount, isPartionSumm
+                         , PartionGoodsId
+                          )
            -- Результат
            SELECT tmpRes.MovementItemId
-                , tmpRes.ContainerId AS ContainerId_Goods
-                , 0                  AS ContainerId_summ
-                , 0                  AS AccountId
-                , tmpRes.Amount
-                , tmpRes.OperSumm
-                , tmpRes.OperSumm_calc - COALESCE (tmpdiff.OperSumm_diff, 0) As OperSumm_calc
-                , tmpRes.InfoMoneyId
+                , tmpRes.ContainerId                                         AS ContainerId_Goods
+                , 0                                                          AS ContainerId_summ
+                , tmpRes.GoodsId                                             AS GoodsId
+                , tmpRes.GoodsKindId                                         AS GoodsKindId
+                , tmpRes.Amount                                              AS OperCount
+                , tmpRes.OperSumm                                            AS OperSumm
+                , tmpRes.OperSumm_calc - COALESCE (tmpdiff.OperSumm_diff, 0) AS OperSumm_calc
+                , 0                                                          AS AccountId
+                , View_InfoMoney.InfoMoneyGroupId                            AS InfoMoneyGroupId
+                , View_InfoMoney.InfoMoneyDestinationId                      AS InfoMoneyDestinationId
+                , View_InfoMoney.InfoMoneyId                                 AS InfoMoneyId
+                , tmpRes.InfoMoneyId                                         AS InfoMoneyId_Detail
+                , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)     AS isPartionCount
+                , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)      AS isPartionSumm
+                , CLO_PartionGoods.ObjectId                                  As PartionGoodsId
            FROM tmpRes
                 LEFT JOIN tmpDiff ON tmpDiff.InfoMoneyId = tmpRes.InfoMoneyId
                                  AND                   1 = tmpRes.Ord
+                LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                              ON CLO_PartionGoods.ContainerId = tmpRes.ContainerId
+                                             AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                     ON ObjectLink_Goods_InfoMoney.ObjectId = tmpRes.GoodsId
+                                    AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
+                                        ON ObjectBoolean_PartionCount.ObjectId = tmpRes.GoodsId
+                                       AND ObjectBoolean_PartionCount.DescId   = zc_ObjectBoolean_Goods_PartionCount()
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionSumm
+                                        ON ObjectBoolean_PartionSumm.ObjectId  = tmpRes.GoodsId
+                                       AND ObjectBoolean_PartionSumm.DescId    = zc_ObjectBoolean_Goods_PartionSumm()
           ;
 
+     -- 1.3.1. определяется Счет(справочника) для проводок по суммовому учету
+     UPDATE _tmpItem SET AccountId = _tmpItem_byAccount.AccountId
+     FROM (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы
+                                             , inAccountDirectionId     := vbAccountDirectionId_To
+                                             , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId
+                                             , inInfoMoneyId            := NULL
+                                             , inUserId                 := inUserId
+                                              ) AS AccountId
+                , _tmpItem_group.InfoMoneyDestinationId
+           FROM (SELECT DISTINCT _tmpItem.InfoMoneyDestinationId FROM _tmpItem) AS _tmpItem_group
+          ) AS _tmpItem_byAccount
+     WHERE _tmpItem.InfoMoneyDestinationId = _tmpItem_byAccount.InfoMoneyDestinationId
+     ;
+
      -- 1.3.2. определяется ContainerId_Summ для проводок по суммовому учету + формируется Аналитика <элемент с/с>
-     UPDATE _tmpItem SET ContainerId_Summ = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
+     UPDATE _tmpItem SET ContainerId_Summ = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate_to
                                                                               , inUnitId                 := vbUnitId
                                                                               , inCarId                  := NULL
                                                                               , inMemberId               := NULL
@@ -200,7 +260,7 @@ BEGIN
                                                                               , inGoodsKindId            := _tmpItem.GoodsKindId
                                                                               , inIsPartionSumm          := _tmpItem.isPartionSumm
                                                                               , inPartionGoodsId         := _tmpItem.PartionGoodsId
-                                                                              , inAssetId                := _tmpItem.AssetId
+                                                                              , inAssetId                := NULL
                                                                                )
      ;
 
@@ -218,6 +278,9 @@ BEGIN
                                 , inDescId     := zc_Movement_IncomeCost()
                                 , inUserId     := inUserId
                                  );
+
+
+     RAISE EXCEPTION 'OK';
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -18,17 +18,10 @@ BEGIN
 
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                               , ContainerId_Summ Integer, ContainerId_Goods Integer, ContainerId_CountSupplier Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, UnitId_Asset Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
-                               , ContainerId_GoodsTicketFuel Integer, GoodsId_TicketFuel Integer
-                               , OperCount TFloat, OperCount_Partner TFloat, OperCount_Packer TFloat
-                               , tmpOperSumm TFloat, OperSumm TFloat
-                               , tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, tmpOperSumm_Partner_Currency TFloat, OperSumm_Partner_Currency TFloat, Price_Currency TFloat
-                               , tmpOperSumm_Packer TFloat, OperSumm_Packer TFloat
-                               , tmpOperSumm_PartnerTo TFloat, OperSumm_PartnerTo TFloat
-                               , AccountId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, InfoMoneyGroupId_Detail Integer, InfoMoneyDestinationId_Detail Integer, InfoMoneyId_Detail Integer
-                               , BusinessId Integer
-                               , ContainerId_ProfitLoss Integer
-                               , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean
+                               , ContainerId_Summ Integer, ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer
+                               , OperCount TFloat, OperSumm TFloat, OperSumm_calc TFloat
+                               , AccountId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, InfoMoneyId_Detail Integer
+                               , isPartionCount Boolean, isPartionSumm Boolean
                                , PartionGoodsId Integer
                                 ) ON COMMIT DROP;
 
