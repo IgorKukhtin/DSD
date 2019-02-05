@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , SummaUnitFrom TFloat, SummaUnitTo TFloat
 
              , Price TFloat, Summa TFloat, PriceWithVAT TFloat, SummaWithVAT TFloat
-             , AmountManual TFloat, AmountDiff TFloat
+             , AmountManual TFloat, AmountStorage TFloat, AmountDiff TFloat, AmountStorageDiff TFloat
              , ReasonDifferencesId Integer, ReasonDifferencesName TVarChar
              , ConditionsKeepName TVarChar
              , MinExpirationDate TDateTime
@@ -136,6 +136,7 @@ BEGIN
                                            , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))/SUM(MIContainer_Count.Amount)),0)   ::TFloat  AS PriceWithVAT
                                            , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))),0)                                 ::TFloat  AS SummaWithVAT
                                            , COALESCE(MIFloat_AmountManual.ValueData,0)   ::TFloat  AS AmountManual
+                                           , COALESCE(MIFloat_AmountStorage.ValueData,0)  ::TFloat  AS AmountStorage
                                           
                                         FROM MovementItem AS MovementItem_Send
                                             -- цена подразделений записанная при автоматическом распределении 
@@ -153,6 +154,10 @@ BEGIN
                                             LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
                                                                         ON MIFloat_AmountManual.MovementItemId = MovementItem_Send.Id
                                                                        AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+                                            LEFT JOIN MovementItemFloat AS MIFloat_AmountStorage
+                                                                        ON MIFloat_AmountStorage.MovementItemId = MovementItem_Send.Id
+                                                                       AND MIFloat_AmountStorage.DescId = zc_MIFloat_AmountStorage()
+
                                             LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
                                                                              ON MILinkObject_ReasonDifferences.MovementItemId = MovementItem_Send.Id
                                                                             AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
@@ -187,6 +192,7 @@ BEGIN
                                                , COALESCE(MIFloat_PriceFrom.ValueData,0)
                                                , COALESCE(MIFloat_PriceTo.ValueData,0) 
                                                , COALESCE(MIFloat_AmountManual.ValueData,0) 
+                                               , COALESCE(MIFloat_AmountStorage.ValueData,0) 
                                      )
 
            , tmpPrice AS (SELECT MovementItem_Send.ObjectId     AS GoodsId
@@ -227,7 +233,9 @@ BEGIN
               , MovementItem_Send.SummaWithVAT
 
               , MovementItem_Send.AmountManual
+              , MovementItem_Send.AmountStorage
               , (COALESCE(MovementItem_Send.AmountManual,0) - COALESCE(MovementItem_Send.Amount,0)) ::TFloat as AmountDiff
+              , (COALESCE(MovementItem_Send.AmountStorage,0) - COALESCE(MovementItem_Send.Amount,0)) ::TFloat as AmountStorageDiff
               , Object_ReasonDifferences.Id                               AS ReasonDifferencesId
               , Object_ReasonDifferences.ValueData                        AS ReasonDifferencesName
               , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
@@ -265,9 +273,10 @@ BEGIN
                                        , MovementItem.IsErased  
                                        , MILinkObject_ReasonDifferences.ObjectId AS ReasonDifferencesId 
                                                     
-                                       , COALESCE(MIFloat_PriceFrom.ValueData,0)    ::TFloat  AS PriceFrom
-                                       , COALESCE(MIFloat_PriceTo.ValueData,0)      ::TFloat  AS PriceTo        
-                                       , COALESCE(MIFloat_AmountManual.ValueData,0) ::TFloat  AS AmountManual
+                                       , COALESCE(MIFloat_PriceFrom.ValueData,0)      ::TFloat  AS PriceFrom
+                                       , COALESCE(MIFloat_PriceTo.ValueData,0)        ::TFloat  AS PriceTo        
+                                       , COALESCE(MIFloat_AmountManual.ValueData,0)   ::TFloat  AS AmountManual
+                                       , COALESCE(MIFloat_AmountStorage.ValueData,0)  ::TFloat  AS AmountStorage
            
                                   FROM MovementItem   
                                       -- цена подразделений записанная при автоматическом распределении 
@@ -280,6 +289,9 @@ BEGIN
                                       LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
                                                                   ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                                                                  AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+                                      LEFT JOIN MovementItemFloat AS MIFloat_AmountStorage
+                                                                  ON MIFloat_AmountStorage.MovementItemId = MovementItem.Id
+                                                                 AND MIFloat_AmountStorage.DescId = zc_MIFloat_AmountStorage()
                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
                                                                        ON MILinkObject_ReasonDifferences.MovementItemId = MovementItem.Id
                                                                       AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
@@ -429,7 +441,9 @@ BEGIN
            , tmpMIContainer.SummaWithVAT     ::TFloat  AS SummaWithVAT
 
            , MovementItem_Send.AmountManual
-           , (COALESCE(MovementItem_Send.AmountManual,0) - COALESCE(MovementItem_Send.Amount,0))::TFloat as AmountDiff
+           , MovementItem_Send.AmountStorage
+           , (COALESCE(MovementItem_Send.AmountManual,0) - COALESCE(MovementItem_Send.Amount,0)) ::TFloat AS AmountDiff
+           , (COALESCE(MovementItem_Send.AmountStorage,0) - COALESCE(MovementItem_Send.Amount,0))::TFloat AS AmountStorageDiff
            , Object_ReasonDifferences.Id                               AS ReasonDifferencesId
            , Object_ReasonDifferences.ValueData                        AS ReasonDifferencesName
            , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
@@ -467,7 +481,8 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   
+ 05.02.19         * add AmountStorage 
  21.03.17         *
  22.01.17         *
  26.01.17         *

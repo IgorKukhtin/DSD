@@ -74,7 +74,7 @@ object OverSettingsEditForm: TOverSettingsEditForm
   object ceMinimumLot: TcxCurrencyEdit
     Left = 176
     Top = 110
-    Properties.DecimalPlaces = 2
+    Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 7
     Width = 137
@@ -161,8 +161,8 @@ object OverSettingsEditForm: TOverSettingsEditForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 272
-    Top = 72
+    Left = 232
+    Top = 64
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_OverSettings'
