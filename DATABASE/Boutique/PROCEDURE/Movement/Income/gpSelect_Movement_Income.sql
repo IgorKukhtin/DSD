@@ -13,7 +13,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Income(
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat, TotalSumm TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat
+             , TotalCount TFloat, TotalSumm TFloat
+             , TotalSummBalance TFloat, TotalSummPriceList TFloat
+             , TotalSummJur TFloat, ChangePercent TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , FromName TVarChar, ToName TVarChar
              , CurrencyDocumentName TVarChar
@@ -86,6 +88,8 @@ BEGIN
            , MF_TotalSumm.ValueData                      AS TotalSumm
            , MovementFloat_TotalSummBalance.ValueData    AS TotalSummBalance
            , MF_TotalSummPriceList.ValueData             AS TotalSummPriceList
+           , MF_TotalSummJur.ValueData                   AS TotalSummJur
+           , MF_ChangePercent.ValueData                  AS ChangePercent
                                                          
            , MF_CurrencyValue.ValueData                  AS CurrencyValue
            , MF_ParValue.ValueData                       AS ParValue
@@ -126,6 +130,13 @@ BEGIN
                                     ON MF_CurrencyValue.MovementId =  Movement.Id
                                    AND MF_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
 
+            LEFT JOIN MovementFloat AS MF_TotalSummJur
+                                    ON MF_TotalSummJur.MovementId = Movement.Id
+                                   AND MF_TotalSummJur.DescId = zc_MovementFloat_TotalSummJur()
+            LEFT JOIN MovementFloat AS MF_ChangePercent
+                                    ON MF_ChangePercent.MovementId = Movement.Id
+                                   AND MF_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
             LEFT JOIN MovementLinkObject AS MLO_From
                                          ON MLO_From.MovementId = Movement.Id
                                         AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -159,6 +170,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .». 
+ 05.02.19         *
  03.05.18         * add protocol
  24.04.18         *
  10.04.17         *

@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Income(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+             , ChangePercent TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
@@ -32,6 +33,7 @@ BEGIN
              , lfGet.Code            AS StatusCode
              , lfGet.Name            AS StatusName
 
+             , CAST (0 AS TFloat)    AS ChangePercent
              , CAST (0 AS TFloat)    AS CurrencyValue
              , CAST (1 AS TFloat)    AS ParValue
 
@@ -59,6 +61,7 @@ BEGIN
              , Object_Status.ObjectCode              AS StatusCode
              , Object_Status.ValueData               AS StatusName
 
+             , MovementFloat_ChangePercent.ValueData AS ChangePercent
              , MovementFloat_CurrencyValue.ValueData AS CurrencyValue
              , MovementFloat_ParValue.ValueData      AS ParValue
 
@@ -86,6 +89,10 @@ BEGIN
                                     ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
                                    AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
 
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                    ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -112,6 +119,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 05.02.19         *
  08.09.17         *
  10.04.17         *
 */

@@ -17,7 +17,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , LabelId Integer, LabelName TVarChar
              , GoodsSizeId Integer, GoodsSizeName TVarChar
              , Amount TFloat
-             , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
+             , PriceJur TFloat
+             , CountForPrice TFloat, OperPriceList TFloat
               )
 AS
 $BODY$
@@ -53,7 +54,7 @@ BEGIN
                ,  0 :: Integer              AS GoodsSizeId
                , '' :: TVarChar             AS GoodsSizeName
                , 1  :: TFloat               AS Amount
-               , 0  :: TFloat               AS OperPrice
+               , 0  :: TFloat               AS PriceJur
                , 1  :: TFloat               AS CountForPrice
                , 0  :: TFloat               AS OperPriceList
              FROM Object AS Object_Measure
@@ -70,7 +71,7 @@ BEGIN
                                , MovementItem.ObjectId AS GoodsId
                                , MovementItem.PartionId
                                , MovementItem.Amount
-                               , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
+                               , COALESCE (MIFloat_PriceJur.ValueData, 0)        AS PriceJur
                                , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
                                , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
                                , MovementItem.isErased
@@ -78,9 +79,9 @@ BEGIN
                                 LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                             ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                            AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-                                LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
-                                                            ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
-                                                           AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
+                                LEFT JOIN MovementItemFloat AS MIFloat_PriceJur
+                                                            ON MIFloat_PriceJur.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_PriceJur.DescId = zc_MIFloat_PriceJur()
                                 LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                             ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                                            AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
@@ -113,7 +114,7 @@ BEGIN
                , CASE WHEN Object_GoodsSize.ValueData = '' THEN ' ' ELSE Object_GoodsSize.ValueData END :: TVarChar AS GoodsSizeName
 
                , tmpMI.Amount         ::TFloat
-               , tmpMI.OperPrice      ::TFloat
+               , tmpMI.PriceJur       ::TFloat
                , tmpMI.CountForPrice  ::TFloat
                , tmpMI.OperPriceList  ::TFloat
 
@@ -145,6 +146,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.  ¬ÓÓ·Í‡ÎÓ ¿.¿.
+ 05.02.19         *
  10.04.17         *
 */
 

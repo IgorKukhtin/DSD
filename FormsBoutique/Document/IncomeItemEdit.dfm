@@ -167,7 +167,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Top = 229
     Caption = #1042#1093'. '#1094#1077#1085#1072
   end
-  object ceOperPrice: TcxCurrencyEdit
+  object cePriceJur: TcxCurrencyEdit
     Left = 289
     Top = 246
     Properties.DecimalPlaces = 4
@@ -406,9 +406,9 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperPrice'
+        Name = 'inPriceJur'
         Value = '45'
-        Component = ceOperPrice
+        Component = cePriceJur
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -628,9 +628,9 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'OperPrice'
+        Name = 'PriceJur'
         Value = Null
-        Component = ceOperPrice
+        Component = cePriceJur
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1281,7 +1281,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
       item
         Name = 'inOperPrice'
         Value = 0.000000000000000000
-        Component = ceOperPrice
+        Component = cePriceJur
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1303,8 +1303,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 368
-    Top = 192
+    Left = 384
+    Top = 176
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1312,7 +1312,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
     RefreshAction = actRefreshOperPriceList
     ComponentList = <
       item
-        Component = ceOperPrice
+        Component = cePriceJur
       end
       item
         Component = ceCountForPrice

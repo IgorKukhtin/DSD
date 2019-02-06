@@ -58,7 +58,7 @@ type
     cxLabel18: TcxLabel;
     ceAmount: TcxCurrencyEdit;
     cxLabel2: TcxLabel;
-    ceOperPrice: TcxCurrencyEdit;
+    cePriceJur: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
     ceOperPriceList: TcxCurrencyEdit;
     cxLabel10: TcxLabel;
