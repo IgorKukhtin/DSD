@@ -229,7 +229,7 @@ BEGIN
                                                    AND ObjectFloat_Price_Value.DescId   = zc_ObjectFloat_Price_Value()
                         )
 
-         , tmpGoodsParam AS (SELECT COALESCE(MovementItem_Send.ObjectId,tmpRemains.GoodsId)           AS GoodsId
+         , tmpGoodsParam AS (SELECT tmp.GoodsId                                                       AS GoodsId
                                   , Object_GoodsGroup.ValueData                                       AS GoodsGroupName
                                   , Object_NDSKind.ValueData                                          AS NDSKindName
                                   , ObjectFloat_NDSKind_NDS.ValueData                                 AS NDS 
