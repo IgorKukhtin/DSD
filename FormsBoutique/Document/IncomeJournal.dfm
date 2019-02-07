@@ -246,6 +246,16 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
+      object ChangePercent: TcxGridDBColumn
+        Caption = '(-)% '#1057#1082'. (+)% '#1053#1072#1094'.'
+        DataBinding.FieldName = 'ChangePercent'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = '+,0.###;-,0.###; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object TotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1074#1093'.'
         DataBinding.FieldName = 'TotalSumm'

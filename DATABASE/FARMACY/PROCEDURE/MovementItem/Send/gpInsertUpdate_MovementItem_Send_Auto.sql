@@ -90,6 +90,7 @@ BEGIN
                                                            , inGoodsId            := inGoodsId
                                                            , inAmount             := inRemainsMCS_result
                                                            , inAmountManual       := 0 ::TFloat
+                                                           , inAmountStorage      := 0 ::TFloat
                                                            , inReasonDifferencesId:= 0
                                                            , inUserId             := vbUserId
                                                             );

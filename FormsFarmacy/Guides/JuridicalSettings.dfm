@@ -90,6 +90,15 @@
             HeaderHint = #1055#1088#1072#1081#1089' '#1079#1072#1082#1088#1099#1090' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
             Width = 108
           end
+          object isBonusClose: TcxGridDBColumn
+            Caption = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1073#1086#1085#1091#1089#1099
+            DataBinding.FieldName = 'isBonusClose'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1073#1086#1085#1091#1089#1099
+            Width = 92
+          end
           object Bonus: TcxGridDBColumn
             Caption = #1041#1086#1085#1091#1089
             DataBinding.FieldName = 'Bonus'
@@ -572,6 +581,82 @@
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1101#1083#1077#1084#1077#1085#1090
       ImageIndex = 0
     end
+    object macUpdateisBonusClose_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateisBonusClose_Yes_list
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1073#1086#1085#1091#1089#1099
+      Hint = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1073#1086#1085#1091#1089#1099
+      ImageIndex = 52
+    end
+    object macUpdateisBonusClose_Yes_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateisBonusClose_Yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1073#1086#1085#1091#1089#1099
+      Hint = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1073#1086#1085#1091#1089#1099
+      ImageIndex = 52
+    end
+    object macUpdateisBonusClose_No: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateisBonusClose_No_list
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1059#1095#1080#1090#1099#1074#1072#1090#1100' '#1073#1086#1085#1091#1089#1099
+      Hint = #1059#1095#1080#1090#1099#1074#1072#1090#1100' '#1073#1086#1085#1091#1089#1099
+      ImageIndex = 58
+    end
+    object macUpdateisBonusClose_No_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateisBonusClose_No
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1095#1080#1090#1099#1074#1072#1090#1100' '#1073#1086#1085#1091#1089#1099
+      Hint = #1059#1095#1080#1090#1099#1074#1072#1090#1100' '#1073#1086#1085#1091#1089#1099
+      ImageIndex = 58
+    end
+    object actUpdateisBonusClose_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isBonusClose_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isBonusClose_Yes
+        end>
+      Caption = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1073#1086#1085#1091#1089#1099
+      Hint = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1073#1086#1085#1091#1089#1099
+    end
+    object actUpdateisBonusClose_No: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isBonusClose_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isBonusClose_No
+        end>
+      Caption = #1059#1095#1080#1090#1099#1074#1072#1090#1100' '#1073#1086#1085#1091#1089#1099
+      Hint = #1059#1095#1080#1090#1099#1074#1072#1090#1100' '#1073#1086#1085#1091#1089#1099
+    end
   end
   inherited MasterDS: TDataSource
     Left = 88
@@ -683,6 +768,18 @@
         end
         item
           Visible = True
+          ItemName = 'bbUpdateisBonusClose_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateisBonusClose_No'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpen'
         end
         item
@@ -740,6 +837,14 @@
     end
     object bbInsertRecord1: TdxBarButton
       Action = InsertRecord1
+      Category = 0
+    end
+    object bbUpdateisBonusClose_Yes: TdxBarButton
+      Action = macUpdateisBonusClose_Yes
+      Category = 0
+    end
+    object bbUpdateisBonusClose_No: TdxBarButton
+      Action = macUpdateisBonusClose_No
       Category = 0
     end
   end
@@ -825,6 +930,15 @@
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isSite'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisBonusClose'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isBonusClose'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -948,8 +1062,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 240
-    Top = 75
+    Left = 336
+    Top = 203
   end
   object spUpdate_isPriceClose_No: TdsdStoredProc
     StoredProcName = 'gpUpdate_JuridicalSettings_isPriceClose'
@@ -1164,5 +1278,53 @@
     PackSize = 1
     Left = 720
     Top = 123
+  end
+  object spUpdate_isBonusClose_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_JuridicalSettings_isBonusClose'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisBonusClose'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 192
+    Top = 339
+  end
+  object spUpdate_isBonusClose_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_JuridicalSettings_isBonusClose'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisBonusClose'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 304
+    Top = 323
   end
 end

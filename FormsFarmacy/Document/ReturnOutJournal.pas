@@ -58,6 +58,7 @@ type
     DataSetPost1: TDataSetPost;
     ExecuteDialog: TExecuteDialog;
     AdjustingOurDate: TcxGridDBColumn;
+    actPrintTTN: TdsdPrintAction;
   private
     { Private declarations }
   public

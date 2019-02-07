@@ -306,7 +306,8 @@ object MainForm: TMainForm
         'E) = TRUE OR'
       
         'COALESCE (isReport3, FALSE) = TRUE OR COALESCE (isReport4, FALSE' +
-        ') = TRUE);')
+        ') = TRUE) AND'
+      'COALESCE (Mail, '#39#39') <> '#39#39';')
     Params = <>
     Left = 144
     Top = 384

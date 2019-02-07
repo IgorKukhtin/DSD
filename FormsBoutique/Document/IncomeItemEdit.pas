@@ -58,7 +58,7 @@ type
     cxLabel18: TcxLabel;
     ceAmount: TcxCurrencyEdit;
     cxLabel2: TcxLabel;
-    ceOperPrice: TcxCurrencyEdit;
+    cePriceJur: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
     ceOperPriceList: TcxCurrencyEdit;
     cxLabel10: TcxLabel;
@@ -74,6 +74,8 @@ type
     actRefreshOperPriceList: TdsdDataSetRefresh;
     cxLabel13: TcxLabel;
     edGoodsCode: TcxCurrencyEdit;
+    spUpdate_PriceWithoutPersent: TdsdStoredProc;
+    actUpdate_PriceWithoutPersent: TdsdExecStoredProc;
   private
     { Private declarations }
   public

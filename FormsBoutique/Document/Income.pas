@@ -184,6 +184,10 @@ type
     macUpdate_PriceWithoutPersent_List: TMultiAction;
     bb: TdxBarButton;
     actPersentDialog1: TExecuteDialog;
+    cxLabel8: TcxLabel;
+    edChangePercent: TcxCurrencyEdit;
+    spUpdate_ChangePercent: TdsdStoredProc;
+    actUpdate_ChangePercent: TdsdExecStoredProc;
   private
   public
   end;

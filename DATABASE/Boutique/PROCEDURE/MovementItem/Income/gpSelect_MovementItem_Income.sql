@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, PartionId Integer, GoodsId Integer, GoodsCode Integer
              , LabelName TVarChar
              , GoodsSizeId Integer, GoodsSizeName TVarChar
              , Amount TFloat, Remains TFloat
-             , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
+             , PriceJur TFloat, OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
              , TotalSumm TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat
              , PriceTax TFloat       -- % наценки
              , Color_Calc Integer
@@ -68,6 +68,7 @@ BEGIN
                            , MovementItem.ObjectId AS GoodsId
                            , MovementItem.PartionId
                            , MovementItem.Amount
+                           , COALESCE (MIFloat_PriceJur.ValueData, 0)        AS PriceJur
                            , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
                            , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
                            , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
@@ -96,6 +97,9 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                         ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                                        AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+                            LEFT JOIN MovementItemFloat AS MIFloat_PriceJur
+                                                        ON MIFloat_PriceJur.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_PriceJur.DescId         = zc_MIFloat_PriceJur()
                      )
    , tmpProtocol AS (SELECT DISTINCT MovementItemProtocol.MovementItemId
                      FROM MovementItemProtocol
@@ -138,6 +142,7 @@ BEGIN
 
            , tmpMI.Amount
            , Container.Amount          :: TFloat AS Remains
+           , tmpMI.PriceJur            :: TFloat AS PriceJur
            , tmpMI.OperPrice           :: TFloat AS OperPrice
            , tmpMI.CountForPrice       :: TFloat AS CountForPrice
            , tmpMI.OperPriceList       :: TFloat AS OperPriceList
@@ -196,7 +201,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 
  03.05.18         *
  10.04.17         *
 */

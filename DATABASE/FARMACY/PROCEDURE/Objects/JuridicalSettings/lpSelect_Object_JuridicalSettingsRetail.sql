@@ -2,7 +2,9 @@
 
 --DROP FUNCTION IF EXISTS lpSelect_Object_JuridicalSettingsPriceListRetail(Integer);
 DROP FUNCTION IF EXISTS lpSelect_Object_JuridicalSettingsRetail(Integer);
-                        
+--DROP FUNCTION IF EXISTS lpSelect_Object_JuridicalSettingsRetail (Integer) CASCADE;
+
+
 CREATE OR REPLACE FUNCTION lpSelect_Object_JuridicalSettingsRetail(
     IN inRetailId   Integer       -- сессия пользователя
 )
@@ -11,6 +13,7 @@ RETURNS TABLE (JuridicalSettingsId Integer
              , isPriceClose boolean
              , isPriceCloseOrder boolean
              , isSite Boolean
+             , isBonusClose boolean
              , Bonus TFloat, PriceLimit TFloat
 ) AS
 $BODY$
@@ -55,6 +58,7 @@ BEGIN
                , COALESCE (ObjectBoolean_isPriceClose.ValueData, FALSE)            AS isPriceClose 
                , COALESCE (ObjectBoolean_isPriceCloseOrder.ValueData, FALSE)       AS isPriceCloseOrder
                , COALESCE (ObjectBoolean_Site.ValueData, FALSE)                    AS isSite
+               , COALESCE (ObjectBoolean_BonusClose.ValueData, FALSE)              AS isBonusClose
                , tmpJuridicalSettingsItem.Bonus
                , tmpJuridicalSettingsItem.PriceLimit
                --, ObjectFloat_Bonus.ValueData                                       AS Bonus
@@ -85,7 +89,12 @@ BEGIN
                                          ON ObjectBoolean_Site.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
                                         AND ObjectBoolean_Site.DescId = zc_ObjectBoolean_JuridicalSettings_Site()
 
+                 LEFT JOIN ObjectBoolean AS ObjectBoolean_BonusClose 	
+                                         ON ObjectBoolean_BonusClose.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                        AND ObjectBoolean_BonusClose.DescId = zc_ObjectBoolean_JuridicalSettings_isBonusClose()
+
                  LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                                   AND COALESCE (ObjectBoolean_BonusClose.ValueData, FALSE) = FALSE
 
 /*                 LEFT JOIN ObjectFloat AS ObjectFloat_Bonus 
                                        ON ObjectFloat_Bonus.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
@@ -107,6 +116,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.02.19         * add isBonusClose
  14.01.19         * add JuridicalSettingsId
  19.10.18         * isPriceCloseOrder
  17.02.15                         *

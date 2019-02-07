@@ -80,6 +80,7 @@ BEGIN
   , JuridicalSettings_all AS (SELECT tmp.JuridicalId, tmp.ContractId
                                    , tmp.isPriceClose, tmp.isSite
                                    , tmp.JuridicalSettingsId
+                                   , tmp.isBonusClose
                               FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId) AS tmp
                               WHERE tmp.isSite = TRUE -- мне нужно: я отметил какие участвуют в аукционе цены для показа на сайте, чтобы цены только этих договоров и участвовали
                               -- WHERE tmp.MainJuridicalId = vbMainJuridicalId
@@ -91,6 +92,7 @@ BEGIN
   , JuridicalSettings_new AS (SELECT tmp.JuridicalId, tmp.ContractId
                                    , ROW_NUMBER() OVER (PARTITION BY tmp.JuridicalId ORDER BY tmp.JuridicalId, CASE WHEN tmp.isSite = TRUE THEN 0 ELSE 1 END, tmp.ContractId) AS Ord
                                    , tmp.JuridicalSettingsId
+                                   , tmp.isBonusClose
                               FROM JuridicalSettings_all AS tmp
                               -- уже здесь ограничения
                               -- WHERE tmp.isPriceClose = FALSE -- ублал, т.к. tmp.isSite = TRUE
@@ -108,11 +110,12 @@ BEGIN
     -- Выбираем в первую очередь тот что для сайта
   , JuridicalSettings AS (SELECT tmp.JuridicalId, tmp.ContractId
                                , tmp.JuridicalSettingsId
+                               , tmp.isBonusClose
                           FROM JuridicalSettings_new AS tmp
                           -- !!!если Временно откл. - тогда будет для всех договоров!!!
                           WHERE tmp.Ord = 1
                          )
-  , JuridicalSettings_list AS (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId, JuridicalSettings.JuridicalSettingsId FROM JuridicalSettings)
+  , JuridicalSettings_list AS (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId, JuridicalSettings.JuridicalSettingsId, JuridicalSettings.isBonusClose FROM JuridicalSettings)
       -- элементы установок юр.лиц (границы цен для бонуса)
   , tmpJuridicalSettingsItem AS (SELECT tmp.JuridicalSettingsId
                                       , tmp.Bonus
@@ -120,6 +123,7 @@ BEGIN
                                       , tmp.PriceLimit
                                  FROM JuridicalSettings_list AS JuridicalSettings
                                       INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inUserId::TVarChar) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                 WHERE COALESCE (JuridicalSettings.isBonusClose, FALSE) = FALSE
                                  )
     -- Список товаров + коды ...
   , GoodsList_all AS
@@ -399,6 +403,7 @@ ALTER FUNCTION lpSelectMinPrice_List (Integer, Integer, Integer) OWNER TO postgr
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 07.02.19         * если isBonusClose = true бонусы не учитываем
  14.01.19         * tmpJuridicalSettingsItem - теперь значения Бонус берем из Итемов
  15.04.16                                        *
 */

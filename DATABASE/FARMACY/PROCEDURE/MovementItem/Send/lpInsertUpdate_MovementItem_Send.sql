@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_Send()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, Integer, Integer);
 
 
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inAmountManual        TFloat    , -- Кол-во ручное
+    IN inAmountStorage       TFloat    , --
     IN inReasonDifferencesId Integer   , -- Причина разногласия
     IN inUserId              Integer     -- пользователь
 )
@@ -47,6 +49,8 @@ BEGIN
 
      -- Сохранили <кол-во ручное>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountManual(), ioId, inAmountManual);
+     -- Сохранили <кол-во ручное>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountStorage(), ioId, inAmountStorage);
  
      -- Сохранили <причину разногласия>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ReasonDifferences(), ioId, inReasonDifferencesId);
@@ -63,7 +67,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А,
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 05.02.19         * add inAmountStorage
  28.06.16         *
  29.07.15                                                                       *
  */

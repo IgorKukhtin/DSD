@@ -91,6 +91,16 @@ type
     InsertRecord1: TInsertRecord;
     bbInsertRecord1: TdxBarButton;
     clPriceLimit_min: TcxGridDBColumn;
+    spUpdate_isBonusClose_Yes: TdsdStoredProc;
+    spUpdate_isBonusClose_No: TdsdStoredProc;
+    actUpdateisBonusClose_No: TdsdExecStoredProc;
+    actUpdateisBonusClose_Yes: TdsdExecStoredProc;
+    macUpdateisBonusClose_No_list: TMultiAction;
+    macUpdateisBonusClose_Yes_list: TMultiAction;
+    bbUpdateisBonusClose_Yes: TdxBarButton;
+    bbUpdateisBonusClose_No: TdxBarButton;
+    macUpdateisBonusClose_Yes: TMultiAction;
+    macUpdateisBonusClose_No: TMultiAction;
   private
     { Private declarations }
   public

@@ -35,10 +35,18 @@ BEGIN
           , Movement_ReturnOut.TotalSumm
           , (Movement_ReturnOut.TotalSumm - Movement_ReturnOut.TotalSummMVAT) AS TotalSummVAT
           , Movement_ReturnOut.TotalCount
-        FROM
-            Movement_ReturnOut_View AS Movement_ReturnOut
-        WHERE 
-            Movement_ReturnOut.Id = inMovementId;
+
+          , ObjectHistory_JuridicalDetails.FullName           AS JuridicalFullName
+          , ObjectHistory_JuridicalDetails.JuridicalAddress   AS JuridicalAddress
+          , ObjectString_Unit_Address.ValueData               AS Address_From
+          , ObjectHistory_ToDetails..FullName                 AS JuridicalFullName_To
+        FROM Movement_ReturnOut_View AS Movement_ReturnOut
+            LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(inJuridicalid := Movement_ReturnOut.JuridicalId, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_JuridicalDetails ON 1=1
+            LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(inJuridicalid := Movement_ReturnOut.ToId, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_ToDetails ON 1=1
+            LEFT JOIN ObjectString AS ObjectString_Unit_Address
+                                   ON ObjectString_Unit_Address.ObjectId = Movement_ReturnOut.FromId
+                                  AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
+        WHERE Movement_ReturnOut.Id = inMovementId;
     RETURN NEXT Cursor1;
 
 
@@ -69,7 +77,7 @@ BEGIN
                 THEN MI_ReturnOut.AmountSumm
                 ELSE ROUND(MI_ReturnOut.AmountSumm/(1+(ObjectFloat_NDSKind_NDS.ValueData/100)),2)
             END AS Summa  
-
+          
         FROM
             MovementItem_ReturnOut_View AS MI_ReturnOut
             LEFT OUTER JOIN ObjectLink AS ObjectLink_Goods_Measure
@@ -103,10 +111,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_Maker
                                   ON ObjectString_Goods_Maker.ObjectId = MILinkObject_Goods.ObjectId 
                                  AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()
-        WHERE
-            MI_ReturnOut.MovementId = inMovementId
-            AND
-            MI_ReturnOut.isErased = FALSE;
+
+        WHERE MI_ReturnOut.MovementId = inMovementId
+          AND MI_ReturnOut.isErased = FALSE;
 
     RETURN NEXT Cursor2;
 END;
@@ -117,8 +124,10 @@ ALTER FUNCTION gpSelect_Movement_ReturnOut_Print (Integer,TVarChar) OWNER TO pos
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А
+ 06.02.19         *
  14.04.16         *
  25.12.15                                                                       *
 */
 
 -- SELECT * FROM gpSelect_Movement_ReturnOut_Print (inMovementId := 570596, inSession:= '5');
+--select * from gpSelect_Movement_ReturnOut_Print(inMovementId := 12521745 ,  inSession := '3');

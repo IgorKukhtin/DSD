@@ -3,7 +3,7 @@ inherited SendForm: TSendForm
   ClientHeight = 550
   ClientWidth = 1015
   ExplicitWidth = 1031
-  ExplicitHeight = 589
+  ExplicitHeight = 588
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -98,6 +98,16 @@ inherited SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaUnitTo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountStorage
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountStorageDiff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -176,6 +186,16 @@ inherited SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaUnitTo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountStorage
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountStorageDiff
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -189,7 +209,15 @@ inherited SendForm: TSendForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object GoodsCode: TcxGridDBColumn [0]
+          object GoodsGroupName: TcxGridDBColumn [0]
+            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 96
+          end
+          object GoodsCode: TcxGridDBColumn [1]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
@@ -197,7 +225,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 75
           end
-          object GoodsName: TcxGridDBColumn [1]
+          object GoodsName: TcxGridDBColumn [2]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -213,7 +241,61 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 249
           end
-          object AmountCheck: TcxGridDBColumn [2]
+          object NDSKindName: TcxGridDBColumn [3]
+            Caption = #1042#1080#1076' '#1053#1044#1057
+            DataBinding.FieldName = 'NDSKindName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1053#1044#1057
+            Options.Editing = False
+            Width = 68
+          end
+          object NDS: TcxGridDBColumn [4]
+            Caption = #1053#1044#1057', %'
+            DataBinding.FieldName = 'NDS'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object IsClose: TcxGridDBColumn [5]
+            Caption = #1047#1072#1082#1088#1099#1090
+            DataBinding.FieldName = 'IsClose'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 52
+          end
+          object IsTop: TcxGridDBColumn [6]
+            Caption = #1058#1054#1055
+            DataBinding.FieldName = 'IsTop'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 37
+          end
+          object isFirst: TcxGridDBColumn [7]
+            Caption = '1-'#1074#1099#1073#1086#1088
+            DataBinding.FieldName = 'isFirst'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object isSecond: TcxGridDBColumn [8]
+            Caption = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088
+            DataBinding.FieldName = 'isSecond'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object AmountCheck: TcxGridDBColumn [9]
             Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1086#1090#1083#1086#1078'. '#1095#1077#1082#1072#1093
             DataBinding.FieldName = 'AmountCheck'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -225,7 +307,7 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 62
           end
-          object AmountRemains: TcxGridDBColumn [3]
+          object AmountRemains: TcxGridDBColumn [10]
             Caption = #1054#1089#1090'. '#1082#1086#1083'-'#1074#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
             DataBinding.FieldName = 'AmountRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -236,15 +318,60 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 65
           end
-          object Amount: TcxGridDBColumn [4]
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+          object Amount: TcxGridDBColumn [11]
+            Caption = #1050#1086#1083'-'#1074#1086', '#1079#1072#1075#1088#1091#1078#1072#1077#1084#1086#1077' '#1074' '#1090#1086#1095#1082#1091'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 77
+            HeaderHint = #1050#1086#1083'-'#1074#1086', '#1079#1072#1075#1088#1091#1078#1072#1077#1084#1086#1077' '#1074' '#1090#1086#1095#1082#1091'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1100
+            Width = 107
+          end
+          object AmountManual: TcxGridDBColumn [12]
+            Caption = #1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+            DataBinding.FieldName = 'AmountManual'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086
+            Width = 86
+          end
+          object AmountDiff: TcxGridDBColumn [13]
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083'-'#1074#1086' ('#1087#1086#1083#1091#1095#1072#1090#1077#1083#1100')'
+            DataBinding.FieldName = 'AmountDiff'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '+,0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1075#1088#1091#1078#1072#1077#1084#1086#1077' '#1082#1086#1083'-'#1074#1086'  '#1084#1080#1085#1091#1089'  '#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+            Options.Editing = False
+            Width = 69
+          end
+          object AmountStorage: TcxGridDBColumn [14]
+            Caption = #1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
+            DataBinding.FieldName = 'AmountStorage'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
+            Width = 86
+          end
+          object AmountStorageDiff: TcxGridDBColumn [15]
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083'-'#1074#1086' ('#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1100')'
+            DataBinding.FieldName = 'AmountStorageDiff'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '+,0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1075#1088#1091#1078#1072#1077#1084#1086#1077' '#1082#1086#1083'-'#1074#1086'  '#1084#1080#1085#1091#1089'  '#1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086' '#1090#1086#1095#1082#1080'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
+            Options.Editing = False
+            Width = 74
           end
           object PriceIn: TcxGridDBColumn
             Caption = #1059#1089#1088#1077#1076'. '#1079#1072#1082#1091#1087'. '#1094#1077#1085#1072' ('#1073#1077#1079' '#1053#1044#1057')'
@@ -343,22 +470,6 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 102
-          end
-          object AmountManual: TcxGridDBColumn
-            Caption = #1060#1072#1082#1090'. '#1082#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'AmountManual'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 54
-          end
-          object AmountDiff: TcxGridDBColumn
-            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'AmountDiff'
-            PropertiesClassName = 'TcxCalcEditProperties'
-            Properties.DisplayFormat = '+,0.###;-,0.###; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
           end
           object ReasonDifferencesName: TcxGridDBColumn
             Caption = #1055#1088#1080#1095#1080#1085#1072' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1103
@@ -1598,10 +1709,27 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountStorage'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountStorage'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outAmountDiff'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AmountDiff'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountStorageDiff'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountStorageDiff'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1611,11 +1739,6 @@ inherited SendForm: TSendForm
         Component = MasterCDS
         ComponentItem = 'ReasonDifferencesId'
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 160

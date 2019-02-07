@@ -6,9 +6,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarCha
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarChar, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarChar, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarChar, Integer, Integer, Integer, Boolean, Boolean, Boolean, TFloat, TFloat, TFloat, TDateTime, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarChar, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, TFloat, TDateTime, TDateTime, TVarChar);
-
-
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarChar, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, TFloat, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettings(Integer, TVarChar, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TFloat, TFloat, TFloat, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalSettings(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Установки для ценовых групп>
@@ -20,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalSettings(
     IN inisPriceClose            Boolean   ,    -- Закрыт прайс
     IN inisPriceCloseOrder       Boolean   ,    -- Закрыт прайс для заказа
     IN inisSite                  Boolean   ,    -- для сайта
+    IN inisBonusClose            Boolean   ,    -- Не учитывать бонусы
     IN inBonus                   TFloat    ,    -- % бонусирования
     IN inPriceLimit              TFloat    ,    -- Цена до
     IN inConditionalPercent      TFloat    ,    -- Доп.условия по прайсу, %
@@ -56,6 +56,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_JuridicalSettings_isPriceClose(), ioId, inisPriceClose);
    -- прайс закрыт для заказа
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_JuridicalSettings_isPriceCloseOrder(), ioId, inisPriceCloseOrder);
+   -- прайс закрыт
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_JuridicalSettings_isBonusClose(), ioId, inisBonusClose);
 
    -- % бонусирования
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_JuridicalSettings_Bonus(), ioId, inBonus);
@@ -89,6 +91,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.02.19         * inisBonusClose
  22.10.18         *
  14.11.16         * add BonusVirtual
  13.04.16         *

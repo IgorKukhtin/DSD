@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -16,7 +17,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
    OUT outSumma              TFloat    , -- Сумма
    OUT outSummaUnitTo        TFloat    , -- Сумма в ценах получателя
     IN inAmountManual        TFloat    , -- Кол-во ручное
-   OUT outAmountDiff         TFloat    , -- Причина разногласия
+    IN inAmountStorage       TFloat    , -- Факт кол-во точки-отправителя
+   OUT outAmountDiff         TFloat    , -- Загружаемое кол-во  минус  Факт кол-во точки-получателя
+   OUT outAmountStorageDiff  TFloat    , -- Загружаемое кол-во  минус  Факт кол-во точки-отправителя
     IN inReasonDifferencesId Integer   , -- Причина разногласия
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -82,7 +85,8 @@ BEGIN
     
     --Посчитали сумму
     outSumma := ROUND(inAmount * inPrice, 2); 
-    outAmountDiff := COALESCE(inAmountManual,0) - coalesce(inAmount,0);
+    outAmountDiff := COALESCE (inAmountManual,0) - COALESCE (inAmount,0);
+    outAmountStorageDiff := COALESCE (inAmountStorage,0) - COALESCE (inAmount,0);
     
     outSummaUnitTo := ROUND(inAmount * ioPriceUnitTo, 2); 
 
@@ -98,6 +102,7 @@ BEGIN
                                             , inGoodsId            := inGoodsId
                                             , inAmount             := inAmount
                                             , inAmountManual       := inAmountManual
+                                            , inAmountStorage      := inAmountStorage
                                             , inReasonDifferencesId:= inReasonDifferencesId
                                             , inUserId             := vbUserId
                                              );
@@ -109,6 +114,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 05.02.19         * add inAmountStorage
  19.12.18                                                                      *  
  07.09.17         *
  28.06.16         *

@@ -2,7 +2,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088' '#1087#1088#1080#1093#1086#1076#1072'>'
-  ClientHeight = 387
+  ClientHeight = 377
   ClientWidth = 520
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -167,7 +167,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Top = 229
     Caption = #1042#1093'. '#1094#1077#1085#1072
   end
-  object ceOperPrice: TcxCurrencyEdit
+  object cePriceJur: TcxCurrencyEdit
     Left = 289
     Top = 246
     Properties.DecimalPlaces = 4
@@ -286,8 +286,11 @@ object IncomeItemEditForm: TIncomeItemEditForm
     object actRefreshOperPriceList: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_OperPriceList
+      StoredProc = spUpdate_PriceWithoutPersent
       StoredProcList = <
+        item
+          StoredProc = spUpdate_PriceWithoutPersent
+        end
         item
           StoredProc = spGet_OperPriceList
         end>
@@ -295,6 +298,19 @@ object IncomeItemEditForm: TIncomeItemEditForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actUpdate_PriceWithoutPersent: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PriceWithoutPersent
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PriceWithoutPersent
+        end>
+      Caption = #1088#1072#1089#1095#1077#1090' '#1074#1093'. '#1094#1077#1085#1099' '#1073#1077#1079' '#1087#1088#1086#1094#1077#1085#1090#1072
+      Hint = #1088#1072#1089#1095#1077#1090' '#1074#1093'. '#1094#1077#1085#1099' '#1073#1077#1079' '#1087#1088#1086#1094#1077#1085#1090#1072
+      ImageIndex = 56
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -406,9 +422,9 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperPrice'
+        Name = 'inPriceJur'
         Value = '45'
-        Component = ceOperPrice
+        Component = cePriceJur
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -430,8 +446,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 468
-    Top = 328
+    Left = 452
+    Top = 320
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -628,9 +644,9 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'OperPrice'
+        Name = 'PriceJur'
         Value = Null
-        Component = ceOperPrice
+        Component = cePriceJur
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -656,8 +672,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 408
-    Top = 336
+    Left = 400
+    Top = 288
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -675,8 +691,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Top = 56
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 264
-    Top = 336
+    Left = 272
+    Top = 320
   end
   object GuidesGoodsSize: TdsdGuides
     KeyField = 'Id'
@@ -1015,8 +1031,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 153
-    Top = 141
+    Left = 209
+    Top = 149
   end
   object GuidesLineFabrica: TdsdGuides
     KeyField = 'Id'
@@ -1085,7 +1101,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 145
+    Left = 89
     Top = 189
   end
   object GuidesMeasure: TdsdGuides
@@ -1225,8 +1241,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 209
-    Top = 229
+    Left = 177
+    Top = 237
   end
   object GuidesJuridicalBasis: TdsdGuides
     KeyField = 'Id'
@@ -1254,8 +1270,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 111
-    Top = 278
+    Left = 79
+    Top = 270
   end
   object spGet_OperPriceList: TdsdStoredProc
     StoredProcName = 'gpGet_MI_Income_OperPriceList'
@@ -1271,6 +1287,14 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsName'
         Value = Null
         Component = edGoodsName
@@ -1281,7 +1305,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
       item
         Name = 'inOperPrice'
         Value = 0.000000000000000000
-        Component = ceOperPrice
+        Component = FormParams
+        ComponentItem = 'OperPrice'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1303,8 +1328,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 368
-    Top = 192
+    Left = 376
+    Top = 184
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1312,12 +1337,47 @@ object IncomeItemEditForm: TIncomeItemEditForm
     RefreshAction = actRefreshOperPriceList
     ComponentList = <
       item
-        Component = ceOperPrice
+        Component = cePriceJur
       end
       item
         Component = ceCountForPrice
       end>
     Left = 448
     Top = 160
+  end
+  object spUpdate_PriceWithoutPersent: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Income_PricebyPersent'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inPersent'
+        Value = 0.000000000000000000
+        Component = FormParams
+        ComponentItem = 'inChangePercent'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceJur'
+        Value = Null
+        Component = cePriceJur
+        ComponentItem = 'PriceJur'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperPrice'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 464
+    Top = 216
   end
 end

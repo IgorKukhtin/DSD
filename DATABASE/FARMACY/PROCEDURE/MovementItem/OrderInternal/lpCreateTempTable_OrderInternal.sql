@@ -86,6 +86,7 @@ BEGIN
                                                   , tmp.PriceLimit
                                              FROM JuridicalSettings
                                                   INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inUserId::TVarChar) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                             WHERE COALESCE (JuridicalSettings.isBonusClose, FALSE) = FALSE
                                              )
 
               , JuridicalArea AS (SELECT DISTINCT ObjectLink_JuridicalArea_Juridical.ChildObjectId AS JuridicalId
@@ -320,6 +321,7 @@ ALTER FUNCTION lpCreateTempTable_OrderInternal (Integer, Integer, Integer, Integ
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.02.19         * если isBonusClose = true бонусы не учитываем
  14.01.19         *
  19.10.18         * isPriceClose заменила на isPriceCloseOrder
  23.03.15                         *  

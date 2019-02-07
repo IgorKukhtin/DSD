@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MIEdit_Income(
     IN inLineFabricaName       TVarChar  , --
     IN inLabelName             TVarChar  , --
     IN inAmount                TFloat    , -- Количество
-    IN inOperPrice             TFloat    , -- Цена
+    IN inPriceJur              TFloat    , -- Цена вх.без скидки
     IN inCountForPrice         TFloat    , -- Цена за количество
     IN inOperPriceList         TFloat    , -- Цена по прайсу
     IN inSession               TVarChar    -- сессия пользователя
@@ -39,6 +39,8 @@ $BODY$
    DECLARE vbPartnerId Integer;
 
    DECLARE vbOperPriceList_old TFloat;
+   DECLARE vbOperPrice TFloat;
+   DECLARE vbChangePercent TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Income());
@@ -403,16 +405,30 @@ BEGIN
      -- Заменили свойство <Цена за количество>
      IF COALESCE (inCountForPrice, 0) = 0 THEN inCountForPrice := 1; END IF;
 
+     -- определяем % скридки / наценки из шапки документа
+     vbChangePercent := COALESCE ((SELECT MovementFloat.ValueData
+                                   FROM MovementFloat
+                                   WHERE MovementFloat.MovementId = inMovementId
+                                     AND MovementFloat.DescId = zc_MovementFloat_ChangePercent()
+                                   )
+                                  , 0);
+     -- расчет вх. цены со скидкой
+     vbOperPrice := (inPriceJur + inPriceJur / 100 * vbChangePercent) :: TFloat;
+
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_Income (ioId                 := ioId
                                               , inMovementId         := inMovementId
                                               , inGoodsId            := vbGoodsId
                                               , inAmount             := inAmount
-                                              , inOperPrice          := inOperPrice
+                                              , inOperPrice          := vbOperPrice
                                               , inCountForPrice      := inCountForPrice
                                               , inOperPriceList      := inOperPriceList
                                               , inUserId             := vbUserId
                                                );
+     
+     
+     -- сохранили свойство <Цена>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceJur(), ioId, inPriceJur);
 
      -- cохраняем Object_PartionGoods + Update св-ва у остальных партий этого vbGoodsId + Update Цены в истории
      PERFORM lpInsertUpdate_Object_PartionGoods (inMovementItemId     := ioId
@@ -425,7 +441,7 @@ BEGIN
                                                , inGoodsItemId        := vbGoodsItemId
                                                , inCurrencyId         := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_CurrencyDocument())
                                                , inAmount             := inAmount
-                                               , inOperPrice          := inOperPrice
+                                               , inOperPrice          := vbOperPrice
                                                , inCountForPrice      := inCountForPrice
                                                , inOperPriceList      := COALESCE (inOperPriceList, 0)
                                                , inOperPriceList_old  := COALESCE (vbOperPriceList_old, 0)
@@ -463,6 +479,9 @@ BEGIN
 
      -- дописали - партию = Id
      UPDATE MovementItem SET PartionId = ioId WHERE MovementItem.Id = ioId AND MovementItem.PartionId IS NULL;
+     
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
 
 END;
@@ -472,6 +491,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Полятыкин А.А.
+ 05.02.19         *
  11.05.17                                                        *
  10.05.17                                                        *
  24.04.17                                                        *

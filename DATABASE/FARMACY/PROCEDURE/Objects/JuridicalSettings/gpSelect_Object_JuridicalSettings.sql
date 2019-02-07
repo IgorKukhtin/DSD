@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_JuridicalSettings(
 RETURNS TABLE (Id Integer, Name TVarChar, JuridicalId Integer, JuridicalName TVarChar, 
                isBonusVirtual Boolean,
                isPriceClose Boolean, isPriceCloseOrder Boolean,
-               isSite Boolean,  
+               isSite Boolean,  isBonusClose Boolean, 
                Bonus TFloat, PriceLimit TFloat, ConditionalPercent TFloat,
                ContractId Integer, ContractName TVarChar, 
                MainJuridicalId Integer, MainJuridicalName TVarChar,
@@ -98,6 +98,7 @@ BEGIN
            , COALESCE (JuridicalSettings.isPriceClose, TRUE)    AS isPriceClose
            , COALESCE (JuridicalSettings.isPriceCloseOrder, TRUE)  AS isPriceCloseOrder
            , COALESCE (JuridicalSettings.isSite, FALSE)         AS isSite 
+           , COALESCE (JuridicalSettings.isBonusClose, FALSE)   AS isBonusClose 
            , JuridicalSettings.Bonus
            , JuridicalSettings.PriceLimit             :: TFloat AS PriceLimit
            , COALESCE(ObjectFloat_ConditionalPercent.ValueData, 0) :: TFloat AS ConditionalPercent
@@ -150,6 +151,7 @@ BEGIN
                       , COALESCE (ObjectBoolean_isPriceClose.ValueData, FALSE)    AS isPriceClose 
                       , COALESCE (ObjectBoolean_isPriceCloseOrder.ValueData, FALSE)  AS isPriceCloseOrder
                       , COALESCE (ObjectBoolean_Site.ValueData, FALSE)            AS isSite
+                      , COALESCE (ObjectBoolean_isBonusClose.ValueData, FALSE)    AS isBonusClose
                       --, ObjectFloat_Bonus.ValueData                               AS Bonus 
                       --, COALESCE (ObjectFloat_PriceLimit.ValueData,0) :: TFloat   AS PriceLimit  
                       , tmpJuridicalSettingsItem.Bonus
@@ -181,6 +183,10 @@ BEGIN
                                               ON ObjectBoolean_isPriceCloseOrder.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
                                              AND ObjectBoolean_isPriceCloseOrder.DescId = zc_ObjectBoolean_JuridicalSettings_isPriceCloseOrder()
 
+                      LEFT JOIN ObjectBoolean AS ObjectBoolean_isBonusClose
+                                              ON ObjectBoolean_isBonusClose.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                             AND ObjectBoolean_isBonusClose.DescId = zc_ObjectBoolean_JuridicalSettings_isBonusClose()
+
                       /*LEFT JOIN ObjectFloat AS ObjectFloat_Bonus 
                                             ON ObjectFloat_Bonus.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
                                            AND ObjectFloat_Bonus.DescId = zc_ObjectFloat_JuridicalSettings_Bonus()
@@ -206,6 +212,7 @@ BEGIN
                                           AND ObjectDate_EndDate.DescId = zc_ObjectDate_Contract_End()
 
                       LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                                        AND COALESCE (ObjectBoolean_isBonusClose.ValueData, FALSE) = FALSE
 
                  WHERE ObjectLink_JuridicalSettings_Retail.DescId = zc_ObjectLink_JuridicalSettings_Retail()
                  AND ObjectLink_JuridicalSettings_Retail.ChildObjectId = vbObjectId) 
@@ -232,6 +239,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 07.02.19         * isBonusClose
  14.01.19         *
  18.10.18         * isPriceCloseOrder
  10.05.18         *

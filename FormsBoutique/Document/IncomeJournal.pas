@@ -116,6 +116,7 @@ type
     cbIsProtocol: TcxCheckBox;
     PeriodChoice1: TPeriodChoice;
     spGet_Current_Date: TdsdStoredProc;
+    ChangePercent: TcxGridDBColumn;
   private
   public
   end;

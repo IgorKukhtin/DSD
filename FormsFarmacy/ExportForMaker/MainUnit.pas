@@ -141,6 +141,7 @@ begin
 
       if qryMaker.FieldByName('isReport1').AsBoolean then
       begin
+        RepType := 0;
         ReportIncome;
         btnExportClick(Sender);
         btnSendMailClick(Sender);
@@ -148,6 +149,7 @@ begin
 
       if qryMaker.FieldByName('isReport2').AsBoolean then
       begin
+        RepType := 1;
         ReportCheck;
         btnExportClick(Sender);
         btnSendMailClick(Sender);
@@ -155,6 +157,7 @@ begin
 
       if qryMaker.FieldByName('isReport3').AsBoolean then
       begin
+        RepType := 2;
         ReportAnalysisRemainsSelling;
         btnExportClick(Sender);
         btnSendMailClick(Sender);
@@ -162,6 +165,7 @@ begin
 
       if qryMaker.FieldByName('isReport4').AsBoolean then
       begin
+        RepType := 3;
         ReportIncomeConsumptionBalance;;
         btnExportClick(Sender);
         btnSendMailClick(Sender);
@@ -536,7 +540,7 @@ begin
       end;
     end;
 
-    SetLength(arrSum, lUnit.Count, 6);
+    SetLength(arrSum, lGoods.Count, 6);
 
     try
       xlApp.Application.ScreenUpdating := false;

@@ -51,6 +51,7 @@ BEGIN
                                       , tmp.PriceLimit
                                  FROM JuridicalSettings
                                       INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inUserId::TVarChar) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                 WHERE COALESCE (JuridicalSettings.isBonusClose, FALSE) = FALSE
                                  )
 
     -- Маркетинговый контракт
@@ -332,6 +333,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 07.02.19         * если isBonusClose = true бонусы не учитываем
  14.01.19         * tmpJuridicalSettingsItem - теперь значения Бонус берем из Итемов
  04.05.16         * 
 */

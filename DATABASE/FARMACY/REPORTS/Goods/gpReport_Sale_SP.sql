@@ -410,11 +410,11 @@ BEGIN
                                                   AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
 
                          WHERE ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
-                         /*  AND ( (COALESCE(ObjectLink_Contract_GroupMemberSP.ChildObjectId,0) = inGroupMemberSPId AND inisGroupMemberSP = FALSE AND COALESCE(inGroupMemberSPId,0) <> 0)
+                           AND (( (COALESCE(ObjectLink_Contract_GroupMemberSP.ChildObjectId,0) = inGroupMemberSPId AND inisGroupMemberSP = FALSE AND COALESCE(inGroupMemberSPId,0) <> 0)
                               OR (COALESCE(ObjectLink_Contract_GroupMemberSP.ChildObjectId,0) = 0 AND inisGroupMemberSP = TRUE AND COALESCE(inGroupMemberSPId,0) <> 0)
                               OR COALESCE(inGroupMemberSPId,0) = 0
-                               )
-                           AND (COALESCE (ObjectFloat_PercentSP.ValueData,0) = inPercentSP OR COALESCE (inPercentSP,0) = 0)*/
+                               ) AND inEndDate < '01.01.2019')
+                           AND (COALESCE (ObjectFloat_PercentSP.ValueData,0) = inPercentSP OR COALESCE (inPercentSP,0) = 0)
                         )
   
  , tmpMovDetails AS (SELECT tmpSale.Id   AS MovementId
@@ -490,12 +490,12 @@ BEGIN
                                             AND tmpContract.Contract_JuridicalBasisId = tmpSale.JuridicalId
                                             AND tmpContract.StartDate_Contract <= tmpSale.OperDate AND tmpContract.EndDate_Contract >= tmpSale.OperDate --выбираем дог. согласно датам
                                             
-                                           /* с 01,01,2019 один договор без категорий 
-                                            AND COALESCE (tmpContract.Contract_GroupMemberSPId,0) = CASE WHEN (COALESCE (tmpSale.GroupMemberSPId,0) = 4063780 AND COALESCE(inGroupMemberSPId,0) <> 0)
+                                           -- с 01,01,2019 один договор без категорий 
+                                            AND (COALESCE (tmpContract.Contract_GroupMemberSPId,0) = CASE WHEN (COALESCE (tmpSale.GroupMemberSPId,0) = 4063780 AND COALESCE(inGroupMemberSPId,0) <> 0)
                                                                                                           THEN COALESCE (tmpSale.GroupMemberSPId,0)
                                                                                                          ELSE 0
                                                                                                     END                                             --4063780;6;"Дитячий"  -- test 3690580
-                                           */ 
+                                                AND inEndDate < '01.01.2019')
                   --                          AND COALESCE (tmpContract.PercentSP,0) = tmpSale.ChangePercent
 
                           -- расчетный счет из договора

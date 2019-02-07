@@ -1008,8 +1008,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutJournalForm');
-  TdsdFormStorageFactory.GetStorage.Save
-    (GetForm('TReturnOutPartnerDataDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutPartnerDataDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutPartnerDataDialogForm');
 end;
 
@@ -1032,7 +1031,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_ObjectForm'));
     TdsdFormStorageFactory.GetStorage.Load('TJuridical_ObjectForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerCodeForm'));
-    TdsdFormStorageFactory.GetStorage.Load('TPartnerCodeForm'); }
+    TdsdFormStorageFactory.GetStorage.Load('TPartnerCodeForm');}
 
   // Адрес
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAddressForm'));

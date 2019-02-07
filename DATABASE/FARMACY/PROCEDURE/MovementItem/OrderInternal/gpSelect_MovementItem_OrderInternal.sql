@@ -714,6 +714,7 @@ BEGIN
                                           , tmp.PriceLimit
                                      FROM JuridicalSettings
                                           INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inSession) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                     WHERE COALESCE (JuridicalSettings.isBonusClose, FALSE) = FALSE
                                      )
        -- Маркетинговый контракт
       , GoodsPromo AS (SELECT tmp.JuridicalId
@@ -999,6 +1000,7 @@ BEGIN
                                                   , tmp.PriceLimit
                                              FROM JuridicalSettings
                                                   INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inSession) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                             WHERE COALESCE (JuridicalSettings.isBonusClose, FALSE) = FALSE
                                              )
 
               , JuridicalArea AS (SELECT DISTINCT ObjectLink_JuridicalArea_Juridical.ChildObjectId AS JuridicalId
@@ -2400,6 +2402,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 07.02.19         * если isBonusClose = true бонусы не учитываем
  02.11.18         *
  19.10.18         * isPriceClose замена на isPriceCloseOrder
  10.09.18         * add Remains_Diff --не хватает с учетом отлож. чеков
