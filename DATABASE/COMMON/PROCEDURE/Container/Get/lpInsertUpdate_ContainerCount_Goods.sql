@@ -165,6 +165,8 @@ BEGIN
                                                                                                                  8379 -- филиал Киев
                                                                                                                 )
                                                                                     THEN inGoodsKindId
+                                                                               WHEN inOperDate >= '01.01.2017'
+                                                                                    THEN inGoodsKindId
                                                                                ELSE 0
                                                                           END 
                                                  , inDescId_3          := CASE WHEN inPartionGoodsId <> 0 THEN zc_ContainerLinkObject_PartionGoods() ELSE NULL END

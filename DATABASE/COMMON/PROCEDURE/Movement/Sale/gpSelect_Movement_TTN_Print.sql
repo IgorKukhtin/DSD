@@ -107,8 +107,8 @@ BEGIN
           
        SELECT
              Movement.InvNumber                         AS InvNumber_Sale
-             -- параметр для Склад ГП ф.Киев - !!!временно!!!
-           , CASE WHEN 8411 = MovementLinkObject_From.ObjectId THEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) ELSE Movement.OperDate END :: TDateTime AS OperDate_Sale
+             -- параметр для Склад ГП ф.Киев + Львов - !!!временно!!!
+           , CASE WHEN MovementLinkObject_From.ObjectId IN (8411, 3080691) THEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) ELSE Movement.OperDate END :: TDateTime AS OperDate_Sale
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner_Sale
            , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDatePartner_Sale
 
@@ -128,8 +128,8 @@ BEGIN
            , OH_JuridicalDetails_From.JuridicalAddress  AS JuridicalAddress_From
 
            , tmpTransportGoods.InvNumber
-             -- параметр для Склад ГП ф.Киев - !!!временно!!!
-           , CASE WHEN 8411 = MovementLinkObject_From.ObjectId THEN COALESCE (MovementDate_OperDatePartner.ValueData, tmpTransportGoods.OperDate) ELSE tmpTransportGoods.OperDate END :: TDateTime AS OperDate
+             -- параметр для Склад ГП ф.Киев + Львов - !!!временно!!!
+           , CASE WHEN MovementLinkObject_From.ObjectId IN (8411, 3080691) THEN COALESCE (MovementDate_OperDatePartner.ValueData, tmpTransportGoods.OperDate) ELSE tmpTransportGoods.OperDate END :: TDateTime AS OperDate
            , tmpTransportGoods.InvNumberMark
            , tmpTransportGoods.CarName
            , tmpTransportGoods.CarModelName

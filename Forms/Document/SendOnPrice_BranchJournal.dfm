@@ -5,8 +5,9 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -320
   ExplicitWidth = 1126
-  ExplicitHeight = 445
+  ExplicitHeight = 442
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -439,6 +440,15 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object isHistoryCost: TcxGridDBColumn
+            Caption = '***'
+            DataBinding.FieldName = 'isHistoryCost'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 'isHistoryCost'
+            Width = 55
           end
         end
       end

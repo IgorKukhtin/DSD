@@ -454,7 +454,7 @@ BEGIN
              , _tmp.isPartionCount
              , _tmp.isPartionSumm 
                -- Партии товара, сформируем позже, ИЛИ !!!ЕСТЬ остаток с пустой партией!!!
-             , COALESCE (tmpContainer_all.PartionGoodsId, tmpMI.PartionGoodsId) AS PartionGoodsId
+             , COALESCE (tmpContainer_all.PartionGoodsId, _tmp.PartionGoodsId) AS PartionGoodsId
         FROM tmpMI AS _tmp
              LEFT JOIN tmpContainer_all ON tmpContainer_all.MovementItemId = _tmp.MovementItemId
                                        AND tmpContainer_all.Ord            = 1 -- на всякий случай - № п/п
@@ -1088,6 +1088,9 @@ end if;*/
                                  )
                      AND vbOperDate > '31.12.2015'
                     )
+                 OR (vbBranchId NOT IN (zc_Branch_Basis(), 0)
+                     AND vbOperDate > '31.12.2017'
+                    )
                    )
              ) AS _tmp
         WHERE  zc_isHistoryCost() = TRUE
@@ -1109,12 +1112,17 @@ end if;*/
 /*
 if inSession = '5' 
 then
-    RAISE EXCEPTION '<%> %  %  %', vbIsLastOnMonth, (select _tmpItemSumm.OperSumm from _tmpItemSumm where _tmpItemSumm.ContainerId = 695902)
-, (select _tmpRemainsSumm.InfoMoneyId_Detail from _tmpRemainsSumm where _tmpRemainsSumm.ContainerId = 695905)
- , zc_Enum_InfoMoney_80401() -- (select _tmpItemSumm.OperSumm from _tmpItemSumm where _tmpItemSumm.ContainerId = 0 and _tmpItemSumm.MovementItemId = 121243281)
+    RAISE EXCEPTION '<%> %  %  %', vbIsLastOnMonth
+, (select sum (_tmpItemSumm.OperSumm) from _tmpItemSumm where _tmpItemSumm.MovementItemId = 130992453)
+, (select min (_tmpItemSumm.OperSumm) from _tmpItemSumm where _tmpItemSumm.MovementItemId = 130992453 and _tmpItemSumm.OperSumm <> 0)
+, (select max (_tmpItemSumm.OperSumm) from _tmpItemSumm where _tmpItemSumm.MovementItemId = 130992453 and _tmpItemSumm.OperSumm <> 0)
+-- , (select _tmpItemSumm.OperSumm from _tmpItemSumm where _tmpItemSumm.ContainerId = 2261046)
+-- , (select _tmpRemainsSumm.InfoMoneyId_Detail from _tmpRemainsSumm where _tmpRemainsSumm.ContainerId = 695905)
+-- , zc_Enum_InfoMoney_80401() -- (select _tmpItemSumm.OperSumm from _tmpItemSumm where _tmpItemSumm.ContainerId = 0 and _tmpItemSumm.MovementItemId = 121243281)
 ;
 end if;
 */
+
      -- 3.2. определяется Счет для проводок по суммовому учету
      UPDATE _tmpItemSumm SET AccountId = _tmpItem_byAccount.AccountId
      FROM _tmpItem
@@ -1462,6 +1470,9 @@ end if;
         AND vbUnitId IN (8411   -- Склад ГП ф.Киев
                        , 428365 -- Склад возвратов ф.Киев
                         )
+        )
+     OR (vbBranchId NOT IN (zc_Branch_Basis(), 0)
+         AND vbOperDate > '31.12.2017'
         )
      THEN
 

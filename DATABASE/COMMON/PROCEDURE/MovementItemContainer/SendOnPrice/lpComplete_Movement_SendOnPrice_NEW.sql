@@ -2254,7 +2254,14 @@ END IF;
 
 
      -- !!!6.0.1. формируется свойство <Спец. алгоритм для расчета с/с (да/нет)>!!!
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_HistoryCost(), inMovementId, CASE WHEN vbBranchId_From = 0 OR vbBranchId_From = zc_Branch_Basis() THEN TRUE ELSE FALSE END);
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_HistoryCost()
+                                           , inMovementId
+                                           , CASE WHEN (vbBranchId_From = 0 OR vbBranchId_From = zc_Branch_Basis())
+                                                    OR (vbBranchId_From > 0 AND vbBranchId_To > 0 AND vbBranchId_From <> zc_Branch_Basis() AND vbBranchId_To <> zc_Branch_Basis())
+                                                       THEN TRUE
+                                                  ELSE FALSE
+                                             END
+                                            );
 
      -- !!!6.0.2. формируется свойство <zc_MIFloat_Summ - Сумма> + <zc_MIFloat_SummFrom - Сумма (ушло)> + <zc_MIFloat_SummPriceList - Сумма по прайсу>!!!
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(),          _tmpItem.MovementItemId, _tmpItem.OperSumm_Partner_ChangePercent)

@@ -195,15 +195,15 @@ BEGIN
              0                 AS Id
            , '' :: TVarChar    AS InvNumber
            , NULL :: TDateTime AS OperDate
-             -- параметр для Склад ГП ф.Киев - !!!временно!!!
-           , CASE WHEN 8411 = MovementLinkObject_From.ObjectId THEN COALESCE (MovementDate.ValueData, Movement.OperDate) ELSE Movement.OperDate END :: TDateTime AS OperDateIn
-             -- параметр для Склад ГП ф.Киев - !!!временно!!!
-           , CASE WHEN 8411 = MovementLinkObject_From.ObjectId THEN COALESCE (MovementDate.ValueData, Movement.OperDate) ELSE Movement.OperDate END :: TDateTime AS OperDateOut
+             -- параметр для Склад ГП ф.Киев + Львов - !!!временно!!!
+           , CASE WHEN MovementLinkObject_From.ObjectId IN (8411, 3080691) THEN COALESCE (MovementDate.ValueData, Movement.OperDate) ELSE Movement.OperDate END :: TDateTime AS OperDateIn
+             -- параметр для Склад ГП ф.Киев + Львов - !!!временно!!!
+           , CASE WHEN MovementLinkObject_From.ObjectId IN (8411, 3080691) THEN COALESCE (MovementDate.ValueData, Movement.OperDate) ELSE Movement.OperDate END :: TDateTime AS OperDateOut
 
            , Movement.Id        AS MovementId_Sale
            , Movement.InvNumber AS InvNumber_Sale
-             -- параметр для Склад ГП ф.Киев - !!!временно!!!
-           , CASE WHEN 8411 = MovementLinkObject_From.ObjectId THEN COALESCE (MovementDate.ValueData, Movement.OperDate) ELSE Movement.OperDate END :: TDateTime AS OperDate_Sale
+             -- параметр для Склад ГП ф.Киев + Львов - !!!временно!!!
+           , CASE WHEN MovementLinkObject_From.ObjectId IN (8411, 3080691) THEN COALESCE (MovementDate.ValueData, Movement.OperDate) ELSE Movement.OperDate END :: TDateTime AS OperDate_Sale
 
            , Object_Car.Id                    AS CarId
            , Object_Car.ValueData             AS CarName

@@ -20,14 +20,14 @@ BEGIN
           tmpBranch AS (SELECT Object.Id AS BranchId
                         FROM Object
                         WHERE Object.DescId = zc_Object_Branch()
-                          AND Object.Id IN (8374   -- филиал Одесса
+                          /*AND Object.Id IN (8374   -- филиал Одесса
                                           , 301310 -- филиал Запорожье
                                           , 8373   -- филиал Николаев (Херсон)
                                           , 8375   -- филиал Черкассы (Кировоград)
                                           , 8377   -- филиал Кр.Рог
                                           , 8381   -- филиал Харьков
                                           , 8379   -- филиал Киев
-                                           )
+                                           )*/
                           AND Object.isErased = FALSE
                        )
       -- список инвентаризаций по документам
@@ -157,4 +157,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_HistoryCost_Branch (inStartDate:= '01.11.2017', inEndDate:= '30.11.2017', inSession:= '2') ORDER BY 4, 1
+-- SELECT * FROM gpSelect_HistoryCost_Branch (inStartDate:= '01.01.2019', inEndDate:= '31.01.2019', inSession:= '2') ORDER BY 4, 1

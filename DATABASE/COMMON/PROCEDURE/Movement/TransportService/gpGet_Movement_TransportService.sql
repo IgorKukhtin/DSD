@@ -106,12 +106,12 @@ BEGIN
 
            , MovementItem.Amount             AS Amount
            , MIFloat_SummAdd.ValueData       AS SummAdd
-           , COALESCE (MIFloat_WeightTransport.ValueData, 0)::TFloat  AS WeightTransport
+           , COALESCE (MIFloat_WeightTransport.ValueData, 0) :: TFloat  AS WeightTransport
            , MIFloat_Distance.ValueData      AS Distance
            , MIFloat_Price.ValueData         AS Price
            , MIFloat_CountPoint.ValueData    AS CountPoint
            , MIFloat_TrevelTime.ValueData    AS TrevelTime
-           , MIFloat_ContractValue.ValueData AS ContractConditionValue   
+           , (COALESCE (MIFloat_ContractValue.ValueData, 0) + COALESCE (MIFloat_ContractValueAdd.ValueData, 0)) :: TFloat AS ContractConditionValue   
 
            , MIString_Comment.ValueData  AS Comment
 
@@ -174,6 +174,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_ContractValue
                                         ON MIFloat_ContractValue.MovementItemId = MovementItem.Id
                                        AND MIFloat_ContractValue.DescId = zc_MIFloat_ContractValue()
+            LEFT JOIN MovementItemFloat AS MIFloat_ContractValueAdd
+                                        ON MIFloat_ContractValueAdd.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ContractValueAdd.DescId = zc_MIFloat_ContractValueAdd()
                                        
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id 

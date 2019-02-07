@@ -124,6 +124,7 @@ type
     spChecked: TdsdStoredProc;
     actChecked: TdsdExecStoredProc;
     bbChecked: TdxBarButton;
+    isHistoryCost: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -40,7 +40,7 @@ BEGIN
      END IF;*/
 
 
-     -- IF inBranchId <> 8379 THEN RETURN; END IF;
+     -- IF inBranchId <> 8379 THEN RETURN; END IF; -- филиал Киев
      -- IF inBranchId <> 0 THEN RETURN; END IF;
 
 
@@ -1402,4 +1402,4 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 
 -- тест
 -- SELECT * FROM  ObjectProtocol WHERE ObjectId = zfCalc_UserAdmin() :: Integer ORDER BY ID DESC LIMIT 100
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.12.2018', inEndDate:= '31.12.2018', inBranchId:= 0, inItearationCount:= 800, inInsert:= -1, inDiffSumm:= 1, inSession:= '2')  ORDER BY ABS (Price) DESC -- WHERE ContainerId = 2162036 -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2019', inEndDate:= '31.01.2019', inBranchId:= 3080683, inItearationCount:= 40, inInsert:= 1, inDiffSumm:= 1, inSession:= '2')  ORDER BY ABS (Price) DESC -- WHERE ContainerId = 2162036 -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext

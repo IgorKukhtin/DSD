@@ -94,6 +94,7 @@ type
     spSelectPrint_SaleOrderTax: TdsdStoredProc;
     actPrintSaleOrderTax: TdsdPrintAction;
     bbPrintSaleOrderTax: TdxBarButton;
+    isHistoryCost: TcxGridDBColumn;
   private
     { Private declarations }
   public

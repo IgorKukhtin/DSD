@@ -43,7 +43,7 @@ $BODY$
     DECLARE vbIsInfoMoney_30201 Boolean;
     DECLARE vbIsInfoMoney_30200 Boolean;
 
-    DECLARE vbKiev Integer;
+    DECLARE vbIsKiev Boolean;
 
     DECLARE vbIsLongUKTZED Boolean;
 
@@ -51,9 +51,9 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= lpGetUserBySession (inSession);
-
-     -- !!! для Киева
-     vbKiev := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Unit() AND Object.Id = 8411 );
+     
+     -- !!! для Киева + Львов
+     vbIsKiev:= EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.ObjectId IN (8411, 3080691) AND MLO.DescId = zc_MovementLinkObject_From());
 
 
      -- кол-во Взвешиваний
@@ -380,7 +380,7 @@ BEGIN
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSumm.ValueData END AS TotalSumm
            , CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSumm.ValueData *(1 - (vbVATPercent / (vbVATPercent + 100))) END TotalSummMVAT_Info
            , Object_From.ValueData             		AS FromName
-           , CASE WHEN Object_From.Id = vbKiev THEN TRUE ELSE FALSE END AS isPrintPageBarCode
+           , CASE WHEN vbIsKiev = TRUE THEN TRUE ELSE FALSE END AS isPrintPageBarCode
            , COALESCE (Object_Partner.ValueData, Object_To.ValueData) AS ToName
            , Object_PaidKind.ValueData         		AS PaidKindName
            , View_Contract.InvNumber        		AS ContractName

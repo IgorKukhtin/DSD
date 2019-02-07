@@ -38,6 +38,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , CheckedName   TVarChar
              , CheckedDate   TDateTime
              , Checked       Boolean
+             , isHistoryCost Boolean
               )
 AS
 $BODY$
@@ -135,7 +136,8 @@ BEGIN
 
            , Object_Checked.ValueData           AS CheckedName
            , MovementDate_Checked.ValueData     AS CheckedDate
-           , COALESCE (MovementBoolean_Checked.ValueData, FALSE) AS Checked
+           , COALESCE (MovementBoolean_Checked.ValueData, FALSE)     AS Checked
+           , COALESCE (MovementBoolean_HistoryCost.ValueData, FALSE) AS isHistoryCost
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -327,6 +329,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId = Movement.Id
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+            LEFT JOIN MovementBoolean AS MovementBoolean_HistoryCost
+                                      ON MovementBoolean_HistoryCost.MovementId = Movement.Id
+                                     AND MovementBoolean_HistoryCost.DescId = zc_MovementBoolean_HistoryCost()
 
             LEFT JOIN MovementDate AS MovementDate_Checked 
                                    ON MovementDate_Checked.MovementId = Movement.Id
