@@ -1239,6 +1239,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_PriceChange_PercentMarkup() RETURNS In
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_PriceChange(), 'zc_ObjectFloat_PriceChange_PercentMarkup', 'Расчетная цена' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceChange_PercentMarkup');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PriceChange_FixPercent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceChange_FixPercent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PriceChange(), 'zc_ObjectFloat_PriceChange_FixPercent', 'фиксированный % скидки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PriceChange_FixPercent');
+
   CREATE OR REPLACE FUNCTION zc_ObjectFloat_RepriceUnitSheduler_PercentDifference() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RepriceUnitSheduler_PercentDifference'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_RepriceUnitSheduler(), 'zc_ObjectFloat_RepriceUnitSheduler_PercentDifference', '% разницы цен' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RepriceUnitSheduler_PercentDifference');
@@ -1290,6 +1294,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 07.02.19         * zc_ObjectFloat_PriceChange_FixPercent
  29.01.19         * zc_ObjectFloat_Route_RateSummaExp
  18.01.19         * zc_ObjectFloat_Maker_Day
                     zc_ObjectFloat_Maker_Month

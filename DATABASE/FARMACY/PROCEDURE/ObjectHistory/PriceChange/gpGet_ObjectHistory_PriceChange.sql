@@ -4,8 +4,8 @@ DROP FUNCTION IF EXISTS gpGet_ObjectHistory_PriceChange (Integer, TDateTime, TVa
 
 CREATE OR REPLACE FUNCTION gpGet_ObjectHistory_PriceChange(
     IN inPriceChangeId        Integer   , -- Юр.лицо
-    IN inOperDate       TDateTime , -- Дата Истории
-    IN inSession        TVarChar    -- сессия пользователя
+    IN inOperDate             TDateTime , -- Дата Истории
+    IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, StartDate TDateTime, 
                PriceChange TFloat, MCSValue TFloat)

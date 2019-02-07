@@ -1,27 +1,27 @@
 inherited PriceChangeHistoryForm: TPriceChangeHistoryForm
   Caption = #1048#1089#1090#1086#1088#1080#1103' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1094#1077#1085#1099' '#1057#1054' '#1057#1050#1048#1044#1050#1054#1049
   ClientHeight = 406
-  ClientWidth = 439
+  ClientWidth = 533
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 455
+  ExplicitWidth = 549
   ExplicitHeight = 444
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 439
+    Width = 533
     Height = 380
-    ExplicitWidth = 432
+    ExplicitWidth = 439
     ExplicitHeight = 380
     ClientRectBottom = 380
-    ClientRectRight = 439
+    ClientRectRight = 533
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 432
+      ExplicitWidth = 439
       ExplicitHeight = 380
       inherited cxGrid: TcxGrid
-        Width = 439
+        Width = 533
         Height = 380
-        ExplicitWidth = 432
+        ExplicitWidth = 439
         ExplicitHeight = 380
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False
@@ -61,6 +61,14 @@ inherited PriceChangeHistoryForm: TPriceChangeHistoryForm
             HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072
             Width = 95
           end
+          object FixPercent: TcxGridDBColumn
+            Caption = #1060#1080#1082#1089'. %'
+            DataBinding.FieldName = 'FixPercent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' % '#1089#1082#1080#1076#1082#1080
+            Width = 95
+          end
         end
       end
     end
@@ -82,9 +90,11 @@ inherited PriceChangeHistoryForm: TPriceChangeHistoryForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
+    Left = 96
     Top = 112
   end
   inherited BarManager: TdxBarManager
+    Left = 152
     Top = 112
     DockControlHeights = (
       0

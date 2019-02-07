@@ -214,6 +214,17 @@ inherited PriceChangeForm: TPriceChangeForm
             HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
             Width = 53
           end
+          object FixPercent: TcxGridDBColumn
+            Caption = #1060#1080#1082#1089'. % ('#1089#1082'.)'
+            DataBinding.FieldName = 'FixPercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1092#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' % '#1089#1082#1080#1076#1082#1080
+            Width = 53
+          end
           object Goods_PercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1087#1086' '#1089#1077#1090#1080')'
             DataBinding.FieldName = 'Goods_PercentMarkup'
@@ -1207,6 +1218,15 @@ inherited PriceChangeForm: TPriceChangeForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'FixValue'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFixPercent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'FixPercent'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

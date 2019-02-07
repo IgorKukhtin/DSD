@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_ObjectHistory_PriceChange ()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceChange (Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceChange (Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceChange(
  INOUT ioId                 Integer,    -- ключ объекта <Элемент истории прайса>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceChange(
     IN inOperDate           TDateTime,  -- Дата действия прайса
     IN inPriceChange        TFloat,     -- Цена
     IN inFixValue           TFloat,     -- 
+    IN inFixPercent         TFloat,     --
     IN inPercentMarkup      TFloat,     -- 
     IN inSession            TVarChar    -- сессия пользователя
 )
@@ -33,6 +35,8 @@ BEGIN
    -- 
    PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceChange_FixValue(), ioId, inFixValue);
    -- 
+   PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceChange_FixPercent(), ioId, inFixPercent);
+   -- 
    PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceChange_PercentMarkup(), ioId, inPercentMarkup);
 
 
@@ -43,6 +47,7 @@ $BODY$
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.02.19         * inFixPercent
  17.08.18         *
 */
