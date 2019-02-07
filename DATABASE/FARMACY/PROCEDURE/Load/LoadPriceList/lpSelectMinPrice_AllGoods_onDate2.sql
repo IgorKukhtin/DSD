@@ -80,7 +80,7 @@ BEGIN
              FROM tmp1 AS tmp
              WHERE tmp.Max_Date = tmp.OperDate -- т.е. для договора и юр лица будет 1 документ
             )
-  , tmpJuridicalSettings AS (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId, JuridicalSettings.JuridicalSettingsId
+  , tmpJuridicalSettings AS (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId, JuridicalSettings.JuridicalSettingsId, JuridicalSettings.isBonusClose
                              FROM JuridicalSettings
                              )
     -- элементы установок юр.лиц (границы цен для бонуса)
@@ -90,6 +90,7 @@ BEGIN
                                       , tmp.PriceLimit
                                  FROM tmpJuridicalSettings AS JuridicalSettings
                                       INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inUserId::TVarChar) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                 WHERE COALESCE (JuridicalSettings.isBonusClose, FALSE) = FALSE
                             
   , Movement_PriceList AS
        (-- выбираются с "нужным" договором из JuridicalSettings
@@ -339,7 +340,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.02.19         * если isBonusClose = true бонусы не учитываем
  04.05.16         * 
 */
 

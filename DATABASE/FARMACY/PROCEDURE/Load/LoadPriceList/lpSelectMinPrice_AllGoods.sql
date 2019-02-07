@@ -185,6 +185,7 @@ BEGIN
                                       , tmp.PriceLimit
                                  FROM JuridicalSettings
                                       INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inUserId::TVarChar) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                 WHERE COALESCE (JuridicalSettings.isBonusClose, FALSE) = FALSE
                                  )
 
     -- Маркетинговый контракт
@@ -304,6 +305,7 @@ BEGIN
             LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
                                               AND PriceList.Amount >= tmpJuridicalSettingsItem.PriceLimit_min
                                               AND PriceList.Amount <= tmpJuridicalSettingsItem.PriceLimit
+
             -- товар "поставщика", если он есть в прайсах !!!а он есть!!!
             LEFT JOIN Object_Goods_View AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
             -- товар "сети"
@@ -461,6 +463,7 @@ ALTER FUNCTION lpSelectMinPrice_AllGoods (Integer, Integer, Integer) OWNER TO po
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 07.02.19         * если isBonusClose = true бонусы не учитываем
  14.01.19         * tmpJuridicalSettingsItem - теперь значения Бонус берем из Итемов
  11.10.17         * add area
  16.02.16         * add isOneJuridical

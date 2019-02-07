@@ -102,7 +102,7 @@ BEGIN
     PriceSettings    AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval    (inUserId::TVarChar))
   , PriceSettingsTOP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsTOPInterval (inUserId::TVarChar))
     -- Установки для юр. лиц (для поставщика определяется договор и т.п) !!!для всех MainJuridicalId!!!
-  , JuridicalSettings_all AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.JuridicalSettingsId, tmp.isPriceClose, tmp.isSite
+  , JuridicalSettings_all AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.JuridicalSettingsId, tmp.isPriceClose, tmp.isSite, tmp.isBonusClose
                               FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId) AS tmp
                               WHERE tmp.isSite = TRUE -- мне нужно: я отметил какие участвуют в аукционе цены для показа на сайте, чтобы цены только этих договоров и участвовали
                               -- WHERE tmp.MainJuridicalId = vbMainJuridicalId
@@ -111,7 +111,7 @@ BEGIN
                                 FROM JuridicalSettings_all AS tmp
                                 WHERE tmp.isPriceClose = TRUE
                                )*/
-  , JuridicalSettings_new AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.JuridicalSettingsId
+  , JuridicalSettings_new AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.JuridicalSettingsId, tmp.isBonusClose
                                    , ROW_NUMBER() OVER (PARTITION BY tmp.JuridicalId ORDER BY tmp.JuridicalId, CASE WHEN tmp.isSite = TRUE THEN 0 ELSE 1 END, tmp.ContractId) AS Ord
                               FROM JuridicalSettings_all AS tmp
                               -- уже здесь ограничения
@@ -128,12 +128,12 @@ BEGIN
                   )
 
     -- Выбираем в первую очередь тот что для сайта
-  , JuridicalSettings AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.JuridicalSettingsId
+  , JuridicalSettings AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.JuridicalSettingsId, tmp.isBonusClose
                           FROM JuridicalSettings_new AS tmp
                           -- !!!если Временно откл. - тогда будет для всех договоров!!!
                           WHERE tmp.Ord = 1
                          )
-  , JuridicalSettings_list AS (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId, JuridicalSettings.JuridicalSettingsId FROM JuridicalSettings)
+  , JuridicalSettings_list AS (SELECT DISTINCT JuridicalSettings.JuridicalId, JuridicalSettings.ContractId, JuridicalSettings.JuridicalSettingsId, JuridicalSettings.isBonusClose FROM JuridicalSettings)
 
       -- элементы установок юр.лиц (границы цен для бонуса)
   , tmpJuridicalSettingsItem AS (SELECT tmp.JuridicalSettingsId
@@ -142,6 +142,7 @@ BEGIN
                                       , tmp.PriceLimit
                                  FROM JuridicalSettings_list AS JuridicalSettings
                                       INNER JOIN gpSelect_Object_JuridicalSettingsItem (JuridicalSettings.JuridicalSettingsId, inUserId::TVarChar) AS tmp ON tmp.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
+                                 WHERE COALESCE (JuridicalSettings.isBonusClose, FALSE) = FALSE
                                  )
     -- Список цены + ТОП
   ,  GoodsPrice AS
@@ -415,6 +416,7 @@ ALTER FUNCTION lpFillingMinPrice_ForSite () OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.    Фелонюк И.В.
+ 07.02.19         * если isBonusClose = true бонусы не учитываем               
  14.01.19                        *
  15.04.16         *
 */

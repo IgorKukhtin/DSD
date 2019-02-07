@@ -212,6 +212,7 @@ BEGIN
                                           AND ObjectDate_EndDate.DescId = zc_ObjectDate_Contract_End()
 
                       LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                                        AND COALESCE (ObjectBoolean_isBonusClose.ValueData, FALSE) = FALSE
 
                  WHERE ObjectLink_JuridicalSettings_Retail.DescId = zc_ObjectLink_JuridicalSettings_Retail()
                  AND ObjectLink_JuridicalSettings_Retail.ChildObjectId = vbObjectId) 
