@@ -3,7 +3,7 @@ unit dsdAction;
 interface
 
 uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst,
-  cxControls, dsdGuides, ImgList, cxPC, cxGrid, cxGridTableView,
+  cxControls, dsdGuides, ImgList, cxPC, cxGrid, cxGridTableView, cxDBPivotGrid,
   cxGridDBTableView, frxClass, frxExportPDF, cxGridCustomView, Dialogs, Controls,
   dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL;
 
@@ -55,7 +55,9 @@ type
     FIndexFieldNames: String;
     FUserName: String;
     FGridView: TcxGridTableView;
+    FPivotGrid: TcxDBPivotGrid;
     procedure SetGridView(const Value: TcxGridTableView);
+    procedure SetPivotGrid(const Value: TcxDBPivotGrid);
   protected
     procedure SetDataSet(const Value: TDataSet); override;
   published
@@ -63,6 +65,7 @@ type
     property IndexFieldNames: String read FIndexFieldNames
       write FIndexFieldNames;
     property GridView: TcxGridTableView read FGridView write SetGridView;
+    property PivotGrid: TcxDBPivotGrid read FPivotGrid write SetPivotGrid;
   end;
 
   // Вызываем события у формы
@@ -2627,10 +2630,10 @@ end;
 
 procedure TAddOnDataSet.SetDataSet(const Value: TDataSet);
 begin
-  if Assigned(GridView) and Assigned(Value) then
+  if (Assigned(GridView) or Assigned(PivotGrid)) and Assigned(Value) then
   begin
     ShowMessage
-      ('Нельзя установить свойство DataSet так как установлено GridView.');
+      ('Нельзя установить свойство DataSet так как установлено GridView или PivotGrid.');
     exit
   end;
   inherited;
@@ -2638,13 +2641,24 @@ end;
 
 procedure TAddOnDataSet.SetGridView(const Value: TcxGridTableView);
 begin
-  if Assigned(DataSet) and Assigned(Value) then
+  if (Assigned(DataSet) or Assigned(PivotGrid)) and Assigned(Value) then
   begin
     ShowMessage
-      ('Нельзя установить свойство GridView так как установлено DataSet.');
+      ('Нельзя установить свойство GridView так как установлено DataSet или PivotGrid.');
     exit
   end;
   FGridView := Value;
+end;
+
+procedure TAddOnDataSet.SetPivotGrid(const Value: TcxDBPivotGrid);
+begin
+  if (Assigned(DataSet) or Assigned(GridView)) and Assigned(Value) then
+  begin
+    ShowMessage
+      ('Нельзя установить свойство PivotGrid так как установлено DataSet или GridView.');
+    exit
+  end;
+  FPivotGrid := Value;
 end;
 
 { TFileDialogAction }
@@ -2708,7 +2722,7 @@ procedure TfrxReportExt.ExecuteReport(AReportName: String; ADataSets: TdsdDataSe
   AParams: TdsdParams; ACopiesCount: Integer = 1; APrinter : String = ''; AWithOutPreview:Boolean = False;
   ADesignReport:Boolean = False; AModal:Boolean = False; APreviewWindowMaximized:Boolean = True);
 var
-  I: Integer;
+  I,J: Integer;
   OldFieldIndexList: TStringList;
   DataSetList: TList;
   MemTableList: TList;
@@ -2822,6 +2836,37 @@ begin
 //            End;
           finally
             (TcxGridLevel(TAddOnDataSet(ADataSets[i]).GridView.Level).Control as TcxGrid).EndUpdate;
+          end;
+          DataSet := MemTableList[MemTableList.Count - 1];
+        end;
+        if Assigned(TAddOnDataSet(ADataSets[i]).PivotGrid) then
+        begin
+          TAddOnDataSet(ADataSets[i]).PivotGrid.BeginUpdate;
+          try
+            // сохранили состояние разворотов до сортировки
+            for ExpandedIdx := 0 to TAddOnDataSet(ADataSets[i]).PivotGrid.ViewData.RowCount - 1 do
+              if TAddOnDataSet(ADataSets[i]).PivotGrid.ViewData.Rows[ExpandedIdx].Expanded then
+                ExpandedStr := ExpandedStr + INtToStr(ExpandedIdx)+';';
+            ExpandedStr := ExpandedStr + '|';
+
+            // развернули все строки, что бы ChildTableView загрузил все данные в клоны
+
+            for J := 0 to TAddOnDataSet(ADataSets[i]).PivotGrid.FieldCount - 1 do
+            begin
+              if TAddOnDataSet(ADataSets[i]).PivotGrid.Fields[J].Area = faRow then
+                TAddOnDataSet(ADataSets[i]).PivotGrid.Fields[J].ExpandAll;
+              if TAddOnDataSet(ADataSets[i]).PivotGrid.Fields[J].Area = faColumn then
+                TAddOnDataSet(ADataSets[i]).PivotGrid.Fields[J].ExpandAll;
+            end;
+
+
+            // перегрузили отсортированные данные в dxMemData
+            MemTableList.Add(ViewToMemTable.LoadData3(TAddOnDataSet(ADataSets[i]).PivotGrid));
+            TClientDataSet(MemTableList.Items[MemTableList.Count-1]).IndexFieldNames :=
+                TAddOnDataSet(ADataSets[i]).IndexFieldNames
+
+          finally
+            TAddOnDataSet(ADataSets[i]).PivotGrid.EndUpdate;
           end;
           DataSet := MemTableList[MemTableList.Count - 1];
         end;
