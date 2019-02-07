@@ -2,9 +2,11 @@
 
 DROP FUNCTION IF EXISTS gpGet_MI_Income_OperPriceList (TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MI_Income_OperPriceList (Integer, TVarChar, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_Income_OperPriceList (Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_Income_OperPriceList(
     IN inMovementId        Integer  , --
+    IN inMovementItemId    Integer  , --
     IN inGoodsName         TVarChar  , --
     IN inOperPrice         TFloat   , --
     IN inCountForPrice     TFloat   , --
@@ -35,6 +37,7 @@ BEGIN
                            WHERE MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = FALSE
+                             AND MovementItem.Id <> inMovementItemId
                            ) AS tmp
                     );
      
@@ -61,6 +64,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 07.02.19         * inMovementItemId
  24.04.18         *
  24.03.18         *
  06.06.17         *

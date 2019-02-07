@@ -3272,6 +3272,14 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsName'
         Value = ''
         Component = MasterCDS
@@ -3359,8 +3367,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 264
-    Top = 392
+    Left = 256
+    Top = 368
   end
   object spUpdate_PriceWithoutPersent: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_Income_PricebyPersent'

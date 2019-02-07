@@ -1287,6 +1287,14 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsName'
         Value = Null
         Component = edGoodsName
