@@ -37,7 +37,7 @@ type
     PrintItemsCDS: TClientDataSet;
     bbTax: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
-    bbPrint_Bill: TdxBarButton;
+    bbPrintTTN: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     Summ: TcxGridDBColumn;
     edPriceWithVAT: TcxCheckBox;
@@ -84,6 +84,7 @@ type
     GuidesJuridicalActualAddress: TdsdGuides;
     edAdjustingOurDate: TcxDateEdit;
     cxLabel17: TcxLabel;
+    actPrintTTN: TdsdPrintAction;
   private
     { Private declarations }
   public
