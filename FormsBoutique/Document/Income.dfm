@@ -1084,7 +1084,7 @@ object IncomeForm: TIncomeForm
           Action = macUpdate_PriceWithoutPersent
         end
         item
-          Action = actRefreshMI
+          Action = actRefresh
         end>
       QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1074#1093'.'#1094#1077#1085#1099' '#1085#1072' %?'
       InfoAfterExecute = #1062#1077#1085#1099' '#1080#1079#1084#1077#1085#1077#1085#1099
@@ -2063,7 +2063,7 @@ object IncomeForm: TIncomeForm
           Action = actIncomeItemPriceDialog
         end
         item
-          Action = actRefreshMI
+          Action = actRefresh
         end>
       QuestionBeforeExecute = 
         #1041#1091#1076#1091#1090' '#1080#1079#1084#1077#1085#1077#1085#1099' '#1094#1077#1085#1099' '#1074#1093'. '#1080' '#1087#1088#1086#1076#1072#1078#1080', '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1099'  '#1087#1086' '#1101 +

@@ -21,7 +21,7 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
      END IF;
 
-     -- сохранили свойство <Курс для перевода в валюту баланса>
+     -- сохранили свойство <% нац. скидки>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), inMovementId, inChangePercent);
 
      -- сохранили протокол

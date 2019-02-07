@@ -76,6 +76,9 @@ BEGIN
      ORDER BY Movement.OperDate, Movement.Id
      ;
 
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (_tmpMI.Id, vbUserId, FALSE)
      FROM _tmpMI;
