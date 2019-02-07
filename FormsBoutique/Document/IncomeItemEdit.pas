@@ -74,6 +74,8 @@ type
     actRefreshOperPriceList: TdsdDataSetRefresh;
     cxLabel13: TcxLabel;
     edGoodsCode: TcxCurrencyEdit;
+    spUpdate_PriceWithoutPersent: TdsdStoredProc;
+    actUpdate_PriceWithoutPersent: TdsdExecStoredProc;
   private
     { Private declarations }
   public

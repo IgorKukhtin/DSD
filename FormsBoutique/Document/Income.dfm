@@ -2,7 +2,7 @@ object IncomeForm: TIncomeForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-  ClientHeight = 477
+  ClientHeight = 482
   ClientWidth = 967
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -223,24 +223,27 @@ object IncomeForm: TIncomeForm
     Left = 0
     Top = 123
     Width = 967
-    Height = 354
+    Height = 359
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 354
+    ExplicitHeight = 354
+    ClientRectBottom = 359
     ClientRectRight = 967
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 330
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 967
-        Height = 330
+        Height = 335
         Align = alClient
         TabOrder = 0
+        ExplicitLeft = 3
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1774,6 +1777,14 @@ object IncomeForm: TIncomeForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inChangePercent'
+          Value = Null
+          Component = edChangePercent
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = MasterDS
@@ -2292,7 +2303,7 @@ object IncomeForm: TIncomeForm
     Top = 337
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 326
+    Left = 310
     Top = 287
   end
   object spInsertUpdateMovement: TdsdStoredProc
@@ -2956,8 +2967,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 759
-    Top = 232
+    Left = 751
+    Top = 248
   end
   object spGet_User_curr: TdsdStoredProc
     StoredProcName = 'gpGet_Object_User_curr'
@@ -3082,8 +3093,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 760
-    Top = 296
+    Left = 752
+    Top = 304
   end
   object spGet_PrinterByUser: TdsdStoredProc
     StoredProcName = 'gpGet_PrinterByUser'
@@ -3244,8 +3255,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 44
-    Top = 376
+    Left = 36
+    Top = 360
   end
   object spGet_MI_Income_OperPriceList: TdsdStoredProc
     StoredProcName = 'gpGet_MI_Income_OperPriceList'
