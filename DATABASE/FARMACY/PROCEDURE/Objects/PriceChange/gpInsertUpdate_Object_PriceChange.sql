@@ -49,16 +49,16 @@ BEGIN
 
     -- Если такая запись есть - достаем её ключу торг.сеть - товар или подразделение - товар
     SELECT Id, 
-           PriceChange, 
-           FixValue, 
-           DateChange, 
+           PriceChange,
+           FixValue,
+           DateChange,
            PercentMarkup,
            FixPercent
 
-      INTO ioId, 
-           vbPriceChange, 
-           vbFixValue, 
-           outDateChange, 
+      INTO ioId,
+           vbPriceChange,
+           vbFixValue,
+           outDateChange,
            vbPercentMarkup,
            vbFixPercent
     FROM (WITH tmp1 AS (SELECT Object_PriceChange.Id                        AS Id
@@ -100,17 +100,21 @@ BEGIN
                             OR (ObjectLink_Unit.ChildObjectId = inUnitId AND inUnitId <> 0)
                               )
                        )
-          -- 
+          --
           SELECT * FROM tmp1
          ) AS tmp;
 
-
     -- Расчет Цены со скидкой
-    IF COALESCE (inFixValue, 0) <> 0
+    IF COALESCE (inFixPercent,0)<> 0
+    THEN
+        -- Приоритет - фиксированный % ск.
+        outPriceChange := 0;
+        inFixValue := 0;
+    ELSEIF COALESCE (inFixValue, 0) <> 0
     THEN
         -- Приоритет - фиксированная цена
         outPriceChange := inFixValue;
-    ELSEIF COALESCE (inFixValue, 0) = 0 AND COALESCE (inPercentMarkup, 0) = 0
+    ELSEIF COALESCE (inFixValue, 0) = 0 AND COALESCE (inPercentMarkup, 0) = 0 AND COALESCE (inFixPercent,0) = 0
     THEN
         -- в этом случае - обнуляем, типа удалили
         outPriceChange := 0;
