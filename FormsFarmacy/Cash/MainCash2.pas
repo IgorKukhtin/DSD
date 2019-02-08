@@ -4185,12 +4185,12 @@ begin
            end;
         Next;
       end;
-      if Assigned(Cash) AND not Cash.AlwaysSold then
+      if result and Assigned(Cash) AND not Cash.AlwaysSold then
       begin
-        if (Disc <> 0) and (PosDisc = 0) then Cash.DiscountGoods(Disc);
-        Cash.SubTotal(true, true, 0, 0);
-        Cash.TotalSumm(SalerCash, SalerCashAdd, PaidType);
-        result := Cash.CloseReceiptEx(ACheckNumber); //Закрыли чек
+        if (Disc <> 0) and (PosDisc = 0) then result := Cash.DiscountGoods(Disc);
+        if result then result := Cash.SubTotal(true, true, 0, 0);
+        if result then result := Cash.TotalSumm(SalerCash, SalerCashAdd, PaidType);
+        if result then result := Cash.CloseReceiptEx(ACheckNumber); //Закрыли чек
         if result and isFiscal then Finish_Check_History(FTotalSumm);
       end;
     end;

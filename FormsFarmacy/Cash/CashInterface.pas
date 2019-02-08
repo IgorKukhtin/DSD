@@ -30,6 +30,7 @@ type
      function PrintFiscalMemoryByDate(inStart, inEnd: TDateTime): boolean;
      function PrintReportByDate(inStart, inEnd: TDateTime): boolean;
      function PrintReportByNum(inStart, inEnd: Integer): boolean;
+     function PrintZeroReceipt: boolean;
      function FiscalNumber:String;
      function SerialNumber:String;
      procedure ClearArticulAttachment;
@@ -39,6 +40,7 @@ type
      function JuridicalName : string;
      function ZReport : Integer;
      property AlwaysSold: boolean read GetAlwaysSold write SetAlwaysSold;
+
    end;
 implementation
 
