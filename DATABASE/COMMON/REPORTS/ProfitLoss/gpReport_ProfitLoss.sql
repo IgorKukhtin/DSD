@@ -67,14 +67,24 @@ BEGIN
                            )
      ,*/ tmpMIContainer AS (SELECT MIContainer.ContainerId
                                  , -1 * SUM (MIContainer.Amount)      AS Amount
+
                                  , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
                                              THEN MIContainer.ObjectIntId_Analyzer
                                         WHEN MIContainer.MovementDescId IN (zc_Movement_Loss())
                                              THEN MIContainer.ObjectExtId_Analyzer
                                         ELSE MIContainer.WhereObjectId_Analyzer
                                    END AS UnitId_ProfitLoss
+
+                                 , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_PersonalService()) 
+                                             THEN MIContainer.ObjectIntId_Analyzer
+                                        WHEN MIContainer.MovementDescId IN (zc_Movement_Sale()) 
+                                             THEN MIContainer.ObjectId_Analyzer
+                                        ELSE 0
+                                   END AS ObjectId_inf
+
                                  , MIContainer.WhereObjectId_Analyzer AS DirectionId
                                  , MIContainer.MovementDescId
+
                             FROM MovementItemContainer AS MIContainer 
                                  /*LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
                                                                   ON MILinkObject_Route.MovementItemId = MIContainer .MovementItemId
@@ -92,17 +102,27 @@ BEGIN
                                      END
                                    , MIContainer.WhereObjectId_Analyzer
                                    , MIContainer.MovementDescId
+                                   , CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Transport(), zc_Movement_PersonalService()) 
+                                               THEN MIContainer.ObjectIntId_Analyzer
+                                          WHEN MIContainer.MovementDescId IN (zc_Movement_Sale()) 
+                                               THEN MIContainer.ObjectId_Analyzer
+                                          ELSE 0
+                                     END
                            )
         , tmpProfitLoss AS (SELECT CLO_Branch.ObjectId                    AS BranchId_ProfitLoss
                                  , CLO_ProfitLoss.ObjectId                AS ProfitLossId
                                  , CLO_Business.ObjectId                  AS BusinessId
                                  , CLO_JuridicalBasis.ObjectId            AS JuridicalId_Basis
-                                 , 0                                      AS InfoMoneyId_inf
+                                 , COALESCE (OL_Goods_InfoMoney.ChildObjectId, 0) AS InfoMoneyId_inf
                                  , tmpMIContainer.MovementDescId
                                  , tmpMIContainer.DirectionId
                                  , tmpMIContainer.UnitId_ProfitLoss
+                                 , tmpMIContainer.ObjectId_inf
                                  , SUM (tmpMIContainer.Amount) AS Amount
                             FROM tmpMIContainer
+                                 LEFT JOIN ObjectLink AS OL_Goods_InfoMoney
+                                                      ON OL_Goods_InfoMoney.ObjectId = tmpMIContainer.ObjectId_inf
+                                                     AND OL_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
                                  LEFT JOIN ContainerLinkObject AS CLO_Branch
                                                                ON CLO_Branch.ContainerId = tmpMIContainer.ContainerId
                                                               AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
@@ -122,9 +142,11 @@ BEGIN
                                    , CLO_ProfitLoss.ObjectId
                                    , CLO_Business.ObjectId
                                    , CLO_JuridicalBasis.ObjectId
+                                   , COALESCE (OL_Goods_InfoMoney.ChildObjectId, 0)
                                    , tmpMIContainer.MovementDescId
                                    , tmpMIContainer.DirectionId
                                    , tmpMIContainer.UnitId_ProfitLoss
+                                   , tmpMIContainer.ObjectId_inf
                            )
 
       , tmpReport AS (SELECT tmpProfitLoss.ProfitLossId
@@ -144,11 +166,7 @@ BEGIN
                            , tmpProfitLoss.InfoMoneyId_inf        AS InfoMoneyId
                            -- , ContainerLinkObject_InfoMoney.ObjectId       AS InfoMoneyId
                            , 0 AS InfoMoneyId_Detail
-                           , 0 AS JuridicalId_inf
-                           , 0 AS PersonalId_inf
-                           , 0 AS UnitId_inf
-                           , 0 AS CarId_inf
-                           , 0 AS GoodsId_inf
+                           , tmpProfitLoss.ObjectId_inf AS ObjectId_inf
                            /*, ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail
                            , ContainerLinkObject_Juridical.ObjectId       AS JuridicalId_inf
                            , ContainerLinkObject_Personal.ObjectId        AS PersonalId_inf
@@ -191,6 +209,7 @@ BEGIN
                              , tmpProfitLoss.InfoMoneyId_inf
                              , tmpProfitLoss.DirectionId
                              , tmpProfitLoss.MovementDescId
+                             , tmpProfitLoss.ObjectId_inf
                              /*, ContainerLinkObject_InfoMoneyDetail.ObjectId
                              , ContainerLinkObject_Juridical.ObjectId
                              , ContainerLinkObject_Personal.ObjectId
@@ -250,7 +269,7 @@ BEGIN
            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Detail ON View_InfoMoney_Detail.InfoMoneyId = tmpReport.InfoMoneyId_Detail
                                                                    -- AND zc_isHistoryCost_byInfoMoneyDetail() = TRUE
            LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id = tmpReport.DirectionId
-           LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = tmpReport.GoodsId_inf
+           LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = tmpReport.ObjectId_inf
 
            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
 
@@ -273,4 +292,4 @@ ALTER FUNCTION gpReport_ProfitLoss (TDateTime, TDateTime, TVarChar) OWNER TO pos
 */
 
 -- тест
---SELECT * FROM gpReport_ProfitLoss (inStartDate:= '31.07.2016', inEndDate:= '31.07.2016', inSession:= '2') WHERE Amount <> 0 ORDER BY 5
+-- SELECT * FROM gpReport_ProfitLoss (inStartDate:= '31.07.2019', inEndDate:= '31.07.2019', inSession:= '2') WHERE Amount <> 0 ORDER BY 5

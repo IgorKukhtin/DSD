@@ -28,7 +28,7 @@ object Report_BalanceForm: TReport_BalanceForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 42370d
+      EditValue = 43466d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -37,7 +37,7 @@ object Report_BalanceForm: TReport_BalanceForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42370d
+      EditValue = 43466d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -63,8 +63,6 @@ object Report_BalanceForm: TReport_BalanceForm
     DataSource = DataSource
     Groups = <>
     TabOrder = 1
-    ExplicitLeft = 101
-    ExplicitTop = 65
     object pvRootName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 0
@@ -291,7 +289,7 @@ object Report_BalanceForm: TReport_BalanceForm
     Top = 179
     Caption = 'C'#1075#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100
     Properties.ReadOnly = False
-    TabOrder = 6
+    TabOrder = 5
     Width = 101
   end
   object cbGroup: TcxCheckBox
@@ -878,11 +876,11 @@ object Report_BalanceForm: TReport_BalanceForm
       ImageIndex = 18
       DataSets = <
         item
-          DataSet = ClientDataSet
           UserName = 'frxDBDItems'
           IndexFieldNames = 
             'RootName_Detail;AccountGroupName_Detail;AccountDirectionName_Det' +
             'ail;AccountName_Detail;Num_Detail'
+          PivotGrid = cxDBPivotGrid
         end>
       Params = <
         item
@@ -957,9 +955,9 @@ object Report_BalanceForm: TReport_BalanceForm
       ImageIndex = 3
       DataSets = <
         item
-          DataSet = ClientDataSet
           UserName = 'frxDBDItems'
           IndexFieldNames = 'RootName;AccountGroupName;AccountDirectionName;AccountName'
+          PivotGrid = cxDBPivotGrid
         end>
       Params = <
         item

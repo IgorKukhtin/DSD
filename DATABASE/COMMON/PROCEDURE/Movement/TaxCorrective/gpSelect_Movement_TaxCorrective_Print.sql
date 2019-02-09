@@ -767,7 +767,10 @@ BEGIN
            , tmpContract.ContractKindName                                   AS ContractKind
            , tmpContract.PartnerCode                                        AS PartnerCode
 
-           , CAST (REPEAT (' ', 7 - LENGTH (tmpMLM_Child.InvNumberPartner_Child)) || tmpMLM_Child.InvNumberPartner_Child AS TVarChar) AS InvNumber_Child
+           , CASE WHEN tmpMLM_Child.InvNumberPartner_Child <> ''
+                      THEN CAST (REPEAT (' ', 7 - LENGTH (tmpMLM_Child.InvNumberPartner_Child)) || tmpMLM_Child.InvNumberPartner_Child AS TVarChar)
+                  ELSE '0' :: TVarChar
+             END  AS InvNumber_Child
            , tmpMLM_Child.OperDate_Child                                    AS OperDate_Child
            , tmpMLM_Child.OperDate_begin_Child                              AS OperDate_begin_Child
 

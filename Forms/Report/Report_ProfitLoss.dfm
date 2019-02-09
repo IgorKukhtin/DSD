@@ -27,7 +27,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 42370d
+      EditValue = 43466d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -36,7 +36,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42370d
+      EditValue = 43466d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -61,7 +61,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     Align = alClient
     DataSource = DataSource
     Groups = <>
-    TabOrder = 2
+    TabOrder = 1
     object clProfitLossGroupName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 0
@@ -881,9 +881,9 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       ImageIndex = 3
       DataSets = <
         item
-          DataSet = ClientDataSet
           UserName = 'frxDBDItems'
           IndexFieldNames = 'ProfitLossGroupName;ProfitLossDirectionName;ProfitLossName'
+          PivotGrid = cxDBPivotGrid
         end>
       Params = <
         item
