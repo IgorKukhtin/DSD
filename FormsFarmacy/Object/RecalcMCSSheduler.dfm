@@ -77,6 +77,20 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
             Options.Editing = False
             Width = 177
           end
+          object AllRetail: TcxGridDBColumn
+            Caption = #1055#1086' '#1074#1089#1077#1081' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'AllRetail'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 54
+          end
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1099#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 82
+          end
           object AreaName: TcxGridDBColumn
             Caption = #1056#1077#1075#1080#1086#1085
             DataBinding.FieldName = 'AreaName'

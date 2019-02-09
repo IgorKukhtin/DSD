@@ -7,12 +7,15 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_RecalcMCSSheduler(
 )
 RETURNS TABLE (Ord Integer, ID Integer, Code Integer, Name TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
-             , AreaName TVarChar, JuridicalId Integer, JuridicalName TVarChar, ProvinceCityName TVarChar
+             , AreaName TVarChar, JuridicalId Integer, JuridicalName TVarChar
+             , RetailId Integer, RetailName TVarChar
+             , ProvinceCityName TVarChar
              , PharmacyItem boolean
 
              , UserId Integer
              , UserName TVarChar
              , Color_cal Integer
+             , AllRetail boolean
              , isErased boolean) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -21,6 +24,31 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
 
    RETURN QUERY
+       WITH tmpRetal AS (SELECT MIN(Object_RecalcMCSSheduler.Id)           AS ShedulerID
+                              , ObjectLink_Juridical_Retail.ChildObjectId  AS RetalID
+                         FROM Object AS Object_RecalcMCSSheduler
+
+                              LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                   ON ObjectLink_Unit.ObjectId = Object_RecalcMCSSheduler.Id
+                                                  AND ObjectLink_Unit.DescId = zc_ObjectLink_RecalcMCSSheduler_Unit()
+
+                              LEFT JOIN ObjectBoolean AS ObjectBoolean_AllRetail
+                                                      ON ObjectBoolean_AllRetail.ObjectId = Object_RecalcMCSSheduler.Id
+                                                     AND ObjectBoolean_AllRetail.DescId = zc_ObjectBoolean_RecalcMCSSheduler_AllRetail()
+
+                              LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                                   ON ObjectLink_Unit_Juridical.ObjectId = ObjectLink_Unit.ChildObjectId
+                                                  AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+
+                              LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                   ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                  AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                          
+                         WHERE Object_RecalcMCSSheduler.DescId = zc_Object_RecalcMCSSheduler()
+                           AND Object_RecalcMCSSheduler.isErased = False
+                           AND COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = True
+                         GROUP BY ObjectLink_Juridical_Retail.ChildObjectId)
+                         
        SELECT
              ROW_NUMBER() OVER (ORDER BY Object_RecalcMCSSheduler.Id)::Integer as Ord
            , Object_RecalcMCSSheduler.Id                      AS Id
@@ -32,12 +60,17 @@ BEGIN
            , Object_Area.ValueData                            AS AreaName
            , Object_Juridical.Id                              AS JuridicalID
            , Object_Juridical.ValueData                       AS JuridicalName
+           , Object_Retail.Id                                 AS RetailID
+           , Object_Retail.ValueData                          AS RetailName
            , Object_ProvinceCity.ValueData                    AS ProvinceCityName
            , COALESCE(ObjectBoolean_PharmacyItem.ValueData, False) AS PharmacyItem
 
            , Object_User.Id                                   AS UnitId
            , Object_User.ValueData                            AS UnitName
-           , CASE WHEN COALESCE (ObjectFloat_Period.ValueData, 0) <=0 OR
+           , CASE WHEN COALESCE (tmpRetal.ShedulerID, 0) <> 0 AND COALESCE (tmpRetal.ShedulerID, 0) <> Object_RecalcMCSSheduler.Id
+             THEN
+               zc_Color_Cyan()
+             ELSE CASE WHEN COALESCE (ObjectFloat_Period.ValueData, 0) <=0 OR
                 COALESCE (ObjectFloat_Period1.ValueData, 0) <=0 OR
                 COALESCE (ObjectFloat_Period2.ValueData, 0) <=0 OR
                 COALESCE (ObjectFloat_Period3.ValueData, 0) <=0 OR
@@ -54,8 +87,9 @@ BEGIN
                 COALESCE (ObjectFloat_Day5.ValueData, 0) <=0 OR
                 COALESCE (ObjectFloat_Day6.ValueData, 0) <=0 OR
                 COALESCE (ObjectFloat_Day7.ValueData, 0) <=0
-                THEN zc_Color_Yelow() ELSE zc_Color_White() END                                 AS Color_cal
-           , Object_RecalcMCSSheduler.isErased                AS isErased
+                THEN zc_Color_Yelow() ELSE zc_Color_White() END END                             AS Color_cal
+           , COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE)                                AS AllRetail
+           , Object_RecalcMCSSheduler.isErased                                                  AS isErased
 
        FROM Object AS Object_RecalcMCSSheduler
            LEFT JOIN ObjectLink AS ObjectLink_Unit
@@ -64,10 +98,21 @@ BEGIN
            LEFT JOIN Object AS Object_Unit
                              ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
 
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_AllRetail
+                                   ON ObjectBoolean_AllRetail.ObjectId = Object_RecalcMCSSheduler.Id
+                                  AND ObjectBoolean_AllRetail.DescId = zc_ObjectBoolean_RecalcMCSSheduler_AllRetail()
+
            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                 ON ObjectLink_Unit_Juridical.ObjectId = ObjectLink_Unit.ChildObjectId
                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+           LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+           
+           LEFT JOIN tmpRetal ON tmpRetal.RetalId = ObjectLink_Juridical_Retail.ChildObjectId
 
            LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
                                 ON ObjectLink_Unit_Area.ObjectId = ObjectLink_Unit_Juridical.ObjectId
@@ -150,6 +195,7 @@ ALTER FUNCTION gpSelect_Object_RecalcMCSSheduler (TVarChar) OWNER TO postgres;
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Øàáëèé Î.Â.
+ 09.02.19                                                       *
  21.12.18                                                       *
 */
 

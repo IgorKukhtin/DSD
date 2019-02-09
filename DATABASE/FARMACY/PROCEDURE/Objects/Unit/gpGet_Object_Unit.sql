@@ -22,7 +22,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                StartServiceNigth TDateTime, EndServiceNigth TDateTime,
                CreateDate TDateTime, CloseDate TDateTime,
                isRepriceAuto Boolean,
-               NormOfManDays Integer
+               NormOfManDays Integer,
+               PharmacyItem Boolean
                ) AS
 $BODY$
 BEGIN
@@ -78,6 +79,8 @@ BEGIN
 
            , False                 AS isRepriceAuto
            , CAST (0 as Integer)   AS NormOfManDays
+           , False                 AS PharmacyItem
+
 ;
    ELSE
        RETURN QUERY 
@@ -131,6 +134,8 @@ BEGIN
       , COALESCE(ObjectBoolean_RepriceAuto.ValueData, False) AS isRepriceAuto
       
       , ObjectFloat_NormOfManDays.ValueData::Integer         AS NormOfManDays
+
+      , COALESCE(ObjectBoolean_PharmacyItem.ValueData, False) AS PharmacyItem
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -226,6 +231,10 @@ BEGIN
                               ON ObjectFloat_NormOfManDays.ObjectId = Object_Unit.Id
                              AND ObjectFloat_NormOfManDays.DescId = zc_ObjectFloat_Unit_NormOfManDays()
                             
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_PharmacyItem
+                                ON ObjectBoolean_PharmacyItem.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_PharmacyItem.DescId = zc_ObjectBoolean_Unit_PharmacyItem()
+
     WHERE Object_Unit.Id = inId;
 
    END IF;
@@ -241,6 +250,7 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 09.02.19                                                        * add PharmacyItem
  15.01.19         *
  22.10.18         *
  29.08.18         * Phone

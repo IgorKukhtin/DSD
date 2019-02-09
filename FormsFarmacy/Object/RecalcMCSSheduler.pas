@@ -46,6 +46,8 @@ type
     HeaderSaver: THeaderSaver;
     spInsertUpdateMovement: TdsdExecStoredProc;
     bbInsertUpdateMovement: TdxBarButton;
+    AllRetail: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
   private
     { Private declarations }
   public

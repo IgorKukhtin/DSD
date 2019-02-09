@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_RecalcMCSSheduler(Integer, Integer, Integer, Boolean,
                                                                 Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                                 Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                                Integer, Boolean, TVarChar);
+                                                                Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_RecalcMCSSheduler(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Причина разногласия>
@@ -30,6 +30,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_RecalcMCSSheduler(
     IN inDay7                    Integer,
 
     IN inUserId                  Integer,
+    IN inAllRetail               Boolean,
     IN inIsClose                 Boolean,
     IN inSession                 TVarChar       -- Сессия пользователя
 )
@@ -37,11 +38,51 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbName TVarChar;
-
+   DECLARE RetailId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ReasonDifferences());
    vbUserId:= inSession;
+   
+   SELECT ObjectLink_Juridical_Retail.ChildObjectId
+   INTO RetailId
+   FROM  ObjectLink AS ObjectLink_Unit_Juridical
+
+         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                              ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                          
+    WHERE ObjectLink_Unit_Juridical.ObjectId = ioUnitId
+      AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();
+   
+   IF inIsClose = False AND inAllRetail = True AND 
+     EXISTS(SELECT 1
+            FROM Object AS Object_RecalcMCSSheduler
+
+                 LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                      ON ObjectLink_Unit.ObjectId = Object_RecalcMCSSheduler.Id
+                                     AND ObjectLink_Unit.DescId = zc_ObjectLink_RecalcMCSSheduler_Unit()
+
+                 LEFT JOIN ObjectBoolean AS ObjectBoolean_AllRetail
+                                         ON ObjectBoolean_AllRetail.ObjectId = Object_RecalcMCSSheduler.Id
+                                        AND ObjectBoolean_AllRetail.DescId = zc_ObjectBoolean_RecalcMCSSheduler_AllRetail()
+
+                 LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                      ON ObjectLink_Unit_Juridical.ObjectId = ObjectLink_Unit.ChildObjectId
+                                     AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+
+                 LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                      ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                     AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                          
+            WHERE Object_RecalcMCSSheduler.DescId = zc_Object_RecalcMCSSheduler()
+              AND Object_RecalcMCSSheduler.isErased = False
+              AND COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = True
+              AND Object_RecalcMCSSheduler.Id <> COALESCE (ioId, 0)
+              AND ObjectLink_Juridical_Retail.ChildObjectId = RetailId)
+   THEN
+        RAISE EXCEPTION 'Ошибка.Признак <Для всей сети> может быть только у одного подразделения сети.';   
+   END IF;
 
    IF COALESCE (ioId, 0) = 0
    THEN
@@ -87,6 +128,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_RecalcMCSSheduler_Unit(), ioId, ioUnitId);
 
    --сохранили
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_RecalcMCSSheduler_AllRetail(), ioId, inAllRetail);
+
+   --сохранили
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Unit_PharmacyItem(), ioUnitId, inPharmacyItem);
 
    -- сохранили <>
@@ -124,13 +168,14 @@ LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Object_RecalcMCSSheduler(Integer, Integer, Integer, Boolean,
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       Integer, Boolean, TVarChar) OWNER TO postgres;
+                                                       Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 ------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 09.02.19                                                       *
  21.12.18                                                       *
 
 */

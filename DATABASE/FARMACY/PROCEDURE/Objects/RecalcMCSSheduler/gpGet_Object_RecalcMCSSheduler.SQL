@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer
              , UnitName TVarChar
 
              , PharmacyItem Boolean
+             , AllRetail Boolean
 
              , Period Integer
              , Period1 Integer
@@ -66,6 +67,7 @@ BEGIN
                ,Object_Unit.ValueData               AS UnitName
 
                , COALESCE(ObjectBoolean_PharmacyItem.ValueData, False) AS PharmacyItem
+               , False                              AS AllRetail
 
                , ObjectFloat_Period.ValueData        :: Integer     AS Period
                , ObjectFloat_Period1.ValueData       :: Integer     AS Period1
@@ -157,6 +159,7 @@ BEGIN
                ,Object_Unit.ValueData               AS UnitName
 
                , COALESCE(ObjectBoolean_PharmacyItem.ValueData, False) AS PharmacyItem
+               , COALESCE(ObjectBoolean_AllRetail.ValueData, False) AS AllRetail
 
                , ObjectFloat_Period.ValueData        :: Integer     AS Period
                , ObjectFloat_Period1.ValueData       :: Integer     AS Period1
@@ -191,6 +194,10 @@ BEGIN
                  LEFT JOIN ObjectBoolean AS ObjectBoolean_PharmacyItem
                                          ON ObjectBoolean_PharmacyItem.ObjectId = Object_Unit.Id
                                         AND ObjectBoolean_PharmacyItem.DescId = zc_ObjectBoolean_Unit_PharmacyItem()
+
+                 LEFT JOIN ObjectBoolean AS ObjectBoolean_AllRetail
+                                         ON ObjectBoolean_AllRetail.ObjectId = Object_RecalcMCSSheduler.Id
+                                        AND ObjectBoolean_AllRetail.DescId = zc_ObjectBoolean_RecalcMCSSheduler_AllRetail()
 
                  LEFT JOIN ObjectFloat AS ObjectFloat_Period
                                        ON ObjectFloat_Period.ObjectId = Object_Unit.Id
@@ -258,7 +265,8 @@ ALTER FUNCTION gpGet_Object_RecalcMCSSheduler(Integer, Integer, TVarChar) OWNER 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий. О.В.
- 21.12.18                                                                       *
+ 09.02.19                                                                       *
+*21.12.18                                                                       *
 */
 
 -- тест

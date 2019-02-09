@@ -40,9 +40,9 @@ BEGIN
          vbSendPlan := vbSendPlan + interval '1 month';       
        END IF;
      ELSE
-       IF COALESCE (inAddDay, 0) = 15
+       IF COALESCE (inAddDay, 0) = 15 or COALESCE (inAddDay, 0) = 14
        THEN
-         IF date_part('day', vbSendPlan) < 16
+         IF date_part('day', vbSendPlan) < (inAddDay + 1)
          THEN
            vbSendPlan := vbSendPlan + inAddDay * interval '1 day';     
          ELSE
@@ -71,6 +71,7 @@ $BODY$ LANGUAGE plpgsql;
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Øàáëèé Î.Â.
+ 09.02.19                                                       *
  25.01.19                                                       *
  
 */
