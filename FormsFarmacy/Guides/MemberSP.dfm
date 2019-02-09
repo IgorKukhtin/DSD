@@ -54,8 +54,9 @@ object MemberSPForm: TMemberSPForm
         Width = 70
       end
       object Name: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Caption = #1060#1048#1054' '#1087#1072#1094#1080#1077#1085#1090#1072
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 241

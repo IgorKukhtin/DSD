@@ -18,6 +18,7 @@ $BODY$
     DECLARE vbPriceChange   TFloat;
     DECLARE vbDateChange    TDateTime;
     DECLARE vbFixValue      TFloat;
+    DECLARE vbFixPercent    TFloat;
     DECLARE vbPercentMarkup TFloat;
 
     -- DECLARE vbOperDate_StartBegin1 TDateTime;
@@ -36,11 +37,13 @@ BEGIN
          , PriceChange_DateChange.valuedata              AS DateChange
          , ObjectFloat_FixValue.ValueData                AS FixValue
          , ObjectFloat_PercentMarkup.ValueData           AS PercentMarkup
+         , ObjectFloat_FixPercent.ValueData              AS FixPercent
            INTO vbId
               , vbPriceChange
               , vbDateChange
               , vbFixValue
               , vbPercentMarkup
+              , vbFixPercent
     FROM ObjectLink AS ObjectLink_Goods
          LEFT JOIN ObjectLink AS ObjectLink_Retail
                               ON ObjectLink_Retail.ObjectId = ObjectLink_Goods.ObjectId
@@ -60,6 +63,9 @@ BEGIN
          LEFT JOIN ObjectFloat AS ObjectFloat_PercentMarkup
                                ON ObjectFloat_PercentMarkup.ObjectId = ObjectLink_Goods.ObjectId
                               AND ObjectFloat_PercentMarkup.DescId   = zc_ObjectFloat_PriceChange_PercentMarkup()
+         LEFT JOIN ObjectFloat AS ObjectFloat_FixPercent
+                               ON ObjectFloat_FixPercent.ObjectId = ObjectLink_Goods.ObjectId
+                              AND ObjectFloat_FixPercent.DescId   = zc_ObjectFloat_PriceChange_FixPercent()
     WHERE ObjectLink_Goods.DescId = zc_ObjectLink_PriceChange_Goods()
       AND ObjectLink_Goods.ChildObjectId = inGoodsId
       AND ((ObjectLink_Retail.ChildObjectId = inRetailId AND inRetailId <> 0)
@@ -105,7 +111,8 @@ BEGIN
                                                             , inOperDate       := CURRENT_TIMESTAMP           :: TDateTime   -- Дата действия прайса
                                                             , inPriceChange    := inPriceChange               :: TFloat      -- Цена
                                                             , inFixValue       := vbFixValue                  :: TFloat
-                                                            , inPercentMarkup  := COALESCE (vbPercentMarkup, 0)   :: TFloat
+                                                            , inFixPercent     := vbFixPercent                :: TFloat
+                                                            , inPercentMarkup  := COALESCE (vbPercentMarkup, 0) :: TFloat
                                                             , inSession  := inUserId :: TVarChar
                                                              );
 

@@ -218,13 +218,34 @@ inherited PriceChangeOnDateForm: TPriceChangeOnDateForm
             Width = 53
           end
           object FixValueEnd: TcxGridDBColumn
-            AlternateCaption = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072
+            AlternateCaption = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072' ('#1085#1072' '#1086#1082#1086#1085#1095'.'#1076#1085#1103')'
             Caption = #1060#1080#1082#1089'. '#1094#1077#1085#1072' ('#1085#1072' '#1086#1082#1086#1085#1095'.'#1076#1085#1103')'
             DataBinding.FieldName = 'FixValueEnd'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072
-            Width = 48
+            HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1094#1077#1085#1072' ('#1085#1072' '#1086#1082#1086#1085#1095'.'#1076#1085#1103')'
+            Width = 72
+          end
+          object FixPercent: TcxGridDBColumn
+            Caption = #1060#1080#1082#1089'. % ('#1089#1082'.)'
+            DataBinding.FieldName = 'FixPercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1092#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' % '#1089#1082#1080#1076#1082#1080
+            Width = 53
+          end
+          object FixPercentEnd: TcxGridDBColumn
+            Caption = #1060#1080#1082#1089'. %('#1089#1082'.) ('#1085#1072' '#1086#1082#1086#1085#1095'.'#1076#1085#1103')'
+            DataBinding.FieldName = 'FixPercentEnd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1092#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' % '#1089#1082#1080#1076#1082#1080' ('#1085#1072' '#1086#1082#1086#1085#1095'.'#1076#1085#1103')'
+            Width = 86
           end
           object PercentMarkupStart: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1085#1072' '#1085#1072#1095'. '#1076#1085#1103')'
@@ -924,8 +945,8 @@ inherited PriceChangeOnDateForm: TPriceChangeOnDateForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 88
-    Top = 144
+    Left = 120
+    Top = 176
   end
   inherited BarManager: TdxBarManager
     Left = 184
@@ -1113,8 +1134,8 @@ inherited PriceChangeOnDateForm: TPriceChangeOnDateForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 264
-    Top = 48
+    Left = 808
+    Top = 208
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_PriceChange'
@@ -1189,6 +1210,15 @@ inherited PriceChangeOnDateForm: TPriceChangeOnDateForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'FixValue'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFixPercent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'FixPercent'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1311,8 +1341,8 @@ inherited PriceChangeOnDateForm: TPriceChangeOnDateForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 400
-    Top = 176
+    Left = 368
+    Top = 184
   end
   object spDelete_Object_MCS: TdsdStoredProc
     StoredProcName = 'gpDelete_Object_MCS'

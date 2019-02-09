@@ -97,10 +97,7 @@ end;
 
 procedure TCashWorkForm.Button3Click(Sender: TObject);
 begin
-  m_Cash.OpenReceipt;
-  m_Cash.SubTotal(true, true, 0, 0);
-  m_Cash.TotalSumm(0, 0, ptMoney);
-  m_Cash.CloseReceipt;
+  m_Cash.PrintZeroReceipt;
 end;
 
 procedure TCashWorkForm.Button4Click(Sender: TObject);

@@ -49,9 +49,9 @@ BEGIN
          , CASE WHEN tmpOldNew.OldProgram = True OR tmpOldNew.OldServise = True
            THEN TRUE ELSE FALSE END AS isErased
     FROM EmployeeWorkLog
-         INNER JOIN Object AS OUnit ON OUnit.id = EmployeeWorkLog.UnitId
-         INNER JOIN Object AS OUser ON OUser.id = EmployeeWorkLog.UserId
-         INNER JOIN tmpOldNew AS tmpOldNew ON tmpOldNew.CashSessionId = EmployeeWorkLog.CashSessionId 
+         LEFT JOIN Object AS OUnit ON OUnit.id = EmployeeWorkLog.UnitId
+         LEFT JOIN Object AS OUser ON OUser.id = EmployeeWorkLog.UserId
+         LEFT JOIN tmpOldNew AS tmpOldNew ON tmpOldNew.CashSessionId = EmployeeWorkLog.CashSessionId 
                                        AND tmpOldNew.UnitId = EmployeeWorkLog.UnitId
                                        AND tmpOldNew.UserId = EmployeeWorkLog.UserId
                                        AND tmpOldNew.Ord = 1

@@ -3,11 +3,12 @@
 DROP FUNCTION IF EXISTS gpSelect_ObjectHistory_PriceChange (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceChange(
-    IN inPriceChangeId        Integer   , -- Прайс
+    IN inPriceChangeId       Integer   , -- Прайс
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, StartDate TDateTime, 
                PriceChange TFloat, FixValue TFloat,
+               FixPercent TFloat,
                PercentMarkup TFloat
                )
 AS
@@ -31,6 +32,7 @@ BEGIN
           , COALESCE(ObjectHistory_PriceChange.StartDate, Empty.StartDate) AS StartDate
           , ObjectHistoryFloat_PriceChange_Value.ValueData                 AS PriceChange
           , ObjectHistoryFloat_PriceChange_FixValue.ValueData              AS FixValue
+          , ObjectHistoryFloat_PriceChange_FixPercent.ValueData            AS FixPercent
           , ObjectHistoryFloat_PriceChange_PercentMarkup.ValueData         AS PercentMarkup
         FROM 
             ObjectHistory_PriceChange
@@ -44,6 +46,10 @@ BEGIN
             LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceChange_FixValue
                                          ON ObjectHistoryFloat_PriceChange_FixValue.ObjectHistoryId = ObjectHistory_PriceChange.Id
                                         AND ObjectHistoryFloat_PriceChange_FixValue.DescId = zc_ObjectHistoryFloat_PriceChange_FixValue()
+
+            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceChange_FixPercent
+                                         ON ObjectHistoryFloat_PriceChange_FixPercent.ObjectHistoryId = ObjectHistory_PriceChange.Id
+                                        AND ObjectHistoryFloat_PriceChange_FixPercent.DescId = zc_ObjectHistoryFloat_PriceChange_FixPercent()
 
             LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceChange_Value
                                          ON ObjectHistoryFloat_PriceChange_Value.ObjectHistoryId = ObjectHistory_PriceChange.Id
@@ -65,6 +71,7 @@ ALTER FUNCTION gpSelect_ObjectHistory_PriceChange (Integer, TVarChar) OWNER TO p
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 08.02.19         * FixPercent
  24.02.16         *
  24.12.15                                                                        *
 

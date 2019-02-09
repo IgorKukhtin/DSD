@@ -11,9 +11,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PriceChangeHistory(
     IN inisShowDel   Boolean,       --True - показать так же удаленные, False - показать только рабочие
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, PriceChange TFloat, FixValue TFloat
+RETURNS TABLE (Id Integer, PriceChange TFloat, FixValue TFloat, FixPercent TFloat
              , PercentMarkupStart TFloat, StartDate TDateTime
-             , PriceChangeEnd TFloat, FixValueEnd TFloat
+             , PriceChangeEnd TFloat, FixValueEnd TFloat, FixPercentEnd TFloat
              , PercentMarkupEnd TFloat, StartDateEnd TDateTime
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupName TVarChar, NDSKindName TVarChar, NDS TFloat
@@ -65,10 +65,12 @@ BEGIN
                  NULL::Integer     AS Id
                , NULL::TFloat      AS PriceChange
                , NULL::TFloat      AS FixValue
+               , NULL::TFloat      AS FixPercent
                , NULL::TFloat      AS PercentMarkupStart
                , NULL::TDateTime   AS StartDate
                , NULL::TFloat      AS PriceChangeEnd
                , NULL::TFloat      AS FixValueEnd
+               , NULL::TFloat      AS FixPercentEnd
                , NULL::TFloat      AS PercentMarkupEnd
                , NULL::TDateTime   AS StartDateEnd
                , NULL::Integer     AS GoodsId
@@ -113,6 +115,7 @@ BEGIN
       , tmpPriceChange AS (SELECT ObjectLink_PriceChange_Retail.ObjectId        AS Id
                                 , ROUND(PriceChange_Value.ValueData,2)::TFloat  AS PriceChange 
                                 , ObjectFloat_FixValue.ValueData                AS FixValue 
+                                , ObjectFloat_FixPercent.ValueData              AS FixPercent
                                 , PriceChange_Goods.ChildObjectId               AS GoodsId
                                 , PriceChange_datechange.valuedata              AS DateChange 
                                 , COALESCE(PriceChange_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup 
@@ -134,6 +137,9 @@ BEGIN
                                LEFT JOIN ObjectFloat AS ObjectFloat_FixValue
                                                      ON ObjectFloat_FixValue.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
                                                     AND ObjectFloat_FixValue.DescId = zc_ObjectFloat_PriceChange_FixValue()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_FixPercent
+                                                     ON ObjectFloat_FixPercent.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
+                                                    AND ObjectFloat_FixPercent.DescId = zc_ObjectFloat_PriceChange_FixPercent()
 
                            WHERE ObjectLink_PriceChange_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
                              AND ObjectLink_PriceChange_Retail.ChildObjectId = inRetailId
@@ -142,6 +148,7 @@ BEGIN
                            SELECT ObjectLink_PriceChange_Unit.ObjectId               AS Id
                                 , ROUND(PriceChange_Value.ValueData,2)::TFloat  AS PriceChange 
                                 , ObjectFloat_FixValue.ValueData                AS FixValue 
+                                , ObjectFloat_FixPercent.ValueData              AS FixPercent
                                 , PriceChange_Goods.ChildObjectId               AS GoodsId
                                 , PriceChange_datechange.valuedata              AS DateChange 
                                 , COALESCE(PriceChange_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup 
@@ -163,6 +170,10 @@ BEGIN
                                LEFT JOIN ObjectFloat AS ObjectFloat_FixValue
                                                      ON ObjectFloat_FixValue.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
                                                     AND ObjectFloat_FixValue.DescId = zc_ObjectFloat_PriceChange_FixValue()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_FixPercent
+                                                     ON ObjectFloat_FixPercent.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                    AND ObjectFloat_FixPercent.DescId = zc_ObjectFloat_PriceChange_FixPercent()
+
                            WHERE ObjectLink_PriceChange_Unit.DescId        = zc_ObjectLink_PriceChange_Unit()
                              AND ObjectLink_PriceChange_Unit.ChildObjectId = inUnitId
                              AND inUnitId <> 0
@@ -171,11 +182,13 @@ BEGIN
             SELECT tmpPriceChange.Id                                                              AS Id
                  , COALESCE (ObjectHistoryFloat_PriceChange.ValueData, 0)            :: TFloat    AS PriceChange
                  , COALESCE (ObjectHistoryFloat_FixValue.ValueData, 0)               :: TFloat    AS FixValue
+                 , COALESCE (ObjectHistoryFloat_FixPercent.ValueData, 0)             :: TFloat    AS FixPercent
                  , COALESCE (ObjectHistoryFloat_PercentMarkup.ValueData, 0)          :: TFloat    AS PercentMarkupStart
                  , COALESCE (ObjectHistory_PriceChange.StartDate, NULL)              :: TDateTime AS StartDate
 
                  , COALESCE (ObjectHistoryFloat_PriceChangeEnd.ValueData, 0)         :: TFloat    AS PriceChangeEnd
                  , COALESCE (ObjectHistoryFloat_FixValueEnd.ValueData, 0)            :: TFloat    AS FixValueEnd
+                 , COALESCE (ObjectHistoryFloat_FixPercentEnd.ValueData, 0)          :: TFloat    AS FixPercentEnd
                  , COALESCE (ObjectHistoryFloat_PercentMarkupEnd.ValueData, 0)       :: TFloat    AS PercentMarkupEnd
                  , COALESCE (ObjectHistory_PriceChangeEnd.StartDate, NULL)           :: TDateTime AS StartDateEnd
 
@@ -222,6 +235,11 @@ BEGIN
                                              ON ObjectHistoryFloat_FixValue.ObjectHistoryId = ObjectHistory_PriceChange.Id
                                             AND ObjectHistoryFloat_FixValue.DescId = zc_ObjectHistoryFloat_PriceChange_FixValue()                
 
+                -- получаем значения фиксированный % скидки из истории значений на дату
+                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_FixPercent
+                                             ON ObjectHistoryFloat_FixPercent.ObjectHistoryId = ObjectHistory_PriceChange.Id
+                                            AND ObjectHistoryFloat_FixPercent.DescId = zc_ObjectHistoryFloat_PriceChange_FixPercent()
+
                 -- получаем значения % наценки из истории значений на дату
                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PercentMarkup
                                              ON ObjectHistoryFloat_PercentMarkup.ObjectHistoryId = ObjectHistory_PriceChange.Id
@@ -240,6 +258,11 @@ BEGIN
                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_FixValueEnd
                                              ON ObjectHistoryFloat_FixValueEnd.ObjectHistoryId = ObjectHistory_PriceChangeEnd.Id
                                             AND ObjectHistoryFloat_FixValueEnd.DescId = zc_ObjectHistoryFloat_PriceChange_FixValue()                
+
+                -- получаем значения фиксированный % скидки из истории значений на конец дня (на сл.день 00:00)
+                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_FixPercentEnd
+                                             ON ObjectHistoryFloat_FixPercentEnd.ObjectHistoryId = ObjectHistory_PriceChangeEnd.Id
+                                            AND ObjectHistoryFloat_FixPercentEnd.DescId = zc_ObjectHistoryFloat_PriceChange_FixPercent()
 
                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PercentMarkupEnd
                                              ON ObjectHistoryFloat_PercentMarkupEnd.ObjectHistoryId = ObjectHistory_PriceChangeEnd.Id
@@ -278,6 +301,7 @@ and 1=0
       , tmpPriceChange AS (SELECT ObjectLink_PriceChange_Retail.ObjectId        AS Id
                                 , ROUND(PriceChange_Value.ValueData,2)::TFloat  AS PriceChange 
                                 , ObjectFloat_FixValue.ValueData                AS FixValue 
+                                , ObjectFloat_FixPercent.ValueData              AS FixPercent 
                                 , PriceChange_Goods.ChildObjectId               AS GoodsId
                                 , PriceChange_datechange.valuedata              AS DateChange 
                                 , COALESCE(PriceChange_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup 
@@ -300,6 +324,10 @@ and 1=0
                                                      ON ObjectFloat_FixValue.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
                                                     AND ObjectFloat_FixValue.DescId = zc_ObjectFloat_PriceChange_FixValue()
 
+                               LEFT JOIN ObjectFloat AS ObjectFloat_FixPercent
+                                                     ON ObjectFloat_FixPercent.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
+                                                    AND ObjectFloat_FixPercent.DescId = zc_ObjectFloat_PriceChange_FixPercent()
+
                            WHERE ObjectLink_PriceChange_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
                              AND ObjectLink_PriceChange_Retail.ChildObjectId = inRetailId
                              AND inUnitId = 0
@@ -307,6 +335,7 @@ and 1=0
                            SELECT ObjectLink_PriceChange_Unit.ObjectId          AS Id
                                 , ROUND(PriceChange_Value.ValueData,2)::TFloat  AS PriceChange 
                                 , ObjectFloat_FixValue.ValueData                AS FixValue 
+                                , ObjectFloat_FixPercent.ValueData                AS FixPercent 
                                 , PriceChange_Goods.ChildObjectId               AS GoodsId
                                 , PriceChange_datechange.valuedata              AS DateChange 
                                 , COALESCE(PriceChange_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup 
@@ -328,6 +357,10 @@ and 1=0
                                LEFT JOIN ObjectFloat AS ObjectFloat_FixValue
                                                      ON ObjectFloat_FixValue.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
                                                     AND ObjectFloat_FixValue.DescId = zc_ObjectFloat_PriceChange_FixValue()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_FixPercent
+                                                     ON ObjectFloat_FixPercent.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                    AND ObjectFloat_FixPercent.DescId = zc_ObjectFloat_PriceChange_FixPercent()
+
                            WHERE ObjectLink_PriceChange_Unit.DescId        = zc_ObjectLink_PriceChange_Unit()
                              AND ObjectLink_PriceChange_Unit.ChildObjectId = inUnitId
                              AND inUnitId <> 0
@@ -336,11 +369,13 @@ and 1=0
             SELECT tmpPriceChange.Id                                                              AS Id
                  , COALESCE (ObjectHistoryFloat_PriceChange.ValueData, 0)            :: TFloat    AS PriceChange
                  , COALESCE (ObjectHistoryFloat_FixValue.ValueData, 0)               :: TFloat    AS FixValue
+                 , COALESCE (ObjectHistoryFloat_FixPercent.ValueData, 0)             :: TFloat    AS FixPercent
                  , COALESCE (ObjectHistoryFloat_PercentMarkup.ValueData, 0)          :: TFloat    AS PercentMarkupStart
                  , COALESCE (ObjectHistory_PriceChange.StartDate, NULL)              :: TDateTime AS StartDate
 
                  , COALESCE (ObjectHistoryFloat_PriceChangeEnd.ValueData, 0)         :: TFloat    AS PriceChangeEnd
                  , COALESCE (ObjectHistoryFloat_FixValueEnd.ValueData, 0)            :: TFloat    AS FixValueEnd
+                 , COALESCE (ObjectHistoryFloat_FixPercentEnd.ValueData, 0)          :: TFloat    AS FixPercentEnd
                  , COALESCE (ObjectHistoryFloat_PercentMarkupEnd.ValueData, 0)       :: TFloat    AS PercentMarkupEnd
                  , COALESCE (ObjectHistory_PriceChangeEnd.StartDate, NULL)           :: TDateTime AS StartDateEnd
 
@@ -384,6 +419,11 @@ and 1=0
                                              ON ObjectHistoryFloat_FixValue.ObjectHistoryId = ObjectHistory_PriceChange.Id
                                             AND ObjectHistoryFloat_FixValue.DescId = zc_ObjectHistoryFloat_PriceChange_FixValue()                
 
+                -- получаем значения фиксированный % скидки из истории значений на дату
+                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_FixPercent
+                                             ON ObjectHistoryFloat_FixPercent.ObjectHistoryId = ObjectHistory_PriceChange.Id
+                                            AND ObjectHistoryFloat_FixPercent.DescId = zc_ObjectHistoryFloat_PriceChange_FixPercent() 
+
                 -- получаем значения % наценки из истории значений на дату
                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PercentMarkup
                                              ON ObjectHistoryFloat_PercentMarkup.ObjectHistoryId = ObjectHistory_PriceChange.Id
@@ -402,6 +442,10 @@ and 1=0
                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_FixValueEnd
                                              ON ObjectHistoryFloat_FixValueEnd.ObjectHistoryId = ObjectHistory_PriceChangeEnd.Id
                                             AND ObjectHistoryFloat_FixValueEnd.DescId = zc_ObjectHistoryFloat_PriceChange_FixValue()                
+
+                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_FixPercentEnd
+                                             ON ObjectHistoryFloat_FixPercentEnd.ObjectHistoryId = ObjectHistory_PriceChangeEnd.Id
+                                            AND ObjectHistoryFloat_FixPercentEnd.DescId = zc_ObjectHistoryFloat_PriceChange_FixPercent()  
 
                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PercentMarkupEnd
                                              ON ObjectHistoryFloat_PercentMarkupEnd.ObjectHistoryId = ObjectHistory_PriceChangeEnd.Id
@@ -423,6 +467,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.02.19         *
  27.09.18         * add inUnitId
  16.08.18         *
 */

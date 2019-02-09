@@ -612,8 +612,11 @@ inherited Report_MemberForm: TReport_MemberForm
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = MasterCDS
-          UserName = 'frxDBDataset'
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 
+            'BranchName;InfoMoneyName;InfoMoneyGroupName;InfoMoneyDestination' +
+            'Name;MemberName'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
@@ -634,6 +637,9 @@ inherited Report_MemberForm: TReport_MemberForm
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object dsdPrintRealAction: TdsdPrintAction
       Category = 'DSDLib'
@@ -642,7 +648,6 @@ inherited Report_MemberForm: TReport_MemberForm
       Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091' ('#1076#1077#1090#1072#1083#1100#1085#1086')>'
       Hint = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091' ('#1076#1077#1090#1072#1083#1100#1085#1086')>'
       ImageIndex = 3
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = MasterCDS
@@ -667,6 +672,9 @@ inherited Report_MemberForm: TReport_MemberForm
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1087#1086#1076#1086#1090#1095#1077#1090#1091' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object PersonalReportJournal: TdsdOpenForm
       Category = 'DSDLib'
@@ -952,6 +960,10 @@ inherited Report_MemberForm: TReport_MemberForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -961,10 +973,6 @@ inherited Report_MemberForm: TReport_MemberForm
         item
           Visible = True
           ItemName = 'bbPrintReal'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -978,7 +986,6 @@ inherited Report_MemberForm: TReport_MemberForm
     object bbPrint: TdxBarButton
       Action = dsdPrintAction
       Category = 0
-      Visible = ivNever
     end
     object bbPrintReal: TdxBarButton
       Action = dsdPrintRealAction

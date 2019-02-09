@@ -89,13 +89,17 @@ BEGIN
              LEFT JOIN ObjectFloat AS OF_FixValue
                                    ON OF_FixValue.ObjectId = Object_PriceChange.Id
                                   AND OF_FixValue.DescId   = zc_ObjectFloat_PriceChange_FixValue()
+             LEFT JOIN ObjectFloat AS OF_FixPercent
+                                   ON OF_FixPercent.ObjectId = Object_PriceChange.Id
+                                  AND OF_FixPercent.DescId   = zc_ObjectFloat_PriceChange_FixPercent()
              LEFT JOIN ObjectFloat AS OF_PercentMarkup
                                    ON OF_PercentMarkup.ObjectId = Object_PriceChange.Id
                                   AND OF_PercentMarkup.DescId   = zc_ObjectFloat_PriceChange_PercentMarkup()
         WHERE Object_PriceChange.DescId   = zc_Object_PriceChange()
           AND Object_PriceChange.isErased = FALSE
-          AND OF_PercentMarkup.ValueData > 0          -- !!! только если установлен % наценки дл€ цены со скидкой
-          AND COALESCE (OF_FixValue.ValueData, 0) = 0 -- !!! только если Ќ≈ установлена фиксированна€ цена со скидкой !!!
+          AND OF_PercentMarkup.ValueData <> 0           -- !!! только если установлен % наценки дл€ цены со скидкой
+          AND COALESCE (OF_FixValue.ValueData, 0) = 0   -- !!! только если Ќ≈ установлена фиксированна€ цена со скидкой !!!
+          AND COALESCE (OF_FixPercent.ValueData, 0) = 0 -- !!! только если Ќ≈ установлен фиксированный % со скидкой !!!
        );
 
     ANALYZE _tmpPriceChange;

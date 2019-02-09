@@ -33,6 +33,7 @@ type
     function PrintFiscalMemoryByNum(inStart, inEnd: Integer): boolean;
     function PrintFiscalMemoryByDate(inStart, inEnd: TDateTime): boolean;
     function PrintReportByDate(inStart, inEnd: TDateTime): boolean;
+    function PrintZeroReceipt: boolean;
     function PrintReportByNum(inStart, inEnd: Integer): boolean;
     function FiscalNumber:String;
     function SerialNumber:String;
@@ -733,6 +734,14 @@ function TCashFP3530T.PrintReportByDate(inStart,
   inEnd: TDateTime): boolean;
 begin
 
+end;
+
+function TCashFP3530T.PrintZeroReceipt: boolean;
+begin
+  OpenReceipt;
+  SubTotal(true, true, 0, 0);
+  TotalSumm(0, 0, ptMoney);
+  CloseReceipt;
 end;
 
 function TCashFP3530T.PrintReportByNum(inStart, inEnd: Integer): boolean;

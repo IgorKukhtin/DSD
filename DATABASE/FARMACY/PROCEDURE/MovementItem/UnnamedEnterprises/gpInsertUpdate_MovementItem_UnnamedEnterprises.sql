@@ -72,7 +72,7 @@ BEGIN
              AND MovementLinkMovement.MovementId = inMovementId);
       END IF;
 
-      IF EXISTS(SELECT 1 FROM MovementLinkMovement
+/*      IF EXISTS(SELECT 1 FROM MovementLinkMovement
                 WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
                   AND MovementLinkMovement.MovementId = inMovementId) AND
          NOT EXISTS(SELECT 1 FROM MovementItemFloat
@@ -90,8 +90,8 @@ BEGIN
                 INNER JOIN Movement ON Movement.ID = MovementLinkMovement.MovementChildId
            WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
              AND MovementLinkMovement.MovementId = inMovementId);
-      END IF;
-    END IF;
+      END IF; */
+    END IF; 
 
     --Посчитали сумму
     outSumm := ROUND(COALESCE(inAmount,0)*COALESCE(inPrice,0),2);

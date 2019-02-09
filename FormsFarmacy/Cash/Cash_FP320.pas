@@ -38,6 +38,7 @@ type
     function PrintFiscalMemoryByDate(inStart, inEnd: TDateTime): boolean;
     function PrintReportByDate(inStart, inEnd: TDateTime): boolean;
     function PrintReportByNum(inStart, inEnd: Integer): boolean;
+    function PrintZeroReceipt: boolean;
     function FiscalNumber:String;
     function SerialNumber:String;
     procedure ClearArticulAttachment;
@@ -236,6 +237,14 @@ end;
 function TCashFP320.PrintReportByNum(inStart, inEnd: Integer): boolean;
 begin
 
+end;
+
+function TCashFP320.PrintZeroReceipt: boolean;
+begin
+  OpenReceipt;
+  SubTotal(true, true, 0, 0);
+  TotalSumm(0, 0, ptMoney);
+  CloseReceipt;
 end;
 
 function TCashFP320.ProgrammingGoods(const GoodsCode: integer;

@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceChange (Integer, Integer, Integer, TDateTime, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceChange (Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceChange (Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PriceChange(
  INOUT ioId                       Integer   ,    -- ключ объекта < Цена >
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PriceChange(
    OUT outStartDate               TDateTime ,    -- Дата
    OUT outPriceChange             TFloat    ,    -- цена
     IN inFixValue                 TFloat    ,    -- 
+    IN inFixPercent               TFloat    ,    -- 
     IN inPercentMarkup            TFloat    ,    -- % наценки
     IN inSession                  TVarChar       -- сессия пользователя
 )
@@ -22,6 +24,7 @@ $BODY$
         vbUserId Integer;
         vbPriceChange TFloat;
         vbFixValue TFloat;
+        vbFixPercent TFloat;
         vbPercentMarkup TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
@@ -46,22 +49,25 @@ BEGIN
 
     -- Если такая запись есть - достаем её ключу торг.сеть - товар или подразделение - товар
     SELECT Id, 
-           PriceChange, 
-           FixValue, 
-           DateChange, 
-           PercentMarkup
+           PriceChange,
+           FixValue,
+           DateChange,
+           PercentMarkup,
+           FixPercent
 
-      INTO ioId, 
-           vbPriceChange, 
-           vbFixValue, 
-           outDateChange, 
-           vbPercentMarkup
+      INTO ioId,
+           vbPriceChange,
+           vbFixValue,
+           outDateChange,
+           vbPercentMarkup,
+           vbFixPercent
     FROM (WITH tmp1 AS (SELECT Object_PriceChange.Id                        AS Id
                              , ROUND(ObjectFloat_Value.ValueData,2)::TFloat AS PriceChange
                              , ObjectFloat_FixValue.ValueData               AS FixValue
+                             , ObjectFloat_FixPercent.ValueData             AS FixPercent
                              , PriceChange_Goods.ChildObjectId              AS GoodsId
                              , ObjectLink_Retail.ChildObjectId              AS RetailId
-                             , ObjectDate_DateChange.valuedata             AS DateChange
+                             , ObjectDate_DateChange.valuedata              AS DateChange
                              , COALESCE(ObjectFloat_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
                         FROM Object AS Object_PriceChange
                             INNER JOIN ObjectLink AS PriceChange_Goods
@@ -80,6 +86,9 @@ BEGIN
                             LEFT JOIN ObjectFloat AS ObjectFloat_FixValue
                                                   ON ObjectFloat_FixValue.ObjectId = Object_PriceChange.Id
                                                  AND ObjectFloat_FixValue.DescId = zc_ObjectFloat_PriceChange_FixValue()
+                            LEFT JOIN ObjectFloat AS ObjectFloat_FixPercent
+                                                  ON ObjectFloat_FixPercent.ObjectId = Object_PriceChange.Id
+                                                 AND ObjectFloat_FixPercent.DescId = zc_ObjectFloat_PriceChange_FixPercent()
                             LEFT JOIN ObjectFloat AS ObjectFloat_PercentMarkup
                                                   ON ObjectFloat_PercentMarkup.ObjectId = Object_PriceChange.Id
                                                  AND ObjectFloat_PercentMarkup.DescId = zc_ObjectFloat_PriceChange_PercentMarkup()
@@ -91,17 +100,21 @@ BEGIN
                             OR (ObjectLink_Unit.ChildObjectId = inUnitId AND inUnitId <> 0)
                               )
                        )
-          -- 
+          --
           SELECT * FROM tmp1
          ) AS tmp;
 
-
     -- Расчет Цены со скидкой
-    IF COALESCE (inFixValue, 0) <> 0
+    IF COALESCE (inFixPercent,0)<> 0
+    THEN
+        -- Приоритет - фиксированный % ск.
+        outPriceChange := 0;
+        inFixValue := 0;
+    ELSEIF COALESCE (inFixValue, 0) <> 0
     THEN
         -- Приоритет - фиксированная цена
         outPriceChange := inFixValue;
-    ELSEIF COALESCE (inFixValue, 0) = 0 AND COALESCE (inPercentMarkup, 0) = 0
+    ELSEIF COALESCE (inFixValue, 0) = 0 AND COALESCE (inPercentMarkup, 0) = 0 AND COALESCE (inFixPercent,0) = 0
     THEN
         -- в этом случае - обнуляем, типа удалили
         outPriceChange := 0;
@@ -146,6 +159,8 @@ BEGIN
     PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_PriceChange_Value(), ioId, outPriceChange);
     -- сохранили св-во <фиксированная цена>
     PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_PriceChange_FixValue(), ioId, inFixValue);
+    -- сохранили св-во <фиксированный % скидки>
+    PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_PriceChange_FixPercent(), ioId, inFixPercent);
     -- сохранили св-во <% наценки >
     PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_PriceChange_PercentMarkup(), ioId, inPercentMarkup);
 
@@ -153,6 +168,7 @@ BEGIN
     -- сохранили историю
     IF  COALESCE (inPercentMarkup, 0) <> COALESCE (vbPercentMarkup, 0)
      OR COALESCE (inFixValue, 0)      <> COALESCE (vbFixValue, 0)
+     OR COALESCE (inFixPercent, 0)    <> COALESCE (vbFixPercent, 0)
     THEN
         -- сохранили св-во < Дата изменения >
         outDateChange := CURRENT_DATE;
@@ -164,6 +180,7 @@ BEGIN
                                                          inOperDate       := CURRENT_TIMESTAMP                       :: TDateTime, -- Дата действия прайса
                                                          inPriceChange    := COALESCE (outPriceChange, vbPriceChange) :: TFloat,    -- Цена
                                                          inFixValue       := COALESCE (inFixValue, vbFixValue)       :: TFloat,
+                                                         inFixPercent     := COALESCE (inFixPercent, vbFixPercent)   :: TFloat,
                                                          inPercentMarkup  := COALESCE (inPercentMarkup, 0)           :: TFloat,
                                                          inSession        := inSession
                                                         );
@@ -186,6 +203,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 08.02.19         *
  16.08.18         *
 */
 

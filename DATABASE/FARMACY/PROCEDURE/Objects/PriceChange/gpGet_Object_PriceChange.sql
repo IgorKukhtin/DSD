@@ -9,7 +9,7 @@ RETURNS TABLE (Id Integer
              , RetailId Integer, RetailCode Integer, RetailName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , DateChange tdatetime
-             , PriceChange TFloat, FixValue TFloat, PercentMarkup TFloat
+             , PriceChange TFloat, FixValue TFloat, FixPercent TFloat, PercentMarkup TFloat
              , isErased boolean
              ) AS
 $BODY$
@@ -40,6 +40,7 @@ BEGIN
 
           , CAST (0 as TFloat)       AS PriceChange
           , CAST (0 as TFloat)       AS FixValue
+          , CAST (0 as TFloat)       AS FixPercent
           , CAST (0 as TFloat)       AS PercentMarkup
 
           , CAST (NULL AS Boolean)   AS isErased;
@@ -63,6 +64,7 @@ BEGIN
 
              , ROUND(ObjectFloat_Value.ValueData,2)::TFloat  AS PriceChange
              , ObjectFloat_FixValue.ValueData                AS FixValue
+             , ObjectFloat_FixPercent.ValueData              AS FixPercent
              , ObjectFloat_PercentMarkup.ValueData           AS PercentMarkup
       
              , Object_Goods.isErased                   AS isErased
@@ -91,6 +93,9 @@ BEGIN
                LEFT JOIN ObjectFloat AS ObjectFloat_FixValue
                                      ON ObjectFloat_FixValue.ObjectId = Object_PriceChange.Id
                                     AND ObjectFloat_FixValue.DescId = zc_ObjectFloat_PriceChange_FixValue()
+               LEFT JOIN ObjectFloat AS ObjectFloat_FixPercent
+                                     ON ObjectFloat_FixPercent.ObjectId = Object_PriceChange.Id
+                                    AND ObjectFloat_FixPercent.DescId = zc_ObjectFloat_PriceChange_FixPercent()
 
                LEFT JOIN ObjectDate AS ObjectDate_DateChange
                                     ON ObjectDate_DateChange.ObjectId = Object_PriceChange.Id
@@ -107,6 +112,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 08.02.19         * FixPercent
  28.09.18         * add zc_ObjectLink_PriceChange_Unit
  16.08.18         *
 */
