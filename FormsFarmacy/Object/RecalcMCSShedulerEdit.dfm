@@ -78,7 +78,7 @@
   end
   object cbIsClose: TcxCheckBox
     Left = 256
-    Top = 26
+    Top = 13
     Caption = #1053#1077' '#1074#1099#1087#1086#1083#1085#1103#1090#1100' '#1087#1077#1088#1077#1097#1077#1090
     TabOrder = 1
     Width = 158
@@ -264,9 +264,16 @@
   end
   object cbPharmacyItem: TcxCheckBox
     Left = 256
-    Top = 49
+    Top = 30
     Caption = #1040#1087#1090#1077#1095#1085#1099#1081' '#1087#1091#1085#1082#1090
     TabOrder = 2
+    Width = 158
+  end
+  object cbAllRetail: TcxCheckBox
+    Left = 256
+    Top = 48
+    Caption = #1044#1083#1103' '#1074#1089#1077#1081' '#1089#1077#1090#1080
+    TabOrder = 36
     Width = 158
   end
   object ActionList: TActionList
@@ -459,6 +466,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAllRetail'
+        Value = Null
+        Component = cbAllRetail
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsClose'
         Value = ''
         Component = cbIsClose
@@ -637,6 +652,13 @@
         Component = UserGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AllRetail'
+        Value = Null
+        Component = cbAllRetail
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item

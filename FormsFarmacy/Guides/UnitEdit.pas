@@ -83,6 +83,7 @@ type
     cxLabel19: TcxLabel;
     edPartnerMedical: TcxButtonEdit;
     GuidesPartnerMedical: TdsdGuides;
+    cbPharmacyItem: TcxCheckBox;
   private
     { Private declarations }
   public

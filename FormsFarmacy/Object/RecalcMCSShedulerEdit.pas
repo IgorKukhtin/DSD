@@ -70,6 +70,7 @@ type
     cePeriod7: TcxCurrencyEdit;
     cxLabel12: TcxLabel;
     cbPharmacyItem: TcxCheckBox;
+    cbAllRetail: TcxCheckBox;
   private
     { Private declarations }
   public

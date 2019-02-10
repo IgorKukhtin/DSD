@@ -51,30 +51,30 @@ object MainForm: TMainForm
     Align = alTop
     TabOrder = 0
     object btnSendMail: TButton
-      Left = 782
+      Left = 775
       Top = 0
       Width = 113
       Height = 25
       Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' Email'
-      TabOrder = 0
+      TabOrder = 3
       OnClick = btnSendMailClick
     end
     object btnExport: TButton
-      Left = 263
+      Left = 711
       Top = 0
       Width = 58
       Height = 25
       Caption = #1069#1082#1089#1087#1086#1088#1090
-      TabOrder = 1
+      TabOrder = 2
       OnClick = btnExportClick
     end
     object btnExecute: TButton
-      Left = 167
+      Left = 615
       Top = 0
       Width = 90
       Height = 25
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100
-      TabOrder = 2
+      TabOrder = 1
       OnClick = btnExecuteClick
     end
     object btnAll: TButton
@@ -83,8 +83,17 @@ object MainForm: TMainForm
       Width = 97
       Height = 25
       Caption = #1042#1089#1105' '#1087#1086' '#1074#1089#1077#1084'!'
-      TabOrder = 3
+      TabOrder = 4
       OnClick = btnAllClick
+    end
+    object btnAllMaker: TButton
+      Left = 480
+      Top = 0
+      Width = 129
+      Height = 25
+      Caption = #1042#1089#1105' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      TabOrder = 0
+      OnClick = btnAllMakerClick
     end
   end
   object cxGrid: TcxGrid
@@ -128,7 +137,7 @@ object MainForm: TMainForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 56
+        Width = 42
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -139,13 +148,82 @@ object MainForm: TMainForm
         Options.Editing = False
         Width = 168
       end
-      object CountryName: TcxGridDBColumn
-        Caption = #1057#1090#1088#1072#1085#1072
-        DataBinding.FieldName = 'CountryName'
+      object Mail: TcxGridDBColumn
+        Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1095#1090#1072' ('#1082#1086#1085#1090'. '#1083#1080#1094#1086')'
+        DataBinding.FieldName = 'Mail'
+        GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 147
+        Width = 114
+      end
+      object SendPlan: TcxGridDBColumn
+        Caption = #1050#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' ('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103')'
+        DataBinding.FieldName = 'SendPlan'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100'('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103')'
+        Options.Editing = False
+        Width = 85
+      end
+      object AmountMonth: TcxGridDBColumn
+        Caption = #1055#1077#1088#1080#1086#1076'. '#1084#1077#1089#1103#1094#1077#1074
+        DataBinding.FieldName = 'AmountMonth'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1087#1077#1088#1080#1086#1076#1080#1095#1085#1086#1089#1090#1100' '#1086#1090#1087#1088#1072#1074#1082#1080'  '#1074' '#1084#1077#1089#1103#1094#1072#1093
+        Options.Editing = False
+        Width = 53
+      end
+      object AmountDay: TcxGridDBColumn
+        Caption = #1055#1077#1088#1080#1086#1076'. '#1076#1085#1077#1081
+        DataBinding.FieldName = 'AmountDay'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1087#1077#1088#1080#1086#1076#1080#1095#1085#1086#1089#1090#1100' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1074' '#1076#1085#1103#1093
+        Options.Editing = False
+        Width = 52
+      end
+      object isReport1: TcxGridDBColumn
+        Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084'"'
+        DataBinding.FieldName = 'isReport1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084'"'
+        Options.Editing = False
+        Width = 62
+      end
+      object isReport2: TcxGridDBColumn
+        Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084'"'
+        DataBinding.FieldName = 'isReport2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084'"'
+        Options.Editing = False
+        Width = 68
+      end
+      object isReport3: TcxGridDBColumn
+        Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1086#1089#1090#1072#1090#1082#1072#1084#1080' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072'"'
+        DataBinding.FieldName = 'isReport3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1086#1089#1090#1072#1090#1082#1072#1084#1080' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072'"'
+        Options.Editing = False
+        Width = 121
+      end
+      object isReport4: TcxGridDBColumn
+        Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
+        DataBinding.FieldName = 'isReport4'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
+        Options.Editing = False
+        Width = 80
       end
       object ContactPersonName: TcxGridDBColumn
         Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1086#1077' '#1083#1080#1094#1086
@@ -161,6 +239,14 @@ object MainForm: TMainForm
         Options.Editing = False
         Width = 100
       end
+      object CountryName: TcxGridDBColumn
+        Caption = #1057#1090#1088#1072#1085#1072
+        DataBinding.FieldName = 'CountryName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 147
+      end
       object Phone: TcxGridDBColumn
         Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1082#1086#1085#1090'. '#1083#1080#1094#1086')'
         DataBinding.FieldName = 'Phone'
@@ -170,47 +256,6 @@ object MainForm: TMainForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 109
-      end
-      object Mail: TcxGridDBColumn
-        Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1095#1090#1072' ('#1082#1086#1085#1090'. '#1083#1080#1094#1086')'
-        DataBinding.FieldName = 'Mail'
-        GroupSummaryAlignment = taCenter
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 114
-      end
-      object AmountMonth: TcxGridDBColumn
-        Caption = #1055#1077#1088#1080#1086#1076'. '#1084#1077#1089#1103#1094#1077#1074
-        DataBinding.FieldName = 'AmountMonth'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1087#1077#1088#1080#1086#1076#1080#1095#1085#1086#1089#1090#1100' '#1086#1090#1087#1088#1072#1074#1082#1080'  '#1074' '#1084#1077#1089#1103#1094#1072#1093
-        Options.Editing = False
-        Width = 70
-      end
-      object AmountDay: TcxGridDBColumn
-        Caption = #1055#1077#1088#1080#1086#1076'. '#1076#1085#1077#1081
-        DataBinding.FieldName = 'AmountDay'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1087#1077#1088#1080#1086#1076#1080#1095#1085#1086#1089#1090#1100' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1074' '#1076#1085#1103#1093
-        Options.Editing = False
-        Width = 70
-      end
-      object SendPlan: TcxGridDBColumn
-        Caption = #1050#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' ('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103')'
-        DataBinding.FieldName = 'SendPlan'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100'('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103')'
-        Options.Editing = False
-        Width = 96
       end
       object SendReal: TcxGridDBColumn
         Caption = #1050#1086#1075#1076#1072' '#1091#1089#1087#1077#1096#1085#1086' '#1087#1088#1086#1096#1083#1072' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103')'
@@ -229,42 +274,6 @@ object MainForm: TMainForm
         HeaderHint = #1076#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1083#1077#1076#1091#1102#1097#1077#1081' '#1086#1090#1087#1088#1072#1074#1082#1080
         Options.Editing = False
         Width = 85
-      end
-      object isReport1: TcxGridDBColumn
-        Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084'"'
-        DataBinding.FieldName = 'isReport1'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084'"'
-        Options.Editing = False
-        Width = 80
-      end
-      object isReport2: TcxGridDBColumn
-        Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084'"'
-        DataBinding.FieldName = 'isReport2'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084'"'
-        Options.Editing = False
-        Width = 80
-      end
-      object isReport3: TcxGridDBColumn
-        Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1086#1089#1090#1072#1090#1082#1072#1084#1080' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072'"'
-        DataBinding.FieldName = 'isReport3'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1086#1089#1090#1072#1090#1082#1072#1084#1080' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072'"'
-        Options.Editing = False
-        Width = 132
-      end
-      object isReport4: TcxGridDBColumn
-        Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
-        DataBinding.FieldName = 'isReport4'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
-        Options.Editing = False
-        Width = 80
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

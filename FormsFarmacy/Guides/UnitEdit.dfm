@@ -343,6 +343,13 @@
     TabOrder = 42
     Width = 448
   end
+  object cbPharmacyItem: TcxCheckBox
+    Left = 349
+    Top = 3
+    Caption = #1040#1087#1090#1077#1095#1085#1099#1081' '#1087#1091#1085#1082#1090
+    TabOrder = 43
+    Width = 115
+  end
   object ActionList: TActionList
     Left = 356
     Top = 358
@@ -556,6 +563,14 @@
         Value = Null
         Component = GuidesPartnerMedical
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPharmacyItem'
+        Value = Null
+        Component = cbPharmacyItem
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -802,6 +817,13 @@
         Component = GuidesPartnerMedical
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PharmacyItem'
+        Value = Null
+        Component = cbPharmacyItem
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

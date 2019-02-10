@@ -57,6 +57,7 @@ type
     qrySetDateSend: TZQuery;
     N3: TMenuItem;
     N4: TMenuItem;
+    btnAllMaker: TButton;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -65,6 +66,7 @@ type
     procedure btnAllClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure pmClick(Sender: TObject);
+    procedure btnAllMakerClick(Sender: TObject);
   private
     { Private declarations }
     RepType : integer;
@@ -88,6 +90,7 @@ type
     procedure OpenAndFormatSQL;
     procedure SetDateParams;
 
+    procedure AllMaker;
     procedure ReportIncome;
     procedure ReportCheck;
     procedure ReportIncomeConsumptionBalance;
@@ -130,6 +133,62 @@ begin
   end;
 end;
 
+procedure TMainForm.AllMaker;
+begin
+  try
+    SetDateParams;
+
+    if qryMaker.FieldByName('isReport1').AsBoolean then
+    begin
+      RepType := 0;
+      ReportIncome;
+      btnExportClick(Nil);
+      btnSendMailClick(Nil);
+    end;
+
+    if qryMaker.FieldByName('isReport2').AsBoolean then
+    begin
+      RepType := 1;
+      ReportCheck;
+      btnExportClick(Nil);
+      btnSendMailClick(Nil);
+    end;
+
+    if qryMaker.FieldByName('isReport3').AsBoolean then
+    begin
+      RepType := 2;
+      ReportAnalysisRemainsSelling;
+      btnExportClick(Nil);
+      btnSendMailClick(Nil);
+    end;
+
+    if qryMaker.FieldByName('isReport4').AsBoolean then
+    begin
+      RepType := 3;
+      ReportIncomeConsumptionBalance;;
+      btnExportClick(Nil);
+      btnSendMailClick(Nil);
+    end;
+
+    try
+      qrySetDateSend.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
+      qrySetDateSend.Params.ParamByName('inAddMonth').Value :=  qryMaker.FieldByName('AmountMonth').AsInteger;
+      qrySetDateSend.Params.ParamByName('inAddDay').Value :=  qryMaker.FieldByName('AmountDay').AsInteger;
+      qrySetDateSend.ExecSQL;
+    except
+      on E: Exception do
+      begin
+        Add_Log(E.Message);
+      end;
+    end;
+
+  except
+    on E: Exception do
+      Add_Log(E.Message);
+  end;
+end;
+
+
 procedure TMainForm.btnAllClick(Sender: TObject);
 begin
   try
@@ -137,51 +196,7 @@ begin
     while not qryMaker.Eof do
     begin
 
-      SetDateParams;
-
-      if qryMaker.FieldByName('isReport1').AsBoolean then
-      begin
-        RepType := 0;
-        ReportIncome;
-        btnExportClick(Sender);
-        btnSendMailClick(Sender);
-      end;
-
-      if qryMaker.FieldByName('isReport2').AsBoolean then
-      begin
-        RepType := 1;
-        ReportCheck;
-        btnExportClick(Sender);
-        btnSendMailClick(Sender);
-      end;
-
-      if qryMaker.FieldByName('isReport3').AsBoolean then
-      begin
-        RepType := 2;
-        ReportAnalysisRemainsSelling;
-        btnExportClick(Sender);
-        btnSendMailClick(Sender);
-      end;
-
-      if qryMaker.FieldByName('isReport4').AsBoolean then
-      begin
-        RepType := 3;
-        ReportIncomeConsumptionBalance;;
-        btnExportClick(Sender);
-        btnSendMailClick(Sender);
-      end;
-
-      try
-        qrySetDateSend.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
-        qrySetDateSend.Params.ParamByName('inAddMonth').Value :=  qryMaker.FieldByName('AmountMonth').AsInteger;
-        qrySetDateSend.Params.ParamByName('inAddDay').Value :=  qryMaker.FieldByName('AmountDay').AsInteger;
-        qrySetDateSend.ExecSQL;
-      except
-        on E: Exception do
-        begin
-          Add_Log(E.Message);
-        end;
-      end;
+      AllMaker;
 
       qryMaker.Next;
       Application.ProcessMessages;
@@ -190,6 +205,16 @@ begin
     on E: Exception do
       Add_Log(E.Message);
   end;
+
+  qryMaker.Close;
+  qryMaker.Open;
+end;
+
+procedure TMainForm.btnAllMakerClick(Sender: TObject);
+begin
+  AllMaker;
+  qryMaker.Close;
+  qryMaker.Open;
 end;
 
 procedure TMainForm.OpenAndFormatSQL;
@@ -435,7 +460,18 @@ begin
 
   if qryMaker.FieldByName('AmountDay').AsInteger <> 0 then
   begin
-     if qryMaker.FieldByName('AmountDay').AsInteger = 15 then
+     if qryMaker.FieldByName('AmountDay').AsInteger = 14 then
+     begin
+       if DayOf(qryMaker.FieldByName('SendPlan').AsDateTime) < 15 then
+       begin
+         DateEnd := IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
+         DateStart := StartOfTheMonth(DateEnd);
+       end else
+       begin
+         DateStart := StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime);
+         DateEnd := IncDay(DateStart, 13);
+       end;
+     end else if qryMaker.FieldByName('AmountDay').AsInteger = 15 then
      begin
        if DayOf(qryMaker.FieldByName('SendPlan').AsDateTime) < 16 then
        begin
@@ -913,6 +949,7 @@ begin
       (Pos('Farmacy.exe', Application.ExeName) <> 0)) then
     begin
       btnAll.Enabled := false;
+      btnAllMaker.Enabled := false;
       btnExecute.Enabled := false;
       btnExport.Enabled := false;
       btnSendMail.Enabled := false;
