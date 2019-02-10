@@ -97,7 +97,9 @@ uses
   PosFactory in '..\FormsFarmacy\Cash\PosFactory.pas',
   PosInterface in '..\FormsFarmacy\Cash\PosInterface.pas',
   EmployeeWorkLog in '..\FormsFarmacy\Cash\EmployeeWorkLog.pas',
-  dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas';
+  dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
+  Cash_IKC_E810T in '..\FormsFarmacy\Cash\Cash_IKC_E810T.pas',
+  NeoFiscalPrinterDriver_TLB in '..\FormsFarmacy\Cash\NeoFiscalPrinterDriver_TLB.pas';
 
 {$R *.res}
 
