@@ -28,7 +28,7 @@ RETURNS TABLE (PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , DebetSumm TFloat, KreditSumm TFloat
              , MoneySumm TFloat, MoneySummCard TFloat, MoneySummCardSecond TFloat, MoneySummCash TFloat
              , ServiceSumm TFloat, IncomeSumm TFloat
-             , SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat, SummNalog TFloat
+             , SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat, SummNalog TFloat, SummNalogRet TFloat
              , EndAmount TFloat, EndAmountD TFloat, EndAmountK TFloat
              , ContainerId Integer
               )
@@ -130,6 +130,7 @@ BEGIN
         Operation.SummTransportTaxi :: TFloat                                                       AS SummTransportTaxi,
         Operation.SummPhone :: TFloat                                                               AS SummPhone,
         Operation.SummNalog :: TFloat                                                               AS SummNalog,
+        Operation.SummNalogRet :: TFloat                                                            AS SummNalogRet,
         (-1 * Operation.EndAmount) :: TFloat                                                        AS EndAmount,
         CASE WHEN Operation.EndAmount > 0 THEN Operation.EndAmount ELSE 0 END :: TFloat             AS EndAmountD,
         CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat        AS EndAmountK,
@@ -154,6 +155,8 @@ BEGIN
                , SUM (Operation_all.SummTransportTaxi)     AS SummTransportTaxi
                , SUM (Operation_all.SummPhone)             AS SummPhone
                , SUM (Operation_all.SummNalog)             AS SummNalog
+               , SUM (Operation_all.SummNalogRet)          AS SummNalogRet
+               
                , SUM (Operation_all.EndAmount)   AS EndAmount
           FROM
           (SELECT tmpContainer.ContainerId
@@ -174,13 +177,14 @@ BEGIN
                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Cash()) AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalCardSecond() THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySummCardSecond
                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId IN (zc_Movement_Cash()) AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService(), zc_Enum_AnalyzerId_Cash_PersonalAvance()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySummCash
 
-                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_PersonalService_Nalog() THEN CASE WHEN Movement.DescId IN (zc_Movement_PersonalService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ServiceSumm
-                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND Movement.DescId        = zc_Movement_Income()                       THEN  1 * MIContainer.Amount ELSE 0 END) AS IncomeSumm
-                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add()         THEN -1 * MIContainer.Amount ELSE 0 END) AS SummTransportAdd
-                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_AddLong()     THEN -1 * MIContainer.Amount ELSE 0 END) AS SummTransportAddLong
-                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Taxi()        THEN -1 * MIContainer.Amount ELSE 0 END) AS SummTransportTaxi
-                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_PersonalService_Nalog() THEN  1 * MIContainer.Amount ELSE 0 END) AS SummNalog
-                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_MobileBills_Personal()  THEN  1 * MIContainer.Amount ELSE 0 END) AS SummPhone
+                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND COALESCE (MIContainer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_PersonalService_Nalog(), zc_Enum_AnalyzerId_PersonalService_NalogRet()) THEN CASE WHEN Movement.DescId IN (zc_Movement_PersonalService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ServiceSumm
+                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND Movement.DescId        = zc_Movement_Income()                          THEN  1 * MIContainer.Amount ELSE 0 END) AS IncomeSumm
+                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add()            THEN -1 * MIContainer.Amount ELSE 0 END) AS SummTransportAdd
+                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_AddLong()        THEN -1 * MIContainer.Amount ELSE 0 END) AS SummTransportAddLong
+                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Taxi()           THEN -1 * MIContainer.Amount ELSE 0 END) AS SummTransportTaxi
+                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_PersonalService_Nalog()    THEN  1 * MIContainer.Amount ELSE 0 END) AS SummNalog
+                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_PersonalService_NalogRet() THEN -1 * MIContainer.Amount ELSE 0 END) AS SummNalogRet
+                , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_MobileBills_Personal()     THEN  1 * MIContainer.Amount ELSE 0 END) AS SummPhone
 
                 , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0)                        AS EndAmount
             FROM (SELECT CLO_Personal.ContainerId         AS ContainerId
@@ -273,4 +277,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Personal (inStartDate:= '01.07.2017', inEndDate:= '01.08.2017', inServiceDate:= '01.07.2017', inIsServiceDate:= false, inAccountId:= 0, inBranchId:=0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inPersonalServiceListId:= 0, inPersonalId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Personal (inStartDate:= '01.07.2019', inEndDate:= '01.08.2019', inServiceDate:= '01.07.2019', inIsServiceDate:= TRUE, inAccountId:= 0, inBranchId:=0, inInfoMoneyId:= 0, inInfoMoneyGroupId:= 0, inInfoMoneyDestinationId:= 0, inPersonalServiceListId:= 0, inPersonalId:= 0, inSession:= zfCalc_UserAdmin());

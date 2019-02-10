@@ -3,9 +3,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
   ClientHeight = 555
   ClientWidth = 901
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -58
   ExplicitWidth = 917
-  ExplicitHeight = 594
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -122,6 +121,11 @@ inherited Report_PersonalForm: TReport_PersonalForm
               Format = ',0.00##'
               Kind = skSum
               Column = MoneySummCash
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummNalogRet
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -218,6 +222,11 @@ inherited Report_PersonalForm: TReport_PersonalForm
               Format = ',0.00##'
               Kind = skSum
               Column = MoneySummCash
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummNalogRet
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -429,6 +438,16 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object SummNalogRet: TcxGridDBColumn
+            Caption = #1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1077' '#1082' '#1047#1055
+            DataBinding.FieldName = 'SummNalogRet'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object SummTransportAdd: TcxGridDBColumn
             Caption = #1050#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
             DataBinding.FieldName = 'SummTransportAdd'
@@ -602,14 +621,14 @@ inherited Report_PersonalForm: TReport_PersonalForm
     ExplicitHeight = 85
     inherited deStart: TcxDateEdit
       Left = 60
-      EditValue = 42736d
+      EditValue = 43466d
       Properties.SaveTime = False
       ExplicitLeft = 60
     end
     inherited deEnd: TcxDateEdit
       Left = 60
       Top = 30
-      EditValue = 42736d
+      EditValue = 43466d
       Properties.SaveTime = False
       ExplicitLeft = 60
       ExplicitTop = 30
@@ -723,7 +742,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
     object deServiceDate: TcxDateEdit
       Left = 156
       Top = 30
-      EditValue = 42005d
+      EditValue = 43466d
       Properties.DisplayFormat = 'mmmm yyyy'
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -861,6 +880,9 @@ inherited Report_PersonalForm: TReport_PersonalForm
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1047#1055' - '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object dsdPrintRealAction: TdsdPrintAction
       Category = 'DSDLib'
@@ -894,6 +916,9 @@ inherited Report_PersonalForm: TReport_PersonalForm
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1047#1055' - '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object IncomeJournal: TdsdOpenForm
       Category = 'DSDLib'
