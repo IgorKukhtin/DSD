@@ -6,10 +6,12 @@ CREATE OR REPLACE FUNCTION gpSelect_CashListDiffGoods(
     IN inGoodsID       Integer,    -- Медикамент
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id              Integer, 
-               AmountDiffUser  TFloat,
-               AmountDiff      TFloat,
-               AmountDiffPrev  TFloat               
+RETURNS TABLE (Id               Integer, 
+               AmountDiffUser   TFloat,
+               AmountDiff       TFloat,
+               AmountDiffPrev   TFloat,
+               AmountDiffPromo  TFloat,
+               AmountDiffAll    TFloat               
               )
 
 AS
@@ -38,11 +40,15 @@ BEGIN
      RETURN QUERY
 
        SELECT
-               MovementItem.ObjectId                                                                            AS Id, 
+               MovementItem.ObjectId                                                                               AS Id, 
                SUM(CASE WHEN Movement.OperDate >= CURRENT_DATE::TDateTime AND 
-                   MILO_Insert.ObjectId = vbUserId THEN MovementItem.Amount END)::TFloat                        AS AmountDiffUser,
-               SUM(CASE WHEN Movement.OperDate >= CURRENT_DATE::TDateTime THEN MovementItem.Amount END)::TFloat AS AmountDiff,
-               SUM(CASE WHEN Movement.OperDate < CURRENT_DATE::TDateTime THEN MovementItem.Amount END)::TFloat  AS AmountDiffPrev 
+                   MILO_Insert.ObjectId = vbUserId THEN MovementItem.Amount END)::TFloat                           AS AmountDiffUser,
+               SUM(CASE WHEN Movement.OperDate >= CURRENT_DATE::TDateTime THEN MovementItem.Amount END)::TFloat    AS AmountDiff,
+               SUM(CASE WHEN Movement.OperDate < CURRENT_DATE::TDateTime THEN MovementItem.Amount END)::TFloat     AS AmountDiffPrev,
+               SUM(CASE WHEN Movement.OperDate >= CURRENT_DATE::TDateTime AND 
+                   MILO_DiffKind.ObjectId = 9704137 THEN MovementItem.Amount END)::TFloat                          AS AmountDiffPromo,
+               SUM(CASE WHEN Movement.OperDate >= CURRENT_DATE::TDateTime AND 
+                   MILO_DiffKind.ObjectId not in (9572746, 9572747, 9704137) THEN MovementItem.Amount END)::TFloat AS AmountDiffAll
        FROM Movement 
             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -54,6 +60,11 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILO_Insert
                                              ON MILO_Insert.MovementItemId = MovementItem.Id
                                             AND MILO_Insert.DescId = zc_MILinkObject_Insert()
+                                            
+            LEFT JOIN MovementItemLinkObject AS MILO_DiffKind
+                                             ON MILO_DiffKind.MovementItemId = MovementItem.Id
+                                            AND MILO_DiffKind.DescId = zc_MILinkObject_DiffKind()
+                                            
        WHERE Movement.OperDate >= (CURRENT_DATE - interval '1 day')::TDateTime
          AND Movement.DescId = zc_Movement_ListDiff()
          AND  MovementItem.ObjectId = inGoodsID
@@ -65,6 +76,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 10.02.19                                                      *
  19.11.18                                                      *
 */
 

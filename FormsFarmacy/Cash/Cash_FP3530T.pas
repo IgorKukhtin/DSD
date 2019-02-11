@@ -43,6 +43,7 @@ type
     function InfoZReport : string;
     function JuridicalName : string;
     function ZReport : Integer;
+    function SummaReceipt : Currency;
   public
     constructor Create;
   end;
@@ -767,6 +768,11 @@ begin
 end;
 
 function TCashFP3530T.ZReport : Integer;
+begin
+  Result := 0;
+end;
+
+function TCashFP3530T.SummaReceipt : Currency;
 begin
   Result := 0;
 end;

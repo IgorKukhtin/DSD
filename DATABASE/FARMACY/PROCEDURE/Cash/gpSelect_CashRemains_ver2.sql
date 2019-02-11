@@ -23,7 +23,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                StartDateMCSAuto TDateTime, EndDateMCSAuto TDateTime,
                isMCSAuto Boolean, isMCSNotRecalcOld Boolean,
                AccommodationId Integer, AccommodationName TVarChar,
-               PriceChange TFloat
+               PriceChange TFloat, FixPercent TFloat
                )
 AS
 $BODY$
@@ -353,6 +353,7 @@ BEGIN
                 -- Цена со скидкой            
               , tmpPriceChange AS (SELECT DISTINCT ObjectLink_PriceChange_Goods.ChildObjectId                             AS GoodsId
                                         , COALESCE (PriceChange_Value_Unit.ValueData, PriceChange_Value_Retail.ValueData) AS PriceChange
+                                        , COALESCE (PriceChange_FixPercent_Unit.ValueData, PriceChange_FixPercent_Retail.ValueData)::TFloat                     AS FixPercent 
                                    FROM Object AS Object_PriceChange
                                         -- скидка по подразд
                                         LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Unit 
@@ -364,6 +365,11 @@ BEGIN
                                                               ON PriceChange_Value_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
                                                              AND PriceChange_Value_Unit.DescId = zc_ObjectFloat_PriceChange_Value()
                                                              AND COALESCE (PriceChange_Value_Unit.ValueData, 0) <> 0
+                                        -- процент скидки по подразд.
+                                        LEFT JOIN ObjectFloat AS PriceChange_FixPercent_Unit
+                                                              ON PriceChange_FixPercent_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                             AND PriceChange_FixPercent_Unit.DescId = zc_ObjectFloat_PriceChange_FixPercent()
+                                                             AND COALESCE (PriceChange_FixPercent_Unit.ValueData, 0) <> 0
                                         -- скидка по сети
                                         LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Retail 
                                                              ON ObjectLink_PriceChange_Retail.ObjectId = Object_PriceChange.Id
@@ -374,6 +380,11 @@ BEGIN
                                                               ON PriceChange_Value_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
                                                              AND PriceChange_Value_Retail.DescId = zc_ObjectFloat_PriceChange_Value()
                                                              AND COALESCE (PriceChange_Value_Retail.ValueData, 0) <> 0
+                                        -- процент скидки по сети.
+                                        LEFT JOIN ObjectFloat AS PriceChange_FixPercent_Retail
+                                                              ON PriceChange_FixPercent_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                                             AND PriceChange_FixPercent_Retail.DescId = zc_ObjectFloat_PriceChange_FixPercent()
+                                                             AND COALESCE (PriceChange_FixPercent_Retail.ValueData, 0) <> 0
 
                                         LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Goods
                                                              ON ObjectLink_PriceChange_Goods.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
@@ -381,7 +392,8 @@ BEGIN
 
                                    WHERE Object_PriceChange.DescId = zc_Object_PriceChange()
                                      AND Object_PriceChange.isErased = FALSE
-                                     AND (COALESCE (PriceChange_Value_Retail.ValueData, 0) <> 0 OR COALESCE (PriceChange_Value_Unit.ValueData, 0) <> 0) -- выбираем только цены <> 0
+                                     AND (COALESCE (PriceChange_Value_Retail.ValueData, 0) <> 0 OR COALESCE (PriceChange_Value_Unit.ValueData, 0) <> 0 OR 
+                                         COALESCE (PriceChange_FixPercent_Unit.ValueData, PriceChange_FixPercent_Retail.ValueData, 0) <> 0) -- выбираем только цены <> 0
 
                                  /*SELECT PriceChange_Goods.ChildObjectId                 AS GoodsId
                                         , ROUND(PriceChange_Value.ValueData,2)  ::TFloat  AS PriceChange 
@@ -611,6 +623,7 @@ BEGIN
           , CashSessionSnapShot.AccommodationId
           , Object_Accommodation.ValueData AS AccommodationName
           , tmpPriceChange.PriceChange
+          , tmpPriceChange.FixPercent
 
          FROM
             CashSessionSnapShot
@@ -677,6 +690,7 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 11.02.19                                                                                                    *
  30.10.18                                                                                                    *
  01.10.18         * tmpPriceChange - учет скидки подразделения
  21.06.17         *

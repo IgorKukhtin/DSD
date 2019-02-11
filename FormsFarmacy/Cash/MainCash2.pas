@@ -3082,7 +3082,7 @@ begin
     ChangeStatus('Инициализация оборудования');
     Cash:=TCashFactory.GetCash(iniCashType);
 
-    if (Cash <> nil) AND (Cash.FiscalNumber = '') then
+    if (Cash <> nil) AND (Cash.FiscalNumber = '') AND (iniCashType = 'FP320') then
     Begin
       MessageDlg('Ошибка инициализации кассового аппарата. Дальнейшая работа программы невозможна.' + #13#10 +
                  'Для кассового апарата типа "DATECS FP-320" ' + #13#10 +
@@ -3275,51 +3275,6 @@ begin
                       // Если есть цена со скидкой
                     if SourceClientDataSet.FieldByName('PriceChange').asCurrency > 0 then
                     begin
-                   {   with TTaskDialog.Create(self) do
-                      try
-                        Caption := Self.Caption;
-                        Title := 'Вставка медикамента в чек';
-                        Text := 'Выбор цены для медикамента';
-                        CommonButtons := [];
-                        with TTaskDialogButtonItem(Buttons.Add) do
-                        begin
-                          Caption := 'Использовать прайсовую цену: ' + SourceClientDataSet.FieldByName('Price').AsString;
-                          ModalResult := mrOk;
-                        end;
-                        with TTaskDialogButtonItem(Buttons.Add) do
-                        begin
-                          Caption := 'Использовать цену со скидкой: ' + SourceClientDataSet.FieldByName('PriceChange').AsString;
-                          ModalResult := mrYes;
-                        end;
-                        with TTaskDialogButtonItem(Buttons.Add) do
-                        begin
-                          Caption := 'Отмена';
-                          ModalResult := mrCancel;
-                        end;
-                        Flags := [tfUseCommandLinks];
-                        MainIcon := tdiNone;
-                        if Execute then
-                          case ModalResult of
-                            mrOk :
-                              begin
-                                 // цена БЕЗ скидки
-                                 lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
-                                 // цена СО скидкой в этом случае такая же
-                                 lPrice_bySoldRegim := lPriceSale_bySoldRegim;
-                              end;
-                            mrYes :
-                              begin
-                                 // цена БЕЗ скидки
-                                 lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
-                                 // цена СО скидкой в этом случае такая же
-                                 lPrice_bySoldRegim := SourceClientDataSet.FieldByName('PriceChange').asCurrency;
-                              end;
-                            mrCancel : Exit;
-                          end
-                        else Exit;
-                      finally
-                        Free;
-                      end;}
 
                       case MessageDlg('Подтверждение цены со скидкой препарата'#13#10#13#10 +
                         'Yes - Цена со скидкой: ' + SourceClientDataSet.FieldByName('PriceChange').AsString + #13#10 +
@@ -3338,6 +3293,33 @@ begin
                              lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
                              // цена СО скидкой
                              lPrice_bySoldRegim := SourceClientDataSet.FieldByName('PriceChange').asCurrency;
+                          end;
+                         mrCancel : Exit;
+                      end;
+                    end else
+                      // Если есть процент скидки
+                    if SourceClientDataSet.FieldByName('FixPercent').asCurrency > 0 then
+                    begin
+
+                      case MessageDlg('Подтверждение цены со скидкой препарата'#13#10#13#10 +
+                        'Yes - Цена со скидкой: ' + CurrToStr(GetPrice(SourceClientDataSet.FieldByName('Price').asCurrency, SourceClientDataSet.FieldByName('FixPercent').asCurrency)) + #13#10 +
+                        'No - Цена БЕЗ скидки: ' + SourceClientDataSet.FieldByName('Price').AsString
+                        ,mtConfirmation,[mbYes,mbNo,mbCancel], 0) of
+                        mrNo :
+                          begin
+                             // цена БЕЗ скидки
+                             lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
+                             // цена СО скидкой в этом случае такая же
+                             lPrice_bySoldRegim := lPriceSale_bySoldRegim;
+                          end;
+                        mrYes :
+                          begin
+                             // цена БЕЗ скидки
+                             lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
+                             // цена СО скидкой
+                             lPrice_bySoldRegim := GetPrice(SourceClientDataSet.FieldByName('Price').asCurrency, SourceClientDataSet.FieldByName('FixPercent').asCurrency);
+                             // процент скидки
+                             lChangePercent := SourceClientDataSet.FieldByName('FixPercent').asCurrency;
                           end;
                          mrCancel : Exit;
                       end;
@@ -3412,6 +3394,12 @@ begin
                  (SourceClientDataSet.FieldByName('PriceChange').asCurrency = lPrice_bySoldRegim) then
               begin
                 lChangePercent     := 0;
+                lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim);
+              end
+         else if Assigned(SourceClientDataSet.FindField('FixPercent')) and
+                 (SourceClientDataSet.FieldByName('FixPercent').asCurrency > 0) and
+                 (GetPrice(SourceClientDataSet.FieldByName('Price').asCurrency, SourceClientDataSet.FieldByName('FixPercent').asCurrency) = lPrice_bySoldRegim) then
+              begin
                 lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim);
               end
          else begin
@@ -4188,10 +4176,23 @@ begin
       if result and Assigned(Cash) AND not Cash.AlwaysSold then
       begin
         if (Disc <> 0) and (PosDisc = 0) then result := Cash.DiscountGoods(Disc);
-        if result then result := Cash.SubTotal(true, true, 0, 0);
-        if result then result := Cash.TotalSumm(SalerCash, SalerCashAdd, PaidType);
-        if result then result := Cash.CloseReceiptEx(ACheckNumber); //Закрыли чек
-        if result and isFiscal then Finish_Check_History(FTotalSumm);
+        if FTotalSumm <> Cash.SummaReceipt then
+        begin
+          if result then result := Cash.SubTotal(true, true, 0, 0);
+          if result then result := Cash.TotalSumm(SalerCash, SalerCashAdd, PaidType);
+          if result then result := Cash.CloseReceiptEx(ACheckNumber); //Закрыли чек
+          if result and isFiscal then Finish_Check_History(FTotalSumm);
+        end else
+        begin
+          result := False;
+          ShowMessage('Ошибка. Сумма чека ' + CurrToStr(FTotalSumm) + ' не равна сумме товара в фискальном чеке' + CurrToStr(Cash.SummaReceipt) + '.'#13#10 +
+            'Чек анулирован...');
+          Cash.Anulirovt;
+        end
+      end else if not result and Assigned(Cash) AND not Cash.AlwaysSold then
+      begin
+        ShowMessage('Ошибка печати фискального чека.'#13#10 + 'Чек анулирован...');
+        Cash.Anulirovt;
       end;
     end;
   except
@@ -4435,6 +4436,15 @@ begin
         begin
             // пересчитаем сумму скидки
             checkCDS.FieldByName('ChangePercent').asCurrency     := 0;
+            checkCDS.FieldByName('SummChangePercent').asCurrency :=
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency) -
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
+        end else if (checkCDS.FieldByName('PriceSale').asCurrency <> checkCDS.FieldByName('Price').asCurrency) and
+          (RemainsCDS.FieldByName('FixPercent').asCurrency > 0) and
+          (checkCDS.FieldByName('Price').asCurrency = GetPrice(RemainsCDS.FieldByName('Price').asCurrency, RemainsCDS.FieldByName('FixPercent').asCurrency)) then
+        begin
+            // пересчитаем сумму скидки
+            checkCDS.FieldByName('ChangePercent').asCurrency     := RemainsCDS.FieldByName('FixPercent').asCurrency;
             checkCDS.FieldByName('SummChangePercent').asCurrency :=
                 GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency) -
                 GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
