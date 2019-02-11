@@ -483,6 +483,8 @@ type
     miReturnInJournal: TMenuItem;
     actGlobalConst: TdsdOpenForm;
     miGlobalConst: TMenuItem;
+    actGoodsCategory: TdsdOpenForm;
+    miGoodsCategory: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

@@ -48,6 +48,7 @@ type
     procedure LoadFiscalFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsFormTest;
+    procedure LoadGoodsCategoryFormTest;
     procedure LoadGoodsSPMovementFormTest;
     procedure LoadImportSettingsFormTest;
     procedure LoadImportTypeFormTest;
@@ -421,6 +422,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TFiscalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFiscalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TFiscalEditForm');
+end;
+
+procedure TLoadFormTest.LoadGoodsCategoryFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsCategoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsCategoryForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsCategoryEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsCategoryEditForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;

@@ -2073,11 +2073,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_RecalcMCSSheduler_User() RETURNS Intege
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_RecalcMCSSheduler_User', 'Связь с Пользователем', zc_Object_RecalcMCSSheduler(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_RecalcMCSSheduler_User');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsCategory_Goods() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsCategory_Goods'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_GoodsCategory_Goods', 'Товар Главный', zc_Object_GoodsCategory(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsCategory_Goods');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsCategory_Category() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsCategory_Category'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_GoodsCategory_Category', 'Категория подразделения(A-B-C)', zc_Object_GoodsCategory(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsCategory_Category');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 11.02.19         * zc_ObjectLink_GoodsCategory_Goods
+                    zc_ObjectLink_GoodsCategory_Category
  15.01.19         * zc_ObjectLink_Unit_PartnerMedical
  13.01.19         * zc_ObjectLink_JuridicalSettingsItem_JuridicalSettings
  11.01.19         * zc_ObjectLink_Maker_ContactPerson
