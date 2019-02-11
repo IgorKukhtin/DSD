@@ -383,7 +383,12 @@ BEGIN
                                                 AND MovementItem.isErased   = FALSE
                     GROUP BY MovementItem.ObjectId
                     )
-       
+
+     -- Товары соц-проект (документ)
+   , tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId, TRUE AS isSP
+                    FROM lpSelect_MovementItem_GoodsSP_onDate (inDateStart:= CURRENT_DATE, inDateEnd:= CURRENT_DATE) AS tmp
+                    )
+
             -- Результат
             SELECT
                  tmpPrice_View.Id                                                   AS Id
@@ -552,7 +557,7 @@ BEGIN
                , tmpPrice_View.isMCSAuto                           :: Boolean
                , tmpPrice_View.isMCSNotRecalcOld
 
-               , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
+               , COALESCE (tmpGoodsSP.isSP, False)     ::Boolean AS isSP
                , Object_Goods_View.isErased                      AS isErased 
 
                , Object_Goods_View.isClose
@@ -567,7 +572,7 @@ BEGIN
                , tmpPrice_View.PercentMarkupDateChange AS PercentMarkupDateChange
                , ObjectDate_CheckPrice.ValueData       AS CheckPriceDate
                
-               , CASE WHEN ObjectBoolean_Goods_SP.ValueData = TRUE THEN 25088 --zc_Color_GreenL()
+               , CASE WHEN COALESCE (tmpGoodsSP.isSP, False) = TRUE THEN 25088 --zc_Color_GreenL()
                       WHEN Object_Remains.MinExpirationDate < CURRENT_DATE  + zc_Interval_ExpirationDate() THEN zc_Color_Red() --zc_Color_Blue() 
                       WHEN (tmpPrice_View.isTop = TRUE OR Object_Goods_View.isTop = TRUE) THEN zc_Color_Blue() --15993821 -- розовый
                       ELSE zc_Color_Black() 
@@ -633,9 +638,10 @@ BEGIN
                LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                        AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
 
-               LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
+               LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
+               /*LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
                                         ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
-                                       AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+                                       AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()*/
 
                LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceRetSP
                                      ON ObjectFloat_Goods_PriceRetSP.ObjectId = ObjectLink_Main.ChildObjectId 
@@ -1031,8 +1037,13 @@ BEGIN
                                                     AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()  
                           )
 
+    -- Товары соц-проект (документ)
+  , tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId, TRUE AS isSP
+                   FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE) AS tmp
+                   )
+
   , tmpGoodsMainParam AS (SELECT tmpPrice_All.GoodsId
-                               , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
+                               , COALESCE (tmpGoodsSP.isSP, False)                   ::Boolean AS isSP
                                , COALESCE (ObjectFloat_Goods_PriceRetSP.ValueData,0) ::TFloat  AS PriceRetSP
                                , COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) ::TFloat  AS PriceOptS
                                , COALESCE (ObjectFloat_Goods_PriceSP.ValueData,0)    ::TFloat  AS PriceSP
@@ -1046,10 +1057,11 @@ BEGIN
                                                                         AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
                                LEFT JOIN ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                                        AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-                
-                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SP 
+
+                               LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
+                               /*LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SP 
                                                         ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
-                                                       AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+                                                       AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()*/
                 
                                LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceRetSP
                                                      ON ObjectFloat_Goods_PriceRetSP.ObjectId = ObjectLink_Main.ChildObjectId 
@@ -1374,6 +1386,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
+ 11.02.19         * признак Товары соц-проект берем и документа
  29.11.18         *
  31.08.18         * add Reserved
  11.08.18                                                                       *

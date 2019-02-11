@@ -28,6 +28,7 @@ $BODY$
   DECLARE vbPartnerId Integer;
   DECLARE vbUnitId    Integer;
   DECLARE vbDate180   TDateTime;
+  DECLARE vbOperDate  TDateTime;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -40,9 +41,12 @@ BEGIN
                      WHERE MovementLinkObject_From.MovementId = inMovementId
                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                     );
+     vbOperDate := (SELECT Date_TRUNC('DAY', Movement.OperDate)
+                    FROM Movement WHERE Movement.Id = inMovementId);
+
      -- + пол года к текущей для определения сроков годности
      vbDate180 := CURRENT_DATE + INTERVAL '180 DAY';
-
+   
      -- ПАРАМЕТРЫ
      SELECT MovementLinkObject.ObjectId AS UnitId
             INTO vbUnitId
@@ -109,6 +113,11 @@ BEGIN
                       FULL JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
                  )
 
+    -- Товары соц-проект (документ)
+   , tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId, TRUE AS isSP
+                   FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= vbOperDate, inEndDate:= vbOperDate) AS tmp
+                   )
+
    , tmpGoodsParam AS (SELECT ObjectBoolean.*
                        FROM ObjectBoolean
                        WHERE ObjectBoolean.ObjectId IN (SELECT DISTINCT tmpData.GoodsId FROM tmpData)
@@ -129,17 +138,19 @@ BEGIN
                                AND ObjectLink.DescId = zc_ObjectLink_Goods_Area()
                             )
                                     
-   , tmpMainParam AS (SELECT ObjectLink_Child.ChildObjectId                                AS GoodsId
-                           , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
+   , tmpMainParam AS (SELECT ObjectLink_Child.ChildObjectId                        AS GoodsId
+                           , COALESCE (tmpGoodsSP.isSP, False)           ::Boolean AS isSP
                            , COALESCE(Object_LinkGoods_View.GoodsCode, Object_LinkGoods_View.GoodsCodeInt::TVarChar) ::Integer AS CommonCode
                       FROM ObjectLink AS ObjectLink_Child 
                            LEFT JOIN  ObjectLink AS ObjectLink_Main 
                                                  ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
            
-                           LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
+                           LEFT JOIN  tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId 
+
+                           /*LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
                                                     ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
-                                                   AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()  
+                                                   AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()  */
                                                    
                            LEFT JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsmainId = ObjectLink_Main.ChildObjectId
                                                           AND Object_LinkGoods_View.ObjectId = zc_Enum_GlobalConst_Marion()
@@ -166,7 +177,7 @@ BEGIN
            , tmpMI.PartionGoodsDate     AS PartionGoodsDate
            , tmpMI.Comment              AS Comment
            , FALSE                      AS isErased
-           , COALESCE (tmpMainParam.isSP, FALSE)                  ::Boolean AS isSP
+           , COALESCE (tmpMainParam.isSP, FALSE)           ::Boolean AS isSP
            , COALESCE (GoodsParam_Close.ValueData, FALSE)  ::Boolean AS isClose
            , COALESCE (GoodsParam_First.ValueData, FALSE)  ::Boolean AS isFirst
            , COALESCE (GoodsParam_Second.ValueData, FALSE) ::Boolean AS isSecond
@@ -213,6 +224,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.02.19         * признак Товары соц-проект берем и документа
  08.11.18         *
  21.10.17         * add AreaName
  25.09.17         *

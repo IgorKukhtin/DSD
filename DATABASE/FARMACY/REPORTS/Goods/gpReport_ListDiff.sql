@@ -136,6 +136,11 @@ BEGIN
                                                          AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                                        --  AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
                          )
+
+       -- Товары соц-проект (документ)
+        , tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId, TRUE AS isSP
+                         FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= inStartDate, inEndDate:= inEndDate) AS tmp
+                         )
                           
         SELECT
              Object_Goods_View.Id                      AS GoodsId
@@ -152,7 +157,7 @@ BEGIN
            , COALESCE(ObjectBoolean_Goods_Second.ValueData, False) :: Boolean AS isSecond
            , COALESCE(ObjectBoolean_Goods_Close.ValueData, False)  :: Boolean AS isClose
            , CASE WHEN COALESCE (GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
-           , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
+           , COALESCE (tmpGoodsSP.isSP, False)                     :: Boolean AS isSP
         FROM tmpData_MI AS tmpData
             LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = tmpData.GoodsId
             
@@ -180,9 +185,10 @@ BEGIN
                                  ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
 
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SP 
+            LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
+            /*LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SP 
                                     ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
-                                   AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+                                   AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()*/
 
         ORDER BY GoodsGroupName
                , GoodsName;
@@ -196,6 +202,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.02.19         * признак Товары соц-проект берем и документа
  21.12.18         *
 */
 

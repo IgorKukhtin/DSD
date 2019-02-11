@@ -223,11 +223,17 @@ BEGIN
                                 , CASE WHEN inIsPartion = TRUE THEN tmpData_all.ContainerId ELSE 0 END
                          HAVING SUM (tmpData_all.Amount) <> 0
                         )
+
+       -- Товары соц-проект (документ)
+      , tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId, TRUE AS isSP
+                       FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE) AS tmp
+                       )
+
       -- главный товар и свойства
       , tmpGoods AS (SELECT tmp.GoodsId
                           , ObjectLink_Goods_GoodsGroup.ChildObjectId                     AS GoodsGroupId
                           , ObjectLink_Goods_ConditionsKeep.ChildObjectId                 AS ConditionsKeepId
-                          , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
+                          , COALESCE (tmpGoodsSP.isSP, False)                 :: Boolean  AS isSP
                           , COALESCE (tmpGoodsBarCode.BarCode, '')            :: TVarChar AS BarCode
                           , COALESCE (tmpPricelistItems.GoodsNDS, 0)          :: TFloat   AS NDS_PriceList
                      FROM (SELECT DISTINCT tmpData_Unit.GoodsId
@@ -246,9 +252,10 @@ BEGIN
                           LEFT JOIN ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
     
-                          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SP 
+                          LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
+                          /*LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SP 
                                  ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
-                                AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+                                AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()*/
                           
                           LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = ObjectLink_Main.ChildObjectId
                           LEFT JOIN tmpPricelistItems ON tmpPricelistItems.GoodsMainId = ObjectLink_Main.ChildObjectId
@@ -456,7 +463,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.02.19         * признак Товары соц-проект берем и документа
  12.05.17         *
 */
 
