@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsCategory(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
+             , GoodsGroupId Integer, GoodsGroupName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , UnitCategoryId Integer, UnitCategoryName TVarChar
              , Value TFloat
@@ -20,7 +21,10 @@ BEGIN
    RETURN QUERY 
        SELECT 
              Object_GoodsCategory.Id        AS Id
-         
+
+           , ObjectLink_Goods_GoodsGroup.ChildObjectId AS GoodsGroupId
+           , Object_GoodsGroup.ValueData               AS GoodsGroupName
+
            , Object_Goods.Id                AS GoodsId
            , Object_Goods.ObjectCode        AS GoodsCode
            , Object_Goods.ValueData         AS GoodsName 

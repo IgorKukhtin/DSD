@@ -38,10 +38,8 @@ BEGIN
             , MovementDate_OperDateEnd.ValueData    AS OperDateEnd
 
        FROM tmpStatus
-            INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
-                               AND Movement.DescId = zc_Movement_GoodsSP()
-                               AND Movement.StatusId = tmpStatus.StatusId
-
+            LEFT JOIN Movement ON Movement.DescId = zc_Movement_GoodsSP()
+                              AND Movement.StatusId = tmpStatus.StatusId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementDate AS MovementDate_OperDateStart
@@ -51,6 +49,8 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDateEnd
                                    ON MovementDate_OperDateEnd.MovementId = Movement.Id
                                   AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
+       WHERE MovementDate_OperDateStart.ValueData <=inEndDate
+         AND MovementDate_OperDateEnd.ValueData >= inStartDate 
             
             ;
 END;
@@ -59,7 +59,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.02.19         * период ограничивать нач/оконч действия СП
  13.08.18         *
 */
 
