@@ -143,12 +143,12 @@ BEGIN
        )
 
     -- Товары соц-проект (документ)
-  , tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId
+  , tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId, TRUE AS isSP
                    FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE) AS tmp
                   )
 
   , tmpGoodsView AS (SELECT Object_Goods_View.*
-                          , CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END :: Boolean  AS isSP
+                          , COALESCE (tmpGoodsSP.isSP, False)   ::Boolean AS isSP
                      FROM Object_Goods_View 
                          -- получаем GoodsMainId
                          LEFT JOIN  ObjectLink AS ObjectLink_Child 
