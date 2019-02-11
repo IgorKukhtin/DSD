@@ -12,6 +12,7 @@ RETURNS TABLE (StartDate TDateTime, EndDate TDateTime
              , UnitGroupId Integer, UnitGroupName TVarChar
              , GoodsGroupId_gp Integer, GoodsGroupName_gp TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar
+             , UnitId_To Integer, UnitName_To TVarChar
               )
 AS
 $BODY$
@@ -38,12 +39,15 @@ BEGIN
                 , Object_GoodsGroup.Id           AS GoodsGroupId
                 , Object_GoodsGroup.ValueData    AS GoodsGroupname
 
+                , 0                              AS UnitId_To
+                , '' ::TVarChar                  AS UnitName_To
+
            FROM Object AS Object_Unit
                 LEFT JOIN Object AS Object_UnitGroup ON Object_UnitGroup.Id = 8460        -- группа складов Возвраты общие
                 LEFT JOIN Object AS Object_GoodsGroupGP ON Object_GoodsGroupGP.Id = 1832  -- группа товаров ГП
                 LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = 1979      -- группа товаров Тушенка
            WHERE Object_Unit.Id = 8459                                                    -- Склад Реализации
-              AND inReportName <> 'Report_Goods_byMovementReal'
+              AND inReportName NOT IN ('Report_Goods_byMovementReal', 'Report_ReceiptSaleAnalyzeReal')
 
         UNION
            SELECT DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '1 DAY') :: TDateTime   AS StartDate
@@ -60,10 +64,32 @@ BEGIN
                 , Object_GoodsGroup.Id           AS GoodsGroupId
                 , Object_GoodsGroup.ValueData    AS GoodsGroupname
 
+                , 0                              AS UnitId_To
+                , '' ::TVarChar                  AS UnitName_To
+
            FROM Object AS Object_GoodsGroupGP 
                 LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = 1979      -- группа товаров Тушенка
            WHERE Object_GoodsGroupGP.Id = 1832                                            -- группа товаров ГП
             AND inReportName = 'Report_Goods_byMovementReal'
+        UNION
+           SELECT DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '1 DAY') :: TDateTime   AS StartDate
+                , (CURRENT_DATE - INTERVAL '1 DAY')  :: TDateTime  AS EndDate
+                , 0                              AS UnitId
+                , '' ::TVarChar                  AS UnitName
+
+                , 0                              AS UnitGroupId
+                , '' ::TVarChar                  AS UnitGroupName     
+
+                , 0                              AS GoodsGroupId_gp
+                , '' ::TVarChar                  AS GoodsGroupName_gp
+
+                , 0                              AS GoodsGroupId
+                , '' ::TVarChar                  AS GoodsGroupname
+
+                , 0                              AS UnitId_To
+                , '' ::TVarChar                  AS UnitName_To
+
+           WHERE inReportName = 'Report_ReceiptSaleAnalyzeReal'
     ;
  
 END;

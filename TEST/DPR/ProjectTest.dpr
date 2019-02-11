@@ -1064,7 +1064,8 @@ uses
   SettingsService in '..\..\Forms\Guides\SettingsService.pas' {SettingsServiceForm: TParentForm},
   SettingsServiceItemEdit in '..\..\Forms\Guides\SettingsServiceItemEdit.pas' {SettingsServiceItemEditForm: TParentForm},
   SettingsService_Object in '..\..\Forms\Guides\SettingsService_Object.pas' {SettingsService_ObjectForm: TParentForm},
-  IncomeCost in '..\..\Forms\Document\IncomeCost.pas' {IncomeCostForm: TParentForm};
+  IncomeCost in '..\..\Forms\Document\IncomeCost.pas' {IncomeCostForm: TParentForm},
+  Report_ReceiptSaleAnalyzeRealDialog in '..\..\Forms\Report\Report_ReceiptSaleAnalyzeRealDialog.pas' {Report_ReceiptSaleAnalyzeRealDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
