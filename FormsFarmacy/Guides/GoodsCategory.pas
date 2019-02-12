@@ -21,7 +21,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit,
+  cxButtonEdit, cxLabel;
 
 type
   TGoodsCategoryForm = class(TAncestorGuidesForm)
@@ -30,6 +31,17 @@ type
     Value: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
+    cxLabel1: TcxLabel;
+    edUnitCategory: TcxButtonEdit;
+    GuidesUnitCategory: TdsdGuides;
+    actShowAll: TBooleanStoredProcAction;
+    actShowDel: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    bbShowDel: TdxBarButton;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    bbUnitCategory: TdxBarControlContainerItem;
   private
     { Private declarations }
   public
