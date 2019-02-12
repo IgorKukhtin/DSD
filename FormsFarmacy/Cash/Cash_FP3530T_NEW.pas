@@ -567,7 +567,7 @@ function TCashFP3530T_NEW.SummaReceipt : Currency;
   var nSum : Currency;
 begin
   Result := 0;
-  if not TryStrToCurr(Trim(StringReplace(FPrinter.SUMCHEQUE[3, 1, Password], '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum) then Result := nSum;
+  if TryStrToCurr(Trim(StringReplace(FPrinter.SUMCHEQUE[3, 1, Password], '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum) then Result := Result + nSum;
   if not СообщениеКА(FPrinter.GETERROR) then Exit;
 end;
 

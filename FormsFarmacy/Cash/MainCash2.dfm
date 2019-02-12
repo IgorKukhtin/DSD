@@ -340,6 +340,16 @@ inherited MainCashForm2: TMainCashForm2
           Options.Editing = False
           Width = 55
         end
+        object MainFixPercent: TcxGridDBColumn
+          Caption = #1055#1088#1086#1094'. '#1089#1082#1080#1076#1082#1080
+          DataBinding.FieldName = 'FixPercent'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = '0.## %'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 57
+        end
         object DiffSP1: TcxGridDBColumn
           Caption = #1089#1082'1'
           DataBinding.FieldName = 'DiffSP1'

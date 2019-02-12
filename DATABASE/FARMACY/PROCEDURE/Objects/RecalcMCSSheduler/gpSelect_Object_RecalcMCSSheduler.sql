@@ -14,6 +14,7 @@ RETURNS TABLE (Ord Integer, ID Integer, Code Integer, Name TVarChar
 
              , UserId Integer
              , UserName TVarChar
+             , DateRun TDateTime
              , Color_cal Integer
              , AllRetail boolean
              , isErased boolean) AS
@@ -67,6 +68,7 @@ BEGIN
 
            , Object_User.Id                                   AS UnitId
            , Object_User.ValueData                            AS UnitName
+           , ObjectDate_DateRun.ValueData                     AS DateRun
            , CASE WHEN COALESCE (tmpRetal.ShedulerID, 0) <> 0 AND COALESCE (tmpRetal.ShedulerID, 0) <> Object_RecalcMCSSheduler.Id
              THEN
                zc_Color_Cyan()
@@ -101,6 +103,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_AllRetail
                                    ON ObjectBoolean_AllRetail.ObjectId = Object_RecalcMCSSheduler.Id
                                   AND ObjectBoolean_AllRetail.DescId = zc_ObjectBoolean_RecalcMCSSheduler_AllRetail()
+
+           LEFT JOIN ObjectDate AS ObjectDate_DateRun
+                                ON ObjectDate_DateRun.ObjectId = Object_RecalcMCSSheduler.Id
+                               AND ObjectDate_DateRun.DescId = zc_ObjectFloat_RecalcMCSSheduler_DateRun()
 
            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                 ON ObjectLink_Unit_Juridical.ObjectId = ObjectLink_Unit.ChildObjectId

@@ -346,6 +346,7 @@ type
     spGlobalConst_SiteDiscount: TdsdStoredProc;
     cxButton2: TcxButton;
     cxButton3: TcxButton;
+    MainFixPercent: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

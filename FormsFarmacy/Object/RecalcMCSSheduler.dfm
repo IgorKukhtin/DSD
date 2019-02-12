@@ -129,6 +129,17 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
             Options.Editing = False
             Width = 113
           end
+          object DateRun: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1097#1077#1090#1072
+            DataBinding.FieldName = 'DateRun'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm.yy hh:nn'
+            Properties.Kind = ckDateTime
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 93
+          end
           object Color_cal: TcxGridDBColumn
             DataBinding.FieldName = 'Color_cal'
             Visible = False
