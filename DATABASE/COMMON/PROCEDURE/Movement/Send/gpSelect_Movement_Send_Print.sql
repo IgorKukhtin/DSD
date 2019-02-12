@@ -1,11 +1,13 @@
 -- Function: gpSelect_Movement_Send_Print()
 
 -- DROP FUNCTION IF EXISTS gpSelect_Movement_Send_Print (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_Send_Print (Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_Send_Print (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Send_Print (Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Send_Print(
     IN inMovementId                 Integer  , -- ключ Документа
     IN inMovementId_Weighing        Integer  , -- ключ Документа взвешивания
+    IN inisItem                     Boolean  , -- не сворачивать по MovementItem да / нет
     IN inSession                    TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -122,6 +124,107 @@ BEGIN
 
 
     OPEN Cursor2 FOR
+    WITH
+    tmpMI AS (SELECT MAX (MovementItem.Id)              AS MovementItemId
+                   , MovementItem.ObjectId              AS GoodsId
+                   , MILinkObject_GoodsKind.ObjectId    AS GoodsKindId
+                   , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
+                   , MIString_PartionGoods.ValueData    AS PartionGoods
+                   , MILinkObject_Asset.ObjectId        AS AssetId
+                   , MILinkObject_PartionGoods.ObjectId AS PartionGoodsId
+                   , SUM (MovementItem.Amount)          AS Amount
+                   , SUM (COALESCE (MIFloat_Count.ValueData, 0))     AS Count
+                   , SUM (COALESCE (MIFloat_CountPack.ValueData, 0)) AS CountPack
+                   , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0)) AS HeadCount
+              FROM MovementItem
+                   LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                               ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                              AND MIFloat_Count.DescId = zc_MIFloat_Count()
+                   LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                               ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                              AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                   LEFT JOIN MovementItemFloat AS MIFloat_CountPack
+                                               ON MIFloat_CountPack.MovementItemId = MovementItem.Id
+                                              AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
+ 
+                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                              ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                   LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
+                                               AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+ 
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+ 
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                    ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
+                                                    ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
+ 
+              WHERE MovementItem.MovementId = CASE WHEN vbIsWeighing = TRUE THEN inMovementId_Weighing ELSE inMovementId END
+                AND MovementItem.DescId     = CASE WHEN vbIsProductionOut = TRUE AND  vbIsWeighing = FALSE THEN zc_MI_Child() ELSE zc_MI_Master() END
+                AND MovementItem.isErased   = FALSE
+                AND MovementItem.Amount <> 0
+                AND inisItem = FALSE
+              GROUP BY MovementItem.ObjectId
+                     , MILinkObject_GoodsKind.ObjectId
+                     , MIDate_PartionGoods.ValueData
+                     , MIString_PartionGoods.ValueData
+                     , MILinkObject_Asset.ObjectId
+                     , MILinkObject_PartionGoods.ObjectId
+             UNION ALL
+              SELECT MovementItem.Id                    AS MovementItemId
+                   , MovementItem.ObjectId              AS GoodsId
+                   , MILinkObject_GoodsKind.ObjectId    AS GoodsKindId
+                   , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
+                   , MIString_PartionGoods.ValueData    AS PartionGoods
+                   , MILinkObject_Asset.ObjectId        AS AssetId
+                   , MILinkObject_PartionGoods.ObjectId AS PartionGoodsId
+                   , MovementItem.Amount                AS Amount
+                   , COALESCE (MIFloat_Count.ValueData, 0)     AS Count
+                   , COALESCE (MIFloat_CountPack.ValueData, 0) AS CountPack
+                   , COALESCE (MIFloat_HeadCount.ValueData, 0) AS HeadCount
+              FROM MovementItem
+                   LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                               ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                              AND MIFloat_Count.DescId = zc_MIFloat_Count()
+                   LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                               ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                              AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                   LEFT JOIN MovementItemFloat AS MIFloat_CountPack
+                                               ON MIFloat_CountPack.MovementItemId = MovementItem.Id
+                                              AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
+ 
+                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                              ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                   LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
+                                               AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+ 
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+ 
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                    ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
+                                                    ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
+ 
+              WHERE MovementItem.MovementId = CASE WHEN vbIsWeighing = TRUE THEN inMovementId_Weighing ELSE inMovementId END
+                AND MovementItem.DescId     = CASE WHEN vbIsProductionOut = TRUE AND vbIsWeighing = FALSE THEN zc_MI_Child() ELSE zc_MI_Master() END
+                AND MovementItem.isErased   = FALSE
+                AND MovementItem.Amount <> 0
+                AND inisItem = TRUE
+             )
+
+       --результат
        SELECT
              tmpMI.MovementItemId               AS Id
            , Object_Goods.Id                    AS GoodsId
@@ -135,6 +238,10 @@ BEGIN
            , tmpMI.CountPack
            , tmpMI.HeadCount
            , CAST ((tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
+           , CASE WHEN COALESCE (tmpMI.Count, 0) <> 0 
+                  THEN (tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ) / tmpMI.Count
+                  ELSE 0
+             END AS WeightOne     -- "вес 1 ед." = вес / кол-во батонов
            , tmpMI.PartionGoodsDate
            , tmpMI.PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
@@ -149,57 +256,7 @@ BEGIN
            , Object_Storage_Partion.ValueData   AS StorageName_Partion
            , Object_Unit.ValueData              AS UnitName
 
-       FROM (SELECT MAX (MovementItem.Id)              AS MovementItemId
-                  , MovementItem.ObjectId              AS GoodsId
-                  , MILinkObject_GoodsKind.ObjectId    AS GoodsKindId
-                  , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
-                  , MIString_PartionGoods.ValueData    AS PartionGoods
-                  , MILinkObject_Asset.ObjectId        AS AssetId
-                  , MILinkObject_PartionGoods.ObjectId AS PartionGoodsId
-                  , SUM (MovementItem.Amount)          AS Amount
-                  , SUM (COALESCE (MIFloat_Count.ValueData, 0))     AS Count
-                  , SUM (COALESCE (MIFloat_CountPack.ValueData, 0)) AS CountPack
-                  , SUM (COALESCE (MIFloat_HeadCount.ValueData, 0)) AS HeadCount
-             FROM MovementItem
-                  LEFT JOIN MovementItemFloat AS MIFloat_Count
-                                              ON MIFloat_Count.MovementItemId = MovementItem.Id
-                                             AND MIFloat_Count.DescId = zc_MIFloat_Count()
-                  LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
-                                              ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
-                                             AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
-                  LEFT JOIN MovementItemFloat AS MIFloat_CountPack
-                                              ON MIFloat_CountPack.MovementItemId = MovementItem.Id
-                                             AND MIFloat_CountPack.DescId = zc_MIFloat_CountPack()
-
-                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods
-                                             ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
-                                            AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
-                  LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                               ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
-                                              AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-
-                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-
-                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
-                                                   ON MILinkObject_Asset.MovementItemId = MovementItem.Id
-                                                  AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
-                  LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
-                                                   ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
-                                                  AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
-
-             WHERE MovementItem.MovementId = CASE WHEN vbIsWeighing = TRUE THEN inMovementId_Weighing ELSE inMovementId END
-               AND MovementItem.DescId     = CASE WHEN vbIsProductionOut = TRUE AND  vbIsWeighing = FALSE THEN zc_MI_Child() ELSE zc_MI_Master() END
-               AND MovementItem.isErased   = FALSE
-               AND MovementItem.Amount <> 0 
-             GROUP BY MovementItem.ObjectId
-                    , MILinkObject_GoodsKind.ObjectId
-                    , MIDate_PartionGoods.ValueData
-                    , MIString_PartionGoods.ValueData
-                    , MILinkObject_Asset.ObjectId
-                    , MILinkObject_PartionGoods.ObjectId
-            ) AS tmpMI
+       FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
@@ -215,7 +272,7 @@ BEGIN
 
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmpMI.AssetId
             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMI.PartionGoodsId
-            LEFT JOIN ObjectFloat AS ObjectFloat_Price ON ObjectFloat_Price.ObjectId = Object_PartionGoods.Id                      -- цена
+            LEFT JOIN ObjectFloat AS ObjectFloat_Price ON ObjectFloat_Price.ObjectId = Object_PartionGoods.Id                   -- цена
                                                       AND ObjectFloat_Price.DescId = zc_ObjectFloat_PartionGoods_Price()
             LEFT JOIN ObjectLink AS ObjectLink_Storage ON ObjectLink_Storage.ObjectId = Object_PartionGoods.Id 		        -- склад
                                                       AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
@@ -250,11 +307,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Send_Print (Integer, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_Send_Print (Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.02.19         * add inisItem
  11.10.17         *
  12.06.15         *
 */
