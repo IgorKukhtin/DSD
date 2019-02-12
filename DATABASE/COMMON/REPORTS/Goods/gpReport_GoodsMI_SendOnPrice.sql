@@ -438,11 +438,13 @@ BEGIN
                       , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_LossSumm_20200()  THEN -1 * MIContainer.Amount ELSE 0 END) AS SummIn_Loss
 
                         -- 5.1. Кол-во у покупателя
-                      , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SendCount_in()    THEN -1 * MIContainer.Amount
+                      , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SendCount_in(), zc_Enum_AnalyzerId_LossCount_10900())
+                                       THEN -1 * MIContainer.Amount
                                   ELSE 0
                              END) AS OperCount_Partner
                         -- 5.2. Себестоимость у покупателя
-                      , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SendSumm_in() THEN -1 * MIContainer.Amount
+                      , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SendSumm_in(), zc_Enum_AnalyzerId_LossSumm_10900())
+                                       THEN -1 * MIContainer.Amount
                                   ELSE 0
                              END) AS SummIn_Partner
 

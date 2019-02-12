@@ -715,7 +715,10 @@ END IF;
                   , ContainerId_GoodsTo
                   , ContainerId_GoodsTransit
                   , GoodsId, GoodsKindId
-                  , zc_Enum_AnalyzerId_SendCount_in()       AS AnalyzerId --  Кол-во, перемещение по цене, перемещение, пришло
+                  , CASE WHEN isTo_10900 = TRUE
+                              THEN zc_Enum_AnalyzerId_LossCount_10900() -- Кол-во, Утилизация возвратов при реализации/перемещении по цене
+                         ELSE zc_Enum_AnalyzerId_SendCount_in()         -- Кол-во, перемещение по цене, перемещение, пришло
+                    END AS AnalyzerId
                   , WhereObjectId_Analyzer_To               AS ObjectExtId_Analyzer
                   , MIContainerId_To                        AS ParentId
                   , OperCount_Partner                       AS OperCount
@@ -1177,6 +1180,9 @@ END IF;
                             OR _tmpItemSumm.InfoMoneyId_Detail_From = zc_Enum_InfoMoney_80401()) -- прибыль текущего периода
                           AND _tmpItem.OperCount_Partner = 0
                               THEN 0 -- !!!может быть временно, т.е. эту сумму надо будет делить на потери!!!*/
+
+                         WHEN _tmpItem.isTo_10900 = TRUE
+                              THEN zc_Enum_AnalyzerId_LossSumm_10900() -- Сумма с/с, Утилизация возвратов при реализации/перемещении по цене
 
                          ELSE zc_Enum_AnalyzerId_SendSumm_in() -- Сумма с/с, перемещение по цене, перемещение, пришло
 
@@ -1669,6 +1675,50 @@ $BODY$
  15.09.13                                        * add zc_Enum_Account_20901
  14.09.13                                        * add vbBusinessId_From
  09.09.13                                        * add lpInsertUpdate_MovementItemContainer_byTable
+*/
+
+/*
+select MIContainer.*
+, case when AnalyzerId = zc_Enum_AnalyzerId_SendCount_in() then zc_Enum_AnalyzerId_LossCount_10900()
+       when AnalyzerId = zc_Enum_AnalyzerId_SendSumm_in() then zc_Enum_AnalyzerId_LossSumm_10900()
+  end as AnalyzerId_new
+from MovementItemContainer as MIContainer
+where 
+MIContainer.MovementItemId in (
+select distinct MIContainer.MovementItemId
+from MovementItemContainer as MIContainer
+     inner join ContainerLinkObject as CLO_ProfitLoss on CLO_ProfitLoss.ContainerId = MIContainer.ContainerId and CLO_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss() and CLO_ProfitLoss.ObjectId in (zc_Enum_ProfitLoss_10902(), zc_Enum_ProfitLoss_10901())
+where MIContainer.OperDate between '01.01.2019' and '01.05.2019'
+  AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
+  and MIContainer.AccountId = zc_Enum_Account_100301 () -- прибыль текущего периода
+)
+--and AnalyzerId IN (zc_Enum_AnalyzerId_SendCount_in(), zc_Enum_AnalyzerId_SendSumm_in())
+and AnalyzerId IN (zc_Enum_AnalyzerId_LossSumm_10900())
+*/
+/*
+update MovementItemContainer 
+set AnalyzerId = case when AnalyzerId = zc_Enum_AnalyzerId_SendCount_in() then zc_Enum_AnalyzerId_LossCount_10900()
+                      when AnalyzerId = zc_Enum_AnalyzerId_SendSumm_in() then zc_Enum_AnalyzerId_LossSumm_10900()
+                 end
+from (
+select distinct MIContainer.MovementItemId
+from MovementItemContainer as MIContainer
+     inner join ContainerLinkObject as CLO_ProfitLoss on CLO_ProfitLoss.ContainerId = MIContainer.ContainerId and CLO_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss() and CLO_ProfitLoss.ObjectId in (zc_Enum_ProfitLoss_10902(), zc_Enum_ProfitLoss_10901())
+-- where MIContainer.OperDate between '01.01.2019' and '01.05.2019'
+-- where MIContainer.OperDate between '01.09.2018' and '01.01.2019'
+-- where MIContainer.OperDate between '01.05.2018' and '01.09.2018'
+-- where MIContainer.OperDate between '01.01.2018' and '01.05.2018'
+-- where MIContainer.OperDate between '01.07.2017' and '01.01.2018'
+ where MIContainer.OperDate between '01.01.2017' and '01.07.2017'
+-- where MIContainer.OperDate between '01.07.2016' and '01.01.2017'
+-- where MIContainer.OperDate between '01.01.2016' and '01.07.2016'
+-- where MIContainer.OperDate between '01.07.2015' and '01.01.2016'
+-- where MIContainer.OperDate between '01.01.2015' and '01.07.2015'
+  AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
+  and MIContainer.AccountId = zc_Enum_Account_100301 () -- прибыль текущего периода
+) as tmp
+where MovementItemContainer.MovementItemId = tmp.MovementItemId 
+  and MovementItemContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SendCount_in(), zc_Enum_AnalyzerId_SendSumm_in())
 */
 
 -- тест

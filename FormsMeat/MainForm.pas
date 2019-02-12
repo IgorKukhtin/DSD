@@ -671,7 +671,7 @@ type
     FormParams: TdsdFormParams;
     N91: TMenuItem;
     actReport_Tara: TdsdOpenForm;
-    N92: TMenuItem;
+    miReport_Tara: TMenuItem;
     actGoodsExternal: TdsdOpenForm;
     N93: TMenuItem;
     actReport_SaleOrderExternalList: TdsdOpenForm;

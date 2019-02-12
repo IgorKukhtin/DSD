@@ -5,7 +5,7 @@
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 260
+  ExplicitHeight = 257
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -7360,7 +7360,7 @@
       object C1: TMenuItem
         Action = actReport_Weighing
       end
-      object N92: TMenuItem
+      object miReport_Tara: TMenuItem
         Action = actReport_Tara
       end
     end

@@ -33,8 +33,9 @@ RETURNS TABLE (AccountId Integer
              , CountSendIn  TFloat
              , CountSendOut TFloat
 
-             , CountSendOnPriceIn  TFloat
-             , CountSendOnPriceOut TFloat
+             , CountSendOnPriceIn        TFloat
+             , CountSendOnPriceOut       TFloat
+             , CountSendOnPriceOut_10900 TFloat
 
              , CountSendOnPrice_10500   TFloat
              , CountSendOnPrice_40200   TFloat
@@ -67,8 +68,9 @@ RETURNS TABLE (AccountId Integer
              , SummSendIn  TFloat
              , SummSendOut TFloat
 
-             , SummSendOnPriceIn TFloat
-             , SummSendOnPriceOut TFloat
+             , SummSendOnPriceIn        TFloat
+             , SummSendOnPriceOut       TFloat
+             , SummSendOnPriceOut_10900 TFloat
 
              , SummSendOnPrice_10500  TFloat
              , SummSendOnPrice_40200  TFloat
@@ -583,6 +585,13 @@ BEGIN
                                                         THEN -1 * MIContainer.Amount
                                                    ELSE 0
                                               END) AS CountSendOnPriceOut
+                                       , SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Count()
+                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_LossCount_10900() -- Кол-во, Утилизация возвратов при реализации/перемещении по цене
+                                                    -- AND MIContainer.isActive = FALSE
+                                                        THEN -1 * MIContainer.Amount
+                                                   ELSE 0
+                                              END) AS CountSendOnPriceOut_10900
 
                                        , SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Count()
                                                     -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
@@ -780,6 +789,14 @@ BEGIN
                                                        THEN -1 * MIContainer.Amount
                                                   ELSE 0
                                              END) AS SummSendOnPriceOut
+
+                                       , SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Summ()
+                                                   AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
+                                                   -- AND MIContainer.isActive = FALSE
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_LossSumm_10900() -- Сумма с/с, Утилизация возвратов при реализации/перемещении по цене
+                                                       THEN -1 * MIContainer.Amount
+                                                  ELSE 0
+                                             END) AS SummSendOnPriceOut_10900
 
                                        , SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Summ()
                                                    -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
@@ -1012,6 +1029,14 @@ BEGIN
                                               END) <> 0 -- AS CountSendOnPriceOut
 
                                       OR SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Count()
+                                                    AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
+                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_LossCount_10900() -- Кол-во, Утилизация возвратов при реализации/перемещении по цене
+                                                    -- AND MIContainer.isActive = FALSE
+                                                        THEN -1 * MIContainer.Amount
+                                                   ELSE 0
+                                              END) <> 0 -- AS CountSendOnPriceOut_10900
+
+                                      OR SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Count()
                                                     -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                     AND MIContainer.MovementDescId = zc_Movement_Sale()
                                                     AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400() -- Кол-во, реализация, у покупателя
@@ -1189,6 +1214,14 @@ BEGIN
                                              END) <> 0 -- AS SummSendOnPriceOut
 
                                       OR SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Summ()
+                                                   AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
+                                                   -- AND MIContainer.isActive = FALSE
+                                                   AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_LossSumm_10900() -- Сумма с/с, Утилизация возвратов при реализации/перемещении по цене
+                                                       THEN -1 * MIContainer.Amount
+                                                  ELSE 0
+                                             END) <> 0 -- AS SummSendOnPriceOut_10900
+
+                                      OR SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Summ()
                                                    -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND MIContainer.MovementDescId = zc_Movement_Sale()
                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10400() -- Сумма с/с, реализация, у покупателя
@@ -1357,6 +1390,7 @@ BEGIN
                                        , 0 AS CountSendOnPrice_10500
                                        , 0 AS CountSendOnPrice_40200
                                        , 0 AS CountSendOnPriceOut
+                                       , 0 AS CountSendOnPriceOut_10900
 
                                        , 0 AS CountSale
                                        , 0 AS CountSale_10500
@@ -1388,6 +1422,7 @@ BEGIN
                                        , 0 AS SummSendOnPrice_10500
                                        , 0 AS SummSendOnPrice_40200                                       
                                        , 0 AS SummSendOnPriceOut
+                                       , 0 AS SummSendOnPriceOut_10900
 
                                        , 0 AS SummSale
                                        , 0 AS SummSale_10500
@@ -1456,11 +1491,12 @@ BEGIN
               , SUM (tmpMIContainer_all.CountSendIn)             :: TFloat AS CountSendIn
               , SUM (tmpMIContainer_all.CountSendOut)            :: TFloat AS CountSendOut
 
-              , SUM (tmpMIContainer_all.CountSendOnPriceIn)      :: TFloat AS CountSendOnPriceIn
-              , SUM (tmpMIContainer_all.CountSendOnPriceOut)     :: TFloat AS CountSendOnPriceOut
+              , SUM (tmpMIContainer_all.CountSendOnPriceIn)        :: TFloat AS CountSendOnPriceIn
+              , SUM (tmpMIContainer_all.CountSendOnPriceOut)       :: TFloat AS CountSendOnPriceOut
+              , SUM (tmpMIContainer_all.CountSendOnPriceOut_10900) :: TFloat AS CountSendOnPriceOut_10900
 
-              , SUM (tmpMIContainer_all.CountSendOnPrice_10500)      :: TFloat AS CountSendOnPrice_10500
-              , SUM (tmpMIContainer_all.CountSendOnPrice_40200)      :: TFloat AS CountSendOnPrice_40200
+              , SUM (tmpMIContainer_all.CountSendOnPrice_10500)    :: TFloat AS CountSendOnPrice_10500
+              , SUM (tmpMIContainer_all.CountSendOnPrice_40200)    :: TFloat AS CountSendOnPrice_40200
               
               , SUM (tmpMIContainer_all.CountSale)               :: TFloat AS CountSale
               , SUM (tmpMIContainer_all.CountSale_10500)         :: TFloat AS CountSale_10500
@@ -1490,6 +1526,7 @@ BEGIN
               , SUM (tmpMIContainer_all.SummSendOut)             :: TFloat AS SummSendOut
               , SUM (tmpMIContainer_all.SummSendOnPriceIn)       :: TFloat AS SummSendOnPriceIn
               , SUM (tmpMIContainer_all.SummSendOnPriceOut)      :: TFloat AS SummSendOnPriceOut
+              , SUM (tmpMIContainer_all.SummSendOnPriceOut_10900):: TFloat AS SummSendOnPriceOut_10900
 
               , SUM (tmpMIContainer_all.SummSendOnPrice_10500)   :: TFloat AS SummSendOnPrice_10500
               , SUM (tmpMIContainer_all.SummSendOnPrice_40200)   :: TFloat AS SummSendOnPrice_40200
@@ -1546,4 +1583,4 @@ ALTER FUNCTION lpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 */
 
 -- тест
--- SELECT * FROM lpReport_MotionGoods (inStartDate:= '01.08.2018', inEndDate:= '31.08.2018', inAccountGroupId:= 9015, inUnitGroupId := 0 , inLocationId := 8425 , inGoodsGroupId := 0 , inGoodsId := 0,  inIsInfoMoney:= FALSE, inUserId := zfCalc_UserAdmin() :: Integer);
+-- SELECT * FROM lpReport_MotionGoods (inStartDate:= '01.08.2019', inEndDate:= '01.08.2019', inAccountGroupId:= 9015, inUnitGroupId := 0 , inLocationId := 8425 , inGoodsGroupId := 0 , inGoodsId := 0,  inIsInfoMoney:= FALSE, inUserId := zfCalc_UserAdmin() :: Integer);

@@ -228,6 +228,9 @@ type
     bbReport_Goods: TdxBarButton;
     actPrintUnit: TdsdPrintAction;
     bbPrintUnit: TdxBarButton;
+    CountSendOnPriceOut_10900: TcxGridDBColumn;
+    SummSendOnPriceOut_10900: TcxGridDBColumn;
+    CountSendOnPriceOut_10900_W: TcxGridDBColumn;
   private
   public
   end;

@@ -404,7 +404,7 @@ BEGIN
                           FROM _tmpUnit
                                INNER JOIN MovementItemContainer AS MIContainer
                                                                 ON MIContainer.WhereObjectId_analyzer = _tmpUnit.UnitId
-                                                               AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SendSumm_in()
+                                                               AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SendSumm_in(), zc_Enum_AnalyzerId_LossSumm_10900())
                                                                AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                                AND MIContainer.AccountId NOT IN (zc_Enum_Account_100301() -- Собственный капитал + Прибыль текущего периода
                                                                                                , zc_Enum_Account_110101() -- Транзит + товар в пути

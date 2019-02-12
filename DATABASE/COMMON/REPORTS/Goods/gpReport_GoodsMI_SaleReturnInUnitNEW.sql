@@ -474,7 +474,7 @@ BEGIN
                                      , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SendSumm_40200() THEN  1 * MIContainer.Amount ELSE 0 END) AS Sale_SummCost_40200 -- !!! Не меняется знак, т.к. надо показать +/-!!!
 
                                      , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Count() THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_Amount
-                                     , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SendCount_in() THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_AmountPartner
+                                     , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SendCount_in(), zc_Enum_AnalyzerId_LossCount_10900()) THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_AmountPartner
                                      , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SendCount_10500() THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_Amount_10500
                                      , SUM (CASE WHEN MIContainer.isActive = FALSE AND MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SendCount_40200() THEN  1 * MIContainer.Amount ELSE 0 END) AS Sale_Amount_40200 -- !!! Не меняется знак, т.к. надо показать +/-!!!
 

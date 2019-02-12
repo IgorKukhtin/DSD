@@ -1559,6 +1559,9 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Real: TdsdPrintAction
       Category = 'DSDLib'
@@ -1650,6 +1653,9 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Calc_PriceList: TdsdPrintAction
       Category = 'DSDLib'
@@ -1745,6 +1751,9 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Calc: TdsdPrintAction
       Category = 'DSDLib'
@@ -1835,11 +1844,14 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1060#1072#1082#1090' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1080' '#1088#1072#1089#1093#1086#1076#1099')'
-      ReportNameParam.Value = #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1060#1072#1082#1090' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1080' '#1088#1072#1089#1093#1086#1076#1099')'
+      ReportName = #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1060#1072#1082#1090' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1080' '#1088#1072#1089#1093#1086#1076#1099') '#1087#1086' '#1076#1072#1090#1077' '#1087#1086#1082#1091#1087
+      ReportNameParam.Value = #1055#1083#1072#1085#1086#1074#1072#1103' '#1055#1088#1080#1073#1099#1083#1100' ('#1060#1072#1082#1090' '#1089#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1080' '#1088#1072#1089#1093#1086#1076#1099') '#1087#1086' '#1076#1072#1090#1077' '#1087#1086#1082#1091#1087
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_CalcPrice: TdsdPrintAction
       Category = 'DSDLib'
@@ -1931,6 +1943,9 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_DiffPrice: TdsdPrintAction
       Category = 'DSDLib'
@@ -2022,6 +2037,9 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_DiffPriceIn: TdsdPrintAction
       Category = 'DSDLib'
@@ -2107,6 +2125,9 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -2351,6 +2372,9 @@ inherited Report_ReceiptSaleAnalyzeRealForm: TReport_ReceiptSaleAnalyzeRealForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource

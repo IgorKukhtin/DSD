@@ -184,8 +184,11 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_ReturnInSumm_10200(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 222, inName:= 'Сумма, возврат, Разница с оптовыми ценами', inEnumName:= 'zc_Enum_AnalyzerId_ReturnInSumm_10200');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_ReturnInSumm_10300(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 223, inName:= 'Сумма, возврат, Скидка дополнительная', inEnumName:= 'zc_Enum_AnalyzerId_ReturnInSumm_10300');
 
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_LossCount_20200(), inDescId:= zc_Object_AnalyzerId(), inCode:= 301, inName:= 'Кол-во, списание при реализации/перемещении по цене', inEnumName:= 'zc_Enum_AnalyzerId_LossCount_20200');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_LossSumm_20200(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 302, inName:= 'Сумма с/с, списание при реализации/перемещении по цене', inEnumName:= 'zc_Enum_AnalyzerId_LossSumm_20200');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_LossCount_10900(), inDescId:= zc_Object_AnalyzerId(), inCode:= 301, inName:= 'Кол-во, Утилизация возвратов при реализации/перемещении по цене', inEnumName:= 'zc_Enum_AnalyzerId_LossCount_10900');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_LossSumm_10900(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 302, inName:= 'Сумма с/с, Утилизация возвратов при реализации/перемещении по цене', inEnumName:= 'zc_Enum_AnalyzerId_LossSumm_10900');
+
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_LossCount_20200(), inDescId:= zc_Object_AnalyzerId(), inCode:= 303, inName:= 'Кол-во, списание при реализации/перемещении по цене', inEnumName:= 'zc_Enum_AnalyzerId_LossCount_20200');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_LossSumm_20200(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 304, inName:= 'Сумма с/с, списание при реализации/перемещении по цене', inEnumName:= 'zc_Enum_AnalyzerId_LossSumm_20200');
 
      --
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_Cash_PersonalAvance(),     inDescId:= zc_Object_AnalyzerId(), inCode:= 1001, inName:= 'Выплата сотруднику - аванс', inEnumName:= 'zc_Enum_AnalyzerId_Cash_PersonalAvance');
