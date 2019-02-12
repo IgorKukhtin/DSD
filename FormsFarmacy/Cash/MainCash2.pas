@@ -4176,7 +4176,7 @@ begin
       if result and Assigned(Cash) AND not Cash.AlwaysSold then
       begin
         if (Disc <> 0) and (PosDisc = 0) then result := Cash.DiscountGoods(Disc);
-        if FTotalSumm <> Cash.SummaReceipt then
+        if Round(FTotalSumm * 100) = Round(Cash.SummaReceipt * 100) then
         begin
           if result then result := Cash.SubTotal(true, true, 0, 0);
           if result then result := Cash.TotalSumm(SalerCash, SalerCashAdd, PaidType);
@@ -4185,7 +4185,7 @@ begin
         end else
         begin
           result := False;
-          ShowMessage('Ошибка. Сумма чека ' + CurrToStr(FTotalSumm) + ' не равна сумме товара в фискальном чеке' + CurrToStr(Cash.SummaReceipt) + '.'#13#10 +
+          ShowMessage('Ошибка. Сумма чека ' + CurrToStr(FTotalSumm) + ' не равна сумме товара в фискальном чеке ' + CurrToStr(Cash.SummaReceipt) + '.'#13#10 +
             'Чек анулирован...');
           Cash.Anulirovt;
         end
