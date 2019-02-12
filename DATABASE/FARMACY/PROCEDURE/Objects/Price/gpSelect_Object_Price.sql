@@ -385,8 +385,35 @@ BEGIN
                     )
 
      -- Товары соц-проект (документ)
-   , tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId, TRUE AS isSP
-                    FROM lpSelect_MovementItem_GoodsSP_onDate (inDateStart:= CURRENT_DATE, inDateEnd:= CURRENT_DATE) AS tmp
+   , tmpMI_GoodsSP AS (SELECT DISTINCT tmp.*, TRUE AS isSP
+                       FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE) AS tmp
+                       )
+     -- параметры из документа GoodsSP
+   , tmpGoodsSP AS (SELECT DISTINCT tmpMI_GoodsSP.GoodsId
+                         , COALESCE(Object_IntenalSP.Id ,0)           ::Integer  AS IntenalSPId
+                         , COALESCE(Object_IntenalSP.ValueData,'')    ::TVarChar AS IntenalSPName
+                         , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
+                         , MIFloat_PriceRetSP.ValueData                          AS PriceRetSP
+                         , MIFloat_PriceSP.ValueData                             AS PriceSP
+                         , MIFloat_PaymentSP.ValueData                           AS PaymentSP
+                         , tmpMI_GoodsSP.isSP
+                    FROM tmpMI_GoodsSP
+                         LEFT JOIN MovementItemFloat AS MIFloat_PriceRetSP
+                                                     ON MIFloat_PriceRetSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
+                                                    AND MIFloat_PriceRetSP.DescId = zc_MIFloat_PriceRetSP()                         
+                         LEFT JOIN MovementItemFloat AS MIFloat_PriceOptSP
+                                                     ON MIFloat_PriceOptSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
+                                                    AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
+                         LEFT JOIN MovementItemFloat AS MIFloat_PriceSP
+                                                     ON MIFloat_PriceSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
+                                                    AND MIFloat_PriceSP.DescId = zc_MIFloat_PriceSP()
+                         LEFT JOIN MovementItemFloat AS MIFloat_PaymentSP
+                                                     ON MIFloat_PaymentSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
+                                                    AND MIFloat_PaymentSP.DescId = zc_MIFloat_PaymentSP()
+                         LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
+                                                          ON MI_IntenalSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
+                                                         AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP()
+                         LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = MI_IntenalSP.ObjectId
                     )
 
             -- Результат
@@ -403,7 +430,7 @@ BEGIN
 --               , zfFormat_BarCode(zc_BarCodePref_Object(), tmpPrice_View.Id) ::TVarChar  AS IdBarCode
                , COALESCE (tmpGoodsBarCode.BarCode, '')  :: TVarChar AS BarCode
                , Object_Goods_View.GoodsName                     AS GoodsName
-               , Object_IntenalSP.ValueData                      AS IntenalSPName
+               , tmpGoodsSP.IntenalSPName                        AS IntenalSPName
                , Object_Goods_View.GoodsGroupName                AS GoodsGroupName
                , Object_Goods_View.NDSKindName                   AS NDSKindName
                , Object_Goods_View.NDS                           AS NDS
@@ -430,121 +457,121 @@ BEGIN
                , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE (tmpPrice_View.MCSValue, 0) THEN COALESCE (Object_Remains.Remains, 0) - COALESCE (tmpPrice_View.MCSValue, 0) ELSE 0 END :: TFloat AS RemainsNotMCS
                , CASE WHEN COALESCE (Object_Remains.Remains, 0) > COALESCE (tmpPrice_View.MCSValue, 0) THEN (COALESCE (Object_Remains.Remains, 0) - COALESCE (tmpPrice_View.MCSValue, 0)) * COALESCE (tmpPrice_View.Price, 0) ELSE 0 END :: TFloat AS SummaNotMCS
 
-               , COALESCE (ObjectFloat_Goods_PriceRetSP.ValueData,0) ::TFloat  AS PriceRetSP
-               , COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) ::TFloat  AS PriceOptSP
-              /* , CASE WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData,0) 
+               , COALESCE (tmpGoodsSP.PriceRetSP, 0) ::TFloat  AS PriceRetSP
+               , COALESCE (tmpGoodsSP.PriceOptSP, 0) ::TFloat  AS PriceOptSP
+              /* , CASE WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (tmpGoodsSP.PriceSP,0) 
                            THEN COALESCE (tmpPrice_View.Price,0)
                       ELSE
                           ::TFloat  AS PriceSP*/
                           
-               , CASE WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+               , CASE WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (tmpGoodsSP.PriceSP, 0)
                       THEN COALESCE (tmpPrice_View.Price,0) -- по нашей цене, т.к. она меньше чем цена возмещения
 
                  ELSE
 
-                     CASE WHEN COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0) = 0
+                     CASE WHEN COALESCE (tmpGoodsSP.PaymentSP, 0) = 0
                           THEN 0 -- по 0, т.к. цена доплаты = 0
     
-                     WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+                     WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (tmpGoodsSP.PriceSP, 0)
                           THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
     
-                     WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
-                       AND 0 > COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                             - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0) 
+                     WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                       AND 0 > COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                             - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0) 
                                ) -- разница с ценой возмещения и "округлили в большую"
                           THEN 0
     
-                     WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
-                          THEN COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                             - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0) 
+                     WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                          THEN COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                             - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0) 
                                ) -- разница с ценой возмещения и "округлили в большую"
     
-                     ELSE COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
+                     ELSE COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
                      
                      END
-                + COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+                + COALESCE (tmpGoodsSP.PriceSP, 0)
      
                  END :: TFloat  AS PriceSP
             
-                  --, COALESCE (ObjectFloat_Goods_PaymentSP.ValueData,0)  ::TFloat  AS PaymentSP
-               , CASE WHEN COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0) = 0
+                  --, COALESCE (tmpGoodsSP.PaymentSP,0)  ::TFloat  AS PaymentSP
+               , CASE WHEN COALESCE (tmpGoodsSP.PaymentSP, 0) = 0
                          THEN 0 -- по 0, т.к. цена доплаты = 0
    
-                    WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+                    WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (tmpGoodsSP.PriceSP, 0)
                          THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
    
-                    -- WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0)
+                    -- WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (tmpGoodsSP.PaymentSP, 0)
                     --      THEN COALESCE (tmpPrice_View.Price,0) -- по нашей цене, т.к. она меньше чем цена доплаты
    
-                    WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
-                      AND 0 > COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                            - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0) 
+                    WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                      AND 0 > COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                            - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0) 
                               ) -- разница с ценой возмещения и "округлили в большую"
                          THEN 0
    
-                    WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
-                         THEN COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                            - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0) 
+                    WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                         THEN COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                            - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0) 
                               ) -- разница с ценой возмещения и "округлили в большую"
    
-                    ELSE COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
+                    ELSE COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
                     
                   END   ::TFloat  AS PaymentSP
                   
                    -- из gpSelect_CashRemains_ver2
-               ,  (CASE WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+               ,  (CASE WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (tmpGoodsSP.PriceSP, 0)
                              THEN COALESCE (tmpPrice_View.Price,0) -- по нашей цене, т.к. она меньше чем цена возмещения
        
                         ELSE
        
-                   CASE WHEN COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0) = 0
+                   CASE WHEN COALESCE (tmpGoodsSP.PaymentSP, 0) = 0
                              THEN 0 -- по 0, т.к. цена доплаты = 0
        
-                        WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+                        WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (tmpGoodsSP.PriceSP, 0)
                              THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
        
-                        -- WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0)
+                        -- WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (tmpGoodsSP.PaymentSP, 0)
                         --      THEN COALESCE (tmpPrice_View.Price,0) -- по нашей цене, т.к. она меньше чем цена доплаты
        
-                        WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
-                          AND 0 > COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                                - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0)
+                        WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                          AND 0 > COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                                - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0)
                                   ) -- разница с ценой возмещения и "округлили в большую"
                              THEN 0
        
-                        WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
-                             THEN COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                                - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0)
+                        WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                             THEN COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                                - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0)
                                   ) -- разница с ценой возмещения и "округлили в большую"
        
-                        ELSE COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
+                        ELSE COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
        
                    END
-                 + COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+                 + COALESCE (tmpGoodsSP.PriceSP, 0)
        
                    END
        
-                 - CASE WHEN COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0) = 0
+                 - CASE WHEN COALESCE (tmpGoodsSP.PaymentSP, 0) = 0
                              THEN 0 -- по 0, т.к. цена доплаты = 0
        
-                        WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0)
+                        WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (tmpGoodsSP.PriceSP, 0)
                              THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
        
-                        -- WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PaymentSP.ValueData, 0)
+                        -- WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (tmpGoodsSP.PaymentSP, 0)
                         --      THEN COALESCE (tmpPrice_View.Price,0) -- по нашей цене, т.к. она меньше чем цена доплаты
        
-                        WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
-                          AND 0 > COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                                - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0)
+                        WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                          AND 0 > COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                                - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0)
                                   ) -- разница с ценой возмещения и "округлили в большую"
                              THEN 0
        
-                        WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (ObjectFloat_Goods_PriceSP.ValueData, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0)
-                             THEN COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                                - (COALESCE (CEIL (ObjectFloat_Goods_PriceSP.ValueData * 100) / 100, 0) + COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0)
+                        WHEN COALESCE (tmpPrice_View.Price,0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
+                             THEN COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
+                                - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) - COALESCE (tmpPrice_View.Price,0)
                                   ) -- разница с ценой возмещения и "округлили в большую"
        
-                        ELSE COALESCE (FLOOR (ObjectFloat_Goods_PaymentSP.ValueData * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
+                        ELSE COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
        
                    END
                   ) :: TFloat AS DiffSP2
@@ -639,10 +666,10 @@ BEGIN
                                                        AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
 
                LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
+               
                /*LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
                                         ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
-                                       AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()*/
-
+                                       AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
                LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceRetSP
                                      ON ObjectFloat_Goods_PriceRetSP.ObjectId = ObjectLink_Main.ChildObjectId 
                                     AND ObjectFloat_Goods_PriceRetSP.DescId = zc_ObjectFloat_Goods_PriceRetSP() 
@@ -660,6 +687,7 @@ BEGIN
                                     ON ObjectLink_Goods_IntenalSP.ObjectId = ObjectLink_Main.ChildObjectId
                                    AND ObjectLink_Goods_IntenalSP.DescId = zc_ObjectLink_Goods_IntenalSP()
                LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = ObjectLink_Goods_IntenalSP.ChildObjectId
+               */
                
                LEFT JOIN ObjectDate AS ObjectDate_LastPrice
                                     ON ObjectDate_LastPrice.ObjectId = ObjectLink_Main.ChildObjectId
@@ -1038,19 +1066,46 @@ BEGIN
                           )
 
     -- Товары соц-проект (документ)
-  , tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId, TRUE AS isSP
-                   FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE) AS tmp
+  , tmpMI_GoodsSP AS (SELECT DISTINCT tmp.*, TRUE AS isSP
+                      FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE) AS tmp
+                   )
+    -- параметры из документа GoodsSP
+  , tmpGoodsSP AS (SELECT DISTINCT tmpMI_GoodsSP.GoodsId
+                        , COALESCE(Object_IntenalSP.Id ,0)           ::Integer  AS IntenalSPId
+                        , COALESCE(Object_IntenalSP.ValueData,'')    ::TVarChar AS IntenalSPName
+                        , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
+                        , MIFloat_PriceRetSP.ValueData                          AS PriceRetSP
+                        , MIFloat_PriceSP.ValueData                             AS PriceSP
+                        , MIFloat_PaymentSP.ValueData                           AS PaymentSP
+                        , tmpMI_GoodsSP.isSP
+                   FROM tmpMI_GoodsSP
+                        LEFT JOIN MovementItemFloat AS MIFloat_PriceRetSP
+                                                    ON MIFloat_PriceRetSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
+                                                   AND MIFloat_PriceRetSP.DescId = zc_MIFloat_PriceRetSP()                         
+                        LEFT JOIN MovementItemFloat AS MIFloat_PriceOptSP
+                                                    ON MIFloat_PriceOptSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
+                                                   AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
+                        LEFT JOIN MovementItemFloat AS MIFloat_PriceSP
+                                                    ON MIFloat_PriceSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
+                                                   AND MIFloat_PriceSP.DescId = zc_MIFloat_PriceSP()
+                        LEFT JOIN MovementItemFloat AS MIFloat_PaymentSP
+                                                    ON MIFloat_PaymentSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
+                                                   AND MIFloat_PaymentSP.DescId = zc_MIFloat_PaymentSP()
+                        LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
+                                                         ON MI_IntenalSP.MovementItemId = tmpMI_GoodsSP.MovementItemId
+                                                        AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP()
+                        LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = MI_IntenalSP.ObjectId
                    )
 
   , tmpGoodsMainParam AS (SELECT tmpPrice_All.GoodsId
-                               , COALESCE (tmpGoodsSP.isSP, False)                   ::Boolean AS isSP
-                               , COALESCE (ObjectFloat_Goods_PriceRetSP.ValueData,0) ::TFloat  AS PriceRetSP
-                               , COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) ::TFloat  AS PriceOptS
-                               , COALESCE (ObjectFloat_Goods_PriceSP.ValueData,0)    ::TFloat  AS PriceSP
-                               , COALESCE (ObjectFloat_Goods_PaymentSP.ValueData,0)  ::TFloat  AS PaymentSP
-                               , Object_IntenalSP.ValueData                                    AS IntenalSPName
-                               , ObjectDate_LastPrice.ValueData                                AS Date_LastPrice
-                               , COALESCE (tmpGoodsBarCode.BarCode, '')            :: TVarChar AS BarCode
+                               , COALESCE (tmpGoodsSP.isSP, False)      ::Boolean AS isSP
+                               , COALESCE (tmpGoodsSP.PriceRetSP,0)     ::TFloat  AS PriceRetSP
+                               , COALESCE (tmpGoodsSP.PriceOptSP,0)     ::TFloat  AS PriceOptS
+                               , COALESCE (tmpGoodsSP.PriceSP,0)        ::TFloat  AS PriceSP
+                               , COALESCE (tmpGoodsSP.PaymentSP,0)      ::TFloat  AS PaymentSP
+                               , tmpGoodsSP.IntenalSPName                         AS IntenalSPName
+                               , ObjectDate_LastPrice.ValueData                   AS Date_LastPrice
+                               , COALESCE (tmpGoodsBarCode.BarCode, '') :: TVarChar AS BarCode
                           FROM tmpPrice_All
                                -- получается GoodsMainId
                                LEFT JOIN ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = tmpPrice_All.Goodsid
@@ -1061,8 +1116,7 @@ BEGIN
                                LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
                                /*LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SP 
                                                         ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
-                                                       AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()*/
-                
+                                                       AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
                                LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceRetSP
                                                      ON ObjectFloat_Goods_PriceRetSP.ObjectId = ObjectLink_Main.ChildObjectId 
                                                     AND ObjectFloat_Goods_PriceRetSP.DescId = zc_ObjectFloat_Goods_PriceRetSP() 
@@ -1075,12 +1129,11 @@ BEGIN
                                LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PaymentSP
                                                      ON ObjectFloat_Goods_PaymentSP.ObjectId = ObjectLink_Main.ChildObjectId 
                                                     AND ObjectFloat_Goods_PaymentSP.DescId = zc_ObjectFloat_Goods_PaymentSP() 
-                
                                LEFT JOIN ObjectLink AS ObjectLink_Goods_IntenalSP
                                                     ON ObjectLink_Goods_IntenalSP.ObjectId = ObjectLink_Main.ChildObjectId
                                                    AND ObjectLink_Goods_IntenalSP.DescId = zc_ObjectLink_Goods_IntenalSP()
                                LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = ObjectLink_Goods_IntenalSP.ChildObjectId
-                        
+                               */
                                LEFT JOIN ObjectDate AS ObjectDate_LastPrice
                                                     ON ObjectDate_LastPrice.ObjectId = ObjectLink_Main.ChildObjectId
                                                    AND ObjectDate_LastPrice.DescId = zc_ObjectDate_Goods_LastPrice()
@@ -1155,7 +1208,7 @@ BEGIN
 --               , zfFormat_BarCode(zc_BarCodePref_Object(), tmpPrice_All.Id) ::TVarChar AS IdBarCode
                , tmpGoodsMainParam.BarCode  :: TVarChar AS BarCode
                , Object_Goods_View.GoodsName               AS GoodsName
-               , tmpGoodsMainParam.IntenalSPName                AS IntenalSPName
+               , tmpGoodsMainParam.IntenalSPName           AS IntenalSPName
                , Object_Goods_View.GoodsGroupName          AS GoodsGroupName
                , Object_Goods_View.NDSKindName             AS NDSKindName
                , Object_Goods_View.NDS                     AS NDS
