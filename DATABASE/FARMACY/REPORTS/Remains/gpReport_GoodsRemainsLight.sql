@@ -246,24 +246,31 @@ BEGIN
                                GROUP BY ObjectLink_Main_BarCode.ChildObjectId
                               )
           , tmpGoodsList AS (SELECT DISTINCT tmpData.GoodsId
-                                    FROM tmpData)                 
-               , tmpGoodsMain AS (SELECT tmp.GoodsId
-                                   , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
-                                   , COALESCE (tmpGoodsBarCode.BarCode, '')            :: TVarChar AS BarCode
-                              FROM tmpGoodsList AS tmp
-             
-                                   -- получается GoodsMainId
-                                   LEFT JOIN ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
-                                         AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
-                                   LEFT JOIN ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                         AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-             
-                                   LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SP 
-                                          ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
-                                         AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
-                                   
-                                   LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = ObjectLink_Main.ChildObjectId
-                              )
+                                    FROM tmpData)
+
+           -- Товары соц-проект (документ)
+          , tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId, TRUE AS isSP
+                           FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= inRemainsDate, inEndDate:= inRemainsDate) AS tmp
+                           )
+                 
+          , tmpGoodsMain AS (SELECT tmp.GoodsId
+                              , COALESCE (tmpGoodsSP.isSP, False)      :: Boolean  AS isSP
+                              , COALESCE (tmpGoodsBarCode.BarCode, '') :: TVarChar AS BarCode
+                         FROM tmpGoodsList AS tmp
+        
+                              -- получается GoodsMainId
+                              LEFT JOIN ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
+                                    AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+                              LEFT JOIN ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                    AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+        
+                              LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
+                             /*LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SP 
+                                     ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                    AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()*/
+                              
+                              LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = ObjectLink_Main.ChildObjectId
+                         )
         -- Маркетинговый контракт
       , GoodsPromo AS (SELECT DISTINCT ObjectLink_Child_retail.ChildObjectId AS GoodsId  -- здесь товар "сети"
                          --   , tmp.ChangePercent
@@ -461,6 +468,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 11.02.19         * признак Товары соц-проект берем и документа
  31.05.18         *
  29.05.18                                                                     *
  07.01.18         *

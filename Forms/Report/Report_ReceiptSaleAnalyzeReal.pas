@@ -125,6 +125,8 @@ type
     bbExecuteDialog: TdxBarButton;
     actPrint_Calc_PriceListExcel: TdsdPrintAction;
     bbPrint_Calc_PriceListExcel: TdxBarButton;
+    actRefreshStart: TdsdDataSetRefresh;
+    spGetParams: TdsdStoredProc;
   private
     { Private declarations }
   public

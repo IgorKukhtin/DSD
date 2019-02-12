@@ -43,6 +43,7 @@ type
     function InfoZReport : string;
     function JuridicalName : string;
     function ZReport : Integer;
+    function SummaReceipt : Currency;
   public
     constructor Create;
   end;
@@ -398,6 +399,7 @@ end;
 function TCashFP3530T_NEW.InfoZReport : string;
   var I : integer; S : String;
       nSum : array [0..3] of Currency;
+      nTotal : Currency;
 
   function Centr(AStr : string) : String;
   begin
@@ -457,6 +459,8 @@ begin
   Result := Result + '  Картка   ' + Str(nSum[3], 13) + Str(nSum[1], 13) + #13#10;
   Result := Result + '  ВСЬОГО   ' + Str(nSum[2] + nSum[3], 13) + Str(nSum[0] + nSum[1], 13) + #13#10;
 
+  nTotal := nSum[0] + nSum[1];
+
   S := FPrinter.SUMDAY[3, 1, 0, 2, Password];
   if not СообщениеКА(FPrinter.GETERROR) then Exit;
   if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[0]) then nSum[0] := 0;
@@ -473,21 +477,27 @@ begin
   Result := Result + '  Готівка  ' + Str(-nSum[0], 13) + Str(nSum[1], 13) + #13#10;
   Result := Result + '  Готівка в касі        ' + Str(nSum[2], 13) + #13#10;
 
-  S := FPrinter.SUMDAY[0, 0, 0, 1, Password];
-  if not СообщениеКА(FPrinter.GETERROR) then Exit;
-  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[0]) then nSum[0] := 0;
+  for I := 1 to 3 do
+  begin
 
-  S := FPrinter.SUMDAY[0, 1 , 0, 1, Password];
-  if not СообщениеКА(FPrinter.GETERROR) then Exit;
-  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[1]) then nSum[1] := 0;
+    S := FPrinter.SUMDAY[0, 0, 0, 1, Password];
+    if not СообщениеКА(FPrinter.GETERROR) then Exit;
+    if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[0]) then nSum[0] := 0;
 
-  S := FPrinter.SUMDAY[1, 0, 0, 1, Password];
-  if not СообщениеКА(FPrinter.GETERROR) then Exit;
-  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[2]) then nSum[2] := 0;
+    S := FPrinter.SUMDAY[0, 1 , 0, 1, Password];
+    if not СообщениеКА(FPrinter.GETERROR) then Exit;
+    if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[1]) then nSum[1] := 0;
 
-  S := FPrinter.SUMDAY[1, 1 , 0, 1, Password];
-  if not СообщениеКА(FPrinter.GETERROR) then Exit;
-  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[3]) then nSum[3] := 0;
+    S := FPrinter.SUMDAY[1, 0, 0, 1, Password];
+    if not СообщениеКА(FPrinter.GETERROR) then Exit;
+    if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[2]) then nSum[2] := 0;
+
+    S := FPrinter.SUMDAY[1, 1 , 0, 1, Password];
+    if not СообщениеКА(FPrinter.GETERROR) then Exit;
+    if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[3]) then nSum[3] := 0;
+
+    if nTotal = (nSum[0] + nSum[1]) then Break;
+  end;
 
   Result := Result + '  ------        Податок       Обіг' + #13#10;
   Result := Result + '  ДОД. А   ' + Str(nSum[2], 13) + Str(nSum[0], 13) + #13#10;
@@ -550,6 +560,14 @@ end;
 function TCashFP3530T_NEW.ZReport : Integer;
 begin
   Result := FPrinter.COUNTERSDAY[0, Password];
+  if not СообщениеКА(FPrinter.GETERROR) then Exit;
+end;
+
+function TCashFP3530T_NEW.SummaReceipt : Currency;
+  var nSum : Currency;
+begin
+  Result := 0;
+  if not TryStrToCurr(Trim(StringReplace(FPrinter.SUMCHEQUE[3, 1, Password], '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum) then Result := nSum;
   if not СообщениеКА(FPrinter.GETERROR) then Exit;
 end;
 

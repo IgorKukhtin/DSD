@@ -138,115 +138,107 @@ BEGIN
     RETURN QUERY
           WITH
           -- выбираем товары спец. проекта (главные)
-          tmpGoodsSP AS (SELECT ObjectBoolean_Goods_SP.ObjectId              AS GoodsMainId
-                              , ObjectLink_Goods_IntenalSP.ChildObjectId     AS IntenalSPId
-                              , Object_IntenalSP.ValueData                   AS IntenalSPName
-                              , ObjectLink_Goods_BrandSP.ChildObjectId       AS BrandSPId
-                              , Object_BrandSP.ValueData                     AS BrandSPName
-                              , ObjectLink_Goods_KindOutSP.ChildObjectId     AS KindOutSPId
-                              , Object_KindOutSP.ValueData                   AS KindOutSPName
+           --  Все Товары соц-проект (документ)
+            tmpMI_GoodsSP AS (SELECT tmp.MovementItemId AS Id
+                                   , tmp.GoodsId
+                                   , tmp.OperDateStart
+                                   , tmp.OperDateEnd
+                                   , tmp.OperDate
+                              FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= inStartDate, inEndDate:= inEndDate) AS tmp
+                              )
 
-                              , ObjectFloat_Goods_PriceSP.ValueData          AS PriceSP
-                              , ObjectFloat_Goods_GroupSP.ValueData          AS GroupSP
-                              , ObjectFloat_Goods_CountSP.ValueData          AS CountSP
-                              , ObjectString_Goods_Pack.ValueData            AS Pack  --дозировка
+          , tmpGoodsSP AS (SELECT DISTINCT MovementItem.GoodsId                         AS GoodsMainId
+                                , MovementItem.OperDateStart                            AS OperDateStart
+                                , MovementItem.OperDateEnd                              AS OperDateEnd
+                                , MovementItem.OperDate                                 AS InsertDateSP
+                                , COALESCE(Object_IntenalSP.Id ,0)           ::Integer  AS IntenalSPId
+                                , COALESCE(Object_IntenalSP.ValueData,'')    ::TVarChar AS IntenalSPName
+                                , COALESCE(Object_BrandSP.Id ,0)             ::Integer  AS BrandSPId
+                                , COALESCE(Object_BrandSP.ValueData,'')      ::TVarChar AS BrandSPName
+                                , COALESCE(Object_KindOutSP.Id ,0)           ::Integer  AS KindOutSPId
+                                , COALESCE(Object_KindOutSP.ValueData,'')    ::TVarChar AS KindOutSPName
+                                , MIFloat_PriceSP.ValueData                             AS PriceSP
+                                , MIFloat_CountSP.ValueData                             AS CountSP
+                                , MIFloat_GroupSP.ValueData                             AS GroupSP
+                                , MIString_Pack.ValueData                               AS Pack
+                                , MIString_CodeATX.ValueData                            AS CodeATX
+                                , MIString_MakerSP.ValueData                            AS MakerSP
+                                , MIString_ReestrSP.ValueData                           AS ReestrSP
+                                , MIString_ReestrDateSP.ValueData                       AS ReestrDateSP
+                                , MIFloat_PriceOptSP.ValueData                          AS PriceOptSP
+                                , MIFloat_PriceRetSP.ValueData                          AS PriceRetSP
+                                , MIFloat_DailyNormSP.ValueData                         AS DailyNormSP
+                                , MIFloat_DailyCompensationSP.ValueData                 AS DailyCompensationSP
+                                , MIFloat_PaymentSP.ValueData                           AS PaymentSP
+                                , MIFloat_ColSP.ValueData                               AS ColSP
+                           FROM tmpMI_GoodsSP AS MovementItem
+                                LEFT JOIN MovementItemFloat AS MIFloat_ColSP
+                                                            ON MIFloat_ColSP.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_ColSP.DescId = zc_MIFloat_ColSP()
+                                LEFT JOIN MovementItemFloat AS MIFloat_CountSP
+                                                            ON MIFloat_CountSP.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_CountSP.DescId = zc_MIFloat_CountSP()
+                                LEFT JOIN MovementItemFloat AS MIFloat_PriceOptSP
+                                                            ON MIFloat_PriceOptSP.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
+                                LEFT JOIN MovementItemFloat AS MIFloat_PriceRetSP
+                                                            ON MIFloat_PriceRetSP.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_PriceRetSP.DescId = zc_MIFloat_PriceRetSP()  
+                                LEFT JOIN MovementItemFloat AS MIFloat_DailyNormSP
+                                                            ON MIFloat_DailyNormSP.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_DailyNormSP.DescId = zc_MIFloat_DailyNormSP() 
+                                LEFT JOIN MovementItemFloat AS MIFloat_DailyCompensationSP
+                                                            ON MIFloat_DailyCompensationSP.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_DailyCompensationSP.DescId = zc_MIFloat_DailyCompensationSP() 
+                                LEFT JOIN MovementItemFloat AS MIFloat_PriceSP
+                                                            ON MIFloat_PriceSP.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_PriceSP.DescId = zc_MIFloat_PriceSP()
+                                LEFT JOIN MovementItemFloat AS MIFloat_PaymentSP
+                                                            ON MIFloat_PaymentSP.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_PaymentSP.DescId = zc_MIFloat_PaymentSP()
+                                LEFT JOIN MovementItemFloat AS MIFloat_GroupSP
+                                                            ON MIFloat_GroupSP.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_GroupSP.DescId = zc_MIFloat_GroupSP()
+                                LEFT JOIN MovementItemString AS MIString_Pack
+                                                             ON MIString_Pack.MovementItemId = MovementItem.Id
+                                                            AND MIString_Pack.DescId = zc_MIString_Pack()
+                                LEFT JOIN MovementItemString AS MIString_CodeATX
+                                                             ON MIString_CodeATX.MovementItemId = MovementItem.Id
+                                                            AND MIString_CodeATX.DescId = zc_MIString_CodeATX()
+                                LEFT JOIN MovementItemString AS MIString_MakerSP
+                                                             ON MIString_MakerSP.MovementItemId = MovementItem.Id
+                                                            AND MIString_MakerSP.DescId = zc_MIString_MakerSP()
+                                LEFT JOIN MovementItemString AS MIString_ReestrSP
+                                                             ON MIString_ReestrSP.MovementItemId = MovementItem.Id
+                                                            AND MIString_ReestrSP.DescId = zc_MIString_ReestrSP()
+                                LEFT JOIN MovementItemString AS MIString_ReestrDateSP
+                                                             ON MIString_ReestrDateSP.MovementItemId = MovementItem.Id
+                                                            AND MIString_ReestrDateSP.DescId = zc_MIString_ReestrDateSP()
+                                LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
+                                                                 ON MI_IntenalSP.MovementItemId = MovementItem.Id
+                                                                AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP()
+                                LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = MI_IntenalSP.ObjectId 
+                                LEFT JOIN MovementItemLinkObject AS MI_BrandSP
+                                                                 ON MI_BrandSP.MovementItemId = MovementItem.Id
+                                                                AND MI_BrandSP.DescId = zc_MILinkObject_BrandSP()
+                                LEFT JOIN Object AS Object_BrandSP ON Object_BrandSP.Id = MI_BrandSP.ObjectId 
+                                LEFT JOIN MovementItemLinkObject AS MI_KindOutSP
+                                                                 ON MI_KindOutSP.MovementItemId = MovementItem.Id
+                                                                AND MI_KindOutSP.DescId = zc_MILinkObject_KindOutSP()
+                                LEFT JOIN Object AS Object_KindOutSP ON Object_KindOutSP.Id = MI_KindOutSP.ObjectId
+                           )
 
-                              , ObjectString_Goods_CodeATX.ValueData         AS CodeATX 
-                              , ObjectString_Goods_ReestrSP.ValueData        AS ReestrSP
-                              , ObjectString_Goods_MakerSP.ValueData         AS MakerSP
-                              , ObjectString_Goods_ReestrDateSP.ValueData    AS DateReestrSP
-                              , ObjectFloat_Goods_PriceOptSP.ValueData       AS PriceOptSP
-                              , ObjectFloat_Goods_PriceRetSP.ValueData       AS PriceRetSP
-                              , ObjectFloat_Goods_DailyNormSP.ValueData      AS DailyNormSP
-                              , ObjectFloat_Goods_DailyCompensationSP.ValueData  AS DailyCompensationSP
-                              , ObjectFloat_Goods_PaymentSP.ValueData        AS PaymentSP
-                              , ObjectFloat_Goods_ColSP.ValueData            AS ColSP
-                              , ObjectDate_InsertSP.ValueData                AS InsertDateSP
-
-                          FROM ObjectBoolean AS ObjectBoolean_Goods_SP 
-                               LEFT JOIN ObjectLink AS ObjectLink_Goods_Object 
-                                                    ON ObjectLink_Goods_Object.ObjectId = ObjectBoolean_Goods_SP.ObjectId
-                                                   AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-
-                               LEFT JOIN ObjectLink AS ObjectLink_Goods_IntenalSP
-                                                    ON ObjectLink_Goods_IntenalSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
-                                                   AND ObjectLink_Goods_IntenalSP.DescId = zc_ObjectLink_Goods_IntenalSP()
-                               LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = ObjectLink_Goods_IntenalSP.ChildObjectId
-        
-                               LEFT JOIN ObjectLink AS ObjectLink_Goods_BrandSP
-                                                    ON ObjectLink_Goods_BrandSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
-                                                   AND ObjectLink_Goods_BrandSP.DescId = zc_ObjectLink_Goods_BrandSP()
-                               LEFT JOIN Object AS Object_BrandSP ON Object_BrandSP.Id = ObjectLink_Goods_BrandSP.ChildObjectId
-
-                               LEFT JOIN ObjectLink AS ObjectLink_Goods_KindOutSP
-                                                    ON ObjectLink_Goods_KindOutSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
-                                                   AND ObjectLink_Goods_KindOutSP.DescId = zc_ObjectLink_Goods_KindOutSP()
-                               LEFT JOIN Object AS Object_KindOutSP ON Object_KindOutSP.Id = ObjectLink_Goods_KindOutSP.ChildObjectId
-
-                               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceSP
-                                                     ON ObjectFloat_Goods_PriceSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
-                                                    AND ObjectFloat_Goods_PriceSP.DescId = zc_ObjectFloat_Goods_PriceSP()   
-                               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_GroupSP
-                                                     ON ObjectFloat_Goods_GroupSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
-                                                    AND ObjectFloat_Goods_GroupSP.DescId = zc_ObjectFloat_Goods_GroupSP()
-
-                               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_CountSP
-                                                     ON ObjectFloat_Goods_CountSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
-                                                    AND ObjectFloat_Goods_CountSP.DescId = zc_ObjectFloat_Goods_CountSP()
-
-                               LEFT JOIN ObjectString AS ObjectString_Goods_Pack
-                                                      ON ObjectString_Goods_Pack.ObjectId = ObjectBoolean_Goods_SP.ObjectId
-                                                     AND ObjectString_Goods_Pack.DescId = zc_ObjectString_Goods_Pack()
-    
-                               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
-                                                     ON ObjectFloat_Goods_PriceOptSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
-                                                    AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP() 
-                               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceRetSP
-                                                     ON ObjectFloat_Goods_PriceRetSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
-                                                    AND ObjectFloat_Goods_PriceRetSP.DescId = zc_ObjectFloat_Goods_PriceRetSP() 
-                               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_DailyNormSP
-                                                     ON ObjectFloat_Goods_DailyNormSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
-                                                    AND ObjectFloat_Goods_DailyNormSP.DescId = zc_ObjectFloat_Goods_DailyNormSP() 
-                               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_DailyCompensationSP
-                                                     ON ObjectFloat_Goods_DailyCompensationSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
-                                                    AND ObjectFloat_Goods_DailyCompensationSP.DescId = zc_ObjectFloat_Goods_DailyCompensationSP() 
-                               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PaymentSP
-                                                     ON ObjectFloat_Goods_PaymentSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
-                                                    AND ObjectFloat_Goods_PaymentSP.DescId = zc_ObjectFloat_Goods_PaymentSP() 
-                               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_ColSP
-                                                     ON ObjectFloat_Goods_ColSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
-                                                    AND ObjectFloat_Goods_ColSP.DescId = zc_ObjectFloat_Goods_ColSP() 
-
-                               LEFT JOIN ObjectString AS ObjectString_Goods_CodeATX
-                                                      ON ObjectString_Goods_CodeATX.ObjectId = ObjectBoolean_Goods_SP.ObjectId
-                                                     AND ObjectString_Goods_CodeATX.DescId = zc_ObjectString_Goods_CodeATX()
-                               LEFT JOIN ObjectString AS ObjectString_Goods_ReestrSP
-                                                      ON ObjectString_Goods_ReestrSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
-                                                     AND ObjectString_Goods_ReestrSP.DescId = zc_ObjectString_Goods_ReestrSP()
-                               LEFT JOIN ObjectString AS ObjectString_Goods_MakerSP
-                                                      ON ObjectString_Goods_MakerSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
-                                                     AND ObjectString_Goods_MakerSP.DescId = zc_ObjectString_Goods_MakerSP()
-                               LEFT JOIN ObjectString AS ObjectString_Goods_ReestrDateSP
-                                                      ON ObjectString_Goods_ReestrDateSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
-                                                     AND ObjectString_Goods_ReestrDateSP.DescId = zc_ObjectString_Goods_ReestrDateSP()
-                               LEFT JOIN ObjectDate AS ObjectDate_InsertSP
-                                                    ON ObjectDate_InsertSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
-                                                   AND ObjectDate_InsertSP.DescId = zc_ObjectDate_Protocol_InsertSP()
-     
-                          WHERE ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
-                          --  AND ObjectBoolean_Goods_SP.ValueData = TRUE
-                         )
            -- связываем главные товары с товарами сети
         , tmpGoods AS (SELECT ObjectLink_Child.ChildObjectId AS GoodsId
                             , tmpGoodsSP.GoodsMainId
-                       FROM tmpGoodsSP
+                       FROM (SELECT DISTINCT tmpGoodsSP.GoodsMainId FROM tmpGoodsSP) AS tmpGoodsSP
                             INNER JOIN ObjectLink AS ObjectLink_Main
-                               ON ObjectLink_Main.ChildObjectId = tmpGoodsSP.GoodsMainId
-                              AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                                  ON ObjectLink_Main.ChildObjectId = tmpGoodsSP.GoodsMainId
+                                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
                             INNER JOIN ObjectLink AS ObjectLink_Child 
-                               ON ObjectLink_Child.ObjectId = ObjectLink_Main.ObjectId
-                              AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
-                              AND COALESCE (ObjectLink_Child.ChildObjectId,0)<>0
+                                                  ON ObjectLink_Child.ObjectId = ObjectLink_Main.ObjectId
+                                                 AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                                 AND COALESCE (ObjectLink_Child.ChildObjectId,0)<>0
                        )
 
       -- выбираем продажи по товарам соц.проекта
@@ -659,7 +651,7 @@ BEGIN
              , tmpGoodsSP.CodeATX         ::TVarChar
              , tmpGoodsSP.ReestrSP        ::TVarChar
              , tmpGoodsSP.MakerSP         ::TVarChar
-             , tmpGoodsSP.DateReestrSP    ::TVarChar
+             , tmpGoodsSP.ReestrDateSP    ::TVarChar AS DateReestrSP
              , tmpGoodsSP.PriceOptSP      :: TFloat
              , tmpGoodsSP.PriceRetSP      :: TFloat
              , tmpGoodsSP.DailyNormSP     :: TFloat
@@ -755,7 +747,11 @@ BEGIN
                                 AND tmpCountR.HospitalId = tmpData.HospitalId
                                 AND COALESCE (tmpCountR.ContractId,0) = COALESCE (tmpParam.PartnerMedical_ContractId,0)
 
-             LEFT JOIN tmpGoodsSP AS tmpGoodsSP ON tmpGoodsSP.GoodsMainId = tmpData.GoodsMainId
+             LEFT JOIN tmpGoodsSP AS tmpGoodsSP 
+                                  ON tmpGoodsSP.GoodsMainId = tmpData.GoodsMainId
+                                 AND tmpData.OperDateSP >= tmpGoodsSP.OperDateStart
+                                 AND tmpData.OperDateSP <= tmpGoodsSP.OperDateEnd
+             
              LEFT JOIN tmp_err ON tmp_err.Id = tmpData.MovementId_err
 /*
              LEFT JOIN Movement AS Movement_err ON Movement_err.Id = tmpData.MovementId_err
@@ -782,6 +778,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+ 11.02.19         * признак Товары соц-проект берем и документа
  26.10.18         *
  07.05.18         *
  14.02.18         * add Contract_SigningDate

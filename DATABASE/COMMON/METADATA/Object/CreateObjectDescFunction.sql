@@ -1096,7 +1096,9 @@ CREATE OR REPLACE FUNCTION zc_Object_SettingsServiceItem() RETURNS Integer AS $B
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_SettingsServiceItem', 'Ограничение на просмотр журнала услуг (элементы)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_SettingsServiceItem');
 
-
+CREATE OR REPLACE FUNCTION zc_Object_GoodsCategory() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsCategory'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_GoodsCategory', 'Ассортиментная матрица(Категории)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsCategory');
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
@@ -1114,6 +1116,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 11.02.19         * zc_Object_GoodsCategory
  28.01.19         * zc_Object_SettingsService
                     zc_Object_SettingsServiceItem
                     

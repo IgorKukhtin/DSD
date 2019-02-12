@@ -141,22 +141,31 @@ BEGIN
                , Container.ObjectId
         HAVING SUM (Container.Amount) > 0
        )
+
+    -- Товары соц-проект (документ)
+  , tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId, TRUE AS isSP
+                   FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE) AS tmp
+                  )
+
   , tmpGoodsView AS (SELECT Object_Goods_View.*
-                          , COALESCE (ObjectBoolean_Goods_SP.ValueData,False) :: Boolean  AS isSP
+                          , COALESCE (tmpGoodsSP.isSP, False)   ::Boolean AS isSP
                      FROM Object_Goods_View 
                          -- получаем GoodsMainId
                          LEFT JOIN  ObjectLink AS ObjectLink_Child 
                                                ON ObjectLink_Child.ChildObjectId = Object_Goods_View.Id
                                               AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
-                         LEFT JOIN  ObjectLink AS ObjectLink_Main 
-                                               ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                              AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                         LEFT JOIN ObjectLink AS ObjectLink_Main 
+                                              ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                             AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
 
-                         LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
-                                                  ON ObjectBoolean_Goods_SP.ObjectId =ObjectLink_Main.ChildObjectId 
-                                                 AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
+                         LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
+
+                         /*LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
+                                                  ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
+                                                 AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()*/
+                                                
                      WHERE Object_Goods_View.ObjectId = vbObjectId
-               )
+                     )
                
   , tmpPrice_View AS (SELECT ObjectLink_Price_Unit.ObjectId          AS Id
                            , ObjectLink_Price_Unit.ChildObjectId     AS UnitId
@@ -422,6 +431,7 @@ ALTER FUNCTION gpSelect_AllGoodsPrice (Integer,  Integer,  TFloat, Boolean, TFlo
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 11.02.19         * признак Товары соц-проект берем и документа
  03.05.18                                                                                      *
  17.04.18                                                                                      *
  01.11.17                                        * add inTaxTo

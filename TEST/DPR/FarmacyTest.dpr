@@ -654,7 +654,9 @@ uses
   CheckItemJournal in '..\..\FormsFarmacy\Document\CheckItemJournal.pas' {CheckItemJournalForm: TParentForm},
   Report_JuridicalCollationSaldo in '..\..\FormsFarmacy\Report\Report_JuridicalCollationSaldo.pas' {Report_JuridicalCollationSaldoForm: TParentForm},
   CheckJournalDiscountExternal in '..\..\Forms\Document\CheckJournalDiscountExternal.pas',
-  GlobalConst in '..\..\FormsFarmacy\System\GlobalConst.pas' {GlobalConstForm: TParentForm};
+  GlobalConst in '..\..\FormsFarmacy\System\GlobalConst.pas' {GlobalConstForm: TParentForm},
+  GoodsCategory in '..\..\FormsFarmacy\Guides\GoodsCategory.pas' {GoodsCategoryForm: TParentForm},
+  GoodsCategoryEdit in '..\..\FormsFarmacy\Guides\GoodsCategoryEdit.pas' {GoodsCategoryEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

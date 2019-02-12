@@ -851,7 +851,7 @@ inherited MainCashForm2: TMainCashForm2
         Style.IsFontAssigned = True
       end
       object lblTotalSumm: TcxLabel
-        Left = 350
+        Left = 355
         Top = 7
         Caption = '0.00'
         ParentFont = False

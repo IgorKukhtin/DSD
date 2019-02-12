@@ -1308,11 +1308,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_UnitCategory_MinLineByLineImplPlan() R
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_UnitCategory(), 'zc_ObjectFloat_UnitCategory_MinLineByLineImplPlan', 'Минимальный % построчного выполнения минимального плана для получения премии' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_UnitCategory_MinLineByLineImplPlan');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_GoodsCategory_Value() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsCategory_Value'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_GoodsCategory(), 'zc_ObjectFloat_GoodsCategory_Value', 'Кол-во' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsCategory_Value');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 11.02.19         * zc_ObjectFloat_GoodsCategory_Value
  07.02.19         * zc_ObjectFloat_PriceChange_FixPercent
  29.01.19         * zc_ObjectFloat_Route_RateSummaExp
  18.01.19         * zc_ObjectFloat_Maker_Day

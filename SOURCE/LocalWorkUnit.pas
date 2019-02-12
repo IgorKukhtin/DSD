@@ -276,13 +276,32 @@ Begin
 End;
 
 procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
+  var I : integer; Tmp: TClientDataSet;
 Begin
   if FileExists(AFileName) and (GetFileSizeByName(AFileName) > 0) then
     CopyFile(PChar(AFileName), PChar(GetBackupFileName(AFileName)), false);
-  ASrc.SaveToFile(AFileName,dfBinary);
+  Tmp := TClientDataSet.Create(Nil);
+  try
+    for I := 1 to 3 do
+    begin
+      ASrc.SaveToFile(AFileName,dfBinary);
+      try
+        Tmp.LoadFromFile(AFileName);
+        Tmp.Open;
+        Break;
+      Except
+        DeleteFile(PChar(AFileName));
+        if I = 3 then ShowMessage('Ошибка сохранения файл '+ AFileName + ' !');
+      end;
+    end;
+  finally
+    Tmp.Close;
+    Tmp.Free;
+  end;
 End;
 
 procedure LoadLocalData(ADst: TClientDataSet; AFileName: String); overload;
+  var I : integer;
 Begin
   if not FileExists(AFileName) then
   begin
@@ -300,9 +319,23 @@ Begin
       Exit;
     end;
   end;
-  ADst.Close;
-  ADst.LoadFromFile(AFileName);
-  ADst.Open;
+  for I := 1 to 2 do
+  begin
+    try
+      ADst.Close;
+      ADst.LoadFromFile(AFileName);
+      ADst.Open;
+      Break;
+    Except
+      if I = 1 then
+      begin
+        if FileExists(GetBackupFileName(AFileName)) and
+           (GetFileSizeByName(GetBackupFileName(AFileName)) > 0) then
+           CopyFile(PChar(GetBackupFileName(AFileName)), PChar(AFileName), false)
+      end else ShowMessage('Ошибка загрузки файл '+ AFileName + ' !');
+    end;
+  end;
+
 End;
 
 end.

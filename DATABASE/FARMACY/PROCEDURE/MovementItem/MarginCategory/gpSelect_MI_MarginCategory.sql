@@ -117,12 +117,17 @@ BEGIN
                  WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                    AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
               )
+    -- Товары соц-проект (документ)
+  , tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId, TRUE AS isSP
+                   FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= vbStartSale, inEndDate:= vbEndSale) AS tmp
+                   )
+              
   -- товары СП, дальше связь по главному товару
-  , tmpOB_SP AS (SELECT *
+  /*, tmpOB_SP AS (SELECT *
                  FROM ObjectBoolean AS ObjectBoolean_Goods_SP 
                  WHERE ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
                    AND COALESCE (ObjectBoolean_Goods_SP.ValueData, False) = TRUE
-                )
+                )*/
     
   , MarginCondition AS (SELECT D1.MarginCategoryItemId
                              , D1.Amount AS MarginPercent
@@ -151,7 +156,7 @@ BEGIN
             , COALESCE (MarginCondition.PercentNew, 0)    ::TFloat  AS MarginPercentNew
             , COALESCE (tmpPrice.MCSIsClose, False)       ::Boolean AS MCSIsClose
             , COALESCE (tmpPrice.MCSNotRecalc, False)     ::Boolean AS MCSNotRecalc
-            , COALESCE (ObjectBoolean_Goods_SP.ValueData, False)  :: Boolean  AS isSP
+            , COALESCE (tmpGoodsSP.isSP, False)           ::Boolean AS isSP
    
             , MovementItem.Amount                         ::TFloat       AS Amount
             , COALESCE (MIFloat_Amount.ValueData, 0)      ::TFloat       AS AmountAnalys
@@ -222,7 +227,7 @@ BEGIN
             
             -- торг.сеть товара
             LEFT JOIN Object AS Object_Retail 
-                             ON Object_Retail.Id = Object_Goods_View.ObjectId
+                             ON Object_Retail.Id = Object_Goods.ObjectId
                             AND Object_Retail.DescId = zc_Object_Retail()
 
             -- получаем GoodsMainId
@@ -232,8 +237,8 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Main 
                                  ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-            LEFT JOIN tmpOB_SP AS ObjectBoolean_Goods_SP 
-                               ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId
+
+            LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
            ;
 
     RETURN NEXT Cursor1;
@@ -265,7 +270,8 @@ LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.02.19         * признак Товары соц-проект берем и документа
  19.11.17         * 
 */
 

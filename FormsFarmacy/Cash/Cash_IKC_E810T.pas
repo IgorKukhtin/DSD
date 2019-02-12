@@ -6,7 +6,8 @@ type
   TCashIKC_E810T = class(TInterfacedObject, ICash)
   private
     FAlwaysSold: boolean;
-    FPrinter: IICS_EP_09;
+    FPrinter: IICS_EP_11;
+//    FModem: IICS_Modem;
     FisFiscal: boolean;
     FLengNoFiscalText : integer;
     procedure SetAlwaysSold(Value: boolean);
@@ -43,6 +44,7 @@ type
     function InfoZReport : string;
     function JuridicalName : string;
     function ZReport : Integer;
+    function SummaReceipt : Currency;
   public
     constructor Create;
     function ShowError: boolean;
@@ -67,8 +69,23 @@ begin
   FPrinter := CoFiscPrn.Create;
   if FPrinter.FPInitialize = 0 then
   begin
-    if not FPrinter.FPOpen(StrToInt(iniPortNumber), StrToInt(iniPortSpeed), 3, 3) then ShowError;
-  end else ShowMessage(SysErrorMessage(GetLastError));
+    if not FPrinter.FPOpen(StrToInt(iniPortNumber), StrToInt(iniPortSpeed), 3, 3) then
+    begin
+      ShowError;
+      Raise Exception.Create('');
+    end;
+  end else
+  begin
+    ShowMessage(SysErrorMessage(GetLastError));
+    Raise Exception.Create('');
+  end;
+
+//  FModem := CoFiscPrn.CreateModem;
+//  if FModem.ModemInitialize('COM' + iniPortNumber) <> 0 then
+//  begin
+//    ShowMessage(SysErrorMessage(GetLastError));
+//    Raise Exception.Create('');
+//  end;
 end;
 
 
@@ -354,6 +371,11 @@ function TCashIKC_E810T.InfoZReport : string;
 begin
   Result := '';
 
+//  FModem.prKsefSavePath := 'd:\DSD\BIN\ZRepot';
+//  FModem.ModemReadKsefByZReport(9);
+//  if FModem.ModemFindPacket(15, 0, 0) then FModem.ModemReadKsefPacket(FModem.prFoundPacket);
+
+
   FPrinter.FPGetCurrentStatus;
 
   if FPrinter.prHeadLine1 <> '' then  Result := Result + Centr(FPrinter.prHeadLine1) + #13#10;
@@ -395,25 +417,16 @@ begin
   Result := Result + '  ВІД. Б   ' + Str(FPrinter.prDaySumAddTaxOfRefund2 / 100, 13) + Str(FPrinter.prDayRefundSumOnTax2 / 100, 13) + #13#10;
   Result := Result + '  Чеків повернення ' + IntToStr(FPrinter.prDayRefundReceiptsCount) + #13#10;
 
-  {
-  S := FPrinter.READTAXRATE[0, 2, Password];
-  if not ShowError then Exit;
-  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[0]) then nSum[0] := 0;
+  FPrinter.FPGetTaxRates;
+  Result := Result + '  Податок     від        ' + FormatDateTime('dd.mm.yyyy', FPrinter.prTaxRatesDate) + #13#10;
+  Result := Result + '            ПДВ_A (Вкл) A =    ' + Str(FPrinter.prTaxRate1 / 100, 6) + '%' + #13#10;
+  Result := Result + '            ПДВ_Б (Вкл) Б =    ' + Str(FPrinter.prTaxRate2 / 100, 6) + '%' + #13#10;
 
-  S := FPrinter.READTAXRATE[1, 2, Password];
-  if not ShowError then Exit;
-  if not TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum[1]) then nSum[1] := 0;
+  FPrinter.FPGetCurrentDate;
+  FPrinter.FPGetCurrentTime;
 
-  Result := Result + '  Податок     від        10.10.2017' + #13#10;
-  Result := Result + '            ПДВ_A (Вкл) A =    ' + Str(nSum[0], 6) + '%' + #13#10;
-  Result := Result + '            ПДВ_Б (Вкл) Б =    ' + Str(nSum[1], 6) + '%' + #13#10;
+  S := FormatDateTime('dd.mm.yyyy', FPrinter.prCurrentDate) + '  ' + FormatDateTime('hh:nn', FPrinter.prCurrentTime);
 
-  S := FPrinter.RETDT[1, Password];
-  if not ShowError then Exit;
-  S := S + '  ' + FPrinter.RETDT[0, Password];
-  if not ShowError then Exit;
-  S := COPY(S, 1, 2) + '.' + COPY(S, 3, 2) +  '.20' + COPY(S, 5, 6) +  ':' + COPY(S, 11, 2);
-  }
   Result := Result + '                    ' + S  + #13#10;
   Result := Result + '         ФІСКАЛЬНИЙ ЧЕК' + #13#10;
   Result := Result + '  --------------------------------------' + #13#10;
@@ -433,6 +446,11 @@ begin
   Result := 0;
   if FPrinter.FPGetDayReportProperties then Result := FPrinter.prCurrentZReport
   else ShowError;
+end;
+
+function TCashIKC_E810T.SummaReceipt : Currency;
+begin
+  Result := FPrinter.prSumTotal / 100;
 end;
 
 end.

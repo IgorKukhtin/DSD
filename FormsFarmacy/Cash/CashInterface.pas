@@ -39,8 +39,9 @@ type
      function InfoZReport : string;
      function JuridicalName : string;
      function ZReport : Integer;
-     property AlwaysSold: boolean read GetAlwaysSold write SetAlwaysSold;
+     function SummaReceipt : Currency;
 
+     property AlwaysSold: boolean read GetAlwaysSold write SetAlwaysSold;
    end;
 implementation
 
