@@ -19,6 +19,12 @@ BEGIN
    --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsCategory());
    vbUserId:= inSession;
 
+   -- проверка
+   IF COALESCE (inUnitId, 0) = 0 OR COALESCE (inGoodsId, 0) = 0
+   THEN 
+       RAISE EXCEPTION 'Ошибка.Параметры <Товар> и <Подразделение> обязательны к заполнению';
+   END IF;
+
      -- проверка
    IF EXISTS (SELECT 1
               FROM ObjectLink AS ObjectLink_GoodsCategory_Unit

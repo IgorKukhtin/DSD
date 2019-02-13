@@ -13,18 +13,19 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
     Top = 67
     Width = 782
     Height = 356
+    ExplicitTop = 67
     ExplicitWidth = 782
-    ExplicitHeight = 397
+    ExplicitHeight = 356
     ClientRectBottom = 356
     ClientRectRight = 782
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 782
-      ExplicitHeight = 397
+      ExplicitHeight = 356
       inherited cxGrid: TcxGrid
         Width = 782
         Height = 356
         ExplicitWidth = 782
-        ExplicitHeight = 397
+        ExplicitHeight = 356
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
@@ -275,16 +276,16 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
         item
           Name = 'UnitId'
           Value = Null
-          Component = GuidesUnit
-          ComponentItem = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
           Value = Null
-          Component = GuidesUnit
-          ComponentItem = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
