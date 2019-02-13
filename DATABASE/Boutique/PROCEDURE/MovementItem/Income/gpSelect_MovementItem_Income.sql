@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, PartionId Integer, GoodsId Integer, GoodsCode Integer
              , GoodsSizeId Integer, GoodsSizeName TVarChar
              , Amount TFloat, Remains TFloat
              , PriceJur TFloat, OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
-             , TotalSumm TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat
+             , TotalSumm TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat, TotalSummPriceJur TFloat
              , PriceTax TFloat       -- % наценки
              , Color_Calc Integer
              , isProtocol Boolean
@@ -82,6 +82,8 @@ BEGIN
                                            ) AS TotalSummBalance
                              -- Сумма по Прайсу - с округлением до 0/2-х знаков
                            , zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)                       AS TotalSummPriceList
+                              -- Сумма по Вх. без скидки 
+                           , zfCalc_SummIn (MovementItem.Amount, MIFloat_PriceJur.ValueData, MIFloat_CountForPrice.ValueData) AS TotalSummPriceJur
                            , MovementItem.isErased
 
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -149,6 +151,7 @@ BEGIN
            , tmpMI.TotalSumm           :: TFloat AS TotalSumm
            , tmpMI.TotalSummBalance    :: TFloat AS TotalSummBalance
            , tmpMI.TotalSummPriceList  :: TFloat AS TotalSummPriceList
+           , tmpMI.TotalSummPriceJur   :: TFloat AS TotalSummPriceJur
            
            -- % наценки
            , CAST (CASE WHEN tmpMI.TotalSummBalance <> 0
@@ -202,7 +205,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 
+ 13.02.19         *
  03.05.18         *
  10.04.17         *
 */

@@ -228,14 +228,12 @@ object IncomeForm: TIncomeForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 354
     ClientRectBottom = 359
     ClientRectRight = 967
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 330
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -243,7 +241,6 @@ object IncomeForm: TIncomeForm
         Height = 335
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 3
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -305,6 +302,11 @@ object IncomeForm: TIncomeForm
               Format = ',0.####'
               Kind = skSum
               Column = Remains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPriceJur
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -372,6 +374,11 @@ object IncomeForm: TIncomeForm
               Format = ',0.####'
               Kind = skSum
               Column = Remains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPriceJur
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -528,6 +535,18 @@ object IncomeForm: TIncomeForm
           object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074#1093'.'
             DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object TotalSummPriceJur: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'TotalSummPriceJur'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -1740,6 +1759,14 @@ object IncomeForm: TIncomeForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inChangePercent'
+          Value = Null
+          Component = edChangePercent
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = MasterDS
@@ -2265,6 +2292,14 @@ object IncomeForm: TIncomeForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'TotalSummPriceList'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalSummPriceJur'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSummPriceJur'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
