@@ -20,6 +20,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , LocationCode Integer, LocationName TVarChar
              , LocationCode_by Integer, LocationName_by TVarChar
              , Amount TFloat, Amount_Weight TFloat, Amount_Sh TFloat
+             , Count TFloat, Weight_Mid TFloat
              , Summ_zavod TFloat, Summ_branch TFloat, Summ_60000 TFloat
              , Price_zavod TFloat, Price_branch TFloat
              , OperDate TDateTime
@@ -93,6 +94,8 @@ BEGIN
          , tmpOperationGroup.Amount        :: TFloat AS Amount
          , tmpOperationGroup.Amount_Weight :: TFloat AS Amount_Weight
          , tmpOperationGroup.Amount_Sh     :: TFloat AS Amount_Sh
+         , tmpOperationGroup.Count         :: TFloat AS Count
+         , CASE WHEN COALESCE (tmpOperationGroup.Count, 0) <> 0 THEN tmpOperationGroup.Amount_Weight / tmpOperationGroup.Count ELSE 0 END :: TFloat AS Weight_Mid -- средний вес 1 батона
 
          , tmpOperationGroup.Summ_zavod  :: TFloat AS Summ_zavod
          , tmpOperationGroup.Summ_branch :: TFloat AS Summ_branch
@@ -113,9 +116,10 @@ BEGIN
                 , SUM (tmpContainer.Amount) AS Amount
                 , SUM (tmpContainer.Amount * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END) AS Amount_Weight
                 , SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpContainer.Amount ELSE 0 END) AS Amount_sh
-                , SUM (tmpContainer.Summ) AS Summ_zavod
+                , SUM (tmpContainer.Summ)   AS Summ_zavod
                 , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.Summ ELSE 0 END) AS Summ_branch
                 , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpContainer.Summ ELSE 0 END) AS Summ_60000
+                , SUM (tmpContainer.Count)  AS Count
                 , tmpContainer.isCalculated
 
            FROM (SELECT CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END AS ContainerId
@@ -127,6 +131,7 @@ BEGIN
                       , COALESCE (MIContainer.AccountId, 0)  AS AccountId
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN MIContainer.Amount ELSE 0 END * CASE WHEN MIContainer.isActive = TRUE THEN 1 ELSE -1 END) AS Amount
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN MIContainer.Amount ELSE 0 END * CASE WHEN MIContainer.isActive = TRUE THEN 1 ELSE -1 END) AS Summ
+                      , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN COALESCE (MIFloat_Count.ValueData,0) ELSE 0 END)                                          AS Count
                       , COALESCE (MIBoolean_Calculated.ValueData, FALSE) ::Boolean AS isCalculated
                  FROM _tmpUnit
                       INNER JOIN MovementItemContainer AS MIContainer
@@ -137,6 +142,9 @@ BEGIN
                       LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
                                                     ON MIBoolean_Calculated.MovementItemId = MIContainer.MovementItemId
                                                    AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
+                      LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                                  ON MIFloat_Count.MovementItemId = MIContainer.MovementItemId
+                                                 AND MIFloat_Count.DescId = zc_MIFloat_Count()
                       -- LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
                  -- WHERE _tmpGoods.GoodsId > 0 OR inGoodsGroupId = 0
                  GROUP BY CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END

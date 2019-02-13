@@ -63,6 +63,11 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ_60000
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -101,6 +106,11 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ_60000
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Count
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -236,6 +246,28 @@ inherited Report_GoodsMI_ProductionForm: TReport_GoodsMI_ProductionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object Count: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1073#1072#1090#1086#1085#1086#1074
+            DataBinding.FieldName = 'Count'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1073#1072#1090#1086#1085#1086#1074
+            Width = 60
+          end
+          object Weight_Mid: TcxGridDBColumn
+            Caption = #1057#1088'. '#1074#1077#1089' 1 '#1073#1072#1090'.'
+            DataBinding.FieldName = 'Weight_Mid'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1088#1077#1076#1085#1080#1081' '#1074#1077#1089' 1 '#1073#1072#1090#1086#1085#1072
+            Width = 60
           end
           object Price_zavod: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1089'/'#1089' '#1079#1072#1074#1086#1076
