@@ -2209,11 +2209,26 @@ inherited MainCashForm2: TMainCashForm2
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1044#1086#1089#1090#1091#1087#1085#1099#1077' '#1083#1077#1082#1072#1088#1089#1090#1074#1072' - '#1057#1055
-      FormName = 'TGoodsSP_ObjectForm'
-      FormNameParam.Value = 'TGoodsSP_ObjectForm'
+      FormName = 'TGoodsSP_MovementForm'
+      FormNameParam.Value = 'TGoodsSP_MovementForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MovementSPId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
     object actGetJuridicalList: TAction
@@ -2573,6 +2588,29 @@ inherited MainCashForm2: TMainCashForm2
       Caption = #1057#1082#1080#1076#1082#1072' '#1095#1077#1088#1077#1079' '#1089#1072#1081#1090
       OnExecute = actSetSiteDiscountExecute
     end
+    object actOpenMovementSP: TMultiAction
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecGet_Movement_GoodsSP_ID
+        end
+        item
+          Action = actOpenGoodsSP_UserForm
+        end>
+      Caption = #1044#1086#1089#1090#1091#1087#1085#1099#1077' '#1083#1077#1082#1072#1088#1089#1090#1074#1072' - '#1057#1055
+    end
+    object actExecGet_Movement_GoodsSP_ID: TdsdExecStoredProc
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = gpGet_Movement_GoodsSP_ID
+      StoredProcList = <
+        item
+          StoredProc = gpGet_Movement_GoodsSP_ID
+        end>
+      Caption = 'actExecGet_Movement_GoodsSP_ID'
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2832,7 +2870,7 @@ inherited MainCashForm2: TMainCashForm2
       Action = actOpenCheckVIP_Error
     end
     object miOpenGoodsSP_UserForm: TMenuItem
-      Action = actOpenGoodsSP_UserForm
+      Action = actOpenMovementSP
     end
     object miSetPromo: TMenuItem
       Action = actSetPromoCode
@@ -3050,6 +3088,17 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'SiteDiscount'
         Value = Null
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementSPId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = 'NULL'
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 32
@@ -3888,5 +3937,21 @@ inherited MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 704
     Top = 56
+  end
+  object gpGet_Movement_GoodsSP_ID: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_GoodsSP_ID'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementSPId'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 480
+    Top = 232
   end
 end

@@ -347,6 +347,9 @@ type
     cxButton2: TcxButton;
     cxButton3: TcxButton;
     MainFixPercent: TcxGridDBColumn;
+    actOpenMovementSP: TMultiAction;
+    actExecGet_Movement_GoodsSP_ID: TdsdExecStoredProc;
+    gpGet_Movement_GoodsSP_ID: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -3068,6 +3071,7 @@ begin
   actSaveCashSesionIdToFile.Execute;  // только 2 форма
   FormParams.ParamByName('ClosedCheckId').Value := 0;
   FormParams.ParamByName('CheckId').Value := 0;
+  FormParams.ParamByName('OperDate').Value := Date;
   ShapeState.Brush.Color := clGreen;
   if NOT GetIniFile(F) then
   Begin
