@@ -2,7 +2,9 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
   Caption = #1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1072#1103' '#1084#1072#1090#1088#1080#1094#1072'('#1050#1072#1090#1077#1075#1086#1088#1080#1080')'
   ClientHeight = 423
   ClientWidth = 782
+  AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 798
   ExplicitHeight = 461
   PixelsPerInch = 96
@@ -115,10 +117,102 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
     inherited actInsert: TInsertUpdateChoiceAction
       FormName = 'TGoodsCategoryEditForm'
       FormNameParam.Value = 'TGoodsCategoryEditForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitCategoryId'
+          Value = '0'
+          Component = GuidesUnitCategory
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitCategoryName'
+          Component = GuidesUnitCategory
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = '0'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TGoodsCategoryEditForm'
       FormNameParam.Value = 'TGoodsCategoryEditForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitCategoryId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitCategoryId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitCategoryName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitCategoryName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Value'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
       isShowModal = True
     end
     inherited dsdChoiceGuides: TdsdChoiceGuides
@@ -450,5 +544,21 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
     PackSize = 1
     Left = 328
     Top = 216
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesUnitCategory
+      end>
+    Left = 384
+    Top = 104
+  end
+  object FormParams: TdsdFormParams
+    Params = <>
+    Left = 224
+    Top = 224
   end
 end

@@ -42,6 +42,8 @@ type
     actUpdateDataSet: TdsdUpdateDataSet;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     bbUnitCategory: TdxBarControlContainerItem;
+    RefreshDispatcher: TRefreshDispatcher;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

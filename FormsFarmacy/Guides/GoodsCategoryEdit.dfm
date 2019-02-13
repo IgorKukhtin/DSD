@@ -73,9 +73,63 @@ inherited GoodsCategoryEditForm: TGoodsCategoryEditForm
   inherited ActionList: TActionList
     Left = 207
     Top = 127
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProc = nil
+      StoredProcList = <>
+      ShortCut = 0
+    end
   end
   inherited FormParams: TdsdFormParams
-    Left = 296
+    Params = <
+      item
+        Name = 'Id'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsName'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitCategoryId'
+        Value = Null
+        Component = GuidesUnitCategory
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitCategoryName'
+        Value = Null
+        Component = GuidesUnitCategory
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value'
+        Value = Null
+        Component = ceValue
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 304
     Top = 0
   end
   inherited spInsertUpdate: TdsdStoredProc

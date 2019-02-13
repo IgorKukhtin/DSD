@@ -17,6 +17,21 @@ BEGIN
    --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsCategory());
    vbUserId:= inSession;
 
+     -- проверка
+   IF EXISTS (SELECT 1
+              FROM ObjectLink AS ObjectLink_GoodsCategory_UnitCategory
+                   INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Goods
+                                        ON ObjectLink_GoodsCategory_Goods.ObjectId = ObjectLink_GoodsCategory_UnitCategory.ObjectId
+                                       AND ObjectLink_GoodsCategory_Goods.DescId = zc_ObjectLink_GoodsCategory_Goods()
+                                       AND ObjectLink_GoodsCategory_Goods.ChildObjectId = inGoodsId
+              WHERE ObjectLink_GoodsCategory_UnitCategory.DescId = zc_ObjectLink_GoodsCategory_Category()
+                AND ObjectLink_GoodsCategory_UnitCategory.ChildObjectId = inUnitCategoryId
+                AND ObjectLink_GoodsCategory_UnitCategory.ObjectId <> ioId
+              )
+   THEN
+      RAISE EXCEPTION 'Ошибка.Связь категория <%> - товар <%> уже существует', lfGet_Object_ValueData (inUnitCategoryId), lfGet_Object_ValueData (inGoodsId);
+   END IF; 
+
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_GoodsCategory(), 0, '');
 
@@ -44,3 +59,5 @@ LANGUAGE plpgsql VOLATILE;
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_GoodsCategory ()                            
+
+--select * from gpInsertUpdate_Object_GoodsCategory(ioId := 10091548 , inGoodsId := 342 , inGoodsCategoryId := 7779481 , inValue := 2 ,  inSession := '3');
