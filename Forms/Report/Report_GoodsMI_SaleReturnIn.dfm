@@ -737,7 +737,7 @@
             Width = 70
           end
           object Sale_SummMVAT: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057' '#1055#1088#1086#1076', '#1075#1088#1085' ('#1087#1086#1082#1091#1087')'
+            Caption = #1055#1088#1086#1076' '#1089#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057', '#1075#1088#1085' ('#1087#1086#1082#1091#1087')'
             DataBinding.FieldName = 'Sale_SummMVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -749,7 +749,7 @@
             Width = 82
           end
           object Sale_SummVAT: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057' '#1055#1088#1086#1076', '#1075#1088#1085' ('#1087#1086#1082#1091#1087')'
+            Caption = #1055#1088#1086#1076' '#1089#1091#1084#1084#1072' '#1053#1044#1057', '#1075#1088#1085' ('#1087#1086#1082#1091#1087')'
             DataBinding.FieldName = 'Sale_SummVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -761,7 +761,7 @@
             Width = 70
           end
           object Return_SummMVAT: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057' '#1042#1086#1079#1074#1088', '#1075#1088#1085
+            Caption = #1042#1086#1079#1074#1088' '#1089#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057', '#1075#1088#1085
             DataBinding.FieldName = 'Return_SummMVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -773,7 +773,7 @@
             Width = 70
           end
           object Return_SummVAT: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057' '#1042#1086#1079#1074#1088', '#1075#1088#1085
+            Caption = #1042#1086#1079#1074#1088' '#1089#1091#1084#1084#1072' '#1053#1044#1057', '#1075#1088#1085
             DataBinding.FieldName = 'Return_SummVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4

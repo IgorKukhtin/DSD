@@ -22,7 +22,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit,
-  cxButtonEdit, cxLabel;
+  cxButtonEdit, cxLabel, Vcl.ExtCtrls;
 
 type
   TGoodsCategoryForm = class(TAncestorGuidesForm)
@@ -31,8 +31,6 @@ type
     Value: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
-    cxLabel1: TcxLabel;
-    edUnitCategory: TcxButtonEdit;
     GuidesUnitCategory: TdsdGuides;
     actShowAll: TBooleanStoredProcAction;
     actShowDel: TBooleanStoredProcAction;
@@ -44,6 +42,13 @@ type
     bbUnitCategory: TdxBarControlContainerItem;
     RefreshDispatcher: TRefreshDispatcher;
     FormParams: TdsdFormParams;
+    Panel: TPanel;
+    cxLabel2: TcxLabel;
+    edUnit: TcxButtonEdit;
+    edUnitCategory: TcxButtonEdit;
+    cxLabel1: TcxLabel;
+    GuidesUnit: TdsdGuides;
+    UnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public

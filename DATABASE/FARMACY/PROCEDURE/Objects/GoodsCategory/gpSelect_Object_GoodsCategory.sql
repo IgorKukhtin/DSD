@@ -2,9 +2,11 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_GoodsCategory(TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_GoodsCategory(Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_GoodsCategory(Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsCategory(
     IN inUnitCategoryId  Integer ,
+    IN inUnitId          Integer ,
     IN inShowAll         Boolean ,
     IN inisErased        Boolean ,
     IN inSession         TVarChar       -- ñåññèÿ ïîëüçîâàòåëÿ
@@ -13,6 +15,7 @@ RETURNS TABLE (Id Integer
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , UnitCategoryId Integer, UnitCategoryName TVarChar
+             , UnitId Integer, UnitName TVarChar
              , Value TFloat
              , isErased boolean
 ) AS
@@ -43,21 +46,27 @@ BEGIN
                                                 ON ObjectLink_Goods_Object.ObjectId = Object_Goods.Id
                                                AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                      WHERE ObjectBoolean_Goods_isMain.DescId = zc_ObjectBoolean_Goods_isMain()
-                       AND inUnitCategoryId <> 0
+                       AND inUnitId <> 0
                      )
 
       , tmpGoodsCategory AS (SELECT Object_GoodsCategory.Id        AS Id
                                   , ObjectLink_Goods_GoodsGroup.ChildObjectId    AS GoodsGroupId
                                   , Object_GoodsGroup.ValueData                  AS GoodsGroupName
                                   , ObjectLink_GoodsCategory_Goods.ChildObjectId AS GoodsId
-                                  , ObjectLink_GoodsCategory_UnitCategory.ChildObjectId AS UnitCategoryId
+                                  , COALESCE (ObjectLink_GoodsCategory_UnitCategory.ChildObjectId,0) AS UnitCategoryId
+                                  , ObjectLink_GoodsCategory_Unit.ChildObjectId  AS UnitId
                                   , ObjectFloat_Value.ValueData    AS Value
                                   , Object_GoodsCategory.isErased  AS isErased
                              FROM Object AS Object_GoodsCategory
+                                 INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Unit
+                                                       ON ObjectLink_GoodsCategory_Unit.ObjectId = Object_GoodsCategory.Id
+                                                      AND ObjectLink_GoodsCategory_Unit.DescId = zc_ObjectLink_GoodsCategory_Unit()
+                                                      AND ObjectLink_GoodsCategory_Unit.ChildObjectId = inUnitId
+
                                  INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_UnitCategory
                                                        ON ObjectLink_GoodsCategory_UnitCategory.ObjectId = Object_GoodsCategory.Id
                                                       AND ObjectLink_GoodsCategory_UnitCategory.DescId = zc_ObjectLink_GoodsCategory_Category()
-                                                      AND (ObjectLink_GoodsCategory_UnitCategory.ChildObjectId = inUnitCategoryId /*OR inUnitCategoryId = 0*/)
+                                                      AND (ObjectLink_GoodsCategory_UnitCategory.ChildObjectId = inUnitCategoryId OR inUnitCategoryId = 0)
 
                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsCategory_Goods
                                                       ON ObjectLink_GoodsCategory_Goods.ObjectId = Object_GoodsCategory.Id
@@ -86,6 +95,8 @@ BEGIN
            , tmpGoods.GoodsName             AS GoodsName 
            , Object_UnitCategory.Id         AS UnitCategoryId
            , Object_UnitCategory.ValueData  AS UnitCategoryName 
+           , Object_Unit.Id                 AS UnitId
+           , Object_Unit.ValueData          AS UnitName 
            , COALESCE (tmpGoodsCategory.Value, 0)  ::TFloat       AS Value
            , CASE WHEN tmpGoodsCategory.isErased = TRUE OR tmpGoods.isErased = TRUE THEN TRUE ELSE FALSE END AS isErased
        FROM tmpGoods
@@ -97,6 +108,7 @@ BEGIN
            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
            
            LEFT JOIN Object AS Object_UnitCategory ON Object_UnitCategory.Id = COALESCE (tmpGoodsCategory.UnitCategoryId, inUnitCategoryId)
+           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE (tmpGoodsCategory.UnitId, inUnitId)
            
        ;
    ELSE
@@ -110,13 +122,21 @@ BEGIN
            , Object_Goods.ValueData         AS GoodsName 
            , Object_UnitCategory.Id         AS UnitCategoryId
            , Object_UnitCategory.ValueData  AS UnitCategoryName 
+           , Object_Unit.Id                 AS UnitId
+           , Object_Unit.ValueData          AS UnitName 
            , ObjectFloat_Value.ValueData    AS Value
            , Object_GoodsCategory.isErased  AS isErased
        FROM Object AS Object_GoodsCategory
+           INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Unit
+                                 ON ObjectLink_GoodsCategory_Unit.ObjectId = Object_GoodsCategory.Id
+                                AND ObjectLink_GoodsCategory_Unit.DescId = zc_ObjectLink_GoodsCategory_Unit()
+                                AND (ObjectLink_GoodsCategory_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
+           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_GoodsCategory_Unit.ChildObjectId 
+
            INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_UnitCategory
                                  ON ObjectLink_GoodsCategory_UnitCategory.ObjectId = Object_GoodsCategory.Id
                                 AND ObjectLink_GoodsCategory_UnitCategory.DescId = zc_ObjectLink_GoodsCategory_Category()
-                                AND (ObjectLink_GoodsCategory_UnitCategory.ChildObjectId = inUnitCategoryId /*OR inUnitCategoryId = 0*/)
+                                AND (ObjectLink_GoodsCategory_UnitCategory.ChildObjectId = inUnitCategoryId OR inUnitCategoryId = 0)
            LEFT JOIN Object AS Object_UnitCategory ON Object_UnitCategory.Id = ObjectLink_GoodsCategory_UnitCategory.ChildObjectId 
 
            LEFT JOIN ObjectLink AS ObjectLink_GoodsCategory_Goods
@@ -146,9 +166,9 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 13.02.19         * inUnitId
  11.02.19         *
-
 */
 
 -- òåñò
--- SELECT * FROM gpSelect_Object_GoodsCategory (0, TRUE, TRUE, '2')
+-- SELECT * FROM gpSelect_Object_GoodsCategory (0, 0, TRUE, TRUE, '2')
