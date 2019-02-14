@@ -2695,7 +2695,7 @@ procedure TLoadFormTest.LoadMemberFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ChoiceForm');
-  exit;
+  {exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalPosition_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalPosition_ObjectForm');
 
@@ -2704,11 +2704,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectDescForm'));
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectDescForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ContainerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ContainerForm');
@@ -2725,6 +2726,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectToEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectToEditForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectToForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectToForm');
 end;
@@ -2940,12 +2942,13 @@ procedure TLoadFormTest.LoadPersonalFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonal_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonal_ObjectForm');
   //  Установить пароль для подтверждения в Scale
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberPswDialogForm'));
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberPswDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberPswDialogForm');
 
   // группировки сотрудников
@@ -2953,6 +2956,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonalGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalGroupEditForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadCarFormTest;
