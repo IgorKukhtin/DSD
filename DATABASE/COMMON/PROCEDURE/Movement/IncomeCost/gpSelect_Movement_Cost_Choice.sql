@@ -59,7 +59,7 @@ BEGIN
                             INNER JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
                                                           ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
                                                          AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
-                                                         AND (MovementLinkObject_UnitForwarding.ObjectId = inUnitId OR inUnitId = 0)
+                                                         -- AND (MovementLinkObject_UnitForwarding.ObjectId = inUnitId OR inUnitId = 0)
       
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
@@ -97,7 +97,7 @@ BEGIN
                                    INNER JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
                                                                  ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
                                                                 AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
-                                                                AND (MovementLinkObject_UnitForwarding.ObjectId = inUnitId OR inUnitId = 0)
+                                                                -- AND (MovementLinkObject_UnitForwarding.ObjectId = inUnitId OR inUnitId = 0)
 
                                    LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                          AND MovementItem.DescId     = zc_MI_Master()

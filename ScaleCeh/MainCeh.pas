@@ -235,6 +235,7 @@ type
     miReport_GoodsBalance_Unit3: TMenuItem;
     miReport_GoodsBalance_Unit4: TMenuItem;
     miReport_GoodsBalance_Unit5: TMenuItem;
+    AmountOneWeight: TcxGridDBColumn;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -1714,6 +1715,7 @@ begin
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('StorageLineName').Index].Visible     :=SettingMain.isGoodsComplete = FALSE;
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count').Index].Visible               :=SettingMain.isGoodsComplete = TRUE;
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountPack').Index].Visible           :=SettingMain.isGoodsComplete = TRUE;
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('AmountOneWeight').Index].Visible     :=SettingMain.isGoodsComplete = TRUE;
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('HeadCount').Index].Visible           :=SettingMain.isGoodsComplete = FALSE;
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('LiveWeight').Index].Visible          :=SettingMain.isGoodsComplete = FALSE;
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountSkewer1_k').Index].Visible      :=SettingMain.isGoodsComplete = FALSE;

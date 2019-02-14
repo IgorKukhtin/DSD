@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ScaleCeh_MI(
 RETURNS TABLE (MovementItemId Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureId Integer, MeasureName TVarChar
              , GoodsKindName TVarChar, StorageLineName TVarChar
              , isStartWeighing Boolean
-             , Amount TFloat, AmountWeight TFloat
+             , Amount TFloat, AmountWeight TFloat, AmountOneWeight TFloat
              , RealWeight TFloat, RealWeightWeight TFloat
              , WeightTare TFloat
              , WeightOther TFloat
@@ -43,6 +43,7 @@ BEGIN
 
            , tmpMI.Amount :: TFloat           AS Amount
            , (tmpMI.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS AmountWeight
+           , CASE WHEN tmpMI.Count > 0 THEN CAST ((tmpMI.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) / tmpMI.Count AS NUMERIC (16, 3)) ELSE 0 END :: TFloat AS AmountOneWeight
 
            , tmpMI.RealWeight  :: TFloat      AS RealWeight
            , (tmpMI.RealWeight * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS RealWeightWeight

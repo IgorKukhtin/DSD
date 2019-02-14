@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_LinkGoods(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbIsUpdate Boolean;   
+   DECLARE vbIsUpdate Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_LinkGoods());
@@ -24,51 +24,30 @@ BEGIN
    END IF;
 
    -- проверка
-   IF EXISTS(SELECT Object_LinkGoods_View.Id               
-               FROM Object_LinkGoods_View
+   IF EXISTS (SELECT Object_LinkGoods_View.Id
+              FROM Object_LinkGoods_View
               WHERE Object_LinkGoods_View.GoodsMainId = inGoodsMainId
                 AND Object_LinkGoods_View.GoodsId = inGoodsId
-                AND Object_LinkGoods_View.Id <> COALESCE (ioId, 0)) THEN
-
-      RAISE EXCEPTION 'Связь между данными товарами уже установлена';
+                AND Object_LinkGoods_View.Id <> COALESCE (ioId, 0)
+             )
+   THEN
+       RAISE EXCEPTION 'Связь между данными товарами уже установлена';
    END IF;
-   
-   -- проверка
-   IF COALESCE (inGoodsMainId, 0) = 0 THEN
-      RAISE EXCEPTION 'Ошибка.Главный товар не определен';
-   END IF; 
-   -- проверка
-   IF COALESCE (inGoodsId, 0) = 0 THEN
-      RAISE EXCEPTION 'Ошибка.Товар не определен';
-   END IF; 
 
-   
-   -- определили <Признак>
-   vbIsUpdate:= COALESCE (ioId, 0) > 0;
+   -- сохранили
+   ioId := lpInsertUpdate_Object_LinkGoods (ioId, inGoodsMainId, inGoodsId);
 
-   -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_LinkGoods(), 0, '');
-   
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_LinkGoods_GoodsMain(), ioId, inGoodsMainId);   
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_LinkGoods_Goods(), ioId, inGoodsId);
-
-   -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (inObjectId:= ioId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_LinkGoods (Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
-  
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.02.19                                        *
  26.08.14                         *
  02.07.14         *
-  
 */
 
 -- тест

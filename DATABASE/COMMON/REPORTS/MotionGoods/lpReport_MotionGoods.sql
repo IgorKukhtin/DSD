@@ -526,7 +526,7 @@ BEGIN
                                          -- ***COUNT***
                                        , SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Count()
                                                     -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                    AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeAsset())
+                                                    AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeCost(), zc_Movement_IncomeAsset())
                                                         THEN MIContainer.Amount
                                                    ELSE 0
                                               END) AS CountIncome
@@ -711,7 +711,7 @@ BEGIN
                                          -- ***SUMM***
                                        , SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Summ()
                                                    -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                   AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeAsset())
+                                                   AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeCost(), zc_Movement_IncomeAsset())
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) AS SummIncome
@@ -970,7 +970,7 @@ BEGIN
                                   HAVING -- ***COUNT***
                                          SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Count()
                                                     -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                    AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeAsset())
+                                                    AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeCost(), zc_Movement_IncomeAsset())
                                                         THEN MIContainer.Amount
                                                    ELSE 0
                                               END) <> 0 -- AS CountIncome
@@ -1154,7 +1154,7 @@ BEGIN
                                          -- ***SUMM***
                                       OR SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Summ()
                                                    -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                   AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeAsset())
+                                                   AND MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeCost(), zc_Movement_IncomeAsset())
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) <> 0 -- AS SummIncome

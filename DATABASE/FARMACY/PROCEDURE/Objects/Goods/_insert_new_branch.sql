@@ -28,8 +28,44 @@
    ;
    
      -- !!!ALL!!!
+     WITH tmpObject_Retail_from AS (SELECT MIN (Object_Retail.Id) AS Id FROM Object AS Object_Retail WHERE Object_Retail.DescId = zc_Object_Retail())
+        , tmpObject_Retail_to AS (SELECT * FROM Object AS Object_Retail
+                                  WHERE Object_Retail.DescId = zc_Object_Retail()
+                                    AND Object_Retail.Id IN (10106458, 10106459, 10106460) -- select * from Object where DescId = zc_Object_Retail() order by id DESC
+                                    AND Object_Retail.Id NOT IN (SELECT tmpObject_Retail_from.Id FROM tmpObject_Retail_from)
+                                 )
+        , tmpObject_Goods AS (SELECT Object_Goods.*, ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId_main, Object_Retail_from.Id AS ObjectId
+                              FROM tmpObject_Retail_from AS Object_Retail_from
+                                   INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                         ON ObjectLink_Goods_Object.ChildObjectId = Object_Retail_from.Id
+                                                        AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                   LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId
+                                   LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                                        ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
+                                                       AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                   LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                                        ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+                                                       AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                              WHERE ObjectLink_LinkGoods_GoodsMain.ChildObjectId > 0
+                             )
+        , tmpGoods AS (SELECT Object_Goods.*, ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId_main, Object_Retail.Id AS ObjectId
+                       FROM tmpObject_Retail_to AS Object_Retail
+                            INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                  ON ObjectLink_Goods_Object.ChildObjectId = Object_Retail.Id
+                                                 AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId
+                            LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                                 ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
+                                                AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+                            LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                                 ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+                                                AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                       WHERE ObjectLink_LinkGoods_GoodsMain.ChildObjectId > 0
+                      )
+     -- –езультат
      SELECT Object_Goods.*, tmpGoods.*
           /*, case when tmpGoods.Id is null then
+            -- !! 1-ый шаг: «јЋ»Ћ» товары в новые сети!!! - потом об€зательно 2-ой шаг - залить линки, иначе эти товары не видны!!!
             lpInsertUpdate_Object_Goods_Retail (ioId            := tmpGoods.Id
                                               , inCode          := Object_Goods.ObjectCode :: TVarChar
                                               , inName          := Object_Goods.ValueData
@@ -43,64 +79,41 @@
                                               , inIsClose       := ObjectBoolean_Goods_Close.ValueData
                                               , inTOP           := ObjectBoolean_Goods_TOP.ValueData
                                               , inPercentMarkup	:= ObjectFloat_Goods_PercentMarkup.ValueData
+                                              , inNameUkr       := ObjectString_Goods_NameUkr.ValueData
+                                              , inCodeUKTZED    := ObjectString_Goods_CodeUKTZED.ValueData
+                                              , inExchangeId    := ObjectLink_Goods_Exchange.ChildObjectId
                                               , inObjectId      := Object_Retail.Id
                                               , inUserId        := 3
                                                )
             end*/
 /*
+            -- !! 3-ий шаг: UPDATE св-ва!!! - только после 2-ой шаг - залить линки, иначе эти товары не видны!!!
           , case when tmpGoods.Id is not null and ObjectBoolean_Goods_First.ValueData is not null
                       then lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_First(), tmpGoods.Id, ObjectBoolean_Goods_First.ValueData)
             end
+            -- !! 3-ий шаг: UPDATE св-ва!!! - только после 2-ой шаг - залить линки, иначе эти товары не видны!!!
           , case when tmpGoods.Id is not null and ObjectString_Goods_Maker.ValueData <> ''
                       then lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Maker(), tmpGoods.Id, ObjectString_Goods_Maker.ValueData)
             end
 */
 
-     FROM (SELECT Object_Goods.*, ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId_main, Object_Retail_from.Id AS ObjectId
-           FROM (SELECT MIN (Object_Retail.Id) AS Id FROM Object AS Object_Retail WHERE Object_Retail.DescId = zc_Object_Retail()
-                ) AS Object_Retail_from
-                INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                      ON ObjectLink_Goods_Object.ChildObjectId = Object_Retail_from.Id
-                                     AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId
-                          LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                                               ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
-                                              AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
-                          LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-                                               ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
-                                              AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-           WHERE ObjectLink_LinkGoods_GoodsMain.ChildObjectId > 0
-          ) AS Object_Goods
-          LEFT JOIN Object AS Object_Retail ON Object_Retail.DescId = zc_Object_Retail() AND Object_Retail.Id <> Object_Goods.ObjectId
-                                           -- AND Object_Retail.Id = (select max (Id) from Object where DescId = zc_Object_Retail())
-                                           AND Object_Retail.Id IN (7433742 , 7433743) -- select * from Object where DescId = zc_Object_Retail() order by id DESC
-          
-
-          LEFT JOIN 
-          (SELECT Object_Goods.*, ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId_main, Object_Retail.Id AS ObjectId
-           FROM (SELECT MIN (Object_Retail.Id) AS Id FROM Object AS Object_Retail WHERE Object_Retail.DescId = zc_Object_Retail()
-                ) AS Object_Retail_from
-                LEFT JOIN Object AS Object_Retail ON Object_Retail.DescId = zc_Object_Retail() -- AND Object_Retail.Id <> Object_Retail_from.Id
-                                                 -- AND Object_Retail.Id = (select max (Id) from Object where DescId = zc_Object_Retail())
-                                                 AND Object_Retail.Id IN (7433742 , 7433743)
-                INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                      ON ObjectLink_Goods_Object.ChildObjectId = Object_Retail.Id
-                                     AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId
-                          LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                                               ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
-                                              AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
-                          LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-                                               ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
-                                              AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-           WHERE ObjectLink_LinkGoods_GoodsMain.ChildObjectId > 0
-          ) AS tmpGoods ON tmpGoods.GoodsId_main = Object_Goods.GoodsId_main
-                       AND tmpGoods.ObjectId = Object_Retail.Id
-
+     FROM tmpObject_Goods AS Object_Goods
+          CROSS JOIN tmpObject_Retail_to AS Object_Retail
+          LEFT JOIN tmpGoods ON tmpGoods.GoodsId_main = Object_Goods.GoodsId_main
+                            AND tmpGoods.ObjectId     = Object_Retail.Id
 
          LEFT JOIN ObjectString AS ObjectString_Goods_Maker
                                 ON ObjectString_Goods_Maker.ObjectId = Object_Goods.Id
                                AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()   
+         LEFT JOIN ObjectString AS ObjectString_Goods_NameUkr
+                                ON ObjectString_Goods_NameUkr.ObjectId = Object_Goods.Id
+                               AND ObjectString_Goods_NameUkr.DescId = zc_ObjectString_Goods_NameUkr()   
+         LEFT JOIN ObjectString AS ObjectString_Goods_CodeUKTZED
+                                ON ObjectString_Goods_CodeUKTZED.ObjectId = Object_Goods.Id
+                               AND ObjectString_Goods_CodeUKTZED.DescId = zc_ObjectString_Goods_CodeUKTZED()   
+         LEFT JOIN ObjectLink AS ObjectLink_Goods_Exchange
+                              ON ObjectLink_Goods_Exchange.ObjectId = Object_Goods.Id
+                             AND ObjectLink_Goods_Exchange.DescId = zc_ObjectLink_Goods_Exchange()
 
          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                               ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
@@ -141,36 +154,53 @@
 -- limit 11
 
 
-     -- !!!LINK!!!
+     -- !! 2-ой шаг - залить LINK, иначе эти товары не видны!!!
+     WITH tmpObject_Retail_from AS (SELECT MIN (Object_Retail.Id) AS Id FROM Object AS Object_Retail WHERE Object_Retail.DescId = zc_Object_Retail())
+        , tmpObject_Retail_to AS (SELECT * FROM Object AS Object_Retail
+                                  WHERE Object_Retail.DescId = zc_Object_Retail()
+                                    AND Object_Retail.Id IN (10106458, 10106459, 10106460) -- select * from Object where DescId = zc_Object_Retail() order by id DESC
+                                    AND Object_Retail.Id NOT IN (SELECT tmpObject_Retail_from.Id FROM tmpObject_Retail_from)
+                                 )
+        , tmpObject_Goods_View_from
+                              AS (SELECT Object_Goods.*, ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId_main, Object_Retail_from.Id AS ObjectId
+                                       , Object_Goods.ObjectCode :: TVarChar AS ObjectCode_str
+                                  FROM tmpObject_Retail_from AS Object_Retail_from
+                                       INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                             ON ObjectLink_Goods_Object.ChildObjectId = Object_Retail_from.Id
+                                                            AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                       LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId
+                       
+                                       LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                                            ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
+                                                           AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                       LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                                            ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+                                                           AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                  WHERE ObjectLink_LinkGoods_GoodsMain.ChildObjectId > 0
+                                 )
+        -- , tmpObject_LinkGoods_View AS (SELECT * FROM Object_LinkGoods_View)
+     -- –езультат
      SELECT Object_Goods_View_from.*, Object_Retail.*
           /*, gpInsertUpdate_Object_LinkGoods_Load (inGoodsMainCode    := Object_Goods_View_from.ObjectCode :: TVarChar
                                                 , inGoodsCode        := Object_Goods_View_from.ObjectCode :: TVarChar
+                                                , это мега-долга€ проц.
                                                 , inRetailId         := Object_Retail.Id
                                                 , inSession          := '3'
                                                  )*/
-     FROM (SELECT Object_Goods.*, ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId_main, Object_Retail_from.Id AS ObjectId
-           FROM (SELECT MIN (Object_Retail.Id) AS Id FROM Object AS Object_Retail WHERE Object_Retail.DescId = zc_Object_Retail()
-                ) AS Object_Retail_from
-                INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                      ON ObjectLink_Goods_Object.ChildObjectId = Object_Retail_from.Id
-                                     AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId
-
-                          LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                                               ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
-                                              AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
-                          LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-                                               ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
-                                              AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-           WHERE ObjectLink_LinkGoods_GoodsMain.ChildObjectId > 0
-          ) AS Object_Goods_View_from
-          LEFT JOIN Object AS Object_Retail ON Object_Retail.DescId = zc_Object_Retail() -- AND Object_Retail.Id <> Object_Goods_View_from.ObjectId
-                                           -- AND Object_Retail.Id = (select max (Id) from Object where DescId = zc_Object_Retail())
-                                           AND Object_Retail.Id IN (7433742 , 7433743)
-
-          -- inner JOIN Object_Goods_View on Object_Goods_View.ObjectId = Object_Retail.Id
-          --        and Object_Goods_View.GoodsCode = Object_Goods_View_from.GoodsCode
-
+          /*, lpInsertUpdate_Object_LinkGoods (ioId               := Object_LinkGoods_View.Id
+                                           , inGoodsMainId      := Object_Goods_View_from.GoodsId_main
+                                           , inGoodsId          := Object_Goods_View.Id
+                                           , inUserId           := 3
+                                             )*/
+     FROM tmpObject_Goods_View_from AS Object_Goods_View_from
+          CROSS JOIN tmpObject_Retail_to AS Object_Retail
+          INNER JOIN Object_Goods_View on Object_Goods_View.ObjectId     = Object_Retail.Id
+                                      and Object_Goods_View.GoodsCode    = Object_Goods_View_from.ObjectCode_str
+                                   -- and Object_Goods_View.GoodsCodeInt = Object_Goods_View_from.ObjectCode
+          LEFT JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsMainId = Object_Goods_View_from.GoodsId_main
+                                         AND Object_LinkGoods_View.GoodsId     = Object_Goods_View.Id
+     WHERE Object_LinkGoods_View.Id IS NULL
+    ;
 
 /*
      SELECT *
@@ -184,4 +214,27 @@
                 ) AS Object_Retail_from
           ) AS Object_Goods_View_from
           LEFT JOIN Object AS Object_Retail ON Object_Retail.DescId = zc_Object_Retail() AND Object_Retail.Id <> Object_Goods_View_from.ObjectId
+*/
+
+
+/*
+-- !! ѕ–ќ¬≈– ј LINK !!!
+select * from object where Id in (
+SELECT Object_Goods_View.ObjectId
+-- SELECT Object_LinkGoods_View.GoodsMainId , Object_LinkGoods_View.GoodsId , Object_Goods_View.ObjectId
+FROM Object_LinkGoods_View
+     join Object_Goods_View on Object_Goods_View.Id     = Object_LinkGoods_View.GoodsId
+where Object_LinkGoods_View.GoodsMainId  > 0
+-- and Object_Goods_View.ObjectId IN (6530478, 59612)
+group by Object_LinkGoods_View.GoodsMainId , Object_LinkGoods_View.GoodsId , Object_Goods_View.ObjectId
+having count(*) > 1
+)
+
+
+SELECT * FROM Object_LinkGoods_View where GoodsMainId = 5464204 and  GoodsId  = 6084059
+SELECT * FROM Object_Goods_Main_View WHERE Id = 5464204
+SELECT * FROM Object_Goods_View WHERE Id = 6084059
+
+select *  from objectProtocol left join Object on Object.Id = UserId where objectProtocol.Objectid = 6085497 order by 1 desc
+select *  from objectProtocol left join Object on Object.Id = UserId where objectProtocol.Objectid = 6085576 order by 1 desc
 */

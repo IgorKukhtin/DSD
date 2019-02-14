@@ -155,7 +155,9 @@ BEGIN
                                               AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                      WHERE Object_Goods.Id = ioId
                     ) AS tmpGoods ON tmpGoods.RetailId = Object_Retail.Id AND tmpGoods.GoodsId > 0
-     WHERE Object_Retail.DescId = zc_Object_Retail();
+     WHERE Object_Retail.DescId = zc_Object_Retail()
+       -- AND Object_Retail.Id NOT IN (10106458, 10106459, 10106460) -- select * from Object where DescId = zc_Object_Retail() order by id DESC
+     ;
 
      IF COALESCE (ioId, 0) = 0
      THEN
@@ -185,7 +187,9 @@ BEGIN
                                                  , inSession          := inSession
                                                   )
      FROM Object AS Object_Retail
-     WHERE Object_Retail.DescId = zc_Object_Retail();
+     WHERE Object_Retail.DescId = zc_Object_Retail()
+       -- AND Object_Retail.Id NOT IN (10106458, 10106459, 10106460) -- select * from Object where DescId = zc_Object_Retail() order by id DESC
+     ;
 
 
      IF COALESCE (inMorionCode, 0) > 0 

@@ -3,7 +3,7 @@ inherited JuridicalForm: TJuridicalForm
   ClientWidth = 761
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 777
-  ExplicitHeight = 346
+  ExplicitHeight = 343
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -114,6 +114,12 @@ inherited JuridicalForm: TJuridicalForm
     inherited actInsert: TInsertUpdateChoiceAction
       FormName = 'TJuridicalEditForm'
       FormNameParam.Value = 'TJuridicalEditForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+          MultiSelectSeparator = ','
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TJuridicalEditForm'
@@ -143,6 +149,7 @@ inherited JuridicalForm: TJuridicalForm
       26
       0)
     inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
       Left = 24
       Top = 72
     end

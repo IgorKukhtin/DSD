@@ -720,6 +720,17 @@ object MainCehForm: TMainCehForm
           HeaderAlignmentVert = vaCenter
           Width = 50
         end
+        object AmountOneWeight: TcxGridDBColumn
+          Caption = #1042#1077#1089' 1 '#1073#1072#1090'.'
+          DataBinding.FieldName = 'AmountOneWeight'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1042#1077#1089' 1-'#1086#1075#1086' '#1073#1072#1090#1086#1085#1072
+          Width = 45
+        end
         object Count: TcxGridDBColumn
           Caption = #1050#1086#1083'. '#1073#1072#1090'.'
           DataBinding.FieldName = 'Count'

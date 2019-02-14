@@ -814,6 +814,11 @@ BEGIN
                            , MovementItem.Amount AS Amount_mi
                            , CASE WHEN vbMovementDescId = zc_Movement_Inventory()
                                        THEN 0 -- надо суммировать
+
+                                  WHEN inBranchCode = 101 -- если Упаковка
+                                   AND vbMovementDescId = zc_Movement_Send()
+                                       THEN MovementItem.Id -- не надо суммировать
+                                  
                                   WHEN inBranchCode <> 201 -- если НЕ Обвалка
                                        THEN 0 -- можно суммировать
                                   -- !!!Убрал т.к. раньше для Упаковки была какая-то другая схема ....!!!
