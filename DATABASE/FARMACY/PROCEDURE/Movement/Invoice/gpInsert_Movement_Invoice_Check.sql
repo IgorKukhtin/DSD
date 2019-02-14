@@ -35,16 +35,17 @@ BEGIN
            RAISE EXCEPTION 'Ошибка.Не выбран Заклад охорони здоров`я.';
     END IF;
 
-    CREATE TEMP TABLE tmpReport (MovementId_Check Integer, JuridicalId Integer, PartnerMedicalId Integer,  ContractId Integer, SummaComp TFloat) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpReport (MovementId_Check Integer, JuridicalId Integer, PartnerMedicalId Integer,  ContractId Integer, SummaComp TFloat, CountSP TFloat) ON COMMIT DROP;
     CREATE TEMP TABLE tmpInvoice (MovementId Integer, InvNumber TVarChar, JuridicalId Integer, PartnerMedicalId Integer,  ContractId Integer) ON COMMIT DROP;
 
      -- выбираем данные из отчета
-     INSERT INTO tmpReport (MovementId_Check, JuridicalId, PartnerMedicalId, ContractId, SummaComp)
+     INSERT INTO tmpReport (MovementId_Check, JuridicalId, PartnerMedicalId, ContractId, SummaComp, CountSP)
        SELECT  tmp.MovementId
              , tmp.JuridicalId
              , tmp.HospitalId
              , tmp.ContractId
-             , SUM(tmp.SummaSP) AS SummaComp
+             , SUM (tmp.SummaSP)          AS SummaComp
+             , MAX (tmp.CountInvNumberSP) AS CountSP
        FROM gpReport_Check_SP(inStartDate:=inStartDate, inEndDate:=inEndDate, inJuridicalId:=inJuridicalId
                             , inUnitId:= inUnitId, inHospitalId:=inPartnerMedicalId, inSession:=inSession) AS tmp
        GROUP BY tmp.MovementId
@@ -98,7 +99,8 @@ BEGIN
                                            , inContractId      := tmpReport.ContractId
                                            , inStartDate       := inStartDate
                                            , inEndDate         := inEndDate
-                                           , inTotalSumm       := SUM(tmpReport.SummaComp):: Tfloat
+                                           , inTotalSumm       := SUM (tmpReport.SummaComp):: Tfloat
+                                           , inTotalCount      := MAX (tmpReport.CountSP)  :: Tfloat
                                            , inValueSP         := 1 :: Tfloat
                                            , inUserId          := vbUserId
                                            )

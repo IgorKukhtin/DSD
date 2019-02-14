@@ -33,6 +33,11 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             item
               Format = ',0.00'
               Kind = skSum
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalCount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -62,6 +67,11 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
               Format = ',0.00'
               Kind = skSum
               Column = TotalSummVAT
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = TotalCount
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -249,6 +259,16 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             HeaderHint = #1057#1091#1084#1084#1072' '#1086#1089#1085#1086#1074#1085#1086#1075#1086' '#1076#1086#1075#1086#1074#1086#1088#1072
             Options.Editing = False
             Width = 87
+          end
+          object TotalCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1094#1077#1087#1090#1086#1074
+            DataBinding.FieldName = 'TotalCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 69
           end
           object OperDateStart: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1087#1077#1088#1080#1086#1076#1072' '#1086#1090#1095#1077#1090#1072
