@@ -8,29 +8,30 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Invoice(
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer
-             , InvNumber TVarChar
-             , InvNumber_int Integer
-             , OperDate TDateTime
-             , StatusCode Integer
-             , StatusName TVarChar
-             , TotalSumm TFloat
+RETURNS TABLE (Id                  Integer
+             , InvNumber           TVarChar
+             , InvNumber_int       Integer
+             , OperDate            TDateTime
+             , StatusCode          Integer
+             , StatusName          TVarChar
+             , TotalSumm           TFloat
              , TotalSummWithOutVAT TFloat
-             , TotalSummVAT TFloat
-             , TotalSumm_Contract TFloat
+             , TotalSummVAT        TFloat
+             , TotalSumm_Contract  TFloat
+             , TotalCount          TFloat
 
-             , JuridicalId Integer
-             , JuridicalName TVarChar
-             , PartnerMedicalId Integer
-             , PartnerMedicalName TVarChar
-             , ContractId Integer
-             , ContractName TVarChar
-             , SigningDate TDateTime
+             , JuridicalId         Integer
+             , JuridicalName       TVarChar
+             , PartnerMedicalId    Integer
+             , PartnerMedicalName  TVarChar
+             , ContractId          Integer
+             , ContractName        TVarChar
+             , SigningDate         TDateTime
 
              , OperDateStart TDateTime
-             , OperDateEnd TDateTime
+             , OperDateEnd   TDateTime
 
-             , DateRegistered TDateTime
+             , DateRegistered      TDateTime
              , InvNumberRegistered TVarChar
 
              , BankAccount TVarChar
@@ -38,7 +39,7 @@ RETURNS TABLE (Id Integer
              , PartnerMedical_BankAccount TVarChar
              , PartnerMedical_BankName    TVarChar
              , isDocument  Boolean
-             , SPName TVarChar
+             , SPName      TVarChar
 
              , DepartmentId    Integer
              , DepartmentName  TVarChar
@@ -139,7 +140,8 @@ BEGIN
       , COALESCE (MovementFloat_TotalSumm.ValueData,0)::TFloat AS TotalSumm
       , COALESCE (CAST (MovementFloat_TotalSumm.ValueData/(1.07) AS NUMERIC (16,2)),0) ::TFloat  AS TotalSummWithOutVAT
       , COALESCE (CAST (MovementFloat_TotalSumm.ValueData - (MovementFloat_TotalSumm.ValueData/(1.07))  AS NUMERIC (16,2)),0) ::TFloat  AS TotalSummVAT
-      , COALESCE (ObjectFloat_TotalSumm.ValueData, 0):: TFloat AS TotalSumm_Contract
+      , COALESCE (ObjectFloat_TotalSumm.ValueData, 0):: TFloat   AS TotalSumm_Contract
+      , COALESCE (MovementFloat_TotalCount.ValueData,0)::TFloat  AS TotalCount
 
       , MovementLinkObject_Juridical.ObjectId                  AS JuridicalId
       , Object_Juridical.ValueData                             AS JuridicalName
@@ -184,6 +186,10 @@ BEGIN
         LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                 ON MovementFloat_TotalSumm.MovementId = Movement.Id
                                AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+        LEFT JOIN MovementFloat AS MovementFloat_TotalCount
+                                ON MovementFloat_TotalCount.MovementId = Movement.Id
+                               AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
 
         LEFT JOIN MovementDate AS MovementDate_OperDateStart
                                ON MovementDate_OperDateStart.MovementId = Movement.Id
@@ -265,6 +271,7 @@ ALTER FUNCTION gpSelect_Movement_Invoice (TDateTime, TDateTime, Boolean, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.02.19         * add TotalCount
  20.08.18         *
  14.05.18         *
  15.08.17         * add InvNumber_int

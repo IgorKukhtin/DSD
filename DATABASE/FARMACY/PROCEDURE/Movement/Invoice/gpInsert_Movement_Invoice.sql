@@ -33,16 +33,17 @@ BEGIN
            RETURN;
     END IF;
 
-    CREATE TEMP TABLE tmpReport (MovementId_Sale Integer, JuridicalId Integer, PartnerMedicalId Integer,  ContractId Integer, SummaComp TFloat) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpReport (MovementId_Sale Integer, JuridicalId Integer, PartnerMedicalId Integer,  ContractId Integer, SummaComp TFloat, CountSP TFloat) ON COMMIT DROP;
     CREATE TEMP TABLE tmpInvoice (MovementId Integer, InvNumber TVarChar, JuridicalId Integer, PartnerMedicalId Integer,  ContractId Integer) ON COMMIT DROP;
 
      -- выбираем данные из отчета
-     INSERT INTO tmpReport (MovementId_Sale, JuridicalId, PartnerMedicalId, ContractId, SummaComp)
+     INSERT INTO tmpReport (MovementId_Sale, JuridicalId, PartnerMedicalId, ContractId, SummaComp, CountSP)
        SELECT  tmp.MovementId
              , tmp.JuridicalId
              , tmp.HospitalId
              , tmp.ContractId
-             , SUM(tmp.SummaComp) AS SummaComp
+             , SUM (tmp.SummaComp) AS SummaComp
+             , MAX (CountSP)       AS CountSP
        FROM gpReport_Sale_SP(inStartDate := inStartDate, inEndDate := inEndDate, inJuridicalId :=inJuridicalId, inUnitId := inUnitId, inHospitalId := inPartnerMedicalId
                            , inGroupMemberSPId := inGroupMemberSPId, inPercentSP := inPercentSP, inisGroupMemberSP := inisGroupMemberSP, inSession := inSession) AS tmp
        GROUP BY tmp.MovementId
@@ -95,7 +96,8 @@ BEGIN
                                            , inContractId      := tmpReport.ContractId
                                            , inStartDate       := inStartDate
                                            , inEndDate         := inEndDate
-                                           , inTotalSumm       := SUM(tmpReport.SummaComp):: Tfloat
+                                           , inTotalSumm       := SUM (tmpReport.SummaComp):: Tfloat
+                                           , inTotalCount      := MAX (tmpReport.CountSP)  :: Tfloat
                                            , inValueSP         := 2 :: Tfloat
                                            , inUserId          := vbUserId
                                            )
@@ -160,6 +162,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.
+ 14.02.19         *
  13.05.17         * add inValueSP
  22.03.17         *
 */

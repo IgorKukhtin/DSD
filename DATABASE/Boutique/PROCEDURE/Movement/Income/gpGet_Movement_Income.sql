@@ -61,7 +61,7 @@ BEGIN
              , Object_Status.ObjectCode              AS StatusCode
              , Object_Status.ValueData               AS StatusName
 
-             , MovementFloat_ChangePercent.ValueData AS ChangePercent
+             , COALESCE (MovementFloat_ChangePercent.ValueData,0) :: TFloat AS ChangePercent
              , MovementFloat_CurrencyValue.ValueData AS CurrencyValue
              , MovementFloat_ParValue.ValueData      AS ParValue
 

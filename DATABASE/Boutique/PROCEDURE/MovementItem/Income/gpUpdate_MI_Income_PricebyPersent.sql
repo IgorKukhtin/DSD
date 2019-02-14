@@ -15,7 +15,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_MI_Income_Price());
 
-     outOperPrice := inPriceJur - (inPriceJur / 100 * inPersent);
+     outOperPrice := inPriceJur + (inPriceJur / 100 * inPersent);
 
 END;
 $BODY$
