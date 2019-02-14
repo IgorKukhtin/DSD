@@ -656,7 +656,10 @@ uses
   CheckJournalDiscountExternal in '..\..\Forms\Document\CheckJournalDiscountExternal.pas',
   GlobalConst in '..\..\FormsFarmacy\System\GlobalConst.pas' {GlobalConstForm: TParentForm},
   GoodsCategory in '..\..\FormsFarmacy\Guides\GoodsCategory.pas' {GoodsCategoryForm: TParentForm},
-  GoodsCategoryEdit in '..\..\FormsFarmacy\Guides\GoodsCategoryEdit.pas' {GoodsCategoryEditForm: TParentForm};
+  GoodsCategoryEdit in '..\..\FormsFarmacy\Guides\GoodsCategoryEdit.pas' {GoodsCategoryEditForm: TParentForm},
+  ReportRogersMovementCheck in '..\..\FormsFarmacy\Rogers\ReportRogersMovementCheck.pas' {ReportRogersMovementCheckForm: TParentForm},
+  RepriceRogers in '..\..\FormsFarmacy\Rogers\RepriceRogers.pas' {RepriceRogersForm: TParentForm},
+  RepriceRogersJournal in '..\..\FormsFarmacy\Rogers\RepriceRogersJournal.pas' {RepriceRogersJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
