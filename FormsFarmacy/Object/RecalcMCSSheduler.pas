@@ -48,6 +48,7 @@ type
     bbInsertUpdateMovement: TdxBarButton;
     AllRetail: TcxGridDBColumn;
     RetailName: TcxGridDBColumn;
+    DateRun: TcxGridDBColumn;
   private
     { Private declarations }
   public

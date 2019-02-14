@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_GoodsCategory(
 RETURNS TABLE (Id Integer  
              , GoodsId Integer, GoodsName TVarChar
              , UnitCategoryId Integer, UnitCategoryName TVarChar
+             , UnitId Integer, UnitName TVarChar
              , Value TFloat
              , isErased boolean) AS
 $BODY$
@@ -27,7 +28,10 @@ BEGIN
 
            , CAST (0 as Integer)   AS UnitCategoryId
            , CAST ('' as TVarChar) AS UnitCategoryName 
-           
+
+           , CAST (0 as Integer)   AS UnitId
+           , CAST ('' as TVarChar) AS UnitName 
+
            , CAST (NULL AS TFloat) AS Value     
        
            , CAST (NULL AS Boolean) AS isErased;
@@ -43,6 +47,9 @@ BEGIN
            , Object_UnitCategory.Id         AS UnitCategoryId
            , Object_UnitCategory.ValueData  AS UnitCategoryName 
 
+           , Object_Unit.Id                 AS UnitId
+           , Object_Unit.ValueData          AS UnitName 
+
            , ObjectFloat_Value.ValueData    AS Value
            
            , Object_GoodsCategory.isErased  AS isErased
@@ -57,6 +64,11 @@ BEGIN
                                 ON ObjectLink_GoodsCategory_UnitCategory.ObjectId = Object_GoodsCategory.Id
                                AND ObjectLink_GoodsCategory_UnitCategory.DescId = zc_ObjectLink_GoodsCategory_Category()
            LEFT JOIN Object AS Object_UnitCategory ON Object_UnitCategory.Id = ObjectLink_GoodsCategory_UnitCategory.ChildObjectId           
+
+           LEFT JOIN ObjectLink AS ObjectLink_GoodsCategory_Unit
+                                ON ObjectLink_GoodsCategory_Unit.ObjectId = Object_GoodsCategory.Id
+                               AND ObjectLink_GoodsCategory_Unit.DescId = zc_ObjectLink_GoodsCategory_Unit()
+           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_GoodsCategory_Unit.ChildObjectId    
 
            LEFT JOIN ObjectFloat AS ObjectFloat_Value 
                                  ON ObjectFloat_Value.ObjectId = Object_GoodsCategory.Id

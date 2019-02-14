@@ -45,6 +45,9 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     ItemName_from: TcxGridDBColumn;
     ItemName_to: TcxGridDBColumn;
+    actPrintGroup: TdsdPrintAction;
+    bbPrintGroup: TdxBarButton;
+    spSelectPrintNoGroup: TdsdStoredProc;
   private
     { Private declarations }
   public

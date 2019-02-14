@@ -17,12 +17,26 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
+   DECLARE vbUnitKey TVarChar;
+   DECLARE vbUnitId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Inventory());
      vbUserId:= lpGetUserBySession (inSession);
      
-     -- определяется <Торговая сеть>
+     
+     IF vbUserId IN (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (308121)) -- Кассир аптеки
+     THEN 
+       vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+       IF vbUnitKey = '' THEN
+          vbUnitKey := '0';
+       END IF;   
+       vbUnitId := vbUnitKey::Integer;
+     ELSE
+       vbUnitId := 0;
+     END IF;
+     
+       -- определяется <Торговая сеть>
      vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 
      RETURN QUERY
@@ -37,7 +51,8 @@ BEGIN
                                                  ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                                                 AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
-                        WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                        WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical() 
+                          AND  (vbUnitId = 0 OR ObjectLink_Unit_Juridical.ObjectId = vbUnitId)
                         )
 
         , tmpMovement_calc AS (SELECT Movement.Id

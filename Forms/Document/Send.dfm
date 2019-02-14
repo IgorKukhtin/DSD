@@ -477,6 +477,43 @@ inherited SendForm: TSendForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
+    object actPrintNoGroup: TdsdPrintAction [8]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintNoGroup
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintNoGroup
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      ImageIndex = 16
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Send'
+      ReportNameParam.Value = 'PrintMovement_Send'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -519,7 +556,7 @@ inherited SendForm: TSendForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [13]
+    object actGoodsKindChoice: TOpenChoiceForm [14]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -884,6 +921,14 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintNoGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -898,6 +943,10 @@ inherited SendForm: TSendForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    object bbPrintNoGroup: TdxBarButton
+      Action = actPrintNoGroup
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -967,8 +1016,8 @@ inherited SendForm: TSendForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 344
-    Top = 496
+    Left = 280
+    Top = 464
   end
   inherited StatusGuides: TdsdGuides
     Left = 80
@@ -1500,6 +1549,13 @@ inherited SendForm: TSendForm
         Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisItem'
+        Value = 'false'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 367
@@ -1591,5 +1647,42 @@ inherited SendForm: TSendForm
       end>
     Left = 752
     Top = 8
+  end
+  object spSelectPrintNoGroup: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Send_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Weighing'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisItem'
+        Value = 'true'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 543
+    Top = 408
   end
 end

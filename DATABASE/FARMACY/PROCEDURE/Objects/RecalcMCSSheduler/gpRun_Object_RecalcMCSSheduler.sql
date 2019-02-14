@@ -39,7 +39,8 @@ BEGIN
   PERFORM  gpRecalcMCS(inUnitId := ObjectLink_Unit_Juridical_Run.ObjectId,
                        inPeriod := ObjectFloat_Period.ValueData::Integer,
                        inDay := ObjectFloat_Day.ValueData::Integer,
-                       inSession := COALESCE (ObjectLink_User.ChildObjectId::TVarChar, inSession))
+                       inSession := COALESCE (ObjectLink_User.ChildObjectId::TVarChar, inSession)),
+           lpInsertUpdate_ObjectDate(zc_ObjectFloat_RecalcMCSSheduler_DateRun(), Object_RecalcMCSSheduler.Id, clock_timestamp())
   FROM Object AS Object_RecalcMCSSheduler
 
            INNER JOIN ObjectBoolean AS ObjectBoolean_AllRetail
@@ -115,14 +116,15 @@ BEGIN
     AND COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = TRUE
     AND Object_Unit_Run.isErased = FALSE
     AND COALESCE(ObjectLink_Unit_Parent_Run.ChildObjectId, 0) <> 0
-    AND ObjectLink_Unit_Juridical_Run.ObjectId not in (377615, 427324, 389328);
+    AND ObjectLink_Unit_Juridical_Run.ObjectId not in (377615, 427324, 389328, 9951517, 5120968, 183290, 9771036);
 
 
     -- По аптекам не вошедшим в сети
   PERFORM  gpRecalcMCS(inUnitId := ObjectLink_Unit.ChildObjectId,
                        inPeriod := ObjectFloat_Period.ValueData::Integer,
                        inDay := ObjectFloat_Day.ValueData::Integer,
-                       inSession := COALESCE (ObjectLink_User.ChildObjectId::TVarChar, inSession))
+                       inSession := COALESCE (ObjectLink_User.ChildObjectId::TVarChar, inSession)),
+           lpInsertUpdate_ObjectDate(zc_ObjectFloat_RecalcMCSSheduler_DateRun(), Object_RecalcMCSSheduler.Id, clock_timestamp())
   FROM Object AS Object_RecalcMCSSheduler
 
            INNER JOIN ObjectLink AS ObjectLink_Unit
@@ -218,7 +220,7 @@ BEGIN
         AND COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = TRUE
         AND Object_Unit_Run.isErased = FALSE
         AND COALESCE(ObjectLink_Unit_Parent_Run.ChildObjectId, 0) <> 0
-        AND ObjectLink_Unit_Juridical_Run.ObjectId not in (377615, 427324, 389328));
+        AND ObjectLink_Unit_Juridical_Run.ObjectId not in (377615, 427324, 389328, 9951517, 5120968, 183290, 9771036));
 
 END;
 $BODY$

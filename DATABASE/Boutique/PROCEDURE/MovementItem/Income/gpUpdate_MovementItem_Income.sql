@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_Income(
    OUT outTotalSumm           TFloat    , -- Сумма вх.
    OUT outTotalSummBalance    TFloat    , -- Сумма вх. (ГРН)
    OUT outTotalSummPriceList  TFloat    , -- Сумма (прайс)
+   OUT outTotalSummPriceJur   TFloat    , -- Сумма вх без скидки
     IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS RECORD
@@ -25,6 +26,7 @@ $BODY$
    DECLARE vbCountForPrice  TFloat;
    DECLARE vbOperPrice      TFloat;
    DECLARE vbOperPriceList  TFloat;
+   DECLARE vbPriceJur   TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Income());
@@ -50,9 +52,10 @@ BEGIN
           , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
           , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
           , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
+          , COALESCE (MIFloat_PriceJur.ValueData, 0)        AS OperPriceJur
             INTO vbMovementId, vbCurrencyId_Doc
                , vbCurrencyValue, vbParValue
-               , vbCountForPrice, vbOperPrice, vbOperPriceList
+               , vbCountForPrice, vbOperPrice, vbOperPriceList, vbPriceJur
      FROM MovementItem
           -- из док.
           LEFT JOIN MovementLinkObject AS MLO_CurrencyDocument
@@ -74,7 +77,9 @@ BEGIN
           LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                       ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                      AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
-
+          LEFT JOIN MovementItemFloat AS MIFloat_PriceJur
+                                      ON MIFloat_PriceJur.MovementItemId = MovementItem.Id
+                                     AND MIFloat_PriceJur.DescId = zc_MIFloat_PriceJur()
      WHERE MovementItem.Id = inId;
 
      -- расчитали <Сумма вх.> для грида
@@ -88,6 +93,8 @@ BEGIN
 
      -- расчитали <Сумма (прайс)> для грида
      outTotalSummPriceList := zfCalc_SummPriceList (inAmount, vbOperPriceList);
+     -- расчитали <Сумма вх без скидки  для грида
+     outTotalSummPriceJur := zfCalc_SummIn (inAmount, vbPriceJur, vbCountForPrice);
 
      -- Обновляем для Партии - Object_PartionGoods.Amount
      UPDATE Object_PartionGoods 
@@ -108,6 +115,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.02.19         * 
  06.06.17         *
  09.05.17         * outOperPriceList
  10.04.17         *

@@ -67,6 +67,9 @@ type
     actGoodsKindCompleteChoice: TOpenChoiceForm;
     cxLabel22: TcxLabel;
     ceComment: TcxTextEdit;
+    spSelectPrintNoGroup: TdsdStoredProc;
+    actPrintNoGroup: TdsdPrintAction;
+    bbPrintNoGroup: TdxBarButton;
   private
     { Private declarations }
   public

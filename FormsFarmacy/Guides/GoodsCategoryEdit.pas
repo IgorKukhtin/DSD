@@ -20,6 +20,9 @@ type
     GuidesUnitCategory: TdsdGuides;
     cxLabel18: TcxLabel;
     ceValue: TcxCurrencyEdit;
+    cxLabel1: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
   private
     { Private declarations }
   public

@@ -2081,9 +2081,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsCategory_Category() RETURNS Intege
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_GoodsCategory_Category', 'Категория подразделения(A-B-C)', zc_Object_GoodsCategory(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsCategory_Category');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsCategory_Unit() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsCategory_Unit'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_GoodsCategory_Unit', 'Подразделение', zc_Object_GoodsCategory(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsCategory_Unit');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 13.02.19         * zc_ObjectLink_GoodsCategory_Unit
  11.02.19         * zc_ObjectLink_GoodsCategory_Goods
                     zc_ObjectLink_GoodsCategory_Category
  15.01.19         * zc_ObjectLink_Unit_PartnerMedical

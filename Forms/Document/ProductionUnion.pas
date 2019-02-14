@@ -84,6 +84,9 @@ type
     HeaderSaver3: THeaderSaver;
     edJuridicalFrom: TcxButtonEdit;
     JuridicalFromGuides: TdsdGuides;
+    spSelectPrintNoGroup: TdsdStoredProc;
+    actPrintNoGroup: TdsdPrintAction;
+    bbPrintNoGroup: TdxBarButton;
   private
     { Private declarations }
   public

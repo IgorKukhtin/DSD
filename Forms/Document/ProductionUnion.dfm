@@ -564,6 +564,35 @@ inherited ProductionUnionForm: TProductionUnionForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
+    object actPrintNoGroup: TdsdPrintAction [8]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintNoGroup
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintNoGroup
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <>
+      ReportName = 'PrintMovement_Send'
+      ReportNameParam.Value = 'PrintMovement_Send'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -582,7 +611,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       ReportName = 'PrintMovement_Send'
       ReportNameParam.Value = 'PrintMovement_Send'
     end
-    object actUpdateChildDS: TdsdUpdateDataSet [9]
+    object actUpdateChildDS: TdsdUpdateDataSet [10]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -594,7 +623,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       Caption = 'actUpdateChildDS'
       DataSource = ChildDS
     end
-    object actPrint1: TdsdPrintAction [14]
+    object actPrint1: TdsdPrintAction [15]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint1
@@ -632,7 +661,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actGoodsKindChoiceChild: TOpenChoiceForm [20]
+    object actGoodsKindChoiceChild: TOpenChoiceForm [21]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -659,7 +688,7 @@ inherited ProductionUnionForm: TProductionUnionForm
         end>
       isShowModal = True
     end
-    object actGoodsKindChoiceMaster: TOpenChoiceForm [21]
+    object actGoodsKindChoiceMaster: TOpenChoiceForm [22]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -870,6 +899,10 @@ inherited ProductionUnionForm: TProductionUnionForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintNoGroup'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -921,6 +954,10 @@ inherited ProductionUnionForm: TProductionUnionForm
     end
     object bbPrintCeh: TdxBarButton
       Action = actPrintCeh
+      Category = 0
+    end
+    object bbPrintNoGroup: TdxBarButton
+      Action = actPrintNoGroup
       Category = 0
     end
   end
@@ -1462,6 +1499,13 @@ inherited ProductionUnionForm: TProductionUnionForm
         Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisItem'
+        Value = 'false'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 495
@@ -1654,5 +1698,42 @@ inherited ProductionUnionForm: TProductionUnionForm
     Params = <>
     Left = 345
     Top = 24
+  end
+  object spSelectPrintNoGroup: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Send_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Weighing'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisItem'
+        Value = 'true'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 551
+    Top = 432
   end
 end

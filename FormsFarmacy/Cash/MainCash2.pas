@@ -346,6 +346,10 @@ type
     spGlobalConst_SiteDiscount: TdsdStoredProc;
     cxButton2: TcxButton;
     cxButton3: TcxButton;
+    MainFixPercent: TcxGridDBColumn;
+    actOpenMovementSP: TMultiAction;
+    actExecGet_Movement_GoodsSP_ID: TdsdExecStoredProc;
+    gpGet_Movement_GoodsSP_ID: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -3067,6 +3071,7 @@ begin
   actSaveCashSesionIdToFile.Execute;  // только 2 форма
   FormParams.ParamByName('ClosedCheckId').Value := 0;
   FormParams.ParamByName('CheckId').Value := 0;
+  FormParams.ParamByName('OperDate').Value := Date;
   ShapeState.Brush.Color := clGreen;
   if NOT GetIniFile(F) then
   Begin
@@ -4176,7 +4181,7 @@ begin
       if result and Assigned(Cash) AND not Cash.AlwaysSold then
       begin
         if (Disc <> 0) and (PosDisc = 0) then result := Cash.DiscountGoods(Disc);
-        if FTotalSumm <> Cash.SummaReceipt then
+        if Round(FTotalSumm * 100) = Round(Cash.SummaReceipt * 100) then
         begin
           if result then result := Cash.SubTotal(true, true, 0, 0);
           if result then result := Cash.TotalSumm(SalerCash, SalerCashAdd, PaidType);
@@ -4185,7 +4190,7 @@ begin
         end else
         begin
           result := False;
-          ShowMessage('Ошибка. Сумма чека ' + CurrToStr(FTotalSumm) + ' не равна сумме товара в фискальном чеке' + CurrToStr(Cash.SummaReceipt) + '.'#13#10 +
+          ShowMessage('Ошибка. Сумма чека ' + CurrToStr(FTotalSumm) + ' не равна сумме товара в фискальном чеке ' + CurrToStr(Cash.SummaReceipt) + '.'#13#10 +
             'Чек анулирован...');
           Cash.Anulirovt;
         end

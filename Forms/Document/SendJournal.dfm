@@ -22,6 +22,8 @@ inherited SendJournalForm: TSendJournalForm
       inherited cxGrid: TcxGrid
         Width = 761
         Height = 478
+        ExplicitLeft = -23
+        ExplicitTop = -52
         ExplicitWidth = 761
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -358,7 +360,57 @@ inherited SendJournalForm: TSendJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object actPrint: TdsdPrintAction [17]
+    object actPrintGroup: TdsdPrintAction [17]
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'Id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintNoGroup
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintNoGroup
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Send'
+      ReportNameParam.Value = 'PrintMovement_Send'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint: TdsdPrintAction [18]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -556,6 +608,14 @@ inherited SendJournalForm: TSendJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -573,6 +633,10 @@ inherited SendJournalForm: TSendJournalForm
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbPrintGroup: TdxBarButton
+      Action = actPrintGroup
       Category = 0
     end
   end
@@ -727,6 +791,13 @@ inherited SendJournalForm: TSendJournalForm
         Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisItem'
+        Value = 'false'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 535
@@ -735,8 +806,8 @@ inherited SendJournalForm: TSendJournalForm
   object PrintItemsSverkaCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 628
-    Top = 294
+    Left = 660
+    Top = 318
   end
   object JuridicalBasisGuides: TdsdGuides
     KeyField = 'Id'
@@ -791,5 +862,42 @@ inherited SendJournalForm: TSendJournalForm
     PackSize = 1
     Left = 664
     Top = 88
+  end
+  object spSelectPrintNoGroup: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Send_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Weighing'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisItem'
+        Value = 'true'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 535
+    Top = 304
   end
 end
