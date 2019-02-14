@@ -14,6 +14,7 @@ $BODY$
   DECLARE vbTotalSumm TFloat;
   DECLARE vbTotalSummPriceList TFloat;
   DECLARE vbTotalSummRemainsPriceList TFloat;
+  DECLARE vbTotalSummJur TFloat;
 
   DECLARE vbTotalCountSecond TFloat;
   DECLARE vbTotalCountSecondRemains TFloat;
@@ -42,9 +43,10 @@ BEGIN
      vbMovementDescId:= (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId);
 
      --
-     SELECT SUM (COALESCE(MovementItem.Amount, 0))                                                                  AS TotalCount
+     SELECT SUM (COALESCE(MovementItem.Amount, 0))                                                                      AS TotalCount
             -- Сумма по Вх. в Валюте - с округлением до 2-х знаков
           , SUM (zfCalc_SummIn (MovementItem.Amount, Object_PartionGoods.OperPrice, Object_PartionGoods.CountForPrice)) AS TotalSumm
+          , SUM (zfCalc_SummIn (MovementItem.Amount, MIFloat_PriceJur.ValueData, Object_PartionGoods.CountForPrice))    AS TotalSummJur
             -- Сумма по Вх. в zc_Currency_Basis
           , SUM (zfCalc_SummIn (MovementItem.Amount
                                 -- Цена Вх. в Валюте - сначала переводим в zc_Currency_Basis - с округлением до 2-х знаков
@@ -77,7 +79,8 @@ BEGIN
           , SUM (zfCalc_SummPriceList (MIFloat_AmountRemains.ValueData, MIFloat_OperPriceList.ValueData))       AS TotalSummRemainsPriceList
 
 
-            INTO vbTotalCount, vbTotalSumm, vbTotalSummBalance, vbTotalSummPriceList
+
+            INTO vbTotalCount, vbTotalSumm, vbTotalSummJur, vbTotalSummBalance, vbTotalSummPriceList
                , vbTotalSummChange, vbTotalSummPay
                , vbTotalSummChangePay, vbTotalSummPayOth, vbTotalCountReturn, vbTotalSummReturn, vbTotalSummPayReturn
                , vbTotalCountRemains, vbTotalCountSecond, vbTotalCountSecondRemains
@@ -89,6 +92,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                         ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                        AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_PriceJur
+                                        ON MIFloat_PriceJur.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PriceJur.DescId         = zc_MIFloat_PriceJur()
 
             LEFT JOIN MovementItemFloat AS MIFloat_AmountRemains
                                         ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
@@ -160,6 +167,8 @@ BEGIN
              PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbTotalCount);
              -- Сохранили свойство <Итого Сумма>
              PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbTotalSumm);
+             -- Сохранили свойство <Итого Сумма без скидки>
+             PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummJur(), inMovementId, vbTotalSummJur);
              -- Сохранили свойство <Итого сумма вх. в ГРН>
              PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummBalance(), inMovementId, vbTotalSummBalance);
              -- Сохранили свойство <Итого Сумма по прайсу>
@@ -193,6 +202,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.02.19         * add TotalSummJur
  21.07.17         *
  15.06.17         *
  28.04.15                         *

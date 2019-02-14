@@ -127,6 +127,11 @@ object IncomeJournalForm: TIncomeJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalSummBalance
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummJur
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -153,6 +158,11 @@ object IncomeJournalForm: TIncomeJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalSummBalance
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummJur
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -259,6 +269,16 @@ object IncomeJournalForm: TIncomeJournalForm
       object TotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1074#1093'.'
         DataBinding.FieldName = 'TotalSumm'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object TotalSummJur: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
+        DataBinding.FieldName = 'TotalSummJur'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -1376,12 +1396,6 @@ object IncomeJournalForm: TIncomeJournalForm
     ComponentList = <
       item
         Component = PeriodChoice
-      end
-      item
-        Component = deEnd
-      end
-      item
-        Component = deStart
       end>
     Left = 584
     Top = 48
