@@ -485,6 +485,11 @@ type
     miGlobalConst: TMenuItem;
     actGoodsCategory: TdsdOpenForm;
     miGoodsCategory: TMenuItem;
+    N179: TMenuItem;
+    actReportRogersMovementCheck: TdsdOpenForm;
+    actRepriceRogersJournal: TdsdOpenForm;
+    N180: TMenuItem;
+    N181: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

@@ -812,7 +812,7 @@ uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
   frxDBSet, Printers,
   cxGridAddOn, cxTextEdit, cxGridDBDataDefinitions, ExternalSave,
   dxmdaset, dxCore, cxCustomData, cxGridLevel, cxImage, UnilWin, dsdAddOn,
-  dsdExportToXLSAction;
+  dsdExportToXLSAction, dsdExportToXMLAction;
 
 procedure Register;
 begin
@@ -848,6 +848,7 @@ begin
   RegisterActions('DSDLibExport', [TdsdStoredProcExportToFile], TdsdStoredProcExportToFile);
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
+  RegisterActions('DSDLibExport', [TdsdExportToXML], TdsdExportToXML);
 
 end;
 

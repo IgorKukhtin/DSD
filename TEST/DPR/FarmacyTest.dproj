@@ -2220,6 +2220,18 @@
 				<Form>GoodsCategoryEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Rogers\ReportRogersMovementCheck.pas">
+				<Form>ReportRogersMovementCheckForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Rogers\RepriceRogers.pas">
+				<Form>RepriceRogersForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Rogers\RepriceRogersJournal.pas">
+				<Form>RepriceRogersJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

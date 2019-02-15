@@ -100,6 +100,7 @@ type
     procedure LoadReportPromoParamsFormTest;
     procedure LoadReportSoldParamsFormTest;
     procedure LoadReportFormTest;
+    procedure LoadRogerseFormTest;
     procedure LoadReportForSiteTest;
     procedure LoadReportUploadFormTest;
     procedure LoadRepriceFormTest;
@@ -955,6 +956,18 @@ begin
     (GetForm('TReport_GoodsOnUnit_ForSiteDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load
     ('TReport_GoodsOnUnit_ForSiteDialogForm');
+end;
+
+procedure TLoadFormTest.LoadRogerseFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportRogersMovementCheckForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReportRogersMovementCheckForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRepriceRogersJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRepriceRogersJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRepriceRogersForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRepriceRogersForm');
 end;
 
 procedure TLoadFormTest.LoadReportSoldParamsFormTest;
