@@ -667,28 +667,6 @@ BEGIN
 
                LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
                
-               /*LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP 
-                                        ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
-                                       AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
-               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceRetSP
-                                     ON ObjectFloat_Goods_PriceRetSP.ObjectId = ObjectLink_Main.ChildObjectId 
-                                    AND ObjectFloat_Goods_PriceRetSP.DescId = zc_ObjectFloat_Goods_PriceRetSP() 
-               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
-                                     ON ObjectFloat_Goods_PriceOptSP.ObjectId = ObjectLink_Main.ChildObjectId
-                                    AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP() 
-               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceSP
-                                     ON ObjectFloat_Goods_PriceSP.ObjectId = ObjectLink_Main.ChildObjectId 
-                                    AND ObjectFloat_Goods_PriceSP.DescId = zc_ObjectFloat_Goods_PriceSP()   
-               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PaymentSP
-                                     ON ObjectFloat_Goods_PaymentSP.ObjectId = ObjectLink_Main.ChildObjectId 
-                                    AND ObjectFloat_Goods_PaymentSP.DescId = zc_ObjectFloat_Goods_PaymentSP() 
-
-               LEFT JOIN ObjectLink AS ObjectLink_Goods_IntenalSP
-                                    ON ObjectLink_Goods_IntenalSP.ObjectId = ObjectLink_Main.ChildObjectId
-                                   AND ObjectLink_Goods_IntenalSP.DescId = zc_ObjectLink_Goods_IntenalSP()
-               LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = ObjectLink_Goods_IntenalSP.ChildObjectId
-               */
-               
                LEFT JOIN ObjectDate AS ObjectDate_LastPrice
                                     ON ObjectDate_LastPrice.ObjectId = ObjectLink_Main.ChildObjectId
                                    AND ObjectDate_LastPrice.DescId = zc_ObjectDate_Goods_LastPrice()
