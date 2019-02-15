@@ -1006,6 +1006,8 @@ type
     miSettingsService: TMenuItem;
     actServiceMarket: TdsdOpenForm;
     miServiceMarket: TMenuItem;
+    actReport_GoodsMI_SaleReturnIn_BUH: TdsdOpenForm;
+    üøReport_GoodsMI_SaleReturnIn_BUH: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

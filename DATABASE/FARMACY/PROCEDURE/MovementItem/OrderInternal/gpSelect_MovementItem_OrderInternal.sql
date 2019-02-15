@@ -252,13 +252,17 @@ BEGIN
 
         -- Товары соц-проект (документ)
       , tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId, TRUE AS isSP
-                       FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= vbOperDate, inEndate:= vbOperDate) AS tmp
+                            , MIFloat_PriceOptSP.ValueData AS PriceOptSP
+                       FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= vbOperDate, inEndDate:= vbOperDate) AS tmp
+                                                LEFT JOIN MovementItemFloat AS MIFloat_PriceOptSP
+                                                     ON MIFloat_PriceOptSP.MovementItemId = tmp.MovementItemId
+                                                    AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
                        )
 
 
       , tmpGoodsMain AS (SELECT tmpMI.GoodsId
                               , COALESCE (tmpGoodsSP.isSP, False)           ::Boolean AS isSP
-                              , CAST ((COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) * 1.1) AS NUMERIC (16,2))    :: TFloat   AS PriceOptSP
+                              , CAST ( (COALESCE (tmpGoodsSP.PriceOptSP,0) * 1.1) AS NUMERIC (16,2))    :: TFloat   AS PriceOptSP
                               , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = vbOperDate THEN TRUE ELSE FALSE END  AS isMarketToday
                               , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)                   ::TDateTime  AS LastPriceDate
                               , COALESCE (ObjectFloat_CountPrice.ValueData,0) ::TFloat AS CountPrice
@@ -270,12 +274,7 @@ BEGIN
                                 LEFT JOIN  ObjectLink AS ObjectLink_Main
                                                       ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                      AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-                                /*LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_SP
-                                                         ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId
-                                                        AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()*/
-                                LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
-                                                      ON ObjectFloat_Goods_PriceOptSP.ObjectId = ObjectLink_Main.ChildObjectId
-                                                     AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP()
+
                                 LEFT JOIN ObjectDate AS ObjectDate_LastPrice
                                                      ON ObjectDate_LastPrice.ObjectId = ObjectLink_Main.ChildObjectId
                                                     AND ObjectDate_LastPrice.DescId = zc_ObjectDate_Goods_LastPrice()
@@ -1832,12 +1831,16 @@ BEGIN
 
         -- Товары соц-проект (документ)
       , tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId, TRUE AS isSP
+                            , MIFloat_PriceOptSP.ValueData AS PriceOptSP
                        FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= vbOperDate, inEndDate:= vbOperDate) AS tmp
+                                                LEFT JOIN MovementItemFloat AS MIFloat_PriceOptSP
+                                                     ON MIFloat_PriceOptSP.MovementItemId = tmp.MovementItemId
+                                                    AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
                        )
 
       , tmpGoodsMain AS (SELECT tmpMI.GoodsId                                                           AS GoodsId
                               , COALESCE (tmpGoodsSP.isSP, False)                             ::Boolean AS isSP
-                              , CAST ((COALESCE (ObjectFloat_Goods_PriceOptSP.ValueData,0) * 1.1) AS NUMERIC (16,2))    :: TFloat   AS PriceOptSP
+                              , CAST ( (COALESCE (tmpGoodsSP.PriceOptSP,0) * 1.1) AS NUMERIC (16,2)) :: TFloat   AS PriceOptSP
                               , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = vbOperDate THEN TRUE ELSE FALSE END  AS isMarketToday
                               , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)          ::TDateTime AS LastPriceDate
                               , COALESCE (ObjectFloat_CountPrice.ValueData,0)               ::TFloat    AS CountPrice
@@ -1849,13 +1852,6 @@ BEGIN
                                 LEFT JOIN ObjectLink AS ObjectLink_Main
                                                      ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                     AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-                                /*LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SP
-                                                     ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId
-                                                    AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
-                                                    AND COALESCE (ObjectBoolean_Goods_SP.ValueData, FALSE) = TRUE*/
-                                LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PriceOptSP
-                                                     ON ObjectFloat_Goods_PriceOptSP.ObjectId = ObjectLink_Main.ChildObjectId
-                                                    AND ObjectFloat_Goods_PriceOptSP.DescId = zc_ObjectFloat_Goods_PriceOptSP()
 
                                 LEFT JOIN ObjectFloat AS ObjectFloat_CountPrice
                                                      ON ObjectFloat_CountPrice.ObjectId = ObjectLink_Main.ChildObjectId

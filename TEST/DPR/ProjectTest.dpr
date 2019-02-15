@@ -1066,6 +1066,7 @@ uses
   SettingsService_Object in '..\..\Forms\Guides\SettingsService_Object.pas' {SettingsService_ObjectForm: TParentForm},
   IncomeCost in '..\..\Forms\Document\IncomeCost.pas' {IncomeCostForm: TParentForm},
   Report_ReceiptSaleAnalyzeRealDialog in '..\..\Forms\Report\Report_ReceiptSaleAnalyzeRealDialog.pas' {Report_ReceiptSaleAnalyzeRealDialogForm: TParentForm},
+  Report_GoodsMI_SaleReturnIn_BUH in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn_BUH.pas' {Report_GoodsMI_SaleReturnIn_BUHForm: TParentForm},
   dsdExportToXMLAction in '..\..\SOURCE\COMPONENT\dsdExportToXMLAction.pas';
 
 {$R *.RES}

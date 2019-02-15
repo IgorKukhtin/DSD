@@ -1,10 +1,9 @@
-﻿inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'>'
+﻿inherited Report_GoodsMI_SaleReturnIn_BUHForm: TReport_GoodsMI_SaleReturnIn_BUHForm
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'> ('#1053#1044#1057')'
   ClientHeight = 387
   ClientWidth = 1362
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -259
   ExplicitWidth = 1378
   ExplicitHeight = 425
   PixelsPerInch = 96
@@ -163,6 +162,26 @@
               Format = ',0.####'
               Kind = skSum
               Column = Return_Summ_10700
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_SummMVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Return_SummVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Return_SummMVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_SummVAT
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -174,6 +193,10 @@
               Format = ',0.####'
               Kind = skSum
               Column = Sale_Amount_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -304,6 +327,26 @@
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = BranchName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_SummMVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Return_SummVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Return_SummMVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_SummVAT
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -690,6 +733,54 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057' '#1091#1095#1077#1090#1086#1084' %'#1089#1082#1080#1076#1082#1080' '#1079#1072' '#1074#1077#1089' '#1080' '#1088#1072#1079#1085#1080#1094#1099' '#1074' '#1074#1077#1089#1077
+            Options.Editing = False
+            Width = 70
+          end
+          object Sale_SummMVAT: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076' '#1089#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057', '#1075#1088#1085' ('#1087#1086#1082#1091#1087')'
+            DataBinding.FieldName = 'Sale_SummMVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057', '#1075#1088#1085
+            Options.Editing = False
+            Width = 82
+          end
+          object Sale_SummVAT: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076' '#1089#1091#1084#1084#1072' '#1053#1044#1057', '#1075#1088#1085' ('#1087#1086#1082#1091#1087')'
+            DataBinding.FieldName = 'Sale_SummVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1053#1044#1057
+            Options.Editing = False
+            Width = 70
+          end
+          object Return_SummMVAT: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088' '#1089#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057', '#1075#1088#1085
+            DataBinding.FieldName = 'Return_SummMVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1073#1077#1079' '#1053#1044#1057
+            Options.Editing = False
+            Width = 70
+          end
+          object Return_SummVAT: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088' '#1089#1091#1084#1084#1072' '#1053#1044#1057', '#1075#1088#1085
+            DataBinding.FieldName = 'Return_SummVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1091#1084#1084#1072' '#1053#1044#1057' '#1074#1086#1079#1074#1088#1072#1090#1072
             Options.Editing = False
             Width = 70
           end
@@ -1713,7 +1804,7 @@
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_GoodsMI_SaleReturnIn'
+    StoredProcName = 'gpReport_GoodsMI_SaleReturnIn_BUH'
     DataSets = <
       item
         DataSet = MasterCDS

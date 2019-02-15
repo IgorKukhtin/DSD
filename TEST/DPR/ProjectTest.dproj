@@ -3601,6 +3601,10 @@
 				<Form>Report_ReceiptSaleAnalyzeRealDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_SaleReturnIn_BUH.pas">
+				<Form>Report_GoodsMI_SaleReturnIn_BUHForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdExportToXMLAction.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
