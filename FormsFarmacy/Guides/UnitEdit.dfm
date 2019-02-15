@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 526
+  ClientHeight = 566
   ClientWidth = 488
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 99
-    Top = 495
+    Top = 535
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 293
-    Top = 495
+    Top = 535
     Width = 75
     Height = 25
     Action = FormClose
@@ -180,23 +180,23 @@
   end
   object cxLabel9: TcxLabel
     Left = 15
-    Top = 203
+    Top = 243
     Caption = #1040#1076#1088#1077#1089
   end
   object edAddress: TcxTextEdit
     Left = 15
-    Top = 220
+    Top = 260
     TabOrder = 23
     Width = 449
   end
   object cxLabel10: TcxLabel
     Left = 255
-    Top = 249
+    Top = 289
     Caption = #1056#1072#1081#1086#1085
   end
   object ceProvinceCity: TcxButtonEdit
     Left = 255
-    Top = 266
+    Top = 306
     Properties.Buttons = <
       item
         Default = True
@@ -207,12 +207,12 @@
   end
   object cxLabel11: TcxLabel
     Left = 15
-    Top = 299
+    Top = 339
     Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1089
   end
   object edCreateDate: TcxDateEdit
     Left = 15
-    Top = 319
+    Top = 359
     EditValue = 42993d
     Properties.ReadOnly = False
     Properties.SaveTime = False
@@ -222,7 +222,7 @@
   end
   object edCloseDate: TcxDateEdit
     Left = 134
-    Top = 319
+    Top = 359
     EditValue = 42993d
     Properties.ReadOnly = False
     Properties.SaveTime = False
@@ -232,17 +232,17 @@
   end
   object cxLabel12: TcxLabel
     Left = 134
-    Top = 299
+    Top = 339
     Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086
   end
   object cxLabel13: TcxLabel
     Left = 255
-    Top = 299
+    Top = 339
     Caption = #1052#1077#1085#1077#1076#1078#1077#1088
   end
   object edUserManager: TcxButtonEdit
     Left = 255
-    Top = 319
+    Top = 359
     Properties.Buttons = <
       item
         Default = True
@@ -254,12 +254,12 @@
   end
   object cxLabel14: TcxLabel
     Left = 16
-    Top = 250
+    Top = 290
     Caption = #1056#1077#1075#1080#1086#1085
   end
   object edArea: TcxButtonEdit
     Left = 15
-    Top = 266
+    Top = 306
     Properties.Buttons = <
       item
         Default = True
@@ -287,7 +287,7 @@
   end
   object ceNormOfManDays: TcxCurrencyEdit
     Left = 16
-    Top = 370
+    Top = 410
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 35
@@ -295,28 +295,28 @@
   end
   object cxLabel16: TcxLabel
     Left = 16
-    Top = 347
+    Top = 387
     Caption = #1053#1086#1088#1084#1072' '#1095#1077#1083#1086#1074#1077#1082#1086#1076#1085#1077#1081' '#1074' '#1084#1077#1089#1103#1094#1077
   end
   object cxLabel17: TcxLabel
     Left = 255
-    Top = 347
+    Top = 387
     Caption = #1058#1077#1083#1077#1092#1086#1085
   end
   object edPhone: TcxTextEdit
     Left = 255
-    Top = 370
+    Top = 410
     TabOrder = 38
     Width = 209
   end
   object cxLabel18: TcxLabel
     Left = 17
-    Top = 402
+    Top = 442
     Caption = #1055#1086#1076#1088#1072#1079#1076'. '#1076#1083#1103' '#1091#1088#1072#1074#1085#1080#1074#1072#1085#1080#1103' '#1094#1077#1085' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
   end
   object edUnitRePrice: TcxButtonEdit
     Left = 17
-    Top = 418
+    Top = 458
     Properties.Buttons = <
       item
         Default = True
@@ -328,12 +328,12 @@
   end
   object cxLabel19: TcxLabel
     Left = 17
-    Top = 446
+    Top = 486
     Caption = #1052#1077#1076'. '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1082#1084#1091' 1303'
   end
   object edPartnerMedical: TcxButtonEdit
     Left = 17
-    Top = 462
+    Top = 502
     Properties.Buttons = <
       item
         Default = True
@@ -350,9 +350,54 @@
     TabOrder = 43
     Width = 115
   end
+  object cxLabel20: TcxLabel
+    Left = 255
+    Top = 202
+    Caption = #1053#1072#1095'. '#1085#1086#1095'. '#1094#1077#1085
+  end
+  object cxLabel21: TcxLabel
+    Left = 367
+    Top = 202
+    Caption = #1054#1082#1086#1085'. '#1085#1086#1095'. '#1094#1077#1085
+  end
+  object edTaxUnitEnd: TcxDateEdit
+    Left = 364
+    Top = 221
+    EditValue = 43234d
+    Properties.ArrowsForYear = False
+    Properties.AssignedValues.EditFormat = True
+    Properties.DateButtons = [btnNow]
+    Properties.DisplayFormat = 'HH:MM'
+    Properties.Kind = ckDateTime
+    TabOrder = 46
+    Width = 100
+  end
+  object edTaxUnitStart: TcxDateEdit
+    Left = 255
+    Top = 221
+    EditValue = 43225d
+    Properties.ArrowsForYear = False
+    Properties.AssignedValues.EditFormat = True
+    Properties.DateButtons = [btnNow]
+    Properties.DateOnError = deNull
+    Properties.DisplayFormat = 'HH:MM'
+    Properties.Kind = ckDateTime
+    Properties.Nullstring = ' '
+    Properties.YearsInMonthList = False
+    TabOrder = 47
+    Width = 100
+  end
+  object cbGoodsCategory: TcxCheckBox
+    Left = 16
+    Top = 214
+    Hint = #1076#1083#1103' '#1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1086#1081' '#1084#1072#1090#1088#1080#1094#1099
+    Caption = #1076#1083#1103' '#1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1086#1081' '#1084#1072#1090#1088#1080#1094#1099
+    TabOrder = 48
+    Width = 179
+  end
   object ActionList: TActionList
     Left = 356
-    Top = 358
+    Top = 398
     object DataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -480,6 +525,22 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inTaxUnitStartDate'
+        Value = 'NULL'
+        Component = edTaxUnitStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxUnitEndDate'
+        Value = 'NULL'
+        Component = edTaxUnitEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisRepriceAuto'
         Value = Null
         Component = cbRepriceAuto
@@ -573,10 +634,18 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGoodsCategory'
+        Value = Null
+        Component = cbGoodsCategory
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 196
-    Top = 342
+    Top = 382
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -587,7 +656,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 420
-    Top = 358
+    Top = 398
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Unit'
@@ -825,10 +894,31 @@
         Component = cbPharmacyItem
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxUnitStartDate'
+        Value = 'NULL'
+        Component = edTaxUnitStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxUnitEndDate'
+        Value = 'NULL'
+        Component = edTaxUnitEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isGoodsCategory'
+        Value = Null
+        Component = cbGoodsCategory
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 84
-    Top = 350
+    Top = 390
   end
   object ParentGuides: TdsdGuides
     KeyField = 'Id'
@@ -944,7 +1034,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 336
-    Top = 254
+    Top = 294
   end
   object GuidesUserManager: TdsdGuides
     KeyField = 'Id'
@@ -973,7 +1063,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 368
-    Top = 306
+    Top = 346
   end
   object GuidesArea: TdsdGuides
     KeyField = 'Id'
@@ -1002,7 +1092,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 104
-    Top = 256
+    Top = 296
   end
   object GuidesUnitCategory: TdsdGuides
     KeyField = 'Id'
@@ -1030,8 +1120,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 376
-    Top = 104
+    Left = 424
+    Top = 112
   end
   object GuidesUnitRePrice: TdsdGuides
     KeyField = 'Id'
@@ -1060,7 +1150,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 241
-    Top = 392
+    Top = 432
   end
   object GuidesPartnerMedical: TdsdGuides
     KeyField = 'Id'
@@ -1089,6 +1179,6 @@
         MultiSelectSeparator = ','
       end>
     Left = 233
-    Top = 444
+    Top = 484
   end
 end

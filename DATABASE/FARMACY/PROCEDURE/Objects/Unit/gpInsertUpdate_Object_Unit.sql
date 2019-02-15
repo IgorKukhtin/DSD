@@ -13,7 +13,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Integer);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Integer);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
@@ -27,6 +28,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inEndServiceNigth         TDateTime ,
     IN inCreateDate              TDateTime ,    -- дата создания точки
     IN inCloseDate               TDateTime ,    -- дата закрытия точки
+    IN inTaxUnitStartDate        TDateTime ,
+    IN inTaxUnitEndDate          TDateTime ,
     IN inisRepriceAuto           Boolean   ,    -- участвует в автопереоценке
     IN inAreaId                  Integer   ,    -- регион
     IN inParentId                Integer   ,    -- ссылка на подразделение
@@ -39,6 +42,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inNormOfManDays           Integer   ,    -- Норма человекодней в месяце
     IN inPartnerMedicalId        Integer   ,    -- Мед.учреждение для пкму 1303
     IN inPharmacyItem            Boolean   ,    -- Аптечный пункт
+    IN inisGoodsCategory         Boolean   ,    -- 
     IN inSession                 TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -112,6 +116,23 @@ BEGIN
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_EndServiceNigth(), ioId, inEndServiceNigth);
    END IF;
 
+   IF inTaxUnitStartDate ::Time <> '00:00'
+   THEN
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_TaxUnitStart(), ioId, inTaxUnitStartDate);
+   ELSE
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_TaxUnitStart(), ioId, NULL);
+   END IF;
+   IF inTaxUnitEndDate ::Time <> '00:00'
+   THEN   
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_TaxUnitEnd(), ioId, inTaxUnitEndDate);
+   ELSE
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_TaxUnitEnd(), ioId, NULL);
+   END IF;
+
    -- участвует в автопереоценке
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_RepriceAuto(), ioId, inisRepriceAuto);
 
@@ -165,6 +186,8 @@ BEGIN
 
    --сохранили <Аптечный пункт>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Unit_PharmacyItem(), ioId, inPharmacyItem);
+   --сохранили <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Unit_GoodsCategory(), ioId, inisGoodsCategory);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -179,6 +202,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 15.02.19         * inGoodsCategory
  09.02.19                                                        * add PharmacyItem
  15.01.19         *
  22.10.18         *

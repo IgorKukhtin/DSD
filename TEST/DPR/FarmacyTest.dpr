@@ -659,7 +659,8 @@ uses
   GoodsCategoryEdit in '..\..\FormsFarmacy\Guides\GoodsCategoryEdit.pas' {GoodsCategoryEditForm: TParentForm},
   ReportRogersMovementCheck in '..\..\FormsFarmacy\Rogers\ReportRogersMovementCheck.pas' {ReportRogersMovementCheckForm: TParentForm},
   RepriceRogers in '..\..\FormsFarmacy\Rogers\RepriceRogers.pas' {RepriceRogersForm: TParentForm},
-  RepriceRogersJournal in '..\..\FormsFarmacy\Rogers\RepriceRogersJournal.pas' {RepriceRogersJournalForm: TParentForm};
+  RepriceRogersJournal in '..\..\FormsFarmacy\Rogers\RepriceRogersJournal.pas' {RepriceRogersJournalForm: TParentForm},
+  dsdExportToXMLAction in '..\..\SOURCE\COMPONENT\dsdExportToXMLAction.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

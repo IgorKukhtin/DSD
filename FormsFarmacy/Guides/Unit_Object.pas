@@ -68,6 +68,7 @@ type
     actChoiceUnit: TOpenChoiceForm;
     UnitRePriceName: TcxGridDBColumn;
     PartnerMedicalName: TcxGridDBColumn;
+    isGoodsCategory: TcxGridDBColumn;
   private
     { Private declarations }
   public

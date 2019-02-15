@@ -177,6 +177,14 @@ object UnitTreeForm: TUnitTreeForm
         Options.Editing = False
         Width = 89
       end
+      object isGoodsCategory: TcxGridDBColumn
+        Caption = #1044#1083#1103' '#1040#1089#1089#1086#1088#1090'. '#1084#1072#1090#1088#1080#1094#1099
+        DataBinding.FieldName = 'isGoodsCategory'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1083#1103' '#1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1086#1081' '#1084#1072#1090#1088#1080#1094#1099
+        Options.Editing = False
+      end
       object Address: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
