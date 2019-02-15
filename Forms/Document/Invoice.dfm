@@ -355,6 +355,7 @@ object InvoiceForm: TInvoiceForm
               end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
             Width = 200
           end
           object UnitCode: TcxGridDBColumn
@@ -404,7 +405,7 @@ object InvoiceForm: TInvoiceForm
             Width = 120
           end
           object GoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074'.'
+            Caption = #1050#1086#1076' '#1090#1086#1074'./'#1086#1089
             DataBinding.FieldName = 'GoodsCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -1229,6 +1230,9 @@ object InvoiceForm: TInvoiceForm
       ReportNameParam.Value = 'PrintMovement_Invoice'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'

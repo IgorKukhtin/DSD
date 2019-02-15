@@ -25,7 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Full TVarChar
              , MovementItemId Integer, MovementId_OrderIncome Integer, InvNumber_OrderIncome TVarChar
              , Amount TFloat, Price TFloat, CountForPrice TFloat, AmountSumm TFloat
              , MIComment TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, InvNumber_Asset TVarChar
              , MeasureId Integer, MeasureName TVarChar
              , NameBeforeId Integer, NameBeforeCode Integer, NameBeforeName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
@@ -151,6 +151,7 @@ BEGIN
            , Object_Goods.Id                     AS GoodsId
            , Object_Goods.ObjectCode             AS GoodsCode
            , Object_Goods.ValueData              AS GoodsName
+           , ObjectString_InvNumber.ValueData    AS InvNumber_Asset
 
            , Object_Measure.Id                   AS MeasureId
            , Object_Measure.ValueData            AS MeasureName
@@ -246,6 +247,9 @@ BEGIN
                                              ON MILinkObject_Goods.MovementItemId = tmpMI.Id
                                             AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MILinkObject_Goods.ObjectId
+            LEFT JOIN ObjectString AS ObjectString_InvNumber
+                                   ON ObjectString_InvNumber.ObjectId = Object_Goods.Id
+                                  AND ObjectString_InvNumber.DescId   = zc_ObjectString_Asset_InvNumber()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                              ON MILinkObject_Asset.MovementItemId = tmpMI.Id

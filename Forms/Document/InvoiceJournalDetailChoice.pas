@@ -39,7 +39,7 @@ type
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
@@ -105,6 +105,9 @@ type
     edJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
     isClosed: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    InvNumber_Asset: TcxGridDBColumn;
   private
   public
   end;

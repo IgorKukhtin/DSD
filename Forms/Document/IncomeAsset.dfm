@@ -26,7 +26,6 @@ object IncomeAssetForm: TIncomeAssetForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 871
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -280,6 +279,7 @@ object IncomeAssetForm: TIncomeAssetForm
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
@@ -310,14 +310,12 @@ object IncomeAssetForm: TIncomeAssetForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 871
     ClientRectBottom = 263
     ClientRectRight = 907
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 871
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -325,7 +323,6 @@ object IncomeAssetForm: TIncomeAssetForm
         Height = 239
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 871
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -435,23 +432,46 @@ object IncomeAssetForm: TIncomeAssetForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object GoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'GoodsCode'
+          object InvNumber_Invoice: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
+            DataBinding.FieldName = 'InvNumber_Invoice'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actInvoiceJournalDetailChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 50
+            HeaderHint = #1054#1089#1085#1086#1074#1072#1085#1080#1077' ('#1089#1095#1077#1090')'
+            Width = 159
           end
           object InvNumber_Asset: TcxGridDBColumn
             Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1085#1099#1081' '#1085#1086#1084#1077#1088
             DataBinding.FieldName = 'InvNumber_Asset'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object GoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074'./'#1086#1089
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object GoodsName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1058#1086#1074#1072#1088'/'#1054#1057')'
+            Caption = #1058#1086#1074#1072#1088'/'#1054#1057
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -578,22 +598,6 @@ object IncomeAssetForm: TIncomeAssetForm
             Options.Editing = False
             Width = 91
           end
-          object InvNumber_Invoice: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
-            DataBinding.FieldName = 'InvNumber_Invoice'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actInvoiceJournalDetailChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1089#1085#1086#1074#1072#1085#1080#1077' ('#1089#1095#1077#1090')'
-            Width = 159
-          end
           object MIId_Invoice: TcxGridDBColumn
             DataBinding.FieldName = 'MIId_Invoice'
             Visible = False
@@ -618,7 +622,9 @@ object IncomeAssetForm: TIncomeAssetForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitWidth = 984
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -626,7 +632,6 @@ object IncomeAssetForm: TIncomeAssetForm
         Height = 239
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 984
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSourceCost
@@ -1323,7 +1328,6 @@ object IncomeAssetForm: TIncomeAssetForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -1342,7 +1346,6 @@ object IncomeAssetForm: TIncomeAssetForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -1624,11 +1627,10 @@ object IncomeAssetForm: TIncomeAssetForm
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
       View = cxGridDBTableView
-      Action = actAssetChoiceFormByGoods
+      Action = actInvoiceJournalDetailChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1057'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1057'>'
-      ShortCut = 45
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1057'> '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' <'#8470' '#1076#1086#1082'. '#1057#1095#1077#1090'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1057'> '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' <'#8470' '#1076#1086#1082'. '#1057#1095#1077#1090'>'
       ImageIndex = 0
     end
     object InsertRecord1: TInsertRecord
@@ -1767,6 +1769,40 @@ object IncomeAssetForm: TIncomeAssetForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsCode'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Asset'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_Asset'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2839,6 +2875,14 @@ object IncomeAssetForm: TIncomeAssetForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inUnitId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAssetId'
         Value = Null
         Component = MasterCDS
@@ -2886,6 +2930,24 @@ object IncomeAssetForm: TIncomeAssetForm
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioInvNumber_Asset'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_Asset'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioInvNumber_Asset_save'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_Asset_save'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

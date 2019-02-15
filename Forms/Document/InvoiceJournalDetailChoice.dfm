@@ -28,7 +28,7 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 42370d
+      EditValue = 43466d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -38,7 +38,7 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42370d
+      EditValue = 43466d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -229,6 +229,7 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
       object InvNumberPartner: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
         DataBinding.FieldName = 'InvNumberPartner'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -241,21 +242,20 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
         HeaderAlignmentVert = vaCenter
         Width = 68
       end
-      object InsertDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
-        DataBinding.FieldName = 'InsertDate'
+      object ContractCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1076#1086#1075'.'
+        DataBinding.FieldName = 'ContractCode'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 68
       end
-      object InsertName: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076'.'
-        DataBinding.FieldName = 'InsertName'
-        Visible = False
+      object ContractName: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1075'.'
+        DataBinding.FieldName = 'ContractName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 98
+        Width = 60
       end
       object TotalSumm: TcxGridDBColumn
         Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1086' '#1076#1086#1082'.'
@@ -289,7 +289,30 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
           end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1077#1076#1074#1072#1088#1080#1090#1077#1083#1100#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
         Width = 200
+      end
+      object GoodsCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1090#1086#1074'./'#1086#1089
+        DataBinding.FieldName = 'GoodsCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object GoodsName: TcxGridDBColumn
+        Caption = #1058#1086#1074#1072#1088'/'#1054#1057
+        DataBinding.FieldName = 'GoodsName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object InvNumber_Asset: TcxGridDBColumn
+        Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1085#1099#1081' '#1085#1086#1084#1077#1088
+        DataBinding.FieldName = 'InvNumber_Asset'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 90
       end
       object MeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -349,7 +372,7 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
         Options.Editing = False
         Width = 70
       end
-      object cxComment: TcxGridDBColumn
+      object MIComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1101#1083#1077#1084#1077#1085#1090')'
         DataBinding.FieldName = 'MIComment'
         HeaderAlignmentHorz = taCenter
@@ -400,21 +423,6 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object ContractCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1076#1086#1075'.'
-        DataBinding.FieldName = 'ContractCode'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 68
-      end
-      object ContractName: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1075'.'
-        DataBinding.FieldName = 'ContractName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
       object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
         DataBinding.FieldName = 'JuridicalName'
@@ -431,6 +439,22 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 163
+      end
+      object InsertDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
+        DataBinding.FieldName = 'InsertDate'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 68
+      end
+      object InsertName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076'.'
+        DataBinding.FieldName = 'InsertName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 98
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -640,10 +664,10 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -704,6 +728,9 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -925,10 +952,10 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -1143,6 +1170,13 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'GoodsCode'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'GoodsName'
           Value = Null
           Component = ClientDataSet
@@ -1249,6 +1283,14 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
           ComponentItem = 'Comment'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Asset'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber_Asset'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
@@ -1256,7 +1298,7 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
       DataSource = DataSource
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Invoice_DetailChoice'
     DataSet = ClientDataSet
     DataSets = <
