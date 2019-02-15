@@ -95,6 +95,32 @@
           , case when tmpGoods.Id is not null and ObjectString_Goods_Maker.ValueData <> ''
                       then lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Maker(), tmpGoods.Id, ObjectString_Goods_Maker.ValueData)
             end
+            -- !!!!
+            -- !!!!
+            -- !! 3-ий шаг: UPDATE св-ва!!! - только после 2-ой шаг - залить линки, иначе эти товары не видны!!!
+            -- !!!!
+          , case when tmpGoods.Id is not null then lpInsertUpdate_Object (tmpGoods.Id, zc_Object_Goods(), Object_Goods.ObjectCode, Object_Goods.ValueData) end
+          , case when tmpGoods.Id is not null then lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Code(), tmpGoods.Id, Object_Goods.ObjectCode :: TVarChar) end
+          , case when tmpGoods.Id is not null then lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroup(), tmpGoods.Id, ObjectLink_Goods_GoodsGroup.ChildObjectId) end
+          , case when tmpGoods.Id is not null then lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Measure(),    tmpGoods.Id, ObjectLink_Goods_Measure.ChildObjectId)    end
+          , case when tmpGoods.Id is not null then lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_NDSKind(),    tmpGoods.Id, ObjectLink_Goods_NDSKind.ChildObjectId)    end
+       -- , case when tmpGoods.Id is not null then lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Maker(),      tmpGoods.Id, 0)                                         end
+       -- , case when tmpGoods.Id is not null then lpInsertUpdate_ObjectString (???zc_ObjectString_Goods_Maker()???,  tmpGoods.Id, '')                                        end
+
+          , case when tmpGoods.Id is not null AND ObjectLink_Goods_Exchange.ChildObjectId > 0   then lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Exchange(),       tmpGoods.Id, ObjectLink_Goods_Exchange.ChildObjectId) end
+          , case when tmpGoods.Id is not null AND ObjectString_Goods_NameUkr.ValueData    <> '' then lpInsertUpdate_ObjectString (zc_ObjectString_Goods_NameUkr(),    tmpGoods.Id, ObjectString_Goods_NameUkr.ValueData)    end
+          , case when tmpGoods.Id is not null AND ObjectString_Goods_CodeUKTZED.ValueData <> '' then lpInsertUpdate_ObjectString (zc_ObjectString_Goods_CodeUKTZED(), tmpGoods.Id, ObjectString_Goods_CodeUKTZED.ValueData) end
+
+          , case when tmpGoods.Id is not null AND ObjectFloat_Goods_ReferCode.ValueData  <> 0 then lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_ReferCode(),  tmpGoods.Id, ObjectFloat_Goods_ReferCode.ValueData :: Integer) end
+          , case when tmpGoods.Id is not null AND ObjectFloat_Goods_ReferPrice.ValueData <> 0 then lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_ReferPrice(), tmpGoods.Id, ObjectFloat_Goods_ReferPrice.ValueData)           end
+          
+          , case when tmpGoods.Id is not null then lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Close(), tmpGoods.Id, ObjectBoolean_Goods_Close.ValueData)         end
+          , case when tmpGoods.Id is not null then lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_TOP(),   tmpGoods.Id, ObjectBoolean_Goods_TOP.ValueData)           end
+
+
+          , case when tmpGoods.Id is not null AND ObjectFloat_Goods_MinimumLot.ValueData     <> 0 then lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_MinimumLot(),    tmpGoods.Id, ObjectFloat_Goods_MinimumLot.ValueData) end
+          , case when tmpGoods.Id is not null AND ObjectFloat_Goods_PercentMarkup.ValueData  <> 0 then lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_PercentMarkup(), tmpGoods.Id, ObjectFloat_Goods_PercentMarkup.ValueData) end
+          , case when tmpGoods.Id is not null AND ObjectFloat_Goods_Price.ValueData          <> 0 then lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Price(),         tmpGoods.Id, ObjectFloat_Goods_Price.ValueData) end
 */
 
      FROM tmpObject_Goods AS Object_Goods
