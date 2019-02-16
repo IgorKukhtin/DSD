@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxGridBandedTableView, cxGridDBBandedTableView;
+  cxGridBandedTableView, cxGridDBBandedTableView, DataModul;
 
 type
   TEmployeeScheduleForm = class(TAncestorDocumentForm)
@@ -42,6 +42,7 @@ type
     actAddUser: TMultiAction;
     actspInsertUser: TdsdExecStoredProc;
     spInsertUser: TdsdStoredProc;
+    UnitName: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

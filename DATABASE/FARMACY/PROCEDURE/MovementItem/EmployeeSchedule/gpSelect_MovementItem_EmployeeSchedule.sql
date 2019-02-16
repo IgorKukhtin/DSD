@@ -58,6 +58,10 @@ BEGIN
                             , Object_Member.ObjectCode                    AS MemberCode
                             , Object_Member.ValueData                     AS MemberName
 
+                            , Object_Unit.ID                              AS UnitID
+                            , Object_Unit.ObjectCode                      AS UnitCode
+                            , Object_Unit.ValueData                       AS UnitName
+
                             , tmpPersonal.PositionName
 
 
@@ -65,6 +69,11 @@ BEGIN
 
                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
                                                   AND MovementItem.DescId = zc_MI_Master()
+
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                            ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
 
                            LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                                 ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
@@ -84,6 +93,9 @@ BEGIN
          tmpUser.MemberCode                   AS PersonalCode,
          tmpUser.MemberName                   AS PersonalName,
          tmpUser.PositionName                 AS PositionName,
+         tmpUser.UnitID                       AS UnitID,
+         tmpUser.UnitCode                     AS UnitCode,
+         tmpUser.UnitName                     AS UnitName,   
          lpDecodeValueDay(1, vbDefaultValue)  AS Value1,
          lpDecodeValueDay(2, vbDefaultValue)  AS Value2,
          lpDecodeValueDay(3, vbDefaultValue)  AS Value3,
@@ -160,6 +172,9 @@ BEGIN
          tmpPersonal.PersonalCode                                AS PersonalCode,
          tmpPersonal.PersonalName                                AS PersonalName,
          tmpPersonal.PositionName                                AS PositionName,
+         tmpUser.UnitID                                          AS UnitID,
+         tmpUser.UnitCode                                        AS UnitCode,
+         tmpUser.UnitName                                        AS UnitName,   
          lpDecodeValueDay(1, MIString_ComingValueDay.ValueData)  AS Value1,
          lpDecodeValueDay(2, MIString_ComingValueDay.ValueData)  AS Value2,
          lpDecodeValueDay(3, MIString_ComingValueDay.ValueData)  AS Value3,
@@ -226,6 +241,8 @@ BEGIN
 
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
                                    AND MovementItem.DescId = zc_MI_Master()
+
+            INNER JOIN tmpUser ON tmpUser.UserID = MovementItem.ObjectId     
 
             LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                  ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
@@ -258,7 +275,41 @@ BEGIN
                                , Object_Personal_View.PersonalCode
                                , Object_Personal_View.PersonalName
                                , Object_Personal_View.PositionName
-                            FROM Object_Personal_View)
+                            FROM Object_Personal_View),
+                            
+            tmpUser AS (SELECT DISTINCT
+                              MovementItem.ObjectId                       AS UserID
+                            , Object_Member.Id                            AS MemberID
+                            , Object_Member.ObjectCode                    AS MemberCode
+                            , Object_Member.ValueData                     AS MemberName
+
+                            , Object_Unit.ID                              AS UnitID
+                            , Object_Unit.ObjectCode                      AS UnitCode
+                            , Object_Unit.ValueData                       AS UnitName
+
+                            , tmpPersonal.PositionName
+
+
+                      FROM Movement
+
+                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
+                                                  AND MovementItem.DescId = zc_MI_Master()
+
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                            ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+
+                           LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                                ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
+                                               AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                           LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectid
+
+                           LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectid
+                                                AND tmpPersonal.Ord = 1
+
+                      WHERE Movement.OperDate >= inDate - INTERVAL '1 MONTH'
+                        AND Movement.DescId = zc_Movement_KPU())
 
        SELECT
          MovementItem.Id                                         AS ID,
@@ -267,6 +318,9 @@ BEGIN
          tmpPersonal.PersonalCode                                AS PersonalCode,
          tmpPersonal.PersonalName                                AS PersonalName,
          tmpPersonal.PositionName                                AS PositionName,
+         tmpUser.UnitID                                          AS UnitID,
+         tmpUser.UnitCode                                        AS UnitCode,
+         tmpUser.UnitName                                        AS UnitName,   
          lpDecodeValueDay(1, MIString_ComingValueDay.ValueData)  AS Value1,
          lpDecodeValueDay(2, MIString_ComingValueDay.ValueData)  AS Value2,
          lpDecodeValueDay(3, MIString_ComingValueDay.ValueData)  AS Value3,
@@ -333,6 +387,8 @@ BEGIN
 
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
                                    AND MovementItem.DescId = zc_MI_Master()
+                                   
+            INNER JOIN tmpUser ON tmpUser.UserID = MovementItem.ObjectId     
 
             LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                  ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
@@ -366,4 +422,4 @@ ALTER FUNCTION gpSelect_MovementItem_EmployeeSchedule (Integer, TDateTime, Boole
 */
 
 -- тест
--- select * from gpSelect_MovementItem_EmployeeSchedule(inMovementId := 0 , inDate:= '01.08.2016', inShowAll := 'False' , inIsErased := 'False' ,  inSession := '4183126');
+-- select * from gpSelect_MovementItem_EmployeeSchedule(inMovementId := 12110225 , inDate := ('30.11.2018 22:00:00')::TDateTime , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
