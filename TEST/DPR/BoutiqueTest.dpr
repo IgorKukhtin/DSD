@@ -308,7 +308,8 @@ uses
   Report_Sale_Analysis in '..\..\FormsBoutique\Report\Report_Sale_Analysis.pas' {Report_Sale_AnalysisForm: TParentForm},
   Medoc_J1201010 in '..\..\SOURCE\MeDOC\Medoc_J1201010.pas',
   Medoc_J1201210 in '..\..\SOURCE\MeDOC\Medoc_J1201210.pas',
-  dsdExportToXLSAction in '..\..\SOURCE\COMPONENT\dsdExportToXLSAction.pas';
+  dsdExportToXLSAction in '..\..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
+  dsdExportToXMLAction in '..\..\SOURCE\COMPONENT\dsdExportToXMLAction.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

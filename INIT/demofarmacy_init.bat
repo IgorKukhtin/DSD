@@ -1,0 +1,1 @@
+copy /Y demofarmacy_init.php farmacy_init.php

@@ -1078,6 +1078,7 @@
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdExportToXLSAction.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdExportToXMLAction.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

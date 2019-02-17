@@ -76,7 +76,8 @@ uses
   dsdPivotGrid in '..\SOURCE\COMPONENT\dsdPivotGrid.pas',
   dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
   Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
-  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas';
+  Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas',
+  dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas';
 
 {$R *.res}
 
@@ -95,7 +96,7 @@ begin
       TUpdater.AutomaticUpdateProgram;
       TUpdater.AutomaticCheckConnect;
       Application.CreateForm(TdmMain, dmMain);
-      Application.CreateForm(TMainForm, MainFormInstance);
+  Application.CreateForm(TMainFormInstance, MainFormInstance);
   end;
   Application.Run;
 

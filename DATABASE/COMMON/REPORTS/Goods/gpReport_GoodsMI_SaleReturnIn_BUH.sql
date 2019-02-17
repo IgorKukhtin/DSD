@@ -106,7 +106,7 @@ BEGIN
             END IF;
         END IF;
     END IF;
-                  
+
 /* ******************************************************** */
    RETURN QUERY
     WITH
@@ -211,7 +211,7 @@ BEGIN
                          , CASE WHEN isSale = TRUE THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END AS MLO_DescId
                     FROM Constant_ProfitLoss_AnalyzerId_View
                     WHERE isCost = FALSE OR (isCost = TRUE AND vbIsCost = TRUE)
-                   ) 
+                   )
   , tmpOperationGroup2 AS (SELECT MIContainer.ContainerId_Analyzer
                                 , MIContainer.ObjectId_Analyzer                 AS GoodsId
                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -219,20 +219,20 @@ BEGIN
                                 , COALESCE (MILinkObject_Branch.ObjectId, 0)   AS BranchId
                                 , COALESCE (ContainerLO_Juridical.ObjectId, 0) AS JuridicalId
                                 , COALESCE (ContainerLO_InfoMoney.ObjectId, 0) AS InfoMoneyId
-  
+
                                 , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE THEN  1 * MIContainer.Amount ELSE 0 END) AS Sale_Summ
                                 , SUM (CASE WHEN tmpAnalyzer.isSale = FALSE AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Return_Summ
-  
-                                , CAST (SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400() 
-                                                  THEN  -1 * MIContainer.Amount * (CASE WHEN MovementBoolean_PriceWithVAT.ValueData = FALSE THEN MIFloat_Price.ValueData 
-                                                                                        ELSE CAST ( (MIFloat_Price.ValueData) / (1 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, COALESCE (MovementFloat_VATPercent.ValueData, 0)) / 100) AS NUMERIC (16, 2))
+
+                                , CAST (SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()
+                                                  THEN  -1 * MIContainer.Amount * (CASE WHEN MovementBoolean_PriceWithVAT.ValueData = FALSE THEN MIFloat_Price.ValueData
+                                                                                        ELSE CAST ( (MIFloat_Price.ValueData) / (0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, COALESCE (MovementFloat_VATPercent.ValueData, 0)) / 100) AS NUMERIC (16, 2))
                                                                                    END)
-                                                  ELSE 0 END) AS NUMERIC (16, 2)) AS Sale_SummMVAT
-                                , CAST (SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800() 
-                                                  THEN MIContainer.Amount * (CASE WHEN MovementBoolean_PriceWithVAT.ValueData = FALSE THEN MIFloat_Price.ValueData 
-                                                                                  ELSE CAST ( (MIFloat_Price.ValueData) / (1 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, COALESCE (MovementFloat_VATPercent.ValueData, 0)) / 100) AS NUMERIC (16, 2))
+                                                  ELSE 0 END) AS NUMERIC (16, 2)) AS Sale_SummVAT
+                                , CAST (SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800()
+                                                  THEN MIContainer.Amount * (CASE WHEN MovementBoolean_PriceWithVAT.ValueData = FALSE THEN MIFloat_Price.ValueData
+                                                                                  ELSE CAST ( (MIFloat_Price.ValueData) / (0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, COALESCE (MovementFloat_VATPercent.ValueData, 0)) / 100) AS NUMERIC (16, 2))
                                                                              END)
-                                                  ELSE 0 END) AS NUMERIC (16, 2)) AS Return_SummMVAT
+                                                  ELSE 0 END) AS NUMERIC (16, 2)) AS Return_SummVAT
                            FROM tmpAnalyzer
                                 INNER JOIN MovementItemContainer AS MIContainer
                                                                  ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
@@ -252,25 +252,25 @@ BEGIN
                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                                              ON MovementLinkObject_Partner.MovementId = MIContainer.MovementId
                                                             AND MovementLinkObject_Partner.DescId = CASE WHEN MIContainer.MovementDescId = zc_Movement_PriceCorrective() THEN zc_MovementLinkObject_Partner() ELSE tmpAnalyzer.MLO_DescId END
-  
+
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                  ON MILinkObject_GoodsKind.MovementItemId = MIContainer.MovementItemId
                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
                                                                  ON MILinkObject_Branch.MovementItemId = MIContainer.MovementItemId
                                                                 AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
-  
+
                                 LEFT JOIN _tmpJuridical ON _tmpJuridical.JuridicalId = ContainerLO_Juridical.ObjectId
                                 LEFT JOIN _tmpJuridicalBranch ON _tmpJuridicalBranch.JuridicalId = ContainerLO_Juridical.ObjectId
-  
+
                                 LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                             ON MIFloat_Price.MovementItemId = MIContainer.MovementItemId
                                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
-  
+
                                 LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                                           ON MovementBoolean_PriceWithVAT.MovementId = MIContainer.MovementId
                                                          AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-  
+
                                 LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                                         ON MovementFloat_VATPercent.MovementId = MIContainer.MovementId
                                                        AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -280,11 +280,12 @@ BEGIN
                                 LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                                                       ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
                                                      AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
-                                  
+                                                     AND 1=0
+
                            WHERE (_tmpJuridical.JuridicalId > 0 OR vbIsJuridical = FALSE)
                              AND (MILinkObject_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0 OR _tmpJuridicalBranch.JuridicalId IS NOT NULL)
                            GROUP BY MIContainer.ContainerId_Analyzer
-                                  , MIContainer.ObjectId_Analyzer                 
+                                  , MIContainer.ObjectId_Analyzer
                                   , MILinkObject_GoodsKind.ObjectId
                                   , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MovementLinkObject_Partner.ObjectId END
                                   , MILinkObject_Branch.ObjectId
@@ -300,16 +301,16 @@ BEGIN
                                , 0 as TradeMarkId
                                , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END     AS GoodsId
                                , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END AS GoodsKindId
- 
-                               , SUM (tmpOperationGroup2.Sale_SummMVAT) AS Sale_SummMVAT
-                               , SUM (tmpOperationGroup2.Sale_Summ - tmpOperationGroup2.Sale_SummMVAT) AS Sale_SummVAT
-                               , SUM (tmpOperationGroup2.Return_SummMVAT) aS Return_SummMVAT
-                               , SUM (tmpOperationGroup2.Return_Summ - tmpOperationGroup2.Return_SummMVAT) AS Return_SummVAT
+
+                               , SUM (tmpOperationGroup2.Sale_Summ - tmpOperationGroup2.Sale_SummVAT)     AS Sale_SummMVAT
+                               , SUM (tmpOperationGroup2.Sale_SummVAT)                                    AS Sale_SummVAT
+                               , SUM (tmpOperationGroup2.Return_Summ - tmpOperationGroup2.Return_SummVAT) AS Return_SummMVAT
+                               , SUM (tmpOperationGroup2.Return_SummVAT)                                  AS Return_SummVAT
                           FROM tmpOperationGroup2
                                LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Contract
                                                              ON ContainerLinkObject_Contract.ContainerId = tmpOperationGroup2.ContainerId_Analyzer
                                                             AND ContainerLinkObject_Contract.DescId = zc_ContainerLinkObject_Contract()
- 
+
                                LEFT JOIN _tmpPartner ON _tmpPartner.PartnerId = tmpOperationGroup2.PartnerId
                                LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpOperationGroup2.GoodsId
                           WHERE (_tmpPartner.PartnerId > 0 OR vbIsPartner = FALSE)
@@ -320,7 +321,7 @@ BEGIN
                                  , tmpOperationGroup2.InfoMoneyId
                                  , tmpOperationGroup2.BranchId
                                  , _tmpGoods.TradeMarkId
-                                 , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END    
+                                 , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END
                                  , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END
                           )
   ,_tmpMI AS (SELECT Object_Juridical.ObjectCode        AS JuridicalCode
@@ -333,11 +334,11 @@ BEGIN
                    , Object_Branch.ObjectCode           AS BranchCode
                    , Object_Branch.ValueData            AS BranchName
                    , Object_TradeMark.ValueData         AS TradeMarkName
-         
+
                    , Object_Goods.ObjectCode            AS GoodsCode
                    , Object_Goods.ValueData             AS GoodsName
                    , Object_GoodsKind.ValueData         AS GoodsKindName
-          
+
                   , tmpOperationGroup.Sale_SummMVAT      :: TFloat
                   , tmpOperationGroup.Sale_SummVAT       :: TFloat
                   , tmpOperationGroup.Return_SummMVAT    :: TFloat
@@ -346,17 +347,17 @@ BEGIN
                    LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpOperationGroup.BranchId
                    LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
                    LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
-         
+
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                         ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
                                        AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
                    LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, tmpOperationGroup.TradeMarkId)
-         
+
                    LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpOperationGroup.JuridicalId
-         
+
                    LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpOperationGroup.ContractId
                    LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = tmpOperationGroup.InfoMoneyId
-              ) 
+              )
        -- результат
        SELECT tmp.*
             , _tmpMI.Sale_SummMVAT, _tmpMI.Sale_SummVAT
@@ -385,7 +386,7 @@ BEGIN
                            AND COALESCE (_tmpMI.InfoMoneyName,'')  = COALESCE (tmp.InfoMoneyName,'')
                            AND COALESCE (_tmpMI.BranchName,'')     = COALESCE (tmp.BranchName,'')
                            AND COALESCE (_tmpMI.TradeMarkName,'')  = COALESCE (tmp.TradeMarkName,'')
-                           AND COALESCE (_tmpMI.GoodsName,'')      = COALESCE (tmp.GoodsName,'') 
+                           AND COALESCE (_tmpMI.GoodsName,'')      = COALESCE (tmp.GoodsName,'')
                            AND COALESCE (_tmpMI.GoodsKindName, '') = COALESCE (tmp.GoodsKindName, '') --and 1=0
 ;
 END;
@@ -399,6 +400,4 @@ $BODY$
 */
 -- тест
 --
---select * from gpReport_GoodsMI_SaleReturnIn_BUH(inStartDate := ('01.02.2019')::TDateTime , inEndDate := ('03.02.2019')::TDateTime , inBranchId := 0 , inAreaId := 0 , inRetailId := 0 , inJuridicalId := 0 , inPaidKindId := 0 , inTradeMarkId := 0 , inGoodsGroupId := 1832 , inInfoMoneyId := 0 , inIsPartner := 'True' , inIsTradeMark := 'False' , inIsGoods := 'False' , inIsGoodsKind := 'False' , inisContract := 'False' , inIsOLAP := 'True' ,  inSession := '140094');
---select * from gpReport_GoodsMI_SaleReturnIn_BUH   (inStartDate := ('01.02.2019')::TDateTime , inEndDate := ('01.02.2019')::TDateTime , inBranchId := 0 , inAreaId := 0 , inRetailId := 0 , inJuridicalId := 0 , inPaidKindId := 0 , inTradeMarkId := 0 , inGoodsGroupId := 1832 , inInfoMoneyId := 0 , inIsPartner := 'True' , inIsTradeMark := 'False' , inIsGoods := 'False' , inIsGoodsKind := 'False' , inisContract := 'False' , inIsOLAP := 'True' ,  inSession := '140094') ttt
-
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_BUH (inStartDate:= '01.02.2019', inEndDate:= '01.02.2019', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsOLAP:= TRUE, inSession:= zfCalc_UserAdmin());

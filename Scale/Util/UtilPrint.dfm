@@ -2411,6 +2411,12 @@ object UtilPrintForm: TUtilPrintForm
         ComponentItem = 'MovementId_by'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsItem'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 159

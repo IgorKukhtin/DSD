@@ -92,7 +92,8 @@ uses
   Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
   Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas',
   dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
-  DialogDateValue in '..\Scale\DialogDateValue.pas' {DialogDateValueForm};
+  DialogDateValue in '..\Scale\DialogDateValue.pas' {DialogDateValueForm},
+  dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas';
 
 {$R *.res}
 
