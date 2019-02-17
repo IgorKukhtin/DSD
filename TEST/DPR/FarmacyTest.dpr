@@ -663,6 +663,8 @@ uses
   dsdExportToXMLAction in '..\..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
   BankPOSTerminal in '..\..\FormsFarmacy\Guides\BankPOSTerminal.pas' {BankPOSTerminalForm: TParentForm},
   BankPOSTerminalEdit in '..\..\FormsFarmacy\Guides\BankPOSTerminalEdit.pas' {BankPOSTerminalEditForm: TParentForm};
+  TaxUnit in '..\..\FormsFarmacy\Guides\TaxUnit.pas' {TaxUnitForm: TParentForm},
+  TaxUnitEdit in '..\..\FormsFarmacy\Guides\TaxUnitEdit.pas' {TaxUnitEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

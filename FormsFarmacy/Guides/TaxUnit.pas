@@ -1,4 +1,4 @@
-unit GoodsCategory;
+unit TaxUnit;
 
 interface
 
@@ -25,13 +25,9 @@ uses
   cxButtonEdit, cxLabel, Vcl.ExtCtrls;
 
 type
-  TGoodsCategoryForm = class(TAncestorGuidesForm)
-    GoodsCode: TcxGridDBColumn;
-    UnitCategoryName: TcxGridDBColumn;
+  TTaxUnitForm = class(TAncestorGuidesForm)
     Value: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
-    GoodsName: TcxGridDBColumn;
-    GuidesUnitCategory: TdsdGuides;
     actShowAll: TBooleanStoredProcAction;
     actShowDel: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
@@ -45,12 +41,8 @@ type
     Panel: TPanel;
     cxLabel2: TcxLabel;
     edUnit: TcxButtonEdit;
-    edUnitCategory: TcxButtonEdit;
-    cxLabel1: TcxLabel;
     GuidesUnit: TdsdGuides;
     UnitName: TcxGridDBColumn;
-    actRefreshList: TdsdDataSetRefresh;
-    cbList: TcxCheckBox;
   private
     { Private declarations }
   public
@@ -62,6 +54,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TGoodsCategoryForm);
+  RegisterClass(TTaxUnitForm);
 
 end.

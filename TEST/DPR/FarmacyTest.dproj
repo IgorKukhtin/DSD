@@ -2239,6 +2239,12 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\BankPOSTerminalEdit.pas">
 				<Form>BankPOSTerminalEditForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\TaxUnit.pas">
+				<Form>TaxUnitForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\TaxUnitEdit.pas">
+				<Form>TaxUnitEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -118,6 +118,7 @@ type
     procedure LoadSPObjectFormTest;
     procedure LoadSPKindFormTest;
     procedure LoadSheetWorkTimeFormTest;
+    procedure LoadTaxUnitFormTest;
     procedure LoadUnitFormTest;
     procedure LoadUnionFormTest;
     procedure LoadUnnamedEnterprisesFormTest;
@@ -1110,6 +1111,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TImportGroupForm');
+end;
+
+procedure TLoadFormTest.LoadTaxUnitFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxUnitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTaxUnitForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxUnitEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTaxUnitEditForm');
 end;
 
 procedure TLoadFormTest.LoadUnitFormTest;

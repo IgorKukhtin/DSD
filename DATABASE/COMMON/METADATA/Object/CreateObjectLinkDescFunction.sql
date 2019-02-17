@@ -1961,6 +1961,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_SettingsServiceItem_InfoMoneyDestinatio
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_SettingsServiceItem_InfoMoneyDestination', 'Связь с Управленческие назначения', zc_Object_SettingsServiceItem(), zc_Object_InfoMoneyDestination() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SettingsServiceItem_InfoMoneyDestination');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_TaxUnit_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_TaxUnit_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_TaxUnit_Unit', 'Подразделение', zc_Object_TaxUnit(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_TaxUnit_Unit');
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -2088,6 +2092,7 @@ SELECT 'zc_ObjectLink_GoodsCategory_Unit', 'Подразделение', zc_Object_GoodsCateg
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 17.02.19         * zc_ObjectLink_TaxUnit_Unit
  13.02.19         * zc_ObjectLink_GoodsCategory_Unit
  11.02.19         * zc_ObjectLink_GoodsCategory_Goods
                     zc_ObjectLink_GoodsCategory_Category
