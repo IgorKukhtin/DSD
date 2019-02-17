@@ -99,7 +99,7 @@ BEGIN
 
        FROM (SELECT Movement.*
              FROM tmpStatus
-                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_PriceCorrective() AND Movement.StatusId = tmpStatus.StatusId
+                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate AND Movement.DescId = zc_Movement_PriceCorrective() AND Movement.StatusId = tmpStatus.StatusId
                   JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
              ) AS Movement
 
