@@ -490,7 +490,7 @@ type
     actRepriceRogersJournal: TdsdOpenForm;
     N180: TMenuItem;
     N181: TMenuItem;
-    actBanksPOSTerminals: TdsdOpenForm;
+    actBankPOSTerminal: TdsdOpenForm;
     POS1: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 

@@ -2619,12 +2619,12 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actBanksPOSTerminals: TdsdOpenForm
+    object actBankPOSTerminal: TdsdOpenForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1041#1072#1085#1082#1080' '#1087#1088#1077#1076#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1077' POS '#1090#1077#1088#1084#1080#1085#1072#1083#1099
-      FormName = 'TBanksPOSTerminalsForm'
-      FormNameParam.Value = 'TBanksPOSTerminalsForm'
+      FormName = 'TBankPOSTerminalForm'
+      FormNameParam.Value = 'TBankPOSTerminalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -3303,7 +3303,7 @@ inherited MainForm: TMainForm
           Action = actCashRegister
         end
         object POS1: TMenuItem [8]
-          Action = actBanksPOSTerminals
+          Action = actBankPOSTerminal
         end
         object N20: TMenuItem [9]
           Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080

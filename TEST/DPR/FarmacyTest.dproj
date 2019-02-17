@@ -2233,12 +2233,12 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdExportToXMLAction.pas"/>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\BanksPOSTerminals.pas">
-				<Form>BanksPOSTerminalsForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\BankPOSTerminal.pas">
+				<Form>BankPOSTerminalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\BanksPOSTerminalsEdit.pas">
-				<Form>BanksPOSTerminalsEditForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\BankPOSTerminalEdit.pas">
+				<Form>BankPOSTerminalEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

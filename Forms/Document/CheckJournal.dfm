@@ -5,7 +5,7 @@ inherited CheckJournalForm: TCheckJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 912
-  ExplicitHeight = 592
+  ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -375,6 +375,14 @@ inherited CheckJournalForm: TCheckJournalForm
             HeaderHint = #1040#1076#1088#1077#1089' '#1087#1072#1094#1080#1077#1085#1090#1072
             Options.Editing = False
             Width = 108
+          end
+          object BanksPOSTerminalsName: TcxGridDBColumn
+            Caption = 'POS '#1090#1077#1088#1084#1080#1085#1072#1083
+            DataBinding.FieldName = 'BankPOSTerminalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 112
           end
         end
       end

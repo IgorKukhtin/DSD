@@ -1,0 +1,72 @@
+-- Function: gpUpdate_Movement_Check_BankPOSTerminal()
+
+DROP FUNCTION IF EXISTS gpUpdate_Movement_Check_BankPOSTerminal (Integer, Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpUpdate_Movement_Check_BankPOSTerminal(
+    IN inId                Integer   , -- Ключ объекта <Документ ЧЕК>
+    IN inBankPOSTerminalId Integer   , -- Подразделени
+    IN inSession           TVarChar    -- сессия пользователя
+)
+RETURNS void
+AS
+$BODY$
+   DECLARE vbUserId Integer;
+   DECLARE vbStatusId Integer;
+   DECLARE vbPaidTypeId Integer;
+BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    --vbUserId := lpGetUserBySession (inSession);
+--    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Check_OperDate());
+
+    IF 3 <> inSession::Integer AND 375661 <> inSession::Integer AND 4183126 <> inSession::Integer AND
+      8001630 <> inSession::Integer AND 9560329 <> inSession::Integer
+    THEN
+      RAISE EXCEPTION 'Изменение <банка POS терминала> вам запрещено.';
+    END IF;
+
+    SELECT
+      StatusId,
+      MovementLinkObject_PaidType.ObjectId
+    INTO
+      vbStatusId,
+      vbPaidTypeId
+    FROM Movement
+
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidType
+                                      ON MovementLinkObject_PaidType.MovementId = Movement.Id
+                                     AND MovementLinkObject_PaidType.DescId = zc_MovementLinkObject_PaidType()
+    WHERE Id = inId;
+
+    IF COALESCE(inId,0) = 0
+    THEN
+        RAISE EXCEPTION 'Документ не записан.';
+    END IF;
+
+    IF vbStatusId <> zc_Enum_Status_UnComplete()
+    THEN
+        RAISE EXCEPTION 'Ошибка.Изменение POS терминала в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
+    END IF;
+
+    IF COALESCE (vbPaidTypeId, 0) not in (496645, 9200130)
+    THEN
+        RAISE EXCEPTION 'Ошибка.Для формы оплаты <%> установка банка POS терминала не возможно.',
+           (select ValueData from Object where Id = vbPaidTypeId);
+    END IF;
+
+    -- сохранили связь с <Подразделением>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_BankPOSTerminal(), inId, inBankPOSTerminalId);
+
+    -- сохранили протокол
+    PERFORM lpInsert_MovementProtocol (inId, vbUserId, False);
+
+END;
+$BODY$
+  LANGUAGE PLPGSQL VOLATILE;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В.
+ 17.11.18                                                                                    *
+*/
+-- тест
+-- select * from gpUpdate_Movement_Check_BankPOSTerminal(inId := 7784533 , inUnitId := 183294 ,  inSession := '3');

@@ -75,6 +75,7 @@ type
     TotalSummPayAdd: TcxGridDBColumn;
     actCashSummaForDey: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
+    BanksPOSTerminalsName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -41,6 +41,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Address_MemberSP  TVarChar
              , INN_MemberSP      TVarChar
              , Passport_MemberSP TVarChar
+             , BankPOSTerminalName TVarChar
               )
 AS
 $BODY$
@@ -127,6 +128,7 @@ BEGIN
            , COALESCE (ObjectString_Address.ValueData, '')   :: TVarChar  AS Address_MemberSP
            , COALESCE (ObjectString_INN.ValueData, '')       :: TVarChar  AS INN_MemberSP
            , COALESCE (ObjectString_Passport.ValueData, '')  :: TVarChar  AS Passport_MemberSP
+           , Object_BankPOSTerminal.ValueData                           AS BankPOSTerminalName
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -311,6 +313,10 @@ BEGIN
                                 AND ObjectLink_MemberSP_GroupMemberSP.DescId = zc_ObjectLink_MemberSP_GroupMemberSP()
             LEFT JOIN Object AS Object_GroupMemberSP ON Object_GroupMemberSP.Id = ObjectLink_MemberSP_GroupMemberSP.ChildObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_BankPOSTerminal
+                                         ON MovementLinkObject_BankPOSTerminal.MovementId =  Movement_Check.Id
+                                        AND MovementLinkObject_BankPOSTerminal.DescId = zc_MovementLinkObject_BankPOSTerminal()
+            LEFT JOIN Object AS Object_BankPOSTerminal ON Object_BankPOSTerminal.Id = MovementLinkObject_BankPOSTerminal.ObjectId
       ;
 
 END;
@@ -321,6 +327,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В. +
+ 16.02.19                                                                                    * add BankPOSTerminal
  28.01.19         * add isSite
  02.10.18                                                                                    * add TotalSummPayAdd
  14.12.17         * add PromoCode

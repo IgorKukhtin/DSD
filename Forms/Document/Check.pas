@@ -107,6 +107,14 @@ type
     bbUpdateMemberSp: TdxBarButton;
     ExecuteDialogUpdateMemberSp: TExecuteDialog;
     cbSite: TcxCheckBox;
+    edBankPOSTerminal: TcxButtonEdit;
+    cxLabel27: TcxLabel;
+    GuidesBankPOSTerminal: TdsdGuides;
+    actBankPOSTerminal: TMultiAction;
+    actChoiceBankPOSTerminal: TOpenChoiceForm;
+    actExecBankPOSTerminal: TdsdExecStoredProc;
+    dxBarButton2: TdxBarButton;
+    spUpdateBankPOSTerminal: TdsdStoredProc;
   private
     { Private declarations }
   public

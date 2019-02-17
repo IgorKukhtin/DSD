@@ -1,4 +1,4 @@
-object BanksPOSTerminalsForm: TBanksPOSTerminalsForm
+object BankPOSTerminalForm: TBankPOSTerminalForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1072#1087#1090#1077#1082'>'
@@ -246,8 +246,8 @@ object BanksPOSTerminalsForm: TBanksPOSTerminalsForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TBanksPOSTerminalsEditForm'
-      FormNameParam.Value = 'TBanksPOSTerminalsEditForm'
+      FormName = 'TBankPOSTerminalEditForm'
+      FormNameParam.Value = 'TBankPOSTerminalEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -282,8 +282,8 @@ object BanksPOSTerminalsForm: TBanksPOSTerminalsForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TBanksPOSTerminalsEditForm'
-      FormNameParam.Value = 'TBanksPOSTerminalsEditForm'
+      FormName = 'TBankPOSTerminalEditForm'
+      FormNameParam.Value = 'TBankPOSTerminalEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -398,7 +398,7 @@ object BanksPOSTerminalsForm: TBanksPOSTerminalsForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_BanksPOSTerminals'
+    StoredProcName = 'gpSelect_Object_BankPOSTerminal'
     DataSet = ClientDataSet
     DataSets = <
       item
