@@ -99,7 +99,7 @@ inherited TaxUnitForm: TTaxUnitForm
       Width = 91
     end
     object edUnit: TcxButtonEdit
-      Left = 87
+      Left = 97
       Top = 11
       Properties.Buttons = <
         item
@@ -108,7 +108,7 @@ inherited TaxUnitForm: TTaxUnitForm
         end>
       Properties.ReadOnly = True
       TabOrder = 1
-      Width = 314
+      Width = 316
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
