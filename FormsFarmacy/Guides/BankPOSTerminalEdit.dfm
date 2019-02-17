@@ -1,4 +1,4 @@
-﻿object BanksPOSTerminalsEditForm: TBanksPOSTerminalsEditForm
+﻿object BankPOSTerminalEditForm: TBankPOSTerminalEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <'#1050#1072#1090#1077#1075#1086#1088#1080#1102' '#1072#1087#1090#1077#1082#1080'>'
@@ -95,7 +95,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_BanksPOSTerminals'
+    StoredProcName = 'gpInsertUpdate_Object_BankPOSTerminal'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -138,7 +138,7 @@
     Top = 32
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_BanksPOSTerminals'
+    StoredProcName = 'gpGet_Object_BankPOSTerminal'
     DataSets = <>
     OutputType = otResult
     Params = <

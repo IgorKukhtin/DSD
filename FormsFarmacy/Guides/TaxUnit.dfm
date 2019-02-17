@@ -1,30 +1,30 @@
-inherited GoodsCategoryForm: TGoodsCategoryForm
-  Caption = #1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1072#1103' '#1084#1072#1090#1088#1080#1094#1072'('#1050#1072#1090#1077#1075#1086#1088#1080#1080')'
+inherited TaxUnitForm: TTaxUnitForm
+  Caption = #1053#1072#1094#1077#1085#1082#1080' '#1076#1083#1103' '#1085#1086#1095#1085#1099#1093' '#1094#1077#1085
   ClientHeight = 423
-  ClientWidth = 782
+  ClientWidth = 470
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 798
+  ExplicitWidth = 486
   ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 67
-    Width = 782
+    Width = 470
     Height = 356
     ExplicitTop = 67
-    ExplicitWidth = 782
+    ExplicitWidth = 470
     ExplicitHeight = 356
     ClientRectBottom = 356
-    ClientRectRight = 782
+    ClientRectRight = 470
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 782
+      ExplicitWidth = 470
       ExplicitHeight = 356
       inherited cxGrid: TcxGrid
-        Width = 782
+        Width = 470
         Height = 356
-        ExplicitWidth = 782
+        ExplicitWidth = 470
         ExplicitHeight = 356
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
@@ -33,55 +33,41 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object GoodsGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsGroupName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 177
-          end
-          object GoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 52
-          end
-          object GoodsName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088' ('#1075#1083#1072#1074#1085#1099#1081')'
-            DataBinding.FieldName = 'GoodsName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 177
-          end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 225
+            Width = 227
           end
-          object UnitCategoryName: TcxGridDBColumn
-            Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' (A-B-C)'
-            DataBinding.FieldName = 'UnitCategoryName'
+          object Price: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089'...'
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
+            Width = 73
+          end
+          object PriceLimit: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1086'...'
+            DataBinding.FieldName = 'PriceLimit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 99
+            Width = 76
           end
           object Value: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
+            Caption = '% '#1085#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'Value'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 98
+            Width = 76
           end
           object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -100,7 +86,7 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
   object Panel: TPanel [1]
     Left = 0
     Top = 0
-    Width = 782
+    Width = 470
     Height = 41
     Align = alTop
     TabOrder = 5
@@ -113,7 +99,7 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
       Width = 91
     end
     object edUnit: TcxButtonEdit
-      Left = 95
+      Left = 87
       Top = 11
       Properties.Buttons = <
         item
@@ -123,30 +109,6 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
       Properties.ReadOnly = True
       TabOrder = 1
       Width = 314
-    end
-    object edUnitCategory: TcxButtonEdit
-      Left = 699
-      Top = 11
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.ReadOnly = True
-      TabOrder = 2
-      Width = 79
-    end
-    object cxLabel1: TcxLabel
-      Left = 518
-      Top = 12
-      Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'(A-B-C):'
-    end
-    object cbList: TcxCheckBox
-      Left = 415
-      Top = 11
-      Action = actRefreshList
-      TabOrder = 4
-      Width = 86
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -162,49 +124,25 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
   end
   inherited ActionList: TActionList
     inherited actInsert: TInsertUpdateChoiceAction
-      FormName = 'TGoodsCategoryEditForm'
-      FormNameParam.Value = 'TGoodsCategoryEditForm'
+      FormName = 'TTaxUnitEditForm'
+      FormNameParam.Value = 'TTaxUnitEditForm'
       GuiParams = <
         item
           Name = 'Id'
           Value = '0'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'GoodsId'
+          Name = 'Price'
           Value = '0'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsName'
-          Value = Null
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitCategoryId'
-          Value = '0'
-          Component = GuidesUnitCategory
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitCategoryName'
-          Value = Null
-          Component = GuidesUnitCategory
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end
         item
           Name = 'Value'
           Value = '0'
           DataType = ftFloat
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -224,10 +162,11 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
+      isShowModal = True
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TGoodsCategoryEditForm'
-      FormNameParam.Value = 'TGoodsCategoryEditForm'
+      FormName = 'TTaxUnitEditForm'
+      FormNameParam.Value = 'TTaxUnitEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -238,36 +177,11 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'GoodsId'
+          Name = 'Price'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitCategoryId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'UnitCategoryId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitCategoryName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'UnitCategoryName'
-          DataType = ftString
+          ComponentItem = 'Price'
+          DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -394,18 +308,6 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
     end
-    object actRefreshList: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1055#1054' '#1057#1055#1048#1057#1050#1059
-      Hint = #1055#1054' '#1057#1055#1048#1057#1050#1059
-      RefreshOnTabSetChanges = False
-    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -416,29 +318,13 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
     Top = 88
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GoodsCategory'
+    StoredProcName = 'gpSelect_Object_TaxUnit'
     Params = <
-      item
-        Name = 'inUnitCategoryId'
-        Value = Null
-        Component = GuidesUnitCategory
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
       item
         Name = 'inUnitId'
         Value = Null
         Component = GuidesUnit
         ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisUnitList'
-        Value = Null
-        Component = cbList
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -574,34 +460,8 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
       end>
     SearchAsFilter = False
   end
-  object GuidesUnitCategory: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edUnitCategory
-    FormNameParam.Value = 'TUnitCategoryForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnitCategoryForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesUnitCategory
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesUnitCategory
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    Left = 616
-  end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_GoodsCategory'
+    StoredProcName = 'gpInsertUpdate_Object_TaxUnit'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -614,26 +474,19 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitCategoryId'
-        Value = ''
-        Component = MasterCDS
-        ComponentItem = 'UnitCategoryId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inUnitId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -656,7 +509,6 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = GuidesUnitCategory
       end
       item
         Component = GuidesUnit

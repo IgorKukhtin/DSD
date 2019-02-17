@@ -393,12 +393,17 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_UserConfirmedKind() RETURNS Int
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_UserConfirmedKind', 'Кто поставил/убрал галка Подтвержден' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_UserConfirmedKind');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_BankPOSTerminal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_BankPOSTerminal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_BankPOSTerminal', 'POS терминал' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_BankPOSTerminal');
+
 /*-------------------------------------------------------------------------------
 
                   РАСПОЛАГАЙТЕ ДЕСКИ ПО АЛФАВИТУ  !!!!!!!!!!!!!!!!!!!
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 16.02.19                                                                                      * zc_MovementLinkObject_BankPOSTerminal
  12.18.17         * zc_MovementLinkObject_PositionComplete5
                     zc_MovementLinkObject_PersonalComplete5
  23.10.18         * zc_MovementLinkObject_Union

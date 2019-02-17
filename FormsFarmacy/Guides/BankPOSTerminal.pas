@@ -1,4 +1,4 @@
-unit BanksPOSTerminals;
+unit BankPOSTerminal;
 
 interface
 
@@ -25,7 +25,7 @@ uses
   Vcl.Menus;
 
 type
-  TBanksPOSTerminalsForm = class(TParentForm)
+  TBankPOSTerminalForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -76,6 +76,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TBanksPOSTerminalsForm);
+  RegisterClass(TBankPOSTerminalForm);
 
 end.

@@ -25,7 +25,7 @@ type
     procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
     procedure LoadBankAccountDocumentFormTest;
-    procedure LoadBanksPOSTerminalsFormTest;
+    procedure LoadBankPOSTerminalFormTest;
     procedure LoadBankStatementFormTest;
     procedure LoadCalendarFormTest;
     procedure LoadCashRegisterFormTest;
@@ -118,6 +118,7 @@ type
     procedure LoadSPObjectFormTest;
     procedure LoadSPKindFormTest;
     procedure LoadSheetWorkTimeFormTest;
+    procedure LoadTaxUnitFormTest;
     procedure LoadUnitFormTest;
     procedure LoadUnionFormTest;
     procedure LoadUnnamedEnterprisesFormTest;
@@ -264,12 +265,12 @@ begin
     ('TBankAccountJournalFarmacyDialogForm');
 end;
 
-procedure TLoadFormTest.LoadBanksPOSTerminalsFormTest;
+procedure TLoadFormTest.LoadBankPOSTerminalFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBanksPOSTerminalsForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TBanksPOSTerminalsForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBanksPOSTerminalsEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TBanksPOSTerminalsEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankPOSTerminalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankPOSTerminalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankPOSTerminalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankPOSTerminalEditForm');
 end;
 
 procedure TLoadFormTest.LoadBankAccountFormTest;
@@ -1110,6 +1111,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TImportGroupForm');
+end;
+
+procedure TLoadFormTest.LoadTaxUnitFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxUnitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTaxUnitForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxUnitEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTaxUnitEditForm');
 end;
 
 procedure TLoadFormTest.LoadUnitFormTest;

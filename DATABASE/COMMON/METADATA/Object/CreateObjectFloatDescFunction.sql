@@ -1312,10 +1312,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_GoodsCategory_Value() RETURNS Integer 
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_GoodsCategory(), 'zc_ObjectFloat_GoodsCategory_Value', 'Кол-во' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsCategory_Value');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_TaxUnit_Price() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_TaxUnit_Price'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_TaxUnit(), 'zc_ObjectFloat_TaxUnit_Price', 'Цены с...' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_TaxUnit_Price');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_TaxUnit_Value() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_TaxUnit_Value'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_TaxUnit(), 'zc_ObjectFloat_TaxUnit_Value', '% наценки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_TaxUnit_Value');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 17.02.19         * zc_ObjectFloat_TaxUnit_Price
+                    zc_ObjectFloat_TaxUnit_Value
  11.02.19         * zc_ObjectFloat_GoodsCategory_Value
  07.02.19         * zc_ObjectFloat_PriceChange_FixPercent
  29.01.19         * zc_ObjectFloat_Route_RateSummaExp

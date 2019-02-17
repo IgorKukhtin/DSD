@@ -3,26 +3,26 @@ inherited CheckForm: TCheckForm
   ClientHeight = 523
   ClientWidth = 817
   ExplicitWidth = 833
-  ExplicitHeight = 561
+  ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 231
+    Top = 242
     Width = 817
-    Height = 292
-    ExplicitTop = 231
+    Height = 281
+    ExplicitTop = 242
     ExplicitWidth = 817
-    ExplicitHeight = 292
-    ClientRectBottom = 292
+    ExplicitHeight = 281
+    ClientRectBottom = 281
     ClientRectRight = 817
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 817
-      ExplicitHeight = 268
+      ExplicitHeight = 257
       inherited cxGrid: TcxGrid
         Width = 817
-        Height = 268
+        Height = 257
         ExplicitWidth = 817
-        ExplicitHeight = 268
+        ExplicitHeight = 257
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -231,9 +231,9 @@ inherited CheckForm: TCheckForm
   end
   inherited DataPanel: TPanel
     Width = 817
-    Height = 205
+    Height = 216
     ExplicitWidth = 817
-    ExplicitHeight = 205
+    ExplicitHeight = 216
     inherited edInvNumber: TcxTextEdit
       Left = 7
       Top = 14
@@ -266,13 +266,13 @@ inherited CheckForm: TCheckForm
       ExplicitTop = -1
     end
     inherited cxLabel15: TcxLabel
-      Top = 37
-      ExplicitTop = 37
+      Top = 33
+      ExplicitTop = 33
     end
     inherited ceStatus: TcxButtonEdit
-      Top = 52
+      Top = 48
       PopupMenu = nil
-      ExplicitTop = 52
+      ExplicitTop = 48
       ExplicitWidth = 141
       ExplicitHeight = 22
       Width = 141
@@ -310,24 +310,24 @@ inherited CheckForm: TCheckForm
     end
     object lblCashMember: TcxLabel
       Left = 251
-      Top = 36
+      Top = 32
       Caption = #1052#1077#1085#1077#1076#1078#1077#1088
     end
     object edCashMember: TcxTextEdit
       Left = 251
-      Top = 52
+      Top = 48
       Properties.ReadOnly = True
       TabOrder = 12
       Width = 212
     end
     object lblBayer: TcxLabel
       Left = 8
-      Top = 76
+      Top = 71
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
     end
     object edBayer: TcxTextEdit
       Left = 8
-      Top = 92
+      Top = 87
       Properties.ReadOnly = True
       TabOrder = 14
       Width = 237
@@ -346,7 +346,7 @@ inherited CheckForm: TCheckForm
     end
     object chbNotMCS: TcxCheckBox
       Left = 155
-      Top = 73
+      Top = 68
       Caption = #1053#1077' '#1076#1083#1103' '#1053#1058#1047
       Properties.ReadOnly = True
       TabOrder = 17
@@ -354,36 +354,36 @@ inherited CheckForm: TCheckForm
     end
     object cxLabel7: TcxLabel
       Left = 464
-      Top = 37
+      Top = 33
       Caption = #8470' '#1082#1072#1088#1090#1099
     end
     object edDiscountCard: TcxTextEdit
       Left = 464
-      Top = 52
+      Top = 48
       Properties.ReadOnly = True
       TabOrder = 19
       Width = 121
     end
     object edManualDiscount: TcxTextEdit
       Left = 732
-      Top = 92
+      Top = 87
       Properties.ReadOnly = True
       TabOrder = 20
       Width = 69
     end
     object cxLabel20: TcxLabel
       Left = 732
-      Top = 77
+      Top = 71
       Caption = #1056#1091#1095'. '#1089#1082#1080#1076#1082#1072
     end
     object cxLabel21: TcxLabel
       Left = 708
-      Top = 37
+      Top = 33
       Caption = #1057#1091#1084#1084#1072' '#1076#1086#1087#1083#1072#1090#1099
     end
     object edTotalSummPayAdd: TcxTextEdit
       Left = 708
-      Top = 52
+      Top = 48
       Properties.Alignment.Horz = taRightJustify
       Properties.ReadOnly = True
       TabOrder = 23
@@ -391,12 +391,12 @@ inherited CheckForm: TCheckForm
     end
     object cxLabel22: TcxLabel
       Left = 8
-      Top = 115
+      Top = 107
       Caption = #1060#1048#1054' '#1087#1072#1094#1080#1077#1085#1090#1072
     end
     object edMemberSP: TcxButtonEdit
       Left = 8
-      Top = 130
+      Top = 122
       Properties.Buttons = <
         item
           Default = True
@@ -409,12 +409,12 @@ inherited CheckForm: TCheckForm
     end
     object cxLabel23: TcxLabel
       Left = 251
-      Top = 115
+      Top = 107
       Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1072#1094'-'#1090#1072
     end
     object edGroupMemberSP: TcxButtonEdit
       Left = 251
-      Top = 130
+      Top = 122
       Properties.Buttons = <
         item
           Default = True
@@ -427,43 +427,43 @@ inherited CheckForm: TCheckForm
     end
     object cxLabel24: TcxLabel
       Left = 350
-      Top = 115
+      Top = 107
       Caption = #1053#1086#1084#1077#1088'/'#1089#1077#1088#1080#1103' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1087#1072#1094'-'#1090#1072
     end
     object cxLabel25: TcxLabel
       Left = 508
-      Top = 115
+      Top = 107
       Caption = #1048#1053#1053' '#1087#1072#1094#1080#1077#1085#1090#1072
     end
     object edPassport: TcxTextEdit
       Left = 350
-      Top = 130
+      Top = 122
       Properties.ReadOnly = True
       TabOrder = 30
       Width = 155
     end
     object edInn: TcxTextEdit
       Left = 508
-      Top = 130
+      Top = 122
       Properties.ReadOnly = True
       TabOrder = 31
       Width = 92
     end
     object cxLabel26: TcxLabel
       Left = 603
-      Top = 115
+      Top = 107
       Caption = #1040#1076#1088#1077#1089' '#1087#1072#1094#1080#1077#1085#1090#1072
     end
     object edAddress: TcxTextEdit
       Left = 603
-      Top = 130
+      Top = 122
       Properties.ReadOnly = True
       TabOrder = 33
       Width = 198
     end
     object cbSite: TcxCheckBox
       Left = 102
-      Top = 73
+      Top = 68
       Hint = #1095#1077#1088#1077#1079' '#1089#1072#1081#1090
       Caption = #1089#1072#1081#1090
       ParentShowHint = False
@@ -472,10 +472,28 @@ inherited CheckForm: TCheckForm
       TabOrder = 34
       Width = 47
     end
+    object edBankPOSTerminal: TcxButtonEdit
+      Left = 7
+      Top = 194
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 35
+      Width = 237
+    end
+    object cxLabel27: TcxLabel
+      Left = 7
+      Top = 179
+      Caption = 'POS '#1090#1077#1088#1084#1080#1085#1072#1083
+    end
   end
   object edInvNumberOrder: TcxTextEdit [2]
     Left = 155
-    Top = 52
+    Top = 48
     Properties.ReadOnly = True
     TabOrder = 6
     Text = 'edInvNumberOrder'
@@ -483,29 +501,29 @@ inherited CheckForm: TCheckForm
   end
   object cxLabel9: TcxLabel [3]
     Left = 155
-    Top = 37
+    Top = 33
     Caption = #8470' '#1079#1072#1082#1072#1079#1072' ('#1089#1072#1081#1090')'
   end
   object cxLabel10: TcxLabel [4]
     Left = 251
-    Top = 76
+    Top = 70
     Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1081' '#1090#1077#1083#1077#1092#1086#1085' ('#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
   end
   object edBayerPhone: TcxTextEdit [5]
     Left = 251
-    Top = 92
+    Top = 87
     Properties.ReadOnly = True
     TabOrder = 9
     Width = 212
   end
   object cxLabel8: TcxLabel [6]
     Left = 464
-    Top = 76
+    Top = 71
     Caption = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072
   end
   object edConfirmedKind: TcxTextEdit [7]
     Left = 464
-    Top = 92
+    Top = 87
     Hint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1057#1086#1089#1090#1086#1103#1085#1080#1077' VIP-'#1095#1077#1082#1072')'
     Properties.ReadOnly = True
     TabOrder = 11
@@ -513,7 +531,7 @@ inherited CheckForm: TCheckForm
   end
   object edConfirmedKindClient: TcxTextEdit [8]
     Left = 603
-    Top = 92
+    Top = 87
     Hint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083#1080#1077#1085#1090#1091')'
     Properties.ReadOnly = True
     TabOrder = 12
@@ -521,30 +539,30 @@ inherited CheckForm: TCheckForm
   end
   object cxLabel11: TcxLabel [9]
     Left = 602
-    Top = 76
+    Top = 71
     Hint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083#1080#1077#1085#1090#1091')'
     Caption = #1057#1090#1072#1090#1091#1089' '#1057#1052#1057
   end
   object cxLabel12: TcxLabel [10]
     Left = 8
-    Top = 157
+    Top = 144
     Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077'('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
   end
   object edPartnerMedical: TcxTextEdit [11]
     Left = 8
-    Top = 173
+    Top = 160
     Properties.ReadOnly = True
     TabOrder = 15
     Width = 237
   end
   object cxLabel13: TcxLabel [12]
     Left = 251
-    Top = 158
+    Top = 145
     Caption = #1044#1072#1090#1072' '#1088#1077#1094#1077#1087#1090#1072
   end
   object edOperDateSP: TcxDateEdit [13]
     Left = 251
-    Top = 173
+    Top = 160
     EditValue = 42261d
     Properties.ReadOnly = True
     TabOrder = 17
@@ -552,61 +570,61 @@ inherited CheckForm: TCheckForm
   end
   object cxLabel14: TcxLabel [14]
     Left = 347
-    Top = 157
+    Top = 144
     Caption = #1053#1086#1084#1077#1088' '#1088#1077#1094#1077#1087#1090#1072
   end
   object edInvNumberSP: TcxTextEdit [15]
     Left = 347
-    Top = 173
+    Top = 160
     Properties.ReadOnly = True
     TabOrder = 19
     Width = 116
   end
   object cxLabel16: TcxLabel [16]
     Left = 464
-    Top = 157
+    Top = 144
     Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
   end
   object edMedicSP: TcxTextEdit [17]
     Left = 464
-    Top = 173
+    Top = 160
     Properties.ReadOnly = True
     TabOrder = 21
     Width = 123
   end
   object cxLabel17: TcxLabel [18]
     Left = 590
-    Top = 157
+    Top = 144
     Caption = #8470' '#1072#1084#1073#1091#1083#1072#1090#1086#1088#1080#1080' '
   end
   object edAmbulance: TcxTextEdit [19]
     Left = 589
-    Top = 173
+    Top = 160
     Properties.ReadOnly = True
     TabOrder = 23
     Width = 93
   end
   object cxLabel18: TcxLabel [20]
     Left = 684
-    Top = 157
+    Top = 144
     Caption = #1042#1080#1076' '#1089#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072
   end
   object edSPKind: TcxTextEdit [21]
     Left = 684
-    Top = 173
+    Top = 160
     Properties.ReadOnly = True
     TabOrder = 25
     Width = 117
   end
   object cxLabel19: TcxLabel [22]
     Left = 586
-    Top = 37
+    Top = 33
     Hint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083#1080#1077#1085#1090#1091')'
     Caption = #1055#1088#1086#1084#1086' '#1082#1086#1076' ('#1076#1086#1082'.)'
   end
   object edInvNumber_PromoCode_Full: TcxTextEdit [23]
     Left = 586
-    Top = 52
+    Top = 48
     Hint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083#1080#1077#1085#1090#1091')'
     Properties.ReadOnly = True
     TabOrder = 27
@@ -1185,6 +1203,54 @@ inherited CheckForm: TCheckForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object actBankPOSTerminal: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actChoiceBankPOSTerminal
+        end
+        item
+          Action = actExecBankPOSTerminal
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' POS '#1090#1085#1088#1084#1080#1085#1072#1083
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' POS '#1090#1085#1088#1084#1080#1085#1072#1083
+      ImageIndex = 42
+    end
+    object actChoiceBankPOSTerminal: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceBankPOSTerminal'
+      FormName = 'TBankPOSTerminalForm'
+      FormNameParam.Value = 'TBankPOSTerminalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BankPOSTerminal'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actExecBankPOSTerminal: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateBankPOSTerminal
+      StoredProcList = <
+        item
+          StoredProc = spUpdateBankPOSTerminal
+        end>
+      Caption = 'actExecBankPOSTerminal'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 306
@@ -1268,6 +1334,10 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1321,6 +1391,10 @@ inherited CheckForm: TCheckForm
       Action = macUpdateMemberSp
       Category = 0
       ImageIndex = 55
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actBankPOSTerminal
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1383,6 +1457,11 @@ inherited CheckForm: TCheckForm
       end
       item
         Name = 'UnitID'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankPOSTerminal'
         Value = Null
         MultiSelectSeparator = ','
       end>
@@ -1687,6 +1766,21 @@ inherited CheckForm: TCheckForm
         Name = 'Passport_MemberSP'
         Value = Null
         Component = edPassport
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankPOSTerminalID'
+        Value = Null
+        Component = GuidesBankPOSTerminal
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankPOSTerminalName'
+        Value = Null
+        Component = GuidesBankPOSTerminal
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -2079,8 +2173,8 @@ inherited CheckForm: TCheckForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 288
-    Top = 120
+    Left = 280
+    Top = 112
   end
   object spUpdateMemberSP: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Check_MemberSP'
@@ -2105,6 +2199,60 @@ inherited CheckForm: TCheckForm
       end>
     PackSize = 1
     Left = 698
+    Top = 384
+  end
+  object GuidesBankPOSTerminal: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBankPOSTerminal
+    FormNameParam.Value = 'TBankPOSTerminalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBankPOSTerminalForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBankPOSTerminal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBankPOSTerminal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 104
+    Top = 176
+  end
+  object spUpdateBankPOSTerminal: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_BankPOSTerminal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankPOSTerminalId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BankPOSTerminal'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 554
     Top = 384
   end
 end

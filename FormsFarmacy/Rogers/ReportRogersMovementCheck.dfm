@@ -843,7 +843,7 @@ inherited ReportRogersMovementCheckForm: TReportRogersMovementCheckForm
     Top = 160
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Movement_Check'
+    StoredProcName = 'gpReport_Movement_Check_Rogers'
     Params = <
       item
         Name = 'inUnitId'

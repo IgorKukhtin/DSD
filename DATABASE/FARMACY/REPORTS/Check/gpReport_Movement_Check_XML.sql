@@ -53,7 +53,7 @@ BEGIN
 
            , Object_PaidType.ValueData                 AS TypePayment
 
-           , NULL::TVarChar          AS Bank
+           , Object_BankPOSTerminal.ValueData        AS Bank
 
        FROM Movement
 
@@ -65,6 +65,11 @@ BEGIN
                                          ON MovementLinkObject_PaidType.MovementId = Movement.Id
                                         AND MovementLinkObject_PaidType.DescId = zc_MovementLinkObject_PaidType()
             LEFT JOIN Object AS Object_PaidType ON Object_PaidType.Id = MovementLinkObject_PaidType.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_BankPOSTerminal
+                                         ON MovementLinkObject_BankPOSTerminal.MovementId = Movement.Id
+                                        AND MovementLinkObject_BankPOSTerminal.DescId = zc_MovementLinkObject_BankPOSTerminal()
+            LEFT JOIN Object AS Object_BankPOSTerminal ON Object_BankPOSTerminal.Id = MovementLinkObject_BankPOSTerminal.ObjectId
 
             INNER JOIN MovementItem AS MovementItem
                                     ON MovementItem.MovementId = Movement.Id
@@ -82,7 +87,7 @@ BEGIN
 
             LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                         ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
-                                       AND MIFloat_SummChangePercent.DescId = zc_MIFloat_SummChangePercent()
+                                       AND MIFloat_SummChangePercent.DescId = zc_MIFloat_SummChangePercent()                                       
 
        WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inDateStart)
          AND Movement.OperDate < DATE_TRUNC ('DAY', inDateFinal) + INTERVAL '1 DAY'
@@ -93,7 +98,8 @@ BEGIN
               , Object_Goods.goodsname
               , MIFloat_Price.ValueData
               , Object_Goods.NDS
-              , Object_PaidType.ValueData;
+              , Object_PaidType.ValueData
+              , Object_BankPOSTerminal.ValueData;
 
 
 END;

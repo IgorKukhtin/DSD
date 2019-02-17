@@ -1,4 +1,4 @@
-unit BanksPOSTerminalsEdit;
+unit BankPOSTerminalEdit;
 
 interface
 
@@ -23,7 +23,7 @@ uses
   cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar;
 
 type
-  TBanksPOSTerminalsEditForm = class(TParentForm)
+  TBankPOSTerminalEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -49,6 +49,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TBanksPOSTerminalsEditForm);
+  RegisterClass(TBankPOSTerminalEditForm);
 
 end.
