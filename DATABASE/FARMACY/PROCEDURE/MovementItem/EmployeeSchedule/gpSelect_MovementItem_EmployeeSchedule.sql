@@ -27,7 +27,8 @@ BEGIN
 
      -- возвращаем заголовки столбцов и даты
      OPEN cur1 FOR SELECT tmpOperDate.OperDate::TDateTime,
-                          ((EXTRACT(DAY FROM tmpOperDate.OperDate))||case when tmpCalendar.Working = False then ' *' else ' ' END||tmpWeekDay.DayOfWeekName) ::TVarChar AS ValueField
+                          ((EXTRACT(DAY FROM tmpOperDate.OperDate))||case when tmpCalendar.Working = False then ' *' else ' ' END||tmpWeekDay.DayOfWeekName) ::TVarChar AS ValueField,
+                          ''::TVarChar   AS ValueFieldUser
                FROM tmpOperDate
                    LEFT JOIN zfCalc_DayOfWeekName (tmpOperDate.OperDate) AS tmpWeekDay ON 1=1
                    LEFT JOIN gpSelect_Object_Calendar(tmpOperDate.OperDate,tmpOperDate.OperDate,inSession) tmpCalendar ON 1=1
@@ -89,13 +90,13 @@ BEGIN
        SELECT
          0                                    AS ID,
          tmpUser.UserID                       AS UserID,
-         NULL::Boolean                        AS IsErased,   
+         NULL::Boolean                        AS IsErased,
          tmpUser.MemberCode                   AS PersonalCode,
          tmpUser.MemberName                   AS PersonalName,
          tmpUser.PositionName                 AS PositionName,
          tmpUser.UnitID                       AS UnitID,
          tmpUser.UnitCode                     AS UnitCode,
-         tmpUser.UnitName                     AS UnitName,   
+         tmpUser.UnitName                     AS UnitName,
          lpDecodeValueDay(1, vbDefaultValue)  AS Value1,
          lpDecodeValueDay(2, vbDefaultValue)  AS Value2,
          lpDecodeValueDay(3, vbDefaultValue)  AS Value3,
@@ -127,6 +128,37 @@ BEGIN
          lpDecodeValueDay(29, vbDefaultValue) AS Value29,
          lpDecodeValueDay(30, vbDefaultValue) AS Value30,
          lpDecodeValueDay(31, vbDefaultValue) AS Value31,
+         lpDecodeValueDay(1, vbDefaultValue)  AS ValueUser1,
+         lpDecodeValueDay(2, vbDefaultValue)  AS ValueUser2,
+         lpDecodeValueDay(3, vbDefaultValue)  AS ValueUser3,
+         lpDecodeValueDay(4, vbDefaultValue)  AS ValueUser4,
+         lpDecodeValueDay(5, vbDefaultValue)  AS ValueUser5,
+         lpDecodeValueDay(6, vbDefaultValue)  AS ValueUser6,
+         lpDecodeValueDay(7, vbDefaultValue)  AS ValueUser7,
+         lpDecodeValueDay(8, vbDefaultValue)  AS ValueUser8,
+         lpDecodeValueDay(9, vbDefaultValue)  AS ValueUser9,
+         lpDecodeValueDay(10, vbDefaultValue) AS ValueUser10,
+         lpDecodeValueDay(11, vbDefaultValue) AS ValueUser11,
+         lpDecodeValueDay(12, vbDefaultValue) AS ValueUser12,
+         lpDecodeValueDay(13, vbDefaultValue) AS ValueUser13,
+         lpDecodeValueDay(14, vbDefaultValue) AS ValueUser14,
+         lpDecodeValueDay(15, vbDefaultValue) AS ValueUser15,
+         lpDecodeValueDay(16, vbDefaultValue) AS ValueUser16,
+         lpDecodeValueDay(17, vbDefaultValue) AS ValueUser17,
+         lpDecodeValueDay(18, vbDefaultValue) AS ValueUser18,
+         lpDecodeValueDay(19, vbDefaultValue) AS ValueUser19,
+         lpDecodeValueDay(20, vbDefaultValue) AS ValueUser20,
+         lpDecodeValueDay(21, vbDefaultValue) AS ValueUser21,
+         lpDecodeValueDay(22, vbDefaultValue) AS ValueUser22,
+         lpDecodeValueDay(23, vbDefaultValue) AS ValueUser23,
+         lpDecodeValueDay(24, vbDefaultValue) AS ValueUser24,
+         lpDecodeValueDay(25, vbDefaultValue) AS ValueUser25,
+         lpDecodeValueDay(26, vbDefaultValue) AS ValueUser26,
+         lpDecodeValueDay(27, vbDefaultValue) AS ValueUser27,
+         lpDecodeValueDay(28, vbDefaultValue) AS ValueUser28,
+         lpDecodeValueDay(29, vbDefaultValue) AS ValueUser29,
+         lpDecodeValueDay(30, vbDefaultValue) AS ValueUser30,
+         lpDecodeValueDay(31, vbDefaultValue) AS ValueUser31,
          1                                    AS TypeId1,
          2                                    AS TypeId2,
          3                                    AS TypeId3,
@@ -168,13 +200,13 @@ BEGIN
        SELECT
          MovementItem.Id                                         AS ID,
          MovementItem.ObjectId                                   AS UserID,
-         MovementItem.IsErased                                   AS IsErased,   
+         MovementItem.IsErased                                   AS IsErased,
          tmpPersonal.PersonalCode                                AS PersonalCode,
          tmpPersonal.PersonalName                                AS PersonalName,
          tmpPersonal.PositionName                                AS PositionName,
          tmpUser.UnitID                                          AS UnitID,
          tmpUser.UnitCode                                        AS UnitCode,
-         tmpUser.UnitName                                        AS UnitName,   
+         tmpUser.UnitName                                        AS UnitName,
          lpDecodeValueDay(1, MIString_ComingValueDay.ValueData)  AS Value1,
          lpDecodeValueDay(2, MIString_ComingValueDay.ValueData)  AS Value2,
          lpDecodeValueDay(3, MIString_ComingValueDay.ValueData)  AS Value3,
@@ -206,6 +238,37 @@ BEGIN
          lpDecodeValueDay(29, MIString_ComingValueDay.ValueData) AS Value29,
          lpDecodeValueDay(30, MIString_ComingValueDay.ValueData) AS Value30,
          lpDecodeValueDay(31, MIString_ComingValueDay.ValueData) AS Value31,
+         lpDecodeValueDay(1, MIString_ComingValueDayUser.ValueData)  AS ValueUser1,
+         lpDecodeValueDay(2, MIString_ComingValueDayUser.ValueData)  AS ValueUser2,
+         lpDecodeValueDay(3, MIString_ComingValueDayUser.ValueData)  AS ValueUser3,
+         lpDecodeValueDay(4, MIString_ComingValueDayUser.ValueData)  AS ValueUser4,
+         lpDecodeValueDay(5, MIString_ComingValueDayUser.ValueData)  AS ValueUser5,
+         lpDecodeValueDay(6, MIString_ComingValueDayUser.ValueData)  AS ValueUser6,
+         lpDecodeValueDay(7, MIString_ComingValueDayUser.ValueData)  AS ValueUser7,
+         lpDecodeValueDay(8, MIString_ComingValueDayUser.ValueData)  AS ValueUser8,
+         lpDecodeValueDay(9, MIString_ComingValueDayUser.ValueData)  AS ValueUser9,
+         lpDecodeValueDay(10, MIString_ComingValueDayUser.ValueData) AS ValueUser10,
+         lpDecodeValueDay(11, MIString_ComingValueDayUser.ValueData) AS ValueUser11,
+         lpDecodeValueDay(12, MIString_ComingValueDayUser.ValueData) AS ValueUser12,
+         lpDecodeValueDay(13, MIString_ComingValueDayUser.ValueData) AS ValueUser13,
+         lpDecodeValueDay(14, MIString_ComingValueDayUser.ValueData) AS ValueUser14,
+         lpDecodeValueDay(15, MIString_ComingValueDayUser.ValueData) AS ValueUser15,
+         lpDecodeValueDay(16, MIString_ComingValueDayUser.ValueData) AS ValueUser16,
+         lpDecodeValueDay(17, MIString_ComingValueDayUser.ValueData) AS ValueUser17,
+         lpDecodeValueDay(18, MIString_ComingValueDayUser.ValueData) AS ValueUser18,
+         lpDecodeValueDay(19, MIString_ComingValueDayUser.ValueData) AS ValueUser19,
+         lpDecodeValueDay(20, MIString_ComingValueDayUser.ValueData) AS ValueUser20,
+         lpDecodeValueDay(21, MIString_ComingValueDayUser.ValueData) AS ValueUser21,
+         lpDecodeValueDay(22, MIString_ComingValueDayUser.ValueData) AS ValueUser22,
+         lpDecodeValueDay(23, MIString_ComingValueDayUser.ValueData) AS ValueUser23,
+         lpDecodeValueDay(24, MIString_ComingValueDayUser.ValueData) AS ValueUser24,
+         lpDecodeValueDay(25, MIString_ComingValueDayUser.ValueData) AS ValueUser25,
+         lpDecodeValueDay(26, MIString_ComingValueDayUser.ValueData) AS ValueUser26,
+         lpDecodeValueDay(27, MIString_ComingValueDayUser.ValueData) AS ValueUser27,
+         lpDecodeValueDay(28, MIString_ComingValueDayUser.ValueData) AS ValueUser28,
+         lpDecodeValueDay(29, MIString_ComingValueDayUser.ValueData) AS ValueUser29,
+         lpDecodeValueDay(30, MIString_ComingValueDayUser.ValueData) AS ValueUser30,
+         lpDecodeValueDay(31, MIString_ComingValueDayUser.ValueData) AS ValueUser31,
          1                                                       AS TypeId1,
          2                                                       AS TypeId2,
          3                                                       AS TypeId3,
@@ -242,7 +305,7 @@ BEGIN
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
                                    AND MovementItem.DescId = zc_MI_Master()
 
-            INNER JOIN tmpUser ON tmpUser.UserID = MovementItem.ObjectId     
+            INNER JOIN tmpUser ON tmpUser.UserID = MovementItem.ObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                  ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
@@ -263,6 +326,10 @@ BEGIN
                                           ON MIString_ComingValueDay.DescId = zc_MIString_ComingValueDay()
                                          AND MIString_ComingValueDay.MovementItemId = MovementItem.Id
 
+            LEFT JOIN MovementItemString AS MIString_ComingValueDayUser
+                                         ON MIString_ComingValueDayUser.DescId = zc_MIString_ComingValueDayUser()
+                                        AND MIString_ComingValueDayUser.MovementItemId = MovementItem.Id
+
        WHERE Movement.ID = inMovementId
          AND (MovementItem.IsErased = FALSE OR inIsErased = TRUE)
 
@@ -276,7 +343,7 @@ BEGIN
                                , Object_Personal_View.PersonalName
                                , Object_Personal_View.PositionName
                             FROM Object_Personal_View),
-                            
+
             tmpUser AS (SELECT DISTINCT
                               MovementItem.ObjectId                       AS UserID
                             , Object_Member.Id                            AS MemberID
@@ -314,13 +381,13 @@ BEGIN
        SELECT
          MovementItem.Id                                         AS ID,
          MovementItem.ObjectId                                   AS UserID,
-         MovementItem.IsErased                                   AS IsErased,   
+         MovementItem.IsErased                                   AS IsErased,
          tmpPersonal.PersonalCode                                AS PersonalCode,
          tmpPersonal.PersonalName                                AS PersonalName,
          tmpPersonal.PositionName                                AS PositionName,
          tmpUser.UnitID                                          AS UnitID,
          tmpUser.UnitCode                                        AS UnitCode,
-         tmpUser.UnitName                                        AS UnitName,   
+         tmpUser.UnitName                                        AS UnitName,
          lpDecodeValueDay(1, MIString_ComingValueDay.ValueData)  AS Value1,
          lpDecodeValueDay(2, MIString_ComingValueDay.ValueData)  AS Value2,
          lpDecodeValueDay(3, MIString_ComingValueDay.ValueData)  AS Value3,
@@ -352,6 +419,37 @@ BEGIN
          lpDecodeValueDay(29, MIString_ComingValueDay.ValueData) AS Value29,
          lpDecodeValueDay(30, MIString_ComingValueDay.ValueData) AS Value30,
          lpDecodeValueDay(31, MIString_ComingValueDay.ValueData) AS Value31,
+         lpDecodeValueDay(1, MIString_ComingValueDayUser.ValueData)  AS ValueUser1,
+         lpDecodeValueDay(2, MIString_ComingValueDayUser.ValueData)  AS ValueUser2,
+         lpDecodeValueDay(3, MIString_ComingValueDayUser.ValueData)  AS ValueUser3,
+         lpDecodeValueDay(4, MIString_ComingValueDayUser.ValueData)  AS ValueUser4,
+         lpDecodeValueDay(5, MIString_ComingValueDayUser.ValueData)  AS ValueUser5,
+         lpDecodeValueDay(6, MIString_ComingValueDayUser.ValueData)  AS ValueUser6,
+         lpDecodeValueDay(7, MIString_ComingValueDayUser.ValueData)  AS ValueUser7,
+         lpDecodeValueDay(8, MIString_ComingValueDayUser.ValueData)  AS ValueUser8,
+         lpDecodeValueDay(9, MIString_ComingValueDayUser.ValueData)  AS ValueUser9,
+         lpDecodeValueDay(10, MIString_ComingValueDayUser.ValueData) AS ValueUser10,
+         lpDecodeValueDay(11, MIString_ComingValueDayUser.ValueData) AS ValueUser11,
+         lpDecodeValueDay(12, MIString_ComingValueDayUser.ValueData) AS ValueUser12,
+         lpDecodeValueDay(13, MIString_ComingValueDayUser.ValueData) AS ValueUser13,
+         lpDecodeValueDay(14, MIString_ComingValueDayUser.ValueData) AS ValueUser14,
+         lpDecodeValueDay(15, MIString_ComingValueDayUser.ValueData) AS ValueUser15,
+         lpDecodeValueDay(16, MIString_ComingValueDayUser.ValueData) AS ValueUser16,
+         lpDecodeValueDay(17, MIString_ComingValueDayUser.ValueData) AS ValueUser17,
+         lpDecodeValueDay(18, MIString_ComingValueDayUser.ValueData) AS ValueUser18,
+         lpDecodeValueDay(19, MIString_ComingValueDayUser.ValueData) AS ValueUser19,
+         lpDecodeValueDay(20, MIString_ComingValueDayUser.ValueData) AS ValueUser20,
+         lpDecodeValueDay(21, MIString_ComingValueDayUser.ValueData) AS ValueUser21,
+         lpDecodeValueDay(22, MIString_ComingValueDayUser.ValueData) AS ValueUser22,
+         lpDecodeValueDay(23, MIString_ComingValueDayUser.ValueData) AS ValueUser23,
+         lpDecodeValueDay(24, MIString_ComingValueDayUser.ValueData) AS ValueUser24,
+         lpDecodeValueDay(25, MIString_ComingValueDayUser.ValueData) AS ValueUser25,
+         lpDecodeValueDay(26, MIString_ComingValueDayUser.ValueData) AS ValueUser26,
+         lpDecodeValueDay(27, MIString_ComingValueDayUser.ValueData) AS ValueUser27,
+         lpDecodeValueDay(28, MIString_ComingValueDayUser.ValueData) AS ValueUser28,
+         lpDecodeValueDay(29, MIString_ComingValueDayUser.ValueData) AS ValueUser29,
+         lpDecodeValueDay(30, MIString_ComingValueDayUser.ValueData) AS ValueUser30,
+         lpDecodeValueDay(31, MIString_ComingValueDayUser.ValueData) AS ValueUser31,
          1                                                       AS TypeId1,
          2                                                       AS TypeId2,
          3                                                       AS TypeId3,
@@ -387,8 +485,8 @@ BEGIN
 
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
                                    AND MovementItem.DescId = zc_MI_Master()
-                                   
-            INNER JOIN tmpUser ON tmpUser.UserID = MovementItem.ObjectId     
+
+            INNER JOIN tmpUser ON tmpUser.UserID = MovementItem.ObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                  ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
@@ -402,7 +500,11 @@ BEGIN
                                           ON MIString_ComingValueDay.DescId = zc_MIString_ComingValueDay()
                                          AND MIString_ComingValueDay.MovementItemId = MovementItem.Id
 
-       WHERE Movement.ID = inMovementId 
+            LEFT JOIN MovementItemString AS MIString_ComingValueDayUser
+                                         ON MIString_ComingValueDayUser.DescId = zc_MIString_ComingValueDayUser()
+                                        AND MIString_ComingValueDayUser.MovementItemId = MovementItem.Id
+
+       WHERE Movement.ID = inMovementId
          AND (MovementItem.IsErased = FALSE OR inIsErased = TRUE)
        ORDER BY tmpPersonal.PersonalName;
      END IF;

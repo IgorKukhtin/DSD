@@ -43,6 +43,8 @@ type
     actspInsertUser: TdsdExecStoredProc;
     spInsertUser: TdsdStoredProc;
     UnitName: TcxGridDBBandedColumn;
+    ValueUser: TcxGridDBBandedColumn;
+    CrossDBViewUserAddOn: TCrossDBViewAddOn;
   private
     { Private declarations }
   public

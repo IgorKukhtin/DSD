@@ -42,19 +42,19 @@ INSERT INTO MovementItemStringDesc (Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_MIString_UID() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_UID'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_UID', 'UID элемента чека' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_UID');
-  
+
 CREATE OR REPLACE FUNCTION zc_MIString_GUID() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_GUID'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_GUID', 'Глобальный уникальный идентификатор' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_GUID');
-  
+
 CREATE OR REPLACE FUNCTION zc_MIString_AddressByGPS() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_AddressByGPS'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_AddressByGPS', 'Адрес, определенный по GPS' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_AddressByGPS');
-  
+
 CREATE OR REPLACE FUNCTION zc_MIString_UKTZED() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_UKTZED'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_UKTZED', 'Код товару згідно з УКТ ЗЕД' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_UKTZED');
-  
+
 CREATE OR REPLACE FUNCTION zc_MIString_Bayer() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Bayer'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_Bayer', 'ФИО клиента' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Bayer');
@@ -112,13 +112,18 @@ CREATE OR REPLACE FUNCTION zc_MIString_ComingValueDay() RETURNS Integer AS $BODY
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_ComingValueDay', 'Время прихода на работу' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_ComingValueDay');
 
+CREATE OR REPLACE FUNCTION zc_MIString_ComingValueDayUser() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_ComingValueDayUser'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_ComingValueDayUser', 'Время прихода на работу (отметка сотрудника)' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_ComingValueDayUser');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 17.02.19                                                                                      * zc_MIString_ComingValueDayUser
  09.12.18                                                                                      * zc_MIString_ComingValueDay
- 05.11.18                                                                                      * 
- 09.10.18                                                                                      * 
+ 05.11.18                                                                                      *
+ 09.10.18                                                                                      *
  13.08.18         * for GoodsSP
  13.12.17         * zc_MIString_Bayer
                     zc_MIString_BayerEmail

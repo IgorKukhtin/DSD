@@ -160,6 +160,16 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
+          object ValueUser: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ValueUser'
+            Visible = False
+            MinWidth = 40
+            Options.Editing = False
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 0
+            Position.RowIndex = 1
+          end
           object isErased: TcxGridDBBandedColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -901,5 +911,22 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     PackSize = 1
     Left = 488
     Top = 336
+  end
+  object CrossDBViewUserAddOn: TCrossDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBBandedTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    HeaderDataSet = HeaderCDS
+    HeaderColumnName = 'ValueFieldUser'
+    TemplateColumn = ValueUser
+    Left = 680
+    Top = 168
   end
 end
