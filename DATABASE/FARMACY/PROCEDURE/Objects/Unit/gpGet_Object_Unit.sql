@@ -21,9 +21,11 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                TaxService TFloat, TaxServiceNigth TFloat,
                StartServiceNigth TDateTime, EndServiceNigth TDateTime,
                CreateDate TDateTime, CloseDate TDateTime,
+               TaxUnitStartDate TDateTime, TaxUnitEndDate TDateTime,
                isRepriceAuto Boolean,
                NormOfManDays Integer,
-               PharmacyItem Boolean
+               PharmacyItem Boolean,
+               isGoodsCategory Boolean
                ) AS
 $BODY$
 BEGIN
@@ -76,10 +78,13 @@ BEGIN
 
            , CAST ((CURRENT_DATE + INTERVAL '1 DAY') as TDateTime) AS CreateDate
            , CAST ((CURRENT_DATE + INTERVAL '1 DAY') as TDateTime) AS CloseDate
+           , CAST (Null as TDateTime) AS TaxUnitStartDate
+           , CAST (Null as TDateTime) AS TaxUnitEndDate
 
            , False                 AS isRepriceAuto
            , CAST (0 as Integer)   AS NormOfManDays
            , False                 AS PharmacyItem
+           , False                 AS isGoodsCategory
 
 ;
    ELSE
@@ -130,12 +135,14 @@ BEGIN
 
       , COALESCE (ObjectDate_Create.ValueData, (CURRENT_DATE + INTERVAL '1 DAY')) ::TDateTime  AS CreateDate
       , COALESCE (ObjectDate_Close.ValueData, (CURRENT_DATE + INTERVAL '1 DAY'))  ::TDateTime  AS CloseDate
-      
-      , COALESCE(ObjectBoolean_RepriceAuto.ValueData, False) AS isRepriceAuto
-      
-      , ObjectFloat_NormOfManDays.ValueData::Integer         AS NormOfManDays
 
-      , COALESCE(ObjectBoolean_PharmacyItem.ValueData, False) AS PharmacyItem
+      , CASE WHEN COALESCE(ObjectDate_TaxUnitStart.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_TaxUnitStart.ValueData ELSE Null END ::TDateTime  AS TaxUnitStartDate
+      , CASE WHEN COALESCE(ObjectDate_TaxUnitEnd.ValueData ::Time,'00:00')   <> '00:00' THEN ObjectDate_TaxUnitEnd.ValueData   ELSE Null END ::TDateTime  AS TaxUnitEndDate
+
+      , COALESCE(ObjectBoolean_RepriceAuto.ValueData, False)     AS isRepriceAuto
+      , ObjectFloat_NormOfManDays.ValueData::Integer             AS NormOfManDays
+      , COALESCE(ObjectBoolean_PharmacyItem.ValueData, False)    AS PharmacyItem
+      , COALESCE(ObjectBoolean_GoodsCategory.ValueData, FALSE)   AS isGoodsCategory
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -234,6 +241,18 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_PharmacyItem
                                 ON ObjectBoolean_PharmacyItem.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_PharmacyItem.DescId = zc_ObjectBoolean_Unit_PharmacyItem()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsCategory 
+                                ON ObjectBoolean_GoodsCategory.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_GoodsCategory.DescId = zc_ObjectBoolean_Unit_GoodsCategory()
+
+        LEFT JOIN ObjectDate AS ObjectDate_TaxUnitStart
+                             ON ObjectDate_TaxUnitStart.ObjectId = Object_Unit.Id
+                            AND ObjectDate_TaxUnitStart.DescId = zc_ObjectDate_Unit_TaxUnitStart()
+
+        LEFT JOIN ObjectDate AS ObjectDate_TaxUnitEnd
+                             ON ObjectDate_TaxUnitEnd.ObjectId = Object_Unit.Id
+                            AND ObjectDate_TaxUnitEnd.DescId = zc_ObjectDate_Unit_TaxUnitEnd()
 
     WHERE Object_Unit.Id = inId;
 

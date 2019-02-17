@@ -149,6 +149,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 88
           end
+          object isGoodsCategory: TcxGridDBColumn
+            Caption = #1044#1083#1103' '#1040#1089#1089#1086#1088#1090'. '#1084#1072#1090#1088#1080#1094#1099
+            DataBinding.FieldName = 'isGoodsCategory'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1083#1103' '#1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1086#1081' '#1084#1072#1090#1088#1080#1094#1099
+            Options.Editing = False
+            Width = 70
+          end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -391,6 +400,30 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Caption = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1044#1072'/'#1053#1077#1090
       Hint = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1044#1072'/'#1053#1077#1090
     end
+    object actUpdateGoodsCategory_No: TdsdExecStoredProc
+      Category = 'GoodsCategory'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_GoodsCategory_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_GoodsCategory_No
+        end>
+      Caption = #1044#1083#1103' '#1040#1089#1089#1086#1088#1090'. '#1084#1072#1090#1088#1080#1094#1099' - '#1053#1077#1090
+      Hint = #1044#1083#1103' '#1040#1089#1089#1086#1088#1090'. '#1084#1072#1090#1088#1080#1094#1099' - '#1053#1077#1090
+    end
+    object actUpdateGoodsCategory_Yes: TdsdExecStoredProc
+      Category = 'GoodsCategory'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_GoodsCategory_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_GoodsCategory_Yes
+        end>
+      Caption = #1044#1083#1103' '#1040#1089#1089#1086#1088#1090'. '#1084#1072#1090#1088#1080#1094#1099' - '#1044#1072
+      Hint = #1044#1083#1103' '#1040#1089#1089#1086#1088#1090'. '#1084#1072#1090#1088#1080#1094#1099' - '#1044#1072
+    end
     object spUpdateisOverNo: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -414,6 +447,30 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       Caption = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1044#1072
       Hint = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1044#1072
+    end
+    object macUpdateisGoodsCategoryNo: TMultiAction
+      Category = 'GoodsCategory'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateGoodsCategory_No
+        end>
+      View = cxGridDBTableView
+      Caption = #1044#1083#1103' '#1040#1089#1089#1086#1088#1090'. '#1084#1072#1090#1088#1080#1094#1099' - '#1053#1077#1090
+      Hint = #1044#1083#1103' '#1040#1089#1089#1086#1088#1090'. '#1084#1072#1090#1088#1080#1094#1099' - '#1053#1077#1090
+      ImageIndex = 58
+    end
+    object macUpdateisGoodsCategoryYes: TMultiAction
+      Category = 'GoodsCategory'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateGoodsCategory_Yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1044#1083#1103' '#1040#1089#1089#1086#1088#1090'. '#1084#1072#1090#1088#1080#1094#1099' - '#1044#1072
+      Hint = #1044#1083#1103' '#1040#1089#1089#1086#1088#1090'. '#1084#1072#1090#1088#1080#1094#1099' - '#1044#1072
+      ImageIndex = 52
     end
     object macUpdateisOverNo: TMultiAction
       Category = 'DSDLib'
@@ -598,7 +655,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbShowAll'
         end
         item
           Visible = True
@@ -651,6 +708,18 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         item
           Visible = True
           ItemName = 'bbisMarginCategory'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateisGoodsCategoryYes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateisGoodsCategoryNo'
         end
         item
           Visible = True
@@ -713,8 +782,16 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Action = actUpdateisReport
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbShowAll: TdxBarButton
       Action = actShowAll
+      Category = 0
+    end
+    object bbUpdateisGoodsCategoryYes: TdxBarButton
+      Action = macUpdateisGoodsCategoryYes
+      Category = 0
+    end
+    object bbUpdateisGoodsCategoryNo: TdxBarButton
+      Action = macUpdateisGoodsCategoryNo
       Category = 0
     end
   end
@@ -980,5 +1057,69 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 344
     Top = 307
+  end
+  object spUpdate_GoodsCategory_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isGoodsCategory'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGoodsCategory'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisGoodsCategory'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isGoodsCategory'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 816
+    Top = 179
+  end
+  object spUpdate_GoodsCategory_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isGoodsCategory'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGoodsCategory'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisGoodsCategory'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isGoodsCategory'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 816
+    Top = 235
   end
 end

@@ -75,7 +75,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
           OptionsSelection.InvertSelect = False
-          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridBandedTableViewStyleSheet
@@ -86,7 +86,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
               FixedKind = fkLeft
               Options.HoldOwnColumnsOnly = True
               Options.Moving = False
-              Width = 347
+              Width = 349
             end
             item
               Caption = #1055#1077#1088#1080#1086#1076
@@ -100,7 +100,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Options.Moving = False
-            Width = 65
+            Width = 27
             Position.BandIndex = 0
             Position.ColIndex = 0
             Position.RowIndex = 0
@@ -112,7 +112,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
             MinWidth = 67
             Options.Editing = False
             Options.Moving = False
-            Width = 200
+            Width = 212
             Position.BandIndex = 0
             Position.ColIndex = 1
             Position.RowIndex = 0
@@ -124,9 +124,23 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
             MinWidth = 64
             Options.Editing = False
             Options.Moving = False
-            Width = 81
+            Width = 92
             Position.BandIndex = 0
             Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object UnitName: TcxGridDBBandedColumn
+            Caption = #1040#1087#1090#1077#1082#1072' ('#1086#1089#1085#1086#1074#1085#1072#1103')'
+            DataBinding.FieldName = 'UnitName'
+            Visible = False
+            GroupIndex = 0
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Styles.Content = dmMain.cxSelection
+            Width = 165
+            Position.BandIndex = 0
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object Value: TcxGridDBBandedColumn

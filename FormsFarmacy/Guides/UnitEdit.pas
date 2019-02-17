@@ -84,6 +84,11 @@ type
     edPartnerMedical: TcxButtonEdit;
     GuidesPartnerMedical: TdsdGuides;
     cbPharmacyItem: TcxCheckBox;
+    cxLabel20: TcxLabel;
+    cxLabel21: TcxLabel;
+    edTaxUnitEnd: TcxDateEdit;
+    edTaxUnitStart: TcxDateEdit;
+    cbGoodsCategory: TcxCheckBox;
   private
     { Private declarations }
   public

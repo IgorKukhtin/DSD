@@ -54,7 +54,7 @@ type
     actUpdateisReport: TdsdExecStoredProc;
     bbUpdateisReport: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
-    bb: TdxBarButton;
+    bbShowAll: TdxBarButton;
     Address: TcxGridDBColumn;
     CreateDate: TcxGridDBColumn;
     CloseDate: TcxGridDBColumn;
@@ -68,6 +68,15 @@ type
     actChoiceUnit: TOpenChoiceForm;
     UnitRePriceName: TcxGridDBColumn;
     PartnerMedicalName: TcxGridDBColumn;
+    isGoodsCategory: TcxGridDBColumn;
+    spUpdate_GoodsCategory_Yes: TdsdStoredProc;
+    spUpdate_GoodsCategory_No: TdsdStoredProc;
+    macUpdateisGoodsCategoryNo: TMultiAction;
+    macUpdateisGoodsCategoryYes: TMultiAction;
+    actUpdateGoodsCategory_No: TdsdExecStoredProc;
+    actUpdateGoodsCategory_Yes: TdsdExecStoredProc;
+    bbUpdateisGoodsCategoryYes: TdxBarButton;
+    bbUpdateisGoodsCategoryNo: TdxBarButton;
   private
     { Private declarations }
   public

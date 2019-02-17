@@ -4181,7 +4181,7 @@ begin
       if result and Assigned(Cash) AND not Cash.AlwaysSold then
       begin
         if (Disc <> 0) and (PosDisc = 0) then result := Cash.DiscountGoods(Disc);
-        if Round(FTotalSumm * 100) = Round(Cash.SummaReceipt * 100) then
+        if not isFiscal or (Round(FTotalSumm * 100) = Round(Cash.SummaReceipt * 100)) then
         begin
           if result then result := Cash.SubTotal(true, true, 0, 0);
           if result then result := Cash.TotalSumm(SalerCash, SalerCashAdd, PaidType);

@@ -49,6 +49,8 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Sale_Amount_40200_Weight TFloat
              , Return_Amount_40200_Weight TFloat
              , ReturnPercent TFloat
+             , Sale_SummMVAT TFloat, Sale_SummVAT TFloat
+             , Return_SummMVAT TFloat, Return_SummVAT TFloat
               )
 AS
 $BODY$
@@ -108,42 +110,48 @@ BEGIN
 
     IF inEndDate < '01.06.2014' THEN
        RETURN QUERY
-       SELECT * FROM gpReport_GoodsMI_SaleReturnIn_OLD (inStartDate
-                                                      , inEndDate
-                                                      , inBranchId
-                                                      , inAreaId
-                                                      , inRetailId
-                                                      , inJuridicalId
-                                                      , inPaidKindId
-                                                      , inTradeMarkId
-                                                      , inGoodsGroupId
-                                                      , inInfoMoneyId
-                                                      , inIsPartner
-                                                      , inIsTradeMark
-                                                      , inIsGoods
-                                                      , inIsGoodsKind
-                                                      , inSession
-                                                       );
+       SELECT * 
+            , 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
+            , 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
+       FROM gpReport_GoodsMI_SaleReturnIn_OLD (inStartDate
+                                             , inEndDate
+                                             , inBranchId
+                                             , inAreaId
+                                             , inRetailId
+                                             , inJuridicalId
+                                             , inPaidKindId
+                                             , inTradeMarkId
+                                             , inGoodsGroupId
+                                             , inInfoMoneyId
+                                             , inIsPartner
+                                             , inIsTradeMark
+                                             , inIsGoods
+                                             , inIsGoodsKind
+                                             , inSession
+                                              );
        RETURN;
     ELSE
     IF inEndDate < '01.07.2015' OR inStartDate < '01.07.2015' THEN
        RETURN QUERY
-       SELECT * FROM gpReport_GoodsMI_SaleReturnIn_OLD_TWO (inStartDate
-                                                      , inEndDate
-                                                      , inBranchId
-                                                      , inAreaId
-                                                      , inRetailId
-                                                      , inJuridicalId
-                                                      , inPaidKindId
-                                                      , inTradeMarkId
-                                                      , inGoodsGroupId
-                                                      , inInfoMoneyId
-                                                      , inIsPartner
-                                                      , inIsTradeMark
-                                                      , inIsGoods
-                                                      , inIsGoodsKind
-                                                      , inSession
-                                                       );
+       SELECT * 
+            , 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
+            , 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
+       FROM gpReport_GoodsMI_SaleReturnIn_OLD_TWO (inStartDate
+                                                 , inEndDate
+                                                 , inBranchId
+                                                 , inAreaId
+                                                 , inRetailId
+                                                 , inJuridicalId
+                                                 , inPaidKindId
+                                                 , inTradeMarkId
+                                                 , inGoodsGroupId
+                                                 , inInfoMoneyId
+                                                 , inIsPartner
+                                                 , inIsTradeMark
+                                                 , inIsGoods
+                                                 , inIsGoodsKind
+                                                 , inSession
+                                                  );
        RETURN;
     END IF;
     END IF;
@@ -214,28 +222,31 @@ BEGIN
       AND EXISTS (SELECT 1 FROM (SELECT MAX (SoldTable.OperDate) AS OperDate FROM SoldTable) AS tmp WHERE inStartDate >= '01.07.2015' AND inEndDate <= tmp.OperDate)
     THEN
        RETURN QUERY
-       SELECT * FROM gpReport_GoodsMI_SaleReturnIn_Olap (inStartDate
-                                                      , inEndDate
-                                                      , inBranchId
-                                                      , inAreaId
-                                                      , inRetailId
-                                                      , inJuridicalId
-                                                      , inPaidKindId
-                                                      , inTradeMarkId
-                                                      , inGoodsGroupId
-                                                      , inInfoMoneyId
-                                                      , inIsPartner
-                                                      , inIsTradeMark
-                                                      , inIsGoods
-                                                      , inIsGoodsKind
-                                                      , inIsContract
-                                                      , vbIsJuridical_Branch
-                                                      , vbIsJuridical_where
-                                                      , vbIsPartner_where
-                                                      , vbIsGoods_where
-                                                      , EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin(), 10898, 326391) AND UserId = vbUserId) -- Отчеты (управленцы) + Аналитики по продажам
-                                                      , inSession
-                                                       );
+       SELECT * 
+            , 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
+            , 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
+       FROM gpReport_GoodsMI_SaleReturnIn_Olap (inStartDate
+                                              , inEndDate
+                                              , inBranchId
+                                              , inAreaId
+                                              , inRetailId
+                                              , inJuridicalId
+                                              , inPaidKindId
+                                              , inTradeMarkId
+                                              , inGoodsGroupId
+                                              , inInfoMoneyId
+                                              , inIsPartner
+                                              , inIsTradeMark
+                                              , inIsGoods
+                                              , inIsGoodsKind
+                                              , inIsContract
+                                              , vbIsJuridical_Branch
+                                              , vbIsJuridical_where
+                                              , vbIsPartner_where
+                                              , vbIsGoods_where
+                                              , EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin(), 10898, 326391) AND UserId = vbUserId) -- Отчеты (управленцы) + Аналитики по продажам
+                                              , inSession
+                                               );
        RETURN;
     END IF;
 
@@ -610,6 +621,9 @@ BEGIN
          , tmpOperationGroup.Return_Amount_40200_Weight  :: TFloat AS Return_Amount_40200_Weight
 
          , CAST (CASE WHEN tmpOperationGroup.Sale_AmountPartner_Weight > 0 THEN 100 * tmpOperationGroup.Return_AmountPartner_Weight / tmpOperationGroup.Sale_AmountPartner_Weight ELSE 0 END AS NUMERIC (16, 1)) :: TFloat AS ReturnPercent
+
+         , 0 :: TFloat AS Sale_SummMVAT,   0 :: TFloat AS Sale_SummVAT
+         , 0 :: TFloat AS Return_SummMVAT, 0 :: TFloat AS Return_SummVAT
 
      FROM tmpOperationGroup
 

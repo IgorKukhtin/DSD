@@ -75,6 +75,7 @@ type
     AreaName: TcxGridDBColumn;
     MemberName: TcxGridDBColumn;
     PartnerMedicalName: TcxGridDBColumn;
+    isGoodsCategory: TcxGridDBColumn;
   private
     { Private declarations }
   public

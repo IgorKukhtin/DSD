@@ -2232,6 +2232,15 @@
 				<Form>RepriceRogersJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdExportToXMLAction.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\BanksPOSTerminals.pas">
+				<Form>BanksPOSTerminalsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\BanksPOSTerminalsEdit.pas">
+				<Form>BanksPOSTerminalsEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

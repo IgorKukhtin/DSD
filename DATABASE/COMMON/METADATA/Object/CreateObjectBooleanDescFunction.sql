@@ -168,6 +168,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_PartionGoodsKind() RETURNS Inte
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Unit_PartionGoodsKind', 'Партии по виду упаковки' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_PartionGoodsKind');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_GoodsCategory() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_GoodsCategory'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_GoodsCategory', 'для Ассортиментной матрицы' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_GoodsCategory');
 
 CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Partner_EdiOrdspr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Partner_EdiOrdspr'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
@@ -427,6 +430,7 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 15.02.19         * zc_ObjectBoolean_Unit_GoodsCategory
  09.02.19                                                                                                          * zc_ObjectBoolean_RecalcMCSSheduler_AllRetail
  06.02.19         * zc_ObjectBoolean_JuridicalSettings_isBonusClose
  21.01.19         * zc_ObjectBoolean_Account_PrintDetail

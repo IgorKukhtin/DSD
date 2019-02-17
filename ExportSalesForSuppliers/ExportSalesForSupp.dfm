@@ -21,7 +21,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     Top = 0
     Width = 909
     Height = 543
-    ActivePage = tsOptima
+    ActivePage = tsADV
     Align = alClient
     TabOrder = 0
     object tsOptima: TTabSheet
@@ -1176,6 +1176,126 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         end
         object grTevaLevel1: TcxGridLevel
           GridView = grtvTeva
+        end
+      end
+    end
+    object tsADV: TTabSheet
+      Caption = 'ADV '#1082#1091#1087#1086#1085
+      ImageIndex = 3
+      object Panel3: TPanel
+        Left = 0
+        Top = 0
+        Width = 901
+        Height = 31
+        Align = alTop
+        TabOrder = 0
+        object cxDateEdit1: TcxDateEdit
+          Left = 85
+          Top = 5
+          EditValue = 42339d
+          Properties.ShowTime = False
+          TabOrder = 0
+          Width = 85
+        end
+        object cxLabel7: TcxLabel
+          Left = 6
+          Top = 8
+          Caption = #1044#1072#1090#1072' '#1086#1090#1095#1077#1090#1072':'
+        end
+        object Button1: TButton
+          Left = 384
+          Top = 0
+          Width = 113
+          Height = 25
+          Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100
+          TabOrder = 2
+          OnClick = btnBaDMExecuteClick
+        end
+        object cxSpinEdit1: TcxSpinEdit
+          Left = 288
+          Top = 4
+          Properties.SpinButtons.Visible = False
+          TabOrder = 3
+          Value = 59610
+          Width = 81
+        end
+        object cxLabel8: TcxLabel
+          Left = 198
+          Top = 8
+          Caption = 'ID '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072':'
+        end
+        object Button2: TButton
+          Left = 503
+          Top = 0
+          Width = 113
+          Height = 25
+          Caption = #1069#1082#1089#1087#1086#1088#1090
+          TabOrder = 5
+          OnClick = btnBaDMExportClick
+        end
+        object Button3: TButton
+          Left = 783
+          Top = 0
+          Width = 113
+          Height = 25
+          Caption = #1055#1086#1089#1083#1072#1090#1100' '#1085#1072' FTP'
+          TabOrder = 6
+          OnClick = btnBaDMSendFTPClick
+        end
+      end
+      object cxGrid1: TcxGrid
+        Left = 0
+        Top = 31
+        Width = 901
+        Height = 484
+        Align = alClient
+        TabOrder = 1
+        object cxGridDBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = dsReport_Upload_Teva
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          object cxGridDBColumn3: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'operdate'
+            Width = 80
+          end
+          object cxGridDBColumn4: TcxGridDBColumn
+            Caption = #1045#1044#1056#1055#1054#1059
+            DataBinding.FieldName = 'okpo'
+            Width = 100
+          end
+          object cxGridDBColumn5: TcxGridDBColumn
+            Caption = #1040#1087#1090#1077#1082#1072
+            DataBinding.FieldName = 'unitname'
+            Width = 200
+          end
+          object cxGridDBColumn6: TcxGridDBColumn
+            Caption = #1040#1076#1088#1077#1089
+            DataBinding.FieldName = 'unitaddress'
+            Width = 200
+          end
+          object cxGridDBColumn7: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088
+            DataBinding.FieldName = 'goodsname'
+            Width = 200
+          end
+          object cxGridDBColumn8: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'amount'
+          end
+          object cxGridDBColumn9: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'summ'
+          end
+          object cxGridDBColumn10: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'price'
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBTableView1
         end
       end
     end

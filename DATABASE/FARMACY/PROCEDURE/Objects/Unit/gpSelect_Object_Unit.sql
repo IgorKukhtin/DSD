@@ -21,11 +21,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TaxService TFloat, TaxServiceNigth TFloat
              , StartServiceNigth TDateTime, EndServiceNigth TDateTime
              , CreateDate TDateTime, CloseDate TDateTime
+             , TaxUnitStartDate TDateTime, TaxUnitEndDate TDateTime
              , isRepriceAuto Boolean
              , isOver Boolean
              , isUploadBadm Boolean
              , isMarginCategory Boolean
              , isReport Boolean
+             , isGoodsCategory Boolean
              , Num_byReportBadm Integer
 ) AS
 $BODY$
@@ -84,14 +86,17 @@ BEGIN
       , ObjectDate_StartServiceNigth.ValueData               AS StartServiceNigth
       , ObjectDate_EndServiceNigth.ValueData                 AS EndServiceNigth
 
-      , COALESCE( ObjectDate_Create.ValueData, NULL) :: TDateTime  AS CreateDate
-      , COALESCE(ObjectDate_Close.ValueData, NULL)   :: TDateTime  AS CloseDate
+      , COALESCE (ObjectDate_Create.ValueData, NULL)  :: TDateTime  AS CreateDate
+      , COALESCE (ObjectDate_Close.ValueData, NULL)   :: TDateTime  AS CloseDate
+      , COALESCE (ObjectDate_TaxUnitStart.ValueData, NULL)   :: TDateTime AS TaxUnitStartDate
+      , COALESCE (ObjectDate_TaxUnitEnd.ValueData, NULL)     :: TDateTime AS TaxUnitEndDate
       
       , COALESCE(ObjectBoolean_RepriceAuto.ValueData, FALSE) AS isRepriceAuto
       , COALESCE(ObjectBoolean_Over.ValueData, FALSE)        AS isOver
       , COALESCE(ObjectBoolean_UploadBadm.ValueData, FALSE)  AS isUploadBadm
       , COALESCE(ObjectBoolean_MarginCategory.ValueData, FALSE)  AS isMarginCategory
       , COALESCE(ObjectBoolean_Report.ValueData, FALSE)          AS isReport
+      , COALESCE(ObjectBoolean_GoodsCategory.ValueData, FALSE)   AS isGoodsCategory
       , COALESCE(tmpByBadm.Num_byReportBadm, Null) ::Integer     AS Num_byReportBadm
 
     FROM Object AS Object_Unit
@@ -144,6 +149,10 @@ BEGIN
                                 ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsCategory 
+                                ON ObjectBoolean_GoodsCategory.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_GoodsCategory.DescId = zc_ObjectBoolean_Unit_GoodsCategory()
+
         LEFT JOIN ObjectString AS ObjectString_Unit_Address
                                ON ObjectString_Unit_Address.ObjectId = Object_Unit.Id
                               AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
@@ -190,7 +199,15 @@ BEGIN
         LEFT JOIN ObjectDate AS ObjectDate_Close
                              ON ObjectDate_Close.ObjectId = Object_Unit.Id
                             AND ObjectDate_Close.DescId = zc_ObjectDate_Unit_Close()
-                            
+
+        LEFT JOIN ObjectDate AS ObjectDate_TaxUnitStart
+                             ON ObjectDate_TaxUnitStart.ObjectId = Object_Unit.Id
+                            AND ObjectDate_TaxUnitStart.DescId = zc_ObjectDate_Unit_TaxUnitStart()
+
+        LEFT JOIN ObjectDate AS ObjectDate_TaxUnitEnd
+                             ON ObjectDate_TaxUnitEnd.ObjectId = Object_Unit.Id
+                            AND ObjectDate_TaxUnitEnd.DescId = zc_ObjectDate_Unit_TaxUnitEnd()
+                    
         LEFT JOIN tmpByBadm ON tmpByBadm.UnitId = Object_Unit.Id
 
     WHERE Object_Unit.DescId = zc_Object_Unit()

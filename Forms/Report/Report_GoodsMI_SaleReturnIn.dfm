@@ -4,7 +4,7 @@
   ClientWidth = 1362
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -259
+  ExplicitLeft = -364
   ExplicitWidth = 1378
   ExplicitHeight = 425
   PixelsPerInch = 96
@@ -1019,6 +1019,62 @@
             VisibleForCustomization = False
             Width = 55
           end
+          object Sale_SummMVAT: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076' '#1089#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057', '#1075#1088#1085' ('#1087#1086#1082#1091#1087')'
+            DataBinding.FieldName = 'Sale_SummMVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057', '#1075#1088#1085
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 82
+          end
+          object Sale_SummVAT: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076' '#1089#1091#1084#1084#1072' '#1053#1044#1057', '#1075#1088#1085' ('#1087#1086#1082#1091#1087')'
+            DataBinding.FieldName = 'Sale_SummVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1053#1044#1057
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 70
+          end
+          object Return_SummMVAT: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088' '#1089#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057', '#1075#1088#1085
+            DataBinding.FieldName = 'Return_SummMVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1073#1077#1079' '#1053#1044#1057
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 70
+          end
+          object Return_SummVAT: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088' '#1089#1091#1084#1084#1072' '#1053#1044#1057', '#1075#1088#1085
+            DataBinding.FieldName = 'Return_SummVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1091#1084#1084#1072' '#1053#1044#1057' '#1074#1086#1079#1074#1088#1072#1090#1072
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 70
+          end
         end
       end
     end
@@ -1469,6 +1525,12 @@
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isBuh'
+          Value = 'false'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1075#1088#1091#1087#1087#1077' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080

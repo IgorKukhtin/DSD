@@ -490,6 +490,8 @@ type
     actRepriceRogersJournal: TdsdOpenForm;
     N180: TMenuItem;
     N181: TMenuItem;
+    actBanksPOSTerminals: TdsdOpenForm;
+    POS1: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
