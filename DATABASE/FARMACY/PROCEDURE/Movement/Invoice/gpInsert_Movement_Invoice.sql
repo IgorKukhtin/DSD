@@ -151,7 +151,7 @@ BEGIN
     WHERE Movement.StatusId <> zc_Enum_Status_Erased()
       AND Movement.DescId = zc_Movement_Invoice()
       AND Movement.OperDate >= inDateInvoice AND Movement.OperDate <inDateInvoice + interval '1 day'
-  --    AND COALESCE (Movement.InvNumber,'') = COALESCE (inInvoice,'')
+      AND COALESCE (Movement.InvNumber,'') = COALESCE (inInvoice,'')
     ;
 
    -- ссылка на документ счет

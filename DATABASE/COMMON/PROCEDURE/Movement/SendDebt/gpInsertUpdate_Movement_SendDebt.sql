@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendDebt (Integer, TVarChar, TDa
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendDebt (Integer, TVarChar, TDateTime, Integer, Integer, Tfloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendDebt (Integer, TVarChar, TDateTime, Integer, Integer, Tfloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendDebt (Integer, TVarChar, TDateTime, Integer, Integer, Tfloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendDebt (Integer, TVarChar, TDateTime, Integer, Integer, Tfloat, Tfloat, Tfloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SendDebt(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -14,24 +15,27 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SendDebt(
  INOUT ioChildId             Integer   , -- Ключ объекта <Элемент документа>
 
     IN inAmount              TFloat    , -- сумма  
-    IN inCurrencyValue       TFloat    , -- Курс  
-    IN inParValue            TFloat    , -- Номинал валюты для которой вводится курс  
-    
+    IN inCurrencyValue_From  TFloat    , -- Курс  
+    IN inParValue_From       TFloat    , -- Номинал валюты для которой вводится курс  
+    IN inCurrencyValue_To    TFloat    , -- Курс  
+    IN inParValue_To         TFloat    , -- Номинал валюты для которой вводится курс  
+        
     IN inJuridicalFromId     Integer   , -- Юр.лицо
     IN inPartnerFromId       Integer   , -- Контрагент
     IN inContractFromId      Integer   , -- Договор
     IN inPaidKindFromId      Integer   , -- Вид форм оплаты
     IN inInfoMoneyFromId     Integer   , -- Статьи назначения
     IN inBranchFromId        Integer   , -- 
-
+    IN inCurrencyId_From     Integer   , -- валюта
+    
     IN inJuridicalToId       Integer   , -- Юр.лицо
     IN inPartnerToId         Integer   , -- Контрагент
     IN inContractToId        Integer   , -- Договор
     IN inPaidKindToId        Integer   , -- Вид форм оплаты
     IN inInfoMoneyToId       Integer   , -- Статьи назначения
     IN inBranchToId          Integer   , -- 
-    IN inCurrencyId          Integer   , -- валюта
-
+    IN inCurrencyId_To       Integer   , -- валюта
+    
     IN inComment             TVarChar  , -- Примечание
     
     IN inSession             TVarChar    -- сессия пользователя
@@ -124,12 +128,19 @@ BEGIN
 
 
      -- сохранили связь с <Валютой>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), ioMasterId, inCurrencyId); 
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), ioMasterId, inCurrencyId_From); 
      -- сохранили свойство <Курс>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValue(), ioMasterId, inCurrencyValue);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValue(), ioMasterId, inCurrencyValue_From);
      -- сохранили свойство <Номинал>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(), ioMasterId, inParValue);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(), ioMasterId, inParValue_From);
 
+     -- сохранили связь с <Валютой>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), ioMasterId, inCurrencyId_From); 
+     -- сохранили свойство <Курс>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValue(), ioMasterId, inCurrencyValue_From);
+     -- сохранили свойство <Номинал>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(), ioMasterId, inParValue_From);
+     
      -- сохранили свойство <Комментарий>
      PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioMasterId, inComment);
 
@@ -148,6 +159,13 @@ BEGIN
 
      -- сохранили связь с <Филиал КОМУ>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), ioChildId, inBranchToId);
+
+     -- сохранили связь с <Валютой>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), ioChildId, inCurrencyId_To); 
+     -- сохранили свойство <Курс>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValue(), ioChildId, inCurrencyValue_To);
+     -- сохранили свойство <Номинал>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(), ioChildId, inParValue_To);
 
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Finance_CreateTemp();
@@ -169,6 +187,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 18.02.19         * add валюта дебет/ кредит
  24.01.19         * add inCurrencyId, inCurrencyValue, inParValue
  12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp
  24.09.14                                        * add inPartner...

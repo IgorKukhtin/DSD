@@ -173,7 +173,7 @@ BEGIN
                        FROM tmpContainerRemeins AS tmp
                               -- находим партию
                               LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
-                                                            ON ContainerLinkObject_MovementItem.Containerid =  tmp.ContainerId
+                                                            ON ContainerLinkObject_MovementItem.Containerid = tmp.ContainerId
                                                            AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
                               LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
                               -- элемент прихода

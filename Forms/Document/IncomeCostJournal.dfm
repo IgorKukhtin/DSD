@@ -130,6 +130,11 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = AmountCost
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountCost_Master
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -141,6 +146,11 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = AmountCost
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountCost_Master
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -250,6 +260,14 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
         Options.Editing = False
         Width = 70
       end
+      object OperDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1079#1072#1090#1088#1072#1090#1099')'
+        DataBinding.FieldName = 'OperDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 79
+      end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1079#1072#1090#1088#1072#1090#1099')'
         DataBinding.FieldName = 'Comment'
@@ -272,6 +290,8 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
       object AmountCost_Master: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
         DataBinding.FieldName = 'AmountCost_Master'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -518,6 +538,14 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
         item
           Visible = True
           ItemName = 'bbOpenFormService'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIContainer'
         end
         item
           Visible = True
@@ -1444,8 +1472,8 @@ object IncomeCostJournalForm: TIncomeCostJournalForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 488
-    Top = 24
+    Left = 728
+    Top = 128
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null

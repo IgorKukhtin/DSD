@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomeCost_byParent(
     IN inIsErased    Boolean   ,
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, MasterMovementId integer, InvNumber Integer, MasterInvNumber Integer, MasterOperDate TDateTime
+RETURNS TABLE (Id Integer, MasterMovementId integer, InvNumber Integer, MasterInvNumber Integer
+             , OperDate TDateTime, MasterOperDate TDateTime
              , StatusCode Integer, StatusName TVarChar, MasterStatusCode Integer, MasterStatusName TVarChar
              , ItemName TVarChar, Comment TVarChar, MasterComment TVarChar
              , AmountCost TFloat, AmountCost_Master TFloat
@@ -36,6 +37,7 @@ BEGIN
                , Movement_Master.Id                            AS MasterMovementId
                , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
                , zfConvert_StringToNumber (Movement_Master.InvNumber) AS MasterInvNumber
+               , Movement.OperDate                             AS OperDate
                , Movement_Master.OperDate                      AS MasterOperDate
                , Object_Status.ObjectCode                      AS StatusCode
                , Object_Status.ValueData                       AS StatusName
@@ -104,6 +106,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.02.19         *
  27.04.16         *
 */
 

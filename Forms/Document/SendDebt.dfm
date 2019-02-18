@@ -1,23 +1,23 @@
 ﻿inherited SendDebtForm: TSendDebtForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1079#1072#1080#1084#1086#1079#1072#1095#1077#1090' ('#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072')>'
-  ClientHeight = 381
+  ClientHeight = 438
   ClientWidth = 594
   AddOnFormData.isSingle = False
   ExplicitWidth = 600
-  ExplicitHeight = 409
+  ExplicitHeight = 466
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 184
-    Top = 340
+    Top = 398
     ExplicitLeft = 184
-    ExplicitTop = 340
+    ExplicitTop = 398
   end
   inherited bbCancel: TcxButton
     Left = 328
-    Top = 340
+    Top = 398
     ExplicitLeft = 328
-    ExplicitTop = 340
+    ExplicitTop = 398
   end
   object cxLabel1: TcxLabel [2]
     Left = 152
@@ -39,7 +39,7 @@
     Width = 129
   end
   object cxLabel2: TcxLabel [5]
-    Left = 9
+    Left = 8
     Top = 241
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1044#1077#1073#1077#1090')'
   end
@@ -49,7 +49,7 @@
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1044#1077#1073#1077#1090')'
   end
   object cePaidKindFrom: TcxButtonEdit [7]
-    Left = 9
+    Left = 8
     Top = 262
     Properties.Buttons = <
       item
@@ -114,19 +114,19 @@
   end
   object cxLabel10: TcxLabel [14]
     Left = 8
-    Top = 283
+    Top = 349
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [15]
     Left = 8
-    Top = 302
+    Top = 368
     TabOrder = 15
     Width = 576
   end
   object cxLabel4: TcxLabel [16]
     Left = 312
     Top = 4
-    Caption = #1057#1091#1084#1084#1072
+    Caption = #1057#1091#1084#1084#1072', '#1075#1088#1085
   end
   object ceAmount: TcxCurrencyEdit [17]
     Left = 312
@@ -134,7 +134,7 @@
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 17
-    Width = 81
+    Width = 126
   end
   object cxLabel3: TcxLabel [18]
     Left = 312
@@ -270,22 +270,27 @@
     Caption = #1060#1080#1083#1080#1072#1083' ('#1050#1088#1077#1076#1080#1090')'
   end
   object cxLabel16: TcxLabel [34]
-    Left = 406
-    Top = 6
+    Left = 8
+    Top = 300
+    Hint = #1050#1091#1088#1089' ('#1076#1077#1073#1077#1090')'
     Caption = #1050#1091#1088#1089
+    ParentShowHint = False
+    ShowHint = True
   end
-  object ceCurrencyValue: TcxCurrencyEdit [35]
-    Left = 406
-    Top = 24
+  object ceCurrencyValueFrom: TcxCurrencyEdit [35]
+    Left = 8
+    Top = 320
+    ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = False
+    ShowHint = True
     TabOrder = 35
     Width = 54
   end
-  object ceParValue: TcxCurrencyEdit [36]
-    Left = 468
-    Top = 24
+  object ceParValueFrom: TcxCurrencyEdit [36]
+    Left = 71
+    Top = 320
     EditValue = 1.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0.'
@@ -294,13 +299,16 @@
     Width = 47
   end
   object cxLabel17: TcxLabel [37]
-    Left = 468
-    Top = 6
+    Left = 72
+    Top = 300
+    Hint = #1053#1086#1084#1080#1085#1072#1083' ('#1076#1077#1073#1077#1090')'
     Caption = #1053#1086#1084#1080#1085#1072#1083
+    ParentShowHint = False
+    ShowHint = True
   end
-  object ceCurrency: TcxButtonEdit [38]
-    Left = 522
-    Top = 24
+  object ceCurrencyFrom: TcxButtonEdit [38]
+    Left = 127
+    Top = 320
     ParentShowHint = False
     Properties.Buttons = <
       item
@@ -313,25 +321,134 @@
     Width = 63
   end
   object cxLabel18: TcxLabel [39]
-    Left = 522
-    Top = 4
+    Left = 127
+    Top = 300
+    Hint = #1042#1072#1083#1102#1090#1072' ('#1076#1077#1073#1077#1090')'
     Caption = #1042#1072#1083#1102#1090#1072
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object cxLabel19: TcxLabel [40]
+    Left = 200
+    Top = 300
+    Caption = #1057#1091#1084#1084#1072' ('#1076#1077#1073#1077#1090')'
+  end
+  object ceAmountCurrencyFrom: TcxCurrencyEdit [41]
+    Left = 200
+    Top = 320
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    Properties.ReadOnly = True
+    TabOrder = 41
+    Width = 81
+  end
+  object cxLabel20: TcxLabel [42]
+    Left = 312
+    Top = 300
+    Hint = #1050#1091#1088#1089' ('#1082#1088#1077#1076#1080#1090')'
+    Caption = #1050#1091#1088#1089
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object ceCurrencyValueTo: TcxCurrencyEdit [43]
+    Left = 312
+    Top = 320
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.ReadOnly = False
+    TabOrder = 43
+    Width = 54
+  end
+  object ceParValueTo: TcxCurrencyEdit [44]
+    Left = 375
+    Top = 320
+    EditValue = 1.000000000000000000
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0.'
+    Properties.ReadOnly = False
+    TabOrder = 44
+    Width = 47
+  end
+  object cxLabel21: TcxLabel [45]
+    Left = 376
+    Top = 300
+    Hint = #1053#1086#1084#1080#1085#1072#1083' ('#1082#1088#1077#1076#1080#1090')'
+    Caption = #1053#1086#1084#1080#1085#1072#1083
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object cxLabel22: TcxLabel [46]
+    Left = 431
+    Top = 300
+    Hint = #1042#1072#1083#1102#1090#1072' ('#1082#1088#1077#1076#1080#1090')'
+    Caption = #1042#1072#1083#1102#1090#1072
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object ceCurrencyTo: TcxButtonEdit [47]
+    Left = 431
+    Top = 320
+    ParentShowHint = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    ShowHint = False
+    TabOrder = 47
+    Width = 63
+  end
+  object ceAmountCurrencyTo: TcxCurrencyEdit [48]
+    Left = 503
+    Top = 320
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    Properties.ReadOnly = True
+    TabOrder = 48
+    Width = 81
+  end
+  object cxLabel23: TcxLabel [49]
+    Left = 503
+    Top = 300
+    Caption = #1057#1091#1084#1084#1072' ('#1050#1088#1077#1076#1080#1090')'
+  end
+  object cbisCopy: TcxCheckBox [50]
+    Left = 453
+    Top = 24
+    Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
+    Properties.ReadOnly = True
+    TabOrder = 50
+    Width = 131
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
-    Top = 332
+    Top = 390
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Top = 332
+    Top = 390
   end
   inherited ActionList: TActionList
     Left = 95
-    Top = 331
+    Top = 389
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
     end
-    inherited actRefresh: TdsdDataSetRefresh [1]
+    object actRefreshAmountCurr: TdsdDataSetRefresh [1]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_AmountCurr
+      StoredProcList = <
+        item
+          StoredProc = spGet_AmountCurr
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
     end
-    inherited FormClose: TdsdFormClose [2]
+    inherited actRefresh: TdsdDataSetRefresh [2]
+    end
+    inherited FormClose: TdsdFormClose [3]
     end
   end
   inherited FormParams: TdsdFormParams
@@ -348,7 +465,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 136
-    Top = 332
+    Top = 390
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_SendDebt'
@@ -402,17 +519,33 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCurrencyValue'
+        Name = 'inCurrencyValue_From'
         Value = Null
-        Component = ceCurrencyValue
+        Component = ceCurrencyValueFrom
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inParValue'
+        Name = 'inParValue_From'
         Value = Null
-        Component = ceParValue
+        Component = ceParValueFrom
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValue_To'
+        Value = Null
+        Component = ceCurrencyValueTo
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParValue_To'
+        Value = Null
+        Component = ceParValueTo
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -466,6 +599,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCurrencyId_From'
+        Value = Null
+        Component = GuidesCurrencyFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inJuridicalToId'
         Value = ''
         Component = ContractJuridicalToGuides
@@ -514,9 +655,9 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCurrencyId'
+        Name = 'inCurrencyId_To'
         Value = Null
-        Component = CurrencyGuides
+        Component = GuidesCurrencyTo
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -529,8 +670,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 30
+    Top = 22
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_SendDebt'
@@ -811,36 +951,86 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CurrencyId'
+        Name = 'CurrencyId_From'
         Value = Null
-        Component = CurrencyGuides
+        Component = GuidesCurrencyFrom
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CurrencyName'
+        Name = 'CurrencyName_From'
         Value = Null
-        Component = CurrencyGuides
+        Component = GuidesCurrencyFrom
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CurrencyValue'
+        Name = 'CurrencyValue_From'
         Value = Null
-        Component = ceCurrencyValue
+        Component = ceCurrencyValueFrom
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ParValue'
+        Name = 'ParValue_From'
         Value = Null
-        Component = ceParValue
+        Component = ceParValueFrom
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId_To'
+        Value = Null
+        Component = GuidesCurrencyTo
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName_To'
+        Value = Null
+        Component = GuidesCurrencyTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyValue_To'
+        Value = Null
+        Component = ceCurrencyValueTo
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ParValue_To'
+        Value = Null
+        Component = ceParValueTo
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountCurrencyFrom'
+        Value = Null
+        Component = ceAmountCurrencyFrom
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountCurrencyTo'
+        Value = Null
+        Component = ceAmountCurrencyTo
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isCopy'
+        Value = Null
+        Component = cbisCopy
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 93
+    Left = 528
+    Top = 53
   end
   object PaidKindFromGuides: TdsdGuides
     KeyField = 'Id'
@@ -915,7 +1105,7 @@
       end>
     ActionItemList = <>
     Left = 280
-    Top = 323
+    Top = 381
   end
   object ContractFromGuides: TdsdGuides
     KeyField = 'Id'
@@ -1473,9 +1663,9 @@
     Left = 528
     Top = 152
   end
-  object CurrencyGuides: TdsdGuides
+  object GuidesCurrencyFrom: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceCurrency
+    LookupControl = ceCurrencyFrom
     FormNameParam.Value = 'TCurrencyValue_ForCashForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1485,14 +1675,14 @@
       item
         Name = 'Key'
         Value = ''
-        Component = CurrencyGuides
+        Component = GuidesCurrencyFrom
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = CurrencyGuides
+        Component = GuidesCurrencyFrom
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1508,7 +1698,7 @@
       item
         Name = 'ParValue'
         Value = 1.000000000000000000
-        Component = ceParValue
+        Component = ceParValueFrom
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1516,12 +1706,171 @@
       item
         Name = 'CurrencyValue'
         Value = 0.000000000000000000
-        Component = ceCurrencyValue
+        Component = ceCurrencyValueFrom
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 533
-    Top = 16
+    Left = 154
+    Top = 304
+  end
+  object GuidesCurrencyTo: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceCurrencyTo
+    FormNameParam.Value = 'TCurrencyValue_ForCashForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCurrencyValue_ForCashForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCurrencyTo
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCurrencyTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 43489d
+        Component = ceOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ParValue'
+        Value = 1.000000000000000000
+        Component = ceParValueTo
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyValue'
+        Value = 0.000000000000000000
+        Component = ceCurrencyValueTo
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 448
+    Top = 320
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefreshAmountCurr
+    ComponentList = <
+      item
+        Component = ceAmount
+      end
+      item
+        Component = GuidesCurrencyFrom
+      end
+      item
+        Component = GuidesCurrencyTo
+      end
+      item
+        Component = ceCurrencyValueFrom
+      end
+      item
+        Component = ceCurrencyValueTo
+      end
+      item
+        Component = ceParValueFrom
+      end
+      item
+        Component = ceParValueTo
+      end>
+    Left = 288
+    Top = 152
+  end
+  object spGet_AmountCurr: TdsdStoredProc
+    StoredProcName = 'gpGet_MI_SendDebt_AmountCurrency'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inCurrencyId_From'
+        Value = Null
+        Component = GuidesCurrencyFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyId_To'
+        Value = Null
+        Component = GuidesCurrencyTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = ''
+        Component = ceAmount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValue_From'
+        Value = Null
+        Component = ceCurrencyValueFrom
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParValue_From'
+        Value = 1.000000000000000000
+        Component = ceParValueFrom
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyValue_To'
+        Value = 0.000000000000000000
+        Component = ceCurrencyValueTo
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParValue_To'
+        Value = Null
+        Component = ceParValueTo
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountCurrencyFrom'
+        Value = Null
+        Component = ceAmountCurrencyFrom
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountCurrencyTo'
+        Value = Null
+        Component = ceAmountCurrencyTo
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 288
+    Top = 96
   end
 end
