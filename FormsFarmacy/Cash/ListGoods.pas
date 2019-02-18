@@ -12,7 +12,8 @@ uses
   cxStyles, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage,
   cxDBData, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGrid, cxCurrencyEdit,
-  Vcl.ComCtrls, cxCheckBox, cxBlobEdit;
+  Vcl.ComCtrls, cxCheckBox, cxBlobEdit, dxSkinsdxBarPainter, dxBarExtItems,
+  dxBar;
 
 type
   TListGoodsForm = class(TAncestorBaseForm)
@@ -65,8 +66,12 @@ type
     colDiffKindId: TcxGridDBColumn;
     DiffKindCDS: TClientDataSet;
     actSearchGoods: TdsdOpenForm;
-    MainMenu1: TMainMenu;
-    mmSearchGoods: TMenuItem;
+    BarManager: TdxBarManager;
+    Bar: TdxBar;
+    bbRefresh: TdxBarButton;
+    dxBarStatic: TdxBarStatic;
+    bbGridToExcel: TdxBarButton;
+    bbOpen: TdxBarButton;
     procedure ParentFormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure edt1Exit(Sender: TObject);
@@ -323,7 +328,7 @@ begin
       pnlLocal.Visible := True;
     end;
   end else pnlLocal.Visible := True;
-  mmSearchGoods.Visible := not pnlLocal.Visible;
+  Bar.Visible := not pnlLocal.Visible;
 
   while ListlDiffNoSendCDS.RecordCount > 0 do ListlDiffNoSendCDS.Delete;
   WaitForSingleObject(MutexGoods, INFINITE);

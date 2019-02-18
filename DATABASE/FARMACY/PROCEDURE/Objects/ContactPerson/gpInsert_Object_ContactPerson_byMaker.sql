@@ -55,6 +55,9 @@ BEGIN
        PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
    ELSE 
        inId := vbId; 
+
+       -- сохранили св-во <>
+       PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ContactPerson_Mail(), inId, TRIM (inMail));
    END IF;
    
    -- записываем в свойство zc_ObjectLink_Maker_ContactPerson
@@ -67,7 +70,7 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.

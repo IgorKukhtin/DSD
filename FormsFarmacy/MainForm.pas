@@ -494,6 +494,8 @@ type
     POS1: TMenuItem;
     actTaxUnit: TdsdOpenForm;
     miTaxUnit: TMenuItem;
+    actUnitBankPOSTerminal: TdsdOpenForm;
+    POS2: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

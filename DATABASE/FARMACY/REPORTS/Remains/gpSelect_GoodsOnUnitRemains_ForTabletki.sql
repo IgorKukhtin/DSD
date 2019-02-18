@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnitRemains_ForTabletki(
     IN inUnitId  Integer = 183292, -- Подразделение
     IN inSession TVarChar = '' -- сессия пользователя
 )
-RETURNS TABLE (RowData TBlob)
+RETURNS TABLE (RowData  TBlob)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -21,12 +21,7 @@ BEGIN
     vbUserId:= inSession :: Integer;
     vbSiteDiscount := COALESCE (gpGet_GlobalConst_SiteDiscount(inSession), 0);
 
-    CREATE TEMP TABLE _Result(RowData TBlob) ON COMMIT DROP;
-
-    --Шапка
-    INSERT INTO _Result(RowData) Values ('<?xml version="1.0" encoding="utf-8"?>');
-    INSERT INTO _Result(RowData) Values ('<Offers>');
-    --Тело
+    RETURN QUERY
     WITH
      tmpContainer AS
                    (SELECT Container.ObjectId
@@ -62,15 +57,12 @@ BEGIN
                     GROUP BY Container.ObjectId
                            , tmpPartionMI.GoodsId_find
                    )
-   /*, tmpGoods AS (SELECT Object_Goods_View.Id, Object_Goods_View.MakerName
-                    FROM Object_Goods_View WHERE Object_Goods_View.Id IN (SELECT DISTINCT tmpRemains.GoodsId_find FROM tmpRemains)
-                   )*/
-     , tmpGoods AS (SELECT ObjectString.ObjectId AS GoodsId_find, ObjectString.ValueData AS MakerName
+   , tmpGoods AS (SELECT ObjectString.ObjectId AS GoodsId_find, ObjectString.ValueData AS MakerName
                     FROM ObjectString
                     WHERE ObjectString.ObjectId IN (SELECT DISTINCT tmpRemains.GoodsId_find FROM tmpRemains)
                       AND ObjectString.DescId   = zc_ObjectString_Goods_Maker()
                    )
-      , Remains AS (SELECT
+   , Remains AS (SELECT
                          tmpRemains.ObjectId
                        , MAX (tmpGoods.MakerName) AS MakerName
                        , SUM (tmpRemains.Amount) AS Amount
@@ -81,7 +73,7 @@ BEGIN
                     HAVING SUM (tmpRemains.Amount) > 0
                    )
 
-  , Reserve AS (SELECT MovementItem.ObjectId
+   , Reserve AS (SELECT MovementItem.ObjectId
                      , SUM (MovementItem.Amount) as ReserveAmount
                 FROM Movement
                      INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -101,7 +93,7 @@ BEGIN
                      INNER JOIN Object AS Object_Goods ON Object_Goods.Id = Remains.ObjectId
                 GROUP BY Object_Goods.ObjectCode
                )
- , tmpPrice AS (SELECT Object_Price_View.GoodsId
+       , tmpPrice AS (SELECT Object_Price_View.GoodsId
                      , Object_Price_View.Price AS Price
                      , CASE WHEN vbSiteDiscount = 0 THEN Object_Price_View.Price 
                         ELSE CEIL(Object_Price_View.Price * (100.0 - vbSiteDiscount) / 10.0) / 10.0 END::TFloat AS PriceReserve
@@ -109,39 +101,40 @@ BEGIN
                 WHERE Object_Price_View.GoodsId IN (SELECT DISTINCT Remains.ObjectId FROM Remains)
                   AND Object_Price_View.UnitId  = inUnitId
                )
+       , tmpResult AS (
+                      --Шапка
+                      SELECT '<?xml version="1.0" encoding="utf-8"?>'::TVarChar AS RowData
+                      UNION ALL
+                      SELECT '<Offers>'::TVarChar
+                      UNION ALL
+                      --Тело
+                        SELECT
+                            '<Offer Code="'||CAST(Object_Goods.ObjectCode AS TVarChar)
+                               ||'" Name="'||replace(replace(replace(Object_Goods.ValueData, '"', ''),'&','&amp;'),'''','')
+                               ||'" Producer="'||replace(replace(replace(COALESCE(Remains.MakerName,''),'"',''),'&','&amp;'),'''','')
+                               ||'" Price="'||to_char(Object_Price.Price,'FM9999990.00')
+                               ||'" Quantity="'||CAST((Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0)) AS TVarChar)
+                               ||'" PriceReserve="'||to_char(Object_Price.PriceReserve,'FM9999990.00')
+                               ||'" />'
 
-    -- Результат
-    INSERT INTO _Result(RowData)
-      SELECT
-          '<Offer Code="'||CAST(Object_Goods.ObjectCode AS TVarChar)
-             ||'" Name="'||replace(replace(replace(Object_Goods.ValueData, '"', ''),'&','&amp;'),'''','')
-         ||'" Producer="'||replace(replace(replace(COALESCE(Remains.MakerName,''),'"',''),'&','&amp;'),'''','')
-            ||'" Price="'||to_char(Object_Price.Price,'FM9999990.00')
-         ||'" Quantity="'||CAST((Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0)) AS TVarChar)
-     ||'" PriceReserve="'||to_char(Object_Price.PriceReserve,'FM9999990.00')
-     ||'" />'
+                        FROM Remains
+                             INNER JOIN T1 ON T1.ObjectId = Remains.ObjectId
 
-      FROM Remains
-           INNER JOIN T1 ON T1.ObjectId = Remains.ObjectId
+                             INNER JOIN Object AS Object_Goods ON Object_Goods.Id = Remains.ObjectId
 
-           INNER JOIN Object AS Object_Goods ON Object_Goods.Id = Remains.ObjectId
+                             LEFT OUTER JOIN tmpPrice AS Object_Price ON Object_Price.GoodsId = Remains.ObjectId
 
-           LEFT OUTER JOIN tmpPrice AS Object_Price ON Object_Price.GoodsId = Remains.ObjectId
+                             LEFT OUTER JOIN Reserve AS Reserve_Goods ON Reserve_Goods.ObjectId = Remains.ObjectId
 
-           LEFT OUTER JOIN Reserve AS Reserve_Goods ON Reserve_Goods.ObjectId = Remains.ObjectId
-
-      WHERE (Remains.Amount - COALESCE (Reserve_Goods.ReserveAmount, 0)) > 0
-      ;
-
-    -- подвал
-    INSERT INTO _Result(RowData) Values ('</Offers>');
+                        WHERE (Remains.Amount - COALESCE (Reserve_Goods.ReserveAmount, 0)) > 0
+                      UNION ALL
+                      -- подва
+                      SELECT '</Offers>')
+                      
+       SELECT tmpResult.RowData::TBlob FROM tmpResult;
 
 
-    -- Результат
-    RETURN QUERY
-        SELECT _Result.RowData FROM _Result;
-
-
+/*
      -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
      INSERT INTO ResourseProtocol (UserId
                                  , OperDate
@@ -182,8 +175,8 @@ BEGIN
                -- ProtocolData
              , inUnitId :: TVarChar
         WHERE vbUserId > 0
-       ;
-
+       ;*/
+       
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -192,6 +185,7 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_ForTabletki (Integer, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В.
+ 18.02.19                                                                                      *
  29.01.19                                                                                      *
  23.07.18                                                                                      *
  24.05.18                                                                                      *

@@ -665,7 +665,8 @@ uses
   BankPOSTerminalEdit in '..\..\FormsFarmacy\Guides\BankPOSTerminalEdit.pas' {BankPOSTerminalEditForm: TParentForm},
   TaxUnit in '..\..\FormsFarmacy\Guides\TaxUnit.pas' {TaxUnitForm: TParentForm},
   TaxUnitEdit in '..\..\FormsFarmacy\Guides\TaxUnitEdit.pas' {TaxUnitEditForm: TParentForm},
-  EmployeeScheduleUser in '..\..\FormsFarmacy\Cash\EmployeeScheduleUser.pas' {EmployeeScheduleUserForm: TParentForm};
+  EmployeeScheduleUser in '..\..\FormsFarmacy\Cash\EmployeeScheduleUser.pas' {EmployeeScheduleUserForm: TParentForm},
+  UnitBankPOSTerminal in '..\..\FormsFarmacy\Guides\UnitBankPOSTerminal.pas' {UnitBankPOSTerminalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

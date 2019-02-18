@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, IniFiles, cxGraphics, cxControls,
+  System.RegularExpressions, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, IniFiles, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxStyles, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData,
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxContainer, cxLabel, cxTextEdit,
@@ -77,6 +77,9 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 var
   ini: TIniFile;
+  HostName : String;
+  Res: TArray<string>;
+  I : integer;
 Begin
 
   ini := TIniFile.Create(ChangeFileExt(Application.ExeName,'.ini'));
@@ -90,8 +93,8 @@ Begin
     ZConnection1.Database := ini.ReadString('Connect','DataBase','farmacy');
     ini.WriteString('Connect','DataBase',ZConnection1.Database);
 
-    ZConnection1.HostName := ini.ReadString('Connect','HostName','91.210.37.210');
-    ini.WriteString('Connect','HostName',ZConnection1.HostName);
+    HostName := ini.ReadString('Connect','HostName','172.17.2.5');
+    ini.WriteString('Connect','HostName',HostName);
 
     ZConnection1.User := ini.ReadString('Connect','User','postgres');
     ini.WriteString('Connect','User',ZConnection1.User);
@@ -105,15 +108,25 @@ Begin
 
   ZConnection1.LibraryLocation := ExtractFilePath(Application.ExeName) + 'libpq.dll';
 
-  try
-    ZConnection1.Connect;
-  except
-    on E: Exception do
-    begin
-      Add_Log(E.Message);
-      Close;
-      Exit;
+  Res := TRegEx.Split(HostName, '[;]');
+  for I := 0 to high(Res) do
+  begin
+    ZConnection1.HostName := Res[I];
+    try
+      ZConnection1.Connect;
+      if ZConnection1.Connected then Break;
+    except
+      on E: Exception do
+      begin
+        Add_Log(E.Message);
+      end;
     end;
+  end;
+
+  if not ZConnection1.Connected then
+  begin
+    Close;
+    Exit;
   end;
 
   if not ((ParamCount >= 1) and (CompareText(ParamStr(1), 'manual') = 0)) then

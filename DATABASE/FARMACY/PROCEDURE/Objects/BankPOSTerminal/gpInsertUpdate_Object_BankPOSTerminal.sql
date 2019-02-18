@@ -1,43 +1,44 @@
--- Function: gpGet_Object_BankPOSTerminal()
+-- Function: gpInsertUpdate_Object_BankPOSTerminal()
 
-DROP FUNCTION IF EXISTS gpGet_Object_BankPOSTerminal(integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BankPOSTerminal(Integer, Integer, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Object_BankPOSTerminal(
-    IN inId          Integer,       -- ключ объекта <>
-    IN inSession     TVarChar       -- сессия пользователя
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_BankPOSTerminal (
+  INOUT ioId integer,
+     IN inCode integer,
+     IN inName TVarChar,
+     IN inSession TVarChar
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , isErased boolean) AS
+  RETURNS integer AS
 $BODY$
+   DECLARE vbUserId Integer;
+   DECLARE vbCode_calc Integer;   
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+   --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_BankPOSTerminal());
+   vbUserId := inSession;
+  
+   -- пытаемся найти код
+   IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 
-   IF COALESCE (inId, 0) = 0
-   THEN
-       RETURN QUERY
-       SELECT
-             CAST (0 as Integer)    AS Id
-           , lfGet_ObjectCode(0, zc_Object_BankPOSTerminal()) AS Code
-           , CAST ('' as TVarChar)  AS Name
-           , CAST (NULL AS Boolean) AS isErased;
-   ELSE
-       RETURN QUERY
-       SELECT
-             Object_BankPOSTerminal.Id                       AS Id
-           , Object_BankPOSTerminal.ObjectCode               AS Code
-           , Object_BankPOSTerminal.ValueData                AS Name
-           , Object_BankPOSTerminal.isErased                 AS isErased
+   -- Если код не установлен, определяем его каи последний+1
+   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_BankPOSTerminal());
 
-       FROM Object AS Object_BankPOSTerminal
-       WHERE Object_BankPOSTerminal.Id = inId;
-   END IF;
+   -- проверка уникальности <Наименование>
+   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_BankPOSTerminal(), inName);
+   -- проверка прав уникальности для свойства <Код>
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_BankPOSTerminal(), vbCode_calc);
+
+   -- сохранили <Объект>
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_BankPOSTerminal(), vbCode_calc, inName);
+
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;
 $BODY$
+  LANGUAGE plpgsql VOLATILE;
 
-LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -47,4 +48,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_BankPOSTerminal (1, '3')
+-- 

@@ -271,6 +271,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBankPOSTerminalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankPOSTerminalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankPOSTerminalEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitBankPOSTerminalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnitBankPOSTerminalForm');
 end;
 
 procedure TLoadFormTest.LoadBankAccountFormTest;
@@ -1701,8 +1704,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TestingUserForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_TestingUserForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEmployeeScheduleUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEmployeeScheduleUserForm');
 
   Exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeJournalForm'));

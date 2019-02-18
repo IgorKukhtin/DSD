@@ -2611,6 +2611,17 @@ inherited MainCashForm2: TMainCashForm2
         end>
       Caption = 'actExecGet_Movement_GoodsSP_ID'
     end
+    object actEmployeeScheduleUser: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1074#1088#1077#1084#1077#1085#1080' '#1087#1088#1080#1093#1086#1076#1072
+      FormName = 'TEmployeeScheduleUserForm'
+      FormNameParam.Value = 'TEmployeeScheduleUserForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2895,6 +2906,9 @@ inherited MainCashForm2: TMainCashForm2
     end
     object N11: TMenuItem
       Action = actExpirationDateFilter
+    end
+    object N22: TMenuItem
+      Action = actEmployeeScheduleUser
     end
   end
   object FormParams: TdsdFormParams
