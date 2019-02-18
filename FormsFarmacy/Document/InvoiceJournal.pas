@@ -48,6 +48,7 @@ type
     SPName: TcxGridDBColumn;
     InvNumber_int: TcxGridDBColumn;
     SigningDate: TcxGridDBColumn;
+    ChangePercent: TcxGridDBColumn;
   private
     { Private declarations }
   public
