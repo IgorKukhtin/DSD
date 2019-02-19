@@ -302,6 +302,14 @@ object TransportJournalForm: TTransportJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object Cost_Info: TcxGridDBColumn
+        Caption = #1055#1088#1080#1093'. '#1086#1090' '#1087#1086#1089#1090'.'
+        DataBinding.FieldName = 'Cost_Info'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1080#1093#1086#1076#1085#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077' '#1079#1072#1090#1088#1072#1090
+        Width = 160
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
