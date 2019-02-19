@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 229
+  ExplicitHeight = 230
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -2641,6 +2641,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actUnitBankPOSTerminal: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1057#1074#1103#1079#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081' '#1089' POS '#1090#1077#1088#1084#1080#1085#1072#1083#1072#1084#1080
+      FormName = 'TUnitBankPOSTerminalForm'
+      FormNameParam.Value = 'TUnitBankPOSTerminalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3316,7 +3327,10 @@ inherited MainForm: TMainForm
         object POS1: TMenuItem [8]
           Action = actBankPOSTerminal
         end
-        object N20: TMenuItem [9]
+        object POS2: TMenuItem [9]
+          Action = actUnitBankPOSTerminal
+        end
+        object N20: TMenuItem [10]
           Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
           object N21: TMenuItem
             Action = actAccountGroup
@@ -3352,13 +3366,13 @@ inherited MainForm: TMainForm
             Action = actProfitLoss
           end
         end
-        object N6: TMenuItem [10]
+        object N6: TMenuItem [11]
           Caption = '-'
         end
-        object N97: TMenuItem [11]
+        object N97: TMenuItem [12]
           Action = actColor
         end
-        object N74: TMenuItem [12]
+        object N74: TMenuItem [13]
           Action = actForms
         end
         object miTest: TMenuItem

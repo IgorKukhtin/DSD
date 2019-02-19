@@ -8,7 +8,7 @@ uses
   dsdGuides, cxDropDownEdit, cxCalendar, cxMaskEdit, cxButtonEdit, cxTextEdit,
   cxCurrencyEdit, Vcl.Controls, cxLabel, dsdDB, dsdAction, System.Classes,
   Vcl.ActnList, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons,
-  dxSkinsCore, dxSkinsDefaultPainters;
+  dxSkinsCore, dxSkinsDefaultPainters, cxCheckBox;
 
 type
   TSendDebtForm = class(TAncestorEditDialogForm)
@@ -58,12 +58,27 @@ type
     cxLabel15: TcxLabel;
     BranchToGuides: TdsdGuides;
     cxLabel16: TcxLabel;
-    ceCurrencyValue: TcxCurrencyEdit;
-    ceParValue: TcxCurrencyEdit;
+    ceCurrencyValueFrom: TcxCurrencyEdit;
+    ceParValueFrom: TcxCurrencyEdit;
     cxLabel17: TcxLabel;
-    ceCurrency: TcxButtonEdit;
+    ceCurrencyFrom: TcxButtonEdit;
     cxLabel18: TcxLabel;
-    CurrencyGuides: TdsdGuides;
+    GuidesCurrencyFrom: TdsdGuides;
+    cxLabel19: TcxLabel;
+    ceAmountCurrencyFrom: TcxCurrencyEdit;
+    cxLabel20: TcxLabel;
+    ceCurrencyValueTo: TcxCurrencyEdit;
+    ceParValueTo: TcxCurrencyEdit;
+    cxLabel21: TcxLabel;
+    cxLabel22: TcxLabel;
+    ceCurrencyTo: TcxButtonEdit;
+    GuidesCurrencyTo: TdsdGuides;
+    ceAmountCurrencyTo: TcxCurrencyEdit;
+    cxLabel23: TcxLabel;
+    cbisCopy: TcxCheckBox;
+    RefreshDispatcher: TRefreshDispatcher;
+    spGet_AmountCurr: TdsdStoredProc;
+    actRefreshAmountCurr: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   System.Win.ComObj, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGridExportLink, cxGraphics, Math,
-  cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
+  cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, System.RegularExpressions,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
   cxContainer, Vcl.ComCtrls, dxCore, cxSpinEdit, Vcl.StdCtrls,
@@ -80,7 +80,7 @@ type
     glSubjectTeva: String;
 
     function SendMail(const Host: String; const Port: integer; const Password,
-      Username: String; const Recipients: array of String; const FromAdres,
+      Username: String; const Recipients: String; const FromAdres,
       Subject, MessageText: String;
       const Attachments: array of String): boolean;
     procedure LInitializeISO(var VHeaderEncoding: Char; var VCharSet: string);
@@ -858,7 +858,7 @@ begin
        qryMailParam.FieldByName('Mail_Port').AsInteger,
        qryMailParam.FieldByName('Mail_Password').AsString,
        qryMailParam.FieldByName('Mail_User').AsString,
-       [qryMaker.FieldByName('Mail').AsString],
+       qryMaker.FieldByName('Mail').AsString,
        qryMailParam.FieldByName('Mail_From').AsString,
        FileName + ' за период с ' + FormatDateTime('dd.mm.yyyy', DateStart) + ' по ' +
                                     FormatDateTime('dd.mm.yyyy', DateEnd),
@@ -976,7 +976,7 @@ end;
 
 function TMainForm.SendMail(const Host: String; const Port: integer;
                           const Password, Username: String;
-                          const Recipients:  array of String;
+                          const Recipients: String;
                           const FromAdres, Subject: String;
                           const MessageText:  String;
                           const Attachments: array of String): boolean;
@@ -987,6 +987,7 @@ var EMsg: TIdMessage;
     i: integer;
     Stream: TFileStream;
     FIdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
+    Res: TArray<string>;
 begin
   FIdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
   FIdSSLIOHandlerSocketOpenSSL.MaxLineAction := maException;
@@ -1025,8 +1026,10 @@ begin
       EText.ContentType := 'text/html';
       EText.CharSet := 'Windows-1251';
       EText.ContentTransfer := '8bit';
-      for i := 0 to high(Recipients) do
-          EMsg.Recipients.Add.Address :=Recipients[i];
+
+      Res := TRegEx.Split(Recipients, '[;]');
+      for i := 0 to high(Res) do
+          EMsg.Recipients.Add.Address :=Res[i];
       EMsg.From.Address := FromAdres;
       EMsg.Body.Clear;
       EMsg.Date := now;

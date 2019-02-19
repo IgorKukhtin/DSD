@@ -1862,6 +1862,14 @@ object IncomeForm: TIncomeForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inChangePercent'
+          Value = Null
+          Component = edChangePercent
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = MasterDS

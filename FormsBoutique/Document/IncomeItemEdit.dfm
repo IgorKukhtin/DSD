@@ -1328,8 +1328,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 376
-    Top = 184
+    Left = 344
+    Top = 192
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1378,6 +1378,6 @@ object IncomeItemEditForm: TIncomeItemEditForm
       end>
     PackSize = 1
     Left = 464
-    Top = 216
+    Top = 208
   end
 end

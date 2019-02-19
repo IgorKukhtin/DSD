@@ -2089,9 +2089,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsCategory_Unit() RETURNS Integer AS
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_GoodsCategory_Unit', 'Подразделение', zc_Object_GoodsCategory(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsCategory_Unit');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_UnitBankPOSTerminal_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_UnitBankPOSTerminal_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_UnitBankPOSTerminal_Unit', 'Ссылка на подразделение', zc_Object_UnitBankPOSTerminal(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_UnitBankPOSTerminal_Unit');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_UnitBankPOSTerminal_BankPOSTerminal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_UnitBankPOSTerminal_BankPOSTerminal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_UnitBankPOSTerminal_BankPOSTerminal', 'Ссылка на банков POS терминалов', zc_Object_UnitBankPOSTerminal(), zc_Object_BankPOSTerminal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_UnitBankPOSTerminal_BankPOSTerminal');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 18.02.19                                                                                      * zc_ObjectLink_UnitBankPOSTerminal_Unit, zc_ObjectLink_UnitBankPOSTerminal_BankPOSTerminal
  17.02.19         * zc_ObjectLink_TaxUnit_Unit
  13.02.19         * zc_ObjectLink_GoodsCategory_Unit
  11.02.19         * zc_ObjectLink_GoodsCategory_Goods

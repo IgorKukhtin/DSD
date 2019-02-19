@@ -103,6 +103,16 @@ object SendDebtJournalForm: TSendDebtJournalForm
         item
           Format = ',0.###;-,0.###; ;'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountCurrencyFrom
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountCurrencyTo
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -133,6 +143,16 @@ object SendDebtJournalForm: TSendDebtJournalForm
         item
           Format = ',0.00'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountCurrencyFrom
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = AmountCurrencyTo
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -188,7 +208,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Width = 70
       end
       object Amount: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072
+        Caption = #1057#1091#1084#1084#1072', '#1075#1088#1085
         DataBinding.FieldName = 'Amount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -249,27 +269,37 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object CurrencyName: TcxGridDBColumn
-        Caption = #1042#1072#1083#1102#1090#1072
-        DataBinding.FieldName = 'CurrencyName'
+      object CurrencyName_From: TcxGridDBColumn
+        Caption = #1042#1072#1083#1102#1090#1072' ('#1044')'
+        DataBinding.FieldName = 'CurrencyName_From'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 51
       end
-      object CurrencyValue: TcxGridDBColumn
-        Caption = #1050#1091#1088#1089
-        DataBinding.FieldName = 'CurrencyValue'
+      object CurrencyValue_From: TcxGridDBColumn
+        Caption = #1050#1091#1088#1089' ('#1044')'
+        DataBinding.FieldName = 'CurrencyValue_From'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 43
       end
-      object ParValue: TcxGridDBColumn
-        Caption = #1053#1086#1084#1080#1085#1072#1083
-        DataBinding.FieldName = 'ParValue'
+      object ParValue_From: TcxGridDBColumn
+        Caption = #1053#1086#1084#1080#1085#1072#1083' ('#1044')'
+        DataBinding.FieldName = 'ParValue_From'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 59
+      end
+      object AmountCurrencyFrom: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' ('#1044')'
+        DataBinding.FieldName = 'AmountCurrencyFrom'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object InfoMoneyFromCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' ('#1044')'
@@ -385,6 +415,38 @@ object SendDebtJournalForm: TSendDebtJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
+      end
+      object CurrencyName_To: TcxGridDBColumn
+        Caption = #1042#1072#1083#1102#1090#1072' ('#1050')'
+        DataBinding.FieldName = 'CurrencyName_To'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 51
+      end
+      object ParValue_To: TcxGridDBColumn
+        Caption = #1053#1086#1084#1080#1085#1072#1083' ('#1050')'
+        DataBinding.FieldName = 'ParValue_To'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 59
+      end
+      object CurrencyValue_To: TcxGridDBColumn
+        Caption = #1050#1091#1088#1089' ('#1050')'
+        DataBinding.FieldName = 'CurrencyValue_To'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 43
+      end
+      object AmountCurrencyTo: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' ('#1050')'
+        DataBinding.FieldName = 'AmountCurrencyTo'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object InfoMoneyToName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1050')'
@@ -1135,8 +1197,8 @@ object SendDebtJournalForm: TSendDebtJournalForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 488
-    Top = 24
+    Left = 536
+    Top = 65528
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1155,8 +1217,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
       item
         Component = JuridicalBasisGuides
       end>
-    Left = 576
-    Top = 24
+    Left = 632
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 240

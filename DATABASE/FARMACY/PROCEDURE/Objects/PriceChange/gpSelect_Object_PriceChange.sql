@@ -30,6 +30,7 @@ $BODY$
 DECLARE
     vbUserId Integer;
     vbObjectId Integer;
+    vbRetailId Integer;
     vbStartDate TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
@@ -40,6 +41,27 @@ BEGIN
 
     vbStartDate:= DATE_TRUNC ('DAY', CURRENT_DATE);
 
+    -- определяем сеть . если заданна то берем ее, если выбранно подр. то опред. сеть по подразделению
+    IF COALESCE (inRetailId, 0) <> 0
+    THEN
+         vbRetailId := inRetailId;
+    ELSE
+        IF COALESCE (inUnitId,0) <> 0
+        THEN
+            vbRetailId := (SELECT ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
+                           FROM ObjectLink AS ObjectLink_Unit_Juridical
+                               INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                     ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                    AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                           WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                             AND ObjectLink_Unit_Juridical.ObjectId = 4103485  --inUnitId
+                            );
+        ELSE
+            vbRetailId := vbObjectId;
+        END IF;
+    END IF;
+    
+    
     CREATE TEMP TABLE tmpUnit (UnitId Integer) ON COMMIT DROP;
     INSERT INTO tmpUnit (UnitId)
           -- все подразделения торговой сети
@@ -263,7 +285,7 @@ BEGIN
 
             FROM Object_Goods_View
                 INNER JOIN ObjectLink ON ObjectLink.ObjectId      = Object_Goods_View.Id
-                                     AND ObjectLink.ChildObjectId = vbObjectId
+                                     AND ObjectLink.ChildObjectId = vbRetailId --vbObjectId
                 LEFT OUTER JOIN tmpPriceChange ON tmpPriceChange.GoodsId = Object_Goods_View.Id
 
                 LEFT OUTER JOIN tmpRemains AS Object_Remains
@@ -450,7 +472,7 @@ BEGIN
       , tmpGoods AS (SELECT ObjectLink_Goods_Object.ObjectId AS GoodsId
                      FROM ObjectLink AS ObjectLink_Goods_Object
                      WHERE ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                       AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
+                       AND ObjectLink_Goods_Object.ChildObjectId = vbRetailId --vbObjectId
                        AND ObjectLink_Goods_Object.ObjectId IN (SELECT DISTINCT tmpPriceChange_All.GoodsId FROM tmpPriceChange_All)
                      )
 

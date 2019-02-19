@@ -1108,6 +1108,11 @@ CREATE OR REPLACE FUNCTION zc_Object_TaxUnit() RETURNS Integer AS $BODY$BEGIN RE
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_TaxUnit', 'Наценки для ночных цен' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_TaxUnit');
 
+CREATE OR REPLACE FUNCTION zc_Object_UnitBankPOSTerminal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_UnitBankPOSTerminal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_UnitBankPOSTerminal', 'Связь подразделения и банков POS терминалов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_UnitBankPOSTerminal');
+
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1124,6 +1129,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 18.02.19                                                                                        * zc_Object_UnitBankPOSTerminal
  16.02.19                                                                                        * zc_Object_BankPOSTerminal
  17.02.19         * zc_Object_TaxUnit
  11.02.19         * zc_Object_GoodsCategory

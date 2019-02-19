@@ -81,11 +81,17 @@ BEGIN
                                      ON MovementLinkObject_Contract.MovementId = Movement.Id
                                     AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
         LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+
+        LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                               AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
     WHERE Movement.StatusId <> zc_Enum_Status_Erased()
       AND Movement.DescId = zc_Movement_Invoice()
       AND Movement.OperDate >= inDateInvoice AND Movement.OperDate <inDateInvoice + interval '1 day'
-      AND COALESCE (Movement.InvNumber,'') = COALESCE (inInvoice,'');
-
+      AND COALESCE (Movement.InvNumber,'') = COALESCE (inInvoice,'')
+      AND COALESCE (MovementFloat_ChangePercent.ValueData, 0) = inPercentSP
+      ;
 
     -- сохранили <ƒокумент>
     PERFORM lpInsertUpdate_Movement_Invoice (ioId              := COALESCE (tmpInvoice.MovementId, 0)
@@ -98,13 +104,14 @@ BEGIN
                                            , inEndDate         := inEndDate
                                            , inTotalSumm       := SUM (tmpReport.SummaComp):: Tfloat
                                            , inTotalCount      := MAX (tmpReport.CountSP)  :: Tfloat
+                                           , inChangePercent   := COALESCE (inPercentSP, 0) :: TFloat
                                            , inValueSP         := 2 :: Tfloat
                                            , inUserId          := vbUserId
                                            )
      FROM tmpReport
         LEFT JOIN tmpInvoice ON tmpInvoice.JuridicalId = tmpReport.JuridicalId 
                              AND tmpInvoice.PartnerMedicalId = tmpReport.PartnerMedicalId 
-                             AND tmpInvoice.ContractId = tmpReport.ContractId
+                             AND COALESCE (tmpInvoice.ContractId, 0) = COALESCE (tmpReport.ContractId, 0)
      GROUP BY tmpReport.JuridicalId
             , tmpReport.PartnerMedicalId
             , tmpReport.ContractId
@@ -144,7 +151,7 @@ BEGIN
     WHERE Movement.StatusId <> zc_Enum_Status_Erased()
       AND Movement.DescId = zc_Movement_Invoice()
       AND Movement.OperDate >= inDateInvoice AND Movement.OperDate <inDateInvoice + interval '1 day'
-  --    AND COALESCE (Movement.InvNumber,'') = COALESCE (inInvoice,'')
+      AND COALESCE (Movement.InvNumber,'') = COALESCE (inInvoice,'')
     ;
 
    -- ссылка на документ счет
@@ -152,7 +159,7 @@ BEGIN
    FROM tmpReport
         INNER JOIN tmpInvoice ON tmpInvoice.JuridicalId = tmpReport.JuridicalId 
                              AND tmpInvoice.PartnerMedicalId = tmpReport.PartnerMedicalId 
-                             AND tmpInvoice.ContractId = tmpReport.ContractId;
+                             AND COALESCE (tmpInvoice.ContractId, 0) = COALESCE (tmpReport.ContractId, 0);
 
 
 END;

@@ -101,6 +101,7 @@ BEGIN
                                            , inEndDate         := inEndDate
                                            , inTotalSumm       := SUM (tmpReport.SummaComp):: Tfloat
                                            , inTotalCount      := MAX (tmpReport.CountSP)  :: Tfloat
+                                           , inChangePercent   := 0 :: TFloat
                                            , inValueSP         := 1 :: Tfloat
                                            , inUserId          := vbUserId
                                            )

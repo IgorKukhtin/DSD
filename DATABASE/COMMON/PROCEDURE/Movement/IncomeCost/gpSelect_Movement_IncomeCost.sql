@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomeCost(
     IN inJuridicalBasisId  Integer   , -- главное юр.лицо
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, MasterMovementId integer, InvNumber Integer, MasterInvNumber Integer, MasterOperDate TDateTime
+RETURNS TABLE (Id Integer, MasterMovementId integer, InvNumber Integer, MasterInvNumber Integer
+             , OperDate TDateTime, MasterOperDate TDateTime
              , StatusCode Integer, StatusName TVarChar, MasterStatusCode Integer, MasterStatusName TVarChar
              , DescId Integer, ItemName TVarChar
              , Comment TVarChar
@@ -44,6 +45,7 @@ BEGIN
                , Movement_Master.Id                            AS MasterMovementId
                , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
                , zfConvert_StringToNumber (Movement_Master.InvNumber) AS MasterInvNumber
+               , Movement.OperDate                             AS OperDate
                , Movement_Master.OperDate                      AS MasterOperDate
                , Object_Status.ObjectCode                      AS StatusCode
                , Object_Status.ValueData                       AS StatusName
@@ -71,7 +73,7 @@ BEGIN
                , Object_InfoMoney_View.InfoMoneyName
                , Object_InfoMoney_View.InfoMoneyName_all
           FROM Movement
-             INNER JOIN  tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+             INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
              LEFT JOIN MovementString AS MovementString_Comment
                                       ON MovementString_Comment.MovementId = Movement.Id

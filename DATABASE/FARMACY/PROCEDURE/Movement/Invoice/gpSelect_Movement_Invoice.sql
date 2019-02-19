@@ -19,6 +19,7 @@ RETURNS TABLE (Id                  Integer
              , TotalSummVAT        TFloat
              , TotalSumm_Contract  TFloat
              , TotalCount          TFloat
+             , ChangePercent       TFloat
 
              , JuridicalId         Integer
              , JuridicalName       TVarChar
@@ -124,7 +125,51 @@ BEGIN
                                                          ON ObjectDate_Signing.ObjectId = Object_Department_Contract.Id
                                                         AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
                                  )
+     , tmpMovement AS (SELECT Movement.*
+                       FROM tmpStatus
+                            INNER JOIN Movement ON Movement.StatusId = tmpStatus.StatusId
+                                               AND Movement.DescId = zc_Movement_Invoice()
+                                               AND Movement.OperDate >= inStartDate AND Movement.OperDate <inEndDate + interval '1 day'
+                       )
+     , tmpMovementFloat AS (SELECT MovementFloat.*
+                            FROM MovementFloat
+                            WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                              AND MovementFloat.DescId IN ( zc_MovementFloat_TotalSumm()
+                                                          , zc_MovementFloat_TotalCount()
+                                                          , zc_MovementFloat_ChangePercent()
+                                                          , zc_MovementFloat_SP() )
+                            )
 
+     , tmpMovementDate AS (SELECT MovementDate.*
+                           FROM MovementDate
+                           WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                             AND MovementDate.DescId IN ( zc_MovementDate_OperDateStart()
+                                                        , zc_MovementDate_OperDateEnd()
+                                                        , zc_MovementDate_DateRegistered()
+                                                         )
+                           )
+
+     , tmpMovementString AS (SELECT MovementString.*
+                             FROM MovementString
+                             WHERE MovementString.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                               AND MovementString.DescId = zc_MovementString_InvNumberRegistered()
+                           )
+
+   
+     , tmpMovementBoolean AS (SELECT MovementBoolean.*
+                              FROM MovementBoolean
+                              WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                AND MovementBoolean.DescId = zc_MovementBoolean_Document()
+                             )    
+
+     , tmpMLO AS (SELECT MovementLinkObject.*
+                  FROM MovementLinkObject
+                  WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                    AND MovementLinkObject.DescId IN ( zc_MovementLinkObject_Juridical()
+                                                     , zc_MovementLinkObject_PartnerMedical()
+                                                     , zc_MovementLinkObject_Contract()
+                                                      )
+                  )
 
         -- Ðåçóëüòàò
     SELECT     
@@ -140,8 +185,9 @@ BEGIN
       , COALESCE (MovementFloat_TotalSumm.ValueData,0)::TFloat AS TotalSumm
       , COALESCE (CAST (MovementFloat_TotalSumm.ValueData/(1.07) AS NUMERIC (16,2)),0) ::TFloat  AS TotalSummWithOutVAT
       , COALESCE (CAST (MovementFloat_TotalSumm.ValueData - (MovementFloat_TotalSumm.ValueData/(1.07))  AS NUMERIC (16,2)),0) ::TFloat  AS TotalSummVAT
-      , COALESCE (ObjectFloat_TotalSumm.ValueData, 0):: TFloat   AS TotalSumm_Contract
-      , COALESCE (MovementFloat_TotalCount.ValueData,0)::TFloat  AS TotalCount
+      , COALESCE (ObjectFloat_TotalSumm.ValueData, 0)       :: TFloat AS TotalSumm_Contract
+      , COALESCE (MovementFloat_TotalCount.ValueData,0)     :: TFloat AS TotalCount
+      , COALESCE (MovementFloat_ChangePercent.ValueData, 0) :: TFloat AS ChangePercent
 
       , MovementLinkObject_Juridical.ObjectId                  AS JuridicalId
       , Object_Juridical.ValueData                             AS JuridicalName
@@ -177,50 +223,55 @@ BEGIN
       , tmpContractDepartment.Contract_StartDate   AS Contract_StartDate_Department
       , tmpContractDepartment.Contract_EndDate     AS Contract_EndDate_Department
 
-    FROM tmpStatus
-        INNER JOIN Movement ON Movement.StatusId = tmpStatus.StatusId
-                           AND Movement.DescId = zc_Movement_Invoice()
-                           AND Movement.OperDate >= inStartDate AND Movement.OperDate <inEndDate + interval '1 day'
+    FROM tmpMovement AS Movement
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
         
-        LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                ON MovementFloat_TotalSumm.MovementId = Movement.Id
-                               AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+        LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSumm
+                                   ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                  AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
-        LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                ON MovementFloat_TotalCount.MovementId = Movement.Id
-                               AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+        LEFT JOIN tmpMovementFloat AS MovementFloat_TotalCount
+                                   ON MovementFloat_TotalCount.MovementId = Movement.Id
+                                  AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
 
-        LEFT JOIN MovementDate AS MovementDate_OperDateStart
-                               ON MovementDate_OperDateStart.MovementId = Movement.Id
-                              AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
-        LEFT JOIN MovementDate AS MovementDate_OperDateEnd
+        LEFT JOIN tmpMovementFloat AS MovementFloat_ChangePercent
+                                   ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                  AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+        LEFT JOIN tmpMovementFloat AS MovementFloat_SP
+                                   ON MovementFloat_SP.MovementId = Movement.Id
+                                  AND MovementFloat_SP.DescId = zc_MovementFloat_SP()
+
+        LEFT JOIN tmpMovementDate AS MovementDate_OperDateStart
+                                  ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                 AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
+        LEFT JOIN tmpMovementDate AS MovementDate_OperDateEnd
                                ON MovementDate_OperDateEnd.MovementId = Movement.Id
                               AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
 
-        LEFT JOIN MovementDate AS MovementDate_DateRegistered
-                               ON MovementDate_DateRegistered.MovementId = Movement.Id
-                              AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
+        LEFT JOIN tmpMovementDate AS MovementDate_DateRegistered
+                                  ON MovementDate_DateRegistered.MovementId = Movement.Id
+                                 AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
 
-        LEFT JOIN MovementString AS MovementString_InvNumberRegistered
-                                 ON MovementString_InvNumberRegistered.MovementId = Movement.Id
-                                AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
+        LEFT JOIN tmpMovementString AS MovementString_InvNumberRegistered
+                                    ON MovementString_InvNumberRegistered.MovementId = Movement.Id
+                                   AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
 
-        LEFT JOIN MovementBoolean AS MovementBoolean_Document
-                                  ON MovementBoolean_Document.MovementId = Movement.Id
-                                 AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
+        LEFT JOIN tmpMovementBoolean AS MovementBoolean_Document
+                                     ON MovementBoolean_Document.MovementId = Movement.Id
+                                    AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
 
-        LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+        LEFT JOIN tmpMLO AS MovementLinkObject_Juridical
                                      ON MovementLinkObject_Juridical.MovementId = Movement.Id
                                     AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
         
-        LEFT JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
+        LEFT JOIN tmpMLO AS MovementLinkObject_PartnerMedical
                                      ON MovementLinkObject_PartnerMedical.MovementId = Movement.Id
                                     AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
         LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = MovementLinkObject_PartnerMedical.ObjectId
 
-        LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+        LEFT JOIN tmpMLO AS MovementLinkObject_Contract
                                      ON MovementLinkObject_Contract.MovementId = Movement.Id
                                     AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
         LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
@@ -247,10 +298,6 @@ BEGIN
                                  ON tmpPartnerMedicalBankAccount.JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId  --ObjectLink_PartnerMedical_Juridical.ChildObjectId
                                 AND tmpPartnerMedicalBankAccount.BankAccount = ObjectHistory_PartnerMedicalDetails.BankAccount
         
-        LEFT JOIN MovementFloat AS MovementFloat_SP
-                                ON MovementFloat_SP.MovementId = Movement.Id
-                               AND MovementFloat_SP.DescId = zc_MovementFloat_SP()
-
         LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Department 
                              ON ObjectLink_PartnerMedical_Department.ObjectId = MovementLinkObject_PartnerMedical.ObjectId
                             AND ObjectLink_PartnerMedical_Department.DescId = zc_ObjectLink_PartnerMedical_Department()
@@ -271,6 +318,7 @@ ALTER FUNCTION gpSelect_Movement_Invoice (TDateTime, TDateTime, Boolean, TVarCha
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 18.02.19         * add ChangePercent
  14.02.19         * add TotalCount
  20.08.18         *
  14.05.18         *

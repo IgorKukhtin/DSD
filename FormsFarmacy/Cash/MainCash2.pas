@@ -350,6 +350,8 @@ type
     actOpenMovementSP: TMultiAction;
     actExecGet_Movement_GoodsSP_ID: TdsdExecStoredProc;
     gpGet_Movement_GoodsSP_ID: TdsdStoredProc;
+    actEmployeeScheduleUser: TdsdOpenForm;
+    N22: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Invoice (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Invoice (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Invoice (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, Tfloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Invoice (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TFloat, Tfloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Invoice(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -15,6 +16,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Invoice(
     IN inEndDate               TDateTime  , -- дата кон.
     IN inTotalSumm             TFloat     , -- сумма
     IN inTotalCount            TFloat     , -- колво рецептов
+    IN inChangePercent         TFloat     , -- % скидки
     IN inValueSP               Tfloat     , -- код соц. проекта
     IN inUserId                Integer      -- сессия пользователя
 )
@@ -49,7 +51,9 @@ BEGIN
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), ioId, inTotalSumm);
     -- Сохранили свойство <Итого колво рецептов>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), ioId, inTotalCount);
-    
+    -- Сохранили свойство <% скидки>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
+
     -- Сохранили свойство <>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SP(), ioId, inValueSP);
   
@@ -63,6 +67,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 18.02.19         * add inChangePercent
  14.02.19         *
  13.05.17         * add inValueSP
  22.03.17         *

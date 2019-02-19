@@ -130,7 +130,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
             Position.RowIndex = 0
           end
           object UnitName: TcxGridDBBandedColumn
-            Caption = #1040#1087#1090#1077#1082#1072' ('#1086#1089#1085#1086#1074#1085#1072#1103')'
+            Caption = #1040#1087#1090#1077#1082#1072
             DataBinding.FieldName = 'UnitName'
             Visible = False
             GroupIndex = 0

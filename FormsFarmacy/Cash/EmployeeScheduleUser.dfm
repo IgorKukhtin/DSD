@@ -1,68 +1,275 @@
 inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
   Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1074#1088#1077#1084#1077#1085#1080' '#1087#1088#1080#1093#1086#1076#1072' '#1085#1072' '#1088#1072#1073#1086#1090#1091' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1075#1088#1072#1092#1080#1082#1072
   ClientHeight = 423
-  ClientWidth = 564
+  ClientWidth = 525
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 580
+  ExplicitWidth = 541
   ExplicitHeight = 462
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 564
+    Width = 525
     Height = 364
     ExplicitTop = 59
-    ExplicitWidth = 374
-    ExplicitHeight = 277
+    ExplicitWidth = 525
+    ExplicitHeight = 364
     ClientRectBottom = 364
-    ClientRectRight = 564
+    ClientRectRight = 525
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 374
-      ExplicitHeight = 277
+      ExplicitWidth = 525
+      ExplicitHeight = 364
       inherited cxGrid: TcxGrid
-        Width = 564
+        Width = 525
         Height = 364
-        ExplicitWidth = 374
-        ExplicitHeight = 159
+        ExplicitWidth = 525
+        ExplicitHeight = 364
         inherited cxGridDBTableView: TcxGridDBTableView
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = SummCash
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = SummCard
-            end>
+          OptionsView.Footer = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object PaidTypeName: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaidTypeName'
+        end
+        object cxGridDBBandedTableView1: TcxGridDBBandedTableView [1]
+          Navigator.Buttons.CustomButtons = <>
+          Navigator.Buttons.First.Visible = True
+          Navigator.Buttons.PriorPage.Visible = True
+          Navigator.Buttons.Prior.Visible = True
+          Navigator.Buttons.Next.Visible = True
+          Navigator.Buttons.NextPage.Visible = True
+          Navigator.Buttons.Last.Visible = True
+          Navigator.Buttons.Insert.Visible = True
+          Navigator.Buttons.Append.Visible = False
+          Navigator.Buttons.Delete.Visible = True
+          Navigator.Buttons.Edit.Visible = True
+          Navigator.Buttons.Post.Visible = True
+          Navigator.Buttons.Cancel.Visible = True
+          Navigator.Buttons.Refresh.Visible = True
+          Navigator.Buttons.SaveBookmark.Visible = True
+          Navigator.Buttons.GotoBookmark.Visible = True
+          Navigator.Buttons.Filter.Visible = True
+          DataController.DataSource = MasterDS
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          OptionsSelection.CellSelect = False
+          OptionsView.GroupByBox = False
+          Bands = <
+            item
+              Width = 106
+            end
+            item
+              Caption = #1044#1085#1080' '#1085#1077#1076#1077#1083#1080
+              Width = 383
+            end>
+          object Range: TcxGridDBBandedColumn
+            Caption = #1055#1077#1088#1080#1086#1076
+            DataBinding.FieldName = 'Range'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 116
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 0
           end
-          object SummCash: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1085#1072#1083#1080#1095#1085#1099#1081' '#1088#1072#1089#1095#1077#1090
-            DataBinding.FieldName = 'SummCash'
+          object Value1: TcxGridDBBandedColumn
+            Caption = #1055#1085
+            DataBinding.FieldName = 'Value1'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 105
+            Width = 65
+            Position.BandIndex = 1
+            Position.ColIndex = 0
+            Position.RowIndex = 0
           end
-          object SummCard: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1082#1072#1088#1090#1077
-            DataBinding.FieldName = 'SummCard'
+          object Value2: TcxGridDBBandedColumn
+            Caption = #1042#1090
+            DataBinding.FieldName = 'Value2'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 103
+            Width = 65
+            Position.BandIndex = 1
+            Position.ColIndex = 1
+            Position.RowIndex = 0
           end
+          object Value3: TcxGridDBBandedColumn
+            Caption = #1057#1088
+            DataBinding.FieldName = 'Value3'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+            Position.BandIndex = 1
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object Value4: TcxGridDBBandedColumn
+            Caption = #1063#1090
+            DataBinding.FieldName = 'Value4'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+            Position.BandIndex = 1
+            Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object Value5: TcxGridDBBandedColumn
+            Caption = #1055#1090
+            DataBinding.FieldName = 'Value5'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+            Position.BandIndex = 1
+            Position.ColIndex = 4
+            Position.RowIndex = 0
+          end
+          object Value6: TcxGridDBBandedColumn
+            Caption = #1057#1073
+            DataBinding.FieldName = 'Value6'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+            Position.BandIndex = 1
+            Position.ColIndex = 5
+            Position.RowIndex = 0
+          end
+          object Value7: TcxGridDBBandedColumn
+            Caption = #1042#1089
+            DataBinding.FieldName = 'Value7'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+            Position.BandIndex = 1
+            Position.ColIndex = 6
+            Position.RowIndex = 0
+          end
+          object ValuePlan1: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ValuePlan1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+            Position.BandIndex = 1
+            Position.ColIndex = 0
+            Position.RowIndex = 1
+            IsCaptionAssigned = True
+          end
+          object ValuePlan2: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ValuePlan2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+            Position.BandIndex = 1
+            Position.ColIndex = 2
+            Position.RowIndex = 1
+            IsCaptionAssigned = True
+          end
+          object ValuePlan3: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ValuePlan3'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+            Position.BandIndex = 1
+            Position.ColIndex = 1
+            Position.RowIndex = 1
+            IsCaptionAssigned = True
+          end
+          object ValuePlan4: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ValuePlan4'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+            Position.BandIndex = 1
+            Position.ColIndex = 3
+            Position.RowIndex = 1
+            IsCaptionAssigned = True
+          end
+          object ValuePlan5: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ValuePlan5'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+            Position.BandIndex = 1
+            Position.ColIndex = 4
+            Position.RowIndex = 1
+            IsCaptionAssigned = True
+          end
+          object ValuePlan6: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ValuePlan6'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+            Position.BandIndex = 1
+            Position.ColIndex = 5
+            Position.RowIndex = 1
+            IsCaptionAssigned = True
+          end
+          object ValuePlan7: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ValuePlan7'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+            Position.BandIndex = 1
+            Position.ColIndex = 6
+            Position.RowIndex = 1
+            IsCaptionAssigned = True
+          end
+          object Color1: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color1'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Position.BandIndex = 1
+            Position.ColIndex = 7
+            Position.RowIndex = 0
+          end
+          object Color2: TcxGridDBBandedColumn
+            Caption = 'Color2'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Position.BandIndex = 1
+            Position.ColIndex = 8
+            Position.RowIndex = 0
+          end
+          object Color3: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color3'
+            Visible = False
+            Position.BandIndex = 1
+            Position.ColIndex = 9
+            Position.RowIndex = 0
+          end
+          object Color4: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color4'
+            Visible = False
+            Position.BandIndex = 1
+            Position.ColIndex = 10
+            Position.RowIndex = 0
+          end
+          object Color5: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color5'
+            Visible = False
+            Position.BandIndex = 1
+            Position.ColIndex = 11
+            Position.RowIndex = 0
+          end
+          object Color6: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color6'
+            Visible = False
+            Position.BandIndex = 1
+            Position.ColIndex = 12
+            Position.RowIndex = 0
+          end
+          object Color7: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color7'
+            Visible = False
+            Position.BandIndex = 1
+            Position.ColIndex = 13
+            Position.RowIndex = 0
+          end
+        end
+        inherited cxGridLevel: TcxGridLevel
+          GridView = cxGridDBBandedTableView1
         end
       end
     end
@@ -70,12 +277,11 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
   object Panel: TPanel [1]
     Left = 0
     Top = 0
-    Width = 564
+    Width = 525
     Height = 33
     Align = alTop
     ShowCaption = False
     TabOrder = 5
-    ExplicitWidth = 374
     object edOperDate: TcxDateEdit
       Left = 206
       Top = 3
@@ -124,33 +330,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
     Top = 104
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_EmployeeScheduleUser'
-    DataSets = <
-      item
-        DataSet = MasterCDS
-      end
-      item
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inCashRegisterName'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'CashRegisterName'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDate'
-        Value = 'NULL'
-        Component = FormParams
-        ComponentItem = 'Date'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
+    StoredProcName = 'gpSelect_MovementItem_EmployeeSchedule_User'
     Left = 88
     Top = 104
   end
@@ -185,23 +365,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
     Top = 256
   end
   object FormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'CashRegisterName'
-        Value = Null
-        Component = edCashRegisterName
-        DataType = ftString
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Date'
-        Value = 'NULL'
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end>
+    Params = <>
     Left = 256
     Top = 104
   end

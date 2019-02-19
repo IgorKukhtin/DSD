@@ -1,9 +1,8 @@
 inherited ListGoodsForm: TListGoodsForm
   BorderIcons = [biSystemMenu]
   Caption = #1055#1086#1076#1073#1086#1088' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1086#1074
-  ClientHeight = 422
+  ClientHeight = 442
   ClientWidth = 839
-  Menu = MainMenu1
   OnCreate = ParentFormCreate
   OnKeyDown = ParentFormKeyDown
   ExplicitWidth = 855
@@ -12,9 +11,9 @@ inherited ListGoodsForm: TListGoodsForm
   TextHeight = 13
   object ListGoodsGrid: TcxGrid [0]
     Left = 0
-    Top = 52
+    Top = 78
     Width = 839
-    Height = 235
+    Height = 229
     Align = alClient
     TabOrder = 1
     object ListGoodsGridDBTableView: TcxGridDBTableView
@@ -179,7 +178,7 @@ inherited ListGoodsForm: TListGoodsForm
   end
   object pnl1: TPanel [1]
     Left = 0
-    Top = 27
+    Top = 53
     Width = 839
     Height = 25
     Align = alTop
@@ -197,8 +196,7 @@ inherited ListGoodsForm: TListGoodsForm
       TabOrder = 0
       OnChange = edt1Change
       OnExit = edt1Exit
-      ExplicitLeft = 2
-      ExplicitTop = -4
+      ExplicitHeight = 21
     end
     object ProgressBar1: TProgressBar
       Left = 773
@@ -213,7 +211,7 @@ inherited ListGoodsForm: TListGoodsForm
   end
   object ListDiffGrid: TcxGrid [2]
     Left = 0
-    Top = 287
+    Top = 307
     Width = 839
     Height = 135
     Align = alBottom
@@ -370,7 +368,8 @@ inherited ListGoodsForm: TListGoodsForm
     object actSearchGoods: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1087#1088#1072#1081#1089' - '#1083#1080#1089#1090#1072#1093
+      Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1087#1088#1072#1081#1089' - '#1083#1080#1089#1090#1072#1093'  '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
+      Hint = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1087#1088#1072#1081#1089' - '#1083#1080#1089#1090#1072#1093'  '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
       ImageIndex = 28
       FormName = 'TChoiceGoodsFromPriceListForm'
       FormNameParam.Value = 'TChoiceGoodsFromPriceListForm'
@@ -493,15 +492,88 @@ inherited ListGoodsForm: TListGoodsForm
     Left = 368
     Top = 360
   end
-  object MainMenu1: TMainMenu
-    Images = dmMain.ImageList
-    Left = 656
-    Top = 144
-    object mmSearchGoods: TMenuItem
-      Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1087#1088#1072#1081#1089' - '#1083#1080#1089#1090#1072#1093
-      ImageIndex = 28
-      ShortCut = 123
-      OnClick = mmSearchGoodsClick
+  object BarManager: TdxBarManager
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    Categories.Strings = (
+      'Default')
+    Categories.ItemsVisibles = (
+      2)
+    Categories.Visibles = (
+      True)
+    ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
+    PopupMenuLinks = <>
+    ShowShortCutInHint = True
+    UseSystemFont = True
+    Left = 168
+    Top = 104
+    DockControlHeights = (
+      0
+      0
+      26
+      0)
+    object Bar: TdxBar
+      Caption = 'Custom'
+      CaptionButtons = <>
+      DockedDockingStyle = dsTop
+      DockedLeft = 0
+      DockedTop = 0
+      DockingStyle = dsTop
+      FloatLeft = 671
+      FloatTop = 8
+      FloatClientWidth = 0
+      FloatClientHeight = 0
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+      OneOnRow = True
+      Row = 0
+      UseOwnFont = False
+      Visible = True
+      WholeRow = False
+    end
+    object bbRefresh: TdxBarButton
+      Action = actRefresh
+      Category = 0
+      Left = 280
+    end
+    object dxBarStatic: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Hint = '     '
+      Visible = ivAlways
+      Left = 208
+      Top = 65528
+    end
+    object bbGridToExcel: TdxBarButton
+      Action = actSearchGoods
+      Category = 0
+      Left = 232
+    end
+    object bbOpen: TdxBarButton
+      Caption = #1054#1090#1082#1088#1099#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 1
+      Left = 160
     end
   end
 end

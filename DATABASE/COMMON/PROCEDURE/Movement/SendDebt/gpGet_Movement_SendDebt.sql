@@ -27,13 +27,21 @@ RETURNS TABLE (Id Integer, MI_MasterId Integer, MI_ChildId Integer
              , PaidKindToId Integer, PaidKindToName TVarChar
              , BranchToId Integer, BranchToName TVarChar
 
-             , CurrencyId    Integer
-             , CurrencyName  TVarChar
-             , CurrencyValue TFloat
-             , ParValue      TFloat
+             , CurrencyId_From    Integer
+             , CurrencyName_From  TVarChar
+             , CurrencyValue_From TFloat
+             , ParValue_From      TFloat
+
+             , CurrencyId_To    Integer
+             , CurrencyName_To  TVarChar
+             , CurrencyValue_To TFloat
+             , ParValue_To      TFloat
 
              , Amount TFloat
+             , AmountCurrencyFrom  TFloat
+             , AmountCurrencyTo    TFloat
              , Comment TVarChar
+             , isCopy Boolean
               )
 AS
 $BODY$
@@ -89,13 +97,21 @@ BEGIN
             , 0            AS BranchToId
             , ''::TVarChar AS BranchToName
 
-            , 0            AS CurrencyId
-            , ''::TVarChar AS CurrencyName
-            , 0 ::TFloat   AS CurrencyValue
-            , 1 ::TFloat   AS ParValue
+            , 0            AS CurrencyId_From
+            , ''::TVarChar AS CurrencyName_From
+            , 0 ::TFloat   AS CurrencyValue_From
+            , 1 ::TFloat   AS ParValue_From
 
-            , 0::TFloat  AS Amount
-            , ''::TVarChar AS Comment
+            , 0            AS CurrencyId_To
+            , ''::TVarChar AS CurrencyName_To
+            , 0 ::TFloat   AS CurrencyValue_To
+            , 1 ::TFloat   AS ParValue_To
+
+            , 0 :: TFloat  AS Amount
+            , 0 :: TFloat  AS AmountCurrencyFrom
+            , 0 :: TFloat  AS AmountCurrencyTo
+            , '':: TVarChar AS Comment
+            , FALSE        AS isCopy
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
                LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = 9399
@@ -153,17 +169,29 @@ BEGIN
             , Object_Branch_To.Id                    AS BranchToId
             , Object_Branch_To.ValueData             AS BranchToName
 
-            , Object_Currency.Id                        AS CurrencyId
-            , Object_Currency.ValueData                 AS CurrencyName
-            , MIFloat_CurrencyValue.ValueData :: TFloat AS CurrencyValue
-            , MIFloat_ParValue.ValueData      :: TFloat AS ParValue
+            , Object_Currency_From.Id                        AS CurrencyId_From
+            , Object_Currency_From.ValueData                 AS CurrencyName_From
+            , MIFloat_CurrencyValue_From.ValueData :: TFloat AS CurrencyValue_From
+            , MIFloat_ParValue_From.ValueData      :: TFloat AS ParValue_From
 
-            , MI_Master.Amount            AS Amount
+            , Object_Currency_To.Id                        AS CurrencyId_To
+            , Object_Currency_To.ValueData                 AS CurrencyName_To
+            , MIFloat_CurrencyValue_To.ValueData :: TFloat AS CurrencyValue_To
+            , MIFloat_ParValue_To.ValueData      :: TFloat AS ParValue_To
+
+            , MI_Master.Amount                   :: TFloat AS Amount
+            , CASE WHEN COALESCE (MIFloat_CurrencyValue_From.ValueData,0) <> 0 THEN CAST (MI_Master.Amount / MIFloat_CurrencyValue_From.ValueData * MIFloat_ParValue_From.ValueData AS NUMERIC (16, 2)) ELSE 0 END :: TFloat AS AmountCurrencyFrom
+            , CASE WHEN COALESCE (MIFloat_CurrencyValue_To.ValueData,0) <> 0   THEN CAST (MI_Master.Amount / MIFloat_CurrencyValue_To.ValueData   * MIFloat_ParValue_To.ValueData   AS NUMERIC (16, 2)) ELSE 0 END :: TFloat AS AmountCurrencyTo
             , MIString_Comment.ValueData  AS Comment
+            , COALESCE(MovementBoolean_isCopy.ValueData, FALSE) AS isCopy
            
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-                       
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isCopy
+                                      ON MovementBoolean_isCopy.MovementId = Movement.Id
+                                     AND MovementBoolean_isCopy.DescId = zc_MovementBoolean_isCopy()
+   
             LEFT JOIN tmpMI AS MI_Master ON MI_Master.MovementId = Movement.Id
                                         AND MI_Master.DescId     = zc_MI_Master()
 
@@ -193,22 +221,21 @@ BEGIN
                              AND MILinkObject_Branch_From.DescId = zc_MILinkObject_Branch()
             LEFT JOIN Object AS Object_Branch_From ON Object_Branch_From.Id = MILinkObject_Branch_From.ObjectId
 
-
             LEFT JOIN tmpMIString AS MIString_Comment
                                   ON MIString_Comment.MovementItemId = MI_Master.Id
                                  AND MIString_Comment.DescId = zc_MIString_Comment()
 
-            LEFT JOIN tmpMILO AS MILinkObject_Currency
-                              ON MILinkObject_Currency.MovementItemId = MI_Master.Id
-                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
-            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
+            LEFT JOIN tmpMILO AS MILinkObject_Currency_From
+                              ON MILinkObject_Currency_From.MovementItemId = MI_Master.Id
+                             AND MILinkObject_Currency_From.DescId = zc_MILinkObject_Currency()
+            LEFT JOIN Object AS Object_Currency_From ON Object_Currency_From.Id = MILinkObject_Currency_From.ObjectId
 
-            LEFT JOIN tmpMIFloat AS MIFloat_CurrencyValue
-                                 ON MIFloat_CurrencyValue.MovementItemId = MI_Master.Id
-                                AND MIFloat_CurrencyValue.DescId = zc_MIFloat_CurrencyValue()
-            LEFT JOIN tmpMIFloat AS MIFloat_ParValue
-                                 ON MIFloat_ParValue.MovementItemId = MI_Master.Id
-                                AND MIFloat_ParValue.DescId = zc_MIFloat_ParValue()
+            LEFT JOIN tmpMIFloat AS MIFloat_CurrencyValue_From
+                                 ON MIFloat_CurrencyValue_From.MovementItemId = MI_Master.Id
+                                AND MIFloat_CurrencyValue_From.DescId = zc_MIFloat_CurrencyValue()
+            LEFT JOIN tmpMIFloat AS MIFloat_ParValue_From
+                                 ON MIFloat_ParValue_From.MovementItemId = MI_Master.Id
+                                AND MIFloat_ParValue_From.DescId = zc_MIFloat_ParValue()
 
             LEFT JOIN tmpMI AS MI_Child ON MI_Child.MovementId = Movement.Id
                                        AND MI_Child.DescId     = zc_MI_Child()
@@ -239,7 +266,18 @@ BEGIN
                              AND MILinkObject_Branch_To.DescId = zc_MILinkObject_Branch()
             LEFT JOIN Object AS Object_Branch_To ON Object_Branch_To.Id = MILinkObject_Branch_To.ObjectId
 
-                                    
+            LEFT JOIN tmpMILO AS MILinkObject_Currency_To
+                              ON MILinkObject_Currency_To.MovementItemId = MI_Child.Id
+                             AND MILinkObject_Currency_To.DescId = zc_MILinkObject_Currency()
+            LEFT JOIN Object AS Object_Currency_To ON Object_Currency_To.Id = MILinkObject_Currency_To.ObjectId
+
+            LEFT JOIN tmpMIFloat AS MIFloat_CurrencyValue_To
+                                 ON MIFloat_CurrencyValue_To.MovementItemId = MI_Child.Id
+                                AND MIFloat_CurrencyValue_To.DescId = zc_MIFloat_CurrencyValue()
+            LEFT JOIN tmpMIFloat AS MIFloat_ParValue_To
+                                 ON MIFloat_ParValue_To.MovementItemId = MI_Child.Id
+                                AND MIFloat_ParValue_To.DescId = zc_MIFloat_ParValue()
+
        WHERE Movement.Id     =  inMovementId
          AND Movement.DescId = zc_Movement_SendDebt();
 
