@@ -64,6 +64,9 @@ BEGIN
                --, ObjectFloat_Bonus.ValueData                                       AS Bonus
                --, COALESCE (ObjectFloat_PriceLimit.ValueData,0) :: TFloat           AS PriceLimit
             FROM ObjectLink AS ObjectLink_JuridicalSettings_Retail
+                 INNER JOIN Object AS Object_JuridicalSettings 
+                                   ON Object_JuridicalSettings.Id = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                  AND Object_JuridicalSettings.isErased = FALSE
 
                  JOIN ObjectLink AS ObjectLink_JuridicalSettings_Juridical 
                                  ON ObjectLink_JuridicalSettings_Juridical.DescId = zc_ObjectLink_JuridicalSettings_Juridical()                      
@@ -104,6 +107,8 @@ BEGIN
                                        ON ObjectFloat_PriceLimit.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
                                       AND ObjectFloat_PriceLimit.DescId = zc_ObjectFloat_JuridicalSettings_PriceLimit()
 */
+
+                 
                WHERE ObjectLink_JuridicalSettings_Retail.DescId = zc_ObjectLink_JuridicalSettings_Retail()
                  AND ObjectLink_JuridicalSettings_Retail.ChildObjectId = inRetailId;
   
