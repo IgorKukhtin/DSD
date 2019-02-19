@@ -66,7 +66,7 @@ BEGIN
 
 
 
-     IF 1=0
+     IF 1=1
      THEN
           -- Результат
           RETURN QUERY

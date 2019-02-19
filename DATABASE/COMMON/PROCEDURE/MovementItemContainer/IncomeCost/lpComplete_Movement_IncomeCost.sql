@@ -43,6 +43,17 @@ BEGIN
        AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
      ;
 
+     -- Проверка
+     IF NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMovementId_to AND Movement.StatusId = zc_Enum_Status_Complete())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> должен быть в статусе <%>.'
+                       , (SELECT MovementDesc.ItemName FROM Movement JOIN MovementDesc ON MovementDsc.Id = Movement.DescId WHERE Movement.Id = vbMovementId_to)
+                       , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_to)
+                       , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_to))
+                       , lfGet_Object_ValueData_sh (zc_Enum_Status_Complete())
+                         ;
+     END IF;
+
 
      -- Перепроведение, что б "затраты" оказались во ВСЕХ "Расходы будущих периодов"
      IF vbMovementDescId_from = zc_Movement_TransportService() -- AND 1=0
@@ -55,7 +66,7 @@ BEGIN
      THEN
          PERFORM gpReComplete_Movement_Transport (vbMovementId_from, NULL, inUserId :: TVarChar);
          --
-         DROP TABLE _tmpItem;
+         DROP TABLE _tmpItem_Transport;
 
      END IF;
      
@@ -319,6 +330,9 @@ BEGIN
             INNER JOIN _tmpItem_To ON _tmpItem_To.ContainerId     = _tmpItem.ContainerId_Detail
                                   AND _tmpItem_To.MovementId_cost = inMovementId
       ;
+
+     -- сохранили <Итого сумма затрат по документу (с учетом НДС)>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummSpending(), vbMovementId_to, COALESCE ((SELECT SUM (_tmpItem.OperSumm_calc) FROM _tmpItem), 0));
 
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки

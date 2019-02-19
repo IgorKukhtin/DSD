@@ -2732,6 +2732,14 @@ END IF;
      END IF;
 
 
+     IF   NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.ParentId = inMovementId AND Movement.DescId = zc_Movement_IncomeCost() AND Movement.StatusId = zc_Enum_Status_Complete())
+      AND EXISTS (SELECT 1 FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_TotalSummSpending() AND MF.ValueData <> 0)
+     THEN
+         -- обнулили <Итого сумма затрат по документу (с учетом НДС)>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummSpending(), inMovementId, 0);
+     END IF;
+
+
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
 

@@ -14,6 +14,10 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_Income());
 
+
+     -- обнулили <Итого сумма затрат по документу (с учетом НДС)>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummSpending(), (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = inMovementId), 0);
+
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId
