@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Send(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat
              , TotalSummFrom TFloat, TotalSummTo TFloat
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , FromId Integer, FromName TVarChar, ProvinceCityName_From TVarChar
+             , ToId Integer, ToName TVarChar, ProvinceCityName_To TVarChar
              , Comment TVarChar
              , isAuto Boolean, MCSPeriod TFloat, MCSDay TFloat
              , Checked Boolean, isComplete Boolean
@@ -56,6 +57,15 @@ BEGIN
                                                 AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
                         WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                         )
+        , tmpProvinceCity AS (SELECT ObjectLink_Unit_ProvinceCity.ObjectId AS UnitId
+                                   , Object_ProvinceCity.Id                AS ProvinceCityId
+                                   , Object_ProvinceCity.ValueData         AS ProvinceCityName
+                              FROM ObjectLink AS ObjectLink_Unit_ProvinceCity
+                                   LEFT JOIN Object AS Object_ProvinceCity 
+                                                    ON Object_ProvinceCity.Id = ObjectLink_Unit_ProvinceCity.ChildObjectId
+                              WHERE ObjectLink_Unit_ProvinceCity.DescId = zc_ObjectLink_Unit_ProvinceCity()
+                                AND COALESCE (ObjectLink_Unit_ProvinceCity.ChildObjectId,0) <> 0
+                              )
 
        SELECT
              Movement.Id                            AS Id
@@ -71,8 +81,10 @@ BEGIN
            , MovementFloat_TotalSummTo.ValueData    AS TotalSummTo
            , Object_From.Id                         AS FromId
            , Object_From.ValueData                  AS FromName
+           , tmpProvinceCity_From.ProvinceCityName  AS ProvinceCityName_From
            , Object_To.Id                           AS ToId
            , Object_To.ValueData                    AS ToName
+           , tmpProvinceCity_To.ProvinceCityName    AS ProvinceCityName_To
            , COALESCE (MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
            , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) :: Boolean  AS isAuto
            , MovementFloat_MCSPeriod.ValueData      AS MCSPeriod
@@ -131,12 +143,14 @@ BEGIN
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN tmpUnit AS tmpUnit_From ON tmpUnit_From.UnitId = MovementLinkObject_From.ObjectId
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            LEFT JOIN tmpProvinceCity AS tmpProvinceCity_From ON tmpProvinceCity_From.UnitId = MovementLinkObject_From.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN tmpUnit AS tmpUnit_To ON tmpUnit_To.UnitId = MovementLinkObject_To.ObjectId
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            LEFT JOIN tmpProvinceCity AS tmpProvinceCity_To ON tmpProvinceCity_To.UnitId = MovementLinkObject_To.ObjectId
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id

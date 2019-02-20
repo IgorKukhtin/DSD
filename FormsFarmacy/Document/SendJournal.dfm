@@ -1,27 +1,27 @@
 inherited SendJournalForm: TSendJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 535
-  ClientWidth = 780
+  ClientWidth = 841
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 796
+  ExplicitWidth = 857
   ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 780
+    Width = 841
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 780
+    ExplicitWidth = 841
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 780
+    ClientRectRight = 841
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 780
+      ExplicitWidth = 841
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 780
+        Width = 841
         Height = 478
-        ExplicitWidth = 780
+        ExplicitWidth = 841
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -187,12 +187,28 @@ inherited SendJournalForm: TSendJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 176
           end
+          object ProvinceCityName_From: TcxGridDBColumn
+            Caption = #1056#1072#1081#1086#1085' ('#1054#1090' '#1082#1086#1075#1086')'
+            DataBinding.FieldName = 'ProvinceCityName_From'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 109
+          end
           object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 165
+          end
+          object ProvinceCityName_To: TcxGridDBColumn
+            Caption = #1056#1072#1081#1086#1085' ('#1050#1086#1084#1091')'
+            DataBinding.FieldName = 'ProvinceCityName_To'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
           end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -378,8 +394,8 @@ inherited SendJournalForm: TSendJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 780
-    ExplicitWidth = 780
+    Width = 841
+    ExplicitWidth = 841
     inherited deStart: TcxDateEdit
       EditValue = 42005d
     end
