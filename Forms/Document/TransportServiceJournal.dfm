@@ -4,8 +4,9 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
   ClientWidth = 1212
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -140
   ExplicitWidth = 1228
-  ExplicitHeight = 371
+  ExplicitHeight = 374
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -418,6 +419,14 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 102
+          end
+          object Cost_Info: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093'. '#1086#1090' '#1087#1086#1089#1090'.'
+            DataBinding.FieldName = 'Cost_Info'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1093#1086#1076#1085#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077' '#1079#1072#1090#1088#1072#1090
+            Width = 160
           end
         end
       end

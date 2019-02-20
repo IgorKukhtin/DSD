@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , PersonalDriverMoreName TVarChar
              , PersonalName TVarChar
              , UnitForwardingName TVarChar
+             , Cost_Info TVarChar
               )
 AS
 $BODY$
@@ -49,6 +50,32 @@ BEGIN
                        UNION
                         SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                        )
+        , tmpMovement AS (SELECT Movement.*
+                          FROM tmpStatus
+                               INNER JOIN Movement ON Movement.DescId = zc_Movement_Transport()
+                                                  AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                                  AND Movement.StatusId = tmpStatus.StatusId
+                                                  AND (Movement.AccessKeyId = vbAccessKeyId OR vbAccessKeyId = 0)
+                         )
+        , tmpCost AS (SELECT tmpMovement.Id
+                           , STRING_AGG (DISTINCT '¹ ' ||Movement_Income.InvNumber|| ' oò '|| zfConvert_DateToString (Movement_Income.OperDate)||'('||Object_From.ValueData||')' ,';') AS Cost_Info
+                      FROM tmpMovement
+                           INNER JOIN MovementFloat AS MovementFloat_MovementId
+                                                    ON MovementFloat_MovementId.ValueData :: Integer  = tmpMovement.Id
+                                                   AND MovementFloat_MovementId.DescId = zc_MovementFloat_MovementId()
+                           INNER JOIN Movement ON Movement.Id = MovementFloat_MovementId.MovementId
+                                              AND Movement.DescId = zc_Movement_IncomeCost()
+                                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                           
+                           LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = Movement.ParentId
+                                 
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                        ON MovementLinkObject_From.MovementId = Movement_Income.Id
+                                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                           LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+                      GROUP BY tmpMovement.Id
+                      )
+
        SELECT
              Movement.Id
            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
@@ -80,14 +107,9 @@ BEGIN
            , View_Personal.PersonalName           AS PersonalName
 
            , Object_UnitForwarding.ValueData AS UnitForwardingName
+           , tmpCost.Cost_Info ::TVarChar
    
-       FROM tmpStatus
-            INNER JOIN Movement ON Movement.DescId = zc_Movement_Transport()
-                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                               AND Movement.StatusId = tmpStatus.StatusId
-                               AND (Movement.AccessKeyId = vbAccessKeyId OR vbAccessKeyId = 0)
-            -- JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey
-            --                                                                                                       ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+       FROM tmpMovement AS Movement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -162,7 +184,8 @@ BEGIN
                                          ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
                                         AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
             LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = MovementLinkObject_UnitForwarding.ObjectId
- 
+
+            LEFT JOIN tmpCost ON tmpCost.Id = Movement.Id
       
          -- AND tmpRoleAccessKey.AccessKeyId IS NOT NULL
       ;
