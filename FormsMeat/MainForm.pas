@@ -1008,6 +1008,9 @@ type
     miServiceMarket: TMenuItem;
     actReport_GoodsMI_SaleReturnIn_BUH: TdsdOpenForm;
     üøReport_GoodsMI_SaleReturnIn_BUH: TMenuItem;
+    actReport_IncomeKill_Olap: TdsdOpenForm;
+    miReport_IncomeKill_Olap: TMenuItem;
+    N92: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

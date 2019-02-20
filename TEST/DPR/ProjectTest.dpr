@@ -1067,7 +1067,9 @@ uses
   IncomeCost in '..\..\Forms\Document\IncomeCost.pas' {IncomeCostForm: TParentForm},
   Report_ReceiptSaleAnalyzeRealDialog in '..\..\Forms\Report\Report_ReceiptSaleAnalyzeRealDialog.pas' {Report_ReceiptSaleAnalyzeRealDialogForm: TParentForm},
   Report_GoodsMI_SaleReturnIn_BUH in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn_BUH.pas' {Report_GoodsMI_SaleReturnIn_BUHForm: TParentForm},
-  dsdExportToXMLAction in '..\..\SOURCE\COMPONENT\dsdExportToXMLAction.pas';
+  dsdExportToXMLAction in '..\..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
+  Report_IncomeKill_Olap in '..\..\Forms\Report\Report_IncomeKill_Olap.pas' {Report_IncomeKill_OlapForm: TParentForm},
+  Report_IncomeKill_OlapDialog in '..\..\Forms\Report\Report_IncomeKill_OlapDialog.pas' {Report_IncomeKill_OlapDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

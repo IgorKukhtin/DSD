@@ -1663,6 +1663,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeKill_OlapForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeKill_OlapForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeKill_OlapDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeKill_OlapDialogForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HolidayCompensationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_HolidayCompensationForm');
