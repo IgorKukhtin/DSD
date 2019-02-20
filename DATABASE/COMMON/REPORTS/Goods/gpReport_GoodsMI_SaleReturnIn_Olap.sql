@@ -27,20 +27,23 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn_Olap (
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, MeasureName TVarChar
-             , TradeMarkName TVarChar, GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, GoodsGroupStatName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsKindId Integer, GoodsKindName TVarChar, MeasureName TVarChar
+             , TradeMarkId Integer, TradeMarkName TVarChar, GoodsGroupAnalystName TVarChar
+             , GoodsTagName TVarChar, GoodsGroupStatName TVarChar
              , GoodsPlatformName TVarChar
              , JuridicalGroupName TVarChar
-             , BranchCode Integer, BranchName TVarChar
-             , JuridicalCode Integer, JuridicalName TVarChar/*, OKPO TVarChar*/
+             , BranchId Integer, BranchCode Integer, BranchName TVarChar
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar/*, OKPO TVarChar*/
              , RetailName TVarChar, RetailReportName TVarChar
              , AreaName TVarChar, PartnerTagName TVarChar
              , Address TVarChar, RegionName TVarChar, ProvinceName TVarChar, CityKindName TVarChar, CityName TVarChar/*, ProvinceCityName TVarChar, StreetKindName TVarChar, StreetName TVarChar*/
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
-             , ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar, ContractTagGroupName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar, ContractTagGroupName TVarChar
              , PersonalName TVarChar, UnitName_Personal TVarChar, BranchName_Personal TVarChar
              , PersonalTradeName TVarChar, UnitName_PersonalTrade TVarChar
-             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
 
              , Promo_Summ TFloat, Sale_Summ TFloat, Sale_SummReal TFloat, Sale_Summ_10200 TFloat, Sale_Summ_10250 TFloat, Sale_Summ_10300 TFloat
              , Promo_SummCost TFloat, Sale_SummCost TFloat, Sale_SummCost_10500 TFloat, Sale_SummCost_40200 TFloat
@@ -343,8 +346,10 @@ BEGIN
           , Object_Goods.Id                    AS GoodsId
           , Object_Goods.ObjectCode            AS GoodsCode
           , Object_Goods.ValueData             AS GoodsName
+          , Object_GoodsKind.Id                AS GoodsKindId
           , Object_GoodsKind.ValueData         AS GoodsKindName
           , Object_Measure.ValueData           AS MeasureName
+          , Object_TradeMark.Id         AS TradeMarkId
           , Object_TradeMark.ValueData         AS TradeMarkName
           , Object_GoodsGroupAnalyst.ValueData AS GoodsGroupAnalystName
           , Object_GoodsTag.ValueData          AS GoodsTagName
@@ -352,8 +357,10 @@ BEGIN
           , Object_GoodsPlatform.ValueData     AS GoodsPlatformName
 
           , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
+          , Object_Branch.Id            AS BranchId
           , Object_Branch.ObjectCode    AS BranchCode
           , Object_Branch.ValueData     AS BranchName
+          , Object_Juridical.Id         AS JuridicalId
           , Object_Juridical.ObjectCode AS JuridicalCode
           , Object_Juridical.ValueData  AS JuridicalName
 
@@ -372,6 +379,7 @@ BEGIN
           , Object_Partner.ObjectCode AS PartnerCode
           , Object_Partner.ValueData  AS PartnerName
 
+          , Object_Contract.Id                AS ContractId
           , Object_Contract.ObjectCode        AS ContractCode
           , Object_Contract.ValueData         AS ContractNumber
           , Object_ContractTag.ValueData      AS ContractTagName
@@ -386,6 +394,7 @@ BEGIN
 
           , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
           , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
+          , View_InfoMoney.InfoMoneyId                     AS InfoMoneyId
           , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
           , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
           , View_InfoMoney.InfoMoneyName_all               AS InfoMoneyName_all

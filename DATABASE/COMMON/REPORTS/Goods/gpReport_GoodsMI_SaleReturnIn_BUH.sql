@@ -423,26 +423,28 @@ BEGIN
                           HAVING SUM (tmpOperationGroup2.Sale_SummVAT)   <> 0
                               OR SUM (tmpOperationGroup2.Return_SummVAT) <> 0
                           )
-  ,_tmpMI AS (SELECT Object_Juridical.ObjectCode        AS JuridicalCode
+  ,_tmpMI AS (SELECT tmpOperationGroup.JuridicalId
+                   , Object_Juridical.ObjectCode        AS JuridicalCode
                    , Object_Juridical.ValueData         AS JuridicalName
+                   , tmpOperationGroup.ContractId
                    , Object_Contract.ObjectCode         AS ContractCode
                    , Object_Contract.ValueData          AS ContractNumber
                    , tmpOperationGroup.PartnerId
+                   , tmpOperationGroup.InfoMoneyId
                    , Object_InfoMoney.ObjectCode        AS InfoMoneyCode
                    , Object_InfoMoney.ValueData         AS InfoMoneyName
+                   , tmpOperationGroup.BranchId
                    , Object_Branch.ObjectCode           AS BranchCode
                    , Object_Branch.ValueData            AS BranchName
+                   , Object_TradeMark.Id                AS TradeMarkId
                    , Object_TradeMark.ValueData         AS TradeMarkName
-
-                   , Object_Goods.Id                    AS GoodsId
+                   , tmpOperationGroup.GoodsId
                    , Object_Goods.ObjectCode            AS GoodsCode
                    , Object_Goods.ValueData             AS GoodsName
+                   , tmpOperationGroup.GoodsKindId
                    , Object_GoodsKind.ValueData         AS GoodsKindName
-
-               -- , tmpOperationGroup.Sale_SummMVAT      :: TFloat
-                  , tmpOperationGroup.Sale_SummVAT       :: TFloat
-               -- , tmpOperationGroup.Return_SummMVAT    :: TFloat
-                  , tmpOperationGroup.Return_SummVAT     :: TFloat
+                   , tmpOperationGroup.Sale_SummVAT       :: TFloat
+                   , tmpOperationGroup.Return_SummVAT     :: TFloat
               FROM tmpOperationGroup
                    LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpOperationGroup.BranchId
                    LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
@@ -470,35 +472,38 @@ BEGIN
             , tmp.GoodsPlatformName
             , tmp.JuridicalGroupName
             , tmp.BranchCode
-            , COALESCE (_tmpMI.BranchName, tmp.BranchName) :: TVarChar AS BranchName
+            , COALESCE (_tmpMI.BranchName, tmp.BranchName)         :: TVarChar AS BranchName
             , tmp.JuridicalCode
-            , COALESCE (_tmpMI.JuridicalName, tmp.JuridicalName) :: TVarChar AS JuridicalName
+            , COALESCE (_tmpMI.JuridicalName, tmp.JuridicalName)   :: TVarChar AS JuridicalName
             , tmp.RetailName, tmp.RetailReportName
             , tmp.AreaName, tmp.PartnerTagName
             , tmp.Address, tmp.RegionName, tmp.ProvinceName, tmp.CityKindName, tmp.CityName
             , tmp.PartnerId, tmp.PartnerCode, tmp.PartnerName
-            , COALESCE (_tmpMI.ContractCode, tmp.ContractCode) :: Integer AS ContractCode
+            , COALESCE (_tmpMI.ContractCode, tmp.ContractCode)     :: Integer  AS ContractCode
             , COALESCE (_tmpMI.ContractNumber, tmp.ContractNumber) :: TVarChar AS ContractNumber
             , tmp.ContractTagName, tmp.ContractTagGroupName
             , tmp.PersonalName, tmp.UnitName_Personal, tmp.BranchName_Personal
             , tmp.PersonalTradeName, tmp.UnitName_PersonalTrade
             , tmp.InfoMoneyGroupName, tmp.InfoMoneyDestinationName
-            , COALESCE (_tmpMI.InfoMoneyCode, tmp.InfoMoneyCode) :: Integer AS InfoMoneyCode
+            , COALESCE (_tmpMI.InfoMoneyCode, tmp.InfoMoneyCode) :: Integer  AS InfoMoneyCode
             , COALESCE (_tmpMI.InfoMoneyName, tmp.InfoMoneyName) :: TVarChar AS InfoMoneyName
             , tmp.InfoMoneyName_all
 
             , tmp.Promo_Summ, tmp.Sale_Summ, tmp.Sale_SummReal, tmp.Sale_Summ_10200, tmp.Sale_Summ_10250, tmp.Sale_Summ_10300
             , tmp.Promo_SummCost, tmp.Sale_SummCost, tmp.Sale_SummCost_10500, tmp.Sale_SummCost_40200
             , tmp.Sale_Amount_Weight, tmp.Sale_Amount_Sh
-            , tmp.Promo_AmountPartner_Weight, tmp.Promo_AmountPartner_Sh, tmp.Sale_AmountPartner_Weight, tmp.Sale_AmountPartner_Sh, tmp.Sale_AmountPartnerR_Weight, tmp.Sale_AmountPartnerR_Sh
+            , tmp.Promo_AmountPartner_Weight, tmp.Promo_AmountPartner_Sh, tmp.Sale_AmountPartner_Weight
+            , tmp.Sale_AmountPartner_Sh, tmp.Sale_AmountPartnerR_Weight, tmp.Sale_AmountPartnerR_Sh
             , tmp.Return_Summ, tmp.Return_Summ_10300, tmp.Return_Summ_10700, tmp.Return_SummCost, tmp.Return_SummCost_40200
             , tmp.Return_Amount_Weight, tmp.Return_Amount_Sh, tmp.Return_AmountPartner_Weight, tmp.Return_AmountPartner_Sh
             , tmp.Sale_Amount_10500_Weight
             , tmp.Sale_Amount_40200_Weight
             , tmp.Return_Amount_40200_Weight
             , tmp.ReturnPercent
-            , (COALESCE (tmp.Sale_Summ, 0)   - COALESCE (_tmpMI.Sale_SummVAT, 0))   :: TFloat AS Sale_SummMVAT, _tmpMI.Sale_SummVAT
-            , (COALESCE (tmp.Return_Summ, 0) - COALESCE (_tmpMI.Return_SummVAT, 0)) :: TFloat AS Return_SummMVAT, _tmpMI.Return_SummVAT
+            , (COALESCE (tmp.Sale_Summ, 0)   - COALESCE (_tmpMI.Sale_SummVAT, 0))   :: TFloat AS Sale_SummMVAT
+            , _tmpMI.Sale_SummVAT   :: TFloat
+            , (COALESCE (tmp.Return_Summ, 0) - COALESCE (_tmpMI.Return_SummVAT, 0)) :: TFloat AS Return_SummMVAT
+            , _tmpMI.Return_SummVAT :: TFloat
        FROM gpReport_GoodsMI_SaleReturnIn (inStartDate
                                          , inEndDate
                                          , inBranchId
@@ -517,14 +522,14 @@ BEGIN
                                          , inIsOLAP
                                          , inSession
                                           ) AS tmp
-           FULL JOIN _tmpMI ON COALESCE (_tmpMI.JuridicalName,'')  = COALESCE (tmp.JuridicalName, '')
-                           AND COALESCE (_tmpMI.ContractNumber,'') = COALESCE (tmp.ContractNumber,'')
+           FULL JOIN _tmpMI ON COALESCE (_tmpMI.JuridicalId,0)  = COALESCE (tmp.JuridicalId, 0)
+                           AND COALESCE (_tmpMI.ContractId,0) = COALESCE (tmp.ContractId,0)
                            AND COALESCE (_tmpMI.PartnerId ,0)      = COALESCE (tmp.PartnerId, 0)
-                           AND COALESCE (_tmpMI.InfoMoneyName,'')  = COALESCE (tmp.InfoMoneyName,'')
-                           AND COALESCE (_tmpMI.BranchName,'')     = COALESCE (tmp.BranchName,'')
-                           AND COALESCE (_tmpMI.TradeMarkName,'')  = COALESCE (tmp.TradeMarkName,'')
+                           AND COALESCE (_tmpMI.InfoMoneyId,0)  = COALESCE (tmp.InfoMoneyId,0)
+                           AND COALESCE (_tmpMI.BranchId,0)     = COALESCE (tmp.BranchId,0)
+                           AND COALESCE (_tmpMI.TradeMarkId,0)  = COALESCE (tmp.TradeMarkId,0)
                            AND COALESCE (_tmpMI.GoodsId, 0)        = COALESCE (tmp.GoodsId, 0)
-                           AND COALESCE (_tmpMI.GoodsKindName, '') = COALESCE (tmp.GoodsKindName, '') --and 1=0
+                           AND COALESCE (_tmpMI.GoodsKindId, 0) = COALESCE (tmp.GoodsKindId, 0)
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
                                ON ObjectLink_Goods_GoodsGroupStat.ObjectId = COALESCE (_tmpMI.GoodsId, tmp.GoodsId)
                               AND ObjectLink_Goods_GoodsGroupStat.DescId   = zc_ObjectLink_Goods_GoodsGroupStat()
@@ -536,7 +541,7 @@ $BODY$
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
-               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
  15.02.19         *
 */
 -- ÚÂÒÚ
