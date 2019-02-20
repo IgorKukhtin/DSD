@@ -71,19 +71,39 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
      vbUserId:= lpGetUserBySession (inSession);
 
-/* ******************************************************** */
+
     -- определ€етс€ уровень доступа
-   vbObjectId_Constraint_Branch:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
+    vbObjectId_Constraint_Branch:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
     -- !!!мен€етс€ параметр!!!
     IF vbObjectId_Constraint_Branch > 0 THEN inBranchId:= vbObjectId_Constraint_Branch; END IF;
 
     -- определ€етс€ уровень доступа дл€ с/с
-    vbIsCost:= EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin(), 10898, 326391) AND UserId = vbUserId); -- ќтчеты (управленцы) + јналитики по продажам
+    vbIsCost:= FALSE;
 
     vbIsGoods:= FALSE;
     vbIsPartner:= FALSE;
     vbIsJuridical:= FALSE;
-    ---
+
+
+    -- ќграничени€ по товару
+    IF inGoodsGroupId <> 0
+    THEN
+        -- устанавливаетс€ признак
+        vbIsGoods_where:= TRUE;
+
+    ELSE IF inTradeMarkId <> 0
+         THEN
+             -- устанавливаетс€ признак
+             vbIsGoods_where:= TRUE;
+
+         ELSE
+             -- устанавливаетс€ признак
+             vbIsGoods_where:= FALSE;
+
+         END IF;
+    END IF;
+
+    --
     vbIsJuridicalBranch:= COALESCE (inBranchId, 0) = 0;
     --
     IF inAreaId <> 0
@@ -372,7 +392,7 @@ BEGIN
                                , CASE WHEN inIsPartner = FALSE THEN 0 ELSE tmpOperationGroup2.PartnerId END AS PartnerId
                                , tmpOperationGroup2.InfoMoneyId
                                , tmpOperationGroup2.BranchId
-                               , 0 as TradeMarkId
+                               , _tmpGoods.TradeMarkId
                                , CASE WHEN inIsGoods = TRUE     THEN tmpOperationGroup2.GoodsId ELSE 0 END     AS GoodsId
                                , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END AS GoodsKindId
 
@@ -400,6 +420,8 @@ BEGIN
                                  , _tmpGoods.TradeMarkId
                                  , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END
                                  , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END
+                          HAVING SUM (tmpOperationGroup2.Sale_SummVAT)   <> 0
+                              OR SUM (tmpOperationGroup2.Return_SummVAT) <> 0
                           )
   ,_tmpMI AS (SELECT Object_Juridical.ObjectCode        AS JuridicalCode
                    , Object_Juridical.ValueData         AS JuridicalName
@@ -412,6 +434,7 @@ BEGIN
                    , Object_Branch.ValueData            AS BranchName
                    , Object_TradeMark.ValueData         AS TradeMarkName
 
+                   , Object_Goods.Id                    AS GoodsId
                    , Object_Goods.ObjectCode            AS GoodsCode
                    , Object_Goods.ValueData             AS GoodsName
                    , Object_GoodsKind.ValueData         AS GoodsKindName
@@ -437,20 +460,32 @@ BEGIN
               )
        -- результат
        SELECT tmp.GoodsGroupName, tmp.GoodsGroupNameFull
-            , tmp.GoodsCode, tmp.GoodsName, tmp.GoodsKindName, tmp.MeasureName
-            , tmp.TradeMarkName, tmp.GoodsGroupAnalystName, tmp.GoodsTagName, tmp.GoodsGroupStatName
+            , COALESCE (_tmpMI.GoodsCode, tmp.GoodsCode) :: Integer AS GoodsCode
+            , COALESCE (_tmpMI.GoodsName, tmp.GoodsName) :: TVarChar AS GoodsName
+            , COALESCE (_tmpMI.GoodsKindName, tmp.GoodsKindName) :: TVarChar AS GoodsKindName
+            , tmp.MeasureName
+            , COALESCE (_tmpMI.TradeMarkName, tmp.TradeMarkName) :: TVarChar AS TradeMarkName
+            , tmp.GoodsGroupAnalystName, tmp.GoodsTagName
+            , Object_GoodsGroupStat.ValueData AS GoodsGroupStatName
             , tmp.GoodsPlatformName
             , tmp.JuridicalGroupName
-            , tmp.BranchCode, tmp.BranchName
-            , tmp.JuridicalCode, tmp.JuridicalName
+            , tmp.BranchCode
+            , COALESCE (_tmpMI.BranchName, tmp.BranchName) :: TVarChar AS BranchName
+            , tmp.JuridicalCode
+            , COALESCE (_tmpMI.JuridicalName, tmp.JuridicalName) :: TVarChar AS JuridicalName
             , tmp.RetailName, tmp.RetailReportName
             , tmp.AreaName, tmp.PartnerTagName
             , tmp.Address, tmp.RegionName, tmp.ProvinceName, tmp.CityKindName, tmp.CityName
             , tmp.PartnerId, tmp.PartnerCode, tmp.PartnerName
-            , tmp.ContractCode, tmp.ContractNumber, tmp.ContractTagName, tmp.ContractTagGroupName
+            , COALESCE (_tmpMI.ContractCode, tmp.ContractCode) :: Integer AS ContractCode
+            , COALESCE (_tmpMI.ContractNumber, tmp.ContractNumber) :: TVarChar AS ContractNumber
+            , tmp.ContractTagName, tmp.ContractTagGroupName
             , tmp.PersonalName, tmp.UnitName_Personal, tmp.BranchName_Personal
             , tmp.PersonalTradeName, tmp.UnitName_PersonalTrade
-            , tmp.InfoMoneyGroupName, tmp.InfoMoneyDestinationName, tmp.InfoMoneyCode, tmp.InfoMoneyName, tmp.InfoMoneyName_all
+            , tmp.InfoMoneyGroupName, tmp.InfoMoneyDestinationName
+            , COALESCE (_tmpMI.InfoMoneyCode, tmp.InfoMoneyCode) :: Integer AS InfoMoneyCode
+            , COALESCE (_tmpMI.InfoMoneyName, tmp.InfoMoneyName) :: TVarChar AS InfoMoneyName
+            , tmp.InfoMoneyName_all
 
             , tmp.Promo_Summ, tmp.Sale_Summ, tmp.Sale_SummReal, tmp.Sale_Summ_10200, tmp.Sale_Summ_10250, tmp.Sale_Summ_10300
             , tmp.Promo_SummCost, tmp.Sale_SummCost, tmp.Sale_SummCost_10500, tmp.Sale_SummCost_40200
@@ -462,8 +497,8 @@ BEGIN
             , tmp.Sale_Amount_40200_Weight
             , tmp.Return_Amount_40200_Weight
             , tmp.ReturnPercent
-            , (tmp.Sale_Summ   - COALESCE (_tmpMI.Sale_SummVAT, 0))   :: TFloat AS Sale_SummMVAT, _tmpMI.Sale_SummVAT
-            , (tmp.Return_Summ - COALESCE (_tmpMI.Return_SummVAT, 0)) :: TFloat AS Return_SummMVAT, _tmpMI.Return_SummVAT
+            , (COALESCE (tmp.Sale_Summ, 0)   - COALESCE (_tmpMI.Sale_SummVAT, 0))   :: TFloat AS Sale_SummMVAT, _tmpMI.Sale_SummVAT
+            , (COALESCE (tmp.Return_Summ, 0) - COALESCE (_tmpMI.Return_SummVAT, 0)) :: TFloat AS Return_SummMVAT, _tmpMI.Return_SummVAT
        FROM gpReport_GoodsMI_SaleReturnIn (inStartDate
                                          , inEndDate
                                          , inBranchId
@@ -482,14 +517,18 @@ BEGIN
                                          , inIsOLAP
                                          , inSession
                                           ) AS tmp
-           LEFT JOIN _tmpMI ON COALESCE (_tmpMI.JuridicalName,'')  = COALESCE (tmp.JuridicalName, '')
+           FULL JOIN _tmpMI ON COALESCE (_tmpMI.JuridicalName,'')  = COALESCE (tmp.JuridicalName, '')
                            AND COALESCE (_tmpMI.ContractNumber,'') = COALESCE (tmp.ContractNumber,'')
-                           AND COALESCE (_tmpMI.PartnerId ,0)      = COALESCE (tmp.PartnerId,0)
+                           AND COALESCE (_tmpMI.PartnerId ,0)      = COALESCE (tmp.PartnerId, 0)
                            AND COALESCE (_tmpMI.InfoMoneyName,'')  = COALESCE (tmp.InfoMoneyName,'')
                            AND COALESCE (_tmpMI.BranchName,'')     = COALESCE (tmp.BranchName,'')
                            AND COALESCE (_tmpMI.TradeMarkName,'')  = COALESCE (tmp.TradeMarkName,'')
-                           AND COALESCE (_tmpMI.GoodsName,'')      = COALESCE (tmp.GoodsName,'')
+                           AND COALESCE (_tmpMI.GoodsId, 0)        = COALESCE (tmp.GoodsId, 0)
                            AND COALESCE (_tmpMI.GoodsKindName, '') = COALESCE (tmp.GoodsKindName, '') --and 1=0
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
+                               ON ObjectLink_Goods_GoodsGroupStat.ObjectId = COALESCE (_tmpMI.GoodsId, tmp.GoodsId)
+                              AND ObjectLink_Goods_GoodsGroupStat.DescId   = zc_ObjectLink_Goods_GoodsGroupStat()
+          LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = ObjectLink_Goods_GoodsGroupStat.ChildObjectId
 ;
 END;
 $BODY$
