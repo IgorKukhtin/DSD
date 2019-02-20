@@ -121,6 +121,19 @@ BEGIN
           , tmp.Code
           , tmp.ItemName
      FROM (
+     -- 1.0. zc_Movement_IncomeCost
+     SELECT Movement.Id AS MovementId
+          , Movement.OperDate
+          , Movement.InvNumber
+          , MovementDesc.Code
+          , MovementDesc.ItemName AS ItemName
+     FROM Movement
+          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+       AND Movement.DescId IN (zc_Movement_IncomeCost())
+       AND Movement.StatusId = zc_Enum_Status_Complete()
+
+    UNION
      -- 1.1. From: Sale + !!!NOT SendOnPrice!!!
      SELECT Movement.Id AS MovementId
           , Movement.OperDate

@@ -20661,8 +20661,10 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select case when Code = ' + FormatToVarCharServer_notNULL('zc_Movement_Inventory')
+        Add('select case when Code = ' + FormatToVarCharServer_notNULL('zc_Movement_IncomeCost')
            +'                 then 1'
+           +'            when Code = ' + FormatToVarCharServer_notNULL('zc_Movement_Inventory')
+           +'                 then 2'
            +'            else 0'
            +'       end as Order_master'
            +'    , _pgMovementReComlete.*');

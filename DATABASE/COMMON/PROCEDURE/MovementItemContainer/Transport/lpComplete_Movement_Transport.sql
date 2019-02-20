@@ -247,8 +247,8 @@ BEGIN
             , _tmp.BusinessId_Route
 
         FROM (SELECT
-                     MovementItem.Id AS MovementItemId
-                   , MovementItem.ParentId AS MovementItemId_parent
+                     COALESCE (MovementItem.Id, 0) AS MovementItemId
+                   , MovementItem_Parent.Id        AS MovementItemId_parent
 --                   , COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0)       AS UnitId_ProfitLoss   -- сейчас затраты по принадлежности маршрута к подразделению, иначе надо изменить на vbUnitId_Car, тогда затраты будут по принадлежности авто к подразделению
 --                   , COALESCE (ObjectLink_UnitRoute_Branch.ChildObjectId, 0) AS BranchId_ProfitLoss -- сейчас затраты по принадлежности маршрута к подразделению, иначе надо изменить на vbBranchId_Car, тогда затраты будут по принадлежности авто к подразделению
                    , CASE WHEN ObjectLink_UnitRoute_Branch.ChildObjectId IS NULL
@@ -266,9 +266,9 @@ BEGIN
                    , COALESCE (MILinkObject_Unit_parent.ObjectId, COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0)) AS UnitId_Route       -- всегда у Маршрута для zc_MI_Master
                    , COALESCE (ObjectLink_UnitRoute_Branch.ChildObjectId, 0)                                         AS BranchId_Route     -- всегда у Маршрута для zc_MI_Master
                      -- для Автомобиля это Вид топлива
-                   , MovementItem.ObjectId AS GoodsId
+                   , COALESCE (MovementItem.ObjectId, 0) AS GoodsId
                    , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
-                   , MovementItem.Amount AS OperCount
+                   , COALESCE (MovementItem.Amount, 0) AS OperCount
                      -- Группы ОПиУ
                    , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossGroupId, 0) AS ProfitLossGroupId
                      -- Аналитики ОПиУ - направления
@@ -281,8 +281,8 @@ BEGIN
                    , COALESCE (ObjectLink_UnitRoute_Business.ChildObjectId, 0) AS BusinessId_Route
 
               FROM Movement
-                   JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE
-                   JOIN MovementItem AS MovementItem_Parent ON MovementItem_Parent.Id = MovementItem.ParentId AND MovementItem_Parent.isErased = FALSE
+                   INNER JOIN MovementItem AS MovementItem_Parent ON MovementItem_Parent.MovementId = Movement.Id AND MovementItem_Parent.DescId = zc_MI_Master() AND MovementItem_Parent.isErased = FALSE
+                   LEFT JOIN MovementItem ON MovementItem.ParentId = MovementItem_Parent.Id AND MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit_parent
                                                     ON MILinkObject_Unit_parent.MovementItemId = MovementItem_Parent.Id
                                                    AND MILinkObject_Unit_parent.DescId = zc_MILinkObject_Unit()
@@ -317,6 +317,7 @@ BEGIN
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              ) AS _tmp
         ;
+
 
      -- заполняем таблицу - элементы по Сотруднику (ЗП) + затраты "командировочные" + "дальнобойные" + "такси", со всеми свойствами для формирования Аналитик в проводках, здесь по !!!MovementItemId!!!
      INSERT INTO _tmpItem_SummPersonal (MovementItemId, OperSumm_Add, OperSumm_AddLong, OperSumm_Taxi
@@ -524,7 +525,7 @@ BEGIN
      -- !!!формируются расчитанные свойства в Подчиненых элементах документа!!!
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_StartAmountFuel(), tmp.MovementItemId, tmp.StartAmountFuel)
      FROM (SELECT _tmpItem_Transport.MovementItemId, COALESCE (_tmpPropertyRemains.Amount, 0) AS StartAmountFuel
-           FROM (SELECT (MovementItemId) AS MovementItemId, GoodsId FROM _tmpItem_Transport
+           FROM (SELECT (MovementItemId) AS MovementItemId, GoodsId FROM _tmpItem_Transport WHERE _tmpItem_Transport.MovementItemId > 0
                 ) AS _tmpItem_Transport
                 LEFT JOIN (SELECT MAX (MovementItemId) AS MovementItemId, GoodsId FROM _tmpItem_Transport GROUP BY GoodsId
                           ) AS _tmpItem_Transport_max ON _tmpItem_Transport_max.GoodsId = _tmpItem_Transport.GoodsId
@@ -554,7 +555,7 @@ BEGIN
                , tmp.StartAmountFuel
            FROM (SELECT _tmpPropertyRemains.FuelId, _tmpPropertyRemains.Amount AS StartAmountFuel
                  FROM _tmpPropertyRemains
-                      LEFT JOIN (SELECT MAX (MovementItemId) AS MovementItemId, GoodsId FROM _tmpItem_Transport GROUP BY GoodsId
+                      LEFT JOIN (SELECT MAX (MovementItemId) AS MovementItemId, GoodsId FROM _tmpItem_Transport WHERE _tmpItem_Transport.MovementItemId > 0 GROUP BY GoodsId
                                 ) AS _tmpItem_Transport ON _tmpItem_Transport.GoodsId = _tmpPropertyRemains.FuelId
                  WHERE _tmpPropertyRemains.Kind = 3
                    AND _tmpItem_Transport.GoodsId IS NULL
@@ -581,7 +582,8 @@ BEGIN
                                                                                           , inAssetId                := _tmpItem_Transport.AssetId
                                                                                           , inBranchId               := 0
                                                                                           , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
-                                                                                           );
+                                                                                           )
+     WHERE _tmpItem_Transport.MovementItemId > 0;
 
      -- 1.2.1. самое интересное: заполняем таблицу - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках !!!(кроме Тары)!!!
      INSERT INTO _tmpItem_TransportSumm_Transport (MovementItemId, ContainerId_ProfitLoss, ContainerId_50000, ContainerId, AccountId, AccountId_50000, OperSumm)
@@ -781,7 +783,9 @@ BEGIN
             , FALSE                                   AS isActive
        FROM _tmpItem_Transport
            LEFT JOIN (SELECT DISTINCT _tmpItem_TransportSumm_Transport.MovementItemId, _tmpItem_TransportSumm_Transport.ContainerId_ProfitLoss, _tmpItem_TransportSumm_Transport.ContainerId_50000, _tmpItem_TransportSumm_Transport.AccountId_50000 FROM _tmpItem_TransportSumm_Transport
-                     ) AS tmpProfitLoss ON tmpProfitLoss.MovementItemId = _tmpItem_Transport.MovementItemId;
+                     ) AS tmpProfitLoss ON tmpProfitLoss.MovementItemId = _tmpItem_Transport.MovementItemId
+       WHERE _tmpItem_Transport.MovementItemId > 0
+      ;
 
      -- 1.2.2. формируются Проводки для суммового учета !!!после прибыли, т.к. нужен ContainerId_ProfitLoss!!!
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
@@ -909,6 +913,7 @@ BEGIN
            , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BranchRoute(), tmp.MovementItemId, tmp.BranchId_Route)
      FROM (SELECT DISTINCT _tmpItem_Transport.MovementItemId, _tmpItem_Transport.UnitId_ProfitLoss, _tmpItem_Transport.BranchId_ProfitLoss, _tmpItem_Transport.RouteId_ProfitLoss, _tmpItem_Transport.UnitId_Route, _tmpItem_Transport.BranchId_Route
            FROM _tmpItem_Transport
+           WHERE _tmpItem_Transport.MovementItemId > 0
           ) AS tmp;
 
 

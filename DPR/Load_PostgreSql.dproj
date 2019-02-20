@@ -149,6 +149,10 @@
 			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201009.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201209.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdPivotGrid.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXMLAction.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXLSAction.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
 			<None Include="Load_PostgreSql.todo"/>
 			<BuildConfiguration Include="Debug">
 				<Key>Cfg_2</Key>

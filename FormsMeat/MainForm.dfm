@@ -5,7 +5,7 @@
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 260
+  ExplicitHeight = 257
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -2992,7 +2992,7 @@
       GuiParams = <
         item
           Name = 'CashId_top'
-          Value = '280296'
+          Value = '3259636'
           MultiSelectSeparator = ','
         end
         item
@@ -6367,6 +6367,39 @@
           Name = 'ToName'
           Value = #1062#1045#1061' '#1058#1091#1096#1077#1085#1082#1072
           DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actCashOperationLviv: TdsdOpenForm
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076' ('#1051#1100#1074#1086#1074')'
+      Hint = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076' ('#1051#1100#1074#1086#1074')'
+      FormName = 'TCashJournalUserForm'
+      FormNameParam.Value = 'TCashJournalUserForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'CashId_top'
+          Value = '407280'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CashName_top'
+          Value = #1050#1072#1089#1089#1072' '#1051#1100#1074#1086#1074
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyId'
+          Value = '14461'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyName'
+          Value = #1075#1088#1085
           MultiSelectSeparator = ','
         end>
       isShowModal = False

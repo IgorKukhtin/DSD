@@ -1,3 +1,6 @@
+-- update Object set valuedata = '' where Id = zc_Enum_GlobalConst_ConnectParam()
+-- update Object set valuedata = '' where Id = zc_Enum_GlobalConst_ConnectReportParam()
+
 -- 1.1. ЗАМЕНИЛИ Goods
 update Object set ValueData = 'Препарат _ ' || ((cast (tmp.Ord as Integer)) :: TVarChar)
 from (select *, ROW_NUMBER() OVER (ORDER BY Id ASC) AS Ord from Object where DescId = zc_Object_Goods() /*limit 100*/) AS tmp
