@@ -20,7 +20,7 @@ RETURNS TABLE (
 
   NDS            TFloat,
 
-  TypePayment    TVarChar,
+  TypePayment    Integer,
   Bank           TVarChar
 )
 AS
@@ -51,9 +51,9 @@ BEGIN
 
            , Object_Goods.NDS
 
-           , Object_PaidType.ValueData                 AS TypePayment
+           , Object_PaidType.ObjectCode - 1            AS TypePayment
 
-           , Object_BankPOSTerminal.ValueData        AS Bank
+           , Object_BankPOSTerminal.ValueData          AS Bank
 
        FROM Movement
 
@@ -98,7 +98,7 @@ BEGIN
               , Object_Goods.goodsname
               , MIFloat_Price.ValueData
               , Object_Goods.NDS
-              , Object_PaidType.ValueData
+              , Object_PaidType.ObjectCode
               , Object_BankPOSTerminal.ValueData;
 
 

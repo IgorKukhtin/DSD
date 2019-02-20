@@ -375,6 +375,13 @@ inherited RepriceRogersForm: TRepriceRogersForm
           Component = GuidesUnit
           ComponentItem = 'TextValue'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'date'
+          Value = 'NULL'
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       StoredProc = spMovementItem_Reprice_XML
       RootName = 'Reprices'

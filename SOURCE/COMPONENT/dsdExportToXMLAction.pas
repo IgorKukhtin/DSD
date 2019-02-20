@@ -80,6 +80,7 @@ var
     begin
       case AParam.DataType of
         ftFloat : Result := CurrToStr(AParam.AsFloat);
+        ftDate, ftTime, ftDateTime : Result := StringReplace(AParam.Value, FormatSettings.DateSeparator, '/', [rfReplaceAll]);
         else Result := AParam.Value;
       end;
 
@@ -95,7 +96,11 @@ var
   begin
     if not AField.IsNull then
     begin
-      Result := AField.AsString;
+      case AField.DataType of
+        ftFloat, ftCurrency, ftBCD : Result := StringReplace(AField.AsString, FormatSettings.DecimalSeparator, '.', [rfReplaceAll]);
+        ftDate, ftTime, ftDateTime : Result := StringReplace(AField.AsString, FormatSettings.DateSeparator, '/', [rfReplaceAll]);
+        else Result := AField.AsString;
+      end;
 
       Result := StringReplace(Result, '<', '&lt;', [rfReplaceAll, rfIgnoreCase]);
       Result := StringReplace(Result, '>', '&gt;', [rfReplaceAll, rfIgnoreCase]);
