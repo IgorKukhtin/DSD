@@ -441,7 +441,7 @@ BEGIN
           , Object_Goods.Id                    AS GoodsId
           , Object_Goods.ObjectCode            AS GoodsCode
           , Object_Goods.ValueData             AS GoodsName
-          , Object_GoodsKind.ValueData         AS GoodsKindId
+          , Object_GoodsKind.Id                AS GoodsKindId
           , Object_GoodsKind.ValueData         AS GoodsKindName
           , Object_Measure.ValueData           AS MeasureName
           , Object_TradeMark.Id                AS TradeMarkId
