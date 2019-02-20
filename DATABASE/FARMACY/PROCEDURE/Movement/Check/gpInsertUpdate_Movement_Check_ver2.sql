@@ -2,6 +2,8 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ ЧЕК>
@@ -28,6 +30,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
     IN inTotalSummPayAdd     TFloat    , -- Доплата по чеку
     IN inMemberSPID          Integer   , -- ФИО пациента
     IN inSiteDiscount        Boolean   , -- Скидка через сайт
+    IN inBankPOSTerminalId   Integer   , -- Банк POS терминала
     IN inUserSession	     TVarChar  , -- сессия пользователя под которой создан чек в программе
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -193,7 +196,11 @@ BEGIN
     IF COALESCE(inSiteDiscount, False) = True OR EXISTS(SELECT 1 FROM MovementBoolean WHERE DescId = zc_MovementBoolean_Site() AND MovementId = ioId) THEN
       PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Site(), ioId, inSiteDiscount);
 	END IF;
-
+    
+    IF COALESCE (inBankPOSTerminalId, 0) <> 0
+    THEN
+      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_BankPOSTerminal(), ioId, inBankPOSTerminalId);    
+    END IF;
 
     IF vbIsInsert = TRUE
       THEN

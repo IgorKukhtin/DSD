@@ -58,7 +58,6 @@ uses
   UtilConvert in '..\SOURCE\UtilConvert.pas',
   CashInterface in '..\FormsFarmacy\Cash\CashInterface.pas',
   IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas',
-  CashCloseDialog in '..\FormsFarmacy\Cash\CashCloseDialog.pas' {CashCloseDialogForm: TParentForm},
   AncestorDialog in '..\Forms\Ancestor\AncestorDialog.pas' {AncestorDialogForm: TParentForm},
   dsdApplication in '..\SOURCE\dsdApplication.pas',
   ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',

@@ -171,10 +171,6 @@
 			<DCCReference Include="..\SOURCE\UtilConvert.pas"/>
 			<DCCReference Include="..\FormsFarmacy\Cash\CashInterface.pas"/>
 			<DCCReference Include="..\FormsFarmacy\Cash\IniUtils.pas"/>
-			<DCCReference Include="..\FormsFarmacy\Cash\CashCloseDialog.pas">
-				<Form>CashCloseDialogForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\Forms\Ancestor\AncestorDialog.pas">
 				<Form>AncestorDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>

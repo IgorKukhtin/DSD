@@ -62,6 +62,10 @@ type
     cxGridDBColumn5: TcxGridDBColumn;
     LinkGridLevel: TcxGridLevel;
     cldescName: TcxGridDBColumn;
+    dxBarSubItem1: TdxBarSubItem;
+    dxBarButton1: TdxBarButton;
+    dxBarButton2: TdxBarButton;
+    LinkGridViewColumn1: TcxGridDBColumn;
   private
     { Private declarations }
   public

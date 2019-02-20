@@ -29,6 +29,7 @@ type
     FSummaTotal: Currency;
     FPaidTypeTemp : integer;
     FSalerCash: Currency;
+    FBankPOSTerminal: Integer;
     { Private declarations }
   public
     { Public declarations }
@@ -36,15 +37,17 @@ type
 
 var
   CashCloseDialogForm: TCashCloseDialogForm;
-function CashCloseDialogExecute(ASummaTotal: Currency; Var ASalerCash, ASalerCashAdd: Currency; var APaidType: TPaidType):Boolean;
+function CashCloseDialogExecute(ASummaTotal: Currency; Var ASalerCash, ASalerCashAdd: Currency; var APaidType: TPaidType;
+                                var ABankPOSTerminal : integer):Boolean;
 
 implementation
 
 {$R *.dfm}
 
-uses DataModul, Math;
+uses DataModul, Math, ChoiceBankPOSTerminal;
 
-function CashCloseDialogExecute(ASummaTotal: Currency; Var ASalerCash, ASalerCashAdd: Currency; var APaidType: TPaidType):Boolean;
+function CashCloseDialogExecute(ASummaTotal: Currency; Var ASalerCash, ASalerCashAdd: Currency; var APaidType: TPaidType;
+                                var ABankPOSTerminal : integer):Boolean;
 Begin
   if NOT assigned(CashCloseDialogForm) then
     CashCloseDialogForm := TCashCloseDialogForm.Create(Application);
@@ -56,9 +59,18 @@ Begin
       lblTotalSumma.Caption := FormatCurr('0.00',ASummaTotal);
       edSalerCash.Value := ASummaTotal;
       rgPaidType.ItemIndex := Integer(APaidType);
+      FBankPOSTerminal:=0;
       ActiveControl := edSalerCash;
       edSalerCash.SelectAll;
-      Result := ShowModal = mrOK;
+      Result := True;
+      while Result do
+      begin
+        Result := ShowModal = mrOK;
+        if Result and (rgPaidType.ItemIndex > 0) then
+        begin
+          if ChoiceBankPOSTerminalExecute(FBankPOSTerminal) then Break;
+        end else Break;
+      end;
       if Result then
       Begin
         ASalerCash := edSalerCash.Value;
@@ -66,6 +78,7 @@ Begin
           ASalerCashAdd := ASummaTotal - edSalerCash.Value
         else ASalerCashAdd := 0;
         APaidType := TPaidType(rgPaidType.ItemIndex);
+        ABankPOSTerminal := FBankPOSTerminal;
       End;
     Except ON E: Exception DO
       MessageDlg(E.Message,mtError,[mbOk],0);
