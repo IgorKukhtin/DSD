@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomeCost_byParent(
 RETURNS TABLE (Id Integer, MasterMovementId integer, InvNumber Integer, MasterInvNumber Integer
              , OperDate TDateTime, MasterOperDate TDateTime
              , StatusCode Integer, StatusName TVarChar, MasterStatusCode Integer, MasterStatusName TVarChar
-             , ItemName TVarChar, Comment TVarChar, MasterComment TVarChar
+             , DescId Integer, ItemName TVarChar
+             , Comment TVarChar, MasterComment TVarChar
              , AmountCost TFloat, AmountCost_Master TFloat
              , JuridicalCode Integer, JuridicalName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
@@ -44,7 +45,8 @@ BEGIN
                , Object_StatusMaster.ObjectCode                AS MasterStatusCode
                , Object_StatusMaster.ValueData                 AS MasterStatusName
 
-               , MovementDescMaster.ItemName
+               , MovementDescMaster.Id                         AS DescId
+               , MovementDescMaster.ItemName                   AS ItemName
                , MovementString_Comment.ValueData              AS Comment
                , MovementString_CommentMaster.ValueData        AS MasterComment
 

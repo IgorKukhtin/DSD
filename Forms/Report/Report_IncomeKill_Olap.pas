@@ -24,7 +24,7 @@ uses
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
   cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, dsdGuides,
-  cxButtonEdit;
+  cxButtonEdit, dsdPivotGrid;
 
 type
   TReport_IncomeKill_OlapForm = class(TParentForm)
@@ -74,26 +74,16 @@ type
     edGoods: TcxButtonEdit;
     GuidesGoods: TdsdGuides;
     cxDBPivotGrid: TcxDBPivotGrid;
-    pvMonthDate: TcxDBPivotGridField;
-    pvInvNumber: TcxDBPivotGridField;
     pvOperDate: TcxDBPivotGridField;
     pvGoodsGroupName: TcxDBPivotGridField;
     pvGoodsCode: TcxDBPivotGridField;
     pvGoodsName: TcxDBPivotGridField;
     pvGoodsKindName: TcxDBPivotGridField;
-    pvGoodsGroupNameFull: TcxDBPivotGridField;
-    pvGoodsGroupAnalystName: TcxDBPivotGridField;
-    pvTradeMarkName: TcxDBPivotGridField;
-    pvGoodsTagName: TcxDBPivotGridField;
-    pvGoodsPlatformName: TcxDBPivotGridField;
-    pvPartionGoods: TcxDBPivotGridField;
-    pvPartionGoods_Date: TcxDBPivotGridField;
-    pvAmount: TcxDBPivotGridField;
+    pvPartnerName: TcxDBPivotGridField;
+    pvHeadCount: TcxDBPivotGridField;
     pvAmount_Weight: TcxDBPivotGridField;
-    pvAmount_Sh: TcxDBPivotGridField;
-    pvAmountPartner: TcxDBPivotGridField;
+    pvHeadCount_one: TcxDBPivotGridField;
     pvAmountPartner_Weight: TcxDBPivotGridField;
-    pvAmountPartner_Sh: TcxDBPivotGridField;
     pvPrice: TcxDBPivotGridField;
     pvPricePartner: TcxDBPivotGridField;
     pvSumm: TcxDBPivotGridField;
@@ -109,6 +99,8 @@ type
     pvInfoMoneyDestinationName_Detail: TcxDBPivotGridField;
     pvInfoMoneyName_Detail: TcxDBPivotGridField;
     pvInfoMoneyName_all_Detail: TcxDBPivotGridField;
+    cfPrice: TdsdPivotGridCalcFields;
+    cfPricePartner: TdsdPivotGridCalcFields;
   private
   public
   end;

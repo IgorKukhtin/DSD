@@ -439,10 +439,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeCostForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeCostForm');
   //
-  exit;
+  {exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCostJournalChoicebyIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCostJournalChoicebyIncomeForm');
   exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCostJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCostJournalChoiceForm');
 

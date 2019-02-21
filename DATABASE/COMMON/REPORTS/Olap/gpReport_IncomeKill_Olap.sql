@@ -8,35 +8,28 @@ CREATE OR REPLACE FUNCTION gpReport_IncomeKill_Olap (
     IN inGoodsId            Integer   ,
     IN inSession            TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
-             , MonthDate TDateTime
+RETURNS TABLE (OperDate TDateTime
              , LocationName TVarChar
              , PartnerName  TVarChar
              , GoodsGroupName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , GoodsKindName TVarChar
              , MeasureName TVarChar
-             , Amount                TFloat
-             , AmountPartner         TFloat
              , Amount_Weight         TFloat
              , AmountPartner_Weight  TFloat
-             , Amount_Sh             TFloat
-             , AmountPartner_Sh      TFloat
+             , AmountWeight_diff     TFloat
              , Summ                  TFloat
              , Summ_ProfitLoss       TFloat
              , TotalSumm             TFloat
+             , HeadCount             TFloat
+             , HeadCount_one         TFloat
 
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
-             , InfoMoneyId_Detail Integer, InfoMoneyCode_Detail Integer,
-              InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar
-              , InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
+             , InfoMoneyId_Detail Integer, InfoMoneyCode_Detail Integer
+             , InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar
+             , InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
 
-             , GoodsGroupNameFull TVarChar
-             , GoodsGroupAnalystName TVarChar
-             , TradeMarkName TVarChar
-             , GoodsTagName TVarChar
-             , GoodsPlatformName TVarChar
              )   
 AS
 $BODY$
@@ -62,23 +55,16 @@ BEGIN
                                    , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.MovementDescId = zc_Movement_Income() AND MIContainer.isActive = TRUE
                                                 AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_Count_40200()
                                                     THEN MIContainer.Amount
-                                               WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.MovementDescId = zc_Movement_ReturnOut() AND MIContainer.isActive = FALSE
-                                                AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_Count_40200()
-                                                    THEN -1 * MIContainer.Amount
                                                ELSE 0
                                           END) AS AmountPartner
                                    , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_Income() AND MIContainer.isActive = TRUE
                                                 AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_ProfitLoss()
                                                     THEN MIContainer.Amount
-                                               WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_ReturnOut() AND MIContainer.isActive = FALSE
-                                                AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_ProfitLoss()
-                                                    THEN -1 * MIContainer.Amount
                                                ELSE 0
                                           END) AS Summ
                                    , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()
                                                 AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()
-                                                AND ((MIContainer.MovementDescId = zc_Movement_ReturnOut() AND MIContainer.isActive = FALSE)
-                                                  OR (MIContainer.MovementDescId = zc_Movement_Income() AND MIContainer.isActive = TRUE))
+                                                AND MIContainer.isActive = TRUE
                                                     THEN MIContainer.Amount
                                                ELSE 0
                                           END) AS Summ_ProfitLoss_partner
@@ -89,7 +75,15 @@ BEGIN
                                                     THEN -1 * MIContainer.Amount
                                                ELSE 0
                                           END) AS Summ_ProfitLoss
+
+                                   , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN COALESCE (MIFloat_HeadCount.ValueData, 0) ELSE 0 END) AS HeadCount
+
                               FROM MovementItemContainer AS MIContainer
+                                   LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                                                ON MIFloat_HeadCount.MovementItemId = MIContainer.MovementItemId
+                                                               AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                                                               AND MIContainer.DescId = zc_MIContainer_Count()
+                                                               AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_Count_40200()
                               WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                 AND MIContainer.MovementDescId = zc_Movement_Income()
                                 AND MIContainer.ObjectId_Analyzer = inGoodsId
@@ -117,8 +111,7 @@ BEGIN
                             )
 
          , tmpOperationGroup AS (SELECT tmpMI_ContainerIn.OperDate   AS OperDate
-                                       , CASE WHEN inIsMovement = TRUE THEN tmpMI_ContainerIn.MovementId ELSE 0 END AS MovementId
-                                       , COALESCE (tmpMI_ContainerIn.PartionGoodsId, 0)     AS PartionGoodsId
+                                       , tmpMI_ContainerIn.MovementId
                                        , COALESCE (tmpMI_ContainerIn.InfoMoneyId, 0)        AS InfoMoneyId
                                        , COALESCE (tmpMI_ContainerIn.InfoMoneyId_Detail, 0) AS InfoMoneyId_Detail
                                        , tmpMI_ContainerIn.GoodsId                          AS GoodsId  
@@ -130,10 +123,10 @@ BEGIN
                                        , SUM (tmpMI_ContainerIn.Summ)                       AS Summ
                                        , SUM (tmpMI_ContainerIn.Summ_ProfitLoss_partner)    AS Summ_ProfitLoss_partner
                                        , SUM (tmpMI_ContainerIn.Summ_ProfitLoss)            AS Summ_ProfitLoss
+                                       , SUM (tmpMI_ContainerIn.HeadCount)                  AS HeadCount
                                     
                                   FROM tmpContainer AS tmpMI_ContainerIn
-                                  GROUP BY CASE WHEN inIsMovement = TRUE THEN tmpMI_ContainerIn.MovementId ELSE 0 END
-                                         , COALESCE (tmpMI_ContainerIn.PartionGoodsId, 0)
+                                  GROUP BY tmpMI_ContainerIn.MovementId
                                          , COALESCE (tmpMI_ContainerIn.InfoMoneyId, 0)
                                          , COALESCE (tmpMI_ContainerIn.InfoMoneyId_Detail, 0)
                                          , tmpMI_ContainerIn.GoodsId       
@@ -194,9 +187,7 @@ BEGIN
                             )
 
       -- Результат 
-      SELECT Movement.InvNumber
-           , Movement.OperDate
-           , tmpOperationGroup.OperDate   :: TDateTime AS MonthDate
+      SELECT tmpOperationGroup.OperDate   :: TDateTime AS OperDate
            , Object_Location.ValueData                 AS LocationName
            , Object_Partner.ValueData                  AS PartnerName
            
@@ -206,15 +197,15 @@ BEGIN
            , Object_GoodsKind.ValueData       AS GoodsKindName
            , Object_Measure.ValueData         AS MeasureName
            
-           , tmpOperationGroup.Amount                                                                                           :: TFloat AS Amount
-           , tmpOperationGroup.AmountPartner                                                                                    :: TFloat AS AmountPartner
-           , (tmpOperationGroup.Amount        * CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END) :: TFloat AS Amount_Weight
-           , (tmpOperationGroup.AmountPartner * CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END) :: TFloat AS AmountPartner_Weight
-           , CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpOperationGroup.Amount        ELSE 0 END                    :: TFloat AS Amount_Sh
-           , CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpOperationGroup.AmountPartner ELSE 0 END                    :: TFloat AS AmountPartner_Sh
+           , (tmpOperationGroup.Amount        * CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END) :: TFloat AS Amount_Weight         -- Ж.В ФАКТ
+           , (tmpOperationGroup.AmountPartner * CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END) :: TFloat AS AmountPartner_Weight  -- ВЕС НАКЛАД. БН
+           , ((tmpOperationGroup.Amount - tmpOperationGroup.AmountPartner) * CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END) :: TFloat AS AmountWeight_diff  -- от заготовителя- излишек,кг
+
            , (tmpOperationGroup.Summ - tmpOperationGroup.Summ_ProfitLoss)                                                       :: TFloat AS Summ
            , (tmpOperationGroup.Summ_ProfitLoss + tmpOperationGroup.Summ_ProfitLoss_partner)                                    :: TFloat AS Summ_ProfitLoss
            , tmpOperationGroup.Summ                                                                                             :: TFloat AS TotalSumm
+           , tmpOperationGroup.HeadCount                                                                                        :: TFloat AS HeadCount
+           , CASE WHEN COALESCE (tmpOperationGroup.HeadCount, 0) <> 0 THEN (tmpOperationGroup.Amount * CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END) / tmpOperationGroup.HeadCount ELSE 0 END :: TFloat AS HeadCount_one
            
            , View_InfoMoney.InfoMoneyId
            , View_InfoMoney.InfoMoneyCode
@@ -229,13 +220,6 @@ BEGIN
            , View_InfoMoneyDetail.InfoMoneyDestinationName AS InfoMoneyDestinationName_Detail
            , View_InfoMoneyDetail.InfoMoneyName            AS InfoMoneyName_Detail
            , View_InfoMoneyDetail.InfoMoneyName_all        AS InfoMoneyName_all_Detail
-           
-
-            , tmpGoodsParam.GoodsGroupNameFull
-            , tmpGoodsParam.GoodsGroupAnalystName
-            , tmpGoodsParam.TradeMarkName
-            , tmpGoodsParam.GoodsTagName
-            , tmpGoodsParam.GoodsPlatformName
 
         FROM tmpOperationGroup
 
@@ -254,9 +238,6 @@ BEGIN
              LEFT JOIN Object AS Object_Location ON Object_Location.Id = tmpOperationGroup.LocationId
              LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpOperationGroup.PartnerId
 
-             LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
-                                  ON ObjectDate_PartionGoods_Value.ObjectId = tmpOperationGroup.PartionGoodsId
-                                 AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
         ;
          
 END;
@@ -270,4 +251,4 @@ $BODY$
 */
 
 -- тест-
- -- SELECT * FROM gpReport_IncomeKill_Olap 
+ -- select * from gpReport_IncomeKill_Olap(inStartDate := ('02.01.2019')::TDateTime , inEndDate := ('02.01.2019')::TDateTime , inGoodsId := 5225 ,  inSession := '5');

@@ -36,6 +36,16 @@ type
     cxLabel3: TcxLabel;
     edInfoMoney: TcxButtonEdit;
     InfoMoneyGuides: TdsdGuides;
+    spCheckDescTransport: TdsdStoredProc;
+    spCheckDescService: TdsdStoredProc;
+    actCheckDescService: TdsdExecStoredProc;
+    actCheckDescTransport: TdsdExecStoredProc;
+    actOpenFormService: TdsdOpenForm;
+    actOpenFormTransport: TdsdOpenForm;
+    macOpenFormService: TMultiAction;
+    macOpenFormTransport: TMultiAction;
+    bbOpenFormTransport: TdxBarButton;
+    bbOpenFormService: TdxBarButton;
   private
     { Private declarations }
   public
