@@ -8,28 +8,12 @@ CREATE OR REPLACE FUNCTION gpReport_IncomeKill_Olap (
     IN inGoodsId            Integer   ,
     IN inSession            TVarChar       -- ÒÂÒÒËˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ
 )
-RETURNS TABLE (OperDate TDateTime
-             , LocationName TVarChar
-             , PartnerName  TVarChar
-             , GoodsGroupName TVarChar
-             , GoodsCode Integer, GoodsName TVarChar
-             , GoodsKindName TVarChar
-             , MeasureName TVarChar
-             , Amount_Weight         TFloat
-             , AmountPartner_Weight  TFloat
-             , AmountWeight_diff     TFloat
-             , Summ                  TFloat
-             , Summ_ProfitLoss       TFloat
-             , TotalSumm             TFloat
-             , HeadCount             TFloat
-             , HeadCount_one         TFloat
-
-             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar
-             , InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
-             , InfoMoneyId_Detail Integer, InfoMoneyCode_Detail Integer
-             , InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar
-             , InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
-
+RETURNS TABLE (Num Integer
+             , OperDate TDateTime
+             , Col_Name     TVarChar
+             --, PartnerName  TVarChar
+             , JuridicalName  TVarChar
+             , Value         TFloat
              )   
 AS
 $BODY$
@@ -39,15 +23,14 @@ BEGIN
     RETURN QUERY
       WITH 
            -- ‰‡ÌÌ˚Â ÔÂ‚Ó„Ó ÔÂËÓ‰‡
-           tmpMIContainer AS (SELECT MIContainer.ContainerId                        AS ContainerId
-                                   , MIContainer.OperDate                           AS OperDate
-                                   , MIContainer.MovementId                         AS MovementId
-                                   , MIContainer.ObjectId_Analyzer                  AS GoodsId
-                                   , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
-                                   --, MIContainer.ContainerId_analyzer               AS ContainerId_analyzer
-                                   , MIContainer.ObjectExtId_Analyzer               AS PartnerId
-                                   , MIContainer.WhereObjectId_analyzer             AS LocationId
-                                  
+           tmpMIContainer AS (SELECT MIContainer.ContainerId                 AS ContainerId
+                                   , MIContainer.OperDate                    AS OperDate
+                                   , MIContainer.MovementId                  AS MovementId
+                                   , MIContainer.ObjectId_Analyzer           AS GoodsId
+                                   , MIContainer.ObjectExtId_Analyzer        AS PartnerId
+                                   , MIContainer.WhereObjectId_analyzer      AS LocationId
+                                   , MIContainer.ContainerIntId_analyzer     AS ContainerIntId_analyzer
+
                                    , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.MovementDescId = zc_Movement_Income() AND MIContainer.isActive = TRUE
                                                     THEN MIContainer.Amount
                                                ELSE 0
@@ -80,10 +63,10 @@ BEGIN
 
                               FROM MovementItemContainer AS MIContainer
                                    LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
-                                                                ON MIFloat_HeadCount.MovementItemId = MIContainer.MovementItemId
-                                                               AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
-                                                               AND MIContainer.DescId = zc_MIContainer_Count()
-                                                               AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_Count_40200()
+                                                               ON MIFloat_HeadCount.MovementItemId = MIContainer.MovementItemId
+                                                              AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                                                              AND MIContainer.DescId = zc_MIContainer_Count()
+                                                              AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_Count_40200()
                               WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                 AND MIContainer.MovementDescId = zc_Movement_Income()
                                 AND MIContainer.ObjectId_Analyzer = inGoodsId
@@ -91,68 +74,101 @@ BEGIN
                               GROUP BY MIContainer.ContainerId
                                      , MIContainer.MovementId
                                      , MIContainer.ObjectId_analyzer
-                                     , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                      , MIContainer.ContainerId_analyzer
                                      , MIContainer.ObjectExtId_Analyzer
                                      , MIContainer.OperDate
                                      , MIContainer.WhereObjectId_analyzer
+                                     , MIContainer.ContainerIntId_analyzer
                                     )
 
          , tmpContainer AS (SELECT tmp.*
-                                 , CLO_InfoMoney.ObjectId             AS InfoMoneyId
-                                 , CLO_InfoMoneyDetail.ObjectId       AS InfoMoneyId_Detail
+                                 , MovementLinkObject_From.ObjectId AS JuridicalId
+                                 , CASE WHEN tmp.PartnerId <> MovementLinkObject_From.ObjectId THEN tmp.Amount ELSE 0 END AS Amount_f2
+                                 , CASE WHEN tmp.PartnerId <> MovementLinkObject_From.ObjectId THEN tmp.Summ   ELSE 0 END AS SUM_f2
+                                 , COALESCE (Object_PartionGoods.ValueData, '')                                           AS PartionGoods
                             FROM tmpMIContainer AS tmp
-                                 LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
-                                                               ON CLO_InfoMoney.ContainerId = tmp.ContainerId
-                                                              AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                                 LEFT JOIN ContainerLinkObject AS CLO_InfoMoneyDetail
-                                                               ON CLO_InfoMoneyDetail.ContainerId = tmp.ContainerId
-                                                              AND CLO_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                              ON MovementLinkObject_From.MovementId = tmp.MovementId
+                                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                 LEFT JOIN ContainerLinkObject AS ContainerLO_PartionGoods
+                                                               ON ContainerLO_PartionGoods.ContainerId = tmp.ContainerIntId_analyzer
+                                                              AND ContainerLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                                 LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = ContainerLO_PartionGoods.ObjectId
+                                                                  
                             )
 
-         , tmpOperationGroup AS (SELECT tmpMI_ContainerIn.OperDate   AS OperDate
-                                       , tmpMI_ContainerIn.MovementId
-                                       , COALESCE (tmpMI_ContainerIn.InfoMoneyId, 0)        AS InfoMoneyId
-                                       , COALESCE (tmpMI_ContainerIn.InfoMoneyId_Detail, 0) AS InfoMoneyId_Detail
-                                       , tmpMI_ContainerIn.GoodsId                          AS GoodsId  
-                                       , tmpMI_ContainerIn.GoodsKindId                      AS GoodsKindId
-                                       , tmpMI_ContainerIn.PartnerId                        AS PartnerId
-                                       , tmpMI_ContainerIn.LocationId                       AS LocationId
-                                       , SUM (tmpMI_ContainerIn.Amount)                     AS Amount
-                                       , SUM (tmpMI_ContainerIn.AmountPartner)              AS AmountPartner
-                                       , SUM (tmpMI_ContainerIn.Summ)                       AS Summ
-                                       , SUM (tmpMI_ContainerIn.Summ_ProfitLoss_partner)    AS Summ_ProfitLoss_partner
-                                       , SUM (tmpMI_ContainerIn.Summ_ProfitLoss)            AS Summ_ProfitLoss
-                                       , SUM (tmpMI_ContainerIn.HeadCount)                  AS HeadCount
-                                    
-                                  FROM tmpContainer AS tmpMI_ContainerIn
-                                  GROUP BY tmpMI_ContainerIn.MovementId
-                                         , COALESCE (tmpMI_ContainerIn.InfoMoneyId, 0)
-                                         , COALESCE (tmpMI_ContainerIn.InfoMoneyId_Detail, 0)
-                                         , tmpMI_ContainerIn.GoodsId       
-                                         , tmpMI_ContainerIn.GoodsKindId 
-                                         , tmpMI_ContainerIn.OperDate
-                                         , tmpMI_ContainerIn.PartnerId
-                                         , tmpMI_ContainerIn.LocationId
-                                 )
+/*
+4261;"—¬»Õ»Õ¿ Ì/Í ‚/¯ 2Í‡Ú_*"  17 
+2844;"√ŒÀŒ¬€ —¬.*"             19
+4183;"√Œ–ÀŒ —¬."               20
+4187;"“–¿’≈ﬂ —¬."              21
+2550;"ﬂ«»  —¬»ÕÕ»…*"           22
+*/
+         , tmpGoods AS (SELECT Object.Id
+                        FROM Object
+                        WHERE Object.Id IN (4261, 2844, 4183, 4187, 2550)
+                          AND Object.DescId = zc_Object_Goods() 
+                       )
+
+         , tmpSeparate AS (SELECT tmp.PartionGoods
+                                , SUM (CASE WHEN MI_Child.ObjectId = 4261 THEN MI_Child.Amount ELSE 0 END) AS Amount_17
+                                , SUM (CASE WHEN MI_Child.ObjectId = 2844 THEN MI_Child.Amount ELSE 0 END) AS Amount_19
+                                , SUM (CASE WHEN MI_Child.ObjectId = 4183 THEN MI_Child.Amount ELSE 0 END) AS Amount_20
+                                , SUM (CASE WHEN MI_Child.ObjectId = 4187 THEN MI_Child.Amount ELSE 0 END) AS Amount_21
+                                , SUM (CASE WHEN MI_Child.ObjectId = 2550 THEN MI_Child.Amount ELSE 0 END) AS Amount_22
+                           FROM (SELECT DISTINCT tmp.MovementId, tmp.PartionGoods, tmp.LocationId FROM tmpContainer AS tmp) AS tmp
+                                 INNER JOIN MovementString AS MovementString_PartionGoods
+                                                           ON MovementString_PartionGoods.ValueData = tmp.PartionGoods
+                                                          AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
+                                 INNER JOIN Movement ON Movement.Id = MovementString_PartionGoods.MovementId
+                                           AND Movement.DescId = zc_Movement_ProductionSeparate()
+                                           AND Movement.StatusId = zc_Enum_Status_Complete()
+
+                                 INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                        ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                                       AND MovementLinkObject_From.ObjectId = tmp.LocationId
+                                 JOIN MovementItem AS MI_Master
+                                                   ON MI_Master.MovementId = Movement.Id
+                                                  AND MI_Master.DescId   = zc_MI_Master()
+                                                  AND MI_Master.isErased = FALSE
+                                                  AND MI_Master.ObjectId = 5225
+                                 JOIN MovementItem AS MI_Child
+                                                   ON MI_Child.MovementId =  Movement.Id -- 12095222
+                                                  AND MI_Child.DescId     = zc_MI_Child()
+                                                  AND MI_Child.isErased   = False
+                                 JOIN  tmpGoods ON tmpGoods.Id = MI_Child.ObjectId
+                           GROUP BY tmp.PartionGoods
+                           )
+
+         , tmpGroup AS (SELECT tmpContainer.OperDate                      AS OperDate
+                             , tmpContainer.GoodsId                       AS GoodsId
+                             , tmpContainer.JuridicalId                   AS JuridicalId
+                             , tmpContainer.PartnerId                     AS PartnerId
+                             , tmpContainer.PartionGoods                  AS PartionGoods
+                             , SUM (tmpContainer.Amount)                  AS Amount
+                             , SUM (tmpContainer.AmountPartner)           AS AmountPartner
+                             , SUM (tmpContainer.Summ)                    AS Summ
+                             , SUM (tmpContainer.Summ_ProfitLoss_partner) AS Summ_ProfitLoss_partner
+                             , SUM (tmpContainer.Summ_ProfitLoss)         AS Summ_ProfitLoss
+                             , SUM (tmpContainer.HeadCount)               AS HeadCount
+                             , SUM (tmpContainer.SUM_f2)                  AS SUM_f2
+                             , SUM (tmpContainer.Amount_f2)               AS Amount_f2
+                           
+                         FROM tmpContainer
+                         GROUP BY tmpContainer.GoodsId       
+                                , tmpContainer.OperDate
+                                , tmpContainer.PartnerId
+                                , tmpContainer.JuridicalId
+                                , tmpContainer.PartionGoods
+                        )
 
          , tmpGoodsParam AS (SELECT tmpGoods.GoodsId
-                                  , Object_GoodsGroup.ValueData                  AS GoodsGroupName
                                   , ObjectLink_Goods_Measure.ChildObjectId       AS MeasureId
                                   , ObjectFloat_Weight.ValueData                 AS Weight
-                                  , ObjectString_Goods_GoodsGroupFull.ValueData  AS GoodsGroupNameFull
-                                  , Object_GoodsGroupAnalyst.ValueData           AS GoodsGroupAnalystName
-                                  , Object_TradeMark.ValueData                   AS TradeMarkName
-                                  , Object_GoodsTag.ValueData                    AS GoodsTagName
-                                  , Object_GoodsPlatform.ValueData               AS GoodsPlatformName
-                             FROM (SELECT DISTINCT tmpOperationGroup.GoodsId
-                                   FROM tmpOperationGroup
+                             FROM (SELECT DISTINCT tmpGroup.GoodsId
+                                   FROM tmpGroup
                                    ) AS tmpGoods
-                                  LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                                       ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpGoods.GoodsId
-                                                      AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-                                  LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-
                                   LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                                        ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
                                                       AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -160,84 +176,192 @@ BEGIN
                                   LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                         ON ObjectFloat_Weight.ObjectId = tmpGoods.GoodsId
                                                        AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-
-                                  LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
-                                                         ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
-                                                        AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-
-                                  LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
-                                                       ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = tmpGoods.GoodsId
-                                                      AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
-                                  LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId
-
-                                  LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
-                                                       ON ObjectLink_Goods_TradeMark.ObjectId = tmpGoods.GoodsId
-                                                      AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
-                                  LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
-
-                                  LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
-                                                       ON ObjectLink_Goods_GoodsTag.ObjectId = tmpGoods.GoodsId
-                                                      AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
-                                  LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
-
-                                  LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsPlatform
-                                                       ON ObjectLink_Goods_GoodsPlatform.ObjectId = tmpGoods.GoodsId
-                                                      AND ObjectLink_Goods_GoodsPlatform.DescId = zc_ObjectLink_Goods_GoodsPlatform()
-                                  LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = ObjectLink_Goods_GoodsPlatform.ChildObjectId
                             )
+         
+         , tmpOperationGroupAll AS (SELECT tmp.OperDate
+                                      , tmp.JuridicalId
+                                      , tmp.Amount_Weight
+                                      , tmp.AmountPartner_Weight
+                                      , tmp.Summ
+                                      , tmp.TotalSumm
+                                      , tmp.HeadCount
+                                      --, tmp.HeadCount_one
+                                      , tmp.AmountWeight_diff
+                                      , tmp.SUM_f2
+                                      --, tmp.Amount_f2
+                                      , CASE WHEN COALESCE (tmp.Amount_Weight,0) <> 0 THEN tmp.Summ / tmp.Amount_Weight ELSE 0 END AS Price
+                                      , CASE WHEN COALESCE (tmp.AmountPartner_Weight,0) <> 0 THEN (tmp.TotalSumm ) / tmp.AmountPartner_Weight ELSE 0 END AS PricePartner
+                                      , CASE WHEN COALESCE (tmp.AmountWeight_diff,0) <> 0 THEN tmp.SUM_f2 / tmp.AmountWeight_diff ELSE 0 END AS Price_f2
+                                      , tmpSeparate.Amount_17
+                                      , tmpSeparate.Amount_19
+                                      , tmpSeparate.Amount_20
+                                      , tmpSeparate.Amount_21
+                                      , tmpSeparate.Amount_22
+                                    FROM (SELECT tmpOperationGroup.OperDate
+                                               , tmpOperationGroup.JuridicalId
+                                               , tmpOperationGroup.PartionGoods
+                                               , SUM (tmpOperationGroup.Amount        * CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END) :: TFloat AS Amount_Weight         -- ∆.¬ ‘¿ “
+                                               , SUM ((tmpOperationGroup.AmountPartner - tmpOperationGroup.Amount_f2)  * CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END) :: TFloat AS AmountPartner_Weight  -- ¬≈— Õ¿ À¿ƒ. ¡Õ
+                                               , SUM (tmpOperationGroup.Summ - tmpOperationGroup.Summ_ProfitLoss)                                                                 :: TFloat AS Summ
+                                               , SUM (tmpOperationGroup.Summ - tmpOperationGroup.SUM_f2 )                                                                         :: TFloat AS TotalSumm
+                                               , SUM (tmpOperationGroup.HeadCount)                                                                                                :: TFloat AS HeadCount
+                                               , SUM (tmpOperationGroup.SUM_f2)                                                                                                   :: TFloat AS SUM_f2
+                                               --, SUM (CASE WHEN COALESCE (tmpOperationGroup.HeadCount, 0) <> 0 THEN (tmpOperationGroup.Amount * CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END) / tmpOperationGroup.HeadCount ELSE 0 END) :: TFloat AS HeadCount_one
+                                               , SUM ((tmpOperationGroup.Amount - tmpOperationGroup.AmountPartner + tmpOperationGroup.Amount_f2 ) * CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END) :: TFloat AS AmountWeight_diff  -- ÓÚ Á‡„ÓÚÓ‚ËÚÂÎˇ- ËÁÎË¯ÂÍ,Í„
+                                          FROM tmpGroup AS tmpOperationGroup
+                                               LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = tmpOperationGroup.GoodsId
+                                          GROUP BY tmpOperationGroup.OperDate
+                                                 , tmpOperationGroup.JuridicalId
+                                                 , tmpOperationGroup.PartionGoods
+                                         ) AS tmp
+                                         LEFT JOIN tmpSeparate ON tmpSeparate.PartionGoods = tmp.PartionGoods
+                                   )
+
+         , tmpOperationGroup AS (SELECT '∆.¬ ‘¿ “' AS Col_Name    
+                                      , 1 AS Num
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , tmpOperationGroupAll.Amount_Weight  AS Value
+                                 FROM tmpOperationGroupAll
+                                 WHERE tmpOperationGroupAll.Amount_Weight <> 0
+                                UNION
+                                 SELECT ' -‚Ó „ÓÎÓ‚' AS Col_Name
+                                      , 2 AS Num      
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , tmpOperationGroupAll.HeadCount
+                                 FROM tmpOperationGroupAll
+                                 WHERE tmpOperationGroupAll.HeadCount <> 0
+                                UNION
+                                 SELECT '—Â‰. ¬ÂÒ 1 „ÓÎÓ‚˚' AS Col_Name
+                                      , 3 AS Num
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , tmpOperationGroupAll.Amount_Weight / tmpOperationGroupAll.HeadCount -- tmpOperationGroupAll.HeadCount_one
+                                 FROM tmpOperationGroupAll
+                                 WHERE tmpOperationGroupAll.Amount_Weight <> 0 AND tmpOperationGroupAll.HeadCount <> 0 --tmpOperationGroupAll.HeadCount_one <> 0
+                                UNION
+                                 SELECT '¬≈— Õ¿ À¿ƒ. ¡Õ' AS Col_Name
+                                      , 4 AS Num    
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , tmpOperationGroupAll.AmountPartner_Weight
+                                 FROM tmpOperationGroupAll
+                                 WHERE tmpOperationGroupAll.AmountPartner_Weight <> 0  
+                                UNION
+                                 SELECT '÷≈Õ¿-Õ¿ À¿ƒ. ¡Õ' AS Col_Name
+                                      , 5 AS Num     
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , tmpOperationGroupAll.PricePartner
+                                 FROM tmpOperationGroupAll
+                                 WHERE tmpOperationGroupAll.PricePartner <> 0
+                                UNION
+                                 SELECT '¬—≈√Œ —”ÃÃ¿ ¡Õ' AS Col_Name
+                                      , 6 AS Num       
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , tmpOperationGroupAll.TotalSumm                                      
+                                 FROM tmpOperationGroupAll
+                                 WHERE tmpOperationGroupAll.TotalSumm <> 0
+                                UNION
+                                 SELECT '¬—≈√Œ ƒŒœÀ¿“¿ Á‡„ÓÚÓ‚ËÚÂÎ˛' AS Col_Name
+                                      , 11 AS Num
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , tmpOperationGroupAll.SUM_f2
+                                 FROM tmpOperationGroupAll
+                                 WHERE tmpOperationGroupAll.SUM_f2 <> 0
+                                UNION
+                                 SELECT 'ŒÚ Á‡„ÓÚÓ‚ËÚÂÎˇ- ËÁÎË¯ÂÍ,Í„' AS Col_Name
+                                      , 12 AS Num      
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , tmpOperationGroupAll.AmountWeight_diff
+                                 FROM tmpOperationGroupAll
+                                 WHERE tmpOperationGroupAll.AmountWeight_diff <> 0
+                                UNION
+                                 SELECT 'ÓÚ Á‡„ÓÚÓ‚˘ËÍ-ˆÂÌ‡' AS Col_Name
+                                      , 13 AS Num      
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , tmpOperationGroupAll.Price_f2
+                                 FROM tmpOperationGroupAll
+                                 WHERE tmpOperationGroupAll.Price_f2 <> 0
+                                UNION
+                                 SELECT '¬—≈√Œ —”ÃÃ¿' AS Col_Name
+                                      , 14 AS Num  
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , tmpOperationGroupAll.Summ                                    
+                                 FROM tmpOperationGroupAll
+                                 WHERE tmpOperationGroupAll.Summ <> 0
+                                UNION
+                                 SELECT '÷≈Õ¿ ∆.¬.-‘¿ “' AS Col_Name
+                                      , 15 AS Num
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , tmpOperationGroupAll.Price
+                                 FROM tmpOperationGroupAll
+                                 WHERE tmpOperationGroupAll.Price <> 0
+                                UNION
+                                 SELECT '—¬»Õ»Õ¿ Õ/ ' AS Col_Name
+                                      , 17 AS Num
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , tmpOperationGroupAll.Amount_17
+                                 FROM tmpOperationGroupAll
+                                 WHERE tmpOperationGroupAll.Amount_17 <> 0
+                                UNION
+                                 SELECT 'ˆÂÌ‡ —¬»Õ»Õ¿ Õ/ ' AS Col_Name
+                                      , 18 AS Num
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , 0 :: TFloat AS Value
+                                 FROM tmpOperationGroupAll
+                                 --WHERE tmpOperationGroupAll.Amount_17 <> 0
+                                UNION
+                                 SELECT '√ŒÀŒ¬€ —¬.' AS Col_Name
+                                      , 19 AS Num
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , tmpOperationGroupAll.Amount_19
+                                 FROM tmpOperationGroupAll
+                                 WHERE tmpOperationGroupAll.Amount_19 <> 0
+                                UNION
+                                 SELECT '√ÓÎÓ Ò‚.' AS Col_Name
+                                      , 20 AS Num
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , tmpOperationGroupAll.Amount_20
+                                 FROM tmpOperationGroupAll
+                                 WHERE tmpOperationGroupAll.Amount_20 <> 0
+                                UNION
+                                 SELECT '“‡ıÂˇ Ò‚.' AS Col_Name
+                                      , 21 AS Num
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , tmpOperationGroupAll.Amount_21
+                                 FROM tmpOperationGroupAll
+                                 WHERE tmpOperationGroupAll.Amount_21 <> 0
+                                UNION
+                                 SELECT 'ﬂÁ˚Í Ò‚.' AS Col_Name
+                                      , 22 AS Num
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , tmpOperationGroupAll.Amount_22
+                                 FROM tmpOperationGroupAll
+                                 WHERE tmpOperationGroupAll.Amount_22 <> 0
+                                 )
 
       -- –ÂÁÛÎ¸Ú‡Ú 
-      SELECT tmpOperationGroup.OperDate   :: TDateTime AS OperDate
-           , Object_Location.ValueData                 AS LocationName
-           , Object_Partner.ValueData                  AS PartnerName
-           
-           , tmpGoodsParam.GoodsGroupName     AS GoodsGroupName 
-           , Object_Goods.ObjectCode          AS GoodsCode
-           , Object_Goods.ValueData           AS GoodsName  
-           , Object_GoodsKind.ValueData       AS GoodsKindName
-           , Object_Measure.ValueData         AS MeasureName
-           
-           , (tmpOperationGroup.Amount        * CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END) :: TFloat AS Amount_Weight         -- ∆.¬ ‘¿ “
-           , (tmpOperationGroup.AmountPartner * CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END) :: TFloat AS AmountPartner_Weight  -- ¬≈— Õ¿ À¿ƒ. ¡Õ
-           , ((tmpOperationGroup.Amount - tmpOperationGroup.AmountPartner) * CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END) :: TFloat AS AmountWeight_diff  -- ÓÚ Á‡„ÓÚÓ‚ËÚÂÎˇ- ËÁÎË¯ÂÍ,Í„
-
-           , (tmpOperationGroup.Summ - tmpOperationGroup.Summ_ProfitLoss)                                                       :: TFloat AS Summ
-           , (tmpOperationGroup.Summ_ProfitLoss + tmpOperationGroup.Summ_ProfitLoss_partner)                                    :: TFloat AS Summ_ProfitLoss
-           , tmpOperationGroup.Summ                                                                                             :: TFloat AS TotalSumm
-           , tmpOperationGroup.HeadCount                                                                                        :: TFloat AS HeadCount
-           , CASE WHEN COALESCE (tmpOperationGroup.HeadCount, 0) <> 0 THEN (tmpOperationGroup.Amount * CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END) / tmpOperationGroup.HeadCount ELSE 0 END :: TFloat AS HeadCount_one
-           
-           , View_InfoMoney.InfoMoneyId
-           , View_InfoMoney.InfoMoneyCode
-           , View_InfoMoney.InfoMoneyGroupName
-           , View_InfoMoney.InfoMoneyDestinationName
-           , View_InfoMoney.InfoMoneyName
-           , View_InfoMoney.InfoMoneyName_all
-   
-           , View_InfoMoneyDetail.InfoMoneyId              AS InfoMoneyId_Detail
-           , View_InfoMoneyDetail.InfoMoneyCode            AS InfoMoneyCode_Detail
-           , View_InfoMoneyDetail.InfoMoneyGroupName       AS InfoMoneyGroupName_Detail
-           , View_InfoMoneyDetail.InfoMoneyDestinationName AS InfoMoneyDestinationName_Detail
-           , View_InfoMoneyDetail.InfoMoneyName            AS InfoMoneyName_Detail
-           , View_InfoMoneyDetail.InfoMoneyName_all        AS InfoMoneyName_all_Detail
-
+      SELECT tmpOperationGroup.Num
+           , tmpOperationGroup.OperDate :: TDateTime AS OperDate
+           , tmpOperationGroup.Col_Name :: TVarChar
+           , Object_Juridical.ValueData              AS JuridicalName
+           , tmpOperationGroup.Value    :: TFloat
         FROM tmpOperationGroup
-
-             LEFT JOIN Movement ON Movement.Id = tmpOperationGroup.MovementId
-
-             LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
-             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup.GoodsKindId
-             
-
-             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
-             LEFT JOIN Object_InfoMoney_View AS View_InfoMoneyDetail ON View_InfoMoneyDetail.InfoMoneyId = tmpOperationGroup.InfoMoneyId_Detail
-        
-             LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = Object_Goods.Id
-             LEFT JOIN Object AS Object_Measure on Object_Measure.Id = tmpGoodsParam.MeasureId
-             
-             LEFT JOIN Object AS Object_Location ON Object_Location.Id = tmpOperationGroup.LocationId
-             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpOperationGroup.PartnerId
-
+             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpOperationGroup.JuridicalId
         ;
          
 END;
