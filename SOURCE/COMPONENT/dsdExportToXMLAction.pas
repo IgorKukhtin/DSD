@@ -47,6 +47,7 @@ begin
   inherited;
 
   FSaveFile := TSaveDialog.Create(Application);
+  FSaveFile.DefaultExt := '.xml';
   FSaveFile.Filter := 'Файл XML|*.xml|Все файлы|*.*';
   FSaveFile.Title := 'Укажите файл для сохранения';
   FSaveFile.Options := [ofFileMustExist, ofOverwritePrompt];

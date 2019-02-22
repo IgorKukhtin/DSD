@@ -36,6 +36,7 @@ function ListDiff_lcl: String;
 function EmployeeWorkLog_lcl: String;
 function BankPOSTerminal_lcl: String;
 function UnitConfig_lcl: String;
+function TaxUnitNight_lcl: String;
 
 procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
 procedure LoadLocalData(ADst: TClientDataSet; AFileName: String);
@@ -120,6 +121,11 @@ Begin
 End;
 
 function UnitConfig_lcl: String;
+Begin
+  Result := ExtractFilePath(Application.ExeName) + 'UnitConfig.local';
+End;
+
+function TaxUnitNight_lcl: String;
 Begin
   Result := ExtractFilePath(Application.ExeName) + 'UnitConfig.local';
 End;

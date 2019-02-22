@@ -19,6 +19,7 @@ RETURNS TABLE (
   SummSale       TFloat,
 
   NDS            TFloat,
+  SummNDS    TFloat,
 
   TypePayment    Integer,
   Bank           TVarChar
@@ -50,6 +51,7 @@ BEGIN
            , Sum(Round(MIFloat_PriceSale.ValueData * MovementItem.Amount, 2))::TFloat AS SummSale
 
            , Object_Goods.NDS
+           , Sum(Round(Round(MIFloat_PriceSale.ValueData * MovementItem.Amount, 2) * Object_Goods.NDS / (100 + Object_Goods.NDS), 2))::TFloat AS SummNDS
 
            , Object_PaidType.ObjectCode - 1            AS TypePayment
 
@@ -74,6 +76,7 @@ BEGIN
             INNER JOIN MovementItem AS MovementItem
                                     ON MovementItem.MovementId = Movement.Id
                                    AND MovementItem.isErased   = FALSE
+                                   AND MovementItem.Amount     <> 0
 
             LEFT JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
@@ -113,4 +116,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Movement_Check_XML(inUnitId := 183292 , inDateStart := ('01.02.2019')::TDateTime , inDateFinal := ('14.02.2019')::TDateTime, inSession := '3');
+-- SELECT * FROM gpReport_Movement_Check_XML(inUnitId := 183292 , inDateStart := ('01.02.2019')::TDateTime , inDateFinal := ('01.02.2019')::TDateTime, inSession := '3');

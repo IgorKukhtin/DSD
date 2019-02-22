@@ -7,8 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Cash_UnitConfig (
 )
 RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                ParentName TVarChar,
-               TaxUnitStartDate TDateTime, TaxUnitEndDate TDateTime,
-               TaxUnitNight Boolean, PriceTaxUnitNight TFloat, ValueTaxUnitNight TFloat
+               TaxUnitNight Boolean, TaxUnitStartDate TDateTime, TaxUnitEndDate TDateTime
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -26,6 +25,23 @@ BEGIN
    vbUnitId := vbUnitKey::Integer;
 
    RETURN QUERY
+   WITH tmpTaxUnitNight AS (SELECT  ObjectLink_TaxUnit_Unit.ChildObjectId               AS UnitId
+                            FROM ObjectLink AS ObjectLink_TaxUnit_Unit
+
+                                 LEFT JOIN Object AS Object_TaxUnit
+                                                  ON Object_TaxUnit.Id = ObjectLink_TaxUnit_Unit.ObjectId
+                                                 AND COALESCE (Object_TaxUnit.isErased, False) = False
+
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                                       ON ObjectFloat_Value.ObjectId = Object_TaxUnit.Id
+                                                      AND ObjectFloat_Value.DescId = zc_ObjectFloat_TaxUnit_Value()
+
+
+                            WHERE ObjectLink_TaxUnit_Unit.DescId = zc_ObjectLink_TaxUnit_Unit()
+                              AND Object_TaxUnit.isErased = False
+                              AND COALESCE(ObjectFloat_Value.ValueData, 0) <> 0)
+   
+   
    SELECT
          Object_Unit.Id                                      AS Id
        , Object_Unit.ObjectCode                              AS Code
@@ -33,12 +49,12 @@ BEGIN
 
        , Object_Parent.ValueData                             AS ParentName
 
+       , COALESCE (tmpTaxUnitNight.UnitId, 0) <> 0 
+         AND COALESCE(ObjectDate_TaxUnitStart.ValueData ::Time,'00:00') <> '00:00' 
+         AND COALESCE(ObjectDate_TaxUnitEnd.ValueData ::Time,'00:00') <> '00:00'                 AS TaxUnitNight
+
        , CASE WHEN COALESCE(ObjectDate_TaxUnitStart.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_TaxUnitStart.ValueData ELSE Null END ::TDateTime  AS TaxUnitStartDate
        , CASE WHEN COALESCE(ObjectDate_TaxUnitEnd.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_TaxUnitEnd.ValueData ELSE Null END ::TDateTime  AS TaxUnitEndDate
-
-       , COALESCE (Object_TaxUnit.Id, 0) <>0                 AS TaxUnitNight
-       , ObjectFloat_Price.ValueData                         AS PriceTaxUnitNight
-       , ObjectFloat_Value.ValueData                         AS ValueTaxUnitNight
 
    FROM Object AS Object_Unit
 
@@ -55,30 +71,17 @@ BEGIN
                              ON ObjectDate_TaxUnitEnd.ObjectId = Object_Unit.Id
                             AND ObjectDate_TaxUnitEnd.DescId = zc_ObjectDate_Unit_TaxUnitEnd()
 
-        LEFT JOIN ObjectLink AS ObjectLink_TaxUnit_Unit
-                             ON ObjectLink_TaxUnit_Unit.ChildObjectId = Object_Unit.Id
-                            AND ObjectLink_TaxUnit_Unit.DescId = zc_ObjectLink_TaxUnit_Unit()
-        LEFT JOIN Object AS Object_TaxUnit
-                         ON Object_TaxUnit.Id = ObjectLink_TaxUnit_Unit.ObjectId
-                        AND COALESCE (Object_TaxUnit.isErased, False) = False
-
-        LEFT JOIN ObjectFloat AS ObjectFloat_Price
-                              ON ObjectFloat_Price.ObjectId = Object_TaxUnit.Id
-                             AND ObjectFloat_Price.DescId = zc_ObjectFloat_TaxUnit_Price()
-        LEFT JOIN ObjectFloat AS ObjectFloat_Value
-                              ON ObjectFloat_Value.ObjectId = Object_TaxUnit.Id
-                             AND ObjectFloat_Value.DescId = zc_ObjectFloat_TaxUnit_Value()
-
+        LEFT JOIN tmpTaxUnitNight ON tmpTaxUnitNight.UnitID = Object_Unit.Id
 
    WHERE Object_Unit.Id = vbUnitId 
-   LIMIT 1;
+   --LIMIT 1
+   ;
 
 END;
 $BODY$
 
 
 LANGUAGE plpgsql VOLATILE;
-
 
 -------------------------------------------------------------------------------
 /*
