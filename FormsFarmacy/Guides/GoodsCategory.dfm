@@ -223,6 +223,14 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isUnitList'
+          Value = Null
+          Component = cbList
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
@@ -294,6 +302,14 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
           Component = MasterCDS
           ComponentItem = 'UnitName'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isUnitList'
+          Value = Null
+          Component = cbList
+          DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -390,6 +406,9 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
@@ -404,6 +423,7 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
         end>
       Caption = #1055#1054' '#1057#1055#1048#1057#1050#1059
       Hint = #1055#1054' '#1057#1055#1048#1057#1050#1059
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end
@@ -643,6 +663,14 @@ inherited GoodsCategoryForm: TGoodsCategoryForm
         Component = MasterCDS
         ComponentItem = 'Value'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisUnitList'
+        Value = Null
+        Component = cbList
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
