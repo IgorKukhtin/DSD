@@ -827,6 +827,20 @@ inherited ReportRogersMovementCheckForm: TReportRogersMovementCheckForm
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DateStart'
+          Value = 'NULL'
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DateEnd'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       StoredProc = spExportToXML
       RootName = 'SalesReport'

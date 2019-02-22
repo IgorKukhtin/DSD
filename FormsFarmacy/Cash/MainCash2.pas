@@ -5276,7 +5276,7 @@ begin
     end;
   finally
     if (nPos <> 0) and BankPOSTerminalCDS.Active and
-      (BankPOSTerminalCDS.RecordCount > nPos) then BankPOSTerminalCDS.RecNo := nPos;
+      (BankPOSTerminalCDS.RecordCount >= nPos) then BankPOSTerminalCDS.RecNo := nPos;
     BankPOSTerminalCDS.EnableControls;
   end;
 end;

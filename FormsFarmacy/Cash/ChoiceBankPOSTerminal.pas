@@ -60,13 +60,12 @@ begin
   With ChoiceBankPOSTerminalForm do
   Begin
     try
-      BankPOSTerminalDS.DataSet := MainCashForm.BankPOSTerminalCDS;
+      if BankPOSTerminalDS.DataSet = Nil then BankPOSTerminalDS.DataSet := MainCashForm.BankPOSTerminalCDS;
       Result := ShowModal = mrOK;
       if Result then ABankPOSTerminal := MainCashForm.BankPOSTerminalCDS.FieldByName('Id').AsInteger;
     Except ON E: Exception DO
       MessageDlg(E.Message,mtError,[mbOk],0);
     end;
-    BankPOSTerminalDS.DataSet := Nil;
   End;
 end;
 
