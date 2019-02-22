@@ -31,6 +31,28 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
           DataController.Filter.TranslateBetween = True
           DataController.Filter.TranslateIn = True
           DataController.Filter.TranslateLike = True
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCost
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountMemberCost
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountCost
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountMemberCost
+            end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -107,6 +129,26 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 109
+          end
+          object AmountCost: TcxGridDBColumn
+            Caption = #1047#1072#1090#1088#1072#1090#1099' '#1043#1057#1052
+            DataBinding.FieldName = 'AmountCost'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object AmountMemberCost: TcxGridDBColumn
+            Caption = #1047#1072#1090#1088#1072#1090#1099' ('#1092#1080#1079'.'#1083#1080#1094#1086')'
+            DataBinding.FieldName = 'AmountMemberCost'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object InfoMoneyName_all: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
@@ -338,6 +380,126 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
       ImageIndex = 7
       DataSource = MasterDS
     end
+    object actCheckDescService: TdsdExecStoredProc
+      Category = 'OpenForm'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCheckDescService
+      StoredProcList = <
+        item
+          StoredProc = spCheckDescService
+        end>
+      Caption = 'actCheckRight'
+    end
+    object actCheckDescTransport: TdsdExecStoredProc
+      Category = 'OpenForm'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCheckDescTransport
+      StoredProcList = <
+        item
+          StoredProc = spCheckDescTransport
+        end>
+      Caption = 'actCheckRight'
+    end
+    object actOpenFormService: TdsdOpenForm
+      Category = 'OpenForm'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
+      ImageIndex = 29
+      FormName = 'TTransportServiceForm'
+      FormNameParam.Value = 'TTransportServiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenFormTransport: TdsdOpenForm
+      Category = 'OpenForm'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
+      ImageIndex = 25
+      FormName = 'TTransportForm'
+      FormNameParam.Value = 'TTransportForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object macOpenFormService: TMultiAction
+      Category = 'OpenForm'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCheckDescService
+        end
+        item
+          Action = actOpenFormService
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
+      ImageIndex = 29
+    end
+    object macOpenFormTransport: TMultiAction
+      Category = 'OpenForm'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCheckDescTransport
+        end
+        item
+          Action = actOpenFormTransport
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
+      ImageIndex = 25
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -428,9 +590,30 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenFormTransport'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormService'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end>
@@ -446,6 +629,14 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
     end
     object bbSelect: TdxBarButton
       Action = dsdChoiceGuides
+      Category = 0
+    end
+    object bbOpenFormTransport: TdxBarButton
+      Action = macOpenFormTransport
+      Category = 0
+    end
+    object bbOpenFormService: TdxBarButton
+      Action = macOpenFormService
       Category = 0
     end
   end
@@ -661,5 +852,53 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
       end>
     Left = 368
     Top = 16
+  end
+  object spCheckDescTransport: TdsdStoredProc
+    StoredProcName = 'gpCheckDesc_Movement_IncomeCost'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDescId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DescId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode_open'
+        Value = 'zc_Movement_Transport'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 520
+    Top = 288
+  end
+  object spCheckDescService: TdsdStoredProc
+    StoredProcName = 'gpCheckDesc_Movement_IncomeCost'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDescId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DescId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode_open'
+        Value = 'zc_Movement_TransportService'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 584
+    Top = 312
   end
 end

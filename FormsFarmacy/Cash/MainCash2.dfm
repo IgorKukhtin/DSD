@@ -3105,6 +3105,11 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end
       item
+        Name = 'BankPOSTerminal'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'MovementSPId'
         Value = Null
         MultiSelectSeparator = ','
@@ -3967,5 +3972,27 @@ inherited MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 480
     Top = 232
+  end
+  object BankPOSTerminalCDS: TClientDataSet
+    Aggregates = <>
+    Filtered = True
+    FieldDefs = <>
+    IndexDefs = <>
+    IndexFieldNames = 'Id'
+    Params = <>
+    StoreDefs = True
+    Left = 48
+    Top = 392
+  end
+  object UnitConfigCDS: TClientDataSet
+    Aggregates = <>
+    Filtered = True
+    FieldDefs = <>
+    IndexDefs = <>
+    IndexFieldNames = 'Id'
+    Params = <>
+    StoreDefs = True
+    Left = 48
+    Top = 448
   end
 end

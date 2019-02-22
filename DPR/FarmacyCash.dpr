@@ -100,7 +100,8 @@ uses
   dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
   Cash_IKC_E810T in '..\FormsFarmacy\Cash\Cash_IKC_E810T.pas',
   NeoFiscalPrinterDriver_TLB in '..\FormsFarmacy\Cash\NeoFiscalPrinterDriver_TLB.pas',
-  dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas';
+  dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
+  ChoiceBankPOSTerminal in '..\FormsFarmacy\Cash\ChoiceBankPOSTerminal.pas' {ChoiceBankPOSTerminalForm: TParentForm};
 
 {$R *.res}
 

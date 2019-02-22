@@ -352,6 +352,8 @@ type
     gpGet_Movement_GoodsSP_ID: TdsdStoredProc;
     actEmployeeScheduleUser: TdsdOpenForm;
     N22: TMenuItem;
+    BankPOSTerminalCDS: TClientDataSet;
+    UnitConfigCDS: TClientDataSet;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -487,6 +489,8 @@ type
     //подключение к локальной базе данных
     function InitLocalStorage: Boolean;
     procedure LoadFromLocalStorage;
+    procedure LoadBankPOSTerminal;
+    procedure LoadUnitConfig;
     //Сохранение чека в локальной базе. возвращает УИД
     function SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AManagerName: String;
       ABayerName, ABayerPhone, AConfirmedKindName, AInvNumberOrder, AConfirmedKindClientName: String;
@@ -494,7 +498,7 @@ type
       APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP : String;
       AOperDateSP : TDateTime;
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
-      ASummPayAdd : Currency;  AMemberSPID : integer; ASiteDiscount : Currency;
+      ASummPayAdd : Currency;  AMemberSPID, ABankPOSTerminal : integer; ASiteDiscount : Currency;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 
     //проверили что есть остаток
@@ -536,7 +540,7 @@ var
   csCriticalSection_All: TRTLCriticalSection;
 
   MutexDBF, MutexDBFDiff, MutexVip, MutexRemains, MutexAlternative, MutexAllowedConduct,
-  MutexDiffKind, MutexDiffCDS, MutexEmployeeWorkLog : THandle;  // MutexAllowedConduct только 2 форма
+  MutexDiffKind, MutexDiffCDS, MutexEmployeeWorkLog, MutexBankPOSTerminal, MutexUnitConfig : THandle;  // MutexAllowedConduct только 2 форма
 
   LastErr: Integer;
   FM_SERVISE: Integer;  // для передачи сообщений между приложение и сервисом // только 2 форма
@@ -593,6 +597,8 @@ begin
           difUpdate:=false;
           actAddDiffMemdata.Execute;   // вычитывает дбф в мемдату
           actSetRimainsFromMemdata.Execute; // обновляем остатки в товарах и чеках с учетом пришедших остатков в мемдате
+          LoadBankPOSTerminal;
+          LoadUnitConfig;
         end;
       2:  // получен запрос на сохранение CashSessionId в  CashSessionId.ini
         begin
@@ -601,6 +607,8 @@ begin
       3:  // получен запрос на обновление всего
         begin
           LoadFromLocalStorage;
+          LoadBankPOSTerminal;
+          LoadUnitConfig;
         end;
       4:  // получен запрос на сохранение в отдельную таблицу отгруженных чеков
         begin
@@ -862,6 +870,8 @@ begin
   FormParams.ParamByName('MemberSPID').Value                := 0;
   //***28.01.19
   FormParams.ParamByName('SiteDiscount').Value              := 0;
+  //***20.02.19
+  FormParams.ParamByName('BankPOSTerminal').Value           := 0;
 
   ClearFilterAll;
 
@@ -1418,6 +1428,7 @@ var
   lMsg: String;
   fErr: Boolean;
   dsdSave: TdsdStoredProc;
+  nBankPOSTerminal : integer;
 begin
   if CheckCDS.RecordCount = 0 then exit;
 
@@ -1439,7 +1450,7 @@ begin
   //спросили сумму и тип оплаты
   if not fShift then
   begin// если с Shift, то считаем, что дали без сдачи
-    if not CashCloseDialogExecute(FTotalSumm,ASalerCash,ASalerCashAdd,PaidType) then
+    if not CashCloseDialogExecute(FTotalSumm,ASalerCash,ASalerCashAdd,PaidType,nBankPOSTerminal) then
     Begin
       if Self.ActiveControl <> edAmount then
         Self.ActiveControl := MainGrid;
@@ -1447,6 +1458,8 @@ begin
     End;
     //***02.11.18
     FormParams.ParamByName('SummPayAdd').Value := ASalerCashAdd;
+    //***20.02.19
+    FormParams.ParamByName('BankPOSTerminal').Value := nBankPOSTerminal;
   end
   else
     ASalerCash:=FTotalSumm;
@@ -1544,6 +1557,8 @@ begin
                    FormParams.ParamByName('SummPayAdd').Value,
                    //***14.01.19
                    FormParams.ParamByName('MemberSPID').Value,
+                   //***20.02.19
+                   FormParams.ParamByName('BankPOSTerminal').Value,
                    //***28.01.19
                    FormParams.ParamByName('SiteDiscount').Value,
 
@@ -2417,8 +2432,11 @@ begin
               ,FormParams.ParamByName('SummPayAdd').Value
               //***14.01.19
               ,FormParams.ParamByName('MemberSPID').Value
+              //***20.02.19
+              ,FormParams.ParamByName('BankPOSTerminal').Value
               //***28.01.19
               ,FormParams.ParamByName('SiteDiscount').Value
+
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -2499,8 +2517,11 @@ begin
               ,FormParams.ParamByName('SummPayAdd').Value
               //***14.01.19
               ,FormParams.ParamByName('MemberSPID').Value
+              //***20.02.19
+              ,FormParams.ParamByName('BankPOSTerminal').Value
               //***28.01.19
               ,FormParams.ParamByName('SiteDiscount').Value
+
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -2762,6 +2783,8 @@ begin
               ,FormParams.ParamByName('SummPayAdd').Value
               //***14.01.19
               ,FormParams.ParamByName('MemberSPID').Value
+              //***20.02.19
+              ,FormParams.ParamByName('BankPOSTerminal').Value
               //***14.01.19
               ,FormParams.ParamByName('SiteDiscount').Value
 
@@ -3063,6 +3086,10 @@ begin
   LastErr := GetLastError;
   MutexEmployeeWorkLog := CreateMutex(nil, false, 'farmacycashMutexEmployeeWorkLog');
   LastErr := GetLastError;
+  MutexBankPOSTerminal := CreateMutex(nil, false, 'farmacycashMutexBankPOSTerminal');
+  LastErr := GetLastError;
+  MutexUnitConfig := CreateMutex(nil, false, 'farmacycashMutexUnitConfig');
+  LastErr := GetLastError;
   DiscountServiceForm:= TDiscountServiceForm.Create(Self);
 
   //сгенерили гуид для определения сессии
@@ -3156,6 +3183,9 @@ begin
   TimerBlinkBtn.Enabled := true;
   FNeedFullRemains := true;
   TimerServiceRun.Enabled := true;
+
+  LoadBankPOSTerminal;
+  LoadUnitConfig;
 end;
 
 function TMainCashForm2.InitLocalStorage: Boolean;
@@ -3846,6 +3876,8 @@ begin
   FormParams.ParamByName('MemberSPID').Value                := 0;
   //***28.01.19
   FormParams.ParamByName('SiteDiscount').Value              := 0;
+  //***20.02.19
+  FormParams.ParamByName('BankPOSTerminal').Value           := 0;
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -3945,14 +3977,16 @@ end;
 procedure TMainCashForm2.ParentFormDestroy(Sender: TObject);
 begin
   inherited;
- CloseHandle(MutexDBF);
- CloseHandle(MutexDBFDiff);
- CloseHandle(MutexVip);
- CloseHandle(MutexRemains);
- CloseHandle(MutexAlternative);
- CloseHandle(MutexDiffKind);
- CloseHandle(MutexDiffCDS);
- CloseHandle(MutexEmployeeWorkLog);
+  CloseHandle(MutexDBF);
+  CloseHandle(MutexDBFDiff);
+  CloseHandle(MutexVip);
+  CloseHandle(MutexRemains);
+  CloseHandle(MutexAlternative);
+  CloseHandle(MutexDiffKind);
+  CloseHandle(MutexDiffCDS);
+  CloseHandle(MutexEmployeeWorkLog);
+  CloseHandle(MutexBankPOSTerminal);
+  CloseHandle(MutexUnitConfig);
 end;
 
 procedure TMainCashForm2.ParentFormKeyDown(Sender: TObject; var Key: Word;
@@ -4490,7 +4524,7 @@ function TMainCashForm2.SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AMan
       APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP : String;
       AOperDateSP : TDateTime;
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
-      ASummPayAdd : Currency; AMemberSPID : integer; ASiteDiscount : currency;
+      ASummPayAdd : Currency; AMemberSPID, ABankPOSTerminal : integer; ASiteDiscount : currency;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: integer;
@@ -4668,7 +4702,9 @@ begin
                                          //***14.01.19
                                          AMemberSPID,               //ФИО пациента
                                          //***28.01.19
-                                         ASiteDiscount > 0
+                                         ASiteDiscount > 0,
+                                         //***20.02.19
+                                         ABankPOSTerminal          // POS терминал
                                         ]);
       End
       else
@@ -4715,6 +4751,8 @@ begin
         FLocalDataBaseHead.FieldByName('MEMBERSPID').Value := AMemberSPID; // ФИО пациента
         //***28.01.19
         FLocalDataBaseHead.FieldByName('SITEDISC').Value := (ASiteDiscount > 0); // Дисконт через сайт
+        //***20.02.19
+        FLocalDataBaseHead.FieldByName('BANKPOS').Value := ABankPOSTerminal;
 
         FLocalDataBaseHead.Post;
       End;
@@ -5219,6 +5257,43 @@ begin
     EndSplash;
   end;
 end;
+
+procedure TMainCashForm2.LoadBankPOSTerminal;
+  var nPos : integer;
+begin
+  if not FileExists(BankPOSTerminal_lcl) then Exit;
+
+  BankPOSTerminalCDS.DisableControls;
+  try
+    if BankPOSTerminalCDS.Active then
+      nPos := BankPOSTerminalCDS.RecNo
+    else nPos := 0;
+    WaitForSingleObject(MutexBankPOSTerminal, INFINITE);
+    try
+      LoadLocalData(BankPOSTerminalCDS, BankPOSTerminal_lcl);
+    finally
+      ReleaseMutex(MutexBankPOSTerminal);
+    end;
+  finally
+    if (nPos <> 0) and BankPOSTerminalCDS.Active and
+      (BankPOSTerminalCDS.RecordCount >= nPos) then BankPOSTerminalCDS.RecNo := nPos;
+    BankPOSTerminalCDS.EnableControls;
+  end;
+end;
+
+procedure TMainCashForm2.LoadUnitConfig;
+  var nPos : integer;
+begin
+  if not FileExists(UnitConfig_lcl) then Exit;
+
+  WaitForSingleObject(MutexUnitConfig, INFINITE);
+  try
+    LoadLocalData(UnitConfigCDS, UnitConfig_lcl);
+  finally
+    ReleaseMutex(MutexUnitConfig);
+  end;
+end;
+
 
 function TMainCashForm2.GetAmount : currency;
   var nAmount : Currency; nOne : Extended; nOut, nPack, nOst : Integer;

@@ -60,7 +60,9 @@ type
     //***21.06.18
     MEMBERSPID  : Integer;       //ФИО пациента
     //***28.01.19
-    SITEDISC  : boolean;       //Дисконт через сайт
+    SITEDISC    : boolean;       //Дисконт через сайт
+    //***28.01.19
+    BANKPOS     : integer;       //Банк POS терминала
   end;
   TBodyRecord = record
     ID: Integer;            //ид записи
@@ -169,6 +171,8 @@ type
     procedure SaveLocalDiffKind;
     procedure SaveRealAll;
     procedure SaveListDiff;
+    procedure SaveBankPOSTerminal;
+    procedure SaveUnitConfig;
     procedure SendZReport;
     procedure SendEmployeeWorkLog;
     procedure SecureUpdateVersion;
@@ -196,7 +200,8 @@ var
   csCriticalSection_All: TRTLCriticalSection;
   AllowedConduct : Boolean = false;
   MutexDBF, MutexDBFDiff,  MutexVip, MutexRemains, MutexAlternative, MutexRefresh,
-  MutexAllowedConduct, MutexGoods, MutexDiffCDS, MutexDiffKind, MutexEmployeeWorkLog: THandle;
+  MutexAllowedConduct, MutexGoods, MutexDiffCDS, MutexDiffKind, MutexEmployeeWorkLog,
+  MutexBankPOSTerminal, MutexUnitConfig: THandle;
   LastErr: Integer;
 
   FM_SERVISE: Integer;
@@ -416,6 +421,10 @@ begin
            Add_Log('End MutexDBFDiff 344');
            ReleaseMutex(MutexDBFDiff);
          end;
+         //Получение POS терминалов
+         SaveBankPOSTerminal;
+         //Получение конфигурации аптеки
+         SaveUnitConfig;
          // Отправка сообщения приложению про надобность обновить остатки из файла
          PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
         end;
@@ -493,6 +502,10 @@ begin   //yes
           SaveLocalGoods;
           //Получение причин отказов
           SaveLocalDiffKind;
+          //Получение POS терминалов
+          SaveBankPOSTerminal;
+          //Получение конфигурации аптеки
+          SaveUnitConfig;
           PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 3);
           // Вывод уведомления сервиса
           tiServise.BalloonHint:='Остатки обновлены.';
@@ -560,6 +573,10 @@ begin
   MutexDiffCDS := CreateMutex(nil, false, 'farmacycashMutexDiffCDS');
   LastErr := GetLastError;
   MutexEmployeeWorkLog := CreateMutex(nil, false, 'farmacycashMutexEmployeeWorkLog');
+  LastErr := GetLastError;
+  MutexBankPOSTerminal := CreateMutex(nil, false, 'farmacycashMutexBankPOSTerminal');
+  LastErr := GetLastError;
+  MutexUnitConfig := CreateMutex(nil, false, 'farmacycashMutexUnitConfig');
   LastErr := GetLastError;
   FHasError := false;
   //сгенерили гуид для определения сессии
@@ -1069,6 +1086,8 @@ begin
                 MEMBERSPID := FieldByName('MEMBERSPID').AsInteger;
                 // ***28.01.19
                 SITEDISC := FieldByName('SITEDISC').AsBoolean;
+                // ***20.02.19
+                BANKPOS := FieldByName('BANKPOS').AsInteger;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1199,6 +1218,8 @@ begin
                   dsdSave.Params.AddParam('inMemberSPID', ftInteger, ptInput, Head.MEMBERSPID);
                   // ***28.01.19
                   dsdSave.Params.AddParam('inSiteDiscount', ftBoolean, ptInput, Head.SITEDISC);
+                  // ***20.02.19
+                  dsdSave.Params.AddParam('inBankPOSTerminalId', ftInteger, ptInput, Head.BANKPOS);
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 
@@ -1597,6 +1618,70 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.SaveBankPOSTerminal;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  sp := TdsdStoredProc.Create(nil);
+  try
+    ds := TClientDataSet.Create(nil);
+    try
+      sp.OutputType := otDataSet;
+      sp.DataSet := ds;
+
+      sp.StoredProcName := 'gpSelect_Cash_BankPOSTerminal';
+      sp.Params.Clear;
+      sp.Execute;
+      Add_Log('Start MutexBankPOSTerminal');
+      WaitForSingleObject(MutexBankPOSTerminal, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+      try
+        SaveLocalData(ds,BankPOSTerminal_lcl);
+      finally
+        Add_Log('End MutexBankPOSTerminal');
+        ReleaseMutex(MutexBankPOSTerminal);
+      end;
+
+    finally
+      ds.free;
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+
+procedure TMainCashForm2.SaveUnitConfig;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  sp := TdsdStoredProc.Create(nil);
+  try
+    ds := TClientDataSet.Create(nil);
+    try
+      sp.OutputType := otDataSet;
+      sp.DataSet := ds;
+
+      sp.StoredProcName := 'gpSelect_Cash_UnitConfig';
+      sp.Params.Clear;
+      sp.Execute;
+      Add_Log('Start MutexUnitConfig');
+      WaitForSingleObject(MutexUnitConfig, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+      try
+        SaveLocalData(ds,UnitConfig_lcl);
+      finally
+        Add_Log('End MutexUnitConfig');
+        ReleaseMutex(MutexUnitConfig);
+      end;
+
+    finally
+      ds.free;
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+
 procedure TMainCashForm2.SendZReport;
   var IdFTP : Tidftp;
       s, p: string; sl : TStringList;  i : integer;
@@ -1719,8 +1804,8 @@ begin
     OldProgram := False;
     OldServise := False;
 
-    Add_Log('Start MutexDiffCDS');
-    WaitForSingleObject(MutexDiffCDS, INFINITE);
+    Add_Log('Start MutexEmployeeWorkLog');
+    WaitForSingleObject(MutexEmployeeWorkLog, INFINITE);
     try
       try
 
@@ -1777,8 +1862,8 @@ begin
         Add_Log('Ошибка отправки лога работы сотрудников:' + E.Message);
       end;
     finally
-      Add_Log('End MutexDiffCDS');
-      ReleaseMutex(MutexDiffCDS);
+      Add_Log('End MutexEmployeeWorkLog');
+      ReleaseMutex(MutexEmployeeWorkLog);
       EmployeeWorkLogCDS.Close;
     end;
   end;
@@ -1862,6 +1947,8 @@ begin
  CloseHandle(MutexDiffKind);
  CloseHandle(MutexDiffCDS);
  CloseHandle(MutexEmployeeWorkLog);
+ CloseHandle(MutexBankPOSTerminal);
+ CloseHandle(MutexUnitConfig);
 end;
 
 

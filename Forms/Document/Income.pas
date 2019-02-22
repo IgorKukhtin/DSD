@@ -213,6 +213,16 @@ type
     actMIContainerCost: TdsdOpenForm;
     AmountCost: TcxGridDBColumn;
     AmountCost_Master: TcxGridDBColumn;
+    spCheckDescTransport: TdsdStoredProc;
+    spCheckDescService: TdsdStoredProc;
+    actCheckDescService: TdsdExecStoredProc;
+    actCheckDescTransport: TdsdExecStoredProc;
+    actOpenFormService: TdsdOpenForm;
+    actOpenFormTransport: TdsdOpenForm;
+    macOpenFormService: TMultiAction;
+    macOpenFormTransport: TMultiAction;
+    bbOpenFormTransport: TdxBarButton;
+    bbOpenFormService: TdxBarButton;
   private
   public
   end;

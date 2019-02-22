@@ -18,8 +18,9 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full TVarChar, OperDate 
              , UnitName TVarChar
              , BranchName TVarChar
              , StartRunPlan TDateTime, StartRun TDateTime
-             , Comment TVarChar , DescName TVarChar
+             , Comment TVarChar , DescId Integer, DescName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , AmountCost TFloat, AmountMemberCost TFloat
               )
 AS
 $BODY$
@@ -48,6 +49,7 @@ BEGIN
                              , MovementLinkObject_Car.ObjectId               AS CarId  
                              , MovementItem.ObjectId                         AS RouteId
                              , MovementLinkObject_UnitForwarding.ObjectId    AS UnitId
+                             , MovementDesc.Id                               AS DescId
                              , MovementDesc.ItemName                         AS DescName
                              , 0                                             AS InfoMoneyId
                         FROM tmpStatus
@@ -86,6 +88,7 @@ BEGIN
                                     , MILinkObject_Car.ObjectId                     AS CarId  
                                     , MILinkObject_Route.ObjectId                   AS RouteId
                                     , MovementLinkObject_UnitForwarding.ObjectId    AS UnitId
+                                    , MovementDesc.Id                               AS DescId
                                     , MovementDesc.ItemName                         AS DescName
                                     , MILinkObject_InfoMoney.ObjectId               AS InfoMoneyId
                                FROM tmpStatus
@@ -126,12 +129,12 @@ BEGIN
 
      , tmpList AS  (SELECT tr1.MovementId, tr1.InvNumber, tr1.OperDate, tr1.PersonalDriverId, tr1.CarId, tr1.RouteId, tr1.Comment 
                          , zfFormat_BarCode (zc_BarCodePref_Movement(), tr1.MovementId) AS IdBarCode
-                         , tr1.StatusId, tr1.InvNumber_Full, tr1.UnitId, tr1.DescName, tr1.InfoMoneyId
+                         , tr1.StatusId, tr1.InvNumber_Full, tr1.UnitId, tr1.DescId, tr1.DescName, tr1.InfoMoneyId
                     FROM tmpTransport AS tr1
                    UNION ALL
                     SELECT tr2.MovementId, tr2.InvNumber, tr2.OperDate, tr2.PersonalDriverId, tr2.CarId, tr2.RouteId, tr2.Comment 
-                        , zfFormat_BarCode (zc_BarCodePref_Movement(), tr2.MovementId) AS IdBarCode
-                        , tr2.StatusId, tr2.InvNumber_Full, tr2.UnitId, tr2.DescName, tr2.InfoMoneyId
+                         , zfFormat_BarCode (zc_BarCodePref_Movement(), tr2.MovementId) AS IdBarCode
+                         , tr2.StatusId, tr2.InvNumber_Full, tr2.UnitId, tr2.DescId, tr2.DescName, tr2.InfoMoneyId
                     FROM tmpTransportService AS tr2
                     )
 
@@ -153,11 +156,15 @@ BEGIN
              , CAST (DATE_TRUNC ('MINUTE', MovementDate_StartRunPlan.ValueData) AS TDateTime) AS StartRunPlan
              , CAST (DATE_TRUNC ('MINUTE', MovementDate_StartRun.ValueData)     AS TDateTime) AS StartRun
              , tmpList.Comment
+             , tmpList.DescId
              , tmpList.DescName
                
              , Object_InfoMoney_View.InfoMoneyCode
              , Object_InfoMoney_View.InfoMoneyName
              , Object_InfoMoney_View.InfoMoneyName_all
+
+             , MovementFloat_AmountCost.ValueData       AS AmountCost
+             , MovementFloat_AmountMemberCost.ValueData AS AmountMemberCost
 
         FROM tmpList
             LEFT JOIN MovementDate AS MovementDate_StartRunPlan
@@ -167,6 +174,13 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_StartRun
                                    ON MovementDate_StartRun.MovementId = tmpList.MovementId
                                   AND MovementDate_StartRun.DescId = zc_MovementDate_StartRun()
+
+            LEFT JOIN MovementFloat AS MovementFloat_AmountCost
+                                    ON MovementFloat_AmountCost.MovementId = tmpList.MovementId
+                                   AND MovementFloat_AmountCost.DescId     = zc_MovementFloat_AmountCost()
+            LEFT JOIN MovementFloat AS MovementFloat_AmountMemberCost
+                                    ON MovementFloat_AmountMemberCost.MovementId = tmpList.MovementId
+                                   AND MovementFloat_AmountMemberCost.DescId     = zc_MovementFloat_AmountMemberCost()
 
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpList.CarId
             
@@ -190,6 +204,7 @@ BEGIN
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpList.StatusId
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpList.UnitId
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpList.InfoMoneyId
+            
 
       ;
   

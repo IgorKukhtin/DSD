@@ -17,6 +17,8 @@ RETURNS TABLE (
 
              , Juridical_Price TFloat
              , MarginPercent TFloat
+             , NDS TFloat
+             , SummNDS TFloat
               )
 AS
 $BODY$
@@ -94,8 +96,8 @@ BEGIN
 
 
         SELECT
-               Object_Goods.ObjectCode::INTEGER                  AS GoodsCode
-             , Object_Goods.ValueData                            AS GoodsName
+               Object_Goods.goodscodeInt                         AS GoodsCode
+             , Object_Goods.goodsname                            AS GoodsName
              , COALESCE(MovementItem.Amount,0)::TFloat           AS Amount
              , MIFloat_Price.ValueData                           AS PriceOld
              , MIFloat_PriceSale.ValueData                       AS PriceNew
@@ -110,6 +112,11 @@ BEGIN
                            ELSE COALESCE (MarginCondition.MarginPercent,0) + COALESCE (MIFloat_JuridicalPercent.ValueData, 0)
                       END
                END::TFloat AS MarginPercent
+
+             , Object_Goods.NDS
+             , Round((MovementItem.Amount*
+                 (COALESCE(MIFloat_PriceSale.ValueData, 0)
+                  -COALESCE(MIFloat_Price.ValueData, 0))) * Object_Goods.NDS / (100 + Object_Goods.NDS), 2)::TFloat AS SummNDS
         FROM  MovementItem
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -128,8 +135,8 @@ BEGIN
                                         ON MIFloat_ContractPercent.MovementItemId = MovementItem.Id
                                        AND MIFloat_ContractPercent.DescId = zc_MIFloat_ContractPercent()
 
-            LEFT JOIN Object AS Object_Goods
-                             ON Object_Goods.Id = MovementItem.ObjectId
+            LEFT JOIN Object_Goods_View AS Object_Goods
+                                        ON Object_Goods.Id = MovementItem.ObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
                              ON ObjectLink_Goods_NDSKind.ObjectId = MovementItem.ObjectId

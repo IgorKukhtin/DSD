@@ -477,7 +477,7 @@ begin
   Result := Result + '  Готівка  ' + Str(-nSum[0], 13) + Str(nSum[1], 13) + #13#10;
   Result := Result + '  Готівка в касі        ' + Str(nSum[2], 13) + #13#10;
 
-  for I := 1 to 3 do
+  for I := 1 to 10 do
   begin
 
     S := FPrinter.SUMDAY[0, 0, 0, 1, Password];

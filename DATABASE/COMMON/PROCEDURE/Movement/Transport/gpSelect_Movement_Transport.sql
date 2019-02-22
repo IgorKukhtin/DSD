@@ -130,7 +130,7 @@ BEGIN
                                   AND MovementDate_EndRun.DescId = zc_MovementDate_EndRun()
 
             LEFT JOIN MovementFloat AS MovementFloat_HoursWork
-                                    ON MovementFloat_HoursWork.MovementId =  Movement.Id
+                                    ON MovementFloat_HoursWork.MovementId = Movement.Id
                                    AND MovementFloat_HoursWork.DescId = zc_MovementFloat_HoursWork()
             
             LEFT JOIN MovementFloat AS MovementFloat_HoursAdd

@@ -2332,6 +2332,11 @@ inherited MainCashForm: TMainCashForm
         Name = 'MemberSPID'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankPOSTerminal'
+        Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 56
     Top = 16

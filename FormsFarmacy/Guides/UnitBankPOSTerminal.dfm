@@ -140,6 +140,10 @@ object UnitBankPOSTerminalForm: TUnitBankPOSTerminalForm
           HeaderAlignmentVert = vaCenter
           Width = 224
         end
+        object LinkGridViewColumn1: TcxGridDBColumn
+          DataBinding.FieldName = 'isErased'
+          Visible = False
+        end
       end
       object LinkGridLevel: TcxGridLevel
         GridView = LinkGridView
@@ -228,6 +232,14 @@ object UnitBankPOSTerminalForm: TUnitBankPOSTerminalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end>
       OneOnRow = True
@@ -275,6 +287,20 @@ object UnitBankPOSTerminalForm: TUnitBankPOSTerminalForm
     end
     object bbInsertMask: TdxBarButton
       Action = actInsertMask
+      Category = 0
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = 'New SubItem'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <>
+    end
+    object dxBarButton1: TdxBarButton
+      Action = dsdSetErased
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = dsdSetUnErased
       Category = 0
     end
   end
@@ -387,7 +413,7 @@ object UnitBankPOSTerminalForm: TUnitBankPOSTerminalForm
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = DataSource
+      DataSource = LinkDS
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -403,7 +429,7 @@ object UnitBankPOSTerminalForm: TUnitBankPOSTerminalForm
       ShortCut = 32776
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = DataSource
+      DataSource = LinkDS
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -551,6 +577,7 @@ object UnitBankPOSTerminalForm: TUnitBankPOSTerminalForm
   end
   object ActionAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
+    View = LinkGridView
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList

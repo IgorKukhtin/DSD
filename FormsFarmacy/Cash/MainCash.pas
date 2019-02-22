@@ -832,6 +832,7 @@ var
   lMsg: String;
   fErr: Boolean;
   dsdSave: TdsdStoredProc;
+  nBankPOSTerminal : integer;
 begin
   if CheckCDS.RecordCount = 0 then exit;
   PaidType:=ptMoney;
@@ -839,12 +840,16 @@ begin
   //спросили сумму и тип оплаты
   if not fShift then
   begin// если с Shift, то считаем, что дали без сдачи
-    if not CashCloseDialogExecute(FTotalSumm,ASalerCash,ASalerCashAdd,PaidType) then
+    if not CashCloseDialogExecute(FTotalSumm,ASalerCash,ASalerCashAdd,PaidType,nBankPOSTerminal) then
     Begin
       if Self.ActiveControl <> ceAmount then
         Self.ActiveControl := MainGrid;
       exit;
     End;
+    //***02.11.18
+    FormParams.ParamByName('SummPayAdd').Value := ASalerCashAdd;
+    //***20.02.19
+    FormParams.ParamByName('BankPOSTerminal').Value := nBankPOSTerminal;
   end
   else
     ASalerCash:=FTotalSumm;

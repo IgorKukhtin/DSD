@@ -1,10 +1,10 @@
 inherited GoodsCategoryEditForm: TGoodsCategoryEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1072#1103' '#1084#1072#1090#1088#1080#1094#1072'('#1050#1072#1090#1077#1075#1086#1088#1080#1080')>'
-  ClientHeight = 293
+  ClientHeight = 273
   ClientWidth = 350
   AddOnFormData.RefreshAction = nil
   ExplicitWidth = 356
-  ExplicitHeight = 321
+  ExplicitHeight = 301
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -187,7 +187,7 @@ inherited GoodsCategoryEditForm: TGoodsCategoryEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsCategoryId'
+        Name = 'inUnitCategoryId'
         Value = ''
         Component = GuidesUnitCategory
         ComponentItem = 'Key'
@@ -207,6 +207,15 @@ inherited GoodsCategoryEditForm: TGoodsCategoryEditForm
         Value = ''
         Component = ceValue
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisUnitList'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isUnitList'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
