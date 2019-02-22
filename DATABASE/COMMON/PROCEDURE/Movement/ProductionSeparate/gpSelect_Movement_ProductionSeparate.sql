@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionSeparate(
     IN inSession           TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-               , TotalCount TFloat, TotalCountChild TFloat, PartionGoods TVarChar
+               , TotalCount TFloat, TotalCountChild TFloat, TotalHeadCount TFloat, TotalHeadCountChild TFloat
+               , PartionGoods TVarChar
                , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
                , isCalculated Boolean
                , UnionName TVarChar
@@ -40,9 +41,11 @@ BEGIN
           , Object_Status.ObjectCode             AS StatusCode
           , Object_Status.ValueData              AS StatusName
 
-          , MovementFloat_TotalCount.ValueData       AS TotalCount
-          , MovementFloat_TotalCountChild.ValueData  AS TotalCountChild
-          , MovementString_PartionGoods.ValueData    AS PartionGoods
+          , MovementFloat_TotalCount.ValueData          AS TotalCount
+          , MovementFloat_TotalCountChild.ValueData     AS TotalCountChild
+          , MovementFloat_TotalHeadCount.ValueData      AS TotalHeadCount
+          , MovementFloat_TotalHeadCountChild.ValueData AS TotalHeadCountChild
+          , MovementString_PartionGoods.ValueData       AS PartionGoods
 
           , Object_From.Id                       AS FromId
           , Object_From.ValueData                AS FromName
@@ -70,6 +73,14 @@ BEGIN
           LEFT JOIN MovementFloat AS MovementFloat_TotalCountChild
                                   ON MovementFloat_TotalCountChild.MovementId = Movement.Id
                                  AND MovementFloat_TotalCountChild.DescId = zc_MovementFloat_TotalCountChild()
+
+          LEFT JOIN MovementFloat AS MovementFloat_TotalHeadCount
+                                  ON MovementFloat_TotalHeadCount.MovementId = Movement.Id
+                                 AND MovementFloat_TotalHeadCount.DescId = zc_MovementFloat_TotalHeadCount()
+
+          LEFT JOIN MovementFloat AS MovementFloat_TotalHeadCountChild
+                                  ON MovementFloat_TotalHeadCountChild.MovementId = Movement.Id
+                                 AND MovementFloat_TotalHeadCountChild.DescId = zc_MovementFloat_TotalHeadCountChild()
 
           LEFT JOIN MovementString AS MovementString_PartionGoods
                                    ON MovementString_PartionGoods.MovementId = Movement.Id
@@ -109,6 +120,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.02.19         * add TotalHeadCount
  07.10.18         * add isCalculated
  05.10.16         * add inJuridicalBasisId
  03.06.14                                                        *

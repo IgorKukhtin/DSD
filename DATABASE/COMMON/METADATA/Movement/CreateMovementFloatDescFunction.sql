@@ -421,10 +421,19 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummOrder() RETURNS Integer AS 
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSummOrder', 'Итого Сумма в заказ' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummOrder');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalHeadCount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalHeadCount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalHeadCount', 'Итого Кол-во голов (расход)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalHeadCount');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalHeadCountChild() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalHeadCountChild'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalHeadCountChild', 'Итого Кол-во голов (приход)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalHeadCountChild');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 22.02.19         * zc_MovementFloat_TotalHeadCount
+                    zc_MovementFloat_TotalHeadCountChild
  07.11.18                                                                                     * zc_MovementFloat_TotalCountOrder, zc_MovementFloat_TotalSummOrder
  02.11.18                                                                                     * zc_MovementFloat_TotalSummPayAdd
  15.10.18                                                                                     * 

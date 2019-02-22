@@ -58,6 +58,8 @@ $BODY$
   DECLARE vbTotalSummTransportAddLong TFloat;
   DECLARE vbTotalSummTransportTaxi    TFloat;
   DECLARE vbTotalSummPhone            TFloat;
+  DECLARE vbTotalHeadCount_Master     TFloat;
+  DECLARE vbTotalHeadCount_Child      TFloat;
 
   DECLARE vbPriceWithVAT Boolean;
   DECLARE vbVATPercent TFloat;
@@ -301,6 +303,8 @@ BEGIN
           , OperSumm_NalogRetRecalc
           , OperSumm_AddOth
           , OperSumm_AddOthRecalc
+          , OperHeadCount_Master
+          , OperHeadCount_Child
 
             INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperCount_Second, vbOperCount_Tare, vbOperCount_Sh, vbOperCount_Kg, vbOperCount_ShFrom, vbOperCount_KgFrom
                , vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_PVAT_original, vbOperSumm_VAT_2018
@@ -312,6 +316,7 @@ BEGIN
                , vbTotalSummTransport, vbTotalSummTransportAdd, vbTotalSummTransportAddLong, vbTotalSummTransportTaxi, vbTotalSummPhone
                , vbTotalSummNalogRet, vbTotalSummNalogRetRecalc
                , vbTotalSummAddOth, vbTotalSummAddOthRecalc
+               , vbTotalHeadCount_Master, vbTotalHeadCount_Child
 
      FROM  -- Расчет Итоговых суммы
           (WITH tmpMI AS (SELECT Movement.DescId AS MovementDescId
@@ -393,6 +398,9 @@ BEGIN
 
                                , SUM (COALESCE (MIFloat_SummAddOth.ValueData, 0))           AS OperSumm_AddOth
                                , SUM (COALESCE (MIFloat_SummAddOthRecalc.ValueData, 0))     AS OperSumm_AddOthRecalc
+                               
+                               , SUM (CASE WHEN MovementItem.DescId = zc_MI_Master() THEN COALESCE (MIFloat_HeadCount.ValueData, 0) ELSE 0 END) AS OperHeadCount_Master
+                               , SUM (CASE WHEN MovementItem.DescId = zc_MI_Child()  THEN COALESCE (MIFloat_HeadCount.ValueData, 0) ELSE 0 END) AS OperHeadCount_Child
 
                           FROM Movement
                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -550,6 +558,11 @@ BEGIN
                                LEFT JOIN MovementItemFloat AS MIFloat_SummPhone
                                                            ON MIFloat_SummPhone.MovementItemId = MovementItem.Id
                                                           AND MIFloat_SummPhone.DescId = zc_MIFloat_SummPhone()
+
+                               LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                                           ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+
                           WHERE Movement.Id = inMovementId
                           GROUP BY Movement.DescId
                                  , CASE WHEN Movement.DescId = zc_Movement_TaxCorrective() THEN MovementItem.Id ELSE 0 END
@@ -750,6 +763,8 @@ BEGIN
                 , OperSumm_NalogRetRecalc
                 , OperSumm_AddOth
                 , OperSumm_AddOthRecalc
+                , OperHeadCount_Master
+                , OperHeadCount_Child
            FROM
                  -- получили 1 запись + !!! перевели в валюту если надо!!!
                 (SELECT SUM (CASE WHEN tmpMI.myLevel = 2 AND vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
@@ -890,6 +905,8 @@ BEGIN
                       , SUM (tmpMI.OperSumm_NalogRetRecalc)   AS OperSumm_NalogRetRecalc
                       , SUM (tmpMI.OperSumm_AddOth)           AS OperSumm_AddOth
                       , SUM (tmpMI.OperSumm_AddOthRecalc)     AS OperSumm_AddOthRecalc
+                      , SUM (tmpMI.OperHeadCount_Master)      AS OperHeadCount_Master
+                      , SUM (tmpMI.OperHeadCount_Child)       AS OperHeadCount_Child
                   FROM (SELECT tmpMI.GoodsId
                              , tmpMI.GoodsKindId
                              , tmpMI.myLevel
@@ -1005,6 +1022,8 @@ BEGIN
 
                             , tmpMI.OperSumm_AddOth
                             , tmpMI.OperSumm_AddOthRecalc
+                            , tmpMI.OperHeadCount_Master
+                            , tmpMI.OperHeadCount_Child
 
                         FROM (SELECT tmpMI.MovementDescId
                                    , tmpMI.MovementItemId
@@ -1076,6 +1095,8 @@ BEGIN
 
                                    , tmpMI.OperSumm_AddOth
                                    , tmpMI.OperSumm_AddOthRecalc
+                                   , tmpMI.OperHeadCount_Master
+                                   , tmpMI.OperHeadCount_Child
                               FROM tmpMI
                              UNION ALL
                               SELECT tmpMI.MovementDescId
@@ -1158,6 +1179,8 @@ BEGIN
 
                                    , tmpMI.OperSumm_AddOth
                                    , tmpMI.OperSumm_AddOthRecalc
+                                   , tmpMI.OperHeadCount_Master
+                                   , tmpMI.OperHeadCount_Child
                               FROM tmpMI
                               WHERE vbIsNPP_calc = TRUE
                              ) AS tmpMI
@@ -1314,6 +1337,12 @@ BEGIN
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCurrency(), inMovementId, vbOperSumm_Currency);
          -- Сохранили свойство <Итого сумма заготовителю по накладной (с учетом НДС)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPacker(), inMovementId, vbOperSumm_Packer);
+         
+         -- Сохранили свойство <Итого кол-во голов расход>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalHeadCount(), inMovementId, vbTotalHeadCount_Master);
+         -- Сохранили свойство <Итого кол-во голов приход>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalHeadCountChild(), inMovementId, vbTotalHeadCount_Child);
+         
      END IF;
      END IF;
 
@@ -1327,6 +1356,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.02.19         * TotalHeadCount
  25.06.18         * SummAddOth
                     SummAddOthRecalc
  27.02.18         * zc_Movement_LossPersonal
