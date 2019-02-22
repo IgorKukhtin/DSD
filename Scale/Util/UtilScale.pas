@@ -216,6 +216,8 @@ begin
      ParamAdd(Params,'isEdiInvoice',ftBoolean);//Счет
      ParamAdd(Params,'isEdiDesadv',ftBoolean); //уведомление
 
+     ParamAdd(Params,'isExportEmail',ftBoolean); //ExportEmail
+
      ParamAdd(Params,'isMovement',ftBoolean);  //Накладная
      ParamAdd(Params,'isAccount',ftBoolean);   //Счет
      ParamAdd(Params,'isTransport',ftBoolean); //ТТН

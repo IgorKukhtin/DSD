@@ -1012,6 +1012,7 @@ type
     miReport_IncomeKill_Olap: TMenuItem;
     N92: TMenuItem;
     actCashOperationLviv: TdsdOpenForm;
+    miCashOperationLviv: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

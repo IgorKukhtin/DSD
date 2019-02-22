@@ -123,6 +123,8 @@ BEGIN
                                THEN zc_Enum_Process_AccessKey_CashOfficialDnepr()
                           WHEN inCashId = 14686 -- Касса Киев
                                THEN zc_Enum_Process_AccessKey_CashKiev()
+                          WHEN inCashId = 3259636 -- Касса Львов
+                               THEN zc_Enum_Process_AccessKey_CashLviv()
                           WHEN inCashId = 279788 -- Касса Кривой Рог
                                THEN zc_Enum_Process_AccessKey_CashKrRog()
                           WHEN inCashId = 279789 -- Касса Николаев

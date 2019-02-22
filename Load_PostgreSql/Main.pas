@@ -20662,10 +20662,10 @@ begin
         Close;
         Clear;
         Add('select case when Code = ' + FormatToVarCharServer_notNULL('zc_Movement_IncomeCost')
-           +'                 then 1'
+           +'                 then 0'
            +'            when Code = ' + FormatToVarCharServer_notNULL('zc_Movement_Inventory')
-           +'                 then 2'
-           +'            else 0'
+           +'                 then 1'
+           +'            else -1'
            +'       end as Order_master'
            +'    , _pgMovementReComlete.*');
         Add('from dba._pgMovementReComlete');

@@ -438,6 +438,8 @@ begin
           if ParamsMovement.ParamByName('isEdiInvoice').asBoolean=TRUE then SendEDI_Invoice (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
           if ParamsMovement.ParamByName('isEdiOrdspr').asBoolean=TRUE then SendEDI_OrdSpr (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
           if ParamsMovement.ParamByName('isEdiDesadv').asBoolean=TRUE then SendEDI_Desadv (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
+          //ExportEmail
+          if ParamsMovement.ParamByName('isExportEmail').asBoolean=TRUE then Export_Email (ParamsMovement.ParamByName('MovementId_begin').AsInteger);
           //
           //Initialize or Empty
              //НЕ будем автоматов открывать предыдущий док.

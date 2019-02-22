@@ -261,7 +261,17 @@ BEGIN
                                                   , inIsLastComplete := NULL
                                                   , inSession        := zc_Enum_Process_Auto_PrimeCost() :: TVarChar);
      ELSE
+
+     -- !!!17 - IncomeCost!!!
+     IF vbMovementDescId = zc_Movement_IncomeCost() AND 1=1 -- !!!ADD!!!
+     THEN
+             -- !!! проводим - IncomeCost !!!
+             PERFORM gpComplete_Movement_IncomeCost (inMovementId     := inMovementId
+                                                   , inSession        := zc_Enum_Process_Auto_PrimeCost() :: TVarChar);
+
+     ELSE
          RAISE EXCEPTION 'NOT FIND inMovementId = %, MovementDescId = %(%)', inMovementId, vbMovementDescId, (SELECT ItemName FROM MovementDesc WHERE Id = vbMovementDescId);
+     END IF;
      END IF;
      END IF;
      END IF;

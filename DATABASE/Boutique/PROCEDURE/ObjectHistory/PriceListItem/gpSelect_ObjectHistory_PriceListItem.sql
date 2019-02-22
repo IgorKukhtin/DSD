@@ -119,7 +119,7 @@ BEGIN
                                , Object_PartionGoods.CompositionGroupId
                           FROM Object_PartionGoods
                           WHERE Object_PartionGoods.isErased = FALSE 
-                            AND (Object_PartionGoods.UnitId = inUnitId OR inUnitId = 0)
+                            -- AND (Object_PartionGoods.UnitId = inUnitId OR inUnitId = 0)
                             AND (Object_PartionGoods.BrandId = inBrandId OR inBrandId = 0)
                             AND (Object_PartionGoods.PeriodId = inPeriodId OR inPeriodId = 0)   
                             AND (Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear)
@@ -147,7 +147,8 @@ BEGIN
                       )
 
     , tmpGoods AS (SELECT tmpPartionGoods.PartnerId
-                        , tmpPartionGoods.UnitId
+                        , tmpPartionGoods.UnitId 
+                   --   , COALESCE (tmpContainer.UnitId, tmpPartionGoods.UnitId) AS UnitId
                         , tmpPartionGoods.OperDate
                         , tmpPartionGoods.GoodsId
                         , tmpPartionGoods.CurrencyId
@@ -169,9 +170,11 @@ BEGIN
                    FROM tmpPartionGoods
                         LEFT JOIN tmpContainer ON tmpContainer.GoodsId   = tmpPartionGoods.GoodsId
                                               AND tmpContainer.PartionId = tmpPartionGoods.PartionId
-                                              AND tmpContainer.UnitId    = tmpPartionGoods.UnitId
+                                              AND (tmpContainer.UnitId   = tmpPartionGoods.UnitId
+                                               OR inUnitId > 0)
                    GROUP BY tmpPartionGoods.PartnerId
                           , tmpPartionGoods.UnitId
+                       -- , COALESCE (tmpContainer.UnitId, tmpPartionGoods.UnitId)
                           , tmpPartionGoods.OperDate
                           , tmpPartionGoods.GoodsId
                           , tmpPartionGoods.CurrencyId

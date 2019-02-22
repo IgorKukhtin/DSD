@@ -122,6 +122,8 @@ begin
        with execParamsMovement do
        begin
          ParamByName('MovementId_begin').AsInteger:= 0;
+         ParamByName('isExportEmail').AsBoolean:= false;
+
 
          ParamByName('MovementId').AsInteger:= DataSet.FieldByName('MovementId').asInteger;
          ParamByName('InvNumber').asString:= DataSet.FieldByName('InvNumber').asString;
@@ -438,6 +440,7 @@ begin
        //try
          Execute;
          execParamsMovement.ParamByName('MovementId_begin').AsInteger:=DataSet.FieldByName('MovementId_begin').asInteger;
+         execParamsMovement.ParamByName('isExportEmail').AsBoolean:= DataSet.FieldByName('isExportEmail').AsBoolean;
        {except
          Result := '';
          ShowMessage('Ошибка получения - gpInsert_Movement_all');

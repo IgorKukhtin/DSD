@@ -2992,7 +2992,7 @@
       GuiParams = <
         item
           Name = 'CashId_top'
-          Value = '3259636'
+          Value = '280296'
           MultiSelectSeparator = ','
         end
         item
@@ -6383,7 +6383,7 @@
       GuiParams = <
         item
           Name = 'CashId_top'
-          Value = '407280'
+          Value = '3259636'
           MultiSelectSeparator = ','
         end
         item
@@ -6780,6 +6780,9 @@
       end
       object miCashOdessa: TMenuItem
         Action = actCashOperationOdessa
+      end
+      object miCashOperationLviv: TMenuItem
+        Action = actCashOperationLviv
       end
       object miCashPav: TMenuItem
         Action = actCashOperationPav

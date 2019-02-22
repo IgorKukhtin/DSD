@@ -5,7 +5,11 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, dsdAction, Vcl.ActnList, dsdDB, Data.DB,
-  Datasnap.DBClient,EDI,frxBarcode;
+  Datasnap.DBClient,EDI,frxBarcode, cxGraphics, cxControls, cxLookAndFeels,
+  cxLookAndFeelPainters, cxStyles, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit,
+  cxDBData, cxGridLevel, cxGridCustomTableView, cxGridTableView,
+  cxGridDBTableView, cxClasses, cxGridCustomView, cxGrid, dsdInternetAction;
 
 type
   TUtilPrintForm = class(TForm)
@@ -108,6 +112,23 @@ type
     actPrint_Report_GoodsBalance: TdsdPrintAction;
     spReport_GoodsBalance: TdsdStoredProc;
     actPrintSticker: TdsdPrintAction;
+    ExportEmailCDS: TClientDataSet;
+    ExportEmailDS: TDataSource;
+    ExportCDS: TClientDataSet;
+    ExportDS: TDataSource;
+    spSelect_Export: TdsdStoredProc;
+    spGet_Export_FileName: TdsdStoredProc;
+    spGet_Export_Email: TdsdStoredProc;
+    ExportXmlGrid: TcxGrid;
+    ExportXmlGridDBTableView: TcxGridDBTableView;
+    RowData: TcxGridDBColumn;
+    ExportXmlGridLevel: TcxGridLevel;
+    actGet_Export_Email: TdsdExecStoredProc;
+    actGet_Export_FileName: TdsdExecStoredProc;
+    actSelect_Export: TdsdExecStoredProc;
+    actExport_Grid: TExportGrid;
+    actSMTPFile: TdsdSMTPFileAction;
+    actExport: TMultiAction;
   private
   end;
 
@@ -129,6 +150,8 @@ type
   procedure SendEDI_Invoice (MovementId: Integer);
   procedure SendEDI_OrdSpr (MovementId: Integer);
   procedure SendEDI_Desadv (MovementId: Integer);
+
+  procedure Export_Email (MovementId: Integer);
 
 var
   UtilPrintForm: TUtilPrintForm;
@@ -639,6 +662,17 @@ begin
         exit;
   end;}
   ShowMessage('Документ <Уведомление об отгрузке> отправлен успешно в EXITE.');
+end;
+//------------------------------------------------------------------------------------------------
+procedure Export_Email (MovementId: Integer);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  try UtilPrintForm.actExport.Execute;
+  except
+        ShowMessage('Ошибка при отправке электронного документа по почте Покупателю.');
+        exit;
+  end;
+  ShowMessage('Электронный документ успешно отправлен по почте Покупателю.');
 end;
 //------------------------------------------------------------------------------------------------
 end.

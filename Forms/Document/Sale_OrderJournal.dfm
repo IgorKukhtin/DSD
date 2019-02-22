@@ -6,7 +6,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1202
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -3556,7 +3556,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'bbExport'
         end
         item
           Visible = True
@@ -3594,6 +3594,9 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     object bbTax: TdxBarButton
       Action = actTax
@@ -3680,7 +3683,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Action = mactPrint_Transport
       Category = 0
     end
-    object dxBarButton1: TdxBarButton
+    object bbExport: TdxBarButton
       Action = actExport
       Category = 0
     end

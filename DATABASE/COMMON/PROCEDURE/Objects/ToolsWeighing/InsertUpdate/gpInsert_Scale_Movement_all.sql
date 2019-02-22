@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_Movement_all(
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId_begin    Integer
+             , isExportEmail       Boolean
               )
 AS
 $BODY$
@@ -1619,7 +1620,25 @@ END IF;
 
      -- Результат
      RETURN QUERY
-       SELECT vbMovementId_begin AS MovementId_begin;
+       SELECT vbMovementId_begin AS MovementId_begin
+             , CASE WHEN vbMovementDescId = zc_Movement_Sale()
+                         -- Шері
+                     AND EXISTS (SELECT
+                                 FROM MovementLinkObject AS MovementLinkObject_To
+                                      INNER JOIN ObjectLink AS OL_Juridical
+                                                            ON OL_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                                           AND OL_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                      INNER JOIN ObjectLink AS OL_Juridical
+                                                            ON OL_Juridical.ObjectId      = OL_Juridical.ChildObjectId
+                                                           AND OL_Juridical.DescId        = zc_ObjectLink_Juridical_Retail()
+                                                           AND OL_Juridical.ChildObjectId = 341162 -- Шері
+                                 WHERE MovementLinkObject_To.MovementId = MovementId_begin
+                                   AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To())
+                                )
+                         THEN TRUE
+                    ELSE FALSE
+               END :: Boolean AS isExportEmail
+       ;
 
 
 END;
