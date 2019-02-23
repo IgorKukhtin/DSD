@@ -121,6 +121,7 @@ type
     PersonalName5: TcxGridDBColumn;
     PositionName5: TcxGridDBColumn;
     bbPrintPackWeight_Fozzy: TSpeedButton;
+    bbExport_Email: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -152,6 +153,7 @@ type
     procedure bbSale_Order_diffTaxClick(Sender: TObject);
     procedure bbPrintStickerTermoClick(Sender: TObject);
     procedure bbPrintPackWeight_FozzyClick(Sender: TObject);
+    procedure bbExport_EmailClick(Sender: TObject);
   private
     fStartWrite:Boolean;
 
@@ -669,6 +671,15 @@ begin
      then exit;
      //
      SendEDI_Ordspr (CDS.FieldByName('MovementId_parent').AsInteger);
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideMovementForm.bbExport_EmailClick(Sender: TObject);
+begin
+     if MessageDlg('Действительно отправить электронный документ Покупателю по почте?',mtConfirmation,mbYesNoCancel,0) <> 6
+     then exit;
+     //
+     Export_Email (CDS.FieldByName('MovementId_parent').AsInteger);
+
 end;
 {------------------------------------------------------------------------------}
 end.

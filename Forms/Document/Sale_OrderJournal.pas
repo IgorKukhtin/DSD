@@ -252,6 +252,8 @@ type
     actPrint_PackWeight: TdsdPrintAction;
     spGetReportNameQuality: TdsdStoredProc;
     actPrint_Quality_ReportName: TdsdExecStoredProc;
+    spUpdate_isMail: TdsdStoredProc;
+    actUpdate_isMail: TdsdExecStoredProc;
   private
     { Private declarations }
   public

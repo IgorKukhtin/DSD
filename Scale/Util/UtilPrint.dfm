@@ -21,9 +21,6 @@ object UtilPrintForm: TUtilPrintForm
     Align = alBottom
     TabOrder = 0
     Visible = False
-    ExplicitLeft = -260
-    ExplicitTop = 450
-    ExplicitWidth = 1186
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS
@@ -2231,6 +2228,17 @@ object UtilPrintForm: TUtilPrintForm
       ToAddress.DataType = ftString
       ToAddress.MultiSelectSeparator = ','
     end
+    object actUpdate_isMail: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isMail
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isMail
+        end>
+      Caption = 'actUpdate_isMail'
+    end
     object actExport: TMultiAction
       Category = 'Export_Email'
       MoveParams = <>
@@ -2249,11 +2257,10 @@ object UtilPrintForm: TUtilPrintForm
         end
         item
           Action = actSMTPFile
+        end
+        item
+          Action = actUpdate_isMail
         end>
-      QuestionBeforeExecute = 
-        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102' '#1087#1086' '#1087#1086#1095#1090#1077 +
-        '?'
-      InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1087#1086' '#1087#1086#1095#1090#1077' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
       Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
       ImageIndex = 53
@@ -3157,5 +3164,22 @@ object UtilPrintForm: TUtilPrintForm
     PackSize = 1
     Left = 816
     Top = 528
+  end
+  object spUpdate_isMail: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_isMail'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 464
   end
 end

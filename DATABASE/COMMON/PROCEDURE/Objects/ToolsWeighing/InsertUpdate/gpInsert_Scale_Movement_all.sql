@@ -1628,12 +1628,12 @@ END IF;
                                       INNER JOIN ObjectLink AS OL_Juridical
                                                             ON OL_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                                            AND OL_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
-                                      INNER JOIN ObjectLink AS OL_Juridical
-                                                            ON OL_Juridical.ObjectId      = OL_Juridical.ChildObjectId
-                                                           AND OL_Juridical.DescId        = zc_ObjectLink_Juridical_Retail()
-                                                           AND OL_Juridical.ChildObjectId = 341162 -- их№Г
-                                 WHERE MovementLinkObject_To.MovementId = MovementId_begin
-                                   AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To())
+                                      INNER JOIN ObjectLink AS OL_Retail
+                                                            ON OL_Retail.ObjectId      = OL_Juridical.ChildObjectId
+                                                           AND OL_Retail.DescId        = zc_ObjectLink_Juridical_Retail()
+                                                           AND OL_Retail.ChildObjectId = 341162 -- их№Г
+                                 WHERE MovementLinkObject_To.MovementId = vbMovementId_begin
+                                   AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                                 )
                          THEN TRUE
                     ELSE FALSE

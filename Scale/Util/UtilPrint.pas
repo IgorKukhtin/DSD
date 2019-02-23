@@ -129,6 +129,8 @@ type
     actExport_Grid: TExportGrid;
     actSMTPFile: TdsdSMTPFileAction;
     actExport: TMultiAction;
+    spUpdate_isMail: TdsdStoredProc;
+    actUpdate_isMail: TdsdExecStoredProc;
   private
   end;
 

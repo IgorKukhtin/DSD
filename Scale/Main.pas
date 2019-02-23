@@ -328,11 +328,11 @@ begin
           then ActiveControl:=EditBarCode
           else ActiveControl:=cxDBGrid;
 end;
+//------------------------------------------------------------------------------------------------
 procedure TMainForm.miFontClick(Sender: TObject);
 begin
   TLookAndFillSettingsForm.Create(nil).Show;
 end;
-
 //------------------------------------------------------------------------------------------------
 function TMainForm.Save_Movement_all:Boolean;
 var execParams:TParams;
@@ -1609,13 +1609,21 @@ begin
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
+var Key2 : Word;
+
 begin
      if Key = VK_F8 then bbSale_Order_allClick(Self);
      if Key = VK_F9 then bbSale_Order_diffTaxClick(Self);
 
      if Key = VK_F5 then Save_Movement_all;
      if Key = VK_F2 then GetParams_MovementDesc('');
-     if (Key = VK_SPACE) and (Shift = []) then begin Key:= 0; GetParams_Goods (FALSE, '', TRUE); end;//isRetail=FALSE
+     if (Key = VK_SPACE) and (Shift = []) then
+     begin Key := 0;
+           Key2:= VK_SPACE;
+           if (GetParams_Goods (FALSE, '', TRUE)) and (SettingMain.isSticker = TRUE)
+           then FormKeyDown(Sender,Key2, []);
+     end;//isRetail=FALSE
+     //
      if (Key = VK_SPACE) and (Shift = [ssCtrl]) and (GetArrayList_Value_byName(Default_Array,'isCheckDelete') = AnsiUpperCase('TRUE'))
      then begin Key:= 0; GetParams_Goods (FALSE, '', FALSE); end;//isRetail=FALSE
      //

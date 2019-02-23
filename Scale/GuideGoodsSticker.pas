@@ -390,7 +390,7 @@ procedure TGuideGoodsStickerForm.deDateStartPropertiesChange(Sender: TObject);
 begin
      try StrToDate (deDateStart.Text)
      except
-        deDateStart.Date:= NOW + 1;
+        deDateStart.Date:= NOW ;
      end;
      //
      with ParamsMI do
@@ -445,7 +445,7 @@ begin
      cbGoodsName.Checked:= TRUE;
 
      //нач. дата (для режим 1)
-     deDateStart.Date   := NOW + 1;
+     deDateStart.Date   := NOW;
      //дата для тары  (для режим 2)
      ParamsMI.ParamByName('DateTare_Sticker').AsDateTime:= NOW;
 
