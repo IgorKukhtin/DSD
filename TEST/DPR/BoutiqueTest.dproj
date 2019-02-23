@@ -1079,6 +1079,10 @@
 			<DCCReference Include="..\..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdExportToXLSAction.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdExportToXMLAction.pas"/>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_Sale_AnalysisAll.pas">
+				<Form>Report_Sale_AnalysisAllForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
