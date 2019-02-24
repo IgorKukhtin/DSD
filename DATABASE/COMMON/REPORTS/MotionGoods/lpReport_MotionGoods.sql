@@ -938,6 +938,8 @@ BEGIN
                                   FROM _tmpContainer
                                        INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = _tmpContainer.ContainerId_begin
                                                                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+-- and (MIContainer.ContainerId = 2092731
+-- or inUserId <> 5)
                                        LEFT JOIN MovementBoolean AS MovementBoolean_HistoryCost
                                                                  ON MovementBoolean_HistoryCost.MovementId = MIContainer.MovementId
                                                                 AND MovementBoolean_HistoryCost.DescId = zc_MovementBoolean_HistoryCost()
