@@ -26,11 +26,29 @@ BEGIN
     THEN
       RAISE EXCEPTION 'Изменение <График работы сотрудеиков> вам запрещено.';
     END IF;
-
-    vbId := 0;
+    
+    IF COALESCE(inMovementId, 0) = 0 
+    THEN
+      RAISE EXCEPTION 'Не сохранен график работы сотрудников.';
+    END IF;
+    
+    IF EXISTS(SELECT 1 FROM MovementItem
+              WHERE MovementItem.MovementId = inMovementId
+                AND MovementItem.DescId = zc_MI_Master()
+                AND MovementItem.ObjectId = inUserId)
+    THEN
+      SELECT MovementItem.ID 
+      INTO vbId        
+      FROM MovementItem
+      WHERE MovementItem.MovementId = inMovementId
+        AND MovementItem.DescId = zc_MI_Master()
+        AND MovementItem.ObjectId = inUserId;
+    ELSE
+      vbId := 0;
+    END IF;	
 
     -- сохранили
-    PERFORM gpInsertUpdate_MovementItem_EmployeeSchedule (ioId                  := 0                 -- Ключ объекта <Элемент документа>
+    PERFORM gpInsertUpdate_MovementItem_EmployeeSchedule (ioId                  := vbId              -- Ключ объекта <Элемент документа>
                                                         , inMovementId          := inMovementId      -- ключ Документа
                                                         , inUserId              := inUserId          -- сотрудник
                                                         , ioValue               := ''::TVarChar      -- Приходы на работу по дням

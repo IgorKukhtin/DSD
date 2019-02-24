@@ -162,7 +162,8 @@ uses Storage, CommonData, TypInfo, UtilConvert, System.SysUtils, cxTextEdit, VCL
      Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
      dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls,
      cxButtonEdit, EDI, ExternalSave, Medoc, UnilWin, FormStorage,
-     cxMemo, cxImage, dsdInternetAction, ParentForm, Vcl.ActnList, System.Rtti;
+     cxMemo, cxImage, cxDropDownEdit, dsdInternetAction, ParentForm, Vcl.ActnList,
+     System.Rtti;
 
 procedure Register;
 begin
@@ -827,6 +828,8 @@ begin
         Result := (Component as TcxButtonEdit).Text;
      if (Component is TDataSet) then
         Result := GetFromDataSet(TDataSet(Component), ComponentItem);
+     if Component is TcxComboBox then
+        Result := (Component as TcxComboBox).Text;
      if (Component is TdsdFormParams) then
         if Assigned((Component as TdsdFormParams).ParamByName(ComponentItem)) then
            Result := (Component as TdsdFormParams).ParamByName(ComponentItem).Value
@@ -971,6 +974,8 @@ begin
         (Component as TcxTextEdit).Text := FValue;
      if Component is TcxMemo then
         (Component as TcxMemo).Text := FValue;
+     if Component is TcxComboBox then
+        (Component as TcxComboBox).Text := FValue;
      if Component is TcxImage then
      begin
         CreateGUID(PhotoGUID);

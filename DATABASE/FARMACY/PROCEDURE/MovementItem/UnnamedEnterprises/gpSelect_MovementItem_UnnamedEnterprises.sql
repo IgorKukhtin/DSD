@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_UnnamedEnterprises(
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsNameUkr TVarChar
              , NDSKindId Integer, NDSKindCode Integer, NDSKindName TVarChar, NDS TFloat
              , Amount TFloat, AmountRemains TFloat, AmountOrder TFloat
-             , Price TFloat, Summ TFloat, SummOrder TFloat
+             , Price TFloat, PriceUnit TFloat, Summ TFloat, SummOrder TFloat
              , CodeUKTZED TVarChar, ExchangeId Integer, ExchangeCode Integer, ExchangeName TVarChar
              , isErased Boolean
               )
@@ -190,6 +190,21 @@ BEGIN
                                                                          AND MarginCategory_all_next.ORD = MarginCategory_all.ORD + 1
                                        WHERE MarginCategory_all.MarginCategoryId = vbMarginCategoryId_site
                                        )
+              , tmpPrice AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat  AS Price
+                                  , Price_Goods.ChildObjectId               AS GoodsId
+                             FROM ObjectLink AS ObjectLink_Price_Unit
+                     
+                                  LEFT JOIN ObjectLink AS Price_Goods
+                                                       ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                      AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+
+                                 LEFT JOIN ObjectFloat AS Price_Value
+                                                       ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                      AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+
+                              WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
+                             )                                      
 
             SELECT COALESCE(MovementItem_UnnamedEnterprises.Id,0)       AS Id
                  , Object_Goods.Id                                      AS GoodsId
@@ -208,6 +223,7 @@ BEGIN
                  , COALESCE(MovementItem_UnnamedEnterprises.Price,
                    ROUND (tmpPrice.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100) *
                    (1 + COALESCE (MarginCategory_site.MarginPercent, 0) / 100), 1) :: TFloat)    AS Price
+                 , Price_Unit.Price                                     AS PriceUnit
                  , MovementItem_UnnamedEnterprises.Summ                 AS Summ
                  , MovementItem_UnnamedEnterprises.SummOrder            AS SummOrder
 
@@ -250,6 +266,9 @@ BEGIN
                 LEFT JOIN tmpMinPrice_List AS tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
 
                 LEFT JOIN MarginCategory_site ON tmpPrice.Price >= MarginCategory_site.MinPrice AND tmpPrice.Price < MarginCategory_site.MaxPrice
+
+                LEFT JOIN tmpPrice AS Price_Unit ON Price_Unit.GoodsId = Object_Goods.Id 
+
             WHERE Object_Goods.isErased = FALSE
                OR MovementItem_UnnamedEnterprises.id is not null;
     ELSE
@@ -294,6 +313,21 @@ BEGIN
                                         AND MovementItem.DescId = zc_MI_Master()
                                         AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
                                       )
+              , tmpPrice AS (SELECT ROUND(Price_Value.ValueData,2)::TFloat  AS Price
+                                  , Price_Goods.ChildObjectId               AS GoodsId
+                             FROM ObjectLink AS ObjectLink_Price_Unit
+
+                                  LEFT JOIN ObjectLink AS Price_Goods
+                                                       ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                      AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+
+                                  LEFT JOIN ObjectFloat AS Price_Value
+                                                        ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                       AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+
+                              WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
+                             )                                      
 
             SELECT
                    MovementItem_UnnamedEnterprises.Id          AS Id
@@ -311,6 +345,7 @@ BEGIN
                  , tmpRemains.Amount::TFloat                            AS AmountRemains
                  , MovementItem_UnnamedEnterprises.AmountOrder::TFloat  AS AmountOrder
                  , MovementItem_UnnamedEnterprises.Price                AS Price
+                 , Price_Unit.Price                                     AS PriceUnit
                  , MovementItem_UnnamedEnterprises.Summ                 AS Summ
                  , MovementItem_UnnamedEnterprises.SummOrder            AS SummOrder
 
@@ -346,7 +381,9 @@ BEGIN
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Exchange
                                      ON ObjectLink_Goods_Exchange.ObjectId = Object_Goods.Id
                                     AND ObjectLink_Goods_Exchange.DescId = zc_ObjectLink_Goods_Exchange()
-                LEFT JOIN Object AS Object_Exchange ON Object_Exchange.Id = ObjectLink_Goods_Exchange.ChildObjectId;
+                LEFT JOIN Object AS Object_Exchange ON Object_Exchange.Id = ObjectLink_Goods_Exchange.ChildObjectId
+                
+                LEFT JOIN tmpPrice AS Price_Unit ON Price_Unit.GoodsId = Object_Goods.Id; 
      END IF;
 END;
 $BODY$
@@ -355,6 +392,7 @@ $BODY$
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Øàáëèé Î.Â.
+ 23.02.19         *
  30.09.18         *
 */
 -- select * from gpSelect_MovementItem_UnnamedEnterprises(inMovementId := 10582538  , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');

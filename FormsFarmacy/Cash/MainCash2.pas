@@ -4,7 +4,7 @@ interface
 
 uses
   DataModul, Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
-  Vcl.Graphics,
+  Vcl.Graphics, System.DateUtils,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorBase, Vcl.ActnList, dsdAction,
   cxPropertiesStore, dsdAddOn, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter, cxData,
@@ -354,6 +354,12 @@ type
     N22: TMenuItem;
     BankPOSTerminalCDS: TClientDataSet;
     UnitConfigCDS: TClientDataSet;
+    pnlTaxUnitNight: TPanel;
+    Label18: TLabel;
+    TaxUnitNightCDS: TClientDataSet;
+    MainColPriceNight: TcxGridDBColumn;
+    MainGridPriceChangeNight: TcxGridDBColumn;
+    edTaxUnitNight: TcxTextEdit;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -438,6 +444,11 @@ type
       AFocusedRecord: TcxCustomGridRecord;
       ANewItemRecordFocusingChanged: Boolean);
     procedure actSetSiteDiscountExecute(Sender: TObject);
+    procedure MainGridPriceChangeNightGetDisplayText(
+      Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+      var AText: string);
+    procedure MainColPriceNightGetDisplayText(Sender: TcxCustomGridTableItem;
+      ARecord: TcxCustomGridRecord; var AText: string);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -491,6 +502,7 @@ type
     procedure LoadFromLocalStorage;
     procedure LoadBankPOSTerminal;
     procedure LoadUnitConfig;
+    procedure LoadTaxUnitNight;
     //Сохранение чека в локальной базе. возвращает УИД
     function SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AManagerName: String;
       ABayerName, ABayerPhone, AConfirmedKindName, AInvNumberOrder, AConfirmedKindClientName: String;
@@ -521,6 +533,18 @@ type
     procedure LoadVIPCheck;
     procedure SetSiteDiscount(ASiteDiscount : Currency);
 
+    // Установка отмена ночной скидки
+    procedure SetTaxUnitNight;
+    // Процент ночной скидки по цене
+    function CalcTaxUnitNightPercent(ABasePrice : Currency) : Currency;
+    // Расчет ночной цены
+    function CalcTaxUnitNightPrice(ABasePrice, APrice : Currency; APercent : Currency = 0) : Currency;
+    function CalcTaxUnitNightPriceGrid(ABasePrice, APrice : Currency) : Currency;
+
+    // Расчет цены, скидок
+    procedure CalcPriceSale(var APriceSale, APrice, AChangePercent : Currency;
+                                APriceBase, APercent : Currency; APriceChange : Currency = 0);
+
   public
     procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String; var AOperDateSP : TDateTime);
     procedure SetPromoCode(APromoCodeId: Integer; APromoName, APromoCodeGUID: String;
@@ -540,7 +564,8 @@ var
   csCriticalSection_All: TRTLCriticalSection;
 
   MutexDBF, MutexDBFDiff, MutexVip, MutexRemains, MutexAlternative, MutexAllowedConduct,
-  MutexDiffKind, MutexDiffCDS, MutexEmployeeWorkLog, MutexBankPOSTerminal, MutexUnitConfig : THandle;  // MutexAllowedConduct только 2 форма
+  MutexDiffKind, MutexDiffCDS, MutexEmployeeWorkLog, MutexBankPOSTerminal,
+  MutexUnitConfig, MutexTaxUnitNight : THandle;  // MutexAllowedConduct только 2 форма
 
   LastErr: Integer;
   FM_SERVISE: Integer;  // для передачи сообщений между приложение и сервисом // только 2 форма
@@ -599,6 +624,8 @@ begin
           actSetRimainsFromMemdata.Execute; // обновляем остатки в товарах и чеках с учетом пришедших остатков в мемдате
           LoadBankPOSTerminal;
           LoadUnitConfig;
+          LoadTaxUnitNight;
+          SetTaxUnitNight;
         end;
       2:  // получен запрос на сохранение CashSessionId в  CashSessionId.ini
         begin
@@ -609,6 +636,8 @@ begin
           LoadFromLocalStorage;
           LoadBankPOSTerminal;
           LoadUnitConfig;
+          LoadTaxUnitNight;
+          SetTaxUnitNight;
         end;
       4:  // получен запрос на сохранение в отдельную таблицу отгруженных чеков
         begin
@@ -900,6 +929,9 @@ begin
   edPromoCode.Text := '';
   pnlSiteDiscount.Visible := false;
   edSiteDiscount.Value := 0;
+
+  // Ночные скидки
+  SetTaxUnitNight;
 end;
 
 procedure TMainCashForm2.actClearMoneyExecute(Sender: TObject);
@@ -999,6 +1031,7 @@ begin
   //***30.06.18
   if FormParams.ParamByName('ManualDiscount').Value > 0 then
   begin
+
     pnlManualDiscount.Visible := True;
     edManualDiscount.Value := FormParams.ParamByName('ManualDiscount').Value;
 
@@ -3090,6 +3123,8 @@ begin
   LastErr := GetLastError;
   MutexUnitConfig := CreateMutex(nil, false, 'farmacycashMutexUnitConfig');
   LastErr := GetLastError;
+  MutexTaxUnitNight := CreateMutex(nil, false, 'farmacycashMutexTaxUnitNight');
+  LastErr := GetLastError;
   DiscountServiceForm:= TDiscountServiceForm.Create(Self);
 
   //сгенерили гуид для определения сессии
@@ -3186,6 +3221,8 @@ begin
 
   LoadBankPOSTerminal;
   LoadUnitConfig;
+  LoadTaxUnitNight;
+  SetTaxUnitNight;
 end;
 
 function TMainCashForm2.InitLocalStorage: Boolean;
@@ -3218,6 +3255,9 @@ var lQuantity, lPrice, lPriceSale, lChangePercent, lSummChangePercent, nAmount :
     lGoodsId_bySoldRegim, nRecNo : Integer;
     lPriceSale_bySoldRegim, lPrice_bySoldRegim : Currency;
 begin
+
+  // Ночные скидки
+  SetTaxUnitNight;
 
   nAmount := GetAmount;
   if nAmount = 0 then
@@ -3262,7 +3302,10 @@ begin
   // потому что криво, надо правильно определить ТОВАР + цена БЕЗ скидки
   if SoldRegim = TRUE
   then //это ПРОДАЖА
-       begin lGoodsId_bySoldRegim   := SourceClientDataSet.FieldByName('Id').asInteger;
+       begin
+
+             lGoodsId_bySoldRegim   := SourceClientDataSet.FieldByName('Id').asInteger;
+
              if (Self.FormParams.ParamByName('SPTax').Value <> 0)
                  and(Self.FormParams.ParamByName('InvNumberSP').Value <> '')
              then begin
@@ -3308,66 +3351,56 @@ begin
                // цена СО скидкой
                lPrice_bySoldRegim := GetPrice(SourceClientDataSet.FieldByName('Price').asCurrency, Self.FormParams.ParamByName('SiteDiscount').Value);
              end else
-                  begin
-                      // Если есть цена со скидкой
-                    if SourceClientDataSet.FieldByName('PriceChange').asCurrency > 0 then
-                    begin
+             begin
 
-                      case MessageDlg('Подтверждение цены со скидкой препарата'#13#10#13#10 +
-                        'Yes - Цена со скидкой: ' + SourceClientDataSet.FieldByName('PriceChange').AsString + #13#10 +
-                        'No - Цена БЕЗ скидки: ' + SourceClientDataSet.FieldByName('Price').AsString
-                        ,mtConfirmation,[mbYes,mbNo,mbCancel], 0) of
-                        mrNo :
-                          begin
-                             // цена БЕЗ скидки
-                             lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
-                             // цена СО скидкой в этом случае такая же
-                             lPrice_bySoldRegim := lPriceSale_bySoldRegim;
-                          end;
-                        mrYes :
-                          begin
-                             // цена БЕЗ скидки
-                             lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
-                             // цена СО скидкой
-                             lPrice_bySoldRegim := SourceClientDataSet.FieldByName('PriceChange').asCurrency;
-                          end;
-                         mrCancel : Exit;
-                      end;
-                    end else
-                      // Если есть процент скидки
-                    if SourceClientDataSet.FieldByName('FixPercent').asCurrency > 0 then
-                    begin
+                  // Если есть цена со скидкой
+                if SourceClientDataSet.FieldByName('PriceChange').asCurrency > 0 then
+                begin
 
-                      case MessageDlg('Подтверждение цены со скидкой препарата'#13#10#13#10 +
-                        'Yes - Цена со скидкой: ' + CurrToStr(GetPrice(SourceClientDataSet.FieldByName('Price').asCurrency, SourceClientDataSet.FieldByName('FixPercent').asCurrency)) + #13#10 +
-                        'No - Цена БЕЗ скидки: ' + SourceClientDataSet.FieldByName('Price').AsString
-                        ,mtConfirmation,[mbYes,mbNo,mbCancel], 0) of
-                        mrNo :
-                          begin
-                             // цена БЕЗ скидки
-                             lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
-                             // цена СО скидкой в этом случае такая же
-                             lPrice_bySoldRegim := lPriceSale_bySoldRegim;
-                          end;
-                        mrYes :
-                          begin
-                             // цена БЕЗ скидки
-                             lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
-                             // цена СО скидкой
-                             lPrice_bySoldRegim := GetPrice(SourceClientDataSet.FieldByName('Price').asCurrency, SourceClientDataSet.FieldByName('FixPercent').asCurrency);
-                             // процент скидки
-                             lChangePercent := SourceClientDataSet.FieldByName('FixPercent').asCurrency;
-                          end;
-                         mrCancel : Exit;
+                  case MessageDlg('Подтверждение цены со скидкой препарата'#13#10#13#10 +
+                    'Yes - Цена со скидкой: ' + CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName('Price').asCurrency, SourceClientDataSet.FieldByName('PriceChange').asCurrency)) + #13#10 +
+                    'No - Цена БЕЗ скидки: ' + CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName('Price').asCurrency, SourceClientDataSet.FieldByName('Price').asCurrency))
+                    ,mtConfirmation,[mbYes,mbNo,mbCancel], 0) of
+                    mrNo :
+                      begin
+                         CalcPriceSale(lPriceSale_bySoldRegim, lPrice_bySoldRegim, lChangePercent,
+                           SourceClientDataSet.FieldByName('Price').asCurrency, 0);
                       end;
-                    end else
-                    begin
-                       // цена БЕЗ скидки
-                       lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
-                       // цена СО скидкой в этом случае такая же
-                       lPrice_bySoldRegim := lPriceSale_bySoldRegim;
-                    end;
-                  end
+                    mrYes :
+                      begin
+                         CalcPriceSale(lPriceSale_bySoldRegim, lPrice_bySoldRegim, lChangePercent,
+                           SourceClientDataSet.FieldByName('Price').asCurrency, 0,
+                           SourceClientDataSet.FieldByName('PriceChange').asCurrency);
+                      end;
+                     mrCancel : Exit;
+                  end;
+                end else
+                  // Если есть процент скидки
+                if SourceClientDataSet.FieldByName('FixPercent').asCurrency > 0 then
+                begin
+
+                  case MessageDlg('Подтверждение цены со скидкой препарата'#13#10#13#10 +
+                    'Yes - Цена со скидкой: ' + CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName('Price').asCurrency, SourceClientDataSet.FieldByName('Price').asCurrency, SourceClientDataSet.FieldByName('FixPercent').asCurrency)) + #13#10 +
+                    'No - Цена БЕЗ скидки: ' + CurrToStr(CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName('Price').asCurrency, SourceClientDataSet.FieldByName('Price').asCurrency))
+                    ,mtConfirmation,[mbYes,mbNo,mbCancel], 0) of
+                    mrNo :
+                      begin
+                         CalcPriceSale(lPriceSale_bySoldRegim, lPrice_bySoldRegim, lChangePercent,
+                           SourceClientDataSet.FieldByName('Price').asCurrency, 0);
+                      end;
+                    mrYes :
+                      begin
+                         CalcPriceSale(lPriceSale_bySoldRegim, lPrice_bySoldRegim, lChangePercent,
+                           SourceClientDataSet.FieldByName('Price').asCurrency, SourceClientDataSet.FieldByName('FixPercent').asCurrency);
+                      end;
+                     mrCancel : Exit;
+                  end;
+                end else
+                begin
+                   CalcPriceSale(lPriceSale_bySoldRegim, lPrice_bySoldRegim, lChangePercent,
+                     SourceClientDataSet.FieldByName('Price').asCurrency, 0);
+                end;
+             end
        end
   else //это ВОЗВРАТ
        begin lGoodsId_bySoldRegim   := CheckCDS.FieldByName('GoodsId').AsInteger;
@@ -3428,14 +3461,22 @@ begin
               end
          else if Assigned(SourceClientDataSet.FindField('PriceChange')) and
                  (SourceClientDataSet.FieldByName('PriceChange').asCurrency > 0) and
-                 (SourceClientDataSet.FieldByName('PriceChange').asCurrency = lPrice_bySoldRegim) then
+                 (lPrice_bySoldRegim =
+                 CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName('Price').asCurrency, SourceClientDataSet.FieldByName('PriceChange').asCurrency)) then
               begin
                 lChangePercent     := 0;
                 lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim);
               end
          else if Assigned(SourceClientDataSet.FindField('FixPercent')) and
                  (SourceClientDataSet.FieldByName('FixPercent').asCurrency > 0) and
-                 (GetPrice(SourceClientDataSet.FieldByName('Price').asCurrency, SourceClientDataSet.FieldByName('FixPercent').asCurrency) = lPrice_bySoldRegim) then
+                 (lPrice_bySoldRegim =
+                 CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName('Price').asCurrency, SourceClientDataSet.FieldByName('Price').asCurrency,
+                 SourceClientDataSet.FieldByName('FixPercent').asCurrency)) then
+              begin
+                lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim);
+              end
+         else if pnlTaxUnitNight.Visible and (lPrice_bySoldRegim =
+                 CalcTaxUnitNightPrice(SourceClientDataSet.FieldByName('Price').asCurrency, SourceClientDataSet.FieldByName('Price').asCurrency)) then
               begin
                 lSummChangePercent := (lPriceSale_bySoldRegim - lPrice_bySoldRegim);
               end
@@ -3780,12 +3821,29 @@ begin
     ActiveControl:=MainGrid;
 end;
 
+procedure TMainCashForm2.MainColPriceNightGetDisplayText(
+  Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AText: string);
+begin
+  inherited;
+  AText := FormatCurr(',0.00', CalcTaxUnitNightPriceGrid(ARecord.Values[MainColPrice.Index], ARecord.Values[MainColPrice.Index]));
+end;
+
 procedure TMainCashForm2.MainColReservedGetDisplayText(
   Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
   var AText: string);
 begin
   if AText = '0' then
     AText := '';
+end;
+
+procedure TMainCashForm2.MainGridPriceChangeNightGetDisplayText(
+  Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AText: string);
+begin
+  inherited;
+  if ARecord.Values[MainGridPriceChange.Index] <> Null then
+    AText := FormatCurr(',0.00', CalcTaxUnitNightPriceGrid(ARecord.Values[MainColPrice.Index], ARecord.Values[MainGridPriceChange.Index]));
 end;
 
 procedure TMainCashForm2.MainGridDBTableViewFocusedRecordChanged(
@@ -3927,6 +3985,9 @@ begin
   edAmount.Text := '0';
   isScaner:=false;
   ActiveControl := lcName;
+
+  // Ночные скидки
+  SetTaxUnitNight;
 end;
 
 procedure TMainCashForm2.ParentFormCloseQuery(Sender: TObject;
@@ -3987,6 +4048,7 @@ begin
   CloseHandle(MutexEmployeeWorkLog);
   CloseHandle(MutexBankPOSTerminal);
   CloseHandle(MutexUnitConfig);
+  CloseHandle(MutexTaxUnitNight);
 end;
 
 procedure TMainCashForm2.ParentFormKeyDown(Sender: TObject; var Key: Word;
@@ -4473,7 +4535,8 @@ begin
                 GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency) -
                 GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
         end else if (checkCDS.FieldByName('PriceSale').asCurrency <> checkCDS.FieldByName('Price').asCurrency) and
-          (checkCDS.FieldByName('Price').asCurrency = RemainsCDS.FieldByName('PriceChange').asCurrency) then
+          (RemainsCDS.FieldByName('PriceChange').asCurrency <> 0) and (checkCDS.FieldByName('Price').asCurrency =
+          CalcTaxUnitNightPrice(RemainsCDS.FieldByName('Price').asCurrency, RemainsCDS.FieldByName('PriceChange').asCurrency)) then
         begin
             // пересчитаем сумму скидки
             checkCDS.FieldByName('ChangePercent').asCurrency     := 0;
@@ -4481,11 +4544,18 @@ begin
                 GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency) -
                 GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
         end else if (checkCDS.FieldByName('PriceSale').asCurrency <> checkCDS.FieldByName('Price').asCurrency) and
-          (RemainsCDS.FieldByName('FixPercent').asCurrency > 0) and
-          (checkCDS.FieldByName('Price').asCurrency = GetPrice(RemainsCDS.FieldByName('Price').asCurrency, RemainsCDS.FieldByName('FixPercent').asCurrency)) then
+          (RemainsCDS.FieldByName('FixPercent').asCurrency > 0) and  (checkCDS.FieldByName('Price').asCurrency =
+          CalcTaxUnitNightPrice(RemainsCDS.FieldByName('Price').asCurrency, RemainsCDS.FieldByName('Price').asCurrency,
+          RemainsCDS.FieldByName('FixPercent').asCurrency)) then
         begin
             // пересчитаем сумму скидки
-            checkCDS.FieldByName('ChangePercent').asCurrency     := RemainsCDS.FieldByName('FixPercent').asCurrency;
+            checkCDS.FieldByName('SummChangePercent').asCurrency :=
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency) -
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
+        end else if pnlTaxUnitNight.Visible and (checkCDS.FieldByName('Price').asCurrency =
+          CalcTaxUnitNightPrice(RemainsCDS.FieldByName('Price').asCurrency, RemainsCDS.FieldByName('Price').asCurrency)) then
+        begin
+            // пересчитаем сумму скидки
             checkCDS.FieldByName('SummChangePercent').asCurrency :=
                 GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency) -
                 GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
@@ -5294,6 +5364,18 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.LoadTaxUnitNight;
+  var nPos : integer;
+begin
+  if not FileExists(TaxUnitNight_lcl) then Exit;
+
+  WaitForSingleObject(MutexTaxUnitNight, INFINITE);
+  try
+    LoadLocalData(TaxUnitNightCDS, TaxUnitNight_lcl);
+  finally
+    ReleaseMutex(MutexTaxUnitNight);
+  end;
+end;
 
 function TMainCashForm2.GetAmount : currency;
   var nAmount : Currency; nOne : Extended; nOut, nPack, nOst : Integer;
@@ -5573,7 +5655,114 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.SetTaxUnitNight;
+  var bThereIs, bActive : boolean;
+begin
+  bThereIs := False;
+  bActive := False;
+  if UnitConfigCDS.Active and (UnitConfigCDS.RecordCount = 1) and TaxUnitNightCDS.Active and
+    UnitConfigCDS.FieldByName('TaxUnitNight').AsBoolean then
+  begin
+    bThereIs := UnitConfigCDS.FieldByName('TaxUnitNight').AsBoolean;
+    bActive := bThereIs and ((TimeOf(UnitConfigCDS.FieldByName('TaxUnitStartDate').AsDateTime) < Time) or
+             (TimeOf(UnitConfigCDS.FieldByName('TaxUnitEndDate').AsDateTime) > Time));
+  end;
 
+  pnlTaxUnitNight.Visible := bActive;
+  if pnlTaxUnitNight.Visible then edTaxUnitNight.Text := 'C ' +
+     FormatDateTime('HH:NN', UnitConfigCDS.FieldByName('TaxUnitStartDate').AsDateTime) + ' по ' +
+     FormatDateTime('HH:NN', UnitConfigCDS.FieldByName('TaxUnitEndDate').AsDateTime)
+  else edTaxUnitNight.Text := '';
+
+  MainColPriceNight.Visible := bThereIs;
+  MainGridPriceChangeNight.Visible := bThereIs;
+end;
+
+    // Процент ночной скидки по цене
+function TMainCashForm2.CalcTaxUnitNightPercent(ABasePrice : Currency) : Currency;
+begin
+  Result := 0;
+  if TaxUnitNightCDS.Active then
+  try
+    TaxUnitNightCDS.Filter := 'PriceTaxUnitNight < ' + CurrToStr(ABasePrice);
+    TaxUnitNightCDS.Filtered := True;
+    TaxUnitNightCDS.Last;
+    if TaxUnitNightCDS.RecordCount > 0 then Result := TaxUnitNightCDS.FieldByName('ValueTaxUnitNight').AsCurrency;
+  finally
+    TaxUnitNightCDS.Filtered := False;
+    TaxUnitNightCDS.Filter := '';
+  end;
+end;
+
+    // Расчет ночной цены
+function TMainCashForm2.CalcTaxUnitNightPrice(ABasePrice, APrice : Currency; APercent : Currency = 0) : Currency;
+  var nPercent : Currency;
+begin
+  if pnlTaxUnitNight.Visible then
+    nPercent :=  CalcTaxUnitNightPercent(ABasePrice)
+  else nPercent := 0;
+  if APercent = 0 then
+  begin
+    if nPercent = 0 then Result := APrice
+    else Result := GetPrice(APrice, - nPercent)
+  end else
+  begin
+    if nPercent = 0 then Result := GetPrice(APrice, APercent)
+    else Result := GetPrice(APrice, APercent - nPercent);
+  end;
+end;
+
+function TMainCashForm2.CalcTaxUnitNightPriceGrid(ABasePrice, APrice : Currency) : Currency;
+  var nPercent : Currency;
+begin
+  nPercent :=  CalcTaxUnitNightPercent(ABasePrice);
+  if nPercent = 0 then Result := APrice
+  else Result := GetPrice(APrice, - nPercent);
+end;
+
+    // Расчет цены, скидок
+procedure TMainCashForm2.CalcPriceSale(var APriceSale, APrice, AChangePercent : Currency;
+                                           APriceBase, APercent : Currency; APriceChange : Currency = 0);
+  var nPercent : Currency;
+begin
+
+  // цена БЕЗ скидки
+  APriceSale := APriceBase;
+
+  if APriceChange <> 0 then
+  begin
+    if pnlTaxUnitNight.Visible then
+    begin
+      nPercent :=  CalcTaxUnitNightPercent(APriceBase);
+      // цена СО скидкой
+      APrice := GetPrice(APriceChange, - nPercent);
+      // процент скидки
+      AChangePercent :=  - nPercent;
+    end else
+    begin
+      // цена СО скидкой
+      APrice := APriceChange;
+      // процент скидки
+      AChangePercent := 0
+    end;
+  end else
+  begin
+    if pnlTaxUnitNight.Visible then
+    begin
+      nPercent :=  CalcTaxUnitNightPercent(APriceBase);
+      // цена СО скидкой
+      APrice := GetPrice(APriceBase, APercent - nPercent);
+      // процент скидки
+      AChangePercent := APercent - nPercent;
+    end else
+    begin
+      // цена СО скидкой
+      APrice := GetPrice(APriceBase, APercent);
+      // процент скидки
+      AChangePercent := APercent;
+    end;
+  end;
+end;
 
 { TSaveRealThread }
 { TRefreshDiffThread }

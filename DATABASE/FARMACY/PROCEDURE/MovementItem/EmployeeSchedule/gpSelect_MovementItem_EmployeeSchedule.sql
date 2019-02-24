@@ -84,7 +84,7 @@ BEGIN
                            LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectid
                                                 AND tmpPersonal.Ord = 1
 
-                      WHERE Movement.OperDate >= inDate - INTERVAL '1 MONTH'
+                      WHERE Movement.OperDate >= inDate - INTERVAL '3 MONTH'
                         AND Movement.DescId = zc_Movement_KPU())
 
        SELECT
@@ -305,7 +305,7 @@ BEGIN
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
                                    AND MovementItem.DescId = zc_MI_Master()
 
-            INNER JOIN tmpUser ON tmpUser.UserID = MovementItem.ObjectId
+            LEFT JOIN tmpUser ON tmpUser.UserID = MovementItem.ObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                  ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
@@ -375,7 +375,7 @@ BEGIN
                            LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectid
                                                 AND tmpPersonal.Ord = 1
 
-                      WHERE Movement.OperDate >= inDate - INTERVAL '1 MONTH'
+                      WHERE Movement.OperDate >= inDate - INTERVAL '3 MONTH'
                         AND Movement.DescId = zc_Movement_KPU())
 
        SELECT
@@ -486,7 +486,7 @@ BEGIN
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
                                    AND MovementItem.DescId = zc_MI_Master()
 
-            INNER JOIN tmpUser ON tmpUser.UserID = MovementItem.ObjectId
+            LEFT JOIN tmpUser ON tmpUser.UserID = MovementItem.ObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                  ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId

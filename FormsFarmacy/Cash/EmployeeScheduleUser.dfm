@@ -9,22 +9,23 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 59
+    Top = 75
     Width = 525
-    Height = 364
-    ExplicitTop = 59
+    Height = 348
+    TabOrder = 5
+    ExplicitTop = 75
     ExplicitWidth = 525
-    ExplicitHeight = 364
-    ClientRectBottom = 364
+    ExplicitHeight = 348
+    ClientRectBottom = 348
     ClientRectRight = 525
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 525
-      ExplicitHeight = 364
+      ExplicitHeight = 348
       inherited cxGrid: TcxGrid
         Width = 525
-        Height = 364
+        Height = 348
         ExplicitWidth = 525
-        ExplicitHeight = 364
+        ExplicitHeight = 348
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.Footer = False
           Styles.Content = nil
@@ -57,6 +58,10 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
           DataController.Summary.SummaryGroups = <>
           OptionsSelection.CellSelect = False
           OptionsView.GroupByBox = False
+          Styles.Content = dmMain.cxContentStyle
+          Styles.Inactive = dmMain.cxSelection
+          Styles.Selection = dmMain.cxSelection
+          Styles.Header = dmMain.cxContentStyle
           Bands = <
             item
               Width = 106
@@ -70,6 +75,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             DataBinding.FieldName = 'Range'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Position.BandIndex = 0
             Position.ColIndex = 0
             Position.RowIndex = 0
@@ -79,6 +85,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             DataBinding.FieldName = 'Value1'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 0
@@ -89,6 +96,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             DataBinding.FieldName = 'Value2'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 1
@@ -99,6 +107,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             DataBinding.FieldName = 'Value3'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 2
@@ -109,6 +118,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             DataBinding.FieldName = 'Value4'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 3
@@ -119,6 +129,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             DataBinding.FieldName = 'Value5'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 4
@@ -129,6 +140,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             DataBinding.FieldName = 'Value6'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 5
@@ -139,6 +151,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             DataBinding.FieldName = 'Value7'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 6
@@ -148,6 +161,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             DataBinding.FieldName = 'ValuePlan1'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 0
@@ -158,6 +172,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             DataBinding.FieldName = 'ValuePlan2'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 2
@@ -168,6 +183,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             DataBinding.FieldName = 'ValuePlan3'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 1
@@ -178,6 +194,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             DataBinding.FieldName = 'ValuePlan4'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 3
@@ -188,6 +205,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             DataBinding.FieldName = 'ValuePlan5'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 4
@@ -198,6 +216,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             DataBinding.FieldName = 'ValuePlan6'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 5
@@ -208,6 +227,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             DataBinding.FieldName = 'ValuePlan7'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
             Position.BandIndex = 1
             Position.ColIndex = 6
@@ -219,15 +239,17 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Position.BandIndex = 1
             Position.ColIndex = 7
             Position.RowIndex = 0
           end
           object Color2: TcxGridDBBandedColumn
-            Caption = 'Color2'
+            DataBinding.FieldName = 'Color2'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Position.BandIndex = 1
             Position.ColIndex = 8
             Position.RowIndex = 0
@@ -235,6 +257,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
           object Color3: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color3'
             Visible = False
+            Options.Editing = False
             Position.BandIndex = 1
             Position.ColIndex = 9
             Position.RowIndex = 0
@@ -242,6 +265,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
           object Color4: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color4'
             Visible = False
+            Options.Editing = False
             Position.BandIndex = 1
             Position.ColIndex = 10
             Position.RowIndex = 0
@@ -249,6 +273,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
           object Color5: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color5'
             Visible = False
+            Options.Editing = False
             Position.BandIndex = 1
             Position.ColIndex = 11
             Position.RowIndex = 0
@@ -256,6 +281,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
           object Color6: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color6'
             Visible = False
+            Options.Editing = False
             Position.BandIndex = 1
             Position.ColIndex = 12
             Position.RowIndex = 0
@@ -263,6 +289,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
           object Color7: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color7'
             Visible = False
+            Options.Editing = False
             Position.BandIndex = 1
             Position.ColIndex = 13
             Position.RowIndex = 0
@@ -278,36 +305,44 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
     Left = 0
     Top = 0
     Width = 525
-    Height = 33
+    Height = 49
     Align = alTop
     ShowCaption = False
-    TabOrder = 5
+    TabOrder = 0
     object edOperDate: TcxDateEdit
-      Left = 206
-      Top = 3
+      Left = 79
+      Top = 15
+      TabStop = False
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy'
       Properties.EditFormat = 'dd.mm.yyyy'
       Properties.ReadOnly = True
-      TabOrder = 0
+      TabOrder = 1
       Width = 100
     end
     object cxLabel2: TcxLabel
-      Left = 170
-      Top = 4
-      Caption = #1044#1072#1090#1072
-    end
-    object edCashRegisterName: TcxTextEdit
-      Left = 49
-      Top = 3
-      Properties.ReadOnly = True
-      TabOrder = 2
-      Width = 104
+      Left = 26
+      Top = 16
+      Caption = #1057#1077#1075#1086#1076#1085#1103
     end
     object cxLabel1: TcxLabel
-      Left = 10
-      Top = 4
-      Caption = #1050#1072#1089#1089#1072
+      Left = 194
+      Top = 16
+      Caption = #1042#1088#1077#1084#1103' '#1087#1088#1080#1093#1086#1076#1072' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1075#1088#1072#1092#1080#1082#1072
+    end
+    object cbValueUser: TcxComboBox
+      Left = 384
+      Top = 15
+      Properties.Items.Strings = (
+        ''
+        '8:00'
+        '9:00'
+        '10:00'
+        '21:00'
+        #1042)
+      TabOrder = 0
+      Text = 'cbValueUser'
+      Width = 121
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -320,6 +355,15 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
   inherited ActionList: TActionList
     Left = 119
     Top = 191
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spGet
+        end>
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -361,12 +405,157 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    View = cxGridDBBandedTableView1
+    ColorRuleList = <
+      item
+        ColorColumn = Value1
+        BackGroundValueColumn = Color1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Value2
+        BackGroundValueColumn = Color2
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Value3
+        BackGroundValueColumn = Color3
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Value4
+        BackGroundValueColumn = Color4
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Value5
+        BackGroundValueColumn = Color5
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Value6
+        BackGroundValueColumn = Color6
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Value7
+        BackGroundValueColumn = Color7
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ValuePlan1
+        BackGroundValueColumn = Color1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ValuePlan2
+        BackGroundValueColumn = Color2
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ValuePlan3
+        BackGroundValueColumn = Color3
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ValuePlan4
+        BackGroundValueColumn = Color4
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ValuePlan5
+        BackGroundValueColumn = Color5
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ValuePlan6
+        BackGroundValueColumn = Color6
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ValuePlan7
+        BackGroundValueColumn = Color7
+        ColorValueList = <>
+      end>
+    KeepSelectColor = True
     Left = 352
     Top = 256
   end
   object FormParams: TdsdFormParams
-    Params = <>
+    Params = <
+      item
+        Name = 'Id'
+        Value = '1'
+        MultiSelectSeparator = ','
+      end>
     Left = 256
     Top = 104
+  end
+  object spGet: TdsdStoredProc
+    StoredProcName = 'gpGet_MovementItem_EmployeeSchedule_User'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'OperDate'
+        Value = 'NULL'
+        Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ValueUser'
+        Value = Null
+        Component = cbValueUser
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 144
+  end
+  object spUpdateEmployeeScheduleUser: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_EmployeeSchedule_User'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValueUser'
+        Value = ''
+        Component = cbValueUser
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'ioId'
+    Left = 346
+    Top = 200
+  end
+  object HeaderSaver: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
+    StoredProc = spUpdateEmployeeScheduleUser
+    ControlList = <
+      item
+        Control = cbValueUser
+      end>
+    GetStoredProc = spGet
+    ActionAfterExecute = actRefresh
+    Left = 424
+    Top = 145
   end
 end

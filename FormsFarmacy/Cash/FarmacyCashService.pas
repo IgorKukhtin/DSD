@@ -173,6 +173,7 @@ type
     procedure SaveListDiff;
     procedure SaveBankPOSTerminal;
     procedure SaveUnitConfig;
+    procedure SaveTaxUnitNight;
     procedure SendZReport;
     procedure SendEmployeeWorkLog;
     procedure SecureUpdateVersion;
@@ -201,7 +202,7 @@ var
   AllowedConduct : Boolean = false;
   MutexDBF, MutexDBFDiff,  MutexVip, MutexRemains, MutexAlternative, MutexRefresh,
   MutexAllowedConduct, MutexGoods, MutexDiffCDS, MutexDiffKind, MutexEmployeeWorkLog,
-  MutexBankPOSTerminal, MutexUnitConfig: THandle;
+  MutexBankPOSTerminal, MutexUnitConfig, MutexTaxUnitNight: THandle;
   LastErr: Integer;
 
   FM_SERVISE: Integer;
@@ -425,6 +426,8 @@ begin
          SaveBankPOSTerminal;
          //Получение конфигурации аптеки
          SaveUnitConfig;
+         //Получение ночных скидок
+         SaveTaxUnitNight;
          // Отправка сообщения приложению про надобность обновить остатки из файла
          PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
         end;
@@ -506,6 +509,9 @@ begin   //yes
           SaveBankPOSTerminal;
           //Получение конфигурации аптеки
           SaveUnitConfig;
+          //Получение ночных скидок
+          SaveTaxUnitNight;
+
           PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 3);
           // Вывод уведомления сервиса
           tiServise.BalloonHint:='Остатки обновлены.';
@@ -577,6 +583,8 @@ begin
   MutexBankPOSTerminal := CreateMutex(nil, false, 'farmacycashMutexBankPOSTerminal');
   LastErr := GetLastError;
   MutexUnitConfig := CreateMutex(nil, false, 'farmacycashMutexUnitConfig');
+  LastErr := GetLastError;
+  MutexTaxUnitNight := CreateMutex(nil, false, 'farmacycashMutexTaxUnitNight');
   LastErr := GetLastError;
   FHasError := false;
   //сгенерили гуид для определения сессии
@@ -1682,6 +1690,38 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.SaveTaxUnitNight;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  sp := TdsdStoredProc.Create(nil);
+  try
+    ds := TClientDataSet.Create(nil);
+    try
+      sp.OutputType := otDataSet;
+      sp.DataSet := ds;
+
+      sp.StoredProcName := 'gpSelect_Cash_TaxUnitNight';
+      sp.Params.Clear;
+      sp.Execute;
+      Add_Log('Start MutexTaxUnitNight');
+      WaitForSingleObject(MutexTaxUnitNight, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+      try
+        SaveLocalData(ds,TaxUnitNight_lcl);
+      finally
+        Add_Log('End MutexTaxUnitNight');
+        ReleaseMutex(MutexTaxUnitNight);
+      end;
+
+    finally
+      ds.free;
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+
 procedure TMainCashForm2.SendZReport;
   var IdFTP : Tidftp;
       s, p: string; sl : TStringList;  i : integer;
@@ -1949,6 +1989,7 @@ begin
  CloseHandle(MutexEmployeeWorkLog);
  CloseHandle(MutexBankPOSTerminal);
  CloseHandle(MutexUnitConfig);
+ CloseHandle(MutexTaxUnitNight);
 end;
 
 

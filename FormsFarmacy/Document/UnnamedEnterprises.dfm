@@ -121,6 +121,14 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
+          object PriceUnit: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1072#1087#1090#1077#1082#1080
+            DataBinding.FieldName = 'PriceUnit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
           object Summ: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Summ'
