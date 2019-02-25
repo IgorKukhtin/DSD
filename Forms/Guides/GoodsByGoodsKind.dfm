@@ -3,7 +3,7 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
   ClientHeight = 420
   ClientWidth = 1030
   ExplicitWidth = 1046
-  ExplicitHeight = 455
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -491,6 +491,42 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object GoodsBrandName: TcxGridDBColumn
+            Caption = #1041#1088#1077#1085#1076
+            DataBinding.FieldName = 'GoodsBrandName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1088#1077#1085#1076' '#1090#1086#1074#1072#1088#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object isGoodsTypeKind_Sh: TcxGridDBColumn
+            Caption = #1064#1090#1091#1095#1085#1099#1081
+            DataBinding.FieldName = 'isGoodsTypeKind_Sh'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072' "'#1064#1090#1091#1095#1085#1099#1081'"'
+            Options.Editing = False
+            Width = 60
+          end
+          object isGoodsTypeKind_Nom: TcxGridDBColumn
+            Caption = #1053#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081
+            DataBinding.FieldName = 'isGoodsTypeKind_Nom'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072' "'#1053#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081'"'
+            Options.Editing = False
+            Width = 60
+          end
+          object cxGridDBTableViewColumn2: TcxGridDBColumn
+            Caption = #1053#1077#1085#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081
+            DataBinding.FieldName = 'isGoodsTypeKind_Ves'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072' "'#1053#1077#1085#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081'"'
+            Options.Editing = False
+            Width = 60
           end
         end
       end

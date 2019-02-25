@@ -1,21 +1,13 @@
--- Function: gpInsertUpdate_Object_GoodsByGoodsKind_VMC (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+-- Function: gpUpdate_Object_GoodsByGoodsKind_GoodsBrand (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
---DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_VMC (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_VMC (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS  gpUpdate_Object_GoodsByGoodsKind_GoodsBrand (Integer, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind_VMC(
- INOUT ioId                    Integer  , -- ключ объекта <Товар>
-    IN inGoodsId               Integer  , -- Товары
-    IN inGoodsKindId           Integer  , -- Виды товаров
-    IN inWeightMin             TFloat  , -- 
-    IN inWeightMax             TFloat  , -- 
-    IN inHeight                TFloat  , -- 
-    IN inLength                TFloat  , -- 
-    IN inWidth                 TFloat  , -- 
-    IN inisGoodsTypeKind_Sh    Boolean , -- 
-    IN inisGoodsTypeKind_Nom   Boolean , -- 
-    IN inisGoodsTypeKind_Ves   Boolean , -- 
-    IN inSession               TVarChar 
+CREATE OR REPLACE FUNCTION gpUpdate_Object_GoodsByGoodsKind_GoodsBrand(
+ INOUT ioId                  Integer  , -- ключ объекта <Товар>
+    IN inGoodsId             Integer  , -- Товары
+    IN inGoodsKindId         Integer  , -- Виды товаров
+    IN inGoodsBrandId        Integer  , -- 
+    IN inSession             TVarChar 
 )
 RETURNS Integer
 AS
@@ -68,40 +60,7 @@ BEGIN
    END IF;
    
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightMin(), ioId, inWeightMin);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightMax(), ioId, inWeightMax);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Height(), ioId, inHeight);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Length(), ioId, inLength);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Width(), ioId, inWidth);
-
-   IF inisGoodsTypeKind_Sh = TRUE 
-   THEN
-         -- сохранили свойство <>
-         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh(), ioId, zc_Enum_GoodsTypeKind_Sh());
-   ELSE
-         -- сохранили свойство <>
-         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh(), ioId, Null);
-   END IF;
-   IF inisGoodsTypeKind_Nom = TRUE 
-   THEN
-         -- сохранили свойство <>
-         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom(), ioId, zc_Enum_GoodsTypeKind_Nom());
-   ELSE
-         -- сохранили свойство <>
-         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom(), ioId, Null);
-   END IF;
-   IF inisGoodsTypeKind_Ves = TRUE 
-   THEN
-         -- сохранили свойство <>
-         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves(), ioId, zc_Enum_GoodsTypeKind_Ves());
-   ELSE
-         -- сохранили свойство <>
-         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves(), ioId, Null);
-   END IF;
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsBrand(), ioId, inGoodsBrandId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -114,7 +73,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 22.06.18         *
+ 25.02.19         *
 */
 
 -- тест
