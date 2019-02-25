@@ -2189,6 +2189,41 @@ inherited Report_Sale_AnalysisAllForm: TReport_Sale_AnalysisAllForm
         ColorColumn = Tax_Summ_prof
         BackGroundValueColumn = Color_Prof
         ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Amount
+        BackGroundValueColumn = Color_Amount
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Summ_curr
+        BackGroundValueColumn = Color_Sum
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Summ
+        BackGroundValueColumn = Color_Sum
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_SummCost_curr
+        BackGroundValueColumn = Color_Prof
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_SummCost
+        BackGroundValueColumn = Color_Prof
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Summ_prof_curr
+        BackGroundValueColumn = Color_Prof
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Sale_Summ_prof
+        BackGroundValueColumn = Color_Prof
+        ColorValueList = <>
       end>
     KeepSelectColor = True
     Left = 472
