@@ -496,6 +496,8 @@ type
     miTaxUnit: TMenuItem;
     actUnitBankPOSTerminal: TdsdOpenForm;
     POS2: TMenuItem;
+    actJackdawsChecks: TdsdOpenForm;
+    actJackdawsChecks1: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

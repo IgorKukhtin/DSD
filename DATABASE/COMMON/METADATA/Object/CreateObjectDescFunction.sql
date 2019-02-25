@@ -1112,6 +1112,10 @@ CREATE OR REPLACE FUNCTION zc_Object_UnitBankPOSTerminal() RETURNS Integer AS $B
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_UnitBankPOSTerminal', 'Связь подразделения и банков POS терминалов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_UnitBankPOSTerminal');
 
+CREATE OR REPLACE FUNCTION zc_Object_JackdawsChecks() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_JackdawsChecks'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_JackdawsChecks', 'Типы галок для чеков' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_JackdawsChecks');
+
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
@@ -1129,6 +1133,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 25.02.19                                                                                        * zc_Object_JackdawsChecks
  18.02.19                                                                                        * zc_Object_UnitBankPOSTerminal
  16.02.19                                                                                        * zc_Object_BankPOSTerminal
  17.02.19         * zc_Object_TaxUnit

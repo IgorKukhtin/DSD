@@ -115,6 +115,9 @@ type
     actExecBankPOSTerminal: TdsdExecStoredProc;
     dxBarButton2: TdxBarButton;
     spUpdateBankPOSTerminal: TdsdStoredProc;
+    edJackdawsChecks: TcxButtonEdit;
+    cxLabel28: TcxLabel;
+    GuidesJackdawsChecks: TdsdGuides;
   private
     { Private declarations }
   public

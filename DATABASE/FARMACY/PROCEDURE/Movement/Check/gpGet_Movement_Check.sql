@@ -39,6 +39,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Passport_MemberSP TVarChar
              
              , BankPOSTerminalId Integer, BankPOSTerminalName TVarChar
+             , JackdawsChecksId Integer, JackdawsChecksName TVarChar
 )
 AS
 $BODY$
@@ -96,8 +97,11 @@ BEGIN
            , COALESCE (ObjectString_INN.ValueData, '')       :: TVarChar  AS INN_MemberSP
            , COALESCE (ObjectString_Passport.ValueData, '')  :: TVarChar  AS Passport_MemberSP
            
-           , Object_BankPOSTerminal.Id                                  AS BankPOSTerminalId
-           , Object_BankPOSTerminal.ValueData                           AS BankPOSTerminalName
+           , Object_BankPOSTerminal.Id                                    AS BankPOSTerminalId
+           , Object_BankPOSTerminal.ValueData                             AS BankPOSTerminalName
+
+           , Object_JackdawsChecks.Id                                     AS JackdawsChecksId
+           , Object_JackdawsChecks.ValueData                              AS JackdawsChecksName
 
         FROM Movement_Check_View AS Movement_Check
              LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
@@ -142,6 +146,11 @@ BEGIN
                                          AND MovementLinkObject_BankPOSTerminal.DescId = zc_MovementLinkObject_BankPOSTerminal()
              LEFT JOIN Object AS Object_BankPOSTerminal ON Object_BankPOSTerminal.Id = MovementLinkObject_BankPOSTerminal.ObjectId
 
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_JackdawsChecks
+                                          ON MovementLinkObject_JackdawsChecks.MovementId =  Movement_Check.Id
+                                         AND MovementLinkObject_JackdawsChecks.DescId = zc_MovementLinkObject_JackdawsChecks()
+             LEFT JOIN Object AS Object_JackdawsChecks ON Object_JackdawsChecks.Id = MovementLinkObject_JackdawsChecks.ObjectId
+
        WHERE Movement_Check.Id = inMovementId;
 
 END;
@@ -152,6 +161,7 @@ ALTER FUNCTION gpGet_Movement_Check (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 25.02.19                                                                      * add JackdawsChecks
  16.02.19                                                                      * add BankPOSTerminal
  28.01.19         * add isSite
  11.01.19         * add MemberSP

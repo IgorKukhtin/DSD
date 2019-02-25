@@ -397,12 +397,17 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_BankPOSTerminal() RETURNS Integ
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_BankPOSTerminal', 'POS терминал' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_BankPOSTerminal');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_JackdawsChecks() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_JackdawsChecks'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_JackdawsChecks', 'Тип галки' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_JackdawsChecks');
+
 /*-------------------------------------------------------------------------------
 
                   РАСПОЛАГАЙТЕ ДЕСКИ ПО АЛФАВИТУ  !!!!!!!!!!!!!!!!!!!
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 25.02.19                                                                                      * zc_MovementLinkObject_JackdawsChecks
  16.02.19                                                                                      * zc_MovementLinkObject_BankPOSTerminal
  12.18.17         * zc_MovementLinkObject_PositionComplete5
                     zc_MovementLinkObject_PersonalComplete5

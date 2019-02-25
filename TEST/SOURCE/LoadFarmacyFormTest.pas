@@ -333,6 +333,12 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJackdawsChecksForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJackdawsChecksForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJackdawsChecksEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJackdawsChecksEditForm');
+
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckPrintDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckPrintDialogForm');

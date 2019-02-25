@@ -490,6 +490,24 @@ inherited CheckForm: TCheckForm
       Top = 179
       Caption = 'POS '#1090#1077#1088#1084#1080#1085#1072#1083
     end
+    object edJackdawsChecks: TcxButtonEdit
+      Left = 250
+      Top = 194
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 37
+      Width = 213
+    end
+    object cxLabel28: TcxLabel
+      Left = 250
+      Top = 179
+      Caption = #1058#1080#1087' '#1075#1072#1083#1082#1080
+    end
   end
   object edInvNumberOrder: TcxTextEdit [2]
     Left = 155
@@ -1783,6 +1801,21 @@ inherited CheckForm: TCheckForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JackdawsChecksId'
+        Value = Null
+        Component = GuidesJackdawsChecks
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JackdawsChecksName'
+        Value = Null
+        Component = GuidesJackdawsChecks
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 397
@@ -2254,5 +2287,34 @@ inherited CheckForm: TCheckForm
     PackSize = 1
     Left = 554
     Top = 384
+  end
+  object GuidesJackdawsChecks: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJackdawsChecks
+    FormNameParam.Value = 'TJackdawsChecksForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJackdawsChecksForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJackdawsChecks
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJackdawsChecks
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 360
+    Top = 176
   end
 end

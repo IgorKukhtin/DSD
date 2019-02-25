@@ -666,7 +666,9 @@ uses
   TaxUnit in '..\..\FormsFarmacy\Guides\TaxUnit.pas' {TaxUnitForm: TParentForm},
   TaxUnitEdit in '..\..\FormsFarmacy\Guides\TaxUnitEdit.pas' {TaxUnitEditForm: TParentForm},
   EmployeeScheduleUser in '..\..\FormsFarmacy\Cash\EmployeeScheduleUser.pas' {EmployeeScheduleUserForm: TParentForm},
-  UnitBankPOSTerminal in '..\..\FormsFarmacy\Guides\UnitBankPOSTerminal.pas' {UnitBankPOSTerminalForm: TParentForm};
+  UnitBankPOSTerminal in '..\..\FormsFarmacy\Guides\UnitBankPOSTerminal.pas' {UnitBankPOSTerminalForm: TParentForm},
+  JackdawsChecks in '..\..\FormsFarmacy\Guides\JackdawsChecks.pas' {JackdawsChecksForm: TParentForm},
+  JackdawsChecksEdit in '..\..\FormsFarmacy\Guides\JackdawsChecksEdit.pas' {JackdawsChecksEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
