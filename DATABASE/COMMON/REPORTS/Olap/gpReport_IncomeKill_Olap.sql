@@ -130,6 +130,66 @@ BEGIN
                                                        AND tmp2.PartnerId <> tmpContainer.PartnerId
                             )
 
+         , tmpTransportCost AS (SELECT tmp.MovementId
+                                     , SUM (COALESCE (MIFloat_Taxi.ValueData, 0) + COALESCE (MIFloat_TaxiMore.ValueData, 0)
+                                     + COALESCE (MIFloat_RateSumma.ValueData, 0) + COALESCE (MIFloat_RateSummaExp.ValueData, 0)) AS Taxi
+                                     , SUM (COALESCE (MovementFloat_AmountCost_Master.ValueData, 0) )                            AS AmountCost
+                                     , SUM (COALESCE (MIFloat_RatePrice.ValueData, 0) * (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_DistanceFuelChild.ValueData, 0))
+                                          + COALESCE (MIFloat_RateSummaAdd.ValueData, 0))                                        AS RatePrice_Calc
+                                                --  , SUM (COALESCE (MovementFloat_AmountMemberCost_Master.ValueData, 0)) :: TFloat AS AmountCost_Master
+                               FROM (SELECT DISTINCT MovementId
+                                     FROM tmpContainer) AS tmp
+                                          INNER JOIN Movement AS Movement_Cost ON Movement_Cost.ParentId = tmp.MovementId
+                                                             AND Movement_Cost.DescId = zc_Movement_IncomeCost()
+                                                            --AND Movement_Cost.StatusId = zc_Enum_Status_Complete()
+                                                             AND Movement_Cost.StatusId <> zc_Enum_Status_Erased()
+
+                                          LEFT JOIN MovementFloat AS MovementFloat_AmountCost
+                                                                  ON MovementFloat_AmountCost.MovementId = Movement_Cost.Id
+                                                                 AND MovementFloat_AmountCost.DescId     = zc_MovementFloat_AmountCost()
+
+                                          LEFT JOIN MovementFloat AS MovementFloat_MovementId
+                                                                  ON MovementFloat_MovementId.MovementId = Movement_Cost.Id
+                                                                 AND MovementFloat_MovementId.DescId = zc_MovementFloat_MovementId()
+
+                                          LEFT JOIN Movement AS Movement_Master ON Movement_Master.Id = MovementFloat_MovementId.ValueData :: Integer
+
+                                          LEFT JOIN MovementFloat AS MovementFloat_AmountCost_Master
+                                                                  ON MovementFloat_AmountCost_Master.MovementId = Movement_Master.Id
+                                                                 AND MovementFloat_AmountCost_Master.DescId     = zc_MovementFloat_AmountCost()
+                                          LEFT JOIN MovementFloat AS MovementFloat_AmountMemberCost_Master
+                                                                  ON MovementFloat_AmountMemberCost_Master.MovementId = Movement_Master.Id
+                                                                 AND MovementFloat_AmountMemberCost_Master.DescId     = zc_MovementFloat_AmountMemberCost()
+
+                                          LEFT JOIN MovementItem ON MovementItem.MovementId = Movement_Master.Id
+                                                                AND MovementItem.DescId     = zc_MI_Master()
+                                                                AND MovementItem.isErased = FALSE
+ 
+                                          LEFT JOIN MovementItemFloat AS MIFloat_Taxi
+                                                                      ON MIFloat_Taxi.MovementItemId =  MovementItem.Id
+                                                                     AND MIFloat_Taxi.DescId = zc_MIFloat_Taxi()
+                                          LEFT JOIN MovementItemFloat AS MIFloat_TaxiMore
+                                                                      ON MIFloat_TaxiMore.MovementItemId =  MovementItem.Id
+                                                                     AND MIFloat_TaxiMore.DescId = zc_MIFloat_TaxiMore()
+                                          LEFT JOIN MovementItemFloat AS MIFloat_RateSummaExp
+                                                                      ON MIFloat_RateSummaExp.MovementItemId = MovementItem.Id
+                                                                     AND MIFloat_RateSummaExp.DescId = zc_MIFloat_RateSummaExp()
+                                          LEFT JOIN MovementItemFloat AS MIFloat_RateSumma
+                                                                      ON MIFloat_RateSumma.MovementItemId =  MovementItem.Id
+                                                                     AND MIFloat_RateSumma.DescId = zc_MIFloat_RateSumma()
+                                          LEFT JOIN MovementItemFloat AS MIFloat_RatePrice
+                                                                      ON MIFloat_RatePrice.MovementItemId =  MovementItem.Id
+                                                                     AND MIFloat_RatePrice.DescId = zc_MIFloat_RatePrice()
+                                          LEFT JOIN MovementItemFloat AS MIFloat_DistanceFuelChild
+                                                                      ON MIFloat_DistanceFuelChild.MovementItemId = MovementItem.Id
+                                                                     AND MIFloat_DistanceFuelChild.DescId = zc_MIFloat_DistanceFuelChild()
+                                          LEFT JOIN MovementItemFloat AS MIFloat_RateSummaAdd
+                                                                      ON MIFloat_RateSummaAdd.MovementItemId = MovementItem.Id
+                                                                     AND MIFloat_RateSummaAdd.DescId = zc_MIFloat_RateSummaAdd()
+                               GROUP BY tmp.MovementId
+                               )
+
+
 /*
 4261;"СВИНИНА н/к в/ш 2кат_*"  17 
 2844;"ГОЛОВЫ СВ.*"             19
@@ -187,16 +247,40 @@ BEGIN
                              , SUM (tmpContainer.HeadCount)               AS HeadCount
                              , SUM (tmpContainer.SUM_f2)                  AS SUM_f2
                              , SUM (tmpContainer.Amount_f2)               AS Amount_f2
-                           
-                         FROM tmpContainer
+                             , SUM (tmpTransportCost.Taxi)                AS Taxi
+                             , SUM (tmpTransportCost.AmountCost)          AS AmountCost
+                             , SUM (tmpTransportCost.RatePrice_Calc)      AS RatePrice_Calc
+                         FROM  (SELECT tmpContainer.OperDate                      AS OperDate
+                                     , tmpContainer.GoodsId                       AS GoodsId
+                                     , tmpContainer.JuridicalId                   AS JuridicalId
+                                     , tmpContainer.PartionGoods                  AS PartionGoods
+                                     , tmpContainer.isDop
+                                     , tmpContainer.MovementId
+                                     , SUM (tmpContainer.Amount)                  AS Amount
+                                     , SUM (tmpContainer.AmountPartner)           AS AmountPartner
+                                     , SUM (tmpContainer.Summ)                    AS Summ
+                                     , SUM (tmpContainer.Summ_ProfitLoss_partner) AS Summ_ProfitLoss_partner
+                                     , SUM (tmpContainer.Summ_ProfitLoss)         AS Summ_ProfitLoss
+                                     , SUM (tmpContainer.HeadCount)               AS HeadCount
+                                     , SUM (tmpContainer.SUM_f2)                  AS SUM_f2
+                                     , SUM (tmpContainer.Amount_f2)               AS Amount_f2
+                                 FROM tmpContainer
+                                 GROUP BY tmpContainer.GoodsId       
+                                        , tmpContainer.OperDate
+                                        , tmpContainer.JuridicalId
+                                        , tmpContainer.PartionGoods
+                                        , tmpContainer.isDop
+                                        , tmpContainer.MovementId
+                                 ) AS tmpContainer
+                                   LEFT JOIN tmpTransportCost ON tmpTransportCost.MovementId = tmpContainer.MovementId
                          GROUP BY tmpContainer.GoodsId       
                                 , tmpContainer.OperDate
                                 , tmpContainer.JuridicalId
                                 , tmpContainer.PartionGoods
                                 , tmpContainer.isDop
-                        )
+                         )
 
-         , tmpGoodsParam AS (SELECT tmpGoods.GoodsId
+/*         , tmpGoodsParam AS (SELECT tmpGoods.GoodsId
                                   , ObjectLink_Goods_Measure.ChildObjectId       AS MeasureId
                                   , ObjectFloat_Weight.ValueData                 AS Weight
                              FROM (SELECT DISTINCT tmpGroup.GoodsId
@@ -210,6 +294,7 @@ BEGIN
                                                         ON ObjectFloat_Weight.ObjectId = tmpGoods.GoodsId
                                                        AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                             )
+*/
          
          , tmpOperationGroupAll AS (SELECT tmp.OperDate
                                       , tmp.JuridicalId
@@ -237,24 +322,29 @@ BEGIN
                                       , tmpSeparate.Amount_21
                                       , tmpSeparate.Amount_22
 
-                                      
+                                      , tmp.Amount_23
+                                      , tmp.Amount_24
+                                      , tmp.Amount_25
                                     FROM (SELECT tmpOperationGroup.OperDate
                                                , tmpOperationGroup.JuridicalId
                                                , tmpOperationGroup.PartionGoods
-                                               , SUM (tmpOperationGroup.Amount        * CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END) :: TFloat AS Amount_Weight         -- Ж.В ФАКТ
-                                               , SUM ((tmpOperationGroup.AmountPartner - tmpOperationGroup.Amount_f2)  * CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END) :: TFloat AS AmountPartner_Weight  -- ВЕС НАКЛАД. БН
+                                               , SUM (tmpOperationGroup.Amount) :: TFloat AS Amount_Weight         -- Ж.В ФАКТ
+                                               , SUM (tmpOperationGroup.AmountPartner - tmpOperationGroup.Amount_f2) :: TFloat AS AmountPartner_Weight  -- ВЕС НАКЛАД. БН
                                                , SUM (tmpOperationGroup.Summ - tmpOperationGroup.Summ_ProfitLoss)                                                                 :: TFloat AS Summ
                                                , SUM (tmpOperationGroup.Summ - tmpOperationGroup.SUM_f2 )                                                                         :: TFloat AS TotalSumm
                                                , SUM (tmpOperationGroup.HeadCount)                                                                                                :: TFloat AS HeadCount
                                                , SUM (tmpOperationGroup.SUM_f2)                                                                                                   :: TFloat AS SUM_f2
-                                               --, SUM (CASE WHEN COALESCE (tmpOperationGroup.HeadCount, 0) <> 0 THEN (tmpOperationGroup.Amount * CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END) / tmpOperationGroup.HeadCount ELSE 0 END) :: TFloat AS HeadCount_one
-                                               , SUM ((tmpOperationGroup.Amount - tmpOperationGroup.AmountPartner + tmpOperationGroup.Amount_f2 ) * CASE WHEN tmpGoodsParam.MeasureId = zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END) :: TFloat AS AmountWeight_diff  -- от заготовителя- излишек,кг
+                                               --, SUM (CASE WHEN COALESCE (tmpOperationGroup.HeadCount, 0) <> 0 THEN (tmpOperationGroup.Amount) / tmpOperationGroup.HeadCount ELSE 0 END) :: TFloat AS HeadCount_one
+                                               , SUM ((tmpOperationGroup.Amount - tmpOperationGroup.AmountPartner + tmpOperationGroup.Amount_f2 )) :: TFloat AS AmountWeight_diff  -- от заготовителя- излишек,кг
                                                , SUM (CASE WHEN tmpOperationGroup.isDop = 1 THEN tmpOperationGroup.Amount_f2 ELSE 0 END ) AS Amount_7
                                                , SUM (CASE WHEN tmpOperationGroup.isDop = 1 THEN tmpOperationGroup.SUM_f2    ELSE 0 END ) AS Amount_8
                                                , SUM (CASE WHEN tmpOperationGroup.isDop = 1 THEN 0 ELSE ROUND(tmpOperationGroup.SUM_f2 / tmpOperationGroup.AmountPartner, 2) END ) AS Amount_9
                                                , SUM (CASE WHEN tmpOperationGroup.isDop = 1 THEN 0 ELSE tmpOperationGroup.SUM_f2 END )    AS Amount_10
+                                               , SUM (tmpOperationGroup.RatePrice_Calc)      AS Amount_23
+                                               , SUM (tmpOperationGroup.AmountCost)          AS Amount_24
+                                               , SUM (tmpOperationGroup.Taxi)                AS Amount_25
                                           FROM tmpGroup AS tmpOperationGroup
-                                               LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = tmpOperationGroup.GoodsId
+                                          --     LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = tmpOperationGroup.GoodsId
                                           GROUP BY tmpOperationGroup.OperDate
                                                  , tmpOperationGroup.JuridicalId
                                                  , tmpOperationGroup.PartionGoods
@@ -437,6 +527,31 @@ BEGIN
                                       , tmpOperationGroupAll.Amount_22
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.Amount_22 <> 0
+
+                                UNION
+                                 SELECT 'Погрузка' AS Col_Name
+                                      , 23 AS Num
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , tmpOperationGroupAll.Amount_23
+                                 FROM tmpOperationGroupAll
+                                 --WHERE tmpOperationGroupAll.Amount_23 <> 0
+                                UNION
+                                 SELECT 'транс- расх.' AS Col_Name
+                                      , 24 AS Num
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , tmpOperationGroupAll.Amount_24
+                                 FROM tmpOperationGroupAll
+                                 --WHERE tmpOperationGroupAll.Amount_24 <> 0
+                                UNION
+                                 SELECT 'Такси+командиров.' AS Col_Name
+                                      , 25 AS Num
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , tmpOperationGroupAll.Amount_25
+                                 FROM tmpOperationGroupAll
+                                 --WHERE tmpOperationGroupAll.Amount_25 <> 0
                                  )
 
       -- Результат 
