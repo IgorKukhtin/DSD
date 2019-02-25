@@ -2652,6 +2652,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actJackdawsChecks: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1058#1080#1087#1099' '#1075#1072#1083#1086#1082' '#1076#1083#1103' '#1095#1077#1082#1086#1074
+      FormName = 'TJackdawsChecksForm'
+      FormNameParam.Value = 'TJackdawsChecksForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3383,6 +3394,9 @@ inherited MainForm: TMainForm
         end
         object miFiscal: TMenuItem
           Action = actFiscal
+        end
+        object actJackdawsChecks1: TMenuItem
+          Action = actJackdawsChecks
         end
       end
       object N44: TMenuItem [1]

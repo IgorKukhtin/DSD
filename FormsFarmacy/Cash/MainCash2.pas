@@ -2705,6 +2705,12 @@ begin
     except on E: Exception do
       ShowMessage('Ошибка получения скидки через сайт: ' + #13#10 + E.Message);
     end;
+
+    if nSiteDiscount = 0 then
+    begin
+      ShowMessage('Операция недоступна.'#13#10'Процент скидки через сайт не установлен.');
+      Exit;
+    end;
   end;
 
   SetSiteDiscount(nSiteDiscount);

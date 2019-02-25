@@ -836,7 +836,7 @@ inherited MainCashForm2: TMainCashForm2
         Style.Font.Color = clWindowText
         Style.Font.Height = -12
         Style.Font.Name = 'Tahoma'
-        Style.Font.Style = [fsStrikeOut]
+        Style.Font.Style = [fsUnderline, fsStrikeOut]
         Style.Shadow = False
         Style.IsFontAssigned = True
         TabOrder = 3
@@ -1613,17 +1613,17 @@ inherited MainCashForm2: TMainCashForm2
     object Label18: TLabel
       Left = 1
       Top = 1
-      Width = 140
+      Width = 173
       Height = 19
       Align = alLeft
       Caption = '     '#1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1085#1086#1095#1085#1072#1103' '#1094#1077#1085#1072'.'
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clFuchsia
-      Font.Height = -11
+      Font.Color = clMaroon
+      Font.Height = -12
       Font.Name = 'Tahoma'
-      Font.Style = []
+      Font.Style = [fsBold]
       ParentFont = False
-      ExplicitHeight = 13
+      ExplicitHeight = 14
     end
     object edTaxUnitNight: TcxTextEdit
       Left = 567

@@ -1,28 +1,28 @@
 inherited CheckJournalForm: TCheckJournalForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1077' '#1095#1077#1082#1080
   ClientHeight = 554
-  ClientWidth = 896
+  ClientWidth = 911
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 912
+  ExplicitWidth = 927
   ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 77
-    Width = 896
+    Width = 911
     Height = 477
     TabOrder = 3
     ExplicitTop = 77
     ExplicitWidth = 896
     ExplicitHeight = 477
     ClientRectBottom = 477
-    ClientRectRight = 896
+    ClientRectRight = 911
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 896
       ExplicitHeight = 477
       inherited cxGrid: TcxGrid
-        Width = 896
+        Width = 911
         Height = 477
         ExplicitWidth = 896
         ExplicitHeight = 477
@@ -384,12 +384,20 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 112
           end
+          object JackdawsChecksName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1075#1072#1083#1082#1080
+            DataBinding.FieldName = 'JackdawsChecksName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 896
+    Width = 911
     Height = 51
     ExplicitWidth = 896
     ExplicitHeight = 51
