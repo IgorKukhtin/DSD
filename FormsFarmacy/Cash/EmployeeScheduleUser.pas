@@ -23,33 +23,15 @@ type
     cxLabel2: TcxLabel;
     FormParams: TdsdFormParams;
     cxGridDBBandedTableView1: TcxGridDBBandedTableView;
-    Range: TcxGridDBBandedColumn;
-    Value1: TcxGridDBBandedColumn;
-    Value2: TcxGridDBBandedColumn;
-    Value3: TcxGridDBBandedColumn;
-    Value4: TcxGridDBBandedColumn;
-    Value5: TcxGridDBBandedColumn;
-    Value6: TcxGridDBBandedColumn;
-    Value7: TcxGridDBBandedColumn;
-    ValuePlan1: TcxGridDBBandedColumn;
-    ValuePlan2: TcxGridDBBandedColumn;
-    ValuePlan3: TcxGridDBBandedColumn;
-    ValuePlan4: TcxGridDBBandedColumn;
-    ValuePlan5: TcxGridDBBandedColumn;
-    ValuePlan6: TcxGridDBBandedColumn;
-    ValuePlan7: TcxGridDBBandedColumn;
-    Color1: TcxGridDBBandedColumn;
-    Color2: TcxGridDBBandedColumn;
-    Color3: TcxGridDBBandedColumn;
-    Color4: TcxGridDBBandedColumn;
-    Color5: TcxGridDBBandedColumn;
-    Color6: TcxGridDBBandedColumn;
-    Color7: TcxGridDBBandedColumn;
+    WhoInput: TcxGridDBBandedColumn;
+    Value: TcxGridDBBandedColumn;
     cxLabel1: TcxLabel;
     cbValueUser: TcxComboBox;
     spGet: TdsdStoredProc;
     spUpdateEmployeeScheduleUser: TdsdStoredProc;
     HeaderSaver: THeaderSaver;
+    HeaderCDS: TClientDataSet;
+    CrossDBViewAddOn: TCrossDBViewAddOn;
   private
     { Private declarations }
   public

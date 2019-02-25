@@ -12,7 +12,7 @@ type
      function SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
      function ProgrammingGoods(const GoodsCode: integer; const GoodsName: string; const Price, NDS: double): boolean;
      function ChangePrice(const GoodsCode: integer; const Price: double): boolean;
-     function OpenReceipt(const isFiscal: boolean = true): boolean;
+     function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false): boolean;
      function CloseReceipt: boolean;
      function CloseReceiptEx(out CheckId: String): boolean;
      function CashInputOutput(const Summa: double): boolean;

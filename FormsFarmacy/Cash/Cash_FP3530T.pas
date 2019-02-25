@@ -15,7 +15,7 @@ type
     function SoldCode(const GoodsCode: integer; const Amount: double; const Price: double = 0.00): boolean;
     function SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
     function ChangePrice(const GoodsCode: integer; const Price: double): boolean;
-    function OpenReceipt(const isFiscal: boolean = true): boolean;
+    function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false): boolean;
     function CloseReceipt: boolean;
     function CloseReceiptEx(out CheckId: String): boolean;
     function CashInputOutput(const Summa: double): boolean;
@@ -251,7 +251,7 @@ begin
   result:= FAlwaysSold;
 end;
 
-function TCashFP3530T.OpenReceipt(const isFiscal: boolean = true): boolean;
+function TCashFP3530T.OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false): boolean;
 begin
   result := true;
   try
@@ -325,7 +325,6 @@ begin
 
     status:= 0;
     result:= true;
-    if FAlwaysSold then exit;
 
       // печать нефискального чека
     if not FisFiscal then
@@ -359,6 +358,8 @@ begin
 
       Exit;
     end;
+
+    if FAlwaysSold then exit;
 
     // найти в таблице соответсвий
     if Table.Locate('GoodsCode;Price',VarArrayOf([GoodsCode, Price]),[]) then begin

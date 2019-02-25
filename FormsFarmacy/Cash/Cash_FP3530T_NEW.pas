@@ -6,16 +6,18 @@ type
   TCashFP3530T_NEW = class(TInterfacedObject, ICash)
   private
     FAlwaysSold: boolean;
+    FPrintSumma: boolean;
     FPrinter: IFiscPRN;
     FisFiscal: boolean;
     FLengNoFiscalText : integer;
+    FSumma : Currency;
     procedure SetAlwaysSold(Value: boolean);
     function GetAlwaysSold: boolean;
   protected
     function SoldCode(const GoodsCode: integer; const Amount: double; const Price: double = 0.00): boolean;
     function SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
     function ChangePrice(const GoodsCode: integer; const Price: double): boolean;
-    function OpenReceipt(const isFiscal: boolean = true): boolean;
+    function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false): boolean;
     function CloseReceipt: boolean;
     function CloseReceiptEx(out CheckId: String): boolean;
     function CashInputOutput(const Summa: double): boolean;
@@ -130,6 +132,7 @@ constructor TCashFP3530T_NEW.Create;
 begin
   inherited Create;
   FAlwaysSold:=false;
+  FPrintSumma:=False;
   FLengNoFiscalText := 35;
   FPrinter := CoFiscPrn.Create;
   FPrinter.SETCOMPORT[StrToInt(iniPortNumber), StrToInt(iniPortSpeed)];
@@ -140,6 +143,7 @@ end;
 function TCashFP3530T_NEW.CloseReceipt: boolean;
 begin
   result := false;
+
   FPrinter.CLOSECHECK[1, Password];
   result := СообщениеКА(FPrinter.GETERROR)
 end;
@@ -156,9 +160,11 @@ begin
   result:= FAlwaysSold;
 end;
 
-function TCashFP3530T_NEW.OpenReceipt(const isFiscal: boolean = true): boolean;
+function TCashFP3530T_NEW.OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false): boolean;
 begin
   FisFiscal := isFiscal;
+  FPrintSumma := isPrintSumma;
+  FSumma := 0;
   if FisFiscal then
      FPrinter.OPENFISKCHECK[1, 1, 0, Password]
   else
@@ -194,7 +200,6 @@ var NDSType: char;
     Res: TArray<string>;
 begin
   result := true;
-  if FAlwaysSold then exit;
 
     // печать нефискального чека
   if not FisFiscal then
@@ -213,15 +218,25 @@ begin
       end;
       if I = High(Res) then
       begin
-        if (Length(L + FormatCurr('0.000', Amount)) + 3) >= FLengNoFiscalText then
+        if FPrintSumma then
         begin
-          if not PrintNotFiscalText(L) then Exit;;
-          L := StringOfChar(' ' , FLengNoFiscalText - Length(FormatCurr('0.000', Amount)) - 1) + FormatCurr('0.000', Amount);
+          if L <> '' then if not PrintNotFiscalText(L) then Exit;
+          L := FormatCurr('0.000', Amount) + ' x ' + FormatCurr('0.00', Price);
+          L := L + StringOfChar(' ' , FLengNoFiscalText - Length(L + FormatCurr('0.00', RoundTo(Amount * Price, -1))) - 1) + FormatCurr('0.00', RoundTo(Amount * Price, -1));
           if not PrintNotFiscalText(L) then Exit;
+          FSumma := FSumma + RoundTo(Amount * Price, -1);
         end else
         begin
-          L := L + StringOfChar(' ' , FLengNoFiscalText - Length(L + FormatCurr('0.000', Amount)) - 1) + FormatCurr('0.000', Amount);
-          if not PrintNotFiscalText(L) then Exit;
+          if (Length(L + FormatCurr('0.000', Amount)) + 3) >= FLengNoFiscalText then
+          begin
+            if not PrintNotFiscalText(L) then Exit;;
+            L := StringOfChar(' ' , FLengNoFiscalText - Length(FormatCurr('0.000', Amount)) - 1) + FormatCurr('0.000', Amount);
+            if not PrintNotFiscalText(L) then Exit;
+          end else
+          begin
+            L := L + StringOfChar(' ' , FLengNoFiscalText - Length(L + FormatCurr('0.000', Amount)) - 1) + FormatCurr('0.000', Amount);
+            if not PrintNotFiscalText(L) then Exit;
+          end;
         end;
       end;
     end;
@@ -229,6 +244,7 @@ begin
     Exit;
   end;
 
+  if FAlwaysSold then exit;
   ProgrammingGoods(GoodsCode, Copy(GoodsName, 1, 40) , Price, NDS);
   result := SoldCode(GoodsCode, Amount, Price);
 end;
@@ -261,6 +277,7 @@ begin
 end;
 
 function TCashFP3530T_NEW.TotalSumm(Summ, SummAdd: double; PaidType: TPaidType): boolean;
+  var L : string;
 begin
   if FisFiscal then
   begin
@@ -275,7 +292,18 @@ begin
       result := СообщениеКА(FPrinter.GETERROR);
     end;
 
-  end else result := True;
+  end else
+  begin
+    if not FisFiscal and FPrintSumma then
+    begin
+      if not PrintNotFiscalText(StringOfChar('-' , FLengNoFiscalText)) then Exit;
+      L := 'СУМА';
+      L := L + StringOfChar(' ' , FLengNoFiscalText - Length(L + FormatCurr('0.00', FSumma)) - 1) + FormatCurr('0.00', FSumma);
+      if not PrintNotFiscalText(L) then Exit;
+    end;
+
+    result := True;
+  end;
 end;
 
 function TCashFP3530T_NEW.DiscountGoods(Summ: double): boolean;

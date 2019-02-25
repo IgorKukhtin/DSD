@@ -2,7 +2,7 @@ inherited MainCashForm2: TMainCashForm2
   ActiveControl = lcName
   Caption = #1055#1088#1086#1076#1072#1078#1072
   ClientHeight = 537
-  ClientWidth = 784
+  ClientWidth = 820
   PopupMenu = PopupMenu
   OnCloseQuery = ParentFormCloseQuery
   OnCreate = FormCreate
@@ -11,14 +11,14 @@ inherited MainCashForm2: TMainCashForm2
   OnShow = ParentFormShow
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
-  ExplicitWidth = 800
+  ExplicitWidth = 836
   ExplicitHeight = 576
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
     Left = 0
     Top = 341
-    Width = 784
+    Width = 820
     Height = 196
     Align = alBottom
     BevelOuter = bvNone
@@ -26,7 +26,7 @@ inherited MainCashForm2: TMainCashForm2
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
-      Width = 530
+      Width = 566
       Height = 196
       Align = alClient
       TabOrder = 0
@@ -135,7 +135,7 @@ inherited MainCashForm2: TMainCashForm2
       end
     end
     object AlternativeGrid: TcxGrid
-      Left = 533
+      Left = 569
       Top = 0
       Width = 251
       Height = 196
@@ -209,7 +209,7 @@ inherited MainCashForm2: TMainCashForm2
       end
     end
     object cxSplitter1: TcxSplitter
-      Left = 530
+      Left = 566
       Top = 0
       Width = 3
       Height = 196
@@ -220,7 +220,7 @@ inherited MainCashForm2: TMainCashForm2
   object cxSplitter2: TcxSplitter [1]
     Left = 0
     Top = 338
-    Width = 784
+    Width = 820
     Height = 3
     AlignSplitter = salBottom
     Control = BottomPanel
@@ -228,7 +228,7 @@ inherited MainCashForm2: TMainCashForm2
   object MainPanel: TPanel [2]
     Left = 0
     Top = 161
-    Width = 784
+    Width = 820
     Height = 177
     Align = alClient
     BevelOuter = bvNone
@@ -236,7 +236,7 @@ inherited MainCashForm2: TMainCashForm2
     object MainGrid: TcxGrid
       Left = 0
       Top = 21
-      Width = 784
+      Width = 820
       Height = 123
       Align = alClient
       TabOrder = 0
@@ -777,12 +777,12 @@ inherited MainCashForm2: TMainCashForm2
     object SearchPanel: TPanel
       Left = 0
       Top = 144
-      Width = 784
+      Width = 820
       Height = 33
       Align = alBottom
       TabOrder = 1
       object ShapeState: TShape
-        Left = 751
+        Left = 797
         Top = 13
         Width = 10
         Height = 10
@@ -824,26 +824,29 @@ inherited MainCashForm2: TMainCashForm2
         Width = 172
       end
       object cbSpec: TcxCheckBox
-        Left = 398
-        Top = 6
+        Left = 407
+        Top = 7
         Hint = #1055#1086' '#1075#1072#1083#1086#1095#1082#1077
         Action = actSpec
         Caption = #1063#1077#1082
+        ParentBackground = False
+        ParentColor = False
         ParentFont = False
         ParentShowHint = False
         ShowHint = True
+        Style.Color = clLime
         Style.Font.Charset = DEFAULT_CHARSET
         Style.Font.Color = clWindowText
         Style.Font.Height = -12
         Style.Font.Name = 'Tahoma'
-        Style.Font.Style = [fsUnderline, fsStrikeOut]
+        Style.Font.Style = [fsStrikeOut]
         Style.Shadow = False
         Style.IsFontAssigned = True
         TabOrder = 3
         Width = 50
       end
       object btnCheck: TcxButton
-        Left = 454
+        Left = 512
         Top = 7
         Width = 35
         Height = 22
@@ -878,7 +881,7 @@ inherited MainCashForm2: TMainCashForm2
         Style.IsFontAssigned = True
       end
       object lblTotalSumm: TcxLabel
-        Left = 355
+        Left = 351
         Top = 7
         Caption = '0.00'
         ParentFont = False
@@ -892,7 +895,7 @@ inherited MainCashForm2: TMainCashForm2
         Style.IsFontAssigned = True
       end
       object btnVIP: TcxButton
-        Left = 496
+        Left = 550
         Top = 7
         Width = 34
         Height = 22
@@ -910,7 +913,7 @@ inherited MainCashForm2: TMainCashForm2
         ParentFont = False
       end
       object lblMoneyInCash: TcxLabel
-        Left = 673
+        Left = 719
         Top = 7
         Caption = '0.00'
         ParentFont = False
@@ -924,7 +927,7 @@ inherited MainCashForm2: TMainCashForm2
         Style.IsFontAssigned = True
       end
       object btnOpenMCSForm: TcxButton
-        Left = 589
+        Left = 639
         Top = 7
         Width = 34
         Height = 22
@@ -942,7 +945,7 @@ inherited MainCashForm2: TMainCashForm2
         ParentFont = False
       end
       object chbNotMCS: TcxCheckBox
-        Left = 536
+        Left = 586
         Top = 7
         Hint = #1053#1077' '#1091#1095#1080#1090#1099#1074'. '#1095#1077#1082' '#1087#1088#1080' '#1087#1077#1088#1077#1089#1095#1077#1090#1077' '#1053#1058#1047
         Caption = #1053#1058#1047
@@ -960,7 +963,7 @@ inherited MainCashForm2: TMainCashForm2
         Width = 47
       end
       object cxButton1: TcxButton
-        Left = 633
+        Left = 679
         Top = 7
         Width = 34
         Height = 22
@@ -986,11 +989,33 @@ inherited MainCashForm2: TMainCashForm2
         OnKeyPress = edAmountKeyPress
         Width = 55
       end
+      object cxCheckBox1: TcxCheckBox
+        Left = 459
+        Top = 7
+        Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1091#1102#1097#1072#1103' '#1075#1072#1083#1086#1095#1082#1072
+        Action = actSpecCorr
+        Caption = #1063#1077#1082
+        ParentBackground = False
+        ParentColor = False
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+        Style.Color = clYellow
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -12
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = [fsUnderline, fsStrikeOut]
+        Style.Shadow = False
+        Style.IsFontAssigned = True
+        TabOrder = 12
+        Width = 50
+      end
     end
     object pnlExpirationDateFilter: TPanel
       Left = 0
       Top = 0
-      Width = 784
+      Width = 820
       Height = 21
       Align = alTop
       Color = 15656679
@@ -1041,7 +1066,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlVIP: TPanel [3]
     Left = 0
     Top = 21
-    Width = 784
+    Width = 820
     Height = 17
     Align = alTop
     Color = 15656679
@@ -1066,7 +1091,7 @@ inherited MainCashForm2: TMainCashForm2
     object lblCashMember: TLabel
       Left = 72
       Top = 1
-      Width = 379
+      Width = 415
       Height = 15
       Align = alClient
       Caption = '...'
@@ -1080,7 +1105,7 @@ inherited MainCashForm2: TMainCashForm2
       ExplicitHeight = 13
     end
     object Label2: TLabel
-      Left = 451
+      Left = 487
       Top = 1
       Width = 64
       Height = 15
@@ -1095,7 +1120,7 @@ inherited MainCashForm2: TMainCashForm2
       ExplicitHeight = 13
     end
     object lblBayer: TLabel
-      Left = 515
+      Left = 551
       Top = 1
       Width = 268
       Height = 15
@@ -1114,7 +1139,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlDiscount: TPanel [4]
     Left = 0
     Top = 38
-    Width = 784
+    Width = 820
     Height = 21
     Align = alTop
     Color = 15656679
@@ -1227,7 +1252,7 @@ inherited MainCashForm2: TMainCashForm2
   object Panel1: TPanel [5]
     Left = 0
     Top = 0
-    Width = 784
+    Width = 820
     Height = 21
     Align = alTop
     TabOrder = 5
@@ -1267,7 +1292,7 @@ inherited MainCashForm2: TMainCashForm2
       Width = 146
     end
     object PanelMCSAuto: TPanel
-      Left = 521
+      Left = 557
       Top = 1
       Width = 262
       Height = 19
@@ -1314,7 +1339,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlSP: TPanel [6]
     Left = 0
     Top = 59
-    Width = 784
+    Width = 820
     Height = 18
     Align = alTop
     Color = 15656679
@@ -1339,7 +1364,7 @@ inherited MainCashForm2: TMainCashForm2
     object lblPartnerMedicalName: TLabel
       Left = 64
       Top = 1
-      Width = 331
+      Width = 367
       Height = 16
       Align = alClient
       Caption = '...'
@@ -1353,7 +1378,7 @@ inherited MainCashForm2: TMainCashForm2
       ExplicitHeight = 14
     end
     object Label7: TLabel
-      Left = 395
+      Left = 431
       Top = 1
       Width = 26
       Height = 16
@@ -1368,7 +1393,7 @@ inherited MainCashForm2: TMainCashForm2
       ExplicitHeight = 13
     end
     object lblMedicSP: TLabel
-      Left = 421
+      Left = 457
       Top = 1
       Width = 362
       Height = 16
@@ -1387,7 +1412,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlPromoCode: TPanel [7]
     Left = 0
     Top = 77
-    Width = 784
+    Width = 820
     Height = 21
     Align = alTop
     Color = 15656679
@@ -1482,7 +1507,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlManualDiscount: TPanel [8]
     Left = 0
     Top = 98
-    Width = 784
+    Width = 820
     Height = 21
     Align = alTop
     Color = 15656679
@@ -1528,7 +1553,7 @@ inherited MainCashForm2: TMainCashForm2
       Width = 60
     end
     object cxButton2: TcxButton
-      Left = 751
+      Left = 787
       Top = 1
       Width = 32
       Height = 19
@@ -1543,7 +1568,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlSiteDiscount: TPanel [9]
     Left = 0
     Top = 140
-    Width = 784
+    Width = 820
     Height = 21
     Align = alTop
     Color = 15656679
@@ -1588,7 +1613,7 @@ inherited MainCashForm2: TMainCashForm2
       Width = 60
     end
     object cxButton3: TcxButton
-      Left = 751
+      Left = 787
       Top = 1
       Width = 32
       Height = 19
@@ -1603,7 +1628,7 @@ inherited MainCashForm2: TMainCashForm2
   object pnlTaxUnitNight: TPanel [10]
     Left = 0
     Top = 119
-    Width = 784
+    Width = 820
     Height = 21
     Align = alTop
     Color = 15656679
@@ -2671,12 +2696,18 @@ inherited MainCashForm2: TMainCashForm2
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1074#1088#1077#1084#1077#1085#1080' '#1087#1088#1080#1093#1086#1076#1072
+      ShortCut = 16468
       FormName = 'TEmployeeScheduleUserForm'
       FormNameParam.Value = 'TEmployeeScheduleUserForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = True
+    end
+    object actSpecCorr: TAction
+      AutoCheck = True
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1091#1102#1097#1072#1103' '#1075#1072#1083#1082#1072
+      OnExecute = actSpecCorrExecute
     end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
@@ -3165,6 +3196,11 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end
       item
+        Name = 'JackdawsChecksCode'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'MovementSPId'
         Value = Null
         MultiSelectSeparator = ','
@@ -3375,7 +3411,7 @@ inherited MainCashForm2: TMainCashForm2
     SummaryItemList = <>
     SearchAsFilter = False
     Left = 472
-    Top = 336
+    Top = 352
   end
   object AlternativeCDS: TClientDataSet
     Aggregates = <>
@@ -3936,7 +3972,7 @@ inherited MainCashForm2: TMainCashForm2
   end
   object pm_OpenVIP: TPopupMenu
     Left = 472
-    Top = 384
+    Top = 408
     object pm_VIP1: TMenuItem
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1095#1077#1082#1086#1074
       OnClick = pm_VIP1Click

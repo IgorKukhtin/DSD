@@ -1269,6 +1269,53 @@ inherited CheckForm: TCheckForm
         end>
       Caption = 'actExecBankPOSTerminal'
     end
+    object actJackdawsChecks: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actChoiceJackdawsChecks
+        end
+        item
+          Action = actExecJackdawsChecks
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1090#1080#1087' '#1075#1072#1083#1082#1080
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1090#1080#1087' '#1075#1072#1083#1082#1080
+      ImageIndex = 66
+    end
+    object actChoiceJackdawsChecks: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceJackdawsChecks'
+      FormName = 'TJackdawsChecksForm'
+      FormNameParam.Value = 'TJackdawsChecksForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'JackdawsChecks'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actExecJackdawsChecks: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateJackdawsChecks
+      StoredProcList = <
+        item
+          StoredProc = spUpdateJackdawsChecks
+        end>
+      Caption = 'actExecJackdawsChecks'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 306
@@ -1356,6 +1403,10 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1412,6 +1463,10 @@ inherited CheckForm: TCheckForm
     end
     object dxBarButton2: TdxBarButton
       Action = actBankPOSTerminal
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actJackdawsChecks
       Category = 0
     end
   end
@@ -1480,6 +1535,11 @@ inherited CheckForm: TCheckForm
       end
       item
         Name = 'BankPOSTerminal'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JackdawsChecks'
         Value = Null
         MultiSelectSeparator = ','
       end>
@@ -2316,5 +2376,30 @@ inherited CheckForm: TCheckForm
       end>
     Left = 360
     Top = 176
+  end
+  object spUpdateJackdawsChecks: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_JackdawsChecks'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJackdawsChecksId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'JackdawsChecks'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 594
+    Top = 192
   end
 end
