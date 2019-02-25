@@ -2118,8 +2118,7 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
  25.02.19         * zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh
                     zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom
-                    zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves
-                    zc_ObjectLink_GoodsByGoodsKind_GoodsBrand
+                    
  18.02.19                                                                                      * zc_ObjectLink_UnitBankPOSTerminal_Unit, zc_ObjectLink_UnitBankPOSTerminal_BankPOSTerminal
  17.02.19         * zc_ObjectLink_TaxUnit_Unit
  13.02.19         * zc_ObjectLink_GoodsCategory_Unit
