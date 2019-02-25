@@ -352,7 +352,7 @@ BEGIN
                                          LEFT JOIN tmpSeparate ON tmpSeparate.PartionGoods = tmp.PartionGoods
                                    )
 
-         , tmpOperationGroup AS (SELECT 'Ж.В ФАКТ' AS Col_Name    
+         , tmpOperationGroup AS (SELECT '01. Ж.В ФАКТ' AS Col_Name    
                                       , 1 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -360,7 +360,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.Amount_Weight <> 0
                                 UNION
-                                 SELECT 'К-во голов' AS Col_Name
+                                 SELECT '02. К-во голов' AS Col_Name
                                       , 2 AS Num      
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -368,7 +368,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.HeadCount <> 0
                                 UNION
-                                 SELECT 'Сред. Вес 1 головы' AS Col_Name
+                                 SELECT '03. Сред. Вес 1 головы' AS Col_Name
                                       , 3 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -376,7 +376,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.Amount_Weight <> 0 AND tmpOperationGroupAll.HeadCount <> 0 --tmpOperationGroupAll.HeadCount_one <> 0
                                 UNION
-                                 SELECT 'ВЕС НАКЛАД. БН' AS Col_Name
+                                 SELECT '04. ВЕС НАКЛАД. БН' AS Col_Name
                                       , 4 AS Num    
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -384,7 +384,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.AmountPartner_Weight <> 0  
                                 UNION
-                                 SELECT 'ЦЕНА-НАКЛАД. БН' AS Col_Name
+                                 SELECT '05. ЦЕНА-НАКЛАД. БН' AS Col_Name
                                       , 5 AS Num     
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -392,7 +392,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.PricePartner <> 0
                                 UNION
-                                 SELECT 'ВСЕГО СУММА БН' AS Col_Name
+                                 SELECT '06. ВСЕГО СУММА БН' AS Col_Name
                                       , 6 AS Num       
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -400,7 +400,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.TotalSumm <> 0
                                 UNION
-                                 SELECT 'доплата за вес, кг' AS Col_Name
+                                 SELECT '07. доплата за вес, кг' AS Col_Name
                                       , 7 AS Num       
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -408,7 +408,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.Amount_7 <> 0
                                 UNION
-                                 SELECT 'ДОПЛАТА ВЕС-НАЛ, грн' AS Col_Name
+                                 SELECT '08. ДОПЛАТА ВЕС-НАЛ, грн' AS Col_Name
                                       , 8 AS Num       
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -416,7 +416,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.Amount_8 <> 0
                                 UNION
-                                 SELECT 'КОПЕЙКИ' AS Col_Name
+                                 SELECT '09. КОПЕЙКИ' AS Col_Name
                                       , 9 AS Num       
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -424,7 +424,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.Amount_9 <> 0
                                 UNION
-                                 SELECT 'ДОПЛАТА КОПЕЙКИ, грн' AS Col_Name
+                                 SELECT '10. ДОПЛАТА КОПЕЙКИ, грн' AS Col_Name
                                       , 10 AS Num       
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -432,7 +432,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.Amount_10 <> 0
                                 UNION
-                                 SELECT 'ВСЕГО ДОПЛАТА заготовителю' AS Col_Name
+                                 SELECT '11. ВСЕГО ДОПЛАТА заготовителю' AS Col_Name
                                       , 11 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -440,7 +440,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.SUM_f2 <> 0
                                 UNION
-                                 SELECT 'От заготовителя- излишек,кг' AS Col_Name
+                                 SELECT '12. От заготовителя- излишек,кг' AS Col_Name
                                       , 12 AS Num      
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -448,7 +448,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.AmountWeight_diff <> 0
                                 UNION
-                                 SELECT 'от заготовщик-цена' AS Col_Name
+                                 SELECT '13. от заготовщик-цена' AS Col_Name
                                       , 13 AS Num      
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -456,7 +456,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.Price_f2 <> 0
                                 UNION
-                                 SELECT 'ВСЕГО СУММА' AS Col_Name
+                                 SELECT '14. ВСЕГО СУММА' AS Col_Name
                                       , 14 AS Num  
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -464,7 +464,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.Summ <> 0
                                 UNION
-                                 SELECT 'ЦЕНА Ж.В.-ФАКТ' AS Col_Name
+                                 SELECT '15. ЦЕНА Ж.В.-ФАКТ' AS Col_Name
                                       , 15 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -472,7 +472,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.Price <> 0
                                 UNION
-                                 SELECT 'ВЫХОД ФАКТ, %' AS Col_Name
+                                 SELECT '16. ВЫХОД ФАКТ, %' AS Col_Name
                                       , 16 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -480,7 +480,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.Amount_17 <> 0 AND tmpOperationGroupAll.Amount_Weight <> 0
                                 UNION
-                                 SELECT 'СВИНИНА Н/К' AS Col_Name
+                                 SELECT '17. СВИНИНА Н/К' AS Col_Name
                                       , 17 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -488,7 +488,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.Amount_17 <> 0
                                 UNION
-                                 SELECT 'цена СВИНИНА Н/К' AS Col_Name
+                                 SELECT '18. цена СВИНИНА Н/К' AS Col_Name
                                       , 18 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -496,7 +496,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.TotalSumm <> 0 AND tmpOperationGroupAll.Amount_17 <> 0
                                 UNION
-                                 SELECT 'ГОЛОВЫ СВ.' AS Col_Name
+                                 SELECT '19. ГОЛОВЫ СВ.' AS Col_Name
                                       , 19 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -504,7 +504,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.Amount_19 <> 0
                                 UNION
-                                 SELECT 'Горло св.' AS Col_Name
+                                 SELECT '20. Горло св.' AS Col_Name
                                       , 20 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -512,7 +512,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.Amount_20 <> 0
                                 UNION
-                                 SELECT 'Трахея св.' AS Col_Name
+                                 SELECT '21. Трахея св.' AS Col_Name
                                       , 21 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -520,16 +520,15 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.Amount_21 <> 0
                                 UNION
-                                 SELECT 'Язык св.' AS Col_Name
+                                 SELECT '22. Язык св.' AS Col_Name
                                       , 22 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Amount_22
                                  FROM tmpOperationGroupAll
                                  WHERE tmpOperationGroupAll.Amount_22 <> 0
-
                                 UNION
-                                 SELECT 'Погрузка' AS Col_Name
+                                 SELECT '23. Погрузка' AS Col_Name
                                       , 23 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -537,7 +536,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  --WHERE tmpOperationGroupAll.Amount_23 <> 0
                                 UNION
-                                 SELECT 'транс- расх.' AS Col_Name
+                                 SELECT '24. транс- расх.' AS Col_Name
                                       , 24 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
@@ -545,7 +544,7 @@ BEGIN
                                  FROM tmpOperationGroupAll
                                  --WHERE tmpOperationGroupAll.Amount_24 <> 0
                                 UNION
-                                 SELECT 'Такси+командиров.' AS Col_Name
+                                 SELECT '25. Такси+командиров.' AS Col_Name
                                       , 25 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId

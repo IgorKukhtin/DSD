@@ -130,7 +130,6 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
       DataBinding.FieldName = 'Num'
       DataVisibility = dvGrandTotalCells
       GroupExpanded = False
-      Visible = True
       Width = 60
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
