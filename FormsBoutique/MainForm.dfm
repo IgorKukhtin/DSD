@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 723
   KeyPreview = True
   ExplicitWidth = 739
-  ExplicitHeight = 226
+  ExplicitHeight = 223
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -36,7 +36,7 @@ inherited MainForm: TMainForm
     object actReport_Sale_AnalysisAll: TdsdOpenForm [2]
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
-      Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1072' '#1082#1083#1102#1095#1077#1074#1099#1093' '#1087#1086#1082#1072#1079#1072#1090#1077#1083#1077#1081' ('#1054#1073#1097#1080#1081')'
+      Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1072' '#1082#1083#1102#1095#1077#1074#1099#1093' '#1087#1086#1082#1072#1079#1072#1090#1077#1083#1077#1081' ('#1042#1057#1045')'
       FormName = 'TReport_Sale_AnalysisAllForm'
       FormNameParam.Value = 'TReport_Sale_AnalysisAllForm'
       FormNameParam.DataType = ftString
@@ -1254,7 +1254,7 @@ inherited MainForm: TMainForm
       object N5: TMenuItem
         Action = actReport_Sale_Analysis
       end
-      object N7: TMenuItem
+      object miReport_Sale_AnalysisAll: TMenuItem
         Action = actReport_Sale_AnalysisAll
       end
     end

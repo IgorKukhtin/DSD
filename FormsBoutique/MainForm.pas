@@ -218,7 +218,7 @@ type
     N5: TMenuItem;
     N6: TMenuItem;
     actReport_Sale_AnalysisAll: TdsdOpenForm;
-    N7: TMenuItem;
+    miReport_Sale_AnalysisAll: TMenuItem;
   private
     { Private declarations }
   public
