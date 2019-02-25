@@ -26,40 +26,40 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
     Align = alTop
     TabOrder = 0
     object deStart: TcxDateEdit
-      Left = 101
+      Left = 109
       Top = 5
       EditValue = 43466d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
-      Width = 85
+      Width = 82
     end
     object deEnd: TcxDateEdit
-      Left = 310
+      Left = 318
       Top = 5
       EditValue = 43466d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 85
+      Width = 82
     end
     object cxLabel1: TcxLabel
-      Left = 4
+      Left = 16
       Top = 6
       Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel2: TcxLabel
-      Left = 200
+      Left = 206
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel8: TcxLabel
-      Left = 425
+      Left = 431
       Top = 6
       Caption = #1058#1086#1074#1072#1088':'
     end
     object edGoods: TcxButtonEdit
-      Left = 464
+      Left = 469
       Top = 5
       Properties.Buttons = <
         item
@@ -72,7 +72,7 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
     end
   end
   object cbTotal: TcxCheckBox
-    Left = 134
+    Left = 639
     Top = 179
     Caption = 'C'#1075#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100
     Properties.ReadOnly = False
@@ -80,7 +80,7 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
     Width = 101
   end
   object cbGroup: TcxCheckBox
-    Left = 241
+    Left = 537
     Top = 179
     Caption = ' '#1072#1082#1090#1080#1074'/'#1087#1072#1089#1089#1080#1074
     Properties.ReadOnly = False
@@ -95,10 +95,13 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
     Align = alClient
     DataSource = DataSource
     Groups = <>
+    OptionsPrefilter.Visible = pfvNever
     OptionsView.ColumnTotals = False
+    OptionsView.FilterFields = False
     OptionsView.RowGrandTotals = False
     OptionsView.RowGrandTotalWidth = 921
     TabOrder = 7
+    ExplicitTop = 56
     object pvOperDate: TcxDBPivotGridField
       Area = faColumn
       AreaIndex = 0
@@ -119,25 +122,27 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
       Visible = True
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
-    object pvCol_Name: TcxDBPivotGridField
-      Area = faRow
-      AreaIndex = 1
-      IsCaptionAssigned = True
-      Caption = #1057#1090#1072#1090#1100#1103
-      DataBinding.FieldName = 'Col_Name'
-      Visible = True
-      Width = 180
-      UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-    end
     object pvNum: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 0
       IsCaptionAssigned = True
       Caption = #8470' '#1087'.'#1087'.'
       DataBinding.FieldName = 'Num'
-      TopValueShowOthers = True
+      DataVisibility = dvGrandTotalCells
+      GroupExpanded = False
       Visible = True
       Width = 60
+      UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object pvCol_Name: TcxDBPivotGridField
+      Area = faRow
+      AreaIndex = 1
+      IsCaptionAssigned = True
+      Caption = #1057#1090#1072#1090#1100#1103
+      DataBinding.FieldName = 'Col_Name'
+      TopValueShowOthers = True
+      Visible = True
+      Width = 180
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object pvValue: TcxDBPivotGridField
@@ -157,13 +162,13 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 120
+    Left = 725
     Top = 208
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 64
+    Left = 781
     Top = 272
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -194,7 +199,7 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 256
+    Left = 589
     Top = 200
   end
   object dxBarManager: TdxBarManager
@@ -214,7 +219,7 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 176
+    Left = 669
     Top = 216
     DockControlHeights = (
       0
@@ -328,7 +333,7 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 40
+    Left = 805
     Top = 200
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -949,17 +954,17 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 208
+    Left = 637
     Top = 288
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 800
+    Left = 45
     Top = 8
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 400
+    Left = 445
     Top = 48
   end
   object RefreshDispatcher: TRefreshDispatcher
@@ -973,18 +978,19 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
       item
         Component = GuidesGoods
       end>
-    Left = 488
+    Left = 357
     Top = 48
   end
   object PivotAddOn: TPivotAddOn
     ErasedFieldName = 'isErased'
+    PivotGrid = cxDBPivotGrid
     OnDblClickActionList = <>
     ActionItemList = <
       item
         Action = macReport_Account
         ShortCut = 13
       end>
-    Left = 392
+    Left = 453
     Top = 272
   end
   object spGetBalanceParam: TdsdStoredProc
@@ -1104,7 +1110,7 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 288
+    Left = 557
     Top = 304
   end
   object FormParams: TdsdFormParams
@@ -1164,7 +1170,7 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 360
+    Left = 485
     Top = 208
   end
   object GuidesGoods: TdsdGuides
@@ -1194,7 +1200,7 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 504
+    Left = 341
     Top = 3
   end
   object cfPrice: TdsdPivotGridCalcFields
@@ -1204,14 +1210,14 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
         Field = pvValue
       end>
     CalcFieldsType = cfDivision
-    Left = 656
+    Left = 189
     Top = 232
   end
   object cfPricePartner: TdsdPivotGridCalcFields
     PivotGrid = cxDBPivotGrid
     GridFields = <>
     CalcFieldsType = cfDivision
-    Left = 656
+    Left = 189
     Top = 288
   end
 end
