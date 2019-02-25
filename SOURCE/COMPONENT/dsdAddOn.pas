@@ -356,6 +356,7 @@ type
     FParam: TdsdParam;
     FGetStoredProc: TdsdStoredProc;
     FAfterExecute: TNotifyEvent;
+    FAction: TCustomAction;
     procedure OnEnter(Sender: TObject);
     procedure OnExit(Sender: TObject);
     // процедура вызываетс€ после открыти€ формы и заполн€ет FEnterValue начальными параметрами
@@ -375,6 +376,7 @@ type
     property StoredProc: TdsdStoredProc read FStoredProc write FStoredProc;
     property ControlList: TControlList read FControlList write FControlList;
     property GetStoredProc: TdsdStoredProc read FGetStoredProc write SetGetStoredProc;
+    property ActionAfterExecute: TCustomAction read FAction write FAction;
   end;
 
   TChangerListItem = class(TCollectionItem)
@@ -618,7 +620,7 @@ uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf,
      cxGeometry, cxCheckBox, dxBar, cxButtonEdit, cxCurrencyEdit,
      VCL.Menus, ParentForm, ChoicePeriod, cxGrid, cxDBData, Variants,
      cxGridDBBandedTableView, cxGridDBDataDefinitions,cxGridBandedTableView,
-     cxCustomPivotGrid, Dialogs, dsdException;
+     cxCustomPivotGrid, cxDropDownEdit, Dialogs, dsdException;
 
 type
 
@@ -1267,12 +1269,16 @@ procedure TdsdDBViewAddOn.OnKeyPress(Sender: TObject; var Key: Char);
 var isReadOnly: boolean;
 begin
   isReadOnly := false;
-  if Assigned(TcxGridDBColumn(FView.Controller.FocusedColumn).Properties) then
-     isReadOnly := TcxGridDBColumn(FView.Controller.FocusedColumn).Properties.ReadOnly;
-  // если колонка не редактируема и введена буква или BackSpace то обрабатываем установку фильтра
-  if SearchAsFilter and (isReadOnly or (not TcxGridDBColumn(FView.Controller.FocusedColumn).Editable)) and (Key > #31) then begin
-     lpSetEdFilterPos(Char(Key));
-     Key := #0;
+  if Assigned(FView.Controller.FocusedColumn) then
+  begin
+     if Assigned(TcxGridDBColumn(FView.Controller.FocusedColumn).Properties) then
+       isReadOnly := TcxGridDBColumn(FView.Controller.FocusedColumn).Properties.ReadOnly;
+    // если колонка не редактируема и введена буква или BackSpace то обрабатываем установку фильтра
+    if SearchAsFilter and (isReadOnly or (not TcxGridDBColumn(FView.Controller.FocusedColumn).Editable)) and (Key > #31) then
+    begin
+       lpSetEdFilterPos(Char(Key));
+       Key := #0;
+    end;
   end;
 end;
 
@@ -1582,6 +1588,8 @@ begin
   end;
   if Sender is TcxCheckBox then
      FEnterValue.Values[TComponent(Sender).Name] := BoolToStr((Sender as TcxCheckBox).Checked);
+  if Sender is TcxComboBox then
+     FEnterValue.Values[TComponent(Sender).Name] := (Sender as TcxComboBox).Text;
 end;
 
 procedure THeaderSaver.OnExit(Sender: TObject);
@@ -1606,10 +1614,14 @@ begin
   end;
   if Sender is TcxCheckBox then
      isChanged := FEnterValue.Values[TComponent(Sender).Name] <> BoolToStr((Sender as TcxCheckBox).Checked);
+  if Sender is TcxComboBox then
+     isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxComboBox).Text;
 
   try
     if isChanged then
        StoredProc.Execute;
+    if isChanged and Assigned(FAction) then
+       FAction.Execute;
   // ≈сли в момент сохранени€ возникает ошибка, то вернем старое значение на гете
   except
     if Assigned(GetStoredProc) then
@@ -1719,6 +1731,10 @@ begin
           if FControl is TcxCurrencyEdit then begin
              (FControl as TcxCurrencyEdit).OnEnter := THeaderSaver(Collection.Owner).OnEnter;
              (FControl as TcxCurrencyEdit).OnExit := THeaderSaver(Collection.Owner).OnExit;
+          end;
+          if FControl is TcxComboBox then begin
+             (FControl as TcxComboBox).OnEnter := THeaderSaver(Collection.Owner).OnEnter;
+             (FControl as TcxComboBox).OnExit := THeaderSaver(Collection.Owner).OnExit;
           end;
        end;
     end;
@@ -3002,6 +3018,8 @@ begin
           (FControl as TcxCheckBox).Properties.OnChange := THeaderChanger(Collection.Owner).OnChange;
         if FControl is TcxCurrencyEdit then
           (FControl as TcxCurrencyEdit).Properties.OnChange := THeaderChanger(Collection.Owner).OnChange;
+        if FControl is TcxComboBox then
+          (FControl as TcxComboBox).Properties.OnChange := THeaderChanger(Collection.Owner).OnChange;
       end;
     end;
   end;
@@ -3068,7 +3086,8 @@ begin
       (Sender is TcxButtonEdit) or
       (Sender is TcxCurrencyEdit) or
       (Sender is TcxDateEdit) or
-      (Sender is TcxCheckBox) then
+      (Sender is TcxCheckBox) or
+      (Sender is TcxComboBox) then
       Action.Execute;
 end;
 

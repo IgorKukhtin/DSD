@@ -21,8 +21,6 @@ type
     Panel: TPanel;
     edOperDate: TcxDateEdit;
     cxLabel2: TcxLabel;
-    edCashRegisterName: TcxTextEdit;
-    cxLabel1: TcxLabel;
     FormParams: TdsdFormParams;
     cxGridDBBandedTableView1: TcxGridDBBandedTableView;
     Range: TcxGridDBBandedColumn;
@@ -47,6 +45,11 @@ type
     Color5: TcxGridDBBandedColumn;
     Color6: TcxGridDBBandedColumn;
     Color7: TcxGridDBBandedColumn;
+    cxLabel1: TcxLabel;
+    cbValueUser: TcxComboBox;
+    spGet: TdsdStoredProc;
+    spUpdateEmployeeScheduleUser: TdsdStoredProc;
+    HeaderSaver: THeaderSaver;
   private
     { Private declarations }
   public

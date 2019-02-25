@@ -414,6 +414,7 @@ initialization
   RegisterClass (TcxSplitter);
   RegisterClass (TcxTabSheet);
   RegisterClass (TcxTextEdit);
+  RegisterClass (TcxComboBox);
 
   RegisterClass (TdxBarManager);
   RegisterClass (TdxBarStatic);

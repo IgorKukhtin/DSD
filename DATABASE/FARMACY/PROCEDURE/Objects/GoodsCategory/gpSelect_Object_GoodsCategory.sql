@@ -36,29 +36,19 @@ BEGIN
    IF inShowAll THEN
    RETURN QUERY
         WITH 
-
-        tmpUnit AS (SELECT inUnitId AS UnitId
+        /*tmpUnit AS (SELECT inUnitId AS UnitId
                     WHERE COALESCE (inUnitId, 0) <> 0 
-                      AND inisUnitList = FALSE
+                   /*   AND inisUnitList = FALSE
                    UNION 
-                  /*  SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
-                    FROM ObjectLink AS ObjectLink_Unit_Juridical
-                      INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                            ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                           AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                           AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
-                    WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                      AND (ObjectLink_Unit_Juridical.ObjectId = inUnitId OR inUnitId = 0)
-                      AND inisUnitList = FALSE
-                   UNION*/
                     SELECT ObjectBoolean_GoodsCategory.ObjectId AS UnitId
                     FROM ObjectBoolean AS ObjectBoolean_GoodsCategory
                     WHERE ObjectBoolean_GoodsCategory.DescId = zc_ObjectBoolean_Unit_GoodsCategory()
                       AND ObjectBoolean_GoodsCategory.ValueData = TRUE
                       AND inisUnitList = TRUE
+                      
                  )
-
-      , tmpGoods AS (SELECT ObjectBoolean_Goods_isMain.ObjectId              AS GoodsId
+        */
+        tmpGoods AS (SELECT ObjectBoolean_Goods_isMain.ObjectId              AS GoodsId
                           , Object_Goods.ObjectCode                          AS GoodsCode
                           , Object_Goods.ValueData                           AS GoodsName
                           , Object_Goods.isErased                            AS isErased
@@ -82,11 +72,11 @@ BEGIN
                                   , ObjectFloat_Value.ValueData    AS Value
                                   , Object_GoodsCategory.isErased  AS isErased
                              FROM Object AS Object_GoodsCategory
-                                 LEFT JOIN ObjectLink AS ObjectLink_GoodsCategory_Unit
+                                 INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Unit
                                                        ON ObjectLink_GoodsCategory_Unit.ObjectId = Object_GoodsCategory.Id
                                                       AND ObjectLink_GoodsCategory_Unit.DescId = zc_ObjectLink_GoodsCategory_Unit()
-                                                     -- AND ObjectLink_GoodsCategory_Unit.ChildObjectId = inUnitId
-                                 INNER JOIN tmpUnit ON tmpUnit.UnitId = ObjectLink_GoodsCategory_Unit.ChildObjectId
+                                                      AND ObjectLink_GoodsCategory_Unit.ChildObjectId = inUnitId
+                                 --INNER JOIN tmpUnit ON tmpUnit.UnitId = ObjectLink_GoodsCategory_Unit.ChildObjectId
                                  INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_UnitCategory
                                                        ON ObjectLink_GoodsCategory_UnitCategory.ObjectId = Object_GoodsCategory.Id
                                                       AND ObjectLink_GoodsCategory_UnitCategory.DescId = zc_ObjectLink_GoodsCategory_Category()
@@ -124,9 +114,9 @@ BEGIN
            , COALESCE (tmpGoodsCategory.Value, 0)  ::TFloat       AS Value
            , CASE WHEN tmpGoodsCategory.isErased = TRUE OR tmpGoods.isErased = TRUE THEN TRUE ELSE FALSE END AS isErased
        FROM tmpGoods
-           LEFT JOIN tmpUnit ON 1=1
+           --LEFT JOIN tmpUnit ON 1=1
            FULL JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpGoods.GoodsId
-                                     AND tmpGoodsCategory.UnitId  = tmpUnit.UnitId
+                                     --AND tmpGoodsCategory.UnitId  = tmpUnit.UnitId
 
            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpGoods.GoodsId
@@ -134,32 +124,23 @@ BEGIN
            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
            
            LEFT JOIN Object AS Object_UnitCategory ON Object_UnitCategory.Id = COALESCE (tmpGoodsCategory.UnitCategoryId, inUnitCategoryId)
-           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE (tmpGoodsCategory.UnitId, tmpUnit.UnitId)
+           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE (tmpGoodsCategory.UnitId, inUnitId) --COALESCE (tmpGoodsCategory.UnitId, tmpUnit.UnitId)
            
        ;
    ELSE
    RETURN QUERY
-   WITH
+   /*WITH
         tmpUnit AS (SELECT inUnitId AS UnitId
                     WHERE COALESCE (inUnitId, 0) <> 0 
                       AND inisUnitList = FALSE
                    UNION 
-                  /*  SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
-                    FROM ObjectLink AS ObjectLink_Unit_Juridical
-                      INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                            ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                           AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                           AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
-                    WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                      AND (ObjectLink_Unit_Juridical.ObjectId = inUnitId OR inUnitId = 0)
-                      AND inisUnitList = FALSE
-                   UNION*/
                     SELECT ObjectBoolean_GoodsCategory.ObjectId AS UnitId
                     FROM ObjectBoolean AS ObjectBoolean_GoodsCategory
                     WHERE ObjectBoolean_GoodsCategory.DescId = zc_ObjectBoolean_Unit_GoodsCategory()
                       AND ObjectBoolean_GoodsCategory.ValueData = TRUE
                       AND inisUnitList = TRUE
                    )
+   */ 
 
        SELECT 
              Object_GoodsCategory.Id        AS Id
@@ -175,10 +156,11 @@ BEGIN
            , ObjectFloat_Value.ValueData    AS Value
            , Object_GoodsCategory.isErased  AS isErased
        FROM Object AS Object_GoodsCategory
-           LEFT JOIN ObjectLink AS ObjectLink_GoodsCategory_Unit
+           INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Unit
                                  ON ObjectLink_GoodsCategory_Unit.ObjectId = Object_GoodsCategory.Id
                                 AND ObjectLink_GoodsCategory_Unit.DescId = zc_ObjectLink_GoodsCategory_Unit()
-           INNER JOIN tmpUnit ON tmpUnit.UnitId = ObjectLink_GoodsCategory_Unit.ChildObjectId
+                                AND ObjectLink_GoodsCategory_Unit.ChildObjectId = inUnitId
+           --INNER JOIN tmpUnit ON tmpUnit.UnitId = ObjectLink_GoodsCategory_Unit.ChildObjectId
            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_GoodsCategory_Unit.ChildObjectId 
 
            INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_UnitCategory

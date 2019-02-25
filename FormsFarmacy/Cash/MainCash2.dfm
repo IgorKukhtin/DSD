@@ -227,9 +227,9 @@ inherited MainCashForm2: TMainCashForm2
   end
   object MainPanel: TPanel [2]
     Left = 0
-    Top = 140
+    Top = 161
     Width = 784
-    Height = 198
+    Height = 177
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
@@ -237,7 +237,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 0
       Top = 21
       Width = 784
-      Height = 144
+      Height = 123
       Align = alClient
       TabOrder = 0
       object MainGridDBTableView: TcxGridDBTableView
@@ -310,6 +310,15 @@ inherited MainCashForm2: TMainCashForm2
           Options.Editing = False
           Width = 45
         end
+        object MainColPriceNight: TcxGridDBColumn
+          Caption = #1053#1086#1095#1085#1072#1103' '#1094#1077#1085#1072
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Horz = taRightJustify
+          OnGetDisplayText = MainColPriceNightGetDisplayText
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 53
+        end
         object MainColPriceSP: TcxGridDBColumn
           Caption = #1062#1077#1085#1072'.'#1089#1087
           DataBinding.FieldName = 'PriceSP'
@@ -339,6 +348,14 @@ inherited MainCashForm2: TMainCashForm2
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 55
+        end
+        object MainGridPriceChangeNight: TcxGridDBColumn
+          Caption = #1053#1086#1095#1085#1072#1103' '#1094#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Horz = taRightJustify
+          OnGetDisplayText = MainGridPriceChangeNightGetDisplayText
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
         end
         object MainFixPercent: TcxGridDBColumn
           Caption = #1055#1088#1086#1094'. '#1089#1082#1080#1076#1082#1080
@@ -759,7 +776,7 @@ inherited MainCashForm2: TMainCashForm2
     end
     object SearchPanel: TPanel
       Left = 0
-      Top = 165
+      Top = 144
       Width = 784
       Height = 33
       Align = alBottom
@@ -1525,7 +1542,7 @@ inherited MainCashForm2: TMainCashForm2
   end
   object pnlSiteDiscount: TPanel [9]
     Left = 0
-    Top = 119
+    Top = 140
     Width = 784
     Height = 21
     Align = alTop
@@ -1581,6 +1598,45 @@ inherited MainCashForm2: TMainCashForm2
       TabOrder = 1
       TabStop = False
       OnClick = actSetSiteDiscountExecute
+    end
+  end
+  object pnlTaxUnitNight: TPanel [10]
+    Left = 0
+    Top = 119
+    Width = 784
+    Height = 21
+    Align = alTop
+    Color = 15656679
+    ParentBackground = False
+    TabOrder = 10
+    Visible = False
+    object Label18: TLabel
+      Left = 1
+      Top = 1
+      Width = 140
+      Height = 19
+      Align = alLeft
+      Caption = '     '#1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1085#1086#1095#1085#1072#1103' '#1094#1077#1085#1072'.'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clFuchsia
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      ExplicitHeight = 13
+    end
+    object edTaxUnitNight: TcxTextEdit
+      Left = 567
+      Top = 0
+      TabStop = False
+      Properties.AutoSelect = False
+      Properties.MaxLength = 8
+      Properties.ReadOnly = True
+      TabOrder = 0
+      OnExit = edPromoCodeExit
+      OnKeyDown = edPromoCodeKeyDown
+      OnKeyPress = edPromoCodeKeyPress
+      Width = 162
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -2620,7 +2676,7 @@ inherited MainCashForm2: TMainCashForm2
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
-      isShowModal = False
+      isShowModal = True
     end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
@@ -2726,8 +2782,8 @@ inherited MainCashForm2: TMainCashForm2
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
-    Left = 640
-    Top = 120
+    Left = 616
+    Top = 72
   end
   object spSelectRemains: TdsdStoredProc
     DataSet = RemainsCDS
@@ -2891,7 +2947,6 @@ inherited MainCashForm2: TMainCashForm2
     end
     object N21: TMenuItem
       Action = actSetSiteDiscount
-      Visible = False
     end
     object miPrintNotFiscalCheck: TMenuItem
       Caption = #1055#1077#1095#1072#1090#1100' '#1085#1077#1092#1080#1089#1082#1072#1083#1100#1085#1086#1075#1086' '#1095#1077#1082#1072
@@ -3916,8 +3971,8 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 704
-    Top = 112
+    Left = 688
+    Top = 144
   end
   object spUpdate_CashSerialNumber: TdsdStoredProc
     StoredProcName = 'gpUpdate_CashSerialNumber'
@@ -3986,13 +4041,16 @@ inherited MainCashForm2: TMainCashForm2
   end
   object UnitConfigCDS: TClientDataSet
     Aggregates = <>
-    Filtered = True
-    FieldDefs = <>
-    IndexDefs = <>
     IndexFieldNames = 'Id'
     Params = <>
-    StoreDefs = True
     Left = 48
+    Top = 448
+  end
+  object TaxUnitNightCDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'PriceTaxUnitNight'
+    Params = <>
+    Left = 136
     Top = 448
   end
 end

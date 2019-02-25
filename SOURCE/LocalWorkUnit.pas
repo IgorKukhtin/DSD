@@ -127,7 +127,7 @@ End;
 
 function TaxUnitNight_lcl: String;
 Begin
-  Result := ExtractFilePath(Application.ExeName) + 'UnitConfig.local';
+  Result := ExtractFilePath(Application.ExeName) + 'TaxUnitNight.local';
 End;
 
 function AddIntField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string): TVKDBFFieldDef;

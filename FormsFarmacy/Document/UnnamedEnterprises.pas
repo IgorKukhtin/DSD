@@ -84,6 +84,7 @@ type
     actExecSelectPrint: TdsdExecStoredProc;
     actPrintXLSScope: TMultiAction;
     actPrintScopeXLS: TdsdExportToXLS;
+    PriceUnit: TcxGridDBColumn;
   private
     { Private declarations }
   public

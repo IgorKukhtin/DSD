@@ -44,15 +44,18 @@ BEGIN
     THEN
       vbComingValueDay := '0000000000000000000000000000000';
     END IF;
+    
+    IF ioTypeId > 0
+    THEN
+      vbValue := CASE ioValue WHEN '8:00' THEN 1
+                              WHEN '9:00' THEN 2
+                              WHEN '10:00' THEN 3
+                              WHEN '21:00' THEN 7
+                              WHEN 'В' THEN 9
+                              ELSE 0 END;
 
-    vbValue := CASE ioValue WHEN '8:00' THEN 1
-                            WHEN '9:00' THEN 2
-                            WHEN '10:00' THEN 3
-                            WHEN '21:00' THEN 7
-                            WHEN 'В' THEN 9
-                            ELSE 0 END;
-
-    vbComingValueDay := SUBSTRING(vbComingValueDay, 1, ioTypeId - 1) || vbValue::TVarChar || SUBSTRING(vbComingValueDay, ioTypeId + 1, 31);
+      vbComingValueDay := SUBSTRING(vbComingValueDay, 1, ioTypeId - 1) || vbValue::TVarChar || SUBSTRING(vbComingValueDay, ioTypeId + 1, 31);
+    END IF;
 
     -- сохранили
     ioId := lpInsertUpdate_MovementItem_EmployeeSchedule (ioId                  := ioId              -- Ключ объекта <Элемент документа>
@@ -63,7 +66,10 @@ BEGIN
                                                          );
 
     --
-    ioValue := lpDecodeValueDay(ioTypeId, vbComingValueDay);
+    IF ioTypeId > 0
+    THEN
+      ioValue := lpDecodeValueDay(ioTypeId, vbComingValueDay);
+    END IF;
 
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);

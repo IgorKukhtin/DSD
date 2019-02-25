@@ -14,6 +14,13 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_EmployeeSchedule_User(
                  Value5 TVarChar,
                  Value6 TVarChar,
                  Value7 TVarChar,
+                 ValuePlan1 TVarChar,
+                 ValuePlan2 TVarChar,
+                 ValuePlan3 TVarChar,
+                 vValuePlan4 TVarChar,
+                 ValuePlan5 TVarChar,
+                 ValuePlan6 TVarChar,
+                 vValuePlan7 TVarChar,
                  Color1 Integer,
                  Color2 Integer,
                  Color3 Integer,
@@ -34,8 +41,10 @@ $BODY$
   DECLARE vbID Integer;
   DECLARE vbDow Integer;
   DECLARE vbValue TVarChar;
+  DECLARE vbValuePlan TVarChar;
   DECLARE vbColor Integer;
   DECLARE vbUserValue TVarChar;
+  DECLARE vbUserValuePlan TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpGetUserBySession (inSession);
@@ -67,19 +76,28 @@ BEGIN
                 AND MovementItem.DescId = zc_MI_Master()
                 AND MovementItem.ObjectId = vbUserId)
     THEN
-      SELECT COALESCE(MIString_ComingValueDayUser.ValueData, '0000000000000000000000000000000')
-      INTO vbUserValue
+      SELECT 
+        COALESCE(MIString_ComingValueDayUser.ValueData, '0000000000000000000000000000000'),
+        COALESCE(MIString_ComingValueDay.ValueData, '0000000000000000000000000000000')
+      INTO 
+        vbUserValue, 
+        vbUserValuePlan
       FROM MovementItem
 
            LEFT JOIN MovementItemString AS MIString_ComingValueDayUser
                                         ON MIString_ComingValueDayUser.DescId = zc_MIString_ComingValueDayUser()
                                        AND MIString_ComingValueDayUser.MovementItemId = MovementItem.Id
 
+           LEFT JOIN MovementItemString AS MIString_ComingValueDay
+                                        ON MIString_ComingValueDay.DescId = zc_MIString_ComingValueDay()
+                                       AND MIString_ComingValueDay.MovementItemId = MovementItem.Id
+
       WHERE MovementItem.MovementId = vbMovementId
         AND MovementItem.DescId = zc_MI_Master()
         AND MovementItem.ObjectId = vbUserId;
     ELSE
       vbUserValue := '0000000000000000000000000000000';
+      vbUserValuePlan := '0000000000000000000000000000000';
     END IF;
 
      --
@@ -100,6 +118,13 @@ BEGIN
                  Value5 TVarChar,
                  Value6 TVarChar,
                  Value7 TVarChar,
+                 ValuePlan1 TVarChar,
+                 ValuePlan2 TVarChar,
+                 ValuePlan3 TVarChar,
+                 ValuePlan4 TVarChar,
+                 ValuePlan5 TVarChar,
+                 ValuePlan6 TVarChar,
+                 ValuePlan7 TVarChar,
                  Color1 Integer,
                  Color2 Integer,
                  Color3 Integer,
@@ -113,8 +138,10 @@ BEGIN
     WHILE (vbIndex <= vbLineCount) LOOP
       INSERT INTO tmpValues (Id, Range,
                  Value1, Value2, Value3, Value4, Value5, Value6, Value7,
+                 ValuePlan1, ValuePlan2, ValuePlan3, ValuePlan4, ValuePlan5, ValuePlan6, ValuePlan7,
                  Color1, Color2, Color3, Color4, Color5, Color6, Color7)
                  VALUES (vbIndex, '',
+                 '', '', '', '', '', '', '',
                  '', '', '', '', '', '', '',
                  zc_Color_Greenl(), zc_Color_Greenl(), zc_Color_Greenl(), zc_Color_Greenl(), zc_Color_Greenl(), zc_Color_Greenl(), zc_Color_Greenl());
       vbIndex := vbIndex  + 1;
@@ -128,6 +155,7 @@ BEGIN
 --      raise notice 'vbDowStart: % vbID: % vbDow: %', vbDowStart, vbID, vbDow;
 
       vbValue := lpDecodeValueDay(vbIndex, vbUserValue);
+      vbValuePlan := lpDecodeValueDay(vbIndex, vbUserValuePlan);
 
       IF vbIndex = date_part('day', CURRENT_DATE)
       THEN
@@ -154,24 +182,24 @@ BEGIN
 
       IF vbDow = 1
       THEN
-        UPDATE tmpValues SET Value1 = vbValue, Color1 = vbColor WHERE tmpValues.Id = vbID;
+        UPDATE tmpValues SET Value1 = vbValue, ValuePlan1 = vbValuePlan, Color1 = vbColor WHERE tmpValues.Id = vbID;
       ELSIF vbDow = 2
       THEN
-        UPDATE tmpValues SET Value2 = vbValue, Color2 = vbColor WHERE tmpValues.Id = vbID;
+        UPDATE tmpValues SET Value2 = vbValue, ValuePlan2 = vbValuePlan, Color2 = vbColor WHERE tmpValues.Id = vbID;
       ELSIF vbDow = 3
       THEN
-        UPDATE tmpValues SET Value3 = vbValue, Color3 = vbColor WHERE tmpValues.Id = vbID;
+        UPDATE tmpValues SET Value3 = vbValue, ValuePlan3 = vbValuePlan, Color3 = vbColor WHERE tmpValues.Id = vbID;
       ELSIF vbDow = 4
       THEN
-        UPDATE tmpValues SET Value4 = vbValue, Color4 = vbColor WHERE tmpValues.Id = vbID;
+        UPDATE tmpValues SET Value4 = vbValue, ValuePlan4 = vbValuePlan, Color4 = vbColor WHERE tmpValues.Id = vbID;
       ELSIF vbDow = 5
       THEN
-        UPDATE tmpValues SET Value5 = vbValue, Color5 = vbColor WHERE tmpValues.Id = vbID;
+        UPDATE tmpValues SET Value5 = vbValue, ValuePlan5 = vbValuePlan, Color5 = vbColor WHERE tmpValues.Id = vbID;
       ELSIF vbDow = 6
       THEN
-        UPDATE tmpValues SET Value6 = vbValue, Color6 = vbColor WHERE tmpValues.Id = vbID;
+        UPDATE tmpValues SET Value6 = vbValue, ValuePlan6 = vbValuePlan, Color6 = vbColor WHERE tmpValues.Id = vbID;
       ELSE
-        UPDATE tmpValues SET Value7 = vbValue, Color7 = vbColor WHERE tmpValues.Id = vbID;
+        UPDATE tmpValues SET Value7 = vbValue, ValuePlan7 = vbValuePlan, Color7 = vbColor WHERE tmpValues.Id = vbID;
       END IF;
 
       vbIndex := vbIndex  + 1;
@@ -193,5 +221,4 @@ ALTER FUNCTION gpSelect_MovementItem_EmployeeSchedule_User (TVarChar) OWNER TO p
 */
 
 -- тест
---
-select * from gpSelect_MovementItem_EmployeeSchedule_User(inSession := '308120');
+-- select * from gpSelect_MovementItem_EmployeeSchedule_User(inSession := '308120');

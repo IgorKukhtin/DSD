@@ -76,9 +76,6 @@ type
     cxDBPivotGrid: TcxDBPivotGrid;
     pvOperDate: TcxDBPivotGridField;
     pvJuridicalName: TcxDBPivotGridField;
-    pvGoodsCode: TcxDBPivotGridField;
-    pvGoodsName: TcxDBPivotGridField;
-    pvPartnerName: TcxDBPivotGridField;
     pvValue: TcxDBPivotGridField;
     cfPrice: TdsdPivotGridCalcFields;
     cfPricePartner: TdsdPivotGridCalcFields;
