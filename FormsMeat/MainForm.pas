@@ -1013,6 +1013,10 @@ type
     N92: TMenuItem;
     actCashOperationLviv: TdsdOpenForm;
     miCashOperationLviv: TMenuItem;
+    actGoodsTypeKind: TdsdOpenForm;
+    N201: TMenuItem;
+    actGoodsBrand: TdsdOpenForm;
+    N202: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

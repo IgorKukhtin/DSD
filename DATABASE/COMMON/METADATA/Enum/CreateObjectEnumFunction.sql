@@ -1161,6 +1161,12 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportType_MemberZP2() RETURNS Integer AS $BO
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_MemberZP2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_MemberZP2' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 
+-- !!!
+-- !!! Категория товара
+-- !!!
+CREATE OR REPLACE FUNCTION zc_Enum_GoodsTypeKind_Sh()  RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_GoodsTypeKind_Sh'  AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_GoodsTypeKind_Nom() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_GoodsTypeKind_Nom' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_GoodsTypeKind_Ves() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_GoodsTypeKind_Ves' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 /*-------------------------------------------------------------------------------*/
 /*

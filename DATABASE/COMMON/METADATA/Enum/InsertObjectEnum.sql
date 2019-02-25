@@ -925,6 +925,15 @@ BEGIN
 
 END $$;
 
+DO $$
+BEGIN
+     -- !!! Категория товара
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GoodsTypeKind_Sh()  , inDescId:= zc_Object_GoodsTypeKind(), inCode:= 1, inName:= 'Штучный'      , inEnumName:= 'zc_Enum_GoodsTypeKind_Sh');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GoodsTypeKind_Nom() , inDescId:= zc_Object_GoodsTypeKind(), inCode:= 2, inName:= 'Номинальный'  , inEnumName:= 'zc_Enum_GoodsTypeKind_Nom');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GoodsTypeKind_Ves() , inDescId:= zc_Object_GoodsTypeKind(), inCode:= 3, inName:= 'Неноминальный', inEnumName:= 'zc_Enum_GoodsTypeKind_Ves');
+END $$;
+
+
 
 /* Закомментил, т.к. 1 раз добавили и харэ
 --Загрузка в Документ <Ведомость начисления зарплаты>

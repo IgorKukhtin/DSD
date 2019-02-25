@@ -9,10 +9,10 @@
 			<Projects Include="ProjectDesignComponent.dproj">
 				<Dependencies/>
 			</Projects>
-			<Projects Include="..\TEST\DPR\ProjectTest.dproj">
+			<Projects Include="Project.dproj">
 				<Dependencies/>
 			</Projects>
-			<Projects Include="Project.dproj">
+			<Projects Include="..\TEST\DPR\ProjectTest.dproj">
 				<Dependencies/>
 			</Projects>
 			<Projects Include="Load_PostgreSql.dproj">
@@ -92,15 +92,6 @@
 		<Target Name="ProjectDesignComponent:Make">
 			<MSBuild Projects="ProjectDesignComponent.dproj" Targets="Make"/>
 		</Target>
-		<Target Name="ProjectTest">
-			<MSBuild Projects="..\TEST\DPR\ProjectTest.dproj"/>
-		</Target>
-		<Target Name="ProjectTest:Clean">
-			<MSBuild Projects="..\TEST\DPR\ProjectTest.dproj" Targets="Clean"/>
-		</Target>
-		<Target Name="ProjectTest:Make">
-			<MSBuild Projects="..\TEST\DPR\ProjectTest.dproj" Targets="Make"/>
-		</Target>
 		<Target Name="Project">
 			<MSBuild Projects="Project.dproj"/>
 		</Target>
@@ -109,6 +100,15 @@
 		</Target>
 		<Target Name="Project:Make">
 			<MSBuild Projects="Project.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="ProjectTest">
+			<MSBuild Projects="..\TEST\DPR\ProjectTest.dproj"/>
+		</Target>
+		<Target Name="ProjectTest:Clean">
+			<MSBuild Projects="..\TEST\DPR\ProjectTest.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="ProjectTest:Make">
+			<MSBuild Projects="..\TEST\DPR\ProjectTest.dproj" Targets="Make"/>
 		</Target>
 		<Target Name="Load_PostgreSql">
 			<MSBuild Projects="Load_PostgreSql.dproj"/>
@@ -264,13 +264,13 @@
 			<MSBuild Projects="EDIOrdersLoader.dproj" Targets="Make"/>
 		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="ProjectComponent;ProjectDesignComponent;ProjectTest;Project;Load_PostgreSql;FarmacyTest;Farmacy;FarmacyCash;FarmacyCashServise;ProjectCom;Scale;ScaleCeh;GetEmail;GetEmailMMO;GetEmailTEST;SavePriceToXls;ExportSalesForSuppliers;Boutique;BoutiqueTest;Load_Repl;EDIOrdersLoader"/>
+			<CallTarget Targets="ProjectComponent;ProjectDesignComponent;Project;ProjectTest;Load_PostgreSql;FarmacyTest;Farmacy;FarmacyCash;FarmacyCashServise;ProjectCom;Scale;ScaleCeh;GetEmail;GetEmailMMO;GetEmailTEST;SavePriceToXls;ExportSalesForSuppliers;Boutique;BoutiqueTest;Load_Repl;EDIOrdersLoader"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="ProjectComponent:Clean;ProjectDesignComponent:Clean;ProjectTest:Clean;Project:Clean;Load_PostgreSql:Clean;FarmacyTest:Clean;Farmacy:Clean;FarmacyCash:Clean;FarmacyCashServise:Clean;ProjectCom:Clean;Scale:Clean;ScaleCeh:Clean;GetEmail:Clean;GetEmailMMO:Clean;GetEmailTEST:Clean;SavePriceToXls:Clean;ExportSalesForSuppliers:Clean;Boutique:Clean;BoutiqueTest:Clean;Load_Repl:Clean;EDIOrdersLoader:Clean"/>
+			<CallTarget Targets="ProjectComponent:Clean;ProjectDesignComponent:Clean;Project:Clean;ProjectTest:Clean;Load_PostgreSql:Clean;FarmacyTest:Clean;Farmacy:Clean;FarmacyCash:Clean;FarmacyCashServise:Clean;ProjectCom:Clean;Scale:Clean;ScaleCeh:Clean;GetEmail:Clean;GetEmailMMO:Clean;GetEmailTEST:Clean;SavePriceToXls:Clean;ExportSalesForSuppliers:Clean;Boutique:Clean;BoutiqueTest:Clean;Load_Repl:Clean;EDIOrdersLoader:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="ProjectComponent:Make;ProjectDesignComponent:Make;ProjectTest:Make;Project:Make;Load_PostgreSql:Make;FarmacyTest:Make;Farmacy:Make;FarmacyCash:Make;FarmacyCashServise:Make;ProjectCom:Make;Scale:Make;ScaleCeh:Make;GetEmail:Make;GetEmailMMO:Make;GetEmailTEST:Make;SavePriceToXls:Make;ExportSalesForSuppliers:Make;Boutique:Make;BoutiqueTest:Make;Load_Repl:Make;EDIOrdersLoader:Make"/>
+			<CallTarget Targets="ProjectComponent:Make;ProjectDesignComponent:Make;Project:Make;ProjectTest:Make;Load_PostgreSql:Make;FarmacyTest:Make;Farmacy:Make;FarmacyCash:Make;FarmacyCashServise:Make;ProjectCom:Make;Scale:Make;ScaleCeh:Make;GetEmail:Make;GetEmailMMO:Make;GetEmailTEST:Make;SavePriceToXls:Make;ExportSalesForSuppliers:Make;Boutique:Make;BoutiqueTest:Make;Load_Repl:Make;EDIOrdersLoader:Make"/>
 		</Target>
 		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
 	</Project>
