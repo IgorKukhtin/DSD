@@ -101,7 +101,6 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
     OptionsView.RowGrandTotals = False
     OptionsView.RowGrandTotalWidth = 921
     TabOrder = 7
-    ExplicitTop = 56
     object pvOperDate: TcxDBPivotGridField
       Area = faColumn
       AreaIndex = 0
