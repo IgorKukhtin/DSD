@@ -47,7 +47,14 @@ BEGIN
         AND MovementItem.DescId = zc_MI_Master()
         AND MovementItem.ObjectId = vbUserId;
     ELSE
-      RAISE EXCEPTION 'Ошибка. В график работы сотрудеиков не найден ваша запись. Обратитесь к Романовой Т.В.';
+      -- сохранили
+      vbMovementItemID := lpInsertUpdate_MovementItem_EmployeeSchedule (ioId                  := 0                 -- Ключ объекта <Элемент документа>
+                                                                      , inMovementId          := vbMovementID      -- ключ Документа
+                                                                      , inPersonId            := vbUserId          -- сотрудник
+                                                                      , inComingValueDay      := '0000000000000000000000000000000'::TVarChar      -- Приходы на работу по дням
+                                                                      , inUserId              := vbUserId          -- пользователь
+                                                                       );
+
     END IF;	
 
     SELECT MovementItemString.ValueData

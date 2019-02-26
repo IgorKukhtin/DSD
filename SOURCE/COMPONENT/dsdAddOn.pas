@@ -294,10 +294,15 @@ type
   TPivotAddOn = class(TCustomDBControlAddOn)
   private
     FPivotGrid: TcxDBPivotGrid;
+    FAfterOpen: TDataSetNotifyEvent;
+    FExpandRow : Integer;
+    FExpandColumn : Integer;
     procedure SetPivotGrid(const Value: TcxDBPivotGrid);
+    procedure OnAfterOpen(ADataSet: TDataSet);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
+    constructor Create(AOwner: TComponent); override;
     function GetCurrentData: string;
   published
     property PivotGrid: TcxDBPivotGrid read FPivotGrid write SetPivotGrid;
@@ -305,6 +310,10 @@ type
     property OnDblClickActionList;
     // список событий, реагирующих на нажатие клавиш в гриде
     property ActionItemList;
+    // Вложеномть разворачивания строк
+    property ExpandRow : Integer read FExpandRow write FExpandRow default 0;
+    // Вложеномть разворачивания столбцов
+    property ExpandColumn : Integer read FExpandColumn write FExpandColumn default 0;
   end;
 
   TdsdUserSettingsStorageAddOn = class(TComponent)
@@ -2357,6 +2366,15 @@ end;
 
 { TPivotAddOn }
 
+constructor TPivotAddOn.Create(AOwner: TComponent);
+begin
+  inherited;
+  FAfterOpen := Nil;
+  FExpandRow := 0;
+  FExpandColumn := 0;
+end;
+
+
 function TPivotAddOn.GetCurrentData: string;
 // <xml><field name="" value=""/><field name="" value=""/></xml>
 var
@@ -2422,8 +2440,32 @@ begin
     FOnKeyDown := FPivotGrid.OnKeyDown;
     FPivotGrid.OnKeyDown := OnKeyDown;
     FPivotGrid.OnDblClick := OnDblClick;
+    if FPivotGrid is TcxDBPivotGrid then
+    begin
+      FAfterOpen := TcxDBPivotGrid(FPivotGrid).DataSource.DataSet.AfterOpen;
+      TcxDBPivotGrid(FPivotGrid).DataSource.DataSet.AfterOpen := OnAfterOpen;
+    end;
   end;
 end;
+
+procedure TPivotAddOn.OnAfterOpen(ADataSet: TDataSet);
+  var I : Integer;
+begin
+  FPivotGrid.BeginUpdate;
+  try
+    for I := 0 to FPivotGrid.FieldCount - 1 do
+    case FPivotGrid.Fields[I].Area of
+      faRow : if FPivotGrid.Fields[I].AreaIndex < FExpandRow then FPivotGrid.Fields[I].ExpandAll;
+      faColumn : if FPivotGrid.Fields[I].AreaIndex < FExpandColumn then FPivotGrid.Fields[I].ExpandAll;
+    end;
+  finally
+    FPivotGrid.EndUpdate;
+  end;
+
+  if Assigned(FAfterOpen) then
+     FAfterOpen(ADataSet);
+end;
+
 
 { TColumnCollectionItem }
 
