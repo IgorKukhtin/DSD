@@ -373,7 +373,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             HeaderHint = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072' "'#1053#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081'"'
             Width = 60
           end
-          object cxGridDBTableViewColumn2: TcxGridDBColumn
+          object isGoodsTypeKind_Ves: TcxGridDBColumn
             Caption = #1053#1077#1085#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081
             DataBinding.FieldName = 'isGoodsTypeKind_Ves'
             HeaderAlignmentHorz = taCenter
@@ -788,7 +788,6 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1064#1090#1091#1095#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1064#1090#1091#1095#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 76
-      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object macListUpdateSh_Yes: TMultiAction
@@ -829,7 +828,6 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1064#1090#1091#1095#1085#1099#1081' - '#1053#1045#1058' '#1076#1083#1103' '#1042#1089#1077#1093
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1064#1090#1091#1095#1085#1099#1081' - '#1053#1045#1058' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 58
-      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object macListUpdateSh_No: TMultiAction
@@ -870,7 +868,6 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 76
-      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object macListUpdateNom_Yes: TMultiAction
@@ -911,7 +908,6 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1053#1045#1058' '#1076#1083#1103' '#1042#1089#1077#1093
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1053#1045#1058' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 58
-      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object macListUpdateNom_No: TMultiAction
@@ -952,7 +948,6 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1077#1085#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1077#1085#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 76
-      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object macListUpdateVes_Yes: TMultiAction
@@ -993,7 +988,6 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1077#1085#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1053#1045#1058' '#1076#1083#1103' '#1042#1089#1077#1093
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1077#1085#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1053#1045#1058' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 58
-      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object macListUpdateVes_No: TMultiAction
@@ -1300,6 +1294,38 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         ComponentItem = 'isGoodsTypeKind_Ves'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisCodeCalc_Diff'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isCodeCalc_Diff'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCodeCalc_Sh'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CodeCalc_Sh'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCodeCalc_Nom'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CodeCalc_Nom'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCodeCalc_Nom'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CodeCalc_Nom'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1

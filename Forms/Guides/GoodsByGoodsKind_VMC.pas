@@ -58,7 +58,6 @@ type
     GoodsBrandName: TcxGridDBColumn;
     isGoodsTypeKind_Sh: TcxGridDBColumn;
     isGoodsTypeKind_Nom: TcxGridDBColumn;
-    cxGridDBTableViewColumn2: TcxGridDBColumn;
     spUpdateSh_Yes: TdsdStoredProc;
     spUpdateNom_Yes: TdsdStoredProc;
     spUpdateSh_No: TdsdStoredProc;

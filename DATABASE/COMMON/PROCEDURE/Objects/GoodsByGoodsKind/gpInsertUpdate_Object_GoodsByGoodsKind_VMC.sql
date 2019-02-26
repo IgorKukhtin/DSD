@@ -15,9 +15,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind_VMC(
     IN inisGoodsTypeKind_Sh    Boolean , -- 
     IN inisGoodsTypeKind_Nom   Boolean , -- 
     IN inisGoodsTypeKind_Ves   Boolean , -- 
+   OUT outisCodeCalc_Diff      Boolean ,
+   OUT outCodeCalc_Sh          TVarChar,
+   OUT outCodeCalc_Nom         TVarChar,
+   OUT outCodeCalc_Ves         TVarChar,
     IN inSession               TVarChar 
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -102,6 +106,13 @@ BEGIN
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves(), ioId, Null);
    END IF;
+
+   -- расчет кодов ВМС
+   SELECT CodeCalc_Sh, CodeCalc_Nom, CodeCalc_Ves, isCodeCalc_Diff
+     INTO outCodeCalc_Sh, outCodeCalc_Nom, outCodeCalc_Ves, outisCodeCalc_Diff
+   FROM gpSelect_Object_GoodsByGoodsKind (inSession) AS tmp
+   WHERE tmp.Id = ioId;
+   
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

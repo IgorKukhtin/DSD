@@ -19,8 +19,11 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsBoxId Integer, GoodsBoxCode Integer, GoodsBoxName TVarChar
              , Quality2 TVarChar, Quality10 TVarChar
+             , GoodsBrandName TVarChar
              , isOrder Boolean
-             , isErased Boolean)
+             , isErased Boolean
+             , isGoodsTypeKind_Sh Boolean, isGoodsTypeKind_Nom Boolean, isGoodsTypeKind_Ves Boolean
+             )
 AS
 $BODY$
 BEGIN
@@ -32,13 +35,22 @@ BEGIN
 
    RETURN QUERY
    WITH 
-   tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
+   tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId                   AS GoodsId
                                 , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
-                                , ObjectBoolean_Order.ValueData AS isOrder
-                           FROM ObjectBoolean AS ObjectBoolean_Order
-                                LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
-                           WHERE ObjectBoolean_Order.ValueData = TRUE
-                             AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                                , ObjectBoolean_Order.ValueData                          AS isOrder
+                                , Object_GoodsBrand.ValueData                            AS GoodsBrandName
+                           FROM Object_GoodsByGoodsKind_View
+                                LEFT JOIN ObjectBoolean AS ObjectBoolean_Order
+                                                        ON ObjectBoolean_Order.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                       AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                              
+                                LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBrand
+                                                     ON ObjectLink_GoodsByGoodsKind_GoodsBrand.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                    AND ObjectLink_GoodsByGoodsKind_GoodsBrand.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsBrand()
+                                LEFT JOIN Object AS Object_GoodsBrand ON Object_GoodsBrand.Id = ObjectLink_GoodsByGoodsKind_GoodsBrand.ChildObjectId
+                             
+                           WHERE ObjectBoolean_Order.ValueData = TRUE 
+                              OR COALESCE (ObjectLink_GoodsByGoodsKind_GoodsBrand.ChildObjectId, 0) <> 0
                            )
 
    SELECT
@@ -76,9 +88,15 @@ BEGIN
 
        , ObjectString_Quality2.ValueData      AS Quality2
        , ObjectString_Quality10.ValueData     AS Quality10
-
+       
+       , tmpGoodsByGoodsKind.GoodsBrandName :: TVarChar
+       
        , COALESCE (tmpGoodsByGoodsKind.isOrder, FALSE) :: Boolean AS isOrder
        , Object_GoodsPropertyValue.isErased   AS isErased
+
+       , CASE WHEN COALESCE (ObjectLink_GoodsTypeKind_Sh.ChildObjectId, 0)  <> 0 THEN TRUE ELSE FALSE END AS isGoodsTypeKind_Sh
+       , CASE WHEN COALESCE (ObjectLink_GoodsTypeKind_Nom.ChildObjectId, 0) <> 0 THEN TRUE ELSE FALSE END AS isGoodsTypeKind_Nom
+       , CASE WHEN COALESCE (ObjectLink_GoodsTypeKind_Ves.ChildObjectId, 0) <> 0 THEN TRUE ELSE FALSE END AS isGoodsTypeKind_Ves
 
    FROM Object AS Object_GoodsPropertyValue
         LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
@@ -147,6 +165,16 @@ BEGIN
                             AND ObjectLink_GoodsPropertyValue_GoodsBox.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsBox()
         LEFT JOIN Object AS Object_GoodsBox ON Object_GoodsBox.Id = ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId
 
+        LEFT JOIN ObjectLink AS ObjectLink_GoodsTypeKind_Sh
+                             ON ObjectLink_GoodsTypeKind_Sh.ObjectId = Object_GoodsPropertyValue.Id
+                            AND ObjectLink_GoodsTypeKind_Sh.DescId   = zc_ObjectLink_GoodsPropertyValue_GoodsTypeKind_Sh()
+        LEFT JOIN ObjectLink AS ObjectLink_GoodsTypeKind_Nom
+                             ON ObjectLink_GoodsTypeKind_Nom.ObjectId = Object_GoodsPropertyValue.Id
+                            AND ObjectLink_GoodsTypeKind_Nom.DescId   = zc_ObjectLink_GoodsPropertyValue_GoodsTypeKind_Nom()
+        LEFT JOIN ObjectLink AS ObjectLink_GoodsTypeKind_Ves
+                             ON ObjectLink_GoodsTypeKind_Ves.ObjectId = Object_GoodsPropertyValue.Id
+                            AND ObjectLink_GoodsTypeKind_Ves.DescId   = zc_ObjectLink_GoodsPropertyValue_GoodsTypeKind_Ves()
+
         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                              ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                             AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -162,7 +190,9 @@ BEGIN
                               AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
         LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = Object_Goods.Id
-                                     AND tmpGoodsByGoodsKind.GoodsKindId = Object_GoodsKind.Id 
+                                     AND tmpGoodsByGoodsKind.GoodsKindId = Object_GoodsKind.Id
+
+
 
    WHERE Object_GoodsPropertyValue.DescId = zc_Object_GoodsPropertyValue()
      AND (ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = inGoodsPropertyId OR inGoodsPropertyId = 0);
@@ -170,52 +200,61 @@ BEGIN
    ELSE 
 
    RETURN QUERY
- WITH tmpGoods AS (SELECT Object_Goods.Id             AS GoodsId
-                        , Object_Goods.ObjectCode     AS GoodsCode 
-                        , Object_Goods.ValueData      AS GoodsName
-                        , Object_Measure.ValueData    AS MeasureName
-                        , Object_GoodsGroup.ValueData AS GoodsGroupName 
-                        , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-                   FROM Object_InfoMoney_View
-                        INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                              ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
-                                             AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                        INNER JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
-                                             AND Object_Goods.isErased = FALSE
-                        LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                             ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-                        LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
-                        LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                             ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
-                                            AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-                        LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-
-                        LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
-                                               ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
-                                              AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-
-                   WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
-                                                                        -- , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
-                                                                        , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                                                                        , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
-                                                                        , zc_Enum_InfoMoneyDestination_20900() -- Ирна
-                                                                        , zc_Enum_InfoMoneyDestination_21000() -- Чапли
-                                                                        , zc_Enum_InfoMoneyDestination_21100() -- Дворкин
-                                                                        , zc_Enum_InfoMoneyDestination_30100() -- Готовая продукция
-                                                                        , zc_Enum_InfoMoneyDestination_30200() -- Тушенка
-                                                                         )
-                  )
- , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
-                                , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
-                                , ObjectBoolean_Order.ValueData AS isOrder
-                           FROM ObjectBoolean AS ObjectBoolean_Order
-                                LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
-                           WHERE ObjectBoolean_Order.ValueData = TRUE
-                             AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
-                           )
-
+   WITH tmpGoods AS (SELECT Object_Goods.Id             AS GoodsId
+                          , Object_Goods.ObjectCode     AS GoodsCode 
+                          , Object_Goods.ValueData      AS GoodsName
+                          , Object_Measure.ValueData    AS MeasureName
+                          , Object_GoodsGroup.ValueData AS GoodsGroupName 
+                          , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+                     FROM Object_InfoMoney_View
+                          INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
+                                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                          INNER JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
+                                               AND Object_Goods.isErased = FALSE
+                          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                               ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+  
+                          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                               ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                              AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+                          LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+  
+                          LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                                 ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                                AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+  
+                     WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
+                                                                          -- , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
+                                                                          , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                                                          , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                                          , zc_Enum_InfoMoneyDestination_20900() -- Ирна
+                                                                          , zc_Enum_InfoMoneyDestination_21000() -- Чапли
+                                                                          , zc_Enum_InfoMoneyDestination_21100() -- Дворкин
+                                                                          , zc_Enum_InfoMoneyDestination_30100() -- Готовая продукция
+                                                                          , zc_Enum_InfoMoneyDestination_30200() -- Тушенка
+                                                                           )
+                    )
+      , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId                   AS GoodsId
+                                     , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
+                                     , ObjectBoolean_Order.ValueData                          AS isOrder
+                                     , Object_GoodsBrand.ValueData                            AS GoodsBrandName
+                                FROM Object_GoodsByGoodsKind_View
+                                     LEFT JOIN ObjectBoolean AS ObjectBoolean_Order
+                                                             ON ObjectBoolean_Order.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                            AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                                   
+                                     LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBrand
+                                                          ON ObjectLink_GoodsByGoodsKind_GoodsBrand.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                         AND ObjectLink_GoodsByGoodsKind_GoodsBrand.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsBrand()
+                                     LEFT JOIN Object AS Object_GoodsBrand ON Object_GoodsBrand.Id = ObjectLink_GoodsByGoodsKind_GoodsBrand.ChildObjectId
+                                  
+                                WHERE ObjectBoolean_Order.ValueData = TRUE 
+                                   OR COALESCE (ObjectLink_GoodsByGoodsKind_GoodsBrand.ChildObjectId, 0) <> 0
+                                )
+   ---
    SELECT
          tmpObjectLink.GoodsPropertyValueId         AS Id
        , tmpObjectLink.GoodsPropertyValueCode       AS Code
@@ -253,9 +292,14 @@ BEGIN
        , tmpObjectLink.Quality2
        , tmpObjectLink.Quality10
 
-       , COALESCE (tmpGoodsByGoodsKind.isOrder, FALSE) :: Boolean AS isOrder
-       ,tmpObjectLink.isErased
+       , COALESCE (tmpGoodsByGoodsKind.GoodsBrandName, NULL) :: TVarChar AS GoodsBrandName
 
+       , COALESCE (tmpGoodsByGoodsKind.isOrder, FALSE) :: Boolean AS isOrder
+       , tmpObjectLink.isErased
+
+       , COALESCE (tmpObjectLink.isGoodsTypeKind_Sh,  FALSE) :: Boolean AS isGoodsTypeKind_Sh
+       , COALESCE (tmpObjectLink.isGoodsTypeKind_Nom, FALSE) :: Boolean AS isGoodsTypeKind_Nom
+       , COALESCE (tmpObjectLink.isGoodsTypeKind_Ves, FALSE) :: Boolean AS isGoodsTypeKind_Ves
     FROM tmpGoods 
         LEFT JOIN (SELECT Object_GoodsPropertyValue.Id          AS GoodsPropertyValueId
                         , Object_GoodsPropertyValue.ObjectCode  AS GoodsPropertyValueCode
@@ -285,6 +329,11 @@ BEGIN
 
                         , ObjectString_Quality2.ValueData      AS Quality2
                         , ObjectString_Quality10.ValueData     AS Quality10
+
+                        , CASE WHEN COALESCE (ObjectLink_GoodsTypeKind_Sh.ChildObjectId, 0)  <> 0 THEN TRUE ELSE FALSE END AS isGoodsTypeKind_Sh
+                        , CASE WHEN COALESCE (ObjectLink_GoodsTypeKind_Nom.ChildObjectId, 0) <> 0 THEN TRUE ELSE FALSE END AS isGoodsTypeKind_Nom
+                        , CASE WHEN COALESCE (ObjectLink_GoodsTypeKind_Ves.ChildObjectId, 0) <> 0 THEN TRUE ELSE FALSE END AS isGoodsTypeKind_Ves
+
                    FROM ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
                       LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                            ON ObjectLink_GoodsPropertyValue_Goods.ObjectId =  ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -302,6 +351,16 @@ BEGIN
                                            ON ObjectLink_GoodsPropertyValue_GoodsBox.ObjectId = Object_GoodsPropertyValue.Id
                                           AND ObjectLink_GoodsPropertyValue_GoodsBox.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsBox()
                       LEFT JOIN Object AS Object_GoodsBox ON Object_GoodsBox.Id = ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId
+
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsTypeKind_Sh
+                                           ON ObjectLink_GoodsTypeKind_Sh.ObjectId = Object_GoodsPropertyValue.Id
+                                          AND ObjectLink_GoodsTypeKind_Sh.DescId   = zc_ObjectLink_GoodsPropertyValue_GoodsTypeKind_Sh()
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsTypeKind_Nom
+                                           ON ObjectLink_GoodsTypeKind_Nom.ObjectId = Object_GoodsPropertyValue.Id
+                                          AND ObjectLink_GoodsTypeKind_Nom.DescId   = zc_ObjectLink_GoodsPropertyValue_GoodsTypeKind_Nom()
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsTypeKind_Ves
+                                           ON ObjectLink_GoodsTypeKind_Ves.ObjectId = Object_GoodsPropertyValue.Id
+                                          AND ObjectLink_GoodsTypeKind_Ves.DescId   = zc_ObjectLink_GoodsPropertyValue_GoodsTypeKind_Ves()
 
                       LEFT JOIN ObjectFloat AS ObjectFloat_Amount
                                             ON ObjectFloat_Amount.ObjectId = Object_GoodsPropertyValue.Id 
@@ -365,6 +424,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.02.19         *
  17.12.18         * add Quality10, Quality2
  25.07.18         * add CodeSticker
  14.02.18         * add GoodsBox
