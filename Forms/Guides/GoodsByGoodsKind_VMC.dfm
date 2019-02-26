@@ -381,36 +381,36 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             HeaderHint = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072' "'#1053#1077#1085#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081'"'
             Width = 60
           end
-          object Code1_calc: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1088#1072#1089#1095'. '#1076#1083#1103' '#1096#1090#1091#1095#1085'.'
-            DataBinding.FieldName = 'Code1_calc'
+          object CodeCalc_Sh: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1042#1052#1057' '#1096#1090'.'
+            DataBinding.FieldName = 'CodeCalc_Sh'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          object Code2_calc: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1088#1072#1089#1095'. '#1076#1083#1103' '#1085#1086#1084#1080#1085#1072#1083'.'
-            DataBinding.FieldName = 'Code2_calc'
+          object CodeCalc_Nom: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1042#1052#1057' '#1085#1086#1084#1080#1085#1072#1083
+            DataBinding.FieldName = 'CodeCalc_Nom'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          object Code3_calc: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1088#1072#1089#1095'. '#1076#1083#1103' '#1076#1083#1103' '#1085#1077#1085#1086#1084#1080#1085#1072#1083'.'
-            DataBinding.FieldName = 'Code3_calc'
+          object CodeCalc_Ves: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1042#1052#1057' '#1085#1077#1085#1086#1084#1080#1085#1072#1083
+            DataBinding.FieldName = 'CodeCalc_Ves'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 83
           end
           object isCodeCalc_Diff: TcxGridDBColumn
-            Caption = #1059#1085#1080#1082#1072#1083#1100#1085'. '#1088#1072#1089#1095'. '#1082#1086#1076#1072
+            Caption = #1055#1086#1074#1090#1086#1088' '#1082#1086#1076#1072' '#1042#1052#1057
             DataBinding.FieldName = 'isCodeCalc_Diff'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1059#1085#1080#1082#1072#1083#1100#1085#1099#1077' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1082#1086#1076#1072
+            HeaderHint = #1087#1086#1074#1090#1086#1088' '#1082#1086#1076#1072' '#1042#1052#1057
             Options.Editing = False
             Width = 81
           end

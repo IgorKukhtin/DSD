@@ -89,7 +89,7 @@ type
     bbUpdateNom_No: TdxBarButton;
     bbUpdateVes_Yes: TdxBarButton;
     bbUpdateVes_No: TdxBarButton;
-    Code1_calc: TcxGridDBColumn;
+    CodeCalc_Sh: TcxGridDBColumn;
     isCodeCalc_Diff: TcxGridDBColumn;
   private
     { Private declarations }
