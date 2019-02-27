@@ -47,7 +47,7 @@ BEGIN
      IF NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMovementId_to AND Movement.StatusId = zc_Enum_Status_Complete())
      THEN
          RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> должен быть в статусе <%>.'
-                       , (SELECT MovementDesc.ItemName FROM Movement JOIN MovementDesc ON MovementDsc.Id = Movement.DescId WHERE Movement.Id = vbMovementId_to)
+                       , (SELECT MovementDesc.ItemName FROM Movement JOIN MovementDesc ON MovementDesc.Id = Movement.DescId WHERE Movement.Id = vbMovementId_to)
                        , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_to)
                        , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_to))
                        , lfGet_Object_ValueData_sh (zc_Enum_Status_Complete())
