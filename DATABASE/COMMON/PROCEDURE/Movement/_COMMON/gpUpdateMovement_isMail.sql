@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpUpdateMovement_isMail(
 -- INOUT inIsMail              Boolean   , -- Отправлен по почте (да/нет)
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Boolean 
+RETURNS VOID 
 AS
 $BODY$
     DECLARE vbUserId Integer;
@@ -21,8 +21,8 @@ BEGIN
      -- inIsMail:= NOT inIsMail;
 
      -- сохранили свойство
-     -- PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isMail(), inId, inIsMail);
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isMail(), inId, TRUE);
+     -- PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Mail(), inId, inIsMail);
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Mail(), inId, TRUE);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);

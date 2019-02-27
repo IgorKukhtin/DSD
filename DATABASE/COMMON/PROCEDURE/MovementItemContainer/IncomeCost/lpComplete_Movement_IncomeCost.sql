@@ -332,7 +332,21 @@ BEGIN
       ;
 
      -- сохранили <Итого сумма затрат по документу (с учетом НДС)>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummSpending(), vbMovementId_to, COALESCE ((SELECT SUM (_tmpItem.OperSumm_calc) FROM _tmpItem), 0));
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummSpending()
+                                         , vbMovementId_to
+                                         , COALESCE ((SELECT SUM (tmp.OperSumm)
+                                                      FROM (SELECT SUM (_tmpItem.OperSumm_calc) AS OperSumm FROM _tmpItem
+                                                           UNION
+                                                            SELECT SUM (COALESCE (MovementFloat.ValueData, 0)) AS OperSumm
+                                                            FROM Movement
+                                                                 LEFT JOIN MovementFloat ON MovementFloat.MovementId = Movement.Id
+                                                                                        AND MovementFloat.DescId     = zc_MovementFloat_AmountCost()
+                                                            WHERE Movement.ParentId = vbMovementId_to
+                                                              AND Movement.DescId   = zc_Movement_IncomeCost()
+                                                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                           ) AS tmp
+                                                     ), 0)
+                                          );
 
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки

@@ -315,4 +315,4 @@ END;$BODY$
 
 -- тест
 -- SELECT * FROM lpUpdate_Movement_Send_DocumentKind (inIsUpdate:= FALSE, inStartDate:= '26.04.2017', inEndDate:= '26.04.2017', inUnitId:= 635388 , inUserId:= zfCalc_UserAdmin() :: Integer) -- Участок нарезки
- SELECT * FROM lpUpdate_Movement_Send_DocumentKind (inIsUpdate:= TRUE, inStartDate:= '26.04.2017', inEndDate:= '26.04.2017', inUnitId:= 635388 , inUserId:= zfCalc_UserAdmin() :: Integer) -- Участок нарезки
+-- SELECT * FROM lpUpdate_Movement_Send_DocumentKind (inIsUpdate:= TRUE, inStartDate:= '26.04.2017', inEndDate:= '26.04.2017', inUnitId:= 635388 , inUserId:= zfCalc_UserAdmin() :: Integer) -- Участок нарезки

@@ -350,6 +350,7 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
     object actExportToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
+      Grid = cxDBPivotGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6

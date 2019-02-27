@@ -18,19 +18,21 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , isAuto Boolean
              , InsertDate TDateTime, InsertName TVarChar
               )
-
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId         Integer;
+   DECLARE vbIsDocumentUser Boolean;
 BEGIN
-
--- inStartDate:= '01.01.2013';
--- inEndDate:= '01.01.2100';
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Send());
---     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- проверка прав
+     vbIsDocumentUser:= EXISTS (SELECT 1 FROM Object_RoleAccessKey_View AS View_RoleAccessKey WHERE View_RoleAccessKey.AccessKeyId = zc_Enum_Process_AccessKey_DocumentUser() AND View_RoleAccessKey.UserId = vbUserId);
+
+
+     -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -70,7 +72,7 @@ BEGIN
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Send() AND Movement.StatusId = tmpStatus.StatusId
---                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+               -- JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             ) AS tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
@@ -122,14 +124,15 @@ BEGIN
                                          ON MovementLinkObject_DocumentKind.MovementId = Movement.Id
                                         AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
             LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MovementLinkObject_DocumentKind.ObjectId
-       WHERE Object_To.DescId IN (zc_Object_Member(), zc_Object_Car()) OR Object_From.DescId IN (zc_Object_Member(), zc_Object_Car())
-            ;
+       WHERE (Object_To.DescId   IN (zc_Object_Member(), zc_Object_Car())
+           OR Object_From.DescId IN (zc_Object_Member(), zc_Object_Car())
+             )
+         AND (vbIsDocumentUser = FALSE OR MLO_Insert.ObjectId = vbUserId)
+      ;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
