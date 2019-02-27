@@ -712,7 +712,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_AnalysisForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_AnalysisDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_AnalysisDialogForm');
-  exit;
+  //exit;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsCodeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsCodeForm');

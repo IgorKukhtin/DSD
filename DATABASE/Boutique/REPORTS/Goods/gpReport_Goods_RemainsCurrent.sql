@@ -54,6 +54,7 @@ RETURNS TABLE (PartionId            Integer
              , OperPrice            TFloat -- Цена вх.
              , CountForPrice        TFloat -- Кол. в цене
              , OperPriceList        TFloat -- Цена по прайсу
+             , PriceJur             TFloat -- Цена вх. без ск.
 
              , Remains              TFloat -- Кол-во - остаток в магазине
              , RemainsDebt          TFloat -- Кол-во - долги по магазину
@@ -64,6 +65,7 @@ RETURNS TABLE (PartionId            Integer
              , TotalSumm            TFloat -- Сумма по входным ценам в валюте - остаток итого с учетом долга
              , TotalSummBalance     TFloat -- Сумма по входным ценам в ГРН - остаток итого с учетом долга
              , TotalSummPriceList   TFloat -- Сумма по прайсу - остаток итого с учетом долга
+             , TotalSummPriceJur    TFloat -- Сумма вх. без скидки
              , PriceTax             TFloat -- % наценки
              , DiscountTax          TFloat -- % Сезонной скидки !!!НА!!! zc_DateEnd
              , Amount_GoodsPrint    TFloat -- Кол-во для печати ценников
@@ -71,8 +73,9 @@ RETURNS TABLE (PartionId            Integer
              , PriceListId_Basis    Integer  --
              , PriceListName_Basis  TVarChar --
              , UpdateDate_Price     TDateTime
-
              , isOlap Boolean
+             , Comment_in           TVarChar
+             , ChangePercent_in     TFloat
               )
 AS
 $BODY$
@@ -250,6 +253,7 @@ BEGIN
                                 --  только для Ord = 1
                               , SUM (CASE WHEN tmpContainer.Ord = 1 THEN tmpContainer.Amount_in ELSE 0 END) AS Amount_in
                               , SUM (CASE WHEN tmpContainer.Ord = 1 THEN zfCalc_SummIn (tmpContainer.Amount_in, tmpContainer.OperPrice, tmpContainer.CountForPrice) ELSE 0 END) AS TotalSummPrice_in
+                              , SUM (CASE WHEN tmpContainer.Ord = 1 THEN zfCalc_SummIn (tmpContainer.Amount_in, COALESCE (MIFloat_PriceJur.ValueData, 0), tmpContainer.CountForPrice) ELSE 0 END) AS TotalSummPriceJur
     
                               , SUM (tmpContainer.Remains)         AS Remains
                               , SUM (tmpContainer.RemainsDebt)     AS RemainsDebt
@@ -262,7 +266,9 @@ BEGIN
                               , SUM (zfCalc_SummPriceList (tmpContainer.RemainsAll, tmpContainer.OperPriceList))                         AS TotalSummPriceList
                               
                               , SUM (CASE WHEN COALESCE (tmpReportOLAP.PartionId, 0) <> 0 THEN 1 ELSE 0 END) AS byOlap
-    
+
+                              , MS_Comment.ValueData                        AS Comment_in
+                              , COALESCE (MF_ChangePercent.ValueData, 0)    AS ChangePercent_in
                          FROM tmpContainer
                               LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = tmpContainer.MovementId
                               LEFT JOIN MovementDesc AS MovementDesc_Partion ON MovementDesc_Partion.Id = Movement_Partion.DescId
@@ -272,6 +278,20 @@ BEGIN
 
                               LEFT JOIN tmpReportOLAP ON tmpReportOLAP.PartionId = tmpContainer.PartionId
                                                      AND tmpReportOLAP.GoodsId   = tmpContainer.GoodsId
+
+                              LEFT JOIN MovementItemFloat AS MIFloat_PriceJur
+                                                          ON MIFloat_PriceJur.MovementItemId = tmpContainer.PartionId
+                                                         AND MIFloat_PriceJur.DescId         = zc_MIFloat_PriceJur()
+                                                         --AND inisPartion = TRUE 
+                                                         AND vbIsOperPrice = TRUE
+                              LEFT JOIN MovementString AS MS_Comment 
+                                                       ON MS_Comment.MovementId = tmpContainer.MovementId
+                                                      AND MS_Comment.DescId = zc_MovementString_Comment()
+                                                      AND inisPartion = TRUE
+                              LEFT JOIN MovementFloat AS MF_ChangePercent
+                                                      ON MF_ChangePercent.MovementId = tmpContainer.MovementId
+                                                     AND MF_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                                                     AND inisPartion = TRUE
 
                               -- LEFT JOIN tmpPrice ON tmpPrice.GoodsId = Object_PartionGoods.GoodsId
                          GROUP BY tmpContainer.UnitId
@@ -301,6 +321,8 @@ BEGIN
                                 , tmpContainer.PeriodYear
                                 , tmpContainer.OperPriceList
                                 , tmpContainer.UnitId_in
+                                , MS_Comment.ValueData
+                                , MF_ChangePercent.ValueData
                   )
        , tmpData AS (SELECT tmpData_All.UnitId
                           , tmpData_All.GoodsId
@@ -330,8 +352,12 @@ BEGIN
                           , tmpData_All.OperPriceList
                           , tmpData_All.UnitId_in
 
+                          , tmpData_All.Comment_in
+                          , tmpData_All.ChangePercent_in
+
                           , SUM (tmpData_All.Amount_in)         AS Amount_in
                           , SUM (tmpData_All.TotalSummPrice_in) AS TotalSummPrice_in
+                          , SUM (tmpData_All.TotalSummPriceJur) AS TotalSummPriceJur
 
                           , SUM (tmpData_All.Remains)         AS Remains
                           , SUM (tmpData_All.RemainsDebt)     AS RemainsDebt
@@ -372,6 +398,8 @@ BEGIN
                           , tmpData_All.CurrencyId
                           , tmpData_All.OperPriceList
                           , tmpData_All.UnitId_in
+                          , tmpData_All.Comment_in
+                          , tmpData_All.ChangePercent_in
               )
 
  
@@ -498,6 +526,10 @@ BEGIN
              END :: TFloat AS OperPrice
            , 1                    :: TFloat AS CountForPrice
            , tmpData.OperPriceList
+           
+           , CASE WHEN tmpData.Amount_in  <> 0 THEN tmpData.TotalSummPriceJur / tmpData.Amount_in
+                  ELSE 0
+             END :: TFloat AS PriceJur
 
            , tmpData.Remains                 :: TFloat AS Remains
            , tmpData.RemainsDebt             :: TFloat AS RemainsDebt
@@ -512,6 +544,7 @@ BEGIN
            , CAST (tmpData.TotalSummPrice * tmpCurrency.Amount / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END AS NUMERIC (16, 2)) :: TFloat AS TotalSummBalance
              -- Сумма по прайсу - остаток итого с учетом долга
            , tmpData.TotalSummPriceList      :: TFloat AS TotalSummPriceList
+           , tmpData.TotalSummPriceJur       :: TFloat AS TotalSummPriceJur
              -- % наценки
            , CAST (CASE WHEN (tmpData.TotalSummPrice_in * tmpCurrency.Amount / CASE WHEN tmpData.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END)
                               <> 0
@@ -531,6 +564,9 @@ BEGIN
            , COALESCE (tmpPriceInfo.UpdateDate, NULL) :: TDateTime AS UpdateDate_Price
            
            , CASE WHEN COALESCE (tmpData.byOlap, 0) > 0 THEN TRUE ELSE FALSE END :: Boolean AS isOlap
+
+           , tmpData.Comment_in       :: TVarChar
+           , tmpData.ChangePercent_in :: TFloat
 
         FROM tmpData
             LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = tmpData.UnitId

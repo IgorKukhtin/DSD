@@ -44,12 +44,14 @@ RETURNS TABLE (MovementId     Integer,
                OperPrice              TFloat,
                CountForPrice          TFloat, -- 
                OperPriceBalance       TFloat, -- Цена вх. (ГРН)
+               PriceJur               TFloat, -- Цена вх. без ск.
                OperPriceList          TFloat, -- Цена по прайсу в документе
                OperPriceListLast      TFloat, -- Цена по прайсу на сегодня !!!НА!!! zc_DateEnd
                Amount                 TFloat, -- Кол-во Приход от поставщика
 
                TotalSumm              TFloat, -- Сумма по входным ценам в валюте
                TotalSummBalance       TFloat, -- Сумма по входным ценам в ГРН
+               TotalSummPriceJur      TFloat, -- Сумма вх. без скидки
                TotalSummPriceList     TFloat, -- Сумма по прайсу в документе
                TotalSummPriceListLast TFloat, -- Сумма по прайсу на сегодня !!!НА!!! zc_DateEnd
 
@@ -66,8 +68,13 @@ RETURNS TABLE (MovementId     Integer,
                CurrencyValue          TFloat, -- Курс из Документа <Приход от поставщика>
                ParValue               TFloat, -- Номинал из Документа <Приход от поставщика>
 
-               PriceTax          TFloat, -- 1) % наценки для цены прайса из док 
-               PriceTaxLast      TFloat  -- 2) % наценки для цены прайса текущей
+               PriceTax               TFloat,  -- 1) % наценки для цены прайса из док 
+               PriceTaxLast           TFloat,  -- 2) % наценки для цены прайса текущей
+
+               ChangePercent          TFloat,
+               Comment                TVarChar
+
+
   )
 AS
 $BODY$
@@ -103,6 +110,9 @@ BEGIN
 
                                  , COALESCE (MovementFloat_CurrencyValue.ValueData, 0)                                                 AS CurrencyValue
                                  , COALESCE (MovementFloat_ParValue.ValueData, 0)                                                      AS ParValue
+
+                                 , MS_Comment.ValueData                        AS Comment
+                                 , COALESCE (MF_ChangePercent.ValueData, 0)    AS ChangePercent
                             FROM Movement AS Movement_Income
                                  -- куда был приход
                                  INNER JOIN MovementLinkObject AS MovementLinkObject_To
@@ -133,6 +143,15 @@ BEGIN
                                                         AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
 
                                  LEFT JOIN MovementDesc AS MovementDesc_Income ON MovementDesc_Income.Id = Movement_Income.DescId
+
+                                 LEFT JOIN MovementString AS MS_Comment 
+                                                          ON MS_Comment.MovementId = Movement_Income.Id
+                                                         AND MS_Comment.DescId = zc_MovementString_Comment()
+                                                         AND inisPartion = TRUE
+                                 LEFT JOIN MovementFloat AS MF_ChangePercent
+                                                         ON MF_ChangePercent.MovementId = Movement_Income.Id
+                                                        AND MF_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                                                        AND inisPartion = TRUE
 
                             WHERE Movement_Income.DescId = zc_Movement_Income()
                               AND Movement_Income.OperDate BETWEEN inStartDate AND inEndDate
@@ -166,12 +185,16 @@ BEGIN
                                 , Object_PartionGoods.CurrencyId
                                 , Object_PartionGoods.PeriodYear
         
+                                , tmpMovementIncome.Comment
+                                , tmpMovementIncome.ChangePercent
+
                                 , tmpMovementIncome.CurrencyValue
                                 , tmpMovementIncome.ParValue
         
                                 , COALESCE (MIFloat_CountForPrice.ValueData, 1)       AS CountForPrice
                                 , SUM (COALESCE (MI_Income.Amount, 0))                AS Amount
                                 , SUM (zfCalc_SummIn (MI_Income.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData)) AS TotalSumm
+                                , SUM (zfCalc_SummIn (MI_Income.Amount, MIFloat_PriceJur.ValueData, MIFloat_CountForPrice.ValueData))  AS TotalSummPriceJur
                                 , SUM (zfCalc_SummPriceList (MI_Income.Amount, MIFloat_OperPriceList.ValueData))                       AS TotalSummPriceList
                                 , SUM (zfCalc_SummPriceList (MI_Income.Amount, Object_PartionGoods.OperPriceList))                     AS TotalSummPriceListLast
         
@@ -190,6 +213,9 @@ BEGIN
                                 LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                             ON MIFloat_OperPriceList.MovementItemId = MI_Income.Id
                                                            AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
+                                LEFT JOIN MovementItemFloat AS MIFloat_PriceJur
+                                                            ON MIFloat_PriceJur.MovementItemId = MI_Income.Id
+                                                           AND MIFloat_PriceJur.DescId         = zc_MIFloat_PriceJur()
                            WHERE (Object_PartionGoods.PeriodYear BETWEEN inStartYear AND inEndYear)
                            GROUP BY tmpMovementIncome.MovementId
                                   , tmpMovementIncome.InvNumber
@@ -216,6 +242,8 @@ BEGIN
                                   , Object_PartionGoods.CurrencyId
                                   , Object_PartionGoods.PeriodYear
                                   , MI_Income.PartionId
+                                  , tmpMovementIncome.Comment
+                                  , tmpMovementIncome.ChangePercent
                     )
  
    , tmpContainer AS (SELECT Container.PartionId              AS PartionId
@@ -278,8 +306,11 @@ BEGIN
                        , tmp.CurrencyValue
                        , tmp.ParValue
                        , tmp.CountForPrice
+                       , tmp.Comment
+                       , tmp.ChangePercent
                        , SUM (tmp.Amount)                  AS Amount
                        , SUM (tmp.TotalSumm)               AS TotalSumm
+                       , SUM (tmp.TotalSummPriceJur)       AS TotalSummPriceJur
                        , SUM (tmp.TotalSummPriceList)      AS TotalSummPriceList
                        , SUM (tmp.TotalSummPriceListLast)  AS TotalSummPriceListLast
 
@@ -325,6 +356,8 @@ BEGIN
                          , tmp.CurrencyValue
                          , tmp.ParValue
                          , tmp.CountForPrice
+                         , tmp.Comment
+                         , tmp.ChangePercent
                   )
 
         SELECT
@@ -357,16 +390,19 @@ BEGIN
            , tmpData.GoodsSizeName_real  ::TVarChar  AS GoodsSizeName_real
            , Object_Currency.ValueData      AS CurrencyName
 
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm  / tmpData.Amount ELSE 0 END          ::TFloat AS OperPrice
+           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm  / tmpData.Amount ELSE 0 END             ::TFloat AS OperPrice
            , tmpData.CountForPrice           ::TFloat
            , (CAST ( (CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm / tmpData.Amount ELSE 0 END)
                       * tmpData.CurrencyValue / CASE WHEN tmpData.ParValue <> 0 THEN tmpData.ParValue ELSE 1 END  AS NUMERIC (16, 2))) :: TFloat  AS OperPriceBalance
+           
+           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummPriceJur / tmpData.Amount ELSE 0 END      ::TFloat AS PriceJur
 
            , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummPriceList     / tmpData.Amount ELSE 0 END :: TFloat AS OperPriceList
            , CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSummPriceListLast / tmpData.Amount ELSE 0 END :: TFloat AS OperPriceListLast
            , tmpData.Amount                  :: TFloat
            , tmpData.TotalSumm               :: TFloat
            , (CAST (tmpData.TotalSumm * tmpData.CurrencyValue / CASE WHEN tmpData.ParValue <> 0 THEN tmpData.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance
+           , tmpData.TotalSummPriceJur       :: TFloat
            , tmpData.TotalSummPriceList      :: TFloat  AS TotalSummPriceList
            , tmpData.TotalSummPriceListLast  :: TFloat  AS TotalSummPriceListLast
 
@@ -399,7 +435,10 @@ BEGIN
                                                       / (CAST ( (CASE WHEN tmpData.Amount <> 0 THEN tmpData.TotalSumm / tmpData.Amount ELSE 0 END)
                                                          * tmpData.CurrencyValue / CASE WHEN tmpData.ParValue <> 0 THEN tmpData.ParValue ELSE 1 END  AS NUMERIC (16, 2)))
                   ELSE 0 END AS NUMERIC (16, 0))  :: TFloat  AS PriceTaxLast
-           
+
+           , tmpData.ChangePercent  :: TFloat
+           , tmpData.Comment        :: TVarChar
+
         FROM tmpData
             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
             LEFT JOIN Object AS Object_To   ON Object_To.Id   = tmpData.ToId
@@ -431,7 +470,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.02.19         *
  30.05.17         *
 */
 
