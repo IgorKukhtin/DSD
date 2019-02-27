@@ -1207,11 +1207,14 @@ END IF;*/
                                                WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                                    THEN 0
 
-                                               WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
-                                                 OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
-                                                 OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                               WHEN (_tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                              --  OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                  OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                    )
+                                              -- AND _tmpItem.UnitId_Item > 0
+                                              -- AND 1=0
                                                    THEN lpInsertFind_Object_PartionGoods (inUnitId_Partion:= NULL
-                                                                                        , inGoodsId       := NULL
+                                                                                        , inGoodsId       := NULL -- _tmpItem.GoodsId
                                                                                         , inStorageId     := NULL
                                                                                         , inInvNumber     := NULL
                                                                                         , inOperDate      := NULL

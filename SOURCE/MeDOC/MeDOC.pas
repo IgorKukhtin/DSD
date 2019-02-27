@@ -2342,7 +2342,7 @@ begin
               //Коригування
               with ZVIT.DECLARBODY.RXXXXG7.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.####', -1 * FieldByName('Price_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
               //Коригування
-              with ZVIT.DECLARBODY.RXXXXG8.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00', FieldByName('Amount_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
+              with ZVIT.DECLARBODY.RXXXXG8.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.####', FieldByName('Amount_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
           end
           else
           begin
