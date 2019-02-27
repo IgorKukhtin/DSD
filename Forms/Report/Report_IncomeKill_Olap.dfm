@@ -988,6 +988,7 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
         Action = macReport_Account
         ShortCut = 13
       end>
+    ExpandColumn = 1
     Left = 453
     Top = 272
   end

@@ -1,10 +1,11 @@
 -- Function: gpUpdateMovement_isMail()
 
 DROP FUNCTION IF EXISTS gpUpdateMovement_isMail (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMovement_isMail (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdateMovement_isMail(
     IN inId                  Integer   , -- Ключ объекта <Документ>
- INOUT inIsMail              Boolean   , -- Отправлен по почте (да/нет)
+-- INOUT inIsMail              Boolean   , -- Отправлен по почте (да/нет)
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Boolean 
@@ -20,7 +21,8 @@ BEGIN
      -- inIsMail:= NOT inIsMail;
 
      -- сохранили свойство
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isMail(), inId, inIsMail);
+     -- PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isMail(), inId, inIsMail);
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isMail(), inId, TRUE);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
