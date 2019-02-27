@@ -68,6 +68,7 @@ type
     GUID_PromoCode: TcxGridDBColumn;
     TotalSummPayAdd: TcxGridDBColumn;
     dxBarButton1: TdxBarButton;
+    JackdawsChecksName: TcxGridDBColumn;
   private
     { Private declarations }
   public

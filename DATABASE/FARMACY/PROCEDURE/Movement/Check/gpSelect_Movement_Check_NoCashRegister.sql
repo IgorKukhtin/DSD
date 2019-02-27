@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , StatusCode_PromoCode Integer
              , InvNumber_PromoCode_Full TVarChar
              , GUID_PromoCode TVarChar
+             , JackdawsChecksName TVarChar
               )
 AS
 $BODY$
@@ -84,6 +85,7 @@ BEGIN
            , Object_Status_PromoCode.ObjectCode                 AS StatusCode_PromoCode
            , ('№ ' || Movement_PromoCode.InvNumber || ' от ' || Movement_PromoCode.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_PromoCode_Full
            , MIString_GUID.ValueData                 ::TVarChar AS GUID_PromoCode
+           , Object_JackdawsChecks.ValueData                              AS JackdawsChecksName
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -234,6 +236,11 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_GUID
                                          ON MIString_GUID.MovementItemId = MI_PromoCode.Id
                                         AND MIString_GUID.DescId = zc_MIString_GUID()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_JackdawsChecks
+                                         ON MovementLinkObject_JackdawsChecks.MovementId =  Movement_Check.Id
+                                        AND MovementLinkObject_JackdawsChecks.DescId = zc_MovementLinkObject_JackdawsChecks()
+            LEFT JOIN Object AS Object_JackdawsChecks ON Object_JackdawsChecks.Id = MovementLinkObject_JackdawsChecks.ObjectId
      ;
 
 END;
@@ -243,8 +250,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В. 
+ 26.02.19                                                                                    *
  17.11.18                                                                                    *
 */
 
 -- тест
--- select * from gpSelect_Movement_Check_NoCashRegister(inStartDate := ('16.01.2018')::TDateTime , inEndDate := ('17.11.2018')::TDateTime , inUnitId := 0 , inSession := '3');
+-- select * from gpSelect_Movement_Check_NoCashRegister(inStartDate := ('24.02.2019')::TDateTime , inEndDate := ('26.02.2019')::TDateTime , inUnitId := 0 ,  inSession := '3');

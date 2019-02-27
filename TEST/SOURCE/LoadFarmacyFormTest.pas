@@ -339,6 +339,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJackdawsChecksEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJackdawsChecksEditForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckNoCashRegisterForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckNoCashRegisterForm');
+
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckPrintDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckPrintDialogForm');
@@ -348,9 +351,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheck_SPEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheck_SPEditForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckNoCashRegisterForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TCheckNoCashRegisterForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckUnCompleteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckUnCompleteForm');
