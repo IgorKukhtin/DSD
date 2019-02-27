@@ -299,6 +299,11 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
               Format = ',0.####'
               Kind = skSum
               Column = RemainsAll
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPriceJur
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -355,6 +360,11 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
               Format = ',0.####'
               Kind = skSum
               Column = RemainsAll
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPriceJur
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -499,6 +509,18 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             Options.Editing = False
             Width = 107
           end
+          object PriceJur: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1089#1082'.'
+            DataBinding.FieldName = 'PriceJur'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
+            Options.Editing = False
+            Width = 75
+          end
           object DiscountTax: TcxGridDBColumn
             Caption = '% '#1089#1082'.'
             DataBinding.FieldName = 'DiscountTax'
@@ -618,6 +640,16 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1043#1056#1053' - '#1055#1088#1080#1073#1099#1083#1100' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074' '#1074' '#1076#1086#1083#1075#1072#1093' '#1087#1086' '#1084#1072#1075#1072#1079#1080#1085#1091
             Options.Editing = False
+            Width = 80
+          end
+          object TotalSummPriceJur: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'TotalSummPriceJur'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object CurrencyName: TcxGridDBColumn
@@ -788,6 +820,24 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
             HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' - '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Options.Editing = False
             Width = 100
+          end
+          object ChangePercent_in: TcxGridDBColumn
+            Caption = '(-)% '#1057#1082'. (+)% '#1053#1072#1094'. ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'ChangePercent_in'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '+,0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Comment_in: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'Comment_in'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
           end
           object GoodsSizeName_real: TcxGridDBColumn
             DataBinding.FieldName = 'GoodsSizeName_real'
@@ -1907,8 +1957,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 72
-    Top = 208
+    Left = 160
+    Top = 224
   end
   inherited BarManager: TdxBarManager
     Left = 120
