@@ -22,8 +22,6 @@ inherited SendJournalForm: TSendJournalForm
       inherited cxGrid: TcxGrid
         Width = 761
         Height = 478
-        ExplicitLeft = -23
-        ExplicitTop = -52
         ExplicitWidth = 761
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -274,6 +272,20 @@ inherited SendJournalForm: TSendJournalForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1086#1073#1098#1077#1076#1080#1085#1077#1085')'
             Width = 130
+          end
+          object InsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 68
+          end
+          object InsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076'.'
+            DataBinding.FieldName = 'InsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 98
           end
         end
       end

@@ -1,25 +1,25 @@
 inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 602
-  ClientWidth = 863
-  ExplicitWidth = 879
+  ClientWidth = 1038
+  ExplicitWidth = 1054
   ExplicitHeight = 640
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 863
+    Width = 1038
     Height = 476
     ExplicitTop = 126
     ExplicitWidth = 863
     ExplicitHeight = 476
     ClientRectBottom = 476
-    ClientRectRight = 863
+    ClientRectRight = 1038
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 863
       ExplicitHeight = 452
       inherited cxGrid: TcxGrid
-        Width = 863
+        Width = 1038
         Height = 452
         ExplicitWidth = 863
         ExplicitHeight = 452
@@ -354,7 +354,7 @@ inherited SendForm: TSendForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 863
+    Width = 1038
     Height = 100
     TabOrder = 3
     ExplicitWidth = 863
@@ -436,6 +436,40 @@ inherited SendForm: TSendForm
       Top = 63
       TabOrder = 11
       Width = 436
+    end
+    object cxLabel8: TcxLabel
+      Left = 868
+      Top = 5
+      Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+    end
+    object edInsertDate: TcxDateEdit
+      Left = 868
+      Top = 24
+      EditValue = 42132d
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
+      Properties.Kind = ckDateTime
+      Properties.ReadOnly = True
+      TabOrder = 13
+      Width = 146
+    end
+    object cxLabel7: TcxLabel
+      Left = 868
+      Top = 45
+      Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+    end
+    object edInsertName: TcxButtonEdit
+      Left = 868
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 15
+      Width = 146
     end
   end
   object cxLabel6: TcxLabel [2]
@@ -1134,6 +1168,20 @@ inherited SendForm: TSendForm
         Value = 0.000000000000000000
         Component = ceComment
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertName'
+        Value = Null
+        Component = edInsertName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertDate'
+        Value = 'NULL'
+        Component = edInsertDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 216

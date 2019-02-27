@@ -819,6 +819,7 @@ end;
 
 procedure TLoadFormTest.LoadSendMemberFormTest;
 begin
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendMemberForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMemberJournalForm'));

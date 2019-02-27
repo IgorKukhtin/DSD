@@ -9,12 +9,14 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_SendMember(
     IN inIsErased          Boolean ,
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+             , StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalCountTare TFloat, TotalCountSh TFloat, TotalCountKg TFloat
              , FromId Integer, FromName TVarChar, ItemName_from TVarChar, ToId Integer, ToName TVarChar, ItemName_to TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
              , Comment TVarChar
              , isAuto Boolean
+             , InsertDate TDateTime, InsertName TVarChar
               )
 
 AS
@@ -58,9 +60,12 @@ BEGIN
            , Object_DocumentKind.Id                         AS DocumentKindId
            , Object_DocumentKind.ValueData                  AS DocumentKindName
 
-           , MovementString_Comment.ValueData   AS Comment
+           , MovementString_Comment.ValueData       AS Comment
 
            , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
+
+           , MovementDate_Insert.ValueData          AS InsertDate
+           , Object_Insert.ValueData                AS InsertName
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -93,6 +98,14 @@ BEGIN
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+            LEFT JOIN MovementLinkObject AS MLO_Insert
+                                         ON MLO_Insert.MovementId = Movement.Id
+                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -120,7 +133,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.02.19         * 
  28.11.17         *
 */
 

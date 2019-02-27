@@ -16,6 +16,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DocumentKindId Integer, DocumentKindName TVarChar
              , Comment TVarChar
              , isAuto Boolean
+             , InsertName TVarChar
+             , InsertDate TDateTime
               )
 AS
 $BODY$
@@ -47,7 +49,12 @@ BEGIN
 
              , FALSE                                            AS isAuto
 
-          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
+             , Object_Insert.ValueData                          AS InsertName
+             , CURRENT_TIMESTAMP ::TDateTime                    AS InsertDate
+
+          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+              LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
+          ;
 
      ELSE
 
@@ -69,6 +76,8 @@ BEGIN
 
            , COALESCE(MovementBoolean_isAuto.ValueData, False) ::Boolean  AS isAuto
 
+           , Object_Insert.ValueData                            AS InsertName
+           , MovementDate_Insert.ValueData                      AS InsertDate
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -83,7 +92,16 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
-                                    
+
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                         ON MovementLinkObject_Insert.MovementId = Movement.Id
+                                        AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MovementLinkObject_Insert.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -113,6 +131,7 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 27.02.19         * 
  03.10.17         * add Comment
  14.07.16         *
  17.06.16         *
