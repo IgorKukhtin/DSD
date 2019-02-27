@@ -15,8 +15,11 @@ $BODY$
 
   DECLARE vbMovementDescId Integer;
 
-  DECLARE vbWhereObjectId_Analyzer_From Integer;
-  DECLARE vbWhereObjectId_Analyzer_To   Integer;
+  DECLARE vbWhereObjectId_Analyzer_From  Integer;
+  DECLARE vbWhereObjectId_Analyzer_To    Integer;
+
+  DECLARE vbIsPartionGoodsKind_Unit_From Boolean;
+  DECLARE vbIsPartionGoodsKind_Unit_To   Boolean;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      IF inSession = zc_Enum_Process_Auto_PrimeCost() :: TVarChar
@@ -401,9 +404,9 @@ BEGIN
             , _tmp.JuridicalId_basis_To
             , _tmp.BusinessId_To
 
-             , _tmp.StorageId_Item
-               -- !!!или подбор партий!!!
-             , COALESCE (tmpContainer.PartionGoodsId, 0) AS PartionGoodsId_Item
+            , _tmp.StorageId_Item
+              -- !!!или подбор партий!!!
+            , COALESCE (tmpContainer.PartionGoodsId, 0) AS PartionGoodsId_Item
 
             , _tmp.isPartionCount
             , _tmp.isPartionSumm
@@ -726,6 +729,7 @@ BEGIN
 --    , (select count(*) from _tmpItem where _tmpItem.GoodsId = 1105050);
 --
 -- end if;
+
      -- определили
      vbWhereObjectId_Analyzer_From:= CASE WHEN (SELECT DISTINCT UnitId_From   FROM _tmpItem) <> 0 THEN (SELECT DISTINCT UnitId_From   FROM _tmpItem)
                                           WHEN (SELECT DISTINCT MemberId_From FROM _tmpItem) <> 0 THEN (SELECT DISTINCT MemberId_From FROM _tmpItem)
@@ -735,6 +739,9 @@ BEGIN
                                         WHEN (SELECT DISTINCT MemberId_To FROM _tmpItem) <> 0 THEN (SELECT DISTINCT MemberId_To FROM _tmpItem)
                                         WHEN (SELECT DISTINCT CarId_To    FROM _tmpItem) <> 0 THEN (SELECT DISTINCT CarId_To    FROM _tmpItem)
                                    END;
+     -- определили
+     vbIsPartionGoodsKind_Unit_From:= COALESCE ((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbWhereObjectId_Analyzer_From AND OB.DescId = zc_ObjectBoolean_Unit_PartionGoodsKind()), FALSE);
+     vbIsPartionGoodsKind_Unit_To  := COALESCE ((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbWhereObjectId_Analyzer_To   AND OB.DescId = zc_ObjectBoolean_Unit_PartionGoodsKind()), FALSE);
 
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -752,7 +759,12 @@ BEGIN
                                                                                     , inMemberId               := _tmpItem.MemberId_From
                                                                                     , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                     , inGoodsId                := _tmpItem.GoodsId
-                                                                                    , inGoodsKindId            := _tmpItem.GoodsKindId
+                                                                                    , inGoodsKindId            := CASE WHEN vbIsPartionGoodsKind_Unit_From = FALSE
+                                                                                                                        -- ћ€сное сырье
+                                                                                                                        AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+                                                                                                                            THEN 0
+                                                                                                                       ELSE _tmpItem.GoodsKindId
+                                                                                                                  END
                                                                                     , inIsPartionCount         := _tmpItem.isPartionCount
                                                                                     , inPartionGoodsId         := _tmpItem.PartionGoodsId_From
                                                                                     , inAssetId                := -- !!!криво найдем - временно!!!
@@ -783,7 +795,12 @@ BEGIN
                                                                                     , inMemberId               := _tmpItem.MemberId_To
                                                                                     , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                     , inGoodsId                := _tmpItem.GoodsId
-                                                                                    , inGoodsKindId            := _tmpItem.GoodsKindId
+                                                                                    , inGoodsKindId            := CASE WHEN vbIsPartionGoodsKind_Unit_To = FALSE
+                                                                                                                        -- ћ€сное сырье
+                                                                                                                        AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+                                                                                                                            THEN 0
+                                                                                                                       ELSE _tmpItem.GoodsKindId
+                                                                                                                  END
                                                                                     , inIsPartionCount         := _tmpItem.isPartionCount
                                                                                     , inPartionGoodsId         := _tmpItem.PartionGoodsId_To
                                                                                     , inAssetId                := -- !!!криво найдем - временно!!!
@@ -937,7 +954,12 @@ BEGIN
                                                                                 , inInfoMoneyId_Detail     := _tmpItemSumm.InfoMoneyId_Detail_From
                                                                                 , inContainerId_Goods      := _tmpItem.ContainerId_GoodsTo
                                                                                 , inGoodsId                := _tmpItem.GoodsId
-                                                                                , inGoodsKindId            := _tmpItem.GoodsKindId
+                                                                                , inGoodsKindId            := CASE WHEN vbIsPartionGoodsKind_Unit_To = FALSE
+                                                                                                                    -- ћ€сное сырье
+                                                                                                                    AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+                                                                                                                        THEN 0
+                                                                                                                   ELSE _tmpItem.GoodsKindId
+                                                                                                              END
                                                                                 , inIsPartionSumm          := _tmpItem.isPartionSumm
                                                                                 , inPartionGoodsId         := _tmpItem.PartionGoodsId_To
                                                                                 , inAssetId                := -- !!!криво найдем - временно!!!

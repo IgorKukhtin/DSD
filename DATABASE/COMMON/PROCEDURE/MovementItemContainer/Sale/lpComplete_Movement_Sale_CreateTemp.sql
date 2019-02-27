@@ -31,7 +31,7 @@ BEGIN
                                , ContainerId_Partner Integer, ContainerId_Currency Integer, AccountId_Partner Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId_From Integer
                                , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean, isLossMaterials Boolean, isPromo Boolean
-                               , PartionGoodsId Integer
+                               , PartionGoodsId Integer, PartionGoodsId_Item Integer
                                , PriceListPrice TFloat, PriceListJurPrice TFloat, Price TFloat, Price_Currency TFloat, Price_original TFloat, CountForPrice TFloat) ON COMMIT DROP;
 
 END;$BODY$
