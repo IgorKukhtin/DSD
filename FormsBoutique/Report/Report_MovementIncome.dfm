@@ -135,6 +135,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       inherited cxGrid: TcxGrid
         Width = 1065
         Height = 402
+        ExplicitLeft = 168
         ExplicitWidth = 1065
         ExplicitHeight = 402
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -203,6 +204,11 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
               Format = ',0.####'
               Kind = skSum
               Column = RemainsDebtTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPriceJur
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -274,6 +280,11 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
               Format = ',0.####'
               Kind = skSum
               Column = RemainsDebtTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummPriceJur
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -515,6 +526,18 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 69
           end
+          object PriceJur: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1089#1082'.'
+            DataBinding.FieldName = 'PriceJur'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
+            Options.Editing = False
+            Width = 75
+          end
           object TotalSummBalance: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074#1093'. ('#1043#1056#1053')'
             DataBinding.FieldName = 'TotalSummBalance'
@@ -527,6 +550,16 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderHint = #1057#1091#1084#1084#1072' '#1087#1086' '#1074#1093#1086#1076#1085#1099#1084' '#1094#1077#1085#1072#1084' '#1074' '#1043#1056#1053
             Options.Editing = False
             Width = 100
+          end
+          object TotalSummPriceJur: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'TotalSummPriceJur'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object OperPriceList: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1043#1056#1053
@@ -727,6 +760,24 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             Visible = False
             VisibleForCustomization = False
             Width = 30
+          end
+          object ChangePercent: TcxGridDBColumn
+            Caption = '(-)% '#1057#1082'. (+)% '#1053#1072#1094'.'
+            DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '+,0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
           end
         end
       end
