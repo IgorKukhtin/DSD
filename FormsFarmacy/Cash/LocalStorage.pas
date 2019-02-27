@@ -72,6 +72,8 @@ begin
       AddBoolField(LocalDataBaseHead,  'SITEDISC');  //Дисконт через сайт
       //***20.02.19
       AddIntField(LocalDataBaseHead,  'BANKPOS');  //Банк POS терминала
+      //***25.02.19
+      AddIntField(LocalDataBaseHead,  'JACKCHECK');  //Галка
 
       LocalDataBaseHead.CreateTable;
     end
@@ -137,6 +139,9 @@ begin
         //***20.02.19
         if FindField('BANKPOS') = nil then
           AddIntField(LFieldDefs,  'BANKPOS');
+        //***25.02.19
+        if FindField('JACKCHECK') = nil then
+          AddIntField(LFieldDefs,  'JACKCHECK');
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -192,7 +197,9 @@ begin
         //***14.01.19
         (FindField('SITEDISC') = nil) or
         //***20.02.19
-        (FindField('BANKPOS') = nil));
+        (FindField('BANKPOS') = nil) or
+        //***25.02.19
+        (FindField('JACKCHECK') = nil));
 
       Close;
 

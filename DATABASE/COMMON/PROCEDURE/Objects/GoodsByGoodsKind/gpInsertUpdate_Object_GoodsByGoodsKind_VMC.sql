@@ -1,19 +1,27 @@
 -- Function: gpInsertUpdate_Object_GoodsByGoodsKind_VMC (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
-DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_VMC (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_VMC (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_VMC (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind_VMC(
- INOUT ioId                  Integer  , -- ключ объекта <Товар>
-    IN inGoodsId             Integer  , -- Товары
-    IN inGoodsKindId         Integer  , -- Виды товаров
-    IN inWeightMin           TFloat  , -- 
-    IN inWeightMax           TFloat  , -- 
-    IN inHeight              TFloat  , -- 
-    IN inLength              TFloat  , -- 
-    IN inWidth               TFloat  , -- 
-    IN inSession             TVarChar 
+ INOUT ioId                    Integer  , -- ключ объекта <Товар>
+    IN inGoodsId               Integer  , -- Товары
+    IN inGoodsKindId           Integer  , -- Виды товаров
+    IN inWeightMin             TFloat  , -- 
+    IN inWeightMax             TFloat  , -- 
+    IN inHeight                TFloat  , -- 
+    IN inLength                TFloat  , -- 
+    IN inWidth                 TFloat  , -- 
+    IN inisGoodsTypeKind_Sh    Boolean , -- 
+    IN inisGoodsTypeKind_Nom   Boolean , -- 
+    IN inisGoodsTypeKind_Ves   Boolean , -- 
+   OUT outisCodeCalc_Diff      Boolean ,
+   OUT outCodeCalc_Sh          TVarChar,
+   OUT outCodeCalc_Nom         TVarChar,
+   OUT outCodeCalc_Ves         TVarChar,
+    IN inSession               TVarChar 
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -73,6 +81,38 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Length(), ioId, inLength);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Width(), ioId, inWidth);
+
+   IF inisGoodsTypeKind_Sh = TRUE 
+   THEN
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh(), ioId, zc_Enum_GoodsTypeKind_Sh());
+   ELSE
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh(), ioId, Null);
+   END IF;
+   IF inisGoodsTypeKind_Nom = TRUE 
+   THEN
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom(), ioId, zc_Enum_GoodsTypeKind_Nom());
+   ELSE
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom(), ioId, Null);
+   END IF;
+   IF inisGoodsTypeKind_Ves = TRUE 
+   THEN
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves(), ioId, zc_Enum_GoodsTypeKind_Ves());
+   ELSE
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves(), ioId, Null);
+   END IF;
+
+   -- расчет кодов ВМС
+   SELECT CodeCalc_Sh, CodeCalc_Nom, CodeCalc_Ves, isCodeCalc_Diff
+     INTO outCodeCalc_Sh, outCodeCalc_Nom, outCodeCalc_Ves, outisCodeCalc_Diff
+   FROM gpSelect_Object_GoodsByGoodsKind (inSession) AS tmp
+   WHERE tmp.Id = ioId;
+   
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

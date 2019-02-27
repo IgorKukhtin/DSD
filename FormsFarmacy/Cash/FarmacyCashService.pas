@@ -61,8 +61,10 @@ type
     MEMBERSPID  : Integer;       //ФИО пациента
     //***28.01.19
     SITEDISC    : boolean;       //Дисконт через сайт
-    //***28.01.19
+    //***20.02.19
     BANKPOS     : integer;       //Банк POS терминала
+    //***25.02.19
+    JACKCHECK   : integer;       //Галка
   end;
   TBodyRecord = record
     ID: Integer;            //ид записи
@@ -1096,6 +1098,8 @@ begin
                 SITEDISC := FieldByName('SITEDISC').AsBoolean;
                 // ***20.02.19
                 BANKPOS := FieldByName('BANKPOS').AsInteger;
+                // ***25.02.19
+                JACKCHECK := FieldByName('JACKCHECK').AsInteger;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1228,6 +1232,8 @@ begin
                   dsdSave.Params.AddParam('inSiteDiscount', ftBoolean, ptInput, Head.SITEDISC);
                   // ***20.02.19
                   dsdSave.Params.AddParam('inBankPOSTerminalId', ftInteger, ptInput, Head.BANKPOS);
+                  // ***20.02.19
+                  dsdSave.Params.AddParam('inJackdawsChecksCode', ftInteger, ptInput, Head.JACKCHECK);
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 

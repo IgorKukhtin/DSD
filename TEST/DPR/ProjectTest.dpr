@@ -1069,7 +1069,11 @@ uses
   Report_GoodsMI_SaleReturnIn_BUH in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn_BUH.pas' {Report_GoodsMI_SaleReturnIn_BUHForm: TParentForm},
   dsdExportToXMLAction in '..\..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
   Report_IncomeKill_Olap in '..\..\Forms\Report\Report_IncomeKill_Olap.pas' {Report_IncomeKill_OlapForm: TParentForm},
-  Report_IncomeKill_OlapDialog in '..\..\Forms\Report\Report_IncomeKill_OlapDialog.pas' {Report_IncomeKill_OlapDialogForm: TParentForm};
+  Report_IncomeKill_OlapDialog in '..\..\Forms\Report\Report_IncomeKill_OlapDialog.pas' {Report_IncomeKill_OlapDialogForm: TParentForm},
+  GoodsTypeKind in '..\..\Forms\Kind\GoodsTypeKind.pas' {GoodsTypeKindForm: TParentForm},
+  GoodsBrand in '..\..\Forms\Guides\GoodsBrand.pas' {GoodsBrandForm: TParentForm},
+  GoodsBrandEdit in '..\..\Forms\Guides\GoodsBrandEdit.pas' {GoodsBrandEditForm: TParentForm},
+  GoodsPropertyValueVMS in '..\..\Forms\Guides\GoodsPropertyValueVMS.pas' {GoodsPropertyValueVMSForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

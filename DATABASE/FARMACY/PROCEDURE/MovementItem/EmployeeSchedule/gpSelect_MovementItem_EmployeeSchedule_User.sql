@@ -5,208 +5,150 @@ DROP FUNCTION IF EXISTS gpSelect_MovementItem_EmployeeSchedule_User(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_EmployeeSchedule_User(
     IN inSession     TVarChar    -- сессия пользователя
 )
-  RETURNS TABLE (ID Integer,
-                 Range TVarChar,
-                 Value1 TVarChar,
-                 Value2 TVarChar,
-                 Value3 TVarChar,
-                 Value4 TVarChar,
-                 Value5 TVarChar,
-                 Value6 TVarChar,
-                 Value7 TVarChar,
-                 ValuePlan1 TVarChar,
-                 ValuePlan2 TVarChar,
-                 ValuePlan3 TVarChar,
-                 vValuePlan4 TVarChar,
-                 ValuePlan5 TVarChar,
-                 ValuePlan6 TVarChar,
-                 vValuePlan7 TVarChar,
-                 Color1 Integer,
-                 Color2 Integer,
-                 Color3 Integer,
-                 Color4 Integer,
-                 Color5 Integer,
-                 Color6 Integer,
-                 Color7 Integer
-               )
+  RETURNS SETOF refcursor
 AS
 $BODY$
+  DECLARE cur1 refcursor;
+  DECLARE cur2 refcursor;
   DECLARE vbUserId Integer;
   DECLARE vbMovementId Integer;
-  DECLARE vbDowStart Integer;
-  DECLARE vbLineCount Integer;
-  DECLARE vbCount Integer;
-  DECLARE vbIndex Integer;
-  DECLARE vbLast Integer;
-  DECLARE vbID Integer;
-  DECLARE vbDow Integer;
-  DECLARE vbValue TVarChar;
-  DECLARE vbValuePlan TVarChar;
-  DECLARE vbColor Integer;
+  DECLARE vbPlanValue TVarChar;
   DECLARE vbUserValue TVarChar;
-  DECLARE vbUserValuePlan TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-   vbUserId:= lpGetUserBySession (inSession);
-
-
-   vbMovementId := 0;
-
-    IF EXISTS(SELECT 1 FROM Movement
-              WHERE Movement.DescId = zc_Movement_EmployeeSchedule()
-                AND Movement.OperDate = DATE_TRUNC ('MONTH', CURRENT_DATE))
-    THEN
-       SELECT Movement.ID
-       INTO vbMovementId
-       FROM Movement
-       WHERE Movement.DescId = zc_Movement_EmployeeSchedule()
-         AND Movement.OperDate = DATE_TRUNC ('MONTH', CURRENT_DATE);
-/*    ELSE
-       vbMovementId := lpInsertUpdate_Movement_EmployeeSchedule (ioId          := 0
-                                                               , inInvNumber       := CAST (NEXTVAL ('movement_EmployeeSchedule_seq')  AS TVarChar)
-                                                               , inOperDate        := DATE_TRUNC ('MONTH', CURRENT_DATE)
-                                                               , inUserId          := vbUserId
-                                                                 );
-*/
-    END IF;
-
-    IF COALESCE (vbMovementId, 0) <> 0 AND
-       EXISTS(SELECT 1 FROM MovementItem
-              WHERE MovementItem.MovementId = vbMovementId
-                AND MovementItem.DescId = zc_MI_Master()
-                AND MovementItem.ObjectId = vbUserId)
-    THEN
-      SELECT 
-        COALESCE(MIString_ComingValueDayUser.ValueData, '0000000000000000000000000000000'),
-        COALESCE(MIString_ComingValueDay.ValueData, '0000000000000000000000000000000')
-      INTO 
-        vbUserValue, 
-        vbUserValuePlan
-      FROM MovementItem
-
-           LEFT JOIN MovementItemString AS MIString_ComingValueDayUser
-                                        ON MIString_ComingValueDayUser.DescId = zc_MIString_ComingValueDayUser()
-                                       AND MIString_ComingValueDayUser.MovementItemId = MovementItem.Id
-
-           LEFT JOIN MovementItemString AS MIString_ComingValueDay
-                                        ON MIString_ComingValueDay.DescId = zc_MIString_ComingValueDay()
-                                       AND MIString_ComingValueDay.MovementItemId = MovementItem.Id
-
-      WHERE MovementItem.MovementId = vbMovementId
-        AND MovementItem.DescId = zc_MI_Master()
-        AND MovementItem.ObjectId = vbUserId;
-    ELSE
-      vbUserValue := '0000000000000000000000000000000';
-      vbUserValuePlan := '0000000000000000000000000000000';
-    END IF;
+     vbUserId:= lpGetUserBySession (inSession);
 
      --
-   CREATE TEMP TABLE tmpOperDate ON COMMIT DROP AS
-      SELECT GENERATE_SERIES (DATE_TRUNC ('MONTH', CURRENT_DATE), DATE_TRUNC ('MONTH', CURRENT_DATE) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', '1 DAY' :: INTERVAL) AS OperDate;
+     CREATE TEMP TABLE tmpOperDate ON COMMIT DROP AS
+        SELECT GENERATE_SERIES (DATE_TRUNC ('MONTH', CURRENT_DATE), DATE_TRUNC ('MONTH', CURRENT_DATE) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', '1 DAY' :: INTERVAL) AS OperDate;
 
-   vbDowStart := (SELECT date_part('isodow', Min(OperDate)) FROM tmpOperDate);
-   vbLineCount := CEIL((0.0 + vbDowStart + (SELECT COUNT(*) FROM tmpOperDate)) / 7);
-   vbCount := (SELECT COUNT(*) FROM tmpOperDate);
 
-    CREATE TEMP TABLE tmpValues (
-                 Id Integer,
-                 Range TVarChar,
-                 Value1 TVarChar,
-                 Value2 TVarChar,
-                 Value3 TVarChar,
-                 Value4 TVarChar,
-                 Value5 TVarChar,
-                 Value6 TVarChar,
-                 Value7 TVarChar,
-                 ValuePlan1 TVarChar,
-                 ValuePlan2 TVarChar,
-                 ValuePlan3 TVarChar,
-                 ValuePlan4 TVarChar,
-                 ValuePlan5 TVarChar,
-                 ValuePlan6 TVarChar,
-                 ValuePlan7 TVarChar,
-                 Color1 Integer,
-                 Color2 Integer,
-                 Color3 Integer,
-                 Color4 Integer,
-                 Color5 Integer,
-                 Color6 Integer,
-                 Color7 Integer) ON COMMIT DROP;
+     -- возвращаем заголовки столбцов и даты
+     OPEN cur1 FOR SELECT tmpOperDate.OperDate::TDateTime,
+                          ((EXTRACT(DAY FROM tmpOperDate.OperDate))||case when tmpCalendar.Working = False then ' *' else ' ' END||tmpWeekDay.DayOfWeekName) ::TVarChar AS ValueField,
+                          ''::TVarChar   AS ValueFieldUser
+               FROM tmpOperDate
+                   LEFT JOIN zfCalc_DayOfWeekName (tmpOperDate.OperDate) AS tmpWeekDay ON 1=1
+                   LEFT JOIN gpSelect_Object_Calendar(tmpOperDate.OperDate,tmpOperDate.OperDate,inSession) tmpCalendar ON 1=1;
+                   
+     RETURN NEXT cur1;
 
-    -- Заполняем строки таблицу
-    vbIndex := 1;
-    WHILE (vbIndex <= vbLineCount) LOOP
-      INSERT INTO tmpValues (Id, Range,
-                 Value1, Value2, Value3, Value4, Value5, Value6, Value7,
-                 ValuePlan1, ValuePlan2, ValuePlan3, ValuePlan4, ValuePlan5, ValuePlan6, ValuePlan7,
-                 Color1, Color2, Color3, Color4, Color5, Color6, Color7)
-                 VALUES (vbIndex, '',
-                 '', '', '', '', '', '', '',
-                 '', '', '', '', '', '', '',
-                 zc_Color_Greenl(), zc_Color_Greenl(), zc_Color_Greenl(), zc_Color_Greenl(), zc_Color_Greenl(), zc_Color_Greenl(), zc_Color_Greenl());
-      vbIndex := vbIndex  + 1;
-    END LOOP;
 
-    vbIndex := 1;
-    WHILE (vbIndex <= vbCount) LOOP
-      vbID := CEIL((vbDowStart + vbIndex - 1.0) / 7);
-      vbDow := Mod(vbDowStart + vbIndex - 2.0, 7) + 1;
+     vbMovementId := 0;
 
---      raise notice 'vbDowStart: % vbID: % vbDow: %', vbDowStart, vbID, vbDow;
-
-      vbValue := lpDecodeValueDay(vbIndex, vbUserValue);
-      vbValuePlan := lpDecodeValueDay(vbIndex, vbUserValuePlan);
-
-      IF vbIndex = date_part('day', CURRENT_DATE)
+      IF EXISTS(SELECT 1 FROM Movement
+                WHERE Movement.DescId = zc_Movement_EmployeeSchedule()
+                  AND Movement.OperDate = DATE_TRUNC ('MONTH', CURRENT_DATE))
       THEN
-        vbColor := zc_Color_Red();
+         SELECT Movement.ID
+         INTO vbMovementId
+         FROM Movement
+         WHERE Movement.DescId = zc_Movement_EmployeeSchedule()
+           AND Movement.OperDate = DATE_TRUNC ('MONTH', CURRENT_DATE);
+      END IF;
+
+      IF COALESCE (vbMovementId, 0) <> 0 AND
+         EXISTS(SELECT 1 FROM MovementItem
+                WHERE MovementItem.MovementId = vbMovementId
+                  AND MovementItem.DescId = zc_MI_Master()
+                  AND MovementItem.ObjectId = vbUserId)
+      THEN
+        SELECT 
+          COALESCE(MIString_ComingValueDayUser.ValueData, '0000000000000000000000000000000'),
+          COALESCE(MIString_ComingValueDay.ValueData, '0000000000000000000000000000000')
+        INTO 
+          vbUserValue, 
+          vbPlanValue
+        FROM MovementItem
+
+             LEFT JOIN MovementItemString AS MIString_ComingValueDayUser
+                                          ON MIString_ComingValueDayUser.DescId = zc_MIString_ComingValueDayUser()
+                                         AND MIString_ComingValueDayUser.MovementItemId = MovementItem.Id
+
+             LEFT JOIN MovementItemString AS MIString_ComingValueDay
+                                          ON MIString_ComingValueDay.DescId = zc_MIString_ComingValueDay()
+                                         AND MIString_ComingValueDay.MovementItemId = MovementItem.Id
+
+        WHERE MovementItem.MovementId = vbMovementId
+          AND MovementItem.DescId = zc_MI_Master()
+          AND MovementItem.ObjectId = vbUserId;
       ELSE
-        vbColor := zc_Color_White();
+        vbUserValue := '0000000000000000000000000000000';
+        vbPlanValue := '0000000000000000000000000000000';
       END IF;
+      
+      OPEN cur2 FOR
+       SELECT
+         0                                 AS ID,
+         'Согласно графика'::TVarChar      AS WhoInput,
+         lpDecodeValueDay(1, vbPlanValue)  AS Value1,
+         lpDecodeValueDay(2, vbPlanValue)  AS Value2,
+         lpDecodeValueDay(3, vbPlanValue)  AS Value3,
+         lpDecodeValueDay(4, vbPlanValue)  AS Value4,
+         lpDecodeValueDay(5, vbPlanValue)  AS Value5,
+         lpDecodeValueDay(6, vbPlanValue)  AS Value6,
+         lpDecodeValueDay(7, vbPlanValue)  AS Value7,
+         lpDecodeValueDay(8, vbPlanValue)  AS Value8,
+         lpDecodeValueDay(9, vbPlanValue)  AS Value9,
+         lpDecodeValueDay(10, vbPlanValue) AS Value10,
+         lpDecodeValueDay(11, vbPlanValue) AS Value11,
+         lpDecodeValueDay(12, vbPlanValue) AS Value12,
+         lpDecodeValueDay(13, vbPlanValue) AS Value13,
+         lpDecodeValueDay(14, vbPlanValue) AS Value14,
+         lpDecodeValueDay(15, vbPlanValue) AS Value15,
+         lpDecodeValueDay(16, vbPlanValue) AS Value16,
+         lpDecodeValueDay(17, vbPlanValue) AS Value17,
+         lpDecodeValueDay(18, vbPlanValue) AS Value18,
+         lpDecodeValueDay(19, vbPlanValue) AS Value19,
+         lpDecodeValueDay(20, vbPlanValue) AS Value20,
+         lpDecodeValueDay(21, vbPlanValue) AS Value21,
+         lpDecodeValueDay(22, vbPlanValue) AS Value22,
+         lpDecodeValueDay(23, vbPlanValue) AS Value23,
+         lpDecodeValueDay(24, vbPlanValue) AS Value24,
+         lpDecodeValueDay(25, vbPlanValue) AS Value25,
+         lpDecodeValueDay(26, vbPlanValue) AS Value26,
+         lpDecodeValueDay(27, vbPlanValue) AS Value27,
+         lpDecodeValueDay(28, vbPlanValue) AS Value28,
+         lpDecodeValueDay(29, vbPlanValue) AS Value29,
+         lpDecodeValueDay(30, vbPlanValue) AS Value30,
+         lpDecodeValueDay(31, vbPlanValue) AS Value31
+       UNION ALL
+       SELECT
+         0                                  AS ID,
+         'Отметки сотрудника'::TVarChar    AS WhoInput,
+         lpDecodeValueDay(1, vbUserValue)  AS Value1,
+         lpDecodeValueDay(2, vbUserValue)  AS Value2,
+         lpDecodeValueDay(3, vbUserValue)  AS Value3,
+         lpDecodeValueDay(4, vbUserValue)  AS Value4,
+         lpDecodeValueDay(5, vbUserValue)  AS Value5,
+         lpDecodeValueDay(6, vbUserValue)  AS Value6,
+         lpDecodeValueDay(7, vbUserValue)  AS Value7,
+         lpDecodeValueDay(8, vbUserValue)  AS Value8,
+         lpDecodeValueDay(9, vbUserValue)  AS Value9,
+         lpDecodeValueDay(10, vbUserValue) AS Value10,
+         lpDecodeValueDay(11, vbUserValue) AS Value11,
+         lpDecodeValueDay(12, vbUserValue) AS Value12,
+         lpDecodeValueDay(13, vbUserValue) AS Value13,
+         lpDecodeValueDay(14, vbUserValue) AS Value14,
+         lpDecodeValueDay(15, vbUserValue) AS Value15,
+         lpDecodeValueDay(16, vbUserValue) AS Value16,
+         lpDecodeValueDay(17, vbUserValue) AS Value17,
+         lpDecodeValueDay(18, vbUserValue) AS Value18,
+         lpDecodeValueDay(19, vbUserValue) AS Value19,
+         lpDecodeValueDay(20, vbUserValue) AS Value20,
+         lpDecodeValueDay(21, vbUserValue) AS Value21,
+         lpDecodeValueDay(22, vbUserValue) AS Value22,
+         lpDecodeValueDay(23, vbUserValue) AS Value23,
+         lpDecodeValueDay(24, vbUserValue) AS Value24,
+         lpDecodeValueDay(25, vbUserValue) AS Value25,
+         lpDecodeValueDay(26, vbUserValue) AS Value26,
+         lpDecodeValueDay(27, vbUserValue) AS Value27,
+         lpDecodeValueDay(28, vbUserValue) AS Value28,
+         lpDecodeValueDay(29, vbUserValue) AS Value29,
+         lpDecodeValueDay(30, vbUserValue) AS Value30,
+         lpDecodeValueDay(31, vbUserValue) AS Value31;
 
-
-      IF vbDow = 1 OR vbIndex = 1
-      THEN
-        IF vbID = 1
-        THEN
-          vbLast := 8 - vbDowStart;
-        ELSIF (vbIndex + 6) > vbCount
-        THEN
-          vbLast := vbCount;
-        ELSE
-          vbLast := vbIndex + 6;
-        END IF;
-
-        UPDATE tmpValues SET Range = 'c '||vbIndex::TVarChar||' по '||vbLast::TVarChar WHERE tmpValues.Id = vbID;
-      END IF;
-
-      IF vbDow = 1
-      THEN
-        UPDATE tmpValues SET Value1 = vbValue, ValuePlan1 = vbValuePlan, Color1 = vbColor WHERE tmpValues.Id = vbID;
-      ELSIF vbDow = 2
-      THEN
-        UPDATE tmpValues SET Value2 = vbValue, ValuePlan2 = vbValuePlan, Color2 = vbColor WHERE tmpValues.Id = vbID;
-      ELSIF vbDow = 3
-      THEN
-        UPDATE tmpValues SET Value3 = vbValue, ValuePlan3 = vbValuePlan, Color3 = vbColor WHERE tmpValues.Id = vbID;
-      ELSIF vbDow = 4
-      THEN
-        UPDATE tmpValues SET Value4 = vbValue, ValuePlan4 = vbValuePlan, Color4 = vbColor WHERE tmpValues.Id = vbID;
-      ELSIF vbDow = 5
-      THEN
-        UPDATE tmpValues SET Value5 = vbValue, ValuePlan5 = vbValuePlan, Color5 = vbColor WHERE tmpValues.Id = vbID;
-      ELSIF vbDow = 6
-      THEN
-        UPDATE tmpValues SET Value6 = vbValue, ValuePlan6 = vbValuePlan, Color6 = vbColor WHERE tmpValues.Id = vbID;
-      ELSE
-        UPDATE tmpValues SET Value7 = vbValue, ValuePlan7 = vbValuePlan, Color7 = vbColor WHERE tmpValues.Id = vbID;
-      END IF;
-
-      vbIndex := vbIndex  + 1;
-    END LOOP;
-
-    RETURN QUERY
-      SELECT * FROM tmpValues ORDER BY ID;
+     RETURN NEXT cur2;
 
 END;
 $BODY$
@@ -217,6 +159,7 @@ ALTER FUNCTION gpSelect_MovementItem_EmployeeSchedule_User (TVarChar) OWNER TO p
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 25.12.18                                                       *
  08.12.18                                                       *
 */
 

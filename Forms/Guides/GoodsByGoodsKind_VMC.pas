@@ -21,7 +21,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxLabel;
 
 type
   TGoodsByGoodsKind_VMCForm = class(TAncestorEnumForm)
@@ -45,6 +45,51 @@ type
     macUpdate: TMultiAction;
     FormParams: TdsdFormParams;
     bbUpdate: TdxBarButton;
+    cxLabel27: TcxLabel;
+    edGoodsBrand: TcxButtonEdit;
+    GuidesGoodsBrand: TdsdGuides;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    spUpdateGoodsBrand: TdsdStoredProc;
+    actUpdateGoodsBrand: TdsdDataSetRefresh;
+    macUpdateGoodsBrandList: TMultiAction;
+    macUpdateGoodsBrand: TMultiAction;
+    bbUpdateGoodsBrand: TdxBarButton;
+    GoodsBrandName: TcxGridDBColumn;
+    isGoodsTypeKind_Sh: TcxGridDBColumn;
+    isGoodsTypeKind_Nom: TcxGridDBColumn;
+    spUpdateSh_Yes: TdsdStoredProc;
+    spUpdateNom_Yes: TdsdStoredProc;
+    spUpdateSh_No: TdsdStoredProc;
+    spUpdateVes_Yes: TdsdStoredProc;
+    spUpdateNom_No: TdsdStoredProc;
+    spUpdateVes_No: TdsdStoredProc;
+    actUpdateSh_Yes: TdsdDataSetRefresh;
+    actUpdateSh_No: TdsdDataSetRefresh;
+    actUpdateNom_Yes: TdsdDataSetRefresh;
+    actUpdateNom_No: TdsdDataSetRefresh;
+    actUpdateVes_Yes: TdsdDataSetRefresh;
+    actUpdateVes_No: TdsdDataSetRefresh;
+    macListUpdateSh_Yes: TMultiAction;
+    macUpdateSh_Yes: TMultiAction;
+    macListUpdateSh_No: TMultiAction;
+    macListUpdateNom_Yes: TMultiAction;
+    macUpdateSh_No: TMultiAction;
+    macUpdateNom_No: TMultiAction;
+    macUpdateNom_Yes: TMultiAction;
+    macListUpdateNom_No: TMultiAction;
+    macListUpdateVes_No: TMultiAction;
+    macUpdateVes_No: TMultiAction;
+    macListUpdateVes_Yes: TMultiAction;
+    macUpdateVes_Yes: TMultiAction;
+    bbUpdateSh_Yes: TdxBarButton;
+    bbUpdateSh_No: TdxBarButton;
+    bbUpdateNom_Yes: TdxBarButton;
+    bbUpdateNom_No: TdxBarButton;
+    bbUpdateVes_Yes: TdxBarButton;
+    bbUpdateVes_No: TdxBarButton;
+    CodeCalc_Sh: TcxGridDBColumn;
+    isCodeCalc_Diff: TcxGridDBColumn;
   private
     { Private declarations }
   public

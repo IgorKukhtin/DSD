@@ -360,6 +360,8 @@ type
     MainColPriceNight: TcxGridDBColumn;
     MainGridPriceChangeNight: TcxGridDBColumn;
     edTaxUnitNight: TcxTextEdit;
+    cxCheckBox1: TcxCheckBox;
+    actSpecCorr: TAction;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -449,6 +451,7 @@ type
       var AText: string);
     procedure MainColPriceNightGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
+    procedure actSpecCorrExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -510,7 +513,7 @@ type
       APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP : String;
       AOperDateSP : TDateTime;
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
-      ASummPayAdd : Currency;  AMemberSPID, ABankPOSTerminal : integer; ASiteDiscount : Currency;
+      ASummPayAdd : Currency;  AMemberSPID, ABankPOSTerminal, AJackdawsChecksCode : integer; ASiteDiscount : Currency;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 
     //проверили что есть остаток
@@ -901,6 +904,8 @@ begin
   FormParams.ParamByName('SiteDiscount').Value              := 0;
   //***20.02.19
   FormParams.ParamByName('BankPOSTerminal').Value           := 0;
+  //***25.02.19
+  FormParams.ParamByName('JackdawsChecksCode').Value        := 0;
 
   ClearFilterAll;
 
@@ -1592,6 +1597,8 @@ begin
                    FormParams.ParamByName('MemberSPID').Value,
                    //***20.02.19
                    FormParams.ParamByName('BankPOSTerminal').Value,
+                   //***25.02.19
+                   FormParams.ParamByName('JackdawsChecksCode').Value,
                    //***28.01.19
                    FormParams.ParamByName('SiteDiscount').Value,
 
@@ -2467,6 +2474,8 @@ begin
               ,FormParams.ParamByName('MemberSPID').Value
               //***20.02.19
               ,FormParams.ParamByName('BankPOSTerminal').Value
+              //***25.02.19
+              ,FormParams.ParamByName('JackdawsChecksCode').Value
               //***28.01.19
               ,FormParams.ParamByName('SiteDiscount').Value
 
@@ -2552,6 +2561,8 @@ begin
               ,FormParams.ParamByName('MemberSPID').Value
               //***20.02.19
               ,FormParams.ParamByName('BankPOSTerminal').Value
+              //***25.02.19
+              ,FormParams.ParamByName('JackdawsChecksCode').Value
               //***28.01.19
               ,FormParams.ParamByName('SiteDiscount').Value
 
@@ -2824,6 +2835,8 @@ begin
               ,FormParams.ParamByName('MemberSPID').Value
               //***20.02.19
               ,FormParams.ParamByName('BankPOSTerminal').Value
+              //***25.02.19
+              ,FormParams.ParamByName('JackdawsChecksCode').Value
               //***14.01.19
               ,FormParams.ParamByName('SiteDiscount').Value
 
@@ -2864,10 +2877,22 @@ begin
   else ActiveControl := lcName;
 end;
 
+procedure TMainCashForm2.actSpecCorrExecute(Sender: TObject);
+begin
+  if actSpec.Checked then actSpec.Checked := False;
+  if Assigned(Cash) then
+    Cash.AlwaysSold := actSpecCorr.Checked or actSpec.Checked;
+  if actSpecCorr.Checked then FormParams.ParamByName('JackdawsChecksCode').Value := 2
+  else FormParams.ParamByName('JackdawsChecksCode').Value := 0;
+end;
+
 procedure TMainCashForm2.actSpecExecute(Sender: TObject);
 begin
+  if actSpecCorr.Checked then actSpecCorr.Checked := False;
   if Assigned(Cash) then
-    Cash.AlwaysSold := actSpec.Checked;
+    Cash.AlwaysSold := actSpecCorr.Checked or actSpec.Checked;
+  if actSpec.Checked then FormParams.ParamByName('JackdawsChecksCode').Value := 1
+  else FormParams.ParamByName('JackdawsChecksCode').Value := 0;
 end;
 
 procedure TMainCashForm2.actUpdateRemainsExecute(Sender: TObject);
@@ -3942,6 +3967,8 @@ begin
   FormParams.ParamByName('SiteDiscount').Value              := 0;
   //***20.02.19
   FormParams.ParamByName('BankPOSTerminal').Value           := 0;
+  //***25.02.19
+  FormParams.ParamByName('JackdawsChecksCode').Value        := 0;
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -3975,6 +4002,7 @@ begin
 
   MainCashForm.SoldRegim := true;
   MainCashForm.actSpec.Checked := false;
+  MainCashForm.actSpecCorr.Checked := false;
   if Assigned(MainCashForm.Cash) AND MainCashForm.Cash.AlwaysSold then
     MainCashForm.Cash.AlwaysSold := False;
 
@@ -4166,45 +4194,61 @@ var str_log_xml : String; Disc: Currency;
 begin
   ACheckNumber := '';
   try
-    if Assigned(Cash) AND NOT Cash.AlwaysSold and isFiscal then
-      AFiscalNumber := Cash.FiscalNumber
-    else
-      AFiscalNumber := '';
-    Disc:= 0; PosDisc:= 0;
+    try
+      if Assigned(Cash) AND NOT Cash.AlwaysSold and isFiscal then
+        AFiscalNumber := Cash.FiscalNumber
+      else
+        AFiscalNumber := '';
+      Disc:= 0; PosDisc:= 0;
+      if actSpec.Checked then isFiscal := False;
+      if not isFiscal then Cash.AlwaysSold := False;
 
-    // Контроль чека до печати
-    with CheckCDS do
-    begin
-      // Определяем сумму скидки наценки (скидки)
-      First;
-      while not EOF do
+      // Контроль чека до печати
+      with CheckCDS do
       begin
-        if CheckCDS.FieldByName('Amount').asCurrency >= 0.001 then
-            Disc := Disc + (FieldByName('Summ').asCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency));
-        Next;
-      end;
-
-      // Если есть скидка находим товар с суммой больше скидки
-      if Disc < 0 then
-      begin
-        Last;
-        while not BOF do
+        // Определяем сумму скидки наценки (скидки)
+        First;
+        while not EOF do
         begin
-          if (GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency) + Disc) > 0 then
-          begin
-            PosDisc:= RecNo;
-            Break;
-          end;
-          Prior;
+          if CheckCDS.FieldByName('Amount').asCurrency >= 0.001 then
+              Disc := Disc + (FieldByName('Summ').asCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency));
+          Next;
         end;
 
-        // Если есть скидка и нет товара с суммой больше скидки то ищем товар равный скидке
-        if (Disc < 0) and (PosDisc = 0) then
+        // Если есть скидка находим товар с суммой больше скидки
+        if Disc < 0 then
         begin
           Last;
           while not BOF do
           begin
-            if (GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency) + Disc) >= 0 then
+            if (GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency) + Disc) > 0 then
+            begin
+              PosDisc:= RecNo;
+              Break;
+            end;
+            Prior;
+          end;
+
+          // Если есть скидка и нет товара с суммой больше скидки то ищем товар равный скидке
+          if (Disc < 0) and (PosDisc = 0) then
+          begin
+            Last;
+            while not BOF do
+            begin
+              if (GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency) + Disc) >= 0 then
+              begin
+                PosDisc:= RecNo;
+                Break;
+              end;
+              Prior;
+            end;
+          end;
+        end else if Disc > 0 then
+        begin
+          Last;
+          while not BOF do
+          begin
+            if GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency) > Disc then
             begin
               PosDisc:= RecNo;
               Break;
@@ -4212,102 +4256,93 @@ begin
             Prior;
           end;
         end;
-      end else if Disc > 0 then
-      begin
-        Last;
-        while not BOF do
+
+        if (Disc <> 0) and (PosDisc = 0) then
         begin
-          if GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency) > Disc then
-          begin
-            PosDisc:= RecNo;
-            Break;
-          end;
-          Prior;
+          ShowMessage('Сумма скидки (наценки) по чеку:' + FormatCurr('0.00', Disc) + #13#10 +
+            'В чеке не найден товар на который можно применить скидку (наценку) по округлению копеек...');
+          Exit;
         end;
       end;
 
-      if (Disc <> 0) and (PosDisc = 0) then
-      begin
-        ShowMessage('Сумма скидки (наценки) по чеку:' + FormatCurr('0.00', Disc) + #13#10 +
-          'В чеке не найден товар на который можно применить скидку (наценку) по округлению копеек...');
-        Exit;
-      end;
-    end;
+      if isFiscal then Add_Check_History;
+      if isFiscal then Start_Check_History(FTotalSumm, SalerCashAdd, PaidType);
 
-    if isFiscal then Add_Check_History;
-    if isFiscal then Start_Check_History(FTotalSumm, SalerCashAdd, PaidType);
-
-    // Непосредственно печать чека
-    str_log_xml:=''; i:=0;
-    result := not Assigned(Cash) or Cash.AlwaysSold or Cash.OpenReceipt(isFiscal);
-    with CheckCDS do
-    begin
-      First;
-      while not EOF do
+      // Непосредственно печать чека
+      str_log_xml:=''; i:=0;
+      result := not Assigned(Cash) or Cash.AlwaysSold or Cash.OpenReceipt(isFiscal, actSpec.Checked);
+      with CheckCDS do
       begin
-        if result then
-           begin
-             if CheckCDS.FieldByName('Amount').asCurrency >= 0.001 then
-              begin
-                  //послали строку в кассу
-                  result := PutOneRecordToCash;
-                  //сохранили строку в лог
-                  i:= i + 1;
-                  if str_log_xml<>'' then str_log_xml:=str_log_xml + #10 + #13;
-                  try
-                  str_log_xml:= str_log_xml
-                              + '<Items num="' +IntToStr(i)+ '">'
-                              + '<GoodsCode>"' + FieldByName('GoodsCode').asString + '"</GoodsCode>'
-                              + '<GoodsName>"' + AnsiUpperCase(FieldByName('GoodsName').Text) + '"</GoodsName>'
-                              + '<Amount>"' + FloatToStr(FieldByName('Amount').asCurrency) + '"</Amount>'
-                              + '<Price>"' + FloatToStr(FieldByName('Price').asCurrency) + '"</Price>'
-                              + '<List_UID>"' + FieldByName('List_UID').AsString + '"</List_UID>'
-                              + '<Discount>"' + CurrToStr(FieldByName('Summ').asCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency)) + '"</Discount>'
-                              + '</Items>';
-                  except
-                  str_log_xml:= str_log_xml
-                              + '<Items="' +IntToStr(i)+ '">'
-                              + '<GoodsCode>"' + FieldByName('GoodsCode').asString + '"</GoodsCode>'
-                              + '<GoodsName>"???"</GoodsName>'
-                              + '<List_UID>"' + FieldByName('List_UID').AsString + '"</List_UID>'
-                              + '<Discount>"' + CurrToStr(FieldByName('Summ').asCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency)) + '"</Discount>'
-                              + '</Items>';
-                  end;
-                  if (Disc <> 0) and (PosDisc = RecNo) then
-                  begin
-                    if Assigned(Cash) and not Cash.AlwaysSold then Cash.DiscountGoods(Disc);
-                    Disc := 0;
-                  end;
-              end;
-           end;
-        Next;
-      end;
-      if result and Assigned(Cash) AND not Cash.AlwaysSold then
-      begin
-        if (Disc <> 0) and (PosDisc = 0) then result := Cash.DiscountGoods(Disc);
-        if not isFiscal or (Round(FTotalSumm * 100) = Round(Cash.SummaReceipt * 100)) then
+        First;
+        while not EOF do
         begin
-          if result then result := Cash.SubTotal(true, true, 0, 0);
-          if result then result := Cash.TotalSumm(SalerCash, SalerCashAdd, PaidType);
-          if result then result := Cash.CloseReceiptEx(ACheckNumber); //Закрыли чек
-          if result and isFiscal then Finish_Check_History(FTotalSumm);
-        end else
+          if result then
+             begin
+               if CheckCDS.FieldByName('Amount').asCurrency >= 0.001 then
+                begin
+                    //послали строку в кассу
+                    result := PutOneRecordToCash;
+                    //сохранили строку в лог
+                    i:= i + 1;
+                    if str_log_xml<>'' then str_log_xml:=str_log_xml + #10 + #13;
+                    try
+                    str_log_xml:= str_log_xml
+                                + '<Items num="' +IntToStr(i)+ '">'
+                                + '<GoodsCode>"' + FieldByName('GoodsCode').asString + '"</GoodsCode>'
+                                + '<GoodsName>"' + AnsiUpperCase(FieldByName('GoodsName').Text) + '"</GoodsName>'
+                                + '<Amount>"' + FloatToStr(FieldByName('Amount').asCurrency) + '"</Amount>'
+                                + '<Price>"' + FloatToStr(FieldByName('Price').asCurrency) + '"</Price>'
+                                + '<List_UID>"' + FieldByName('List_UID').AsString + '"</List_UID>'
+                                + '<Discount>"' + CurrToStr(FieldByName('Summ').asCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency)) + '"</Discount>'
+                                + '</Items>';
+                    except
+                    str_log_xml:= str_log_xml
+                                + '<Items="' +IntToStr(i)+ '">'
+                                + '<GoodsCode>"' + FieldByName('GoodsCode').asString + '"</GoodsCode>'
+                                + '<GoodsName>"???"</GoodsName>'
+                                + '<List_UID>"' + FieldByName('List_UID').AsString + '"</List_UID>'
+                                + '<Discount>"' + CurrToStr(FieldByName('Summ').asCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency)) + '"</Discount>'
+                                + '</Items>';
+                    end;
+                    if (Disc <> 0) and (PosDisc = RecNo) then
+                    begin
+                      if Assigned(Cash) and not Cash.AlwaysSold then Cash.DiscountGoods(Disc);
+                      Disc := 0;
+                    end;
+                end;
+             end;
+          Next;
+        end;
+        if result and Assigned(Cash) AND not Cash.AlwaysSold then
         begin
-          result := False;
-          ShowMessage('Ошибка. Сумма чека ' + CurrToStr(FTotalSumm) + ' не равна сумме товара в фискальном чеке ' + CurrToStr(Cash.SummaReceipt) + '.'#13#10 +
-            'Чек анулирован...');
+          if (Disc <> 0) and (PosDisc = 0) then result := Cash.DiscountGoods(Disc);
+          if not isFiscal or (Round(FTotalSumm * 100) = Round(Cash.SummaReceipt * 100)) then
+          begin
+            if result then result := Cash.SubTotal(true, true, 0, 0);
+            if result then result := Cash.TotalSumm(SalerCash, SalerCashAdd, PaidType);
+            if result then result := Cash.CloseReceiptEx(ACheckNumber); //Закрыли чек
+            if result and isFiscal then Finish_Check_History(FTotalSumm);
+          end else
+          begin
+            result := False;
+            ShowMessage('Ошибка. Сумма чека ' + CurrToStr(FTotalSumm) + ' не равна сумме товара в фискальном чеке ' + CurrToStr(Cash.SummaReceipt) + '.'#13#10 +
+              'Чек анулирован...');
+            Cash.Anulirovt;
+          end
+        end else if not result and Assigned(Cash) AND not Cash.AlwaysSold then
+        begin
+          ShowMessage('Ошибка печати фискального чека.'#13#10 + 'Чек анулирован...');
           Cash.Anulirovt;
-        end
-      end else if not result and Assigned(Cash) AND not Cash.AlwaysSold then
-      begin
-        ShowMessage('Ошибка печати фискального чека.'#13#10 + 'Чек анулирован...');
-        Cash.Anulirovt;
+        end;
       end;
+    except
+      result := false;
+      raise;
     end;
-  except
-    result := false;
-    raise;
+  finally
+    if Assigned(Cash) then Cash.AlwaysSold := actSpecCorr.Checked or actSpec.Checked;
   end;
+
   //
   // что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА
   Add_Log_XML('<Head now="'+FormatDateTime('YYYY.MM.DD hh:mm:ss',now)+'">'
@@ -4600,7 +4635,7 @@ function TMainCashForm2.SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AMan
       APartnerMedicalId: Integer; APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP : String;
       AOperDateSP : TDateTime;
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
-      ASummPayAdd : Currency; AMemberSPID, ABankPOSTerminal : integer; ASiteDiscount : currency;
+      ASummPayAdd : Currency; AMemberSPID, ABankPOSTerminal, AJackdawsChecksCode : Integer; ASiteDiscount : currency;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: integer;
@@ -4776,11 +4811,13 @@ begin
                                          //***02.11.18
                                          ASummPayAdd,              //Доплата по чеку
                                          //***14.01.19
-                                         AMemberSPID,               //ФИО пациента
+                                         AMemberSPID,              //ФИО пациента
                                          //***28.01.19
                                          ASiteDiscount > 0,
                                          //***20.02.19
-                                         ABankPOSTerminal          // POS терминал
+                                         ABankPOSTerminal,         // POS терминал
+                                         //***25.02.19
+                                         AJackdawsChecksCode       // Галка
                                         ]);
       End
       else
@@ -4829,6 +4866,8 @@ begin
         FLocalDataBaseHead.FieldByName('SITEDISC').Value := (ASiteDiscount > 0); // Дисконт через сайт
         //***20.02.19
         FLocalDataBaseHead.FieldByName('BANKPOS').Value := ABankPOSTerminal;
+        //***25.02.19
+        FLocalDataBaseHead.FieldByName('JACKCHECK').Value := AJackdawsChecksCode;
 
         FLocalDataBaseHead.Post;
       End;

@@ -27,7 +27,13 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , ReceiptId Integer, ReceiptCode TVarChar, ReceiptName TVarChar
              , GoodsCode_basis Integer, GoodsName_basis TVarChar
              , GoodsCode_main Integer, GoodsName_main TVarChar
+             , GoodsBrandName TVarChar
              , isCheck_basis Boolean, isCheck_main Boolean
+             , isGoodsTypeKind_Sh Boolean, isGoodsTypeKind_Nom Boolean, isGoodsTypeKind_Ves Boolean
+             , CodeCalc_Sh TVarChar
+             , CodeCalc_Nom TVarChar
+             , CodeCalc_Ves TVarChar
+             , isCodeCalc_Diff Boolean
               )
 AS
 $BODY$
@@ -36,6 +42,71 @@ BEGIN
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Account());
 
      RETURN QUERY
+     WITH 
+     tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.*
+                                  , Object_Goods_basis.ObjectCode     AS GoodsCode_basis
+                                  , Object_Goods_basis.ValueData      AS GoodsName_basis
+                                  , Object_Goods_main.ObjectCode      AS GoodsCode_main
+                                  , Object_Goods_main.ValueData       AS GoodsName_main
+                                  , Object_GoodsBrand.ObjectCode      AS GoodsBrandCode
+                                  , Object_GoodsBrand.ValueData       AS GoodsBrandName
+
+                                  , CASE WHEN Object_Goods_basis.Id > 0 AND Object_Goods_basis.Id <> COALESCE (Object_Goods_main.Id,                 0) THEN TRUE ELSE FALSE END :: Boolean AS isCheck_basis
+                                  , CASE WHEN Object_Goods_main.Id  > 0 AND Object_Goods_main. Id <> COALESCE (Object_GoodsByGoodsKind_View.GoodsId, 0) THEN TRUE ELSE FALSE END :: Boolean AS isCheck_main
+
+                                  , CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh.ChildObjectId, 0)  <> 0 THEN TRUE ELSE FALSE END AS isGoodsTypeKind_Sh
+                                  , CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom.ChildObjectId, 0) <> 0 THEN TRUE ELSE FALSE END AS isGoodsTypeKind_Nom
+                                  , CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.ChildObjectId, 0) <> 0 THEN TRUE ELSE FALSE END AS isGoodsTypeKind_Ves
+                                  
+                                  , CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh.ChildObjectId, 0)  <> 0 
+                                         THEN (''||COALESCE (Object_Goods_main.ObjectCode,0)||'.'||COALESCE (Object_GoodsByGoodsKind_View.GoodsKindCode,0)||'.'||COALESCE (Object_GoodsBrand.ObjectCode,0)||'.'||CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh.ChildObjectId, 0)  <> 0 THEN 1 ELSE 0 END)
+                                         ELSE NULL
+                                    END  :: TVarChar AS CodeCalc_Sh
+                                  , CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom.ChildObjectId, 0) <> 0 
+                                         THEN (''||COALESCE (Object_Goods_main.ObjectCode,0)||'.'||COALESCE (Object_GoodsByGoodsKind_View.GoodsKindCode,0)||'.'||COALESCE (Object_GoodsBrand.ObjectCode,0)||'.'||CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom.ChildObjectId, 0) <> 0 THEN 2 ELSE 0 END)
+                                         ELSE NULL
+                                    END  :: TVarChar AS CodeCalc_Nom
+                                  , CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.ChildObjectId, 0) <> 0
+                                         THEN (''||COALESCE (Object_Goods_main.ObjectCode,0)||'.'||COALESCE (Object_GoodsByGoodsKind_View.GoodsKindCode,0)||'.'||COALESCE (Object_GoodsBrand.ObjectCode,0)||'.'||CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.ChildObjectId, 0) <> 0 THEN 3 ELSE 0 END)
+                                         ELSE NULL
+                                    END  :: TVarChar AS CodeCalc_Ves
+
+                             FROM Object_GoodsByGoodsKind_View
+                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBasis
+                                                       ON ObjectLink_GoodsByGoodsKind_GoodsBasis.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                      AND ObjectLink_GoodsByGoodsKind_GoodsBasis.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsBasis()
+                                  LEFT JOIN Object AS Object_Goods_basis ON Object_Goods_basis.Id = ObjectLink_GoodsByGoodsKind_GoodsBasis.ChildObjectId
+                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsMain
+                                                       ON ObjectLink_GoodsByGoodsKind_GoodsMain.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                      AND ObjectLink_GoodsByGoodsKind_GoodsMain.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsMain()
+                                  LEFT JOIN Object AS Object_Goods_main ON Object_Goods_main.Id = ObjectLink_GoodsByGoodsKind_GoodsMain.ChildObjectId
+
+                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBrand
+                                                       ON ObjectLink_GoodsByGoodsKind_GoodsBrand.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                      AND ObjectLink_GoodsByGoodsKind_GoodsBrand.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsBrand()
+                                  LEFT JOIN Object AS Object_GoodsBrand ON Object_GoodsBrand.Id = ObjectLink_GoodsByGoodsKind_GoodsBrand.ChildObjectId
+
+                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh
+                                                       ON ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                      AND ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh()
+                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom
+                                                       ON ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                      AND ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom()
+                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves
+                                                       ON ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                      AND ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves()
+                             )
+   , tmpCodeCalc AS (SELECT tmp.CodeCalc_Sh, tmp.CodeCalc_Nom, tmp.CodeCalc_Ves
+                          , COUNT (*) OVER (PARTITION BY tmp.CodeCalc_Sh) AS Count1
+                          , COUNT (*) OVER (PARTITION BY tmp.CodeCalc_Nom) AS Count2
+                          , COUNT (*) OVER (PARTITION BY tmp.CodeCalc_Ves) AS Count3
+                     FROM tmpGoodsByGoodsKind AS tmp
+                     WHERE tmp.isGoodsTypeKind_Sh  <> False
+                        OR tmp.isGoodsTypeKind_Nom <> False
+                        OR tmp.isGoodsTypeKind_Ves <> False
+                     GROUP BY tmp.CodeCalc_Sh, tmp.CodeCalc_Nom, tmp.CodeCalc_Ves   
+                     )
+       --
        SELECT
              Object_GoodsByGoodsKind_View.Id
            , Object_GoodsByGoodsKind_View.GoodsId
@@ -94,16 +165,30 @@ BEGIN
            , ObjectString_Code.ValueData      AS ReceiptCode
            , Object_Receipt.ValueData         AS ReceiptName
 
-           , Object_Goods_basis.ObjectCode     AS GoodsCode_basis
-           , Object_Goods_basis.ValueData      AS GoodsName_basis
-           , Object_Goods_main.ObjectCode      AS GoodsCode_main
-           , Object_Goods_main.ValueData       AS GoodsName_main
+           , Object_GoodsByGoodsKind_View.GoodsCode_basis
+           , Object_GoodsByGoodsKind_View.GoodsName_basis
+           , Object_GoodsByGoodsKind_View.GoodsCode_main
+           , Object_GoodsByGoodsKind_View.GoodsName_main
+           , Object_GoodsByGoodsKind_View.GoodsBrandName
 
-           , CASE WHEN Object_Goods_basis.Id > 0 AND Object_Goods_basis.Id <> COALESCE (Object_Goods_main.Id,                 0) THEN TRUE ELSE FALSE END :: Boolean AS isCheck_basis
-           , CASE WHEN Object_Goods_main.Id  > 0 AND Object_Goods_main. Id <> COALESCE (Object_GoodsByGoodsKind_View.GoodsId, 0) THEN TRUE ELSE FALSE END :: Boolean AS isCheck_main
+           , Object_GoodsByGoodsKind_View.isCheck_basis
+           , Object_GoodsByGoodsKind_View.isCheck_main
+           
+           , Object_GoodsByGoodsKind_View.isGoodsTypeKind_Sh
+           , Object_GoodsByGoodsKind_View.isGoodsTypeKind_Nom
+           , Object_GoodsByGoodsKind_View.isGoodsTypeKind_Ves
+           
+           , Object_GoodsByGoodsKind_View.CodeCalc_Sh  :: TVarChar 
+           , Object_GoodsByGoodsKind_View.CodeCalc_Nom  :: TVarChar 
+           , Object_GoodsByGoodsKind_View.CodeCalc_Ves  :: TVarChar 
+             
+           , CASE WHEN Object_GoodsByGoodsKind_View.isGoodsTypeKind_Sh = FALSE AND Object_GoodsByGoodsKind_View.isGoodsTypeKind_Nom = FALSE AND Object_GoodsByGoodsKind_View.isGoodsTypeKind_Ves = FALSE THEN FALSE
+                  WHEN (COALESCE (tmpCodeCalc_1.Count1, 1) + COALESCE (tmpCodeCalc_2.Count2, 1) + COALESCE (tmpCodeCalc_3.Count3, 1)) <= 3 THEN FALSE 
+                  ELSE TRUE
+             END  AS isCodeCalc_Diff
 
-       FROM Object_GoodsByGoodsKind_View
-            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBasis
+       FROM tmpGoodsByGoodsKind AS Object_GoodsByGoodsKind_View
+            /*LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBasis
                                  ON ObjectLink_GoodsByGoodsKind_GoodsBasis.ObjectId = Object_GoodsByGoodsKind_View.Id
                                 AND ObjectLink_GoodsByGoodsKind_GoodsBasis.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsBasis()
             LEFT JOIN Object AS Object_Goods_basis ON Object_Goods_basis.Id = ObjectLink_GoodsByGoodsKind_GoodsBasis.ChildObjectId
@@ -112,6 +197,21 @@ BEGIN
                                 AND ObjectLink_GoodsByGoodsKind_GoodsMain.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsMain()
             LEFT JOIN Object AS Object_Goods_main ON Object_Goods_main.Id = ObjectLink_GoodsByGoodsKind_GoodsMain.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBrand
+                                 ON ObjectLink_GoodsByGoodsKind_GoodsBrand.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectLink_GoodsByGoodsKind_GoodsBrand.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsBrand()
+            LEFT JOIN Object AS Object_GoodsBrand ON Object_GoodsBrand.Id = ObjectLink_GoodsByGoodsKind_GoodsBrand.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh
+                                 ON ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh()
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom
+                                 ON ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom()
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves
+                                 ON ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves()
+            */
             LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
                                   ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id
                                  AND ObjectFloat_WeightPackage.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
@@ -241,6 +341,10 @@ BEGIN
                                    ON ObjectString_Code.ObjectId = Object_Receipt.Id
                                   AND ObjectString_Code.DescId   = zc_ObjectString_Receipt_Code()
 
+            LEFT JOIN (SELECT DISTINCT tmpCodeCalc.CodeCalc_Sh , tmpCodeCalc.Count1 FROM tmpCodeCalc WHERE tmpCodeCalc.CodeCalc_Sh  IS NOT NULL) AS tmpCodeCalc_1 ON tmpCodeCalc_1.CodeCalc_Sh = Object_GoodsByGoodsKind_View.CodeCalc_Sh
+            LEFT JOIN (SELECT DISTINCT tmpCodeCalc.CodeCalc_Nom, tmpCodeCalc.Count2 FROM tmpCodeCalc WHERE tmpCodeCalc.CodeCalc_Nom IS NOT NULL) AS tmpCodeCalc_2 ON tmpCodeCalc_2.CodeCalc_Nom = Object_GoodsByGoodsKind_View.CodeCalc_Nom
+            LEFT JOIN (SELECT DISTINCT tmpCodeCalc.CodeCalc_Ves, tmpCodeCalc.Count3 FROM tmpCodeCalc WHERE tmpCodeCalc.CodeCalc_Ves IS NOT NULL) AS tmpCodeCalc_3 ON tmpCodeCalc_3.CodeCalc_Ves = Object_GoodsByGoodsKind_View.CodeCalc_Ves
+            
       ;
 
 END;
@@ -274,4 +378,4 @@ group by BarCodeShort
 having count (*) > 1
 */
 -- тест
--- SELECT * FROM gpSelect_Object_GoodsByGoodsKind (zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_GoodsByGoodsKind (zfCalc_UserAdmin())  limit 10

@@ -6,6 +6,8 @@ type
   TCashIKC_E810T = class(TInterfacedObject, ICash)
   private
     FAlwaysSold: boolean;
+    FPrintSumma: boolean;
+    FSumma : Currency;
     FPrinter: IICS_EP_11;
 //    FModem: IICS_Modem;
     FisFiscal: boolean;
@@ -16,7 +18,7 @@ type
     function SoldCode(const GoodsCode: integer; const Amount: double; const Price: double = 0.00): boolean;
     function SoldFromPC(const GoodsCode: integer; const GoodsName: string; const Amount, Price, NDS: double): boolean; //Продажа с компьютера
     function ChangePrice(const GoodsCode: integer; const Price: double): boolean;
-    function OpenReceipt(const isFiscal: boolean = true): boolean;
+    function OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false): boolean;
     function CloseReceipt: boolean;
     function CloseReceiptEx(out CheckId: String): boolean;
     function CashInputOutput(const Summa: double): boolean;
@@ -65,7 +67,8 @@ constructor TCashIKC_E810T.Create;
 begin
   inherited Create;
   FAlwaysSold:=false;
-  FLengNoFiscalText := 35;
+  FPrintSumma:=False;
+  FLengNoFiscalText := 37;
   FPrinter := CoFiscPrn.Create;
   if FPrinter.FPInitialize = 0 then
   begin
@@ -112,9 +115,11 @@ begin
   result:= FAlwaysSold;
 end;
 
-function TCashIKC_E810T.OpenReceipt(const isFiscal: boolean = true): boolean;
+function TCashIKC_E810T.OpenReceipt(const isFiscal: boolean = true; const isPrintSumma: boolean = false): boolean;
 begin
   FisFiscal := isFiscal;
+  FPrintSumma := isPrintSumma;
+  FSumma := 0;
   result := True;
 end;
 
@@ -144,7 +149,6 @@ var NDSType: char;
     Res: TArray<string>;
 begin
   result := true;
-  if FAlwaysSold then exit;
 
     // печать нефискального чека
   if not FisFiscal then
@@ -161,23 +165,36 @@ begin
         if not PrintNotFiscalText(L) then Exit;
         L := '';
       end;
+
       if I = High(Res) then
       begin
-        if (Length(L + FormatCurr('0.000', Amount)) + 3) >= FLengNoFiscalText then
+        if FPrintSumma then
         begin
-          if not PrintNotFiscalText(L) then Exit;;
-          L := StringOfChar(' ' , FLengNoFiscalText - Length(FormatCurr('0.000', Amount)) - 1) + FormatCurr('0.000', Amount);
+          if L <> '' then if not PrintNotFiscalText(L) then Exit;
+          L := FormatCurr('0.000', Amount) + ' x ' + FormatCurr('0.00', Price);
+          L := L + StringOfChar(' ' , FLengNoFiscalText - Length(L + FormatCurr('0.00', RoundTo(Amount * Price, -1))) - 1) + FormatCurr('0.00', RoundTo(Amount * Price, -1));
           if not PrintNotFiscalText(L) then Exit;
+          FSumma := FSumma + RoundTo(Amount * Price, -1);
         end else
         begin
-          L := L + StringOfChar(' ' , FLengNoFiscalText - Length(L + FormatCurr('0.000', Amount)) - 1) + FormatCurr('0.000', Amount);
-          if not PrintNotFiscalText(L) then Exit;
+          if (Length(L + FormatCurr('0.000', Amount)) + 3) >= FLengNoFiscalText then
+          begin
+            if not PrintNotFiscalText(L) then Exit;
+            L := StringOfChar(' ' , FLengNoFiscalText - Length(FormatCurr('0.000', Amount)) - 1) + FormatCurr('0.000', Amount);
+            if not PrintNotFiscalText(L) then Exit;
+          end else
+          begin
+            L := L + StringOfChar(' ' , FLengNoFiscalText - Length(L + FormatCurr('0.000', Amount)) - 1) + FormatCurr('0.000', Amount);
+            if not PrintNotFiscalText(L) then Exit;
+          end;
         end;
       end;
     end;
 
     Exit;
   end;
+
+  if FAlwaysSold then exit;
 
   if NDS = 20 then nNDS := 1 else nNDS := 2;
 
@@ -211,6 +228,7 @@ begin
 end;
 
 function TCashIKC_E810T.TotalSumm(Summ, SummAdd: double; PaidType: TPaidType): boolean;
+  var L : string;
 begin
   result := True;
 
@@ -233,7 +251,18 @@ begin
    if not result then ShowError;
    if not result then FPrinter.FPAnnulReceipt;
 
-  end else FPrinter.FPCloseServiceReport;
+  end else
+  begin
+    if FPrintSumma then
+    begin
+      if not PrintNotFiscalText(StringOfChar('-' , FLengNoFiscalText)) then Exit;
+      L := 'СУМА';
+      L := L + StringOfChar(' ' , FLengNoFiscalText - Length(L + FormatCurr('0.00', FSumma)) - 1) + FormatCurr('0.00', FSumma);
+      if not PrintNotFiscalText(L) then Exit;
+    end;
+
+    FPrinter.FPCloseServiceReport;
+  end;
 
 end;
 

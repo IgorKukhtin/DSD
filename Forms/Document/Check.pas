@@ -118,6 +118,11 @@ type
     edJackdawsChecks: TcxButtonEdit;
     cxLabel28: TcxLabel;
     GuidesJackdawsChecks: TdsdGuides;
+    actJackdawsChecks: TMultiAction;
+    actChoiceJackdawsChecks: TOpenChoiceForm;
+    actExecJackdawsChecks: TdsdExecStoredProc;
+    dxBarButton3: TdxBarButton;
+    spUpdateJackdawsChecks: TdsdStoredProc;
   private
     { Private declarations }
   public

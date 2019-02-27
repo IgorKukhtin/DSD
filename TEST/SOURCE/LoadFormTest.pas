@@ -64,12 +64,14 @@ type
     procedure LoadGoodsPropertyValueFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsFormTest;
+    procedure LoadGoodsBrandFormTest;
     procedure LoadGoodsKindWeighingFormTest;
     procedure LoadGoodsKindFormTest;
     procedure LoadGoodsListIncomeFormTest;
     procedure LoadGoodsListSaleFormTest;
     procedure LoadGoodsReportSaleFormTest;
     procedure LoadGoodsTagFormTest;
+    procedure LoadGoodsTypeKindFormTest;
     procedure LoadGoodsPlatformFormTest;
     procedure LoadGoodsSeparateFormTest;
     procedure LoadImportSettingsFormTest;
@@ -467,11 +469,11 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTreeForm'));
@@ -506,6 +508,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoods_UKTZEDForm');
   }
 
+end;
+
+procedure TLoadFormTest.LoadGoodsBrandFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsBrandForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsBrandForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsBrandEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsBrandEditForm');
 end;
 
       procedure TLoadFormTest.LoadGoodsSeparateFormTest;
@@ -597,6 +607,7 @@ end;
 
 procedure TLoadFormTest.LoadGoodsPropertyValueFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueEditForm'));
@@ -604,6 +615,9 @@ begin
 //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueDocForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueDocForm');
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueVMSForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueVMSForm');
 end;
 
 procedure TLoadFormTest.LoadQualityParamsFormTest;
@@ -642,6 +656,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsTagForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTagEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsTagEditForm');
+end;
+
+ procedure TLoadFormTest.LoadGoodsTypeKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTypeKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsTypeKindForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsPlatformFormTest;

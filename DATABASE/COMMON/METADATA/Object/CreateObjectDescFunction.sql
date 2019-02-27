@@ -842,6 +842,13 @@ CREATE OR REPLACE FUNCTION zc_Object_MemberPersonalServiceList() RETURNS integer
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_MemberPersonalServiceList', 'Доступ к Ведомости начисления' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MemberPersonalServiceList');
 
+CREATE OR REPLACE FUNCTION zc_Object_GoodsTypeKind() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsTypeKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_GoodsTypeKind', 'Категория товара' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsTypeKind');
+
+CREATE OR REPLACE FUNCTION zc_Object_GoodsBrand() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsBrand'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_GoodsBrand', 'Бренд товара' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsBrand');
 
 
 --!!! Аптека
@@ -1133,6 +1140,8 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 25.02.19         * zc_Object_GoodsTypeKind
+                    zc_Object_GoodsBrand
  25.02.19                                                                                        * zc_Object_JackdawsChecks
  18.02.19                                                                                        * zc_Object_UnitBankPOSTerminal
  16.02.19                                                                                        * zc_Object_BankPOSTerminal
