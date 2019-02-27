@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Send(
     IN inIsErased          Boolean ,
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+             , StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalCountTare TFloat, TotalCountSh TFloat, TotalCountKg TFloat
              , FromId Integer, FromName TVarChar, ItemName_from TVarChar, ToId Integer, ToName TVarChar, ItemName_to TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
@@ -17,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isAuto Boolean
              , UnionName TVarChar
              , UnionDate TDateTime
+             , InsertDate TDateTime, InsertName TVarChar
               )
 
 AS
@@ -60,13 +62,16 @@ BEGIN
            , Object_DocumentKind.Id                         AS DocumentKindId
            , Object_DocumentKind.ValueData                  AS DocumentKindName
 
-           , MovementString_Comment.ValueData   AS Comment
+           , MovementString_Comment.ValueData       AS Comment
 
            , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
 
-           , Object_Union.ValueData               AS UnionName
-           , MovementDate_Union.ValueData         AS UnionDate
+           , Object_Union.ValueData                 AS UnionName
+           , MovementDate_Union.ValueData           AS UnionDate
 
+           , MovementDate_Insert.ValueData          AS InsertDate
+           , Object_Insert.ValueData                AS InsertName
+           
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Send() AND Movement.StatusId = tmpStatus.StatusId
@@ -123,6 +128,15 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_Union 
                                    ON MovementDate_Union.MovementId = Movement.Id
                                   AND MovementDate_Union.DescId = zc_MovementDate_Union()
+
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+            LEFT JOIN MovementLinkObject AS MLO_Insert
+                                         ON MLO_Insert.MovementId = Movement.Id
+                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
+
             ;
 
 END;
@@ -132,6 +146,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.02.19         * 
  03.10.17         add Comment
  05.10.16         * add inJuridicalBasisId
  14.07.16         *

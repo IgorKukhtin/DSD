@@ -70,6 +70,10 @@ type
     spSelectPrintNoGroup: TdsdStoredProc;
     actPrintNoGroup: TdsdPrintAction;
     bbPrintNoGroup: TdxBarButton;
+    cxLabel8: TcxLabel;
+    edInsertDate: TcxDateEdit;
+    cxLabel7: TcxLabel;
+    edInsertName: TcxButtonEdit;
   private
     { Private declarations }
   public
