@@ -1073,7 +1073,8 @@ uses
   GoodsTypeKind in '..\..\Forms\Kind\GoodsTypeKind.pas' {GoodsTypeKindForm: TParentForm},
   GoodsBrand in '..\..\Forms\Guides\GoodsBrand.pas' {GoodsBrandForm: TParentForm},
   GoodsBrandEdit in '..\..\Forms\Guides\GoodsBrandEdit.pas' {GoodsBrandEditForm: TParentForm},
-  GoodsPropertyValueVMS in '..\..\Forms\Guides\GoodsPropertyValueVMS.pas' {GoodsPropertyValueVMSForm: TParentForm};
+  GoodsPropertyValueVMS in '..\..\Forms\Guides\GoodsPropertyValueVMS.pas' {GoodsPropertyValueVMSForm: TParentForm},
+  TransportRouteJournal in '..\..\Forms\Document\TransportRouteJournal.pas' {TransportRouteJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
