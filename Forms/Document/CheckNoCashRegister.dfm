@@ -1,28 +1,28 @@
 inherited CheckNoCashRegisterForm: TCheckNoCashRegisterForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1077' '#1095#1077#1082#1080' '#1073#1077#1079' '#1085#1086#1084#1077#1088#1072' '#1082#1072#1089#1089#1086#1074#1086#1075#1086' '#1072#1087#1087#1072#1088#1072#1090#1072
   ClientHeight = 554
-  ClientWidth = 896
+  ClientWidth = 900
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 912
+  ExplicitWidth = 916
   ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 77
-    Width = 896
+    Width = 900
     Height = 477
     TabOrder = 3
     ExplicitTop = 77
     ExplicitWidth = 896
     ExplicitHeight = 477
     ClientRectBottom = 477
-    ClientRectRight = 896
+    ClientRectRight = 900
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 896
       ExplicitHeight = 477
       inherited cxGrid: TcxGrid
-        Width = 896
+        Width = 900
         Height = 477
         ExplicitWidth = 896
         ExplicitHeight = 477
@@ -326,12 +326,19 @@ inherited CheckNoCashRegisterForm: TCheckNoCashRegisterForm
             Options.Editing = False
             Width = 70
           end
+          object JackdawsChecksName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1075#1072#1083#1082#1080
+            DataBinding.FieldName = 'JackdawsChecksName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 77
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 896
+    Width = 900
     Height = 51
     ExplicitWidth = 896
     ExplicitHeight = 51
