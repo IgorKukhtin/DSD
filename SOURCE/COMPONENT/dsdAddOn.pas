@@ -2,11 +2,11 @@ unit dsdAddOn;
 
 interface
 
-uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
+uses Windows, Winapi.Messages, Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
      cxTextEdit, DB, dsdAction, cxGridTableView,
      VCL.Graphics, cxGraphics, cxStyles, cxCalendar, Forms, Controls,
      SysUtils, dsdDB, Contnrs, cxGridCustomView, cxGridCustomTableView, dsdGuides,
-     VCL.ActnList, cxDBPivotGrid, cxEdit, cxCustomData, Windows, Winapi.Messages,
+     VCL.ActnList, cxCustomPivotGrid, cxDBPivotGrid, cxEdit, cxCustomData,
      GMClasses, GMMap, GMMapVCL, GMGeoCode, GMConstants, SHDocVw, ExtCtrls, Winapi.ShellAPI,
      System.StrUtils, GMDirection, GMDirectionVCL;
 
@@ -107,6 +107,35 @@ type
     property ValueBoldColumn: TcxGridColumn read FValueBoldColumn write FValueBoldColumn;
   end;
 
+  // Правило управления цветом
+  TColorRulePivot = class(TCollectionItem)
+  private
+    FColorColumn: TcxPivotGridField;
+    FValueColumn: TcxPivotGridField;
+    FValueBoldColumn: TcxPivotGridField;
+    FColorInValueColumn: boolean;
+    FColorValueList: TCollection;
+    FStyle: TcxStyle;
+    FBackGroundValueColumn: TcxPivotGridField;
+  public
+    constructor Create(Collection: TCollection); override;
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+  published
+    // Какую ячейку раскрашивать. Если ColorColumn не указан, то будет меняться цвет у всей строки
+    property ColorColumn: TcxPivotGridField read FColorColumn write FColorColumn;
+    // Откуда брать значение для определения цвета
+    property ValueColumn: TcxPivotGridField read FValueColumn write FValueColumn;
+    // Откуда брать значение для определения цвета BackGround
+    property BackGroundValueColumn: TcxPivotGridField read FBackGroundValueColumn write FBackGroundValueColumn;
+    // Указан ли цвет непосредственно в ValueColumn;
+    property ColorInValueColumn: boolean read FColorInValueColumn write FColorInValueColumn default true;
+    // Значения для цветов
+    property ColorValueList: TCollection read FColorValueList write FColorValueList;
+    // Откуда брать значение для определения Bold
+    property ValueBoldColumn: TcxPivotGridField read FValueBoldColumn write FValueBoldColumn;
+  end;
+
   TColumnActionOptions = class(TPersistent)
   private
     FAfterEmptyValue: boolean;
@@ -170,7 +199,7 @@ type
     edFilter: TcxTextEdit;
     FOnlyEditingCellOnEnter: boolean;
     FGridEditKeyEvent: TcxGridEditKeyEvent;
-    FOnGetContentStyleEvent: TcxGridGetCellStyleEvent;
+    FOnGetContentStyleEvent : TcxGridGetCellStyleEvent;
     FErasedStyle: TcxStyle;
     FBeforeOpen: TDataSetNotifyEvent;
     FAfterOpen: TDataSetNotifyEvent;
@@ -287,7 +316,7 @@ type
     property HeaderColumnName: String read FHeaderColumnName write FHeaderColumnName;
     // Шаблон для Cross колонок
     property TemplateColumn: TcxGridColumn read FTemplateColumn write FTemplateColumn;
-    // Колонки цвкета не размножать (один цвет на все колонки)
+    // Колонки цвета не размножать (один цвет на все колонки)
     property NoCrossColorColumn : boolean read FNoCrossColorColumn write FNoCrossColorColumn default False;
   end;
 
@@ -295,14 +324,21 @@ type
   private
     FPivotGrid: TcxDBPivotGrid;
     FAfterOpen: TDataSetNotifyEvent;
+    FOnGetContentStyleEvent : TcxPivotGridGetContentStyleEvent;
     FExpandRow : Integer;
     FExpandColumn : Integer;
+    FColorRuleList: TCollection;
+
     procedure SetPivotGrid(const Value: TcxDBPivotGrid);
     procedure OnAfterOpen(ADataSet: TDataSet);
+    // рисуем свой цвет у выделенной ячейки при выгрузке в Excel, например, или печати
+    procedure OnGetContentStyle(Sender: TcxCustomPivotGrid;
+      ACell: TcxPivotGridDataCellViewInfo; var AStyle: TcxStyle);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
     function GetCurrentData: string;
   published
     property PivotGrid: TcxDBPivotGrid read FPivotGrid write SetPivotGrid;
@@ -314,6 +350,8 @@ type
     property ExpandRow : Integer read FExpandRow write FExpandRow default 0;
     // Вложеномть разворачивания столбцов
     property ExpandColumn : Integer read FExpandColumn write FExpandColumn default 0;
+    // Правила разукрашивания грида
+    property ColorRuleList: TCollection read FColorRuleList write FColorRuleList;
   end;
 
   TdsdUserSettingsStorageAddOn = class(TComponent)
@@ -629,7 +667,7 @@ uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf,
      cxGeometry, cxCheckBox, dxBar, cxButtonEdit, cxCurrencyEdit,
      VCL.Menus, ParentForm, ChoicePeriod, cxGrid, cxDBData, Variants,
      cxGridDBBandedTableView, cxGridDBDataDefinitions,cxGridBandedTableView,
-     cxCustomPivotGrid, cxDropDownEdit, Dialogs, dsdException;
+     cxDropDownEdit, Dialogs, dsdException;
 
 type
 
@@ -2344,6 +2382,38 @@ begin
   inherited;
 end;
 
+{ TColorRulePivot }
+
+procedure TColorRulePivot.Assign(Source: TPersistent);
+begin
+  if Source is TColorRulePivot then
+    with TColorRulePivot(Source) do
+    begin
+      Self.ColorColumn := ColorColumn;
+      Self.ValueColumn := ValueColumn;
+      Self.ValueBoldColumn := ValueBoldColumn;
+      Self.ColorInValueColumn := ColorInValueColumn;
+      Self.ColorValueList.Assign(ColorValueList);
+    end
+  else
+    inherited Assign(Source);
+end;
+
+constructor TColorRulePivot.Create(Collection: TCollection);
+begin
+  inherited Create(Collection);
+  FColorValueList := TCollection.Create(TColorValue);
+  FColorInValueColumn := true;
+  FStyle := TcxStyle.Create(nil);
+end;
+
+destructor TColorRulePivot.Destroy;
+begin
+  FreeAndNil(FColorValueList);
+  FreeAndNil(FStyle);
+  inherited;
+end;
+
 { TColumnAddOn }
 
 constructor TColumnAddOn.Create(Collection: TCollection);
@@ -2372,8 +2442,15 @@ begin
   FAfterOpen := Nil;
   FExpandRow := 0;
   FExpandColumn := 0;
+  FOnGetContentStyleEvent := Nil;
+  FColorRuleList := TCollection.Create(TColorRulePivot);
 end;
 
+destructor TPivotAddOn.Destroy;
+begin
+  FColorRuleList.Free;
+  inherited;
+end;
 
 function TPivotAddOn.GetCurrentData: string;
 // <xml><field name="" value=""/><field name="" value=""/></xml>
@@ -2440,6 +2517,9 @@ begin
     FOnKeyDown := FPivotGrid.OnKeyDown;
     FPivotGrid.OnKeyDown := OnKeyDown;
     FPivotGrid.OnDblClick := OnDblClick;
+    FOnGetContentStyleEvent := FPivotGrid.Styles.OnGetContentStyle;
+    FPivotGrid.Styles.OnGetContentStyle := OnGetContentStyle;
+
     if FPivotGrid is TcxDBPivotGrid then
     begin
       FAfterOpen := TcxDBPivotGrid(FPivotGrid).DataSource.DataSet.AfterOpen;
@@ -2466,6 +2546,76 @@ begin
      FAfterOpen(ADataSet);
 end;
 
+procedure TPivotAddOn.OnGetContentStyle(Sender: TcxCustomPivotGrid;
+      ACell: TcxPivotGridDataCellViewInfo; var AStyle: TcxStyle);
+var Column: TcxGridColumn;
+    i, j: integer;
+    isBold_calc:Boolean;
+begin
+  if Assigned(FOnGetContentStyleEvent) then
+     FOnGetContentStyleEvent(Sender, ACell, AStyle);
+
+  if ACell = nil then exit;
+
+  // Если это сгруппированная строка, то выходим
+//  if ACell.IsGrandTotal or
+//     ACell.Row.IsTotalItem or
+//     ACell.Column.IsTotalItem then Exit;
+
+  // Работаем с условиями
+  try
+    for i := 0 to ColorRuleList.Count - 1 do
+      with TColorRulePivot(ColorRuleList.Items[i]) do begin
+        if Assigned(ColorColumn) then
+        begin
+          if ACell.DataField = ColorColumn then begin
+           //сначала Bold, !!!но так не работает, поэтому - отключил!!!!
+           {isBold_calc:= false;
+           if Assigned(ValueBoldColumn) then
+              if not VarIsNull(ARecord.Values[ValueBoldColumn.Index]) then
+              isBold_calc:= AnsiUpperCase(ARecord.Values[ValueBoldColumn.Index]) = AnsiUpperCase('true');}
+           //
+           if Assigned(ValueColumn) and (ValueColumn.Area = faData) then
+              if not VarIsNull(ACell.CellSummary.Owner.Row.GetCellByCrossItem(ACell.CellSummary.Owner.Column).GetSummaryByField(ValueColumn,stMax)) then begin
+                 FStyle.TextColor := ACell.CellSummary.Owner.Row.GetCellByCrossItem(ACell.CellSummary.Owner.Column).GetSummaryByField(ValueColumn,stMax);
+                 // if isBold_calc = true then FStyle.Font.Style:= [fsBold] else if Assigned(FStyle.Font) then FStyle.Font.Style:= [];
+                 AStyle := FStyle
+              end;
+           if Assigned(BackGroundValueColumn) and (BackGroundValueColumn.Area = faData) then
+              if not VarIsNull(ACell.CellSummary.Owner.Row.GetCellByCrossItem(ACell.CellSummary.Owner.Column).GetSummaryByField(BackGroundValueColumn,stMax)) then begin
+              begin
+                j := BackGroundValueColumn.Index;
+                FStyle.Color := ACell.CellSummary.Owner.Row.GetCellByCrossItem(ACell.CellSummary.Owner.Column).GetSummaryByField(BackGroundValueColumn,stMax);
+              end;
+                 AStyle := FStyle
+              end;
+           end;
+        end
+        else begin
+           //сначала Bold, !!!но так не работает, поэтому - отключил!!!!
+           {isBold_calc:= false;
+           if Assigned(ValueBoldColumn) then
+              if not VarIsNull(ARecord.Values[ValueBoldColumn.Index]) then
+              isBold_calc:= AnsiUpperCase(ARecord.Values[ValueBoldColumn.Index]) = AnsiUpperCase('true');}
+           //
+           if Assigned(ValueColumn) and (ValueColumn.Area = faData) then
+              if not VarIsNull(ACell.CellSummary.Owner.Row.GetCellByCrossItem(ACell.CellSummary.Owner.Column).GetSummaryByField(ValueColumn,stMax)) then begin
+                 FStyle.TextColor := ACell.CellSummary.Owner.Row.GetCellByCrossItem(ACell.CellSummary.Owner.Column).GetSummaryByField(ValueColumn,stMax);
+                 // if (isBold_calc = true)and Assigned(FStyle.Font) then FStyle.Font.Style:= [fsBold] else if Assigned(FStyle.Font) then FStyle.Font.Style:= [];
+                 AStyle := FStyle
+              end;
+           if Assigned(BackGroundValueColumn) and (BackGroundValueColumn.Area = faData) then
+              if not VarIsNull(ACell.CellSummary.Owner.Row.GetCellByCrossItem(ACell.CellSummary.Owner.Column).GetSummaryByField(BackGroundValueColumn,stMax)) then begin
+                 FStyle.Color := ACell.CellSummary.Owner.Row.GetCellByCrossItem(ACell.CellSummary.Owner.Column).GetSummaryByField(BackGroundValueColumn,stMax);
+                 AStyle := FStyle
+              end;
+        end;
+      end;
+  except
+    on E: Exception do ShowMessage(E.Message + ' ' +IntToStr(FPivotGrid.FieldCount)  + ' ' +  IntToStr(J));
+  end;
+
+end;
 
 { TColumnCollectionItem }
 
