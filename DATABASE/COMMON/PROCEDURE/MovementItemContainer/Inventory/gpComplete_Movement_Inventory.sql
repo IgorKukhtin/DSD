@@ -459,10 +459,6 @@ BEGIN
              LEFT JOIN tmpContainer_all ON tmpContainer_all.MovementItemId = _tmp.MovementItemId
                                        AND tmpContainer_all.Ord            = 1 -- на всякий случай - № п/п
               ;
-/*if inSession = '5'
-then
-    RAISE EXCEPTION '<%>', (select _tmpItem.PartionGoodsId from _tmpItem where _tmpItem.MovementItemId = 127477878);
-end if;*/
 
 
      -- формируются Партии товара, ЕСЛИ надо ...
@@ -1062,6 +1058,7 @@ end if;*/
 
               WHERE (_tmpRemainsCount.ContainerId_Goods IN (SELECT _tmpItem.ContainerId_Goods FROM _tmpItem WHERE _tmpItem.OperCount <> 0)
                      OR vbIsLastOnMonth = FALSE
+                     OR _tmpRemainsCount.OperCount_find <> 0
                     )
                AND (vbUnitId IN (301309 -- Склад ГП ф.Запорожье
                                , 309599 -- Склад возвратов ф.Запорожье
@@ -1726,7 +1723,7 @@ end if;
      -- !!!формируется свойство <Price>!!!
      IF vbPriceListId <> 0
      THEN
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContainerId(), _tmpItem.MovementItemId, COALESCE (lfSelect.ValuePrice, 0))
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), _tmpItem.MovementItemId, COALESCE (lfSelect.ValuePrice, 0))
          FROM _tmpItem
               LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate + INTERVAL '1 DAY')
                      AS lfSelect ON lfSelect.GoodsId = _tmpItem.GoodsId;

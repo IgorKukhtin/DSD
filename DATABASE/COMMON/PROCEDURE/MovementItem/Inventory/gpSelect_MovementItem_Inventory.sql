@@ -34,7 +34,8 @@ BEGIN
 
      -- inShowAll:= TRUE;
 
-     IF inShowAll THEN
+     IF inShowAll = TRUE
+     THEN
 
      RETURN QUERY
        WITH tmpPrice AS (SELECT lfObjectHistory_PriceListItem.GoodsId
@@ -352,10 +353,14 @@ BEGIN
                                          ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
 
+            LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                          ON CLO_GoodsKind.ContainerId = MIFloat_ContainerId.ValueData :: Integer
+                                         AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+            -- LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = COALESCE (CLO_GoodsKind.ObjectId, MILinkObject_GoodsKind.ObjectId)
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = COALESCE (MILinkObject_GoodsKind.ObjectId, CLO_GoodsKind.ObjectId)
 
             LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
                                              ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
