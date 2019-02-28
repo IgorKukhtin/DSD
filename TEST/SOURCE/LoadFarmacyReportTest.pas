@@ -59,9 +59,10 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+{
   LoadReportFromFile('Возвратная ТТН', ReportPath + '\Возвратная ТТН.fr3');
   Exit;
-  {
+
   LoadReportFromFile('Коммерческое предложение', ReportPath + '\Коммерческое предложение.fr3');
   LoadReportFromFile('Счет к безналу предприятия', ReportPath + '\Счет к безналу предприятия.fr3');
   Exit;
