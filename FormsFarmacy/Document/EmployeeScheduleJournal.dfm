@@ -146,6 +146,28 @@ inherited EmployeeScheduleJournalForm: TEmployeeScheduleJournalForm
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TEmployeeScheduleForm'
       FormNameParam.Value = 'TEmployeeScheduleForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'

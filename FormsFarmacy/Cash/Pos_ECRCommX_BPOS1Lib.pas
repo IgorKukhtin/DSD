@@ -13,6 +13,7 @@ type
     FLastPosRRN : String;
     FCancel : Boolean;
     FMsgDescriptionProc : TMsgDescriptionProc;
+    FPOSTerminalCode : integer;
 
     procedure SetMsgDescriptionProc(Value: TMsgDescriptionProc);
     function GetMsgDescriptionProc: TMsgDescriptionProc;
@@ -21,6 +22,7 @@ type
     function Payment(ASumma : Currency) : Boolean;
     procedure Cancel;
   public
+    constructor Create(APOSTerminalCode : Integer);
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
   end;
@@ -28,6 +30,12 @@ type
 implementation
 
 uses IniUtils;
+
+constructor TPos_ECRCommX_BPOS1Lib.Create(APOSTerminalCode : Integer);
+begin
+  inherited Create;
+  FPOSTerminalCode := APOSTerminalCode;
+end;
 
 procedure TPos_ECRCommX_BPOS1Lib.SetMsgDescriptionProc(Value: TMsgDescriptionProc);
 begin
@@ -90,7 +98,7 @@ begin
   Summa := StrToInt(FloatToStr(ASumma * 100));
   FPOS.SetErrorLang(2);                                                    // язык сообщений. 2-”кр
   try
-    FPOS.CommOpen(iniPosPortSpeed, iniPosPortNumber);
+    FPOS.CommOpen(iniPosPortSpeed(FPOSTerminalCode), iniPosPortNumber(FPOSTerminalCode));
     if WaitPosResponsePrivat() = 0 then
     begin
       FPOS.Purchase( Summa, 0, 0 );

@@ -22,20 +22,6 @@ BEGIN
     
     IF COALESCE (inMovementId, 0) = 0
     THEN
-      IF EXISTS (SELECT 1 FROM Movement
-                 WHERE Movement.OperDate = vbOperDate
-                   AND Movement.DescId = zc_Movement_EmployeeSchedule())
-      THEN
-          SELECT Movement.ID 
-          INTO inMovementId          
-          FROM Movement
-          WHERE  Movement.OperDate = vbOperDate
-            AND Movement.DescId = zc_Movement_EmployeeSchedule();
-      END IF;
-    END IF;
-    
-    IF COALESCE (inMovementId, 0) = 0
-    THEN
 
         -- проверка прав пользователя на вызов процедуры
         IF 758920 <> inSession::Integer AND 4183126 <> inSession::Integer

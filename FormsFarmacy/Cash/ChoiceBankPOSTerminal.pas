@@ -32,7 +32,7 @@ type
   public
   end;
 
-  function ChoiceBankPOSTerminalExecute(var ABankPOSTerminal : integer) : boolean;
+  function ChoiceBankPOSTerminalExecute(var ABankPOSTerminal, APOSTerminalCode : integer) : boolean;
 
   var ChoiceBankPOSTerminalForm : TChoiceBankPOSTerminalForm;
 
@@ -43,15 +43,17 @@ implementation
 uses LocalWorkUnit, CommonData, MainCash2;
 
 
-function ChoiceBankPOSTerminalExecute(var ABankPOSTerminal : integer) : boolean;
+function ChoiceBankPOSTerminalExecute(var ABankPOSTerminal, APOSTerminalCode : integer) : boolean;
 begin
   Result := True;
   ABankPOSTerminal := 0;
+  APOSTerminalCode := 0;
   if not MainCashForm.BankPOSTerminalCDS.Active then Exit;
   if MainCashForm.BankPOSTerminalCDS.RecordCount < 1 then Exit;
   if MainCashForm.BankPOSTerminalCDS.RecordCount = 1 then
   begin
     ABankPOSTerminal := MainCashForm.BankPOSTerminalCDS.FieldByName('Id').AsInteger;
+    APOSTerminalCode := MainCashForm.BankPOSTerminalCDS.FieldByName('Code').AsInteger;
     Exit;
   end;
 
@@ -62,7 +64,11 @@ begin
     try
       if BankPOSTerminalDS.DataSet = Nil then BankPOSTerminalDS.DataSet := MainCashForm.BankPOSTerminalCDS;
       Result := ShowModal = mrOK;
-      if Result then ABankPOSTerminal := MainCashForm.BankPOSTerminalCDS.FieldByName('Id').AsInteger;
+      if Result then
+      begin
+        ABankPOSTerminal := MainCashForm.BankPOSTerminalCDS.FieldByName('Id').AsInteger;
+        APOSTerminalCode := MainCashForm.BankPOSTerminalCDS.FieldByName('Code').AsInteger;
+      end;
     Except ON E: Exception DO
       MessageDlg(E.Message,mtError,[mbOk],0);
     end;

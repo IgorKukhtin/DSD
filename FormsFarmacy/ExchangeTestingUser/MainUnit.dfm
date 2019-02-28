@@ -59,16 +59,16 @@ object Form1: TForm1
     Align = alTop
     TabOrder = 1
     object btnExportUser: TButton
-      Left = 183
+      Left = 335
       Top = 15
-      Width = 242
+      Width = 114
       Height = 25
-      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1086#1074' '#1080' '#1101#1082#1089#1087#1086#1088#1090' '#1089#1087#1080#1089#1082#1072
+      Caption = #1069#1082#1089#1087#1086#1088#1090' '#1089#1087#1080#1089#1082#1072
       TabOrder = 0
       OnClick = btnExportUserClick
     end
     object btnLoadResult: TButton
-      Left = 28
+      Left = 468
       Top = 15
       Width = 133
       Height = 25

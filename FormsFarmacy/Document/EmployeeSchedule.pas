@@ -45,6 +45,10 @@ type
     UnitName: TcxGridDBBandedColumn;
     ValueUser: TcxGridDBBandedColumn;
     CrossDBViewUserAddOn: TCrossDBViewAddOn;
+    actExecPreviousMonth: TdsdExecStoredProc;
+    spPreviousMonth: TdsdStoredProc;
+    actPreviousMonth: TMultiAction;
+    dxBarButton4: TdxBarButton;
   private
     { Private declarations }
   public

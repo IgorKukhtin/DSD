@@ -120,24 +120,31 @@ type
     grtvTevaprice: TcxGridDBColumn;
     tsADV: TTabSheet;
     Panel3: TPanel;
-    cxDateEdit1: TcxDateEdit;
+    AVDDate: TcxDateEdit;
     cxLabel7: TcxLabel;
-    Button1: TButton;
-    cxSpinEdit1: TcxSpinEdit;
-    cxLabel8: TcxLabel;
-    Button2: TButton;
-    Button3: TButton;
-    cxGrid1: TcxGrid;
+    btnADVExecute: TButton;
+    btnADVExport: TButton;
+    btnADVSend: TButton;
+    grAVD: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
-    cxGridDBColumn3: TcxGridDBColumn;
-    cxGridDBColumn4: TcxGridDBColumn;
-    cxGridDBColumn5: TcxGridDBColumn;
-    cxGridDBColumn6: TcxGridDBColumn;
-    cxGridDBColumn7: TcxGridDBColumn;
-    cxGridDBColumn8: TcxGridDBColumn;
-    cxGridDBColumn9: TcxGridDBColumn;
-    cxGridDBColumn10: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
+    dsReport_Upload_ADV: TDataSource;
+    qryReport_Upload_ADV: TZQuery;
+    cxGridDBTableView1Column1: TcxGridDBColumn;
+    cxGridDBTableView1Column2: TcxGridDBColumn;
+    cxGridDBTableView1Column3: TcxGridDBColumn;
+    cxGridDBTableView1Column4: TcxGridDBColumn;
+    cxGridDBTableView1Column5: TcxGridDBColumn;
+    cxGridDBTableView1Column6: TcxGridDBColumn;
+    cxGridDBTableView1Column7: TcxGridDBColumn;
+    cxGridDBTableView1Column8: TcxGridDBColumn;
+    cxGridDBTableView1Column9: TcxGridDBColumn;
+    cxGridDBTableView1Column10: TcxGridDBColumn;
+    cxGridDBTableView1Column11: TcxGridDBColumn;
+    cxGridDBTableView1Column12: TcxGridDBColumn;
+    cxGridDBTableView1Column13: TcxGridDBColumn;
+    cxGridDBTableView1Column14: TcxGridDBColumn;
+    cxGridDBTableView1Column15: TcxGridDBColumn;
     procedure btnBaDMExecuteClick(Sender: TObject);
     procedure btnBaDMExportClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -152,6 +159,9 @@ type
     procedure btnTevaSendMailClick(Sender: TObject);
     procedure btnTevaAllClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnADVExecuteClick(Sender: TObject);
+    procedure btnADVExportClick(Sender: TObject);
+    procedure btnADVSendClick(Sender: TObject);
   private
     { Private declarations }
     FileNameBaDM_byUnit: String;
@@ -171,6 +181,14 @@ type
     glFTPPath,
     glFTPUser,
     glFTPPassword: String;
+
+    FileNameADV: String;
+    SavePathADV: String;
+
+    glFTPHostADV,
+    glFTPPathADV,
+    glFTPUserADV,
+    glFTPPasswordADV: String;
 
     function SendMail(const Host: String; const Port: integer; const Password,
       Username: String; const Recipients: array of String; const FromAdres,
@@ -206,6 +224,99 @@ begin
     CloseFile(F);
   end;
   except
+  end;
+end;
+
+procedure TExportSalesForSuppForm.btnADVExecuteClick(Sender: TObject);
+begin
+  Add_Log('Начало Формирования отчета AVD');
+
+  qryReport_Upload_ADV.Close;
+  qryReport_Upload_ADV.Params.ParamByName('inDate').Value := AVDDate.Date;
+
+  try
+    qryReport_Upload_ADV.Open;
+  except
+    on E:Exception do
+    begin
+      Add_Log(E.Message);
+      Exit;
+    end;
+  end;
+
+  FileNameADV := 'ADV_' + FormatDateTime('DD_MM_YYYY', AVDDate.Date) + '.csv';
+end;
+
+procedure TExportSalesForSuppForm.btnADVExportClick(Sender: TObject);
+var
+  sl: TStringList;
+begin
+  Add_Log('Начало выгрузки отчета ADV');
+  if not ForceDirectories(SavePathADV) then
+  Begin
+    Add_Log('Не могу создать директорию выгрузки');
+    exit;
+  end;
+  //
+  // обычный отчет
+
+  try
+    try
+      ExportGridToText(SavePathADV + FileNameADV, grAVD, True, True, ';', '', '', 'csv');
+      sl := TStringList.Create;
+      try
+        sl.LoadFromFile(SavePathADV + FileNameADV);
+        sl.SaveToFile(SavePathADV + FileNameADV, TEncoding.UTF8);
+      finally
+        sl.Free;
+      end;
+    except
+      on E: Exception do
+      begin
+        Add_Log(E.Message);
+        exit;
+      end;
+    end;
+  finally
+  end;
+end;
+
+procedure TExportSalesForSuppForm.btnADVSendClick(Sender: TObject);
+begin
+  try
+    IdFTP1.Disconnect;
+    IdFTP1.Host := glFTPHostADV;
+    idFTP1.Username := glFTPUserADV;
+    idFTP1.Password := glFTPPasswordADV;
+    try
+      idFTP1.Connect;
+    Except ON E: Exception DO
+      Begin
+        Add_Log(E.Message);
+        exit;
+      End;
+    end;
+    if glFTPPathADV <> '' then
+    try
+      idFTP1.ChangeDir(glFTPPathADV);
+    except ON E: Exception DO
+      begin
+        Add_Log(E.Message);
+        exit;
+      end;
+    end;
+    try
+      idFTP1.Put(SavePathADV+FileNameADV,
+                 FileNameADV);
+      DeleteFile(SavePathADV+FileNameADV);
+    except ON E: Exception DO
+      Begin
+        Add_Log(E.Message);
+        exit;
+      End;
+    end;
+  finally
+    idFTP1.Disconnect;
   end;
 end;
 
@@ -615,6 +726,11 @@ begin
       SavePathTeva := SavePathTeva + '\';
     Ini.WriteString('Options', 'PathTeva', SavePathTeva);
 
+    SavePathADV := Trim(Ini.ReadString('Options', 'PathADV', ExtractFilePath(Application.ExeName)));
+    if SavePathADV[Length(SavePathADV)] <> '\' then
+      SavePathADV := SavePathADV + '\';
+    Ini.WriteString('Options', 'PathADV', SavePathADV);
+
     BaDMID.Value := Ini.ReadInteger('Options','BaDM_ID',59610);
     Ini.WriteInteger('Options','BaDM_ID',BaDMID.Value);
 
@@ -665,6 +781,19 @@ begin
 
     glFTPPassword := Ini.ReadString('FTP','Password','FsT3469Dv');
     Ini.WriteString('FTP','Password',glFTPPassword);
+
+    glFTPHostADV := Ini.ReadString('FTP','HostADV','zvh53.mirohost.net');
+    Ini.WriteString('FTP','Host',glFTPHost);
+
+    glFTPPathADV := Ini.ReadString('FTP','PathADV','');
+    Ini.WriteString('FTP','Path',glFTPPath);
+
+    glFTPUserADV := Ini.ReadString('FTP','UserADV','neboley');
+    Ini.WriteString('FTP','User',glFTPUser);
+
+    glFTPPasswordADV := Ini.ReadString('FTP','PasswordADV','MXps3yZWudD0');
+    Ini.WriteString('FTP','Password',glFTPPassword);
+
   finally
     Ini.free;
   end;
@@ -672,6 +801,7 @@ begin
   BaDMDate.Date := Date - 1;
   OptimaDate.Date := Date - 1;
   TevaDate.Date := Date - 1;
+  AVDDate.Date := Date - 1;
   ZConnection1.LibraryLocation := ExtractFilePath(Application.ExeName) + 'libpq.dll';
 
   try
@@ -736,9 +866,17 @@ begin
       edtOptimaEMail.Enabled := False;
       edtTevaEMail.Enabled := False;
       grUnit.Enabled := false;
+      AVDDate.Enabled := false;
+      btnADVExecute.Enabled := false;
+      btnADVExport.Enabled := false;
+      btnADVSend.Enabled := false;
+
       Timer1.Enabled := true;
     end;
   end;
+
+  FormatSettings.DecimalSeparator:=',';
+  FormatSettings.DateSeparator := '.';
 end;
 
 procedure TExportSalesForSuppForm.Timer1Timer(Sender: TObject);

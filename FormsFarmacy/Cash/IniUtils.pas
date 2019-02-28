@@ -32,11 +32,11 @@ function iniCashSerialNumber: String;
 function iniTaxGroup7:Integer;
 
 //возвраащет тип POS-терминала;
-function iniPosType:String;
+function iniPosType(ACode : integer):String;
 //возвращает порт POS-терминала
-function iniPosPortNumber:Integer;
+function iniPosPortNumber(ACode : integer):Integer;
 //возвращает скорость порта POS-терминала
-function iniPosPortSpeed:Integer;
+function iniPosPortSpeed(ACode : integer):Integer;
 
 
 var gUnitName, gUserName, gPassValue: string;
@@ -250,27 +250,27 @@ begin
 End;
 
 //возвраащет тип POS-терминала;
-function iniPosType:String;
+function iniPosType(ACode : integer):String;
 begin
-  Result := GetValue('TSoldWithCompMainForm','PosType','');
+  Result := GetValue('TSoldWithCompMainForm','PosType' + IntToStr(ACode),'');
 end;
 
 //возвращает порт POS-терминала
-function iniPosPortNumber:Integer;
+function iniPosPortNumber(ACode : integer):Integer;
 var
   S: String;
 begin
-  S := GetValue('TSoldWithCompMainForm','PosPortNumber','');
+  S := GetValue('TSoldWithCompMainForm','PosPortNumber' + IntToStr(ACode),'');
   if not tryStrToInt(S,Result) then
     Result := 0;
 end;
 
 //возвращает скорость порта POS-терминала
-function iniPosPortSpeed:Integer;
+function iniPosPortSpeed(ACode : integer):Integer;
  var
   S: String;
 begin
-  S := GetValue('TSoldWithCompMainForm','PosPortSpeed','');
+  S := GetValue('TSoldWithCompMainForm','PosPortSpeed' + IntToStr(ACode),'');
   if not tryStrToInt(S,Result) then
     Result := 0;
 end;

@@ -153,7 +153,7 @@ end;
 
 procedure TForm1.btnExportUserClick(Sender: TObject);
 begin
-  if LoadResult then ExportUser;
+  ExportUser;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);

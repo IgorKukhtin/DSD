@@ -25,7 +25,7 @@ BEGIN
     --Шапка
    INSERT INTO _Result(RowData) Values ('<?xml version="1.0" encoding="utf-8"?>');
 
-   INSERT INTO _Result(RowData) Values ('<Headers>');
+/*   INSERT INTO _Result(RowData) Values ('<Headers>');
 
    INSERT INTO _Result(RowData)
    SELECT 
@@ -50,7 +50,7 @@ BEGIN
    WHERE Movement.Id = vbMovementId;
 
    INSERT INTO _Result(RowData) Values ('</Headers>');
-
+*/
     -- Содержимое
    INSERT INTO _Result(RowData) Values ('<Offers>');
     --Тело
@@ -61,7 +61,7 @@ BEGIN
                         FROM Object_Personal_View AS View_Personal
                         WHERE View_Personal.isErased = FALSE
                         GROUP BY View_Personal.MemberId
-                       ),
+                       )/*,
         tmpResult AS (SELECT 
                              MovementItem.ObjectId                     AS UserID
                            , MovementItem.Amount::Integer              AS Result       
@@ -78,17 +78,18 @@ BEGIN
                            INNER JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItem.Id
                                                        AND MovementItemFloat.DescId = zc_MIFloat_TestingUser_Attempts()
 
-                      WHERE Movement.Id = vbMovementId)
+                      WHERE Movement.Id = vbMovementId)*/
                        
    INSERT INTO _Result(RowData)
    SELECT
         '<Offer Code="'||CAST(Object_User.ObjectCode AS TVarChar)||
              '" Name="'||replace(replace(replace(Object_User.ValueData, '"', ''),'&','&amp;'),'''','')||
-             '" Password="'||digest(ObjectString_User_.ValueData::Text, 'md5')||
-             '" Result="'||CASE WHEN tmpResult.Result IS NULL THEN 'Null' ELSE tmpResult.Result::Text END||
+             '" Password="'||digest(ObjectString_User_.ValueData::Text, 'md5')||'" />'
+
+/*             '" Result="'||CASE WHEN tmpResult.Result IS NULL THEN 'Null' ELSE tmpResult.Result::Text END||
              '" Attempts="'||CASE WHEN tmpResult.Attempts IS NULL THEN 'Null' ELSE tmpResult.Attempts::Text END||
              '" DateTimeTest="'||CASE WHEN tmpResult.DateTimeTest IS NULL THEN 'Null' ELSE to_char(tmpResult.DateTimeTest, 'DD.MM.YYYY HH24:MI:SS') END||'" />'
-   
+*/   
    FROM Object AS Object_User
 
         LEFT JOIN ObjectString AS ObjectString_User_
@@ -103,9 +104,10 @@ BEGIN
         LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectId
                              AND tmpPersonal.PositionId = 1672498
         
-        LEFT JOIN tmpResult ON tmpResult.UserID = Object_User.Id
+--        LEFT JOIN tmpResult ON tmpResult.UserID = Object_User.Id
    WHERE Object_User.DescId = zc_Object_User()
-     AND (tmpPersonal.MemberId IS NOT NULL OR tmpResult.UserID IS NOT NULL)
+     AND tmpPersonal.MemberId IS NOT NULL
+--     AND (tmpPersonal.MemberId IS NOT NULL OR tmpResult.UserID IS NOT NULL)
    ORDER BY Object_User.ObjectCode;
 
    --подвал

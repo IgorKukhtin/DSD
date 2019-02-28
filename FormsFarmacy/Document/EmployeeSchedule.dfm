@@ -360,6 +360,32 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
         end>
       Caption = 'actspInsertUser'
     end
+    object actPreviousMonth: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecPreviousMonth
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1075#1088#1072#1092#1080#1082#1086#1074' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1084#1077#1089#1103#1094#1072
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = 'actPreviousMonth'
+      ImageIndex = 50
+    end
+    object actExecPreviousMonth: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spPreviousMonth
+      StoredProcList = <
+        item
+          StoredProc = spPreviousMonth
+        end>
+      Caption = 'actExecPreviousMonth'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -492,6 +518,10 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -540,6 +570,10 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
       Hint = #1057#1086#1079#1076#1072#1090#1100' '#1087#1088#1086#1076#1072#1078#1091
       Visible = ivAlways
       ImageIndex = 43
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actPreviousMonth
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -928,5 +962,22 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     TemplateColumn = ValueUser
     Left = 680
     Top = 168
+  end
+  object spPreviousMonth: TdsdStoredProc
+    StoredProcName = 'gpInsert_MovementItem_EmployeeSchedule_PreviousMonth'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 672
+    Top = 296
   end
 end
