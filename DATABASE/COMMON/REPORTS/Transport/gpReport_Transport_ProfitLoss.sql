@@ -24,6 +24,7 @@ RETURNS TABLE (Invnumber TVarChar, OperDate TDateTime, MovementDescName TVarChar
              , Distance TFloat
              , WeightTransport TFloat, WeightSale TFloat
              , One_KM TFloat, One_KG TFloat
+             , isAccount_50000 Boolean
              )   
 AS
 $BODY$
@@ -36,7 +37,8 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-    WITH tmpContainer AS ( SELECT tmpContainer.MovementId               
+    WITH tmpAccount_50000 AS (SELECT * FROM Object_Account_View WHERE Object_Account_View.AccountGroupId = zc_Enum_AccountGroup_50000())
+        , tmpContainer AS (SELECT tmpContainer.MovementId               
                                 , tmpContainer.MovementDescId           
                                 , tmpContainer.FuelId
                                 , tmpContainer.SumCount_Transport
@@ -54,6 +56,7 @@ BEGIN
                                 , tmpContainer.RouteId
                                 , tmpContainer.ProfitLossId
                                 , tmpContainer.BusinessId
+                                , tmpContainer.isAccount_50000
                    
                                 , SUM (CASE WHEN tmpContainer.MovementDescId = zc_Movement_TransportService() THEN MIFloat_Distance.ValueData
                                        WHEN tmpContainer.MovementDescId = zc_Movement_Transport() THEN (MovementItem.Amount + COALESCE(MIFloat_Distance.ValueData,0))
@@ -76,15 +79,17 @@ BEGIN
                                        , MIContainer.ObjectIntId_Analyzer            AS UnitId
                                        , MIContainer.ObjectExtId_Analyzer            AS BranchId
                                        , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() AND COALESCE (MIContainer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_Transport_Add(), zc_Enum_AnalyzerId_Transport_AddLong(), zc_Enum_AnalyzerId_Transport_Taxi()) THEN MovementLinkObject_PersonalDriver.ObjectId ELSE MIContainer.ObjectId_Analyzer END AS PersonalDriverId
-                                       , COALESCE (MovementItem.ObjectId, MILinkObject_Route.ObjectId) AS RouteId
+                                       , COALESCE (MovementItem.ObjectId, MILinkObject_Route.ObjectId)  AS RouteId
                                        , CLO_ProfitLoss.ObjectId                     AS ProfitLossId
                                        , CLO_Business.ObjectId                       AS BusinessId
                                        -- , MIContainer.AnalyzerId
+                                    -- , CASE WHEN tmpAccount_50000.AccountId > 0 THEN TRUE ELSE FALSE END AS isAccount_50000
+                                       , FALSE AS isAccount_50000
                                
                                   FROM MovementItemContainer AS MIContainer
-                                       JOIN ContainerLinkObject AS CLO_ProfitLoss
-                                                                ON CLO_ProfitLoss.ContainerId = MIContainer.ContainerId_Analyzer
-                                                               AND CLO_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()   
+                                       INNER JOIN ContainerLinkObject AS CLO_ProfitLoss
+                                                                      ON CLO_ProfitLoss.ContainerId = MIContainer.ContainerId_Analyzer
+                                                                     AND CLO_ProfitLoss.DescId      = zc_ContainerLinkObject_ProfitLoss()   
                                        LEFT JOIN ContainerLinkObject AS CLO_Business
                                                                      ON CLO_Business.ContainerId = MIContainer.ContainerId_Analyzer
                                                                     AND CLO_Business.DescId = zc_ContainerLinkObject_Business()
@@ -99,14 +104,17 @@ BEGIN
                                        LEFT JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
                                                              AND MovementItem.DescId = zc_MI_Master()
                                                              AND MIContainer.MovementDescId = zc_Movement_Transport()
+                                       -- LEFT JOIN tmpAccount_50000 ON tmpAccount_50000.AccountId = MIContainer.AccountId
+                                       LEFT JOIN tmpAccount_50000 ON tmpAccount_50000.AccountId = MIContainer.AccountId_Analyzer
                                                       
                                   WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
                                     AND MIContainer.MovementDescId in (zc_Movement_Transport(), zc_Movement_TransportService(),zc_Movement_PersonalSendCash())
                                     -- AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()
-                                    AND (MIContainer.ObjectExtId_Analyzer = inBranchId OR inBranchId = 0)  -- филиал
-                                    AND (MIContainer.ObjectIntId_Analyzer = inUnitId OR inUnitId = 0)      -- подразделение
-                                    AND (MIContainer.WhereObjectId_Analyzer = inCarId OR inCarId = 0)      -- Автомобиль
-                                    AND (CLO_Business.ObjectId = inBusinessId OR inBusinessId= 0)          -- Бизнес  
+                                    AND (MIContainer.ObjectExtId_Analyzer   = inBranchId   OR inBranchId   = 0) -- филиал
+                                    AND (MIContainer.ObjectIntId_Analyzer   = inUnitId     OR inUnitId     = 0) -- подразделение
+                                    AND (MIContainer.WhereObjectId_Analyzer = inCarId      OR inCarId      = 0) -- Автомобиль
+                                    AND (CLO_Business.ObjectId              = inBusinessId OR inBusinessId = 0) -- Бизнес  
+                                 -- AND (CLO_ProfitLoss.ContainerId > 0 OR tmpAccount_50000.AccountId > 0)
                                   GROUP BY  MIContainer.MovementId, MIContainer.MovementDescId
                                           , MIContainer.ObjectId_Analyzer
                                           , MIContainer.WhereObjectId_Analyzer 
@@ -114,8 +122,63 @@ BEGIN
                                           , MIContainer.ObjectExtId_Analyzer
                                           , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() AND COALESCE (MIContainer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_Transport_Add(), zc_Enum_AnalyzerId_Transport_AddLong(), zc_Enum_AnalyzerId_Transport_Taxi()) THEN MovementLinkObject_PersonalDriver.ObjectId ELSE MIContainer.ObjectId_Analyzer END
                                           , MILinkObject_Route.ObjectId
-                                          , CLO_ProfitLoss.ObjectId , CLO_Business.ObjectId 
+                                          , CLO_ProfitLoss.ObjectId
+                                          , CLO_Business.ObjectId 
                                           -- , MovementLinkObject_PersonalDriver.ObjectId   
+                                          , MovementItem.Id
+                                          , MovementItem.ObjectId
+                                       -- , CASE WHEN tmpAccount_50000.AccountId > 0 THEN TRUE ELSE FALSE END
+                                 UNION ALL
+                                  SELECT MIContainer.MovementId               AS MovementId
+                                       , MIContainer.MovementDescId           AS MovementDescId
+                                       , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() AND MovementItem.Id IS NULL THEN MIContainer.ObjectId_Analyzer ELSE 0 END AS FuelId
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() AND MIContainer.MovementDescId = zc_Movement_Transport() THEN -1 * MIContainer.Amount ELSE 0 END) AS SumCount_Transport
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_Transport()        AND COALESCE (MIContainer.AnalyzerId, 0) IN (0, zc_Enum_AnalyzerId_ProfitLoss()) THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_Transport
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_Transport()        AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add() THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportAdd
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_AddLong() THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportAddLong
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_Taxi()    THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportTaxi
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_TransportService() AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()    THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_TransportService
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_TransportService() AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add() THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_ServiceAdd
+                                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.MovementDescId = zc_Movement_PersonalSendCash()         THEN -1 * MIContainer.Amount ELSE 0 END) AS SumAmount_PersonalSendCash
+                                       , MIContainer.WhereObjectId_Analyzer          AS CarId
+                                       , MIContainer.ObjectIntId_Analyzer            AS UnitId
+                                       , MIContainer.ObjectExtId_Analyzer            AS BranchId
+                                       , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() AND COALESCE (MIContainer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_Transport_Add(), zc_Enum_AnalyzerId_Transport_AddLong(), zc_Enum_AnalyzerId_Transport_Taxi()) THEN MovementLinkObject_PersonalDriver.ObjectId ELSE MIContainer.ObjectId_Analyzer END AS PersonalDriverId
+                                       , COALESCE (MovementItem.ObjectId, MILinkObject_Route.ObjectId)  AS RouteId
+                                       , MIContainer.AccountId_Analyzer              AS ProfitLossId
+                                       , 0                                           AS BusinessId
+                                       -- , MIContainer.AnalyzerId
+                                       , TRUE AS isAccount_50000
+                               
+                                  FROM MovementItemContainer AS MIContainer
+                                       INNER JOIN tmpAccount_50000 ON tmpAccount_50000.AccountId = MIContainer.AccountId_Analyzer
+                                                          
+                                       LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
+                                                                    ON MovementLinkObject_PersonalDriver.MovementId = MIContainer.MovementId
+                                                                   AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
+         
+                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
+                                                                        ON MILinkObject_Route.MovementItemId = MIContainer.MovementItemId
+                                                                       AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
+                                       LEFT JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
+                                                             AND MovementItem.DescId = zc_MI_Master()
+                                                             AND MIContainer.MovementDescId = zc_Movement_Transport()
+                                                      
+                                  WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate  
+                                    AND MIContainer.MovementDescId in (zc_Movement_Transport(), zc_Movement_TransportService(),zc_Movement_PersonalSendCash())
+                                    -- AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()
+                                    AND (MIContainer.ObjectExtId_Analyzer   = inBranchId   OR inBranchId   = 0) -- филиал
+                                    AND (MIContainer.ObjectIntId_Analyzer   = inUnitId     OR inUnitId     = 0) -- подразделение
+                                    AND (MIContainer.WhereObjectId_Analyzer = inCarId      OR inCarId      = 0) -- Автомобиль
+                                    AND (                                                     inBusinessId = 0) -- Бизнес  
+                                  GROUP BY  MIContainer.MovementId, MIContainer.MovementDescId
+                                          , MIContainer.ObjectId_Analyzer
+                                          , MIContainer.WhereObjectId_Analyzer 
+                                          , MIContainer.ObjectIntId_Analyzer 
+                                          , MIContainer.ObjectExtId_Analyzer
+                                          , CASE WHEN MIContainer.MovementDescId = zc_Movement_Transport() AND COALESCE (MIContainer.AnalyzerId, 0) NOT IN (zc_Enum_AnalyzerId_Transport_Add(), zc_Enum_AnalyzerId_Transport_AddLong(), zc_Enum_AnalyzerId_Transport_Taxi()) THEN MovementLinkObject_PersonalDriver.ObjectId ELSE MIContainer.ObjectId_Analyzer END
+                                          , MILinkObject_Route.ObjectId
+                                          , MIContainer.AccountId_Analyzer
                                           , MovementItem.Id
                                           , MovementItem.ObjectId
                             ) AS tmpContainer   
@@ -148,6 +211,7 @@ BEGIN
                                        , tmpContainer.RouteId
                                        , tmpContainer.ProfitLossId
                                        , tmpContainer.BusinessId
+                                       , tmpContainer.isAccount_50000
                           )
 
    , tmpWeight       AS ( SELECT MLM_Transport.MovementChildId                  AS MovementTransportId
@@ -203,6 +267,7 @@ BEGIN
                          , tmpWeight.RouteId
                          , tmpContainer.ProfitLossId
                          , tmpContainer.BusinessId
+                         , tmpContainer.isAccount_50000
                     FROM tmpWeight
                          LEFT JOIN tmpContainer ON tmpContainer.MovementId = tmpWeight.MovementTransportId
                                                AND tmpContainer.RouteId    = tmpWeight.RouteId 
@@ -217,6 +282,7 @@ BEGIN
                      , tmpAll.RouteId
                      , tmpAll.ProfitLossId
                      , tmpAll.BusinessId
+                     , tmpAll.isAccount_50000
                      , SUM(tmpAll.WeightSale)                 AS WeightSale
                      , SUM(tmpAll.SumCount_Transport)         AS SumCount_Transport
                      , SUM(tmpAll.SumAmount_Transport)        AS SumAmount_Transport
@@ -238,6 +304,7 @@ BEGIN
                             , tmpContainer.RouteId
                             , tmpContainer.ProfitLossId
                             , tmpContainer.BusinessId
+                            , tmpContainer.isAccount_50000
                             , 0           AS WeightSale
                             , tmpContainer.SumCount_Transport
                             , tmpContainer.SumAmount_Transport
@@ -261,6 +328,7 @@ BEGIN
                             , tmpWeight_All.RouteId
                             , tmpWeight_All.ProfitLossId
                             , tmpWeight_All.BusinessId
+                            , tmpWeight_All.isAccount_50000
                             , tmpWeight_All.TotalCountKg AS WeightSale
                             , 0 AS SumCount_Transport
                             , 0 AS SumAmount_Transport
@@ -273,7 +341,8 @@ BEGIN
                             , 0 AS Distance
                             , 0 AS WeightTransport
 
-                       FROM tmpWeight_All) AS tmpAll
+                       FROM tmpWeight_All
+                      ) AS tmpAll
                 GROUP BY tmpAll.MovementId
                        , tmpAll.CarId
                        , tmpAll.FuelId
@@ -283,11 +352,9 @@ BEGIN
                        , tmpAll.RouteId
                        , tmpAll.ProfitLossId
                        , tmpAll.BusinessId
+                       , tmpAll.isAccount_50000
                 )
-
-    
-
-
+       -- Результат
        SELECT COALESCE (Movement.Invnumber, '') :: TVarChar          AS Invnumber
             , COALESCE (Movement.OperDate, CAST (NULL as TDateTime)) AS OperDate
             , COALESCE (MovementDesc.ItemName, '') :: TVarChar       AS MovementDescName
@@ -300,10 +367,10 @@ BEGIN
             , Object_Unit_View.Name            AS UnitName
             , Object_Unit_View.BranchName
             , Object_Business.ValueData        AS BusinessName 
-            , View_ProfitLoss.ProfitLossGroupName
-            , View_ProfitLoss.ProfitLossDirectionName
-            , View_ProfitLoss.ProfitLossName
-            , View_ProfitLoss.ProfitLossName_all
+            , COALESCE (View_ProfitLoss.ProfitLossGroupName, View_Account.AccountGroupName)         :: TVarChar AS ProfitLossGroupName
+            , COALESCE (View_ProfitLoss.ProfitLossDirectionName, View_Account.AccountDirectionName) :: TVarChar AS ProfitLossDirectionName
+            , COALESCE (View_ProfitLoss.ProfitLossName, View_Account.AccountName)                   :: TVarChar AS ProfitLossName
+            , COALESCE (View_ProfitLoss.ProfitLossName_all, View_Account.AccountName_all)           :: TVarChar AS ProfitLossName_all
                         
             , SUM (tmpUnion.SumCount_Transport)         :: TFloat  AS SumCount_Transport 
             , SUM (tmpUnion.SumAmount_Transport)        :: TFloat  AS SumAmount_Transport
@@ -325,7 +392,8 @@ BEGIN
                          ELSE 0 END  AS TFloat)  AS One_KM
             , CAST (CASE WHEN SUM (tmpUnion.WeightTransport) <> 0 THEN  SUM (tmpUnion.SumAmount_Transport + tmpUnion.SumAmount_TransportAdd + tmpUnion.SumAmount_TransportAddLong + tmpUnion.SumAmount_TransportTaxi + tmpUnion.SumAmount_TransportService + tmpUnion.SumAmount_ServiceAdd + tmpUnion.SumAmount_PersonalSendCash) /SUM (tmpUnion.WeightTransport)
                          ELSE 0 END AS TFloat)  AS One_KG
-       FROM tmpUnion
+            , tmpUnion.isAccount_50000 :: Boolean AS isAccount_50000
+      FROM tmpUnion
                  LEFT JOIN Object AS Object_Route on Object_Route.Id = tmpUnion.RouteId
                  LEFT JOIN Object_Unit_View  on Object_Unit_View.Id = tmpUnion.UnitId
                  LEFT JOIN Object AS Object_PersonalDriver on Object_PersonalDriver.Id = tmpUnion.PersonalDriverId
@@ -344,9 +412,10 @@ BEGIN
                  LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId                
                  LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                                             AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
-                 LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+                 LEFT JOIN Object                 AS Object_CarModel ON Object_CarModel.Id           = ObjectLink_Car_CarModel.ChildObjectId
                  LEFT JOIN Object_ProfitLoss_View AS View_ProfitLoss ON View_ProfitLoss.ProfitLossId = tmpUnion.ProfitLossId
-                 LEFT JOIN Object AS Object_Business ON Object_Business.Id = tmpUnion.BusinessId                               
+                 LEFT JOIN Object_Account_View    AS View_Account    ON View_Account.AccountId       = tmpUnion.ProfitLossId
+                 LEFT JOIN Object                 AS Object_Business ON Object_Business.Id           = tmpUnion.BusinessId                               
                
        GROUP BY COALESCE (Movement.Invnumber, '') , COALESCE (MovementDesc.ItemName, '')
               , COALESCE (Movement.OperDate, CAST (NULL as TDateTime))
@@ -360,10 +429,11 @@ BEGIN
               , Object_PersonalDriver.ValueData
               , Object_CarModel.ValueData
               , Object_Business.ValueData 
-              , View_ProfitLoss.ProfitLossGroupName
-              , View_ProfitLoss.ProfitLossDirectionName
-              , View_ProfitLoss.ProfitLossName
-              , View_ProfitLoss.ProfitLossName_all
+              , COALESCE (View_ProfitLoss.ProfitLossGroupName, View_Account.AccountGroupName)
+              , COALESCE (View_ProfitLoss.ProfitLossDirectionName, View_Account.AccountDirectionName)
+              , COALESCE (View_ProfitLoss.ProfitLossName, View_Account.AccountName)
+              , COALESCE (View_ProfitLoss.ProfitLossName_all, View_Account.AccountName_all)
+              , tmpUnion.isAccount_50000
             
        ORDER BY Object_Unit_View.BusinessName
               , Object_Unit_View.BranchName
@@ -388,4 +458,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Transport_ProfitLoss (inStartDate:= '31.07.2016', inEndDate:= '13.08.2016', inBusinessId:= 0, inBranchId:= 0, inUnitId:= 0, inCarId:= 0, inIsMovement:= true, inSession := zfCalc_UserAdmin()); -- Склад Реализации
+-- SELECT * FROM gpReport_Transport_ProfitLoss (inStartDate:= '01.02.2019', inEndDate:= '01.02.2019', inBusinessId:= 0, inBranchId:= 0, inUnitId:= 0, inCarId:= 0, inIsMovement:= true, inSession := zfCalc_UserAdmin()); -- Склад Реализации

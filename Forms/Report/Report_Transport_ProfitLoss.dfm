@@ -174,6 +174,15 @@ object Report_Transport_ProfitLossForm: TReport_Transport_ProfitLossForm
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object isAccount_50000: TcxGridDBColumn
+        Caption = #1047#1072#1090#1088#1072#1090#1099' '#1074' '#1087#1088#1080#1093'.'
+        DataBinding.FieldName = 'isAccount_50000'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1090#1088#1072#1090#1099' '#1074' '#1087#1088#1080#1093#1086#1076#1077' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' - '#1056#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074
+        Options.Editing = False
+        Width = 55
+      end
       object MovementDescName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'MovementDescName'

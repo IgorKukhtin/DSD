@@ -88,6 +88,7 @@ type
     SumAmount_TransportTaxi: TcxGridDBColumn;
     SumAmount_ServiceAdd: TcxGridDBColumn;
     SumAmount_ServiceTotal: TcxGridDBColumn;
+    isAccount_50000: TcxGridDBColumn;
   private
   public
   end;
