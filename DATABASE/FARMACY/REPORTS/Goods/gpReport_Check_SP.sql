@@ -749,8 +749,8 @@ BEGIN
 
              LEFT JOIN tmpGoodsSP AS tmpGoodsSP 
                                   ON tmpGoodsSP.GoodsMainId = tmpData.GoodsMainId
-                                 AND tmpData.OperDateSP >= tmpGoodsSP.OperDateStart
-                                 AND tmpData.OperDateSP <= tmpGoodsSP.OperDateEnd
+                                 AND tmpData.OperDate >= tmpGoodsSP.OperDateStart
+                                 AND tmpData.OperDate <= tmpGoodsSP.OperDateEnd
              
              LEFT JOIN tmp_err ON tmp_err.Id = tmpData.MovementId_err
 /*
