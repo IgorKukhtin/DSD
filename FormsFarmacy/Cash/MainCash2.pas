@@ -458,8 +458,6 @@ type
     fShift: Boolean;
     FTotalSumm: Currency;
     Cash: ICash;
-    PosTerm: IPos;
-    PosTermBan : Boolean;
     SoldParallel: Boolean;
     SourceClientDataSet: TClientDataSet;
     ThreadErrorMessage:String;
@@ -1467,6 +1465,8 @@ var
   fErr: Boolean;
   dsdSave: TdsdStoredProc;
   nBankPOSTerminal : integer;
+  nPOSTerminalCode : integer;
+  pPosTerm : IPos;
 begin
   if CheckCDS.RecordCount = 0 then exit;
 
@@ -1488,7 +1488,7 @@ begin
   //спросили сумму и тип оплаты
   if not fShift then
   begin// если с Shift, то считаем, что дали без сдачи
-    if not CashCloseDialogExecute(FTotalSumm,ASalerCash,ASalerCashAdd,PaidType,nBankPOSTerminal) then
+    if not CashCloseDialogExecute(FTotalSumm,ASalerCash,ASalerCashAdd,PaidType,nBankPOSTerminal,nPOSTerminalCode) then
     Begin
       if Self.ActiveControl <> edAmount then
         Self.ActiveControl := MainGrid;
@@ -1501,14 +1501,6 @@ begin
   end
   else
     ASalerCash:=FTotalSumm;
-
-  //проверили бана по POS-терминалу
-  if (PaidType <> ptMoney) and PosTermBan then
-  begin
-    ShowMessage('Внимание! Программа не смогла подключиться к POS-терминала.'+#13+
-                'Отпуск через кредитный терминал невозможен!');
-    Exit;
-  end;
 
   //показали что началась печать
   ShapeState.Brush.Color := clYellow;
@@ -1542,13 +1534,30 @@ begin
        freeAndNil(dsdSave);
     end;
   end;
+
   //послали на печать
   try
-    //проверили бана по POS-терминалу
-    if (PaidType <> ptMoney) and (PosTerm <> Nil) then
+
+    // Подключились к POS-терминалу
+    if (PaidType <> ptMoney) and (nPOSTerminalCode <> 0) and (iniPosType(nPOSTerminalCode) <> '') then
     begin
-      if not PayPosTerminal(PosTerm, MainCashForm.ASalerCash) then Exit;
+
+      Add_Log('Подключение к POS терминалу');
+      try
+        pPosTerm:=TPosFactory.GetPos(nPOSTerminalCode);
+      except ON E:Exception do Add_Log('Exception: ' + E.Message);
+      end;
+
+      if pPosTerm = Nil then
+      begin
+        ShowMessage('Внимание! Программа не может подключиться к POS-терминалу.'+#13+
+                    'Проверьте подключение и повторите попытку печети!');
+        Exit;
+      end;
+
+      if not PayPosTerminal(pPosTerm, MainCashForm.ASalerCash) then Exit;
     end;
+
     Add_Log('Печать чека');
     if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.ASalerCashAdd, MainCashForm.PaidType, FiscalNumber, CheckNumber) then
     Begin
@@ -1613,6 +1622,8 @@ begin
            end; // else if fErr = true
     End;
   finally
+    if pPosTerm <> Nil then pPosTerm := Nil;
+
     ShapeState.Brush.Color := clGreen;
     ShapeState.Repaint;
   end;
@@ -3198,23 +3209,6 @@ begin
       ShowMessage('Внимание! Программа не может подключиться к фискальному аппарату.'+#13+
                   'Дальнейшая работа программы возможна только в нефискальном режиме!');
     End;
-  end;
-
-  PosTermBan := False;
-  PosTerm := Nil;
-  if iniPosType <> '' then
-  try
-    try
-      PosTerm:=TPosFactory.GetPos(iniPosType);
-    except ON E:Exception do Add_Log('Exception: ' + E.Message);
-    end;
-  finally
-    if PosTerm = Nil then
-    begin
-      PosTermBan := True;
-      ShowMessage('Внимание! Программа не может подключиться к POS-терминала.'+#13+
-                  'Дальнейшая работа программы возможна только без отпуска через кредитный терминал!');
-    end;
   end;
 
   //а2 начало -  только 2 форма

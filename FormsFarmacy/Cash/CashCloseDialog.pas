@@ -30,6 +30,7 @@ type
     FPaidTypeTemp : integer;
     FSalerCash: Currency;
     FBankPOSTerminal: Integer;
+    FPOSTerminalCode: Integer;
     { Private declarations }
   public
     { Public declarations }
@@ -38,7 +39,7 @@ type
 var
   CashCloseDialogForm: TCashCloseDialogForm;
 function CashCloseDialogExecute(ASummaTotal: Currency; Var ASalerCash, ASalerCashAdd: Currency; var APaidType: TPaidType;
-                                var ABankPOSTerminal : integer):Boolean;
+                                var ABankPOSTerminal, APOSTerminalCode : integer):Boolean;
 
 implementation
 
@@ -47,7 +48,7 @@ implementation
 uses DataModul, Math, ChoiceBankPOSTerminal;
 
 function CashCloseDialogExecute(ASummaTotal: Currency; Var ASalerCash, ASalerCashAdd: Currency; var APaidType: TPaidType;
-                                var ABankPOSTerminal : integer):Boolean;
+                                var ABankPOSTerminal, APOSTerminalCode : integer):Boolean;
 Begin
   if NOT assigned(CashCloseDialogForm) then
     CashCloseDialogForm := TCashCloseDialogForm.Create(Application);
@@ -60,6 +61,7 @@ Begin
       edSalerCash.Value := ASummaTotal;
       rgPaidType.ItemIndex := Integer(APaidType);
       FBankPOSTerminal:=0;
+      FPOSTerminalCode:= 0;
       ActiveControl := edSalerCash;
       edSalerCash.SelectAll;
       Result := True;
@@ -68,7 +70,7 @@ Begin
         Result := ShowModal = mrOK;
         if Result and (rgPaidType.ItemIndex > 0) then
         begin
-          if ChoiceBankPOSTerminalExecute(FBankPOSTerminal) then Break;
+          if ChoiceBankPOSTerminalExecute(FBankPOSTerminal, FPOSTerminalCode) then Break;
         end else Break;
       end;
       if Result then
@@ -79,6 +81,7 @@ Begin
         else ASalerCashAdd := 0;
         APaidType := TPaidType(rgPaidType.ItemIndex);
         ABankPOSTerminal := FBankPOSTerminal;
+        APOSTerminalCode := FPOSTerminalCode;
       End;
     Except ON E: Exception DO
       MessageDlg(E.Message,mtError,[mbOk],0);

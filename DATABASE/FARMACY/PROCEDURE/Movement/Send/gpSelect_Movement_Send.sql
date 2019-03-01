@@ -28,6 +28,8 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
+   DECLARE vbUnitKey TVarChar;
+   DECLARE vbUnitId Integer;
 BEGIN
 
 -- inStartDate:= '01.01.2013';
@@ -39,6 +41,18 @@ BEGIN
 
      -- определяется <Торговая сеть>
      vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
+     
+     IF vbUserId IN (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (308121)) -- Кассир аптеки
+     THEN 
+       vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+       IF vbUnitKey = '' THEN
+          vbUnitKey := '0';
+       END IF;   
+       vbUnitId := vbUnitKey::Integer;
+     ELSE
+       vbUnitId := 0;
+     END IF;
+     
 
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
@@ -198,6 +212,7 @@ BEGIN
             LEFT JOIN Movement AS Movement_ReportUnLiquid ON Movement_ReportUnLiquid.Id = MLM_ReportUnLiquid.MovementChildId
 
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
+         AND  (vbUnitId = 0 OR tmpUnit_To.UnitId = vbUnitId OR tmpUnit_FROM.UnitId = vbUnitId)
         
        ;
 
@@ -209,7 +224,8 @@ ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar) 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 27.02.19                                                                                      * vbUnitId
  08.11.17         * Deferred
  21.03.17         * add zc_MovementFloat_TotalSummFrom
                         zc_MovementFloat_TotalSummTo

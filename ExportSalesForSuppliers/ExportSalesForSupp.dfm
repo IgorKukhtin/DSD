@@ -191,6 +191,10 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     object tsBaDM: TTabSheet
       Caption = #1041#1072#1044#1052
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object PageControl: TcxPageControl
         Left = 0
         Top = 31
@@ -208,6 +212,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
           Caption = 'tsMain'
           ImageIndex = 0
           TabVisible = False
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object grBaDM: TcxGrid
             Left = 0
             Top = 0
@@ -1189,9 +1195,9 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         Height = 31
         Align = alTop
         TabOrder = 0
-        object cxDateEdit1: TcxDateEdit
+        object AVDDate: TcxDateEdit
           Left = 85
-          Top = 5
+          Top = 4
           EditValue = 42339d
           Properties.ShowTime = False
           TabOrder = 0
@@ -1199,51 +1205,38 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         end
         object cxLabel7: TcxLabel
           Left = 6
-          Top = 8
+          Top = 6
           Caption = #1044#1072#1090#1072' '#1086#1090#1095#1077#1090#1072':'
         end
-        object Button1: TButton
+        object btnADVExecute: TButton
           Left = 384
           Top = 0
           Width = 113
           Height = 25
           Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100
           TabOrder = 2
-          OnClick = btnBaDMExecuteClick
+          OnClick = btnADVExecuteClick
         end
-        object cxSpinEdit1: TcxSpinEdit
-          Left = 288
-          Top = 4
-          Properties.SpinButtons.Visible = False
-          TabOrder = 3
-          Value = 59610
-          Width = 81
-        end
-        object cxLabel8: TcxLabel
-          Left = 198
-          Top = 8
-          Caption = 'ID '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072':'
-        end
-        object Button2: TButton
+        object btnADVExport: TButton
           Left = 503
           Top = 0
           Width = 113
           Height = 25
           Caption = #1069#1082#1089#1087#1086#1088#1090
-          TabOrder = 5
-          OnClick = btnBaDMExportClick
+          TabOrder = 3
+          OnClick = btnADVExportClick
         end
-        object Button3: TButton
+        object btnADVSend: TButton
           Left = 783
           Top = 0
           Width = 113
           Height = 25
           Caption = #1055#1086#1089#1083#1072#1090#1100' '#1085#1072' FTP'
-          TabOrder = 6
-          OnClick = btnBaDMSendFTPClick
+          TabOrder = 4
+          OnClick = btnADVSendClick
         end
       end
-      object cxGrid1: TcxGrid
+      object grAVD: TcxGrid
         Left = 0
         Top = 31
         Width = 901
@@ -1252,46 +1245,81 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         TabOrder = 1
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = dsReport_Upload_Teva
+          DataController.DataSource = dsReport_Upload_ADV
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <>
           DataController.Summary.SummaryGroups = <>
-          object cxGridDBColumn3: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
-            DataBinding.FieldName = 'operdate'
-            Width = 80
+          object cxGridDBTableView1Column1: TcxGridDBColumn
+            DataBinding.FieldName = 'retailName'
+            Width = 70
           end
-          object cxGridDBColumn4: TcxGridDBColumn
-            Caption = #1045#1044#1056#1055#1054#1059
-            DataBinding.FieldName = 'okpo'
-            Width = 100
+          object cxGridDBTableView1Column2: TcxGridDBColumn
+            DataBinding.FieldName = 'city'
+            Width = 70
           end
-          object cxGridDBColumn5: TcxGridDBColumn
-            Caption = #1040#1087#1090#1077#1082#1072
-            DataBinding.FieldName = 'unitname'
-            Width = 200
+          object cxGridDBTableView1Column3: TcxGridDBColumn
+            DataBinding.FieldName = 'address'
+            Width = 70
           end
-          object cxGridDBColumn6: TcxGridDBColumn
-            Caption = #1040#1076#1088#1077#1089
-            DataBinding.FieldName = 'unitaddress'
-            Width = 200
+          object cxGridDBTableView1Column4: TcxGridDBColumn
+            DataBinding.FieldName = 'checkID'
+            Width = 70
           end
-          object cxGridDBColumn7: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
-            DataBinding.FieldName = 'goodsname'
-            Width = 200
+          object cxGridDBTableView1Column5: TcxGridDBColumn
+            DataBinding.FieldName = 'sale_date'
+            Width = 70
           end
-          object cxGridDBColumn8: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'amount'
+          object cxGridDBTableView1Column6: TcxGridDBColumn
+            DataBinding.FieldName = 'sale_time'
+            Width = 70
           end
-          object cxGridDBColumn9: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'summ'
+          object cxGridDBTableView1Column7: TcxGridDBColumn
+            DataBinding.FieldName = 'itemBC'
+            Width = 70
           end
-          object cxGridDBColumn10: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
+          object cxGridDBTableView1Column8: TcxGridDBColumn
+            DataBinding.FieldName = 'couponBC'
+            Width = 70
+          end
+          object cxGridDBTableView1Column9: TcxGridDBColumn
+            DataBinding.FieldName = 'nameBC'
+            Width = 70
+          end
+          object cxGridDBTableView1Column10: TcxGridDBColumn
             DataBinding.FieldName = 'price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.00'
+            Width = 70
+          end
+          object cxGridDBTableView1Column11: TcxGridDBColumn
+            DataBinding.FieldName = 'sum_price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.00'
+            Width = 70
+          end
+          object cxGridDBTableView1Column12: TcxGridDBColumn
+            DataBinding.FieldName = 'sum_couponsale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.00'
+            Width = 70
+          end
+          object cxGridDBTableView1Column13: TcxGridDBColumn
+            DataBinding.FieldName = 'discount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.00'
+            Width = 70
+          end
+          object cxGridDBTableView1Column14: TcxGridDBColumn
+            DataBinding.FieldName = 'discount_rel'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.00'
+            Width = 70
+          end
+          object cxGridDBTableView1Column15: TcxGridDBColumn
+            DataBinding.FieldName = 'sum_discount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.00'
+            Width = 70
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -1522,8 +1550,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         ParamType = ptInput
         Value = 59610
       end>
-    Left = 620
-    Top = 336
+    Left = 588
+    Top = 232
     ParamData = <
       item
         DataType = ftDateTime
@@ -1576,7 +1604,33 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
   end
   object dsReport_Upload_Teva: TDataSource
     DataSet = qryReport_Upload_Teva
+    Left = 584
+    Top = 304
+  end
+  object dsReport_Upload_ADV: TDataSource
+    DataSet = qryReport_Upload_ADV
     Left = 720
-    Top = 336
+    Top = 304
+  end
+  object qryReport_Upload_ADV: TZQuery
+    Connection = ZConnection1
+    SQL.Strings = (
+      'SELECT * FROM gpReport_Upload_ADV (:inDate, zfCalc_UserAdmin())')
+    Params = <
+      item
+        DataType = ftDateTime
+        Name = 'inDate'
+        ParamType = ptInput
+        Value = 42773d
+      end>
+    Left = 716
+    Top = 232
+    ParamData = <
+      item
+        DataType = ftDateTime
+        Name = 'inDate'
+        ParamType = ptInput
+        Value = 42773d
+      end>
   end
 end
