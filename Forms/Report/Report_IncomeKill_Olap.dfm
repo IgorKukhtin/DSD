@@ -67,6 +67,7 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
+      Style.Color = 12713983
       TabOrder = 5
       Width = 253
     end
@@ -121,20 +122,9 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
       Visible = True
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
-    object pvNum: TcxDBPivotGridField
-      Area = faRow
-      AreaIndex = 0
-      IsCaptionAssigned = True
-      Caption = #8470' '#1087'.'#1087'.'
-      DataBinding.FieldName = 'Num'
-      DataVisibility = dvGrandTotalCells
-      GroupExpanded = False
-      Width = 60
-      UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-    end
     object pvCol_Name: TcxDBPivotGridField
       Area = faRow
-      AreaIndex = 1
+      AreaIndex = 0
       IsCaptionAssigned = True
       Caption = #1057#1090#1072#1090#1100#1103
       DataBinding.FieldName = 'Col_Name'
@@ -152,10 +142,20 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      ImageAlign = taCenter
       Styles.ColumnHeader = dmMain.cxRemainsContentStyle
       Visible = True
       Width = 80
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
+    object Color_calc: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 1
+      IsCaptionAssigned = True
+      Caption = 'Color_calc'
+      DataBinding.FieldName = 'Color_calc'
+      TotalsVisibility = tvNone
+      UniqueName = 'Color_calc'
     end
   end
   object DataSource: TDataSource
@@ -990,8 +990,14 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
         ShortCut = 13
       end>
     ExpandColumn = 1
-    Left = 453
-    Top = 272
+    ColorRuleList = <
+      item
+        ColorColumn = pvValue
+        BackGroundValueColumn = Color_calc
+        ColorValueList = <>
+      end>
+    Left = 357
+    Top = 224
   end
   object spGetBalanceParam: TdsdStoredProc
     StoredProcName = 'gpGetBalanceParam'
