@@ -8,12 +8,12 @@ CREATE OR REPLACE FUNCTION gpReport_IncomeKill_Olap (
     IN inGoodsId            Integer   ,
     IN inSession            TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Num Integer
-             , OperDate TDateTime
-             , Col_Name     TVarChar
-             --, PartnerName  TVarChar
-             , JuridicalName  TVarChar
+RETURNS TABLE (Num           Integer
+             , OperDate      TDateTime
+             , Col_Name      TVarChar
+             , JuridicalName TVarChar
              , Value         TFloat
+             , Color_calc    Integer
              )   
 AS
 $BODY$
@@ -357,208 +357,209 @@ BEGIN
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Amount_Weight  AS Value
+                                      , zc_Color_White() AS Color_calc
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.Amount_Weight <> 0
                                 UNION
                                  SELECT '02. К-во голов' AS Col_Name
                                       , 2 AS Num      
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.HeadCount
+                                      , zc_Color_White() AS Color_calc
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.HeadCount <> 0
                                 UNION
                                  SELECT '03. Сред. Вес 1 головы' AS Col_Name
                                       , 3 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
-                                      , tmpOperationGroupAll.Amount_Weight / tmpOperationGroupAll.HeadCount -- tmpOperationGroupAll.HeadCount_one
+                                      , CASE WHEN COALESCE (tmpOperationGroupAll.HeadCount, 0) <> 0 THEN tmpOperationGroupAll.Amount_Weight / tmpOperationGroupAll.HeadCount ELSE 0 END-- tmpOperationGroupAll.HeadCount_one
+                                      , zc_Color_White() AS Color_calc
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.Amount_Weight <> 0 AND tmpOperationGroupAll.HeadCount <> 0 --tmpOperationGroupAll.HeadCount_one <> 0
                                 UNION
                                  SELECT '04. ВЕС НАКЛАД. БН' AS Col_Name
                                       , 4 AS Num    
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.AmountPartner_Weight
+                                      , 12713983  AS Color_calc   -- зеленая беж  -- поярче 6608867
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.AmountPartner_Weight <> 0  
                                 UNION
                                  SELECT '05. ЦЕНА-НАКЛАД. БН' AS Col_Name
                                       , 5 AS Num     
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.PricePartner
+                                      , 12713983 AS Color_calc   -- зеленая беж
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.PricePartner <> 0
                                 UNION
                                  SELECT '06. ВСЕГО СУММА БН' AS Col_Name
                                       , 6 AS Num       
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
-                                      , tmpOperationGroupAll.TotalSumm                                      
+                                      , tmpOperationGroupAll.TotalSumm      
+                                      , 12713983 AS Color_calc           -- зеленая беж                       
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.TotalSumm <> 0
                                 UNION
                                  SELECT '07. доплата за вес, кг' AS Col_Name
                                       , 7 AS Num       
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
-                                      , tmpOperationGroupAll.Amount_7                                      
+                                      , tmpOperationGroupAll.Amount_7    
+                                      , zc_Color_White() AS Color_calc                                  
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.Amount_7 <> 0
                                 UNION
                                  SELECT '08. ДОПЛАТА ВЕС-НАЛ, грн' AS Col_Name
                                       , 8 AS Num       
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
-                                      , tmpOperationGroupAll.Amount_8                                      
+                                      , tmpOperationGroupAll.Amount_8    
+                                      , zc_Color_White() AS Color_calc                                  
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.Amount_8 <> 0
                                 UNION
                                  SELECT '09. КОПЕЙКИ' AS Col_Name
                                       , 9 AS Num       
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
-                                      , tmpOperationGroupAll.Amount_9                                     
+                                      , tmpOperationGroupAll.Amount_9        
+                                      , zc_Color_White() AS Color_calc                             
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.Amount_9 <> 0
                                 UNION
                                  SELECT '10. ДОПЛАТА КОПЕЙКИ, грн' AS Col_Name
                                       , 10 AS Num       
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
-                                      , tmpOperationGroupAll.Amount_10                                      
+                                      , tmpOperationGroupAll.Amount_10
+                                      , zc_Color_White() AS Color_calc                                   
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.Amount_10 <> 0
                                 UNION
                                  SELECT '11. ВСЕГО ДОПЛАТА заготовителю' AS Col_Name
                                       , 11 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.SUM_f2
+                                      , zc_Color_White() AS Color_calc
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.SUM_f2 <> 0
                                 UNION
                                  SELECT '12. От заготовителя- излишек,кг' AS Col_Name
                                       , 12 AS Num      
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.AmountWeight_diff
+                                      , zc_Color_White() AS Color_calc   -- цвет  шрифта
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.AmountWeight_diff <> 0
                                 UNION
                                  SELECT '13. от заготовщик-цена' AS Col_Name
                                       , 13 AS Num      
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Price_f2
+                                      , zc_Color_White() AS Color_calc
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.Price_f2 <> 0
                                 UNION
                                  SELECT '14. ВСЕГО СУММА' AS Col_Name
                                       , 14 AS Num  
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
-                                      , tmpOperationGroupAll.Summ                                    
+                                      , tmpOperationGroupAll.Summ
+                                      , zc_Color_White() AS Color_calc                                
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.Summ <> 0
                                 UNION
                                  SELECT '15. ЦЕНА Ж.В.-ФАКТ' AS Col_Name
                                       , 15 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Price
+                                      , zc_Color_White() AS Color_calc
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.Price <> 0
                                 UNION
                                  SELECT '16. ВЫХОД ФАКТ, %' AS Col_Name
                                       , 16 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
-                                      , ROUND (tmpOperationGroupAll.Amount_17 / tmpOperationGroupAll.Amount_Weight * 100, 1)
+                                      , CASE WHEN COALESCE (tmpOperationGroupAll.Amount_Weight,0) <> 0 THEN ROUND (tmpOperationGroupAll.Amount_17 / tmpOperationGroupAll.Amount_Weight * 100, 1) ELSE 0 END
+                                      , zc_Color_White() AS Color_calc
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.Amount_17 <> 0 AND tmpOperationGroupAll.Amount_Weight <> 0
                                 UNION
                                  SELECT '17. СВИНИНА Н/К' AS Col_Name
                                       , 17 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Amount_17
+                                      , 11452916 AS Color_calc
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.Amount_17 <> 0
                                 UNION
                                  SELECT '18. цена СВИНИНА Н/К' AS Col_Name
                                       , 18 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
-                                      , tmpOperationGroupAll.TotalSumm / tmpOperationGroupAll.Amount_17 AS Value
+                                      , CASE WHEN COALESCE (tmpOperationGroupAll.Amount_17,0) <>0 THEN tmpOperationGroupAll.TotalSumm / tmpOperationGroupAll.Amount_17 ELSE 0 END AS Value
+                                      , zc_Color_White() AS Color_calc
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.TotalSumm <> 0 AND tmpOperationGroupAll.Amount_17 <> 0
                                 UNION
                                  SELECT '19. ГОЛОВЫ СВ.' AS Col_Name
                                       , 19 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Amount_19
+                                      , 10733211 AS Color_calc
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.Amount_19 <> 0
                                 UNION
                                  SELECT '20. Горло св.' AS Col_Name
                                       , 20 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Amount_20
+                                      , 10733211 AS Color_calc
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.Amount_20 <> 0
                                 UNION
                                  SELECT '21. Трахея св.' AS Col_Name
                                       , 21 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Amount_21
+                                      , 10733211 AS Color_calc
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.Amount_21 <> 0
                                 UNION
                                  SELECT '22. Язык св.' AS Col_Name
                                       , 22 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Amount_22
+                                      , 10733211 AS Color_calc
                                  FROM tmpOperationGroupAll
-                                 WHERE tmpOperationGroupAll.Amount_22 <> 0
                                 UNION
                                  SELECT '23. Погрузка' AS Col_Name
                                       , 23 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Amount_23
+                                      , zc_Color_White() AS Color_calc
                                  FROM tmpOperationGroupAll
-                                 --WHERE tmpOperationGroupAll.Amount_23 <> 0
                                 UNION
                                  SELECT '24. транс- расх.' AS Col_Name
                                       , 24 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Amount_24
+                                      , zc_Color_White() AS Color_calc
                                  FROM tmpOperationGroupAll
-                                 --WHERE tmpOperationGroupAll.Amount_24 <> 0
                                 UNION
                                  SELECT '25. Такси+командиров.' AS Col_Name
                                       , 25 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Amount_25
+                                      , zc_Color_White() AS Color_calc
                                  FROM tmpOperationGroupAll
-                                 --WHERE tmpOperationGroupAll.Amount_25 <> 0
                                  )
 
       -- Результат 
       SELECT tmpOperationGroup.Num
-           , tmpOperationGroup.OperDate :: TDateTime AS OperDate
-           , tmpOperationGroup.Col_Name :: TVarChar
-           , Object_Juridical.ValueData              AS JuridicalName
-           , tmpOperationGroup.Value    :: TFloat
+           , tmpOperationGroup.OperDate   :: TDateTime
+           , tmpOperationGroup.Col_Name   :: TVarChar
+           , Object_Juridical.ValueData                AS JuridicalName
+           , tmpOperationGroup.Value      :: TFloat
+           , tmpOperationGroup.Color_calc :: Integer
         FROM tmpOperationGroup
              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpOperationGroup.JuridicalId
         ;
