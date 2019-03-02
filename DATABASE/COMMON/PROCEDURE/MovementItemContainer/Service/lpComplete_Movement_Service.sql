@@ -110,7 +110,7 @@ BEGIN
                END AS AnalyzerId -- заполняется !!!только!!! для текущей
 
                -- Валюта
-             , COALESCE (MILinkObject_Currency.ObjectId, zc_Enum_Currency_Basis()) AS CurrencyId
+             , COALESCE (MLO_Currency.ObjectId, zc_Enum_Currency_Basis()) AS CurrencyId
 
              , CASE WHEN MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END AS IsActive
              , TRUE AS IsMaster
@@ -119,16 +119,16 @@ BEGIN
 
              LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
                                      ON MovementFloat_AmountCurrency.MovementId = Movement.Id
-                                    AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
-                                              ON MILinkObject_Currency.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
+                                    AND MovementFloat_AmountCurrency.DescId     = zc_MovementFloat_AmountCurrency()
+             LEFT JOIN MovementLinkObject AS MLO_Currency
+                                          ON MLO_Currency.MovementId = Movement.Id
+                                         AND MLO_Currency.DescId     = zc_MovementLinkObject_CurrencyPartner()
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                               ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                              AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = MILinkObject_Unit.ObjectId
-                                                           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                                                           AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                               ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id

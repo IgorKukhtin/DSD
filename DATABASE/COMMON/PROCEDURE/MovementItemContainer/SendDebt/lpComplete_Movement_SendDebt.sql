@@ -26,20 +26,27 @@ BEGIN
                             AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
                           )
      -- Расчет
-     INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm
+     INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm, OperSumm_Currency
                          , MovementItemId, ContainerId
                          , AccountGroupId, AccountDirectionId, AccountId
                          , ProfitLossGroupId, ProfitLossDirectionId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
                          , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
+                         , CurrencyId
                          , IsActive, IsMaster
                           )
         SELECT tmpMovement.DescId
              , tmpMovement.OperDate
              , COALESCE (MovementItem.ObjectId, 0) AS ObjectId
              , COALESCE (Object.DescId, 0) AS ObjectDescId
+
              , MovementItem.Amount AS OperSumm
+             , CASE WHEN COALESCE (MILinkObject_Currency.ObjectId, zc_Enum_Currency_Basis()) <> zc_Enum_Currency_Basis() AND MIFloat_CurrencyValue.ValueData <> 0
+                         THEN CAST (MovementItem.Amount / MIFloat_CurrencyValue.ValueData * MIFloat_ParValue.ValueData AS NUMERIC (16, 2))
+                         ELSE 0
+               END AS OperSumm_Currency
+
              , MovementItem.Id AS MovementItemId
 
              , 0 AS ContainerId                                                     -- сформируем позже
@@ -74,6 +81,9 @@ BEGIN
 
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
              , COALESCE (MILinkObject_PaidKind.ObjectId, 0) AS PaidKindId
+
+               -- Валюта
+             , COALESCE (MILinkObject_Currency.ObjectId, zc_Enum_Currency_Basis()) AS CurrencyId
 
              , TRUE AS IsActive
              , TRUE AS IsMaster
@@ -93,6 +103,16 @@ BEGIN
                                               ON MILinkObject_Branch.MovementItemId = MovementItem.Id
                                              AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
 
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
+                                              ON MILinkObject_Currency.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
+             LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
+                                         ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
+                                        AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()
+             LEFT JOIN MovementItemFloat AS MIFloat_ParValue
+                                         ON MIFloat_ParValue.MovementItemId = MovementItem.Id
+                                        AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
+
              LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
              LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis ON ObjectLink_Contract_JuridicalBasis.ObjectId = MILinkObject_Contract.ObjectId
                                                                        AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
@@ -102,7 +122,13 @@ BEGIN
              , tmpMovement.OperDate
              , COALESCE (MovementItem.ObjectId, 0) AS ObjectId
              , COALESCE (Object.DescId, 0) AS ObjectDescId
+
              , -1 * MovementItem.Amount AS OperSumm
+             , -1 * CASE WHEN COALESCE (MILinkObject_Currency.ObjectId, zc_Enum_Currency_Basis()) <> zc_Enum_Currency_Basis() AND MIFloat_CurrencyValue.ValueData <> 0
+                              THEN CAST (MovementItem.Amount / MIFloat_CurrencyValue.ValueData * MIFloat_ParValue.ValueData AS NUMERIC (16, 2))
+                              ELSE 0
+                    END AS OperSumm_Currency
+
              , MovementItem.Id AS MovementItemId
 
              , 0 AS ContainerId                                                     -- сформируем позже
@@ -138,6 +164,9 @@ BEGIN
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
              , COALESCE (MILinkObject_PaidKind.ObjectId, 0) AS PaidKindId
 
+               -- Валюта
+             , COALESCE (MILinkObject_Currency.ObjectId, zc_Enum_Currency_Basis()) AS CurrencyId
+
              , FALSE AS IsActive
              , FALSE AS IsMaster
         FROM tmpMovement
@@ -155,6 +184,16 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
                                               ON MILinkObject_Branch.MovementItemId = MovementItem.Id
                                              AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
+                                              ON MILinkObject_Currency.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
+             LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
+                                         ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
+                                        AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()
+             LEFT JOIN MovementItemFloat AS MIFloat_ParValue
+                                         ON MIFloat_ParValue.MovementItemId = MovementItem.Id
+                                        AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
 
              LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
              LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis ON ObjectLink_Contract_JuridicalBasis.ObjectId = MILinkObject_Contract.ObjectId

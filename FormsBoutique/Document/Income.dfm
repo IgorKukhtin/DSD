@@ -497,16 +497,14 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object Price: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1074#1093'.'
-            DataBinding.FieldName = 'OperPrice'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object PriceTax: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094'.'
+            DataBinding.FieldName = 'PriceTax'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080
             Options.Editing = False
-            Width = 75
+            Width = 60
           end
           object PriceJur: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1089#1082'.'
@@ -517,6 +515,17 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
+            Options.Editing = False
+            Width = 75
+          end
+          object Price: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1074#1093'.'
+            DataBinding.FieldName = 'OperPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 75
           end
@@ -615,18 +624,10 @@ object IncomeForm: TIncomeForm
             Options.Editing = False
             Width = 70
           end
-          object PriceTax: TcxGridDBColumn
-            Caption = '% '#1085#1072#1094'.'
-            DataBinding.FieldName = 'PriceTax'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080
-            Width = 60
-          end
           object Color_Calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_Calc'
             Visible = False
+            Options.Editing = False
             VisibleForCustomization = False
             Width = 30
           end
@@ -854,14 +855,6 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bbMIContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -887,6 +880,14 @@ object IncomeForm: TIncomeForm
         item
           Visible = True
           ItemName = 'bbGoodsPrintList_Print'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIContainer'
         end
         item
           Visible = True
@@ -1108,9 +1109,8 @@ object IncomeForm: TIncomeForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1074#1093'.'#1094#1077#1085#1099' '#1085#1072' %?'
-      InfoAfterExecute = #1062#1077#1085#1099' '#1080#1079#1084#1077#1085#1077#1085#1099
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1074#1093'.'#1094#1077#1085#1099' '#1085#1072' %?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1093'. '#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1085#1072' % '#1089#1082#1080#1076#1082#1080
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1093'. '#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1085#1072' % '#1089#1082#1080#1076#1082#1080
     end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -2112,9 +2112,8 @@ object IncomeForm: TIncomeForm
           Action = actRefresh
         end>
       QuestionBeforeExecute = 
-        #1041#1091#1076#1091#1090' '#1080#1079#1084#1077#1085#1077#1085#1099' '#1094#1077#1085#1099' '#1074#1093'. '#1080' '#1087#1088#1086#1076#1072#1078#1080', '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1099'  '#1087#1086' '#1101 +
-        #1090#1080#1084' '#1087#1072#1088#1090#1080#1103#1084', '#1087#1088#1086#1076#1086#1083#1078#1080#1090#1100'?'
-      InfoAfterExecute = #1062#1077#1085#1099' '#1074#1093'. '#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1080#1079#1084#1077#1085#1077#1085#1099
+        #1041#1091#1076#1091#1090' '#1080#1079#1084#1077#1085#1077#1085#1072' '#1094#1077#1085#1072' '#1074#1093'. '#1080' '#1087#1088#1086#1076#1072#1078#1080', '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1086' '#1101#1090 +
+        #1086#1081' '#1087#1072#1088#1090#1080#1080', '#1087#1088#1086#1076#1086#1083#1078#1080#1090#1100'?'
       Caption = #1080#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1093' '#1080' '#1087#1088#1086#1076#1072#1078#1080
       Hint = #1080#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1093' '#1080' '#1087#1088#1086#1076#1072#1078#1080
       ImageIndex = 45
@@ -2200,7 +2199,9 @@ object IncomeForm: TIncomeForm
         end
         item
           Name = 'ParamName'
-          Value = '% '#1080#1079#1084'. '#1074#1093'. '#1094#1077#1085#1099
+          Value = 
+            #1048#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1099' '#1074#1093'. '#1080' '#1087#1088#1086#1076#1072#1078#1080' '#1085#1072' % '#1089#1082#1080#1076#1082#1080', '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077 +
+            #1085#1090#1099
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -2927,8 +2928,8 @@ object IncomeForm: TIncomeForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 630
-    Top = 102
+    Left = 622
+    Top = 158
   end
   object spGet_GoodsPrint_Null: TdsdStoredProc
     StoredProcName = 'gpGet_Object_GoodsPrint_Null'

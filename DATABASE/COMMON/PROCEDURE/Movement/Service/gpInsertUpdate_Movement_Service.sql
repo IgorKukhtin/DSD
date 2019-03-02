@@ -11,27 +11,27 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
     IN inOperDate                 TDateTime , -- Дата документа
     IN inOperDatePartner          TDateTime , -- Дата акта(контрагента)
     IN inInvNumberPartner         TVarChar  , -- Номер акта (контрагента)
- INOUT ioAmountIn                 TFloat    , -- Сумма операции 
- INOUT ioAmountOut                TFloat    , -- Сумма операции
- INOUT ioAmountCurrencyDebet      TFloat    , -- Сумма операции (в валюте)
- INOUT ioAmountCurrencyKredit     TFloat    , -- Сумма операции (в валюте)
-    IN inCurrencyPartnerValue     TFloat    , -- Курс для расчета суммы операции
-    IN inParPartnerValue          TFloat    , -- Номинал для расчета суммы операции
-    IN inMovementId_List          TVarChar  , -- список Ид док для затрат 
+ INOUT ioAmountIn                 TFloat    , -- Сумма Дебет (мы оказали)
+ INOUT ioAmountOut                TFloat    , -- Сумма Кредит (мы получили)
+ INOUT ioAmountCurrencyDebet      TFloat    , -- Сумма Дебет (в валюте)
+ INOUT ioAmountCurrencyKredit     TFloat    , -- Сумма Кредит (в валюте)
+    IN inCurrencyPartnerValue     TFloat    , -- Курс для расчета суммы операции в ГРН
+    IN inParPartnerValue          TFloat    , -- Номинал для расчета суммы операции в ГРН
+    IN inMovementId_List          TVarChar  , -- список Ид док для затрат
     IN inComment                  TVarChar  , -- Комментарий
-    IN inBusinessId               Integer   , -- Бизнес    
+    IN inBusinessId               Integer   , -- Бизнес
     IN inContractId               Integer   , -- Договор
-    IN inInfoMoneyId              Integer   , -- Статьи назначения 
-    IN inJuridicalId              Integer   , -- Юр. лицо	
+    IN inInfoMoneyId              Integer   , -- Статьи назначения
+    IN inJuridicalId              Integer   , -- Юр. лицо
     IN inPartnerId                Integer   , -- Контрагент
-    IN inJuridicalBasisId         Integer   , -- Главное юр. лицо	
+    IN inJuridicalBasisId         Integer   , -- Главное юр. лицо
     IN inPaidKindId               Integer   , -- Виды форм оплаты
     IN inUnitId                   Integer   , -- Подразделение
-    IN inMovementId_Invoice       Integer   , -- документ счет  
+    IN inMovementId_Invoice       Integer   , -- документ счет
     IN inAssetId                  Integer   , -- Для ОС
     IN inCurrencyPartnerId        Integer   , -- Валюта (контрагента)
     IN inSession                  TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -44,21 +44,59 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Service());
+
      -- определяем ключ доступа
      vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Service());
 
+
+     -- если валюта выбрана
+     IF COALESCE (inCurrencyPartnerId, 0) NOT IN (0, zc_Enum_Currency_Basis())
+     THEN
+         -- меняется сумма ГРН - Дебет (мы оказали)
+         ioAmountIn := CASE WHEN ioAmountCurrencyDebet <> 0
+                            THEN ioAmountCurrencyDebet
+                            ELSE 0
+                        END
+                        -- по курсу
+                      * CASE WHEN inParPartnerValue > 0 THEN inCurrencyPartnerValue / inParPartnerValue
+                             ELSE inCurrencyPartnerValue
+                        END;
+         -- меняется сумма ГРН - Кредит (мы получили)
+         ioAmountOut:= CASE WHEN ioAmountCurrencyKredit <> 0
+                            THEN ioAmountCurrencyKredit
+                            ELSE 0
+                        END
+                        -- по курсу
+                      * CASE WHEN inParPartnerValue > 0 THEN inCurrencyPartnerValue / inParPartnerValue
+                             ELSE inCurrencyPartnerValue
+                        END;
+         -- расчет - сумма в валюте
+         vbAmountCurrency := CASE WHEN ioAmountCurrencyDebet  <> 0 THEN  1 * ioAmountCurrencyDebet
+                                  WHEN ioAmountCurrencyKredit <> 0 THEN -1 * ioAmountCurrencyKredit
+                                  ELSE 0
+                             END;
+     ELSE
+         ioAmountCurrencyDebet := 0;
+         ioAmountCurrencyKredit:= 0;
+     END IF;
+
+
      -- проверка
-     IF ((COALESCE(ioAmountIn, 0) = 0) AND (COALESCE(ioAmountOut, 0) = 0))  
-     -- OR ((COALESCE(ioAmountCurrencyDebet, 0) = 0) AND (COALESCE(ioAmountCurrencyKredit, 0) = 0))
+     IF COALESCE (ioAmountCurrencyDebet, 0) = 0 AND COALESCE (ioAmountCurrencyKredit, 0) = 0 AND COALESCE (inCurrencyPartnerId, 0) NOT IN (0, zc_Enum_Currency_Basis())
+     THEN
+        RAISE EXCEPTION 'Введите сумму в валюте.';
+     END IF;
+     -- проверка
+     IF COALESCE (ioAmountIn, 0) = 0 AND COALESCE (ioAmountOut, 0) = 0 AND COALESCE (inCurrencyPartnerId, 0) IN (0, zc_Enum_Currency_Basis())
      THEN
         RAISE EXCEPTION 'Введите сумму.';
      END IF;
      -- проверка
-     IF (COALESCE(ioAmountIn, 0) <> 0) AND (COALESCE(ioAmountOut, 0) <> 0) THEN
+     IF COALESCE (ioAmountIn, 0) <> 0 AND COALESCE (ioAmountOut, 0) <> 0 THEN
         RAISE EXCEPTION 'Должна быть введена только одна сумма: <Дебет> или <Кредит>.';
      END IF;
      -- проверка
-     IF (COALESCE(ioAmountCurrencyDebet, 0) <> 0) AND (COALESCE(ioAmountCurrencyKredit, 0) <> 0) THEN
+     IF COALESCE (ioAmountCurrencyDebet, 0) <> 0 AND COALESCE (ioAmountCurrencyKredit, 0) <> 0 THEN
         RAISE EXCEPTION 'Должна быть введена только одна сумма в валюте: <Дебет> или <Кредит>.';
      END IF;
      -- проверка
@@ -73,39 +111,15 @@ BEGIN
          RAISE EXCEPTION 'Ошибка. Для формы оплаты <%> должен быть установлен <Контрагент>.', lfGet_Object_ValueData (inPaidKindId);
      END IF;
 
-     -- если валюта выбрана
-     IF COALESCE (inCurrencyPartnerId, 0) NOT IN (0, zc_Enum_Currency_Basis())
-     THEN 
-         ioAmountIn := CASE WHEN ioAmountCurrencyDebet <> 0 THEN ioAmountCurrencyDebet
-                             ELSE 0
-                        END
-                        -- по курсу в ГРН
-                      * CASE WHEN inParPartnerValue > 0 THEN inCurrencyPartnerValue / inParPartnerValue
-                             ELSE inCurrencyPartnerValue
-                        END;
-         ioAmountOut:= CASE WHEN ioAmountCurrencyKredit <> 0 THEN ioAmountCurrencyKredit
-                             ELSE 0
-                        END
-                        -- по курсу в ГРН
-                      * CASE WHEN inParPartnerValue > 0 THEN inCurrencyPartnerValue / inParPartnerValue
-                             ELSE inCurrencyPartnerValue
-                        END;
-                        
-         vbAmountCurrency := CASE WHEN ioAmountCurrencyDebet <> 0 THEN ioAmountCurrencyDebet
-                                  WHEN ioAmountCurrencyKredit <> 0 THEN -1 * ioAmountCurrencyKredit
-                                  ELSE 0
-                             END;
-     ELSE 
-         ioAmountCurrencyDebet := 0;
-         ioAmountCurrencyKredit:= 0;
-     END IF;
-     
-     -- расчет
-     IF ioAmountIn <> 0 THEN
+
+     -- расчет сумма в ГРН
+     IF ioAmountIn <> 0
+     THEN
         vbAmount := ioAmountIn;
      ELSE
         vbAmount := -1 * ioAmountOut;
      END IF;
+
 
      -- 1. Распроводим Документ
      IF ioId > 0 AND vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_Service())
@@ -135,7 +149,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParPartnerValue(), ioId, inParPartnerValue);
      -- сохранили свойство <Сумма операции (в валюте)>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCurrency(), ioId, vbAmountCurrency);
-     
+
 
      -- определяем <Элемент документа>
      SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
@@ -145,7 +159,7 @@ BEGIN
 
      -- сохранили <Элемент документа>
      vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), CASE WHEN inPartnerId <> 0 AND inPaidKindId = zc_Enum_PaidKind_SecondForm() THEN inPartnerId ELSE inJuridicalId END, ioId, vbAmount, NULL);
-    
+
      -- Комментарий
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
 
@@ -165,10 +179,10 @@ BEGIN
      -- PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ContractConditionKind(), vbMovementItemId, inContractConditionKindId);
 
 
-     --- сохраняем связи в документах приход от поставщика 
+     --- сохраняем связи в документах приход от поставщика
      -- таблица
      CREATE TEMP TABLE tmp_List (MovementId Integer) ON COMMIT DROP;
-     -- парсим 
+     -- парсим
      vbIndex := 1;
      WHILE SPLIT_PART (inMovementId_List, ',', vbIndex) <> '' LOOP
          -- добавляем то что нашли
@@ -176,10 +190,10 @@ BEGIN
          -- теперь следуюющий
          vbIndex := vbIndex + 1;
      END LOOP;
-/*     
+/*
      -- сохраняем <Документ Затрат>
      PERFORM lpInsertUpdate_Movement_Cost ( ioId         := 0
-                                          , inParentId   := tmp_List.MovementId    --- док приход 
+                                          , inParentId   := tmp_List.MovementId    --- док приход
                                           , inMovementId := ioId   ::TFloat        --- док сервис
                                           , inComment    := ''::TVarChar
                                           , inUserId     := vbUserId
@@ -189,23 +203,23 @@ BEGIN
                   from tmp_List
                      Inner Join Movement on tmp_List.MovementId = Movement.ParentId
                      Inner JOIN MovemenTFloat AS MovemenTFloat_MovementId
-                                              ON MovemenTFloat_MovementId.MovementId = Movement.Id 
+                                              ON MovemenTFloat_MovementId.MovementId = Movement.Id
                                              AND MovemenTFloat_MovementId.DescId = zc_MovemenTFloat_MovementId()
                                              AND MovemenTFloat_MovementId.ValueData = ioId
                   ) as tmp on tmp.ParentId =  tmp_List.MovementId
      WHERE tmp.Id isnull;
 
-     -- метим на удаление док.затрат в  приходах не из списка  
-     PERFORM lpSetErased_Movement (inMovementId := tmp.MovementId 
+     -- метим на удаление док.затрат в  приходах не из списка
+     PERFORM lpSetErased_Movement (inMovementId := tmp.MovementId
                                  , inUserId     := vbUserId)
      FROM (select Movement.ParentId, MovemenTFloat.MovementId
            from MovemenTFloat
               left Join Movement on Movement.id = MovemenTFloat.Movementid
            where MovemenTFloat.DescId = zc_MovemenTFloat_MovementId()
-             AND MovemenTFloat.ValueData = ioId ) AS tmp 
-        LEFT JOIN tmp_List on tmp.ParentId = tmp_List.MovementId 
+             AND MovemenTFloat.ValueData = ioId ) AS tmp
+        LEFT JOIN tmp_List on tmp.ParentId = tmp_List.MovementId
      WHERE tmp_List.MovementId Isnull;
-*/  
+*/
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);

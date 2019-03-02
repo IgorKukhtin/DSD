@@ -1,9 +1,9 @@
 object IncomeItemPriceDialogForm: TIncomeItemPriceDialogForm
   Left = 0
   Top = 0
-  Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1099
+  Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1099' + '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
   ClientHeight = 148
-  ClientWidth = 335
+  ClientWidth = 386
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,7 +16,7 @@ object IncomeItemPriceDialogForm: TIncomeItemPriceDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 58
+    Left = 91
     Top = 115
     Width = 75
     Height = 22
@@ -26,7 +26,7 @@ object IncomeItemPriceDialogForm: TIncomeItemPriceDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 193
+    Left = 226
     Top = 115
     Width = 75
     Height = 22
@@ -35,12 +35,12 @@ object IncomeItemPriceDialogForm: TIncomeItemPriceDialogForm
     TabOrder = 1
   end
   object cxLabel2: TcxLabel
-    Left = 45
+    Left = 89
     Top = 23
     Caption = #1042#1093'. '#1094#1077#1085#1072
   end
   object ceOperPrice: TcxCurrencyEdit
-    Left = 45
+    Left = 89
     Top = 46
     EditValue = 40.000000000000000000
     Properties.DecimalPlaces = 4
@@ -49,12 +49,12 @@ object IncomeItemPriceDialogForm: TIncomeItemPriceDialogForm
     Width = 91
   end
   object cxLabel8: TcxLabel
-    Left = 177
+    Left = 221
     Top = 23
     Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
   end
   object ceOperPriceList: TcxCurrencyEdit
-    Left = 177
+    Left = 221
     Top = 46
     EditValue = 3950.000000000000000000
     Properties.DecimalPlaces = 4

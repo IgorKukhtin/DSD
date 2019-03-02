@@ -5,8 +5,8 @@ DROP FUNCTION IF EXISTS gpUpdate_MI_Income_Price (Integer, Integer, TFloat, TFlo
 CREATE OR REPLACE FUNCTION gpUpdate_MI_Income_Price(
     IN inId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
-    IN inOperPrice             TFloat    , -- Цена
-    IN inOperPriceList         TFloat    , -- Цена по прайсу
+    IN inOperPrice             TFloat    , -- Цена (со скидкой)
+    IN inOperPriceList         TFloat    , -- Цена по прайсу (со скидкой)
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -51,12 +51,23 @@ BEGIN
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), _tmpMI.Id, inOperPriceList)       -- сохранили свойство <Цена продажи >
      FROM _tmpMI;
 
-     -- изменили цены в партиях - по значению <Ключ партии>
-     UPDATE Object_PartionGoods
-            SET OperPrice            = inOperPrice
-              , OperPriceList        = inOperPriceList
-     WHERE Object_PartionGoods.MovementItemId IN (SELECT _tmpMI.Id FROM _tmpMI);
      
+     -- Здесь еще Update - Object_PartionGoods.OperPriceList
+     PERFORM gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId         := NULL                  -- сам найдет нужный Id
+                                                           , inPriceListId:= zc_PriceList_Basis()  -- !!!Базовый Прайс!!!
+                                                           , inGoodsId    := vbGoodsId
+                                                           , inOperDate   := zc_DateStart()
+                                                           , inValue      := inOperPriceList
+                                                           , inIsLast     := TRUE
+                                                           , inSession    := vbUserId :: TVarChar
+                                                            );
+
+     -- !!! НЕТ !!! изменили цены в партиях - по значению <Ключ партии>
+     -- UPDATE Object_PartionGoods
+     --        SET OperPrice            = inOperPrice
+     --          , OperPriceList        = inOperPriceList
+     -- WHERE Object_PartionGoods.MovementItemId IN (SELECT _tmpMI.Id FROM _tmpMI);
+
      -- дальше перепроводим все док. где єта партия участвовала
      PERFORM CASE WHEN Movement.DescId = zc_Movement_Sale() THEN gpReComplete_Movement_Sale (Movement.Id, inSession)
                   WHEN Movement.DescId = zc_Movement_ReturnIn() THEN gpReComplete_Movement_ReturnIn (Movement.Id, inSession)
