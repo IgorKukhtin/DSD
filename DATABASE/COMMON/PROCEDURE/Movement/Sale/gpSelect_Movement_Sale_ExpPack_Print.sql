@@ -128,7 +128,7 @@ BEGIN
            , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)   AS OperDatePartner
 
 
-           , View_Contract.InvNumber         		                        AS ContractName
+           , View_Contract.InvNumber         		                    AS ContractName
            , ObjectDate_Signing.ValueData                                   AS ContractSigningDate
            , View_Contract.ContractKindName                                 AS ContractKind
 
@@ -163,7 +163,7 @@ BEGIN
            , CAST ((COALESCE (MIFloat_AmountPartner.ValueData, 0) * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) AS TFloat) AS Netto_Weight
            , CAST ((COALESCE (MIFloat_AmountPartner.ValueData, 0) * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END )) + (COALESCE (OF_Box_Weight.ValueData, 0) * COALESCE (MIFloat_BoxCount.ValueData, 0)) AS TFloat) AS Brutto_Weight
 
-
+           , 'Україна, м.Дніпро' :: TVarChar AS LoadingPlace
 
        FROM tmpMovement
 /*
@@ -302,6 +302,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_ExpPack_Print (Integer, TVarChar) OWNER TO
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.03.19         * add LoadingPlace
  22.10.14                                                       *
  21.10.14                                                       *
 */

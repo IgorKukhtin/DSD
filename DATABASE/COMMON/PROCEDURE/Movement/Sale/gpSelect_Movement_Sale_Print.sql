@@ -560,6 +560,7 @@ BEGIN
              -- кол-во Взвешиваний
            , vbWeighingCount AS WeighingCount
 
+           , 'м.Дніпро' :: TVarChar AS CityOf                             -- Мiсце складання
        FROM Movement
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementId = Movement.Id
