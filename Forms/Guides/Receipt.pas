@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdGuides, Vcl.ExtCtrls;
 
 type
   TReceiptForm = class(TParentForm)
@@ -169,13 +169,22 @@ type
     dsdSetErasedReceiptChild: TdsdUpdateErased;
     bbSetErasedReceiptChild: TdxBarButton;
     dsdSetUnErasedReceiptChild: TdsdUpdateErased;
-    bb: TdxBarButton;
+    bbSetUnErasedReceiptChild: TdxBarButton;
     spErasedUnErasedReceipt: TdsdStoredProc;
     Check_Weight: TcxGridDBColumn;
     Check_PartionValue: TcxGridDBColumn;
     Check_TaxExit: TcxGridDBColumn;
     TaxExitCheck: TcxGridDBColumn;
     isParentMulti: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
+    Panel: TPanel;
+    cxLabel3: TcxLabel;
+    edGoods: TcxButtonEdit;
+    cxLabel1: TcxLabel;
+    edGoodsKind: TcxButtonEdit;
+    GuidesGoods: TdsdGuides;
+    GuidesGoodsKind: TdsdGuides;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

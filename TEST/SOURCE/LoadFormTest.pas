@@ -3131,9 +3131,12 @@ end;
 
 procedure TLoadFormTest.LoadReceiptFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptDialogForm');
   // Рецептуры
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptEditForm');
   // Затраты в рецептурах
@@ -3153,6 +3156,7 @@ begin
   // составляющие рецептур
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptComponentsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptComponentsForm');
+  }
 end;
 
 procedure TLoadFormTest.SetUp;

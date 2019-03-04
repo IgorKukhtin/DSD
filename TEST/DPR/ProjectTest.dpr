@@ -1074,7 +1074,8 @@ uses
   GoodsBrand in '..\..\Forms\Guides\GoodsBrand.pas' {GoodsBrandForm: TParentForm},
   GoodsBrandEdit in '..\..\Forms\Guides\GoodsBrandEdit.pas' {GoodsBrandEditForm: TParentForm},
   GoodsPropertyValueVMS in '..\..\Forms\Guides\GoodsPropertyValueVMS.pas' {GoodsPropertyValueVMSForm: TParentForm},
-  TransportRouteJournal in '..\..\Forms\Document\TransportRouteJournal.pas' {TransportRouteJournalForm: TParentForm};
+  TransportRouteJournal in '..\..\Forms\Document\TransportRouteJournal.pas' {TransportRouteJournalForm: TParentForm},
+  ReceiptDialog in '..\..\Forms\Guides\ReceiptDialog.pas' {ReceiptDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
