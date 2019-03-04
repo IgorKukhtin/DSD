@@ -291,4 +291,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelectMobile_Object_GoodsListSale (inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
--- SELECT * FROM gpSelectMobile_Object_GoodsListSale (inSyncDateIn := zc_DateStart(), inSession := '1000137')
+-- SELECT * FROM gpSelectMobile_Object_GoodsListSale (inSyncDateIn := CURRENT_DATE, inSession := '2149406')

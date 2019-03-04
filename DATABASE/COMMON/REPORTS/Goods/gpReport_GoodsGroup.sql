@@ -377,9 +377,9 @@ BEGIN
                             , 0                               AS SummOut_branch
                             , 0                               AS SummPartnerOut
                             , SUM (tmp.OperCount_Partner)     AS AmountIn
-                            , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.SummOut_Partner) ELSE SUM (tmp.SummIn_Partner_zavod) END AS SummIn
-                            , SUM (tmp.SummOut_Partner)       AS SummIn_branch
-                            --***, SUM (tmp.SummIn_Partner_zavod)  AS SummPartnerIn
+                            , CASE WHEN vbIsBranch = TRUE THEN SUM (tmp.SummOut_Partner_real) ELSE SUM (tmp.SummIn_Partner_zavod_real) END AS SummIn
+                            , SUM (tmp.SummOut_Partner_real)       AS SummIn_branch
+                            --***, SUM (tmp.SummIn_Partner_zavod_real)  AS SummPartnerIn
                             , SUM (tmp.Summ_pl)               AS SummPartnerIn
 
                             , 0                               AS AmountStart
@@ -388,9 +388,9 @@ BEGIN
                             , 0                               AS SummEnd
                             , 0                               AS SummStart_branch
                             , 0                               AS SummEnd_branch
-                            --***, SUM (tmp.SummIn_Partner_zavod)  AS Summ
+                            --***, SUM (tmp.SummIn_Partner_zavod_real)  AS Summ
                             , SUM (tmp.Summ_pl)               AS Summ
-                            , SUM (tmp.SummOut_Partner)       AS Summ_branch
+                            , SUM (tmp.SummOut_Partner_real)       AS Summ_branch
 
                             , SUM (tmp.OperCount_Change)      AS Amount_Change
                             , SUM (tmp.SummIn_Change_zavod)   AS Summ_Change_branch

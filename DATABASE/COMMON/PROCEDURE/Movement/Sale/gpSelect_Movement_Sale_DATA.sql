@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_DATA(
     IN inIsPartnerDate      Boolean   ,
     IN inIsErased           Boolean   ,
     IN inJuridicalBasisId   Integer   ,
-    IN inUserId             Integer    
+    IN inUserId             Integer
     )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , Checked Boolean
@@ -60,11 +60,12 @@ BEGIN
      -- !!!’леб!!!
      vbIsXleb:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 131936  AND UserId = inUserId);
 
-
+/*
 if inUserId = 1613484 then
   perform pg_sleep (59);
   -- return;
 end if;
+*/
      -- !!!т.к. нельз€ когда много данных в гриде!!!
      IF inStartDate + (INTERVAL '200 DAY') <= inEndDate
      THEN
@@ -93,8 +94,8 @@ end if;
                               )
         , tmpBranchJuridical AS (SELECT DISTINCT ObjectLink_Juridical.ChildObjectId AS JuridicalId
                                  FROM ObjectLink AS ObjectLink_Juridical
-                                      INNER JOIN ObjectLink AS ObjectLink_Branch 
-                                                            ON ObjectLink_Branch.ObjectId = ObjectLink_Juridical.ObjectId 
+                                      INNER JOIN ObjectLink AS ObjectLink_Branch
+                                                            ON ObjectLink_Branch.ObjectId = ObjectLink_Juridical.ObjectId
                                                            AND ObjectLink_Branch.DescId = zc_ObjectLink_BranchJuridical_Branch()
                                  WHERE ObjectLink_Juridical.ChildObjectId > 0
                                    AND ObjectLink_Juridical.DescId = zc_ObjectLink_BranchJuridical_Juridical()
@@ -126,7 +127,7 @@ end if;
                             AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                             AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                          )
-            
+
         , tmpMovementBoolean AS (SELECT MovementBoolean.*
                                  FROM MovementBoolean
                                  WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
@@ -143,9 +144,9 @@ end if;
                               FROM MovementDate
                               WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                                 AND MovementDate.DescId IN (zc_MovementDate_Insert()
-                                                                 , zc_MovementDate_Payment()
-                                                                 , zc_MovementDate_OperDatePartner()
-                                                                  )
+                                                          , zc_MovementDate_Payment()
+                                                          , zc_MovementDate_OperDatePartner()
+                                                           )
                               )
         , tmpMovementString AS (SELECT MovementString.*
                                 FROM MovementString
@@ -174,7 +175,7 @@ end if;
                                                             , zc_MovementFloat_ParValue()
                                                             , zc_MovementFloat_CurrencyPartnerValue()
                                                             , zc_MovementFloat_ParPartnerValue()
-                                                            )
+                                                             )
                               )
    /* , tmpMovementFloat_VATPercent AS (SELECT MovementFloat.*
                                FROM MovementFloat
@@ -292,7 +293,7 @@ end if;
                                                AND MovementLinkObject.DescId = zc_MovementLinkObject_Contract()
                                              )
 
-        , tmpContract_InvNumber AS (SELECT Object_Contract_InvNumber_Sale_View.* 
+        , tmpContract_InvNumber AS (SELECT Object_Contract_InvNumber_Sale_View.*
                                     FROM Object_Contract_InvNumber_Sale_View
                                     WHERE Object_Contract_InvNumber_Sale_View.ContractId IN (SELECT DISTINCT tmpMovementLinkObject_Contract.ObjectId FROM tmpMovementLinkObject_Contract)
                                     )
@@ -346,7 +347,7 @@ end if;
                                     WHERE MovementString.MovementId IN (SELECT DISTINCT tmpMLM.MovementChildId FROM tmpMLM WHERE tmpMLM.DescId = zc_MovementLinkMovement_Master())
                                       AND MovementString.DescId = zc_MovementString_InvNumberPartner()
                                    )
-           
+
        , tmpMB_MLM AS (SELECT MovementBoolean.*
                        FROM MovementBoolean
                        WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMLM.MovementChildId FROM tmpMLM/* WHERE tmpMLM.DescId = zc_MovementLinkMovement_Master()*/)
@@ -395,13 +396,13 @@ end if;
                            WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMLM.MovementChildId FROM tmpMLM)
                              AND MovementLinkObject.DescId = zc_MovementLinkObject_Retail()
                            )
- 
+
        , tmpMLO_Car AS (SELECT MovementLinkObject.*
                         FROM MovementLinkObject
                         WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMLM.MovementChildId FROM tmpMLM)
                           AND MovementLinkObject.DescId = zc_MovementLinkObject_Car()
                        )
- 
+
        , tmpMLO_PersonalDriver AS (SELECT MovementLinkObject.*
                                    FROM MovementLinkObject
                                    WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMLM.MovementChildId FROM tmpMLM)
@@ -414,7 +415,7 @@ end if;
                           LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId AND Object_Route.DescId = zc_Object_Route()
                      )
        , tmpOL_Route_RouteGroup AS (SELECT ObjectLink.*
-                                    FROM ObjectLink 
+                                    FROM ObjectLink
                                     WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpRoute.Id FROM tmpRoute)
                                       AND ObjectLink.DescId = zc_ObjectLink_Route_RouteGroup()
                                     )
@@ -428,31 +429,31 @@ end if;
                     FROM tmpMLO_Car AS MovementLinkObject_Car
                          LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId AND Object_Car.DescId = zc_Object_Car()
                     )
-      
+
        , tmpPersonalDriver AS (SELECT MovementLinkObject_PersonalDriver.MovementId
                                     , Object_PersonalDriver.*
                                FROM tmpMLO_PersonalDriver AS MovementLinkObject_PersonalDriver
                                     LEFT JOIN Object AS Object_PersonalDriver
-                                                     ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId 
+                                                     ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
                                )
        , tmpPartner AS (SELECT MovementLinkObject_Partner.MovementId
                             , Object_Partner.*
                     FROM tmpMLO_Partner AS MovementLinkObject_Partner
                          LEFT JOIN Object AS Object_Partner
-                                          ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId 
+                                          ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
                     )
-     
+
        , tmpRetail AS (SELECT MovementLinkObject_Retail.MovementId
                             , Object_Retail.*
                        FROM tmpMLO_Retail AS MovementLinkObject_Retail
                             LEFT JOIN Object AS Object_Retail
-                                             ON Object_Retail.Id = MovementLinkObject_Retail.ObjectId 
+                                             ON Object_Retail.Id = MovementLinkObject_Retail.ObjectId
                        )
 --
        , tmpJuridicalTo AS (SELECT ObjectLink_Partner_Juridical.ObjectId AS ToId
                                  , Object_JuridicalTo.*
                             FROM ObjectLink AS ObjectLink_Partner_Juridical
-                                 LEFT JOIN Object AS Object_JuridicalTo ON Object_JuridicalTo.Id = ObjectLink_Partner_Juridical.ChildObjectId 
+                                 LEFT JOIN Object AS Object_JuridicalTo ON Object_JuridicalTo.Id = ObjectLink_Partner_Juridical.ChildObjectId
                             WHERE ObjectLink_Partner_Juridical.ObjectId IN (SELECT DISTINCT tmpTo.Id FROM tmpTo)
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                             )
@@ -471,7 +472,7 @@ end if;
                                                               , zc_ObjectBoolean_Partner_EdiInvoice()
                                                               , zc_ObjectBoolean_Partner_EdiDesadv())
                                 )
-     
+
         , tmpMovement_Master AS (SELECT MovementLinkMovement_Master.MovementId
                                       , Movement_Master.*
                                  FROM tmpMLM AS MovementLinkMovement_Master
@@ -508,17 +509,17 @@ end if;
                                                        AND Movement_Promo.DescId = zc_Movement_Promo()
                                 WHERE MovementLinkMovement_Promo.DescId = zc_MovementLinkMovement_Promo()
                                )
-                 
+
         , tmpMovementDate_Promo AS (SELECT MovementDate.*
                                     FROM MovementDate
                                     WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement_Promo.Id FROM tmpMovement_Promo)
                                        AND MovementDate.DescId IN (zc_MovementDate_StartSale()
                                                                  , zc_MovementDate_EndSale())
                                     )
-     
+
         , tmpCarModel AS (SELECT ObjectLink.ObjectId AS CarId
                                , Object_CarModel.*
-                          FROM ObjectLink 
+                          FROM ObjectLink
                                LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink.ChildObjectId
                           WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpCar.Id FROM tmpCar)
                             AND ObjectLink.DescId = zc_ObjectLink_Car_CarModel()
@@ -763,7 +764,7 @@ end if;
             LEFT JOIN tmpJuridicalTo AS Object_JuridicalTo ON Object_JuridicalTo.ToId = Object_To.Id
             LEFT JOIN tmpJuridicalDetails AS ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_JuridicalTo.Id
             LEFT JOIN tmpBranchJuridical ON tmpBranchJuridical.JuridicalId = Object_JuridicalTo.Id
-            
+
             LEFT JOIN tmpMovementLinkObject_PaidKind AS MovementLinkObject_PaidKind
                                                      ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                                     AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
@@ -791,7 +792,7 @@ end if;
 
             LEFT JOIN tmpMovement_Master AS Movement_DocumentMaster ON Movement_DocumentMaster.MovementId = Movement.Id
 
-            LEFT JOIN tmpMS_InvNumberPartner AS MS_InvNumberPartner_Master 
+            LEFT JOIN tmpMS_InvNumberPartner AS MS_InvNumberPartner_Master
                                              ON MS_InvNumberPartner_Master.MovementId = Movement_DocumentMaster.Id -- Movement_DocumentMaster.Id
 
             LEFT JOIN tmpMovement_TransportGoods AS Movement_TransportGoods ON Movement_TransportGoods.MovementId = Movement.Id
@@ -837,7 +838,7 @@ end if;
 
             LEFT JOIN tmpRoute AS Object_Route ON Object_Route.MovementId = MovementLinkMovement_Order.MovementChildId
 
-            LEFT JOIN tmpPersonal AS Object_Personal ON Object_Personal.MovementId = MovementLinkMovement_Order.MovementChildId 
+            LEFT JOIN tmpPersonal AS Object_Personal ON Object_Personal.MovementId = MovementLinkMovement_Order.MovementChildId
 
             LEFT JOIN tmpOL_Route_RouteGroup AS ObjectLink_Route_RouteGroup
                                              ON ObjectLink_Route_RouteGroup.ObjectId = Object_Route.Id
@@ -852,11 +853,11 @@ end if;
             LEFT JOIN tmpObjectBoolean_To AS ObjectBoolean_EdiOrdspr
                                           ON ObjectBoolean_EdiOrdspr.ObjectId = Object_To.Id
                                          AND ObjectBoolean_EdiOrdspr.DescId = zc_ObjectBoolean_Partner_EdiOrdspr()
-   
+
             LEFT JOIN tmpObjectBoolean_To AS ObjectBoolean_EdiInvoice
                                           ON ObjectBoolean_EdiInvoice.ObjectId = Object_To.Id
                                          AND ObjectBoolean_EdiInvoice.DescId = zc_ObjectBoolean_Partner_EdiInvoice()
-   
+
             LEFT JOIN tmpObjectBoolean_To AS ObjectBoolean_EdiDesadv
                                           ON ObjectBoolean_EdiDesadv.ObjectId = Object_To.Id
                                          AND ObjectBoolean_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
@@ -871,22 +872,22 @@ end if;
                                             ON MD_EndSale.MovementId = Movement_Promo.Id
                                            AND MD_EndSale.DescId = zc_MovementDate_EndSale()
 
-            LEFT JOIN tmpMovement_Production AS Movement_Production ON Movement_Production.MovementId = Movement.Id 
-  
+            LEFT JOIN tmpMovement_Production AS Movement_Production ON Movement_Production.MovementId = Movement.Id
+
             LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_Production.DescId
-  
+
             LEFT JOIN tmpMB_MLM AS MovementBoolean_Peresort
                                 ON MovementBoolean_Peresort.MovementId = Movement_Production.Id
                                AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
-  
+
             LEFT JOIN tmpMovement_Transport AS Movement_Transport ON Movement_Transport.MovementId = Movement.Id
-  
+
             LEFT JOIN tmpCar AS Object_Car ON Object_Car.MovementId = Movement_Transport.Id
-  
+
             LEFT JOIN tmpCarModel AS Object_CarModel ON Object_CarModel.CarId = Object_Car.Id
-  
+
             LEFT JOIN tmpPersonalDriver AS Object_PersonalDriver ON Object_PersonalDriver.MovementId =  Movement_Transport.Id
-            
+
             LEFT JOIN tmpRetail_JuridicalTo ON tmpRetail_JuridicalTo.JuridicalId_To = Object_JuridicalTo.Id
 
      WHERE /*(vbIsXleb = FALSE OR (View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30103() -- ’леб
@@ -934,6 +935,6 @@ $BODY$
 
 -- тест
 --
--- SELECT * FROM gpSelect_Movement_Sale_DATA (inStartDate:= '01.03.2018', inEndDate:= '31.03.2018', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inJuridicalBasisId:= 0, inUserId:= zfCalc_UserAdmin() :: Integer)
+-- SELECT * FROM gpSelect_Movement_Sale_DATA (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inJuridicalBasisId:= 0, inUserId:= zfCalc_UserAdmin() :: Integer)
 --Ѕыло 1 мес€ц - 3 мин 21 сек
 --сейчас 1 мес€ц - 28 сек

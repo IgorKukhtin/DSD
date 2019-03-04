@@ -370,7 +370,7 @@ BEGIN
            , vbIsInfoMoney_30201 AS isInfoMoney_30201
 
            , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '') 
-                  ELSE 'м.ƒнiпропетровськ' 
+                  ELSE 'м.ƒнiпро' 
                   END  :: TVarChar   AS PlaceOf 
            , CASE WHEN COALESCE (Object_Personal_View.PersonalName, '') <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName, 2, FALSE) ELSE '' END AS PersonalBookkeeperName   -- бухгалтер из спр.‘илиалы 
            

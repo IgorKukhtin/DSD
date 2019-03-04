@@ -163,7 +163,7 @@ BEGIN
            , OH_JuridicalDetails_To.Phone               AS Phone_To
    
            , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '') 
-                  ELSE 'м.ƒнiпропетровськ' 
+                  ELSE 'м.ƒнiпро' 
                   END  :: TVarChar   AS PlaceOf 
 
        FROM Movement
