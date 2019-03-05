@@ -352,6 +352,12 @@
         ComponentItem = 'MasterUnitName'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isOnlyService'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 120
     Top = 167

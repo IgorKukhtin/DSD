@@ -46,6 +46,7 @@ type
     macOpenFormTransport: TMultiAction;
     bbOpenFormTransport: TdxBarButton;
     bbOpenFormService: TdxBarButton;
+    cbOnlyService: TcxCheckBox;
   private
     { Private declarations }
   public

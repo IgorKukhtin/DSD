@@ -768,7 +768,6 @@ object IncomeForm: TIncomeForm
         Height = 290
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = -3
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CostDS
@@ -1850,6 +1849,12 @@ object IncomeForm: TIncomeForm
           Component = GuidesTo
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isOnlyService'
+          Value = 'FALSE'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = True

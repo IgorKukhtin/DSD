@@ -448,7 +448,6 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCostJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCostJournalChoiceForm');
-
 end;
 
 procedure TLoadFormTest.LoadCurrencyMovementFormTest;
@@ -744,8 +743,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
+  {
   exit;
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeFuelForm'));
@@ -916,6 +916,7 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDatePeriodDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDatePeriodDialogForm');
   exit;

@@ -245,6 +245,13 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
       TabOrder = 5
       Width = 283
     end
+    object cbOnlyService: TcxCheckBox
+      Left = 598
+      Top = 5
+      Caption = #1090#1086#1083#1100#1082#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075'>'
+      TabOrder = 6
+      Width = 235
+    end
   end
   object cxLabel3: TcxLabel [2]
     Left = 238
@@ -536,6 +543,14 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisOnlyService'
+        Value = Null
+        Component = cbOnlyService
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inUnitId'
         Value = Null
         Component = UnitGuides
@@ -786,6 +801,13 @@ inherited CostJournalChoiceForm: TCostJournalChoiceForm
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isOnlyService'
+        Value = Null
+        Component = cbOnlyService
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 296

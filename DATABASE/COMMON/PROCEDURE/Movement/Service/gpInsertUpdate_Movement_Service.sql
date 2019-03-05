@@ -190,36 +190,39 @@ BEGIN
          -- теперь следуюющий
          vbIndex := vbIndex + 1;
      END LOOP;
-/*
-     -- сохраняем <Документ Затрат>
-     PERFORM lpInsertUpdate_Movement_Cost ( ioId         := 0
-                                          , inParentId   := tmp_List.MovementId    --- док приход
-                                          , inMovementId := ioId   ::TFloat        --- док сервис
-                                          , inComment    := ''::TVarChar
-                                          , inUserId     := vbUserId
-                                          )
+
+     -- сохраняем <Документ Затрат> , если такого еще нет
+     PERFORM lpInsertUpdate_Movement_IncomeCost (ioId         := 0
+                                               , inParentId   := tmp_List.MovementId -- док приход
+                                               , inMovementId := ioId                -- док услуг
+                                               , inComment    := ''::TVarChar
+                                               , inUserId     := vbUserId
+                                                )
      FROM tmp_List
-       Left Join (select Movement.Id, tmp_List.MovementId AS ParentId
-                  from tmp_List
-                     Inner Join Movement on tmp_List.MovementId = Movement.ParentId
-                     Inner JOIN MovemenTFloat AS MovemenTFloat_MovementId
+       LEFT JOIN (SELECT Movement.Id, tmp_List.MovementId AS ParentId
+                  FROM tmp_List
+                     INNER JOIN Movement on tmp_List.MovementId = Movement.ParentId
+                     INNER JOIN MovemenTFloat AS MovemenTFloat_MovementId
                                               ON MovemenTFloat_MovementId.MovementId = Movement.Id
                                              AND MovemenTFloat_MovementId.DescId = zc_MovemenTFloat_MovementId()
                                              AND MovemenTFloat_MovementId.ValueData = ioId
+                  WHERE tmp_List.MovementId <> 0
                   ) as tmp on tmp.ParentId =  tmp_List.MovementId
-     WHERE tmp.Id isnull;
+     WHERE tmp.Id isnull AND tmp_List.MovementId <> 0;
 
-     -- метим на удаление док.затрат в  приходах не из списка
+     -- метим на удаление док.затрат в приходах не из списка
      PERFORM lpSetErased_Movement (inMovementId := tmp.MovementId
                                  , inUserId     := vbUserId)
-     FROM (select Movement.ParentId, MovemenTFloat.MovementId
-           from MovemenTFloat
-              left Join Movement on Movement.id = MovemenTFloat.Movementid
-           where MovemenTFloat.DescId = zc_MovemenTFloat_MovementId()
-             AND MovemenTFloat.ValueData = ioId ) AS tmp
-        LEFT JOIN tmp_List on tmp.ParentId = tmp_List.MovementId
+     FROM (SELECT Movement.ParentId
+                , MovemenTFloat.MovementId
+           FROM MovemenTFloat
+              LEFT JOIN Movement ON Movement.Id = MovemenTFloat.Movementid
+           WHERE MovemenTFloat.DescId = zc_MovemenTFloat_MovementId()
+             AND MovemenTFloat.ValueData ::Integer = ioId
+           ) AS tmp
+           LEFT JOIN tmp_List ON tmp_List.MovementId = tmp.ParentId
      WHERE tmp_List.MovementId Isnull;
-*/
+     ---------------------
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);

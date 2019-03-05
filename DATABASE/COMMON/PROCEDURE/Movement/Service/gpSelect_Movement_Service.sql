@@ -59,7 +59,7 @@ BEGIN
                                                  AND Movement_Cost.StatusId <> zc_Enum_Status_Erased()
                               INNER JOIN Movement AS Movement_Income
                                                   ON Movement_Income.Id = Movement_Cost.ParentId
-                                                 AND Movement_Income.DescId = zc_Movement_Income()
+                                                 --AND Movement_Income.DescId = zc_Movement_Income()
                            WHERE MovementFloat.DescId = zc_MovementFloat_MovementId()
                            GROUP BY MovementFloat.ValueData
                          )

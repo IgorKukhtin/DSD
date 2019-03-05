@@ -1,13 +1,14 @@
 -- Function: gpSelect_Movement_Cost_Choice()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Cost_Choice (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpSelect_Movement_Cost_Choice (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Cost_Choice(
-    IN inStartDate   TDateTime , --
-    IN inEndDate     TDateTime , --
-    IN inIsErased    Boolean   ,
-    IN inUnitId      Integer   ,
-    IN inInfoMoneyId Integer   ,
+    IN inStartDate     TDateTime , --
+    IN inEndDate       TDateTime , --
+    IN inIsErased      Boolean   ,
+    IN inisOnlyService Boolean ,
+    IN inUnitId        Integer   ,
+    IN inInfoMoneyId   Integer   ,
     IN inSession     TVarChar    -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full TVarChar, OperDate TDateTime
@@ -76,6 +77,7 @@ BEGIN
                             JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                              AND MovementItem.DescId     = zc_MI_Master()
                                              AND MovementItem.isErased = False
+                        WHERE inisOnlyService = FALSE
                        )
                   
      , tmpTransportService AS (SELECT Movement.Id AS MovementId
@@ -125,7 +127,45 @@ BEGIN
                                    LEFT JOIN ObjectLink AS ObjectLink_Car_PersonalDriver 
                                                         ON ObjectLink_Car_PersonalDriver.ObjectId = MILinkObject_Car.ObjectId
                                                        AND ObjectLink_Car_PersonalDriver.DescId = zc_ObjectLink_Car_PersonalDriver()
+                               WHERE inisOnlyService = FALSE
                               )
+
+     , tmpService AS (SELECT Movement.Id AS MovementId
+                           , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
+                           , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, Movement.InvNumber, Movement.OperDate) AS InvNumber_Full
+                           , Movement.OperDate                             AS OperDate
+                           , Movement.StatusId                             AS StatusId
+                           , 0                                             AS PersonalDriverId
+                           , MIString_Comment.ValueData                    AS Comment
+                           , 0                                             AS CarId  
+                           , 0                                             AS RouteId
+                           , MILinkObject_Unit.ObjectId                    AS UnitId
+                           , MovementDesc.Id                               AS DescId
+                           , MovementDesc.ItemName                         AS DescName
+                           , MILinkObject_InfoMoney.ObjectId               AS InfoMoneyId
+                      FROM tmpStatus
+                          INNER JOIN Movement ON Movement.DescId = zc_Movement_Service()
+                                             AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                             AND Movement.StatusId = tmpStatus.StatusId
+                          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+                         
+                          LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                AND MovementItem.DescId     = zc_MI_Master()
+                          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId 
+
+                          LEFT JOIN MovementItemString AS MIString_Comment
+                                                       ON MIString_Comment.MovementItemId = MovementItem.Id 
+                                                      AND MIString_Comment.DescId = zc_MIString_Comment()
+
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                           ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id 
+                                                          AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                          ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                      WHERE inisOnlyService = TRUE
+                     )
 
      , tmpList AS  (SELECT tr1.MovementId, tr1.InvNumber, tr1.OperDate, tr1.PersonalDriverId, tr1.CarId, tr1.RouteId, tr1.Comment 
                          , zfFormat_BarCode (zc_BarCodePref_Movement(), tr1.MovementId) AS IdBarCode
@@ -136,6 +176,11 @@ BEGIN
                          , zfFormat_BarCode (zc_BarCodePref_Movement(), tr2.MovementId) AS IdBarCode
                          , tr2.StatusId, tr2.InvNumber_Full, tr2.UnitId, tr2.DescId, tr2.DescName, tr2.InfoMoneyId
                     FROM tmpTransportService AS tr2
+                   UNION ALL
+                    SELECT tr2.MovementId, tr2.InvNumber, tr2.OperDate, tr2.PersonalDriverId, tr2.CarId, tr2.RouteId, tr2.Comment 
+                         , zfFormat_BarCode (zc_BarCodePref_Movement(), tr2.MovementId) AS IdBarCode
+                         , tr2.StatusId, tr2.InvNumber_Full, tr2.UnitId, tr2.DescId, tr2.DescName, tr2.InfoMoneyId
+                    FROM tmpService AS tr2
                     )
 
 
@@ -211,14 +256,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpSelect_Movement_Cost_Choice (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
-
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 05.03.19         *
  10.01.19         *
 */
 
 -- òåñò
--- SELECT * FROM gpSelect_Movement_Cost_Choice (inStartDate:= '01.09.2015'::TDateTime, inEndDate:= '01.09.2015'::TDateTime, inIsErased:= FALSE, inUnitId:=0, inInfoMoneyId :=0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Cost_Choice (inStartDate:= '01.09.2015'::TDateTime, inEndDate:= '01.09.2015'::TDateTime, inIsErased:= FALSE, inisOnlyService:= FALSE, inUnitId:=0, inInfoMoneyId :=0, inSession:= zfCalc_UserAdmin())

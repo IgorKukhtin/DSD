@@ -181,6 +181,8 @@ type
     InvNumber_Asset: TcxGridDBColumn;
     cxLabel21: TcxLabel;
     edParValue: TcxCurrencyEdit;
+    actOpenFormService: TdsdOpenForm;
+    bbOpenFormService: TdxBarButton;
   private
   public
   end;

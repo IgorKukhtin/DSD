@@ -596,7 +596,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
           Name = 'KeyList'
           Value = Null
           Component = cxGridDBTableView
-          ComponentItem = 'clId'
+          ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end
         item

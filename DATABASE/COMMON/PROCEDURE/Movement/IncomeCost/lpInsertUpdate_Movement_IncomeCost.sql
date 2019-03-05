@@ -13,10 +13,13 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbIsInsert Boolean;
+   DECLARE vbDescId   Integer;
 BEGIN
 
      -- определ€ем признак —оздание/ орректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
+
+     vbDescId := (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId);
 
      -- сохранили <ƒокумент>
      IF COALESCE (ioId, 0) = 0
@@ -43,6 +46,16 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementId(), ioId, inMovementId);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+     
+     -- сохран€ем дл€ нач. услуг приход в список док. затрат
+     IF vbDescId = zc_Movement_Service()
+     THEN
+         PERFORM lpInsertUpdate_MovementString (zc_MovementString_MovementId(), inMovementId, CASE WHEN COALESCE (MovementString.ValueData,'') = ''  THEN inParentId :: TVarChar ELSE MovementString.ValueData|| ','||inParentId END :: TVarChar) 
+         FROM Movement
+              LEFT JOIN MovementString ON MovementString.MovementId = Movement.Id
+                                      AND MovementString.DescId = zc_MovementString_MovementId()              
+         WHERE Movement.Id = inMovementId;
+     END IF;
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
