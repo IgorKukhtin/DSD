@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InsertDate TDateTime, InsertName TVarChar
              , TotalCount TFloat--, TotalCountKg TFloat, TotalCountSh TFloat
              , TotalSummMVAT TFloat , TotalSummPVAT TFloat, TotalSumm TFloat
+             , TotalSumm_f1 TFloat, TotalSumm_f2 TFloat
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
@@ -56,6 +57,16 @@ BEGIN
            , MovementFloat_TotalSummMVAT.ValueData  AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData  AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData      AS TotalSumm
+           
+           , CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() 
+                  THEN MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                  ELSE COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+             END :: TFloat AS TotalSumm_f1            -- оплата б/н
+
+           , CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() 
+                  THEN COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                  ELSE MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+             END :: TFloat AS TotalSumm_f2            -- оплата нал
 
            , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData     AS VATPercent
@@ -123,6 +134,10 @@ BEGIN
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPayOth
+                                    ON MovementFloat_TotalSummPayOth.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummPayOth.DescId = zc_MovementFloat_TotalSummPayOth()
+
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -166,7 +181,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.03.19         * add MovementFloat_TotalSummPayOth
  19.05.17         * add Closed
  06.10.16         * add inJuridicalBasisId
  25.07.16         * InvNumberPartner

@@ -3,7 +3,7 @@ object InvoiceForm: TInvoiceForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'>'
   ClientHeight = 477
-  ClientWidth = 967
+  ClientWidth = 1051
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,11 +20,12 @@ object InvoiceForm: TInvoiceForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 967
+    Width = 1051
     Height = 97
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 967
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -251,25 +252,28 @@ object InvoiceForm: TInvoiceForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 123
-    Width = 967
+    Width = 1051
     Height = 242
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 967
     ClientRectBottom = 242
-    ClientRectRight = 967
+    ClientRectRight = 1051
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 967
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 967
+        Width = 1051
         Height = 218
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 967
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -594,19 +598,21 @@ object InvoiceForm: TInvoiceForm
   object cxSplitter1: TcxSplitter
     Left = 0
     Top = 365
-    Width = 967
+    Width = 1051
     Height = 3
     AlignSplitter = salBottom
     Control = cxGrid
+    ExplicitWidth = 967
   end
   object cxGrid1: TcxGrid
     Left = 0
     Top = 368
-    Width = 967
+    Width = 1051
     Height = 109
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 9
+    ExplicitWidth = 967
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ChildDS
@@ -757,6 +763,36 @@ object InvoiceForm: TInvoiceForm
     object cxGridLevel1: TcxGridLevel
       GridView = cxGridDBTableView1
     end
+  end
+  object cxLabel4: TcxLabel
+    Left = 967
+    Top = 5
+    Caption = #1057#1091#1084#1084#1072' '#1073'/'#1085
+  end
+  object edTotalSumm_f1: TcxCurrencyEdit
+    Left = 967
+    Top = 23
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####;-,0.####; ;'
+    TabOrder = 11
+    Width = 58
+  end
+  object cxLabel6: TcxLabel
+    Left = 967
+    Top = 45
+    Caption = #1057#1091#1084#1084#1072' '#1085#1072#1083'.'
+  end
+  object edTotalSumm_f2: TcxCurrencyEdit
+    Left = 967
+    Top = 63
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####;-,0.####; ;'
+    TabOrder = 13
+    Width = 58
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -2182,6 +2218,22 @@ object InvoiceForm: TInvoiceForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioTotalSumm_f1'
+        Value = Null
+        Component = edTotalSumm_f1
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioTotalSumm_f2'
+        Value = Null
+        Component = edTotalSumm_f2
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -2235,6 +2287,12 @@ object InvoiceForm: TInvoiceForm
       end
       item
         Control = edInvNumberPartner
+      end
+      item
+        Control = edTotalSumm_f1
+      end
+      item
+        Control = edTotalSumm_f2
       end>
     GetStoredProc = spGet
     Left = 264
@@ -2419,6 +2477,20 @@ object InvoiceForm: TInvoiceForm
         Value = Null
         Component = edisClosed
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSumm_f1'
+        Value = Null
+        Component = edTotalSumm_f1
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSumm_f2'
+        Value = Null
+        Component = edTotalSumm_f2
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

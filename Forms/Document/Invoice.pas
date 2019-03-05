@@ -176,6 +176,10 @@ type
     edisClosed: TcxCheckBox;
     actClosed: TdsdExecStoredProc;
     bbClosed: TdxBarButton;
+    cxLabel4: TcxLabel;
+    edTotalSumm_f1: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
+    edTotalSumm_f2: TcxCurrencyEdit;
   private
   public
   end;
