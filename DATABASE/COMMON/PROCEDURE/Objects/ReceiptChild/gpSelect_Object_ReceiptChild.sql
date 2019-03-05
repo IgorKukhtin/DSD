@@ -1,9 +1,12 @@
 -- Function: gpSelect_Object_ReceiptChild()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptChild (Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptChild (Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptChild (Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptChild(
     IN inReceiptId    Integer,
+    IN inGoodsId      Integer,
+    IN inGoodsKindId  Integer,
     IN inShowAll      Boolean,
     IN inSession      TVarChar       -- сессия пользователя
 )
@@ -131,6 +134,17 @@ BEGIN
                 LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
                                      ON ObjectLink_ReceiptChild_Receipt.ObjectId = Object_ReceiptChild.Id
                                     AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
+                                    
+                INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                      ON ObjectLink_Receipt_Goods.ObjectId = ObjectLink_ReceiptChild_Receipt.ChildObjectId
+                                     AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                                     AND (ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)
+          
+                INNER JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                      ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_ReceiptChild_Receipt.ChildObjectId
+                                     AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                                     AND (ObjectLink_Receipt_GoodsKind.ChildObjectId = inGoodsKindId OR inGoodsKindId = 0)
+
                 LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_ReceiptChild_Receipt.ChildObjectId
                 INNER JOIN tmpIsErased ON tmpIsErased.isErased = Object_Receipt.isErased
 
@@ -199,7 +213,6 @@ BEGIN
                                   ON ObjectBoolean_Main_Parent.ObjectId = Object_ReceiptChild_Parent.Id
                                  AND ObjectBoolean_Main_Parent.DescId = zc_ObjectBoolean_Receipt_Main()
 
-
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpReceiptChild.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpReceiptChild.GoodsKindId
  
@@ -233,17 +246,17 @@ BEGIN
                              ON ObjectLink_Update.ObjectId = tmpReceiptChild.Id 
                             AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
           LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId   
-
     ;
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_ReceiptChild (Integer, Boolean, TVarChar) OWNER TO postgres;
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 05.03.19         * 
  08.12.15         * add Parent
  12.11.15         * add протокол 
  21.03.15                                       * add inReceiptId
@@ -254,4 +267,4 @@ ALTER FUNCTION gpSelect_Object_ReceiptChild (Integer, Boolean, TVarChar) OWNER T
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ReceiptChild (352371, FALSE, '2') ORDER BY GroupNumber
+-- SELECT * FROM gpSelect_Object_ReceiptChild (0, 4975  ,8345  ,FALSE, '2') ORDER BY GroupNumber

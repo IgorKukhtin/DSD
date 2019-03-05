@@ -26,8 +26,6 @@ object ReceiptForm: TReceiptForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 26
-    ExplicitHeight = 313
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -856,7 +854,6 @@ object ReceiptForm: TReceiptForm
     Height = 35
     Align = alTop
     TabOrder = 7
-    ExplicitTop = -6
     object cxLabel3: TcxLabel
       Left = 15
       Top = 9
@@ -1916,6 +1913,22 @@ object ReceiptForm: TReceiptForm
       item
         Name = 'inReceiptId'
         Value = 0
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = GuidesGoodsKind
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

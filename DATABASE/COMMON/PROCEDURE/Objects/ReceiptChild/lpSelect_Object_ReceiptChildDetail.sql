@@ -1,4 +1,4 @@
--- Function: gpSelect_Object_ReceiptChild()
+-- Function: lpSelect_Object_ReceiptChildDetail()
 
 DROP FUNCTION IF EXISTS lpSelect_Object_ReceiptChildDetail (Integer);
 DROP FUNCTION IF EXISTS lpSelect_Object_ReceiptChildDetail ();

@@ -1,4 +1,4 @@
--- Function: gpSelect_Object_ReceiptChild()
+-- Function: gpSelect_Object_PrintReceiptChildDetail()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_PrintReceiptChildDetail (Integer, TVarChar);
 
