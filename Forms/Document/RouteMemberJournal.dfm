@@ -4,8 +4,9 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
   ClientWidth = 953
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -163
   ExplicitWidth = 969
-  ExplicitHeight = 435
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -101,7 +102,6 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.Footer = False
           OptionsView.GroupByBox = True
           OptionsView.HeaderHeight = 50
@@ -112,15 +112,18 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 55
           end
           inherited colInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 64
           end
           inherited colOperDate: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 85
           end
           object InsertName: TcxGridDBColumn
@@ -219,13 +222,19 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 150
           end
           object AddressByGPS: TcxGridDBColumn
             Caption = #1040#1076#1088#1077#1089', '#1086#1087#1088#1077#1076#1077#1083#1077#1085#1085#1099#1081' '#1087#1086' GPS'
             DataBinding.FieldName = 'AddressByGPS'
-            Visible = False
-            Options.Editing = False
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             Width = 150
           end
           object GUID: TcxGridDBColumn
@@ -340,6 +349,9 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactSilentPrint: TMultiAction [1]
       Category = 'Print'
@@ -473,6 +485,9 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_Order: TMultiAction
       Category = 'Print'

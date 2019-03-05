@@ -21211,7 +21211,7 @@ object frmMain: TfrmMain
   end
   object tSavePath: TTimer
     Enabled = False
-    Interval = 30000
+    Interval = 300000
     OnTimer = tSavePathTimer
     Left = 136
     Top = 8

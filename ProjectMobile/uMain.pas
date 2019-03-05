@@ -1085,6 +1085,7 @@ type
     FCanEditPartner : boolean;
 
     FCurCoordinatesSet: boolean;
+    FCurCoordinatesMsg: String;
     FCurCoordinates: TLocationCoord2D;
     FMapLoaded: Boolean;
     FWebGMap: TTMSFMXWebGMaps;
@@ -1236,7 +1237,7 @@ implementation
 
 uses
   uConstants, System.IOUtils, Authentication, Storage, CommonData, uDM, CursorUtils,
-  uNetwork, System.StrUtils, uIntf;
+  uNetwork, System.StrUtils, uIntf, Math;
 
 {$R *.fmx}
 
@@ -1394,6 +1395,7 @@ begin
   FDeletedSRI := TList<Integer>.Create;
   FDeletedRI := TList<Integer>.Create;
   FCurCoordinatesSet := false;
+  FCurCoordinatesMsg := '';
 
   FJuridicalList := TList<TJuridicalItem>.Create;
   FPartnerList := TList<TPartnerItem>.Create;
@@ -4374,13 +4376,17 @@ begin
         begin
           qrySavePhoto.Params[5].Value := FCurCoordinates.Latitude;
           qrySavePhoto.Params[6].Value := FCurCoordinates.Longitude;
-          qrySavePhoto.Params[7].Value := GetAddress(FCurCoordinates.Latitude, FCurCoordinates.Longitude);
+          qrySavePhoto.Params[7].Value := GetAddress(FCurCoordinates.Latitude, FCurCoordinates.Longitude)
+                                + ' = ' + FCurCoordinatesMsg
+                                ;
         end
         else
         begin
           qrySavePhoto.Params[5].Value := 0;
           qrySavePhoto.Params[6].Value := 0;
-          qrySavePhoto.Params[7].Value := '';
+          qrySavePhoto.Params[7].Value := ''
+                                        + '=' + FCurCoordinatesMsg
+                                        ;
         end;
 
         qrySavePhoto.ExecSQL;
@@ -4654,7 +4660,9 @@ begin
         DM.tblMovement_RouteMemberGUID.AsString := GUIDToString(GlobalId);
         DM.tblMovement_RouteMemberGPSN.AsFloat := FCurCoordinates.Latitude;
         DM.tblMovement_RouteMemberGPSE.AsFloat := FCurCoordinates.Longitude;
-        DM.tblMovement_RouteMemberAddressByGPS.AsString := GetAddress(FCurCoordinates.Latitude, FCurCoordinates.Longitude);
+        DM.tblMovement_RouteMemberAddressByGPS.AsString := GetAddress(FCurCoordinates.Latitude, FCurCoordinates.Longitude)
+                                                         + ' = ' + FCurCoordinatesMsg
+                                                        ;
         DM.tblMovement_RouteMemberInsertDate.AsDateTime := Now();
         DM.tblMovement_RouteMemberisSync.AsBoolean := false;
         DM.tblMovement_RouteMember.Post;
@@ -4696,8 +4704,8 @@ function TfrmMain.GetAddress(const Latitude, Longitude: Double): string;
   end;
 begin
   try
-    WebGMapsReverseGeocoder.Latitude := Latitude;
-    WebGMapsReverseGeocoder.Longitude := Longitude;
+    WebGMapsReverseGeocoder.Latitude := RoundTo(Latitude, -5);
+    WebGMapsReverseGeocoder.Longitude := RoundTo(Longitude, -5);
     if WebGMapsReverseGeocoder.LaunchReverseGeocoding = erOk then
       begin
         Result := WebGMapsReverseGeocoder.ResultAddress.Street +
@@ -4706,10 +4714,13 @@ begin
                   PrependIfNotEmpty(', ', WebGMapsReverseGeocoder.ResultAddress.Region) +
                   PrependIfNotEmpty(', ', WebGMapsReverseGeocoder.ResultAddress.Country);
       end
-    else
-      Result :=  FormatFloat('0.000000', Latitude)+'N '+FormatFloat('0.000000', Longitude)+'E';
+    else begin
+      Result :=  FormatFloat('0.00000###', Latitude)+'N '+FormatFloat('0.00000###', Longitude)+'E';
+      FCurCoordinatesMsg:= FCurCoordinatesMsg + ' не раскодирован Адрес для '+FloatToStr(RoundTo(Latitude, -5))+', '+FloatToStr(RoundTo(Longitude, -5))+''
+      end;
   except
     Result :=  FormatFloat('0.000000', Latitude)+'N '+FormatFloat('0.000000', Longitude)+'E';
+    FCurCoordinatesMsg:= FCurCoordinatesMsg + ' ошибка в службе при определении Адреса для _'+FloatToStr(Latitude)+'_ _'+FloatToStr(Longitude)+'_'
   end;
 end;
 
@@ -6468,6 +6479,8 @@ var
 {$ENDIF}
 begin
   FCurCoordinatesSet := false;
+  FCurCoordinatesMsg := '';
+
 
   {$IFDEF ANDROID}
   try
@@ -6475,25 +6488,27 @@ begin
     LocManagerObj := TAndroidHelper.Context.getSystemService(TJContext.JavaClass.LOCATION_SERVICE);
     if Assigned(LocManagerObj) then
     begin
-      //получаем LocationManager
-      LocationManager := TJLocationManager.Wrap((LocManagerObj as ILocalObject).GetObjectID);
-      if Assigned(LocationManager) then
-      begin
-        //получаем последнее местоположение зафиксированное с помощью координат wi-fi и мобильных сетей
-        LastLocation := LocationManager.getLastKnownLocation(TJLocationManager.JavaClass.NETWORK_PROVIDER);
-        if Assigned(LastLocation) then
+        //получаем LocationManager
+        LocationManager := TJLocationManager.Wrap((LocManagerObj as ILocalObject).GetObjectID);
+        if Assigned(LocationManager) then
         begin
-          FCurCoordinates := TLocationCoord2D.Create(LastLocation.getLatitude, LastLocation.getLongitude);
-          FCurCoordinatesSet := true;
+          //получаем последнее местоположение зафиксированное с помощью координат wi-fi и мобильных сетей
+          LastLocation := LocationManager.getLastKnownLocation(TJLocationManager.JavaClass.NETWORK_PROVIDER);
+          if Assigned(LastLocation) then
+          begin
+            FCurCoordinates := TLocationCoord2D.Create(LastLocation.getLatitude, LastLocation.getLongitude);
+            FCurCoordinatesSet := true;
+          end;
+        end
+        else
+        begin
+           FCurCoordinatesMsg:= 'нет доступа к Менеджеру GPS';
+          //raise Exception.Create('Could not access Location Manager');
         end;
-      end
-      else
-      begin
-        //raise Exception.Create('Could not access Location Manager');
-      end;
     end
     else
     begin
+      FCurCoordinatesMsg:= 'не запущен Сервис GPS';
       //raise Exception.Create('Could not locate Location Service');
     end;
   except
