@@ -208,10 +208,10 @@ begin
 
   LoadReportFromFile('Продажа и возврат', ReportPath + '\Отчеты (товарные)\Продажа и возврат.fr3');
   LoadReportFromFile('Продажа и возврат по юрлицам', ReportPath + '\Отчеты (товарные)\Продажа и возврат по юрлицам.fr3');
-  }
+
   LoadReportFromFile('Отчет по группе статистики', ReportPath + '\Отчеты (товарные)\Отчет по группе статистики.fr3');
   exit;
-  {
+
   LoadReportFromFile('Продажа и возврат контрагенты', ReportPath + '\Отчеты (товарные)\Продажа и возврат контрагенты.fr3');
 
   LoadReportFromFile('Отчет движение по товару (для всех)', ReportPath + '\Отчеты (товарные)\Отчет движение по товару (для всех).fr3');
@@ -340,8 +340,9 @@ begin
 //  LoadReportFromFile('PrintMovement_SendOnPriceIn', ReportPath + '\Товарный Учет\PrintMovement_SendOnPriceIn.fr3');
 //  LoadReportFromFile('PrintMovement_SendOnPriceOut', ReportPath + '\Товарный Учет\PrintMovement_SendOnPriceOut.fr3');
   LoadReportFromFile('PrintMovement_SendOnPrice', ReportPath + '\Товарный Учет\PrintMovement_SendOnPrice.fr3');
+  }
   LoadReportFromFile('PrintMovement_SalePack', ReportPath + '\Товарный Учет\PrintMovement_SalePack.fr3');
-
+  {
   LoadReportFromFile('PrintMovement_Quality', ReportPath + '\Товарный Учет\PrintMovement_Quality.fr3');
   LoadReportFromFile('PrintMovement_Quality32049199', ReportPath + '\Товарный Учет\PrintMovement_Quality32049199.fr3');
   exit;
@@ -378,9 +379,9 @@ begin
 
   LoadReportFromFile('PrintMovement_SalePackGross', ReportPath + '\Товарный Учет\PrintMovement_SalePackGross.fr3');
   exit;
-
+   }
   LoadReportFromFile('PrintMovement_SalePack21', ReportPath + '\Товарный Учет\PrintMovement_SalePack21.fr3');
-  LoadReportFromFile('PrintMovement_SalePack22', ReportPath + '\Товарный Учет\PrintMovement_SalePack22.fr3');
+  {LoadReportFromFile('PrintMovement_SalePack22', ReportPath + '\Товарный Учет\PrintMovement_SalePack22.fr3');
 
   LoadReportFromFile('PrintMovement_ReturnIn_By_TaxCorrective', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn_By_TaxCorrective.fr3');
 
@@ -398,10 +399,10 @@ begin
   LoadReportFromFile('PrintMovement_IncomeFuel', ReportPath + '\Товарный Учет\PrintMovement_IncomeFuel.fr3');
 
   LoadReportFromFile('PrintMovement_ReturnOut', ReportPath + '\Товарный Учет\PrintMovement_ReturnOut.fr3');
-  }
+
   LoadReportFromFile('PrintMovement_Send', ReportPath + '\Товарный Учет\PrintMovement_Send.fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintMovement_Inventory', ReportPath + '\Товарный Учет\PrintMovement_Inventory.fr3');
   LoadReportFromFile('PrintMovement_Sale_Order', ReportPath + '\Товарный Учет\PrintMovement_Sale_Order.fr3');
   LoadReportFromFile('PrintMovement_ProductionUnion', ReportPath + '\Товарный Учет\PrintMovement_ProductionUnion.fr3');
@@ -434,6 +435,10 @@ begin
   for i := Low(OKPO) to High(OKPO) do
     LoadReportFromFile('PrintMovement_Transport' + OKPO[i], ReportPath + '\Товарный Учет\PrintMovement_Transport' + OKPO[i] + '.fr3');
 }
+  TStrArrAdd(['01074874','31929492']);
+  for i := Low(OKPO) to High(OKPO) do
+    LoadReportFromFile('PrintMovement_Sale' + OKPO[i], ReportPath + '\Товарный Учет\PrintMovement_Sale' + OKPO[i] + '.fr3');
+
 end;
 
 procedure TLoadReportTest.SetUp;

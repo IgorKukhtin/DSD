@@ -15,16 +15,19 @@ object ReceiptForm: TReceiptForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 61
     Width = 1152
-    Height = 313
+    Height = 278
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 26
+    ExplicitHeight = 313
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -846,6 +849,49 @@ object ReceiptForm: TReceiptForm
     AlignSplitter = salBottom
     Control = cxGridReceiptChild
   end
+  object Panel: TPanel
+    Left = 0
+    Top = 0
+    Width = 1152
+    Height = 35
+    Align = alTop
+    TabOrder = 7
+    ExplicitTop = -6
+    object cxLabel3: TcxLabel
+      Left = 15
+      Top = 9
+      Caption = #1058#1086#1074#1072#1088':'
+    end
+    object edGoods: TcxButtonEdit
+      Left = 53
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 1
+      Width = 276
+    end
+    object cxLabel1: TcxLabel
+      Left = 342
+      Top = 9
+      Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072':'
+    end
+    object edGoodsKind: TcxButtonEdit
+      Left = 408
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 3
+      Width = 173
+    end
+  end
   object MasterDS: TDataSource
     DataSet = MasterCDS
     Left = 56
@@ -911,6 +957,14 @@ object ReceiptForm: TReceiptForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert'
         end
         item
@@ -952,7 +1006,7 @@ object ReceiptForm: TReceiptForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbSetUnErasedReceiptChild'
         end
         item
           Visible = True
@@ -1132,8 +1186,12 @@ object ReceiptForm: TReceiptForm
       Action = dsdSetErasedReceiptChild
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbSetUnErasedReceiptChild: TdxBarButton
       Action = dsdSetUnErasedReceiptChild
+      Category = 0
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
       Category = 0
     end
   end
@@ -1524,6 +1582,9 @@ object ReceiptForm: TReceiptForm
       ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintDetail: TdsdPrintAction
       Category = 'Print'
@@ -1551,6 +1612,9 @@ object ReceiptForm: TReceiptForm
       ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actUpdateTaxExit: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1596,6 +1660,54 @@ object ReceiptForm: TReceiptForm
       isSetErased = False
       DataSource = ChildDS
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ImageIndex = 35
+      FormName = 'TReceiptDialogForm'
+      FormNameParam.Value = 'TReceiptDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'GoodsId'
+          Value = ''
+          Component = GuidesGoods
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = ''
+          Component = GuidesGoods
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindId'
+          Value = ''
+          Component = GuidesGoodsKind
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsKindName'
+          Value = ''
+          Component = GuidesGoodsKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Receipt'
@@ -1614,12 +1726,16 @@ object ReceiptForm: TReceiptForm
       item
         Name = 'inGoodsId'
         Value = 0
+        Component = GuidesGoods
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
         Value = 0
+        Component = GuidesGoodsKind
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1960,7 +2076,10 @@ object ReceiptForm: TReceiptForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = PeriodChoice
+        Component = GuidesGoods
+      end
+      item
+        Component = GuidesGoodsKind
       end>
     Left = 536
     Top = 160
@@ -2145,5 +2264,63 @@ object ReceiptForm: TReceiptForm
     PackSize = 1
     Left = 112
     Top = 272
+  end
+  object GuidesGoods: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoods
+    FormNameParam.Value = 'TGoods_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoods_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 688
+    Top = 3
+  end
+  object GuidesGoodsKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsKind
+    FormNameParam.Value = 'TGoodsKind_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsKind_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 768
+    Top = 3
   end
 end

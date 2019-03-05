@@ -381,6 +381,8 @@ BEGIN
              -- кол-во Взвешиваний
            , vbWeighingCount AS WeighingCount
 
+           , 'м.Дніпро' :: TVarChar AS CityOf                             -- Мiсце складання
+
        FROM (SELECT Max(tmpListDocSale.MovementId) AS MovementId
                   , MAX(tmpListDocSale.ExtraChargesPercent - tmpListDocSale.DiscountPercent)  AS ChangePercent
                   , Sum(MovementFloat_TotalCount.ValueData)         AS TotalCount
