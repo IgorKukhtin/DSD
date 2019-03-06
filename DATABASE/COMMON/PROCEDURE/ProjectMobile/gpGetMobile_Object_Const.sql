@@ -134,7 +134,7 @@ BEGIN
             , Object_PaidKind_FirstForm.ValueData    AS PaidKindName_First
             , Object_PaidKind_SecondForm.Id          AS PaidKindId_Second
             , Object_PaidKind_SecondForm.ValueData   AS PaidKindName_Second
-           
+
             , Object_Status_UnComplete.Id            AS StatusId_UnComplete
             , Object_Status_UnComplete.ValueData     AS StatusName_UnComplete
             , Object_Status_Complete.Id              AS StatusId_Complete
@@ -182,8 +182,8 @@ BEGIN
             , getMobileConst.OperDateDiff AS OperDate_diff  -- пока на один день позже для всех, потом будет для каждого филиала отдельно задаваться
             -- , 14::Integer AS ReturnDayCount -- пока 14 дней
             , getMobileConst.ReturnDayCount -- пока 14 дней
-            -- , 21::Integer AS CriticalOverDays 
-            , getMobileConst.CriticalOverDays 
+            -- , 21::Integer AS CriticalOverDays
+            , getMobileConst.CriticalOverDays
             -- , 1::TFloat   AS CriticalDebtSum
             , getMobileConst.CriticalDebtSum
 
@@ -198,9 +198,10 @@ BEGIN
 
             LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = tmpPersonal.UnitId -- Склад Реализации
             LEFT JOIN Object AS Object_Unit_ret ON Object_Unit_ret.Id = tmpPersonal.UnitId_ret
-            LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch 
+            LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch
                                  ON ObjectLink_Cash_Branch.ChildObjectId = vbBranchId
-                                AND ObjectLink_Cash_Branch.DescId = zc_ObjectLink_Cash_Branch() 
+                                AND ObjectLink_Cash_Branch.DescId        = zc_ObjectLink_Cash_Branch()
+                                AND vbBranchId                           <> zc_Branch_Basis()
             LEFT JOIN Object AS Object_Cash     ON Object_Cash.Id     = CASE WHEN vbBranchId = zc_Branch_Basis() THEN 14462 /*Касса Днепр*/ ELSE ObjectLink_Cash_Branch.ObjectId END
 
             LEFT JOIN Object AS Object_User ON Object_User.Id = vbUserId
@@ -227,6 +228,6 @@ END;$BODY$
 
 -- тест
 -- SELECT * FROM ObjectString where DescId = zc_ObjectString_MobileConst_MobileVersion();
--- UPDATE ObjectString SET ValueData = '1.47.0' WHERE DescId = zc_ObjectString_MobileConst_MobileVersion();
+-- UPDATE ObjectString SET ValueData = '1.48.0' WHERE DescId = zc_ObjectString_MobileConst_MobileVersion();
 -- SELECT * FROM gpGetMobile_Object_Const (inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpGetMobile_Object_Const (inSession:= '1000168')
