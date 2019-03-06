@@ -153,6 +153,7 @@ type
     procedure N5Click(Sender: TObject);
     procedure N7Click(Sender: TObject);
     procedure actCashRemainsExecute(Sender: TObject);
+    procedure gpUpdate_Log_CashRemainsAfterExecute(Sender: TObject);
 
   private
     { Private declarations }
@@ -1678,6 +1679,7 @@ begin
 
       sp.StoredProcName := 'gpSelect_Cash_UnitConfig';
       sp.Params.Clear;
+      sp.Params.AddParam('inCashRegister', ftString, ptInput, iniLocalCashRegisterGet);
       sp.Execute;
       Add_Log('Start MutexUnitConfig');
       WaitForSingleObject(MutexUnitConfig, INFINITE); // только дл€ формы2;  защищаем так как есть в приложениее и сервисе
@@ -1951,6 +1953,11 @@ begin
     Result := 5
   else
     Result := 0;
+end;
+
+procedure TMainCashForm2.gpUpdate_Log_CashRemainsAfterExecute(Sender: TObject);
+begin
+
 end;
 
 // что б отловить ошибки - запишим в лог чек - во врем€ пробити€ чека через Ё  ј

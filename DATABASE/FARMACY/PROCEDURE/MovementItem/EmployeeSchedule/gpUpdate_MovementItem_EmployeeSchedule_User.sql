@@ -13,6 +13,8 @@ $BODY$
    DECLARE vbMovementID Integer;
    DECLARE vbMovementItemID Integer;
    DECLARE vbUserId Integer;
+   DECLARE vbUnitId Integer;
+   DECLARE vbUnitKey TVarChar;
    DECLARE vbComingValueDay TVarChar;
    DECLARE vbTypeId Integer;
    DECLARE vbValue Integer;
@@ -20,6 +22,16 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
     vbUserId:= lpGetUserBySession (inSession);
+    vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+    IF vbUnitKey = '' THEN
+       vbUnitKey := '0';
+    END IF;
+    vbUnitId := vbUnitKey::Integer;
+    
+    IF inValueUser = '7:00' AND vbUnitId NOT IN (2886778)
+    THEN
+      RAISE EXCEPTION 'Ошибка. Время прихода 7:00 вам устанавлтивать запрещено.';
+    END IF;
 
     -- проверка наличия графика
     IF NOT EXISTS(SELECT 1 FROM Movement
@@ -73,6 +85,7 @@ BEGIN
     vbValue := CASE inValueUser WHEN '8:00' THEN 1
                                 WHEN '9:00' THEN 2
                                 WHEN '10:00' THEN 3
+                                WHEN '7:00' THEN 4
                                 WHEN '21:00' THEN 7
                                 WHEN 'В' THEN 9
                                 ELSE 0 END;

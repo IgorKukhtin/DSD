@@ -50,6 +50,7 @@ BEGIN
       vbValue := CASE ioValue WHEN '8:00' THEN 1
                               WHEN '9:00' THEN 2
                               WHEN '10:00' THEN 3
+                              WHEN '7:00' THEN 4
                               WHEN '21:00' THEN 7
                               WHEN 'Â' THEN 9
                               ELSE 0 END;

@@ -30,15 +30,18 @@ type
 
     procedure MsgDescriptionProc(AMsgDescription : string);
     procedure UpdateMsgDescription;
+    function GetLastPosError : string;
   end;
 
 
-  TPayPosTermProcessForm = class(TAncestorDialogForm)
+  TPayPosTermProcessForm = class(TForm)
     edMsgDescription: TEdit;
     cxProgressBar1: TcxProgressBar;
-    procedure FormShow(Sender: TObject);
+    Timer: TTimer;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDestroy(Sender: TObject);
+    procedure TimerTimer(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     FPosTermThread : TPosTermThread;
@@ -95,6 +98,12 @@ begin
   PayPosTermProcessForm.edMsgDescription.Text := FMsgDescription;
 end;
 
+function TPosTermThread.GetLastPosError : string;
+begin
+  if Assigned(FPosTerm) then Result := FPosTerm.LastPosError;
+end;
+
+
   {TPayPosTermProcessForm}
 
 procedure TPayPosTermProcessForm.FormClose(Sender: TObject;
@@ -107,7 +116,12 @@ begin
     if MessageDlg('Прервать оплату документа?',mtConfirmation,mbYesNo,0)<>mrYes then FPosTermThread.FPosTerm.Cancel;
   end else
   begin
-    if Assigned(FPosTermThread) then FreeAndNil(FPosTermThread);
+    if Assigned(FPosTermThread) then
+    begin
+      if FPosTermThread.GetLastPosError <> '' then ShowMessage(FPosTermThread.GetLastPosError);
+      FreeAndNil(FPosTermThread);
+    end;
+    Timer.Enabled := False;
   end;
 end;
 
@@ -119,6 +133,15 @@ end;
 procedure TPayPosTermProcessForm.FormShow(Sender: TObject);
 begin
   if Assigned(FPosTermThread) then FPosTermThread.Start;
+  Timer.Enabled := True;
+end;
+
+procedure TPayPosTermProcessForm.TimerTimer(Sender: TObject);
+begin
+  if Assigned(FPosTermThread) then
+  begin
+    if FPosTermThread.Finished then Close;
+  end else Close;
 end;
 
 procedure TPayPosTermProcessForm.EndPayPosTerm;
@@ -126,7 +149,6 @@ begin
   if Assigned(FPosTermThread) and FPosTermThread.FPeyResult then ModalResult := mrOk
   else ModalResult := mrCancel;
 end;
-
 
 function PayPosTerminal(PosTerm: IPos;  ASalerCash : currency) : Boolean;
 Begin

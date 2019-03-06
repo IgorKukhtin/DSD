@@ -42,4 +42,11 @@ object PayPosTermProcessForm: TPayPosTermProcessForm
     TabOrder = 1
     Width = 393
   end
+  object Timer: TTimer
+    Enabled = False
+    Interval = 200
+    OnTimer = TimerTimer
+    Left = 384
+    Top = 16
+  end
 end

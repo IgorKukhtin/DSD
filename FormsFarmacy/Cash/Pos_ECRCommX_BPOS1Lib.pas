@@ -17,6 +17,7 @@ type
 
     procedure SetMsgDescriptionProc(Value: TMsgDescriptionProc);
     function GetMsgDescriptionProc: TMsgDescriptionProc;
+    function GetLastPosError : string;
   protected
     function WaitPosResponsePrivat() : Integer;
     function Payment(ASumma : Currency) : Boolean;
@@ -45,6 +46,11 @@ end;
 function TPos_ECRCommX_BPOS1Lib.GetMsgDescriptionProc: TMsgDescriptionProc;
 begin
   Result := FMsgDescriptionProc;
+end;
+
+function TPos_ECRCommX_BPOS1Lib.GetLastPosError : string;
+begin
+  Result := FLastPosError;
 end;
 
 procedure TPos_ECRCommX_BPOS1Lib.AfterConstruction;
@@ -98,7 +104,7 @@ begin
   Summa := StrToInt(FloatToStr(ASumma * 100));
   FPOS.SetErrorLang(2);                                                    // язык сообщений. 2-”кр
   try
-    FPOS.CommOpen(iniPosPortSpeed(FPOSTerminalCode), iniPosPortNumber(FPOSTerminalCode));
+    FPOS.CommOpen(iniPosPortNumber(FPOSTerminalCode), iniPosPortSpeed(FPOSTerminalCode));
     if WaitPosResponsePrivat() = 0 then
     begin
       FPOS.Purchase( Summa, 0, 0 );

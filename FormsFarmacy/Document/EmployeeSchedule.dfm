@@ -148,6 +148,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
             PropertiesClassName = 'TcxComboBoxProperties'
             Properties.Items.Strings = (
               ''
+              '7:00'
               '8:00'
               '9:00'
               '10:00'

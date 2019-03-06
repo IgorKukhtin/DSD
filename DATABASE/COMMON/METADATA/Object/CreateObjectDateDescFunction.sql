@@ -336,9 +336,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Maker_SendReal() RETURNS Integer AS $BO
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Maker(), 'zc_ObjectDate_Maker_SendReal', 'Когда успешно прошла отправка (дата/время)' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Maker_SendReal');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_CashRegister_TimePUSHFinal1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_CashRegister_TimePUSHFinal1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashRegister(), 'zc_ObjectDate_CashRegister_TimePUSHFinal1', 'Время первого PUSH сообщения о завершении работы' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_CashRegister_TimePUSHFinal1');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_CashRegister_TimePUSHFinal2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_CashRegister_TimePUSHFinal2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashRegister(), 'zc_ObjectDate_CashRegister_TimePUSHFinal2', 'Время второго PUSH сообщения о завершении работы' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_CashRegister_TimePUSHFinal2');
+
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 04.03.19                                                                                     * zc_ObjectFloat_CashRegister_TimePUSHFinal ...
  15.02.19         * zc_ObjectDate_Unit_TaxUnitStart
                     zc_ObjectDate_Unit_TaxUnitEnd
  12.02.19                                                                                     * zc_ObjectFloat_RecalcMCSSheduler_DateRun
