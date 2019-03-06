@@ -23,7 +23,8 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                StartDateMCSAuto TDateTime, EndDateMCSAuto TDateTime,
                isMCSAuto Boolean, isMCSNotRecalcOld Boolean,
                AccommodationId Integer, AccommodationName TVarChar,
-               PriceChange TFloat, FixPercent TFloat
+               PriceChange TFloat, FixPercent TFloat,
+               DoesNotShare boolean
                )
 AS
 $BODY$
@@ -624,6 +625,7 @@ BEGIN
           , Object_Accommodation.ValueData AS AccommodationName
           , tmpPriceChange.PriceChange
           , tmpPriceChange.FixPercent
+          , COALESCE (ObjectBoolean_DoesNotShare.ValueData, FALSE) AS DoesNotShare
 
          FROM
             CashSessionSnapShot
@@ -676,7 +678,10 @@ BEGIN
             LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = CashSessionSnapShot.AccommodationId
             -- Цена со скидкой            
             LEFT JOIN tmpPriceChange ON tmpPriceChange.GoodsId = Goods.Id
-
+            -- Не делить медикамент на кассах
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_DoesNotShare
+                                    ON ObjectBoolean_DoesNotShare.ObjectId = Goods.Id
+                                   AND ObjectBoolean_DoesNotShare.DescId = zc_ObjectBoolean_Goods_DoesNotShare()
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId
         ORDER BY
@@ -690,6 +695,7 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 06.03.19                                                                                                    * DoesNotShare
  11.02.19                                                                                                    *
  30.10.18                                                                                                    *
  01.10.18         * tmpPriceChange - учет скидки подразделения
