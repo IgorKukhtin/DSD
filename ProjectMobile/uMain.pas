@@ -4668,6 +4668,22 @@ begin
         DM.tblMovement_RouteMember.Post;
 
         DM.tblMovement_RouteMember.Close;
+      end
+      else
+      begin
+        DM.tblMovement_RouteMember.Open;
+
+        DM.tblMovement_RouteMember.Append;
+        CreateGUID(GlobalId);
+        DM.tblMovement_RouteMemberGUID.AsString := GUIDToString(GlobalId);
+        DM.tblMovement_RouteMemberGPSN.AsFloat := 0;
+        DM.tblMovement_RouteMemberGPSE.AsFloat := 0;
+        DM.tblMovement_RouteMemberAddressByGPS.AsString := FCurCoordinatesMsg;
+        DM.tblMovement_RouteMemberInsertDate.AsDateTime := Now();
+        DM.tblMovement_RouteMemberisSync.AsBoolean := false;
+        DM.tblMovement_RouteMember.Post;
+
+        DM.tblMovement_RouteMember.Close;
       end;
     end;
   finally
