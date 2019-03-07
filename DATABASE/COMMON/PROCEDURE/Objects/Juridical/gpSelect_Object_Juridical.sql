@@ -247,6 +247,8 @@ BEGIN
            OR tmpListBranch_Constraint.JuridicalId > 0
            OR vbIsConstraint = FALSE
            OR Object_Juridical.Id IN (408130 -- юцпн яхпнбхмю рнб
+                                    , 528407  -- норрнпц-15 рнб
+                                    , 3136014 -- яу╡дрнпц 2018 рнб
                                      )
          )
    ;

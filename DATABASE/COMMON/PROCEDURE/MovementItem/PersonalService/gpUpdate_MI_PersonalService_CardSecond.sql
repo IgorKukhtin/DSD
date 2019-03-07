@@ -69,9 +69,9 @@ BEGIN
                                      , ObjectLink_Personal_Position.ChildObjectId                 AS PositionId
                                      , zc_Enum_InfoMoney_60101()                                  AS InfoMoneyId  -- 60101 Заработная плата
                                      , ObjectLink_Personal_PersonalServiceList.ChildObjectId      AS PersonalServiceListId
-                                FROM tmpPersonal
+                                FROM tmpPersonal_all
                                      LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
-                                                          ON ObjectLink_Personal_Member.ChildObjectId = tmpPersonal.MemberId
+                                                          ON ObjectLink_Personal_Member.ChildObjectId = tmpPersonal_all.MemberId
                                                          AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
                                      LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListCardSecond
                                                           ON ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId      = ObjectLink_Personal_Member.ObjectId
@@ -206,7 +206,11 @@ BEGIN
                  , tmpListPersonal.PositionId
                  , tmpListPersonal.InfoMoneyId
                  , tmpListPersonal.PersonalServiceListId
-                 , -1 * COALESCE (tmpMIContainer.Amount, 0) - COALESCE (tmpSummCard.Amount, 0) AS SummCardSecondRecalc -- т.к. в проводках долг с минусом
+                 , CASE WHEN -1 * COALESCE (tmpMIContainer.Amount, 0) - COALESCE (tmpSummCard.Amount, 0) > 0
+                                  -- т.к. в проводках долг с минусом
+                             THEN -1 * COALESCE (tmpMIContainer.Amount, 0) - COALESCE (tmpSummCard.Amount, 0)
+                        ELSE 0
+                   END AS SummCardSecondRecalc
             FROM tmpListPersonal
                  LEFT JOIN tmpMIContainer ON tmpMIContainer.PersonalId  = tmpListPersonal.PersonalId
                                          AND tmpMIContainer.UnitId      = tmpListPersonal.UnitId

@@ -671,7 +671,9 @@ BEGIN
                                  , 128902 -- ФОЗЗИ  ФУД, Запорожье Ленина,147
                                  , 128903 -- ФОЗЗИ  ФУД, Запорожье,ул.Иванова,1а
                                   )
-          OR ObjectLink_Partner_Juridical.ChildObjectId IN (408130 -- АГРО СИРОВИНА ТОВ
+          OR ObjectLink_Partner_Juridical.ChildObjectId IN (408130  -- АГРО СИРОВИНА ТОВ
+                                                          , 528407  -- ОПТТОРГ-15 ТОВ
+                                                          , 3136014 -- СХІДТОРГ 2018 ТОВ
                                                            )
          )
 
