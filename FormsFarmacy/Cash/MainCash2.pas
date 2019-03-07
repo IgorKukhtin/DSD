@@ -362,6 +362,9 @@ type
     edTaxUnitNight: TcxTextEdit;
     cxCheckBox1: TcxCheckBox;
     actSpecCorr: TAction;
+    TimerPUSH: TTimer;
+    spGet_PUSH_Cash: TdsdStoredProc;
+    PUSHDS: TClientDataSet;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -452,6 +455,7 @@ type
     procedure MainColPriceNightGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
     procedure actSpecCorrExecute(Sender: TObject);
+    procedure TimerPUSHTimer(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -475,6 +479,11 @@ type
     FSaveCheckToMemData: boolean;
     FShowMessageCheckConnection: boolean;
     FNeedFullRemains: boolean;
+
+    FPUSHStart: boolean;
+    FPUSHEnd: TDateTime;
+    FLoadPUSH: Integer;
+
     procedure SetBlinkVIP (isRefresh : boolean);
     procedure SetBlinkCheck (isRefresh : boolean);
 
@@ -497,7 +506,7 @@ type
     procedure Add_Log_XML(AMessage: String);
     // Пробивает чек через ЭККА
     function PutCheckToCash(SalerCash, SalerCashAdd: Currency; PaidType: TPaidType;
-      out AFiscalNumber, ACheckNumber: String; isFiscal: boolean = true): boolean;
+      out AFiscalNumber, ACheckNumber: String; APOSTerminalCode : Integer = 0; isFiscal: boolean = true): boolean;
     //подключение к локальной базе данных
     function InitLocalStorage: Boolean;
     procedure LoadFromLocalStorage;
@@ -1263,6 +1272,67 @@ begin
  end;
 end;
 
+procedure TMainCashForm2.TimerPUSHTimer(Sender: TObject);
+
+  procedure Load_PUSH(ARun : boolean);
+  begin
+    if ARun or (FLoadPUSH > 15) then
+    begin
+      FLoadPUSH := 0;
+
+      if not gc_User.Local then
+      try
+        spGet_PUSH_Cash.Execute;
+        TimerPUSH.Interval := 1000;
+      except ON E:Exception do Add_Log_XML('<Load_PUSH err="'+E.Message+'">');
+      end;
+    end else Inc(FLoadPUSH);
+  end;
+
+begin
+  TimerPUSH.Enabled := False;
+  TimerPUSH.Interval := 60 * 1000;
+  if TimeOf(FPUSHEnd) > TimeOf(Now) then FPUSHEnd := Now;
+  try
+    if FPUSHStart then
+    begin
+      ShowMessage('Уважаемые коллеги!'#13#10 +
+                  '1. Сделайте Х-отчет, убедитесь, что он пустой 0,00.'#13#10 +
+                  '   Форс-Мажор РРО: звоним в любое время Татьяна (099-641-59-21), Юлия (0957767101)'#13#10 +
+                  '2. Сделайте нулевой чек, проверьте дату и время.'#13#10 +
+                  '3. Сделайте внесение 100,00 грн.');
+      Load_PUSH(True);
+    end else if UnitConfigCDS.Active and Assigned(UnitConfigCDS.FindField('TimePUSHFinal1')) and (
+      not UnitConfigCDS.FieldByName('TimePUSHFinal1').IsNull and (TimeOf(FPUSHEnd) < TimeOf(UnitConfigCDS.FieldByName('TimePUSHFinal1').AsDateTime)) and
+      (TimeOf(UnitConfigCDS.FieldByName('TimePUSHFinal1').AsDateTime) < TimeOf(Now)) or
+      not UnitConfigCDS.FieldByName('TimePUSHFinal2').IsNull and (TimeOf(FPUSHEnd) < TimeOf(UnitConfigCDS.FieldByName('TimePUSHFinal2').AsDateTime)) and
+      (TimeOf(UnitConfigCDS.FieldByName('TimePUSHFinal2').AsDateTime) < TimeOf(Now))) then
+    begin
+      ShowMessage('Уважаемые коллеги!'#13#10 +
+                  '1. Не забудьте сделать X-отчет!!! Вынесите необходимую сумму наличных средств из кассы согласно Х-отчета за минусом 100,00 грн !!!'#13#10 +
+                  '2. Еще раз сделайте х-отчет!!! Убедитесь, что наличных в кассе 100,00 грн!!!'#13#10 +
+                  '3. Сделайте z-отчет!!!'#13#10 +
+                  '4. Убедитесь, что Ваш z-отчет отправился в бухгалтерию!!!'#13#10 +
+                  '5. Форс-Мажор РРО: звоним в любое время : Татьяна (099-641-59-21), Юлия (0957767101)'#13#10 +
+                  '6. Сделайте запись в книге РРО!!!');
+      FPUSHEnd := Now;
+    end else if (CheckCDS.RecordCount = 0) and PUSHDS.Active and (PUSHDS.RecordCount > 0) then
+    begin
+      PUSHDS.First;
+      try
+        TimerPUSH.Interval := 1000;
+        if Trim(PUSHDS.FieldByName('Text').AsString) <> '' then ShowMessage(PUSHDS.FieldByName('Text').AsString);
+      finally
+         PUSHDS.Delete;
+      end;
+    end;
+    Load_PUSH(False);
+  finally
+    FPUSHStart := False;
+    TimerPUSH.Enabled := True;
+  end;
+end;
+
 procedure TMainCashForm2.actInsertUpdateCheckItemsExecute(Sender: TObject);
 begin
   if GetAmount <> 0 then begin //ЕСЛИ введенное кол-во 0 то просто переходим к следующему коду
@@ -1466,7 +1536,6 @@ var
   dsdSave: TdsdStoredProc;
   nBankPOSTerminal : integer;
   nPOSTerminalCode : integer;
-  pPosTerm : IPos;
 begin
   if CheckCDS.RecordCount = 0 then exit;
 
@@ -1538,28 +1607,8 @@ begin
   //послали на печать
   try
 
-    // Подключились к POS-терминалу
-    if (PaidType <> ptMoney) and (nPOSTerminalCode <> 0) and (iniPosType(nPOSTerminalCode) <> '') then
-    begin
-
-      Add_Log('Подключение к POS терминалу');
-      try
-        pPosTerm:=TPosFactory.GetPos(nPOSTerminalCode);
-      except ON E:Exception do Add_Log('Exception: ' + E.Message);
-      end;
-
-      if pPosTerm = Nil then
-      begin
-        ShowMessage('Внимание! Программа не может подключиться к POS-терминалу.'+#13+
-                    'Проверьте подключение и повторите попытку печети!');
-        Exit;
-      end;
-
-      if not PayPosTerminal(pPosTerm, MainCashForm.ASalerCash) then Exit;
-    end;
-
     Add_Log('Печать чека');
-    if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.ASalerCashAdd, MainCashForm.PaidType, FiscalNumber, CheckNumber) then
+    if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.ASalerCashAdd, MainCashForm.PaidType, FiscalNumber, CheckNumber, nPOSTerminalCode) then
     Begin
       Add_Log('Печать чека завершена');
       if (FormParams.ParamByName('DiscountExternalId').Value > 0)
@@ -1622,8 +1671,6 @@ begin
            end; // else if fErr = true
     End;
   finally
-    if pPosTerm <> Nil then pPosTerm := Nil;
-
     ShapeState.Brush.Color := clGreen;
     ShapeState.Repaint;
   end;
@@ -3110,7 +3157,7 @@ end;
 procedure TMainCashForm2.miPrintNotFiscalCheckClick(Sender: TObject);
 var CheckNumber: string;
 begin
-  PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.ASalerCashAdd, MainCashForm.PaidType, FiscalNumber, CheckNumber, false);
+  PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.ASalerCashAdd, MainCashForm.PaidType, FiscalNumber, CheckNumber, 0, false);
 end;
 
 procedure TMainCashForm2.mmSaveToExcelClick(Sender: TObject);
@@ -3139,6 +3186,7 @@ begin
   mdCheck.Active := true;
   isScaner:= false;
   difUpdate := true;
+  FPUSHStart := True;
   //
   edDays.Value:=7;
   PanelMCSAuto.Visible:=false;
@@ -3209,6 +3257,11 @@ begin
       ShowMessage('Внимание! Программа не может подключиться к фискальному аппарату.'+#13+
                   'Дальнейшая работа программы возможна только в нефискальном режиме!');
     End;
+  end;
+
+  if (Cash <> nil) and (Cash.FiscalNumber <> '') then
+  begin
+    iniLocalCashRegisterSave(Cash.FiscalNumber);
   end;
 
   //а2 начало -  только 2 форма
@@ -4135,7 +4188,8 @@ begin
     VipCDS.LoadFromFile(Vip_lcl);
     VIPListCDS.LoadFromFile(VipList_lcl);
   End;
-
+  FPUSHEnd := Now;
+  if FPUSHStart then TimerPUSH.Enabled := True;
 end;
 
 // что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА
@@ -4160,9 +4214,9 @@ begin
 end;
 
 function TMainCashForm2.PutCheckToCash(SalerCash,SalerCashAdd: Currency;
-  PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String; isFiscal: boolean = true): boolean;
+  PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String; APOSTerminalCode : Integer = 0; isFiscal: boolean = true): boolean;
 var str_log_xml : String; Disc: Currency;
-    i, PosDisc : Integer;
+    i, PosDisc : Integer; pPosTerm : IPos;
 {------------------------------------------------------------------------------}
   function PutOneRecordToCash: boolean; //Продажа одного наименования
     var сAccommodationName : string;
@@ -4258,6 +4312,31 @@ begin
           Exit;
         end;
       end;
+
+      // Подключились к POS-терминалу
+      if (PaidType <> ptMoney) and (APOSTerminalCode <> 0) and (iniPosType(APOSTerminalCode) <> '') then
+      begin
+        try
+          Add_Log('Подключение к POS терминалу');
+          try
+            pPosTerm:=TPosFactory.GetPos(APOSTerminalCode);
+          except ON E:Exception do Add_Log('Exception: ' + E.Message);
+          end;
+
+          if pPosTerm = Nil then
+          begin
+            ShowMessage('Внимание! Программа не может подключиться к POS-терминалу.'+#13+
+                        'Проверьте подключение и повторите попытку печети!');
+            Exit;
+          end;
+
+          if not PayPosTerminal(pPosTerm, MainCashForm.ASalerCash) then Exit;
+        finally
+          if pPosTerm <> Nil then pPosTerm := Nil;
+        end;
+      end;
+
+
 
       if isFiscal then Add_Check_History;
       if isFiscal then Start_Check_History(FTotalSumm, SalerCashAdd, PaidType);

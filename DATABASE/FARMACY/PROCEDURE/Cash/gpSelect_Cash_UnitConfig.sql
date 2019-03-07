@@ -1,18 +1,22 @@
 -- Function: gpSelect_Cash_UnitConfig()
 
-DROP FUNCTION IF EXISTS gpSelect_Cash_UnitConfig (TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Cash_UnitConfig (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Cash_UnitConfig (TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Cash_UnitConfig (
-    IN inSession     TVarChar       -- сесси€ пользовател€
+    IN inCashRegister   TVarChar,
+    IN inSession        TVarChar       -- сесси€ пользовател€
 )
 RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                ParentName TVarChar,
-               TaxUnitNight Boolean, TaxUnitStartDate TDateTime, TaxUnitEndDate TDateTime
+               TaxUnitNight Boolean, TaxUnitStartDate TDateTime, TaxUnitEndDate TDateTime,
+               TimePUSHFinal1 TDateTime, TimePUSHFinal2 TDateTime
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
+   DECLARE vbCashRegisterId Integer;
 BEGIN
 
    -- проверка прав пользовател€ на вызов процедуры
@@ -23,6 +27,21 @@ BEGIN
       vbUnitKey := '0';
    END IF;
    vbUnitId := vbUnitKey::Integer;
+
+
+   if EXISTS(SELECT Object_CashRegister.Id
+             FROM Object AS Object_CashRegister
+             WHERE Object_CashRegister.DescId = zc_Object_CashRegister()
+               AND Object_CashRegister.ValueData = inCashRegister)
+   THEN
+     SELECT Object_CashRegister.Id
+     INTO vbCashRegisterId
+     FROM Object AS Object_CashRegister
+     WHERE Object_CashRegister.DescId = zc_Object_CashRegister()
+       AND Object_CashRegister.ValueData = inCashRegister;
+   ELSE
+     vbCashRegisterId := 0;
+   END IF;
 
    RETURN QUERY
    WITH tmpTaxUnitNight AS (SELECT  ObjectLink_TaxUnit_Unit.ChildObjectId               AS UnitId
@@ -40,8 +59,8 @@ BEGIN
                             WHERE ObjectLink_TaxUnit_Unit.DescId = zc_ObjectLink_TaxUnit_Unit()
                               AND Object_TaxUnit.isErased = False
                               AND COALESCE(ObjectFloat_Value.ValueData, 0) <> 0)
-   
-   
+
+
    SELECT
          Object_Unit.Id                                      AS Id
        , Object_Unit.ObjectCode                              AS Code
@@ -49,12 +68,15 @@ BEGIN
 
        , Object_Parent.ValueData                             AS ParentName
 
-       , COALESCE (tmpTaxUnitNight.UnitId, 0) <> 0 
-         AND COALESCE(ObjectDate_TaxUnitStart.ValueData ::Time,'00:00') <> '00:00' 
+       , COALESCE (tmpTaxUnitNight.UnitId, 0) <> 0
+         AND COALESCE(ObjectDate_TaxUnitStart.ValueData ::Time,'00:00') <> '00:00'
          AND COALESCE(ObjectDate_TaxUnitEnd.ValueData ::Time,'00:00') <> '00:00'                 AS TaxUnitNight
 
        , CASE WHEN COALESCE(ObjectDate_TaxUnitStart.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_TaxUnitStart.ValueData ELSE Null END ::TDateTime  AS TaxUnitStartDate
        , CASE WHEN COALESCE(ObjectDate_TaxUnitEnd.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_TaxUnitEnd.ValueData ELSE Null END ::TDateTime  AS TaxUnitEndDate
+
+       , COALESCE (ObjectDate_TimePUSHFinal1.ValueData, ('01.01.2019 21:00')::TDateTime) AS TimePUSHFinal1
+       , ObjectDate_TimePUSHFinal2.ValueData                                             AS TimePUSHFinal2
 
    FROM Object AS Object_Unit
 
@@ -73,7 +95,15 @@ BEGIN
 
         LEFT JOIN tmpTaxUnitNight ON tmpTaxUnitNight.UnitID = Object_Unit.Id
 
-   WHERE Object_Unit.Id = vbUnitId 
+        LEFT JOIN ObjectDate AS ObjectDate_TimePUSHFinal1
+                              ON ObjectDate_TimePUSHFinal1.ObjectId = vbCashRegisterId
+                             AND ObjectDate_TimePUSHFinal1.DescId = zc_ObjectDate_CashRegister_TimePUSHFinal1()
+
+        LEFT JOIN ObjectDate AS ObjectDate_TimePUSHFinal2
+                              ON ObjectDate_TimePUSHFinal2.ObjectId = vbCashRegisterId
+                             AND ObjectDate_TimePUSHFinal2.DescId = zc_ObjectDate_CashRegister_TimePUSHFinal2()
+
+   WHERE Object_Unit.Id = vbUnitId
    --LIMIT 1
    ;
 
@@ -92,4 +122,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Cash_UnitConfig( '308120')
+-- SELECT * FROM gpSelect_Cash_UnitConfig('3000497773', '308120')

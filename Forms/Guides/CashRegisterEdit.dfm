@@ -1,24 +1,24 @@
 ﻿inherited CashRegisterEditForm: TCashRegisterEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1072#1089#1089#1086#1074#1099#1081' '#1072#1087#1087#1072#1088#1072#1090'>'
-  ClientHeight = 195
-  ClientWidth = 287
-  ExplicitWidth = 293
-  ExplicitHeight = 220
+  ClientHeight = 279
+  ClientWidth = 303
+  ExplicitWidth = 309
+  ExplicitHeight = 308
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 37
-    Top = 161
+    Left = 33
+    Top = 233
     TabOrder = 2
-    ExplicitLeft = 37
-    ExplicitTop = 161
+    ExplicitLeft = 33
+    ExplicitTop = 233
   end
   inherited bbCancel: TcxButton
-    Left = 169
-    Top = 161
+    Left = 166
+    Top = 233
     TabOrder = 3
-    ExplicitLeft = 169
-    ExplicitTop = 161
+    ExplicitLeft = 166
+    ExplicitTop = 233
   end
   object edMeasureName: TcxTextEdit [2]
     Left = 7
@@ -46,12 +46,12 @@
   end
   object cxLabel7: TcxLabel [6]
     Left = 8
-    Top = 98
+    Top = 127
     Caption = #1058#1080#1087' '#1082#1072#1089#1089#1086#1074#1086#1075#1086' '#1072#1087#1087#1072#1088#1072#1090#1072
   end
   object ceInfoMoney: TcxButtonEdit [7]
     Left = 6
-    Top = 118
+    Top = 147
     Properties.Buttons = <
       item
         Default = True
@@ -61,12 +61,61 @@
     TabOrder = 6
     Width = 273
   end
+  object edTimePUSHFinal2: TcxDateEdit [8]
+    Left = 151
+    Top = 199
+    EditValue = 43234d
+    Properties.ArrowsForYear = False
+    Properties.AssignedValues.EditFormat = True
+    Properties.DateButtons = [btnNow]
+    Properties.DisplayFormat = 'HH:MM'
+    Properties.Kind = ckDateTime
+    TabOrder = 8
+    Width = 100
+  end
+  object cxLabel21: TcxLabel [9]
+    Left = 151
+    Top = 176
+    Caption = #1042#1077#1095#1077#1088#1085#1077#1077' PUSH 2'
+  end
+  object edTimePUSHFinal1: TcxDateEdit [10]
+    Left = 8
+    Top = 199
+    EditValue = 43225d
+    Properties.ArrowsForYear = False
+    Properties.AssignedValues.EditFormat = True
+    Properties.DateButtons = [btnNow]
+    Properties.DateOnError = deNull
+    Properties.DisplayFormat = 'HH:MM'
+    Properties.Kind = ckDateTime
+    Properties.Nullstring = ' '
+    Properties.YearsInMonthList = False
+    TabOrder = 10
+    Width = 100
+  end
+  object cxLabel20: TcxLabel [11]
+    Left = 8
+    Top = 176
+    Caption = #1042#1077#1095#1077#1088#1085#1077#1077' PUSH 1'
+  end
+  object edSerialNumber: TcxTextEdit [12]
+    Left = 8
+    Top = 106
+    Properties.ReadOnly = True
+    TabOrder = 12
+    Width = 273
+  end
+  object cxLabel2: TcxLabel [13]
+    Left = 8
+    Top = 90
+    Caption = #1057#1077#1088#1080#1081#1085#1099#1081' '#1085#1086#1084#1077#1088
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 115
     Top = 136
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Top = 128
+    Top = 112
   end
   inherited ActionList: TActionList
     Images = dmMain.ImageList
@@ -102,12 +151,14 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -115,6 +166,7 @@
         Component = edMeasureName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCashRegisterKindId'
@@ -122,6 +174,23 @@
         Component = CashRegisterKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTimePUSHFinal1'
+        Value = 'NULL'
+        Component = edTimePUSHFinal1
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTimePUSHFinal2'
+        Value = 'NULL'
+        Component = edTimePUSHFinal2
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 48
@@ -135,23 +204,27 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edMeasureName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashRegisterKindId'
         Value = Null
         Component = CashRegisterKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashRegisterKindName'
@@ -159,6 +232,28 @@
         Component = CashRegisterKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SerialNumber'
+        Value = Null
+        Component = edSerialNumber
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TimePUSHFinal1'
+        Value = 'NULL'
+        Component = edTimePUSHFinal1
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TimePUSHFinal2'
+        Value = 'NULL'
+        Component = edTimePUSHFinal2
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 184
     Top = 88
@@ -168,6 +263,7 @@
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TCashRegisterKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCashRegisterKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -178,6 +274,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -186,6 +283,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 128
     Top = 96

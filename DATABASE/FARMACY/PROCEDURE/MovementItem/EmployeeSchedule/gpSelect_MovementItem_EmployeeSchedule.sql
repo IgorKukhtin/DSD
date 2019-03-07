@@ -85,7 +85,19 @@ BEGIN
                                                 AND tmpPersonal.Ord = 1
 
                       WHERE Movement.OperDate >= inDate - INTERVAL '3 MONTH'
-                        AND Movement.DescId = zc_Movement_KPU())
+                        AND Movement.DescId = zc_Movement_KPU()),
+                        
+            tmpEmployee AS (SELECT EmployeeWorkLog.UserId   AS UserId
+                                 , EmployeeWorkLog.UnitId   AS UnitId
+                                 , COUNT(*)                 AS CountLog
+                            FROM EmployeeWorkLog
+                            WHERE EmployeeWorkLog.DateLogIn >= inDate - INTERVAL '3 MONTH'
+                            GROUP BY EmployeeWorkLog.UnitId, EmployeeWorkLog.UserId),
+                      
+            tmpEmployeeUser AS (SELECT ROW_NUMBER() OVER (PARTITION BY tmpEmployee.UserId ORDER BY tmpEmployee.CountLog DESC) AS Ord
+                                     , tmpEmployee.UserId   AS UserId
+                                     , tmpEmployee.UnitId   AS UnitId
+                                FROM tmpEmployee)     
 
        SELECT
          0                                    AS ID,
@@ -202,11 +214,11 @@ BEGIN
          MovementItem.ObjectId                                   AS UserID,
          MovementItem.IsErased                                   AS IsErased,
          tmpPersonal.PersonalCode                                AS PersonalCode,
-         tmpPersonal.PersonalName                                AS PersonalName,
+         COALESCE (tmpPersonal.PersonalName, Object_User.ValueData) AS PersonalName,
          tmpPersonal.PositionName                                AS PositionName,
-         tmpUser.UnitID                                          AS UnitID,
-         tmpUser.UnitCode                                        AS UnitCode,
-         tmpUser.UnitName                                        AS UnitName,
+         COALESCE (tmpUser.UnitID, Object_Unit.ID)               AS UnitID,
+         COALESCE (tmpUser.UnitCode, Object_Unit.ObjectCode)     AS UnitCode,
+         COALESCE (tmpUser.UnitName, Object_Unit.ValueData)      AS UnitName,
          lpDecodeValueDay(1, MIString_ComingValueDay.ValueData)  AS Value1,
          lpDecodeValueDay(2, MIString_ComingValueDay.ValueData)  AS Value2,
          lpDecodeValueDay(3, MIString_ComingValueDay.ValueData)  AS Value3,
@@ -304,6 +316,7 @@ BEGIN
 
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
                                    AND MovementItem.DescId = zc_MI_Master()
+            LEFT JOIN Object AS Object_User ON Object_User.Id = MovementItem.ObjectId
 
             LEFT JOIN tmpUser ON tmpUser.UserID = MovementItem.ObjectId
 
@@ -311,6 +324,10 @@ BEGIN
                                  ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectid
+
+            LEFT JOIN tmpEmployeeUser ON tmpEmployeeUser.UserID = MovementItem.ObjectId
+                                     AND tmpEmployeeUser.Ord = 1
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpEmployeeUser.UnitID
 
             LEFT JOIN (SELECT
                                ROW_NUMBER() OVER (PARTITION BY MemberId ORDER BY IsErased) AS Ord
@@ -376,18 +393,31 @@ BEGIN
                                                 AND tmpPersonal.Ord = 1
 
                       WHERE Movement.OperDate >= inDate - INTERVAL '3 MONTH'
-                        AND Movement.DescId = zc_Movement_KPU())
+                        AND Movement.DescId = zc_Movement_KPU()),
+                        
+            tmpEmployee AS (SELECT EmployeeWorkLog.UserId   AS UserId
+                                 , EmployeeWorkLog.UnitId   AS UnitId
+                                 , COUNT(*)                 AS CountLog
+                            FROM EmployeeWorkLog
+                            WHERE EmployeeWorkLog.DateLogIn >= inDate - INTERVAL '3 MONTH'
+                            GROUP BY EmployeeWorkLog.UnitId, EmployeeWorkLog.UserId),
+                      
+            tmpEmployeeUser AS (SELECT ROW_NUMBER() OVER (PARTITION BY tmpEmployee.UserId ORDER BY tmpEmployee.CountLog DESC) AS Ord
+                                     , tmpEmployee.UserId   AS UserId
+                                     , tmpEmployee.UnitId   AS UnitId
+                                FROM tmpEmployee)     
+                        
 
        SELECT
          MovementItem.Id                                         AS ID,
          MovementItem.ObjectId                                   AS UserID,
          MovementItem.IsErased                                   AS IsErased,
          tmpPersonal.PersonalCode                                AS PersonalCode,
-         tmpPersonal.PersonalName                                AS PersonalName,
+         COALESCE (tmpPersonal.PersonalName, Object_User.ValueData) AS PersonalName,
          tmpPersonal.PositionName                                AS PositionName,
-         tmpUser.UnitID                                          AS UnitID,
-         tmpUser.UnitCode                                        AS UnitCode,
-         tmpUser.UnitName                                        AS UnitName,
+         COALESCE (tmpUser.UnitID, Object_Unit.ID)               AS UnitID,
+         COALESCE (tmpUser.UnitCode, Object_Unit.ObjectCode)     AS UnitCode,
+         COALESCE (tmpUser.UnitName, Object_Unit.ValueData)      AS UnitName,
          lpDecodeValueDay(1, MIString_ComingValueDay.ValueData)  AS Value1,
          lpDecodeValueDay(2, MIString_ComingValueDay.ValueData)  AS Value2,
          lpDecodeValueDay(3, MIString_ComingValueDay.ValueData)  AS Value3,
@@ -485,6 +515,7 @@ BEGIN
 
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
                                    AND MovementItem.DescId = zc_MI_Master()
+            LEFT JOIN Object AS Object_User ON Object_User.Id = MovementItem.ObjectId
 
             LEFT JOIN tmpUser ON tmpUser.UserID = MovementItem.ObjectId
 
@@ -495,6 +526,10 @@ BEGIN
 
             LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = ObjectLink_User_Member.ChildObjectid
                                  AND tmpPersonal.Ord = 1
+                                 
+            LEFT JOIN tmpEmployeeUser ON tmpEmployeeUser.UserID = MovementItem.ObjectId
+                                     AND tmpEmployeeUser.Ord = 1
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpEmployeeUser.UnitID
 
             INNER JOIN MovementItemString AS MIString_ComingValueDay
                                           ON MIString_ComingValueDay.DescId = zc_MIString_ComingValueDay()

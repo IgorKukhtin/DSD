@@ -127,6 +127,16 @@ object InvoiceJournalForm: TInvoiceJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalSummCurrency
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm_f1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm_f2
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -185,6 +195,16 @@ object InvoiceJournalForm: TInvoiceJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalSummCurrency
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm_f1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm_f2
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -369,6 +389,30 @@ object InvoiceJournalForm: TInvoiceJournalForm
       object TotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
         DataBinding.FieldName = 'TotalSumm'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' ('#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057' '#1080' '#1089#1082#1080#1076#1082#1080')'
+        Options.Editing = False
+        Width = 80
+      end
+      object TotalSumm_f1: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1073'/'#1085')'
+        DataBinding.FieldName = 'TotalSumm_f1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' ('#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057' '#1080' '#1089#1082#1080#1076#1082#1080')'
+        Options.Editing = False
+        Width = 80
+      end
+      object TotalSumm_f2: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1085#1072#1083')'
+        DataBinding.FieldName = 'TotalSumm_f2'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -763,6 +807,9 @@ object InvoiceJournalForm: TInvoiceJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'

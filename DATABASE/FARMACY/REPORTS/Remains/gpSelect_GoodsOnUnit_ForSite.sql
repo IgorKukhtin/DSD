@@ -68,6 +68,8 @@ $BODY$
    DECLARE vbOperDate_Begin3 TDateTime;
    DECLARE vbOperDate_Begin4 TDateTime;
    DECLARE vbSiteDiscount TFloat;
+
+   DECLARE vbQueryText Text;
 BEGIN
      -- сразу запомнили время начала выполнения Проц.
      vbOperDate_Begin1:= CLOCK_TIMESTAMP();
@@ -121,18 +123,12 @@ BEGIN
     -- INSERT INTO _tmpUnitMinPrice_List (UnitId) SELECT 0 WHERE NOT EXISTS (SELECT 1 FROM _tmpUnitMinPrice_List);
 
     -- парсим товары
-    vbIndex := 1;
-    WHILE SPLIT_PART (inGoodsId_list, ',', vbIndex) <> '' LOOP
-        -- добавляем то что нашли
-        INSERT INTO _tmpGoodsMinPrice_List (GoodsId, GoodsId_retail)
-           WITH tmp AS (SELECT SPLIT_PART (inGoodsId_list, ',', vbIndex) :: Integer AS GoodsId)
-              , tmpRes AS (SELECT ObjectLink_Child.ChildObjectId      AS GoodsId
+    IF COALESCE(inGoodsId_list, '') <> ''
+    THEN
+      vbQueryText := 'INSERT INTO _tmpGoodsMinPrice_List (GoodsId, GoodsId_retail)
+           WITH tmpRes AS (SELECT ObjectLink_Child.ChildObjectId      AS GoodsId
                                 , ObjectLink_Child_ALL.ChildObjectId AS GoodsId_retail
                                 , Object_Retail.DescId
-                           -- FROM tmp
-                           --      INNER JOIN ObjectLink AS ObjectLink_Child
-                           --                            ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
-                           --                           AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
                            FROM ObjectLink AS ObjectLink_Child
                                 INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                                          AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
@@ -145,16 +141,14 @@ BEGIN
                                                      AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                 INNER JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Goods_Object.ChildObjectId
                                                                 -- AND Object_Retail.DescId = zc_Object_Retail()
-                           WHERE ObjectLink_Child.ChildObjectId IN (SELECT tmp.GoodsId FROM tmp)
+                           WHERE ObjectLink_Child.ChildObjectId IN ('||inGoodsId_list||')
                              AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
                           )
-              SELECT tmpRes.GoodsId, tmpRes.GoodsId_retail FROM tmpRes WHERE tmpRes.DescId = zc_Object_Retail()
-          ;
-        -- теперь следуюющий
-        vbIndex := vbIndex + 1;
-    END LOOP;
+              SELECT tmpRes.GoodsId, tmpRes.GoodsId_retail FROM tmpRes WHERE tmpRes.DescId = zc_Object_Retail()';
+      
+      EXECUTE vbQueryText;
+    END IF;
     
-
     -- !!!Оптимизация!!!
     ANALYZE _tmpUnitMinPrice_List;
 

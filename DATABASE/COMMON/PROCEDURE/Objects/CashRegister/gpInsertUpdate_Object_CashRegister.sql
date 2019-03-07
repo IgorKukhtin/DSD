@@ -1,12 +1,15 @@
 -- Function: gpInsertUpdate_Object_City()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashRegister (Integer, Integer, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashRegister (Integer, Integer, TVarChar, Integer, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashRegister(
  INOUT ioId                     Integer   ,     -- ключ объекта <Город>
     IN inCode                   Integer   ,     -- Код объекта
     IN inName                   TVarChar  ,     -- Название объекта
     IN inCashRegisterKindId     Integer   ,     -- 
+    IN inTimePUSHFinal1         TDateTime ,     -- 
+    IN inTimePUSHFinal2         TDateTime ,     -- 
     IN inSession                TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -35,19 +38,38 @@ BEGIN
 
   -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_CashRegister_CashRegisterKind(), ioId, inCashRegisterKindId);
+   
+   IF inTimePUSHFinal1 ::Time <> '00:00'
+   THEN
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_CashRegister_TimePUSHFinal1(), ioId, inTimePUSHFinal1);
+   ELSE
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_CashRegister_TimePUSHFinal1(), ioId, NULL);
+   END IF;
+   
+   IF inTimePUSHFinal2 ::Time <> '00:00'
+   THEN
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_CashRegister_TimePUSHFinal2(), ioId, inTimePUSHFinal2);
+   ELSE
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_CashRegister_TimePUSHFinal2(), ioId, NULL);
+   END IF;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_CashRegister (Integer, Integer, TVarChar, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_CashRegister (Integer, Integer, TVarChar, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.   Шаблий О.В.
+ 04.03.19                                                                      *  
  22.05.15                        *  
 */
 

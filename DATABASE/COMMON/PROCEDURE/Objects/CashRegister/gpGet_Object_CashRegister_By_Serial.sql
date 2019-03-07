@@ -32,7 +32,7 @@ BEGIN
     ValueData = inSerial;
 
   IF COALESCE(outId,0) = 0 THEN
-    outId := gpInsertUpdate_Object_CashRegister(0,0,inSerial,vbCashRegisterKindId,inSession);
+    outId := gpInsertUpdate_Object_CashRegister(0,0,inSerial,vbCashRegisterKindId,CURRENT_DATE,CURRENT_DATE,inSession);
   END IF;  
 END;
 $BODY$

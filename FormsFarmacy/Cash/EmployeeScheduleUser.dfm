@@ -135,6 +135,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
       Top = 15
       Properties.Items.Strings = (
         ''
+        '7:00'
         '8:00'
         '9:00'
         '10:00'

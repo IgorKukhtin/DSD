@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Invoice(Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Invoice(Integer, TVarChar, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Invoice(Integer, TVarChar, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Invoice(Integer, TVarChar, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Invoice(
@@ -13,13 +15,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Invoice(
     IN inContractId          Integer   , -- Договор 
     IN inPaidKindId          Integer   , -- Форма оплаты
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
-
+    
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
     IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки 
    OUT outCurrencyValue      TFloat    , -- курс валюты
    OUT outParValue           TFloat    , -- Номинал для перевода в валюту баланса
 
+ INOUT ioTotalSumm_f1        TFloat    , --
+ INOUT ioTotalSumm_f2        TFloat    , --
+ 
     IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -77,6 +82,15 @@ BEGIN
      -- Примечание
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
+     --
+     IF inPaidKindId = zc_Enum_PaidKind_FirstForm()
+     THEN
+         -- сохранили свойство <Итого сумма оплаты по другой форме оплаты> нал
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPayOth(), ioId, COALESCE (ioTotalSumm_f2,0));
+     ELSE 
+         -- сохранили свойство <Итого сумма оплаты по другой форме оплаты> б/н
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPayOth(), ioId, COALESCE (ioTotalSumm_f1,0));
+     END IF;     
 
      IF vbIsInsert = TRUE
          THEN
@@ -89,6 +103,27 @@ BEGIN
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
+     SELECT CASE WHEN inPaidKindId = zc_Enum_PaidKind_FirstForm() 
+                  THEN MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                  ELSE COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+             END AS TotalSumm_f1            -- оплата б/н
+
+           , CASE WHEN inPaidKindId = zc_Enum_PaidKind_FirstForm() 
+                  THEN COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                  ELSE MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+             END AS TotalSumm_f2            -- оплата нал
+      INTO ioTotalSumm_f1, ioTotalSumm_f2
+     FROM MovementFloat AS MovementFloat_TotalSumm
+          LEFT JOIN MovementFloat AS MovementFloat_TotalSummPayOth
+                                  ON MovementFloat_TotalSummPayOth.MovementId = MovementFloat_TotalSumm.MovementId
+                                 AND MovementFloat_TotalSummPayOth.DescId = zc_MovementFloat_TotalSummPayOth()
+     WHERE MovementFloat_TotalSumm.MovementId = ioId
+       AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm();
+
+     IF COALESCE (ioTotalSumm_f1,0) < 0 OR COALESCE (ioTotalSumm_f2,0) < 0
+     THEN
+          RAISE EXCEPTION 'Ошибка.Сумма (б/нал - нал) не может быть меньше 0.';
+     END IF;
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
@@ -99,6 +134,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.03.19         * 
  25.07.16         * inInvNumberPartner
  15.07.16         *
 */

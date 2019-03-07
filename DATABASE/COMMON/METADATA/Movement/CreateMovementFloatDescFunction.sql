@@ -429,9 +429,15 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalHeadCountChild() RETURNS Intege
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalHeadCountChild', 'Итого Кол-во голов (приход)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalHeadCountChild');
 
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummPayOth() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummPayOth'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSummPayOth', 'Итого сумма оплаты по другой форме оплаты' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummPayOth');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 05.03.19         * zc_MovementFloat_TotalSummPayOth
  22.02.19         * zc_MovementFloat_TotalHeadCount
                     zc_MovementFloat_TotalHeadCountChild
  07.11.18                                                                                     * zc_MovementFloat_TotalCountOrder, zc_MovementFloat_TotalSummOrder

@@ -4089,4 +4089,33 @@ inherited MainCashForm2: TMainCashForm2
     Left = 136
     Top = 448
   end
+  object TimerPUSH: TTimer
+    Enabled = False
+    OnTimer = TimerPUSHTimer
+    Left = 768
+    Top = 8
+  end
+  object spGet_PUSH_Cash: TdsdStoredProc
+    StoredProcName = 'gpGet_PUSH_Cash'
+    DataSet = PUSHDS
+    DataSets = <
+      item
+        DataSet = PUSHDS
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 768
+    Top = 56
+  end
+  object PUSHDS: TClientDataSet
+    Aggregates = <>
+    Filtered = True
+    FieldDefs = <>
+    IndexDefs = <>
+    IndexFieldNames = 'Id'
+    Params = <>
+    StoreDefs = True
+    Left = 768
+    Top = 112
+  end
 end

@@ -38,6 +38,9 @@ function iniPosPortNumber(ACode : integer):Integer;
 //возвращает скорость порта POS-терминала
 function iniPosPortSpeed(ACode : integer):Integer;
 
+//–егистрационный номер текущего кассового аппарата
+function iniLocalCashRegisterGet: string;
+function iniLocalCashRegisterSave(ACashRegister: string): string;
 
 var gUnitName, gUserName, gPassValue: string;
 var gUnitId : Integer;
@@ -273,6 +276,28 @@ begin
   S := GetValue('TSoldWithCompMainForm','PosPortSpeed' + IntToStr(ACode),'');
   if not tryStrToInt(S,Result) then
     Result := 0;
+end;
+
+function iniLocalCashRegisterGet: string;
+begin
+  Result := GetValue('Common','CashRegister', '');
+end;
+
+function iniLocalCashRegisterSave(ACashRegister: string): string;
+var
+  f: TIniFile;
+begin
+  Result := GetValue('Common','CashRegister', '');
+  if (ACashRegister <> '') and (Result <> ACashRegister) then
+  Begin
+    Result := ACashRegister;
+    f := TIniFile.Create(ExtractFilePath(Application.ExeName)+'ini\'+FileName);
+    try
+      f.WriteString('Common','CashRegister',Result);
+    finally
+      f.Free;
+    end;
+  End;
 end;
 
 

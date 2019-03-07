@@ -1,24 +1,24 @@
 inherited CashRegisterForm: TCashRegisterForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1072#1089#1089#1086#1074#1099#1093' '#1072#1087#1087#1072#1088#1072#1090#1086#1074'>'
   ClientHeight = 374
-  ClientWidth = 396
+  ClientWidth = 769
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 404
-  ExplicitHeight = 401
+  ExplicitWidth = 785
+  ExplicitHeight = 413
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 396
+    Width = 769
     Height = 348
     ExplicitWidth = 396
     ExplicitHeight = 348
     ClientRectBottom = 348
-    ClientRectRight = 396
+    ClientRectRight = 769
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 396
       ExplicitHeight = 348
       inherited cxGrid: TcxGrid
-        Width = 396
+        Width = 769
         Height = 348
         ExplicitWidth = 396
         ExplicitHeight = 348
@@ -27,6 +27,7 @@ inherited CashRegisterForm: TCashRegisterForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -35,17 +36,60 @@ inherited CashRegisterForm: TCashRegisterForm
           object clCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 62
           end
           object clName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 145
+          end
+          object SerialNumber: TcxGridDBColumn
+            Caption = #1057#1077#1088'. '#1085#1086#1084#1077#1088
+            DataBinding.FieldName = 'SerialNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
           end
           object clCashRegisterKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1082#1072#1089#1089#1099
             DataBinding.FieldName = 'CashRegisterKindName'
-            Width = 141
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 104
+          end
+          object TimePUSHFinal1: TcxGridDBColumn
+            Caption = #1042#1077#1095#1077#1088#1085#1077#1077' PUSH 1'
+            DataBinding.FieldName = 'TimePUSHFinal1'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'HH:NN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object TimePUSHFinal2: TcxGridDBColumn
+            Caption = #1042#1077#1095#1077#1088#1085#1077#1077' PUSH 2'
+            DataBinding.FieldName = 'TimePUSHFinal2'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'HH:NN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 203
           end
           object clErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
