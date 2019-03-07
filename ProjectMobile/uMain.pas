@@ -6495,7 +6495,7 @@ var
 {$ENDIF}
 begin
   FCurCoordinatesSet := false;
-  FCurCoordinatesMsg := '';
+  FCurCoordinatesMsg := 'not Exec';
 
 
   {$IFDEF ANDROID}
@@ -6514,7 +6514,8 @@ begin
           begin
             FCurCoordinates := TLocationCoord2D.Create(LastLocation.getLatitude, LastLocation.getLongitude);
             FCurCoordinatesSet := true;
-          end;
+          end
+          else FCurCoordinatesMsg:= 'на телефоне не запущен GPS';
         end
         else
         begin
@@ -6528,6 +6529,7 @@ begin
       //raise Exception.Create('Could not locate Location Service');
     end;
   except
+      FCurCoordinatesMsg:= 'ошибка при обращении к Сервису GPS';
   end;
   {$ENDIF}
 end;
