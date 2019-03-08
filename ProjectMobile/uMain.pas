@@ -4732,11 +4732,11 @@ begin
       end
     else begin
       Result :=  FormatFloat('0.00000###', Latitude)+'N '+FormatFloat('0.00000###', Longitude)+'E';
-      FCurCoordinatesMsg:= FCurCoordinatesMsg + ' не раскодирован Адрес для '+FloatToStr(RoundTo(Latitude, -5))+', '+FloatToStr(RoundTo(Longitude, -5))+''
+      FCurCoordinatesMsg:= ' не раскодирован Адрес для '+FloatToStr(RoundTo(Latitude, -5))+', '+FloatToStr(RoundTo(Longitude, -5))+''
       end;
   except
     Result :=  FormatFloat('0.000000', Latitude)+'N '+FormatFloat('0.000000', Longitude)+'E';
-    FCurCoordinatesMsg:= FCurCoordinatesMsg + ' ошибка в службе при определении Адреса для _'+FloatToStr(Latitude)+'_ _'+FloatToStr(Longitude)+'_'
+    FCurCoordinatesMsg:= ' ошибка в службе при определении Адреса для _'+FloatToStr(Latitude)+'_ _'+FloatToStr(Longitude)+'_'
   end;
 end;
 
@@ -6495,7 +6495,7 @@ var
 {$ENDIF}
 begin
   FCurCoordinatesSet := false;
-  FCurCoordinatesMsg := 'not Exec';
+  FCurCoordinatesMsg := '_';
 
 
   {$IFDEF ANDROID}
