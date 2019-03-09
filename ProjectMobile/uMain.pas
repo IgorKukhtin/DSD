@@ -4668,6 +4668,22 @@ begin
         DM.tblMovement_RouteMember.Post;
 
         DM.tblMovement_RouteMember.Close;
+      end
+      else
+      begin
+        DM.tblMovement_RouteMember.Open;
+
+        DM.tblMovement_RouteMember.Append;
+        CreateGUID(GlobalId);
+        DM.tblMovement_RouteMemberGUID.AsString := GUIDToString(GlobalId);
+        DM.tblMovement_RouteMemberGPSN.AsFloat := 0;
+        DM.tblMovement_RouteMemberGPSE.AsFloat := 0;
+        DM.tblMovement_RouteMemberAddressByGPS.AsString := FCurCoordinatesMsg;
+        DM.tblMovement_RouteMemberInsertDate.AsDateTime := Now();
+        DM.tblMovement_RouteMemberisSync.AsBoolean := false;
+        DM.tblMovement_RouteMember.Post;
+
+        DM.tblMovement_RouteMember.Close;
       end;
     end;
   finally
@@ -4716,11 +4732,11 @@ begin
       end
     else begin
       Result :=  FormatFloat('0.00000###', Latitude)+'N '+FormatFloat('0.00000###', Longitude)+'E';
-      FCurCoordinatesMsg:= FCurCoordinatesMsg + ' не раскодирован Адрес для '+FloatToStr(RoundTo(Latitude, -5))+', '+FloatToStr(RoundTo(Longitude, -5))+''
+      FCurCoordinatesMsg:= ' не раскодирован Адрес для '+FloatToStr(RoundTo(Latitude, -5))+', '+FloatToStr(RoundTo(Longitude, -5))+''
       end;
   except
     Result :=  FormatFloat('0.000000', Latitude)+'N '+FormatFloat('0.000000', Longitude)+'E';
-    FCurCoordinatesMsg:= FCurCoordinatesMsg + ' ошибка в службе при определении Адреса для _'+FloatToStr(Latitude)+'_ _'+FloatToStr(Longitude)+'_'
+    FCurCoordinatesMsg:= ' ошибка в службе при определении Адреса для _'+FloatToStr(Latitude)+'_ _'+FloatToStr(Longitude)+'_'
   end;
 end;
 
@@ -6479,7 +6495,7 @@ var
 {$ENDIF}
 begin
   FCurCoordinatesSet := false;
-  FCurCoordinatesMsg := '';
+  FCurCoordinatesMsg := '_';
 
 
   {$IFDEF ANDROID}
@@ -6498,7 +6514,8 @@ begin
           begin
             FCurCoordinates := TLocationCoord2D.Create(LastLocation.getLatitude, LastLocation.getLongitude);
             FCurCoordinatesSet := true;
-          end;
+          end
+          else FCurCoordinatesMsg:= 'на телефоне не запущен GPS';
         end
         else
         begin
@@ -6512,6 +6529,7 @@ begin
       //raise Exception.Create('Could not locate Location Service');
     end;
   except
+      FCurCoordinatesMsg:= 'ошибка при обращении к Сервису GPS';
   end;
   {$ENDIF}
 end;
