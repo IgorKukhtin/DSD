@@ -19,8 +19,8 @@ $BODY$BEGIN
         Object_DocumentKind.Id           AS Id 
       , Object_DocumentKind.ObjectCode   AS Code
       , Object_DocumentKind.ValueData    AS Name
-      -- , ObjectString_Enum.ValueData      AS EnumName
-      , ObjectString_Enum.DescId :: TVarChar
+      , ObjectString_Enum.ValueData      AS EnumName
+   -- , ObjectString_Enum.DescId :: TVarChar
 
       , Object_Goods.Id                  AS GoodsId
       , Object_Goods.ObjectCode          AS GoodsCode

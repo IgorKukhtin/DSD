@@ -158,6 +158,9 @@ BEGIN
                                 AND ObjectString_CardSecond.DescId    = zc_ObjectString_Member_CardSecond()
     ;
 
+     -- cохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (_tmpContainer.MovementItemId, vbUserId, FALSE) FROM _tmpContainer;
+
 
 END;
 $BODY$
