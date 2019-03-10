@@ -668,7 +668,9 @@ uses
   EmployeeScheduleUser in '..\..\FormsFarmacy\Cash\EmployeeScheduleUser.pas' {EmployeeScheduleUserForm: TParentForm},
   UnitBankPOSTerminal in '..\..\FormsFarmacy\Guides\UnitBankPOSTerminal.pas' {UnitBankPOSTerminalForm: TParentForm},
   JackdawsChecks in '..\..\FormsFarmacy\Guides\JackdawsChecks.pas' {JackdawsChecksForm: TParentForm},
-  JackdawsChecksEdit in '..\..\FormsFarmacy\Guides\JackdawsChecksEdit.pas' {JackdawsChecksEditForm: TParentForm};
+  JackdawsChecksEdit in '..\..\FormsFarmacy\Guides\JackdawsChecksEdit.pas' {JackdawsChecksEditForm: TParentForm},
+  PUSH in '..\..\FormsFarmacy\Document\PUSH.pas' {PUSHForm: TParentForm},
+  PUSHJournal in '..\..\FormsFarmacy\Document\PUSHJournal.pas' {PUSHJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

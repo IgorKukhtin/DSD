@@ -82,6 +82,11 @@ BEGIN
     
     vbTypeId :=  date_part('day', inOperDate);
     
+    IF SUBSTRING(vbComingValueDay, vbTypeId, 1) <> '0'
+    THEN
+      RAISE EXCEPTION 'Вы уже поставили отметку, повторная попытка не предусмотрена!';
+    END IF;
+    
     vbValue := CASE inValueUser WHEN '8:00' THEN 1
                                 WHEN '9:00' THEN 2
                                 WHEN '10:00' THEN 3

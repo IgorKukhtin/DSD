@@ -2709,6 +2709,13 @@ inherited MainCashForm2: TMainCashForm2
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1091#1102#1097#1072#1103' '#1075#1072#1083#1082#1072
       OnExecute = actSpecCorrExecute
     end
+    object actDoesNotShare: TAction
+      Category = 'DSDLib'
+      Caption = #1055#1088#1080#1079#1085#1072#1082' "'#1041#1083#1086#1082#1080#1088#1086#1074#1082#1072' '#1076#1077#1083#1077#1085#1080#1103' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072'"'
+      Hint = #1055#1088#1080#1079#1085#1072#1082' "'#1041#1083#1086#1082#1080#1088#1086#1074#1082#1072' '#1076#1077#1083#1077#1085#1080#1103' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072'"'
+      ShortCut = 16462
+      OnExecute = actDoesNotShareExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2995,6 +3002,9 @@ inherited MainCashForm2: TMainCashForm2
     end
     object N22: TMenuItem
       Action = actEmployeeScheduleUser
+    end
+    object actUpdateRemainsCDS1: TMenuItem
+      Action = actDoesNotShare
     end
   end
   object FormParams: TdsdFormParams
@@ -4117,5 +4127,29 @@ inherited MainCashForm2: TMainCashForm2
     StoreDefs = True
     Left = 768
     Top = 112
+  end
+  object spDoesNotShare: TdsdStoredProc
+    StoredProcName = 'gpUodate_Cash_DoesNotShare'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsID'
+        Value = Null
+        Component = RemainsCDS
+        ComponentItem = 'ID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDoesNotShare'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 592
+    Top = 392
   end
 end

@@ -1053,6 +1053,17 @@ begin
             if LocateUID(UID, FSAVE) and not FLocalDataBaseHead.Deleted then
             Begin
               Find := True;
+
+              if FLocalDataBaseHead.FieldByName('NEEDCOMPL').AsBoolean then
+              begin
+                tiServise.Hint := 'Проведение чеков';
+                MainCashForm2.tiServise.IconIndex := 2;
+              end else
+              begin
+                tiServise.Hint := 'Сохранение VIP чека';
+                MainCashForm2.tiServise.IconIndex := 8;
+              end;
+
               With Head, FLocalDataBaseHead do
               Begin
                 ID := FieldByName('ID').AsInteger;

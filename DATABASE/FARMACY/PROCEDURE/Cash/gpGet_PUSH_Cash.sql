@@ -59,7 +59,7 @@ BEGIN
 
    IF SUBSTRING(vbEmployeeSchedule, date_part('day',  CURRENT_DATE)::Integer, 1) = '0'
    THEN
-      INSERT INTO _PUSH (Id, Text) VALUES (1, '"Уважаемые коллеги не забудьте сегодня поставить отметку времени прихода в график (Ctrl+T)"');
+      INSERT INTO _PUSH (Id, Text) VALUES (1, '"Уважаемые коллеги, не забудьте сегодня поставить отметку времени прихода в график (Ctrl+T)"');
    END IF;
 
    RETURN QUERY
@@ -80,5 +80,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
---
-SELECT * FROM gpGet_PUSH_Cash('3')
+-- SELECT * FROM gpGet_PUSH_Cash('3')

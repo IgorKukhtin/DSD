@@ -83,10 +83,15 @@ INSERT INTO MovementItemDateDesc (Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_MIDate_Income() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Income'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_Income', 'Дата последнего прихода' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Income');
+
+CREATE OR REPLACE FUNCTION zc_MIDate_Viewed() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Viewed'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_Viewed', 'Дата и время просмотра сообщения' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_Viewed');
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.  Шаблий О.В.
+ 10.03.19                                                                         * zc_MIDate_Viewed
  19.11.18         * zc_MIDate_Income
  07.11.18         * zc_MIDate_List
  21.09.18                                                                         * zc_MIDate_TestingUser

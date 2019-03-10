@@ -401,6 +401,7 @@ initialization
   RegisterClass (TcxDBTreeList);
   RegisterClass (TcxDBTreeListColumn);
   RegisterClass (TcxDBVerticalGrid);
+  RegisterClass (TcxDBMemo);
   RegisterClass (TcxGroupBox);
   RegisterClass (TcxGridDBBandedTableView);
   RegisterClass (TcxGridDBTableView);

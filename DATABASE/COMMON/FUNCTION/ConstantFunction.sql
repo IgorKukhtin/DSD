@@ -87,11 +87,24 @@ CREATE OR REPLACE FUNCTION zc_IsLockTableSecond() RETURNS Integer AS $BODY$BEGIN
 CREATE OR REPLACE FUNCTION zc_DateStart_Role_CashReplace() RETURNS TDateTime AS $BODY$BEGIN RETURN ('24.11.2016'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_DateEnd_Role_CashReplace() RETURNS TDateTime AS $BODY$BEGIN RETURN ('25.11.2016'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-- Функции для определения метода суммирования в TPivotAddOn
+CREATE OR REPLACE FUNCTION zc_PivotSummartType_None() RETURNS Integer AS $BODY$BEGIN RETURN (0); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_PivotSummartType_Count() RETURNS Integer AS $BODY$BEGIN RETURN (1); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_PivotSummartType_Sum() RETURNS Integer AS $BODY$BEGIN RETURN (2); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_PivotSummartType_Min() RETURNS Integer AS $BODY$BEGIN RETURN (3); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_PivotSummartType_Max() RETURNS Integer AS $BODY$BEGIN RETURN (4); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_PivotSummartType_Average() RETURNS Integer AS $BODY$BEGIN RETURN (5); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_PivotSummartType_StdDev() RETURNS Integer AS $BODY$BEGIN RETURN (6); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_PivotSummartType_StdDevP() RETURNS Integer AS $BODY$BEGIN RETURN (7); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_PivotSummartType_Variance() RETURNS Integer AS $BODY$BEGIN RETURN (8); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_PivotSummartType_VarianceP() RETURNS Integer AS $BODY$BEGIN RETURN (9); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 */
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 09.03.19                                                                                        *zc_PivotSummartType_ ...
  12.11.18                                                                                        *zc_Color_Lime
  29.09.15                                                        *zc_Color_Goods_Additional,zc_Color_Goods_Alternative 
  07.05.14                                        * add rem zc_PriceList_Bread

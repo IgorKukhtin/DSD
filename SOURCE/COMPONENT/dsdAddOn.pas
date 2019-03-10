@@ -136,6 +136,28 @@ type
     property ValueBoldColumn: TcxPivotGridField read FValueBoldColumn write FValueBoldColumn;
   end;
 
+	TPivotSummartType = (psNone, psCount, psSum, psMin, psMax, psAverage,
+    psStdDev, psStdDevP, psVariance, psVarianceP);
+
+  // ѕравило подсчета итогов по €чейкам пивота
+  TSummaryFieldPivot = class(TCollectionItem)
+  private
+    FSummaryColumn: TcxPivotGridField;
+    FTypeColumn: TcxPivotGridField;
+    FIfDifferent: TPivotSummartType;
+  public
+    constructor Create(Collection: TCollection); override;
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+  published
+    // ƒл€ какой €чейку примен€ть расчет
+    property SummaryColumn: TcxPivotGridField read FSummaryColumn write FSummaryColumn;
+    // ќткуда брать значение дл€ типа суммировани€
+    property TypeColumn: TcxPivotGridField read FTypeColumn write FTypeColumn;
+    // ≈сли разные типа суммировани€
+    property IfDifferent: TPivotSummartType read FIfDifferent write FIfDifferent default psNone;
+  end;
+
   TColumnActionOptions = class(TPersistent)
   private
     FAfterEmptyValue: boolean;
@@ -328,12 +350,16 @@ type
     FExpandRow : Integer;
     FExpandColumn : Integer;
     FColorRuleList: TCollection;
+    FSummaryFieldList: TCollection;
 
     procedure SetPivotGrid(const Value: TcxDBPivotGrid);
     procedure OnAfterOpen(ADataSet: TDataSet);
     // рисуем свой цвет у выделенной €чейки при выгрузке в Excel, например, или печати
     procedure OnGetContentStyle(Sender: TcxCustomPivotGrid;
       ACell: TcxPivotGridDataCellViewInfo; var AStyle: TcxStyle);
+    // расчет сумировани€ по €чейкам
+    procedure OnCalculateCustomSummary(
+      Sender: TcxPivotGridField; ASummary: TcxPivotGridCrossCellSummary);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
@@ -352,6 +378,8 @@ type
     property ExpandColumn : Integer read FExpandColumn write FExpandColumn default 0;
     // ѕравила разукрашивани€ грида
     property ColorRuleList: TCollection read FColorRuleList write FColorRuleList;
+    // ѕравила сумировани€ по €чейкам
+    property SummaryList: TCollection read FSummaryFieldList write FSummaryFieldList;
   end;
 
   TdsdUserSettingsStorageAddOn = class(TComponent)
@@ -2414,6 +2442,32 @@ begin
   inherited;
 end;
 
+{ TSummaryFieldPivot }
+
+procedure TSummaryFieldPivot.Assign(Source: TPersistent);
+begin
+  if Source is TSummaryFieldPivot then
+    with TSummaryFieldPivot(Source) do
+    begin
+      Self.SummaryColumn := SummaryColumn;
+      Self.TypeColumn := TypeColumn;
+      Self.IfDifferent := IfDifferent;
+    end
+  else
+    inherited Assign(Source);
+end;
+
+constructor TSummaryFieldPivot.Create(Collection: TCollection);
+begin
+  inherited Create(Collection);
+  FIfDifferent := psNone;
+end;
+
+destructor TSummaryFieldPivot.Destroy;
+begin
+  inherited;
+end;
+
 { TColumnAddOn }
 
 constructor TColumnAddOn.Create(Collection: TCollection);
@@ -2444,10 +2498,12 @@ begin
   FExpandColumn := 0;
   FOnGetContentStyleEvent := Nil;
   FColorRuleList := TCollection.Create(TColorRulePivot);
+  FSummaryFieldList := TCollection.Create(TSummaryFieldPivot);
 end;
 
 destructor TPivotAddOn.Destroy;
 begin
+  FSummaryFieldList.Free;
   FColorRuleList.Free;
   inherited;
 end;
@@ -2529,7 +2585,7 @@ begin
 end;
 
 procedure TPivotAddOn.OnAfterOpen(ADataSet: TDataSet);
-  var I : Integer;
+  var I, J : Integer;
 begin
   FPivotGrid.BeginUpdate;
   try
@@ -2538,6 +2594,19 @@ begin
       faRow : if FPivotGrid.Fields[I].AreaIndex < FExpandRow then FPivotGrid.Fields[I].ExpandAll;
       faColumn : if FPivotGrid.Fields[I].AreaIndex < FExpandColumn then FPivotGrid.Fields[I].ExpandAll;
     end;
+
+    for I := 0 to FSummaryFieldList.Count - 1 do
+      if Assigned(TSummaryFieldPivot(FSummaryFieldList.Items[I]).SummaryColumn) and
+         Assigned(TSummaryFieldPivot(FSummaryFieldList.Items[I]).TypeColumn) then
+    begin
+      for J := 0 to FPivotGrid.FieldCount - 1 do
+        if FPivotGrid.Fields[J] = TSummaryFieldPivot(FSummaryFieldList.Items[I]).SummaryColumn then
+      begin
+        FPivotGrid.Fields[J].OnCalculateCustomSummary := OnCalculateCustomSummary;
+        FPivotGrid.Fields[J].SummaryType := stCustom;
+      end;
+    end;
+
   finally
     FPivotGrid.EndUpdate;
   end;
@@ -2613,6 +2682,68 @@ begin
       end;
   except
     on E: Exception do ShowMessage(E.Message + ' ' +IntToStr(FPivotGrid.FieldCount)  + ' ' +  IntToStr(J));
+  end;
+
+end;
+
+  // расчет сумировани€ по €чейкам
+procedure TPivotAddOn.OnCalculateCustomSummary(
+  Sender: TcxPivotGridField; ASummary: TcxPivotGridCrossCellSummary);
+
+  var ARow, AColumn: TcxPivotGridGroupItem; TypeColumn : TcxPivotGridField;
+      PivotSummartType: TPivotSummartType; I, S : Integer;
+
+  function VarToDouble(const AValue: Variant): Currency;
+  begin
+    Result := 0;
+    if not VarIsNull(AValue) and (VarType(AValue) in [varSmallInt, varInteger, varSingle, varDouble, varCurrency, varShortInt,
+                                                      varByte, varWord, varLongWord, varInt64, varUInt64])  then
+      Result := AValue;
+  end;
+
+  function VarToInteger(const AValue: Variant): Integer;
+  begin
+    Result := - 2;
+    if not VarIsNull(AValue) and (VarType(AValue) in [varSmallInt, varInteger, varSingle, varShortInt,
+                                                      varByte, varWord, varLongWord, varInt64, varUInt64]) then
+      Result := AValue;
+  end;
+
+begin
+  ARow := ASummary.Owner.Row;
+  AColumn := ASummary.Owner.Column;
+  TypeColumn := Nil;
+
+  for I := 0 to FSummaryFieldList.Count - 1 do
+    if Assigned(TSummaryFieldPivot(FSummaryFieldList.Items[I]).SummaryColumn) and
+       Assigned(TSummaryFieldPivot(FSummaryFieldList.Items[I]).TypeColumn) then
+  begin
+    if TSummaryFieldPivot(FSummaryFieldList.Items[I]).FSummaryColumn = Sender then
+    begin
+      TypeColumn := TSummaryFieldPivot(FSummaryFieldList.Items[I]).TypeColumn;
+      PivotSummartType := TSummaryFieldPivot(FSummaryFieldList.Items[I]).IfDifferent;
+    end;
+  end;
+
+  if Assigned(TypeColumn) then
+  begin
+    S := VarToInteger(ARow.GetCellByCrossItem(AColumn).GetSummaryByField(TypeColumn, stMin));
+    if (S >= 0) and (S <> VarToInteger(ARow.GetCellByCrossItem(AColumn).GetSummaryByField(TypeColumn, stMax))) then S := -1;
+
+    if (S >= 0) and (S <= Ord(High(TPivotSummartType))) then PivotSummartType := TPivotSummartType(S)
+    else if S <> -1 then PivotSummartType := psNone;
+  end else PivotSummartType := psNone;
+
+  case PivotSummartType of
+    psCount : ASummary.Custom := VarToDouble(ARow.GetCellByCrossItem(AColumn).GetSummaryByField(Sender, stCount));
+    psSum : ASummary.Custom := VarToDouble(ARow.GetCellByCrossItem(AColumn).GetSummaryByField(Sender, stSum));
+    psMin : ASummary.Custom := VarToDouble(ARow.GetCellByCrossItem(AColumn).GetSummaryByField(Sender, stMin));
+    psMax : ASummary.Custom := VarToDouble(ARow.GetCellByCrossItem(AColumn).GetSummaryByField(Sender, stMax));
+    psAverage : ASummary.Custom := VarToDouble(ARow.GetCellByCrossItem(AColumn).GetSummaryByField(Sender, stAverage));
+    psStdDev : ASummary.Custom := VarToDouble(ARow.GetCellByCrossItem(AColumn).GetSummaryByField(Sender, stStdDev));
+    psStdDevP : ASummary.Custom := VarToDouble(ARow.GetCellByCrossItem(AColumn).GetSummaryByField(Sender, stStdDevP));
+    psVariance : ASummary.Custom := VarToDouble(ARow.GetCellByCrossItem(AColumn).GetSummaryByField(Sender, stVariance));
+    psVarianceP : ASummary.Custom := VarToDouble(ARow.GetCellByCrossItem(AColumn).GetSummaryByField(Sender, stVarianceP));
   end;
 
 end;

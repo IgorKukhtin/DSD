@@ -365,6 +365,9 @@ type
     TimerPUSH: TTimer;
     spGet_PUSH_Cash: TdsdStoredProc;
     PUSHDS: TClientDataSet;
+    actDoesNotShare: TAction;
+    actUpdateRemainsCDS1: TMenuItem;
+    spDoesNotShare: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -456,6 +459,7 @@ type
       ARecord: TcxCustomGridRecord; var AText: string);
     procedure actSpecCorrExecute(Sender: TObject);
     procedure TimerPUSHTimer(Sender: TObject);
+    procedure actDoesNotShareExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -1284,7 +1288,7 @@ procedure TMainCashForm2.TimerPUSHTimer(Sender: TObject);
       try
         spGet_PUSH_Cash.Execute;
         TimerPUSH.Interval := 1000;
-      except ON E:Exception do Add_Log_XML('<Load_PUSH err="'+E.Message+'">');
+      except ON E:Exception do Add_Log('Load_PUSH err=' + E.Message);
       end;
     end else Inc(FLoadPUSH);
   end;
@@ -1343,6 +1347,7 @@ begin
        ShowMessage('Ќельз€ продать товар с 0 ценой! —в€житесь с менеджером');
        exit;
     end;
+
     InsertUpdateBillCheckItems;
   end;
   SoldRegim := true;
@@ -2953,6 +2958,54 @@ begin
   else FormParams.ParamByName('JackdawsChecksCode').Value := 0;
 end;
 
+procedure TMainCashForm2.actDoesNotShareExecute(Sender: TObject);
+begin
+  if not RemainsCDS.Active  then Exit;
+  if RemainsCDS.RecordCount < 1  then Exit;
+
+  try
+    if gc_User.Local then
+    begin
+      if RemainsCDS.FieldByName('DoesNotShare').AsBoolean then
+      begin
+        if MessageDlg('¬ автономно режиме сн€ть признак блокировки делени€ медикамента можно только на врем€ текущего сеанса.'#13#10#13#10 +
+        '—н€ть признак блокировки делени€ медикамента"'#13#10 + RemainsCDS.FieldByName('GoodsName').AsString + #13#10' на врем€ сеанса?', mtConfirmation, mbYesNo, 0) <> mrYes then Exit;
+        RemainsCDS.Edit;
+        RemainsCDS.FieldByName('DoesNotShare').AsBoolean := False;
+        RemainsCDS.Post;
+      end else ShowMessage('¬ автономно режиме установка признака невозможно.');
+      Exit;
+    end;
+
+    if RemainsCDS.FieldByName('DoesNotShare').AsBoolean then
+    begin
+      if MessageDlg('—н€ть с медикамента'#13#10 + RemainsCDS.FieldByName('GoodsName').AsString + #13#10'признак блокировки делени€ медикамента?', mtConfirmation, mbYesNo, 0) <> mrYes then Exit;
+
+      spDoesNotShare.ParamByName('inDoesNotShare').Value := False;
+      spDoesNotShare.Execute;
+      RemainsCDS.Edit;
+      RemainsCDS.FieldByName('DoesNotShare').AsBoolean := False;
+      RemainsCDS.Post;
+
+    end else
+    begin
+      if MessageDlg('”становить на медикамент'#13#10 + RemainsCDS.FieldByName('GoodsName').AsString + #13#10'признак блокировки делени€ медикамента?', mtConfirmation, mbYesNo, 0) <> mrYes then Exit;
+
+      spDoesNotShare.ParamByName('inDoesNotShare').Value := True;
+      spDoesNotShare.Execute;
+      RemainsCDS.Edit;
+      RemainsCDS.FieldByName('DoesNotShare').AsBoolean := True;
+      RemainsCDS.Post;
+
+    end;
+  except ON E:Exception do
+    begin
+      Add_Log('Error set DoesNotShare = ' + E.Message);
+      ShowMessage(E.Message);
+    end;
+  end;
+end;
+
 procedure TMainCashForm2.actUpdateRemainsExecute(Sender: TObject);
 begin
   Exit;
@@ -3356,6 +3409,12 @@ begin
     ShowMessage('Ќе хватает количества дл€ возврата!');
     exit;
   end;
+  if RemainsCDS.FieldByName('DoesNotShare').AsBoolean and (nAmount <> Round(nAmount)) then
+  begin
+    ShowMessage('ƒеление медикамента заблокировано!');
+    exit;
+  end;
+
   //
   if SoldRegim = TRUE then
   begin
