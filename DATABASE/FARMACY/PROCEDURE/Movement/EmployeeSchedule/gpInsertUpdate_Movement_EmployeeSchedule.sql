@@ -18,7 +18,7 @@ BEGIN
     ioOperDate := date_trunc('month', ioOperDate);
 
     -- проверка прав пользователя на вызов процедуры
-    IF 758920 <> inSession::Integer AND 4183126 <> inSession::Integer
+    IF 758920 <> inSession::Integer AND 4183126 <> inSession::Integer AND 9383066  <> inSession::Integer
     THEN
       RAISE EXCEPTION 'Изменение <График работы сотрудеиков> вам запрещено.';
     END IF;

@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpGet_PUSH_Cash(TVarChar);
 CREATE OR REPLACE FUNCTION gpGet_PUSH_Cash(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Text TVarChar)
+RETURNS TABLE (Id Integer, Text TBlob)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -18,7 +18,7 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
     CREATE TEMP TABLE _PUSH (Id  Integer
-                           , Text TVarChar) ON COMMIT DROP;
+                           , Text TBlob) ON COMMIT DROP;
 
      -- Отметка посещаемости
     vbEmployeeSchedule := '';
@@ -62,6 +62,29 @@ BEGIN
       INSERT INTO _PUSH (Id, Text) VALUES (1, '"Уважаемые коллеги, не забудьте сегодня поставить отметку времени прихода в график (Ctrl+T)"');
    END IF;
 
+   -- PUSH уведомления
+   INSERT INTO _PUSH (Id, Text)
+   SELECT
+          Movement.Id                              AS ID
+        , MovementBlob_Message.ValueData           AS Message
+
+   FROM Movement
+
+        LEFT JOIN MovementItem AS MovementItem
+                               ON MovementItem.MovementId = Movement.Id
+                              AND MovementItem.DescId = zc_MI_Master()
+                              AND MovementItem.ObjectId = vbUserId
+
+        LEFT JOIN MovementBlob AS MovementBlob_Message
+                               ON MovementBlob_Message.MovementId = Movement.Id
+                              AND MovementBlob_Message.DescId = zc_MovementBlob_Message()
+
+   WHERE Movement.OperDate <= CURRENT_TIMESTAMP
+     AND Movement.DescId = zc_Movement_PUSH()
+     AND Movement.StatusId = zc_Enum_Status_Complete()
+     AND COALESCE (MovementItem.ID, 0) = 0;
+
+
    RETURN QUERY
      SELECT _PUSH.Id                     AS Id
           , _PUSH.Text                   AS Text
@@ -80,4 +103,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpGet_PUSH_Cash('3')
+--
+ SELECT * FROM gpGet_PUSH_Cash('3')

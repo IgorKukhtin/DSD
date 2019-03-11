@@ -4152,4 +4152,19 @@ inherited MainCashForm2: TMainCashForm2
     Left = 592
     Top = 392
   end
+  object spInsert_MovementItem_PUSH: TdsdStoredProc
+    StoredProcName = 'gpInsert_MovementItem_PUSH_Cash'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovement'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 768
+    Top = 168
+  end
 end

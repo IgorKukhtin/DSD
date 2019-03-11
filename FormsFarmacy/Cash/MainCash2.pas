@@ -368,6 +368,7 @@ type
     actDoesNotShare: TAction;
     actUpdateRemainsCDS1: TMenuItem;
     spDoesNotShare: TdsdStoredProc;
+    spInsert_MovementItem_PUSH: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1325,7 +1326,17 @@ begin
       PUSHDS.First;
       try
         TimerPUSH.Interval := 1000;
-        if Trim(PUSHDS.FieldByName('Text').AsString) <> '' then ShowMessage(PUSHDS.FieldByName('Text').AsString);
+        if PUSHDS.FieldByName('Id').AsInteger > 1000 then
+        begin
+          if MessageDlg(PUSHDS.FieldByName('Text').AsString, mtConfirmation, mbOKCancel, 0) = mrOk then
+          begin
+            try
+              spInsert_MovementItem_PUSH.ParamByName('inMovement').Value := PUSHDS.FieldByName('Id').AsInteger;
+              spInsert_MovementItem_PUSH.Execute;
+            except ON E:Exception do Add_Log('Marc_PUSH err=' + E.Message);
+            end;
+          end;
+        end else if Trim(PUSHDS.FieldByName('Text').AsString) <> '' then ShowMessage(PUSHDS.FieldByName('Text').AsString);
       finally
          PUSHDS.Delete;
       end;

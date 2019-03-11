@@ -1,5 +1,5 @@
 inherited PUSHForm: TPUSHForm
-  Caption = 'PUSH '#1089#1086#1086#1073#1097#1077#1085#1080't '#1076#1083#1103' '#1082#1072#1089#1089#1080#1088#1086#1074
+  Caption = 'PUSH '#1089#1086#1086#1073#1097#1077#1085#1080#1077' '#1076#1083#1103' '#1082#1072#1089#1089#1080#1088#1086#1074
   ClientHeight = 500
   ClientWidth = 638
   AddOnFormData.AddOnFormRefresh.ParentList = 'PUSH'
@@ -114,13 +114,13 @@ inherited PUSHForm: TPUSHForm
       Caption = #1058#1077#1082#1089#1090' '#1089#1086#1086#1073#1097#1077#1085#1080#1103
     end
     object edMessage: TcxMemo
-      Left = 192
+      Left = 184
       Top = 22
       Lines.Strings = (
         'edMessage')
       TabOrder = 7
       Height = 100
-      Width = 417
+      Width = 441
     end
   end
   inherited ActionList: TActionList
