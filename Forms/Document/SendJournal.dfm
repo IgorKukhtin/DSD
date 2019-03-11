@@ -287,6 +287,15 @@ inherited SendJournalForm: TSendJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 98
           end
+          object InvNumber_SendFull: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1086#1089#1085#1086#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'InvNumber_SendFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082'. '#1086#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+            Options.Editing = False
+            Width = 120
+          end
         end
       end
     end
@@ -872,8 +881,8 @@ inherited SendJournalForm: TSendJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 664
-    Top = 88
+    Left = 616
+    Top = 104
   end
   object spSelectPrintNoGroup: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Send_Print'

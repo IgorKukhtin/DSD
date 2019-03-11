@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnionName TVarChar
              , UnionDate TDateTime
              , InsertDate TDateTime, InsertName TVarChar
+             , MovementId_Send Integer, InvNumber_SendFull TVarChar
               )
 AS
 $BODY$
@@ -73,7 +74,17 @@ BEGIN
 
            , MovementDate_Insert.ValueData          AS InsertDate
            , Object_Insert.ValueData                AS InsertName
-           
+
+           , COALESCE(Movement_Send.Id, -1)                         AS MovementId_Send
+           , COALESCE(CASE WHEN Movement_Send.StatusId = zc_Enum_Status_Erased()
+                       THEN '***'
+                   WHEN Movement_Send.StatusId = zc_Enum_Status_UnComplete()
+                       THEN '*'
+                   ELSE ''
+              END
+           || zfCalc_PartionMovementName (Movement_Send.DescId, MovementDesc_Send.ItemName, Movement_Send.InvNumber, Movement_Send.OperDate)
+             , ' ')                     :: TVarChar      AS InvNumber_SendFull
+
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Send() AND Movement.StatusId = tmpStatus.StatusId
@@ -138,7 +149,13 @@ BEGIN
                                          ON MLO_Insert.MovementId = Movement.Id
                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
-  
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Send
+                                           ON MovementLinkMovement_Send.MovementChildId = Movement.Id
+                                          AND MovementLinkMovement_Send.DescId          = zc_MovementLinkMovement_Send()
+            LEFT JOIN Movement AS Movement_Send ON Movement_Send.Id = MovementLinkMovement_Send.MovementId
+            LEFT JOIN MovementDesc AS MovementDesc_Send ON MovementDesc_Send.Id = Movement_Send.DescId
+
        WHERE (vbIsDocumentUser = FALSE OR MLO_Insert.ObjectId = vbUserId)
       ;
 

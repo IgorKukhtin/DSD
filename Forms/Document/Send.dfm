@@ -11,17 +11,17 @@ inherited SendForm: TSendForm
     Width = 1038
     Height = 476
     ExplicitTop = 126
-    ExplicitWidth = 863
+    ExplicitWidth = 1038
     ExplicitHeight = 476
     ClientRectBottom = 476
     ClientRectRight = 1038
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 863
+      ExplicitWidth = 1038
       ExplicitHeight = 452
       inherited cxGrid: TcxGrid
         Width = 1038
         Height = 452
-        ExplicitWidth = 863
+        ExplicitWidth = 1038
         ExplicitHeight = 452
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -357,7 +357,7 @@ inherited SendForm: TSendForm
     Width = 1038
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 863
+    ExplicitWidth = 1038
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -427,15 +427,15 @@ inherited SendForm: TSendForm
       Caption = #1050#1086#1084#1091
     end
     object cxLabel22: TcxLabel
-      Left = 423
+      Left = 649
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 423
+      Left = 649
       Top = 63
       TabOrder = 11
-      Width = 436
+      Width = 210
     end
     object cxLabel8: TcxLabel
       Left = 868
@@ -470,6 +470,24 @@ inherited SendForm: TSendForm
       Properties.ReadOnly = True
       TabOrder = 15
       Width = 146
+    end
+    object cxLabel27: TcxLabel
+      Left = 423
+      Top = 45
+      Caption = #8470' '#1076#1086#1082'. '#1086#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+    end
+    object edInvNumberSend: TcxButtonEdit
+      Left = 423
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 17
+      Width = 220
     end
   end
   object cxLabel6: TcxLabel [2]
@@ -1183,6 +1201,21 @@ inherited SendForm: TSendForm
         Component = edInsertDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Send'
+        Value = Null
+        Component = GuidesSendDoc
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_SendFull'
+        Value = Null
+        Component = GuidesSendDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1664,8 +1697,8 @@ inherited SendForm: TSendForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 536
-    Top = 16
+    Left = 480
+    Top = 65520
   end
   object GuidesDocumentKind: TdsdGuides
     KeyField = 'Id'
@@ -1732,5 +1765,33 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 543
     Top = 408
+  end
+  object GuidesSendDoc: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberSend
+    Key = '0'
+    FormNameParam.Value = 'TSendJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TSendJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesSendDoc
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesSendDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 524
+    Top = 56
   end
 end

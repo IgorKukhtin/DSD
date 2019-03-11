@@ -65,6 +65,7 @@ type
     actGoodsKindChoiceForm: TOpenChoiceForm;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    isAuto: TcxGridDBColumn;
   private
     { Private declarations }
   public

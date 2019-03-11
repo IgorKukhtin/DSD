@@ -48,6 +48,7 @@ type
     actPrintGroup: TdsdPrintAction;
     bbPrintGroup: TdxBarButton;
     spSelectPrintNoGroup: TdsdStoredProc;
+    InvNumber_SendFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

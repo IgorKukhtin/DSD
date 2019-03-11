@@ -8,7 +8,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_DocumentKind(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, EnumName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar
-             , isErased Boolean) AS
+             , isAuto Boolean
+             , isErased Boolean
+) AS
 $BODY$BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -30,6 +32,7 @@ $BODY$BEGIN
       , Object_GoodsKind.ObjectCode      AS GoodsKindCode
       , Object_GoodsKind.ValueData       AS GoodsKindName
       
+      , COALESCE (ObjectBoolean_isAuto.ValueData, False) :: Boolean AS isAuto
       , Object_DocumentKind.isErased     AS isErased
       
    FROM Object AS Object_DocumentKind
@@ -45,6 +48,11 @@ $BODY$BEGIN
                              ON ObjectLink_DocumentKind_GoodsKind.ObjectId = Object_DocumentKind.Id
                             AND ObjectLink_DocumentKind_GoodsKind.DescId = zc_ObjectLink_DocumentKind_GoodsKind()
         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_DocumentKind_GoodsKind.ChildObjectId
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isAuto
+                                ON ObjectBoolean_isAuto.ObjectId = Object_DocumentKind.Id
+                               AND ObjectBoolean_isAuto.DescId = zc_ObjectBoolean_DocumentKind_isAuto()
+
    WHERE Object_DocumentKind.DescId = zc_Object_DocumentKind()
      AND (ObjectString_Enum.ObjectId IS NULL
        OR Object_DocumentKind.Id IN (zc_Enum_DocumentKind_PackDiff())

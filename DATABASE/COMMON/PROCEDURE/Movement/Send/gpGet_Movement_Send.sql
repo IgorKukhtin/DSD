@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Send(
     IN inOperDate          TDateTime, -- дата Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+             , StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
@@ -18,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isAuto Boolean
              , InsertName TVarChar
              , InsertDate TDateTime
+             , MovementId_Send Integer, InvNumber_SendFull TVarChar
               )
 AS
 $BODY$
@@ -52,6 +54,8 @@ BEGIN
              , Object_Insert.ValueData                          AS InsertName
              , CURRENT_TIMESTAMP ::TDateTime                    AS InsertDate
 
+             , 0                                                AS MovementId_Send
+             , CAST ('' AS TVarChar)                            AS InvNumber_SendFull
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
           ;
@@ -78,6 +82,16 @@ BEGIN
 
            , Object_Insert.ValueData                            AS InsertName
            , MovementDate_Insert.ValueData                      AS InsertDate
+           
+           , COALESCE(Movement_Send.Id, -1)                         AS MovementId_Send
+           , COALESCE(CASE WHEN Movement_Send.StatusId = zc_Enum_Status_Erased()
+                       THEN '***'
+                   WHEN Movement_Send.StatusId = zc_Enum_Status_UnComplete()
+                       THEN '*'
+                   ELSE ''
+              END
+           || zfCalc_PartionMovementName (Movement_Send.DescId, MovementDesc_Send.ItemName, Movement_Send.InvNumber, Movement_Send.OperDate)
+             , ' ')                     :: TVarChar      AS InvNumber_SendFull
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -117,7 +131,13 @@ BEGIN
                                         AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
             LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MovementLinkObject_DocumentKind.ObjectId
 
-       WHERE Movement.Id =  inMovementId
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Send
+                                           ON MovementLinkMovement_Send.MovementChildId = Movement.Id
+                                          AND MovementLinkMovement_Send.DescId          = zc_MovementLinkMovement_Send()
+            LEFT JOIN Movement AS Movement_Send ON Movement_Send.Id = MovementLinkMovement_Send.MovementId
+            LEFT JOIN MovementDesc AS MovementDesc_Send ON MovementDesc_Send.Id = Movement_Send.DescId
+
+       WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Send();
 
        END IF;

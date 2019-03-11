@@ -806,10 +806,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
-  exit;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalChoiceForm');
+  exit;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendTicketFuelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendTicketFuelForm');

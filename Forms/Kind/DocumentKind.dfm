@@ -3,7 +3,7 @@ object DocumentKindForm: TDocumentKindForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1080#1087#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'>'
   ClientHeight = 376
-  ClientWidth = 584
+  ClientWidth = 658
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,15 +20,13 @@ object DocumentKindForm: TDocumentKindForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 584
+    Width = 658
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 200
-    ExplicitTop = 18
-    ExplicitWidth = 542
+    ExplicitWidth = 584
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -59,7 +57,7 @@ object DocumentKindForm: TDocumentKindForm
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 213
+        Width = 194
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -99,7 +97,19 @@ object DocumentKindForm: TDocumentKindForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 96
+        Width = 75
+      end
+      object isAuto: TcxGridDBColumn
+        Caption = #1040#1074#1090#1086' '#1087#1077#1088#1077#1084'. '#1088#1072#1089#1093#1086#1076
+        DataBinding.FieldName = 'isAuto'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = 
+          #1060#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1072#1074#1090#1086#1084#1072#1090#1086#1084' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1072#1089#1093#1086#1076' '#1087#1088#1080' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1055#1077#1088#1077#1084#1077#1097#1077 +
+          #1085#1080#1103' '#1087#1088#1080#1093#1086#1076
+        Options.Editing = False
+        Width = 87
       end
     end
     object cxGridLevel: TcxGridLevel

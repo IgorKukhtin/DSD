@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_DocumentKind(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsId Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
-             , isErased boolean) AS
+             , isAuto Boolean
+             , isErased Boolean) AS
 $BODY$
 BEGIN
 
@@ -29,6 +30,7 @@ BEGIN
            , CAST (0 as Integer)    AS GoodsKindId
            , CAST ('' as TVarChar)  AS GoodsKindName
 
+           , CAST (False AS Boolean) AS isAuto
            , CAST (False AS Boolean) AS isErased;
    ELSE
        RETURN QUERY 
@@ -40,6 +42,7 @@ BEGIN
            , Object_Goods.ValueData           AS GoodsName
            , Object_GoodsKind.Id              AS GoodsKindId
            , Object_GoodsKind.ValueData       AS GoodsKindName
+           , COALESCE (ObjectBoolean_isAuto.ValueData, False) :: Boolean AS isAuto
            , Object_DocumentKind.isErased     AS isErased
        FROM Object AS Object_DocumentKind
         LEFT JOIN ObjectLink AS ObjectLink_DocumentKind_Goods
@@ -51,6 +54,10 @@ BEGIN
                              ON ObjectLink_DocumentKind_GoodsKind.ObjectId = Object_DocumentKind.Id
                             AND ObjectLink_DocumentKind_GoodsKind.DescId = zc_ObjectLink_DocumentKind_GoodsKind()
         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_DocumentKind_GoodsKind.ChildObjectId
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isAuto
+                                ON ObjectBoolean_isAuto.ObjectId = Object_DocumentKind.Id
+                               AND ObjectBoolean_isAuto.DescId = zc_ObjectBoolean_DocumentKind_isAuto()
        WHERE Object_DocumentKind.Id = inId;
    END IF; 
   
@@ -64,6 +71,7 @@ ALTER FUNCTION gpGet_Object_DocumentKind(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 11.03.19         * add isAuto
  13.06.17         *
  13.06.16         *
 */

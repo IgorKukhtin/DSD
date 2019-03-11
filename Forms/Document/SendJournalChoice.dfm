@@ -5,10 +5,8 @@ inherited SendJournalChoiceForm: TSendJournalChoiceForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -116
-  ExplicitTop = -203
   ExplicitWidth = 791
-  ExplicitHeight = 574
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -149,14 +147,14 @@ inherited SendJournalChoiceForm: TSendJournalChoiceForm
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 90
+            Width = 113
           end
           object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 90
+            Width = 108
           end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -177,6 +175,15 @@ inherited SendJournalChoiceForm: TSendJournalChoiceForm
             Options.Editing = False
             Width = 39
           end
+          object InvNumber_SendFull: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1086#1089#1085#1086#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'InvNumber_SendFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082'. '#1086#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+            Options.Editing = False
+            Width = 120
+          end
         end
       end
     end
@@ -193,12 +200,12 @@ inherited SendJournalChoiceForm: TSendJournalChoiceForm
   end
   object cxLabel27: TcxLabel [2]
     Left = 510
-    Top = 9
+    Top = 6
     Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   object edJuridicalBasis: TcxButtonEdit [3]
     Left = 588
-    Top = 8
+    Top = 5
     Properties.Buttons = <
       item
         Default = True
@@ -309,6 +316,9 @@ inherited SendJournalChoiceForm: TSendJournalChoiceForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -732,7 +742,7 @@ inherited SendJournalChoiceForm: TSendJournalChoiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 648
-    Top = 72
+    Left = 584
+    Top = 184
   end
 end

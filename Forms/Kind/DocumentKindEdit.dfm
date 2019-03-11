@@ -57,7 +57,7 @@ object DocumentKindEditForm: TDocumentKindEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 273
+    Width = 106
   end
   object cxLabel3: TcxLabel
     Left = 10
@@ -83,9 +83,21 @@ object DocumentKindEditForm: TDocumentKindEditForm
     TabOrder = 9
     Width = 273
   end
+  object cbisAuto: TcxCheckBox
+    Left = 152
+    Top = 30
+    Hint = 
+      #1060#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1072#1074#1090#1086#1084#1072#1090#1086#1084' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1072#1089#1093#1086#1076' '#1087#1088#1080' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1055#1077#1088#1077#1084#1077#1097#1077 +
+      #1085#1080#1103' '#1087#1088#1080#1093#1086#1076
+    Caption = #1040#1074#1090#1086' '#1087#1077#1088#1077#1084'. '#1088#1072#1089#1093#1086#1076
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 10
+    Width = 135
+  end
   object ActionList: TActionList
     Left = 152
-    Top = 224
+    Top = 200
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -142,6 +154,14 @@ object DocumentKindEditForm: TDocumentKindEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAuto'
+        Value = Null
+        Component = cbisAuto
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 88
@@ -155,8 +175,8 @@ object DocumentKindEditForm: TDocumentKindEditForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 96
-    Top = 8
+    Left = 64
+    Top = 56
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_DocumentKind'
@@ -197,10 +217,17 @@ object DocumentKindEditForm: TDocumentKindEditForm
         Component = edGoodsKindName
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAuto'
+        Value = Null
+        Component = cbisAuto
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 184
-    Top = 16
+    Left = 240
+    Top = 96
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <

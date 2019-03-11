@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Object_DocumentKind(Integer,Integer,TVarChar,TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DocumentKind(Integer,Integer,TVarChar,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DocumentKind (Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DocumentKind (Integer, Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_DocumentKind(
  INOUT ioId	             Integer,       -- ключ объекта <Вид населенного пункта>
     IN inCode                Integer,       -- Код объекта <>
     IN inName                TVarChar,      -- Название объекта <>
+    IN inisAuto              Boolean ,      -- Формировать автоматом Перемещение расход при проведении Перемещения приход
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -29,7 +31,10 @@ BEGIN
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_DocumentKind(), vbCode_calc, inName);
-   
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_DocumentKind_isAuto(), ioId, inisAuto);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -40,8 +45,8 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 13.06.16         * 
-
+ 11.03.19         * add inisAuto
+ 13.06.16         *
 */
 
 -- тест
