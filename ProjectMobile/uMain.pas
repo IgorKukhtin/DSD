@@ -1698,6 +1698,11 @@ var
 begin
   NeedSync := not assigned(gc_User) or SyncCheckBox.IsChecked;
 
+  // !!!Optimize!!!
+  if SyncCheckBox.IsChecked = TRUE then
+     fOptimizeDB;
+
+
   if gc_WebService = '' then
     gc_WebService := WebServerEdit.Text;
 
@@ -1736,8 +1741,8 @@ begin
   end;
 
   // !!!Optimize!!!
-  if NeedSync then
-     fOptimizeDB;
+  //if SyncCheckBox.IsChecked = TRUE then
+  //   fOptimizeDB;
 
   // сохранение координат при логине и запуск таймера
   tSavePathTimer(tSavePath);
@@ -3746,6 +3751,7 @@ begin
 end;
 
 function TfrmMain.fOptimizeDB : Boolean;
+var str_day:string;
 begin
   Result:= false;
   //
@@ -3753,8 +3759,29 @@ begin
     DM.conMain.ExecSQL('pragma integrity_check');
     DM.conMain.ExecSQL('VACUUM');
 
-    DM.conMain.ExecSQL('DELETE FROM MOVEMENT_ROUTEMEMBER');
-
+    //!!! MOVEMENT_ROUTEMEMBER !!!
+    DM.conMain.ExecSQL('DELETE FROM MOVEMENT_ROUTEMEMBER WHERE ISSYNC = 1');
+    //
+    str_day:= chr(39) + '-44 DAY' + chr(39);
+    //MOVEMENT_ORDEREXTERNAL
+    DM.conMain.ExecSQL('DELETE FROM MOVEMENTITEM_ORDEREXTERNAL WHERE MOVEMENTID IN (SELECT Id FROM MOVEMENT_ORDEREXTERNAL WHERE ISSYNC = 1 AND OPERDATE < DATE(CURRENT_DATE, ' + str_day +'))');
+    DM.conMain.ExecSQL('DELETE FROM MOVEMENT_ORDEREXTERNAL WHERE ISSYNC = 1 AND OPERDATE < DATE(CURRENT_DATE, ' + str_day +') AND NOT EXISTS (SELECT 1 FROM MOVEMENTITEM_ORDEREXTERNAL WHERE MOVEMENTID = MOVEMENT_ORDEREXTERNAL.Id)');
+    //MOVEMENTITEM_RETURNIN
+    DM.conMain.ExecSQL('DELETE FROM MOVEMENTITEM_RETURNIN      WHERE MOVEMENTID IN (SELECT Id FROM MOVEMENT_RETURNIN      WHERE ISSYNC = 1 AND OPERDATE < DATE(CURRENT_DATE, ' + str_day +'))');
+    DM.conMain.ExecSQL('DELETE FROM MOVEMENT_RETURNIN      WHERE ISSYNC = 1 AND OPERDATE < DATE(CURRENT_DATE, ' + str_day +') AND NOT EXISTS (SELECT 1 FROM MOVEMENTITEM_RETURNIN      WHERE MOVEMENTID = MOVEMENT_RETURNIN.Id)');
+    //MOVEMENTITEM_STOREREAL
+    DM.conMain.ExecSQL('DELETE FROM MOVEMENTITEM_STOREREAL     WHERE MOVEMENTID IN (SELECT Id FROM MOVEMENT_STOREREAL     WHERE ISSYNC = 1 AND OPERDATE < DATE(CURRENT_DATE, ' + str_day +'))');
+    DM.conMain.ExecSQL('DELETE FROM MOVEMENT_STOREREAL     WHERE ISSYNC = 1 AND OPERDATE < DATE(CURRENT_DATE, ' + str_day +') AND NOT EXISTS (SELECT 1 FROM MOVEMENTITEM_STOREREAL     WHERE MOVEMENTID = MOVEMENT_STOREREAL.Id)');
+    //MOVEMENTITEM_TASK
+    DM.conMain.ExecSQL('DELETE FROM MOVEMENTITEM_TASK          WHERE MOVEMENTID IN (SELECT Id FROM MOVEMENT_TASK          WHERE                OPERDATE < DATE(CURRENT_DATE, ' + str_day +'))');
+    DM.conMain.ExecSQL('DELETE FROM MOVEMENT_TASK          WHERE                OPERDATE < DATE(CURRENT_DATE, ' + str_day +') AND NOT EXISTS (SELECT 1 FROM MOVEMENTITEM_TASK          WHERE MOVEMENTID = MOVEMENT_TASK.Id)');
+    //MOVEMENTITEM_VISIT
+    DM.conMain.ExecSQL('DELETE FROM MOVEMENTITEM_VISIT         WHERE MOVEMENTID IN (SELECT Id FROM MOVEMENT_VISIT         WHERE ISSYNC = 1 AND OPERDATE < DATE(CURRENT_DATE, ' + str_day +')) AND ISSYNC = 1');
+    DM.conMain.ExecSQL('DELETE FROM MOVEMENT_VISIT         WHERE ISSYNC = 1 AND OPERDATE < DATE(CURRENT_DATE, ' + str_day +') AND NOT EXISTS (SELECT 1 FROM MOVEMENTITEM_VISIT         WHERE MOVEMENTID = MOVEMENT_VISIT.Id)');
+    //MOVEMENT_CASH
+    DM.conMain.ExecSQL('DELETE FROM MOVEMENT_CASH          WHERE ISSYNC = 1 AND OPERDATE < DATE(CURRENT_DATE, ' + str_day +')');
+    //
+    //
     DM.conMain.ExecSQL('DELETE FROM Object_GoodsByGoodsKind WHERE isErased = 1');
     DM.conMain.ExecSQL('DELETE FROM Object_GoodsListSale WHERE isErased = 1');
 

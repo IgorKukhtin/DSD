@@ -67,7 +67,7 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      Style.Color = 12713983
+      Style.Color = clWindow
       TabOrder = 5
       Width = 253
     end
@@ -154,8 +154,19 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
       IsCaptionAssigned = True
       Caption = 'Color_calc'
       DataBinding.FieldName = 'Color_calc'
+      Hidden = True
       TotalsVisibility = tvNone
       UniqueName = 'Color_calc'
+    end
+    object SummType: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 2
+      IsCaptionAssigned = True
+      Caption = 'SummType'
+      DataBinding.FieldName = 'SummType'
+      Hidden = True
+      TotalsVisibility = tvNone
+      UniqueName = 'SummType_Average'
     end
   end
   object DataSource: TDataSource
@@ -995,6 +1006,11 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
         ColorColumn = pvValue
         BackGroundValueColumn = Color_calc
         ColorValueList = <>
+      end>
+    SummaryList = <
+      item
+        SummaryColumn = pvValue
+        TypeColumn = SummType
       end>
     Left = 357
     Top = 224
