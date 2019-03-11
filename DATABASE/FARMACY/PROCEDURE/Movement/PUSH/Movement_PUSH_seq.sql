@@ -1,7 +1,7 @@
 DO $$
 BEGIN
   IF (SELECT COUNT(*) from pg_statio_all_sequences where relname = 'movement_PUSH_seq') = 0 THEN
-    CREATE SEQUENCE Movement_EmployeeSchedule_seq
+    CREATE SEQUENCE Movement_PUSH_seq
     INCREMENT 1
     MINVALUE 1
     MAXVALUE 9223372036854775807

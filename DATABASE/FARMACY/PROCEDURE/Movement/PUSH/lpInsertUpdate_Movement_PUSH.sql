@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PUSH(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
     IN inInvNumber             TVarChar   , -- Номер документа
     IN inOperDate              TDateTime  , -- Дата документа
+    IN inMessage               TBlob      , -- Сообщение
     IN inUserId                Integer     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -20,6 +21,9 @@ BEGIN
     -- сохранили <Документ>
     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_PUSH(), inInvNumber, inOperDate, NULL, 0);
     
+    -- сохранили свойство <Сообщение>
+   PERFORM lpInsertUpdate_MovementBlob (zc_MovementBlob_Message(), ioId, inMessage);
+
     -- !!!протокол через свойства конкретного объекта!!!
      IF vbIsInsert = FALSE
      THEN

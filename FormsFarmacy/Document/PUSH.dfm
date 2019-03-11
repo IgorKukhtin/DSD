@@ -113,17 +113,25 @@ inherited PUSHForm: TPUSHForm
       Top = 4
       Caption = #1058#1077#1082#1089#1090' '#1089#1086#1086#1073#1097#1077#1085#1080#1103
     end
-    object edMessage: TcxDBMemo
-      Left = 184
-      Top = 27
-      DataBinding.DataField = 'Message'
-      DataBinding.DataSource = MessageDS
+    object edMessage: TcxMemo
+      Left = 192
+      Top = 22
+      Lines.Strings = (
+        'edMessage')
       TabOrder = 7
       Height = 100
-      Width = 441
+      Width = 417
     end
   end
   inherited ActionList: TActionList
+    inherited actInsertUpdateMovement: TdsdExecStoredProc
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+        end>
+    end
     inherited actShowAll: TBooleanStoredProcAction
       StoredProcList = <
         item
@@ -145,6 +153,18 @@ inherited PUSHForm: TPUSHForm
         end>
       ReportName = #1050#1086#1084#1084#1077#1088#1095#1077#1089#1082#1086#1077' '#1087#1088#1077#1076#1083#1086#1078#1077#1085#1080#1077
       ReportNameParam.Value = #1050#1086#1084#1084#1077#1088#1095#1077#1089#1082#1086#1077' '#1087#1088#1077#1076#1083#1086#1078#1077#1085#1080#1077
+    end
+    object actUpdateMessage: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProcList = <
+        item
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = 'actUpdateMessage'
     end
   end
   inherited MasterDS: TDataSource
@@ -318,11 +338,96 @@ inherited PUSHForm: TPUSHForm
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PUSH'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber'
+        Value = ''
+        Component = edInvNumber
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = 42132d
+        Component = edOperDate
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StatusCode'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StatusName'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Message'
+        Value = Null
+        Component = edMessage
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
     Left = 176
     Top = 272
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_PUSH'
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber'
+        Value = ''
+        Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 0d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMessage'
+        Value = Null
+        Component = edMessage
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     NeedResetData = True
     ParamKeyField = 'ioId'
     Left = 282
@@ -353,6 +458,7 @@ inherited PUSHForm: TPUSHForm
         Control = edInvNumber
       end
       item
+        Control = edMessage
       end>
     Left = 208
     Top = 233
@@ -476,25 +582,11 @@ inherited PUSHForm: TPUSHForm
   end
   inherited spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PUSH_TotalSumm'
-    DataSet = MessageCDS
     DataSets = <
       item
-        DataSet = MessageCDS
       end>
     OutputType = otDataSet
     Left = 284
     Top = 348
-  end
-  object MessageDS: TDataSource
-    DataSet = MessageCDS
-    Left = 312
-    Top = 400
-  end
-  object MessageCDS: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 280
-    Top = 400
   end
 end

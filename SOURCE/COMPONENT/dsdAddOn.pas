@@ -695,7 +695,7 @@ uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf,
      cxGeometry, cxCheckBox, dxBar, cxButtonEdit, cxCurrencyEdit,
      VCL.Menus, ParentForm, ChoicePeriod, cxGrid, cxDBData, Variants,
      cxGridDBBandedTableView, cxGridDBDataDefinitions,cxGridBandedTableView,
-     cxDropDownEdit, Dialogs, dsdException;
+     cxDropDownEdit, cxMemo, Dialogs, dsdException;
 
 type
 
@@ -1651,6 +1651,8 @@ var
 begin
   if Sender is TcxTextEdit then
      FEnterValue.Values[TComponent(Sender).Name] := (Sender as TcxTextEdit).Text;
+  if Sender is TcxMemo then
+     FEnterValue.Values[TComponent(Sender).Name] := (Sender as TcxMemo).Text;
   if Sender is TcxButtonEdit then
      FEnterValue.Values[TComponent(Sender).Name] := (Sender as TcxButtonEdit).Text;
   if Sender is TcxCurrencyEdit then
@@ -1679,6 +1681,8 @@ begin
       exit;
   if Sender is TcxTextEdit then
      isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxTextEdit).Text;
+  if Sender is TcxMemo then
+     isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxMemo).Text;
   if Sender is TcxButtonEdit then
      isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxButtonEdit).Text;
   if Sender is TcxCurrencyEdit then
@@ -1790,6 +1794,10 @@ begin
           if FControl is TcxTextEdit then begin
              (FControl as TcxTextEdit).OnEnter := THeaderSaver(Collection.Owner).OnEnter;
              (FControl as TcxTextEdit).OnExit := THeaderSaver(Collection.Owner).OnExit;
+          end;
+          if FControl is TcxMemo then begin
+             (FControl as TcxMemo).OnEnter := THeaderSaver(Collection.Owner).OnEnter;
+             (FControl as TcxMemo).OnExit := THeaderSaver(Collection.Owner).OnExit;
           end;
           if FControl is TcxDateEdit then begin
              (FControl as TcxDateEdit).OnEnter := THeaderSaver(Collection.Owner).OnEnter;
@@ -3333,6 +3341,8 @@ begin
       begin
         if FControl is TcxTextEdit then
           (FControl as TcxTextEdit).Properties.OnChange := THeaderChanger(Collection.Owner).OnChange;
+        if FControl is TcxMemo then
+          (FControl as TcxMemo).Properties.OnChange := THeaderChanger(Collection.Owner).OnChange;
         if FControl is TcxDateEdit then
           (FControl as TcxDateEdit).Properties.OnChange := THeaderChanger(Collection.Owner).OnChange;
         if FControl is TcxButtonEdit then
@@ -3406,6 +3416,7 @@ procedure THeaderChanger.OnChange(Sender: TObject);
 begin
   if Assigned(Action) then
     if (Sender is TcxTextEdit) or
+      (Sender is TcxMemo) or
       (Sender is TcxButtonEdit) or
       (Sender is TcxCurrencyEdit) or
       (Sender is TcxDateEdit) or

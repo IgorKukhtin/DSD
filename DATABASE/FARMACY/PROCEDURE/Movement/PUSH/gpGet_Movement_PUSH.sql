@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer
              , OperDate TDateTime
              , StatusCode Integer
              , StatusName TVarChar
+             , Message TBlob
              )
 AS
 $BODY$
@@ -34,6 +35,7 @@ BEGIN
           , CURRENT_TIMESTAMP::TDateTime                     AS OperDate
           , Object_Status.Code               	             AS StatusCode
           , Object_Status.Name              	             AS StatusName
+          , Null::TBlob                                      AS Message
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
     ELSE
@@ -44,9 +46,14 @@ BEGIN
           , Movement.OperDate
           , Object_Status.ObjectCode                 AS StatusCode
           , Object_Status.ValueData                  AS StatusName
+          , MovementBlob_Message.ValueData           AS Message
 
         FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementBlob AS MovementBlob_Message
+                                   ON MovementBlob_Message.MovementId = Movement.Id
+                                  AND MovementBlob_Message.DescId = zc_MovementBlob_Message()
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id

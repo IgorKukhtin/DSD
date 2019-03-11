@@ -498,6 +498,8 @@ type
     POS2: TMenuItem;
     actJackdawsChecks: TdsdOpenForm;
     actJackdawsChecks1: TMenuItem;
+    actPUSH: TdsdOpenForm;
+    actPUSH1: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

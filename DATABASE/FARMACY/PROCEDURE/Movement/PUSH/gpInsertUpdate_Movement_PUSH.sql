@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PUSH(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
     IN inInvNumber             TVarChar   , -- Номер документа
     IN inOperDate              TDateTime  , -- Дата документа
+    IN inMessage               TBlob      , -- Сообщение
     IN inSession               TVarChar     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -20,6 +21,7 @@ BEGIN
     ioId := lpInsertUpdate_Movement_PUSH (ioId              := ioId
                                         , inInvNumber       := inInvNumber
                                         , inOperDate        := inOperDate
+                                        , inMessage         := inMessage
                                         , inUserId          := vbUserId
                                         );
 END;
@@ -29,6 +31,5 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.
- 16.11.18         *
- 30.09.18         *
-*
+ 10.03.19         *
+*/

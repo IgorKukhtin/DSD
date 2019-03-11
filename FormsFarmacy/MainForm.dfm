@@ -2663,6 +2663,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actPUSH: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      MoveParams = <>
+      Caption = 'PUSH '#1089#1086#1086#1073#1097#1077#1085#1080#1103' '#1076#1083#1103' '#1082#1072#1089#1089#1080#1088#1086#1074
+      Hint = 'PUSH '#1089#1086#1086#1073#1097#1077#1085#1080#1103' '#1076#1083#1103' '#1082#1072#1089#1089#1080#1088#1086#1074
+      FormName = 'TPUSHJournalForm'
+      FormNameParam.Value = 'TPUSHJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -2936,6 +2948,9 @@ inherited MainForm: TMainForm
       end
       object N172: TMenuItem
         Action = actReport_KPU
+      end
+      object actPUSH1: TMenuItem
+        Action = actPUSH
       end
     end
     object miLoad: TMenuItem [2]

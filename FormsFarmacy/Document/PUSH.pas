@@ -37,9 +37,8 @@ type
     dxBarButton3: TdxBarButton;
     cxLabel3: TcxLabel;
     DateViewed: TcxGridDBColumn;
-    edMessage: TcxDBMemo;
-    MessageDS: TDataSource;
-    MessageCDS: TClientDataSet;
+    actUpdateMessage: TdsdUpdateDataSet;
+    edMessage: TcxMemo;
   private
     { Private declarations }
   public
