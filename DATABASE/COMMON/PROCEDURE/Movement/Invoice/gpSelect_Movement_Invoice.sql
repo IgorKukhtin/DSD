@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InsertDate TDateTime, InsertName TVarChar
              , TotalCount TFloat--, TotalCountKg TFloat, TotalCountSh TFloat
              , TotalSummMVAT TFloat , TotalSummPVAT TFloat, TotalSumm TFloat
+             , TotalSummCurrency TFloat
              , TotalSumm_f1 TFloat, TotalSumm_f2 TFloat
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , CurrencyValue TFloat, ParValue TFloat
@@ -57,6 +58,7 @@ BEGIN
            , MovementFloat_TotalSummMVAT.ValueData  AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData  AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData      AS TotalSumm
+           , MovementFloat_TotalSummCurrency.ValueData      AS TotalSummCurrency
            
            , CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() 
                   THEN MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
@@ -133,6 +135,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummCurrency
+                                    ON MovementFloat_TotalSummCurrency.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummCurrency.DescId = zc_MovementFloat_AmountCurrency()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPayOth
                                     ON MovementFloat_TotalSummPayOth.MovementId =  Movement.Id
