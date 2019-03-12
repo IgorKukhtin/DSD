@@ -1,29 +1,29 @@
 inherited PUSHForm: TPUSHForm
   Caption = 'PUSH '#1089#1086#1086#1073#1097#1077#1085#1080#1077' '#1076#1083#1103' '#1082#1072#1089#1089#1080#1088#1086#1074
   ClientHeight = 500
-  ClientWidth = 638
+  ClientWidth = 646
   AddOnFormData.AddOnFormRefresh.ParentList = 'PUSH'
-  ExplicitWidth = 654
+  ExplicitWidth = 662
   ExplicitHeight = 539
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 153
-    Width = 638
-    Height = 347
-    ExplicitTop = 153
+    Top = 179
+    Width = 646
+    Height = 321
+    ExplicitTop = 179
     ExplicitWidth = 638
-    ExplicitHeight = 347
-    ClientRectBottom = 347
-    ClientRectRight = 638
+    ExplicitHeight = 321
+    ClientRectBottom = 321
+    ClientRectRight = 646
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 638
-      ExplicitHeight = 323
+      ExplicitHeight = 297
       inherited cxGrid: TcxGrid
-        Width = 638
-        Height = 323
+        Width = 646
+        Height = 297
         ExplicitWidth = 638
-        ExplicitHeight = 323
+        ExplicitHeight = 297
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
@@ -50,7 +50,14 @@ inherited PUSHForm: TPUSHForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 282
+            Width = 191
+          end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 171
           end
           object DateViewed: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1080' '#1074#1088#1077#1084#1103' '#1087#1088#1086#1089#1084#1086#1090#1088#1072
@@ -60,52 +67,54 @@ inherited PUSHForm: TPUSHForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 170
+            Width = 161
           end
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 638
-    Height = 127
+    Width = 646
+    Height = 153
     TabOrder = 3
     ExplicitWidth = 638
-    ExplicitHeight = 127
+    ExplicitHeight = 153
     inherited edInvNumber: TcxTextEdit
       Left = 8
-      Top = 62
+      Top = 57
       ExplicitLeft = 8
-      ExplicitTop = 62
+      ExplicitTop = 57
     end
     inherited cxLabel1: TcxLabel
       Left = 8
-      Top = 43
+      Top = 40
       ExplicitLeft = 8
-      ExplicitTop = 43
+      ExplicitTop = 40
     end
     inherited edOperDate: TcxDateEdit
       Left = 8
-      Top = 101
+      Top = 91
       Properties.Kind = ckDateTime
       ExplicitLeft = 8
-      ExplicitTop = 101
+      ExplicitTop = 91
       ExplicitWidth = 152
       Width = 152
     end
     inherited cxLabel2: TcxLabel
       Left = 8
-      Top = 83
+      Top = 75
+      Caption = #1044#1072#1090#1072' '#1074#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1072' '#1086#1087#1086#1074#1077#1097#1077#1085#1080#1103
       ExplicitLeft = 8
-      ExplicitTop = 83
+      ExplicitTop = 75
+      ExplicitWidth = 168
     end
     inherited cxLabel15: TcxLabel
       Top = 4
       ExplicitTop = 4
     end
     inherited ceStatus: TcxButtonEdit
-      Top = 22
-      ExplicitTop = 22
+      Top = 19
+      ExplicitTop = 19
       ExplicitHeight = 22
     end
     object cxLabel3: TcxLabel
@@ -115,12 +124,25 @@ inherited PUSHForm: TPUSHForm
     end
     object edMessage: TcxMemo
       Left = 184
-      Top = 22
+      Top = 19
       Lines.Strings = (
         'edMessage')
       TabOrder = 7
-      Height = 100
+      Height = 128
       Width = 441
+    end
+    object edDateEndPUSH: TcxDateEdit
+      Left = 8
+      Top = 133
+      EditValue = 42132d
+      Properties.Kind = ckDateTime
+      TabOrder = 8
+      Width = 152
+    end
+    object cxLabel4: TcxLabel
+      Left = 8
+      Top = 110
+      Caption = #1050#1086#1085#1094#1072' '#1086#1087#1086#1074#1077#1097#1077#1085#1080#1103
     end
   end
   inherited ActionList: TActionList
@@ -384,6 +406,13 @@ inherited PUSHForm: TPUSHForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'DateEndPUSH'
+        Value = 'NULL'
+        Component = edDateEndPUSH
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Message'
         Value = Null
         Component = edMessage
@@ -416,6 +445,14 @@ inherited PUSHForm: TPUSHForm
         Name = 'inOperDate'
         Value = 0d
         Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateEndPUSH'
+        Value = 'NULL'
+        Component = edDateEndPUSH
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -456,6 +493,9 @@ inherited PUSHForm: TPUSHForm
       end
       item
         Control = edInvNumber
+      end
+      item
+        Control = edDateEndPUSH
       end
       item
         Control = edMessage

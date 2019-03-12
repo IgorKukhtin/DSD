@@ -39,6 +39,9 @@ type
     DateViewed: TcxGridDBColumn;
     actUpdateMessage: TdsdUpdateDataSet;
     edMessage: TcxMemo;
+    edDateEndPUSH: TcxDateEdit;
+    cxLabel4: TcxLabel;
+    UnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public

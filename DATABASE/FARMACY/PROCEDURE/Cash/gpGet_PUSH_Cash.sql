@@ -75,11 +75,16 @@ BEGIN
                               AND MovementItem.DescId = zc_MI_Master()
                               AND MovementItem.ObjectId = vbUserId
 
+        LEFT JOIN MovementDate AS MovementDate_DateEndPUSH
+                               ON MovementDate_DateEndPUSH.MovementId = Movement.Id
+                              AND MovementDate_DateEndPUSH.DescId = zc_MovementDate_DateEndPUSH()
+                                              
         LEFT JOIN MovementBlob AS MovementBlob_Message
                                ON MovementBlob_Message.MovementId = Movement.Id
                               AND MovementBlob_Message.DescId = zc_MovementBlob_Message()
 
    WHERE Movement.OperDate <= CURRENT_TIMESTAMP
+     AND CURRENT_TIMESTAMP < COALESCE(MovementDate_DateEndPUSH.ValueData, date_trunc('day', Movement.OperDate + INTERVAL '1 DAY'))			
      AND Movement.DescId = zc_Movement_PUSH()
      AND Movement.StatusId = zc_Enum_Status_Complete()
      AND COALESCE (MovementItem.ID, 0) = 0;
@@ -103,5 +108,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
---
- SELECT * FROM gpGet_PUSH_Cash('3')
+-- SELECT * FROM gpGet_PUSH_Cash('3')
