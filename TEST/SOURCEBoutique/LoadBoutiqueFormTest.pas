@@ -85,6 +85,7 @@ type
     procedure LoadPositionFormTest;
     procedure LoadPersonalFormTest;
     procedure LoadPriceListFormTest;
+    procedure LoadProfitLossDemoFormTest;
     procedure LoadReportFormTest;
     procedure LoadReportBalanceFormTest;
     procedure LoadReportOLAPFormTest;
@@ -811,9 +812,19 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleOLAP_AnalysisDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleOLAP_AnalysisDialogForm');
 end;
+ procedure TLoadFormTest.LoadProfitLossDemoFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossDemoForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossDemoForm');
+end;
 
 procedure TLoadFormTest.LoadReportProfitLossFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossPeriodForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossPeriodForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossPeriodDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossPeriodDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossDialogForm'));
