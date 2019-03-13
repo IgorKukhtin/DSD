@@ -1,28 +1,28 @@
 inherited PUSHForm: TPUSHForm
   Caption = 'PUSH '#1089#1086#1086#1073#1097#1077#1085#1080#1077' '#1076#1083#1103' '#1082#1072#1089#1089#1080#1088#1086#1074
   ClientHeight = 500
-  ClientWidth = 646
+  ClientWidth = 638
   AddOnFormData.AddOnFormRefresh.ParentList = 'PUSH'
-  ExplicitWidth = 662
+  ExplicitWidth = 654
   ExplicitHeight = 539
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 179
-    Width = 646
+    Width = 638
     Height = 321
     ExplicitTop = 179
-    ExplicitWidth = 638
+    ExplicitWidth = 646
     ExplicitHeight = 321
     ClientRectBottom = 321
-    ClientRectRight = 646
+    ClientRectRight = 638
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 638
+      ExplicitWidth = 646
       ExplicitHeight = 297
       inherited cxGrid: TcxGrid
-        Width = 646
+        Width = 638
         Height = 297
-        ExplicitWidth = 638
+        ExplicitWidth = 646
         ExplicitHeight = 297
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
@@ -50,7 +50,15 @@ inherited PUSHForm: TPUSHForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 191
+            Width = 164
+          end
+          object Views: TcxGridDBColumn
+            Caption = #1055#1088#1086#1089#1084'.'
+            DataBinding.FieldName = 'Views'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
           end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -67,23 +75,25 @@ inherited PUSHForm: TPUSHForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 161
+            Width = 158
           end
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 646
+    Width = 638
     Height = 153
     TabOrder = 3
-    ExplicitWidth = 638
+    ExplicitWidth = 646
     ExplicitHeight = 153
     inherited edInvNumber: TcxTextEdit
       Left = 8
       Top = 57
       ExplicitLeft = 8
       ExplicitTop = 57
+      ExplicitWidth = 75
+      Width = 75
     end
     inherited cxLabel1: TcxLabel
       Left = 8
@@ -143,6 +153,20 @@ inherited PUSHForm: TPUSHForm
       Left = 8
       Top = 110
       Caption = #1050#1086#1085#1094#1072' '#1086#1087#1086#1074#1077#1097#1077#1085#1080#1103
+    end
+    object cxLabel5: TcxLabel
+      Left = 92
+      Top = 40
+      Caption = #1055#1086#1074#1090#1086#1088#1086#1074
+    end
+    object edReplays: TcxCurrencyEdit
+      Left = 92
+      Top = 57
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      Properties.ReadOnly = False
+      TabOrder = 11
+      Width = 68
     end
   end
   inherited ActionList: TActionList
@@ -413,6 +437,12 @@ inherited PUSHForm: TPUSHForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'Replays'
+        Value = Null
+        Component = edReplays
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Message'
         Value = Null
         Component = edMessage
@@ -458,6 +488,13 @@ inherited PUSHForm: TPUSHForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inReplays'
+        Value = Null
+        Component = edReplays
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMessage'
         Value = Null
         Component = edMessage
@@ -499,6 +536,9 @@ inherited PUSHForm: TPUSHForm
       end
       item
         Control = edMessage
+      end
+      item
+        Control = edReplays
       end>
     Left = 208
     Top = 233

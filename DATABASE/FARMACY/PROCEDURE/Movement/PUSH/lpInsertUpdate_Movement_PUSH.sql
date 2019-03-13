@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PUSH(
     IN inInvNumber             TVarChar   , -- Номер документа
     IN inOperDate              TDateTime  , -- Дата документа
     IN inDateEndPUSH           TDateTime  ,
+    IN inReplays               Integer    , -- Количество повторов  
     IN inMessage               TBlob      , -- Сообщение
     IN inUserId                Integer     -- сессия пользователя
 )
@@ -25,7 +26,10 @@ BEGIN
     -- сохранили свойство <Сообщение>
     PERFORM lpInsertUpdate_MovementBlob (zc_MovementBlob_Message(), ioId, inMessage);
 
-    -- сохранили свойство <Дата создания>
+    -- сохранили свойство <Сообщение>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Replays(), ioId, inReplays);
+
+    -- сохранили свойство <Дата окончания>
     IF inDateEndPUSH > inOperDate
     THEN
       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_DateEndPUSH(), ioId, inDateEndPUSH);

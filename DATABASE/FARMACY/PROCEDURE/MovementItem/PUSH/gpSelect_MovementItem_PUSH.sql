@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PUSH(
     IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, UserId Integer, UserCode Integer, UserName TVarChar
+RETURNS TABLE (Id Integer, Views Integer, UserId Integer, UserCode Integer, UserName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , DateViewed TDateTime
              , isErased Boolean
@@ -25,6 +25,7 @@ BEGIN
 
       SELECT
              MovementItem.Id                                     AS Id
+           , MovementItem.Amount::Integer                        AS Views
            , Object_User.Id                                      AS UserId
            , Object_User.ObjectCode                              AS UserCode
            , Object_User.ValueData                               AS UserName

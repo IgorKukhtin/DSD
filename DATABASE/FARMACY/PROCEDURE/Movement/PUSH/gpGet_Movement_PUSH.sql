@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer
              , StatusCode Integer
              , StatusName TVarChar
              , DateEndPUSH TDateTime
+             , Replays Integer
              , Message TBlob
              )
 AS
@@ -37,6 +38,7 @@ BEGIN
           , Object_Status.Code               	             AS StatusCode
           , Object_Status.Name              	             AS StatusName
           , date_trunc('day', CURRENT_TIMESTAMP + INTERVAL '1 DAY')::TDateTime  AS DateEndPUSH
+          , 1::Integer                                       AS Replays
           , Null::TBlob                                      AS Message
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
@@ -49,10 +51,15 @@ BEGIN
           , Object_Status.ObjectCode                 AS StatusCode
           , Object_Status.ValueData                  AS StatusName
           , MovementDate_DateEndPUSH.ValueData       AS DateEndPUSH
+          , MovementFloat_Replays.ValueData::Integer AS Replays  
           , MovementBlob_Message.ValueData           AS Message
 
         FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementFloat AS MovementFloat_Replays
+                                   ON MovementFloat_Replays.MovementId = Movement.Id
+                                  AND MovementFloat_Replays.DescId = zc_MovementFloat_Replays()
 
             LEFT JOIN MovementBlob AS MovementBlob_Message
                                    ON MovementBlob_Message.MovementId = Movement.Id

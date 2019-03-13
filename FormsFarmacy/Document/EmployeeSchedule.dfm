@@ -163,9 +163,17 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
           end
           object ValueUser: TcxGridDBBandedColumn
             DataBinding.FieldName = 'ValueUser'
+            PropertiesClassName = 'TcxComboBoxProperties'
+            Properties.Items.Strings = (
+              ''
+              '7:00'
+              '8:00'
+              '9:00'
+              '10:00'
+              '21:00'
+              #1042)
             Visible = False
             MinWidth = 40
-            Options.Editing = False
             Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 0
@@ -852,6 +860,15 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
         Value = Null
         Component = CrossDBViewAddOn
         ComponentItem = 'Value'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioValueUser'
+        Value = Null
+        Component = CrossDBViewAddOn
+        ComponentItem = 'ValueUser'
         DataType = ftString
         ParamType = ptInputOutput
         MultiSelectSeparator = ','

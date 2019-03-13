@@ -42,6 +42,9 @@ type
     edDateEndPUSH: TcxDateEdit;
     cxLabel4: TcxLabel;
     UnitName: TcxGridDBColumn;
+    cxLabel5: TcxLabel;
+    edReplays: TcxCurrencyEdit;
+    Views: TcxGridDBColumn;
   private
     { Private declarations }
   public

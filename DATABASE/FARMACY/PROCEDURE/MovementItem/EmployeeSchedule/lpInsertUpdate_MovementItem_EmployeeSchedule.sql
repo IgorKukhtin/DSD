@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_EmployeeSchedule(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inPersonId            Integer   , -- Сотрудник
     IN inComingValueDay      TVarChar  , -- Приходы на работу по дням
+    IN inComingValueDayUser  TVarChar  , -- Приходы на работу по дням
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -23,6 +24,9 @@ BEGIN
     -- сохранили <приходы по дням>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_ComingValueDay(), ioId, inComingValueDay);
 
+    -- сохранили <приходы по дням>
+    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_ComingValueDayUser(), ioId, inComingValueDayUser);
+
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
@@ -33,5 +37,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.
+ 13.03.19         *
  09.12.18         *
 */

@@ -10,10 +10,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PUSH(
 )
 RETURNS TABLE (Id Integer
              , InvNumber TVarChar
-             , OperDate TDateTime
+             , OperDate TVarChar
              , StatusCode Integer
              , StatusName TVarChar
-             , DateEndPUSH TDateTime
+             , DateEndPUSH TVarChar
+             , Replays Integer
              , Message TBlob
 
              , InsertName TVarChar, InsertDate TDateTime
@@ -38,25 +39,31 @@ BEGIN
 
         -- Результат
         SELECT
-            Movement.Id                              AS ID
-          , Movement.InvNumber                       AS InvNumber
-          , Movement.OperDate                        AS OperDate
-          , Object_Status.ObjectCode                 AS StatusCode
-          , Object_Status.ValueData                  AS StatusName
-          , COALESCE(MovementDate_DateEndPUSH.ValueData,
-            date_trunc('day', Movement.OperDate + INTERVAL '1 DAY'))::TDateTime AS DateEndPUSH
+            Movement.Id                                                AS ID
+          , Movement.InvNumber                                         AS InvNumber
+          , to_char(Movement.OperDate, 'DD.MM.YYYY HH24:MI:SS')::TVarChar AS OperDate
+          , Object_Status.ObjectCode                                   AS StatusCode
+          , Object_Status.ValueData                                    AS StatusName
+          , to_char(COALESCE(MovementDate_DateEndPUSH.ValueData,
+            date_trunc('day', Movement.OperDate + INTERVAL '1 DAY')), 
+            'DD.MM.YYYY HH24:MI:SS')::TVarChar                         AS DateEndPUSH
+          , COALESCE(MovementFloat_Replays.ValueData, 1)::Integer      AS Replays  
 
-          , MovementBlob_Message.ValueData           AS Message
+          , MovementBlob_Message.ValueData                             AS Message
 
-          , Object_Insert.ValueData                  AS InsertName
-          , MovementDate_Insert.ValueData            AS InsertDate
-          , Object_Update.ValueData                  AS UpdateName
-          , MovementDate_Update.ValueData            AS UpdateDate
+          , Object_Insert.ValueData                                    AS InsertName
+          , MovementDate_Insert.ValueData                              AS InsertDate
+          , Object_Update.ValueData                                    AS UpdateName
+          , MovementDate_Update.ValueData                             AS UpdateDate
         FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             INNER JOIN tmpStatus ON Movement.StatusId = tmpStatus.StatusId
-
+            
+            LEFT JOIN MovementFloat AS MovementFloat_Replays
+                                   ON MovementFloat_Replays.MovementId = Movement.Id
+                                  AND MovementFloat_Replays.DescId = zc_MovementFloat_Replays()
+            
             LEFT JOIN MovementBlob AS MovementBlob_Message
                                    ON MovementBlob_Message.MovementId = Movement.Id
                                   AND MovementBlob_Message.DescId = zc_MovementBlob_Message()
