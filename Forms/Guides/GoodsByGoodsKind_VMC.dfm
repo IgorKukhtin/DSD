@@ -269,6 +269,17 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object NormInDays: TcxGridDBColumn
+            Caption = 'C'#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080', '#1076#1085'.'
+            DataBinding.FieldName = 'NormInDays'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1074' '#1076#1085#1103#1093
+            Width = 70
+          end
           object isOrder: TcxGridDBColumn
             Caption = #1048#1089#1087#1086#1083#1100#1079#1091#1077#1090#1089#1103' '#1074' '#1079#1072#1103#1074#1082#1072#1093
             DataBinding.FieldName = 'isOrder'
@@ -788,6 +799,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1064#1090#1091#1095#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1064#1090#1091#1095#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 76
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object macListUpdateSh_Yes: TMultiAction
@@ -828,6 +840,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1064#1090#1091#1095#1085#1099#1081' - '#1053#1045#1058' '#1076#1083#1103' '#1042#1089#1077#1093
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1064#1090#1091#1095#1085#1099#1081' - '#1053#1045#1058' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 58
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object macListUpdateSh_No: TMultiAction
@@ -868,6 +881,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 76
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object macListUpdateNom_Yes: TMultiAction
@@ -908,6 +922,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1053#1045#1058' '#1076#1083#1103' '#1042#1089#1077#1093
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1053#1045#1058' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 58
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object macListUpdateNom_No: TMultiAction
@@ -948,6 +963,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1077#1085#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1077#1085#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 76
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object macListUpdateVes_Yes: TMultiAction
@@ -988,6 +1004,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1077#1085#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1053#1045#1058' '#1076#1083#1103' '#1042#1089#1077#1093
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1077#1085#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1053#1045#1058' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 58
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object macListUpdateVes_No: TMultiAction
@@ -1265,6 +1282,15 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Width'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNormInDays'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NormInDays'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
