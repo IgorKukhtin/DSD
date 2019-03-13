@@ -12,17 +12,17 @@ inherited PUSHForm: TPUSHForm
     Width = 638
     Height = 321
     ExplicitTop = 179
-    ExplicitWidth = 646
+    ExplicitWidth = 638
     ExplicitHeight = 321
     ClientRectBottom = 321
     ClientRectRight = 638
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 646
+      ExplicitWidth = 638
       ExplicitHeight = 297
       inherited cxGrid: TcxGrid
         Width = 638
         Height = 297
-        ExplicitWidth = 646
+        ExplicitWidth = 638
         ExplicitHeight = 297
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
@@ -65,6 +65,7 @@ inherited PUSHForm: TPUSHForm
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 171
           end
           object DateViewed: TcxGridDBColumn
@@ -85,7 +86,7 @@ inherited PUSHForm: TPUSHForm
     Width = 638
     Height = 153
     TabOrder = 3
-    ExplicitWidth = 646
+    ExplicitWidth = 638
     ExplicitHeight = 153
     inherited edInvNumber: TcxTextEdit
       Left = 8
