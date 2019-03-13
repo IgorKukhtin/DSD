@@ -25,7 +25,6 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
   cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox, dsdGuides,
   cxButtonEdit, dsdPivotGrid;
-
 type
   TReport_IncomeKill_OlapForm = class(TParentForm)
     DataSource: TDataSource;
