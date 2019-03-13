@@ -102,7 +102,7 @@ BEGIN
                         , COALESCE (tmpMI.isErased, FALSE)                           :: Boolean AS isErased
                    FROM tmpMI
                         FULL JOIN tmpMI_parent ON tmpMI_parent.MovementItemId = tmpMI.MIId_Invoice
-                                              AND tmpMI_parent.GoodsId        = tmpMI.GoodsId
+                                             -- AND tmpMI_parent.GoodsId        = tmpMI.GoodsId
                   )
          -- Результат
          SELECT
@@ -152,8 +152,8 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Invoice_Goods
                                              ON MILinkObject_Invoice_Goods.MovementItemId = tmpMI.MIId_Invoice
                                             AND MILinkObject_Invoice_Goods.DescId = zc_MILinkObject_Goods()                                                                  
-            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = MI_Invoice.MovementId
-                                                  AND MILinkObject_Invoice_Goods.ObjectId = tmpMI.GoodsId
+            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id                 = MI_Invoice.MovementId
+                                               -- AND MILinkObject_Invoice_Goods.ObjectId = tmpMI.GoodsId
 
             LEFT JOIN MovementItemFloat AS MIFloat_Price_Invoice
                                         ON MIFloat_Price_Invoice.MovementItemId = tmpMI.MIId_Invoice

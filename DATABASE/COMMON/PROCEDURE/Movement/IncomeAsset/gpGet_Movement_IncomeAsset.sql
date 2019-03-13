@@ -83,12 +83,14 @@ BEGIN
                       FROM MovementItem
                            INNER JOIN MovementItemFloat AS MIFloat_MovementId
                                                         ON MIFloat_MovementId.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_MovementId.DescId = zc_MIFloat_MovementItemId()
-                                                       AND MIFloat_MovementId.ValueData > 0
-                           INNER JOIN MovementItem AS MI_Invoice ON MI_Invoice.Id = MIFloat_MovementId.ValueData :: Integer
+                                                       AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementItemId()
+                                                       AND MIFloat_MovementId.ValueData      > 0
+                           INNER JOIN MovementItem AS MI_Invoice ON MI_Invoice.Id       = MIFloat_MovementId.ValueData :: Integer
+                                                                AND MI_Invoice.isErased = FALSE
                       WHERE MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId     = zc_MI_MASter()
-                        AND MovementItem.isErASed   = FALSE
+                        AND MovementItem.isErased   = FALSE
+                        AND MovementItem.Amount     > 0
                       ORDER BY MovementItem.Id DESC
                       LIMIT 1
                      )
