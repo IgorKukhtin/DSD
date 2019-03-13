@@ -66,9 +66,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Currency_IncomeKoeff() RETURNS Integer
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_Currency_IncomeKoeff', zc_Object_Currency(), 'Коэффициент при приходе' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Currency_IncomeKoeff');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ProfitLossDemo_Value() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ProfitLossDemo_Value'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_ProfitLossDemo_Value', zc_Object_ProfitLossDemo(), 'Коэффициент' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ProfitLossDemo_Value');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.  Кухтин И.В.  Климентьев К.И.  Полятыкин А.А.  Воробкало А.А.
+12.03.19          * zc_ObjectFloat_ProfitLossDemo_Value
 24.04.18          * zc_ObjectFloat_Currency_IncomeKoeff
 08.05.17                                                       *
 */

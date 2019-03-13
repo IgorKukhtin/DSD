@@ -288,9 +288,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Protocol_Update() RETURNS Integer AS $B
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Protocol_Update', 'Пользователь (корректировка)', zc_Object_User(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Protocol_Update');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ProfitLossDemo_Unit() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProfitLossDemo_Unit'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ProfitLossDemo_Unit', 'Подразделение', zc_Object_ProfitLossDemo(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProfitLossDemo_Unit');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ProfitLossDemo_ProfitLoss() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProfitLossDemo_ProfitLoss'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ProfitLossDemo_ProfitLoss', 'Статьи отчета о прибылях и убытках', zc_Object_ProfitLossDemo(), zc_Object_ProfitLoss() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProfitLossDemo_ProfitLoss');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Полятыкин А.А.  Воробкало А.А.
+12.03.19          * zc_ObjectLink_ProfitLossDemo_ProfitLoss
+                    zc_ObjectLink_ProfitLossDemo_Unit
 23.02.18          * zc_ObjectLink_DiscountPeriod_Unit
                     zc_ObjectLink_DiscountPeriod_Period
 07.06.17          * zc_ObjectLink_GoodsGroup_InfoMoney

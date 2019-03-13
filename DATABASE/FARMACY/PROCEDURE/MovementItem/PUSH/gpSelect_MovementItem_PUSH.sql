@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PUSH(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, UserId Integer, UserCode Integer, UserName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , DateViewed TDateTime
              , isErased Boolean
               )
@@ -27,6 +28,9 @@ BEGIN
            , Object_User.Id                                      AS UserId
            , Object_User.ObjectCode                              AS UserCode
            , Object_User.ValueData                               AS UserName
+           , Object_Unit.Id                                      AS UnitId
+           , Object_Unit.ObjectCode                              AS UnitCode
+           , Object_Unit.ValueData                               AS UnitName
            , MovementItemDate_Viewed.ValueData                   AS DateViewed
 
            , MovementItem.IsErased    AS isErased
@@ -34,6 +38,11 @@ BEGIN
       
 
                 LEFT JOIN Object AS Object_User ON Object_User.Id = MovementItem.ObjectId
+
+                LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                 ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
 
                 LEFT JOIN MovementItemDate AS MovementItemDate_Viewed
                                            ON MovementItemDate_Viewed.MovementItemId = MovementItem.Id

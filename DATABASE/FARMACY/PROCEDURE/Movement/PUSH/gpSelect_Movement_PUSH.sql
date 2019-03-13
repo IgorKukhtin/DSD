@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer
              , OperDate TDateTime
              , StatusCode Integer
              , StatusName TVarChar
+             , DateEndPUSH TDateTime
              , Message TBlob
 
              , InsertName TVarChar, InsertDate TDateTime
@@ -42,6 +43,8 @@ BEGIN
           , Movement.OperDate                        AS OperDate
           , Object_Status.ObjectCode                 AS StatusCode
           , Object_Status.ValueData                  AS StatusName
+          , COALESCE(MovementDate_DateEndPUSH.ValueData,
+            date_trunc('day', Movement.OperDate + INTERVAL '1 DAY'))::TDateTime AS DateEndPUSH
 
           , MovementBlob_Message.ValueData           AS Message
 
@@ -58,6 +61,10 @@ BEGIN
                                    ON MovementBlob_Message.MovementId = Movement.Id
                                   AND MovementBlob_Message.DescId = zc_MovementBlob_Message()
 
+            LEFT JOIN MovementDate AS MovementDate_DateEndPUSH
+                                   ON MovementDate_DateEndPUSH.MovementId = Movement.Id
+                                  AND MovementDate_DateEndPUSH.DescId = zc_MovementDate_DateEndPUSH()
+                                              
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -90,4 +97,4 @@ ALTER FUNCTION gpSelect_Movement_PUSH (TDateTime, TDateTime, Boolean, TVarChar) 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_PUSH (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inIsErased := FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_PUSH (inStartDate:= '01.08.2016', inEndDate:= '01.08.2020', inIsErased := FALSE, inSession:= zfCalc_UserAdmin());

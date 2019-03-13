@@ -74,8 +74,22 @@ inherited PUSHJournalForm: TPUSHJournalForm
           end
           inherited colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1074#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1072' '#1086#1087#1086#1074#1077#1097#1077#1085#1080#1103
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm.yyyy hh:nn'
+            Properties.Kind = ckDateTime
             HeaderAlignmentHorz = taCenter
-            Width = 124
+            Width = 125
+          end
+          object DateEndPUSH: TcxGridDBColumn
+            Caption = #1050#1086#1085#1094#1072' '#1086#1087#1086#1074#1077#1097#1077#1085#1080#1103
+            DataBinding.FieldName = 'DateEndPUSH'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd.mm.yyyy hh:nn'
+            Properties.Kind = ckDateTime
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
           end
           object Message: TcxGridDBColumn
             Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077

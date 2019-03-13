@@ -12,10 +12,17 @@ $BODY$
    DECLARE vbId Integer;
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbUnitId Integer;
+   DECLARE vbUnitKey TVarChar;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
     vbUserId := inSession;
+    vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+    IF vbUnitKey = '' THEN
+       vbUnitKey := '0';
+    END IF;
+    vbUnitId := vbUnitKey::Integer;
 
     IF (COALESCE (inMovementId, 0) = 0)
     THEN
@@ -46,6 +53,11 @@ BEGIN
 
     -- сохранили <Дату>
     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Viewed(), vbId, CURRENT_TIMESTAMP);
+    
+    IF vbUnitId <> 0
+    THEN
+      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbId, vbUnitId);    
+    END IF;
     
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (vbId, vbUserId, True);

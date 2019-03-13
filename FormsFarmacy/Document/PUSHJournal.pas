@@ -22,6 +22,7 @@ type
     Message: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbmacPrint: TdxBarButton;
+    DateEndPUSH: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1083,6 +1083,18 @@
 				<Form>Report_Sale_AnalysisAllForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_ProfitLossPeriod.pas">
+				<Form>Report_ProfitLossPeriodForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_ProfitLossPeriodDialog.pas">
+				<Form>Report_ProfitLossPeriodDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\ProfitLossDemo.pas">
+				<Form>ProfitLossDemoForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -170,9 +170,16 @@ CREATE OR REPLACE FUNCTION zc_MovementDate_BeginDateEnd() RETURNS Integer AS $BO
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_BeginDateEnd', 'конечн дата отпуска' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_BeginDateEnd');
 
+CREATE OR REPLACE FUNCTION zc_MovementDate_DateEndPUSH() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_DateEndPUSH'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_DateEndPUSH', 'Дата конца получения сообщения' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_DateEndPUSH');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 11.03.19                                                                                                        * zc_MovementDate_DateEndPUSH
+ 12.10.18                                                                                                        * zc_MovementDate_UserConfirmedKind
  23.10.18         * zc_MovementDate_Union
  12.10.18                                                                                                        * zc_MovementDate_UserConfirmedKind
  11.10.18         * zc_MovementDate_Checked
