@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceChange (Integer, Integer, Integer, TDateTime, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceChange (Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceChange (Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PriceChange (Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PriceChange(
  INOUT ioId                       Integer   ,    -- ключ объекта < Цена >
@@ -16,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PriceChange(
     IN inFixValue                 TFloat    ,    -- 
     IN inFixPercent               TFloat    ,    -- 
     IN inPercentMarkup            TFloat    ,    -- % наценки
+    IN inMultiplicity             TFloat    ,    -- кратность
     IN inSession                  TVarChar       -- сессия пользователя
 )
 AS
@@ -164,6 +166,8 @@ BEGIN
     -- сохранили св-во <% наценки >
     PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_PriceChange_PercentMarkup(), ioId, inPercentMarkup);
 
+    -- сохранили св-во <Кратность>
+    PERFORM lpInsertUpdate_objectFloat(zc_ObjectFloat_PriceChange_Multiplicity(), ioId, inMultiplicity);
 
     -- сохранили историю
     IF  COALESCE (inPercentMarkup, 0) <> COALESCE (vbPercentMarkup, 0)
@@ -202,7 +206,8 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.03.19         * inMultiplicity
  08.02.19         *
  16.08.18         *
 */
