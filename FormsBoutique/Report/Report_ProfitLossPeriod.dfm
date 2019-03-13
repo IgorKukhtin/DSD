@@ -124,7 +124,7 @@ object Report_ProfitLossPeriodForm: TReport_ProfitLossPeriodForm
       UniqueName = #1057#1090#1072#1090#1100#1103
     end
     object clUnitName_ProfitLoss: TcxDBPivotGridField
-      AreaIndex = 2
+      AreaIndex = 0
       IsCaptionAssigned = True
       Caption = #1052#1072#1075#1072#1079#1080#1085
       DataBinding.FieldName = 'UnitName_ProfitLoss'
@@ -132,7 +132,7 @@ object Report_ProfitLossPeriodForm: TReport_ProfitLossPeriodForm
       UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object clMovementDescName: TcxDBPivotGridField
-      AreaIndex = 3
+      AreaIndex = 1
       IsCaptionAssigned = True
       Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       DataBinding.FieldName = 'MovementDescName'
@@ -140,50 +140,57 @@ object Report_ProfitLossPeriodForm: TReport_ProfitLossPeriodForm
       UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object clInfoMoneyCode: TcxDBPivotGridField
-      AreaIndex = 4
+      AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' '#1059#1055' '#1089#1090'.'
       DataBinding.FieldName = 'InfoMoneyCode'
-      Visible = True
+      Hidden = True
       UniqueName = #1050#1086#1076' '#1059#1055' '#1089#1090'.'
     end
     object clInfoMoneyGroupName: TcxDBPivotGridField
-      AreaIndex = 5
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
       DataBinding.FieldName = 'InfoMoneyGroupName'
-      Visible = True
+      Hidden = True
       UniqueName = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object clInfoMoneyDestinationName: TcxDBPivotGridField
-      AreaIndex = 6
+      AreaIndex = 4
       IsCaptionAssigned = True
       Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
       DataBinding.FieldName = 'InfoMoneyDestinationName'
-      Visible = True
+      Hidden = True
       UniqueName = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
     end
     object clInfoMoneyName: TcxDBPivotGridField
-      AreaIndex = 7
+      AreaIndex = 5
       IsCaptionAssigned = True
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
       DataBinding.FieldName = 'InfoMoneyName'
-      Visible = True
+      Hidden = True
       UniqueName = #1059#1055' '#1089#1090#1072#1090#1100#1103
     end
     object clOperYear: TcxDBPivotGridField
+      Area = faColumn
       AreaIndex = 0
       IsCaptionAssigned = True
       Caption = #1043#1086#1076
       DataBinding.FieldName = 'OperYear'
+      DisplayFormat = 'YY'
+      PropertiesClassName = 'TcxDateEditProperties'
+      Properties.DisplayFormat = 'YYYY'
       Visible = True
       UniqueName = #1059#1055' '#1089#1090#1072#1090#1100#1103
     end
     object clOperMonth: TcxDBPivotGridField
+      Area = faColumn
       AreaIndex = 1
       IsCaptionAssigned = True
       Caption = #1052#1077#1089#1103#1094
       DataBinding.FieldName = 'OperMonth'
+      PropertiesClassName = 'TcxDateEditProperties'
+      Properties.DisplayFormat = 'YYYY MMMM'
       Visible = True
       UniqueName = #1059#1055' '#1089#1090#1072#1090#1100#1103
     end
@@ -195,18 +202,83 @@ object Report_ProfitLossPeriodForm: TReport_ProfitLossPeriodForm
       Caption = #1057#1091#1084#1084#1072
       DataBinding.FieldName = 'Amount'
       PropertiesClassName = 'TcxCurrencyEditProperties'
-      Properties.DisplayFormat = ',0.;-,0.'
+      Properties.DisplayFormat = ',0.;-,0. ; ;'
       Visible = True
       UniqueName = #1057#1091#1084#1084#1072
     end
-  end
-  object cbTotal: TcxCheckBox
-    Left = 134
-    Top = 163
-    Caption = 'C'#1075#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100
-    Properties.ReadOnly = False
-    TabOrder = 6
-    Width = 101
+    object clPercent: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 3
+      AllowedAreas = [faData]
+      IsCaptionAssigned = True
+      Caption = '% '#1086#1090#1082#1083'. '#1087#1088#1086#1096#1083'. '#1087#1077#1088#1080#1086#1076
+      DataBinding.FieldName = 'Percent'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DisplayFormat = ',0.#;-,0.#; ;'
+      Visible = True
+      UniqueName = #1057#1091#1084#1084#1072
+    end
+    object PercentMonth: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 4
+      IsCaptionAssigned = True
+      Caption = '% '#1086#1090#1082#1083'. '#1087#1088#1086#1096#1083'. '#1084#1077#1089'.'
+      DataBinding.FieldName = 'PercentMonth'
+      Visible = True
+      UniqueName = '% '#1086#1090#1082#1083'. '#1087#1088#1086#1096#1083'. '#1084#1077#1089'.'
+    end
+    object clAmountDif: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 1
+      AllowedAreas = [faData]
+      IsCaptionAssigned = True
+      Caption = #1056#1072#1079#1085#1080#1094#1072
+      DataBinding.FieldName = 'AmountDif'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DisplayFormat = ',0.;-,0. ; ;'
+      Hidden = True
+      UniqueName = #1057#1091#1084#1084#1072
+    end
+    object clAmountPast: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 5
+      AllowedAreas = [faData]
+      IsCaptionAssigned = True
+      Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1086#1096#1083#1099#1081' '#1087#1077#1088#1080#1086#1076')'
+      DataBinding.FieldName = 'AmountPast'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DisplayFormat = ',0.;-,0. ; ;'
+      ImageAlign = taCenter
+      Hidden = True
+      Width = 70
+      UniqueName = #1057#1091#1084#1084#1072
+    end
+    object clAmountMonthDif: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 2
+      AllowedAreas = [faData]
+      IsCaptionAssigned = True
+      Caption = #1056#1072#1079#1085#1080#1094#1072
+      DataBinding.FieldName = 'AmountMonthDif'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DisplayFormat = ',0.;-,0. ; ;'
+      Hidden = True
+      UniqueName = #1057#1091#1084#1084#1072
+    end
+    object clAmountMonthPast: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 6
+      AllowedAreas = [faData]
+      IsCaptionAssigned = True
+      Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1086#1096#1083#1099#1081' '#1087#1077#1088#1080#1086#1076')'
+      DataBinding.FieldName = 'AmountMonthPast'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DisplayFormat = ',0.;-,0. ; ;'
+      ImageAlign = taCenter
+      Hidden = True
+      Width = 70
+      UniqueName = #1057#1091#1084#1084#1072
+    end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -238,6 +310,16 @@ object Report_ProfitLossPeriodForm: TReport_ProfitLossPeriodForm
           'Left'
           'Top'
           'Width')
+      end
+      item
+        Component = deStart2
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deEnd2
+        Properties.Strings = (
+          'Date')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -306,14 +388,6 @@ object Report_ProfitLossPeriodForm: TReport_ProfitLossPeriodForm
         end
         item
           Visible = True
-          ItemName = 'dxBarControlContainerItem1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -348,13 +422,6 @@ object Report_ProfitLossPeriodForm: TReport_ProfitLossPeriodForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
-    end
-    object dxBarControlContainerItem1: TdxBarControlContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
-      Control = cbTotal
     end
   end
   object ActionList: TActionList
@@ -683,7 +750,6 @@ object Report_ProfitLossPeriodForm: TReport_ProfitLossPeriodForm
         item
           Name = 'isTotal'
           Value = Null
-          Component = cbTotal
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -939,8 +1005,8 @@ object Report_ProfitLossPeriodForm: TReport_ProfitLossPeriodForm
       end>
     ColorRuleList = <>
     SummaryList = <>
-    Left = 424
-    Top = 240
+    Left = 80
+    Top = 320
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1113,5 +1179,33 @@ object Report_ProfitLossPeriodForm: TReport_ProfitLossPeriodForm
     DateEnd = deEnd2
     Left = 688
     Top = 8
+  end
+  object cfCalcPercent: TdsdPivotGridCalcFields
+    PivotGrid = cxDBPivotGrid
+    CalcField = clPercent
+    GridFields = <
+      item
+        Field = clAmountDif
+      end
+      item
+        Field = clAmountPast
+      end>
+    CalcFieldsType = cfPercent
+    Left = 520
+    Top = 248
+  end
+  object cfCalcPercentMonth: TdsdPivotGridCalcFields
+    PivotGrid = cxDBPivotGrid
+    CalcField = PercentMonth
+    GridFields = <
+      item
+        Field = clAmountMonthDif
+      end
+      item
+        Field = clAmountMonthPast
+      end>
+    CalcFieldsType = cfPercent
+    Left = 504
+    Top = 312
   end
 end
