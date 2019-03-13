@@ -21,6 +21,10 @@ RETURNS TABLE (GoodsId        Integer,
                Price          TFloat,
                Amount         TFloat,
                Summa          TFloat,
+               AmountSale     TFloat,
+               SummaSale      TFloat,
+               AmountDiff     TFloat,
+               SummaDiff      TFloat,
                isTOP    Boolean,
                isFirst  Boolean,
                isSecond Boolean,
@@ -41,26 +45,26 @@ BEGIN
     RETURN QUERY
     WITH
         tmpUnit AS (SELECT inUnitId AS UnitId
-                WHERE COALESCE (inUnitId, 0) <> 0 
-                  AND inisUnitList = FALSE
-               UNION 
-                SELECT ObjectLink_Unit_Juridical.ObjectId     AS UnitId
-                FROM ObjectLink AS ObjectLink_Unit_Juridical
-                     INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                           ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                          AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                          AND ((ObjectLink_Juridical_Retail.ChildObjectId = inRetailId AND inUnitId = 0)
-                                               OR (inRetailId = 0 AND inUnitId = 0))
-                WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                  AND (ObjectLink_Unit_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
-                  AND inisUnitList = FALSE
-               UNION
-                SELECT ObjectBoolean_Report.ObjectId          AS UnitId
-                FROM ObjectBoolean AS ObjectBoolean_Report
-                WHERE ObjectBoolean_Report.DescId = zc_ObjectBoolean_Unit_Report()
-                  AND ObjectBoolean_Report.ValueData = TRUE
-                  AND inisUnitList = TRUE
-             )
+                    WHERE COALESCE (inUnitId, 0) <> 0 
+                      AND inisUnitList = FALSE
+                   UNION 
+                    SELECT ObjectLink_Unit_Juridical.ObjectId     AS UnitId
+                    FROM ObjectLink AS ObjectLink_Unit_Juridical
+                         INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                               ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                              AND ((ObjectLink_Juridical_Retail.ChildObjectId = inRetailId AND inUnitId = 0)
+                                                   OR (inRetailId = 0 AND inUnitId = 0))
+                    WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                      AND (ObjectLink_Unit_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
+                      AND inisUnitList = FALSE
+                   UNION
+                    SELECT ObjectBoolean_Report.ObjectId          AS UnitId
+                    FROM ObjectBoolean AS ObjectBoolean_Report
+                    WHERE ObjectBoolean_Report.DescId = zc_ObjectBoolean_Unit_Report()
+                      AND ObjectBoolean_Report.ValueData = TRUE
+                      AND inisUnitList = TRUE
+                 )
 
       -- Виды отказов
       , tmpDiffKind AS (SELECT Object_DiffKind.Id                     AS Id
@@ -112,12 +116,7 @@ BEGIN
                               , MILO_DiffKind.ObjectId
                               , MI_Float_Price.ValueData
                        )
-/*      , tmpMovementOrder AS (SELECT Movement.*
-                             FROM (SELECT DISTICT tmpData_MI.MovementId_Order FROM tmpData_MI) AS tmp
-                                  LEFT JOIN Movement ON Movement.Id = tmp.MovementId_Order
-                             )*/
 
---      , tmpGoods_Params AS ()
       -- Маркетинговый контракт
       , GoodsPromo AS (SELECT DISTINCT ObjectLink_Child_retail.ChildObjectId AS GoodsId  -- здесь товар "сети"
                                      , ObjectLink_Goods_Object.ChildObjectId AS ObjectId
@@ -141,7 +140,24 @@ BEGIN
         , tmpGoodsSP AS (SELECT DISTINCT tmp.GoodsId, TRUE AS isSP
                          FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= inStartDate, inEndDate:= inEndDate) AS tmp
                          )
+
+      -- продажи
+      , tmpCheck AS (SELECT --MIContainer.WhereObjectId_analyzer          AS UnitId
+                            MIContainer.ObjectId_analyzer               AS GoodsId
+                          , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount
+                          , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS SummaSale
+                     FROM MovementItemContainer AS MIContainer
+                          INNER JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
+                          INNER JOIN (SELECT DISTINCT tmpData_MI.GoodsId FROM tmpData_MI) AS tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
+                     WHERE MIContainer.DescId = zc_MIContainer_Count()
+                       AND MIContainer.MovementDescId = zc_Movement_Check()
+                       AND MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY'
+                     GROUP BY MIContainer.ObjectId_analyzer 
+                            --, MIContainer.WhereObjectId_analyzer
+                     HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
+                     )
                           
+   
         SELECT
              Object_Goods_View.Id                      AS GoodsId
            , Object_Goods_View.GoodsCodeInt  ::Integer AS GoodsCode
@@ -152,6 +168,12 @@ BEGIN
            , tmpData.Price             ::TFloat AS Price
            , tmpData.Amount            ::TFloat AS Amount
            , tmpData.Summa             ::TFloat AS Summa
+           
+           , tmpCheck.Amount           ::TFloat AS AmountSale
+           , tmpCheck.SummaSale        ::TFloat AS SummaSale
+           , (COALESCE (tmpData.Amount,0) - COALESCE (tmpCheck.Amount,0))    :: TFloat AS AmountDiff
+           , (COALESCE (tmpData.Summa, 0) - COALESCE (tmpCheck.SummaSale,0)) :: TFloat AS SummaDiff
+           
            , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false)    :: Boolean AS isTOP
            , COALESCE(ObjectBoolean_Goods_First.ValueData, False)  :: Boolean AS isFirst
            , COALESCE(ObjectBoolean_Goods_Second.ValueData, False) :: Boolean AS isSecond
@@ -186,9 +208,8 @@ BEGIN
                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
 
             LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
-            /*LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SP 
-                                    ON ObjectBoolean_Goods_SP.ObjectId = ObjectLink_Main.ChildObjectId 
-                                   AND ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()*/
+            LEFT JOIN tmpCheck ON tmpCheck.GoodsId = tmpData.GoodsId
+
 
         ORDER BY GoodsGroupName
                , GoodsName;

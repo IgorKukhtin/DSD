@@ -162,6 +162,15 @@ inherited PriceChangeForm: TPriceChangeForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
+          object Multiplicity: TcxGridDBColumn
+            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1086#1090#1087#1091#1089#1082#1072
+            DataBinding.FieldName = 'Multiplicity'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 74
+          end
           object StartDate: TcxGridDBColumn
             Caption = #1048#1089#1090#1086#1088#1080#1103' '#1089
             DataBinding.FieldName = 'StartDate'
@@ -1236,6 +1245,15 @@ inherited PriceChangeForm: TPriceChangeForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PercentMarkup'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMultiplicity'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Multiplicity'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
