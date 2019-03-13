@@ -101,7 +101,7 @@ BEGIN
            , MovementDate_Insert.ValueData          AS InsertDate
            , Object_Insert.ValueData                AS InsertName
 
-           , CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() 
+   /*        , CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() 
                   THEN MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
                   ELSE COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
              END :: TFloat AS TotalSumm_f1            -- оплата б/н
@@ -110,7 +110,30 @@ BEGIN
                   THEN COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
                   ELSE MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
              END :: TFloat AS TotalSumm_f2            -- оплата нал
-             
+*/
+           , CASE WHEN Object_CurrencyDocument.Id = zc_Enum_Currency_Basis() 
+                  THEN CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() 
+                            THEN MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                            ELSE COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                       END 
+                  ELSE CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() 
+                            THEN MovementFloat_TotalSummCurrency.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                            ELSE COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                       END 
+             END  :: TFloat AS TotalSumm_f1            -- оплата б/н
+
+           , CASE WHEN Object_CurrencyDocument.Id = zc_Enum_Currency_Basis() 
+                  THEN CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() 
+                            THEN COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                            ELSE MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                       END
+                  ELSE CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() 
+                            THEN COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                            ELSE MovementFloat_TotalSummCurrency.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                       END
+             END
+             :: TFloat AS TotalSumm_f2            -- оплата нал
+
            , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData     AS VATPercent
            , MovementFloat_ChangePercent.ValueData  AS ChangePercent
@@ -184,6 +207,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPayOth
                                     ON MovementFloat_TotalSummPayOth.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummPayOth.DescId = zc_MovementFloat_TotalSummPayOth()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummCurrency
+                                    ON MovementFloat_TotalSummCurrency.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummCurrency.DescId = zc_MovementFloat_AmountCurrency()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
