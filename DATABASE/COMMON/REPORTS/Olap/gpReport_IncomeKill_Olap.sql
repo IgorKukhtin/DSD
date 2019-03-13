@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpReport_IncomeKill_Olap (TDateTime, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_IncomeKill_Olap (
-    IN inStartDate          TDateTime ,  
+    IN inStartDate          TDateTime ,
     IN inEndDate            TDateTime ,
     IN inGoodsId            Integer   ,
     IN inSession            TVarChar       -- сессия пользователя
@@ -13,16 +13,17 @@ RETURNS TABLE (Num           Integer
              , Col_Name      TVarChar
              , JuridicalName TVarChar
              , Value         TFloat
+             , ValueAmount   TFloat
              , Color_calc    Integer
              , SummType      Integer
-             )   
+             )
 AS
 $BODY$
 BEGIN
 
     -- Результат
     RETURN QUERY
-      WITH 
+      WITH
            -- данные первого периода
            tmpMIContainer AS (SELECT MIContainer.ContainerId                 AS ContainerId
                                    , MIContainer.OperDate                    AS OperDate
@@ -72,7 +73,7 @@ BEGIN
                                                               AND COALESCE (MIContainer.AnalyzerId, 0) <> zc_Enum_AnalyzerId_Count_40200()
                                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                               ON MIFloat_Price.MovementItemId = MIContainer.MovementItemId
-                                                             AND MIFloat_Price.DescId = zc_MIFloat_Price() 
+                                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                                              AND MIContainer.DescId = zc_MIContainer_Count()
                               WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                 AND MIContainer.MovementDescId = zc_Movement_Income()
@@ -119,14 +120,14 @@ BEGIN
                                    , tmp.GoodsId
                                    , tmp.PartnerId
                                    , tmp.LocationId
-                                   , MovementLinkObject_From.ObjectId                                    
+                                   , MovementLinkObject_From.ObjectId
                             )
 
 
          , tmpContainer AS (SELECT tmpContainer.*
-                                 , CASE WHEN COALESCE (tmp2.MIPrice,0) = COALESCE (tmpContainer.MIPrice,0) THEN 1 ELSE 0 END AS isDop     
+                                 , CASE WHEN COALESCE (tmp2.MIPrice,0) = COALESCE (tmpContainer.MIPrice,0) THEN 1 ELSE 0 END AS isDop
                             FROM tmpContainer1 AS tmpContainer
-                                LEFT JOIN tmpContainer1 AS tmp2 
+                                LEFT JOIN tmpContainer1 AS tmp2
                                                         ON tmp2.MovementId = tmpContainer.MovementId
                                                        AND tmp2.PartnerId <> tmpContainer.PartnerId
                             )
@@ -165,7 +166,7 @@ BEGIN
                                           LEFT JOIN MovementItem ON MovementItem.MovementId = Movement_Master.Id
                                                                 AND MovementItem.DescId     = zc_MI_Master()
                                                                 AND MovementItem.isErased = FALSE
- 
+
                                           LEFT JOIN MovementItemFloat AS MIFloat_Taxi
                                                                       ON MIFloat_Taxi.MovementItemId =  MovementItem.Id
                                                                      AND MIFloat_Taxi.DescId = zc_MIFloat_Taxi()
@@ -192,7 +193,7 @@ BEGIN
 
 
 /*
-4261;"СВИНИНА н/к в/ш 2кат_*"  17 
+4261;"СВИНИНА н/к в/ш 2кат_*"  17
 2844;"ГОЛОВЫ СВ.*"             19
 4183;"ГОРЛО СВ."               20
 4187;"ТРАХЕЯ СВ."              21
@@ -201,55 +202,37 @@ BEGIN
          , tmpGoods AS (SELECT Object.Id
                         FROM Object
                         WHERE Object.Id IN (4261, 2844, 4183, 4187, 2550)
-                          AND Object.DescId = zc_Object_Goods() 
+                          AND Object.DescId = zc_Object_Goods()
                        )
 
-         , tmp AS (SELECT DISTINCT tmp.PartionGoods, tmp.LocationId
-                                 , Movement.Id AS MovementId
-                   FROM (SELECT DISTINCT tmp.PartionGoods, tmp.LocationId FROM tmpContainer AS tmp) AS tmp
-                         INNER JOIN MovementString AS MovementString_PartionGoods
-                                                   ON MovementString_PartionGoods.ValueData = tmp.PartionGoods
-                                                  AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
-                         INNER JOIN Movement ON Movement.Id = MovementString_PartionGoods.MovementId
-                                            AND Movement.DescId = zc_Movement_ProductionSeparate()
-                                            AND Movement.StatusId = zc_Enum_Status_Complete()
-                                   )
- 
-         , tmpSummIn AS (SELECT MIContainer.MovementItemId
-                              , SUM (MIContainer.Amount) AS SummIn
-                             FROM tmp
-                                  LEFT JOIN MovementItemContainer AS MIContainer
-                                                                  ON MIContainer.MovementId = tmp.MovementId
-                                                                 AND MIContainer.DescId     = zc_MIContainer_Summ()
-                                                                 AND MIContainer.isActive   = TRUE
-                             GROUP BY MIContainer.MovementItemId
-                             )
          , tmpSeparate AS (SELECT tmp.PartionGoods
                                 , SUM (CASE WHEN MI_Child.ObjectId = 4261 THEN MI_Child.Amount ELSE 0 END) AS Amount_17
                                 , SUM (CASE WHEN MI_Child.ObjectId = 2844 THEN MI_Child.Amount ELSE 0 END) AS Amount_19
                                 , SUM (CASE WHEN MI_Child.ObjectId = 4183 THEN MI_Child.Amount ELSE 0 END) AS Amount_20
                                 , SUM (CASE WHEN MI_Child.ObjectId = 4187 THEN MI_Child.Amount ELSE 0 END) AS Amount_21
                                 , SUM (CASE WHEN MI_Child.ObjectId = 2550 THEN MI_Child.Amount ELSE 0 END) AS Amount_22
-                                , SUM (CASE WHEN MI_Child.ObjectId = 4261 THEN tmpSummIn.SummIn ELSE 0 END) AS SummIn_17
-                           FROM tmp 
+                           FROM (SELECT DISTINCT tmp.PartionGoods, tmp.LocationId FROM tmpContainer AS tmp) AS tmp
+                                 INNER JOIN MovementString AS MovementString_PartionGoods
+                                                           ON MovementString_PartionGoods.ValueData = tmp.PartionGoods
+                                                          AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
+                                 INNER JOIN Movement ON Movement.Id = MovementString_PartionGoods.MovementId
+                                           AND Movement.DescId = zc_Movement_ProductionSeparate()
+                                           AND Movement.StatusId = zc_Enum_Status_Complete()
+
                                  INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                                        ON MovementLinkObject_From.MovementId = tmp.MovementId
+                                                                        ON MovementLinkObject_From.MovementId = Movement.Id
                                                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                                                        AND MovementLinkObject_From.ObjectId = tmp.LocationId
                                  JOIN MovementItem AS MI_Master
-                                                   ON MI_Master.MovementId = tmp.MovementId
+                                                   ON MI_Master.MovementId = Movement.Id
                                                   AND MI_Master.DescId   = zc_MI_Master()
                                                   AND MI_Master.isErased = FALSE
                                                   AND MI_Master.ObjectId = 5225
                                  JOIN MovementItem AS MI_Child
-                                                   ON MI_Child.MovementId =  tmp.MovementId -- 12095222
+                                                   ON MI_Child.MovementId =  Movement.Id -- 12095222
                                                   AND MI_Child.DescId     = zc_MI_Child()
                                                   AND MI_Child.isErased   = False
                                  JOIN  tmpGoods ON tmpGoods.Id = MI_Child.ObjectId
-                                 
-                                 LEFT JOIN tmpSummIn ON tmpSummIn.MovementItemId = MI_Child.Id
-                                                    AND MI_Child.ObjectId = 4261
-
                            GROUP BY tmp.PartionGoods
                            )
 
@@ -284,7 +267,7 @@ BEGIN
                                      , SUM (tmpContainer.SUM_f2)                  AS SUM_f2
                                      , SUM (tmpContainer.Amount_f2)               AS Amount_f2
                                  FROM tmpContainer
-                                 GROUP BY tmpContainer.GoodsId       
+                                 GROUP BY tmpContainer.GoodsId
                                         , tmpContainer.OperDate
                                         , tmpContainer.JuridicalId
                                         , tmpContainer.PartionGoods
@@ -292,7 +275,7 @@ BEGIN
                                         , tmpContainer.MovementId
                                  ) AS tmpContainer
                                    LEFT JOIN tmpTransportCost ON tmpTransportCost.MovementId = tmpContainer.MovementId
-                         GROUP BY tmpContainer.GoodsId       
+                         GROUP BY tmpContainer.GoodsId
                                 , tmpContainer.OperDate
                                 , tmpContainer.JuridicalId
                                 , tmpContainer.PartionGoods
@@ -314,7 +297,7 @@ BEGIN
                                                        AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                             )
 */
-         
+
          , tmpOperationGroupAll AS (SELECT tmp.OperDate
                                       , tmp.JuridicalId
                                       , tmp.Amount_Weight
@@ -340,7 +323,6 @@ BEGIN
                                       , tmpSeparate.Amount_20
                                       , tmpSeparate.Amount_21
                                       , tmpSeparate.Amount_22
-                                      , tmpSeparate.SummIn_17
 
                                       , tmp.Amount_23
                                       , tmp.Amount_24
@@ -372,22 +354,24 @@ BEGIN
                                          LEFT JOIN tmpSeparate ON tmpSeparate.PartionGoods = tmp.PartionGoods
                                    )
 
-         , tmpOperationGroup AS (SELECT '01. Ж.В ФАКТ' AS Col_Name    
+         , tmpOperationGroup AS (SELECT '01. Ж.В ФАКТ' AS Col_Name
                                       , 1 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Amount_Weight  AS Value
+                                      , 0::TFloat                           AS ValueAmount
                                       , zc_Color_White() AS Color_calc
-                                    --  , zc_PivotSummartType_Sum() :: Integer AS SummType
+                                      , zc_PivotSummartType_Sum() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '02. К-во голов' AS Col_Name
-                                      , 2 AS Num      
+                                      , 2 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.HeadCount
+                                      , 0::TFloat
                                       , zc_Color_White() AS Color_calc
-                                    --  , zc_PivotSummartType_Sum() :: Integer AS SummType
+                                      , zc_PivotSummartType_Sum() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '03. Сред. Вес 1 головы' AS Col_Name
@@ -395,71 +379,79 @@ BEGIN
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , CASE WHEN COALESCE (tmpOperationGroupAll.HeadCount, 0) <> 0 THEN tmpOperationGroupAll.Amount_Weight / tmpOperationGroupAll.HeadCount ELSE 0 END-- tmpOperationGroupAll.HeadCount_one
+                                      , tmpOperationGroupAll.HeadCount
                                       , zc_Color_White() AS Color_calc
-                                     -- , zc_PivotSummartType_Average() :: Integer AS SummType
+                                      , zc_PivotSummartType_AveragePrice() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '04. ВЕС НАКЛАД. БН' AS Col_Name
-                                      , 4 AS Num    
+                                      , 4 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.AmountPartner_Weight
+                                      , 0::TFloat
                                       , 12713983  AS Color_calc   -- зеленая беж  -- поярче 6608867
-                                    --  , zc_PivotSummartType_Sum() :: Integer AS SummType
+                                      , zc_PivotSummartType_Sum() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '05. ЦЕНА-НАКЛАД. БН' AS Col_Name
-                                      , 5 AS Num     
+                                      , 5 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.PricePartner
+                                      , tmpOperationGroupAll.AmountPartner_Weight
                                       , 12713983 AS Color_calc   -- зеленая беж
-                                    --  , zc_PivotSummartType_Average() :: Integer AS SummType
+                                      , zc_PivotSummartType_AveragePrice() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '06. ВСЕГО СУММА БН' AS Col_Name
-                                      , 6 AS Num       
+                                      , 6 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
-                                      , tmpOperationGroupAll.TotalSumm      
-                                      , 12713983 AS Color_calc           -- зеленая беж  
-                                  --    , zc_PivotSummartType_Sum() :: Integer AS SummType                     
+                                      , tmpOperationGroupAll.TotalSumm
+                                      , 0::TFloat
+                                      , 12713983 AS Color_calc           -- зеленая беж
+                                      , zc_PivotSummartType_Sum() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '07. доплата за вес, кг' AS Col_Name
-                                      , 7 AS Num       
+                                      , 7 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
-                                      , tmpOperationGroupAll.Amount_7    
-                                      , zc_Color_White() AS Color_calc 
-                                  --    , zc_PivotSummartType_Sum() :: Integer AS SummType                                 
+                                      , tmpOperationGroupAll.Amount_7
+                                      , 0::TFloat
+                                      , zc_Color_White() AS Color_calc
+                                      , zc_PivotSummartType_Sum() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '08. ДОПЛАТА ВЕС-НАЛ, грн' AS Col_Name
-                                      , 8 AS Num       
+                                      , 8 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
-                                      , tmpOperationGroupAll.Amount_8    
+                                      , tmpOperationGroupAll.Amount_8
+                                      , 0::TFloat
                                       , zc_Color_White() AS Color_calc
-                                  --    , zc_PivotSummartType_Sum() :: Integer AS SummType                                 
+                                      , zc_PivotSummartType_Sum() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '09. КОПЕЙКИ' AS Col_Name
-                                      , 9 AS Num       
+                                      , 9 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
-                                      , tmpOperationGroupAll.Amount_9        
+                                      , tmpOperationGroupAll.Amount_9
+                                      , 0::TFloat
                                       , zc_Color_White() AS Color_calc
-                                  --    , zc_PivotSummartType_Sum() :: Integer AS SummType                            
+                                      , zc_PivotSummartType_Sum() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '10. ДОПЛАТА КОПЕЙКИ, грн' AS Col_Name
-                                      , 10 AS Num       
+                                      , 10 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Amount_10
+                                      , 0::TFloat
                                       , zc_Color_White() AS Color_calc
-                                  --    , zc_PivotSummartType_Sum() :: Integer AS SummType                                  
+                                      , zc_PivotSummartType_Sum() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '11. ВСЕГО ДОПЛАТА заготовителю' AS Col_Name
@@ -467,35 +459,39 @@ BEGIN
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.SUM_f2
+                                      , 0::TFloat
                                       , zc_Color_White() AS Color_calc
-                                  --    , zc_PivotSummartType_Sum() :: Integer AS SummType
+                                      , zc_PivotSummartType_Sum() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '12. От заготовителя- излишек,кг' AS Col_Name
-                                      , 12 AS Num      
+                                      , 12 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.AmountWeight_diff
+                                      , 0::TFloat
                                       , zc_Color_White() AS Color_calc   -- цвет  шрифта
-                                     -- , zc_PivotSummartType_Sum() :: Integer AS SummType
+                                      , zc_PivotSummartType_Sum() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '13. от заготовщик-цена' AS Col_Name
-                                      , 13 AS Num      
+                                      , 13 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Price_f2
+                                      , tmpOperationGroupAll.AmountWeight_diff
                                       , zc_Color_White() AS Color_calc
-                                     -- , zc_PivotSummartType_Average() :: Integer AS SummType
+                                      , zc_PivotSummartType_AveragePrice() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '14. ВСЕГО СУММА' AS Col_Name
-                                      , 14 AS Num  
+                                      , 14 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Summ
+                                      , 0::TFloat
                                       , zc_Color_White() AS Color_calc
-                                     -- , zc_PivotSummartType_Sum() :: Integer AS SummType                              
+                                      , zc_PivotSummartType_Sum() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '15. ЦЕНА Ж.В.-ФАКТ' AS Col_Name
@@ -503,8 +499,9 @@ BEGIN
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Price
+                                      , tmpOperationGroupAll.Amount_Weight
                                       , zc_Color_White() AS Color_calc
-                                    --  , zc_PivotSummartType_Average() :: Integer AS SummType
+                                      , zc_PivotSummartType_AveragePrice() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '16. ВЫХОД ФАКТ, %' AS Col_Name
@@ -512,8 +509,9 @@ BEGIN
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , CASE WHEN COALESCE (tmpOperationGroupAll.Amount_Weight,0) <> 0 THEN ROUND (tmpOperationGroupAll.Amount_17 / tmpOperationGroupAll.Amount_Weight * 100, 1) ELSE 0 END
+                                      , tmpOperationGroupAll.Amount_Weight * 100
                                       , zc_Color_White() AS Color_calc
-                                     -- , zc_PivotSummartType_Average() :: Integer AS SummType
+                                      , zc_PivotSummartType_AveragePrice() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '17. СВИНИНА Н/К' AS Col_Name
@@ -521,17 +519,19 @@ BEGIN
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Amount_17
+                                      , 0::TFloat
                                       , 11452916 AS Color_calc
-                                     -- , zc_PivotSummartType_Sum() :: Integer AS SummType
+                                      , zc_PivotSummartType_Sum() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '18. цена СВИНИНА Н/К' AS Col_Name
                                       , 18 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
-                                      , CASE WHEN COALESCE (tmpOperationGroupAll.Amount_17,0) <> 0 THEN tmpOperationGroupAll.SummIn_17 / tmpOperationGroupAll.Amount_17 ELSE 0 END AS Value
+                                      , CASE WHEN COALESCE (tmpOperationGroupAll.Amount_17,0) <>0 THEN tmpOperationGroupAll.TotalSumm / tmpOperationGroupAll.Amount_17 ELSE 0 END AS Value
+                                      , tmpOperationGroupAll.Amount_17
                                       , zc_Color_White() AS Color_calc
-                                      --, zc_PivotSummartType_Average() :: Integer AS SummType
+                                      , zc_PivotSummartType_AveragePrice() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '19. ГОЛОВЫ СВ.' AS Col_Name
@@ -539,8 +539,9 @@ BEGIN
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Amount_19
+                                      , 0::TFloat
                                       , 10733211 AS Color_calc
-                                      --, zc_PivotSummartType_Sum() :: Integer AS SummType
+                                      , zc_PivotSummartType_Sum() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '20. Горло св.' AS Col_Name
@@ -548,8 +549,9 @@ BEGIN
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Amount_20
+                                      , 0::TFloat
                                       , 10733211 AS Color_calc
-                                     -- , zc_PivotSummartType_Sum() :: Integer AS SummType
+                                      , zc_PivotSummartType_Sum() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '21. Трахея св.' AS Col_Name
@@ -557,8 +559,9 @@ BEGIN
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Amount_21
+                                      , 0::TFloat
                                       , 10733211 AS Color_calc
-                                     -- , zc_PivotSummartType_Sum() :: Integer AS SummType
+                                      , zc_PivotSummartType_Sum() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '22. Язык св.' AS Col_Name
@@ -566,8 +569,9 @@ BEGIN
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Amount_22
+                                      , 0::TFloat
                                       , 10733211 AS Color_calc
-                                     -- , zc_PivotSummartType_Sum() :: Integer AS SummType
+                                      , zc_PivotSummartType_Sum() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '23. Погрузка' AS Col_Name
@@ -575,8 +579,9 @@ BEGIN
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Amount_23
+                                      , 0::TFloat
                                       , zc_Color_White() AS Color_calc
-                                     -- , zc_PivotSummartType_Sum() :: Integer AS SummType
+                                      , zc_PivotSummartType_Sum() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '24. транс- расх.' AS Col_Name
@@ -584,8 +589,9 @@ BEGIN
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Amount_24
+                                      , 0::TFloat
                                       , zc_Color_White() AS Color_calc
-                                      --, zc_PivotSummartType_Sum() :: Integer AS SummType
+                                      , zc_PivotSummartType_Sum() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                 UNION
                                  SELECT '25. Такси+командиров.' AS Col_Name
@@ -593,24 +599,25 @@ BEGIN
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
                                       , tmpOperationGroupAll.Amount_25
+                                      , 0::TFloat
                                       , zc_Color_White() AS Color_calc
-                                      --, zc_PivotSummartType_Sum() :: Integer AS SummType
+                                      , zc_PivotSummartType_Sum() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
                                  )
 
-      -- Результат 
+      -- Результат
       SELECT tmpOperationGroup.Num
            , tmpOperationGroup.OperDate   :: TDateTime
            , tmpOperationGroup.Col_Name   :: TVarChar
            , Object_Juridical.ValueData                AS JuridicalName
            , tmpOperationGroup.Value      :: TFloat
+           , tmpOperationGroup.ValueAmount:: TFloat
            , tmpOperationGroup.Color_calc :: Integer
-           , 0 AS SummType  -- , tmpOperationGroup.SummType   :: Integer
-          
+           , tmpOperationGroup.SummType   :: Integer
         FROM tmpOperationGroup
              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpOperationGroup.JuridicalId
         ;
-         
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

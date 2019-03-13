@@ -80,6 +80,7 @@ type
     cfPrice: TdsdPivotGridCalcFields;
     cfPricePartner: TdsdPivotGridCalcFields;
     Color_calc: TcxDBPivotGridField;
+    pvValueAmount: TcxDBPivotGridField;
   private
   public
   end;

@@ -212,11 +212,11 @@ BEGIN
     --
     INSERT INTO _tmpList (UnitId, AreaId, GoodsId, GoodsId_retail)
 
-                SELECT DISTINCT
+                SELECT DISTINCT 
                        _tmpUnitMinPrice_List.UnitId
                      , _tmpUnitMinPrice_List.AreaId
                      , _tmpGoodsMinPrice_List.GoodsId
-                     , ObjectLink_Child_R.ChildObjectId AS GoodsId_retail
+                     , _tmpGoodsMinPrice_List.GoodsId_retail
                 FROM _tmpGoodsMinPrice_List
                      CROSS JOIN _tmpUnitMinPrice_List -- ON 1=1
                      LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
@@ -225,17 +225,8 @@ BEGIN
                      LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                           ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                          AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
-                     INNER JOIN ObjectLink AS ObjectLink_Child
-                                           ON ObjectLink_Child.ChildObjectId = _tmpGoodsMinPrice_List.GoodsId
-                                          AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                     INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                              AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                     INNER JOIN ObjectLink AS ObjectLink_Main_R ON ObjectLink_Main_R.ChildObjectId = ObjectLink_Main.ChildObjectId
-                                                               AND ObjectLink_Main_R.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                     INNER JOIN ObjectLink AS ObjectLink_Child_R ON ObjectLink_Child_R.ObjectId = ObjectLink_Main_R.ObjectId
-                                                                AND ObjectLink_Child_R.DescId   = zc_ObjectLink_LinkGoods_Goods()
                      INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                           ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_R.ChildObjectId
+                                           ON ObjectLink_Goods_Object.ObjectId = _tmpGoodsMinPrice_List.GoodsId_retail
                                           AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                           AND ObjectLink_Goods_Object.ChildObjectId = ObjectLink_Juridical_Retail.ChildObjectId
                 ;
@@ -345,24 +336,24 @@ BEGIN
     -- Результат
     RETURN QUERY
        WITH tmpMI_Deferred AS
-               (SELECT tmpList.UnitId
+               (SELECT MovementLinkObject_Unit.ObjectId AS UnitId
                      , MovementItem.ObjectId     AS GoodsId
                      , SUM (MovementItem.Amount) AS Amount
-                FROM _tmpUnitMinPrice_List AS tmpList
-                     INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                   ON MovementLinkObject_Unit.ObjectId = tmpList.UnitId
-                                                  AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                     INNER JOIN MovementBoolean AS MovementBoolean_Deferred
-                                                ON MovementBoolean_Deferred.MovementId = MovementLinkObject_Unit.MovementId
-                                               AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
-                                               AND MovementBoolean_Deferred.ValueData = TRUE
-                     INNER JOIN Movement ON Movement.Id       = MovementLinkObject_Unit.MovementId
+                FROM MovementBoolean AS MovementBoolean_Deferred
+                     INNER JOIN Movement ON Movement.Id       = MovementBoolean_Deferred.MovementId
                                         AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                         AND Movement.DescId   = zc_Movement_Check()
+
+                     INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                   ON MovementLinkObject_Unit.movementid = Movement.Id
+                                                  AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                             AND MovementItem.isErased   = FALSE
-                                            AND MovementItem.ObjectId IN (SELECT _tmpList.GoodsId_retail FROM _tmpList)
-                GROUP BY tmpList.UnitId
+
+                WHERE MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                  AND MovementBoolean_Deferred.ValueData = TRUE
+                GROUP BY MovementLinkObject_Unit.ObjectId
                        , MovementItem.ObjectId
                )
           , MarginCategory_Unit AS
