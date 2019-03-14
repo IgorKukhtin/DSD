@@ -486,7 +486,7 @@ end if;
                      FROM MovementLinkMovement AS MLM_Order
                           JOIN Movement ON Movement.Id = MLM_Order.MovementChildId
                                        AND Movement.DescId = zc_Movement_SendOnPrice()
-                                       AND Movement.OperDate BETWEEN inOperDate - INTERVAL '8 DAY' AND inOperDate
+                                       AND Movement.OperDate BETWEEN inOperDate - INTERVAL '20 DAY' AND inOperDate
                      WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
                     )
           THEN

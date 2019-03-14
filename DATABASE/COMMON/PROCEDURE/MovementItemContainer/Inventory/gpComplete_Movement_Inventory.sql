@@ -179,8 +179,10 @@ BEGIN
 
 
      IF inMovementId IN (11270863 , 11250369, 11648660)
+        -- OR 1=1
      THEN 
          vbIsLastOnMonth:= FALSE;
+         -- RAISE EXCEPTION '<%>', ;
      END IF;
 
 
