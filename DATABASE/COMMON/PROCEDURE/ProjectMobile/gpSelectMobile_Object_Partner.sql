@@ -306,9 +306,9 @@ BEGIN
 
                     -- в следующем порядке: 1.1) ---акционный у контрагента 1.2) ---акционный у договора 1.3) ---акционный у юр.лица 2.1) обычный у контрагента 2.2) обычный у договора 2.3) обычный у юр.лица 3) zc_PriceList_Basis
                   , COALESCE (ObjectLink_Partner_PriceList.ChildObjectId
-                  , COALESCE (tmpContract.PriceListId
-                  , COALESCE (ObjectLink_Juridical_PriceList.ChildObjectId
-                            , zc_PriceList_Basis()))) AS PriceListId
+                            , COALESCE (tmpContract.PriceListId
+                                      , COALESCE (ObjectLink_Juridical_PriceList.ChildObjectId
+                                                , zc_PriceList_Basis()))) AS PriceListId
 
                     -- так для возвратов ГП по "старым ценам" - 1) обычный у контрагента 2) обычный у юр.лица 3) zc_PriceList_BasisPrior
                   , COALESCE (ObjectLink_Partner_PriceListPrior.ChildObjectId, COALESCE (ObjectLink_Juridical_PriceListPrior.ChildObjectId, zc_PriceList_Basis() /*zc_PriceList_BasisPrior()*/)) AS PriceListId_ret

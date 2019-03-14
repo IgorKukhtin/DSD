@@ -256,7 +256,8 @@ BEGIN
                                              , MI_ReturnIn.ObjectId
                                              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  
                                  )
-             SELECT (tmpGoodsListSale.Id + CASE WHEN Ord = 1 THEN 0 ELSE Ord * 100000000 END) :: Integer AS Id
+             -- SELECT (tmpGoodsListSale.Id + CASE WHEN Ord = 1 THEN 0 ELSE Ord * 100000000 END) :: Integer AS Id
+             SELECT (tmpGoodsListSale.Id + CASE WHEN Ord = 1 THEN 0 ELSE Ord * 10000000 END) :: Integer AS Id
                   , tmpGoodsListSale.GoodsId
                   , tmpGoodsListSale.GoodsKindId 
                   , tmpGoodsListSale.PartnerId

@@ -137,7 +137,12 @@ BEGIN
                                               AND ObjectHistoryFloat_PriceListItem_Value_Return.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
              WHERE Object_PriceListItem.DescId = zc_Object_PriceListItem()
                AND ((ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Order.ValueData, 0.0)) 
-                   + ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Sale.ValueData, 0.0))) <> 0.0);
+                   + ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Sale.ValueData, 0.0))) <> 0.0)
+             ORDER BY ObjectLink_PriceListItem_PriceList.ChildObjectId
+                    , ObjectLink_PriceListItem_Goods.ChildObjectId
+                    , ObjectHistory_PriceListItem_Return.StartDate DESC
+            ;
+                   
       END IF;
 
 END; 
@@ -151,6 +156,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelectMobile_Object_PriceListItems (inSyncDateIn := zc_DateStart(), inSession := '1000168') WHERE GoodsId = 477449
+-- SELECT * FROM gpSelectMobile_Object_PriceListItems (inSyncDateIn := zc_DateStart(), inSession := '1059546') WHERE GoodsId = 1045379 and PriceListId = zc_PriceList_Basis()
 -- SELECT * FROM gpSelectMobile_Object_PriceListItems (inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
 -- SELECT * FROM gpSelectMobile_Object_PriceListItems (inSyncDateIn := zc_DateStart(), inSession := '1000137')

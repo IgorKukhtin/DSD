@@ -205,7 +205,7 @@ BEGIN
         END IF;
     END IF;
 
-    -- дальше поиск уже черз ОКПО
+    -- дальше поиск уже через ОКПО
     IF COALESCE(vbJuridicalId, 0) = 0
     THEN
        -- Пытаемся найти расчетный счет ТОЛЬКО ВО ВНУТРЕННИХ ФИРМАХ!!!
@@ -249,29 +249,46 @@ BEGIN
     
 
         -- 1. если Приход
-        IF inAmount > 0 THEN
-    
-           -- 1.1. находим свойство <Договор> "по умолчанию" для inAmount > 0
-           SELECT MAX (View_Contract.ContractId) INTO vbContractId
-           FROM _tmpContract_find AS View_Contract
-                INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
-                                                AND InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_30000()) -- Доходы
-                                                -- AND inAmount > 0
-                INNER JOIN ObjectBoolean AS ObjectBoolean_Default
-                                         ON ObjectBoolean_Default.ObjectId  = View_Contract.ContractId
-                                        AND ObjectBoolean_Default.DescId    = zc_ObjectBoolean_Contract_Default()
-                                        AND ObjectBoolean_Default.ValueData = TRUE
-           WHERE View_Contract.JuridicalId = vbJuridicalId
-             AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-             AND View_Contract.isErased   = FALSE
-             AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm();
+        IF inAmount > 0
+        THEN
+           IF TRIM (inBankAccount) <> ''
+           THEN
+               -- 1.0. находим свойство <Договор> черз inBankAccount для inAmount > 0
+               SELECT ObjectString_BankAccountPartner.ObjectId INTO vbContractId
+               FROM ObjectString AS ObjectString_BankAccountPartner
+                    INNER JOIN _tmpContract_find AS View_Contract
+                                                 ON View_Contract.ContractId          = ObjectString_BankAccountPartner.ObjectId
+                                                AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                                AND View_Contract.isErased            = FALSE
+               WHERE ObjectString_BankAccountPartner.ValueData = TRIM (inBankAccount)
+                 AND ObjectString_BankAccountPartner.DescId    = zc_objectString_Contract_BankAccountPartner()
+              ;  
+           END IF;
+
+           IF COALESCE (vbContractId, 0) = 0
+           THEN
+               -- 1.1. находим свойство <Договор> "по умолчанию" для inAmount > 0
+               SELECT MAX (View_Contract.ContractId) INTO vbContractId
+               FROM _tmpContract_find AS View_Contract
+                    INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
+                                                    AND InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_30000()) -- Доходы
+                                                    -- AND inAmount > 0
+                    INNER JOIN ObjectBoolean AS ObjectBoolean_Default
+                                             ON ObjectBoolean_Default.ObjectId  = View_Contract.ContractId
+                                            AND ObjectBoolean_Default.DescId    = zc_ObjectBoolean_Contract_Default()
+                                            AND ObjectBoolean_Default.ValueData = TRUE
+               WHERE View_Contract.JuridicalId = vbJuridicalId
+                 AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                 AND View_Contract.isErased   = FALSE
+                 AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm();
+           END IF;
 
         END IF;
     
 
         -- 2. если Расход
-        IF inAmount < 0 THEN
-
+        IF inAmount < 0
+        THEN
            -- 2.1. находим свойство <Договор> "по умолчанию" для inAmount < 0
            SELECT MAX (View_Contract.ContractId) INTO vbContractId
            FROM _tmpContract_find AS View_Contract

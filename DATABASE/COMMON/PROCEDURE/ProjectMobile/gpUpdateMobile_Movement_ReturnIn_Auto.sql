@@ -10,9 +10,12 @@ RETURNS TBlob
 AS $BODY$
   DECLARE vbUserId Integer;
 
-  DECLARE vbId Integer;
-  DECLARE vbStatusId Integer;
-  DECLARE vbOperDate  TDateTime;
+  DECLARE vbId          Integer;
+  DECLARE vbStatusId    Integer;
+  DECLARE vbOperDate    TDateTime;
+  DECLARE vbPartner     Integer;
+  DECLARE vbContractId  Integer;
+  DECLARE vbPriceListId Integer;
   
   DECLARE vbMessageText Text:= '';
 BEGIN
@@ -24,12 +27,22 @@ BEGIN
       SELECT MovementString_GUID.MovementId 
            , Movement.StatusId
            , Movement.OperDate
-            INTO vbId 
-               , vbStatusId
-               , vbOperDate
+           , MovementLinkObject_From.ObjectId
+           , MovementLinkObject_Contract.ObjectId
+             INTO vbId 
+                , vbStatusId
+                , vbOperDate
+                , vbPartner
+                , vbContractId
       FROM MovementString AS MovementString_GUID
            JOIN Movement ON Movement.Id     = MovementString_GUID.MovementId
                         AND Movement.DescId = zc_Movement_ReturnIn() 
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                        ON MovementLinkObject_From.MovementId = Movement.Id
+                                       AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                        ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                       AND MovementLinkObject_Contract.DescId     = zc_MovementLinkObject_Contract()
       WHERE MovementString_GUID.DescId = zc_MovementString_GUID() 
         AND MovementString_GUID.ValueData = inMovementGUID;
 
@@ -103,19 +116,19 @@ BEGIN
                     FROM tmpResult
                    ) AS tmp;
 
-               -- первый раз - автоматом сформировалась строчная часть - zc_MI_Child
+               -- первый раз - автоматом сформировалась строчная часть - zc_MI_Child - для Promo
                vbMessageText:= lpUpdate_Movement_ReturnIn_Auto (inStartDateSale := DATE_TRUNC ('MONTH', vbOperDate) - INTERVAL '6 MONTH'
                                                               , inEndDateSale   := NULL
                                                               , inMovementId    := vbId
                                                               , inUserId        := -1 * vbUserId
                                                                );
 
-               -- если не привязалось
+               -- если не привязалось - 1
                IF EXISTS (SELECT 1
                           FROM (WITH tmpResult AS (SELECT MovementItem.ParentId, SUM (MovementItem.Amount) AS Amount
                                                    FROM MovementItem
                                                    WHERE MovementItem.MovementId = vbId
-                                                    AND MovementItem.DescId     = zc_MI_Child()
+                                                     AND MovementItem.DescId     = zc_MI_Child()
                                                      AND MovementItem.isErased   = FALSE
                                                    GROUP BY MovementItem.ParentId
                                                   )
@@ -128,12 +141,12 @@ BEGIN
                          )
                   -- AND 1=0
                THEN
-                   -- восстановим Цены что были
+                   -- восстановим Цены что были - !!!ПЕРВЫЙ!!!
                    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), tmp.MovementItemId, tmp.Price)
                    FROM (WITH tmpResult AS (SELECT MovementItem.ParentId, SUM (MovementItem.Amount) AS Amount
                                             FROM MovementItem
                                             WHERE MovementItem.MovementId = vbId
-                                             AND MovementItem.DescId     = zc_MI_Child()
+                                              AND MovementItem.DescId     = zc_MI_Child()
                                               AND MovementItem.isErased   = FALSE
                                             GROUP BY MovementItem.ParentId
                                            )
@@ -144,13 +157,136 @@ BEGIN
                         WHERE _tmpMI_noPromo.Amount <> COALESCE (tmpResult.Amount, 0)
                        ) AS tmp;
     
-                   -- еще раз - автоматом сформировали строчная часть - zc_MI_Child
+                   -- еще раз - автоматом сформировали строчная часть - zc_MI_Child - Цены возврата - 14 дней
                    vbMessageText:= lpUpdate_Movement_ReturnIn_Auto (inStartDateSale := DATE_TRUNC ('MONTH', vbOperDate) - INTERVAL '6 MONTH'
                                                                   , inEndDateSale   := NULL
                                                                   , inMovementId    := vbId
                                                                   , inUserId        := -1 * vbUserId
                                                                    );
-               END IF;
+
+                   -- если не привязалось - 2
+                   IF EXISTS (SELECT 1
+                              FROM (WITH tmpResult AS (SELECT MovementItem.ParentId, SUM (MovementItem.Amount) AS Amount
+                                                       FROM MovementItem
+                                                       WHERE MovementItem.MovementId = vbId
+                                                         AND MovementItem.DescId     = zc_MI_Child()
+                                                         AND MovementItem.isErased   = FALSE
+                                                       GROUP BY MovementItem.ParentId
+                                                      )
+                                   -- Результат
+                                   SELECT _tmpMI_noPromo.MovementItemId, _tmpMI_noPromo.Price
+                                   FROM _tmpMI_noPromo
+                                        LEFT JOIN tmpResult ON tmpResult.ParentId = _tmpMI_noPromo.MovementItemId
+                                   WHERE _tmpMI_noPromo.Amount <> COALESCE (tmpResult.Amount, 0)
+                                  ) AS tmp
+                             )
+                      -- AND 1=0
+                   THEN
+                       -- найдем в следующем порядке: 1.1) ---акционный у контрагента 1.2) ---акционный у договора 1.3) ---акционный у юр.лица 2.1) обычный у контрагента 2.2) обычный у договора 2.3) обычный у юр.лица 3) zc_PriceList_Basis
+                       vbPriceListId:= (SELECT COALESCE (ObjectLink_Partner_PriceList.ChildObjectId
+                                                       , COALESCE (ObjectLink_Contract_PriceList.ChildObjectId
+                                                                 , COALESCE (ObjectLink_Juridical_PriceList.ChildObjectId
+                                                                           , zc_PriceList_Basis())))
+                                        FROM Object AS Object_Partner
+                                             LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList
+                                                                  ON ObjectLink_Partner_PriceList.ObjectId = Object_Partner.Id
+                                                                 AND ObjectLink_Partner_PriceList.DescId   = zc_ObjectLink_Partner_PriceList()
+                                             LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
+                                                                  ON ObjectLink_Contract_PriceList.ObjectId = vbContractId
+                                                                 AND ObjectLink_Contract_PriceList.DescId   = zc_ObjectLink_Contract_PriceList()
+                                             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                                  ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
+                                                                 AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                             LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
+                                                                  ON ObjectLink_Juridical_PriceList.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                                 AND ObjectLink_Juridical_PriceList.DescId   = zc_ObjectLink_Juridical_PriceList()
+                                        WHERE Object_Partner.Id = vbPartner
+                                       );
+
+                       -- установим Цены за "сегодня"
+                       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), tmp.MovementItemId, ObjectHistoryFloat_PriceListItem_Value.ValueData)
+                       FROM (WITH tmpResult AS (SELECT MovementItem.ParentId, SUM (MovementItem.Amount) AS Amount
+                                                FROM MovementItem
+                                                WHERE MovementItem.MovementId = vbId
+                                                 AND MovementItem.DescId     = zc_MI_Child()
+                                                  AND MovementItem.isErased   = FALSE
+                                                GROUP BY MovementItem.ParentId
+                                               )
+                            -- Результат
+                            SELECT _tmpMI_noPromo.MovementItemId, _tmpMI_noPromo.GoodsId
+                            FROM _tmpMI_noPromo
+                                 LEFT JOIN tmpResult ON tmpResult.ParentId = _tmpMI_noPromo.MovementItemId
+                            WHERE _tmpMI_noPromo.Amount <> COALESCE (tmpResult.Amount, 0)
+                           ) AS tmp
+                           JOIN ObjectLink AS ObjectLink_PriceListItem_Goods 
+                                           ON ObjectLink_PriceListItem_Goods.ChildObjectId = tmp.GoodsId
+                                          AND ObjectLink_PriceListItem_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
+                           JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                           ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                          AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                                          AND ObjectLink_PriceListItem_PriceList.ChildObjectId = vbPriceListId
+                           JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                              ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
+                                             AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem() 
+                                             AND vbOperDate BETWEEN ObjectHistory_PriceListItem.StartDate AND ObjectHistory_PriceListItem.EndDate
+                           JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                   ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                  AND ObjectHistoryFloat_PriceListItem_Value.DescId          = zc_ObjectHistoryFloat_PriceListItem_Value()
+                                                  AND ObjectHistoryFloat_PriceListItem_Value.ValueData       <> 0
+                           ;
+        
+                       -- еще раз - автоматом сформировали строчная часть - zc_MI_Child - Цены возврата - за "сегодня"
+                       vbMessageText:= lpUpdate_Movement_ReturnIn_Auto (inStartDateSale := DATE_TRUNC ('MONTH', vbOperDate) - INTERVAL '6 MONTH'
+                                                                      , inEndDateSale   := NULL
+                                                                      , inMovementId    := vbId
+                                                                      , inUserId        := -1 * vbUserId
+                                                                       );
+
+                       -- если не привязалось - 3
+                       IF EXISTS (SELECT 1
+                                  FROM (WITH tmpResult AS (SELECT MovementItem.ParentId, SUM (MovementItem.Amount) AS Amount
+                                                           FROM MovementItem
+                                                           WHERE MovementItem.MovementId = vbId
+                                                             AND MovementItem.DescId     = zc_MI_Child()
+                                                             AND MovementItem.isErased   = FALSE
+                                                           GROUP BY MovementItem.ParentId
+                                                          )
+                                       -- Результат
+                                       SELECT _tmpMI_noPromo.MovementItemId, _tmpMI_noPromo.Price
+                                       FROM _tmpMI_noPromo
+                                            LEFT JOIN tmpResult ON tmpResult.ParentId = _tmpMI_noPromo.MovementItemId
+                                       WHERE _tmpMI_noPromo.Amount <> COALESCE (tmpResult.Amount, 0)
+                                      ) AS tmp
+                                 )
+                          -- AND 1=0
+                       THEN
+                           -- восстановим Цены что были - !!!ВТОРОЙ!!!
+                           PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), tmp.MovementItemId, tmp.Price)
+                           FROM (WITH tmpResult AS (SELECT MovementItem.ParentId, SUM (MovementItem.Amount) AS Amount
+                                                    FROM MovementItem
+                                                    WHERE MovementItem.MovementId = vbId
+                                                      AND MovementItem.DescId     = zc_MI_Child()
+                                                      AND MovementItem.isErased   = FALSE
+                                                    GROUP BY MovementItem.ParentId
+                                                   )
+                                -- Результат
+                                SELECT _tmpMI_noPromo.MovementItemId, _tmpMI_noPromo.Price
+                                FROM _tmpMI_noPromo
+                                     LEFT JOIN tmpResult ON tmpResult.ParentId = _tmpMI_noPromo.MovementItemId
+                                WHERE _tmpMI_noPromo.Amount <> COALESCE (tmpResult.Amount, 0)
+                               ) AS tmp;
+            
+                           -- еще раз - автоматом сформировали строчная часть - zc_MI_Child - Цены возврата - 14 дней
+                           vbMessageText:= lpUpdate_Movement_ReturnIn_Auto (inStartDateSale := DATE_TRUNC ('MONTH', vbOperDate) - INTERVAL '6 MONTH'
+                                                                          , inEndDateSale   := NULL
+                                                                          , inMovementId    := vbId
+                                                                          , inUserId        := -1 * vbUserId
+                                                                           );
+                       END IF; -- если не привязалось - 3
+
+                   END IF; -- если не привязалось - 2
+
+               END IF; -- если не привязалось - 1
                                                                
                -- вернем ошибку
                IF vbMessageText <> '' THEN
