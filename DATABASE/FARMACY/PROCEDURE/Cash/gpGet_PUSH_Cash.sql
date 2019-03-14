@@ -59,7 +59,7 @@ BEGIN
 
    IF SUBSTRING(vbEmployeeSchedule, date_part('day',  CURRENT_DATE)::Integer, 1) = '0'
    THEN
-      INSERT INTO _PUSH (Id, Text) VALUES (1, '"Уважаемые коллеги, не забудьте сегодня поставить отметку времени прихода в график (Ctrl+T)"');
+      INSERT INTO _PUSH (Id, Text) VALUES (1, 'Уважаемые коллеги, не забудьте сегодня поставить отметку времени прихода в  график (Ctrl+T) исходя из персонального графика работы (07:00, 08:00, 10:00)');
    END IF;
 
    -- PUSH уведомления
@@ -70,15 +70,14 @@ BEGIN
 
    FROM Movement
 
-        LEFT JOIN MovementItem AS MovementItem
-                               ON MovementItem.MovementId = Movement.Id
-                              AND MovementItem.DescId = zc_MI_Master()
-                              AND MovementItem.ObjectId = vbUserId
-
         LEFT JOIN MovementDate AS MovementDate_DateEndPUSH
                                ON MovementDate_DateEndPUSH.MovementId = Movement.Id
                               AND MovementDate_DateEndPUSH.DescId = zc_MovementDate_DateEndPUSH()
                                               
+        LEFT JOIN MovementFloat AS MovementFloat_Replays
+                                ON MovementFloat_Replays.MovementId = Movement.Id
+                               AND MovementFloat_Replays.DescId = zc_MovementFloat_Replays()
+
         LEFT JOIN MovementBlob AS MovementBlob_Message
                                ON MovementBlob_Message.MovementId = Movement.Id
                               AND MovementBlob_Message.DescId = zc_MovementBlob_Message()
@@ -87,7 +86,11 @@ BEGIN
      AND CURRENT_TIMESTAMP < COALESCE(MovementDate_DateEndPUSH.ValueData, date_trunc('day', Movement.OperDate + INTERVAL '1 DAY'))			
      AND Movement.DescId = zc_Movement_PUSH()
      AND Movement.StatusId = zc_Enum_Status_Complete()
-     AND COALESCE (MovementItem.ID, 0) = 0;
+     AND COALESCE(MovementFloat_Replays.ValueData, 1) >
+         COALESCE ((SELECT SUM(MovementItem.Amount) FROM MovementItem 
+                    WHERE MovementItem.MovementId = Movement.Id
+                      AND MovementItem.DescId = zc_MI_Master()
+                      AND MovementItem.ObjectId = vbUserId), 0);
 
 
    RETURN QUERY
@@ -103,6 +106,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 13.03.18                                                       *
  04.03.18                                                       *
 
 */

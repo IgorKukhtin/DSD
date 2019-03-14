@@ -148,6 +148,12 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
       Width = 80
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
+    object pvValueAmount: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 3
+      DataBinding.FieldName = 'ValueAmount'
+      UniqueName = 'ValueAmount'
+    end
     object Color_calc: TcxDBPivotGridField
       Area = faData
       AreaIndex = 1
@@ -1010,6 +1016,7 @@ object Report_IncomeKill_OlapForm: TReport_IncomeKill_OlapForm
     SummaryList = <
       item
         SummaryColumn = pvValue
+        AddColumn = pvValueAmount
         TypeColumn = SummType
       end>
     Left = 357

@@ -49,6 +49,7 @@ type
     spPreviousMonth: TdsdStoredProc;
     actPreviousMonth: TMultiAction;
     dxBarButton4: TdxBarButton;
+    Color_Calc: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

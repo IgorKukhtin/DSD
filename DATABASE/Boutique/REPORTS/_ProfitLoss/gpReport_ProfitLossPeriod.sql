@@ -15,6 +15,10 @@ RETURNS TABLE (OperYear TDateTime, OperMONTH TDateTime
              , UnitName_ProfitLoss TVarChar
              , MovementDescName TVarChar
              , Amount TFloat
+             , AmountPast TFloat
+             , AmountDif TFloat
+             , AmountMonthPast TFloat
+             , AmountMonthDif  TFloat
               )
 AS
 $BODY$
@@ -134,6 +138,8 @@ BEGIN
                              , tmpReport.DirectionId
                              , tmpReport.MovementDescId
                              , tmpReport.Amount
+                             , 0      AS AmountPast
+                             , 0      AS AmountMonthPast
                         FROM tmpReport1 AS tmpReport
                        UNION
                         SELECT tmpReport.OperYear
@@ -143,13 +149,55 @@ BEGIN
                              , tmpReport.DirectionId
                              , tmpReport.MovementDescId
                              , tmpReport.Amount
+                             , 0      AS AmountPast
+                             , 0      AS AmountMonthPast
                         FROM tmpReport2 AS tmpReport
-                        )                 
-                        
-                        
-                        
-      SELECT tmpReport.OperYear
-           , tmpReport.OperMonth
+                        UNION
+                        -- данные прошлого периода
+                        SELECT tmpReport.OperYear  + interval '1 Year'
+                             , tmpReport.OperMonth + interval '1 Year'
+                             , tmpReport.ProfitLossId
+                             , tmpReport.UnitId_ProfitLoss
+                             , tmpReport.DirectionId
+                             , tmpReport.MovementDescId
+                             , 0      AS Amount
+                             , tmpReport.Amount AS AmountPast
+                             , 0      AS AmountMonthPast
+                        FROM tmpReport1 AS tmpReport
+                        WHERE COALESCE (tmpReport.Amount,0) <> 0
+                        UNION
+                        -- данные прошлого месяца период1
+                        SELECT DATE_TRUNC ('YEAR', tmpReport.OperMonth + interval '1 Month') AS OperYear
+                             , tmpReport.OperMonth + interval '1 Month'
+                             , tmpReport.ProfitLossId
+                             , tmpReport.UnitId_ProfitLoss
+                             , tmpReport.DirectionId
+                             , tmpReport.MovementDescId
+                             , 0      AS Amount
+                             , 0      AS AmountPast
+                             , tmpReport.Amount AS AmountMonthPast
+                        FROM tmpReport1 AS tmpReport
+                        WHERE COALESCE (tmpReport.Amount,0) <> 0
+                          AND tmpReport.OperMonth + interval '1 Month' <= inEndDate1
+                        UNION
+                        -- данные прошлого месяца период2
+                        SELECT DATE_TRUNC ('YEAR', tmpReport.OperMonth + interval '1 Month') AS OperYear
+                             , tmpReport.OperMonth + interval '1 Month'
+                             , tmpReport.ProfitLossId
+                             , tmpReport.UnitId_ProfitLoss
+                             , tmpReport.DirectionId
+                             , tmpReport.MovementDescId
+                             , 0      AS Amount
+                             , 0      AS AmountPast
+                             , tmpReport.Amount AS AmountMonthPast
+                        FROM tmpReport2 AS tmpReport
+                        WHERE COALESCE (tmpReport.Amount,0) <> 0
+                          AND tmpReport.OperMonth + interval '1 Month' <= inEndDate2
+                        )
+     
+      -- результат
+      SELECT tmpReport.OperYear    :: TDateTime
+           , tmpReport.OperMonth   :: TDateTime
            , View_ProfitLoss.ProfitLossGroupName
            , View_ProfitLoss.ProfitLossDirectionName
            , View_ProfitLoss.ProfitLossName
@@ -162,10 +210,15 @@ BEGIN
 
            , MovementDesc.ItemName         AS MovementDescName
 
-           , tmpReport.Amount :: TFloat AS Amount
-
+           , tmpReport.Amount     :: TFloat AS Amount
+           , tmpReport.AmountPast :: TFloat AS AmountPast
+           , (COALESCE (tmpReport.Amount,0) - COALESCE (tmpReport.AmountPast,0)):: TFloat AS AmountDif
+           
+           , tmpReport.AmountMonthPast :: TFloat
+           , (COALESCE (tmpReport.Amount,0) - COALESCE (tmpReport.AmountMonthPast,0)):: TFloat AS AmountMonthDif
+           
       FROM tmpReport 
-           LEFT JOIN Object_ProfitLoss_View AS View_ProfitLoss
+           FULL JOIN Object_ProfitLoss_View AS View_ProfitLoss
                                             ON View_ProfitLoss.ProfitLossId = tmpReport.ProfitLossId
            
            LEFT JOIN Object AS Object_Unit_ProfitLoss ON Object_Unit_ProfitLoss.Id = tmpReport.UnitId_ProfitLoss

@@ -18,11 +18,12 @@ uses
 type
   TPUSHJournalForm = class(TAncestorJournalForm)
     spGet_Movement_PUSH: TdsdStoredProc;
-    Id: TcxGridDBColumn;
-    Message: TcxGridDBColumn;
+    colId: TcxGridDBColumn;
+    colMessageText: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbmacPrint: TdxBarButton;
-    DateEndPUSH: TcxGridDBColumn;
+    colDateEndPUSH: TcxGridDBColumn;
+    colReplays: TcxGridDBColumn;
   private
     { Private declarations }
   public

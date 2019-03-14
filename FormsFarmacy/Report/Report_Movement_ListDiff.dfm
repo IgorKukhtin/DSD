@@ -61,6 +61,26 @@ inherited Report_Movement_ListDiffForm: TReport_Movement_ListDiffForm
             item
               Format = ',0.00'
               Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountSale
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummaSale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaDiff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -109,6 +129,26 @@ inherited Report_Movement_ListDiffForm: TReport_Movement_ListDiffForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountSale
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummaSale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaDiff
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -152,13 +192,14 @@ inherited Report_Movement_ListDiffForm: TReport_Movement_ListDiffForm
             Width = 214
           end
           object Amount: TcxGridDBColumn
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079'.'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079#1072#1085#1085#1086#1075#1086
             Options.Editing = False
             Width = 80
           end
@@ -175,6 +216,49 @@ inherited Report_Movement_ListDiffForm: TReport_Movement_ListDiffForm
           object Summa: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Summa'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 102
+          end
+          object AmountSale: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1076'.'
+            DataBinding.FieldName = 'AmountSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1085#1086
+            Options.Editing = False
+            Width = 80
+          end
+          object SummaSale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076'.'
+            DataBinding.FieldName = 'SummaSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 102
+          end
+          object AmountDiff: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1091#1087'. '#1079#1072#1082#1072#1079'./ '#1087#1088#1086#1076#1072#1078#1072
+            DataBinding.FieldName = 'AmountDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 105
+          end
+          object SummaDiff: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1075#1088#1085'. '#1079#1072#1082#1072#1079'./ '#1087#1088#1086#1076#1072#1078#1072
+            DataBinding.FieldName = 'SummaDiff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
@@ -582,6 +666,7 @@ inherited Report_Movement_ListDiffForm: TReport_Movement_ListDiffForm
         end>
       Caption = #1055#1054' '#1057#1055#1048#1057#1050#1059
       Hint = #1055#1054' '#1057#1055#1048#1057#1050#1059
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end

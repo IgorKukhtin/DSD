@@ -137,11 +137,12 @@ type
   end;
 
 	TPivotSummartType = (psNone, psCount, psSum, psMin, psMax, psAverage,
-    psStdDev, psStdDevP, psVariance, psVarianceP);
+    psStdDev, psStdDevP, psVariance, psVarianceP, psAveragePrice);
 
   // Правило подсчета итогов по ячейкам пивота
   TSummaryFieldPivot = class(TCollectionItem)
   private
+    FAddColumn: TcxPivotGridField;
     FSummaryColumn: TcxPivotGridField;
     FTypeColumn: TcxPivotGridField;
     FIfDifferent: TPivotSummartType;
@@ -152,6 +153,8 @@ type
   published
     // Для какой ячейку применять расчет
     property SummaryColumn: TcxPivotGridField read FSummaryColumn write FSummaryColumn;
+    // Откуда брать значение для типа суммирования
+    property AddColumn: TcxPivotGridField read FAddColumn write FAddColumn;
     // Откуда брать значение для типа суммирования
     property TypeColumn: TcxPivotGridField read FTypeColumn write FTypeColumn;
     // Если разные типа суммирования
@@ -2457,6 +2460,7 @@ begin
   if Source is TSummaryFieldPivot then
     with TSummaryFieldPivot(Source) do
     begin
+      Self.AddColumn := AddColumn;
       Self.SummaryColumn := SummaryColumn;
       Self.TypeColumn := TypeColumn;
       Self.IfDifferent := IfDifferent;
@@ -2698,7 +2702,7 @@ end;
 procedure TPivotAddOn.OnCalculateCustomSummary(
   Sender: TcxPivotGridField; ASummary: TcxPivotGridCrossCellSummary);
 
-  var ARow, AColumn: TcxPivotGridGroupItem; TypeColumn : TcxPivotGridField;
+  var ARow, AColumn: TcxPivotGridGroupItem; AddColumn, TypeColumn : TcxPivotGridField;
       PivotSummartType: TPivotSummartType; I, S : Integer;
 
   function VarToDouble(const AValue: Variant): Currency;
@@ -2717,6 +2721,99 @@ procedure TPivotAddOn.OnCalculateCustomSummary(
       Result := AValue;
   end;
 
+  function CalсAveragePrice : variant;
+    var I, C : integer; nSum, nAmount : Currency;  bNext : boolean;
+
+    function RowFits : boolean;
+      var J : integer;
+    begin
+      Result := False;
+      if ARow.DataController.Values[ARow.RecordIndex, ARow.Field.Index] = ARow.DataController.Values[I, ARow.Field.Index] then
+      begin
+        if ARow.Field.AreaIndex > 0 then
+        begin
+          for J := 0 to PivotGrid.FieldCount - 1 do
+            if (PivotGrid.Fields[J].Area = ARow.Field.Area) and (PivotGrid.Fields[J].AreaIndex < ARow.Field.AreaIndex) then
+              if ARow.DataController.Values[ARow.RecordIndex, PivotGrid.Fields[J].Index] <> ARow.DataController.Values[I, PivotGrid.Fields[J].Index] then Exit;
+        end;
+        Result := True;
+      end;
+    end;
+
+    function ColumnFits : boolean;
+      var J : integer;
+    begin
+      Result := False;
+      if ARow.DataController.Values[AColumn.RecordIndex, AColumn.Field.Index] = ARow.DataController.Values[I, AColumn.Field.Index] then
+      begin
+        if AColumn.Field.AreaIndex > 0 then
+        begin
+          for J := 0 to PivotGrid.FieldCount - 1 do
+            if (PivotGrid.Fields[J].Area = AColumn.Field.Area) and (PivotGrid.Fields[J].AreaIndex < AColumn.Field.AreaIndex) then
+              if ARow.DataController.Values[AColumn.RecordIndex, PivotGrid.Fields[J].Index] <> ARow.DataController.Values[I, PivotGrid.Fields[J].Index] then Exit;
+        end;
+        Result := True;
+      end;
+    end;
+
+  begin
+    Result := Null; nSum := 0; nAmount := 0;
+    if not Assigned(AddColumn) then Exit;
+
+    for I := 0 to ARow.DataController.RecordCount - 1 do
+    begin
+
+      bNext := False;
+      for C := 0 to PivotGrid.FieldCount - 1 do
+        if (TcxDBPivotGridField(PivotGrid.Fields[c]).Filter.Values.Count > 0) then
+           if not TcxDBPivotGridField(PivotGrid.Fields[c]).Filter.Contains(ARow.DataController.Values[I, PivotGrid.Fields[c].Index]) then
+      begin
+        bNext := True;
+        Break;
+      end;
+      if bNext then Continue;
+
+      if ARow.Field <> Nil then
+      begin
+        if RowFits then
+        begin
+          if AColumn.Field <> Nil then
+          begin
+            if ColumnFits then
+            begin
+              nSum := nSum + VarToDouble(ARow.DataController.Values[I, Sender.Index]) *
+                VarToDouble(ARow.DataController.Values[I, AddColumn.Index]);
+              nAmount := nAmount + VarToDouble(ARow.DataController.Values[I, AddColumn.Index]);
+            end
+          end else
+          begin
+            nSum := nSum + VarToDouble(ARow.DataController.Values[I, Sender.Index]) *
+              VarToDouble(ARow.DataController.Values[I, AddColumn.Index]);
+            nAmount := nAmount + VarToDouble(ARow.DataController.Values[I, AddColumn.Index]);
+          end;
+        end;
+      end else
+      begin
+        if AColumn.Field <> Nil then
+        begin
+          if ColumnFits then
+          begin
+            nSum := nSum + VarToDouble(ARow.DataController.Values[I, Sender.Index]) *
+              VarToDouble(ARow.DataController.Values[I, AddColumn.Index]);
+            nAmount := nAmount + VarToDouble(ARow.DataController.Values[I, AddColumn.Index]);
+          end;
+        end else
+        begin
+          nSum := nSum + VarToDouble(ARow.DataController.Values[I, Sender.Index]) *
+            VarToDouble(ARow.DataController.Values[I, AddColumn.Index]);
+          nAmount := nAmount + VarToDouble(ARow.DataController.Values[I, AddColumn.Index]);
+        end;
+      end;
+    end;
+
+    if nAmount > 0 then Result := RoundTo(nSum / nAmount, - 2);
+  end;
+
 begin
   ARow := ASummary.Owner.Row;
   AColumn := ASummary.Owner.Column;
@@ -2728,6 +2825,7 @@ begin
   begin
     if TSummaryFieldPivot(FSummaryFieldList.Items[I]).FSummaryColumn = Sender then
     begin
+      AddColumn := TSummaryFieldPivot(FSummaryFieldList.Items[I]).AddColumn;
       TypeColumn := TSummaryFieldPivot(FSummaryFieldList.Items[I]).TypeColumn;
       PivotSummartType := TSummaryFieldPivot(FSummaryFieldList.Items[I]).IfDifferent;
     end;
@@ -2752,6 +2850,7 @@ begin
     psStdDevP : ASummary.Custom := VarToDouble(ARow.GetCellByCrossItem(AColumn).GetSummaryByField(Sender, stStdDevP));
     psVariance : ASummary.Custom := VarToDouble(ARow.GetCellByCrossItem(AColumn).GetSummaryByField(Sender, stVariance));
     psVarianceP : ASummary.Custom := VarToDouble(ARow.GetCellByCrossItem(AColumn).GetSummaryByField(Sender, stVarianceP));
+    psAveragePrice : ASummary.Custom := CalсAveragePrice;
   end;
 
 end;

@@ -23,7 +23,7 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
-  cxDBPivotGrid, cxLabel, dxBarExtItems, ChoicePeriod, cxCheckBox;
+  cxDBPivotGrid, cxLabel, dxBarExtItems, ChoicePeriod, cxCheckBox, dsdPivotGrid;
 
 type
   TReport_ProfitLossPeriodForm = class(TParentForm)
@@ -64,8 +64,6 @@ type
     bbExecuteDialog: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    cbTotal: TcxCheckBox;
-    dxBarControlContainerItem1: TdxBarControlContainerItem;
     RefreshDispatcher: TRefreshDispatcher;
     cxLabel7: TcxLabel;
     cxLabel9: TcxLabel;
@@ -74,6 +72,9 @@ type
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
     PeriodChoice2: TPeriodChoice;
+    cfCalcPercent: TdsdPivotGridCalcFields;
+    cfCalcPercentMonth: TdsdPivotGridCalcFields;
+    PercentMonth: TcxDBPivotGridField;
   private
   public
   end;

@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , WeightTotal TFloat, ChangePercentAmount TFloat
              , WeightMin TFloat, WeightMax TFloat
              , Height TFloat, Length TFloat, Width TFloat
+             , NormInDays TFloat
              , isOrder Boolean, isScaleCeh Boolean, isNotMobile Boolean
              , GoodsSubId Integer, GoodsSubCode Integer, GoodsSubName TVarChar, MeasureSubName TVarChar
              , GoodsKindSubId Integer, GoodsKindSubName TVarChar
@@ -142,6 +143,7 @@ BEGIN
            , COALESCE (ObjectFloat_Height.ValueData,0)          ::TFloat  AS Height
            , COALESCE (ObjectFloat_Length.ValueData,0)          ::TFloat  AS Length
            , COALESCE (ObjectFloat_Width.ValueData,0)           ::TFloat  AS Width
+           , COALESCE (ObjectFloat_NormInDays.ValueData,0)      ::TFloat  AS NormInDays
 
            , COALESCE (ObjectBoolean_Order.ValueData, False)           AS isOrder
            , COALESCE (ObjectBoolean_ScaleCeh.ValueData, False)        AS isScaleCeh
@@ -247,6 +249,10 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Width
                                   ON ObjectFloat_Width.ObjectId = Object_GoodsByGoodsKind_View.Id
                                  AND ObjectFloat_Width.DescId = zc_ObjectFloat_GoodsByGoodsKind_Width()
+            LEFT JOIN ObjectFloat AS ObjectFloat_NormInDays
+                                  ON ObjectFloat_NormInDays.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                 AND ObjectFloat_NormInDays.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormInDays()
+
  --
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Order
                                     ON ObjectBoolean_Order.ObjectId = Object_GoodsByGoodsKind_View.Id
@@ -356,6 +362,7 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 13.03.19        * NormInDays
  22.06.18        *
  18.02.18        * add WeightPackageSticker
  21.12.17        * add GoodsSPack, GoodsKindPack

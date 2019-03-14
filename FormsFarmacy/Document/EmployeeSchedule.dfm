@@ -163,13 +163,28 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
           end
           object ValueUser: TcxGridDBBandedColumn
             DataBinding.FieldName = 'ValueUser'
+            PropertiesClassName = 'TcxComboBoxProperties'
+            Properties.Items.Strings = (
+              ''
+              '7:00'
+              '8:00'
+              '9:00'
+              '10:00'
+              '21:00'
+              #1042)
             Visible = False
             MinWidth = 40
-            Options.Editing = False
             Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 0
             Position.RowIndex = 1
+          end
+          object Color_Calc: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_Calc'
+            Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 5
+            Position.RowIndex = 0
           end
           object isErased: TcxGridDBBandedColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -857,6 +872,15 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioValueUser'
+        Value = Null
+        Component = CrossDBViewAddOn
+        ComponentItem = 'ValueUser'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioTypeId'
         Value = Null
         Component = CrossDBViewAddOn
@@ -907,7 +931,12 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = Value
+        BackGroundValueColumn = Color_Calc
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>

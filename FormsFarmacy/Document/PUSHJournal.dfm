@@ -29,28 +29,6 @@ inherited PUSHJournalForm: TPUSHJournalForm
         ExplicitWidth = 745
         ExplicitHeight = 434
         inherited cxGridDBTableView: TcxGridDBTableView
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = #1057#1090#1088#1086#1082': ,0'
-              Kind = skCount
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
@@ -59,48 +37,55 @@ inherited PUSHJournalForm: TPUSHJournalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object Id: TcxGridDBColumn [0]
+          object colId: TcxGridDBColumn [0]
             Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
             DataBinding.FieldName = 'Id'
             Visible = False
+            Options.Editing = False
           end
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 49
           end
           inherited colInvNumber: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 71
           end
           inherited colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1074#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1072' '#1086#1087#1086#1074#1077#1097#1077#1085#1080#1103
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'dd.mm.yyyy hh:nn'
-            Properties.Kind = ckDateTime
             HeaderAlignmentHorz = taCenter
-            Width = 125
+            Options.Editing = False
+            Width = 124
           end
-          object DateEndPUSH: TcxGridDBColumn
-            Caption = #1050#1086#1085#1094#1072' '#1086#1087#1086#1074#1077#1097#1077#1085#1080#1103
+          object colDateEndPUSH: TcxGridDBColumn
+            Caption = #1050#1086#1085#1094' '#1087#1086#1083#1091#1095#1077#1085#1080#1103' '#1086#1087#1086#1074#1077#1097#1077#1085#1080#1103
             DataBinding.FieldName = 'DateEndPUSH'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'dd.mm.yyyy hh:nn'
-            Properties.Kind = ckDateTime
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 101
+            Width = 116
           end
-          object Message: TcxGridDBColumn
+          object colReplays: TcxGridDBColumn
+            Caption = #1055#1086#1074#1090#1086#1088#1086#1074
+            DataBinding.FieldName = 'Replays'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
+          object colMessageText: TcxGridDBColumn
             Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077
             DataBinding.FieldName = 'Message'
             PropertiesClassName = 'TcxBlobEditProperties'
             Properties.BlobPaintStyle = bpsText
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 248
           end
-          object InsertName: TcxGridDBColumn
+          object colInsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
@@ -108,7 +93,7 @@ inherited PUSHJournalForm: TPUSHJournalForm
             Options.Editing = False
             Width = 101
           end
-          object InsertDate: TcxGridDBColumn
+          object colInsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
@@ -116,7 +101,7 @@ inherited PUSHJournalForm: TPUSHJournalForm
             Options.Editing = False
             Width = 78
           end
-          object UpdateName: TcxGridDBColumn
+          object colUpdateName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateName'
             HeaderAlignmentHorz = taCenter
@@ -124,7 +109,7 @@ inherited PUSHJournalForm: TPUSHJournalForm
             Options.Editing = False
             Width = 101
           end
-          object UpdateDate: TcxGridDBColumn
+          object colUpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateDate'
             HeaderAlignmentHorz = taCenter
