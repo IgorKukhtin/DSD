@@ -179,6 +179,13 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
             Position.ColIndex = 0
             Position.RowIndex = 1
           end
+          object Color_Calc: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_Calc'
+            Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 5
+            Position.RowIndex = 0
+          end
           object isErased: TcxGridDBBandedColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -924,7 +931,12 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = Value
+        BackGroundValueColumn = Color_Calc
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>

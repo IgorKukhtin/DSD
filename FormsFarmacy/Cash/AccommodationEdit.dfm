@@ -19,7 +19,7 @@
   object edMeasureName: TcxTextEdit
     Left = 32
     Top = 86
-    Properties.MaxLength = 5
+    Properties.MaxLength = 10
     TabOrder = 0
     Width = 273
   end
