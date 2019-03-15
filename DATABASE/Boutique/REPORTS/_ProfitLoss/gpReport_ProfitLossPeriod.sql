@@ -86,7 +86,7 @@ BEGIN
         , tmpMIContainer2 AS (SELECT MIContainer.ContainerId
                                    , MIContainer.OperDate
                                    , -1 * SUM (MIContainer.Amount)      AS Amount
-                                   , MIContainer.WhereObjectId_Analyzer AS UnitId_ProfitLoss
+                                   , MIContainer.ObjectExtId_Analyzer   AS UnitId_ProfitLoss
                                    , MIContainer.WhereObjectId_Analyzer AS DirectionId
                                    , MIContainer.MovementDescId
                               FROM MovementItemContainer AS MIContainer 
@@ -94,7 +94,7 @@ BEGIN
                                 AND MIContainer.AccountId = zc_Enum_Account_100301()
                                 AND MIContainer.isActive = FALSE
                               GROUP BY MIContainer.ContainerId
-                                     , MIContainer.WhereObjectId_Analyzer
+                                     , MIContainer.ObjectExtId_Analyzer
                                      , MIContainer.WhereObjectId_Analyzer
                                      , MIContainer.MovementDescId
                                      , MIContainer.OperDate

@@ -824,9 +824,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitDemoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitDemoForm');
 
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossForm');
-  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitDemoPeriodForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitDemoPeriodForm');
 end;
 
 procedure TLoadFormTest.LoadReportProfitLossFormTest;
