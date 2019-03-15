@@ -187,7 +187,8 @@ begin
       .asString;
     КодКонтрагента := HeaderDataSet.FieldByName('OKPO_From').asString;
     ІПН := HeaderDataSet.FieldByName('INN_From').asString;
-    GLN := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
+    if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+    then GLN := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
   end;
   with ЕлектроннийДокумент.Сторони.Add do
   begin
@@ -488,10 +489,16 @@ begin
   DECLAR.DECLARHEAD.C_DOC_STAN := C_DOC_STAN;
   DECLAR.DECLARHEAD.D_FILL := FormatDateTime('ddmmyyyy',
     HeaderDataSet.FieldByName('OperDate').asDateTime);
+  if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+  then
   DECLAR.DECLARHEAD.SOFTWARE := 'COMDOC:' + HeaderDataSet.FieldByName('InvNumberPartnerEDI').asString
                               + ';DATE:' + FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartnerEDI').asDateTime)
                               + ';BY:' + HeaderDataSet.FieldByName('BuyerGLNCode').asString
                               + ';SU:' + HeaderDataSet.FieldByName('SupplierGLNCode').asString
+  else
+  DECLAR.DECLARHEAD.SOFTWARE := 'COMDOC:' + HeaderDataSet.FieldByName('InvNumberPartnerEDI').asString
+                              + ';DATE:' + FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartnerEDI').asDateTime)
+                              + ';BY:' + HeaderDataSet.FieldByName('BuyerGLNCode').asString
                                ;
 
   if HeaderDataSet.FieldByName('isNotNDSPayer').asBoolean then
@@ -831,10 +838,16 @@ begin
   DECLAR.DECLARHEAD.C_DOC_STAN := C_DOC_STAN;
   DECLAR.DECLARHEAD.D_FILL := FormatDateTime('ddmmyyyy',
     HeaderDataSet.FieldByName('OperDate').asDateTime);
+  if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+  then
   DECLAR.DECLARHEAD.SOFTWARE := 'COMDOC:' + HeaderDataSet.FieldByName('InvNumberPartnerEDI').asString
                               + ';DATE:' + FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartnerEDI').asDateTime)
                               + ';BY:' + HeaderDataSet.FieldByName('BuyerGLNCode').asString
                               + ';SU:' + HeaderDataSet.FieldByName('SupplierGLNCode').asString
+  else
+  DECLAR.DECLARHEAD.SOFTWARE := 'COMDOC:' + HeaderDataSet.FieldByName('InvNumberPartnerEDI').asString
+                              + ';DATE:' + FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartnerEDI').asDateTime)
+                              + ';BY:' + HeaderDataSet.FieldByName('BuyerGLNCode').asString
                                ;
 
   if HeaderDataSet.FieldByName('isNotNDSPayer').asBoolean then
@@ -1181,9 +1194,12 @@ begin
   DECLAR.DECLARHEAD.C_DOC_STAN := C_DOC_STAN;
   DECLAR.DECLARHEAD.D_FILL := FormatDateTime('ddmmyyyy',
     HeaderDataSet.FieldByName('OperDate').asDateTime);
-  DECLAR.DECLARHEAD.SOFTWARE := 'BY:' + HeaderDataSet.FieldByName
-    ('SupplierGLNCode').asString + ';SU:' + HeaderDataSet.FieldByName
-    ('BuyerGLNCode').asString;
+  if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+  then
+  DECLAR.DECLARHEAD.SOFTWARE := 'BY:' + HeaderDataSet.FieldByName('SupplierGLNCode').asString
+                             + ';SU:' + HeaderDataSet.FieldByName('BuyerGLNCode').asString
+  else
+  DECLAR.DECLARHEAD.SOFTWARE := 'SU:' + HeaderDataSet.FieldByName('BuyerGLNCode').asString;
 
   if C_DOC_VER <> '7' then
      DECLAR.DECLARBODY.HORIG := '1'
@@ -1547,10 +1563,16 @@ begin
   DECLAR.DECLARHEAD.D_FILL := FormatDateTime('ddmmyyyy',
     HeaderDataSet.FieldByName('OperDate').asDateTime);
 
+  if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+  then
   DECLAR.DECLARHEAD.SOFTWARE := 'COMDOC:' + HeaderDataSet.FieldByName('InvNumberPartnerEDI').asString
                               + ';DATE:' + FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartnerEDI_tax').asDateTime)
                               + ';BY:' + HeaderDataSet.FieldByName('BuyerGLNCode').asString
                               + ';SU:' + HeaderDataSet.FieldByName('SupplierGLNCode').asString
+  else
+  DECLAR.DECLARHEAD.SOFTWARE := 'COMDOC:' + HeaderDataSet.FieldByName('InvNumberPartnerEDI').asString
+                              + ';DATE:' + FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartnerEDI_tax').asDateTime)
+                              + ';BY:' + HeaderDataSet.FieldByName('BuyerGLNCode').asString
                                ;
 
 
@@ -1849,10 +1871,16 @@ begin
   DECLAR.DECLARHEAD.D_FILL := FormatDateTime('ddmmyyyy',
     HeaderDataSet.FieldByName('OperDate').asDateTime);
 
+  if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+  then
   DECLAR.DECLARHEAD.SOFTWARE := 'COMDOC:' + HeaderDataSet.FieldByName('InvNumberPartnerEDI').asString
                               + ';DATE:' + FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartnerEDI_tax').asDateTime)
                               + ';BY:' + HeaderDataSet.FieldByName('BuyerGLNCode').asString
                               + ';SU:' + HeaderDataSet.FieldByName('SupplierGLNCode').asString
+  else
+  DECLAR.DECLARHEAD.SOFTWARE := 'COMDOC:' + HeaderDataSet.FieldByName('InvNumberPartnerEDI').asString
+                              + ';DATE:' + FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartnerEDI_tax').asDateTime)
+                              + ';BY:' + HeaderDataSet.FieldByName('BuyerGLNCode').asString
                                ;
 
 
@@ -2159,8 +2187,12 @@ begin
   DECLAR.DECLARHEAD.C_DOC_STAN := C_DOC_STAN;
   DECLAR.DECLARHEAD.D_FILL := FormatDateTime('ddmmyyyy',
     HeaderDataSet.FieldByName('OperDate').asDateTime);
+  if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+  then
   DECLAR.DECLARHEAD.SOFTWARE := 'BY:' + HeaderDataSet.FieldByName('BuyerGLNCode').asString
-                              + ';SU:' + HeaderDataSet.FieldByName('SupplierGLNCode').asString
+                             + ';SU:' + HeaderDataSet.FieldByName('SupplierGLNCode').asString
+  else
+  DECLAR.DECLARHEAD.SOFTWARE := 'BY:' + HeaderDataSet.FieldByName('BuyerGLNCode').asString
                                ;
 
   if C_DOC_VER <> '7' then
@@ -2417,7 +2449,9 @@ begin
   DESADV.DELIVERYNOTEDATE := FormatDateTime('yyyy-mm-dd',
     HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
 
-  DESADV.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
+  if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+  then
+      DESADV.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
   DESADV.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
   DESADV.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName
     ('DELIVERYPLACEGLNCode').asString;
@@ -2677,8 +2711,9 @@ begin
     HeaderDataSet.FieldByName('VATPercent').AsFloat),
     FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
 
-  INVOICE.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode')
-    .asString;
+  if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+  then
+      INVOICE.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
   INVOICE.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
   INVOICE.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName
     ('DELIVERYPLACEGLNCode').asString;
@@ -3075,7 +3110,9 @@ begin
   ORDRSP.ORDERDATE := FormatDateTime('yyyy-mm-dd',
     HeaderDataSet.FieldByName('OperDate').asDateTime);
 
-  ORDRSP.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
+  if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+  then
+      ORDRSP.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
   ORDRSP.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
   ORDRSP.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName
     ('DELIVERYPLACEGLNCode').asString;

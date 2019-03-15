@@ -1,4 +1,4 @@
--- Function: gpUpdate_MI_Income_Price()
+ -- Function: gpUpdate_MI_Income_Price()
 
 DROP FUNCTION IF EXISTS gpUpdate_MI_Income_Price (Integer, Integer, TFloat, TFloat, TVarChar);
 

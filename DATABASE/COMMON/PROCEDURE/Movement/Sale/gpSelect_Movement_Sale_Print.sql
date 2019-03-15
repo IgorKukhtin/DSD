@@ -470,11 +470,14 @@ BEGIN
                                  , inGLNCodeJuridical      := ObjectString_Juridical_GLNCode.ValueData
                                   ) AS RecipientGLNCode
 
-           , zfCalc_GLNCodeCorporate (inGLNCode                  := ObjectString_Partner_GLNCode.ValueData
-                                    , inGLNCodeCorporate_partner := ObjectString_Partner_GLNCodeCorporate.ValueData
-                                    , inGLNCodeCorporate_retail  := ObjectString_Retail_GLNCodeCorporate.ValueData
-                                    , inGLNCodeCorporate_main    := ObjectString_JuridicalFrom_GLNCode.ValueData
-                                     ) AS SupplierGLNCode
+           , CASE WHEN OH_JuridicalDetails_To.JuridicalId = 15158 -- МЕТРО Кеш енд Кері Україна ТОВ
+                       THEN '' -- если Метро, тогда наш = "пусто"
+                  ELSE zfCalc_GLNCodeCorporate (inGLNCode                  := ObjectString_Partner_GLNCode.ValueData
+                                              , inGLNCodeCorporate_partner := ObjectString_Partner_GLNCodeCorporate.ValueData
+                                              , inGLNCodeCorporate_retail  := ObjectString_Retail_GLNCodeCorporate.ValueData
+                                              , inGLNCodeCorporate_main    := ObjectString_JuridicalFrom_GLNCode.ValueData
+                                               )
+             END :: TVarChar AS SupplierGLNCode
 
            , zfCalc_GLNCodeCorporate (inGLNCode                  := ObjectString_Partner_GLNCode.ValueData
                                     , inGLNCodeCorporate_partner := ObjectString_Partner_GLNCodeCorporate.ValueData

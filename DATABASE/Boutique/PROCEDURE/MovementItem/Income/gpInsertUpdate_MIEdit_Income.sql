@@ -498,5 +498,44 @@ $BODY$
  10.04.17         *
 */
 
+/*
+-- SELECT  lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceListItem_Value(), tmp.Id, tmp.PriceOk)
+-- from (
+
+SELECT ObjectHistoryFloat_PriceListItem_Value.ValueData, Object_PartionGoods .OperPriceList , MIFloat_OperPriceList.ValueData as PriceOk
+, ObjectHistory_PriceListItem.*
+FROM Object_PartionGoods 
+     join MovementItemFloat AS MIFloat_OperPriceList
+          ON MIFloat_OperPriceList.MovementItemId = Object_PartionGoods .MovementItemId
+          AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+
+                   inner join ObjectLink AS ObjectLink_PriceListItem_PriceList
+                      on ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
+                     AND ObjectLink_PriceListItem_PriceList.ChildObjectId = zc_PriceList_Basis()
+                     -- AND (ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0 OR ObjectHistory_PriceListItem.StartDate <> zc_DateStart())
+                        inner JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
+                                             ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                            AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+                                            AND ObjectLink_PriceListItem_Goods.ChildObjectId = Object_PartionGoods.GoodsId
+       
+                        LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                               AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
+                                               AND CURRENT_DATE >= ObjectHistory_PriceListItem.StartDate AND CURRENT_DATE < ObjectHistory_PriceListItem.EndDate
+                        LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                     ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                    AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+ 
+                   
+
+
+WHERE Object_PartionGoods.PeriodYear = 2019
+-- and Object_PartionGoods .OperPriceList <> MIFloat_OperPriceList.ValueData
+and Object_PartionGoods .OperPriceList  <> ObjectHistoryFloat_PriceListItem_Value.ValueData
+-- and Object_PartionGoods .MovementItemId = 1707494 
+-- and ObjectHistory_PriceListItem.StartDate <> zc_DateStart()
+
+-- ) as tmp
+*/
 -- тест
 -- SELECT * FROMgpInsertUpdate_MIEdit_Income()

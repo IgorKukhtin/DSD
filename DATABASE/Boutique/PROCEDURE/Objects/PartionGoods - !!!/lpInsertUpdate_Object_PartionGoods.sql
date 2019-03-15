@@ -185,6 +185,7 @@ BEGIN
                         WHERE MovementItem.ObjectId = inGoodsId
                           AND MovementItem.isErased = FALSE -- !!!только НЕ удаленные!!!
                           -- AND MovementItem.DescId= ...   -- !!!любой Desc!!!
+                          -- AND  inUserId <> 8
                         ORDER BY Movement.OperDate DESC
                         LIMIT 1
                        );

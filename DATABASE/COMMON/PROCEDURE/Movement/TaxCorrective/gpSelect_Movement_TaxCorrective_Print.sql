@@ -868,12 +868,14 @@ BEGIN
                                     , inGLNCodeJuridical         := tmpMovement_Data.Juridical_GLNCode
                                      ) AS BuyerGLNCode
 
-           , zfCalc_GLNCodeCorporate (inGLNCode                  := 'ok'
-                                    , inGLNCodeCorporate_partner := tmpMovement_Data.Partner_GLNCodeCorporate
-                                    , inGLNCodeCorporate_retail  := tmpMovement_Data.Retail_GLNCodeCorporate
-                                    , inGLNCodeCorporate_main    := tmpMovement_Data.JuridicalTo_GLNCode
-                                     ) AS SupplierGLNCode
-
+           , CASE WHEN OH_JuridicalDetails_From.JuridicalId = 15158 -- МЕТРО Кеш енд Кері Україна ТОВ
+                       THEN '' -- если Метро, тогда наш = "пусто"
+                  ELSE zfCalc_GLNCodeCorporate (inGLNCode                  := 'ok'
+                                              , inGLNCodeCorporate_partner := tmpMovement_Data.Partner_GLNCodeCorporate
+                                              , inGLNCodeCorporate_retail  := tmpMovement_Data.Retail_GLNCodeCorporate
+                                              , inGLNCodeCorporate_main    := tmpMovement_Data.JuridicalTo_GLNCode
+                                               )
+             END :: TVarChar AS SupplierGLNCode
 
            , CASE WHEN COALESCE (tmpMovement_Data.INN_From, OH_JuridicalDetails_From.INN) = vbNotNDSPayer_INN OR vbCalcNDSPayer_INN <> ''
                   THEN 'Неплатник'

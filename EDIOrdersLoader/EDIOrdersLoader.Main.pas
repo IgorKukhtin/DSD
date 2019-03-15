@@ -256,7 +256,9 @@ begin
     Old_stat:=fGet_Movement_Edi_stat;
     AddToLog('Загрузка EDI началась ... <'+IntToStr(Old_stat)+'>');
 
-    AddToLog(' - Период с ' + deStart.EditText + ' по ' + deEnd.EditText);
+    if FormParams.ParamByName('gIsDelete').Value = TRUE
+    then AddToLog(' - Период с ' + deStart.EditText + ' по ' + deEnd.EditText + ' : del = TRUE')
+    else AddToLog(' - Период с ' + deStart.EditText + ' по ' + deEnd.EditText + ' : del = FALSE');
 
     EDIActionOrdersLoad.Execute;
     AddToLog('Загружено <'+IntToStr(fGet_Movement_Edi_stat - Old_stat)+'> Документов');
