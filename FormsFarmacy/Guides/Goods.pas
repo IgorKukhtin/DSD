@@ -80,6 +80,8 @@ type
     bbUpdate_CountPrice: TdxBarButton;
     isNotUploadSites: TcxGridDBColumn;
     spUpdate_Goods_isNotUploadSites: TdsdStoredProc;
+    DoesNotShare: TcxGridDBColumn;
+    spUpdate_Goods_DoesNotShare: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -30,7 +30,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , MorionCode Integer, BarCode TVarChar--, OrdBar Integer
              , NDS_PriceList TFloat, isNDS_dif Boolean
              , OrdPrice Integer
-             , isNotUploadSites Boolean
+             , isNotUploadSites Boolean, DoesNotShare Boolean
               ) AS
 $BODY$ 
   DECLARE vbUserId Integer;
@@ -293,6 +293,7 @@ BEGIN
            , CASE WHEN COALESCE (tmpPricelistItems.GoodsNDS, 0) <> 0 AND inContractId <> 0 AND COALESCE (tmpPricelistItems.GoodsNDS, 0) <> Object_Goods_View.NDS THEN TRUE ELSE FALSE END AS isNDS_dif
            , tmpPricelistItems.Ord      :: Integer AS OrdPrice
            , COALESCE(ObjectBoolean_isNotUploadSites.ValueData, false) AS isNotUploadSites
+           , COALESCE(ObjectBoolean_DoesNotShare.ValueData, false) AS DoesNotShare
       FROM Object_Goods_View
            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_View.ObjectId
            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id 
@@ -355,6 +356,10 @@ BEGIN
                                    ON ObjectBoolean_isNotUploadSites.ObjectId = Object_Goods_View.Id 
                                   AND ObjectBoolean_isNotUploadSites.DescId = zc_ObjectBoolean_Goods_isNotUploadSites()
 
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_DoesNotShare 
+                                   ON ObjectBoolean_DoesNotShare.ObjectId = Object_Goods_View.Id 
+                                  AND ObjectBoolean_DoesNotShare.DescId = zc_ObjectBoolean_Goods_DoesNotShare()
+
       WHERE Object_Goods_View.ObjectId = vbObjectId
       ;
 
@@ -369,6 +374,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.  Шаблий О.В.
+ 15.03.19                                                                     * add DoesNotShare
  11.02.19         * признак Товары соц-проект берем и документа
  24.05.18                                                                     * add isNotUploadSites
  05.01.18         * add inRetailId
