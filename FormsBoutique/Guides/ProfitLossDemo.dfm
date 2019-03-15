@@ -9,17 +9,17 @@ inherited ProfitLossDemoForm: TProfitLossDemoForm
   inherited PageControl: TcxPageControl
     Width = 586
     Height = 451
-    ExplicitWidth = 648
+    ExplicitWidth = 586
     ExplicitHeight = 451
     ClientRectBottom = 451
     ClientRectRight = 586
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 648
+      ExplicitWidth = 586
       ExplicitHeight = 451
       inherited cxGrid: TcxGrid
         Width = 586
         Height = 451
-        ExplicitWidth = 648
+        ExplicitWidth = 586
         ExplicitHeight = 451
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -92,7 +92,7 @@ inherited ProfitLossDemoForm: TProfitLossDemoForm
         Hint = '% '#1089#1082#1080#1076#1082#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103
         EditValue = '0'
         ParentShowHint = False
-        Properties.DecimalPlaces = 1
+        Properties.DecimalPlaces = 4
         Properties.DisplayFormat = '0.####'
         ShowHint = True
         TabOrder = 1

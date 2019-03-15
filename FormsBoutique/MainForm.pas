@@ -223,6 +223,9 @@ type
     miReport_ProfitLossPeriod: TMenuItem;
     actProfitLossDemo: TdsdOpenForm;
     miProfitLossDemo: TMenuItem;
+    actReport_ProfitDemo: TdsdOpenForm;
+    miReport_ProfitDemo: TMenuItem;
+    N7: TMenuItem;
   private
     { Private declarations }
   public

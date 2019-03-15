@@ -100,6 +100,7 @@ object Movement_DateDialogForm: TMovement_DateDialogForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
@@ -107,6 +108,7 @@ object Movement_DateDialogForm: TMovement_DateDialogForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'IsPartnerDate'
@@ -114,8 +116,9 @@ object Movement_DateDialogForm: TMovement_DateDialogForm
         Component = edIsPartnerDate
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 31
-    Top = 134
+    Left = 103
+    Top = 30
   end
 end

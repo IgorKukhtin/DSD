@@ -313,7 +313,8 @@ uses
   Report_Sale_AnalysisAll in '..\..\FormsBoutique\Report\Report_Sale_AnalysisAll.pas' {Report_Sale_AnalysisAllForm: TParentForm},
   Report_ProfitLossPeriod in '..\..\FormsBoutique\Report\Report_ProfitLossPeriod.pas' {Report_ProfitLossPeriodForm: TParentForm},
   Report_ProfitLossPeriodDialog in '..\..\FormsBoutique\Report\Report_ProfitLossPeriodDialog.pas' {Report_ProfitLossPeriodDialogForm: TParentForm},
-  ProfitLossDemo in '..\..\FormsBoutique\Guides\ProfitLossDemo.pas' {ProfitLossDemoForm: TParentForm};
+  ProfitLossDemo in '..\..\FormsBoutique\Guides\ProfitLossDemo.pas' {ProfitLossDemoForm: TParentForm},
+  Report_ProfitDemo in '..\..\FormsBoutique\Report\Report_ProfitDemo.pas' {Report_ProfitDemoForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

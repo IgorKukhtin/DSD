@@ -1,4 +1,4 @@
-unit Report_ProfitLoss;
+unit Report_ProfitDemo;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   cxDBPivotGrid, cxLabel, dxBarExtItems, ChoicePeriod, cxCheckBox;
 
 type
-  TReport_ProfitLossForm = class(TParentForm)
+  TReport_ProfitDemoForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -79,6 +79,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_ProfitLossForm);
+  RegisterClass(TReport_ProfitDemoForm);
 
 end.

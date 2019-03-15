@@ -30,7 +30,7 @@ BEGIN
                             -- ??? как сделать что б не попали операции переброски накопленной прибыль прошлого месяца в долг по прибыли???
      WITH tmpMIContainer AS (SELECT MIContainer.ContainerId
                                   , -1 * SUM (MIContainer.Amount)      AS Amount
-                                  , MIContainer.WhereObjectId_Analyzer AS UnitId_ProfitLoss
+                                  , MIContainer.ObjectExtId_Analyzer   AS UnitId_ProfitLoss
                                   , MIContainer.WhereObjectId_Analyzer AS DirectionId
                                   , MIContainer.MovementDescId
                              FROM MovementItemContainer AS MIContainer 
@@ -38,7 +38,7 @@ BEGIN
                                AND MIContainer.AccountId = zc_Enum_Account_100301()
                                AND MIContainer.isActive = FALSE
                              GROUP BY MIContainer.ContainerId
-                                    , MIContainer.WhereObjectId_Analyzer
+                                    , MIContainer.ObjectExtId_Analyzer
                                     , MIContainer.WhereObjectId_Analyzer
                                     , MIContainer.MovementDescId
                             )
@@ -101,7 +101,7 @@ BEGIN
            LEFT JOIN Object AS Object_Unit_ProfitLoss   ON Object_Unit_ProfitLoss.Id = tmpReport.UnitId_ProfitLoss
            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = NULL
 
-           LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id   = NULL
+           LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id   = tmpReport.DirectionId
            LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = NULL
 
            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
