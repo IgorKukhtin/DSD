@@ -14,7 +14,7 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE cur1 refcursor;
-  DECLARE cur2 refcursor;
+  DECLARE cur3 refcursor;
   DECLARE vbDefaultValue TVarChar;
   DECLARE vbCurrDay Integer;
 BEGIN
@@ -39,7 +39,7 @@ BEGIN
      -- возвращаем заголовки столбцов и даты
      OPEN cur1 FOR SELECT tmpOperDate.OperDate::TDateTime,
                           ((EXTRACT(DAY FROM tmpOperDate.OperDate))||case when tmpCalendar.Working = False then ' *' else ' ' END||tmpWeekDay.DayOfWeekName) ::TVarChar AS ValueField,
-                          ''::TVarChar   AS ValueFieldUser
+                          EXTRACT(DAY FROM tmpOperDate.OperDate)::TVarChar   AS ValueFieldUser
                FROM tmpOperDate
                    LEFT JOIN zfCalc_DayOfWeekName (tmpOperDate.OperDate) AS tmpWeekDay ON 1=1
                    LEFT JOIN gpSelect_Object_Calendar(tmpOperDate.OperDate,tmpOperDate.OperDate,inSession) tmpCalendar ON 1=1
@@ -55,7 +55,7 @@ BEGIN
                    WHERE MovementItem.MovementId = inMovementId
                      AND MovementItem.DescId = zc_MI_Master())
      THEN
-       OPEN cur2 FOR
+       OPEN cur3 FOR
        WITH tmpUser AS (SELECT DISTINCT
                               ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
                             , MovementItem.ObjectId                       AS UserID
@@ -452,7 +452,7 @@ BEGIN
        WHERE Movement.ID = inMovementId
          AND (MovementItem.IsErased = FALSE OR inIsErased = TRUE);
      ELSE
-       OPEN cur2 FOR
+       OPEN cur3 FOR
        WITH tmpUser AS (SELECT DISTINCT
                               ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
                             , MovementItem.ObjectId                       AS UserID
@@ -699,7 +699,7 @@ BEGIN
          AND (MovementItem.IsErased = FALSE OR inIsErased = TRUE);
      END IF;
 
-     RETURN NEXT cur2;
+     RETURN NEXT cur3;
 
 END;
 $BODY$

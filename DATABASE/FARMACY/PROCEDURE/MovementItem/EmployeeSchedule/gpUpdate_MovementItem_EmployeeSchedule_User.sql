@@ -64,6 +64,7 @@ BEGIN
                                                                       , inMovementId          := vbMovementID      -- ключ Документа
                                                                       , inPersonId            := vbUserId          -- сотрудник
                                                                       , inComingValueDay      := '0000000000000000000000000000000'::TVarChar      -- Приходы на работу по дням
+                                                                      , inComingValueDayUser  := '0000000000000000000000000000000'::TVarChar      -- Приходы на работу по дням
                                                                       , inUserId              := vbUserId          -- пользователь
                                                                        );
 

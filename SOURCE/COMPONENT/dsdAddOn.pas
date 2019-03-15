@@ -1380,6 +1380,7 @@ begin
     FDateEdit.Date:=Now;
   end;
 end;
+
 procedure TdsdDBViewAddOn.SetView(const Value: TcxGridTableView);
 begin
   FView := Value;
@@ -2342,7 +2343,7 @@ procedure TCrossDBViewAddOn.onEditing(Sender: TcxCustomGridTableView;
 begin
   if Assigned(FEditing) then
      FEditing(Sender, AItem, AAllow);
-  if Assigned(HeaderDataSet) then
+  if Assigned(HeaderDataSet) and (FCreateColumnList.IndexOf(Aitem) >= 0) then
      HeaderDataSet.Locate(HeaderColumnName, Aitem.Caption, []);
 end;
 
@@ -2356,6 +2357,7 @@ begin
      FAfterClose := FDataSet.AfterClose;
      FDataSet.AfterClose := onAfterClose;
      FEditing := Value.OnEditing;
+     Value.OnEditing := Nil;
      Value.OnEditing := onEditing;
      FFocusedItemChanged := Value.OnFocusedItemChanged;
      Value.OnFocusedItemChanged := FocusedItemChanged;
