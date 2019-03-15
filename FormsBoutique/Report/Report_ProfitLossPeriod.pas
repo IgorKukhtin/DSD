@@ -75,6 +75,7 @@ type
     cfCalcPercent: TdsdPivotGridCalcFields;
     cfCalcPercentMonth: TdsdPivotGridCalcFields;
     PercentMonth: TcxDBPivotGridField;
+    clDirectionObjectName: TcxDBPivotGridField;
   private
   public
   end;

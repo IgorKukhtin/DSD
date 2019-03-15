@@ -37,11 +37,12 @@ BEGIN
                                       AND ObjectLink_ProfitLoss_Unit.DescId   = zc_ObjectLink_ProfitLossDemo_Unit()
 
                                 LEFT JOIN ObjectFloat AS ObjectFloat_Value
-                                                        ON ObjectFloat_Value.ObjectId = Object_ProfitLossDemo.Id 
-                                                       AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ProfitLossDemo_Value()
+                                       ON ObjectFloat_Value.ObjectId = Object_ProfitLossDemo.Id 
+                                      AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ProfitLossDemo_Value()
 
                            WHERE Object_ProfitLossDemo.DescId = zc_Object_ProfitLossDemo()
                            )
+
    , tmpUnion AS (SELECT Object_ProfitLoss.Id  AS ProfitLossId
                        , Object_Unit.Id        AS UnitId
                   FROM Object AS Object_ProfitLoss 

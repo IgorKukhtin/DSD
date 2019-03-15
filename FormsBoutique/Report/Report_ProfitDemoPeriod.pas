@@ -1,4 +1,4 @@
-unit Report_ProfitLoss;
+unit Report_ProfitDemoPeriod;
 
 interface
 
@@ -23,10 +23,10 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
-  cxDBPivotGrid, cxLabel, dxBarExtItems, ChoicePeriod, cxCheckBox;
+  cxDBPivotGrid, cxLabel, dxBarExtItems, ChoicePeriod, cxCheckBox, dsdPivotGrid;
 
 type
-  TReport_ProfitLossForm = class(TParentForm)
+  TReport_ProfitDemoPeriodForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -40,8 +40,8 @@ type
     bbToExcel: TdxBarButton;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel1: TPanel;
-    deStart: TcxDateEdit;
-    deEnd: TcxDateEdit;
+    deStart1: TcxDateEdit;
+    deEnd1: TcxDateEdit;
     cxDBPivotGrid: TcxDBPivotGrid;
     clProfitLossGroupName: TcxDBPivotGridField;
     clProfitLossDirectionName: TcxDBPivotGridField;
@@ -49,8 +49,6 @@ type
     clInfoMoneyName: TcxDBPivotGridField;
     clAmount: TcxDBPivotGridField;
     clMovementDescName: TcxDBPivotGridField;
-    cxLabel1: TcxLabel;
-    cxLabel2: TcxLabel;
     clUnitName_ProfitLoss: TcxDBPivotGridField;
     clInfoMoneyCode: TcxDBPivotGridField;
     clInfoMoneyGroupName: TcxDBPivotGridField;
@@ -60,16 +58,24 @@ type
     dsdExecStoredProc1: TdsdExecStoredProc;
     spGetProfitLostParam: TdsdStoredProc;
     PivotAddOn: TPivotAddOn;
-    PeriodChoice: TPeriodChoice;
+    PeriodChoice1: TPeriodChoice;
     dxBarStatic: TdxBarStatic;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    cbTotal: TcxCheckBox;
-    dxBarControlContainerItem1: TdxBarControlContainerItem;
     RefreshDispatcher: TRefreshDispatcher;
-    DirectionObjectName: TcxDBPivotGridField;
+    cxLabel7: TcxLabel;
+    cxLabel9: TcxLabel;
+    deStart2: TcxDateEdit;
+    deEnd2: TcxDateEdit;
+    cxLabel3: TcxLabel;
+    cxLabel4: TcxLabel;
+    PeriodChoice2: TPeriodChoice;
+    cfCalcPercent: TdsdPivotGridCalcFields;
+    cfCalcPercentMonth: TdsdPivotGridCalcFields;
+    PercentMonth: TcxDBPivotGridField;
+    clDirectionObjectName: TcxDBPivotGridField;
   private
   public
   end;
@@ -79,6 +85,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_ProfitLossForm);
+  RegisterClass(TReport_ProfitDemoPeriodForm);
 
 end.

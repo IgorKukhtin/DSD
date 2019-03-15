@@ -1140,17 +1140,19 @@ begin
 end;
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin
-{
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerJournalForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalChoiceForm');
 
@@ -1172,13 +1174,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_ReturnInToSaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_ReturnInToSaleDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_ReturnInToSaleDialogForm');
-  }
+
   //Отчет Проверка количества в привязке возврата к продажам
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckAmount_ReturnInToSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckAmount_ReturnInToSaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckAmount_ReturnInToSaleDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckAmount_ReturnInToSaleDialogForm');
-
+   }
 end;
 { ZakazExternalForm  -> OrderExternalForm
 procedure TLoadFormTest.LoadZakazExternalFormTest;

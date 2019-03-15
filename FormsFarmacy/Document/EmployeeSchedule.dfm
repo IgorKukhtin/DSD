@@ -155,6 +155,8 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
               '21:00'
               #1042)
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             MinWidth = 40
             Width = 60
             Position.BandIndex = 1
@@ -173,6 +175,8 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
               '21:00'
               #1042)
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             MinWidth = 40
             Width = 60
             Position.BandIndex = 1
@@ -874,7 +878,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
       item
         Name = 'ioValueUser'
         Value = Null
-        Component = CrossDBViewAddOn
+        Component = CrossDBViewUserAddOn
         ComponentItem = 'ValueUser'
         DataType = ftString
         ParamType = ptInputOutput
@@ -923,6 +927,23 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     SearchAsFilter = False
     Left = 214
     Top = 353
+  end
+  object CrossDBViewUserAddOn: TCrossDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBBandedTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    HeaderDataSet = HeaderCDS
+    HeaderColumnName = 'ValueFieldUser'
+    TemplateColumn = ValueUser
+    Left = 680
+    Top = 168
   end
   object CrossDBViewAddOn: TCrossDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -976,23 +997,6 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     PackSize = 1
     Left = 488
     Top = 336
-  end
-  object CrossDBViewUserAddOn: TCrossDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = cxGridDBBandedTableView1
-    OnDblClickActionList = <>
-    ActionItemList = <>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
-    ColumnAddOnList = <>
-    ColumnEnterList = <>
-    SummaryItemList = <>
-    HeaderDataSet = HeaderCDS
-    HeaderColumnName = 'ValueFieldUser'
-    TemplateColumn = ValueUser
-    Left = 680
-    Top = 168
   end
   object spPreviousMonth: TdsdStoredProc
     StoredProcName = 'gpInsert_MovementItem_EmployeeSchedule_PreviousMonth'

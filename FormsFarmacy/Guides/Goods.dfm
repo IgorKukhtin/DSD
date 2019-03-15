@@ -354,6 +354,13 @@ inherited GoodsForm: TGoodsForm
             HeaderHint = #1053#1077' '#1074#1099#1075#1088#1091#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1072#1081#1090#1086#1074' ('#1074' '#1074#1099#1075#1088#1091#1079#1082#1072#1093' '#1076#1083#1103' '#1082#1086#1085#1090#1088' '#1072#1075#1077#1085#1090#1086#1074')'
             Width = 60
           end
+          object DoesNotShare: TcxGridDBColumn
+            Caption = #1053#1077' '#1076#1077#1083#1080#1090#1100' '#1085#1072' '#1082#1072#1089#1089#1072#1093
+            DataBinding.FieldName = 'DoesNotShare'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
         end
       end
     end
@@ -544,6 +551,9 @@ inherited GoodsForm: TGoodsForm
         end
         item
           StoredProc = spUpdate_Goods_isNotUploadSites
+        end
+        item
+          StoredProc = spUpdate_Goods_DoesNotShare
         end>
       Caption = 'UpdateDataSet'
       DataSource = MasterDS
@@ -1282,7 +1292,7 @@ inherited GoodsForm: TGoodsForm
       end>
     PackSize = 1
     Left = 808
-    Top = 248
+    Top = 232
   end
   object spUpdate_CountPrice: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_CountPrice'
@@ -1325,5 +1335,38 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 648
     Top = 312
+  end
+  object spUpdate_Goods_DoesNotShare: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_DoesNotShare'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDoesNotShare'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DoesNotShare'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDoesNotShare'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DoesNotShare'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 808
+    Top = 296
   end
 end

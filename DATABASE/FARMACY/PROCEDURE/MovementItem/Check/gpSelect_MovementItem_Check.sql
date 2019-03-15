@@ -26,7 +26,8 @@ RETURNS TABLE (Id Integer, ParentId integer
              , Remains TFloat
              , Color_calc integer
              , Color_ExpirationDate integer   
-             , AccommodationName TVarChar          
+             , AccommodationName TVarChar       
+             , Multiplicity TFloat   
               )
 AS
 $BODY$
@@ -86,6 +87,7 @@ BEGIN
            , zc_Color_White()                                                    AS Color_calc
            , zc_Color_Black()                                                    AS Color_ExpirationDate
            , Null::TVArChar                                                      AS AccommodationName  
+           , Null::TFloat                                                         AS Multiplicity 
        FROM MovementItem_Check_View AS MovementItem 
             -- получаем GoodsMainId
             LEFT JOIN  ObjectLink AS ObjectLink_Child 
@@ -109,6 +111,7 @@ ALTER FUNCTION gpSelect_MovementItem_Check (Integer, TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А. Воробкало А.А   Шаблий О.В.
+ 15.03.19                                                                                   *
  05.11.18                                                                                   *
  21.10.18                                                                                   *
  21.04.17         *

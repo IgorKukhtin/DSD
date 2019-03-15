@@ -13,6 +13,7 @@ RETURNS TABLE (OperYear TDateTime, OperMONTH TDateTime
              , ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, ProfitLossName  TVarChar
              , PL_GroupName_original TVarChar, PL_DirectionName_original TVarChar, PL_Name_original  TVarChar
              , UnitName_ProfitLoss TVarChar
+             , DirectionObjectCode Integer, DirectionObjectName TVarChar
              , MovementDescName TVarChar
              , Amount TFloat
              , AmountPast TFloat
@@ -36,7 +37,7 @@ BEGIN
           tmpMIContainer1 AS (SELECT MIContainer.ContainerId
                                    , MIContainer.OperDate
                                    , -1 * SUM (MIContainer.Amount)      AS Amount
-                                   , MIContainer.WhereObjectId_Analyzer AS UnitId_ProfitLoss
+                                   , MIContainer.ObjectExtId_Analyzer   AS UnitId_ProfitLoss
                                    , MIContainer.WhereObjectId_Analyzer AS DirectionId
                                    , MIContainer.MovementDescId
                               FROM MovementItemContainer AS MIContainer 
@@ -44,7 +45,7 @@ BEGIN
                                 AND MIContainer.AccountId = zc_Enum_Account_100301()
                                 AND MIContainer.isActive = FALSE
                               GROUP BY MIContainer.ContainerId
-                                     , MIContainer.WhereObjectId_Analyzer
+                                     , MIContainer.ObjectExtId_Analyzer
                                      , MIContainer.WhereObjectId_Analyzer
                                      , MIContainer.MovementDescId
                                      , MIContainer.OperDate
@@ -85,7 +86,7 @@ BEGIN
         , tmpMIContainer2 AS (SELECT MIContainer.ContainerId
                                    , MIContainer.OperDate
                                    , -1 * SUM (MIContainer.Amount)      AS Amount
-                                   , MIContainer.WhereObjectId_Analyzer AS UnitId_ProfitLoss
+                                   , MIContainer.ObjectExtId_Analyzer   AS UnitId_ProfitLoss
                                    , MIContainer.WhereObjectId_Analyzer AS DirectionId
                                    , MIContainer.MovementDescId
                               FROM MovementItemContainer AS MIContainer 
@@ -93,7 +94,7 @@ BEGIN
                                 AND MIContainer.AccountId = zc_Enum_Account_100301()
                                 AND MIContainer.isActive = FALSE
                               GROUP BY MIContainer.ContainerId
-                                     , MIContainer.WhereObjectId_Analyzer
+                                     , MIContainer.ObjectExtId_Analyzer
                                      , MIContainer.WhereObjectId_Analyzer
                                      , MIContainer.MovementDescId
                                      , MIContainer.OperDate
@@ -208,6 +209,9 @@ BEGIN
 
            , Object_Unit_ProfitLoss.ValueData AS UnitName_ProfitLoss
 
+           , Object_Direction.ObjectCode   AS DirectionObjectCode
+           , Object_Direction.ValueData    AS DirectionObjectName
+
            , MovementDesc.ItemName         AS MovementDescName
 
            , tmpReport.Amount     :: TFloat AS Amount
@@ -222,6 +226,7 @@ BEGIN
                                             ON View_ProfitLoss.ProfitLossId = tmpReport.ProfitLossId
            
            LEFT JOIN Object AS Object_Unit_ProfitLoss ON Object_Unit_ProfitLoss.Id = tmpReport.UnitId_ProfitLoss
+           LEFT JOIN Object AS Object_Direction       ON Object_Direction.Id       = tmpReport.DirectionId
 
            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
 

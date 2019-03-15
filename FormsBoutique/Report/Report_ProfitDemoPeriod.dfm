@@ -1,7 +1,7 @@
-object Report_ProfitLossPeriodForm: TReport_ProfitLossPeriodForm
+object Report_ProfitDemoPeriodForm: TReport_ProfitDemoPeriodForm
   Left = 0
   Top = 0
-  Caption = #1054#1090#1095#1077#1090' '#1086' '#1055#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1059#1073#1099#1090#1082#1072#1093
+  Caption = #1054#1090#1095#1077#1090' '#1086' '#1055#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1059#1073#1099#1090#1082#1072#1093' ('#1044#1077#1084#1086'-'#1074#1077#1088#1089#1080#1103')'
   ClientHeight = 395
   ClientWidth = 906
   Color = clBtnFace
@@ -772,7 +772,7 @@ object Report_ProfitLossPeriodForm: TReport_ProfitLossPeriodForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpReport_ProfitLossPeriod'
+    StoredProcName = 'gpReport_ProfitDemoPeriod'
     DataSet = ClientDataSet
     DataSets = <
       item

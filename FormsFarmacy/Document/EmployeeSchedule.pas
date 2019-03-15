@@ -35,6 +35,7 @@ type
     dxBarButton2: TdxBarButton;
     dxBarButton3: TdxBarButton;
     cxGridDBBandedTableView1: TcxGridDBBandedTableView;
+    CrossDBViewUserAddOn: TCrossDBViewAddOn;
     CrossDBViewAddOn: TCrossDBViewAddOn;
     HeaderCDS: TClientDataSet;
     actDataDialog: TExecuteDialog;
@@ -44,7 +45,6 @@ type
     spInsertUser: TdsdStoredProc;
     UnitName: TcxGridDBBandedColumn;
     ValueUser: TcxGridDBBandedColumn;
-    CrossDBViewUserAddOn: TCrossDBViewAddOn;
     actExecPreviousMonth: TdsdExecStoredProc;
     spPreviousMonth: TdsdStoredProc;
     actPreviousMonth: TMultiAction;

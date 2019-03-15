@@ -610,7 +610,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
     object edIsPartnerDate: TcxCheckBox
       Left = 10
       Top = 26
-      Action = actRefresh
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
       TabOrder = 4
       Width = 270
@@ -1419,7 +1419,8 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Top = 155
+    Left = 128
+    Top = 211
   end
   inherited BarManager: TdxBarManager
     Left = 152

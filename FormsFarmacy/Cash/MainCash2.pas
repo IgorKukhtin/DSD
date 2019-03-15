@@ -369,6 +369,7 @@ type
     actUpdateRemainsCDS1: TMenuItem;
     spDoesNotShare: TdsdStoredProc;
     spInsert_MovementItem_PUSH: TdsdStoredProc;
+    Multiplicity: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1100,7 +1101,8 @@ begin
         RemainsCDS.FieldByName('Remains').asCurrency) or
         (checkCDS.FieldByName('Color_calc').AsInteger <> RemainsCDS.FieldByName('Color_calc').asInteger) or
         (checkCDS.FieldByName('Color_ExpirationDate').AsInteger <> RemainsCDS.FieldByName('Color_ExpirationDate').asInteger) or
-        (checkCDS.FieldByName('AccommodationName').AsVariant <> RemainsCDS.FieldByName('AccommodationName').AsVariant)) then
+        (checkCDS.FieldByName('AccommodationName').AsVariant <> RemainsCDS.FieldByName('AccommodationName').AsVariant) or
+        (checkCDS.FieldByName('Multiplicity').AsVariant <> RemainsCDS.FieldByName('Multiplicity').AsVariant)) then
       begin
         checkCDS.Edit;
         checkCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency +
@@ -1115,6 +1117,8 @@ begin
           checkCDS.FieldByName('Color_ExpirationDate').AsInteger:=clBlack;
         end;
         checkCDS.FieldByName('AccommodationName').AsVariant:=RemainsCDS.FieldByName('AccommodationName').AsVariant;
+        if checkCDS.FieldByName('Price').asCurrency <> checkCDS.FieldByName('PriceSale').asCurrency then
+           checkCDS.FieldByName('Multiplicity').AsVariant:=RemainsCDS.FieldByName('Multiplicity').AsVariant;
         checkCDS.Post;
       end;
       CheckCDS.Next;
@@ -1568,6 +1572,24 @@ begin
     Exit;
   end;
 
+  // Контроль чека до печати
+  with CheckCDS do
+  begin
+    First;
+    while not EOF do
+    begin
+
+      if (FieldByName('Multiplicity').AsCurrency <> 0) and (FieldByName('Price').asCurrency <> FieldByName('PriceSale').asCurrency) and
+        (Trunc(FieldByName('Amount').AsCurrency / FieldByName('Multiplicity').AsCurrency * 100) mod 100 <> 0) then
+      begin
+        ShowMessage('Для медикамента '#13#10 + FieldByName('GoodsName').AsString + #13#10'установлена кратность при отпуске со скидкой.'#13#10#13#10 +
+          'Отпускать со скидкой разрешено кратно ' + FieldByName('Multiplicity').AsString + ' упаковки.');
+        Exit;
+      end;
+      Next;
+    end;
+  end;
+
   Add_Log('PutCheckToCash');
   PaidType:=ptMoney;
   //спросили сумму и тип оплаты
@@ -1914,6 +1936,9 @@ begin
         end;
         //***05.11.18
         checkCDS.FieldByName('AccommodationName').AsVariant:=RemainsCDS.FieldByName('AccommodationName').AsVariant;
+        //***15.03.19
+        if checkCDS.FieldByName('Price').asCurrency <> checkCDS.FieldByName('PriceSale').asCurrency then
+          checkCDS.FieldByName('Multiplicity').AsVariant:=RemainsCDS.FieldByName('Multiplicity').AsVariant;
         CheckCDS.Post;
         Add_Log('Id - '+ VipList.FieldByName('Id').AsString +
                 ' GoodsCode - ' + VipList.FieldByName('GoodsCode').AsString +
@@ -3395,11 +3420,12 @@ procedure TMainCashForm2.InsertUpdateBillCheckItems;
 var lQuantity, lPrice, lPriceSale, lChangePercent, lSummChangePercent, nAmount : Currency;
     lMsg : String;
     lGoodsId_bySoldRegim, nRecNo : Integer;
-    lPriceSale_bySoldRegim, lPrice_bySoldRegim : Currency;
+    lPriceSale_bySoldRegim, lPrice_bySoldRegim, nMultiplicity : Currency;
 begin
 
   // Ночные скидки
   SetTaxUnitNight;
+  nMultiplicity := 0;
 
   nAmount := GetAmount;
   if nAmount = 0 then
@@ -3516,6 +3542,12 @@ begin
                       end;
                     mrYes :
                       begin
+
+                         nMultiplicity := SourceClientDataSet.FieldByName('Multiplicity').AsCurrency;
+                         if SourceClientDataSet.FieldByName('Multiplicity').AsCurrency <> 0 then
+                           ShowMessage('Для медикамента установлена кратность при отпуске со скидкой.'#13#10#13#10 +
+                             'Отпускать со скидкой разрешено кратно ' + SourceClientDataSet.FieldByName('Multiplicity').AsString + ' упаковки.');
+
                          CalcPriceSale(lPriceSale_bySoldRegim, lPrice_bySoldRegim, lChangePercent,
                            SourceClientDataSet.FieldByName('Price').asCurrency, 0,
                            SourceClientDataSet.FieldByName('PriceChange').asCurrency);
@@ -3538,6 +3570,12 @@ begin
                       end;
                     mrYes :
                       begin
+
+                         nMultiplicity := SourceClientDataSet.FieldByName('Multiplicity').AsCurrency;
+                         if SourceClientDataSet.FieldByName('Multiplicity').AsCurrency <> 0 then
+                           ShowMessage('Для медикамента установлена кратность при отпуске со скидкой.'#13#10#13#10 +
+                             'Отпускать со скидкой разрешено кратно ' + SourceClientDataSet.FieldByName('Multiplicity').AsString + ' упаковки.');
+
                          CalcPriceSale(lPriceSale_bySoldRegim, lPrice_bySoldRegim, lChangePercent,
                            SourceClientDataSet.FieldByName('Price').asCurrency, SourceClientDataSet.FieldByName('FixPercent').asCurrency);
                       end;
@@ -3557,6 +3595,8 @@ begin
              else lPriceSale_bySoldRegim := CheckCDS.FieldByName('Price').asCurrency;
              // ?цена СО скидкой в этом случае такая же?
              lPrice_bySoldRegim:= lPriceSale_bySoldRegim;
+             // Кратность упаковки
+             nMultiplicity := CheckCDS.FieldByName('Multiplicity').AsCurrency;
        end;
   {
   //Находится "ИТОГО" кол-во - сколько уже набрали в продаже и к нему плюсуется или минусуется "новое" кол-во
@@ -3723,6 +3763,7 @@ begin
         end;
         if Assigned(SourceClientDataSet.FindField('AccommodationName')) then
           checkCDS.FieldByName('AccommodationName').AsVariant:=SourceClientDataSet.FieldByName('AccommodationName').AsVariant;
+        checkCDS.FieldByName('Multiplicity').AsVariant:=nMultiplicity;
         checkCDS.Post;
 
         if (FormParams.ParamByName('DiscountExternalId').Value > 0) and
@@ -4330,6 +4371,14 @@ begin
         begin
           if CheckCDS.FieldByName('Amount').asCurrency >= 0.001 then
               Disc := Disc + (FieldByName('Summ').asCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('Price').asCurrency));
+
+          if (FieldByName('Multiplicity').AsCurrency <> 0) and (FieldByName('Price').asCurrency <> FieldByName('PriceSale').asCurrency) and
+            (Trunc(FieldByName('Amount').AsCurrency / FieldByName('Multiplicity').AsCurrency * 100) mod 100 <> 0) then
+          begin
+            ShowMessage('Для медикамента '#13#10 + FieldByName('GoodsName').AsString + #13#10'установлена кратность при отпуске со скидкой.'#13#10#13#10 +
+              'Отпускать со скидкой разрешено кратно ' + FieldByName('Multiplicity').AsString + ' упаковки.');
+            Exit;
+          end;
           Next;
         end;
 
