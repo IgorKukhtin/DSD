@@ -603,6 +603,16 @@ BEGIN
                                       , zc_Color_White() AS Color_calc
                                       , zc_PivotSummartType_Sum() :: Integer AS SummType
                                  FROM tmpOperationGroupAll
+                                UNION
+                                 SELECT '26. итого транспорт' AS Col_Name
+                                      , 26 AS Num
+                                      , tmpOperationGroupAll.OperDate
+                                      , tmpOperationGroupAll.JuridicalId
+                                      , COALESCE (tmpOperationGroupAll.Amount_23,0) + COALESCE (tmpOperationGroupAll.Amount_24,0) + COALESCE (tmpOperationGroupAll.Amount_25,0)
+                                      , 0::TFloat
+                                      , zc_Color_White() AS Color_calc
+                                      , zc_PivotSummartType_Sum() :: Integer AS SummType
+                                 FROM tmpOperationGroupAll
                                  )
 
       -- Результат
