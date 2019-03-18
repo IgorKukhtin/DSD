@@ -18,6 +18,8 @@ RETURNS TABLE (PersonalDriverName TVarChar
              , RouteKindFreightName TVarChar
              , Weight TFloat, HoursWork TFloat, HoursAdd TFloat
              , InvNumber Integer, OperDate TDateTime
+             , Count_Movement  TFloat
+             , TotalCountKg    TFloat
               )
 AS
 $BODY$BEGIN
@@ -26,29 +28,66 @@ $BODY$BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Transport());
      
       RETURN QUERY 
-         WITH tmpPersonal AS  (SELECT PersonalId FROM Object_Personal_View WHERE COALESCE (inPersonalId, 0) = 0 UNION SELECT COALESCE (inPersonalId, 0) AS PersonalId
+         WITH tmpPersonal AS (SELECT PersonalId
+                              FROM Object_Personal_View
+                              WHERE COALESCE (inPersonalId, 0) = 0
+                             UNION
+                              SELECT COALESCE (inPersonalId, 0) AS PersonalId
+                             )
+            , tmpMovement AS (SELECT Movement.Id, Movement.OperDate, Movement.InvNumber
+                              FROM Movement
+                              WHERE Movement.DescId = zc_Movement_Transport()
+                                AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                AND Movement.StatusId = zc_Enum_Status_Complete()
                               )
-            , tmpMovement AS (SELECT Movement.Id, Movement.OperDate, Movement.InvNumber FROM Movement WHERE Movement.DescId = zc_Movement_Transport() AND Movement.OperDate BETWEEN inStartDate AND inEndDate AND Movement.StatusId = zc_Enum_Status_Complete()
-                              )
 
-        SELECT 
-   	          View_PersonalDriver.PersonalName AS PersonalDriverName
-   	        
-   	        , ViewObject_Unit.BranchName  AS BranchName
+            , tmpReestr AS (SELECT tmpMovement.Id                     AS MovementId_Transport
+                                 , COUNT (DISTINCT Movement_Sale.Id)  AS Count_Movement
+                                 , SUM (COALESCE (MovementFloat_TotalCountKg.ValueData, 0)) AS TotalCountKg 
+                            FROM tmpMovement
+                                 -- привязка документа реестра
+                                 INNER JOIN MovementLinkMovement AS MovementLinkMovement_Transport
+                                                                 ON MovementLinkMovement_Transport.MovementChildId = tmpMovement.Id
+                                                                AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
 
-            , Object_Route.ValueData      AS RouteName
+                                 INNER JOIN Movement AS Movement_Reestr 
+                                                     ON Movement_Reestr.Id = MovementLinkMovement_Transport.MovementId
+                                                    AND Movement_Reestr.DescId = zc_Movement_Reestr()
+                                                    AND Movement_Reestr.StatusId <> zc_Enum_Status_Erased()
+                     
+                                 -- строчная часть реестра
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement_Reestr.Id
+                                 -- док. продажи
+                                 INNER JOIN MovementFloat AS MovementFloat_MovementItemId
+                                                          ON MovementFloat_MovementItemId.ValueData ::integer = MovementItem.Id -- tmpMI.MovementItemId
+                                                         AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
+                                 INNER JOIN Movement AS Movement_Sale 
+                                                     ON Movement_Sale.Id = MovementFloat_MovementItemId.MovementId
+                                                    AND Movement_Sale.StatusId <> zc_Enum_Status_Erased()
+                     
+                                 LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+                                                         ON MovementFloat_TotalCountKg.MovementId = Movement_Sale.Id
+                                                        AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+                            GROUP BY tmpMovement.Id
+                            )
 
-            , Object_RouteKind.ValueData  AS RouteKindName
+        --- результат
+        SELECT View_PersonalDriver.PersonalName AS PersonalDriverName
+   	     , ViewObject_Unit.BranchName  AS BranchName
+             , Object_Route.ValueData      AS RouteName
+             , Object_RouteKind.ValueData  AS RouteKindName
+             , Object_RouteKindFreight.ValueData AS RouteKindFreightName
 
-            , Object_RouteKindFreight.ValueData AS RouteKindFreightName
-
-            , (CASE WHEN tmpMovementAll.DescId_Personal = zc_MovementLinkObject_PersonalDriver() THEN tmpMI.Weight ELSE 0 END) :: TFloat AS Weight
+             , (CASE WHEN tmpMovementAll.DescId_Personal = zc_MovementLinkObject_PersonalDriver() THEN tmpMI.Weight ELSE 0 END) :: TFloat AS Weight
             
-            , (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0)) :: TFloat AS HoursWork
-            , MovementFloat_HoursAdd.ValueData      AS HoursAdd
+             , (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0)) :: TFloat AS HoursWork
+             , MovementFloat_HoursAdd.ValueData      AS HoursAdd
 
-            , zfConvert_StringToNumber (tmpMovementAll.InvNumber) AS InvNumber
-            , tmpMovementAll.OperDate
+             , zfConvert_StringToNumber (tmpMovementAll.InvNumber) AS InvNumber
+             , tmpMovementAll.OperDate
+             
+             , COALESCE (tmpReestr.Count_Movement, 0) :: TFloat AS Count_Movement
+             , COALESCE (tmpReestr.TotalCountKg, 0)   :: TFloat AS TotalCountKg
 
         FROM (SELECT tmpMovement.Id, tmpMovement.OperDate, tmpMovement.InvNumber, MovementLinkObject_PersonalDriver.DescId AS DescId_Personal, MovementLinkObject_PersonalDriver.ObjectId AS PersonalId
               FROM tmpMovement
@@ -98,21 +137,23 @@ $BODY$BEGIN
               -- ограничиваем по Филиалу
               LEFT JOIN Object_Unit_View AS ViewObject_Unit ON ViewObject_Unit.Id = View_PersonalDriver.UnitId
                                   -- AND (ViewObject_Unit.BranchId = inBranchId OR inBranchId = 0)
-           WHERE COALESCE (ViewObject_Unit.BranchId, 0) = inBranchId 
-              OR inBranchId = 0 
-              OR (inBranchId = zc_Branch_Basis() AND COALESCE (ViewObject_Unit.BranchId, 0) = 0)
+              --
+              LEFT JOIN tmpReestr ON tmpReestr.MovementId_Transport = tmpMovementAll.Id
+
+        WHERE COALESCE (ViewObject_Unit.BranchId, 0) = inBranchId 
+           OR inBranchId = 0 
+           OR (inBranchId = zc_Branch_Basis() AND COALESCE (ViewObject_Unit.BranchId, 0) = 0)
 
 ;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_TransportHoursWork (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 18.03.19         *
  10.02.14         * изменение условий ограничения филиала inBranchId 
  16.12.13         * add inBranchId             
  12.11.13                                        * add zc_MovementLinkObject_PersonalDriverMore
@@ -120,4 +161,4 @@ ALTER FUNCTION gpReport_TransportHoursWork (TDateTime, TDateTime, Integer, Integ
 */
 
 -- тест
--- SELECT * FROM gpReport_TransportHoursWork (inStartDate:= '01.01.2013', inEndDate:= '01.11.2013', inPersonalId:= 0, inSession:= '2') 
+--  SELECT * FROM gpReport_TransportHoursWork (inStartDate:= '01.01.2019' ::TDateTime, inEndDate:= '10.01.2019' ::TDateTime , inPersonalId:= 0, inBranchId:= 0, inSession:= '2') 

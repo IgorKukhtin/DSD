@@ -116,6 +116,16 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
           Format = ',0.##'
           Kind = skSum
           Column = Weight
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Count_Movement
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = TotalCountKg
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -190,6 +200,16 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
           Format = ',0.##'
           Kind = skSum
           Column = Weight
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Count_Movement
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = TotalCountKg
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -299,6 +319,26 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 80
+      end
+      object Count_Movement: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1082'. '#1080#1079' '#1085#1072#1082#1083'. '#1088#1077#1077#1089#1090#1088#1072
+        DataBinding.FieldName = 'Count_Movement'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.###;-,0.###; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object TotalCountKg: TcxGridDBColumn
+        Caption = #1042#1077#1089', '#1080#1079' '#1085#1072#1082#1083'. '#1088#1077#1077#1089#1090#1088#1072
+        DataBinding.FieldName = 'TotalCountKg'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.###;-,0.###; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
