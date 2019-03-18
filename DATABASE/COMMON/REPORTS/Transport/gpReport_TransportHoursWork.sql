@@ -17,7 +17,7 @@ RETURNS TABLE (PersonalDriverName TVarChar
              , RouteKindName TVarChar
              , RouteKindFreightName TVarChar
              , Weight TFloat, HoursWork TFloat, HoursAdd TFloat
-             , InvNumber Integer, OperDate TDateTime
+             , MovementId Integer, InvNumber Integer, OperDate TDateTime
              , Count_Movement  TFloat
              , TotalCountKg    TFloat
               )
@@ -83,6 +83,7 @@ $BODY$BEGIN
              , (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0)) :: TFloat AS HoursWork
              , MovementFloat_HoursAdd.ValueData      AS HoursAdd
 
+             , tmpMovementAll.Id                                   AS MovementId
              , zfConvert_StringToNumber (tmpMovementAll.InvNumber) AS InvNumber
              , tmpMovementAll.OperDate
              

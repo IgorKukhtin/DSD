@@ -15,6 +15,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -340,6 +341,12 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         Options.Editing = False
         Width = 70
       end
+      object MovementId: TcxGridDBColumn
+        DataBinding.FieldName = 'MovementId'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -516,6 +523,14 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
           ItemName = 'dxBarStatic1'
         end
         item
+          Visible = True
+          ItemName = 'bbOpenReportForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbToExcel'
@@ -542,6 +557,10 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
     end
     object bbDialogForm: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbOpenReportForm: TdxBarButton
+      Action = actOpenReportForm
       Category = 0
     end
   end
@@ -638,6 +657,27 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actOpenReportForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = '<'#1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' ('#1074#1080#1079#1072')>'
+      Hint = '<'#1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' ('#1074#1080#1079#1072')>'
+      ImageIndex = 25
+      FormName = 'TReestrJournal_byReportForm'
+      FormNameParam.Value = 'TReestrJournal_byReportForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpReport_TransportHoursWork'
@@ -664,7 +704,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalDriverId'
+        Name = 'inPersonalId'
         Value = ''
         Component = PersonalDriverGuides
         ParamType = ptInput
@@ -780,5 +820,10 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
       end>
     Left = 760
     Top = 27
+  end
+  object FormParams: TdsdFormParams
+    Params = <>
+    Left = 652
+    Top = 200
   end
 end

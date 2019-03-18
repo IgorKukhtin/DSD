@@ -1501,6 +1501,8 @@ end;
 
 procedure TLoadFormTest.LoadReestrFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrJournal_byReportForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReestrJournal_byReportForm');
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrJournalForm');
@@ -1510,10 +1512,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrUpdateMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrUpdateMovementForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_ReestrJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_ReestrJournalForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrStartDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrStartDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrUpdateDialogForm'));
