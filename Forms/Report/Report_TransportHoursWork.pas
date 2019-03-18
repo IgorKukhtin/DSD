@@ -69,6 +69,12 @@ type
     BranchName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     dxBarStatic1: TdxBarStatic;
+    Count_Movement: TcxGridDBColumn;
+    TotalCountKg: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
+    MovementId: TcxGridDBColumn;
   private
   public
   end;
