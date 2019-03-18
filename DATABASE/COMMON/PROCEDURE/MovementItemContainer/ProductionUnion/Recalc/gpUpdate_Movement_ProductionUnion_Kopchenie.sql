@@ -27,7 +27,7 @@ BEGIN
 
 
     -- !!!Удалили, временно пока Пересчет Send здесь!!!
-    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpResult'))      THEN DROP TABLE _tmpResult; END IF;
+    /*IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpResult'))      THEN DROP TABLE _tmpResult; END IF;
     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem_pr'))     THEN DROP TABLE _tmpItem_pr; END IF;
     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItemSumm_pr')) THEN DROP TABLE _tmpItemSumm_pr; END IF;
 
@@ -37,7 +37,7 @@ BEGIN
                                                , inEndDate   := inEndDate
                                                , inUnitId    := 0
                                                , inUserId    := zc_Enum_Process_Auto_Send()
-                                                );
+                                                );*/
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -10,6 +10,7 @@ RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbMovementId_Send_out Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Send());
@@ -20,6 +21,17 @@ BEGIN
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);
+
+
+     -- Поиск "Расхода на Участок нарезки"
+     vbMovementId_Send_out:= (SELECT MLM.MovementId FROM MovementLinkMovement AS MLM WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Send());
+     -- Синхронно - Распровели
+     IF vbMovementId_Send_out <> 0
+     THEN
+         PERFORM lpUnComplete_Movement (inMovementId := vbMovementId_Send_out
+                                      , inUserId     := vbUserId
+                                       );
+     END IF;
 
 END;
 $BODY$

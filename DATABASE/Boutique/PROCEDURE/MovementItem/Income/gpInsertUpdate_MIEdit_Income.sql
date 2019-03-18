@@ -501,7 +501,6 @@ $BODY$
 /*
 -- SELECT  lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceListItem_Value(), tmp.Id, tmp.PriceOk)
 -- from (
-
 SELECT ObjectHistoryFloat_PriceListItem_Value.ValueData, Object_PartionGoods .OperPriceList , MIFloat_OperPriceList.ValueData as PriceOk
 , ObjectHistory_PriceListItem.*
 FROM Object_PartionGoods 
@@ -534,7 +533,6 @@ WHERE Object_PartionGoods.PeriodYear = 2019
 and Object_PartionGoods .OperPriceList  <> ObjectHistoryFloat_PriceListItem_Value.ValueData
 -- and Object_PartionGoods .MovementItemId = 1707494 
 -- and ObjectHistory_PriceListItem.StartDate <> zc_DateStart()
-
 -- ) as tmp
 */
 -- тест

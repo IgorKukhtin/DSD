@@ -151,9 +151,9 @@ BEGIN
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Send
-                                           ON MovementLinkMovement_Send.MovementChildId = Movement.Id
-                                          AND MovementLinkMovement_Send.DescId          = zc_MovementLinkMovement_Send()
-            LEFT JOIN Movement AS Movement_Send ON Movement_Send.Id = MovementLinkMovement_Send.MovementId
+                                           ON MovementLinkMovement_Send.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Send.DescId     = zc_MovementLinkMovement_Send()
+            LEFT JOIN Movement AS Movement_Send ON Movement_Send.Id = MovementLinkMovement_Send.MovementChildId
             LEFT JOIN MovementDesc AS MovementDesc_Send ON MovementDesc_Send.Id = Movement_Send.DescId
 
        WHERE (vbIsDocumentUser = FALSE OR MLO_Insert.ObjectId = vbUserId)

@@ -1166,6 +1166,17 @@ BEGIN
                                 , inUserId     := vbUserId
                                  );
 
+     -- кроме Админа
+     IF inSession = zfCalc_UserAdmin() OR 1=1
+     THEN
+         -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Производство" - !!!важно - здесь очищается ВСЕ, поэтому делаем ПОСЛЕ проводок!!!
+         PERFORM lpComplete_Movement_Send_Recalc (inMovementId := inMovementId
+                                                , inFromId     := vbWhereObjectId_Analyzer_From
+                                                , inToId       := vbWhereObjectId_Analyzer_To
+                                                , inUserId     := vbUserId
+                                                 );
+     END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
