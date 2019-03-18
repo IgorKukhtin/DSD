@@ -4738,33 +4738,38 @@ end;
 
 // получения адреса по координатам
 function TfrmMain.GetAddress(const Latitude, Longitude: Double): string;
-  function PrependIfNotEmpty(const Prefix, Subject: string): string;
-  begin
-    if Subject.IsEmpty then
-      Result := ''
-    else
-      Result := Prefix+Subject;
-  end;
+  {$IFDEF ANDROID}
+  var Geocoder: JGeocoder;
+      Address: JAddress;
+      AddressList: JList;
+  {$ENDIF}
 begin
+  {$IFDEF ANDROID}
   try
-    WebGMapsReverseGeocoder.Latitude := RoundTo(Latitude, -5);
-    WebGMapsReverseGeocoder.Longitude := RoundTo(Longitude, -5);
-    if WebGMapsReverseGeocoder.LaunchReverseGeocoding = erOk then
-      begin
-        Result := WebGMapsReverseGeocoder.ResultAddress.Street +
-                  PrependIfNotEmpty(', ', WebGMapsReverseGeocoder.ResultAddress.StreetNumber) +
-                  PrependIfNotEmpty(', ', WebGMapsReverseGeocoder.ResultAddress.City) +
-                  PrependIfNotEmpty(', ', WebGMapsReverseGeocoder.ResultAddress.Region) +
-                  PrependIfNotEmpty(', ', WebGMapsReverseGeocoder.ResultAddress.Country);
-      end
-    else begin
+    geocoder:= TJGeocoder.JavaClass.init(SharedActivityContext);
+    if not Assigned(geocoder) then
+       raise Exception.Create('Could not access Geocoder');
+    //пробуем определить 1 возможный адрес местоположения
+    AddressList:=geocoder.getFromLocation(Latitude, Longitude,1);
+    if AddressList.size > 0 then
+    begin
+       Address:=TJAddress.Wrap((AddressList.get(0) as ILocalObject).GetObjectID);
+       if not Assigned(Address) then
+         raise Exception.Create('Could not access Address');
+       //выводим данные
+       Result := JStringToString(Address.getAddressLine(0));
+    end else
+    begin
       Result :=  FormatFloat('0.00000###', Latitude)+'N '+FormatFloat('0.00000###', Longitude)+'E';
       FCurCoordinatesMsg:= ' не раскодирован Адрес для '+FloatToStr(RoundTo(Latitude, -5))+', '+FloatToStr(RoundTo(Longitude, -5))+''
-      end;
+    end;
   except
     Result :=  FormatFloat('0.000000', Latitude)+'N '+FormatFloat('0.000000', Longitude)+'E';
     FCurCoordinatesMsg:= ' ошибка в службе при определении Адреса для _'+FloatToStr(Latitude)+'_ _'+FloatToStr(Longitude)+'_'
   end;
+  {$ELSE}
+  Result := '';
+  {$ENDIF}
 end;
 
 function TfrmMain.GetCoordinates(const Address: string; out Coordinates: TLocationCoord2D): Boolean;
