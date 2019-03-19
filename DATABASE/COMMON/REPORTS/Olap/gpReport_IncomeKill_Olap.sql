@@ -205,34 +205,52 @@ BEGIN
                           AND Object.DescId = zc_Object_Goods()
                        )
 
+         , tmp AS (SELECT DISTINCT tmp.PartionGoods, tmp.LocationId
+                                 , Movement.Id AS MovementId
+                   FROM (SELECT DISTINCT tmp.PartionGoods, tmp.LocationId FROM tmpContainer AS tmp) AS tmp
+                         INNER JOIN MovementString AS MovementString_PartionGoods
+                                                   ON MovementString_PartionGoods.ValueData = tmp.PartionGoods
+                                                  AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
+                         INNER JOIN Movement ON Movement.Id = MovementString_PartionGoods.MovementId
+                                            AND Movement.DescId = zc_Movement_ProductionSeparate()
+                                            AND Movement.StatusId = zc_Enum_Status_Complete()
+                                   )
+ 
+         , tmpSummIn AS (SELECT MIContainer.MovementItemId
+                              , SUM (MIContainer.Amount) AS SummIn
+                             FROM tmp
+                                  LEFT JOIN MovementItemContainer AS MIContainer
+                                                                  ON MIContainer.MovementId = tmp.MovementId
+                                                                 AND MIContainer.DescId     = zc_MIContainer_Summ()
+                                                                 AND MIContainer.isActive   = TRUE
+                             GROUP BY MIContainer.MovementItemId
+                             )
          , tmpSeparate AS (SELECT tmp.PartionGoods
                                 , SUM (CASE WHEN MI_Child.ObjectId = 4261 THEN MI_Child.Amount ELSE 0 END) AS Amount_17
                                 , SUM (CASE WHEN MI_Child.ObjectId = 2844 THEN MI_Child.Amount ELSE 0 END) AS Amount_19
                                 , SUM (CASE WHEN MI_Child.ObjectId = 4183 THEN MI_Child.Amount ELSE 0 END) AS Amount_20
                                 , SUM (CASE WHEN MI_Child.ObjectId = 4187 THEN MI_Child.Amount ELSE 0 END) AS Amount_21
                                 , SUM (CASE WHEN MI_Child.ObjectId = 2550 THEN MI_Child.Amount ELSE 0 END) AS Amount_22
-                           FROM (SELECT DISTINCT tmp.PartionGoods, tmp.LocationId FROM tmpContainer AS tmp) AS tmp
-                                 INNER JOIN MovementString AS MovementString_PartionGoods
-                                                           ON MovementString_PartionGoods.ValueData = tmp.PartionGoods
-                                                          AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
-                                 INNER JOIN Movement ON Movement.Id = MovementString_PartionGoods.MovementId
-                                           AND Movement.DescId = zc_Movement_ProductionSeparate()
-                                           AND Movement.StatusId = zc_Enum_Status_Complete()
-
+                                , SUM (CASE WHEN MI_Child.ObjectId = 4261 THEN tmpSummIn.SummIn ELSE 0 END) AS SummIn_17
+                           FROM tmp 
                                  INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                                        ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                        ON MovementLinkObject_From.MovementId = tmp.MovementId
                                                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                                                        AND MovementLinkObject_From.ObjectId = tmp.LocationId
                                  JOIN MovementItem AS MI_Master
-                                                   ON MI_Master.MovementId = Movement.Id
+                                                   ON MI_Master.MovementId = tmp.MovementId
                                                   AND MI_Master.DescId   = zc_MI_Master()
                                                   AND MI_Master.isErased = FALSE
                                                   AND MI_Master.ObjectId = 5225
                                  JOIN MovementItem AS MI_Child
-                                                   ON MI_Child.MovementId =  Movement.Id -- 12095222
+                                                   ON MI_Child.MovementId =  tmp.MovementId -- 12095222
                                                   AND MI_Child.DescId     = zc_MI_Child()
                                                   AND MI_Child.isErased   = False
                                  JOIN  tmpGoods ON tmpGoods.Id = MI_Child.ObjectId
+                                 
+                                 LEFT JOIN tmpSummIn ON tmpSummIn.MovementItemId = MI_Child.Id
+                                                    AND MI_Child.ObjectId = 4261
+
                            GROUP BY tmp.PartionGoods
                            )
 
@@ -323,6 +341,7 @@ BEGIN
                                       , tmpSeparate.Amount_20
                                       , tmpSeparate.Amount_21
                                       , tmpSeparate.Amount_22
+                                      , tmpSeparate.SummIn_17
 
                                       , tmp.Amount_23
                                       , tmp.Amount_24
@@ -528,7 +547,7 @@ BEGIN
                                       , 18 AS Num
                                       , tmpOperationGroupAll.OperDate
                                       , tmpOperationGroupAll.JuridicalId
-                                      , CASE WHEN COALESCE (tmpOperationGroupAll.Amount_17,0) <>0 THEN tmpOperationGroupAll.TotalSumm / tmpOperationGroupAll.Amount_17 ELSE 0 END AS Value
+                                      , CASE WHEN COALESCE (tmpOperationGroupAll.Amount_17,0) <>0 THEN tmpOperationGroupAll.SummIn_17 / tmpOperationGroupAll.Amount_17 ELSE 0 END AS Value
                                       , tmpOperationGroupAll.Amount_17
                                       , zc_Color_White() AS Color_calc
                                       , zc_PivotSummartType_AveragePrice() :: Integer AS SummType
