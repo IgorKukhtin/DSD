@@ -56,7 +56,12 @@ BEGIN
                      AND MovementItem.DescId = zc_MI_Master())
      THEN
        OPEN cur3 FOR
-       WITH tmpUser AS (SELECT DISTINCT
+       WITH tmPersonal_View AS (SELECT DISTINCT
+                                       Object_Personal_View.MemberId
+                                     , Object_Personal_View.PositionName
+                                FROM Object_Personal_View),
+
+            tmpUser AS (SELECT 
                               ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
                             , MovementItem.ObjectId                       AS UserID
                             , Object_Member.Id                            AS MemberID
@@ -67,7 +72,7 @@ BEGIN
                             , Object_Unit.ObjectCode                      AS UnitCode
                             , Object_Unit.ValueData                       AS UnitName
 
-                            , Object_Position.ValueData                   AS PositionName
+                            , Personal_View.PositionName                  AS PositionName
 
 
                       FROM Movement
@@ -85,14 +90,7 @@ BEGIN
                                                AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                            LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectid
 
-                           LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
-                                                ON ObjectLink_Personal_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
-                                               AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
-
-                           LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
-                                                ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_Member.ObjectId
-                                               AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-                           LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
+                           LEFT JOIN tmPersonal_View AS Personal_View ON Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
 
                       WHERE Movement.OperDate >= inDate - INTERVAL '3 MONTH'
                         AND Movement.DescId = zc_Movement_KPU()),
@@ -248,6 +246,7 @@ BEGIN
                                     FROM MovementItem
                                     WHERE MovementItem.MovementId = inMovementId
                                       AND MovementItem.DescId = zc_MI_Master())
+         AND tmpUser.Ord = 1
        UNION ALL
 
        SELECT
@@ -256,7 +255,7 @@ BEGIN
          MovementItem.IsErased                                   AS IsErased,
          Object_Member.ObjectCode                                AS PersonalCode,
          Object_Member.ValueData                                 AS PersonalName,
-         Object_Position.ValueData                               AS PositionName,
+         Personal_View.PositionName                              AS PositionName,
          COALESCE (tmpUser.UnitID, Object_Unit.ID)               AS UnitID,
          COALESCE (tmpUser.UnitCode, Object_Unit.ObjectCode)     AS UnitCode,
          COALESCE (tmpUser.UnitName, Object_Unit.ValueData)      AS UnitName,
@@ -423,16 +422,9 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                  ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-            LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
-                                 ON ObjectLink_Personal_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
-                                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
-
-            LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
-                                 ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_Member.ObjectId
-                                AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-            LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
+            LEFT JOIN tmPersonal_View AS Personal_View ON Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
 
             LEFT JOIN tmpUser ON tmpUser.UserID = MovementItem.ObjectId
                              AND tmpUser.Ord = 1
@@ -456,9 +448,6 @@ BEGIN
        WITH tmpUser AS (SELECT DISTINCT
                               ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
                             , MovementItem.ObjectId                       AS UserID
-                            , Object_Member.Id                            AS MemberID
-                            , Object_Member.ObjectCode                    AS MemberCode
-                            , Object_Member.ValueData                     AS MemberName
 
                             , Object_Unit.ID                              AS UnitID
                             , Object_Unit.ObjectCode                      AS UnitCode
@@ -493,7 +482,12 @@ BEGIN
             tmpEmployeeUser AS (SELECT ROW_NUMBER() OVER (PARTITION BY tmpEmployee.UserId ORDER BY tmpEmployee.CountLog DESC) AS Ord
                                      , tmpEmployee.UserId   AS UserId
                                      , tmpEmployee.UnitId   AS UnitId
-                                FROM tmpEmployee)
+                                FROM tmpEmployee),
+
+            tmPersonal_View AS (SELECT DISTINCT
+                                       Object_Personal_View.MemberId
+                                     , Object_Personal_View.PositionName
+                                FROM Object_Personal_View)
 
 
        SELECT
@@ -502,7 +496,7 @@ BEGIN
          MovementItem.IsErased                                   AS IsErased,
          Object_Member.ObjectCode                                AS PersonalCode,
          Object_Member.ValueData                                 AS PersonalName,
-         Object_Position.ValueData                               AS PositionName,
+         Personal_View.PositionName                              AS PositionName,
          COALESCE (tmpUser.UnitID, Object_Unit.ID)               AS UnitID,
          COALESCE (tmpUser.UnitCode, Object_Unit.ObjectCode)     AS UnitCode,
          COALESCE (tmpUser.UnitName, Object_Unit.ValueData)      AS UnitName,
@@ -669,16 +663,14 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                  ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-            LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
-                                 ON ObjectLink_Personal_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
-                                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+            LEFT JOIN ObjectLink AS ObjectLink_Member_Education
+                                 ON ObjectLink_Member_Education.ObjectId = Object_Member.Id
+                                AND ObjectLink_Member_Education.DescId = zc_ObjectLink_Member_Education()
+            LEFT JOIN Object AS Object_Education ON Object_Education.Id = ObjectLink_Member_Education.ChildObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
-                                 ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_Member.ObjectId
-                                AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-            LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
+            LEFT JOIN tmPersonal_View AS Personal_View ON Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
 
             LEFT JOIN tmpUser ON tmpUser.UserID = MovementItem.ObjectId
                              AND tmpUser.Ord = 1
@@ -715,4 +707,4 @@ ALTER FUNCTION gpSelect_MovementItem_EmployeeSchedule (Integer, TDateTime, Boole
 */
 
 -- тест
--- select * from gpSelect_MovementItem_EmployeeSchedule(inMovementId := 12110225 , inDate := ('30.11.2018 22:00:00')::TDateTime , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_EmployeeSchedule(inMovementId := 13211961 , inDate := ('01.03.2019')::TDateTime , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

@@ -73,8 +73,13 @@ type
     DateStart : TDateTime;
     DateEnd : TDateTime;
 
+    FormAddFile : boolean;
+    DateStartAdd : TDateTime;
+    DateEndAdd : TDateTime;
+
     FileName: String;
     SavePath: String;
+    Subject: String;
 
     glSubject: String;
     glSubjectTeva: String;
@@ -91,10 +96,10 @@ type
     procedure SetDateParams;
 
     procedure AllMaker;
-    procedure ReportIncome;
-    procedure ReportCheck;
-    procedure ReportIncomeConsumptionBalance;
-    procedure ReportAnalysisRemainsSelling;
+    procedure ReportIncome(ADateStart, ADateEnd : TDateTime);
+    procedure ReportCheck(ADateStart, ADateEnd : TDateTime);
+    procedure ReportIncomeConsumptionBalance(ADateStart, ADateEnd : TDateTime);
+    procedure ReportAnalysisRemainsSelling(ADateStart, ADateEnd : TDateTime);
 
     procedure ExportAnalysisRemainsSelling;
   end;
@@ -141,7 +146,7 @@ begin
     if qryMaker.FieldByName('isReport1').AsBoolean then
     begin
       RepType := 0;
-      ReportIncome;
+      ReportIncome(DateStart, DateEnd);
       btnExportClick(Nil);
       btnSendMailClick(Nil);
     end;
@@ -149,7 +154,7 @@ begin
     if qryMaker.FieldByName('isReport2').AsBoolean then
     begin
       RepType := 1;
-      ReportCheck;
+      ReportCheck(DateStart, DateEnd);
       btnExportClick(Nil);
       btnSendMailClick(Nil);
     end;
@@ -157,7 +162,7 @@ begin
     if qryMaker.FieldByName('isReport3').AsBoolean then
     begin
       RepType := 2;
-      ReportAnalysisRemainsSelling;
+      ReportAnalysisRemainsSelling(DateStart, DateEnd);
       btnExportClick(Nil);
       btnSendMailClick(Nil);
     end;
@@ -165,9 +170,44 @@ begin
     if qryMaker.FieldByName('isReport4').AsBoolean then
     begin
       RepType := 3;
-      ReportIncomeConsumptionBalance;;
+      ReportIncomeConsumptionBalance(DateStart, DateEnd);
       btnExportClick(Nil);
       btnSendMailClick(Nil);
+    end;
+
+    if FormAddFile then
+    begin
+      if qryMaker.FieldByName('isReport1').AsBoolean then
+      begin
+        RepType := 0;
+        ReportIncome(DateStartAdd, DateEndAdd);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReport2').AsBoolean then
+      begin
+        RepType := 1;
+        ReportCheck(DateStartAdd, DateEndAdd);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReport3').AsBoolean then
+      begin
+        RepType := 2;
+        ReportAnalysisRemainsSelling(DateStartAdd, DateEndAdd);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReport4').AsBoolean then
+      begin
+        RepType := 3;
+        ReportIncomeConsumptionBalance(DateStartAdd, DateEndAdd);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
     end;
 
     try
@@ -279,10 +319,12 @@ begin
   end;
 end;
 
-procedure TMainForm.ReportIncome;
+procedure TMainForm.ReportIncome(ADateStart, ADateEnd : TDateTime);
 begin
   Add_Log('Начало Формирования отчета по приходам ' + qryMaker.FieldByName('Name').AsString);
   FileName := 'Отчет по приходам';
+  Subject := FileName + ' за период с ' + FormatDateTime('dd.mm.yyyy', ADateStart) + ' по ' +
+                                          FormatDateTime('dd.mm.yyyy', ADateEnd);
 
   if qryReport_Upload.Active then qryReport_Upload.Close;
   if grtvMaker.ColumnCount > 0 then grtvMaker.ClearItems;
@@ -310,8 +352,8 @@ begin
     'where isSendMaker = True and MainJuridicalId not in (2141104, 3031071, 5603546, 377601)';
 
   qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
-  qryReport_Upload.Params.ParamByName('inStartDate').Value := DateStart;
-  qryReport_Upload.Params.ParamByName('inEndDate').Value := DateEnd;
+  qryReport_Upload.Params.ParamByName('inStartDate').Value := ADateStart;
+  qryReport_Upload.Params.ParamByName('inEndDate').Value := ADateEnd;
 
   OpenAndFormatSQL;
 
@@ -331,10 +373,12 @@ begin
   end;
 end;
 
-procedure TMainForm.ReportCheck;
+procedure TMainForm.ReportCheck(ADateStart, ADateEnd : TDateTime);
 begin
   Add_Log('Начало Формирования отчета по продажам ' + qryMaker.FieldByName('Name').AsString);
   FileName := 'Отчет по продажам';
+  Subject := FileName + ' за период с ' + FormatDateTime('dd.mm.yyyy', ADateStart) + ' по ' +
+                                          FormatDateTime('dd.mm.yyyy', ADateEnd);
 
   if qryReport_Upload.Active then qryReport_Upload.Close;
   if grtvMaker.ColumnCount > 0 then grtvMaker.ClearItems;
@@ -361,8 +405,8 @@ begin
     'where isSendMaker = True and MainJuridicalId not in (2141104, 3031071, 5603546, 377601)';
 
   qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
-  qryReport_Upload.Params.ParamByName('inStartDate').Value := DateStart;
-  qryReport_Upload.Params.ParamByName('inEndDate').Value := DateEnd;
+  qryReport_Upload.Params.ParamByName('inStartDate').Value := ADateStart;
+  qryReport_Upload.Params.ParamByName('inEndDate').Value := ADateEnd;
 
   OpenAndFormatSQL;
 
@@ -389,11 +433,13 @@ begin
 
 end;
 
-procedure TMainForm.ReportAnalysisRemainsSelling;
+procedure TMainForm.ReportAnalysisRemainsSelling(ADateStart, ADateEnd : TDateTime);
   var I : integer;
 begin
   Add_Log('Начало Формирования отчета реализация за период с остатком на конец периода ' + qryMaker.FieldByName('Name').AsString);
   FileName := 'Отчет реализация за период с остатком на конец периода';
+  Subject := FileName + ' за период с ' + FormatDateTime('dd.mm.yyyy', ADateStart) + ' по ' +
+                                          FormatDateTime('dd.mm.yyyy', ADateEnd);
 
   if qryReport_Upload.Active then qryReport_Upload.Close;
   if grtvMaker.ColumnCount > 0 then grtvMaker.ClearItems;
@@ -404,17 +450,19 @@ begin
     'from gpSelect_Export_AnalysisRemainsSelling (:inStartDate, :inEndDate, :inMaker, ''3'')';
 
   qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
-  qryReport_Upload.Params.ParamByName('inStartDate').Value := DateStart;
-  qryReport_Upload.Params.ParamByName('inEndDate').Value := DateEnd;
+  qryReport_Upload.Params.ParamByName('inStartDate').Value := ADateStart;
+  qryReport_Upload.Params.ParamByName('inEndDate').Value := ADateEnd;
 
   OpenAndFormatSQL;
 end;
 
-procedure TMainForm.ReportIncomeConsumptionBalance;
+procedure TMainForm.ReportIncomeConsumptionBalance(ADateStart, ADateEnd : TDateTime);
   var I : integer;
 begin
   Add_Log('Начало Формирования отчета приход расход остаток ' + qryMaker.FieldByName('Name').AsString);
   FileName := 'Отчет приход расход остаток';
+  Subject := FileName + ' за период с ' + FormatDateTime('dd.mm.yyyy', ADateStart) + ' по ' +
+                                          FormatDateTime('dd.mm.yyyy', ADateEnd);
 
   if qryReport_Upload.Active then qryReport_Upload.Close;
   if grtvMaker.ColumnCount > 0 then grtvMaker.ClearItems;
@@ -435,8 +483,8 @@ begin
     'from gpSelect_Export_IncomeConsumptionBalance (:inStartDate, :inEndDate, :inMaker, ''3'')';
 
   qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
-  qryReport_Upload.Params.ParamByName('inStartDate').Value := DateStart;
-  qryReport_Upload.Params.ParamByName('inEndDate').Value := DateEnd;
+  qryReport_Upload.Params.ParamByName('inStartDate').Value := ADateStart;
+  qryReport_Upload.Params.ParamByName('inEndDate').Value := ADateEnd;
 
   OpenAndFormatSQL;
 
@@ -458,6 +506,7 @@ begin
   if grtvMaker.DataController.Summary.FooterSummaryItems.Count > 0 then
     grtvMaker.DataController.Summary.FooterSummaryItems.Clear;
 
+  FormAddFile := False;
   if qryMaker.FieldByName('AmountDay').AsInteger <> 0 then
   begin
      if qryMaker.FieldByName('AmountDay').AsInteger = 14 then
@@ -481,6 +530,10 @@ begin
        begin
          DateStart := StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime);
          DateEnd := IncDay(DateStart, 14);
+
+         FormAddFile := True;
+         DateEndAdd := IncDay(DateStart, -1);
+         DateStartAdd := StartOfTheMonth(DateEndAdd);
        end;
      end else
      begin
@@ -504,10 +557,10 @@ begin
   SetDateParams;
 
   case RepType of
-    0 : ReportIncome;
-    1 : ReportCheck;
-    2 : ReportAnalysisRemainsSelling;
-    3 : ReportIncomeConsumptionBalance;
+    0 : ReportIncome(DateStart, DateEnd);
+    1 : ReportCheck(DateStart, DateEnd);
+    2 : ReportAnalysisRemainsSelling(DateStart, DateEnd);
+    3 : ReportIncomeConsumptionBalance(DateStart, DateEnd);
   end;
 end;
 
@@ -860,8 +913,7 @@ begin
        qryMailParam.FieldByName('Mail_User').AsString,
        qryMaker.FieldByName('Mail').AsString,
        qryMailParam.FieldByName('Mail_From').AsString,
-       FileName + ' за период с ' + FormatDateTime('dd.mm.yyyy', DateStart) + ' по ' +
-                                    FormatDateTime('dd.mm.yyyy', DateEnd),
+       Subject,
        '',
        [SavePath + FileName + '.xls']) then
   begin
