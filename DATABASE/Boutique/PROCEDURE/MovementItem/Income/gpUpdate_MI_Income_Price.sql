@@ -62,16 +62,15 @@ BEGIN
                                                            , inSession    := vbUserId :: TVarChar
                                                             );
 
-     -- !!! НЕТ !!! изменили цены в партиях - по значению <Ключ партии>
-     -- UPDATE Object_PartionGoods
-     --        SET OperPrice            = inOperPrice
-     --          , OperPriceList        = inOperPriceList
-     -- WHERE Object_PartionGoods.MovementItemId IN (SELECT _tmpMI.Id FROM _tmpMI);
+     -- !!! ДА !!! изменили цены в партиях - по значению <Ключ партии>
+     UPDATE Object_PartionGoods
+            SET OperPrice            = inOperPrice
+     --       , OperPriceList        = inOperPriceList
+     WHERE Object_PartionGoods.MovementItemId IN (SELECT _tmpMI.Id FROM _tmpMI);
 
-     -- дальше перепроводим все док. где єта партия участвовала
+
+     -- 1.1. дальше перепроводим все док. где эта партия участвовала
      PERFORM CASE WHEN Movement.DescId = zc_Movement_Sale() THEN gpReComplete_Movement_Sale (Movement.Id, inSession)
-                  WHEN Movement.DescId = zc_Movement_ReturnIn() THEN gpReComplete_Movement_ReturnIn (Movement.Id, inSession)
-                  WHEN Movement.DescId = zc_Movement_GoodsAccount() THEN gpReComplete_Movement_GoodsAccount (Movement.Id, inSession)
                   WHEN Movement.DescId = zc_Movement_Inventory() THEN gpReComplete_Movement_Inventory (Movement.Id, inSession)
                   WHEN Movement.DescId = zc_Movement_ReturnOut() THEN gpReComplete_Movement_ReturnOut (Movement.Id, inSession)
                   WHEN Movement.DescId = zc_Movement_Send() THEN gpReComplete_Movement_Send (Movement.Id, inSession)
@@ -80,12 +79,38 @@ BEGIN
      FROM MovementItem
           INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
                              AND Movement.StatusId = zc_Enum_Status_Complete() -- !!!только проведенные!!!
-                             AND Movement.DescId   <> zc_Movement_Income()     -- !!!только НЕ Приход от постав.!!!
+                             -- !!!только НЕ Приход от постав.!!!
+                             AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_Inventory(), zc_Movement_ReturnOut(), zc_Movement_Send(), zc_Movement_Loss())
      WHERE MovementItem.PartionId IN (SELECT _tmpMI.Id FROM _tmpMI)
        AND MovementItem.isErased = FALSE -- !!!только НЕ удаленные!!!
        -- AND MovementItem.DescId= ...   -- !!!любой Desc!!!
      ORDER BY Movement.OperDate, Movement.Id
      ;
+
+     -- 1.2. дальше перепроводим все док. где эта партия участвовала
+     PERFORM CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN gpReComplete_Movement_ReturnIn (Movement.Id, inSession)
+             END
+     FROM MovementItem
+          INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                             AND Movement.StatusId = zc_Enum_Status_Complete() -- !!!только проведенные!!!
+                             AND Movement.DescId   = zc_Movement_ReturnIn()
+     WHERE MovementItem.PartionId IN (SELECT _tmpMI.Id FROM _tmpMI)
+       AND MovementItem.isErased = FALSE -- !!!только НЕ удаленные!!!
+       -- AND MovementItem.DescId= ...   -- !!!любой Desc!!!
+     ORDER BY Movement.OperDate, Movement.Id
+
+     -- 1.3. дальше перепроводим все док. где эта партия участвовала
+     PERFORM CASE WHEN Movement.DescId = zc_Movement_GoodsAccount() THEN gpReComplete_Movement_GoodsAccount (Movement.Id, inSession)
+             END
+     FROM MovementItem
+          INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                             AND Movement.StatusId = zc_Enum_Status_Complete() -- !!!только проведенные!!!
+                             AND Movement.DescId   = zc_Movement_GoodsAccount()
+     WHERE MovementItem.PartionId IN (SELECT _tmpMI.Id FROM _tmpMI)
+       AND MovementItem.isErased = FALSE -- !!!только НЕ удаленные!!!
+       -- AND MovementItem.DescId= ...   -- !!!любой Desc!!!
+     ORDER BY Movement.OperDate, Movement.Id
+
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
