@@ -21,6 +21,14 @@ AS
 $BODY$
 BEGIN
 
+     -- очень важная проверка
+    IF COALESCE (inGoodsId, 0) = 0
+    THEN
+        RAISE EXCEPTION 'Ошибка.Не выбран товар  <%>', (SELECT ValueData FROM Object WHERE ID = 5225);
+    END IF;
+
+
+
     -- Результат
     RETURN QUERY
       WITH

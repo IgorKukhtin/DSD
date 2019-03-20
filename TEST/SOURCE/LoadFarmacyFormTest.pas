@@ -1467,8 +1467,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalChoiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncome_AmountTroubleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncome_AmountTroubleForm');
-  TdsdFormStorageFactory.GetStorage.Save
-    (GetForm('TIncomePartnerDataDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePartnerDataDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePartnerDataDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeCheckDialogForm'));
@@ -1747,11 +1746,11 @@ end;
 
 procedure TLoadFormTest.LoadSPObjectFormTest;
 begin
-
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSP_ObjectForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMedicSP_ObjectForm');
     exit;
-    {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSPForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMedicSPForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSPEditForm'));
@@ -1762,10 +1761,11 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSPEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMemberSPEditForm');
     //exit;
-
+   }
   // отчет реестр по постановлению 1303
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPDialogForm');
   exit;
@@ -1796,13 +1796,13 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsSPForm');
     exit;
-  }
+
   // отчет по продажам товара соц. проекта
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSPDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSPDialogForm');
-
+  }
 end;
 
 procedure TLoadFormTest.LoadServiceFormTest;

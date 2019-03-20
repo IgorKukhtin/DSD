@@ -64,6 +64,21 @@
               Format = ',0.00'
               Kind = skSum
               Column = SampleSumm
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = OrderSumm
+            end
+            item
+              Format = ',0.00'
+              Kind = skAverage
+              Column = Price
+            end
+            item
+              Format = ',0.00'
+              Kind = skAverage
+              Column = OrderPrice
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -123,6 +138,21 @@
               Format = ',0.00'
               Kind = skSum
               Column = SampleSumm
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = OrderSumm
+            end
+            item
+              Format = ',0.00'
+              Kind = skAverage
+              Column = Price
+            end
+            item
+              Format = ',0.00'
+              Kind = skAverage
+              Column = OrderPrice
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -3016,8 +3046,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 631
-    Top = 192
+    Left = 639
+    Top = 232
   end
   object spIncome_GoodsId: TdsdStoredProc
     StoredProcName = 'gpUpdate_MovementItem_Income_GoodsId'
@@ -3189,8 +3219,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 752
-    Top = 203
+    Left = 744
+    Top = 227
   end
   object OrderExternalChoiceGuides: TdsdGuides
     KeyField = 'Id'
