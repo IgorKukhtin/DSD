@@ -4,9 +4,8 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
   ClientWidth = 953
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -163
   ExplicitWidth = 969
-  ExplicitHeight = 431
+  ExplicitHeight = 435
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -581,6 +580,7 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
       isShowModal = True
       MapType = acShowAll
       DataSet = MasterCDS
+      APIKeyStoredProc = spGoogle_APIKey
     end
   end
   inherited MasterDS: TDataSource
@@ -1031,5 +1031,24 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
     PackSize = 1
     Left = 592
     Top = 48
+  end
+  object spGoogle_APIKey: TdsdStoredProc
+    StoredProcName = 'gpSelect_Google_APIKey'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outAPIKey'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 831
+    Top = 168
   end
 end

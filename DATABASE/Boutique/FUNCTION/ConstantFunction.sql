@@ -66,6 +66,9 @@ CREATE OR REPLACE FUNCTION zc_Color_Yelow() RETURNS Integer AS $BODY$BEGIN RETUR
 CREATE OR REPLACE FUNCTION zc_Color_White() RETURNS Integer AS $BODY$BEGIN RETURN (16777215); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Color_Blue() RETURNS Integer AS $BODY$BEGIN RETURN (14614528); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-- Возвращает APIKey для работы с API Google карт
+CREATE OR REPLACE FUNCTION zc_Google_APIKey() RETURNS TVarChar AS $BODY$BEGIN RETURN ('AIzaSyCE4y_Hypzj3p6Xv1s6r9vy4Vx4fPYQdxc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 */
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
