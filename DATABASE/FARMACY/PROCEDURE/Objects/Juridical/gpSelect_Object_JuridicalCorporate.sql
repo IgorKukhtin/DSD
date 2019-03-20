@@ -55,4 +55,4 @@ ALTER FUNCTION gpSelect_Object_JuridicalCorporate(TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Juridical ('2')
+-- SELECT * FROM gpSelect_Object_JuridicalCorporate ('2')

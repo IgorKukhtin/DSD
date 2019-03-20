@@ -1063,8 +1063,9 @@ end;
 
 procedure TLoadFormTest.LoadJuridicalFormTest;
 begin
-  { TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalForm'));
+   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalForm'));
     TdsdFormStorageFactory.GetStorage.Load('TJuridicalForm');
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalCorporateForm'));
     TdsdFormStorageFactory.GetStorage.Load('TJuridicalCorporateForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalEditForm'));
@@ -1072,7 +1073,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_ObjectForm'));
     TdsdFormStorageFactory.GetStorage.Load('TJuridical_ObjectForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerCodeForm'));
-    TdsdFormStorageFactory.GetStorage.Load('TPartnerCodeForm');}
+    TdsdFormStorageFactory.GetStorage.Load('TPartnerCodeForm');
 
   // Адрес
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAddressForm'));
@@ -1094,6 +1095,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save
     (GetForm('TJuridicalActualAddressEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalActualAddressEditForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadJuridicalAreaFormTest;
