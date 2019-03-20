@@ -1144,9 +1144,11 @@ begin
     if result.WindowState = wsMinimized then
       result.WindowState := wsNormal;
     if isShowModal then
-      result.ShowModal
-    else
-      result.Show
+    begin
+      result.ShowModal;
+      if (result is TParentForm) and TParentForm(result).AddOnFormData.isFreeAtClosing then result.Free;
+    end
+    else result.Show
   end
   else
     result.Free
@@ -3222,6 +3224,7 @@ begin
       if Form.Components[I].ClassType = TdsdGMMap then
       begin
         FGMMap := TGMMap(Form.Components[I]);
+        TdsdGMMap(Form.Components[I]).APIKey := 'AIzaSyCE4y_Hypzj3p6Xv1s6r9vy4Vx4fPYQdxc';
         TdsdGMMap(Form.Components[I]).MapType := FMapType;
         TdsdGMMap(Form.Components[I]).DataSet := FDataSet;
         TdsdGMMap(Form.Components[I]).GPSNField := FGPSNField;

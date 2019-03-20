@@ -165,7 +165,8 @@ begin
   try
     // Если данная форма не одиночка, то при закрытии надо проверить единственная она или нет
     // Если не единственная, то сделать ей Free
-    if not AddOnFormData.isSingle then begin
+    if not AddOnFormData.isFreeAtClosing then Action := caFree
+    else if not AddOnFormData.isSingle then begin
        for i := 0 to ComponentCount - 1 do
            if Components[i] is TDataSet then
               DataSetList.Add(Components[i]);

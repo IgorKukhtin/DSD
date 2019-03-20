@@ -14,6 +14,7 @@ object PartnerMapForm: TPartnerMapForm
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.isSingle = False
+  AddOnFormData.isFreeAtClosing = True
   PixelsPerInch = 96
   TextHeight = 13
   object wbPartner: TdsdWebBrowser
