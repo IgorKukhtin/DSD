@@ -165,6 +165,10 @@ object DM: TDM
     object tblObject_ConstCriticalDebtSum: TFloatField
       FieldName = 'CriticalDebtSum'
     end
+    object tblObject_ConstAPIKey: TStringField
+      FieldName = 'APIKey'
+      Size = 250
+    end
   end
   object tblObject_Partner: TFDTable
     Connection = conMain

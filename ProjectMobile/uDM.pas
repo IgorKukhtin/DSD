@@ -801,6 +801,7 @@ type
     tblObject_ConstWebService_two: TStringField;
     tblObject_ConstWebService_three: TStringField;
     tblObject_ConstWebService_four: TStringField;
+    tblObject_ConstAPIKey: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure qryGoodsForPriceListCalcFields(DataSet: TDataSet);
     procedure qryPhotoGroupsCalcFields(DataSet: TDataSet);
