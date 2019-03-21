@@ -29,6 +29,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isReport Boolean
              , isGoodsCategory Boolean
              , Num_byReportBadm Integer
+             , DateSP      TDateTime
+             , StartTimeSP TDateTime
+             , EndTimeSP   TDateTime
+             , isSP        Boolean
 ) AS
 $BODY$
 BEGIN
@@ -98,6 +102,12 @@ BEGIN
       , COALESCE(ObjectBoolean_Report.ValueData, FALSE)          AS isReport
       , COALESCE(ObjectBoolean_GoodsCategory.ValueData, FALSE)   AS isGoodsCategory
       , COALESCE(tmpByBadm.Num_byReportBadm, Null) ::Integer     AS Num_byReportBadm
+      
+      , ObjectDate_SP.ValueData                       :: TDateTime AS DateSP
+      , ObjectDate_StartSP.ValueData                  :: TDateTime AS StartTimeSP
+      , ObjectDate_EndSP.ValueData                    :: TDateTime AS EndTimeSP
+      , COALESCE (ObjectBoolean_SP.ValueData, FALSE)  :: Boolean   AS isSP
+      
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -153,6 +163,10 @@ BEGIN
                                 ON ObjectBoolean_GoodsCategory.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_GoodsCategory.DescId = zc_ObjectBoolean_Unit_GoodsCategory()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SP 
+                                ON ObjectBoolean_SP.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SP.DescId = zc_ObjectBoolean_Unit_SP()
+
         LEFT JOIN ObjectString AS ObjectString_Unit_Address
                                ON ObjectString_Unit_Address.ObjectId = Object_Unit.Id
                               AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
@@ -207,7 +221,19 @@ BEGIN
         LEFT JOIN ObjectDate AS ObjectDate_TaxUnitEnd
                              ON ObjectDate_TaxUnitEnd.ObjectId = Object_Unit.Id
                             AND ObjectDate_TaxUnitEnd.DescId = zc_ObjectDate_Unit_TaxUnitEnd()
-                    
+
+        LEFT JOIN ObjectDate AS ObjectDate_SP
+                             ON ObjectDate_SP.ObjectId = Object_Unit.Id
+                            AND ObjectDate_SP.DescId = zc_ObjectDate_Unit_SP()
+
+        LEFT JOIN ObjectDate AS ObjectDate_StartSP
+                             ON ObjectDate_StartSP.ObjectId = Object_Unit.Id
+                            AND ObjectDate_StartSP.DescId = zc_ObjectDate_Unit_StartSP()
+
+        LEFT JOIN ObjectDate AS ObjectDate_EndSP
+                             ON ObjectDate_EndSP.ObjectId = Object_Unit.Id
+                            AND ObjectDate_EndSP.DescId = zc_ObjectDate_Unit_EndSP()
+
         LEFT JOIN tmpByBadm ON tmpByBadm.UnitId = Object_Unit.Id
 
     WHERE Object_Unit.DescId = zc_Object_Unit()
@@ -223,6 +249,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 20.03.19         *
  15.01.19         * 
  22.10.18         *
  29.08.18         * Phone

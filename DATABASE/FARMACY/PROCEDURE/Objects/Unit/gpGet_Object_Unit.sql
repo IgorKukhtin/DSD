@@ -25,7 +25,11 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isRepriceAuto Boolean,
                NormOfManDays Integer,
                PharmacyItem Boolean,
-               isGoodsCategory Boolean
+               isGoodsCategory Boolean,
+               DateSP      TDateTime,
+               StartTimeSP TDateTime,
+               EndTimeSP   TDateTime,
+               isSP        Boolean
                ) AS
 $BODY$
 BEGIN
@@ -86,6 +90,11 @@ BEGIN
            , False                 AS PharmacyItem
            , False                 AS isGoodsCategory
 
+           , CAST (Null as TDateTime) AS DateSP
+           , CAST (Null as TDateTime) AS StartTimeSP
+           , CAST (Null as TDateTime) AS EndTimeSP
+           , FALSE                    AS isSP
+
 ;
    ELSE
        RETURN QUERY 
@@ -144,6 +153,11 @@ BEGIN
       , COALESCE(ObjectBoolean_PharmacyItem.ValueData, False)    AS PharmacyItem
       , COALESCE(ObjectBoolean_GoodsCategory.ValueData, FALSE)   AS isGoodsCategory
 
+      , ObjectDate_SP.ValueData                       :: TDateTime AS DateSP
+      , CASE WHEN COALESCE (ObjectDate_StartSP.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_StartSP.ValueData ELSE Null END :: TDateTime AS StartTimeSP
+      , CASE WHEN COALESCE (ObjectDate_EndSP.ValueData ::Time,'00:00')   <> '00:00' THEN ObjectDate_EndSP.ValueData ELSE Null END   :: TDateTime AS EndTimeSP
+      , COALESCE (ObjectBoolean_SP.ValueData, FALSE)  :: Boolean   AS isSP
+
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
@@ -199,6 +213,10 @@ BEGIN
                                 ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SP 
+                                ON ObjectBoolean_SP.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SP.DescId = zc_ObjectBoolean_Unit_SP()
+
         LEFT JOIN ObjectString AS ObjectString_Unit_Address
                                ON ObjectString_Unit_Address.ObjectId = Object_Unit.Id
                               AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
@@ -253,6 +271,18 @@ BEGIN
         LEFT JOIN ObjectDate AS ObjectDate_TaxUnitEnd
                              ON ObjectDate_TaxUnitEnd.ObjectId = Object_Unit.Id
                             AND ObjectDate_TaxUnitEnd.DescId = zc_ObjectDate_Unit_TaxUnitEnd()
+
+        LEFT JOIN ObjectDate AS ObjectDate_SP
+                             ON ObjectDate_SP.ObjectId = Object_Unit.Id
+                            AND ObjectDate_SP.DescId = zc_ObjectDate_Unit_SP()
+
+        LEFT JOIN ObjectDate AS ObjectDate_StartSP
+                             ON ObjectDate_StartSP.ObjectId = Object_Unit.Id
+                            AND ObjectDate_StartSP.DescId = zc_ObjectDate_Unit_StartSP()
+
+        LEFT JOIN ObjectDate AS ObjectDate_EndSP
+                             ON ObjectDate_EndSP.ObjectId = Object_Unit.Id
+                            AND ObjectDate_EndSP.DescId = zc_ObjectDate_Unit_EndSP()
 
     WHERE Object_Unit.Id = inId;
 

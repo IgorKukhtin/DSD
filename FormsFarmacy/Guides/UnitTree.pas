@@ -76,6 +76,8 @@ type
     MemberName: TcxGridDBColumn;
     PartnerMedicalName: TcxGridDBColumn;
     isGoodsCategory: TcxGridDBColumn;
+    isSP: TcxGridDBColumn;
+    DateSP: TcxGridDBColumn;
   private
     { Private declarations }
   public

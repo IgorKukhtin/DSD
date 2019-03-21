@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 566
+  ClientHeight = 620
   ClientWidth = 488
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 99
-    Top = 535
+    Top = 587
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 293
-    Top = 535
+    Top = 587
     Width = 75
     Height = 25
     Action = FormClose
@@ -310,12 +310,12 @@
     Width = 209
   end
   object cxLabel18: TcxLabel
-    Left = 17
+    Left = 16
     Top = 442
     Caption = #1055#1086#1076#1088#1072#1079#1076'. '#1076#1083#1103' '#1091#1088#1072#1074#1085#1080#1074#1072#1085#1080#1103' '#1094#1077#1085' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
   end
   object edUnitRePrice: TcxButtonEdit
-    Left = 17
+    Left = 16
     Top = 458
     Properties.Buttons = <
       item
@@ -327,12 +327,12 @@
     Width = 448
   end
   object cxLabel19: TcxLabel
-    Left = 17
+    Left = 16
     Top = 486
     Caption = #1052#1077#1076'. '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1082#1084#1091' 1303'
   end
   object edPartnerMedical: TcxButtonEdit
-    Left = 17
+    Left = 16
     Top = 502
     Properties.Buttons = <
       item
@@ -394,6 +394,69 @@
     Caption = #1076#1083#1103' '#1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1086#1081' '#1084#1072#1090#1088#1080#1094#1099
     TabOrder = 48
     Width = 179
+  end
+  object cbSp: TcxCheckBox
+    Left = 16
+    Top = 545
+    Hint = #1076#1083#1103' '#1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1086#1081' '#1084#1072#1090#1088#1080#1094#1099
+    Caption = #1057#1086#1094'.'#1087#1088#1086#1077#1082#1090
+    TabOrder = 49
+    Width = 89
+  end
+  object cxLabel22: TcxLabel
+    Left = 119
+    Top = 535
+    Hint = #1044#1072#1090#1072' '#1085#1072#1095'.'#1088#1072#1073#1086#1090#1099' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072#1084
+    Caption = #1044#1072#1090#1072' '#1085#1072#1095'.'
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object edDateSp: TcxDateEdit
+    Left = 119
+    Top = 554
+    EditValue = 42993d
+    Properties.ReadOnly = False
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 51
+    Width = 90
+  end
+  object cxLabel23: TcxLabel
+    Left = 255
+    Top = 535
+    Caption = #1053#1072#1095'. '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090
+  end
+  object edStartSP: TcxDateEdit
+    Left = 255
+    Top = 554
+    EditValue = 43225d
+    Properties.ArrowsForYear = False
+    Properties.AssignedValues.EditFormat = True
+    Properties.DateButtons = [btnNow]
+    Properties.DateOnError = deNull
+    Properties.DisplayFormat = 'HH:MM'
+    Properties.Kind = ckDateTime
+    Properties.Nullstring = ' '
+    Properties.YearsInMonthList = False
+    TabOrder = 53
+    Width = 100
+  end
+  object edEndSP: TcxDateEdit
+    Left = 364
+    Top = 554
+    EditValue = 43234d
+    Properties.ArrowsForYear = False
+    Properties.AssignedValues.EditFormat = True
+    Properties.DateButtons = [btnNow]
+    Properties.DisplayFormat = 'HH:MM'
+    Properties.Kind = ckDateTime
+    TabOrder = 54
+    Width = 100
+  end
+  object cxLabel24: TcxLabel
+    Left = 367
+    Top = 535
+    Caption = #1054#1082#1086#1085'. '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090
   end
   object ActionList: TActionList
     Left = 356
@@ -537,6 +600,38 @@
         Value = 'NULL'
         Component = edTaxUnitEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateSP'
+        Value = 'NULL'
+        Component = edDateSp
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartTimeSP'
+        Value = 'NULL'
+        Component = edStartSP
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndTimeSP'
+        Value = 'NULL'
+        Component = edEndSP
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSP'
+        Value = Null
+        Component = cbSp
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -914,6 +1009,34 @@
         Value = Null
         Component = cbGoodsCategory
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSp'
+        Value = Null
+        Component = cbSp
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DateSp'
+        Value = 'NULL'
+        Component = edDateSp
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartTimeSP'
+        Value = 'NULL'
+        Component = edStartSP
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndTimeSP'
+        Value = 'NULL'
+        Component = edEndSP
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1

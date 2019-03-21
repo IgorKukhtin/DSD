@@ -13,8 +13,9 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
---DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Integer);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Integer);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Boolean, Integer);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
@@ -30,6 +31,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inCloseDate               TDateTime ,    -- дата закрытия точки
     IN inTaxUnitStartDate        TDateTime ,
     IN inTaxUnitEndDate          TDateTime ,
+    IN inDateSP                  TDateTime ,    -- Дата начала работы по Соц.проектам 
+    IN inStartTimeSP             TDateTime ,    -- Время начала работы по Соц.проектам 
+    IN inEndTimeSP               TDateTime ,    -- Время завершения работы по Соц.проектам
+    IN inisSp                    Boolean   ,    -- Работают по Соц.проекту
     IN inisRepriceAuto           Boolean   ,    -- участвует в автопереоценке
     IN inAreaId                  Integer   ,    -- регион
     IN inParentId                Integer   ,    -- ссылка на подразделение
@@ -133,6 +138,23 @@ BEGIN
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_TaxUnitEnd(), ioId, NULL);
    END IF;
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_StartSP(), ioId, inStartTimeSP);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_EndSP(), ioId, inEndTimeSP);
+     
+   IF inisSp = TRUE
+   THEN
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_SP(), ioId, inDateSP);
+   ELSE 
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Unit_SP(), ioId, NULL);
+   END IF;
+
+   --
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_SP(), ioId, inisSP);
+   
    -- участвует в автопереоценке
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_RepriceAuto(), ioId, inisRepriceAuto);
 
@@ -202,6 +224,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 20.03.19         *
  15.02.19         * inGoodsCategory
  09.02.19                                                        * add PharmacyItem
  15.01.19         *
