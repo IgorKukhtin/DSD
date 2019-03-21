@@ -1,5 +1,5 @@
 inherited Report_SaleSPForm: TReport_SaleSPForm
-  Caption = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303 ()'
+  Caption = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303'
   ClientHeight = 480
   ClientWidth = 1077
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -1112,6 +1112,154 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrintInvoice2: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090' - '#1092#1072#1082#1090#1091#1088#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090' - '#1092#1072#1082#1090#1091#1088#1072
+      ImageIndex = 17
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'JuridicalName;HospitalName;ContractName;isPrintLast;OperDate;Goo' +
+            'dsName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42736d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42736d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GroupMemberSPName'
+          Value = ''
+          Component = GroupMemberSPGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGroupMemberSP'
+          Value = 'False'
+          Component = cbGroupMemberSP
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Invoice'
+          Value = ''
+          Component = edInvoice
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PercentSP'
+          Value = 0.000000000000000000
+          Component = cePercentSP
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DateInvoice'
+          Value = 'NULL'
+          Component = edDateInvoice
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303('#1089#1095#1077#1090')'
+      ReportNameParam.Value = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303('#1089#1095#1077#1090')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintBill: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ImageIndex = 16
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'JuridicalName;HospitalName;ContractName;isPrintLast;OperDate;Goo' +
+            'dsName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42736d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42736d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GroupMemberSPName'
+          Value = ''
+          Component = GroupMemberSPGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGroupMemberSP'
+          Value = 'False'
+          Component = cbGroupMemberSP
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Invoice'
+          Value = ''
+          Component = edInvoice
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PercentSP'
+          Value = Null
+          Component = cePercentSP
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DateInvoice'
+          Value = 'NULL'
+          Component = edDateInvoice
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303('#1085#1072#1082#1083#1072#1076#1085#1072#1103')'
+      ReportNameParam.Value = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303('#1085#1072#1082#1083#1072#1076#1085#1072#1103')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1333,6 +1481,18 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintInvoice2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintBill'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1365,6 +1525,14 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       Hint = 'New Item'
       Visible = ivAlways
       Control = cbisInsert
+    end
+    object bbPrintInvoice2: TdxBarButton
+      Action = actPrintInvoice2
+      Category = 0
+    end
+    object bbPrintBill: TdxBarButton
+      Action = actPrintBill
+      Category = 0
     end
   end
   inherited PeriodChoice: TPeriodChoice

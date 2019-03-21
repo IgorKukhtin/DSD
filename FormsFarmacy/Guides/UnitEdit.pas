@@ -89,6 +89,13 @@ type
     edTaxUnitEnd: TcxDateEdit;
     edTaxUnitStart: TcxDateEdit;
     cbGoodsCategory: TcxCheckBox;
+    cbSp: TcxCheckBox;
+    cxLabel22: TcxLabel;
+    edDateSp: TcxDateEdit;
+    cxLabel23: TcxLabel;
+    edStartSP: TcxDateEdit;
+    edEndSP: TcxDateEdit;
+    cxLabel24: TcxLabel;
   private
     { Private declarations }
   public

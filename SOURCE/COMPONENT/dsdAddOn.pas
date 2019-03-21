@@ -623,6 +623,7 @@ type
     FRefreshAction: TdsdDataSetRefresh;
     FisSingle: boolean;
     FisAlwaysRefresh: boolean;
+    FisFreeAtClosing: boolean;
     FOnLoadAction: TdsdCustomAction;
     FAddOnFormRefresh: TAddOnFormRefresh;
   public
@@ -637,6 +638,8 @@ type
     property RefreshAction: TdsdDataSetRefresh read FRefreshAction write FRefreshAction;
     // Данная форма создается в единственном экземпляре. Актуально, например, для справочников
     property isSingle: boolean read FisSingle write FisSingle default true;
+    // Данная форма после закрытия унечтожаеться
+    property isFreeAtClosing: boolean read FisFreeAtClosing write FisFreeAtClosing default false;
     // Событие вызываемое для выбора значения
     property ChoiceAction: TdsdChoiceGuides read FChoiceAction write FChoiceAction;
     // Событие открытия диалога
@@ -2382,6 +2385,7 @@ constructor TAddOnFormData.Create;
 begin
   FisAlwaysRefresh := true;
   FisSingle := true;
+  FisFreeAtClosing := false;
   FAddOnFormRefresh := TAddOnFormRefresh.Create;
 end;
 

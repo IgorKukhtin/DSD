@@ -782,7 +782,9 @@ type
     FInsertDateField: string;
     FGMMap: TGMMap;
     FIsShowRoute: Boolean;
-
+    FAPIKey: String;
+    FAPIKeyField: String;
+    FAPIKeyStoredProc: TdsdStoredProc;
     procedure SetDataSet(const Value: TDataSet);
   protected
     procedure Notification(AComponent: TComponent;
@@ -799,6 +801,10 @@ type
     property AddressField: string read FAddressField write FAddressField;
     property InsertDateField: string read FInsertDateField write FInsertDateField;
     property IsShowRoute: Boolean read FIsShowRoute write FIsShowRoute default False;
+
+    property APIKey: string read FAPIKey write FAPIKey;
+    property APIKeyField: string read FAPIKeyField write FAPIKeyField;
+    property APIKeyStoredProc: TdsdStoredProc  read FAPIKeyStoredProc write FAPIKeyStoredProc;
   end;
 
 procedure Register;
@@ -1144,9 +1150,11 @@ begin
     if result.WindowState = wsMinimized then
       result.WindowState := wsNormal;
     if isShowModal then
-      result.ShowModal
-    else
-      result.Show
+    begin
+      result.ShowModal;
+      if (result is TParentForm) and TParentForm(result).AddOnFormData.isFreeAtClosing then result.Free;
+    end
+    else result.Show
   end
   else
     result.Free
@@ -3208,6 +3216,8 @@ begin
   inherited;
   FMapType := acShowOne;
   FIsShowRoute := False;
+  FAPIKey := '';
+  FAPIKeyField := '';
 end;
 
 procedure TdsdPartnerMapAction.BeforeExecute(Form: TForm);
@@ -3222,6 +3232,22 @@ begin
       if Form.Components[I].ClassType = TdsdGMMap then
       begin
         FGMMap := TGMMap(Form.Components[I]);
+
+        if FAPIKey <> '' then TdsdGMMap(Form.Components[I]).APIKey := FAPIKey
+        else if Assigned(FAPIKeyStoredProc) then
+        begin
+          try
+            FAPIKeyStoredProc.Execute;
+            if FAPIKeyField <> '' then
+              TdsdGMMap(Form.Components[I]).APIKey := FAPIKeyStoredProc.ParamByName(FAPIKeyField).AsString
+            else if Assigned(FAPIKeyStoredProc.ParamByName('outAPIKey')) then
+              TdsdGMMap(Form.Components[I]).APIKey := FAPIKeyStoredProc.ParamByName('outAPIKey').AsString
+            else if FAPIKeyStoredProc.Params.Count > 0 then
+              TdsdGMMap(Form.Components[I]).APIKey := FAPIKeyStoredProc.Params.Items[0].AsString
+          except
+          end;
+        end;
+
         TdsdGMMap(Form.Components[I]).MapType := FMapType;
         TdsdGMMap(Form.Components[I]).DataSet := FDataSet;
         TdsdGMMap(Form.Components[I]).GPSNField := FGPSNField;

@@ -1,4 +1,4 @@
--- Function: gpSelect_Object_Juridical()
+-- Function: gpSelect_Object_UnionLoadObject()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_UnionLoadObject(TVarChar);
 
@@ -38,4 +38,4 @@ ALTER FUNCTION gpSelect_Object_UnionLoadObject(TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Juridical ('2')
+-- SELECT * FROM gpSelect_Object_UnionLoadObject ('2')

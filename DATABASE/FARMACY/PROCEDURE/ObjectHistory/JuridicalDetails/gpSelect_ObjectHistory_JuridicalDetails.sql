@@ -47,7 +47,7 @@ BEGIN
 
        FROM ObjectHistory_JuridicalDetails
   FULL JOIN (SELECT zc_DateStart() AS StartDate, inJuridicalId AS ObjectId ) AS Empty
-         ON Empty.ObjectId = ObjectHistory_JuridicalDetails.ObjectID
+         ON Empty.ObjectId = ObjectHistory_JuridicalDetails.ObjectId
 
   LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_FullName
          ON ObjectHistoryString_JuridicalDetails_FullName.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id

@@ -54,6 +54,7 @@ type
     dxBarStatic1: TdxBarStatic;
     actRouteOnMap: TdsdPartnerMapAction;
     AddressByGPS: TcxGridDBColumn;
+    spGoogle_APIKey: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -1,4 +1,4 @@
--- Function: gpSelect_Object_Juridical()
+-- Function: gpSelect_Color()
 
 DROP FUNCTION IF EXISTS gpSelect_Color(TVarChar);
 
@@ -10,7 +10,7 @@ $BODY$
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Juridical());
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_());
 
    RETURN QUERY 
        SELECT zc_Color_Black(),            zc_Color_White(), 'zc_Color_Black'             ::TVarChar, 'Текст' ::TVarChar, 'Фон' ::TVarChar

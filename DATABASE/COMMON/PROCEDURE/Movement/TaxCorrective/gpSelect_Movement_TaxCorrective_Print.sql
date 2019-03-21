@@ -300,6 +300,7 @@ BEGIN
     , tmpGoods AS (SELECT tmp.GoodsId                              AS GoodsId
                         , Object_Goods.ObjectCode                  AS GoodsCode
                         , Object_Goods.ValueData                   AS GoodsName
+                        , ObjectString_Goods_RUS.ValueData         AS GoodsName_RUS
                         , ObjectString_Goods_UKTZED.ValueData      AS Goods_UKTZED
                         , ObjectString_Goods_TaxImport.ValueData   AS Goods_TaxImport
                         , ObjectString_Goods_DKPP.ValueData        AS Goods_DKPP
@@ -323,6 +324,9 @@ BEGIN
                         LEFT JOIN ObjectString AS ObjectString_Goods_TaxAction
                                                ON ObjectString_Goods_TaxAction.ObjectId = tmp.GoodsId
                                               AND ObjectString_Goods_TaxAction.DescId = zc_ObjectString_Goods_TaxAction()
+                        LEFT JOIN ObjectString AS ObjectString_Goods_RUS
+                                               ON ObjectString_Goods_RUS.ObjectId = tmp.GoodsId
+                                              AND ObjectString_Goods_RUS.DescId = zc_ObjectString_Goods_RUS()
                         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                              ON ObjectLink_Goods_Measure.ObjectId = tmp.GoodsId
                                             AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -948,7 +952,7 @@ BEGIN
                                                                                                  END
                    WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name 
                    WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name 
-                   ELSE tmpGoods.GoodsName || CASE WHEN COALESCE (tmpMI.GoodsKindId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || tmpMI.GoodsKindName END 
+                   ELSE CASE WHEN vbOperDate_begin < zc_DateEnd_GoodsRus() THEN tmpGoods.GoodsName_RUS ELSE tmpGoods.GoodsName END || CASE WHEN COALESCE (tmpMI.GoodsKindId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || tmpMI.GoodsKindName END 
                    END) :: TVarChar AS GoodsName
 
            , CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() THEN CASE WHEN vbOperDate_begin >= '01.12.2018' AND COALESCE (tmpMovement_Data.Goods_DocumentTaxKind, '') <> '' THEN tmpMovement_Data.Goods_DocumentTaxKind
@@ -956,7 +960,7 @@ BEGIN
                                                                                                 END
                   WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name 
                   WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name 
-                  ELSE tmpGoods.GoodsName 
+                  ELSE CASE WHEN vbOperDate_begin < zc_DateEnd_GoodsRus() THEN tmpGoods.GoodsName_RUS ELSE tmpGoods.GoodsName END 
              END AS GoodsName_two
 
            , tmpMI.GoodsKindName                                            AS GoodsKindName
@@ -1035,7 +1039,7 @@ BEGIN
                                               WHEN tmpMI.isAuto = TRUE THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum)
                                               ELSE tmpMI.NPP
                                          END
-                                       , tmpGoods.GoodsName
+                                       , CASE WHEN vbOperDate_begin < zc_DateEnd_GoodsRus() THEN tmpGoods.GoodsName_RUS ELSE tmpGoods.GoodsName END
                                        , tmpMI.GoodsKindName
                                ) AS Ord
 
@@ -1828,6 +1832,7 @@ $BODY$
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 21.03.19         * GoodsName_RUS
  04.03.18         *
  06.11.17         *
  28.08.17         *

@@ -83,7 +83,6 @@ uses
   dbObjectTest in '..\SOURCE\dbObjectTest.pas',
   Retail in '..\..\Forms\Guides\Retail.pas' {RetailForm: TParentForm},
   RetailEdit in '..\..\Forms\Guides\RetailEdit.pas' {RetailEditForm: TParentForm},
-  Juridical in '..\..\FormsFarmacy\Guides\Juridical.pas' {JuridicalForm: TParentForm},
   JuridicalEdit in '..\..\FormsFarmacy\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
   MainForm in '..\..\FormsFarmacy\MainForm.pas' {MainForm},
   IncomeJournal in '..\..\FormsFarmacy\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
@@ -670,7 +669,8 @@ uses
   JackdawsChecks in '..\..\FormsFarmacy\Guides\JackdawsChecks.pas' {JackdawsChecksForm: TParentForm},
   JackdawsChecksEdit in '..\..\FormsFarmacy\Guides\JackdawsChecksEdit.pas' {JackdawsChecksEditForm: TParentForm},
   PUSH in '..\..\FormsFarmacy\Document\PUSH.pas' {PUSHForm: TParentForm},
-  PUSHJournal in '..\..\FormsFarmacy\Document\PUSHJournal.pas' {PUSHJournalForm: TParentForm};
+  PUSHJournal in '..\..\FormsFarmacy\Document\PUSHJournal.pas' {PUSHJournalForm: TParentForm},
+  Juridical in '..\..\FormsFarmacy\Guides\Juridical.pas' {JuridicalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

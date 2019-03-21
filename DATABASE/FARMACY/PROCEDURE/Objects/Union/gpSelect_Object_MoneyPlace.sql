@@ -1,4 +1,4 @@
--- Function: gpSelect_Object_Juridical()
+-- Function: gpSelect_Object_MoneyPlace()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_MoneyPlace(TVarChar);
 
@@ -10,7 +10,7 @@ $BODY$
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Juridical());
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_());
 
    RETURN QUERY 
        SELECT 
@@ -37,4 +37,4 @@ ALTER FUNCTION gpSelect_Object_MoneyPlace(TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Juridical ('2')
+-- SELECT * FROM gpSelect_Object_MoneyPlace ('2')

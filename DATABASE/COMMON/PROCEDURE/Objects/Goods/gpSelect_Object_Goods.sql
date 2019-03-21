@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
     IN inShowAll     Boolean,
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_RUS TVarChar
              , GoodsCode_basis Integer, GoodsName_basis TVarChar
              , GoodsCode_main Integer, GoodsName_main TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -45,6 +45,7 @@ BEGIN
        SELECT Object_Goods.Id             AS Id
             , Object_Goods.ObjectCode     AS Code
             , Object_Goods.ValueData      AS Name
+            , COALESCE (ObjectString_Goods_RUS.ValueData, '') :: TVarChar AS Name_RUS
 
             , Object_Goods_basis.ObjectCode     AS GoodsCode_basis
             , Object_Goods_basis.ValueData      AS GoodsName_basis
@@ -136,6 +137,10 @@ BEGIN
                                     ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                    AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
+             LEFT JOIN ObjectString AS ObjectString_Goods_RUS
+                                    ON ObjectString_Goods_RUS.ObjectId = Object_Goods.Id
+                                   AND ObjectString_Goods_RUS.DescId = zc_ObjectString_Goods_RUS()
+
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                   ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -198,6 +203,7 @@ BEGIN
             , 0                   :: Integer  AS Code
             -- , 'Очистить значение' :: TVarChar AS Name
             , 'УДАЛИТЬ Значение'  :: TVarChar AS Name
+            , ''                  :: TVarChar AS Name_RUS
 
             , 0                   :: Integer  AS GoodsCode_basis
             , ''                  :: TVarChar AS GoodsName_basis
@@ -254,6 +260,7 @@ ALTER FUNCTION gpSelect_Object_Goods (Boolean, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.03.19         *
  12.12.18         * 
  18.10.18         *
  15.04.15         * add GoodsPlatform

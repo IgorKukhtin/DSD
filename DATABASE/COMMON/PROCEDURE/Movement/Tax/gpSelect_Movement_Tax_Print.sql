@@ -795,7 +795,7 @@ order by 4*/
                                   THEN tmpObject_GoodsPropertyValue.Name
                              WHEN tmpObject_GoodsPropertyValue_basis.Name <> ''
                                   THEN tmpObject_GoodsPropertyValue_basis.Name
-                             ELSE Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
+                             ELSE CASE WHEN Movement.OperDate < zc_DateEnd_GoodsRus() THEN ObjectString_Goods_RUS.ValueData ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
                         END
               END) :: TVarChar AS GoodsName
 
@@ -807,7 +807,7 @@ order by 4*/
                                   THEN tmpObject_GoodsPropertyValue.Name
                              WHEN tmpObject_GoodsPropertyValue_basis.Name <> ''
                                   THEN tmpObject_GoodsPropertyValue_basis.Name
-                             ELSE Object_Goods.ValueData
+                             ELSE CASE WHEN Movement.OperDate < zc_DateEnd_GoodsRus() THEN ObjectString_Goods_RUS.ValueData ELSE Object_Goods.ValueData END
                         END
              END) :: TVarChar AS GoodsName_two
 
@@ -908,6 +908,10 @@ order by 4*/
                                    ON ObjectString_Goods_TaxAction.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_TaxAction.DescId = zc_ObjectString_Goods_TaxAction()
 
+            LEFT JOIN ObjectString AS ObjectString_Goods_RUS
+                                   ON ObjectString_Goods_RUS.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_RUS.DescId = zc_ObjectString_Goods_RUS()
+
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -928,7 +932,7 @@ order by 4*/
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             -- LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-       ORDER BY Object_Goods.ValueData
+       ORDER BY CASE WHEN Movement.OperDate < zc_DateEnd_GoodsRus() THEN ObjectString_Goods_RUS.ValueData ELSE Object_Goods.ValueData END
               , Object_GoodsKind.ValueData
               , tmpMI.Id
       ;
