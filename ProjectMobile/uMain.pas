@@ -4015,6 +4015,7 @@ begin
     FWebGMap.Align := TAlignLayout.Client;
     FWebGMap.MapOptions.ZoomMap := 14;
     FWebGMap.Parent := pPathOnMap;
+    FWebGMap.APIKey := DM.tblObject_ConstAPIKey.AsString;
   finally
     FreeAndNil(RouteQuery);
   end;
@@ -4830,6 +4831,7 @@ begin
   FWebGMap.Align := TAlignLayout.Client;
   FWebGMap.MapOptions.ZoomMap := 13;
   FWebGMap.Parent := tiMap;
+  FWebGMap.APIKey := DM.tblObject_ConstAPIKey.AsString;
 end;
 
 // вызов карты с координатами ТТ
@@ -4891,6 +4893,7 @@ begin
     }
     FWebGMap.MapOptions.ZoomMap := 18;
     FWebGMap.Parent := pMap;
+    FWebGMap.APIKey := DM.tblObject_ConstAPIKey.AsString;
     FWebGMap.OnDownloadFinish := WebGMapDownloadFinish;
     if SetCordinate then
     begin
