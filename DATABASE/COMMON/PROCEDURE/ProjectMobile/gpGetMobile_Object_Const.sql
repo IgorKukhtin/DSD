@@ -41,6 +41,7 @@ RETURNS TABLE (PaidKindId_First      Integer   -- Форма оплаты - БН
              , ReturnDayCount        Integer   -- сколько дней принимаются возвраты по старым ценам
              , CriticalOverDays      Integer   -- Количество дней просрочки|После которого формирование заявки невозможно (default 21)
              , CriticalDebtSum       TFloat    -- Сумма долга|После которого формирование заявки невозможно (default 1 грн.)
+             , APIKey                TVarChar  -- APIKey для гугл карт
 )
 AS
 $BODY$
@@ -186,6 +187,7 @@ BEGIN
             , getMobileConst.CriticalOverDays
             -- , 1::TFloat   AS CriticalDebtSum
             , getMobileConst.CriticalDebtSum
+            , zc_Google_APIKey() AS APIKey
 
        FROM tmpPersonal
             LEFT JOIN gpGet_Object_MobileConst_BySession (inSession:= inSession) AS getMobileConst ON 1 = 1
@@ -220,7 +222,8 @@ END;$BODY$
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.   Шаблий Щ.В.
+ 21.03.19                                                                    * APIKey
  04.12.17                                                       * WebService_three, WebService_four
  11.05.17                                                       * OperDate_diff
  17.02.17                                        *
