@@ -3,17 +3,22 @@
 --DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_VMC (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_VMC (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_VMC (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_VMC (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind_VMC(
  INOUT ioId                    Integer  , -- ключ объекта <Товар>
     IN inGoodsId               Integer  , -- Товары
     IN inGoodsKindId           Integer  , -- Виды товаров
+    IN inBoxId                 Integer  , -- ящик
     IN inWeightMin             TFloat  , -- 
     IN inWeightMax             TFloat  , -- 
     IN inHeight                TFloat  , -- 
     IN inLength                TFloat  , -- 
     IN inWidth                 TFloat  , -- 
     IN inNormInDays            TFloat  , -- 
+    IN inCountOnBox            TFloat  , -- 
+    IN inWeightOnBox           TFloat  , -- 
+   OUT outWeightGross          TFloat  , -- 
     IN inisGoodsTypeKind_Sh    Boolean , -- 
     IN inisGoodsTypeKind_Nom   Boolean , -- 
     IN inisGoodsTypeKind_Ves   Boolean , -- 
@@ -27,6 +32,7 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbGoodsPropertyBoxId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsByGoodsKind_VMC());
@@ -118,6 +124,34 @@ BEGIN
    FROM gpSelect_Object_GoodsByGoodsKind (inSession) AS tmp
    WHERE tmp.Id = ioId;
    
+   -- если внесли ящик тогда сохраняем данные
+   IF COALESCE (inBoxId,0) <> 0
+   THEN
+       -- находим если есть GoodsPropertyBox.Id
+       vbGoodsPropertyBoxId := (SELECT ObjectLink_GoodsPropertyBox_Goods.ObjectId
+                                FROM ObjectLink AS ObjectLink_GoodsPropertyBox_Goods
+                                     INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyBox_GoodsKind
+                                                           ON ObjectLink_GoodsPropertyBox_GoodsKind.ObjectId = ObjectLink_GoodsPropertyBox_Goods.ObjectId
+                                                          AND ObjectLink_GoodsPropertyBox_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyBox_GoodsKind()
+                                                          AND ObjectLink_GoodsPropertyBox_GoodsKind.ChildObjectId = inGoodsKindId
+                                WHERE ObjectLink_GoodsPropertyBox_Goods.DescId = zc_ObjectLink_GoodsPropertyBox_Goods()
+                                  AND ObjectLink_GoodsPropertyBox_Goods.ChildObjectId = inGoodsId
+                                );
+       -- сохраняем Значения свойств товаров для ящиков
+       PERFORM gpInsertUpdate_Object_GoodsPropertyBox (ioId                   := COALESCE (vbGoodsPropertyBoxId,0) , -- ключ объекта <>
+                                                       inBoxId                := inBoxId        , -- Ящик
+                                                       inGoodsId              := inGoodsId      , -- Товары
+                                                       inGoodsKindId          := inGoodsKindId  , -- Виды товаров
+                                                       inCountOnBox           := inCountOnBox   , -- количество ед. в ящ.
+                                                       inWeightOnBox          := inWeightOnBox  , -- количество кг. в ящ.
+                                                       inSession              := inSession);
+                                                       
+       outWeightGross := inWeightOnBox + (SELECT ObjectFloat_Weight.ValueData
+                                          FROM ObjectFloat AS ObjectFloat_Weight
+                                          WHERE ObjectFloat_Weight.ObjectId = inBoxId
+                                            AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Box_Weight()
+                                          );
+   END IF;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -130,6 +164,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.03.19         * 
  13.03.19         *
  22.06.18         *
 */

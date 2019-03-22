@@ -90,6 +90,7 @@ type
     bbUpdateVes_No: TdxBarButton;
     CodeCalc_Sh: TcxGridDBColumn;
     isCodeCalc_Diff: TcxGridDBColumn;
+    BoxChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
