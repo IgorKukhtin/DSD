@@ -840,6 +840,7 @@ type
     lTotalWeightDoc: TLabel;
     lDocBranch: TLabel;
     lDocContract: TLabel;
+    LocationSensor1: TLocationSensor;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -1070,6 +1071,8 @@ type
     procedure LinkListControlToField2FilledListItem(Sender: TObject; const AEditor: IBindListEditorItem);
     procedure lwJuridicalCollationItemClick(const Sender: TObject; const AItem: TListViewItem);
     procedure bSyncReturnInClick(Sender: TObject);
+    procedure LocationSensor1LocationChanged(Sender: TObject; const OldLocation,
+      NewLocation: TLocationCoord2D);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -1087,6 +1090,7 @@ type
     FCurCoordinatesSet: boolean;
     FCurCoordinatesMsg: String;
     FCurCoordinates: TLocationCoord2D;
+    FSensorCoordinates: TLocationCoord2D;
     FMapLoaded: Boolean;
     FWebGMap: TTMSFMXWebGMaps;
 
@@ -1404,6 +1408,7 @@ begin
   FPaidKindIdList := TList<integer>.Create;
 
   FEditCashAmount := false;
+  FSensorCoordinates := TLocationCoord2D.Create(0, 0);
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -1687,6 +1692,12 @@ procedure TfrmMain.LinkListControlToFieldTasksFilledListItem(Sender: TObject;
   const AEditor: IBindListEditorItem);
 begin
   ChangeTaskView(lwTasks.Items[AEditor.CurrentIndex])
+end;
+
+procedure TfrmMain.LocationSensor1LocationChanged(Sender: TObject;
+  const OldLocation, NewLocation: TLocationCoord2D);
+begin
+  FSensorCoordinates := TLocationCoord2D.Create(NewLocation.Latitude, NewLocation.Longitude);
 end;
 
 // проверка логина и парол€
@@ -4800,7 +4811,13 @@ end;
 // завершение загрузки карты (с установкой маркеров при необходимости)
 procedure TfrmMain.WebGMapDownloadFinish(Sender: TObject);
 var
-  i : integer;
+  i : integer; Location: TLocationCoord2D;
+
+  function IsDelta(ALatitude, ALongitude : Double) : boolean;
+  begin
+    Result := Sqrt(Sqr(Location.Latitude - ALatitude) + Sqr(Location.Longitude - ALongitude)) > 0.003;
+  end;
+
 begin
   if Assigned(FWebGMap) and not FMapLoaded then
   begin
@@ -4811,8 +4828,10 @@ begin
 
     if FMarkerList.Count > 0 then
     begin
-      for i := 0 to FMarkerList.Count - 1 do
+      Location := TLocationCoord2D.Create(FMarkerList[0].Latitude, FMarkerList[0].Longitude);
+      for i := 0 to FMarkerList.Count - 1 do if (i = 0) or IsDelta(FMarkerList[I].Latitude, FMarkerList[I].Longitude) then
       begin
+        Location := TLocationCoord2D.Create(FMarkerList[I].Latitude, FMarkerList[i].Longitude);
         with FWebGMap.Markers.Add(FMarkerList[i].Latitude, FMarkerList[i].Longitude, FMarkerList[i].Address, '', True, True, False, True, False, 0, TMarkerIconColor.icDefault, -1, -1, -1, -1) do
           if tcMain.ActiveTab = tiPathOnMap then
             MapLabel.Text := IntToStr(i + 1) + ') ' + FormatDateTime('DD.MM.YYYY hh:mm:ss', FMarkerList[i].VisitTime)
@@ -6535,11 +6554,11 @@ var
   LastLocation: JLocation;
   LocManagerObj: JObject;
   LocationManager: JLocationManager;
+  TimeGPS : Int64;
 {$ENDIF}
 begin
   FCurCoordinatesSet := false;
   FCurCoordinatesMsg := '_';
-
 
   {$IFDEF ANDROID}
   try
@@ -6552,13 +6571,29 @@ begin
         if Assigned(LocationManager) then
         begin
           //получаем последнее местоположение зафиксированное с помощью координат wi-fi и мобильных сетей
-          LastLocation := LocationManager.getLastKnownLocation(TJLocationManager.JavaClass.NETWORK_PROVIDER);
-          if Assigned(LastLocation) then
+          if LocationManager.isProviderEnabled(TJLocationManager.JavaClass.GPS_PROVIDER) then
           begin
-            FCurCoordinates := TLocationCoord2D.Create(LastLocation.getLatitude, LastLocation.getLongitude);
-            FCurCoordinatesSet := true;
-          end
-          else FCurCoordinatesMsg:= 'на телефоне не запущен GPS';
+            LastLocation := LocationManager.getLastKnownLocation(TJLocationManager.JavaClass.GPS_PROVIDER);
+            if Assigned(LastLocation) then
+            begin
+              TimeGPS := LastLocation.getTime;
+              FCurCoordinates := TLocationCoord2D.Create(LastLocation.getLatitude, LastLocation.getLongitude);
+              FCurCoordinatesSet := true;
+            end
+          end;
+
+          //получаем последнее местоположение зафиксированное с помощью координат wi-fi и мобильных сетей
+          if locationManager.isProviderEnabled(TJLocationManager.JavaClass.NETWORK_PROVIDER) then
+          begin
+            LastLocation := LocationManager.getLastKnownLocation(TJLocationManager.JavaClass.NETWORK_PROVIDER);
+            if Assigned(LastLocation) and (not FCurCoordinatesSet or (TimeGPS < LastLocation.getTime)) then
+            begin
+              FCurCoordinates := TLocationCoord2D.Create(LastLocation.getLatitude, LastLocation.getLongitude);
+              FCurCoordinatesSet := true;
+            end
+          end;
+
+          if not FCurCoordinatesSet then FCurCoordinatesMsg:= 'на телефоне не запущен сераис или нет доступа к GPS или NETWORK сет€м'
         end
         else
         begin
@@ -6573,6 +6608,13 @@ begin
     end;
   except
       FCurCoordinatesMsg:= 'ошибка при обращении к —ервису GPS';
+  end;
+  {$ELSE}
+  if (FSensorCoordinates.Latitude <> 0) and (FSensorCoordinates.Longitude <> 0) then
+  begin
+    FCurCoordinates := TLocationCoord2D.Create(FSensorCoordinates.Latitude, FSensorCoordinates.Longitude);
+    FCurCoordinatesSet := true;
+    Exit;
   end;
   {$ENDIF}
 end;
