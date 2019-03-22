@@ -1,5 +1,6 @@
 -- Function: lpComplete_Movement_PersonalService (Integer, Integer)
 
+DROP FUNCTION IF EXISTS lpComplete_Movement_PersonalService (Integer, Boolean, Integer);
 DROP FUNCTION IF EXISTS lpComplete_Movement_PersonalService (Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_PersonalService(
@@ -74,7 +75,7 @@ BEGIN
                             AND MovementDate_ServiceDate.MovementId <> inMovementId
                            LIMIT 1
                           );
-     IF vbMovementId_check <> 0
+     IF vbMovementId_check <> 0 -- AND inUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.Найдена другая <Ведомость начисления> № <%> от <%> для <%> за <%>.Дублирование запрещено. <%>'
                        , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_check)
@@ -95,8 +96,8 @@ BEGIN
                )
         AND 1=0
      THEN
-         IF inUserId = zfCalc_UserAdmin() :: Integer
-            OR NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = inUserId)
+         IF ABS (inUserId) = zfCalc_UserAdmin() :: Integer
+            OR NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = ABS (inUserId))
          THEN
              -- Нашли
              vbInsertDate:= (SELECT MIN (tmp.OperDate) FROM (SELECT MIN (MovementProtocol.OperDate) AS OperDate FROM MovementProtocol WHERE MovementProtocol.MovementId = inMovementId UNION ALL SELECT MIN (MovementProtocol.OperDate) AS OperDate FROM MovementProtocol_arc AS MovementProtocol WHERE MovementProtocol.MovementId = inMovementId) AS tmp);
@@ -156,8 +157,8 @@ BEGIN
          END IF;
 
      ELSEIF 1=1
-        AND (NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = inUserId)
-          OR inUserId = zfCalc_UserAdmin() :: Integer
+        AND (NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND ObjectLink_UserRole_View.UserId = ABS (inUserId))
+          OR ABS (inUserId) = zfCalc_UserAdmin() :: Integer
             )
      THEN
          -- для остальных - нельзя "следующий" месяц
@@ -306,6 +307,7 @@ BEGIN
                 WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
                   AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
                )
+               AND inUserId > 0
      THEN
           PERFORM lpComplete_Movement_PersonalService_Recalc (inMovementId := inMovementId
                                                             , inUserId     := inUserId);
@@ -1089,12 +1091,13 @@ BEGIN
 
      -- 5.1. ФИНИШ - формируем/сохраняем Проводки
      PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId
-                                        , inUserId     := inUserId);
+                                        , inUserId     := ABS (inUserId)
+                                         );
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
                                 , inDescId     := zc_Movement_PersonalService()
-                                , inUserId     := inUserId
+                                , inUserId     := ABS (inUserId)
                                  );
      -- 6.1. ФИНИШ - пересчитали сумму к выплате (если есть "другие" расчеты) - ДА надо "минус" <Налоги - удержания с ЗП> И <Алименты - удержания> И <Удержания сторонними юр.л.> 
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummToPay(), tmpMovement.MovementItemId, -1 * OperSumm

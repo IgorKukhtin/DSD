@@ -43,45 +43,44 @@ BEGIN
 
 
        SELECT
-             Movement.Id                            AS Id
-           , Movement.InvNumber                     AS InvNumber
-           , Movement.OperDate                      AS OperDate
-           , Object_Status.ObjectCode               AS StatusCode
-           , Object_Status.ValueData                AS StatusName
-           , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
+             Movement.Id                                AS Id
+           , Movement.InvNumber                         AS InvNumber
+           , Movement.OperDate                          AS OperDate
+           , Object_Status.ObjectCode                   AS StatusCode
+           , Object_Status.ValueData                    AS StatusName
+           , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
 
-           , MovementDate_Insert.ValueData          AS InsertDate
-           , Object_Insert.ValueData                AS InsertName
+           , MovementDate_Insert.ValueData              AS InsertDate
+           , Object_Insert.ValueData                    AS InsertName
 
-           , MovementFloat_TotalCount.ValueData     AS TotalCount
+           , MovementFloat_TotalCount.ValueData         AS TotalCount
 
-           , MovementFloat_TotalSummMVAT.ValueData  AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData  AS TotalSummPVAT
-           , MovementFloat_TotalSumm.ValueData      AS TotalSumm
-           , MovementFloat_TotalSummCurrency.ValueData      AS TotalSummCurrency
-           
-           , CASE WHEN Object_CurrencyDocument.Id = zc_Enum_Currency_Basis() 
-                  THEN CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() 
-                            THEN MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                            ELSE COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                       END 
-                  ELSE CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() 
-                            THEN MovementFloat_TotalSummCurrency.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                            ELSE COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                       END 
-             END  :: TFloat AS TotalSumm_f1            -- оплата б/н
-
-           , CASE WHEN Object_CurrencyDocument.Id = zc_Enum_Currency_Basis() 
-                  THEN CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() 
-                            THEN COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                            ELSE MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+           , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
+           , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
+           , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+           , MovementFloat_TotalSummCurrency.ValueData  AS TotalSummCurrency
+             -- оплата б/н
+           , CASE WHEN Object_CurrencyDocument.Id = zc_Enum_Currency_Basis()
+                  THEN CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm()
+                            THEN MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0)
+                            ELSE COALESCE (MovementFloat_TotalSummPayOth.ValueData,0)
                        END
-                  ELSE CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() 
-                            THEN COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                            ELSE MovementFloat_TotalSummCurrency.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                  ELSE CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm()
+                            THEN MovementFloat_TotalSummCurrency.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0)
+                            ELSE COALESCE (MovementFloat_TotalSummPayOth.ValueData,0)
                        END
-             END
-             :: TFloat AS TotalSumm_f2            -- оплата нал
+             END :: TFloat AS TotalSumm_f1
+             -- оплата нал
+           , CASE WHEN Object_CurrencyDocument.Id = zc_Enum_Currency_Basis()
+                  THEN CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm()
+                            THEN COALESCE (MovementFloat_TotalSummPayOth.ValueData,0)
+                            ELSE MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0)
+                       END
+                  ELSE CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm()
+                            THEN COALESCE (MovementFloat_TotalSummPayOth.ValueData,0)
+                            ELSE MovementFloat_TotalSummCurrency.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0)
+                       END
+             END :: TFloat AS TotalSumm_f2
 
            , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData     AS VATPercent

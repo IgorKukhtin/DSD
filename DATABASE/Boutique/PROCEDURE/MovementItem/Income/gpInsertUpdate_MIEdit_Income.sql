@@ -501,17 +501,29 @@ $BODY$
 /*
 -- SELECT  lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceListItem_Value(), tmp.Id, tmp.PriceOk)
 -- from (
-SELECT ObjectHistoryFloat_PriceListItem_Value.ValueData, Object_PartionGoods .OperPriceList , MIFloat_OperPriceList.ValueData as PriceOk
+SELECT Object_Goods.*, Object_GoodsSize.ValueData, Movement.OperDate, Movement.InvNumber
+, ObjectHistoryFloat_PriceListItem_Value.ValueData, Object_PartionGoods .OperPriceList , MIFloat_OperPriceList.ValueData as PriceOk
+, Object_PartionGoods .OperPrice , MIFloat_OperPrice.ValueData as PriceInOk
 , ObjectHistory_PriceListItem.*
+, Object_PartionGoods.*
 FROM Object_PartionGoods 
+     join Object AS Object_Goods on Object_Goods.Id = Object_PartionGoods.GoodsId
+     join Object AS Object_GoodsSize on Object_GoodsSize.Id = Object_PartionGoods.GoodsSizeId
+
+     join Movement ON Movement.Id = MovementId
+
      join MovementItemFloat AS MIFloat_OperPriceList
           ON MIFloat_OperPriceList.MovementItemId = Object_PartionGoods .MovementItemId
           AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
 
+     join MovementItemFloat AS MIFloat_OperPrice
+          ON MIFloat_OperPrice.MovementItemId = Object_PartionGoods .MovementItemId
+          AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
+
                    inner join ObjectLink AS ObjectLink_PriceListItem_PriceList
                       on ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
                      AND ObjectLink_PriceListItem_PriceList.ChildObjectId = zc_PriceList_Basis()
-                     -- AND (ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0 OR ObjectHistory_PriceListItem.StartDate <> zc_DateStart())
+                     -- AND (ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0 OR ObjectHistory_PriceListItem.StartDate = zc_DateStart())
                         inner JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                              ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                             AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
@@ -529,10 +541,11 @@ FROM Object_PartionGoods
 
 
 WHERE Object_PartionGoods.PeriodYear = 2019
--- and Object_PartionGoods .OperPriceList <> MIFloat_OperPriceList.ValueData
-and Object_PartionGoods .OperPriceList  <> ObjectHistoryFloat_PriceListItem_Value.ValueData
 -- and Object_PartionGoods .MovementItemId = 1707494 
--- and ObjectHistory_PriceListItem.StartDate <> zc_DateStart()
+-- and Object_PartionGoods.OperPriceList <> MIFloat_OperPriceList.ValueData and ObjectHistory_PriceListItem.StartDate <> zc_DateStart()
+-- and Object_PartionGoods .OperPriceList  <> ObjectHistoryFloat_PriceListItem_Value.ValueData
+ and Object_PartionGoods .OperPrice  <> MIFloat_OperPrice.ValueData
+order by 3, Object_GoodsSize.ValueData
 -- ) as tmp
 */
 -- тест
