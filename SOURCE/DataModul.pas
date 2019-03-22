@@ -47,6 +47,7 @@ type
     cxHeaderL2Style: TcxStyle;
     cxHeaderL3Style: TcxStyle;
     cxRemainsCashContentStyle: TcxStyle;
+    cxHeaderL4Style: TcxStyle;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   end;

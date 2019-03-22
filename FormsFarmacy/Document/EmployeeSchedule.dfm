@@ -151,7 +151,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
             MinWidth = 40
             Options.Editing = False
             Styles.Content = dmMain.cxGreenEdit
-            Styles.Header = dmMain.cxHeaderL2Style
+            Styles.Header = dmMain.cxHeaderL4Style
             Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 0
