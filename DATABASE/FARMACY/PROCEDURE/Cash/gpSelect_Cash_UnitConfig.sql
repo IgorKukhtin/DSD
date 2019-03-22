@@ -10,7 +10,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Cash_UnitConfig (
 RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                ParentName TVarChar,
                TaxUnitNight Boolean, TaxUnitStartDate TDateTime, TaxUnitEndDate TDateTime,
-               TimePUSHFinal1 TDateTime, TimePUSHFinal2 TDateTime
+               TimePUSHFinal1 TDateTime, TimePUSHFinal2 TDateTime,
+               isSP Boolean, DateSP TDateTime, StartTimeSP TDateTime, EndTimeSP TDateTime
+
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -78,6 +80,11 @@ BEGIN
        , COALESCE (ObjectDate_TimePUSHFinal1.ValueData, ('01.01.2019 21:00')::TDateTime) AS TimePUSHFinal1
        , ObjectDate_TimePUSHFinal2.ValueData                                             AS TimePUSHFinal2
 
+       , COALESCE (ObjectBoolean_SP.ValueData, FALSE)  :: Boolean   AS isSP
+       , ObjectDate_SP.ValueData                       :: TDateTime AS DateSP
+       , CASE WHEN COALESCE (ObjectDate_StartSP.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_StartSP.ValueData ELSE Null END :: TDateTime AS StartTimeSP
+       , CASE WHEN COALESCE (ObjectDate_EndSP.ValueData ::Time,'00:00')   <> '00:00' THEN ObjectDate_EndSP.ValueData ELSE Null END   :: TDateTime AS EndTimeSP
+
    FROM Object AS Object_Unit
 
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -103,6 +110,22 @@ BEGIN
                               ON ObjectDate_TimePUSHFinal2.ObjectId = vbCashRegisterId
                              AND ObjectDate_TimePUSHFinal2.DescId = zc_ObjectDate_CashRegister_TimePUSHFinal2()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SP 
+                                ON ObjectBoolean_SP.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SP.DescId = zc_ObjectBoolean_Unit_SP()
+
+        LEFT JOIN ObjectDate AS ObjectDate_SP
+                             ON ObjectDate_SP.ObjectId = Object_Unit.Id
+                            AND ObjectDate_SP.DescId = zc_ObjectDate_Unit_SP()
+
+        LEFT JOIN ObjectDate AS ObjectDate_StartSP
+                             ON ObjectDate_StartSP.ObjectId = Object_Unit.Id
+                            AND ObjectDate_StartSP.DescId = zc_ObjectDate_Unit_StartSP()
+
+        LEFT JOIN ObjectDate AS ObjectDate_EndSP
+                             ON ObjectDate_EndSP.ObjectId = Object_Unit.Id
+                            AND ObjectDate_EndSP.DescId = zc_ObjectDate_Unit_EndSP()
+
    WHERE Object_Unit.Id = vbUnitId
    --LIMIT 1
    ;
@@ -117,6 +140,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 22.03.19                                                       *
  20.02.19                                                       *
 
 */

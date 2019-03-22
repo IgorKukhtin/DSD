@@ -14,9 +14,12 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE cur1 refcursor;
+  DECLARE cur2 refcursor;
   DECLARE cur3 refcursor;
   DECLARE vbDefaultValue TVarChar;
   DECLARE vbCurrDay Integer;
+  DECLARE vbDate TDateTime;
+  DECLARE vbMovementId  Integer;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
@@ -35,6 +38,30 @@ BEGIN
      CREATE TEMP TABLE tmpOperDate ON COMMIT DROP AS
         SELECT GENERATE_SERIES (DATE_TRUNC ('MONTH', inDate), DATE_TRUNC ('MONTH', inDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', '1 DAY' :: INTERVAL) AS OperDate;
 
+     vbDate := DATE_TRUNC ('MONTH', inDate) - INTERVAL '1 MONTH';
+
+     CREATE TEMP TABLE tmpOperDatePrev ON COMMIT DROP AS
+        SELECT GENERATE_SERIES (DATE_TRUNC ('MONTH', vbDate), DATE_TRUNC ('MONTH', vbDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', '1 DAY' :: INTERVAL) AS OperDate;
+
+     SELECT Movement.Id
+     INTO vbMovementId
+     FROM Movement
+     WHERE Movement.OperDate = vbDate
+          AND Movement.DescId = zc_Movement_EmployeeSchedule();
+
+     IF (SELECT count(*) FROM tmpOperDatePrev) <> (SELECT count(*) FROM tmpOperDate)
+     THEN
+       WHILE (SELECT count(*) FROM tmpOperDatePrev) <> (SELECT count(*) FROM tmpOperDate)
+       LOOP
+         IF (SELECT count(*) FROM tmpOperDatePrev) > (SELECT count(*) FROM tmpOperDate)
+         THEN
+           INSERT INTO tmpOperDate (OperDate) VALUES (NULL);
+         ELSE
+           INSERT INTO tmpOperDatePrev (OperDate) VALUES (NULL);
+         END IF;
+       END LOOP;
+     END IF;
+
 
      -- возвращаем заголовки столбцов и даты
      OPEN cur1 FOR SELECT tmpOperDate.OperDate::TDateTime,
@@ -46,6 +73,16 @@ BEGIN
 
       ;
      RETURN NEXT cur1;
+
+     -- возвращаем заголовки столбцов и даты дл€ предыдущего мес€ца
+     OPEN cur2 FOR SELECT tmpOperDatePrev.OperDate::TDateTime,
+                          ((EXTRACT(DAY FROM tmpOperDatePrev.OperDate))||case when tmpCalendar.Working = False then ' *' else ' ' END||tmpWeekDay.DayOfWeekName) ::TVarChar AS ValueField
+               FROM tmpOperDatePrev
+                   LEFT JOIN zfCalc_DayOfWeekName (tmpOperDatePrev.OperDate) AS tmpWeekDay ON 1=1
+                   LEFT JOIN gpSelect_Object_Calendar(tmpOperDatePrev.OperDate,tmpOperDatePrev.OperDate,inSession) tmpCalendar ON 1=1
+
+      ;
+     RETURN NEXT cur2;
 
      vbDefaultValue := '0000000000000000000000000000000';
 
@@ -61,7 +98,7 @@ BEGIN
                                      , Object_Personal_View.PositionName
                                 FROM Object_Personal_View),
 
-            tmpUser AS (SELECT 
+            tmpUser AS (SELECT
                               ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
                             , MovementItem.ObjectId                       AS UserID
                             , Object_Member.Id                            AS MemberID
@@ -117,6 +154,37 @@ BEGIN
          tmpUser.UnitID                       AS UnitID,
          tmpUser.UnitCode                     AS UnitCode,
          tmpUser.UnitName                     AS UnitName,
+         lpDecodeValueDay(1, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev1,
+         lpDecodeValueDay(2, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev2,
+         lpDecodeValueDay(3, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev3,
+         lpDecodeValueDay(4, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev4,
+         lpDecodeValueDay(5, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev5,
+         lpDecodeValueDay(6, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev6,
+         lpDecodeValueDay(7, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev7,
+         lpDecodeValueDay(8, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev8,
+         lpDecodeValueDay(9, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev9,
+         lpDecodeValueDay(10, MIString_ComingValueDayPrev.ValueData) AS ValuePrev10,
+         lpDecodeValueDay(11, MIString_ComingValueDayPrev.ValueData) AS ValuePrev11,
+         lpDecodeValueDay(12, MIString_ComingValueDayPrev.ValueData) AS ValuePrev12,
+         lpDecodeValueDay(13, MIString_ComingValueDayPrev.ValueData) AS ValuePrev13,
+         lpDecodeValueDay(14, MIString_ComingValueDayPrev.ValueData) AS ValuePrev14,
+         lpDecodeValueDay(15, MIString_ComingValueDayPrev.ValueData) AS ValuePrev15,
+         lpDecodeValueDay(16, MIString_ComingValueDayPrev.ValueData) AS ValuePrev16,
+         lpDecodeValueDay(17, MIString_ComingValueDayPrev.ValueData) AS ValuePrev17,
+         lpDecodeValueDay(18, MIString_ComingValueDayPrev.ValueData) AS ValuePrev18,
+         lpDecodeValueDay(19, MIString_ComingValueDayPrev.ValueData) AS ValuePrev19,
+         lpDecodeValueDay(20, MIString_ComingValueDayPrev.ValueData) AS ValuePrev20,
+         lpDecodeValueDay(21, MIString_ComingValueDayPrev.ValueData) AS ValuePrev21,
+         lpDecodeValueDay(22, MIString_ComingValueDayPrev.ValueData) AS ValuePrev22,
+         lpDecodeValueDay(23, MIString_ComingValueDayPrev.ValueData) AS ValuePrev23,
+         lpDecodeValueDay(24, MIString_ComingValueDayPrev.ValueData) AS ValuePrev24,
+         lpDecodeValueDay(25, MIString_ComingValueDayPrev.ValueData) AS ValuePrev25,
+         lpDecodeValueDay(26, MIString_ComingValueDayPrev.ValueData) AS ValuePrev26,
+         lpDecodeValueDay(27, MIString_ComingValueDayPrev.ValueData) AS ValuePrev27,
+         lpDecodeValueDay(28, MIString_ComingValueDayPrev.ValueData) AS ValuePrev28,
+         lpDecodeValueDay(29, MIString_ComingValueDayPrev.ValueData) AS ValuePrev29,
+         lpDecodeValueDay(30, MIString_ComingValueDayPrev.ValueData) AS ValuePrev30,
+         lpDecodeValueDay(31, MIString_ComingValueDayPrev.ValueData) AS ValuePrev31,
          lpDecodeValueDay(1, vbDefaultValue)  AS Value1,
          lpDecodeValueDay(2, vbDefaultValue)  AS Value2,
          lpDecodeValueDay(3, vbDefaultValue)  AS Value3,
@@ -242,6 +310,15 @@ BEGIN
          zc_Color_White()                     AS Color_Calc30,
          zc_Color_White()                     AS Color_Calc31
        FROM tmpUser
+            LEFT JOIN MovementItem AS MovementItemPrev
+                                   ON MovementItemPrev.MovementId = vbMovementId
+                                  AND MovementItemPrev.ObjectId = tmpUser.UserID
+                                  AND MovementItemPrev.DescId = zc_MI_Master()
+
+            LEFT JOIN MovementItemString AS MIString_ComingValueDayPrev
+                                         ON MIString_ComingValueDayPrev.DescId = zc_MIString_ComingValueDay()
+                                        AND MIString_ComingValueDayPrev.MovementItemId = MovementItemPrev.Id
+
        WHERE tmpUser.UserID NOT IN (SELECT MovementItem.ObjectId
                                     FROM MovementItem
                                     WHERE MovementItem.MovementId = inMovementId
@@ -259,6 +336,37 @@ BEGIN
          COALESCE (tmpUser.UnitID, Object_Unit.ID)               AS UnitID,
          COALESCE (tmpUser.UnitCode, Object_Unit.ObjectCode)     AS UnitCode,
          COALESCE (tmpUser.UnitName, Object_Unit.ValueData)      AS UnitName,
+         lpDecodeValueDay(1, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev1,
+         lpDecodeValueDay(2, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev2,
+         lpDecodeValueDay(3, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev3,
+         lpDecodeValueDay(4, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev4,
+         lpDecodeValueDay(5, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev5,
+         lpDecodeValueDay(6, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev6,
+         lpDecodeValueDay(7, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev7,
+         lpDecodeValueDay(8, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev8,
+         lpDecodeValueDay(9, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev9,
+         lpDecodeValueDay(10, MIString_ComingValueDayPrev.ValueData) AS ValuePrev10,
+         lpDecodeValueDay(11, MIString_ComingValueDayPrev.ValueData) AS ValuePrev11,
+         lpDecodeValueDay(12, MIString_ComingValueDayPrev.ValueData) AS ValuePrev12,
+         lpDecodeValueDay(13, MIString_ComingValueDayPrev.ValueData) AS ValuePrev13,
+         lpDecodeValueDay(14, MIString_ComingValueDayPrev.ValueData) AS ValuePrev14,
+         lpDecodeValueDay(15, MIString_ComingValueDayPrev.ValueData) AS ValuePrev15,
+         lpDecodeValueDay(16, MIString_ComingValueDayPrev.ValueData) AS ValuePrev16,
+         lpDecodeValueDay(17, MIString_ComingValueDayPrev.ValueData) AS ValuePrev17,
+         lpDecodeValueDay(18, MIString_ComingValueDayPrev.ValueData) AS ValuePrev18,
+         lpDecodeValueDay(19, MIString_ComingValueDayPrev.ValueData) AS ValuePrev19,
+         lpDecodeValueDay(20, MIString_ComingValueDayPrev.ValueData) AS ValuePrev20,
+         lpDecodeValueDay(21, MIString_ComingValueDayPrev.ValueData) AS ValuePrev21,
+         lpDecodeValueDay(22, MIString_ComingValueDayPrev.ValueData) AS ValuePrev22,
+         lpDecodeValueDay(23, MIString_ComingValueDayPrev.ValueData) AS ValuePrev23,
+         lpDecodeValueDay(24, MIString_ComingValueDayPrev.ValueData) AS ValuePrev24,
+         lpDecodeValueDay(25, MIString_ComingValueDayPrev.ValueData) AS ValuePrev25,
+         lpDecodeValueDay(26, MIString_ComingValueDayPrev.ValueData) AS ValuePrev26,
+         lpDecodeValueDay(27, MIString_ComingValueDayPrev.ValueData) AS ValuePrev27,
+         lpDecodeValueDay(28, MIString_ComingValueDayPrev.ValueData) AS ValuePrev28,
+         lpDecodeValueDay(29, MIString_ComingValueDayPrev.ValueData) AS ValuePrev29,
+         lpDecodeValueDay(30, MIString_ComingValueDayPrev.ValueData) AS ValuePrev30,
+         lpDecodeValueDay(31, MIString_ComingValueDayPrev.ValueData) AS ValuePrev31,
          lpDecodeValueDay(1, MIString_ComingValueDay.ValueData)  AS Value1,
          lpDecodeValueDay(2, MIString_ComingValueDay.ValueData)  AS Value2,
          lpDecodeValueDay(3, MIString_ComingValueDay.ValueData)  AS Value3,
@@ -440,6 +548,15 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_ComingValueDayUser
                                          ON MIString_ComingValueDayUser.DescId = zc_MIString_ComingValueDayUser()
                                         AND MIString_ComingValueDayUser.MovementItemId = MovementItem.Id
+
+            LEFT JOIN MovementItem AS MovementItemPrev
+                                   ON MovementItemPrev.MovementId = vbMovementId
+                                  AND MovementItemPrev.ObjectId = MovementItem.ObjectId
+                                  AND MovementItemPrev.DescId = zc_MI_Master()
+
+            LEFT JOIN MovementItemString AS MIString_ComingValueDayPrev
+                                         ON MIString_ComingValueDayPrev.DescId = zc_MIString_ComingValueDay()
+                                        AND MIString_ComingValueDayPrev.MovementItemId = MovementItemPrev.Id
 
        WHERE Movement.ID = inMovementId
          AND (MovementItem.IsErased = FALSE OR inIsErased = TRUE);
@@ -500,6 +617,37 @@ BEGIN
          COALESCE (tmpUser.UnitID, Object_Unit.ID)               AS UnitID,
          COALESCE (tmpUser.UnitCode, Object_Unit.ObjectCode)     AS UnitCode,
          COALESCE (tmpUser.UnitName, Object_Unit.ValueData)      AS UnitName,
+         lpDecodeValueDay(1, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev1,
+         lpDecodeValueDay(2, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev2,
+         lpDecodeValueDay(3, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev3,
+         lpDecodeValueDay(4, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev4,
+         lpDecodeValueDay(5, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev5,
+         lpDecodeValueDay(6, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev6,
+         lpDecodeValueDay(7, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev7,
+         lpDecodeValueDay(8, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev8,
+         lpDecodeValueDay(9, MIString_ComingValueDayPrev.ValueData)  AS ValuePrev9,
+         lpDecodeValueDay(10, MIString_ComingValueDayPrev.ValueData) AS ValuePrev10,
+         lpDecodeValueDay(11, MIString_ComingValueDayPrev.ValueData) AS ValuePrev11,
+         lpDecodeValueDay(12, MIString_ComingValueDayPrev.ValueData) AS ValuePrev12,
+         lpDecodeValueDay(13, MIString_ComingValueDayPrev.ValueData) AS ValuePrev13,
+         lpDecodeValueDay(14, MIString_ComingValueDayPrev.ValueData) AS ValuePrev14,
+         lpDecodeValueDay(15, MIString_ComingValueDayPrev.ValueData) AS ValuePrev15,
+         lpDecodeValueDay(16, MIString_ComingValueDayPrev.ValueData) AS ValuePrev16,
+         lpDecodeValueDay(17, MIString_ComingValueDayPrev.ValueData) AS ValuePrev17,
+         lpDecodeValueDay(18, MIString_ComingValueDayPrev.ValueData) AS ValuePrev18,
+         lpDecodeValueDay(19, MIString_ComingValueDayPrev.ValueData) AS ValuePrev19,
+         lpDecodeValueDay(20, MIString_ComingValueDayPrev.ValueData) AS ValuePrev20,
+         lpDecodeValueDay(21, MIString_ComingValueDayPrev.ValueData) AS ValuePrev21,
+         lpDecodeValueDay(22, MIString_ComingValueDayPrev.ValueData) AS ValuePrev22,
+         lpDecodeValueDay(23, MIString_ComingValueDayPrev.ValueData) AS ValuePrev23,
+         lpDecodeValueDay(24, MIString_ComingValueDayPrev.ValueData) AS ValuePrev24,
+         lpDecodeValueDay(25, MIString_ComingValueDayPrev.ValueData) AS ValuePrev25,
+         lpDecodeValueDay(26, MIString_ComingValueDayPrev.ValueData) AS ValuePrev26,
+         lpDecodeValueDay(27, MIString_ComingValueDayPrev.ValueData) AS ValuePrev27,
+         lpDecodeValueDay(28, MIString_ComingValueDayPrev.ValueData) AS ValuePrev28,
+         lpDecodeValueDay(29, MIString_ComingValueDayPrev.ValueData) AS ValuePrev29,
+         lpDecodeValueDay(30, MIString_ComingValueDayPrev.ValueData) AS ValuePrev30,
+         lpDecodeValueDay(31, MIString_ComingValueDayPrev.ValueData) AS ValuePrev31,
          lpDecodeValueDay(1, MIString_ComingValueDay.ValueData)  AS Value1,
          lpDecodeValueDay(2, MIString_ComingValueDay.ValueData)  AS Value2,
          lpDecodeValueDay(3, MIString_ComingValueDay.ValueData)  AS Value3,
@@ -665,11 +813,6 @@ BEGIN
                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
             LEFT JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_Member_Education
-                                 ON ObjectLink_Member_Education.ObjectId = Object_Member.Id
-                                AND ObjectLink_Member_Education.DescId = zc_ObjectLink_Member_Education()
-            LEFT JOIN Object AS Object_Education ON Object_Education.Id = ObjectLink_Member_Education.ChildObjectId
-
             LEFT JOIN tmPersonal_View AS Personal_View ON Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
 
             LEFT JOIN tmpUser ON tmpUser.UserID = MovementItem.ObjectId
@@ -687,12 +830,20 @@ BEGIN
                                          ON MIString_ComingValueDayUser.DescId = zc_MIString_ComingValueDayUser()
                                         AND MIString_ComingValueDayUser.MovementItemId = MovementItem.Id
 
+            LEFT JOIN MovementItem AS MovementItemPrev
+                                   ON MovementItemPrev.MovementId = vbMovementId
+                                  AND MovementItemPrev.ObjectId = MovementItem.ObjectId
+                                  AND MovementItemPrev.DescId = zc_MI_Master()
+
+            LEFT JOIN MovementItemString AS MIString_ComingValueDayPrev
+                                         ON MIString_ComingValueDayPrev.DescId = zc_MIString_ComingValueDay()
+                                        AND MIString_ComingValueDayPrev.MovementItemId = MovementItemPrev.Id
        WHERE Movement.ID = inMovementId
          AND (MovementItem.IsErased = FALSE OR inIsErased = TRUE);
      END IF;
 
      RETURN NEXT cur3;
-
+     
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -707,4 +858,4 @@ ALTER FUNCTION gpSelect_MovementItem_EmployeeSchedule (Integer, TDateTime, Boole
 */
 
 -- тест
--- select * from gpSelect_MovementItem_EmployeeSchedule(inMovementId := 13211961 , inDate := ('01.03.2019')::TDateTime , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_EmployeeSchedule(inMovementId := 13211961 , inDate := ('01.02.2019')::TDateTime , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

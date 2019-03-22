@@ -35,10 +35,9 @@ type
     dxBarButton2: TdxBarButton;
     dxBarButton3: TdxBarButton;
     cxGridDBBandedTableView1: TcxGridDBBandedTableView;
-    CrossDBViewUserAddOn: TCrossDBViewAddOn;
-    CrossDBViewAddOn: TCrossDBViewAddOn;
     HeaderCDS: TClientDataSet;
     actDataDialog: TExecuteDialog;
+    HeaderPrewCDS: TClientDataSet;
     actUserNickDialig: TOpenChoiceForm;
     actAddUser: TMultiAction;
     actspInsertUser: TdsdExecStoredProc;
@@ -50,6 +49,10 @@ type
     actPreviousMonth: TMultiAction;
     dxBarButton4: TdxBarButton;
     Color_Calc: TcxGridDBBandedColumn;
+    ValuePrev: TcxGridDBBandedColumn;
+    CrossDBViewPrevAddOn: TCrossDBViewAddOn;
+    CrossDBViewAddOn: TCrossDBViewAddOn;
+    CrossDBViewUserAddOn: TCrossDBViewAddOn;
   private
     { Private declarations }
   public

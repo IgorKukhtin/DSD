@@ -560,6 +560,8 @@ type
     // Расчет цены, скидок
     procedure CalcPriceSale(var APriceSale, APrice, AChangePercent : Currency;
                                 APriceBase, APercent : Currency; APriceChange : Currency = 0);
+    // Проверка доступности работы с соц. проектами
+    function CheckSP : boolean;
 
   public
     procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String; var AOperDateSP : TDateTime);
@@ -1571,6 +1573,8 @@ begin
     ShowMessage('Ошибка.Установлен признак <Скидка через сайт> необходимо установить VIP-чек.');
     Exit;
   end;
+
+  if FormParams.ParamByName('PartnerMedicalId').Value <> 0 then if not CheckSP then Exit;
 
   // Контроль чека до печати
   with CheckCDS do
@@ -2826,6 +2830,38 @@ begin
   SetSiteDiscount(nSiteDiscount);
 end;
 
+function TMainCashForm2.CheckSP : boolean;
+begin
+  Result := False;
+
+  if not UnitConfigCDS.FieldByName('isSP').AsBoolean then
+  Begin
+    ShowMessage('По подразделению работа со скидками по соц проекту запрещена!');
+    exit;
+  End;
+
+  if not UnitConfigCDS.FieldByName('DateSP').IsNull and (UnitConfigCDS.FieldByName('DateSP').AsDateTime > Date) then
+  Begin
+    ShowMessage('По подразделению работа со скидками по соц проекту будет доступна с ' +
+      FormatDateTime('dd mmmm yyyy', UnitConfigCDS.FieldByName('DateSP').AsDateTime) + 'г.!');
+    exit;
+  End;
+
+  if not UnitConfigCDS.FieldByName('StartTimeSP').IsNull and not UnitConfigCDS.FieldByName('EndTimeSP').IsNull then
+  begin
+    if (UnitConfigCDS.FieldByName('StartTimeSP').AsDateTime <> UnitConfigCDS.FieldByName('EndTimeSP').AsDateTime) and
+      ((TimeOf(UnitConfigCDS.FieldByName('StartTimeSP').AsDateTime) > Time) or (TimeOf(UnitConfigCDS.FieldByName('EndTimeSP').AsDateTime) < Time))  then
+    Begin
+      ShowMessage('По подразделению работа со скидками по соц проекту разрешена с ' +
+        FormatDateTime('hh:nn:ss', UnitConfigCDS.FieldByName('StartTimeSP').AsDateTime) + ' по ' +
+        FormatDateTime('hh:nn:ss', UnitConfigCDS.FieldByName('EndTimeSP').AsDateTime) + ' !');
+      exit;
+    End;
+  end;
+  Result := True;
+end;
+
+
 procedure TMainCashForm2.actSetSPExecute(Sender: TObject);
 var
   PartnerMedicalId, SPKindId, MemberSPID : Integer;
@@ -2833,6 +2869,9 @@ var
   OperDateSP : TDateTime;
   SPTax : Currency;
 begin
+
+  if not CheckSP then Exit;
+
   if (not CheckCDS.IsEmpty) and (Self.FormParams.ParamByName('InvNumberSP').Value = '') or
     pnlManualDiscount.Visible or pnlPromoCode.Visible or pnlSiteDiscount.Visible then
   Begin

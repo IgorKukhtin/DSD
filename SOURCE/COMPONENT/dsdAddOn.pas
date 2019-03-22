@@ -2260,6 +2260,7 @@ begin
                 TcxGridDBBandedColumn(Column).DataBinding.FieldName := TcxGridDBBandedColumn(TemplateColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
              if Column is TcxGridDBColumn then
                 TcxGridDBColumn(Column).DataBinding.FieldName := TcxGridDBColumn(TemplateColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+             if Caption = '' then Options.Editing := False;
            end;
 
            if Assigned(TemplateColorRule) then

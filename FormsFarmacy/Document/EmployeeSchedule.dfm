@@ -86,7 +86,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
               FixedKind = fkLeft
               Options.HoldOwnColumnsOnly = True
               Options.Moving = False
-              Width = 349
+              Width = 332
             end
             item
               Caption = #1055#1077#1088#1080#1086#1076
@@ -100,7 +100,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Options.Moving = False
-            Width = 27
+            Width = 32
             Position.BandIndex = 0
             Position.ColIndex = 0
             Position.RowIndex = 0
@@ -112,7 +112,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
             MinWidth = 67
             Options.Editing = False
             Options.Moving = False
-            Width = 212
+            Width = 207
             Position.BandIndex = 0
             Position.ColIndex = 1
             Position.RowIndex = 0
@@ -124,7 +124,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
             MinWidth = 64
             Options.Editing = False
             Options.Moving = False
-            Width = 92
+            Width = 75
             Position.BandIndex = 0
             Position.ColIndex = 2
             Position.RowIndex = 0
@@ -141,6 +141,20 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
             Width = 165
             Position.BandIndex = 0
             Position.ColIndex = 4
+            Position.RowIndex = 0
+          end
+          object ValuePrev: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ValuePrev'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            MinWidth = 40
+            Options.Editing = False
+            Styles.Content = dmMain.cxGreenEdit
+            Styles.Header = dmMain.cxHeaderL2Style
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 0
             Position.RowIndex = 0
           end
           object Value: TcxGridDBBandedColumn
@@ -161,7 +175,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
             Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 0
-            Position.RowIndex = 0
+            Position.RowIndex = 1
           end
           object ValueUser: TcxGridDBBandedColumn
             DataBinding.FieldName = 'ValueUser'
@@ -181,7 +195,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
             Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 0
-            Position.RowIndex = 1
+            Position.RowIndex = 2
           end
           object Color_Calc: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_Calc'
@@ -420,6 +434,9 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     DataSets = <
       item
         DataSet = HeaderCDS
+      end
+      item
+        DataSet = HeaderPrewCDS
       end
       item
         DataSet = MasterCDS
@@ -928,7 +945,7 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     Left = 214
     Top = 353
   end
-  object CrossDBViewUserAddOn: TCrossDBViewAddOn
+  object CrossDBViewPrevAddOn: TCrossDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBBandedTableView1
     OnDblClickActionList = <>
@@ -939,11 +956,11 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    HeaderDataSet = HeaderCDS
-    HeaderColumnName = 'ValueFieldUser'
-    TemplateColumn = ValueUser
-    Left = 680
-    Top = 168
+    HeaderDataSet = HeaderPrewCDS
+    HeaderColumnName = 'ValueField'
+    TemplateColumn = ValuePrev
+    Left = 800
+    Top = 112
   end
   object CrossDBViewAddOn: TCrossDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -964,8 +981,25 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'
     TemplateColumn = Value
-    Left = 680
-    Top = 112
+    Left = 800
+    Top = 160
+  end
+  object CrossDBViewUserAddOn: TCrossDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBBandedTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    HeaderDataSet = HeaderCDS
+    HeaderColumnName = 'ValueFieldUser'
+    TemplateColumn = ValueUser
+    Left = 800
+    Top = 208
   end
   object HeaderCDS: TClientDataSet
     Aggregates = <>
@@ -1014,5 +1048,11 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     PackSize = 1
     Left = 672
     Top = 296
+  end
+  object HeaderPrewCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 568
+    Top = 168
   end
 end
