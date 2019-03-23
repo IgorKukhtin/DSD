@@ -7,8 +7,8 @@ uses Windows, Winapi.Messages, Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTable
      VCL.Graphics, cxGraphics, cxStyles, cxCalendar, Forms, Controls,
      SysUtils, dsdDB, Contnrs, cxGridCustomView, cxGridCustomTableView, dsdGuides,
      VCL.ActnList, cxCustomPivotGrid, cxDBPivotGrid, cxEdit, cxCustomData,
-     GMClasses, GMMap, GMMapVCL, GMGeoCode, GMConstants, SHDocVw, ExtCtrls, Winapi.ShellAPI,
-     System.StrUtils, GMDirection, GMDirectionVCL;
+     GMClasses, GMMap, GMMapVCL, GMGeoCode, GMConstants, GMMarkerVCL, SHDocVw, ExtCtrls,
+     Winapi.ShellAPI, System.StrUtils, GMDirection, GMDirectionVCL;
 
 const
   WM_SETFLAG = WM_USER + 2;
@@ -3252,11 +3252,17 @@ end;
 
 procedure TdsdWebBrowser.OnTimerNotifyEvent(Sender: TObject);
 var
-  i: integer;
+  i,j: integer;
   GMList: TGeoMarkerList;
   FDataSet: TDataSet;
   GPSNField, GPSEField, AddressField, InsertDateField: string;
   InsertDateValue: TDateTime;
+
+  function IsDelta : boolean;
+  begin
+    Result := Sqrt(Sqr(GMList[j].Data.Lat - GMList[i].Data.Lat) + Sqr(GMList[j].Data.Lng - GMList[i].Data.Lng)) > 0.003;
+  end;
+
 begin
   FTimer.Enabled := False;
   GMList := TGeoMarkerList.Create;
@@ -3341,8 +3347,15 @@ begin
 
           GMList.Sort(CompareGeoMarkerData);
 
-          for i := 0 to Pred(GMList.Count) do
-            FGeoCode.Marker.Add(GMList[i].Data.Lat, GMList[i].Data.Lng, GMList[i].Data.Title);
+          j := 0;
+          for i := 0 to Pred(GMList.Count) do if (i = 0) or IsDelta then
+
+          begin
+            j := I;
+            FGeoCode.Marker.Add(GMList[i].Data.Lat, GMList[i].Data.Lng, FormatDateTime('hh:mm', GMList[i].Data.InsertDate));
+            FGeoCode.Marker.Items[FGeoCode.Marker.Count - 1].MarkerType := mtStyledMarker;
+            TGMMarker(FGeoCode.Marker).Items[FGeoCode.Marker.Count - 1].StyledMarker.StyledIcon := siBubble;
+          end;
 
           if FGeoCode.Marker.Count > 1 then
           begin
