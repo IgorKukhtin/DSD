@@ -1089,6 +1089,7 @@ type
 
     FCurCoordinatesSet: boolean;
     FCurCoordinatesMsg: String;
+    FServiceNameMsg: String;
     FCurCoordinates: TLocationCoord2D;
     FSensorCoordinates: TLocationCoord2D;
     FMapLoaded: Boolean;
@@ -1400,6 +1401,7 @@ begin
   FDeletedRI := TList<Integer>.Create;
   FCurCoordinatesSet := false;
   FCurCoordinatesMsg := '';
+  FServiceNameMsg    := '';
 
   FJuridicalList := TList<TJuridicalItem>.Create;
   FPartnerList := TList<TPartnerItem>.Create;
@@ -3994,9 +3996,11 @@ begin
     RouteQuery.Connection := DM.conMain;
     try
       if cbShowAllPath.IsChecked then
-        RouteQuery.Open('SELECT * FROM ' + TableName)
+        RouteQuery.Open('SELECT * FROM ' + TableName + ' WHERE GPSN <> 0 AND GPSE <> 0')
       else
-        RouteQuery.Open('SELECT * FROM ' + TableName + ' WHERE date(InsertDate) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', deDatePath.Date)));
+        RouteQuery.Open('SELECT * FROM ' + TableName
+                     + ' WHERE date(InsertDate) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', deDatePath.Date))
+                     + '   AND GPSN <> 0 AND GPSE <> 0');
     except
       on E: Exception do
         Showmessage(E.Message);
@@ -4416,7 +4420,7 @@ begin
           qrySavePhoto.Params[5].Value := FCurCoordinates.Latitude;
           qrySavePhoto.Params[6].Value := FCurCoordinates.Longitude;
           qrySavePhoto.Params[7].Value := GetAddress(FCurCoordinates.Latitude, FCurCoordinates.Longitude)
-                                + ' = ' + FCurCoordinatesMsg
+                                + ' = ' + FServiceNameMsg + ' / ' + FCurCoordinatesMsg
                                 ;
         end
         else
@@ -4700,7 +4704,7 @@ begin
         DM.tblMovement_RouteMemberGPSN.AsFloat := FCurCoordinates.Latitude;
         DM.tblMovement_RouteMemberGPSE.AsFloat := FCurCoordinates.Longitude;
         DM.tblMovement_RouteMemberAddressByGPS.AsString := GetAddress(FCurCoordinates.Latitude, FCurCoordinates.Longitude)
-                                                         + ' = ' + FCurCoordinatesMsg
+                                                         + ' = ' + FServiceNameMsg + ' / ' + FCurCoordinatesMsg
                                                         ;
         DM.tblMovement_RouteMemberInsertDate.AsDateTime := Now();
         DM.tblMovement_RouteMemberisSync.AsBoolean := false;
@@ -6559,6 +6563,7 @@ var
 begin
   FCurCoordinatesSet := false;
   FCurCoordinatesMsg := '_';
+  FServiceNameMsg    := '';
 
   {$IFDEF ANDROID}
   try
@@ -6578,22 +6583,26 @@ begin
             begin
               TimeGPS := LastLocation.getTime;
               FCurCoordinates := TLocationCoord2D.Create(LastLocation.getLatitude, LastLocation.getLongitude);
+              FServiceNameMsg:= 'gps';
               FCurCoordinatesSet := true;
             end
           end;
 
           //получаем последнее местоположение зафиксированное с помощью координат wi-fi и мобильных сетей
+          if not FCurCoordinatesSet
+          then
           if locationManager.isProviderEnabled(TJLocationManager.JavaClass.NETWORK_PROVIDER) then
           begin
             LastLocation := LocationManager.getLastKnownLocation(TJLocationManager.JavaClass.NETWORK_PROVIDER);
             if Assigned(LastLocation) and (not FCurCoordinatesSet or (TimeGPS < LastLocation.getTime)) then
             begin
               FCurCoordinates := TLocationCoord2D.Create(LastLocation.getLatitude, LastLocation.getLongitude);
+              FServiceNameMsg:= 'net';
               FCurCoordinatesSet := true;
             end
           end;
 
-          if not FCurCoordinatesSet then FCurCoordinatesMsg:= 'на телефоне не запущен сераис или нет доступа к GPS или NETWORK сетям'
+          if not FCurCoordinatesSet then FCurCoordinatesMsg:= 'на телефоне не запущен сервис или нет доступа к GPS или NETWORK сетям'
         end
         else
         begin

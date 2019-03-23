@@ -5860,7 +5860,10 @@ end;
 
 function TSyncData.AdaptQuotMark(S: string): string;
 begin
-  Result := ReplaceStr(S, '''', '''||CHR (39)||''');
+//  Result := ReplaceStr(S, '''', '''||CHR (39)||''');
+//  Result := ReplaceStr(Result, '"', '''||CHR (39)||''');
+  Result := ReplaceStr(S, CHR (39), '`');
+  Result := ReplaceStr(Result, '"', '`');
 end;
 
 procedure TSyncData.FeedbackMovementReturnIn(AGUID: string);
