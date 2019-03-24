@@ -4767,7 +4767,7 @@ begin
     begin
        //raise Exception.Create('Could not access Geocoder');
        Result :=  '';
-       FCurCoordinatesMsg:= ' нет доступа к службе geocoder для: '+FloatToStr(Latitude)+', '+FloatToStr(Longitude)+'';
+       FCurCoordinatesMsg:= ' нет доступа к службе Адреса - geocoder для: '+FloatToStr(Latitude)+', '+FloatToStr(Longitude)+'';
        exit;
     end;
     //пробуем определить 1 возможный адрес местоположения
@@ -6607,11 +6607,11 @@ begin
             end
           end;
 
-          if not FCurCoordinatesSet then FCurCoordinatesMsg:= 'на телефоне не запущен сервис или нет доступа к GPS или NETWORK сетям'
+          if not FCurCoordinatesSet then FCurCoordinatesMsg:= 'на телефоне не запущен Сервис или нет доступа к GPS или NETWORK сетям'
         end
         else
         begin
-           FCurCoordinatesMsg:= 'нет доступа к Менеджеру GPS';
+           FCurCoordinatesMsg:= 'нет доступа Сервиса к Менеджеру GPS';
           //raise Exception.Create('Could not access Location Manager');
         end;
     end
