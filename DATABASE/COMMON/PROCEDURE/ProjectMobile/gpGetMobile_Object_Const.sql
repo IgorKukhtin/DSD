@@ -228,9 +228,38 @@ END;$BODY$
  11.05.17                                                       * OperDate_diff
  17.02.17                                        *
 */
+/*
+-------- GetCurrentCoordinates :
+try (LocManagerObj :=TAndroidHelper.Context.getSystemService(TJContext.JavaClass.LOCATION_SERVICE) 
+FCurCoordinatesMsg:= 'ошибка при обращении к Сервису GPS';
 
+if not Assigned(LocManagerObj := TAndroidHelper.Context.getSystemService(TJContext.JavaClass.LOCATION_SERVICE))
+FCurCoordinatesMsg:= 'не запущен Сервис GPS';
+
+if not Assigned(LocationManager := TJLocationManager.Wrap((LocManagerObj as ILocalObject).GetObjectID))
+FCurCoordinatesMsg:= 'нет доступа Сервиса к Менеджеру GPS'
+
+if   not LocationManager.isProviderEnabled(TJLocationManager.JavaClass.GPS_PROVIDER)
+ and not locationManager.isProviderEnabled(TJLocationManager.JavaClass.NETWORK_PROVIDER)
+ and ...
+FCurCoordinatesMsg:= 'на телефоне не запущен Сервис или нет доступа к GPS или NETWORK сетям'
+
+
+-------- GetAddress:
+if not Assigned(geocoder:= TJGeocoder.JavaClass.init(SharedActivityContext))
+FCurCoordinatesMsg:= ' нет доступа к службе Адреса - geocoder для: '+FloatToStr(Latitude)+', '+FloatToStr(Longitude)+'';
+
+if not geocoder.getFromLocation(Latitude, Longitude,1).size > 0
+FCurCoordinatesMsg:= ' не раскодирован Адрес для '+FloatToStr(Latitude)+', '+FloatToStr(Longitude)+''
+
+if not Assigned(TJAddress.Wrap((AddressList.get(0) as ILocalObject).GetObjectID))
+FCurCoordinatesMsg:= ' ошибка в службе при раскодировании Адреса для: '+FloatToStr(Latitude)+', '+FloatToStr(Longitude);
+
+except
+FCurCoordinatesMsg:= ' ошибка в службе при определении Адреса для: '+FloatToStr(Latitude)+', '+FloatToStr(Longitude)+''
+*/
 -- тест
 -- SELECT * FROM ObjectString where DescId = zc_ObjectString_MobileConst_MobileVersion();
--- UPDATE ObjectString SET ValueData = '1.52.0' WHERE DescId = zc_ObjectString_MobileConst_MobileVersion();
+-- UPDATE ObjectString SET ValueData = '1.54.0' WHERE DescId = zc_ObjectString_MobileConst_MobileVersion();
 -- SELECT * FROM gpGetMobile_Object_Const (inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpGetMobile_Object_Const (inSession:= '1000168')

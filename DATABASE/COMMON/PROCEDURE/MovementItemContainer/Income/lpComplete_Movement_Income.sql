@@ -2480,8 +2480,8 @@ END IF;
        FROM _tmpItem
        WHERE _tmpItem.ContainerId_ProfitLoss <> 0 -- !!!если ќѕи”!!!
       ;
-
-/*RAISE EXCEPTION '<%>   %' 
+/*
+RAISE EXCEPTION '<%>   %' 
 ,(SELECT DISTINCT _tmpItem_SummPartner.ContainerId_Currency
              FROM _tmpItem_SummPartner
              WHERE vbInvoiceSumm_Currency <> 0

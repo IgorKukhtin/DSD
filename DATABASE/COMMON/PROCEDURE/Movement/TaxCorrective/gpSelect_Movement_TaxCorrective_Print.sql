@@ -545,6 +545,10 @@ BEGIN
                                     THEN MovementDate_DateRegistered_Child.ValueData
                                ELSE Movement_child.OperDate
                           END AS OperDate_begin_Child
+                        , CASE WHEN MovementString_InvNumberRegistered_Child.ValueData <> '' 
+                                    THEN COALESCE (MovementDate_DateRegistered_Child.ValueData, Movement_child.OperDate)
+                               ELSE CURRENT_DATE
+                          END AS OperDate_rus
 
                    FROM tmpMovement
                         INNER JOIN MovementLinkMovement AS MovementLinkMovement_Child
@@ -952,7 +956,7 @@ BEGIN
                                                                                                  END
                    WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name 
                    WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name 
-                   ELSE CASE WHEN vbOperDate_begin < zc_DateEnd_GoodsRus() THEN tmpGoods.GoodsName_RUS ELSE tmpGoods.GoodsName END || CASE WHEN COALESCE (tmpMI.GoodsKindId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || tmpMI.GoodsKindName END 
+                   ELSE CASE WHEN tmpMLM_Child.OperDate_rus < zc_DateEnd_GoodsRus() AND tmpGoods.GoodsName_RUS <> '' THEN tmpGoods.GoodsName_RUS ELSE tmpGoods.GoodsName END || CASE WHEN COALESCE (tmpMI.GoodsKindId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || tmpMI.GoodsKindName END 
                    END) :: TVarChar AS GoodsName
 
            , CASE WHEN tmpMovement_Data.DocumentTaxKind = zc_Enum_DocumentTaxKind_Prepay() THEN CASE WHEN vbOperDate_begin >= '01.12.2018' AND COALESCE (tmpMovement_Data.Goods_DocumentTaxKind, '') <> '' THEN tmpMovement_Data.Goods_DocumentTaxKind
@@ -960,7 +964,7 @@ BEGIN
                                                                                                 END
                   WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name 
                   WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name 
-                  ELSE CASE WHEN vbOperDate_begin < zc_DateEnd_GoodsRus() THEN tmpGoods.GoodsName_RUS ELSE tmpGoods.GoodsName END 
+                  ELSE CASE WHEN tmpMLM_Child.OperDate_rus < zc_DateEnd_GoodsRus() AND tmpGoods.GoodsName_RUS <> '' THEN tmpGoods.GoodsName_RUS ELSE tmpGoods.GoodsName END 
              END AS GoodsName_two
 
            , tmpMI.GoodsKindName                                            AS GoodsKindName
@@ -1039,7 +1043,7 @@ BEGIN
                                               WHEN tmpMI.isAuto = TRUE THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum)
                                               ELSE tmpMI.NPP
                                          END
-                                       , CASE WHEN vbOperDate_begin < zc_DateEnd_GoodsRus() THEN tmpGoods.GoodsName_RUS ELSE tmpGoods.GoodsName END
+                                       , CASE WHEN tmpMLM_Child.OperDate_rus < zc_DateEnd_GoodsRus() AND tmpGoods.GoodsName_RUS <> '' THEN tmpGoods.GoodsName_RUS ELSE tmpGoods.GoodsName END
                                        , tmpMI.GoodsKindName
                                ) AS Ord
 

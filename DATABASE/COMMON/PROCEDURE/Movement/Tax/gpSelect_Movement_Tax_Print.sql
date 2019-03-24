@@ -28,6 +28,7 @@ $BODY$
     DECLARE vbCurrencyPartnerId Integer;
 
     DECLARE vbOperDate_begin TDateTime;
+    DECLARE vbOperDate_rus   TDateTime;
 
     DECLARE vbPriceWithVAT Boolean;
     DECLARE vbVATPercent TFloat;
@@ -154,6 +155,8 @@ order by 4*/
           -- , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId    AS GoodsPropertyId_basis
 
           , CASE WHEN MovementDate_DateRegistered.ValueData > Movement_Tax.OperDate THEN MovementDate_DateRegistered.ValueData ELSE Movement_Tax.OperDate END AS OperDate_begin
+          , CASE WHEN MovementString_InvNumberRegistered.ValueData <> '' THEN COALESCE (MovementDate_DateRegistered.ValueData, Movement_Tax.OperDate) ELSE CURRENT_DATE END AS OperDate_rus
+          
           , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)    AS isLongUKTZED
 
 
@@ -163,7 +166,7 @@ order by 4*/
           , ObjectFloat_Price.ValueData         :: TFloat   AS Price_DocumentTaxKind
        
             INTO vbMovementId_Tax, vbStatusId_Tax, vbDocumentTaxKindId, vbPriceWithVAT, vbVATPercent, vbCurrencyPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis
-               , vbOperDate_begin, vbIsLongUKTZED
+               , vbOperDate_begin, vbOperDate_rus, vbIsLongUKTZED
                
                , vbGoods_DocumentTaxKind
                , vbMeasure_DocumentTaxKind
@@ -188,6 +191,9 @@ order by 4*/
                                        ON MovementLinkObject_CurrencyPartner.MovementId = MovementLinkMovement_Master.MovementId
                                       AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
 
+          LEFT JOIN MovementString AS MovementString_InvNumberRegistered
+                                   ON MovementString_InvNumberRegistered.MovementId = tmpMovement.MovementId_Tax
+                                  AND MovementString_InvNumberRegistered.DescId = zc_MovementString_InvNumberRegistered()
           LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                  ON MovementDate_DateRegistered.MovementId = tmpMovement.MovementId_Tax
                                 AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
@@ -795,7 +801,7 @@ order by 4*/
                                   THEN tmpObject_GoodsPropertyValue.Name
                              WHEN tmpObject_GoodsPropertyValue_basis.Name <> ''
                                   THEN tmpObject_GoodsPropertyValue_basis.Name
-                             ELSE CASE WHEN Movement.OperDate < zc_DateEnd_GoodsRus() THEN ObjectString_Goods_RUS.ValueData ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
+                             ELSE CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> '' THEN ObjectString_Goods_RUS.ValueData ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
                         END
               END) :: TVarChar AS GoodsName
 
@@ -807,7 +813,7 @@ order by 4*/
                                   THEN tmpObject_GoodsPropertyValue.Name
                              WHEN tmpObject_GoodsPropertyValue_basis.Name <> ''
                                   THEN tmpObject_GoodsPropertyValue_basis.Name
-                             ELSE CASE WHEN Movement.OperDate < zc_DateEnd_GoodsRus() THEN ObjectString_Goods_RUS.ValueData ELSE Object_Goods.ValueData END
+                             ELSE CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> '' THEN ObjectString_Goods_RUS.ValueData ELSE Object_Goods.ValueData END
                         END
              END) :: TVarChar AS GoodsName_two
 
@@ -932,7 +938,7 @@ order by 4*/
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             -- LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-       ORDER BY CASE WHEN Movement.OperDate < zc_DateEnd_GoodsRus() THEN ObjectString_Goods_RUS.ValueData ELSE Object_Goods.ValueData END
+       ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> '' THEN ObjectString_Goods_RUS.ValueData ELSE Object_Goods.ValueData END
               , Object_GoodsKind.ValueData
               , tmpMI.Id
       ;
