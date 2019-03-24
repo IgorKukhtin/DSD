@@ -3255,12 +3255,12 @@ var
   i,j: integer;
   GMList: TGeoMarkerList;
   FDataSet: TDataSet;
-  GPSNField, GPSEField, AddressField, InsertDateField: string;
+  GPSNField, GPSEField, AddressField, InsertDateField, Adr: string;
   InsertDateValue: TDateTime;
 
   function IsDelta : boolean;
   begin
-    Result := Sqrt(Sqr(GMList[j].Data.Lat - GMList[i].Data.Lat) + Sqr(GMList[j].Data.Lng - GMList[i].Data.Lng)) > 0.003;
+    Result := Sqrt(Sqr(GMList[j].Data.Lat - GMList[i].Data.Lat) + Sqr(GMList[j].Data.Lng - GMList[i].Data.Lng)) > 0.002;
   end;
 
 begin
@@ -3322,22 +3322,34 @@ begin
             FDataSet.First;
             while not FDataSet.Eof do
             begin
-              if (FDataSet.FindField(GPSNField).AsFloat <> 0) and
-                 (FDataSet.FindField(GPSEField).AsFloat <> 0) then
-                FGeoCode.Geocode(FDataSet.FindField(GPSNField).AsFloat, FDataSet.FindField(GPSEField).AsFloat)
-              else if FDataSet.FindField(AddressField) <> nil then
-                FGeoCode.Geocode(FDataSet.FindField(AddressField).AsString);
-
               InsertDateValue := StrToDateTime('01.01.1900');
               if FDataSet.FindField(InsertDateField) <> nil then
                 InsertDateValue := FDataSet.FieldByName(InsertDateField).AsDateTime;
 
-              if (FGeoCode.GeoStatus = gsOK) and (FGeoCode.Count > 0) then
+              if (FDataSet.FindField(GPSNField).AsFloat <> 0) and
+                 (FDataSet.FindField(GPSEField).AsFloat <> 0) then
+              begin
+                if FDataSet.FindField(AddressField) <> nil then
+                  Adr := FDataSet.FindField(AddressField).AsString
+                else Adr := '';
+
                 GMList.Add(TGeoMarker.Create(
-                  FGeoCode.GeoResult[0].Geometry.Location.Lat,
-                  FGeoCode.GeoResult[0].Geometry.Location.Lng,
-                  FGeoCode.GeoResult[0].FormatedAddr,
-                  InsertDateValue));
+                   FDataSet.FindField(GPSNField).AsFloat,
+                   FDataSet.FindField(GPSEField).AsFloat,
+                   Adr,
+                   InsertDateValue));
+
+              end else if FDataSet.FindField(AddressField) <> nil then
+              begin
+                FGeoCode.Geocode(FDataSet.FindField(AddressField).AsString);
+
+                if (FGeoCode.GeoStatus = gsOK) and (FGeoCode.Count > 0) then
+                 GMList.Add(TGeoMarker.Create(
+                   FGeoCode.GeoResult[0].Geometry.Location.Lat,
+                   FGeoCode.GeoResult[0].Geometry.Location.Lng,
+                   FGeoCode.GeoResult[0].FormatedAddr,
+                   InsertDateValue));
+              end;
 
               FDataSet.Next;
             end;
@@ -3349,7 +3361,6 @@ begin
 
           j := 0;
           for i := 0 to Pred(GMList.Count) do if (i = 0) or IsDelta then
-
           begin
             j := I;
             FGeoCode.Marker.Add(GMList[i].Data.Lat, GMList[i].Data.Lng, FormatDateTime('hh:mm', GMList[i].Data.InsertDate));
