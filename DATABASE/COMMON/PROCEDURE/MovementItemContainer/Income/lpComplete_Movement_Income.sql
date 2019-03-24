@@ -17,6 +17,9 @@ $BODY$
 
   DECLARE vbMovementDescId Integer;
 
+  DECLARE vbInvoiceSumm          TFloat;
+  DECLARE vbInvoiceSumm_Currency TFloat;
+
   DECLARE vbOperSumm_Partner_byItem   TFloat;
   DECLARE vbOperSumm_Packer_byItem    TFloat;
   DECLARE vbOperSumm_PartnerTo_byItem TFloat;
@@ -130,6 +133,7 @@ BEGIN
           , _tmp.UnitId, _tmp.CarId, _tmp.MemberDriverId, _tmp.BranchId_To, _tmp.BranchId_Car, _tmp.AccountDirectionId_To, _tmp.isPartionDate_Unit
           , _tmp.MemberId_Packer, _tmp.PaidKindId, _tmp.ContractId, _tmp.JuridicalId_Basis_To, _tmp.BusinessId_To, _tmp.BusinessId_Route
           , _tmp.CurrencyDocumentId, _tmp.CurrencyPartnerId, _tmp.CurrencyValue, _tmp.ParValue
+          , _tmp.InvoiceSumm, _tmp.InvoiceSumm_Currency
             INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePrice
                , vbMovementDescId, vbOperDate, vbOperDatePartner, vbJuridicalId_From, vbIsCorporate_From, vbInfoMoneyId_CorporateFrom, vbPartnerId_From, vbMemberId_From, vbCardFuelId_From, vbTicketFuelId_From
                , vbInfoMoneyId_From
@@ -137,8 +141,75 @@ BEGIN
                , vbUnitId, vbCarId, vbMemberId_Driver, vbBranchId_To, vbBranchId_Car, vbAccountDirectionId_To, vbIsPartionDate_Unit
                , vbMemberId_Packer, vbPaidKindId, vbContractId, vbJuridicalId_Basis_To, vbBusinessId_To, vbBusinessId_Route
                , vbCurrencyDocumentId, vbCurrencyPartnerId, vbCurrencyValue, vbParValue
+               , vbInvoiceSumm, vbInvoiceSumm_Currency
 
-     FROM (SELECT COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
+
+     FROM (WITH tmpMI_Invoice AS (SELECT MI_Invoice.MovementId AS MovementId
+                                  FROM MovementItem
+                                       INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                                    ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                                   AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementItemId()
+                                                                   AND MIFloat_MovementId.ValueData      > 0
+                                       INNER JOIN MovementItem AS MI_Invoice ON MI_Invoice.Id       = MIFloat_MovementId.ValueData :: Integer
+                                                                            AND MI_Invoice.isErased = FALSE
+                                  WHERE MovementItem.MovementId = inMovementId
+                                    AND MovementItem.DescId     = zc_MI_MASter()
+                                    AND MovementItem.isErased   = FALSE
+                                    AND MovementItem.Amount     > 0
+                                  ORDER BY MovementItem.Id DESC
+                                  LIMIT 1
+                                )
+              , tmpMovement_Invoice AS
+                               (SELECT tmpMI_Invoice.MovementId                     AS MovementId
+                                     , MovementLinkObject_CurrencyDocument.ObjectId AS CurrencyId
+                                     , MovementFloat_CurrencyValue.ValueData        AS CurrencyValue
+                                     , MovementFloat_ParValue.ValueData             AS ParValue
+                                       -- оплата б/н
+                                     , CASE WHEN MovementLinkObject_CurrencyDocument.ObjectId = zc_Enum_Currency_Basis() 
+                                            THEN CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() 
+                                                      THEN MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                                                      ELSE COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                                                 END 
+                                            ELSE CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() 
+                                                      THEN MovementFloat_TotalSummCurrency.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                                                      ELSE COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                                                 END 
+                                       END AS TotalSumm_f1
+                                       -- оплата нал
+                                     , CASE WHEN MovementLinkObject_CurrencyDocument.ObjectId = zc_Enum_Currency_Basis() 
+                                            THEN CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() 
+                                                      THEN COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                                                      ELSE MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                                                 END
+                                            ELSE CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() 
+                                                      THEN COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                                                      ELSE MovementFloat_TotalSummCurrency.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                                                 END
+                                       END AS TotalSumm_f2
+                                FROM tmpMI_Invoice
+                                     LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
+                                                             ON MovementFloat_CurrencyValue.MovementId = tmpMI_Invoice.MovementId
+                                                            AND MovementFloat_CurrencyValue.DescId     = zc_MovementFloat_CurrencyValue()
+                                     LEFT JOIN MovementFloat AS MovementFloat_ParValue
+                                                             ON MovementFloat_ParValue.MovementId = tmpMI_Invoice.MovementId
+                                                            AND MovementFloat_ParValue.DescId     = zc_MovementFloat_ParValue()
+                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                                  ON MovementLinkObject_PaidKind.MovementId = tmpMI_Invoice.MovementId
+                                                                 AND MovementLinkObject_PaidKind.DescId     = zc_MovementLinkObject_PaidKind()
+                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
+                                                                  ON MovementLinkObject_CurrencyDocument.MovementId = tmpMI_Invoice.MovementId
+                                                                 AND MovementLinkObject_CurrencyDocument.DescId     = zc_MovementLinkObject_CurrencyDocument()
+                                     LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                             ON MovementFloat_TotalSumm.MovementId = tmpMI_Invoice.MovementId
+                                                            AND MovementFloat_TotalSumm.DescId     = zc_MovementFloat_TotalSumm()
+                                     LEFT JOIN MovementFloat AS MovementFloat_TotalSummCurrency
+                                                             ON MovementFloat_TotalSummCurrency.MovementId = tmpMI_Invoice.MovementId
+                                                            AND MovementFloat_TotalSummCurrency.DescId     = zc_MovementFloat_AmountCurrency()
+                                     LEFT JOIN MovementFloat AS MovementFloat_TotalSummPayOth
+                                                             ON MovementFloat_TotalSummPayOth.MovementId = tmpMI_Invoice.MovementId
+                                                            AND MovementFloat_TotalSummPayOth.DescId     = zc_MovementFloat_TotalSummPayOth()
+                               )
+           SELECT COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
                 , COALESCE (MovementFloat_VATPercent.ValueData, 0) AS VATPercent
                 , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
                 , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
@@ -218,7 +289,61 @@ BEGIN
                   -- !!!замена!!!
                 , CASE WHEN MovementFloat_ParValue.ValueData > 0 THEN MovementFloat_ParValue.ValueData ELSE 1 END AS ParValue
 
+                  -- !!!
+               , CASE -- если док Приход БН
+                      WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
+                           THEN CASE -- если в счете валюта + в доке Прихода валюта
+                                     WHEN tmpMovement_Invoice.CurrencyId <> zc_Enum_Currency_Basis()
+                                      AND COALESCE (MovementLinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis()) <> zc_Enum_Currency_Basis()
+                                          -- переводим сумму счета по ф.2 из валюты - в ГРН !!!по курсу док.!!!
+                                          THEN tmpMovement_Invoice.TotalSumm_f2 * MovementFloat_CurrencyValue.ValueData / CASE WHEN MovementFloat_ParValue.ValueData > 0 THEN MovementFloat_ParValue.ValueData ELSE 1 END
+                                     -- если в счете валюта + в доке Прихода ГРН
+                                     WHEN tmpMovement_Invoice.CurrencyId <> zc_Enum_Currency_Basis()
+                                          -- переводим сумму счета по ф.2 из валюты - в ГРН
+                                          THEN tmpMovement_Invoice.TotalSumm_f2 * tmpMovement_Invoice.CurrencyValue / CASE WHEN tmpMovement_Invoice.ParValue > 0 THEN tmpMovement_Invoice.ParValue ELSE 1 END
+                                          -- иначе сумма счета по ф.2
+                                     ELSE tmpMovement_Invoice.TotalSumm_f2
+                                END
+                      -- если док Приход НАЛ
+                      WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
+                           THEN CASE -- если в счете валюта + в доке Прихода валюта
+                                     WHEN tmpMovement_Invoice.CurrencyId <> zc_Enum_Currency_Basis()
+                                      AND COALESCE (MovementLinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis()) <> zc_Enum_Currency_Basis()
+                                          -- переводим сумму счета по ф.1 из валюты - в ГРН !!!по курсу док.!!!
+                                          THEN tmpMovement_Invoice.TotalSumm_f1 * MovementFloat_CurrencyValue.ValueData / CASE WHEN MovementFloat_ParValue.ValueData > 0 THEN MovementFloat_ParValue.ValueData ELSE 1 END
+                                     -- если в счете валюта + в доке Прихода ГРН
+                                     WHEN tmpMovement_Invoice.CurrencyId = zc_Enum_Currency_Basis()
+                                          -- переводим сумму счета по ф.1 из валюты - в ГРН
+                                          THEN tmpMovement_Invoice.TotalSumm_f1 * tmpMovement_Invoice.CurrencyValue / CASE WHEN tmpMovement_Invoice.ParValue > 0 THEN tmpMovement_Invoice.ParValue ELSE 1 END
+                                          -- иначе сумма счета по ф.1
+                                     ELSE tmpMovement_Invoice.TotalSumm_f1
+                                END
+                 END AS InvoiceSumm
+
+                 -- !!!
+               , CASE WHEN COALESCE (MovementLinkObject_CurrencyPartner.ObjectId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis()
+                           -- если документ Приход в ГРН
+                           THEN 0
+                      -- если док Приход БН
+                      WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
+                           THEN CASE WHEN tmpMovement_Invoice.CurrencyId = zc_Enum_Currency_Basis()
+                                          -- переводим сумму счета по ф.2 из ГРН - в валюту
+                                          THEN CASE WHEN MovementFloat_CurrencyValue.ValueData > 0 THEN tmpMovement_Invoice.TotalSumm_f2 / MovementFloat_CurrencyValue.ValueData * CASE WHEN MovementFloat_ParValue.ValueData > 0 THEN MovementFloat_ParValue.ValueData ELSE 1 END ELSE 0 END
+                                          -- иначе сумма счета по ф.2
+                                     ELSE tmpMovement_Invoice.TotalSumm_f2
+                                END
+                      -- если док Приход НАЛ
+                      WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
+                           THEN CASE WHEN tmpMovement_Invoice.CurrencyId = zc_Enum_Currency_Basis()
+                                          -- переводим сумму счета по ф.1 из ГРН - в валюту
+                                          THEN CASE WHEN MovementFloat_CurrencyValue.ValueData > 0 THEN tmpMovement_Invoice.TotalSumm_f1 / MovementFloat_CurrencyValue.ValueData * CASE WHEN MovementFloat_ParValue.ValueData > 0 THEN MovementFloat_ParValue.ValueData ELSE 1 END ELSE 0 END
+                                          -- иначе сумма счета по ф.1
+                                     ELSE tmpMovement_Invoice.TotalSumm_f1
+                                END
+                 END AS InvoiceSumm_Currency
+
            FROM Movement
+                LEFT JOIN tmpMovement_Invoice ON 1=1
                 LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                        ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                       AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
@@ -1129,9 +1254,10 @@ BEGIN
 
      -- заполняем таблицу - элементы по контрагенту, со всеми свойствами для формирования Аналитик в проводках, здесь по !!!InfoMoneyId_Detail!!!
      -- !!!только если не талон!!!
-     INSERT INTO _tmpItem_SummPartner (MovementItemId, ContainerId, ContainerId_Currency, AccountId, ContainerId_Transit, AccountId_Transit, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId, BusinessId, UnitId_Asset, GoodsId, GoodsKindId, OperSumm_Partner, OperSumm_Partner_Currency)
+     INSERT INTO _tmpItem_SummPartner (MovementItemId, ContainerId, ContainerId_Currency, ContainerId_re, ContainerId_Currency_re, AccountId, ContainerId_Transit, AccountId_Transit, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId, BusinessId, UnitId_Asset, GoodsId, GoodsKindId, OperSumm_Partner, OperSumm_Partner_Currency)
         SELECT _tmpSumm.MovementItemId
-             , 0 AS ContainerId, 0 AS ContainerId_Currency, 0 AS AccountId, 0 AS ContainerId_Transit, 0 AS AccountId_Transit
+             , 0 AS ContainerId, 0 AS ContainerId_Currency, 0 AS ContainerId_re, 0 AS ContainerId_Currency_re
+             , 0 AS AccountId, 0 AS ContainerId_Transit, 0 AS AccountId_Transit
              , _tmpSumm.InfoMoneyGroupId_Detail, _tmpSumm.InfoMoneyDestinationId_Detail, _tmpSumm.InfoMoneyId_Detail, _tmpSumm.BusinessId, _tmpSumm.UnitId_Asset
              , _tmpSumm.GoodsId
              , _tmpSumm.GoodsKindId
@@ -1469,6 +1595,7 @@ END IF;
 
      -- 2.0.1.2. определяется ContainerId для проводок по долг Поставщику или Физ.лицу (подотчетные лица)
      UPDATE _tmpItem_SummPartner SET ContainerId          = tmp.ContainerId
+                                   , ContainerId_re       = tmp.ContainerId_re
                                    , ContainerId_Transit  = tmp.ContainerId_Transit
                                    , ContainerId_Currency = CASE WHEN vbMemberId_From <> 0 OR vbCurrencyPartnerId = zc_Enum_Currency_Basis()
                                                                       THEN 0
@@ -1488,6 +1615,35 @@ END IF;
                                                                                                  , inObjectId_3        := tmp.InfoMoneyId
                                                                                                  , inDescId_4          := zc_ContainerLinkObject_PaidKind()
                                                                                                  , inObjectId_4        := vbPaidKindId
+                                                                                                 , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
+                                                                                                 , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
+                                                                                                 , inDescId_6          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
+                                                                                                 , inObjectId_6        := CASE WHEN vbInfoMoneyDestinationId_From = zc_Enum_InfoMoneyDestination_20400() /*ГСМ*/ THEN 0 ELSE CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN vbPartnerId_From ELSE NULL END END
+                                                                                                 , inDescId_7          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
+                                                                                                 , inObjectId_7        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг Поставщика всегда на Главном филиале
+                                                                                                 , inDescId_8          := zc_ContainerLinkObject_Currency()
+                                                                                                 , inObjectId_8        := vbCurrencyPartnerId
+                                                                                                  )
+                                                            END
+                                , ContainerId_Currency_re = CASE WHEN vbMemberId_From <> 0 OR vbCurrencyPartnerId = zc_Enum_Currency_Basis()
+                                                                    OR (COALESCE (vbInvoiceSumm, 0) = 0 AND COALESCE (vbInvoiceSumm_Currency, 0) = 0)
+                                                                      THEN 0
+                                                                           -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
+                                                                      ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_SummCurrency()
+                                                                                                 , inParentId          := tmp.ContainerId
+                                                                                                 , inObjectId          := tmp.AccountId
+                                                                                                 , inJuridicalId_basis := vbJuridicalId_Basis_To
+                                                                                                 , inBusinessId        := tmp.BusinessId
+                                                                                                 , inObjectCostDescId  := NULL
+                                                                                                 , inObjectCostId      := NULL
+                                                                                                 , inDescId_1          := zc_ContainerLinkObject_Juridical()
+                                                                                                 , inObjectId_1        := vbJuridicalId_From
+                                                                                                 , inDescId_2          := zc_ContainerLinkObject_Contract()
+                                                                                                 , inObjectId_2        := vbContractId
+                                                                                                 , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
+                                                                                                 , inObjectId_3        := tmp.InfoMoneyId
+                                                                                                 , inDescId_4          := zc_ContainerLinkObject_PaidKind()
+                                                                                                 , inObjectId_4        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() THEN zc_Enum_PaidKind_SecondForm() ELSE zc_Enum_PaidKind_FirstForm() END
                                                                                                  , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
                                                                                                  , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
                                                                                                  , inDescId_6          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
@@ -1543,6 +1699,34 @@ END IF;
                                                                                                       , inObjectId_8        := CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN NULL ELSE vbCurrencyPartnerId END
                                                                                                        )
                                                                  END AS ContainerId
+                                                               , CASE WHEN vbMemberId_From = 0 AND (vbInvoiceSumm <> 0 OR vbInvoiceSumm_Currency <> 0)
+                                                                                -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
+                                                                           THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                                                      , inParentId          := NULL
+                                                                                                      , inObjectId          := tmp.AccountId
+                                                                                                      , inJuridicalId_basis := vbJuridicalId_Basis_To
+                                                                                                      , inBusinessId        := tmp.BusinessId
+                                                                                                      , inObjectCostDescId  := NULL
+                                                                                                      , inObjectCostId      := NULL
+                                                                                                      , inDescId_1          := zc_ContainerLinkObject_Juridical()
+                                                                                                      , inObjectId_1        := vbJuridicalId_From
+                                                                                                      , inDescId_2          := zc_ContainerLinkObject_Contract()
+                                                                                                      , inObjectId_2        := vbContractId
+                                                                                                      , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
+                                                                                                      , inObjectId_3        := tmp.InfoMoneyId
+                                                                                                      , inDescId_4          := zc_ContainerLinkObject_PaidKind()
+                                                                                                      , inObjectId_4        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm() THEN zc_Enum_PaidKind_SecondForm() ELSE zc_Enum_PaidKind_FirstForm() END
+                                                                                                      , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
+                                                                                                      , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
+                                                                                                      , inDescId_6          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Partner() ELSE NULL END
+                                                                                                      , inObjectId_6        := CASE WHEN vbInfoMoneyDestinationId_From = zc_Enum_InfoMoneyDestination_20400() /*ГСМ*/ THEN 0 ELSE CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN vbPartnerId_From ELSE NULL END END
+                                                                                                      , inDescId_7          := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_ContainerLinkObject_Branch() ELSE NULL END
+                                                                                                      , inObjectId_7        := CASE WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbIsCorporate_From = FALSE THEN zc_Branch_Basis() ELSE NULL END -- долг Поставщика всегда на Главном филиале
+                                                                                                      , inDescId_8          := CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN NULL ELSE zc_ContainerLinkObject_Currency() END
+                                                                                                      , inObjectId_8        := CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN NULL ELSE vbCurrencyPartnerId END
+                                                                                                       )
+                                                                           ELSE 0
+                                                                 END AS ContainerId_re
                                                                , CASE WHEN tmp.AccountId_Transit = 0 OR vbMemberId_From <> 0
                                                                            THEN 0
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
@@ -2297,6 +2481,16 @@ END IF;
        WHERE _tmpItem.ContainerId_ProfitLoss <> 0 -- !!!если ОПиУ!!!
       ;
 
+/*RAISE EXCEPTION '<%>   %' 
+,(SELECT DISTINCT _tmpItem_SummPartner.ContainerId_Currency
+             FROM _tmpItem_SummPartner
+             WHERE vbInvoiceSumm_Currency <> 0
+            )
+,(SELECT DISTINCT _tmpItem_SummPartner.ContainerId_Currency_re
+             FROM _tmpItem_SummPartner
+             WHERE vbInvoiceSumm_Currency <> 0
+            )
+;*/
      -- 2.0.3. формируются Проводки - долг Поставщику или Физ.лицу (подотчетные лица) + !!!добавлен MovementItemId!!! + !!!добавлен GoodsId + GoodsKindId!!!
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer, ContainerIntId_Analyzer
@@ -2322,6 +2516,46 @@ END IF;
        -- WHERE _tmpItem_SummPartner.OperSumm_Partner <> 0
 
      UNION ALL
+       -- это взаимозачет - 1.1.
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId
+            , _tmpItem_SummPartner.ContainerId
+            , _tmpItem_SummPartner.AccountId          AS AccountId                -- счет есть всегда
+            , 0                                       AS AnalyzerId               -- нет аналитики, т.е. деление Поставщик, Заготовитель, Покупатель, Талоны пока не надо
+            , 0                                       AS ObjectId_Analyzer        -- Товар
+            , 0                                       AS WhereObjectId_Analyzer   -- Подраделение или...
+            , _tmpItem_SummPartner.ContainerId        AS ContainerId_Analyzer     -- тот же самый
+            , 0                                       AS ObjectIntId_Analyzer     -- вид товара
+            , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer     -- Поставщик или...
+            , _tmpItem_SummPartner.ContainerId_re     AS ContainerIntId_Analyzer  -- Контейнер "re"
+            , 0                                       AS ParentId
+            , 1 * vbInvoiceSumm                       AS Amount
+            , vbOperDatePartner                       AS OperDate
+            , FALSE                                   AS isActive
+       FROM (SELECT DISTINCT _tmpItem_SummPartner.ContainerId, _tmpItem_SummPartner.AccountId, _tmpItem_SummPartner.ContainerId_re
+             FROM _tmpItem_SummPartner
+             WHERE vbInvoiceSumm <> 0
+            ) AS _tmpItem_SummPartner
+     UNION ALL
+       -- это взаимозачет - 1.2.
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId
+            , _tmpItem_SummPartner.ContainerId_re
+            , _tmpItem_SummPartner.AccountId          AS AccountId                -- счет есть всегда
+            , 0                                       AS AnalyzerId               -- нет аналитики, т.е. деление Поставщик, Заготовитель, Покупатель, Талоны пока не надо
+            , 0                                       AS ObjectId_Analyzer        -- Товар
+            , 0                                       AS WhereObjectId_Analyzer   -- Подраделение или...
+            , _tmpItem_SummPartner.ContainerId_re     AS ContainerId_Analyzer     -- тот же самый
+            , 0                                       AS ObjectIntId_Analyzer     -- вид товара
+            , vbObjectExtId_Analyzer                  AS ObjectExtId_Analyzer     -- Поставщик или...
+            , _tmpItem_SummPartner.ContainerId        AS ContainerIntId_Analyzer  -- Контейнер "re"
+            , 0                                       AS ParentId
+            , -1 * vbInvoiceSumm                      AS Amount
+            , vbOperDatePartner                       AS OperDate
+            , FALSE                                   AS isActive
+       FROM (SELECT DISTINCT _tmpItem_SummPartner.ContainerId, _tmpItem_SummPartner.AccountId, _tmpItem_SummPartner.ContainerId_re
+             FROM _tmpItem_SummPartner
+             WHERE vbInvoiceSumm <> 0
+            ) AS _tmpItem_SummPartner
+     UNION ALL
        -- это !!!одна!!! проводка для "забалансового" Валютного счета
        SELECT 0, zc_MIContainer_SummCurrency() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId
             , _tmpGroup.ContainerId_Currency
@@ -2338,6 +2572,46 @@ END IF;
             , CASE WHEN _tmpGroup.AccountId_Transit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate
             , FALSE                                   AS isActive
        FROM (SELECT _tmpItem_SummPartner.ContainerId_Currency, _tmpItem_SummPartner.AccountId, _tmpItem_SummPartner.AccountId_Transit, SUM (_tmpItem_SummPartner.OperSumm_Partner_Currency) AS OperSumm_Partner_Currency FROM _tmpItem_SummPartner WHERE _tmpItem_SummPartner.ContainerId_Currency <> 0 GROUP BY _tmpItem_SummPartner.ContainerId_Currency, _tmpItem_SummPartner.AccountId, _tmpItem_SummPartner.AccountId_Transit
+            ) AS _tmpGroup
+     UNION ALL
+       -- это взаимозачет - 2.1. !!!одна!!! проводка для "забалансового" Валютного счета
+       SELECT 0, zc_MIContainer_SummCurrency() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId
+            , _tmpGroup.ContainerId_Currency
+            , _tmpGroup.AccountId                      AS AccountId                -- счет есть всегда
+            , 0                                        AS AnalyzerId               -- нет аналитики, т.е. деление Поставщик, Заготовитель, Покупатель, Талоны пока не надо
+            , 0                                        AS ObjectId_Analyzer        -- Товар
+            , 0                                        AS WhereObjectId_Analyzer   -- Подраделение или...
+            , _tmpGroup.ContainerId_Currency           AS ContainerId_Analyzer     -- тот же самый
+            , 0                                        AS ObjectIntId_Analyzer     -- вид товара
+            , 0                                        AS ObjectExtId_Analyzer     -- Поставщик или...
+            , _tmpGroup.ContainerId_Currency_re        AS ContainerIntId_Analyzer  -- Контейнер "re"
+            , 0                                        AS ParentId
+            , 1 * vbInvoiceSumm_Currency               AS Amount
+            , vbOperDatePartner                        AS OperDate
+            , FALSE                                    AS isActive
+       FROM (SELECT DISTINCT _tmpItem_SummPartner.ContainerId_Currency, _tmpItem_SummPartner.AccountId, _tmpItem_SummPartner.ContainerId_Currency_re
+             FROM _tmpItem_SummPartner
+             WHERE vbInvoiceSumm_Currency <> 0
+            ) AS _tmpGroup
+     UNION ALL
+       -- это взаимозачет - 2.2. !!!одна!!! проводка для "забалансового" Валютного счета
+       SELECT 0, zc_MIContainer_SummCurrency() AS DescId, vbMovementDescId, inMovementId, 0 AS MovementItemId
+            , _tmpGroup.ContainerId_Currency_re
+            , _tmpGroup.AccountId                      AS AccountId                -- счет есть всегда
+            , 0                                        AS AnalyzerId               -- нет аналитики, т.е. деление Поставщик, Заготовитель, Покупатель, Талоны пока не надо
+            , 0                                        AS ObjectId_Analyzer        -- Товар
+            , 0                                        AS WhereObjectId_Analyzer   -- Подраделение или...
+            , _tmpGroup.ContainerId_Currency_re        AS ContainerId_Analyzer     -- тот же самый
+            , 0                                        AS ObjectIntId_Analyzer     -- вид товара
+            , 0                                        AS ObjectExtId_Analyzer     -- Поставщик или...
+            , _tmpGroup.ContainerId_Currency           AS ContainerIntId_Analyzer  -- Контейнер "re"
+            , 0                                        AS ParentId
+            , -1 * vbInvoiceSumm_Currency              AS Amount
+            , vbOperDatePartner                        AS OperDate
+            , FALSE                                    AS isActive
+       FROM (SELECT DISTINCT _tmpItem_SummPartner.ContainerId_Currency, _tmpItem_SummPartner.AccountId, _tmpItem_SummPartner.ContainerId_Currency_re
+             FROM _tmpItem_SummPartner
+             WHERE vbInvoiceSumm_Currency <> 0
             ) AS _tmpGroup
 
      UNION ALL

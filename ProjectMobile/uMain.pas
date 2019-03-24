@@ -4764,7 +4764,12 @@ begin
   try
     geocoder:= TJGeocoder.JavaClass.init(SharedActivityContext);
     if not Assigned(geocoder) then
-       raise Exception.Create('Could not access Geocoder');
+    begin
+       //raise Exception.Create('Could not access Geocoder');
+       Result :=  '';
+       FCurCoordinatesMsg:= ' нет доступа к службе geocoder для: '+FloatToStr(Latitude)+', '+FloatToStr(Longitude)+'';
+       exit;
+    end;
     //пробуем определить 1 возможный адрес местоположения
     AddressList:=geocoder.getFromLocation(Latitude, Longitude,1);
     if AddressList.size > 0 then
@@ -4788,7 +4793,7 @@ begin
       FCurCoordinatesMsg:= ' не раскодирован Адрес для '+FloatToStr(Latitude)+', '+FloatToStr(Longitude)+''
     end;
   except
-    Result :=  FormatFloat('0.000000', Latitude)+'N '+FormatFloat('0.000000', Longitude)+'E';
+    Result :=  FormatFloat('0.00000###', Latitude)+', '+FormatFloat('0.00000###', Longitude);
     FCurCoordinatesMsg:= ' ошибка в службе при определении Адреса для: '+FloatToStr(Latitude)+', '+FloatToStr(Longitude)+''
   end;
   {$ELSE}
@@ -6563,7 +6568,7 @@ var
 begin
   FCurCoordinatesSet := false;
   FCurCoordinatesMsg := '_';
-  FServiceNameMsg    := '';
+  FServiceNameMsg    := '?';
 
   {$IFDEF ANDROID}
   try

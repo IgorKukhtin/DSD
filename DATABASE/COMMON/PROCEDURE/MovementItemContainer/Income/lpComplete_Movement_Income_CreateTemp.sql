@@ -11,7 +11,7 @@ BEGIN
      PERFORM lpComplete_Movement_All_CreateTemp();
 
      -- таблица - элементы по контрагенту, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem_SummPartner (MovementItemId Integer, ContainerId Integer, ContainerId_Currency Integer, AccountId Integer, ContainerId_Transit Integer, AccountId_Transit Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, BusinessId Integer, UnitId_Asset Integer, GoodsId Integer, GoodsKindId Integer, OperSumm_Partner TFloat, OperSumm_Partner_Currency TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItem_SummPartner (MovementItemId Integer, ContainerId Integer, ContainerId_Currency Integer, ContainerId_re Integer, ContainerId_Currency_re Integer, AccountId Integer, ContainerId_Transit Integer, AccountId_Transit Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, BusinessId Integer, UnitId_Asset Integer, GoodsId Integer, GoodsKindId Integer, OperSumm_Partner TFloat, OperSumm_Partner_Currency TFloat) ON COMMIT DROP;
      -- таблица - элементы по ПОКУПАТЕЛЮ, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem_SummPartner_To (MovementItemId Integer, ContainerId_Goods Integer, ContainerId Integer, AccountId Integer, ContainerId_ProfitLoss_70201 Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, BusinessId Integer, GoodsId Integer, OperCount_PartnerFrom TFloat, OperCount TFloat, OperSumm_Partner TFloat, OperSumm_70201 TFloat) ON COMMIT DROP;
      -- таблица - элементы по Сотруднику (ЗП) + затраты "Заправка" + "Учредитель" + "Перевыставление", со всеми свойствами для формирования Аналитик в проводках

@@ -103,20 +103,33 @@ BEGIN
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
-     SELECT CASE WHEN inPaidKindId = zc_Enum_PaidKind_FirstForm() 
-                  THEN MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                  ELSE COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-             END AS TotalSumm_f1            -- оплата б/н
+     SELECT -- оплата б/н
+            CASE WHEN inPaidKindId = zc_Enum_PaidKind_FirstForm()
+                 THEN CASE WHEN inCurrencyDocumentId IN (0, zc_Enum_Currency_Basis())
+                           THEN MovementFloat_TotalSumm.ValueData         - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                           ELSE MovementFloat_TotalSummCurrency.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                      END 
+                 ELSE ioTotalSumm_f1
+            END AS TotalSumm_f1
 
-           , CASE WHEN inPaidKindId = zc_Enum_PaidKind_FirstForm() 
-                  THEN COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                  ELSE MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-             END AS TotalSumm_f2            -- оплата нал
-      INTO ioTotalSumm_f1, ioTotalSumm_f2
+             -- оплата нал
+          , CASE WHEN inPaidKindId = zc_Enum_PaidKind_SecondForm()
+                 THEN CASE WHEN inCurrencyDocumentId IN (0, zc_Enum_Currency_Basis())
+                           THEN MovementFloat_TotalSumm.ValueData         - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                           ELSE MovementFloat_TotalSummCurrency.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                      END 
+                 ELSE ioTotalSumm_f2
+            END AS TotalSumm_f2
+
+            INTO ioTotalSumm_f1, ioTotalSumm_f2
+
      FROM MovementFloat AS MovementFloat_TotalSumm
           LEFT JOIN MovementFloat AS MovementFloat_TotalSummPayOth
                                   ON MovementFloat_TotalSummPayOth.MovementId = MovementFloat_TotalSumm.MovementId
                                  AND MovementFloat_TotalSummPayOth.DescId = zc_MovementFloat_TotalSummPayOth()
+          LEFT JOIN MovementFloat AS MovementFloat_TotalSummCurrency
+                                  ON MovementFloat_TotalSummCurrency.MovementId =  MovementFloat_TotalSumm.MovementId
+                                 AND MovementFloat_TotalSummCurrency.DescId = zc_MovementFloat_AmountCurrency()
      WHERE MovementFloat_TotalSumm.MovementId = ioId
        AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm();
 

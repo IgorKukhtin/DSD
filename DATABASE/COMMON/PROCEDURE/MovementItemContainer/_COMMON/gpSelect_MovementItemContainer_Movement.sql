@@ -28,7 +28,7 @@ RETURNS TABLE (InvNumber Integer, OperDate TDateTime
              , DestinationObjectCode Integer, DestinationObjectName TVarChar
              , JuridicalBasisCode Integer, JuridicalBasisName TVarChar
              , GoodsKindName TVarChar
-             , ObjectCostId Integer, MIId_Parent Integer, GoodsCode_Parent Integer, GoodsName_Parent TVarChar, GoodsKindName_Parent TVarChar
+             , ObjectCostId Integer, ContainerId_Currency Integer, MIId_Parent Integer, GoodsCode_Parent Integer, GoodsName_Parent TVarChar, GoodsKindName_Parent TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyCode_Detail Integer, InfoMoneyName_Detail TVarChar
              , CurrencyName TVarChar
               )
@@ -363,7 +363,7 @@ BEGIN
             --
           , tmpCLO_find AS (SELECT * FROM ContainerLinkObject AS CLO WHERE CLO.ContainerId IN (SELECT DISTINCT tmpMIContainer_Summ.ContainerId_find FROM tmpMIContainer_Summ))
             --
-          , tmpCLO AS (SELECT * FROM ContainerLinkObject AS CLO WHERE CLO.ContainerId IN (SELECT DISTINCT tmpMIContainer_Summ.ContainerId FROM tmpMIContainer_Summ))
+          , tmpCLO AS (SELECT * FROM ContainerLinkObject AS CLO WHERE CLO.ContainerId IN (SELECT DISTINCT tmpMIContainer_Summ.ContainerId FROM tmpMIContainer_Summ UNION SELECT DISTINCT tmpMIContainer_Summ.ContainerId_Currency FROM tmpMIContainer_Summ))
             --
           , tmpMILO_Branch AS (SELECT * FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId IN (SELECT DISTINCT tmpMIContainer_Summ.MovementItemId FROM tmpMIContainer_Summ)
                                                                               AND MILO.DescId = zc_MILinkObject_Branch()
@@ -429,6 +429,7 @@ BEGIN
            , tmpMovementItemContainer.JuridicalBasisName
            , tmpMovementItemContainer.GoodsKindName
            , tmpMovementItemContainer.ObjectCostId
+           , tmpMovementItemContainer.ContainerId_Currency
            , tmpMovementItemContainer.MIId_Parent
            , tmpMovementItemContainer.GoodsCode_Parent
            , tmpMovementItemContainer.GoodsName_Parent
@@ -449,8 +450,9 @@ BEGIN
                 , tmpMIContainer_Summ.isActive
 
                 , tmpMIContainer_Summ.Id
-                , tmpMIContainer_Summ.ContainerId        AS ObjectCostId
-                , SUM (tmpMIContainer_Summ.Amount_Count) AS Amount_Count
+                , tmpMIContainer_Summ.ContainerId          AS ObjectCostId
+                , tmpMIContainer_Summ.ContainerId_Currency AS ContainerId_Currency
+                , SUM (tmpMIContainer_Summ.Amount_Count)   AS Amount_Count
 
                 , Object_JuridicalBasis.ObjectCode AS JuridicalBasisCode
                 , Object_JuridicalBasis.ValueData  AS JuridicalBasisName
@@ -517,10 +519,12 @@ BEGIN
 
                 , tmpMIContainer_Summ.isActive
 
-                , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.Id             ELSE 0 END AS Id
-                , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.ContainerId    ELSE 0 END AS ContainerId
-                , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.MovementItemId ELSE 0 END AS MovementItemId
-                , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.Amount_Count   ELSE 0 END AS Amount_Count
+                , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.Id                   ELSE 0 END AS Id
+                , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.ContainerId          ELSE 0 END AS ContainerId
+                , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.ContainerId_Currency ELSE 0 END AS ContainerId_Currency
+                
+                , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.MovementItemId       ELSE 0 END AS MovementItemId
+                , CASE WHEN tmpMIContainer_Summ.isInfoMoneyDetail = TRUE THEN tmpMIContainer_Summ.Amount_Count         ELSE 0 END AS Amount_Count
 
                 , CASE WHEN ContainerLinkObject_ProfitLoss.ObjectId <> 0
                             THEN ContainerLinkObject_ProfitLoss.ObjectId
@@ -614,7 +618,7 @@ BEGIN
                                                ON ContainerLinkObject_Currency.ContainerId = tmpMIContainer_Summ.ContainerId
                                               AND ContainerLinkObject_Currency.DescId      = zc_ContainerLinkObject_Currency()
                  LEFT JOIN tmpCLO AS ContainerLinkObject_PaidKind
-                                               ON ContainerLinkObject_PaidKind.ContainerId = tmpMIContainer_Summ.ContainerId
+                                               ON ContainerLinkObject_PaidKind.ContainerId = CASE WHEN tmpMIContainer_Summ.ContainerId_Currency <> 0 THEN tmpMIContainer_Summ.ContainerId_Currency ELSE tmpMIContainer_Summ.ContainerId END
                                               AND ContainerLinkObject_PaidKind.DescId      = zc_ContainerLinkObject_PaidKind()
 
                  -- вот так "просто" выбираем филиал
@@ -658,6 +662,7 @@ BEGIN
                    , tmpMIContainer_Summ.isActive
                    , tmpMIContainer_Summ.AccountId
                    , tmpMIContainer_Summ.ContainerId
+                   , tmpMIContainer_Summ.ContainerId_Currency
                    , tmpMIContainer_Summ.MovementItemId_Parent
                    , tmpMIContainer_Summ.Id
                    , tmpMIContainer_Summ.MovementDescId

@@ -41,7 +41,7 @@ BEGIN
              , Object_Status.Code                         AS StatusCode
              , Object_Status.Name                         AS StatusName
              , CAST ('' as TVarChar)                      AS InvNumberPartner
-             
+
              , CURRENT_TIMESTAMP ::TDateTime              AS InsertDate
              , COALESCE(Object_Insert.ValueData,'')  ::TVarChar AS InsertName
 
@@ -62,8 +62,8 @@ BEGIN
              , 0                                          AS ContractId
              , CAST ('' as TVarChar)                      AS ContractName
              , 0                                          AS PaidKindId
-             , CAST ('' as TVarChar)                      AS PaidKindName  
-  
+             , CAST ('' as TVarChar)                      AS PaidKindName
+
              , CAST ('' as TVarChar) 	                  AS Comment
              , 0                                          AS OrderIncomeId
              , CAST ('' as TVarChar) 	                  AS OrderIncomeName
@@ -97,42 +97,26 @@ BEGIN
            , Object_Status.ObjectCode               AS StatusCode
            , Object_Status.ValueData                AS StatusName
            , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
-           
+
            , MovementDate_Insert.ValueData          AS InsertDate
            , Object_Insert.ValueData                AS InsertName
 
-   /*        , CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() 
-                  THEN MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                  ELSE COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-             END :: TFloat AS TotalSumm_f1            -- оплата б/н
-
-           , CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() 
-                  THEN COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                  ELSE MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-             END :: TFloat AS TotalSumm_f2            -- оплата нал
-*/
-           , CASE WHEN Object_CurrencyDocument.Id = zc_Enum_Currency_Basis() 
-                  THEN CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() 
-                            THEN MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                            ELSE COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                       END 
-                  ELSE CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() 
-                            THEN MovementFloat_TotalSummCurrency.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                            ELSE COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                       END 
-             END  :: TFloat AS TotalSumm_f1            -- оплата б/н
-
-           , CASE WHEN Object_CurrencyDocument.Id = zc_Enum_Currency_Basis() 
-                  THEN CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() 
-                            THEN COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                            ELSE MovementFloat_TotalSumm.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+             -- оплата б/н
+           , CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm()
+                  THEN CASE WHEN COALESCE (Object_CurrencyDocument.Id, 0) IN (0, zc_Enum_Currency_Basis())
+                            THEN MovementFloat_TotalSumm.ValueData         - COALESCE (MovementFloat_TotalSummPayOth.ValueData, 0)
+                            ELSE MovementFloat_TotalSummCurrency.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData, 0)
                        END
-                  ELSE CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() 
-                            THEN COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
-                            ELSE MovementFloat_TotalSummCurrency.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData,0) 
+                  ELSE COALESCE (MovementFloat_TotalSummPayOth.ValueData, 0)
+             END :: TFloat AS TotalSumm_f1
+             -- оплата нал
+           , CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_SecondForm()
+                  THEN CASE WHEN COALESCE (Object_CurrencyDocument.Id, 0) IN (0, zc_Enum_Currency_Basis())
+                            THEN MovementFloat_TotalSumm.ValueData         - COALESCE (MovementFloat_TotalSummPayOth.ValueData, 0)
+                            ELSE MovementFloat_TotalSummCurrency.ValueData - COALESCE (MovementFloat_TotalSummPayOth.ValueData, 0)
                        END
-             END
-             :: TFloat AS TotalSumm_f2            -- оплата нал
+                  ELSE COALESCE (MovementFloat_TotalSummPayOth.ValueData, 0)
+             END :: TFloat AS TotalSumm_f2
 
            , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData     AS VATPercent
@@ -161,7 +145,7 @@ BEGIN
             LEFT JOIN tmpMI ON 1 = 1
             LEFT JOIN Movement AS Movement_OrderIncome ON Movement_OrderIncome.Id = tmpMI.MovementId
             LEFT JOIN MovementDesc AS MovementDesc_OrderIncome ON MovementDesc_OrderIncome.Id = Movement_OrderIncome.DescId
-            
+
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Closed
@@ -179,9 +163,9 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MLO_Insert
                                          ON MLO_Insert.MovementId = Movement.Id
                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
-            LEFT JOIN MovementString AS MovementString_Comment 
+            LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
@@ -231,7 +215,7 @@ BEGIN
                                          ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
             LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
-    
+
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Invoice();
 
@@ -246,7 +230,7 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  19.05.17         * add Closed
  25.07.16         * InvNumberPartner
- 15.07.16         *                                                      
+ 15.07.16         *
 */
 
 -- тест
