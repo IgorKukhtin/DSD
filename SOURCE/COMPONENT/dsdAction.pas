@@ -851,6 +851,7 @@ begin
   RegisterActions('DSDLib', [TShowMessageAction], TShowMessageAction);
   RegisterActions('DSDLib', [TdsdLoadXMLKS], TdsdLoadXMLKS);
   RegisterActions('DSDLib', [TdsdPartnerMapAction], TdsdPartnerMapAction);
+  RegisterActions('DSDLib', [TCrossDBViewSetTypeId], TCrossDBViewSetTypeId);
   RegisterActions('DSDLibExport', [TdsdStoredProcExportToFile], TdsdStoredProcExportToFile);
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);

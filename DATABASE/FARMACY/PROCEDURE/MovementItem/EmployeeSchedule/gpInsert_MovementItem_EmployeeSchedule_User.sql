@@ -52,6 +52,7 @@ BEGIN
                                                         , inMovementId          := inMovementId      -- ключ Документа
                                                         , inUserId              := inUserId          -- сотрудник
                                                         , ioValue               := ''::TVarChar      -- Приходы на работу по дням
+                                                        , ioValueUser           := ''::TVarChar      -- Приходы на работу по дням
                                                         , ioTypeId              := 0                 -- Приходы на работу по дням
                                                         , inSession             := inSession         -- пользователь
                                                          );

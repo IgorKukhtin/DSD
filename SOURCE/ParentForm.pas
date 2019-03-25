@@ -437,6 +437,7 @@ initialization
   RegisterClass (TChangeStatus);
   RegisterClass (TChangeGuidesStatus);
   RegisterClass (TCrossDBViewAddOn);
+  RegisterClass (TCrossDBViewSetTypeId);
   RegisterClass (TdsdChangeMovementStatus);
   RegisterClass (TdsdChoiceGuides);
   RegisterClass (TdsdDataSetRefresh);

@@ -26,8 +26,57 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
 
+     -- Получение главніх аптек
+     CREATE TEMP TABLE tmpMainUnit (UserId Integer, UnitId Integer,
+               UnitID1 Integer, UnitID2 Integer, UnitID3 Integer, UnitID4 Integer, UnitID5 Integer,
+               UnitID6 Integer, UnitID7 Integer, UnitID8 Integer, UnitID9 Integer, UnitID10 Integer,
+               UnitID11 Integer, UnitID12 Integer, UnitID13 Integer, UnitID14 Integer, UnitID15 Integer,
+               UnitID16 Integer, UnitID17 Integer, UnitID18 Integer, UnitID19 Integer, UnitID20 Integer,
+               UnitID21 Integer, UnitID22 Integer, UnitID23 Integer, UnitID24 Integer, UnitID25 Integer,
+               UnitID26 Integer, UnitID27 Integer, UnitID28 Integer, UnitID29 Integer, UnitID30 Integer,
+               UnitID31 Integer) ON COMMIT DROP;
+
      inDate := DATE_TRUNC ('MONTH', inDate);
 
+     WITH   tmpMain AS (SELECT
+                               MovementItem.ObjectId      AS UserId
+                             , MILinkObject_Unit.ObjectId AS UnitId
+                        FROM Movement
+
+                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
+                                                    AND MovementItem.DescId = zc_MI_Master()
+
+                             INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                               ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+
+                        WHERE Movement.ID = inMovementId
+                          AND (MovementItem.IsErased = FALSE OR inIsErased = TRUE)),
+
+            tmLogAll AS (SELECT count(*) as CountLog
+                              , EmployeeWorkLog.UserId
+                              , EmployeeWorkLog.UnitId
+                         FROM EmployeeWorkLog
+                         WHERE EmployeeWorkLog.DateLogIn >= inDate - INTERVAL '1 MONTH' AND EmployeeWorkLog.DateLogIn < inDate - INTERVAL '1 DAY'
+                           AND EmployeeWorkLog.UserId NOT IN (SELECT tmpMain.UserId FROM tmpMain)
+                         GROUP BY EmployeeWorkLog.UserId, EmployeeWorkLog.UnitId),
+
+            tmLog AS (SELECT ROW_NUMBER() OVER (PARTITION BY tmLogAll.UserId ORDER BY tmLogAll.CountLog DESC) AS Ord
+                           , tmLogAll.UserId
+                           , tmLogAll.UnitId
+                      FROM tmLogAll)
+
+     INSERT INTO tmpMainUnit (UserId, UnitId)
+     SELECT tmpMain.UserId
+          , tmpMain.UnitId
+     FROM tmpMain
+     UNION ALL
+     SELECT tmLog.UserId
+          , tmLog.UnitId
+     FROM tmLog
+     WHERE tmLog.Ord = 1;
+
+      -- Графики по аптекам
      CREATE TEMP TABLE tmpUnserUnit (UserId Integer, UnitId Integer,
                D1 BOOLEAN DEFAULT FALSE, D2 BOOLEAN DEFAULT FALSE, D3 BOOLEAN DEFAULT FALSE, D4 BOOLEAN DEFAULT FALSE, D5 BOOLEAN DEFAULT FALSE,
                D6 BOOLEAN DEFAULT FALSE, D7 BOOLEAN DEFAULT FALSE, D8 BOOLEAN DEFAULT FALSE, D9 BOOLEAN DEFAULT FALSE, D10 BOOLEAN DEFAULT FALSE,
@@ -60,8 +109,62 @@ BEGIN
                          AND tmpUnserUnit.UserId = EWL.UserId';
 
        EXECUTE vbQueryText;
+
+       vbQueryText := 'UPDATE tmpMainUnit SET UnitID'||I::Text||' = MI_Child.UnitID
+                       FROM (SELECT
+                                    MovementItem.ObjectId             AS UserId
+                                  , MovementItemChild.ObjectId        AS UnitId
+                             FROM MovementItem
+
+                                  INNER JOIN MovementItem AS MovementItemChild
+                                                          ON MovementItemChild.MovementId = '||inMovementId::Text||'
+                                                         AND MovementItemChild.Amount = '||I::Text||'
+                                                         AND MovementItemChild.DescId = zc_MI_Child()
+                                                         AND MovementItemChild.ParentId = MovementItem.ID
+
+                             WHERE MovementItem.MovementId = '||inMovementId::Text||'
+                               AND MovementItem.DescId = zc_MI_Master()) AS MI_Child
+                       WHERE tmpMainUnit.UserId = MI_Child.UserId';
+
+       EXECUTE vbQueryText;
        I := I + 1;
      END LOOP;
+
+     INSERT INTO tmpUnserUnit (UserId, UnitId)
+     SELECT DISTINCT
+            tmpMainUnit.UserId
+          , tmpMainUnit.UnitId
+     FROM tmpMainUnit
+
+          LEFT JOIN tmpUnserUnit ON tmpUnserUnit.UserID = tmpMainUnit.UserId
+                                AND tmpUnserUnit.UnitID = tmpMainUnit.UnitId
+
+     WHERE COALESCE(tmpUnserUnit.UserID, 0) = 0;
+
+
+     WITH tmpChild AS (SELECT DISTINCT
+                              MovementItem.ObjectId         AS UserId
+                            , MovementItemChild.ObjectId    AS UnitId
+                       FROM MovementItem
+
+                            INNER JOIN MovementItem AS MovementItemChild
+                                                    ON MovementItemChild.MovementId = inMovementId
+                                                   AND MovementItemChild.DescId = zc_MI_Child()
+                                                   AND MovementItemChild.ParentId = MovementItem.ID
+
+                       WHERE MovementItem.MovementId = inMovementId
+                         AND MovementItem.DescId = zc_MI_Master())
+
+
+     INSERT INTO tmpUnserUnit (UserId, UnitId)
+     SELECT tmpChild.UserId
+          , tmpChild.UnitId
+     FROM tmpChild
+
+          LEFT JOIN tmpUnserUnit ON tmpUnserUnit.UserID = tmpChild.UserId
+                                AND tmpUnserUnit.UnitID = tmpChild.UnitId
+
+     WHERE COALESCE(tmpUnserUnit.UserID, 0) = 0;
 
      IF inDate < CURRENT_DATE AND inDate + INTERVAL '1 MONTH' - INTERVAL '1 DAY' > CURRENT_DATE
      THEN
@@ -181,8 +284,8 @@ BEGIN
 
 
        OPEN cur3 FOR
-       WITH tmPersonal_View AS (SELECT Object_User.Id                      AS UserID
-                                     , Max(Object_Personal_View.UnitId)    AS UnitId
+       WITH tmPersonal_View AS (SELECT DISTINCT
+                                       Object_User.Id                      AS UserID
                                      , Object_Personal_View.MemberId       AS MemberId
                                      , Object_Personal_View.PositionName   AS PositionName
                                 FROM Object AS Object_User
@@ -193,9 +296,7 @@ BEGIN
 
                                      INNER JOIN Object_Personal_View ON Object_Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
 
-                                WHERE Object_User.DescId = zc_Object_User()
-                                GROUP BY Object_User.Id, Object_Personal_View.MemberId, Object_Personal_View.PositionName)
-
+                                WHERE Object_User.DescId = zc_Object_User())
 
        SELECT
          0                                                           AS ID,
@@ -331,6 +432,37 @@ BEGIN
          29                                   AS TypeId29,
          30                                   AS TypeId30,
          31                                   AS TypeId31,
+         zc_Color_White()                     AS Color_CalcUser1,
+         zc_Color_White()                     AS Color_CalcUser2,
+         zc_Color_White()                     AS Color_CalcUser3,
+         zc_Color_White()                     AS Color_CalcUser4,
+         zc_Color_White()                     AS Color_CalcUser5,
+         zc_Color_White()                     AS Color_CalcUser6,
+         zc_Color_White()                     AS Color_CalcUser7,
+         zc_Color_White()                     AS Color_CalcUser8,
+         zc_Color_White()                     AS Color_CalcUser9,
+         zc_Color_White()                     AS Color_CalcUser10,
+         zc_Color_White()                     AS Color_CalcUser11,
+         zc_Color_White()                     AS Color_CalcUser12,
+         zc_Color_White()                     AS Color_CalcUser13,
+         zc_Color_White()                     AS Color_CalcUser14,
+         zc_Color_White()                     AS Color_CalcUser15,
+         zc_Color_White()                     AS Color_CalcUser16,
+         zc_Color_White()                     AS Color_CalcUser17,
+         zc_Color_White()                     AS Color_CalcUser18,
+         zc_Color_White()                     AS Color_CalcUser19,
+         zc_Color_White()                     AS Color_CalcUser20,
+         zc_Color_White()                     AS Color_CalcUser21,
+         zc_Color_White()                     AS Color_CalcUser22,
+         zc_Color_White()                     AS Color_CalcUser23,
+         zc_Color_White()                     AS Color_CalcUser24,
+         zc_Color_White()                     AS Color_CalcUser25,
+         zc_Color_White()                     AS Color_CalcUser26,
+         zc_Color_White()                     AS Color_CalcUser27,
+         zc_Color_White()                     AS Color_CalcUser28,
+         zc_Color_White()                     AS Color_CalcUser29,
+         zc_Color_White()                     AS Color_CalcUser30,
+         zc_Color_White()                     AS Color_CalcUser31,
          zc_Color_White()                     AS Color_Calc1,
          zc_Color_White()                     AS Color_Calc2,
          zc_Color_White()                     AS Color_Calc3,
@@ -377,7 +509,7 @@ BEGIN
                                          ON MIString_ComingValueDayPrev.DescId = zc_MIString_ComingValueDay()
                                         AND MIString_ComingValueDayPrev.MovementItemId = MovementItemPrev.Id
 
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE(tmpUnserUnit.UnitID, tmPersonal_View.UnitID)
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnserUnit.UnitID
 
        WHERE tmpUnserUnit.UserID NOT IN (SELECT MovementItem.ObjectId
                                          FROM MovementItem
@@ -519,103 +651,136 @@ BEGIN
          29                                                      AS TypeId29,
          30                                                      AS TypeId30,
          31                                                      AS TypeId31,
-         CASE WHEN COALESCE(tmpUnserUnit.D1, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpUnserUnit.D1, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser1,
+         CASE WHEN COALESCE(tmpUnserUnit.D2, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser2,
+         CASE WHEN COALESCE(tmpUnserUnit.D3, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser3,
+         CASE WHEN COALESCE(tmpUnserUnit.D4, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser4,
+         CASE WHEN COALESCE(tmpUnserUnit.D5, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser5,
+         CASE WHEN COALESCE(tmpUnserUnit.D6, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser6,
+         CASE WHEN COALESCE(tmpUnserUnit.D7, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser7,
+         CASE WHEN COALESCE(tmpUnserUnit.D8, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser8,
+         CASE WHEN COALESCE(tmpUnserUnit.D9, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser9,
+         CASE WHEN COALESCE(tmpUnserUnit.D10, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser10,
+         CASE WHEN COALESCE(tmpUnserUnit.D11, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser11,
+         CASE WHEN COALESCE(tmpUnserUnit.D12, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser12,
+         CASE WHEN COALESCE(tmpUnserUnit.D13, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser13,
+         CASE WHEN COALESCE(tmpUnserUnit.D14, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser14,
+         CASE WHEN COALESCE(tmpUnserUnit.D15, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser15,
+         CASE WHEN COALESCE(tmpUnserUnit.D16, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser16,
+         CASE WHEN COALESCE(tmpUnserUnit.D17, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser17,
+         CASE WHEN COALESCE(tmpUnserUnit.D18, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser18,
+         CASE WHEN COALESCE(tmpUnserUnit.D19, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser19,
+         CASE WHEN COALESCE(tmpUnserUnit.D20, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser20,
+         CASE WHEN COALESCE(tmpUnserUnit.D21, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser21,
+         CASE WHEN COALESCE(tmpUnserUnit.D22, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser22,
+         CASE WHEN COALESCE(tmpUnserUnit.D23, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser23,
+         CASE WHEN COALESCE(tmpUnserUnit.D24, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser24,
+         CASE WHEN COALESCE(tmpUnserUnit.D25, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser25,
+         CASE WHEN COALESCE(tmpUnserUnit.D26, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser26,
+         CASE WHEN COALESCE(tmpUnserUnit.D27, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser27,
+         CASE WHEN COALESCE(tmpUnserUnit.D28, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser28,
+         CASE WHEN COALESCE(tmpUnserUnit.D29, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser29,
+         CASE WHEN COALESCE(tmpUnserUnit.D30, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser30,
+         CASE WHEN COALESCE(tmpUnserUnit.D31, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser31,
+         CASE WHEN COALESCE(tmpMainUnit.UnitID1, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 1, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 1, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc1,
-         CASE WHEN COALESCE(tmpUnserUnit.D2, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID2, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 2 AND SUBSTRING(MIString_ComingValueDay.ValueData, 2, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 2, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc2,
-         CASE WHEN COALESCE(tmpUnserUnit.D3, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID3, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 3 AND SUBSTRING(MIString_ComingValueDay.ValueData, 3, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 3, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc3,
-         CASE WHEN COALESCE(tmpUnserUnit.D4, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID4, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 4 AND SUBSTRING(MIString_ComingValueDay.ValueData, 4, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 4, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc4,
-         CASE WHEN COALESCE(tmpUnserUnit.D5, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID5, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 5 AND SUBSTRING(MIString_ComingValueDay.ValueData, 5, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 5, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc5,
-         CASE WHEN COALESCE(tmpUnserUnit.D6, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID6, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 6 AND SUBSTRING(MIString_ComingValueDay.ValueData, 6, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 6, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc6,
-         CASE WHEN COALESCE(tmpUnserUnit.D7, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID7, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 7 AND SUBSTRING(MIString_ComingValueDay.ValueData, 7, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 7, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc7,
-         CASE WHEN COALESCE(tmpUnserUnit.D8, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID8, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 8 AND SUBSTRING(MIString_ComingValueDay.ValueData, 8, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 8, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc8,
-         CASE WHEN COALESCE(tmpUnserUnit.D9, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID9, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 9 AND SUBSTRING(MIString_ComingValueDay.ValueData, 9, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 9, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc9,
-         CASE WHEN COALESCE(tmpUnserUnit.D10, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID10, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 10 AND SUBSTRING(MIString_ComingValueDay.ValueData, 10, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 10, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc10,
-         CASE WHEN COALESCE(tmpUnserUnit.D11, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID11, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 11 AND SUBSTRING(MIString_ComingValueDay.ValueData, 11, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 11, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc11,
-         CASE WHEN COALESCE(tmpUnserUnit.D12, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID12, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 12 AND SUBSTRING(MIString_ComingValueDay.ValueData, 12, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 12, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc12,
-         CASE WHEN COALESCE(tmpUnserUnit.D13, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID13, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 13 AND SUBSTRING(MIString_ComingValueDay.ValueData, 13, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 13, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc13,
-         CASE WHEN COALESCE(tmpUnserUnit.D14, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID14, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 14 AND SUBSTRING(MIString_ComingValueDay.ValueData, 14, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 14, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc14,
-         CASE WHEN COALESCE(tmpUnserUnit.D15, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID15, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 15 AND SUBSTRING(MIString_ComingValueDay.ValueData, 15, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 15, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc15,
-         CASE WHEN COALESCE(tmpUnserUnit.D16, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID16, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 16 AND SUBSTRING(MIString_ComingValueDay.ValueData, 16, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 16, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc16,
-         CASE WHEN COALESCE(tmpUnserUnit.D17, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID17, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 17 AND SUBSTRING(MIString_ComingValueDay.ValueData, 17, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 17, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc17,
-         CASE WHEN COALESCE(tmpUnserUnit.D18, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID18, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 18 AND SUBSTRING(MIString_ComingValueDay.ValueData, 18, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 18, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc18,
-         CASE WHEN COALESCE(tmpUnserUnit.D19, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID19, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 19 AND SUBSTRING(MIString_ComingValueDay.ValueData, 19, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 19, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc19,
-         CASE WHEN COALESCE(tmpUnserUnit.D20, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID20, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 20 AND SUBSTRING(MIString_ComingValueDay.ValueData, 20, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 20, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc20,
-         CASE WHEN COALESCE(tmpUnserUnit.D21, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID21, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 21 AND SUBSTRING(MIString_ComingValueDay.ValueData, 21, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 21, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc21,
-         CASE WHEN COALESCE(tmpUnserUnit.D22, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID22, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 22 AND SUBSTRING(MIString_ComingValueDay.ValueData, 22, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 22, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc22,
-         CASE WHEN COALESCE(tmpUnserUnit.D23, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID23, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 23 AND SUBSTRING(MIString_ComingValueDay.ValueData, 23, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 23, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc23,
-         CASE WHEN COALESCE(tmpUnserUnit.D24, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID24, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 24 AND SUBSTRING(MIString_ComingValueDay.ValueData, 24, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 24, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc24,
-         CASE WHEN COALESCE(tmpUnserUnit.D25, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID25, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 25 AND SUBSTRING(MIString_ComingValueDay.ValueData, 25, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 25, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc25,
-         CASE WHEN COALESCE(tmpUnserUnit.D26, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID26, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 26 AND SUBSTRING(MIString_ComingValueDay.ValueData, 26, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 26, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc26,
-         CASE WHEN COALESCE(tmpUnserUnit.D27, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID27, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 27 AND SUBSTRING(MIString_ComingValueDay.ValueData, 27, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 27, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc27,
-         CASE WHEN COALESCE(tmpUnserUnit.D28, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID28, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 28 AND SUBSTRING(MIString_ComingValueDay.ValueData, 28, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 28, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc28,
-         CASE WHEN COALESCE(tmpUnserUnit.D29, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID29, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 29 AND SUBSTRING(MIString_ComingValueDay.ValueData, 29, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 29, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc29,
-         CASE WHEN COALESCE(tmpUnserUnit.D30, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID30, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 30 AND SUBSTRING(MIString_ComingValueDay.ValueData, 30, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 30, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc30,
-         CASE WHEN COALESCE(tmpUnserUnit.D31, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID31, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 31 AND SUBSTRING(MIString_ComingValueDay.ValueData, 31, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 31, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc31
        FROM Movement
 
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
                                    AND MovementItem.DescId = zc_MI_Master()
+
+            LEFT JOIN tmpMainUnit ON tmpMainUnit.UserId = MovementItem.ObjectId
 
             LEFT JOIN tmpUnserUnit ON tmpUnserUnit.UserId = MovementItem.ObjectId
 
@@ -626,7 +791,7 @@ BEGIN
 
             LEFT JOIN tmPersonal_View AS Personal_View ON Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
 
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE(tmpUnserUnit.UnitID, Personal_View.UnitID)
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnserUnit.UnitID
 
             INNER JOIN MovementItemString AS MIString_ComingValueDay
                                           ON MIString_ComingValueDay.DescId = zc_MIString_ComingValueDay()
@@ -649,8 +814,8 @@ BEGIN
          AND (MovementItem.IsErased = FALSE OR inIsErased = TRUE);
      ELSE
        OPEN cur3 FOR
-       WITH tmPersonal_View AS (SELECT Object_User.Id                      AS UserID
-                                     , Max(Object_Personal_View.UnitId)    AS UnitId
+       WITH tmPersonal_View AS (SELECT DISTINCT
+                                       Object_User.Id                      AS UserID
                                      , Object_Personal_View.MemberId       AS MemberId
                                      , Object_Personal_View.PositionName   AS PositionName
                                 FROM Object AS Object_User
@@ -661,8 +826,7 @@ BEGIN
 
                                      INNER JOIN Object_Personal_View ON Object_Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
 
-                                WHERE Object_User.DescId = zc_Object_User()
-                                GROUP BY Object_User.Id, Object_Personal_View.MemberId, Object_Personal_View.PositionName)
+                                WHERE Object_User.DescId = zc_Object_User())
 
        SELECT
          MovementItem.Id                                         AS ID,
@@ -798,103 +962,136 @@ BEGIN
          29                                                      AS TypeId29,
          30                                                      AS TypeId30,
          31                                                      AS TypeId31,
-         CASE WHEN COALESCE(tmpUnserUnit.D1, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpUnserUnit.D1, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser1,
+         CASE WHEN COALESCE(tmpUnserUnit.D2, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser2,
+         CASE WHEN COALESCE(tmpUnserUnit.D3, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser3,
+         CASE WHEN COALESCE(tmpUnserUnit.D4, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser4,
+         CASE WHEN COALESCE(tmpUnserUnit.D5, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser5,
+         CASE WHEN COALESCE(tmpUnserUnit.D6, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser6,
+         CASE WHEN COALESCE(tmpUnserUnit.D7, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser7,
+         CASE WHEN COALESCE(tmpUnserUnit.D8, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser8,
+         CASE WHEN COALESCE(tmpUnserUnit.D9, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser9,
+         CASE WHEN COALESCE(tmpUnserUnit.D10, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser10,
+         CASE WHEN COALESCE(tmpUnserUnit.D11, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser11,
+         CASE WHEN COALESCE(tmpUnserUnit.D12, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser12,
+         CASE WHEN COALESCE(tmpUnserUnit.D13, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser13,
+         CASE WHEN COALESCE(tmpUnserUnit.D14, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser14,
+         CASE WHEN COALESCE(tmpUnserUnit.D15, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser15,
+         CASE WHEN COALESCE(tmpUnserUnit.D16, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser16,
+         CASE WHEN COALESCE(tmpUnserUnit.D17, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser17,
+         CASE WHEN COALESCE(tmpUnserUnit.D18, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser18,
+         CASE WHEN COALESCE(tmpUnserUnit.D19, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser19,
+         CASE WHEN COALESCE(tmpUnserUnit.D20, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser20,
+         CASE WHEN COALESCE(tmpUnserUnit.D21, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser21,
+         CASE WHEN COALESCE(tmpUnserUnit.D22, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser22,
+         CASE WHEN COALESCE(tmpUnserUnit.D23, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser23,
+         CASE WHEN COALESCE(tmpUnserUnit.D24, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser24,
+         CASE WHEN COALESCE(tmpUnserUnit.D25, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser25,
+         CASE WHEN COALESCE(tmpUnserUnit.D26, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser26,
+         CASE WHEN COALESCE(tmpUnserUnit.D27, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser27,
+         CASE WHEN COALESCE(tmpUnserUnit.D28, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser28,
+         CASE WHEN COALESCE(tmpUnserUnit.D29, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser29,
+         CASE WHEN COALESCE(tmpUnserUnit.D30, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser30,
+         CASE WHEN COALESCE(tmpUnserUnit.D31, False) = FALSE THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_CalcUser31,
+         CASE WHEN COALESCE(tmpMainUnit.UnitID1, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 1 AND SUBSTRING(MIString_ComingValueDay.ValueData, 1, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 1, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc1,
-         CASE WHEN COALESCE(tmpUnserUnit.D2, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID2, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 2 AND SUBSTRING(MIString_ComingValueDay.ValueData, 2, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 2, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc2,
-         CASE WHEN COALESCE(tmpUnserUnit.D3, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID3, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 3 AND SUBSTRING(MIString_ComingValueDay.ValueData, 3, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 3, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc3,
-         CASE WHEN COALESCE(tmpUnserUnit.D4, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID4, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 4 AND SUBSTRING(MIString_ComingValueDay.ValueData, 4, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 4, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc4,
-         CASE WHEN COALESCE(tmpUnserUnit.D5, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID5, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 5 AND SUBSTRING(MIString_ComingValueDay.ValueData, 5, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 5, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc5,
-         CASE WHEN COALESCE(tmpUnserUnit.D6, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID6, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 6 AND SUBSTRING(MIString_ComingValueDay.ValueData, 6, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 6, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc6,
-         CASE WHEN COALESCE(tmpUnserUnit.D7, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID7, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 7 AND SUBSTRING(MIString_ComingValueDay.ValueData, 7, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 7, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc7,
-         CASE WHEN COALESCE(tmpUnserUnit.D8, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID8, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 8 AND SUBSTRING(MIString_ComingValueDay.ValueData, 8, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 8, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc8,
-         CASE WHEN COALESCE(tmpUnserUnit.D9, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID9, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 9 AND SUBSTRING(MIString_ComingValueDay.ValueData, 9, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 9, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc9,
-         CASE WHEN COALESCE(tmpUnserUnit.D10, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID10, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 10 AND SUBSTRING(MIString_ComingValueDay.ValueData, 10, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 10, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc10,
-         CASE WHEN COALESCE(tmpUnserUnit.D11, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID11, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 11 AND SUBSTRING(MIString_ComingValueDay.ValueData, 11, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 11, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc11,
-         CASE WHEN COALESCE(tmpUnserUnit.D12, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID12, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 12 AND SUBSTRING(MIString_ComingValueDay.ValueData, 12, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 12, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc12,
-         CASE WHEN COALESCE(tmpUnserUnit.D13, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID13, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 13 AND SUBSTRING(MIString_ComingValueDay.ValueData, 13, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 13, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc13,
-         CASE WHEN COALESCE(tmpUnserUnit.D14, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID14, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 14 AND SUBSTRING(MIString_ComingValueDay.ValueData, 14, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 14, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc14,
-         CASE WHEN COALESCE(tmpUnserUnit.D15, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID15, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 15 AND SUBSTRING(MIString_ComingValueDay.ValueData, 15, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 15, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc15,
-         CASE WHEN COALESCE(tmpUnserUnit.D16, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID16, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 16 AND SUBSTRING(MIString_ComingValueDay.ValueData, 16, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 16, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc16,
-         CASE WHEN COALESCE(tmpUnserUnit.D17, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID17, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 17 AND SUBSTRING(MIString_ComingValueDay.ValueData, 17, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 17, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc17,
-         CASE WHEN COALESCE(tmpUnserUnit.D18, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID18, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 18 AND SUBSTRING(MIString_ComingValueDay.ValueData, 18, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 18, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc18,
-         CASE WHEN COALESCE(tmpUnserUnit.D19, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID19, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 19 AND SUBSTRING(MIString_ComingValueDay.ValueData, 19, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 19, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc19,
-         CASE WHEN COALESCE(tmpUnserUnit.D20, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID20, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 20 AND SUBSTRING(MIString_ComingValueDay.ValueData, 20, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 20, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc20,
-         CASE WHEN COALESCE(tmpUnserUnit.D21, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID21, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 21 AND SUBSTRING(MIString_ComingValueDay.ValueData, 21, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 21, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc21,
-         CASE WHEN COALESCE(tmpUnserUnit.D22, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID22, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 22 AND SUBSTRING(MIString_ComingValueDay.ValueData, 22, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 22, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc22,
-         CASE WHEN COALESCE(tmpUnserUnit.D23, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID23, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 23 AND SUBSTRING(MIString_ComingValueDay.ValueData, 23, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 23, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc23,
-         CASE WHEN COALESCE(tmpUnserUnit.D24, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID24, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 24 AND SUBSTRING(MIString_ComingValueDay.ValueData, 24, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 24, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc24,
-         CASE WHEN COALESCE(tmpUnserUnit.D25, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID25, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 25 AND SUBSTRING(MIString_ComingValueDay.ValueData, 25, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 25, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc25,
-         CASE WHEN COALESCE(tmpUnserUnit.D26, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID26, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 26 AND SUBSTRING(MIString_ComingValueDay.ValueData, 26, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 26, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc26,
-         CASE WHEN COALESCE(tmpUnserUnit.D27, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID27, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 27 AND SUBSTRING(MIString_ComingValueDay.ValueData, 27, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 27, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc27,
-         CASE WHEN COALESCE(tmpUnserUnit.D28, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID28, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 28 AND SUBSTRING(MIString_ComingValueDay.ValueData, 28, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 28, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc28,
-         CASE WHEN COALESCE(tmpUnserUnit.D29, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID29, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 29 AND SUBSTRING(MIString_ComingValueDay.ValueData, 29, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 29, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc29,
-         CASE WHEN COALESCE(tmpUnserUnit.D30, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID30, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 30 AND SUBSTRING(MIString_ComingValueDay.ValueData, 30, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 30, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc30,
-         CASE WHEN COALESCE(tmpUnserUnit.D31, False) = FALSE THEN zc_Color_White() ELSE
+         CASE WHEN COALESCE(tmpMainUnit.UnitID31, tmpMainUnit.UnitID) <> Object_Unit.ID THEN zc_Color_White() ELSE
            CASE WHEN vbCurrDay >= 31 AND SUBSTRING(MIString_ComingValueDay.ValueData, 31, 1) <>
            SUBSTRING(MIString_ComingValueDayUser.ValueData, 31, 1) THEN zc_Color_Red() ELSE zc_Color_Yelow() END END AS Color_Calc31
        FROM Movement
 
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
                                    AND MovementItem.DescId = zc_MI_Master()
+
+            LEFT JOIN tmpMainUnit ON tmpMainUnit.UserId = MovementItem.ObjectId
 
             LEFT JOIN tmpUnserUnit ON tmpUnserUnit.UserId = MovementItem.ObjectId
 
@@ -905,7 +1102,7 @@ BEGIN
 
             LEFT JOIN tmPersonal_View AS Personal_View ON Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
 
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE(tmpUnserUnit.UnitID, Personal_View.UnitID)
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnserUnit.UnitID
 
             INNER JOIN MovementItemString AS MIString_ComingValueDay
                                           ON MIString_ComingValueDay.DescId = zc_MIString_ComingValueDay()
@@ -943,4 +1140,5 @@ ALTER FUNCTION gpSelect_MovementItem_EmployeeSchedule (Integer, TDateTime, Boole
 */
 
 -- тест
--- select * from gpSelect_MovementItem_EmployeeSchedule(inMovementId := 13211961 , inDate := ('01.02.2019')::TDateTime , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+--
+select * from gpSelect_MovementItem_EmployeeSchedule(inMovementId := 12604227 , inDate := ('01.04.2019')::TDateTime , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '4183126');

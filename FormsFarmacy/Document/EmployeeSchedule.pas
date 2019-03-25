@@ -54,6 +54,17 @@ type
     CrossDBViewAddOn: TCrossDBViewAddOn;
     CrossDBViewUserAddOn: TCrossDBViewAddOn;
     Color_CalcUser: TcxGridDBBandedColumn;
+    actUpdateUnit: TMultiAction;
+    actChoiceUnitTreeForm: TOpenChoiceForm;
+    actExecStoredUpdateUnit: TdsdExecStoredProc;
+    actUpdateSubstitutionUnit: TMultiAction;
+    actChoiceSubstitutionUnitTreeForm: TOpenChoiceForm;
+    actExecStoredUpdateSubstitutionUnit: TdsdExecStoredProc;
+    dxBarButton5: TdxBarButton;
+    dxBarButton6: TdxBarButton;
+    spUpdateUnit: TdsdStoredProc;
+    spUpdateSubstitutionUnit: TdsdStoredProc;
+    actCrossDBViewSetSubstitutionUnit: TCrossDBViewSetTypeId;
   private
     { Private declarations }
   public
