@@ -1406,6 +1406,7 @@ begin
     FGridEditKeyEvent := FView.OnEditKeyDown;
     FView.OnEditKeyDown := GridEditKeyEvent;
     FOnGetContentStyleEvent := FView.Styles.OnGetContentStyle;
+    FView.Styles.OnGetContentStyle := Nil;
     FView.Styles.OnGetContentStyle := OnGetContentStyle;
 
     if Assigned(TcxDBDataController(FView.DataController).DataSource) then
@@ -2593,6 +2594,7 @@ begin
     FPivotGrid.OnKeyDown := OnKeyDown;
     FPivotGrid.OnDblClick := OnDblClick;
     FOnGetContentStyleEvent := FPivotGrid.Styles.OnGetContentStyle;
+    FPivotGrid.Styles.OnGetContentStyle := Nil;
     FPivotGrid.Styles.OnGetContentStyle := OnGetContentStyle;
 
     if FPivotGrid is TcxDBPivotGrid then

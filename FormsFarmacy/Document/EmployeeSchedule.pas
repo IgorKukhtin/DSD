@@ -53,6 +53,7 @@ type
     CrossDBViewPrevAddOn: TCrossDBViewAddOn;
     CrossDBViewAddOn: TCrossDBViewAddOn;
     CrossDBViewUserAddOn: TCrossDBViewAddOn;
+    Color_CalcUser: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public
