@@ -1330,9 +1330,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_TaxUnit_Value() RETURNS Integer AS $BO
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_TaxUnit(), 'zc_ObjectFloat_TaxUnit_Value', '% наценки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_TaxUnit_Value');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Retail_MarginPercent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Retail_MarginPercent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Retail(), 'zc_ObjectFloat_Retail_MarginPercent', '% наценки для срока годности < 6 мес.' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Retail_MarginPercent');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 25.03.19         * zc_ObjectFloat_Retail_MarginPercent
  13.03.19         * zc_ObjectFloat_PriceChange_Multiplicity
                     zc_ObjectFloat_GoodsByGoodsKind_NormInDays
  17.02.19         * zc_ObjectFloat_TaxUnit_Price

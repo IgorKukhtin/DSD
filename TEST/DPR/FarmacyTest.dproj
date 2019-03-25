@@ -247,14 +247,6 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Component\UpdaterTest.pas"/>
 			<DCCReference Include="..\SOURCE\dbObjectTest.pas"/>
-			<DCCReference Include="..\..\Forms\Guides\Retail.pas">
-				<Form>RetailForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\RetailEdit.pas">
-				<Form>RetailEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalEdit.pas">
 				<Form>JuridicalEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -2271,6 +2263,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\Juridical.pas">
 				<Form>JuridicalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Retail.pas">
+				<Form>RetailForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\RetailEdit.pas">
+				<Form>RetailEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

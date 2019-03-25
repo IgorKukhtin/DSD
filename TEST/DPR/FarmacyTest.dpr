@@ -81,8 +81,6 @@ uses
   MovementLoad in '..\..\FormsFarmacy\Load\MovementLoad.pas' {MovementLoadForm: TParentForm},
   UpdaterTest in '..\SOURCE\Component\UpdaterTest.pas',
   dbObjectTest in '..\SOURCE\dbObjectTest.pas',
-  Retail in '..\..\Forms\Guides\Retail.pas' {RetailForm: TParentForm},
-  RetailEdit in '..\..\Forms\Guides\RetailEdit.pas' {RetailEditForm: TParentForm},
   JuridicalEdit in '..\..\FormsFarmacy\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
   MainForm in '..\..\FormsFarmacy\MainForm.pas' {MainForm},
   IncomeJournal in '..\..\FormsFarmacy\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
@@ -670,7 +668,9 @@ uses
   JackdawsChecksEdit in '..\..\FormsFarmacy\Guides\JackdawsChecksEdit.pas' {JackdawsChecksEditForm: TParentForm},
   PUSH in '..\..\FormsFarmacy\Document\PUSH.pas' {PUSHForm: TParentForm},
   PUSHJournal in '..\..\FormsFarmacy\Document\PUSHJournal.pas' {PUSHJournalForm: TParentForm},
-  Juridical in '..\..\FormsFarmacy\Guides\Juridical.pas' {JuridicalForm: TParentForm};
+  Juridical in '..\..\FormsFarmacy\Guides\Juridical.pas' {JuridicalForm: TParentForm},
+  Retail in '..\..\FormsFarmacy\Guides\Retail.pas' {RetailForm: TParentForm},
+  RetailEdit in '..\..\FormsFarmacy\Guides\RetailEdit.pas' {RetailEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
