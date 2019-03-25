@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_GoodsKind()
 
---DROP FUNCTION gpSelect_Object_GoodsKind();
+DROP FUNCTION IF EXISTS gpSelect_Object_GoodsKind (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_GoodsKind (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsKind(
+    IN inShowAll        Boolean, 
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
@@ -27,6 +29,7 @@ BEGIN
                              WHERE ObjectBoolean_Order.ValueData = TRUE
                                AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
                             )
+
        SELECT 
              Object.Id         AS Id 
            , Object.ObjectCode AS Code
@@ -34,7 +37,7 @@ BEGIN
            , Object.isErased   AS isErased
        FROM tmpGoodsKind
             INNER JOIN Object ON Object.Id = tmpGoodsKind.GoodsKindId
-                             AND Object.isErased = FALSE
+                             AND (Object.isErased = FALSE OR inShowAll = TRUE)
       UNION ALL
        SELECT 0 AS Id
             , 0 AS Code
@@ -52,6 +55,7 @@ BEGIN
        FROM Object
        WHERE Object.DescId = zc_Object_GoodsKind()
            AND (Object.Id <> 268778 OR vbUserId = 5) -- "удален - шт" + Админ
+           AND (Object.isErased = FALSE OR inShowAll = TRUE)
       UNION ALL
        SELECT 0 AS Id
             , 0 AS Code
@@ -61,18 +65,15 @@ BEGIN
    END IF;
      
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 100;
-ALTER FUNCTION gpSelect_Object_GoodsKind(TVarChar)
-  OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 12.06.13          *
+ 25.03.19         *
+ 12.06.13         *
  00.06.13          
 */
 

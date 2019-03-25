@@ -48,6 +48,8 @@ type
     bbChoiceGuide: TdxBarButton;
     dsdChoiceGuides: TdsdChoiceGuides;
     Id: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public
