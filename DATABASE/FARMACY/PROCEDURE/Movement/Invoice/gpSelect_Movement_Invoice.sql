@@ -48,6 +48,10 @@ RETURNS TABLE (Id                  Integer
              , Contract_SigningDate_Department TDateTime
              , Contract_StartDate_Department   TDateTime
              , Contract_EndDate_Department     TDateTime
+
+             , OKPO_Juridical      TVarChar
+             , OKPO_PartnerMedical TVarChar
+             , OKPO_Department     TVarChar
               )
 
 AS
@@ -222,6 +226,10 @@ BEGIN
       , tmpContractDepartment.Contract_SigningDate AS Contract_SigningDate_Department
       , tmpContractDepartment.Contract_StartDate   AS Contract_StartDate_Department
       , tmpContractDepartment.Contract_EndDate     AS Contract_EndDate_Department
+      
+      , ObjectHistory_JuridicalDetails.OKPO      AS OKPO_Juridical
+      , ObjectHistory_PartnerMedicalDetails.OKPO AS OKPO_PartnerMedical
+      , ObjectHistory_DepartmentDetails.OKPO     AS OKPO_Department
 
     FROM tmpMovement AS Movement
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -262,18 +270,18 @@ BEGIN
                                     AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
 
         LEFT JOIN tmpMLO AS MovementLinkObject_Juridical
-                                     ON MovementLinkObject_Juridical.MovementId = Movement.Id
-                                    AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+                         ON MovementLinkObject_Juridical.MovementId = Movement.Id
+                        AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
         
         LEFT JOIN tmpMLO AS MovementLinkObject_PartnerMedical
-                                     ON MovementLinkObject_PartnerMedical.MovementId = Movement.Id
-                                    AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
+                         ON MovementLinkObject_PartnerMedical.MovementId = Movement.Id
+                        AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
         LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = MovementLinkObject_PartnerMedical.ObjectId
 
         LEFT JOIN tmpMLO AS MovementLinkObject_Contract
-                                     ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                    AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                         ON MovementLinkObject_Contract.MovementId = Movement.Id
+                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
         LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
         -- дата подписания договора
         LEFT JOIN ObjectDate AS ObjectDate_Signing
@@ -307,8 +315,8 @@ BEGIN
                                        AND tmpContractDepartment.Contract_StartDate <= MovementDate_OperDateStart.ValueData
                                        AND tmpContractDepartment.Contract_EndDate >= MovementDate_OperDateStart.ValueData
 
-
-;
+        LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := ObjectLink_PartnerMedical_Department.ChildObjectId, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_DepartmentDetails ON 1=1
+ ;
 
 END;
 $BODY$
