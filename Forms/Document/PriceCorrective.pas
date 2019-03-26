@@ -117,6 +117,10 @@ type
     cxLabel8: TcxLabel;
     edDocumentTax: TcxButtonEdit;
     GuidesDocumentTax: TdsdGuides;
+    edIsChecked: TcxCheckBox;
+    spChecked: TdsdStoredProc;
+    actChecked: TdsdExecStoredProc;
+    bbChecked: TdxBarButton;
   private
     { Private declarations }
   public
