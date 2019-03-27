@@ -13,7 +13,7 @@ uses
   cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
   dxSkinsdxBarPainter, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxTextEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls,
-  cxGridBandedTableView, cxGridDBBandedTableView;
+  cxGridBandedTableView, cxGridDBBandedTableView, DataModul;
 
 type
   TEmployeeScheduleUserForm = class(TAncestorDBGridForm)
@@ -23,7 +23,7 @@ type
     cxLabel2: TcxLabel;
     FormParams: TdsdFormParams;
     cxGridDBBandedTableView1: TcxGridDBBandedTableView;
-    WhoInput: TcxGridDBBandedColumn;
+    Note: TcxGridDBBandedColumn;
     Value: TcxGridDBBandedColumn;
     cxLabel1: TcxLabel;
     cbValueUser: TcxComboBox;
@@ -32,6 +32,26 @@ type
     HeaderSaver: THeaderSaver;
     HeaderCDS: TClientDataSet;
     CrossDBViewAddOn: TCrossDBViewAddOn;
+    NoteUser: TcxGridDBBandedColumn;
+    ValueUser: TcxGridDBBandedColumn;
+    HeaderUserCDS: TClientDataSet;
+    CrossDBViewUserAddOn: TCrossDBViewAddOn;
+    Color_Calc: TcxGridDBBandedColumn;
+    Color_CalcFont: TcxGridDBBandedColumn;
+    Color_CalcFontUser: TcxGridDBBandedColumn;
+    cxGridSubstitution: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    cxGridDBBandedTableViewSubstitution: TcxGridDBBandedTableView;
+    Substitution_Note: TcxGridDBBandedColumn;
+    Substitution_Value: TcxGridDBBandedColumn;
+    Substitution_Color_CalcFont: TcxGridDBBandedColumn;
+    cxGridLevelSubstitution: TcxGridLevel;
+    Substitution_UnitName: TcxGridDBBandedColumn;
+    Substitution_ValueNext: TcxGridDBBandedColumn;
+    SubstitutionDS: TDataSource;
+    SubstitutionCDS: TClientDataSet;
+    CrossDBViewAddOnSubstitutionNext: TCrossDBViewAddOn;
+    CrossDBViewAddOnSubstitution: TCrossDBViewAddOn;
   private
     { Private declarations }
   public

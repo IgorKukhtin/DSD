@@ -385,6 +385,22 @@ type
     property SummaryList: TCollection read FSummaryFieldList write FSummaryFieldList;
   end;
 
+  TCrossDBViewSetTypeId = class(TdsdCustomAction)
+  private
+    FCrossDBViewAddOn : TCrossDBViewAddOn;
+  protected
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+  published
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
+    property CrossDBViewAddOn : TCrossDBViewAddOn read FCrossDBViewAddOn write FCrossDBViewAddOn;
+  end;
+
   TdsdUserSettingsStorageAddOn = class(TComponent)
   private
     FOnDestroy: TNotifyEvent;
@@ -1406,6 +1422,7 @@ begin
     FGridEditKeyEvent := FView.OnEditKeyDown;
     FView.OnEditKeyDown := GridEditKeyEvent;
     FOnGetContentStyleEvent := FView.Styles.OnGetContentStyle;
+    FView.Styles.OnGetContentStyle := Nil;
     FView.Styles.OnGetContentStyle := OnGetContentStyle;
 
     if Assigned(TcxDBDataController(FView.DataController).DataSource) then
@@ -2593,6 +2610,7 @@ begin
     FPivotGrid.OnKeyDown := OnKeyDown;
     FPivotGrid.OnDblClick := OnDblClick;
     FOnGetContentStyleEvent := FPivotGrid.Styles.OnGetContentStyle;
+    FPivotGrid.Styles.OnGetContentStyle := Nil;
     FPivotGrid.Styles.OnGetContentStyle := OnGetContentStyle;
 
     if FPivotGrid is TcxDBPivotGrid then
@@ -2861,6 +2879,39 @@ begin
   end;
 
 end;
+
+
+{ TCrossDBViewSetTypeId }
+
+constructor TCrossDBViewSetTypeId.Create(AOwner: TComponent);
+begin
+  inherited;
+end;
+
+function TCrossDBViewSetTypeId.LocalExecute: Boolean;
+begin
+  Result := False;
+  if not Assigned(FCrossDBViewAddOn) then
+    raise Exception.Create('Не определен CrossDBViewAddOn');
+
+  if not Assigned(FCrossDBViewAddOn.FHeaderDataSet) then
+    raise Exception.Create('Не определен HeaderDataSet');
+
+  if not Assigned(FCrossDBViewAddOn.FView) then
+    raise Exception.Create('Не определен View');
+
+  if not FCrossDBViewAddOn.FView.Focused then
+    raise Exception.Create('Не установлен фокус на грид');
+
+  if not Assigned(FCrossDBViewAddOn.FView.Controller.FocusedColumn) then
+    raise Exception.Create('Не установлен фокус на поле грида');
+
+  if FCrossDBViewAddOn.FCreateColumnList.IndexOf(FCrossDBViewAddOn.FView.Controller.FocusedColumn) < 0 then
+    raise Exception.Create('Выбранное поле не принадлежит область для позиционирования...');
+
+  Result := FCrossDBViewAddOn.FHeaderDataSet.Locate(FCrossDBViewAddOn.FHeaderColumnName, FCrossDBViewAddOn.FView.Controller.FocusedColumn.Caption, []);
+end;
+
 
 { TColumnCollectionItem }
 

@@ -725,6 +725,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Width = 170
     end
   end
+  object edIsChecked: TcxCheckBox [2]
+    Left = 568
+    Top = 103
+    Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+    Properties.ReadOnly = True
+    TabOrder = 6
+    Width = 118
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
     Top = 552
@@ -1258,6 +1266,20 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Category = 'DSDLib'
       MoveParams = <>
     end
+    object actChecked: TdsdExecStoredProc
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spChecked
+      StoredProcList = <
+        item
+          StoredProc = spChecked
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1406,6 +1428,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end
         item
           Visible = True
+          ItemName = 'bbChecked'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -1494,6 +1524,10 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     end
     object bbOpenTax: TdxBarButton
       Action = actOpenTax
+      Category = 0
+    end
+    object bbChecked: TdxBarButton
+      Action = actChecked
       Category = 0
     end
   end
@@ -1770,6 +1804,13 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Component = GuidesDocumentTax
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Checked'
+        Value = Null
+        Component = edIsChecked
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -2867,5 +2908,30 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end>
     Left = 648
     Top = 48
+  end
+  object spChecked: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChecked'
+        Value = Null
+        Component = edIsChecked
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 272
+    Top = 427
   end
 end

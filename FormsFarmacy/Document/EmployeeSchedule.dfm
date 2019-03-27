@@ -204,6 +204,13 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
             Position.ColIndex = 5
             Position.RowIndex = 0
           end
+          object Color_CalcUser: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_CalcUser'
+            Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 6
+            Position.RowIndex = 0
+          end
           object isErased: TcxGridDBBandedColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -421,6 +428,113 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
         end>
       Caption = 'actExecPreviousMonth'
     end
+    object actUpdateUnit: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actChoiceUnitTreeForm
+        end
+        item
+          Action = actExecStoredUpdateUnit
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1089#1085#1086#1074#1085#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1089#1085#1086#1074#1085#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1089#1085#1086#1074#1085#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      ImageIndex = 66
+    end
+    object actChoiceUnitTreeForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceUnitTreeForm'
+      FormName = 'TUnitTreeForm'
+      FormNameParam.Value = 'TUnitTreeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'UnitID'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actExecStoredUpdateUnit: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateUnit
+      StoredProcList = <
+        item
+          StoredProc = spUpdateUnit
+        end>
+      Caption = 'actExecStoredUpdateUnit'
+    end
+    object actUpdateSubstitutionUnit: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actCrossDBViewSetSubstitutionUnit
+        end
+        item
+          Action = actChoiceSubstitutionUnitTreeForm
+        end
+        item
+          Action = actExecStoredUpdateSubstitutionUnit
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1086#1076#1084#1077#1085#1099'?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1086#1076#1084#1077#1085#1099
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1086#1076#1084#1077#1085#1099
+      ImageIndex = 35
+    end
+    object actCrossDBViewSetSubstitutionUnit: TCrossDBViewSetTypeId
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actCrossDBViewSetSubstitutionUnit'
+      CrossDBViewAddOn = CrossDBViewAddOn
+    end
+    object actChoiceSubstitutionUnitTreeForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceSubstitutionUnitTreeForm'
+      FormName = 'TUnitTreeForm'
+      FormNameParam.Value = 'TUnitTreeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'UnitID'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actExecStoredUpdateSubstitutionUnit: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateSubstitutionUnit
+      StoredProcList = <
+        item
+          StoredProc = spUpdateSubstitutionUnit
+        end>
+      Caption = 'actExecStoredUpdateSubstitutionUnit'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -563,12 +677,21 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
           ItemName = 'dxBarStatic'
         end
         item
+          BeginGroup = True
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton6'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
     end
     inherited bbAddMask: TdxBarButton
@@ -611,6 +734,14 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     end
     object dxBarButton4: TdxBarButton
       Action = actPreviousMonth
+      Category = 0
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actUpdateUnit
+      Category = 0
+    end
+    object dxBarButton6: TdxBarButton
+      Action = actUpdateSubstitutionUnit
       Category = 0
     end
   end
@@ -657,6 +788,11 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
       end
       item
         Name = 'UserID'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitID'
         Value = Null
         MultiSelectSeparator = ','
       end>
@@ -991,7 +1127,12 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = ValueUser
+        BackGroundValueColumn = Color_CalcUser
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
@@ -1054,5 +1195,63 @@ inherited EmployeeScheduleForm: TEmployeeScheduleForm
     Params = <>
     Left = 568
     Top = 168
+  end
+  object spUpdateUnit: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_EmployeeSchedule_Unit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 802
+    Top = 288
+  end
+  object spUpdateSubstitutionUnit: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_EmployeeSchedule_SubstitutionUnit'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioTypeId'
+        Value = Null
+        Component = CrossDBViewAddOn
+        ComponentItem = 'TypeId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 802
+    Top = 344
   end
 end

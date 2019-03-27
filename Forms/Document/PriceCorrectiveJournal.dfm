@@ -119,15 +119,24 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
             Options.Editing = False
             Width = 60
           end
+          object Checked: TcxGridDBColumn [1]
+            Caption = #1055#1088#1086#1074#1077#1088#1077#1085
+            DataBinding.FieldName = 'Checked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1074#1077#1088#1077#1085
+            Options.Editing = False
+            Width = 39
+          end
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             Width = 78
           end
-          inherited colOperDate: TcxGridDBColumn [2]
+          inherited colOperDate: TcxGridDBColumn [3]
             HeaderAlignmentHorz = taCenter
             Width = 70
           end
-          inherited colInvNumber: TcxGridDBColumn [3]
+          inherited colInvNumber: TcxGridDBColumn [4]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Width = 45
@@ -531,6 +540,9 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactPrintReturnIn: TMultiAction
       Category = 'DSDLib'
@@ -620,6 +632,9 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_TaxCorrective_Client: TdsdPrintAction
       Category = 'DSDLib'
@@ -657,6 +672,9 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_TaxCorrective_Client: TMultiAction
       Category = 'DSDLib'
@@ -771,6 +789,19 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actChecked: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spChecked
+      StoredProcList = <
+        item
+          StoredProc = spChecked
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 58
     end
   end
   inherited MasterDS: TDataSource
@@ -888,6 +919,14 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbChecked'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -949,6 +988,10 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
     end
     object bbPrintReturnIn: TdxBarButton
       Action = mactPrintReturnIn
+      Category = 0
+    end
+    object bbChecked: TdxBarButton
+      Action = actChecked
       Category = 0
     end
   end
@@ -1407,5 +1450,31 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
     PackSize = 1
     Left = 824
     Top = 48
+  end
+  object spChecked: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChecked'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Checked'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 904
+    Top = 203
   end
 end

@@ -118,6 +118,14 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 62
           end
+          object OKPO_Juridical: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054' ('#1085#1072#1096')'
+            DataBinding.FieldName = 'OKPO_Juridical'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
@@ -143,6 +151,14 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             HeaderHint = #1041#1072#1085#1082' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103' ('#1085#1072#1096')'
             Options.Editing = False
             Width = 110
+          end
+          object OKPO_PartnerMedical: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054' ('#1084#1077#1076'.'#1091#1095#1088#1077#1078#1076'.)'
+            DataBinding.FieldName = 'OKPO_PartnerMedical'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object PartnerMedicalName: TcxGridDBColumn
             Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077
@@ -194,6 +210,14 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object OKPO_Department: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054' ('#1044#1054#1047')'
+            DataBinding.FieldName = 'OKPO_Department'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object DepartmentName: TcxGridDBColumn
             Caption = #1044#1077#1087#1072#1088#1090#1072#1084#1077#1085#1090' '#1086#1093#1088#1072#1085#1099' '#1079#1076#1086#1088#1086#1074#1100#1103

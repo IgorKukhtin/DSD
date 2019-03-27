@@ -1,31 +1,32 @@
 inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
   Caption = #1047#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1074#1088#1077#1084#1077#1085#1080' '#1087#1088#1080#1093#1086#1076#1072' '#1085#1072' '#1088#1072#1073#1086#1090#1091' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1075#1088#1072#1092#1080#1082#1072
-  ClientHeight = 318
-  ClientWidth = 792
+  ClientHeight = 467
+  ClientWidth = 800
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 808
-  ExplicitHeight = 357
+  ExplicitWidth = 816
+  ExplicitHeight = 506
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 75
-    Width = 792
-    Height = 243
+    Width = 800
+    Height = 392
     TabOrder = 5
     ExplicitTop = 75
-    ExplicitWidth = 792
-    ExplicitHeight = 243
-    ClientRectBottom = 243
-    ClientRectRight = 792
+    ExplicitWidth = 800
+    ExplicitHeight = 392
+    ClientRectBottom = 392
+    ClientRectRight = 800
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 792
-      ExplicitHeight = 243
+      ExplicitWidth = 800
+      ExplicitHeight = 392
       inherited cxGrid: TcxGrid
-        Width = 792
-        Height = 243
-        ExplicitWidth = 792
-        ExplicitHeight = 243
+        Width = 800
+        Height = 217
+        Align = alTop
+        ExplicitWidth = 800
+        ExplicitHeight = 217
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.Footer = False
           Styles.Content = nil
@@ -64,23 +65,36 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
           Styles.Header = dmMain.cxContentStyle
           Bands = <
             item
+              Caption = #1043#1088#1072#1092#1080#1082' '#1088#1072#1073#1086#1090#1099' '#1087#1086' '#1076#1085#1103#1084
               FixedKind = fkLeft
-              Width = 227
+              Styles.Header = dmMain.cxFooterStyle
+              Width = 259
             end
             item
               Caption = #1055#1077#1088#1080#1086#1076
               Width = 55
             end>
-          object WhoInput: TcxGridDBBandedColumn
-            Caption = #1054#1090#1084#1077#1090#1082#1080
-            DataBinding.FieldName = 'WhoInput'
+          object Note: TcxGridDBBandedColumn
+            Caption = #1044#1072#1090#1099' '#1090#1077#1082#1091#1097#1077#1075#1086' '#1084#1077#1089#1103#1094#1072
+            DataBinding.FieldName = 'Note'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 220
+            Width = 239
             Position.BandIndex = 0
             Position.ColIndex = 0
             Position.RowIndex = 0
+          end
+          object NoteUser: TcxGridDBBandedColumn
+            Caption = #1044#1072#1090#1099' '#1089#1083#1077#1076#1091#1102#1097#1077#1075#1086' '#1084#1077#1089#1103#1094#1072
+            DataBinding.FieldName = 'NoteUser'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Styles.Header = dmMain.cxHeaderL4Style
+            Width = 240
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 1
           end
           object Value: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Value'
@@ -94,9 +108,166 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
+          object ValueUser: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'ValueUser'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            MinWidth = 45
+            Styles.Header = dmMain.cxHeaderL4Style
+            Width = 65
+            Position.BandIndex = 1
+            Position.ColIndex = 0
+            Position.RowIndex = 1
+          end
+          object Color_Calc: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_Calc'
+            Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+          object Color_CalcFont: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_CalcFont'
+            Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object Color_CalcFontUser: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_CalcFont'
+            Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
         end
         inherited cxGridLevel: TcxGridLevel
           GridView = cxGridDBBandedTableView1
+        end
+      end
+      object cxGridSubstitution: TcxGrid
+        Left = 0
+        Top = 217
+        Width = 800
+        Height = 175
+        Align = alClient
+        PopupMenu = PopupMenu
+        TabOrder = 1
+        ExplicitTop = 223
+        object cxGridDBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = MasterDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Inserting = False
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+        end
+        object cxGridDBBandedTableViewSubstitution: TcxGridDBBandedTableView
+          Navigator.Buttons.CustomButtons = <>
+          Navigator.Buttons.First.Visible = True
+          Navigator.Buttons.PriorPage.Visible = True
+          Navigator.Buttons.Prior.Visible = True
+          Navigator.Buttons.Next.Visible = True
+          Navigator.Buttons.NextPage.Visible = True
+          Navigator.Buttons.Last.Visible = True
+          Navigator.Buttons.Insert.Visible = True
+          Navigator.Buttons.Append.Visible = False
+          Navigator.Buttons.Delete.Visible = True
+          Navigator.Buttons.Edit.Visible = True
+          Navigator.Buttons.Post.Visible = True
+          Navigator.Buttons.Cancel.Visible = True
+          Navigator.Buttons.Refresh.Visible = True
+          Navigator.Buttons.SaveBookmark.Visible = True
+          Navigator.Buttons.GotoBookmark.Visible = True
+          Navigator.Buttons.Filter.Visible = True
+          DataController.DataSource = SubstitutionDS
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          OptionsSelection.CellSelect = False
+          OptionsView.GroupByBox = False
+          Styles.Content = dmMain.cxContentStyle
+          Styles.Inactive = dmMain.cxSelection
+          Styles.Selection = dmMain.cxSelection
+          Styles.Header = dmMain.cxContentStyle
+          Bands = <
+            item
+              Caption = #1043#1088#1072#1092#1080#1082' '#1087#1086#1076#1084#1077#1085
+              FixedKind = fkLeft
+              Styles.Header = dmMain.cxFooterStyle
+              Width = 259
+            end
+            item
+              Caption = #1055#1077#1088#1080#1086#1076
+              Width = 55
+            end>
+          object Substitution_Note: TcxGridDBBandedColumn
+            Caption = #1055#1077#1088#1080#1086#1076
+            DataBinding.FieldName = 'Note'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object Substitution_UnitName: TcxGridDBBandedColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 193
+            Position.BandIndex = 0
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object Substitution_Value: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Value'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            MinWidth = 45
+            Options.Editing = False
+            Width = 65
+            Position.BandIndex = 1
+            Position.ColIndex = 0
+            Position.RowIndex = 0
+          end
+          object Substitution_ValueNext: TcxGridDBBandedColumn
+            Caption = ' '
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Styles.Header = dmMain.cxHeaderL4Style
+            Position.BandIndex = 1
+            Position.ColIndex = 0
+            Position.RowIndex = 1
+          end
+          object Substitution_Color_CalcFont: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_CalcFont'
+            Visible = False
+            Position.BandIndex = 0
+            Position.ColIndex = 1
+            Position.RowIndex = 0
+          end
+        end
+        object cxGridLevelSubstitution: TcxGridLevel
+          GridView = cxGridDBBandedTableViewSubstitution
         end
       end
     end
@@ -104,7 +275,7 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
   object Panel: TPanel [1]
     Left = 0
     Top = 0
-    Width = 792
+    Width = 800
     Height = 49
     Align = alTop
     ShowCaption = False
@@ -182,14 +353,20 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
         DataSet = HeaderCDS
       end
       item
+        DataSet = HeaderUserCDS
+      end
+      item
         DataSet = MasterCDS
+      end
+      item
+        DataSet = SubstitutionCDS
       end>
     OutputType = otMultiDataSet
     Left = 88
     Top = 104
   end
   inherited BarManager: TdxBarManager
-    Left = 168
+    Left = 152
     Top = 104
     DockControlHeights = (
       0
@@ -227,8 +404,8 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
         Value = '1'
         MultiSelectSeparator = ','
       end>
-    Left = 256
-    Top = 104
+    Left = 288
+    Top = 56
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_MovementItem_EmployeeSchedule_User'
@@ -310,7 +487,13 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = Value
+        ValueColumn = Color_CalcFont
+        BackGroundValueColumn = Color_Calc
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
@@ -318,6 +501,80 @@ inherited EmployeeScheduleUserForm: TEmployeeScheduleUserForm
     HeaderColumnName = 'ValueField'
     TemplateColumn = Value
     Left = 464
-    Top = 168
+    Top = 176
+  end
+  object HeaderUserCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 600
+    Top = 96
+  end
+  object CrossDBViewUserAddOn: TCrossDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBBandedTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    HeaderDataSet = HeaderUserCDS
+    HeaderColumnName = 'ValueField'
+    TemplateColumn = ValueUser
+    Left = 600
+    Top = 176
+  end
+  object SubstitutionDS: TDataSource
+    DataSet = SubstitutionCDS
+    Left = 360
+    Top = 360
+  end
+  object SubstitutionCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 360
+    Top = 304
+  end
+  object CrossDBViewAddOnSubstitutionNext: TCrossDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBBandedTableViewSubstitution
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    HeaderDataSet = HeaderUserCDS
+    HeaderColumnName = 'ValueField'
+    TemplateColumn = Substitution_ValueNext
+    Left = 664
+    Top = 296
+  end
+  object CrossDBViewAddOnSubstitution: TCrossDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBBandedTableViewSubstitution
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <
+      item
+        ColorColumn = Substitution_Value
+        ValueColumn = Substitution_Color_CalcFont
+        ColorValueList = <>
+      end>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    HeaderDataSet = HeaderCDS
+    HeaderColumnName = 'ValueField'
+    TemplateColumn = Substitution_Value
+    Left = 488
+    Top = 296
   end
 end

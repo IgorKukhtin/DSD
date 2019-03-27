@@ -68,6 +68,9 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    spChecked: TdsdStoredProc;
+    actChecked: TdsdExecStoredProc;
+    bbChecked: TdxBarButton;
   private
     { Private declarations }
   public
