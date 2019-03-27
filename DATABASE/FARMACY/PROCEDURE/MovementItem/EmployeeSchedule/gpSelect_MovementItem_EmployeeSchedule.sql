@@ -284,8 +284,8 @@ BEGIN
 
 
        OPEN cur3 FOR
-       WITH tmPersonal_View AS (SELECT DISTINCT
-                                       Object_User.Id                      AS UserID
+       WITH tmPersonal_View AS (SELECT ROW_NUMBER() OVER (PARTITION BY Object_User.Id ORDER BY Object_Personal_View.IsErased) AS Ord
+                                     , Object_User.Id                      AS UserID
                                      , Object_Personal_View.MemberId       AS MemberId
                                      , Object_Personal_View.PositionName   AS PositionName
                                 FROM Object AS Object_User
@@ -515,6 +515,7 @@ BEGIN
                                          FROM MovementItem
                                          WHERE MovementItem.MovementId = inMovementId
                                            AND MovementItem.DescId = zc_MI_Master())
+         AND tmPersonal_View.Ord = 1
        UNION ALL
 
        SELECT
@@ -789,7 +790,10 @@ BEGIN
                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
             LEFT JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId
 
-            LEFT JOIN tmPersonal_View AS Personal_View ON Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
+            LEFT JOIN tmPersonal_View AS Personal_View 
+                                      ON Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
+                                     AND Personal_View.Ord = 1 
+                                                    
 
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnserUnit.UnitID
 
@@ -814,8 +818,8 @@ BEGIN
          AND (MovementItem.IsErased = FALSE OR inIsErased = TRUE);
      ELSE
        OPEN cur3 FOR
-       WITH tmPersonal_View AS (SELECT DISTINCT
-                                       Object_User.Id                      AS UserID
+       WITH tmPersonal_View AS (SELECT ROW_NUMBER() OVER (PARTITION BY Object_User.Id ORDER BY Object_Personal_View.IsErased) AS Ord
+                                     , Object_User.Id                      AS UserID
                                      , Object_Personal_View.MemberId       AS MemberId
                                      , Object_Personal_View.PositionName   AS PositionName
                                 FROM Object AS Object_User
@@ -1100,7 +1104,9 @@ BEGIN
                                 AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
             LEFT JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId
 
-            LEFT JOIN tmPersonal_View AS Personal_View ON Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
+            LEFT JOIN tmPersonal_View AS Personal_View 
+                                      ON Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
+                                     AND Personal_View.Ord = 1  
 
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnserUnit.UnitID
 
@@ -1141,4 +1147,4 @@ ALTER FUNCTION gpSelect_MovementItem_EmployeeSchedule (Integer, TDateTime, Boole
 
 -- тест
 --
-select * from gpSelect_MovementItem_EmployeeSchedule(inMovementId := 12604227 , inDate := ('01.04.2019')::TDateTime , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '4183126');
+select * from gpSelect_MovementItem_EmployeeSchedule(inMovementId := 12604227 , inDate := ('01.04.2019')::TDateTime , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '4183126');
