@@ -47,8 +47,9 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
     vbUserId := inSession::Integer;
     
-    vbStartDate := inStartDate - INTERVAL '1 YEAR';
+    vbStartDate := inStartDate - INTERVAL '1 YEAR' + INTERVAL '1 DAY'; --vbStartDate := inStartDate - INTERVAL '1 YEAR';
     vbEndDate   := inStartDate;
+
     -- кол-во мес€цев после чего положен отпуск - 1 отпуск - после 6 м. непрерывного стажа
     vbMonthHoliday := 6;
     -- кол-во положенных дней отпуска
@@ -58,7 +59,7 @@ BEGIN
     RETURN QUERY
 
     WITH
-
+    -- сотрудники
     tmpMemberPersonal AS (SELECT lfSelect.MemberId
                                , lfSelect.PersonalId
                                , lfSelect.UnitId
@@ -69,7 +70,7 @@ BEGIN
                             AND (lfSelect.MemberId = inMemberId OR inMemberId = 0)
                             AND (lfSelect.UnitId = inUnitId OR inUnitId = 0)
                           )
-
+    -- сотрудники дата приема , увольнени€
   , tmpPersonal AS (SELECT Object_Personal_View.*
                          , CASE WHEN Object_Personal_View.DateIn < vbStartDate THEN vbStartDate ELSE Object_Personal_View.DateIn END AS DateIn_Calc      -- 
                          , CASE WHEN Object_Personal_View.isDateOut = FALSE THEN vbEndDate ELSE Object_Personal_View.DateOut_user END AS DateOut_Calc  -- CURRENT_DATE  -- если дата увольнени€ пута€ ставим = дате форм. отчета, дл€ расчета отр. мес€цев на дату форм. отчета
@@ -82,6 +83,7 @@ BEGIN
                    )
   -- вычисл€ем интервалы непрерывной работы более 6 мес€цев
   , tmp1 (MemberId, DateIn_Calc, ord) AS
+         -- получем нач.дату интервалов работы
          (SELECT t1.MemberId
                , min(t1.DateIn_Calc) AS DateIn_Calc
                , row_number() over (partition by t1.MemberId order by min(t1.DateIn_Calc))
@@ -91,6 +93,7 @@ BEGIN
           GROUP BY t1.DateIn_Calc, t1.MemberId
          )
   , tmp2 (MemberId, DateOut_Calc, Ord) AS
+         -- определ€ем дату окончани€ интервалов работы 
          (SELECT t1.MemberId
                , min(t1.DateOut_Calc) AS DateOut_Calc
                , row_number() over (partition by t1.MemberId  order by min(t1.DateOut_Calc)) AS Ord
@@ -99,11 +102,12 @@ BEGIN
           WHERE t2.MemberId IS NULL
           GROUP BY t1.DateOut_Calc, t1.MemberId
          )
+   -- расчет отработанных мес€цев и календарных дней
   , tmpWork AS (SELECT tmp.MemberId
                      , SUM (tmp.Month_work)   AS Month_work
                      , SUM (tmp.Day_calendar) AS Day_calendar
                 FROM (SELECT tmp1.MemberId
-
+                            -- кол-во календарных дней без праздничных
                            , (SELECT COUNT (*) - SUM (CASE WHEN gpSelect.isHoliday = TRUE THEN 1 ELSE 0 END)
                               FROM gpSelect_Object_Calendar (inStartDate := tmp1.DateIn_Calc, inEndDate := tmp2.DateOut_Calc - INTERVAL '1 DAY', inSession := inSession) AS gpSelect) :: TFloat AS Day_calendar
 
@@ -116,20 +120,13 @@ BEGIN
                       ) AS tmp
                 GROUP BY tmp.MemberId
                 )
-                   
-/*
-  , tmpWork AS (SELECT *
-                     , DATE_PART('YEAR', AGE (tmpPersonal.DateOut_Calc, tmpPersonal.DateIn_Calc)) * 12 
-                     + DATE_PART('MONTH', AGE (tmpPersonal.DateOut_Calc, tmpPersonal.DateIn_Calc)) AS Month_work  -- кол-во отработанных мес€цев
-                     , AGE (tmpPersonal.DateOut_Calc, tmpPersonal.DateIn) AS Age_work                                                                             -- итого отработано
-                FROM tmpPersonal
-                )
-                */
-
+   -- колво положенных дней отпуска  (14 дней в год, 1 отпуск - после 6 м. непрерывного стажа)      
+   -- считаем положенные дни отпуска, если отработано более 6 мес€цев          
   , tmpVacation AS (SELECT *
-                         , CASE WHEN tmpWork.Month_work >= vbMonthHoliday THEN CAST (vbDayHoliday * tmpWork.Month_work / 12 AS NUMERIC (16,0)) ELSE 0 END  AS Day_vacation -- колво положенных дней отпуска  (14 дней в год, 1 отпуск - после 6 м. непрерывного стажа)
+                         , CASE WHEN tmpWork.Month_work >= vbMonthHoliday THEN CAST (vbDayHoliday * tmpWork.Month_work / 12 AS NUMERIC (16,0)) ELSE 0 END  AS Day_vacation 
                     FROM tmpWork
                    )
+                   
   --выбираем документы отпусков
   , tmpMov_Holiday AS (SELECT Movement.Id
                             , Movement.InvNumber
@@ -165,7 +162,8 @@ BEGIN
                          AND Movement.StatusId = zc_Enum_Status_Complete()
                          AND Movement.OperDate BETWEEN vbStartDate AND vbEndDate
                       )
-  -- считаем кол-во дней пердоставленного отпуска
+                      
+  -- считаем кол-во дней предоставленного отпуска, по документам отпусков
   , tmpHoliday AS (SELECT CASE WHEN inisDetail = TRUE THEN tmpData.InvNumber          ELSE ''   END :: TVarChar  AS InvNumber
                         , CASE WHEN inisDetail = TRUE THEN tmpData.OperDate           ELSE NULL END :: TDateTime AS OperDate
                         , CASE WHEN inisDetail = TRUE THEN tmpData.OperDateStart  ELSE NULL END :: TDateTime AS OperDateStart
@@ -186,7 +184,8 @@ BEGIN
                           , tmpData.MemberId
                    HAVING SUM (DATE_PART ('DAY', tmpData.BeginDateEnd - tmpData.BeginDateStart) +1 ) <> 0
                    )
-    -- св€зываемданные положенных дней отпуска и фоактич.
+    
+    -- св€зываем данные положенных(расчетных) дней отпуска и фактически полученные
     -- –езультат
 
     SELECT tmpVacation.MemberId
