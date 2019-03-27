@@ -71,7 +71,7 @@ BEGIN
                                     ) AS tmp
                                     INNER JOIN Movement ON Movement.Id = tmp.MovementId
                                                        AND Movement.DescId = zc_Movement_Sale()
-                                                       AND Movement.OperDate >= CURRENT_DATE - INTERVAL '8 MONTH'
+                                                       AND Movement.OperDate >= CURRENT_DATE - INTERVAL '12 MONTH'
                                                        AND Movement.StatusId <> zc_Enum_Status_Erased()
                               );
      ELSE -- по InvNumber, но для скорости ограничение - 4 MONTH
@@ -79,7 +79,7 @@ BEGIN
                                FROM Movement
                                WHERE Movement.InvNumber = TRIM (inBarCode)
                                  AND Movement.DescId = zc_Movement_Sale()
-                                 AND Movement.OperDate >= CURRENT_DATE - INTERVAL '8 MONTH'
+                                 AND Movement.OperDate >= CURRENT_DATE - INTERVAL '12 MONTH'
                                  AND Movement.StatusId <> zc_Enum_Status_Erased()
                               );
      END IF;

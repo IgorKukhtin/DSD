@@ -542,7 +542,7 @@ FROM Object_PartionGoods
 
 WHERE Object_PartionGoods.PeriodYear = 2019
 -- and Object_PartionGoods .MovementItemId = 1707494 
--- and Object_PartionGoods.OperPriceList <> MIFloat_OperPriceList.ValueData and ObjectHistory_PriceListItem.StartDate <> zc_DateStart()
+-- and Object_PartionGoods.OperPriceList <> MIFloat_OperPriceList.ValueData and ObjectHistory_PriceListItem.StartDate = zc_DateStart()
 -- and Object_PartionGoods .OperPriceList  <> ObjectHistoryFloat_PriceListItem_Value.ValueData
  and Object_PartionGoods .OperPrice  <> MIFloat_OperPrice.ValueData
 order by 3, Object_GoodsSize.ValueData

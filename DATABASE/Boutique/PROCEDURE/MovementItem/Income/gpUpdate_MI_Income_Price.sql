@@ -51,6 +51,12 @@ BEGIN
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), _tmpMI.Id, inOperPriceList)       -- сохранили свойство <Цена продажи >
      FROM _tmpMI;
 
+     -- сохранили свойства ВСЕХ строк документа приход с текущим товаром 
+     IF NOT EXISTS (SELECT 1 FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_ChangePercent() AND MF.ValueData <> 0)
+     THEN
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceJur(), _tmpMI.Id, inOperPrice)               -- сохранили свойство <Цена прихода >
+         FROM _tmpMI;
+     END IF;
      
      -- Здесь еще Update - Object_PartionGoods.OperPriceList
      PERFORM gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId         := NULL                  -- сам найдет нужный Id
@@ -84,8 +90,7 @@ BEGIN
      WHERE MovementItem.PartionId IN (SELECT _tmpMI.Id FROM _tmpMI)
        AND MovementItem.isErased = FALSE -- !!!только НЕ удаленные!!!
        -- AND MovementItem.DescId= ...   -- !!!любой Desc!!!
-     ORDER BY Movement.OperDate, Movement.Id
-     ;
+     ORDER BY Movement.OperDate, Movement.Id;
 
      -- 1.2. дальше перепроводим все док. где эта партия участвовала
      PERFORM CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN gpReComplete_Movement_ReturnIn (Movement.Id, inSession)
@@ -97,7 +102,7 @@ BEGIN
      WHERE MovementItem.PartionId IN (SELECT _tmpMI.Id FROM _tmpMI)
        AND MovementItem.isErased = FALSE -- !!!только НЕ удаленные!!!
        -- AND MovementItem.DescId= ...   -- !!!любой Desc!!!
-     ORDER BY Movement.OperDate, Movement.Id
+     ORDER BY Movement.OperDate, Movement.Id;
 
      -- 1.3. дальше перепроводим все док. где эта партия участвовала
      PERFORM CASE WHEN Movement.DescId = zc_Movement_GoodsAccount() THEN gpReComplete_Movement_GoodsAccount (Movement.Id, inSession)
@@ -109,7 +114,7 @@ BEGIN
      WHERE MovementItem.PartionId IN (SELECT _tmpMI.Id FROM _tmpMI)
        AND MovementItem.isErased = FALSE -- !!!только НЕ удаленные!!!
        -- AND MovementItem.DescId= ...   -- !!!любой Desc!!!
-     ORDER BY Movement.OperDate, Movement.Id
+     ORDER BY Movement.OperDate, Movement.Id;
 
 
      -- пересчитали Итоговые суммы по накладной
