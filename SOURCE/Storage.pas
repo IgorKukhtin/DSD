@@ -232,13 +232,22 @@ begin
     Instance.FReportList := TStringList.Create;
     Instance.FConnectionList := TConnectionList.Create;
 
-    if Pos('\farmacy_init.php', ConnectionPath) > 0 then
-      lConnectionPathRep := ReplaceStr(ConnectionPath, '\farmacy_init.php', '\farmacy_initRep.php')
-    else lConnectionPathRep := ReplaceStr(ConnectionPath, '\init.php', '\initRep.php');
+    if gc_ProgramName = 'FDemo.exe' then
+    begin
+      // !!! DEMO
+      Instance.FConnectionList.Add(TConnection.Create('http://farmacy-dev2.neboley.dp.ua', ctMain));
+      Instance.FConnectionList.Add(TConnection.Create('http://farmacy-dev2.neboley.dp.ua', ctReport));
+    end
+    else begin
 
-    Instance.FConnectionList.AddFromFile(ConnectionPath, ctMain);
-    if (lConnectionPathRep <> ConnectionPath) and FileExists(lConnectionPathRep) then
-      Instance.FConnectionList.AddFromFile(lConnectionPathRep, ctReport);
+      if Pos('\farmacy_init.php', ConnectionPath) > 0 then
+        lConnectionPathRep := ReplaceStr(ConnectionPath, '\farmacy_init.php', '\farmacy_initRep.php')
+      else lConnectionPathRep := ReplaceStr(ConnectionPath, '\init.php', '\initRep.php');
+
+      Instance.FConnectionList.AddFromFile(ConnectionPath, ctMain);
+      if (lConnectionPathRep <> ConnectionPath) and FileExists(lConnectionPathRep) then
+        Instance.FConnectionList.AddFromFile(lConnectionPathRep, ctReport);
+    end;
 
     if Instance.FConnectionList.Count = 0 then
       Instance.FConnectionList.Add(TConnection.Create('http://localhost/dsd/index.php', ctMain));

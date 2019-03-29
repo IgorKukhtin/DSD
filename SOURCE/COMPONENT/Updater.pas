@@ -18,7 +18,7 @@ implementation
 
 uses UnilWin, VCL.Dialogs, Controls, StdCtrls, FormStorage, SysUtils, forms,
      MessagesUnit, dsdDB, DB, Storage, UtilConst, Classes, ShellApi, Windows,
-     StrUtils;
+     StrUtils, CommonData;
 { TUpdater }
 
 class procedure TUpdater.AutomaticCheckConnect;
@@ -29,6 +29,10 @@ var StoredProc: TdsdStoredProc;
     i:Integer;
     fFind:Boolean;
 begin
+  // !!! DEMO
+  if gc_ProgramName = 'FDemo.exe' then exit;
+
+
   StoredProc := TdsdStoredProc.Create(nil);
   try
     StoredProc.Params.AddParam('inConstName', ftString, ptInput, 'zc_Enum_GlobalConst_ConnectParam');
