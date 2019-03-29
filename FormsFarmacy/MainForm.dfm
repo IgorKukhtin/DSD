@@ -2810,6 +2810,9 @@ inherited MainForm: TMainForm
       object miUnit_MCS: TMenuItem
         Action = actUnit_MCS
       end
+      object miRetail: TMenuItem
+        Action = actRetail
+      end
       object N145: TMenuItem
         Action = actProvinceCity
       end
@@ -3335,28 +3338,25 @@ inherited MainForm: TMainForm
         object miMeasure: TMenuItem [2]
           Action = actMeasure
         end
-        object miRetail: TMenuItem [3]
-          Action = actRetail
-        end
-        object N121: TMenuItem [4]
+        object N121: TMenuItem [3]
           Action = actConditionsKeep
         end
-        object miDiffKind: TMenuItem [5]
+        object miDiffKind: TMenuItem [4]
           Action = actDiffKind
         end
-        object N8: TMenuItem [6]
+        object N8: TMenuItem [5]
           Caption = '-'
         end
-        object N50: TMenuItem [7]
+        object N50: TMenuItem [6]
           Action = actCashRegister
         end
-        object POS1: TMenuItem [8]
+        object POS1: TMenuItem [7]
           Action = actBankPOSTerminal
         end
-        object POS2: TMenuItem [9]
+        object POS2: TMenuItem [8]
           Action = actUnitBankPOSTerminal
         end
-        object N20: TMenuItem [10]
+        object N20: TMenuItem [9]
           Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
           object N21: TMenuItem
             Action = actAccountGroup
@@ -3392,13 +3392,13 @@ inherited MainForm: TMainForm
             Action = actProfitLoss
           end
         end
-        object N6: TMenuItem [11]
+        object N6: TMenuItem [10]
           Caption = '-'
         end
-        object N97: TMenuItem [12]
+        object N97: TMenuItem [11]
           Action = actColor
         end
-        object N74: TMenuItem [13]
+        object N74: TMenuItem [12]
           Action = actForms
         end
         object miTest: TMenuItem
