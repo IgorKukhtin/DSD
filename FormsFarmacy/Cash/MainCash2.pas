@@ -370,6 +370,9 @@ type
     spDoesNotShare: TdsdStoredProc;
     spInsert_MovementItem_PUSH: TdsdStoredProc;
     Multiplicity: TcxGridDBColumn;
+    actOpenCashGoodsOneToExpirationDate: TdsdOpenForm;
+    actCashGoodsOneToExpirationDate: TAction;
+    actCashGoodsOneToExpirationDate1: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -462,6 +465,7 @@ type
     procedure actSpecCorrExecute(Sender: TObject);
     procedure TimerPUSHTimer(Sender: TObject);
     procedure actDoesNotShareExecute(Sender: TObject);
+    procedure actCashGoodsOneToExpirationDateExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -563,6 +567,9 @@ type
     // Проверка доступности работы с соц. проектами
     function CheckSP : boolean;
 
+    // Уменьшение остатка в наличии по партиям
+    procedure UpdateRemainsGoodsToExpirationDate;
+
   public
     procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String; var AOperDateSP : TDateTime);
     procedure SetPromoCode(APromoCodeId: Integer; APromoName, APromoCodeGUID: String;
@@ -583,7 +590,7 @@ var
 
   MutexDBF, MutexDBFDiff, MutexVip, MutexRemains, MutexAlternative, MutexAllowedConduct,
   MutexDiffKind, MutexDiffCDS, MutexEmployeeWorkLog, MutexBankPOSTerminal,
-  MutexUnitConfig, MutexTaxUnitNight : THandle;  // MutexAllowedConduct только 2 форма
+  MutexUnitConfig, MutexTaxUnitNight, MutexGoods, MutexGoodsExpirationDate : THandle;  // MutexAllowedConduct только 2 форма
 
   LastErr: Integer;
   FM_SERVISE: Integer;  // для передачи сообщений между приложение и сервисом // только 2 форма
@@ -599,7 +606,7 @@ implementation
 
 uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog, CashWork, MessagesUnit,
      LocalWorkUnit, Splash, DiscountService, MainCash, UnilWin, ListDiff, ListGoods,
-	   MediCard.Intf, PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog;
+	   MediCard.Intf, PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog, GoodsToExpirationDate;
 
 const
   StatusUnCompleteCode = 1;
@@ -823,6 +830,37 @@ end;
 procedure TMainCashForm2.actCalcTotalSummExecute(Sender: TObject);
 begin
   CalcTotalSumm;
+end;
+
+procedure TMainCashForm2.actCashGoodsOneToExpirationDateExecute(
+  Sender: TObject);
+  var bLocal : boolean;
+begin
+
+  bLocal := True;
+  if not gc_User.Local then
+  begin
+    try
+      if CheckGrid.IsFocused then
+        actOpenCashGoodsOneToExpirationDate.GuiParams.ParamByName('GoodsId').Value := CheckCDS.FieldByName('GoodsId').AsInteger
+      else actOpenCashGoodsOneToExpirationDate.GuiParams.ParamByName('GoodsId').Value := RemainsCDS.FieldByName('ID').AsInteger;
+      actOpenCashGoodsOneToExpirationDate.Execute;
+    except
+      bLocal := False;
+    end;
+  end else bLocal := False;
+
+  if not bLocal then
+  begin
+    with TGoodsToExpirationDateForm.Create(nil) do
+    try
+      if CheckGrid.IsFocused then
+        GoodsToExpirationDateExecute(CheckCDS.FieldByName('GoodsId').AsInteger, CheckCDS.FieldByName('GoodsCode').AsInteger, CheckCDS.FieldByName('GoodsName').AsString)
+      else  GoodsToExpirationDateExecute(RemainsCDS.FieldByName('ID').AsInteger, RemainsCDS.FieldByName('GoodsCode').AsInteger, RemainsCDS.FieldByName('GoodsName').AsString);
+    finally
+       Free;
+    end;
+  end;
 end;
 
 procedure TMainCashForm2.actCashWorkExecute(Sender: TObject);
@@ -1660,6 +1698,8 @@ begin
       if fErr = true
       then ShowMessage ('Ошибка.Чек распечатан.Продажа не сохранена')
       else begin
+      Add_Log('Уменьшение остатков по партиям');
+      UpdateRemainsGoodsToExpirationDate;
       Add_Log('Сохранение чека');
       ShapeState.Brush.Color := clRed;
       ShapeState.Repaint;
@@ -3343,6 +3383,10 @@ begin
   LastErr := GetLastError;
   MutexTaxUnitNight := CreateMutex(nil, false, 'farmacycashMutexTaxUnitNight');
   LastErr := GetLastError;
+  MutexGoodsExpirationDate := CreateMutex(nil, false, 'farmacycashMutexGoodsExpirationDate');
+  LastErr := GetLastError;
+  MutexGoods := CreateMutex(nil, false, 'farmacycashMutexGoods');
+  LastErr := GetLastError;
   DiscountServiceForm:= TDiscountServiceForm.Create(Self);
 
   //сгенерили гуид для определения сессии
@@ -4280,6 +4324,8 @@ begin
   CloseHandle(MutexBankPOSTerminal);
   CloseHandle(MutexUnitConfig);
   CloseHandle(MutexTaxUnitNight);
+  CloseHandle(MutexGoodsExpirationDate);
+  CloseHandle(MutexGoods);
 end;
 
 procedure TMainCashForm2.ParentFormKeyDown(Sender: TObject; var Key: Word;
@@ -4856,6 +4902,61 @@ begin
     CheckCDS.Filtered := True;
     if AGoodsId <> 0 then
       CheckCDS.Locate('GoodsId',AGoodsId,[]);
+    CheckCDS.EnableControls;
+  end;
+end;
+
+procedure TMainCashForm2.UpdateRemainsGoodsToExpirationDate;
+  var ListGoodsCDS: TClientDataSet; nAmount : Currency;
+begin
+  if not FileExists(GoodsExpirationDate_lcl) then Exit;
+
+  CheckCDS.DisableControls;
+  try
+
+    ListGoodsCDS := TClientDataSet.Create(Nil);
+    ListGoodsCDS.IndexFieldNames := 'ExpirationDate';
+
+    WaitForSingleObject(MutexGoodsExpirationDate, INFINITE);
+    try
+      if FileExists(GoodsExpirationDate_lcl) then LoadLocalData(ListGoodsCDS, GoodsExpirationDate_lcl);
+      if not ListGoodsCDS.Active then ListGoodsCDS.Open;
+
+      CheckCDS.First;
+      while not CheckCDS.eof do
+      begin
+        if CheckCDS.FieldByName('Amount').asCurrency > 0 then
+        Begin
+
+          nAmount := CheckCDS.FieldByName('Amount').asCurrency;
+          ListGoodsCDS.Filter := 'Id = ' + CheckCDS.FieldByName('GoodsId').AsString;
+          ListGoodsCDS.Filtered := True;
+          ListGoodsCDS.First;
+
+          while (nAmount > 0) and not RemainsCDS.Eof  do
+          Begin
+            if nAmount >= ListGoodsCDS.FieldByName('Amount').asCurrency then
+            begin
+              nAmount := nAmount - ListGoodsCDS.FieldByName('Amount').asCurrency;
+              ListGoodsCDS.Delete;
+              ListGoodsCDS.First;
+            end else
+            begin
+              ListGoodsCDS.Edit;
+              ListGoodsCDS.FieldByName('Amount').asCurrency := ListGoodsCDS.FieldByName('Amount').asCurrency - nAmount;
+              ListGoodsCDS.Post;
+              nAmount := 0;
+            end;
+          End;
+        End;
+        CheckCDS.Next;
+      end;
+      SaveLocalData(ListGoodsCDS,GoodsExpirationDate_lcl);
+    finally
+      ReleaseMutex(MutexGoodsExpirationDate);
+    end;
+  finally
+    ListGoodsCDS.Free;
     CheckCDS.EnableControls;
   end;
 end;

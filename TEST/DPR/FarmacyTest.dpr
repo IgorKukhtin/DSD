@@ -670,7 +670,8 @@ uses
   PUSHJournal in '..\..\FormsFarmacy\Document\PUSHJournal.pas' {PUSHJournalForm: TParentForm},
   Juridical in '..\..\FormsFarmacy\Guides\Juridical.pas' {JuridicalForm: TParentForm},
   Retail in '..\..\FormsFarmacy\Guides\Retail.pas' {RetailForm: TParentForm},
-  RetailEdit in '..\..\FormsFarmacy\Guides\RetailEdit.pas' {RetailEditForm: TParentForm};
+  RetailEdit in '..\..\FormsFarmacy\Guides\RetailEdit.pas' {RetailEditForm: TParentForm},
+  CashGoodsOneToExpirationDate in '..\..\FormsFarmacy\Cash\CashGoodsOneToExpirationDate.pas' {CashGoodsOneToExpirationDate: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

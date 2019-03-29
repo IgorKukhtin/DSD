@@ -308,6 +308,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccommodationEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccommodationEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashGoodsOneToExpirationDateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCashGoodsOneToExpirationDateForm');
 end;
 
 procedure TLoadFormTest.LoadCalendarFormTest;

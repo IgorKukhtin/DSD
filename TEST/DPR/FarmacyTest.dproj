@@ -2273,6 +2273,10 @@
 				<Form>RetailEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Cash\CashGoodsOneToExpirationDate.pas">
+				<Form>CashGoodsOneToExpirationDate</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

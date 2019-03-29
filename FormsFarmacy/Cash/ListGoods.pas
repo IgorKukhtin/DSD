@@ -106,8 +106,6 @@ type
     procedure FillingListlDiffNoSendCDS;
   end;
 
-  var MutexGoods: THandle;
-
 implementation
 
 {$R *.dfm}

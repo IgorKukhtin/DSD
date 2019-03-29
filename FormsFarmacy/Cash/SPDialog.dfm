@@ -55,7 +55,7 @@ inherited SPDialogForm: TSPDialogForm
       Width = 265
     end
     object cxLabel13: TcxLabel
-      Left = 433
+      Left = 473
       Top = 54
       Caption = #1044#1072#1090#1072' '#1088#1077#1094#1077#1087#1090#1072
     end
@@ -80,10 +80,10 @@ inherited SPDialogForm: TSPDialogForm
     end
     object edInvNumberSP: TcxTextEdit
       Left = 297
-      Top = 74
+      Top = 76
       Properties.ReadOnly = False
       TabOrder = 5
-      Width = 116
+      Width = 170
     end
     object edMedicSP: TcxButtonEdit
       Left = 16
@@ -100,8 +100,8 @@ inherited SPDialogForm: TSPDialogForm
       Width = 265
     end
     object edOperDateSP: TcxDateEdit
-      Left = 433
-      Top = 74
+      Left = 473
+      Top = 76
       EditValue = 42261d
       Properties.ReadOnly = False
       Properties.SaveTime = False

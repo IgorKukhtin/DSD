@@ -792,6 +792,7 @@ BEGIN
 
             LEFT JOIN tmPersonal_View AS Personal_View 
                                       ON Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
+                                     AND COALESCE (Personal_View.UserID, MovementItem.ObjectId) =  MovementItem.ObjectId
                                      AND Personal_View.Ord = 1 
                                                     
 
@@ -1106,6 +1107,7 @@ BEGIN
 
             LEFT JOIN tmPersonal_View AS Personal_View 
                                       ON Personal_View.MemberId = ObjectLink_User_Member.ChildObjectId
+                                     AND COALESCE (Personal_View.UserID, MovementItem.ObjectId) =  MovementItem.ObjectId
                                      AND Personal_View.Ord = 1  
 
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnserUnit.UnitID
@@ -1146,5 +1148,4 @@ ALTER FUNCTION gpSelect_MovementItem_EmployeeSchedule (Integer, TDateTime, Boole
 */
 
 -- тест
---
-select * from gpSelect_MovementItem_EmployeeSchedule(inMovementId := 12604227 , inDate := ('01.04.2019')::TDateTime , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '4183126');
+-- select * from gpSelect_MovementItem_EmployeeSchedule(inMovementId := 12604227 , inDate := ('01.04.2019')::TDateTime , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '4183126');

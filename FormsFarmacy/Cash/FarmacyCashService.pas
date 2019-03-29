@@ -177,6 +177,8 @@ type
     procedure SaveBankPOSTerminal;
     procedure SaveUnitConfig;
     procedure SaveTaxUnitNight;
+    procedure SaveGoodsExpirationDate;
+
     procedure SendZReport;
     procedure SendEmployeeWorkLog;
     procedure SecureUpdateVersion;
@@ -205,7 +207,7 @@ var
   AllowedConduct : Boolean = false;
   MutexDBF, MutexDBFDiff,  MutexVip, MutexRemains, MutexAlternative, MutexRefresh,
   MutexAllowedConduct, MutexGoods, MutexDiffCDS, MutexDiffKind, MutexEmployeeWorkLog,
-  MutexBankPOSTerminal, MutexUnitConfig, MutexTaxUnitNight: THandle;
+  MutexBankPOSTerminal, MutexUnitConfig, MutexTaxUnitNight, MutexGoodsExpirationDate: THandle;
   LastErr: Integer;
 
   FM_SERVISE: Integer;
@@ -431,6 +433,8 @@ begin
          SaveUnitConfig;
          //Получение ночных скидок
          SaveTaxUnitNight;
+         //Получение остатков по партиям
+         SaveGoodsExpirationDate;
          // Отправка сообщения приложению про надобность обновить остатки из файла
          PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
         end;
@@ -514,6 +518,8 @@ begin   //yes
           SaveUnitConfig;
           //Получение ночных скидок
           SaveTaxUnitNight;
+          //Получение остатков по партиям
+          SaveGoodsExpirationDate;
 
           PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 3);
           // Вывод уведомления сервиса
@@ -588,6 +594,10 @@ begin
   MutexUnitConfig := CreateMutex(nil, false, 'farmacycashMutexUnitConfig');
   LastErr := GetLastError;
   MutexTaxUnitNight := CreateMutex(nil, false, 'farmacycashMutexTaxUnitNight');
+  LastErr := GetLastError;
+  MutexGoodsExpirationDate := CreateMutex(nil, false, 'farmacycashMutexGoodsExpirationDate');
+  LastErr := GetLastError;
+  MutexGoods := CreateMutex(nil, false, 'farmacycashMutexGoods');
   LastErr := GetLastError;
   FHasError := false;
   //сгенерили гуид для определения сессии
@@ -1741,6 +1751,40 @@ begin
   end;
 end;
 
+//Получение остатков по партиям
+procedure TMainCashForm2.SaveGoodsExpirationDate;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  sp := TdsdStoredProc.Create(nil);
+  try
+    ds := TClientDataSet.Create(nil);
+    try
+      sp.OutputType := otDataSet;
+      sp.DataSet := ds;
+
+      sp.StoredProcName := 'gpSelect_CashGoodsToExpirationDate';
+      sp.Params.Clear;
+      sp.Execute;
+      Add_Log('Start MutexGoodsExpirationDate');
+      WaitForSingleObject(MutexGoodsExpirationDate, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+      try
+        SaveLocalData(ds,GoodsExpirationDate_lcl);
+      finally
+        Add_Log('End MutexGoodsExpirationDate');
+        ReleaseMutex(MutexGoodsExpirationDate);
+      end;
+
+    finally
+      ds.free;
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+
+
 procedure TMainCashForm2.SendZReport;
   var IdFTP : Tidftp;
       s, p: string; sl : TStringList;  i : integer;
@@ -2014,6 +2058,8 @@ begin
  CloseHandle(MutexBankPOSTerminal);
  CloseHandle(MutexUnitConfig);
  CloseHandle(MutexTaxUnitNight);
+ CloseHandle(MutexGoodsExpirationDate);
+ CloseHandle(MutexGoods);
 end;
 
 
