@@ -48,27 +48,45 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettings_Juridical(), ioId, inJuridicalId);
    -- сохранили связь с <>
-
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettings_Contract(), ioId, inContractId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettings_FileType(), ioId, inFileTypeId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettings_ImportType(), ioId, inImportTypeId);
    -- сохранили связь с <>
-
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettings_Email(), ioId, inEmailId);
    -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettings_ContactPerson(), ioId, inContactPersonId);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_ImportSettings_HDR(), ioId, inHDR);
 
    -- сохранили свойство <Много раз загружать прайс>
-
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ImportSettings_MultiLoad(), ioId, inIsMultiLoad);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjecTFloat(zc_ObjecTFloat_ImportSettings_StartRow(), ioId, inStartRow);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjecTFloat(zc_ObjecTFloat_ImportSettings_Time(), ioId, inTime);
 
-
+   IF COALESCE(inStartTime,'') <> '' 
+   THEN 
+       vbStartTime:= ( '' ||CURRENT_DATE::Date || ' '||inStartTime ::Time):: TDateTime;
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate(zc_ObjectDate_ImportSettings_StartTime(), ioId, vbStartTime);
+   END IF;
+   IF COALESCE(inEndTime,'') <> '' 
+   THEN 
+       vbEndTime  := ( '' ||CURRENT_DATE::Date || ' '||inEndTime ::Time):: TDateTime;
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectDate(zc_ObjectDate_ImportSettings_EndTime(), ioId, vbEndTime);
+   END IF;
    
    
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ImportSettings_Directory(), ioId, inDirectory);
 
+   PERFORM lpInsertUpdate_ObjectBlob(zc_ObjectBlob_ImportSettings_Query(), ioId, inQuery);
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

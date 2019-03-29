@@ -228,6 +228,9 @@ type
     N7: TMenuItem;
     actReport_ProfitDemoPeriod: TdsdOpenForm;
     miReport_ProfitDemoPeriod: TMenuItem;
+    miImportType: TMenuItem;
+    miImportSettings: TMenuItem;
+    N10: TMenuItem;
   private
     { Private declarations }
   public

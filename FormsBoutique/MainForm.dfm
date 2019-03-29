@@ -1515,7 +1515,16 @@ inherited MainForm: TMainForm
       object N2: TMenuItem [9]
         Caption = '-'
       end
-      inherited miProtocolAll: TMenuItem [10]
+      object miImportType: TMenuItem [10]
+        Action = actImportType
+      end
+      object miImportSettings: TMenuItem [11]
+        Action = actImportSettings
+      end
+      object N10: TMenuItem [12]
+        Caption = '-'
+      end
+      inherited miProtocolAll: TMenuItem [13]
         inherited miProtocol: TMenuItem
           Visible = False
         end

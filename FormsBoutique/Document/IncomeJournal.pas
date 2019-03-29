@@ -25,7 +25,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
-  dsdGuides, cxButtonEdit, cxCheckBox;
+  dsdGuides, cxButtonEdit, cxCheckBox, ExternalLoad;
 
 type
   TIncomeJournalForm = class(TParentForm)
@@ -117,6 +117,12 @@ type
     PeriodChoice1: TPeriodChoice;
     spGet_Current_Date: TdsdStoredProc;
     ChangePercent: TcxGridDBColumn;
+    spGetImportSettingId: TdsdStoredProc;
+    actGetImportSetting: TdsdExecStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    macStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
+    spGetImportSettingId_O: TdsdStoredProc;
   private
   public
   end;

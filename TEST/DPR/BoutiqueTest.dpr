@@ -315,7 +315,9 @@ uses
   Report_ProfitLossPeriodDialog in '..\..\FormsBoutique\Report\Report_ProfitLossPeriodDialog.pas' {Report_ProfitLossPeriodDialogForm: TParentForm},
   ProfitLossDemo in '..\..\FormsBoutique\Guides\ProfitLossDemo.pas' {ProfitLossDemoForm: TParentForm},
   Report_ProfitDemo in '..\..\FormsBoutique\Report\Report_ProfitDemo.pas' {Report_ProfitDemoForm: TParentForm},
-  Report_ProfitDemoPeriod in '..\..\FormsBoutique\Report\Report_ProfitDemoPeriod.pas' {Report_ProfitDemoPeriodForm: TParentForm};
+  Report_ProfitDemoPeriod in '..\..\FormsBoutique\Report\Report_ProfitDemoPeriod.pas' {Report_ProfitDemoPeriodForm: TParentForm},
+  ImportType in '..\..\FormsBoutique\Import\ImportType.pas' {ImportTypeForm: TParentForm},
+  ImportSettings in '..\..\FormsBoutique\Import\ImportSettings.pas' {ImportSettingsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

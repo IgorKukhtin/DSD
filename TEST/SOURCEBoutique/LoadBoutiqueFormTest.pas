@@ -58,7 +58,11 @@ type
     procedure LoadDiscountPeriodFormTest;
     procedure LoadDiscountPeriodItemFormTest;
     procedure LoadDiscountKindFormTest;
-
+    procedure LoadIncomeFormTest;
+    procedure LoadInfoMoneyFormTest;
+    procedure LoadInventoryFormTest;
+    procedure LoadImportSettingsFormTest;
+    procedure LoadImportTypeFormTest;
     procedure LoadFabrikaFormTest;
     procedure LoadGoodsFormTest;
     procedure LoadGoodsAccountFormTest;
@@ -68,9 +72,7 @@ type
     procedure LoadGoodsSizeFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsPrintFormTest;
-    procedure LoadIncomeFormTest;
-    procedure LoadInfoMoneyFormTest;
-    procedure LoadInventoryFormTest;
+
     procedure LoadJuridicalGroupFormTest;
     procedure LoadJuridicalFormTest;
     procedure LoadJuridicalBasisFormTest;
@@ -342,6 +344,20 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountPeriodGoodsItemEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountPeriodGoodsItemEditForm');
 
+end;
+
+procedure TLoadFormTest.LoadImportTypeFormTest;
+begin
+  // Типы импорта
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportTypeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TImportTypeForm');
+end;
+
+procedure TLoadFormTest.LoadImportSettingsFormTest;
+begin
+  // Настройки импорта
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportSettingsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TImportSettingsForm');
 end;
 
 procedure TLoadFormTest.LoadFabrikaFormTest;
