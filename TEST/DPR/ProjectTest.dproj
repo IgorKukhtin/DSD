@@ -3421,10 +3421,6 @@
 				<Form>DataTimeDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\GoodsByGoodsKind_VMC.pas">
-				<Form>GoodsByGoodsKind_VMCForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsByGoodsKind_VMCDialog.pas">
 				<Form>GoodsByGoodsKind_VMCDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -3640,6 +3636,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ReestrJournal_byReport.pas">
 				<Form>ReestrJournal_byReportForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsByGoodsKind_VMC.pas">
+				<Form>GoodsByGoodsKind_VMCForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

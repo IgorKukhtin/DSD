@@ -2,7 +2,6 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1058#1086#1074#1072#1088' '#1080' '#1042#1080#1076' '#1090#1086#1074#1072#1088#1072'> ('#1042#1052#1057')'
   ClientHeight = 420
   ClientWidth = 1030
-  ExplicitLeft = -27
   ExplicitWidth = 1046
   ExplicitHeight = 458
   PixelsPerInch = 96
@@ -427,7 +426,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Width = 81
           end
           object BoxCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1103#1097#1080#1082#1072
+            Caption = #1050#1086#1076' '#1103#1097#1080#1082#1072' (E2)'
             DataBinding.FieldName = 'BoxCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -435,7 +434,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Width = 49
           end
           object BoxName: TcxGridDBColumn
-            Caption = #1071#1097#1080#1082
+            Caption = #1071#1097#1080#1082' (E2)'
             DataBinding.FieldName = 'BoxName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -450,7 +449,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Width = 125
           end
           object CountOnBox: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1077#1076'. '#1074' '#1103#1097'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1077#1076'. '#1074' '#1103#1097'. (E2)'
             DataBinding.FieldName = 'CountOnBox'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -460,7 +459,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Width = 66
           end
           object WeightOnBox: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1082#1075'. '#1074' '#1103#1097'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1082#1075'. '#1074' '#1103#1097'. (E2)'
             DataBinding.FieldName = 'WeightOnBox'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -470,7 +469,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Width = 63
           end
           object BoxVolume: TcxGridDBColumn
-            Caption = #1054#1073#1098#1077#1084' '#1103#1097'., '#1084'3.'
+            Caption = #1054#1073#1098#1077#1084' '#1103#1097'., '#1084'3. (E2)'
             DataBinding.FieldName = 'BoxVolume'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -481,7 +480,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Width = 71
           end
           object BoxWeight: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1103#1097'.'
+            Caption = #1042#1077#1089' '#1103#1097'. (E2)'
             DataBinding.FieldName = 'BoxWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -492,7 +491,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Width = 57
           end
           object BoxHeight: TcxGridDBColumn
-            Caption = #1042#1099#1089#1086#1090#1072' '#1103#1097'.'
+            Caption = #1042#1099#1089#1086#1090#1072' '#1103#1097'. (E2)'
             DataBinding.FieldName = 'BoxHeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -503,7 +502,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Width = 60
           end
           object BoxLength: TcxGridDBColumn
-            Caption = #1044#1083#1080#1085#1072' '#1103#1097'.'
+            Caption = #1044#1083#1080#1085#1072' '#1103#1097'. (E2)'
             DataBinding.FieldName = 'BoxLength'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -514,7 +513,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Width = 45
           end
           object BoxWidth: TcxGridDBColumn
-            Caption = #1064#1080#1088#1080#1085#1072' '#1103#1097'.'
+            Caption = #1064#1080#1088#1080#1085#1072' '#1103#1097'. (E2)'
             DataBinding.FieldName = 'BoxWidth'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -525,8 +524,118 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Width = 56
           end
           object WeightGross: TcxGridDBColumn
-            Caption = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' '#1087#1086#1083#1085#1086#1075#1086' '#1103#1097#1080#1082#1072
+            Caption = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' '#1087#1086#1083#1085#1086#1075#1086' '#1103#1097#1080#1082#1072' (E2)'
             DataBinding.FieldName = 'WeightGross'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' '#1087#1086#1083#1085#1086#1075#1086' '#1103#1097#1080#1082#1072
+            Options.Editing = False
+            Width = 56
+          end
+          object BoxCode_2: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1103#1097#1080#1082#1072' ('#1043')'
+            DataBinding.FieldName = 'BoxCode_2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 49
+          end
+          object BoxName_2: TcxGridDBColumn
+            Caption = #1071#1097#1080#1082' ('#1043')'
+            DataBinding.FieldName = 'BoxName_2'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = Box2ChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 125
+          end
+          object CountOnBox_2: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1077#1076'. '#1074' '#1103#1097'. ('#1043')'
+            DataBinding.FieldName = 'CountOnBox_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 66
+          end
+          object WeightOnBox_2: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1082#1075'. '#1074' '#1103#1097'. ('#1043')'
+            DataBinding.FieldName = 'WeightOnBox_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 63
+          end
+          object BoxVolume_2: TcxGridDBColumn
+            Caption = #1054#1073#1098#1077#1084' '#1103#1097'., '#1084'3. ('#1043')'
+            DataBinding.FieldName = 'BoxVolume_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 71
+          end
+          object BoxWeight_2: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1103#1097'. ('#1043')'
+            DataBinding.FieldName = 'BoxWeight_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 57
+          end
+          object BoxHeight_2: TcxGridDBColumn
+            Caption = #1042#1099#1089#1086#1090#1072' '#1103#1097'. ('#1043')'
+            DataBinding.FieldName = 'BoxHeight_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object BoxLength_2: TcxGridDBColumn
+            Caption = #1044#1083#1080#1085#1072' '#1103#1097'. ('#1043')'
+            DataBinding.FieldName = 'BoxLength_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object BoxWidth_2: TcxGridDBColumn
+            Caption = #1064#1080#1088#1080#1085#1072' '#1103#1097'. ('#1043')'
+            DataBinding.FieldName = 'BoxWidth_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
+          end
+          object WeightGross_2: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' '#1087#1086#1083#1085#1086#1075#1086' '#1103#1097#1080#1082#1072' ('#1043')'
+            DataBinding.FieldName = 'WeightGross_2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -708,6 +817,40 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object Box2ChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'BoxChoiceForm'
+      FormName = 'TBoxForm'
+      FormNameParam.Value = 'TBoxForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxId_2'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxName_2'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxCode_2'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object ExecuteDialogUpdate: TExecuteDialog
       Category = 'UpdateDate'
@@ -1395,6 +1538,14 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inBoxId_2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BoxId_2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inWeightMin'
         Value = 'Felse'
         Component = MasterCDS
@@ -1467,10 +1618,36 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCountOnBox_2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountOnBox_2'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeightOnBox_2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightOnBox_2'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outWeightGross'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'WeightGross'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWeightGross_2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightGross_2'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

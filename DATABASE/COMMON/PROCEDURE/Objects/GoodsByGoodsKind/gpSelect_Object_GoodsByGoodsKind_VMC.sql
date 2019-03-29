@@ -36,12 +36,17 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , CodeCalc_Ves TVarChar
              , isCodeCalc_Diff Boolean
              --
-             , GoodsPropertyBoxId Integer
+             --, GoodsPropertyBoxId Integer
              , BoxId Integer, BoxCode Integer, BoxName TVarChar
              , WeightOnBox TFloat, CountOnBox TFloat
              , BoxVolume TFloat, BoxWeight TFloat
              , BoxHeight TFloat, BoxLength TFloat, BoxWidth TFloat
              , WeightGross TFloat
+             , BoxId_2 Integer, BoxCode_2 Integer, BoxName_2 TVarChar
+             , WeightOnBox_2 TFloat, CountOnBox_2 TFloat
+             , BoxVolume_2 TFloat, BoxWeight_2 TFloat
+             , BoxHeight_2 TFloat, BoxLength_2 TFloat, BoxWidth_2 TFloat
+             , WeightGross_2 TFloat
               )
 AS
 $BODY$
@@ -115,8 +120,7 @@ BEGIN
                      GROUP BY tmp.CodeCalc_Sh, tmp.CodeCalc_Nom, tmp.CodeCalc_Ves   
                      )
 
-   , tmpGoodsPropertyBox AS (SELECT Object_GoodsPropertyBox.Id           AS GoodsPropertyBoxId
-                                  , ObjectLink_GoodsPropertyBox_Goods.ChildObjectId     AS GoodsId
+   , tmpGoodsPropertyBox AS (SELECT ObjectLink_GoodsPropertyBox_Goods.ChildObjectId     AS GoodsId
                                   , ObjectLink_GoodsPropertyBox_GoodsKind.ChildObjectId AS GoodsKindId
 
                                   , Object_Box.Id                        AS BoxId
@@ -255,21 +259,30 @@ BEGIN
                   ELSE TRUE
              END  AS isCodeCalc_Diff
 
-            , tmpGoodsPropertyBox.GoodsPropertyBoxId
+            -- ящик 1
             , tmpGoodsPropertyBox.BoxId
             , tmpGoodsPropertyBox.BoxCode
             , tmpGoodsPropertyBox.BoxName
- 
             , tmpGoodsPropertyBox.WeightOnBox
             , tmpGoodsPropertyBox.CountOnBox
- 
             , tmpGoodsPropertyBox.BoxVolume
             , tmpGoodsPropertyBox.BoxWeight
             , tmpGoodsPropertyBox.BoxHeight
             , tmpGoodsPropertyBox.BoxLength
             , tmpGoodsPropertyBox.BoxWidth
-            
             , (tmpGoodsPropertyBox.WeightOnBox + tmpGoodsPropertyBox.BoxWeight) :: TFloat AS WeightGross
+            -- ящик 2
+            , tmpGoodsPropertyBox_2.BoxId       AS BoxId_2
+            , tmpGoodsPropertyBox_2.BoxCode     AS BoxCode_2
+            , tmpGoodsPropertyBox_2.BoxName     AS BoxName_2
+            , tmpGoodsPropertyBox_2.WeightOnBox AS WeightOnBox_2
+            , tmpGoodsPropertyBox_2.CountOnBox  AS CountOnBox_2
+            , tmpGoodsPropertyBox_2.BoxVolume   AS BoxVolume_2
+            , tmpGoodsPropertyBox_2.BoxWeight   AS BoxWeight_2
+            , tmpGoodsPropertyBox_2.BoxHeight   AS BoxHeight_2
+            , tmpGoodsPropertyBox_2.BoxLength   AS BoxLength_2
+            , tmpGoodsPropertyBox_2.BoxWidth    AS BoxWidth_2
+            , (tmpGoodsPropertyBox_2.WeightOnBox + tmpGoodsPropertyBox_2.BoxWeight) :: TFloat AS WeightGross_2
 
        FROM tmpGoodsByGoodsKind AS Object_GoodsByGoodsKind_View
             LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
@@ -410,6 +423,13 @@ BEGIN
 
             LEFT JOIN tmpGoodsPropertyBox ON tmpGoodsPropertyBox.GoodsId     = Object_GoodsByGoodsKind_View.GoodsId
                                          AND tmpGoodsPropertyBox.GoodsKindId = Object_GoodsByGoodsKind_View.GoodsKindId
+                                         AND tmpGoodsPropertyBox.BoxId = zc_Box_E2()
+
+            LEFT JOIN tmpGoodsPropertyBox AS tmpGoodsPropertyBox_2
+                                          ON tmpGoodsPropertyBox_2.GoodsId     = Object_GoodsByGoodsKind_View.GoodsId
+                                         AND tmpGoodsPropertyBox_2.GoodsKindId = Object_GoodsByGoodsKind_View.GoodsKindId
+                                         AND tmpGoodsPropertyBox_2.BoxId <> zc_Box_E2()
+                                         
       ;
 
 END;

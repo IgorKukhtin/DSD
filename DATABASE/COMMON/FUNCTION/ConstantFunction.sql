@@ -102,6 +102,8 @@ CREATE OR REPLACE FUNCTION zc_PivotSummartType_Variance() RETURNS Integer AS $BO
 CREATE OR REPLACE FUNCTION zc_PivotSummartType_VarianceP() RETURNS Integer AS $BODY$BEGIN RETURN (9); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_PivotSummartType_AveragePrice() RETURNS Integer AS $BODY$BEGIN RETURN (10); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+--
+CREATE OR REPLACE FUNCTION zc_Box_E2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM Object WHERE ValueData = 'Å2' AND DescId = zc_Object_Box()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 */
 
 /*-------------------------------------------------------------------------------

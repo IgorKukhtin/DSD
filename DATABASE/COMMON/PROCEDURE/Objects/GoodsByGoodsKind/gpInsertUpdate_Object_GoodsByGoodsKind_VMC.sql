@@ -4,12 +4,14 @@
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_VMC (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_VMC (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_VMC (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_VMC (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind_VMC(
  INOUT ioId                    Integer  , -- ключ объекта <Товар>
     IN inGoodsId               Integer  , -- Товары
     IN inGoodsKindId           Integer  , -- Виды товаров
     IN inBoxId                 Integer  , -- ящик
+    IN inBoxId_2               Integer  , -- ящик
     IN inWeightMin             TFloat  , -- 
     IN inWeightMax             TFloat  , -- 
     IN inHeight                TFloat  , -- 
@@ -18,7 +20,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind_VMC(
     IN inNormInDays            TFloat  , -- 
     IN inCountOnBox            TFloat  , -- 
     IN inWeightOnBox           TFloat  , -- 
+    IN inCountOnBox_2          TFloat  , -- 
+    IN inWeightOnBox_2         TFloat  , -- 
    OUT outWeightGross          TFloat  , -- 
+   OUT outWeightGross_2        TFloat  , -- 
     IN inisGoodsTypeKind_Sh    Boolean , -- 
     IN inisGoodsTypeKind_Nom   Boolean , -- 
     IN inisGoodsTypeKind_Ves   Boolean , -- 
@@ -51,7 +56,7 @@ BEGIN
    THEN 
        RAISE EXCEPTION 'Ошибка.Значение  <%> + <%> уже есть в справочнике. Дублирование запрещено.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId);
    END IF;   
-
+   
    IF COALESCE (ioId, 0) = 0 
    THEN
        -- сохранили <Объект>
@@ -124,9 +129,14 @@ BEGIN
    FROM gpSelect_Object_GoodsByGoodsKind (inSession) AS tmp
    WHERE tmp.Id = ioId;
    
-   -- если внесли ящик тогда сохраняем данные
+   -- если внесли ящик 1 тогда сохраняем данные
    IF COALESCE (inBoxId,0) <> 0
    THEN
+       -- проверка что в свойство ящик2 - выбран ящик2
+       IF inBoxId <> zc_Box_E2()
+       THEN
+           RAISE EXCEPTION 'Ошибка.Значение  <%> не может быть записано в свойство <ГофроЯщик>.', lfGet_Object_ValueData (inBoxId);
+       END IF;
        -- находим если есть GoodsPropertyBox.Id
        vbGoodsPropertyBoxId := (SELECT ObjectLink_GoodsPropertyBox_Goods.ObjectId
                                 FROM ObjectLink AS ObjectLink_GoodsPropertyBox_Goods
@@ -134,6 +144,10 @@ BEGIN
                                                            ON ObjectLink_GoodsPropertyBox_GoodsKind.ObjectId = ObjectLink_GoodsPropertyBox_Goods.ObjectId
                                                           AND ObjectLink_GoodsPropertyBox_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyBox_GoodsKind()
                                                           AND ObjectLink_GoodsPropertyBox_GoodsKind.ChildObjectId = inGoodsKindId
+                                     INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyBox_Box
+                                                           ON ObjectLink_GoodsPropertyBox_Box.ObjectId = ObjectLink_GoodsPropertyBox_Goods.ObjectId
+                                                          AND ObjectLink_GoodsPropertyBox_Box.DescId = zc_ObjectLink_GoodsPropertyBox_Box()
+                                                          AND ObjectLink_GoodsPropertyBox_Box.ChildObjectId = zc_Box_E2()
                                 WHERE ObjectLink_GoodsPropertyBox_Goods.DescId = zc_ObjectLink_GoodsPropertyBox_Goods()
                                   AND ObjectLink_GoodsPropertyBox_Goods.ChildObjectId = inGoodsId
                                 );
@@ -153,6 +167,45 @@ BEGIN
                                           );
    END IF;
 
+   -- если внесли ящик 2 тогда сохраняем данные
+   IF COALESCE (inBoxId_2,0) <> 0
+   THEN
+       -- проверка что в свойство ящик2 - выбран ящик2
+       IF inBoxId_2 = zc_Box_E2()
+       THEN
+           RAISE EXCEPTION 'Ошибка.Значение  <%> не может быть записано в свойство <Пластиковый Ящик>.', lfGet_Object_ValueData (inBoxId_2);
+       END IF;
+       
+       -- находим если есть GoodsPropertyBox.Id
+       vbGoodsPropertyBoxId := (SELECT ObjectLink_GoodsPropertyBox_Goods.ObjectId
+                                FROM ObjectLink AS ObjectLink_GoodsPropertyBox_Goods
+                                     INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyBox_GoodsKind
+                                                           ON ObjectLink_GoodsPropertyBox_GoodsKind.ObjectId = ObjectLink_GoodsPropertyBox_Goods.ObjectId
+                                                          AND ObjectLink_GoodsPropertyBox_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyBox_GoodsKind()
+                                                          AND ObjectLink_GoodsPropertyBox_GoodsKind.ChildObjectId = inGoodsKindId
+                                     INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyBox_Box
+                                                           ON ObjectLink_GoodsPropertyBox_Box.ObjectId = ObjectLink_GoodsPropertyBox_Goods.ObjectId
+                                                          AND ObjectLink_GoodsPropertyBox_Box.DescId = zc_ObjectLink_GoodsPropertyBox_Box()
+                                                          AND ObjectLink_GoodsPropertyBox_Box.ChildObjectId <> zc_Box_E2()
+                                WHERE ObjectLink_GoodsPropertyBox_Goods.DescId = zc_ObjectLink_GoodsPropertyBox_Goods()
+                                  AND ObjectLink_GoodsPropertyBox_Goods.ChildObjectId = inGoodsId
+                                );
+       -- сохраняем Значения свойств товаров для ящиков
+       PERFORM gpInsertUpdate_Object_GoodsPropertyBox (ioId                   := COALESCE (vbGoodsPropertyBoxId,0) , -- ключ объекта <>
+                                                       inBoxId                := inBoxId_2        , -- Ящик
+                                                       inGoodsId              := inGoodsId        , -- Товары
+                                                       inGoodsKindId          := inGoodsKindId    , -- Виды товаров
+                                                       inCountOnBox           := inCountOnBox_2   , -- количество ед. в ящ.
+                                                       inWeightOnBox          := inWeightOnBox_2  , -- количество кг. в ящ.
+                                                       inSession              := inSession);
+
+       outWeightGross_2 := inWeightOnBox_2 + (SELECT ObjectFloat_Weight.ValueData
+                                              FROM ObjectFloat AS ObjectFloat_Weight
+                                              WHERE ObjectFloat_Weight.ObjectId = inBoxId_2
+                                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Box_Weight()
+                                              );
+   END IF;
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -164,6 +217,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.03.19         *
  22.03.19         * 
  13.03.19         *
  22.06.18         *

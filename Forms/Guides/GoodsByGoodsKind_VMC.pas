@@ -91,6 +91,7 @@ type
     CodeCalc_Sh: TcxGridDBColumn;
     isCodeCalc_Diff: TcxGridDBColumn;
     BoxChoiceForm: TOpenChoiceForm;
+    Box2ChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
