@@ -1,4 +1,4 @@
-unit EmployeeScheduleUser;
+unit EmployeeScheduleUnit;
 
 interface
 
@@ -13,47 +13,43 @@ uses
   cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
   dxSkinsdxBarPainter, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxTextEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls,
-  cxGridBandedTableView, cxGridDBBandedTableView, DataModul;
+  cxGridBandedTableView, cxGridDBBandedTableView, DataModul, cxSplitter;
 
 type
-  TEmployeeScheduleUserForm = class(TAncestorDBGridForm)
+  TEmployeeScheduleUnitForm = class(TAncestorDBGridForm)
     bbOpen: TdxBarButton;
-    Panel: TPanel;
-    edOperDate: TcxDateEdit;
-    cxLabel2: TcxLabel;
     FormParams: TdsdFormParams;
     cxGridDBBandedTableView1: TcxGridDBBandedTableView;
     Note: TcxGridDBBandedColumn;
     Value: TcxGridDBBandedColumn;
-    cxLabel1: TcxLabel;
-    cbValueUser: TcxComboBox;
-    spGet: TdsdStoredProc;
-    spUpdateEmployeeScheduleUser: TdsdStoredProc;
     HeaderSaver: THeaderSaver;
     HeaderCDS: TClientDataSet;
     CrossDBViewAddOn: TCrossDBViewAddOn;
-    NoteUser: TcxGridDBBandedColumn;
+    NoteNext: TcxGridDBBandedColumn;
     ValueUser: TcxGridDBBandedColumn;
     HeaderUserCDS: TClientDataSet;
     CrossDBViewUserAddOn: TCrossDBViewAddOn;
-    Color_Calc: TcxGridDBBandedColumn;
-    Color_CalcFont: TcxGridDBBandedColumn;
-    Color_CalcFontUser: TcxGridDBBandedColumn;
     cxGridSubstitution: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     cxGridDBBandedTableViewSubstitution: TcxGridDBBandedTableView;
     Substitution_Note: TcxGridDBBandedColumn;
     Substitution_Value: TcxGridDBBandedColumn;
-    Substitution_Color_CalcFont: TcxGridDBBandedColumn;
     cxGridLevelSubstitution: TcxGridLevel;
-    Substitution_UnitName: TcxGridDBBandedColumn;
     Substitution_ValueNext: TcxGridDBBandedColumn;
     SubstitutionDS: TDataSource;
     SubstitutionCDS: TClientDataSet;
     CrossDBViewAddOnSubstitutionNext: TCrossDBViewAddOn;
     CrossDBViewAddOnSubstitution: TCrossDBViewAddOn;
-    actEmployeeScheduleUnit: TdsdOpenForm;
-    dxBarButton1: TdxBarButton;
+    Substitution_PersonalName: TcxGridDBBandedColumn;
+    PersonalName: TcxGridDBBandedColumn;
+    cxSplitter1: TcxSplitter;
+    PersonNull: TcxGridDBBandedColumn;
+    ValueNext: TcxGridDBBandedColumn;
+    NoteUser: TcxGridDBBandedColumn;
+    PersonNull1: TcxGridDBBandedColumn;
+    CrossDBViewAddOnNext: TCrossDBViewAddOn;
+    Substitution_PersonNull: TcxGridDBBandedColumn;
+    Substitution_NoteNext: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public
@@ -65,6 +61,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TEmployeeScheduleUserForm);
+  RegisterClass(TEmployeeScheduleUnitForm);
 
 end.

@@ -671,7 +671,8 @@ uses
   Juridical in '..\..\FormsFarmacy\Guides\Juridical.pas' {JuridicalForm: TParentForm},
   Retail in '..\..\FormsFarmacy\Guides\Retail.pas' {RetailForm: TParentForm},
   RetailEdit in '..\..\FormsFarmacy\Guides\RetailEdit.pas' {RetailEditForm: TParentForm},
-  CashGoodsOneToExpirationDate in '..\..\FormsFarmacy\Cash\CashGoodsOneToExpirationDate.pas' {CashGoodsOneToExpirationDate: TParentForm};
+  CashGoodsOneToExpirationDate in '..\..\FormsFarmacy\Cash\CashGoodsOneToExpirationDate.pas' {CashGoodsOneToExpirationDate: TParentForm},
+  EmployeeScheduleUnit in '..\..\FormsFarmacy\Cash\EmployeeScheduleUnit.pas' {EmployeeScheduleUnitForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

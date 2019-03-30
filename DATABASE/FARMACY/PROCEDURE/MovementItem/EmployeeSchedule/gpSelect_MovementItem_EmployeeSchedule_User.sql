@@ -24,7 +24,6 @@ $BODY$
   DECLARE vbQueryText Text;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
      vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
      IF vbUnitKey = '' THEN
@@ -679,8 +678,7 @@ ALTER FUNCTION gpSelect_MovementItem_EmployeeSchedule_User (TVarChar) OWNER TO p
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 25.12.18                                                       *
- 08.12.18                                                       *
+ 27.03.19                                                       *
 */
 
 -- тест
