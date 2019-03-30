@@ -133,7 +133,7 @@ BEGIN
    IF COALESCE (inBoxId,0) <> 0
    THEN
        -- проверка что в свойство €щик2 - выбран €щик2
-       IF inBoxId <> zc_Box_E2()
+       IF inBoxId NOT IN (zc_Box_E2(), zc_Box_E3())
        THEN
            RAISE EXCEPTION 'ќшибка.«начение  <%> не может быть записано в свойство <√офроящик>.', lfGet_Object_ValueData (inBoxId);
        END IF;
@@ -147,7 +147,7 @@ BEGIN
                                      INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyBox_Box
                                                            ON ObjectLink_GoodsPropertyBox_Box.ObjectId = ObjectLink_GoodsPropertyBox_Goods.ObjectId
                                                           AND ObjectLink_GoodsPropertyBox_Box.DescId = zc_ObjectLink_GoodsPropertyBox_Box()
-                                                          AND ObjectLink_GoodsPropertyBox_Box.ChildObjectId = zc_Box_E2()
+                                                          AND ObjectLink_GoodsPropertyBox_Box.ChildObjectId IN (zc_Box_E2(), zc_Box_E3())
                                 WHERE ObjectLink_GoodsPropertyBox_Goods.DescId = zc_ObjectLink_GoodsPropertyBox_Goods()
                                   AND ObjectLink_GoodsPropertyBox_Goods.ChildObjectId = inGoodsId
                                 );
@@ -171,7 +171,7 @@ BEGIN
    IF COALESCE (inBoxId_2,0) <> 0
    THEN
        -- проверка что в свойство €щик2 - выбран €щик2
-       IF inBoxId_2 = zc_Box_E2()
+       IF inBoxId_2 IN (zc_Box_E2(), zc_Box_E3())
        THEN
            RAISE EXCEPTION 'ќшибка.«начение  <%> не может быть записано в свойство <ѕластиковый ящик>.', lfGet_Object_ValueData (inBoxId_2);
        END IF;
@@ -186,7 +186,7 @@ BEGIN
                                      INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyBox_Box
                                                            ON ObjectLink_GoodsPropertyBox_Box.ObjectId = ObjectLink_GoodsPropertyBox_Goods.ObjectId
                                                           AND ObjectLink_GoodsPropertyBox_Box.DescId = zc_ObjectLink_GoodsPropertyBox_Box()
-                                                          AND ObjectLink_GoodsPropertyBox_Box.ChildObjectId <> zc_Box_E2()
+                                                          AND ObjectLink_GoodsPropertyBox_Box.ChildObjectId NOT IN (zc_Box_E2(), zc_Box_E3())
                                 WHERE ObjectLink_GoodsPropertyBox_Goods.DescId = zc_ObjectLink_GoodsPropertyBox_Goods()
                                   AND ObjectLink_GoodsPropertyBox_Goods.ChildObjectId = inGoodsId
                                 );

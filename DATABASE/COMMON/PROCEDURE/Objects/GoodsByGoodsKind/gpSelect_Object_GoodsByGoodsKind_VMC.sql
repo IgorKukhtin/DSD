@@ -423,12 +423,12 @@ BEGIN
 
             LEFT JOIN tmpGoodsPropertyBox ON tmpGoodsPropertyBox.GoodsId     = Object_GoodsByGoodsKind_View.GoodsId
                                          AND tmpGoodsPropertyBox.GoodsKindId = Object_GoodsByGoodsKind_View.GoodsKindId
-                                         AND tmpGoodsPropertyBox.BoxId = zc_Box_E2()
+                                         AND tmpGoodsPropertyBox.BoxId IN (zc_Box_E2(), zc_Box_E3())
 
             LEFT JOIN tmpGoodsPropertyBox AS tmpGoodsPropertyBox_2
                                           ON tmpGoodsPropertyBox_2.GoodsId     = Object_GoodsByGoodsKind_View.GoodsId
                                          AND tmpGoodsPropertyBox_2.GoodsKindId = Object_GoodsByGoodsKind_View.GoodsKindId
-                                         AND tmpGoodsPropertyBox_2.BoxId <> zc_Box_E2()
+                                         AND tmpGoodsPropertyBox_2.BoxId NOT IN (zc_Box_E2(), zc_Box_E3())
                                          
       ;
 
