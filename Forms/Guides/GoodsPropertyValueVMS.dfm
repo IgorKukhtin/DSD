@@ -24,7 +24,6 @@ object GoodsPropertyValueVMSForm: TGoodsPropertyValueVMSForm
     Height = 404
     Align = alClient
     TabOrder = 1
-    ExplicitLeft = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -257,6 +256,14 @@ object GoodsPropertyValueVMSForm: TGoodsPropertyValueVMSForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
+      end
+      object Quality: TcxGridDBColumn
+        Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1043#1054#1057#1058', '#1044#1057#1058#1059','#1058#1059' ('#1050#1059')'
+        DataBinding.FieldName = 'Quality'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 110
       end
       object Quality2: TcxGridDBColumn
         Caption = #1057#1090#1088#1086#1082' '#1087#1088#1080#1076#1072#1090#1085#1086#1089#1090#1110' ('#1050#1059')'
@@ -867,6 +874,7 @@ object GoodsPropertyValueVMSForm: TGoodsPropertyValueVMSForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1064#1090#1091#1095#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1064#1090#1091#1095#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 76
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object actUpdateSh_No: TdsdDataSetRefresh
@@ -880,6 +888,7 @@ object GoodsPropertyValueVMSForm: TGoodsPropertyValueVMSForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1064#1090#1091#1095#1085#1099#1081' - '#1053#1045#1058' '#1076#1083#1103' '#1042#1089#1077#1093
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1064#1090#1091#1095#1085#1099#1081' - '#1053#1045#1058' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 58
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object actUpdateNom_Yes: TdsdDataSetRefresh
@@ -893,6 +902,7 @@ object GoodsPropertyValueVMSForm: TGoodsPropertyValueVMSForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 76
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object actUpdateNom_No: TdsdDataSetRefresh
@@ -906,6 +916,7 @@ object GoodsPropertyValueVMSForm: TGoodsPropertyValueVMSForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1053#1045#1058' '#1076#1083#1103' '#1042#1089#1077#1093
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1053#1045#1058' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 58
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object actUpdateVes_Yes: TdsdDataSetRefresh
@@ -919,6 +930,7 @@ object GoodsPropertyValueVMSForm: TGoodsPropertyValueVMSForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1077#1085#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1077#1085#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 76
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object actUpdateVes_No: TdsdDataSetRefresh
@@ -932,6 +944,7 @@ object GoodsPropertyValueVMSForm: TGoodsPropertyValueVMSForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1077#1085#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1053#1045#1058' '#1076#1083#1103' '#1042#1089#1077#1093
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1053#1077#1085#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081' - '#1053#1045#1058' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 58
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object macListUpdateSh_Yes: TMultiAction

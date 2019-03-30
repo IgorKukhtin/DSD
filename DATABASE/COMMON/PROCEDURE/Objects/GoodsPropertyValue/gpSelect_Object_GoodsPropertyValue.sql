@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsBoxId Integer, GoodsBoxCode Integer, GoodsBoxName TVarChar
-             , Quality2 TVarChar, Quality10 TVarChar
+             , Quality TVarChar, Quality2 TVarChar, Quality10 TVarChar
              , GoodsBrandName TVarChar
              , isOrder Boolean
              , isErased Boolean
@@ -86,6 +86,7 @@ BEGIN
        , Object_GoodsBox.ObjectCode           AS GoodsBoxCode
        , Object_GoodsBox.ValueData            AS GoodsBoxName
 
+       , ObjectString_Quality.ValueData       AS Quality
        , ObjectString_Quality2.ValueData      AS Quality2
        , ObjectString_Quality10.ValueData     AS Quality10
        
@@ -143,6 +144,9 @@ BEGIN
                                ON ObjectString_CodeSticker.ObjectId = Object_GoodsPropertyValue.Id
                               AND ObjectString_CodeSticker.DescId = zc_ObjectString_GoodsPropertyValue_CodeSticker()
 
+        LEFT JOIN ObjectString AS ObjectString_Quality
+                               ON ObjectString_Quality.ObjectId = Object_GoodsPropertyValue.Id
+                              AND ObjectString_Quality.DescId = zc_ObjectString_GoodsPropertyValue_Quality()
         LEFT JOIN ObjectString AS ObjectString_Quality2
                                ON ObjectString_Quality2.ObjectId = Object_GoodsPropertyValue.Id
                               AND ObjectString_Quality2.DescId = zc_ObjectString_GoodsPropertyValue_Quality2()
@@ -289,6 +293,7 @@ BEGIN
        , tmpObjectLink.GoodsBoxCode
        , tmpObjectLink.GoodsBoxName
 
+       , tmpObjectLink.Quality
        , tmpObjectLink.Quality2
        , tmpObjectLink.Quality10
 
@@ -327,6 +332,7 @@ BEGIN
                         , Object_GoodsBox.ObjectCode           AS GoodsBoxCode
                         , Object_GoodsBox.ValueData            AS GoodsBoxName
 
+                        , ObjectString_Quality.ValueData       AS Quality
                         , ObjectString_Quality2.ValueData      AS Quality2
                         , ObjectString_Quality10.ValueData     AS Quality10
 
@@ -399,6 +405,9 @@ BEGIN
                                             ON ObjectString_CodeSticker.ObjectId = Object_GoodsPropertyValue.Id
                                            AND ObjectString_CodeSticker.DescId = zc_ObjectString_GoodsPropertyValue_CodeSticker()
 
+                     LEFT JOIN ObjectString AS ObjectString_Quality
+                                            ON ObjectString_Quality.ObjectId = Object_GoodsPropertyValue.Id
+                                           AND ObjectString_Quality.DescId = zc_ObjectString_GoodsPropertyValue_Quality()
                      LEFT JOIN ObjectString AS ObjectString_Quality2
                                             ON ObjectString_Quality2.ObjectId = Object_GoodsPropertyValue.Id
                                            AND ObjectString_Quality2.DescId = zc_ObjectString_GoodsPropertyValue_Quality2()
@@ -424,6 +433,7 @@ END;$BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 30.03.19         * add Quality
  26.02.19         *
  17.12.18         * add Quality10, Quality2
  25.07.18         * add CodeSticker

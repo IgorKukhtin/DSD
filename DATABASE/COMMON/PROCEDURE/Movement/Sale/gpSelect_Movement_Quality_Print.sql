@@ -296,6 +296,7 @@ BEGIN
                                              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
                                              , Object_GoodsPropertyValue.ValueData  AS Name
                                              , ObjectString_Article.ValueData       AS Article
+                                             , ObjectString_Quality.ValueData       AS Quality
                                              , ObjectString_Quality2.ValueData      AS Quality2
                                              , ObjectString_Quality10.ValueData     AS Quality10
                                         FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
@@ -314,6 +315,10 @@ BEGIN
                                              LEFT JOIN ObjectString AS ObjectString_Article
                                                                     ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                                    AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
+                                             LEFT JOIN ObjectString AS ObjectString_Quality
+                                                                    ON ObjectString_Quality.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                                   AND ObjectString_Quality.DescId = zc_ObjectString_GoodsPropertyValue_Quality()
+                                                                   AND ObjectString_Quality.ValueData <> ''
                                              LEFT JOIN ObjectString AS ObjectString_Quality2
                                                                     ON ObjectString_Quality2.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                                    AND ObjectString_Quality2.DescId = zc_ObjectString_GoodsPropertyValue_Quality2()
@@ -325,6 +330,7 @@ BEGIN
      , tmpObject_GoodsPropertyValueGroup AS (SELECT tmpObject_GoodsPropertyValue.GoodsId
                                                   , tmpObject_GoodsPropertyValue.Name
                                                   , tmpObject_GoodsPropertyValue.Article
+                                                  , tmpObject_GoodsPropertyValue.Quality
                                                   , tmpObject_GoodsPropertyValue.Quality2
                                                   , tmpObject_GoodsPropertyValue.Quality10
                                              FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Name <> '' GROUP BY GoodsId
@@ -364,6 +370,7 @@ BEGIN
               END                 :: TVarChar AS CodeUKTZED
 
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Article,   COALESCE (tmpObject_GoodsPropertyValue.Article, ''))      AS Article_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality,   tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17) AS Quality_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality2,  COALESCE (tmpObject_GoodsPropertyValue.Quality2, ''))     AS Quality2_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality10, COALESCE (tmpObject_GoodsPropertyValue.Quality10, ''))    AS Quality10_Juridical
 
@@ -385,6 +392,7 @@ BEGIN
            , TRUE                 :: Boolean  AS isJuridicalBasis
 
            , tmpGoodsQuality.QualityCode
+
            , tmpGoodsQuality.QualityName
            , tmpGoodsQuality.QualityComment
            , tmpGoodsQuality.Value17

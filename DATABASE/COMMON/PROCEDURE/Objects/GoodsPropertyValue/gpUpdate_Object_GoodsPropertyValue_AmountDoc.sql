@@ -3,11 +3,13 @@
 DROP FUNCTION IF EXISTS gpUpdate_Object_GoodsPropertyValue_AmountDoc(Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_GoodsPropertyValue_AmountDoc(Integer, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_GoodsPropertyValue_AmountDoc(Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_GoodsPropertyValue_AmountDoc(Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_GoodsPropertyValue_AmountDoc(
     IN inId                  Integer   ,    -- ключ объекта <Значения свойств товаров для классификатора>
     IN inAmountDoc           TFloat    ,    -- Количество вложение
     IN inCodeSticker         TVarChar  ,    -- Код PLU
+    IN inQuality             TVarChar  ,    -- Значение ГОСТ, ДСТУ,ТУ (КУ)
     IN inQuality2            TVarChar  ,    -- Строк придатності (КУ)
     IN inQuality10           TVarChar  ,    -- Умови зберігання (КУ)
     IN inSession             TVarChar       -- сессия пользователя
@@ -32,6 +34,8 @@ $BODY$
    -- сохранили свойство
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsPropertyValue_CodeSticker(), inId, inCodeSticker);
    -- сохранили свойство
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsPropertyValue_Quality(), inId, inQuality);
+   -- сохранили свойство
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsPropertyValue_Quality2(), inId, inQuality2);
    -- сохранили свойство
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_GoodsPropertyValue_Quality10(), inId, inQuality10);
@@ -47,6 +51,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.03.19         *
  17.12.18         *
  25.07.18         *
  27.06.17         *
