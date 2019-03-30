@@ -1231,7 +1231,7 @@ object IncomeJournalForm: TIncomeJournalForm
     object actDoLoad: TExecuteImportSettingsAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
-      ImportSettingsId.Value = Null
+      ImportSettingsId.Value = '0'
       ImportSettingsId.Component = FormParams
       ImportSettingsId.ComponentItem = 'ImportSettingId'
       ImportSettingsId.MultiSelectSeparator = ','
@@ -1661,37 +1661,5 @@ object IncomeJournalForm: TIncomeJournalForm
     PackSize = 1
     Left = 816
     Top = 192
-  end
-  object spGetImportSettingId_O: TdsdStoredProc
-    StoredProcName = 'gpGet_DefaultValue'
-    DataSets = <
-      item
-      end>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inDefaultKey'
-        Value = 'TGoodsSPMovementForm;zc_Object_ImportSetting_GoodsSPMovement'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUserKeyId'
-        Value = '0'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'gpGet_DefaultValue'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'ImportSettingId'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 808
-    Top = 256
   end
 end
