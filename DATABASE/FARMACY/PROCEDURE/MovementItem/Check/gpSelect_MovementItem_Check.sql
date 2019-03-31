@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, ParentId integer
              , Color_ExpirationDate integer   
              , AccommodationName TVarChar       
              , Multiplicity TFloat   
+             , DoesNotShare boolean
               )
 AS
 $BODY$
@@ -87,7 +88,8 @@ BEGIN
            , zc_Color_White()                                                    AS Color_calc
            , zc_Color_Black()                                                    AS Color_ExpirationDate
            , Null::TVArChar                                                      AS AccommodationName  
-           , Null::TFloat                                                         AS Multiplicity 
+           , Null::TFloat                                                        AS Multiplicity 
+           , COALESCE (ObjectBoolean_DoesNotShare.ValueData, FALSE)              AS DoesNotShare
        FROM MovementItem_Check_View AS MovementItem 
             -- получаем GoodsMainId
             LEFT JOIN  ObjectLink AS ObjectLink_Child 
@@ -100,6 +102,10 @@ BEGIN
                                  ON ObjectLink_Goods_IntenalSP.ObjectId = ObjectLink_Main.ChildObjectId 
                                 AND ObjectLink_Goods_IntenalSP.DescId = zc_ObjectLink_Goods_IntenalSP()
             LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = ObjectLink_Goods_IntenalSP.ChildObjectId
+            -- Не делить медикамент на кассах
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_DoesNotShare
+                                    ON ObjectBoolean_DoesNotShare.ObjectId = MovementItem.GoodsId
+                                   AND ObjectBoolean_DoesNotShare.DescId = zc_ObjectBoolean_Goods_DoesNotShare()
        WHERE MovementItem.MovementId = inMovementId
          -- AND MovementItem.isErased   = FALSE
       ;
@@ -111,6 +117,7 @@ ALTER FUNCTION gpSelect_MovementItem_Check (Integer, TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А. Воробкало А.А   Шаблий О.В.
+ 31.03.19                                                                                   *
  15.03.19                                                                                   *
  05.11.18                                                                                   *
  21.10.18                                                                                   *

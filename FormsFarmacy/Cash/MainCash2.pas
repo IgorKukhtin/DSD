@@ -3529,7 +3529,8 @@ begin
     ShowMessage('Не хватает количества для возврата!');
     exit;
   end;
-  if RemainsCDS.FieldByName('DoesNotShare').AsBoolean and (nAmount <> Round(nAmount)) then
+  if ((nAmount > 0) and SourceClientDataSet.FieldByName('DoesNotShare').AsBoolean  or
+     (nAmount < 0) and CheckCDS.FieldByName('DoesNotShare').AsBoolean) and (nAmount <> Round(nAmount)) then
   begin
     ShowMessage('Деление медикамента заблокировано!');
     exit;
@@ -3809,7 +3810,8 @@ begin
         checkCDS.FieldByName('List_UID').AsString := GenerateGUID;
         //***04.09.18
         checkCDS.FieldByName('Remains').asCurrency:=SourceClientDataSet.FieldByName('Remains').asCurrency;
-        //***21.10.18
+        //***31.03.19
+        CheckCDS.FieldByName('DoesNotShare').AsBoolean:=SourceClientDataSet.FieldByName('DoesNotShare').AsBoolean;
         if not Assigned(SourceClientDataSet.FindField('Color_calc')) then
         begin
           RemainsCDS.DisableControls;

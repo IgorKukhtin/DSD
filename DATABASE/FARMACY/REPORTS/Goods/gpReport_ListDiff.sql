@@ -35,11 +35,18 @@ RETURNS TABLE (GoodsId        Integer,
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbObjectId Integer;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ListDiff());
     vbUserId:= lpGetUserBySession (inSession);
+
+    -- определяется <Торговая сеть>
+    IF vbUserId IN (3, 183242, 375661) -- Админ + Люба + Юра 
+    THEN vbObjectId:= 0;
+    ELSE vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
+    END IF;
 
     -- Результат
     RETURN QUERY
@@ -55,6 +62,7 @@ BEGIN
                                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                                               AND ((ObjectLink_Juridical_Retail.ChildObjectId = inRetailId AND inUnitId = 0)
                                                    OR (inRetailId = 0 AND inUnitId = 0))
+                                              AND (ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId OR vbObjectId = 0)
                     WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                       AND (ObjectLink_Unit_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
                       AND inisUnitList = FALSE
@@ -222,7 +230,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 31.03.19                                                      * ограничение по сети
  11.02.19         * признак Товары соц-проект берем и документа
  21.12.18         *
 */

@@ -3372,6 +3372,10 @@ inherited MainCashForm2: TMainCashForm2
       item
         Name = 'Multiplicity'
         DataType = ftCurrency
+      end
+      item
+        Name = 'DoesNotShare'
+        DataType = ftBoolean
       end>
     IndexDefs = <>
     Params = <>
