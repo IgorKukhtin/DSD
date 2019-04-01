@@ -151,11 +151,19 @@ BEGIN
                                      INNER JOIN Object AS Object_GoodsPropertyBox
                                                        ON Object_GoodsPropertyBox.Id = ObjectLink_GoodsPropertyBox_Goods.ObjectId
                                                       AND Object_GoodsPropertyBox.DescId = zc_Object_GoodsPropertyBox()
-                                                      AND Object_GoodsPropertyBox.isErased = FALSE
+                                                      --AND Object_GoodsPropertyBox.isErased = FALSE
                                 WHERE ObjectLink_GoodsPropertyBox_Goods.DescId = zc_ObjectLink_GoodsPropertyBox_Goods()
                                   AND ObjectLink_GoodsPropertyBox_Goods.ChildObjectId = inGoodsId
                                 LIMIT 1
                                 );
+
+       --если есть GoodsPropertyBox.Id и он помечен на удал. тогда его восстанавливаем
+       IF COALESCE (vbGoodsPropertyBoxId,0) <> 0 AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = vbGoodsPropertyBoxId AND Object.isErased = TRUE)
+       THEN
+           --
+           PERFORM lpUpdate_Object_isErased (inObjectId:= vbGoodsPropertyBoxId, inUserId:= vbUserId);
+       END IF;
+
        -- сохран€ем «начени€ свойств товаров дл€ €щиков
        PERFORM gpInsertUpdate_Object_GoodsPropertyBox (ioId                   := COALESCE (vbGoodsPropertyBoxId,0) , -- ключ объекта <>
                                                        inBoxId                := inBoxId        , -- ящик
@@ -195,11 +203,19 @@ BEGIN
                                      INNER JOIN Object AS Object_GoodsPropertyBox
                                                        ON Object_GoodsPropertyBox.Id = ObjectLink_GoodsPropertyBox_Goods.ObjectId
                                                       AND Object_GoodsPropertyBox.DescId = zc_Object_GoodsPropertyBox()
-                                                      AND Object_GoodsPropertyBox.isErased = FALSE
+                                                      --AND Object_GoodsPropertyBox.isErased = FALSE
                                 WHERE ObjectLink_GoodsPropertyBox_Goods.DescId = zc_ObjectLink_GoodsPropertyBox_Goods()
                                   AND ObjectLink_GoodsPropertyBox_Goods.ChildObjectId = inGoodsId
                                 LIMIT 1
                                 );
+
+       --если есть GoodsPropertyBox.Id и он помечен на удал. тогда его восстанавливаем
+       IF COALESCE (vbGoodsPropertyBoxId,0) <> 0 AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = vbGoodsPropertyBoxId AND Object.isErased = TRUE)
+       THEN
+           --
+           PERFORM lpUpdate_Object_isErased (inObjectId:= vbGoodsPropertyBoxId, inUserId:= vbUserId);
+       END IF;
+
        -- сохран€ем «начени€ свойств товаров дл€ €щиков
        PERFORM gpInsertUpdate_Object_GoodsPropertyBox (ioId                   := COALESCE (vbGoodsPropertyBoxId,0) , -- ключ объекта <>
                                                        inBoxId                := inBoxId_2        , -- ящик
