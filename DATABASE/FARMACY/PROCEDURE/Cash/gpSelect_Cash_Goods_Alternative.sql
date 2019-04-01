@@ -63,8 +63,12 @@ BEGIN
             SUM(Container.Amount)>0
       ),
     tmpPrice AS (
-                 SELECT Price_Goods.ChildObjectId               AS GoodsId
-                      , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+                 SELECT Price_Goods.ChildObjectId  AS GoodsId
+                      , CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                              AND ObjectFloat_Goods_Price.ValueData > 0
+                             THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                             ELSE ROUND (Price_Value.ValueData, 2)
+                        END :: TFloat              AS Price 
                  FROM ObjectLink AS ObjectLink_Price_Unit
                       LEFT JOIN ObjectLink AS Price_Goods
                              ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
@@ -72,6 +76,13 @@ BEGIN
                       LEFT JOIN ObjectFloat AS Price_Value
                              ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
                             AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                      -- Фикс цена для всей Сети
+                      LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                             ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.ChildObjectId
+                                            AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()   
+                      LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                              ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
+                                             AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()  
                  WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                    AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                  )
@@ -149,4 +160,4 @@ ALTER FUNCTION gpSELECT_CASh_Goods_Alternative_ver2(Integer, TVarChar) OWNER TO 
 */
 
 -- тест
---SELECT * FROM gpSELECT_CASh_Goods_Alternative(1,'308120'::TVarChar)
+-- SELECT * FROM gpSELECT_CASh_Goods_Alternative(1,'308120'::TVarChar)

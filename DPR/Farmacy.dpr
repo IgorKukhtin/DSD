@@ -1,6 +1,7 @@
 program Farmacy;
 
 uses
+  MidasLib,Windows,
   Vcl.Forms,
   Controls,
   SysUtils,
@@ -89,20 +90,37 @@ uses
 begin
   Application.Initialize;
   Logger.Enabled := FindCmdLineSwitch('log');
+  // !!! Real
   ConnectionPath := '..\INIT\farmacy_init.php';
   gc_ProgramName := 'Farmacy.exe';
+  // !!! DEMO
+  // ConnectionPath := 'Demo.php';
+  // gc_ProgramName := 'FDemo.exe';
 
   TdsdApplication.Create;
 
-  with TLoginForm.Create(Application) do
-  //Если все хорошо создаем главную форму Application.CreateForm();
-  if ShowModal = mrOk then
+  // Процесс аутентификации
+  if gc_ProgramName = 'FDemo.exe' then
   begin
-    TUpdater.AutomaticUpdateProgram;
-    if not FindCmdLineSwitch('skipcheckconnect') then
-       TUpdater.AutomaticCheckConnect;
-    Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TMainForm, MainFormInstance);
-  end;
+     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'demo', 'demo', gc_User);
+     TUpdater.AutomaticUpdateProgram;
+     TUpdater.AutomaticCheckConnect;
+     Application.CreateForm(TdmMain, dmMain);
+     Application.CreateForm(TMainForm, MainFormInstance);
+  end
+  else
+
+      with TLoginForm.Create(Application) do
+      //Если все хорошо создаем главную форму Application.CreateForm();
+      if ShowModal = mrOk then
+      begin
+        TUpdater.AutomaticUpdateProgram;
+        if not FindCmdLineSwitch('skipcheckconnect') then
+           TUpdater.AutomaticCheckConnect;
+        //
+        Application.CreateForm(TdmMain, dmMain);
+        Application.CreateForm(TMainForm, MainFormInstance);
+      end;
+  //
   Application.Run;
 end.

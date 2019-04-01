@@ -185,7 +185,13 @@ BEGIN
                                                            AND ObjectFloat.DescId   IN (zc_ObjectFloat_Price_Value(), zc_ObjectFloat_Price_MCSValue())
                                                            AND ObjectFloat.ValueData <> 0
                   )
-       , tmpPrice AS (SELECT tmpObjPrice.ObjectId, COALESCE (ROUND (ObjectFloat_Value.ValueData, 2), 0) AS Price, COALESCE (ObjectFloat_MCS.ValueData, 0) AS MCSValue
+       , tmpPrice AS (SELECT tmpObjPrice.ObjectId
+                           , CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                     AND ObjectFloat_Goods_Price.ValueData > 0
+                                    THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                                    ELSE COALESCE (ROUND (ObjectFloat_Value.ValueData, 2), 0)
+                               END AS Price
+                           , COALESCE (ObjectFloat_MCS.ValueData, 0) AS MCSValue
                       FROM tmpObjPrice
                            LEFT JOIN tmpOF AS ObjectFloat_Value
                                            ON ObjectFloat_Value.ObjectId = tmpObjPrice.PriceId
@@ -193,6 +199,13 @@ BEGIN
                            LEFT JOIN tmpOF AS ObjectFloat_MCS
                                            ON ObjectFloat_MCS.ObjectId = tmpObjPrice.PriceId
                                           AND ObjectFloat_MCS.DescId = zc_ObjectFloat_Price_MCSValue()
+                           -- Фикс цена для всей Сети
+                           LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                                  ON ObjectFloat_Goods_Price.ObjectId = tmpObjPrice.ObjectId
+                                                 AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()   
+                           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                   ON ObjectBoolean_Goods_TOP.ObjectId = tmpObjPrice.ObjectId
+                                                  AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()  
                      )
        /*, tmpPrice AS (SELECT ObjectLink_Goods.ChildObjectId AS ObjectId, COALESCE (ROUND (ObjectFloat_Value.ValueData, 2), 0) AS Price, COALESCE (ObjectFloat_MCS.ValueData, 0) AS MCSValue
                       -- FROM tmpGoods
