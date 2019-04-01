@@ -811,6 +811,10 @@ object IncomeForm: TIncomeForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1006,6 +1010,10 @@ object IncomeForm: TIncomeForm
       Action = macUpdate_PriceWithoutPersent_List
       Category = 0
       ImageIndex = 56
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actStartLoad
+      Category = 0
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -2207,6 +2215,50 @@ object IncomeForm: TIncomeForm
         end>
       isShowModal = True
       OpenBeforeShow = True
+    end
+    object actGetImportSettingId: TdsdExecStoredProc
+      Category = 'Load'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSettingId'
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = 'Load'
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actStartLoad: TMultiAction
+      Category = 'Load'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingId
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1086#1089#1090#1072#1090#1082#1072' '#1074' '#1090#1077#1082#1091#1097#1091#1102' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1102'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1089#1090#1072#1090#1082#1080
+      ImageIndex = 41
     end
   end
   object MasterDS: TDataSource
@@ -3472,5 +3524,37 @@ object IncomeForm: TIncomeForm
     PackSize = 1
     Left = 92
     Top = 368
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TInventoryForm;zc_Object_ImportSetting_Inventory'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 928
+    Top = 200
   end
 end

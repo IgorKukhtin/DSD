@@ -17,7 +17,8 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsPropertyBox());
+   --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsPropertyBox());
+   vbUserId := inSession;
 
    -- проверка
    IF COALESCE (inGoodsId, 0) = 0
@@ -25,6 +26,7 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Не установлено значение <Товар>.';
    END IF;
 
+   
    -- проверка уникальности
    IF EXISTS (SELECT ObjectLink_GoodsPropertyBox_Goods.ChildObjectId
               FROM ObjectLink AS ObjectLink_GoodsPropertyBox_Goods
@@ -34,11 +36,18 @@ BEGIN
                    LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyBox_Box
                                         ON ObjectLink_GoodsPropertyBox_Box.ObjectId = ObjectLink_GoodsPropertyBox_Goods.ObjectId
                                        AND ObjectLink_GoodsPropertyBox_Box.DescId = zc_ObjectLink_GoodsPropertyBox_Box()
+                   LEFT JOIN Object AS Object_GoodsPropertyBox
+                                    ON Object_GoodsPropertyBox.Id = ObjectLink_GoodsPropertyBox_Goods.ObjectId
+                                   AND Object_GoodsPropertyBox.DescId = zc_Object_GoodsPropertyBox()
               WHERE ObjectLink_GoodsPropertyBox_Goods.DescId = zc_ObjectLink_GoodsPropertyBox_Goods()
-                AND ObjectLink_GoodsPropertyBox_Box.ChildObjectId = inBoxId
+                --AND ObjectLink_GoodsPropertyBox_Box.ChildObjectId = inBoxId
+                AND ( (ObjectLink_GoodsPropertyBox_Box.ChildObjectId IN (zc_Box_E2(), zc_Box_E3())     AND inBoxId IN (zc_Box_E2(), zc_Box_E3()))
+                   OR (ObjectLink_GoodsPropertyBox_Box.ChildObjectId NOT IN (zc_Box_E2(), zc_Box_E3()) AND inBoxId NOT IN (zc_Box_E2(), zc_Box_E3())) 
+                    )
                 AND ObjectLink_GoodsPropertyBox_Goods.ChildObjectId = inGoodsId
                 AND COALESCE (ObjectLink_GoodsPropertyBox_GoodsKind.ChildObjectId, 0) = COALESCE (inGoodsKindId, 0)
-                AND ObjectLink_GoodsPropertyBox_Goods.ObjectId <> COALESCE (ioId, 0))
+                AND ObjectLink_GoodsPropertyBox_Goods.ObjectId <> COALESCE (ioId, 0)
+                AND Object_GoodsPropertyBox.isErased = FALSE)
 
    THEN 
        RAISE EXCEPTION 'Ошибка.Значение  <%> + <%> + <%> уже есть в справочнике. Дублирование запрещено.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId), lfGet_Object_ValueData (inBoxId);

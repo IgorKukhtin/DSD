@@ -148,8 +148,13 @@ BEGIN
                                                            ON ObjectLink_GoodsPropertyBox_Box.ObjectId = ObjectLink_GoodsPropertyBox_Goods.ObjectId
                                                           AND ObjectLink_GoodsPropertyBox_Box.DescId = zc_ObjectLink_GoodsPropertyBox_Box()
                                                           AND ObjectLink_GoodsPropertyBox_Box.ChildObjectId IN (zc_Box_E2(), zc_Box_E3())
+                                     INNER JOIN Object AS Object_GoodsPropertyBox
+                                                       ON Object_GoodsPropertyBox.Id = ObjectLink_GoodsPropertyBox_Goods.ObjectId
+                                                      AND Object_GoodsPropertyBox.DescId = zc_Object_GoodsPropertyBox()
+                                                      AND Object_GoodsPropertyBox.isErased = FALSE
                                 WHERE ObjectLink_GoodsPropertyBox_Goods.DescId = zc_ObjectLink_GoodsPropertyBox_Goods()
                                   AND ObjectLink_GoodsPropertyBox_Goods.ChildObjectId = inGoodsId
+                                LIMIT 1
                                 );
        -- сохраняем Значения свойств товаров для ящиков
        PERFORM gpInsertUpdate_Object_GoodsPropertyBox (ioId                   := COALESCE (vbGoodsPropertyBoxId,0) , -- ключ объекта <>
@@ -187,8 +192,13 @@ BEGIN
                                                            ON ObjectLink_GoodsPropertyBox_Box.ObjectId = ObjectLink_GoodsPropertyBox_Goods.ObjectId
                                                           AND ObjectLink_GoodsPropertyBox_Box.DescId = zc_ObjectLink_GoodsPropertyBox_Box()
                                                           AND ObjectLink_GoodsPropertyBox_Box.ChildObjectId NOT IN (zc_Box_E2(), zc_Box_E3())
+                                     INNER JOIN Object AS Object_GoodsPropertyBox
+                                                       ON Object_GoodsPropertyBox.Id = ObjectLink_GoodsPropertyBox_Goods.ObjectId
+                                                      AND Object_GoodsPropertyBox.DescId = zc_Object_GoodsPropertyBox()
+                                                      AND Object_GoodsPropertyBox.isErased = FALSE
                                 WHERE ObjectLink_GoodsPropertyBox_Goods.DescId = zc_ObjectLink_GoodsPropertyBox_Goods()
                                   AND ObjectLink_GoodsPropertyBox_Goods.ChildObjectId = inGoodsId
+                                LIMIT 1
                                 );
        -- сохраняем Значения свойств товаров для ящиков
        PERFORM gpInsertUpdate_Object_GoodsPropertyBox (ioId                   := COALESCE (vbGoodsPropertyBoxId,0) , -- ключ объекта <>

@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, ChoicePeriod;
+  cxImageComboBox, ChoicePeriod, ExternalLoad;
 
 type
   TIncomeForm = class(TParentForm)
@@ -188,6 +188,11 @@ type
     edChangePercent: TcxCurrencyEdit;
     spUpdate_ChangePercent: TdsdStoredProc;
     actUpdate_ChangePercent: TdsdExecStoredProc;
+    spGetImportSettingId: TdsdStoredProc;
+    actGetImportSettingId: TdsdExecStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actStartLoad: TMultiAction;
+    dxBarButton3: TdxBarButton;
   private
   public
   end;

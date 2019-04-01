@@ -34,7 +34,6 @@ uses
   SimpleGauge in '..\..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm},
   ClientBankLoad in '..\..\SOURCE\COMPONENT\ClientBankLoad.pas',
   Document in '..\..\SOURCE\COMPONENT\Document.pas',
-  ExternalLoad in '..\..\SOURCE\COMPONENT\ExternalLoad.pas',
   Log in '..\..\SOURCE\Log.pas',
   ExternalData in '..\..\SOURCE\COMPONENT\ExternalData.pas',
   ExternalSave in '..\..\SOURCE\COMPONENT\ExternalSave.pas',
@@ -317,7 +316,8 @@ uses
   Report_ProfitDemo in '..\..\FormsBoutique\Report\Report_ProfitDemo.pas' {Report_ProfitDemoForm: TParentForm},
   Report_ProfitDemoPeriod in '..\..\FormsBoutique\Report\Report_ProfitDemoPeriod.pas' {Report_ProfitDemoPeriodForm: TParentForm},
   ImportType in '..\..\FormsBoutique\Import\ImportType.pas' {ImportTypeForm: TParentForm},
-  ImportSettings in '..\..\FormsBoutique\Import\ImportSettings.pas' {ImportSettingsForm: TParentForm};
+  ImportSettings in '..\..\FormsBoutique\Import\ImportSettings.pas' {ImportSettingsForm: TParentForm},
+  ExternalLoad in '..\..\SOURCE\COMPONENT\ExternalLoad.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
