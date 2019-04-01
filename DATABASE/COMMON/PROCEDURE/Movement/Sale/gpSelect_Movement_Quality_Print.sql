@@ -370,7 +370,7 @@ BEGIN
               END                 :: TVarChar AS CodeUKTZED
 
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Article,   COALESCE (tmpObject_GoodsPropertyValue.Article, ''))      AS Article_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality,   tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17) AS Quality_Juridical
+           --, COALESCE (tmpObject_GoodsPropertyValueGroup.Quality,   tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17) AS Quality_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality2,  COALESCE (tmpObject_GoodsPropertyValue.Quality2, ''))     AS Quality2_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality10, COALESCE (tmpObject_GoodsPropertyValue.Quality10, ''))    AS Quality10_Juridical
 
@@ -395,7 +395,7 @@ BEGIN
 
            , tmpGoodsQuality.QualityName
            , tmpGoodsQuality.QualityComment
-           , tmpGoodsQuality.Value17
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17) :: TVarChar AS Value17   --, tmpGoodsQuality.Value17
            , tmpGoodsQuality.Value1
            , tmpGoodsQuality.Value2
            , tmpGoodsQuality.Value3

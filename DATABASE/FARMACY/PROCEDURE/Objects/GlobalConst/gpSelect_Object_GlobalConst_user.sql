@@ -50,7 +50,8 @@ $BODY$BEGIN
                                 AND ObjectFloat_SiteDiscount.DescId = zc_ObjectFloat_GlobalConst_SiteDiscount()
 
      WHERE Object_GlobalConst.DescId = zc_Object_GlobalConst()
-       AND Object_GlobalConst.Id = zc_Enum_GlobalConst_SiteDiscount();
+       AND (Object_GlobalConst.Id = zc_Enum_GlobalConst_SiteDiscount()
+         OR Object_GlobalConst.Id =zc_Enum_GlobalConst_CostCredit()) ;
   
 END;
 $BODY$
