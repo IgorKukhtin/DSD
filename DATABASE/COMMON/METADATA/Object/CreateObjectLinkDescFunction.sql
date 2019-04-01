@@ -219,7 +219,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ContractTag_ContractTagGroup() RETURNS 
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ContractTag_ContractTagGroup', 'Связь группы признака договора с признаком договора', zc_Object_ContractTag(), zc_Object_ContractTagGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractTag_ContractTagGroup');
 
-
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_GoodsAnalog() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_GoodsAnalog'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Goods_GoodsAnalog', 'Связь товаров с аналогом товара', zc_Object_Goods(), zc_Object_GoodsAnalog() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_GoodsAnalog');
 
 
 -- !!!zc_Object_GoodsPropertyValue!!!
@@ -2128,6 +2130,7 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 01.04.19                                                                                      * zzc_ObjectLink_Goods_GoodsAnalog
  26.02.19         * zc_ObjectLink_GoodsPropertyValue_GoodsTypeKind_Sh
                     zc_ObjectLink_GoodsPropertyValue_GoodsTypeKind_Nom
                     zc_ObjectLink_GoodsPropertyValue_GoodsTypeKind_Ves

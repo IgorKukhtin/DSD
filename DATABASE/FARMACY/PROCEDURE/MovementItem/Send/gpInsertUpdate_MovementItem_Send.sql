@@ -68,6 +68,21 @@ BEGIN
       THEN 
         RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);     
       END IF;     
+      
+      IF EXISTS(SELECT 1 FROM MovementBoolean 
+                WHERE MovementBoolean.MovementId = inMovementId
+                  AND MovementBoolean.DescId = zc_MovementBoolean_isAuto() 
+                  AND MovementBoolean.ValueData = TRUE)
+      THEN 
+      
+        IF COALESCE (ioId, 0) = 0 OR EXISTS(SELECT 1 FROM MovementItem 
+                                            WHERE MovementItem.ID = ioId 
+                                              AND MovementItem.Amount < inAmount)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Увеличивать количество в автоматически сформированных перемещениях вам запрещено.';     
+        END IF;     
+      END IF;     
+      
     END IF;     
 
     --если цена получателя = 0 заменяем ее на цену отвравителя и записываем в прайс
@@ -114,6 +129,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 01.04.19                                                                      *  
  05.02.19         * add inAmountStorage
  19.12.18                                                                      *  
  07.09.17         *

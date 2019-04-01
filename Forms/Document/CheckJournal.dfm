@@ -14,17 +14,17 @@ inherited CheckJournalForm: TCheckJournalForm
     Height = 477
     TabOrder = 3
     ExplicitTop = 77
-    ExplicitWidth = 896
+    ExplicitWidth = 911
     ExplicitHeight = 477
     ClientRectBottom = 477
     ClientRectRight = 911
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 896
+      ExplicitWidth = 911
       ExplicitHeight = 477
       inherited cxGrid: TcxGrid
         Width = 911
         Height = 477
-        ExplicitWidth = 896
+        ExplicitWidth = 911
         ExplicitHeight = 477
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -392,6 +392,20 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 87
           end
+          object Delay: TcxGridDBColumn
+            Caption = #1055#1088#1086#1089#1088#1086#1095#1082#1072
+            DataBinding.FieldName = 'Delay'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object Deadlines: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082#1080
+            DataBinding.FieldName = 'Deadlines'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
         end
       end
     end
@@ -399,7 +413,7 @@ inherited CheckJournalForm: TCheckJournalForm
   inherited Panel: TPanel
     Width = 911
     Height = 51
-    ExplicitWidth = 896
+    ExplicitWidth = 911
     ExplicitHeight = 51
     inherited deStart: TcxDateEdit
       EditValue = 42370d

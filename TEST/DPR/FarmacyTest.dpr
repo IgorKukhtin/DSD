@@ -672,7 +672,9 @@ uses
   Retail in '..\..\FormsFarmacy\Guides\Retail.pas' {RetailForm: TParentForm},
   RetailEdit in '..\..\FormsFarmacy\Guides\RetailEdit.pas' {RetailEditForm: TParentForm},
   CashGoodsOneToExpirationDate in '..\..\FormsFarmacy\Cash\CashGoodsOneToExpirationDate.pas' {CashGoodsOneToExpirationDate: TParentForm},
-  EmployeeScheduleUnit in '..\..\FormsFarmacy\Cash\EmployeeScheduleUnit.pas' {EmployeeScheduleUnitForm: TParentForm};
+  EmployeeScheduleUnit in '..\..\FormsFarmacy\Cash\EmployeeScheduleUnit.pas' {EmployeeScheduleUnitForm: TParentForm},
+  GoodsAnalog in '..\..\FormsFarmacy\Guides\GoodsAnalog.pas' {GoodsAnalogForm: TParentForm},
+  GoodsAnalogEdit in '..\..\FormsFarmacy\Guides\GoodsAnalogEdit.pas' {GoodsAnalogEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

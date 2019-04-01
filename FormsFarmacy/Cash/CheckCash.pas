@@ -90,6 +90,9 @@ type
     dxBarButton6: TdxBarButton;
     colRemains: TcxGridDBColumn;
     colColor_calc: TcxGridDBColumn;
+    cbSite: TcxCheckBox;
+    cbDeadlines: TcxCheckBox;
+    cbDelay: TcxCheckBox;
   private
     { Private declarations }
   public

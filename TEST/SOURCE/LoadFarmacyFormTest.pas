@@ -483,22 +483,26 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_NDS_diffForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoods_NDS_diffForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
-
   }
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAnalogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TGoodsAnalogForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAnalogEditForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TGoodsAnalogEditForm');
+
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TExchangeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TExchangeForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TExchangeEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TExchangeEditForm');
 
-    exit;
-    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMainForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsMainForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMainEditForm'));

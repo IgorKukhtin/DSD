@@ -31,6 +31,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , NDS_PriceList TFloat, isNDS_dif Boolean
              , OrdPrice Integer
              , isNotUploadSites Boolean, DoesNotShare Boolean
+             , GoodsAnalog TVarChar
               ) AS
 $BODY$ 
   DECLARE vbUserId Integer;
@@ -294,6 +295,7 @@ BEGIN
            , tmpPricelistItems.Ord      :: Integer AS OrdPrice
            , COALESCE(ObjectBoolean_isNotUploadSites.ValueData, false) AS isNotUploadSites
            , COALESCE(ObjectBoolean_DoesNotShare.ValueData, false) AS DoesNotShare
+           , Object_GoodsAnalog.ValueData                          AS GoodsAnalog
       FROM Object_Goods_View
            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_View.ObjectId
            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id 
@@ -360,6 +362,12 @@ BEGIN
                                    ON ObjectBoolean_DoesNotShare.ObjectId = Object_Goods_View.Id 
                                   AND ObjectBoolean_DoesNotShare.DescId = zc_ObjectBoolean_Goods_DoesNotShare()
 
+           -- Аналоги товара
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsAnalog
+                                ON ObjectLink_Goods_GoodsAnalog.ObjectId = Object_Goods_View.Id
+                               AND ObjectLink_Goods_GoodsAnalog.DescId = zc_ObjectLink_Goods_GoodsAnalog()
+           LEFT JOIN Object AS Object_GoodsAnalog ON Object_GoodsAnalog.Id = ObjectLink_Goods_GoodsAnalog.ChildObjectId
+
       WHERE Object_Goods_View.ObjectId = vbObjectId
       ;
 
@@ -374,6 +382,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.  Шаблий О.В.
+ 01.04.19                                                                     * add DoesNotShare
  15.03.19                                                                     * add DoesNotShare
  11.02.19         * признак Товары соц-проект берем и документа
  24.05.18                                                                     * add isNotUploadSites

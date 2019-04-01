@@ -77,6 +77,8 @@ type
     dxBarButton1: TdxBarButton;
     BanksPOSTerminalsName: TcxGridDBColumn;
     JackdawsChecksName: TcxGridDBColumn;
+    Delay: TcxGridDBColumn;
+    Deadlines: TcxGridDBColumn;
   private
     { Private declarations }
   public

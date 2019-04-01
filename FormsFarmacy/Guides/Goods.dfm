@@ -1,24 +1,24 @@
 inherited GoodsForm: TGoodsForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1089#1077#1090#1080
   ClientHeight = 443
-  ClientWidth = 883
+  ClientWidth = 886
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 899
+  ExplicitWidth = 902
   ExplicitHeight = 482
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 883
+    Width = 886
     Height = 417
     ExplicitWidth = 883
     ExplicitHeight = 417
     ClientRectBottom = 417
-    ClientRectRight = 883
+    ClientRectRight = 886
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 883
       ExplicitHeight = 417
       inherited cxGrid: TcxGrid
-        Width = 883
+        Width = 886
         Height = 417
         ExplicitWidth = 883
         ExplicitHeight = 417
@@ -360,6 +360,13 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
+          end
+          object GoodsAnalog: TcxGridDBColumn
+            Caption = #1040#1085#1072#1083#1086#1075' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsAnalog'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
         end
       end

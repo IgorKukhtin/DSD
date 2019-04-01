@@ -144,7 +144,7 @@ BEGIN
            WHERE Movement.ID = vbMovementNextId) AS T1
      WHERE tmpMainUnit.UserID = T1.UserID;
 
-     DELETE FROM tmpMainUnit WHERE MovementItemNextID IS Null and MovementItemNextID IS NULL;
+     DELETE FROM tmpMainUnit WHERE MovementItemID IS Null and MovementItemNextID IS NULL;
 
      -- Получение главных аптек для отображения подмен
      CREATE TEMP TABLE tmpMainUnitSubstitution (UserId Integer,

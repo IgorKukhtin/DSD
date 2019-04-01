@@ -108,13 +108,8 @@ begin
           ModalResult:=mrNone; // не надо закрывать
           exit;
     end;}
-    if trim (edMedicSP.Text) = '' then
-    begin ActiveControl:=edMedicSP;
-          ShowMessage ('Ошибка.Значение <ФИО врача> не определено');
-          ModalResult:=mrNone; // не надо закрывать
-          exit;
-    end;
     //
+
     try Key:= SPKindGuides.Params.ParamByName('Key').Value; except Key:= 0;end;
     if Key = 0 then
     begin
@@ -123,9 +118,18 @@ begin
           ModalResult:=mrNone; // не надо закрывать
           exit;
     end;
-    //
+
     if Panel2.Visible then
     begin
+
+      if trim (edMedicSP.Text) = '' then
+      begin ActiveControl:=edMedicSP;
+            ShowMessage ('Ошибка.Значение <ФИО врача> не определено');
+            ModalResult:=mrNone; // не надо закрывать
+            exit;
+      end;
+      //
+
       try Key:= GuidesMemberSP.Params.ParamByName('Key').Value; except Key:= 0;end;
       if Key = 0 then
       begin
@@ -134,14 +138,14 @@ begin
             ModalResult:=mrNone; // не надо закрывать
             exit;
       end;
-    end;
 
-    try Key:= PartnerMedicalGuides.Params.ParamByName('Key').Value; except Key:= 0;end;
-    if Key = 0 then
-    begin
-          ActiveControl:=cePartnerMedical;
-          ShowMessage ('Внимание.Значение <Медицинское учреждение> не установлено.');
-          ModalResult:=mrOk; // ??? может не надо закрывать
+      try Key:= PartnerMedicalGuides.Params.ParamByName('Key').Value; except Key:= 0;end;
+      if Key = 0 then
+      begin
+            ActiveControl:=cePartnerMedical;
+            ShowMessage ('Внимание.Значение <Медицинское учреждение> не установлено.');
+            ModalResult:=mrOk; // ??? может не надо закрывать
+      end else ModalResult:=mrOk;
     end
     // а здесь уже все ОК
     else ModalResult:=mrOk;

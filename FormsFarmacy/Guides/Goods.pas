@@ -82,6 +82,7 @@ type
     spUpdate_Goods_isNotUploadSites: TdsdStoredProc;
     DoesNotShare: TcxGridDBColumn;
     spUpdate_Goods_DoesNotShare: TdsdStoredProc;
+    GoodsAnalog: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,7 +1,7 @@
-object BankPOSTerminalForm: TBankPOSTerminalForm
+object GoodsAnalogForm: TGoodsAnalogForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <POS '#1090#1077#1088#1084#1080#1085#1072#1083#1099'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1040#1085#1072#1083#1086#1075#1080' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 344
   ClientWidth = 452
   Color = clBtnFace
@@ -246,8 +246,8 @@ object BankPOSTerminalForm: TBankPOSTerminalForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TBankPOSTerminalEditForm'
-      FormNameParam.Value = 'TBankPOSTerminalEditForm'
+      FormName = 'TGoodsAnalogEditForm'
+      FormNameParam.Value = 'TGoodsAnalogEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -282,8 +282,8 @@ object BankPOSTerminalForm: TBankPOSTerminalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TBankPOSTerminalEditForm'
-      FormNameParam.Value = 'TBankPOSTerminalEditForm'
+      FormName = 'TGoodsAnalogEditForm'
+      FormNameParam.Value = 'TGoodsAnalogEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -398,7 +398,7 @@ object BankPOSTerminalForm: TBankPOSTerminalForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_BankPOSTerminal'
+    StoredProcName = 'gpSelect_Object_GoodsAnalog'
     DataSet = ClientDataSet
     DataSets = <
       item

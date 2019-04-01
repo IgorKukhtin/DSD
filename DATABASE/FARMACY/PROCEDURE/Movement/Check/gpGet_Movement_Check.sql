@@ -40,6 +40,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              
              , BankPOSTerminalId Integer, BankPOSTerminalName TVarChar
              , JackdawsChecksId Integer, JackdawsChecksName TVarChar
+             , Delay Boolean, Deadlines Boolean
 )
 AS
 $BODY$
@@ -103,6 +104,9 @@ BEGIN
            , Object_JackdawsChecks.Id                                     AS JackdawsChecksId
            , Object_JackdawsChecks.ValueData                              AS JackdawsChecksName
 
+           , COALESCE (MovementBoolean_Delay.ValueData, False)::Boolean       AS Delay
+           , COALESCE (MovementBoolean_Deadlines.ValueData, False)::Boolean   AS Deadlines
+
         FROM Movement_Check_View AS Movement_Check
              LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
                                   ON ObjectLink_DiscountExternal.ObjectId = Movement_Check.DiscountCardId
@@ -151,6 +155,14 @@ BEGIN
                                          AND MovementLinkObject_JackdawsChecks.DescId = zc_MovementLinkObject_JackdawsChecks()
              LEFT JOIN Object AS Object_JackdawsChecks ON Object_JackdawsChecks.Id = MovementLinkObject_JackdawsChecks.ObjectId
 
+             LEFT JOIN MovementBoolean AS MovementBoolean_Delay
+                                       ON MovementBoolean_Delay.MovementId = Movement_Check.Id
+                                      AND MovementBoolean_Delay.DescId = zc_MovementBoolean_Delay()
+
+             LEFT JOIN MovementBoolean AS MovementBoolean_Deadlines
+                                       ON MovementBoolean_Deadlines.MovementId = Movement_Check.Id
+                                      AND MovementBoolean_Deadlines.DescId = zc_MovementBoolean_Deadlines()
+
        WHERE Movement_Check.Id = inMovementId;
 
 END;
@@ -161,6 +173,7 @@ ALTER FUNCTION gpGet_Movement_Check (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 01.04.19                                                                      * add Delay, Deadlines
  25.02.19                                                                      * add JackdawsChecks
  16.02.19                                                                      * add BankPOSTerminal
  28.01.19         * add isSite

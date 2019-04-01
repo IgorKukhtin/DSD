@@ -123,6 +123,8 @@ type
     actExecJackdawsChecks: TdsdExecStoredProc;
     dxBarButton3: TdxBarButton;
     spUpdateJackdawsChecks: TdsdStoredProc;
+    cbDeadlines: TcxCheckBox;
+    cbDelay: TcxCheckBox;
   private
     { Private declarations }
   public

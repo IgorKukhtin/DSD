@@ -320,7 +320,7 @@ inherited MainCashForm2: TMainCashForm2
           Width = 53
         end
         object MainColPriceSP: TcxGridDBColumn
-          Caption = #1062#1077#1085#1072'.'#1089#1087
+          Caption = #1044#1086#1087#1083#1072#1090#1072' '#1087#1072#1094#1080#1077#1085#1090#1086#1084' '#1057#1055
           DataBinding.FieldName = 'PriceSP'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
@@ -387,7 +387,7 @@ inherited MainCashForm2: TMainCashForm2
           Width = 45
         end
         object DiffSP2: TcxGridDBColumn
-          Caption = #1089#1082'2'
+          Caption = #1054#1087#1083#1072#1090#1072' '#1075#1086#1089'-'#1074#1086#1084' '#1087#1086' '#1057#1055
           DataBinding.FieldName = 'DiffSP2'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
@@ -3773,7 +3773,7 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 408
+    Left = 400
     Top = 248
   end
   object spGet_JuridicalList: TdsdStoredProc

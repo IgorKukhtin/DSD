@@ -2874,7 +2874,7 @@ function TMainCashForm2.CheckSP : boolean;
 begin
   Result := False;
 
-  if not UnitConfigCDS.FieldByName('isSP').AsBoolean then
+{  if not UnitConfigCDS.FieldByName('isSP').AsBoolean then
   Begin
     ShowMessage('По подразделению работа со скидками по соц проекту запрещена!');
     exit;
@@ -2897,7 +2897,7 @@ begin
         FormatDateTime('hh:nn:ss', UnitConfigCDS.FieldByName('EndTimeSP').AsDateTime) + ' !');
       exit;
     End;
-  end;
+  end;}
   Result := True;
 end;
 

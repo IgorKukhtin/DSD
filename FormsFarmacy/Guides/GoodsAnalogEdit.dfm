@@ -1,7 +1,7 @@
-﻿object BankPOSTerminalEditForm: TBankPOSTerminalEditForm
+﻿object GoodsAnalogEditForm: TGoodsAnalogEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <POS '#1090#1077#1088#1084#1080#1085#1072#1083'>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <'#1040#1085#1072#1083#1086#1075#1080#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 166
   ClientWidth = 436
   Color = clBtnFace
@@ -95,7 +95,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_BankPOSTerminal'
+    StoredProcName = 'gpInsertUpdate_Object_GoodsAnalog'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -138,7 +138,7 @@
     Top = 32
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_BankPOSTerminal'
+    StoredProcName = 'gpGet_Object_GoodsAnalog'
     DataSets = <>
     OutputType = otResult
     Params = <

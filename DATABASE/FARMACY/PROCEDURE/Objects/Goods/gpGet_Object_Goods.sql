@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isFirst boolean, isSecond boolean, 
                MorionCode Integer, BarCode TVarChar,
                NameUkr TVarChar, CodeUKTZED TVarChar, ExchangeId Integer, ExchangeName TVarChar,
+               GoodsAnalogId Integer, GoodsAnalogName TVarChar,
                isErased boolean
                ) AS
 $BODY$
@@ -59,7 +60,10 @@ BEGIN
                   , ''::TVarChar  AS NameUkr
                   , ''::TVarChar  AS CodeUKTZED
                   , 0::Integer    AS ExchangeId
-                  , 0::TVarChar   AS ExchangeName
+                  , ''::TVarChar  AS ExchangeName
+                  , 0::Integer    AS GoodsAnalogId 
+                  , ''::TVarChar  AS GoodsAnalogName
+
                   , CAST (NULL AS Boolean) AS isErased
 
              FROM (SELECT lfGet_ObjectCode_byRetail (vbObjectId, 0, zc_Object_Goods()) AS GoodsCodeIntNew) AS Object_Goods
@@ -146,6 +150,10 @@ BEGIN
 
                   , Object_Exchange.Id               AS ExchangeId
                   , Object_Exchange.ValueData        AS ExchangeName
+                  
+                  , Object_GoodsAnalog.Id            AS GoodsAnalogId
+                  , Object_GoodsAnalog.ValueData     AS GoodsAnalogName
+
 
                   , Object_Goods_View.isErased       AS isErased
                   
@@ -175,6 +183,13 @@ BEGIN
                                        ON ObjectLink_Goods_Exchange.ObjectId = Object_Goods_View.Id
                                       AND ObjectLink_Goods_Exchange.DescId = zc_ObjectLink_Goods_Exchange()
                   LEFT JOIN Object AS Object_Exchange ON Object_Exchange.Id = ObjectLink_Goods_Exchange.ChildObjectId
+
+                  -- Аналоги товара
+                  LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsAnalog
+                                       ON ObjectLink_Goods_GoodsAnalog.ObjectId = Object_Goods_View.Id
+                                      AND ObjectLink_Goods_GoodsAnalog.DescId = zc_ObjectLink_Goods_GoodsAnalog()
+                  LEFT JOIN Object AS Object_GoodsAnalog ON Object_GoodsAnalog.Id = ObjectLink_Goods_GoodsAnalog.ChildObjectId
+                  
              WHERE Object_Goods_View.Id = inId;
 
      END IF;
@@ -188,6 +203,7 @@ ALTER FUNCTION gpGet_Object_Goods(integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.   Шаблий О.В.
+ 01.04.19                                                                      * GoodsAnalog
  28.09.18                                                                      * NameUkr, CodeUKTZED, ExchangeId, ExchangeName
  19.05.17                                                       * MorionCode, BarCode
  12.04.16         *

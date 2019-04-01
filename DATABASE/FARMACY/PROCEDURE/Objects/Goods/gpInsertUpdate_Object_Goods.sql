@@ -9,6 +9,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -29,6 +30,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inNameUkr             TVarChar  ,    -- Название украинское
     IN inCodeUKTZED          TVarChar  ,    -- Код УКТЗЭД
     IN inExchangeId          Integer   ,    -- Од:
+    IN inGoodsAnalogId       Integer   ,    -- Аналоги товара
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS Integer
@@ -128,6 +130,7 @@ BEGIN
                                                , inNameUkr       := inNameUkr
                                                , inCodeUKTZED    := inCodeUKTZED
                                                , inExchangeId    := inExchangeId
+                                               , inGoodsAnalogId := inGoodsAnalogId
                                                , inObjectId      := Object_Retail.Id
                                                , inUserId        := vbUserId
                                                 )
@@ -248,6 +251,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.   Шаблий О.В.
+ 01.04.16                                                                      *
  28.09.18                                                                      *
  19.05.17                                                       * MorionCode, BarCode
  25.03.16                                        *
