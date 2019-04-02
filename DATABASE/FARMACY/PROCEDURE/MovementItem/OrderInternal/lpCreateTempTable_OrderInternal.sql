@@ -14,7 +14,24 @@ $BODY$
   DECLARE vbMainJuridicalId Integer;
   DECLARE vbUnitId Integer;
   DECLARE vbAreaId_find Integer;
+  DECLARE vbCostCredit TFloat;
 BEGIN
+
+     -- получаем значение константы
+     vbCostCredit := COALESCE ((SELECT COALESCE (ObjectFloat_SiteDiscount.ValueData, 0)          :: TFloat    AS SiteDiscount
+                                FROM Object AS Object_GlobalConst
+                                     INNER JOIN ObjectBoolean AS ObjectBoolean_SiteDiscount
+                                                              ON ObjectBoolean_SiteDiscount.ObjectId = Object_GlobalConst.Id
+                                                             AND ObjectBoolean_SiteDiscount.DescId = zc_ObjectBoolean_GlobalConst_SiteDiscount()
+                                                             AND ObjectBoolean_SiteDiscount.ValueData = TRUE
+                                     INNER JOIN ObjectFloat AS ObjectFloat_SiteDiscount
+                                                           ON ObjectFloat_SiteDiscount.ObjectId = Object_GlobalConst.Id
+                                                          AND ObjectFloat_SiteDiscount.DescId = zc_ObjectFloat_GlobalConst_SiteDiscount()
+                                                          AND COALESCE (ObjectFloat_SiteDiscount.ValueData, 0) <> 0
+                                WHERE Object_GlobalConst.DescId = zc_Object_GlobalConst()
+                                  AND Object_GlobalConst.Id =zc_Enum_GlobalConst_CostCredit()
+                                )
+                                , 0)  :: TFloat;
 
      -- ПАРАМЕТРЫ
      SELECT ObjectLink_Unit_Juridical.ChildObjectId, MovementLinkObject.ObjectId, COALESCE (ObjectLink_Unit_Area.ChildObjectId, zc_Area_Basis())
@@ -68,7 +85,8 @@ BEGIN
              , Deferment Integer
              , Bonus TFloat
              , Percent TFloat
-             , SuperFinalPrice TFloat) ON COMMIT DROP;
+             , SuperFinalPrice TFloat
+             , SuperFinalPrice_Deferment TFloat) ON COMMIT DROP;
 
 
       -- Сохраниели данные
@@ -193,7 +211,7 @@ BEGIN
             , ddd.isDefault
             , ddd.Deferment
             , ddd.Bonus 
-/* * /
+/*   * /
             , CASE WHEN ddd.Deferment = 0
                         THEN 0
                    WHEN ddd.isTOP = TRUE
@@ -206,7 +224,7 @@ BEGIN
                         THEN FinalPrice * (100 - COALESCE (PriceSettingsTOP.Percent, 0)) / 100
                    ELSE FinalPrice * (100 - PriceSettings.Percent) / 100
               END :: TFloat AS SuperFinalPrice   
-/ */
+/   */
             , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
                         THEN COALESCE (PriceSettingsTOP.Percent, 0)
                    WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
@@ -219,6 +237,14 @@ BEGIN
                         THEN FinalPrice * (100 + COALESCE (PriceSettings.Percent, 0)) / 100
                    ELSE FinalPrice
               END :: TFloat AS SuperFinalPrice   
+
+              -- цена  с учетом стоимости кредитных ресурсов
+            , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
+                        THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
+                   WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
+                        THEN FinalPrice * (100 + COALESCE (PriceSettings.Percent, 0)) / 100
+                   ELSE FinalPrice - FinalPrice * ((ddd.Deferment+1) * vbCostCredit) / 100
+              END :: TFloat AS SuperFinalPrice_Deferment
 /**/
        FROM 
              (SELECT DISTINCT MovementItemOrder.Id
@@ -321,6 +347,7 @@ ALTER FUNCTION lpCreateTempTable_OrderInternal (Integer, Integer, Integer, Integ
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.04.19         * SuperFinalPrice_Deferment
  07.02.19         * если isBonusClose = true бонусы не учитываем
  14.01.19         *
  19.10.18         * isPriceClose заменила на isPriceCloseOrder

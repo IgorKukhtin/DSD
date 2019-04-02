@@ -5,6 +5,7 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ ЧЕК>
@@ -33,6 +34,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
     IN inSiteDiscount        Boolean   , -- Скидка через сайт
     IN inBankPOSTerminalId   Integer   , -- Банк POS терминала
     IN inJackdawsChecksCode  Integer   , -- Тип галки
+    IN inRoundingDown        Boolean   , -- Округление в низ
     IN inUserSession	     TVarChar  , -- сессия пользователя под которой создан чек в программе
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -169,6 +171,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberSP(), ioId, inInvNumberSP);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_RoundingTo10(), ioId, True);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_RoundingDown(), ioId, inRoundingDown);
     -- сохранили <>
     IF inInvNumberSP <> ''
     THEN

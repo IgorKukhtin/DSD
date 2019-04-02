@@ -121,10 +121,10 @@ BEGIN
         FROM (
                 SELECT *, MIN(DDD.Id) OVER(PARTITION BY MovementItemId) AS MinId 
                 FROM(
-                        SELECT *, MIN(SuperFinalPrice) OVER(PARTITION BY MovementItemId) AS MinSuperFinalPrice
+                        SELECT *, MIN(SuperFinalPrice_Deferment) OVER(PARTITION BY MovementItemId) AS MinSuperFinalPrice
                         FROM _tmpMI
                     ) AS DDD
-                WHERE DDD.SuperFinalPrice = DDD.MinSuperFinalPrice
+                WHERE DDD.SuperFinalPrice_Deferment = DDD.MinSuperFinalPrice
              ) AS MinPrice
         WHERE MinPrice.Id = MinPrice.MinId;
     END IF;
@@ -176,10 +176,10 @@ BEGIN
          FROM (
                  SELECT *, MIN(DDD.Id) OVER(PARTITION BY MovementItemId) AS MinId 
                  FROM(
-                         SELECT *, MIN(SuperFinalPrice) OVER(PARTITION BY MovementItemId) AS MinSuperFinalPrice
+                         SELECT *, MIN(SuperFinalPrice_Deferment) OVER(PARTITION BY MovementItemId) AS MinSuperFinalPrice
                          FROM _tmpMI
                      ) AS DDD
-                 WHERE DDD.SuperFinalPrice = DDD.MinSuperFinalPrice
+                 WHERE DDD.SuperFinalPrice_Deferment = DDD.MinSuperFinalPrice
               ) AS MinPrice
          WHERE MinPrice.Id = MinPrice.MinId;
     END IF;

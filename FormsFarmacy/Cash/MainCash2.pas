@@ -531,7 +531,7 @@ type
       AOperDateSP : TDateTime;
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
       ASummPayAdd : Currency;  AMemberSPID, ABankPOSTerminal, AJackdawsChecksCode : integer; ASiteDiscount : Currency;
-      NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
+      ARoundingDown, ANeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 
     //проверили что есть остаток
     function fCheck_RemainsError : Boolean;
@@ -595,7 +595,7 @@ var
   LastErr: Integer;
   FM_SERVISE: Integer;  // для передачи сообщений между приложение и сервисом // только 2 форма
   function GetPrice(Price, Discount:currency): currency;
-  function GetSumm(Amount,Price:currency): currency;
+  function GetSumm(Amount,Price:currency;Down:Boolean): currency;
   function GetSummFull(Amount,Price:currency): currency;
   function GenerateGUID: String;
   procedure Add_Log(AMessage: String);
@@ -708,7 +708,7 @@ begin
   Result := (RI / 100);
 end;
 
-function GetSumm(Amount,Price:currency): currency;
+function GetSumm(Amount,Price:currency;Down:Boolean): currency;
 var
   A, P, RI: Cardinal;
   S1: String;
@@ -722,14 +722,24 @@ begin
   P := trunc(Price * 100);
   RI := A*P;
   S1 := IntToStr(RI);
-  if Length(S1) <= 4 then
-    RI := 0
-  else
-    RI := StrToInt(Copy(S1,1,length(S1)-4));
-  if (Length(S1)>=4) AND
-     (StrToint(S1[length(S1)-3])>=5) then
-    RI := RI + 1;
-  Result := (RI / 10);
+  if Down then
+  begin
+    if Length(S1) <= 4 then
+      RI := 0
+    else
+      RI := StrToInt(Copy(S1,1,length(S1)-4));
+    Result := (RI / 10);
+  end else
+  begin
+    if Length(S1) <= 4 then
+      RI := 0
+    else
+      RI := StrToInt(Copy(S1,1,length(S1)-4));
+    if (Length(S1)>=4) AND
+       (StrToint(S1[length(S1)-3])>=5) then
+      RI := RI + 1;
+    Result := (RI / 10);
+  end;
 end;
 
 function GetSummFull(Amount,Price:currency): currency;
@@ -959,6 +969,8 @@ begin
   FormParams.ParamByName('BankPOSTerminal').Value           := 0;
   //***25.02.19
   FormParams.ParamByName('JackdawsChecksCode').Value        := 0;
+  //***02.04.19
+  FormParams.ParamByName('RoundingDown').Value              := False;
 
   ClearFilterAll;
 
@@ -1108,9 +1120,9 @@ begin
           checkCDS.FieldByName('Price').asCurrency    := GetPrice(checkCDS.FieldByName('PriceSale').asCurrency,
                                                                   Self.FormParams.ParamByName('ManualDiscount').Value);
           checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('ManualDiscount').Value;
-          CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency);
+          CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
           checkCDS.FieldByName('SummChangePercent').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
-              CheckCDS.FieldByName('PriceSale').asCurrency) - CheckCDS.FieldByName('Summ').asCurrency;
+              CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value) - CheckCDS.FieldByName('Summ').asCurrency;
           checkCDS.Post;
         end;
         CheckCDS.Next;
@@ -1524,8 +1536,8 @@ begin
         checkCDS.FieldByName('Price').asCurrency    := GetPrice(checkCDS.FieldByName('PriceSale').asCurrency,
                                                                 Self.FormParams.ParamByName('ManualDiscount').Value);
         checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('ManualDiscount').Value;
-        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency);
-        checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency) -
+        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
+        checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value) -
           CheckCDS.FieldByName('Summ').asCurrency;
         checkCDS.Post;
       end;
@@ -1741,6 +1753,8 @@ begin
                    FormParams.ParamByName('JackdawsChecksCode').Value,
                    //***28.01.19
                    FormParams.ParamByName('SiteDiscount').Value,
+                   //***02.04.19
+                   FormParams.ParamByName('RoundingDown').Value,
 
                    True,         // NeedComplete
                    CheckNumber,  // FiscalCheckNumber
@@ -2216,8 +2230,8 @@ begin
         checkCDS.FieldByName('Price').asCurrency    := GetPrice(checkCDS.FieldByName('PriceSale').asCurrency,
                                                                 Self.FormParams.ParamByName('PromoCodeChangePercent').Value + Self.FormParams.ParamByName('SiteDiscount').Value);
         checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('PromoCodeChangePercent').Value + Self.FormParams.ParamByName('SiteDiscount').Value;
-        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency);
-        checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency) -
+        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
+        checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value) -
           CheckCDS.FieldByName('Summ').asCurrency;
         checkCDS.Post;
       end else if Self.FormParams.ParamByName('SiteDiscount').Value > 0 then
@@ -2226,8 +2240,8 @@ begin
         checkCDS.FieldByName('Price').asCurrency    := GetPrice(checkCDS.FieldByName('PriceSale').asCurrency,
                                                                 Self.FormParams.ParamByName('SiteDiscount').Value);
         checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('SiteDiscount').Value;
-        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency);
-        checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency) -
+        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
+        checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value) -
           CheckCDS.FieldByName('Summ').asCurrency;
         checkCDS.Post;
       end else
@@ -2235,7 +2249,7 @@ begin
         checkCDS.Edit;
         checkCDS.FieldByName('Price').asCurrency    := checkCDS.FieldByName('PriceSale').asCurrency;
         checkCDS.FieldByName('ChangePercent').asCurrency     := 0;
-        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
+        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
         checkCDS.FieldByName('SummChangePercent').asCurrency :=  0;
         checkCDS.Post;
       end;
@@ -2621,7 +2635,8 @@ begin
               ,FormParams.ParamByName('JackdawsChecksCode').Value
               //***28.01.19
               ,FormParams.ParamByName('SiteDiscount').Value
-
+              //***02.04.19
+              ,FormParams.ParamByName('RoundingDown').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -2708,7 +2723,8 @@ begin
               ,FormParams.ParamByName('JackdawsChecksCode').Value
               //***28.01.19
               ,FormParams.ParamByName('SiteDiscount').Value
-
+              //***02.04.19
+              ,FormParams.ParamByName('RoundingDown').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -2796,8 +2812,8 @@ begin
         checkCDS.FieldByName('Price').asCurrency    := GetPrice(checkCDS.FieldByName('PriceSale').asCurrency,
                                                                 Self.FormParams.ParamByName('PromoCodeChangePercent').Value + Self.FormParams.ParamByName('SiteDiscount').Value);
         checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('PromoCodeChangePercent').Value + Self.FormParams.ParamByName('SiteDiscount').Value;
-        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency);
-        checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency) -
+        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
+        checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value) -
           CheckCDS.FieldByName('Summ').asCurrency;
         checkCDS.Post;
       end else if FormParams.ParamByName('SiteDiscount').Value > 0 then
@@ -2806,8 +2822,8 @@ begin
         checkCDS.FieldByName('Price').asCurrency    := GetPrice(checkCDS.FieldByName('PriceSale').asCurrency,
                                                                 Self.FormParams.ParamByName('SiteDiscount').Value);
         checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('SiteDiscount').Value;
-        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency);
-        checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency) -
+        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
+        checkCDS.FieldByName('SummChangePercent').asCurrency :=  GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value) -
           CheckCDS.FieldByName('Summ').asCurrency;
         checkCDS.Post;
       end else
@@ -2815,7 +2831,7 @@ begin
         checkCDS.Edit;
         checkCDS.FieldByName('Price').asCurrency    := checkCDS.FieldByName('PriceSale').asCurrency;
         checkCDS.FieldByName('ChangePercent').asCurrency     := 0;
-        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
+        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
         checkCDS.FieldByName('SummChangePercent').asCurrency :=  0;
         checkCDS.Post;
       end;
@@ -2874,7 +2890,7 @@ function TMainCashForm2.CheckSP : boolean;
 begin
   Result := False;
 
-{  if not UnitConfigCDS.FieldByName('isSP').AsBoolean then
+  if not UnitConfigCDS.FieldByName('isSP').AsBoolean then
   Begin
     ShowMessage('По подразделению работа со скидками по соц проекту запрещена!');
     exit;
@@ -2897,7 +2913,7 @@ begin
         FormatDateTime('hh:nn:ss', UnitConfigCDS.FieldByName('EndTimeSP').AsDateTime) + ' !');
       exit;
     End;
-  end;}
+  end;
   Result := True;
 end;
 
@@ -2950,7 +2966,8 @@ begin
   FormParams.ParamByName('SPTax').Value     := SPTax;
   FormParams.ParamByName('SPKindId').Value  := SPKindId;
   FormParams.ParamByName('SPKindName').Value:= SPKindName;
-  Self.FormParams.ParamByName('MemberSPID').Value := MemberSPID;
+  FormParams.ParamByName('MemberSPID').Value := MemberSPID;
+  FormParams.ParamByName('RoundingDown').Value := SPKindId = 4823009;
   //
   pnlSP.Visible := InvNumberSP <> '';
   lblPartnerMedicalName.Caption:= '  ' + PartnerMedicalName; // + '  /  № амб. ' + Ambulance;
@@ -3017,6 +3034,8 @@ begin
               ,FormParams.ParamByName('JackdawsChecksCode').Value
               //***14.01.19
               ,FormParams.ParamByName('SiteDiscount').Value
+              //***02.04.19
+              ,FormParams.ParamByName('RoundingDown').Value
 
               ,False         // NeedComplete
               ,''            // FiscalCheckNumber
@@ -4212,6 +4231,8 @@ begin
   FormParams.ParamByName('BankPOSTerminal').Value           := 0;
   //***25.02.19
   FormParams.ParamByName('JackdawsChecksCode').Value        := 0;
+  //***02.04.19
+  FormParams.ParamByName('RoundingDown').Value              := False;
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -4828,8 +4849,8 @@ begin
             // и УСТАНОВИМ скидку
             checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('PromoCodeChangePercent').Value + Self.FormParams.ParamByName('SiteDiscount').Value;
             checkCDS.FieldByName('SummChangePercent').asCurrency :=
-                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency) -
-                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value) -
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
         end else
         if (Self.FormParams.ParamByName('SiteDiscount').Value > 0) then
         begin
@@ -4840,8 +4861,8 @@ begin
             // и УСТАНОВИМ скидку
             checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('SiteDiscount').Value;
             checkCDS.FieldByName('SummChangePercent').asCurrency :=
-                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency) -
-                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value) -
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
         end else
         if (Self.FormParams.ParamByName('ManualDiscount').Value > 0) then
         begin
@@ -4852,8 +4873,8 @@ begin
             // и УСТАНОВИМ скидку
             checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('ManualDiscount').Value;
             checkCDS.FieldByName('SummChangePercent').asCurrency :=
-                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency) -
-                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value) -
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
         end else if (checkCDS.FieldByName('PriceSale').asCurrency <> checkCDS.FieldByName('Price').asCurrency) and
           (RemainsCDS.FieldByName('PriceChange').asCurrency <> 0) and (checkCDS.FieldByName('Price').asCurrency =
           CalcTaxUnitNightPrice(RemainsCDS.FieldByName('Price').asCurrency, RemainsCDS.FieldByName('PriceChange').asCurrency)) then
@@ -4861,8 +4882,8 @@ begin
             // пересчитаем сумму скидки
             checkCDS.FieldByName('ChangePercent').asCurrency     := 0;
             checkCDS.FieldByName('SummChangePercent').asCurrency :=
-                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency) -
-                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value) -
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
         end else if (checkCDS.FieldByName('PriceSale').asCurrency <> checkCDS.FieldByName('Price').asCurrency) and
           (RemainsCDS.FieldByName('FixPercent').asCurrency > 0) and  (checkCDS.FieldByName('Price').asCurrency =
           CalcTaxUnitNightPrice(RemainsCDS.FieldByName('Price').asCurrency, RemainsCDS.FieldByName('Price').asCurrency,
@@ -4870,15 +4891,15 @@ begin
         begin
             // пересчитаем сумму скидки
             checkCDS.FieldByName('SummChangePercent').asCurrency :=
-                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency) -
-                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value) -
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
         end else if pnlTaxUnitNight.Visible and (checkCDS.FieldByName('Price').asCurrency =
           CalcTaxUnitNightPrice(RemainsCDS.FieldByName('Price').asCurrency, RemainsCDS.FieldByName('Price').asCurrency)) then
         begin
             // пересчитаем сумму скидки
             checkCDS.FieldByName('SummChangePercent').asCurrency :=
-                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency) -
-                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value) -
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
         end else
         begin
             // на всяк случай условие - восстановим если Цена БЕЗ скидки была запонена
@@ -4889,7 +4910,7 @@ begin
             checkCDS.FieldByName('SummChangePercent').asCurrency := 0;
         end;
 
-        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency);
+        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
 
         CheckCDS.Post;
       End;
@@ -4935,7 +4956,7 @@ begin
           ListGoodsCDS.Filtered := True;
           ListGoodsCDS.First;
 
-          while (nAmount > 0) and not RemainsCDS.Eof  do
+          while (nAmount > 0) and not ListGoodsCDS.Eof  do
           Begin
             if nAmount >= ListGoodsCDS.FieldByName('Amount').asCurrency then
             begin
@@ -4970,7 +4991,7 @@ function TMainCashForm2.SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AMan
       AOperDateSP : TDateTime;
       ASPKindId: Integer; ASPKindName : String; ASPTax : Currency; APromoCodeID, AManualDiscount : Integer;
       ASummPayAdd : Currency; AMemberSPID, ABankPOSTerminal, AJackdawsChecksCode : Integer; ASiteDiscount : currency;
-      NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
+      ARoundingDown, ANeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: integer;
   myVIPCDS, myVIPListCDS: TClientDataSet;
@@ -4978,7 +4999,7 @@ var
   i : Integer;
 begin
   //Если чек виповский и ещё не проведен - то сохраняем в таблицу випов
-  if gc_User.Local And not NeedComplete AND ((AManagerId <> 0) or (ABayerName <> '')) then
+  if gc_User.Local And not ANeedComplete AND ((AManagerId <> 0) or (ABayerName <> '')) then
   Begin
     myVIPCDS := TClientDataSet.Create(nil);
     myVIPListCDS := TClientDataSet.Create(nil);
@@ -5061,7 +5082,7 @@ begin
         MyVipListCDS.FieldByname('GoodsName').Value := ADS.FieldByName('GoodsName').AsString;
         MyVipListCDS.FieldByname('Amount').Value := ADS.FieldByName('Amount').AsFloat;
         MyVipListCDS.FieldByname('Price').Value := ADS.FieldByName('Price').AsFloat;
-        MyVipListCDS.FieldByname('Summ').Value := GetSumm(ADS.FieldByName('Amount').AsFloat,ADS.FieldByName('Price').AsFloat);
+        MyVipListCDS.FieldByname('Summ').Value := GetSumm(ADS.FieldByName('Amount').AsFloat,ADS.FieldByName('Price').AsFloat,FormParams.ParamByName('RoundingDown').Value);
         //***20.07.16
         MyVipListCDS.FieldByName('PriceSale').asCurrency         := ADS.FieldByName('PriceSale').asCurrency;
         MyVipListCDS.FieldByName('ChangePercent').asCurrency     := ADS.FieldByName('ChangePercent').asCurrency;
@@ -5115,7 +5136,7 @@ begin
                                          ABayerName,                              //Покупатель (VIP)
                                          False,                                   //Распечатан на фискальном регистраторе
                                          False,                                   //Сохранен в реальную базу данных
-                                         NeedComplete,                            //Необходимо проведение
+                                         ANeedComplete,                            //Необходимо проведение
                                          chbNotMCS.Checked,                       //Не участвует в расчете НТЗ
                                          FiscalCheckNumber,                       //Номер фискального чека
                                          //***20.07.16
@@ -5151,7 +5172,9 @@ begin
                                          //***20.02.19
                                          ABankPOSTerminal,         // POS терминал
                                          //***25.02.19
-                                         AJackdawsChecksCode       // Галка
+                                         AJackdawsChecksCode,      // Галка
+                                         //***02.04.19
+                                         ARoundingDown             // Округление в низ
                                         ]);
       End
       else
@@ -5165,7 +5188,7 @@ begin
         FLocalDataBaseHead.FieldByName('BAYER').Value := ABayerName; //Покупатель (VIP)
         FLocalDataBaseHead.FieldByName('SAVE').Value := False; //Покупатель (VIP)
         FLocalDataBaseHead.FieldByName('COMPL').Value := False; //Покупатель (VIP)
-        FLocalDataBaseHead.FieldByName('NEEDCOMPL').Value := NeedComplete; //нужно провести документ
+        FLocalDataBaseHead.FieldByName('NEEDCOMPL').Value := ANeedComplete; //нужно провести документ
         FLocalDataBaseHead.FieldByName('NOTMCS').Value := chbNotMCS.Checked; //Не участвует в расчете НТЗ
         FLocalDataBaseHead.FieldByName('FISCID').Value := FiscalCheckNumber; //Номер фискального чека
         //***20.07.16
@@ -5202,6 +5225,8 @@ begin
         FLocalDataBaseHead.FieldByName('BANKPOS').Value := ABankPOSTerminal;
         //***25.02.19
         FLocalDataBaseHead.FieldByName('JACKCHECK').Value := AJackdawsChecksCode;
+        //***02.04.19
+        FLocalDataBaseHead.FieldByName('ROUNDDOWN').Value := ARoundingDown;
 
         FLocalDataBaseHead.Post;
       End;
@@ -5325,7 +5350,7 @@ begin
 
   // update VIP
   if ((AManagerId <> 0) or (ABayerName <> '')) and
-     (gc_User.Local) and NeedComplete then
+     (gc_User.Local) and ANeedComplete then
   Begin
     WaitForSingleObject(MutexVip, INFINITE);
     try

@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpUpdate_MovementItem_OrderInternal_PrioritetPartner
          (Integer, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, TVarChar, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MovementItem_OrderInternal_PrioritetPartner
+         (Integer, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_OrderInternal_PrioritetPartner(
     IN inId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -13,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_OrderInternal_PrioritetPartner(
     IN inGoodsCode           TVarChar  , 
     IN inGoodsName           TVarChar  , 
     IN inSuperPrice          TFloat    , 
+    IN inSuperPrice_Deferment TFloat    ,
     IN inPrice               TFloat    , 
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -48,6 +51,7 @@ BEGIN
           inGoodsCode AS GoodsCode, 
           inGoodsName AS GoodsName,
           inSuperPrice AS SuperPrice, 
+          inSuperPrice_Deferment AS SuperPrice_Deferment, 
           inPrice AS Price;
 
 
@@ -62,6 +66,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.04.19         * add inSuperPrice_Deferment
  15.10.14                        *
 */
 

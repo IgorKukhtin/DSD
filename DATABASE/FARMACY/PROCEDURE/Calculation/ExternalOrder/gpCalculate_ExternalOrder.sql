@@ -64,14 +64,14 @@ BEGIN
        -- 
        FOR vbRec IN EXECUTE 'FETCH ALL IN' || QUOTE_IDENT (vbCurName1)
        LOOP
-           INSERT INTO _tmpMI_OrderInternal_Master (MovementItemId, PartionGoods, MinimumLot, MCS, PriceFrom, JuridicalPrice, Remains, Reserved, Income, CheckAmount, SendAmount, AmountDeferred, Maker, isClose, isFirst, isSecond, isTOP, isUnitTOP, isMCSNotRecalc, isMCSIsClose, GoodsId_partner, JuridicalId, ContractId)
-             VALUES (vbRec.Id, vbRec.PartionGoodsDate, vbRec.MinimumLot, vbRec.MCS, vbRec.Price, vbRec.SuperFinalPrice, vbRec.RemainsInUnit, vbRec.Reserved, vbRec.Income_Amount, vbRec.CheckAmount, vbRec.SendAmount, vbRec.AmountDeferred, vbRec.MakerName, vbRec.isClose, vbRec.isFirst, vbRec.isSecond, vbRec.isTOP, vbRec.isTOP_Price, vbRec.MCSNotRecalc, vbRec.MCSIsClose, COALESCE (vbRec.PartnerGoodsId, 0), COALESCE (vbRec.JuridicalId, 0), COALESCE (vbRec.ContractId, 0));
+           INSERT INTO _tmpMI_OrderInternal_Master (MovementItemId, PartionGoods, MinimumLot, MCS, PriceFrom, JuridicalPrice, DefermentPrice, Remains, Reserved, Income, CheckAmount, SendAmount, AmountDeferred, Maker, isClose, isFirst, isSecond, isTOP, isUnitTOP, isMCSNotRecalc, isMCSIsClose, GoodsId_partner, JuridicalId, ContractId)
+             VALUES (vbRec.Id, vbRec.PartionGoodsDate, vbRec.MinimumLot, vbRec.MCS, vbRec.Price, vbRec.SuperFinalPrice, vbRec.SuperFinalPrice_Deferment, vbRec.RemainsInUnit, vbRec.Reserved, vbRec.Income_Amount, vbRec.CheckAmount, vbRec.SendAmount, vbRec.AmountDeferred, vbRec.MakerName, vbRec.isClose, vbRec.isFirst, vbRec.isSecond, vbRec.isTOP, vbRec.isTOP_Price, vbRec.MCSNotRecalc, vbRec.MCSIsClose, COALESCE (vbRec.PartnerGoodsId, 0), COALESCE (vbRec.JuridicalId, 0), COALESCE (vbRec.ContractId, 0));
        END LOOP;
        --
        FOR vbRec IN EXECUTE 'FETCH ALL IN' || QUOTE_IDENT (vbCurName2)
        LOOP
-           INSERT INTO _tmpMI_OrderInternal_Child (MovementItemId, GoodsId, PartionGoods, Price, JuridicalPrice, PriceListMovementItemId, Maker, JuridicalId, ContractId)
-             VALUES (vbRec.MovementItemId, COALESCE (vbRec.GoodsId, 0), vbRec.PartionGoodsDate, vbRec.Price, vbRec.SuperFinalPrice, vbRec.PriceListMovementItemId, vbRec.MakerName, COALESCE (vbRec.JuridicalId, 0), COALESCE (vbRec.ContractId, 0));
+           INSERT INTO _tmpMI_OrderInternal_Child (MovementItemId, GoodsId, PartionGoods, Price, JuridicalPrice, DefermentPrice, PriceListMovementItemId, Maker, JuridicalId, ContractId)
+             VALUES (vbRec.MovementItemId, COALESCE (vbRec.GoodsId, 0), vbRec.PartionGoodsDate, vbRec.Price, vbRec.SuperFinalPrice, vbRec.SuperFinalPrice_Deferment, vbRec.PriceListMovementItemId, vbRec.MakerName, COALESCE (vbRec.JuridicalId, 0), COALESCE (vbRec.ContractId, 0));
        END LOOP;
 
        -- Сохранили 
@@ -85,6 +85,7 @@ BEGIN
              , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_AmountDeferred(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.AmountDeferred, 0))
              , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_PriceFrom()     , MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.PriceFrom, 0))
              , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_JuridicalPrice(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.JuridicalPrice, 0))
+             , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_DefermentPrice(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.DefermentPrice, 0))
              , lpInsertUpdate_MovementItemString  (zc_MIString_Maker()        , MovementItem.Id, _tmpMI_OrderInternal_Master.Maker)
              , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Close()       , MovementItem.Id, _tmpMI_OrderInternal_Master.isClose)
              , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_First()       , MovementItem.Id, _tmpMI_OrderInternal_Master.isFirst)
@@ -117,6 +118,7 @@ BEGIN
                                                               , inAmount                    := 0
                                                               , inPrice                     := COALESCE (_tmpMI_OrderInternal_Child.Price, 0)
                                                               , inJuridicalPrice            := COALESCE (_tmpMI_OrderInternal_Child.JuridicalPrice, 0)
+                                                              , inDefermentPrice            := COALESCE (_tmpMI_OrderInternal_Child.DefermentPrice, 0)
                                                               , inPriceListMovementItemId   := COALESCE (_tmpMI_OrderInternal_Child.PriceListMovementItemId, 0)
                                                               , inPartionGoods              := _tmpMI_OrderInternal_Child.PartionGoods
                                                               , inMaker                     := _tmpMI_OrderInternal_Child.Maker
@@ -188,25 +190,25 @@ BEGIN
                                                  ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                                                 AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
                                              
-             LEFT JOIN (SELECT * FROM 
+               LEFT JOIN (SELECT * FROM 
                                       (SELECT *, MIN(Id) OVER(PARTITION BY MovementItemId) AS MinId FROM
                                            (SELECT *
-                                                , MIN(SuperFinalPrice) OVER(PARTITION BY MovementItemId) AS MinSuperFinalPrice
+                                                , MIN(SuperFinalPrice_Deferment) OVER(PARTITION BY MovementItemId) AS MinSuperFinalPrice
                                             FROM _tmpMI) AS DDD
-                                       WHERE DDD.SuperFinalPrice = DDD.MinSuperFinalPrice) AS DDD
+                                       WHERE DDD.SuperFinalPrice_Deferment = DDD.MinSuperFinalPrice) AS DDD
                                   WHERE Id = MinId) AS MinPrice
-                              ON MinPrice.MovementItemId = MovementItem.Id
-                    LEFT JOIN Object_Goods_View AS Object_Goods 
-                                                ON Object_Goods.Id = MovementItem.ObjectId 
-
-                    LEFT OUTER JOIN MovementItemString AS MIString_Comment
-                                                       ON MIString_Comment.MovementItemId = MovementItem.Id
-                                                      AND MIString_Comment.DescId = zc_MIString_Comment()
-            WHERE MovementItem.MovementId = inInternalOrder
-              AND MovementItem.DescId     = zc_MI_Master()
-              AND MovementItem.isErased   = FALSE
-              AND COALESCE(MIFloat_AmountManual.ValueData,(MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0))) > 0
-              AND COALESCE(COALESCE(PriceList.Price, MinPrice.Price), 0) <> 0;
+                                                    ON MinPrice.MovementItemId = MovementItem.Id
+               LEFT JOIN Object_Goods_View AS Object_Goods 
+                                           ON Object_Goods.Id = MovementItem.ObjectId 
+ 
+               LEFT OUTER JOIN MovementItemString AS MIString_Comment
+                                                  ON MIString_Comment.MovementItemId = MovementItem.Id
+                                                 AND MIString_Comment.DescId = zc_MIString_Comment()
+         WHERE MovementItem.MovementId = inInternalOrder
+           AND MovementItem.DescId     = zc_MI_Master()
+           AND MovementItem.isErased   = FALSE
+           AND COALESCE(MIFloat_AmountManual.ValueData,(MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0))) > 0
+           AND COALESCE(COALESCE(PriceList.Price, MinPrice.Price), 0) <> 0;
                        
 -- А тут вставляются те, которых нет в прайсе
 
@@ -231,6 +233,7 @@ BEGIN
                         JOIN MovementItem AS PriceList ON Object_LinkGoods_View.GoodsMainId = PriceList.objectid
                         JOIN LastPriceList_View ON LastPriceList_View.MovementId =  PriceList.MovementId
                     WHERE MovementItem.MovementId = inInternalOrder*/
+                    
                     SELECT DISTINCT MovementItem.Id 
                     FROM MovementItem 
                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Juridical 
@@ -260,21 +263,25 @@ BEGIN
                                   FROM (SELECT *
                                              , MIN (Id) OVER (PARTITION BY MovementItemId) AS MinId
                                         FROM (SELECT *
-                                                   , MIN (SuperFinalPrice) OVER (PARTITION BY MovementItemId) AS MinSuperFinalPrice
+                                                   , MIN (SuperFinalPrice_Deferment) OVER (PARTITION BY MovementItemId) AS MinSuperFinalPrice
                                               FROM _tmpMI
                                              ) AS DDD
-                                       WHERE DDD.SuperFinalPrice = DDD.MinSuperFinalPrice
+                                       WHERE DDD.SuperFinalPrice_Deferment = DDD.MinSuperFinalPrice
                                       ) AS DDD
                                   WHERE Id = MinId
                                  ) AS MinPrice ON MinPrice.MovementItemId = MovementItem.Id
 
-            WHERE MovementItem.MovementId = inInternalOrder
-              AND MovementItem.DescId     = zc_MI_Master()
-              AND MovementItem.isErased   = FALSE
-              AND COALESCE (MIFloat_AmountManual.ValueData, (MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0))) > 0
-              AND COALESCE (COALESCE (PriceList.Price, MinPrice.Price), 0) <> 0
+                    WHERE MovementItem.MovementId = inInternalOrder
+                      AND MovementItem.DescId     = zc_MI_Master()
+                      AND MovementItem.isErased   = FALSE
+                      AND COALESCE (MIFloat_AmountManual.ValueData, (MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0))) > 0
+                      AND COALESCE (COALESCE (PriceList.Price, MinPrice.Price), 0) <> 0
                     )
-        SELECT MovementItem.*, MIFloat_AmountSecond.ValueData AS AmountSecond, MIFloat_AmountManual.ValueData AS AmountManual, MIString_Comment.ValueData as Comment
+                    
+        SELECT MovementItem.*
+             , MIFloat_AmountSecond.ValueData AS AmountSecond
+             , MIFloat_AmountManual.ValueData AS AmountManual
+             , MIString_Comment.ValueData     AS Comment
         FROM MovementItem 
             LEFT OUTER JOIN MovementItemString AS MIString_Comment
                                                ON MIString_Comment.MovementItemId = MovementItem.Id
@@ -285,10 +292,9 @@ BEGIN
             LEFT OUTER JOIN MovementItemFloat AS MIFloat_AmountManual
                                               ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                                              AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()                                  
-        WHERE 
-            MovementId = inInternalOrder 
-            AND 
-            Id NOT IN(SELECT Id FROM ddd)) AS DDD
+        WHERE MovementId = inInternalOrder 
+          AND Id NOT IN (SELECT Id FROM ddd)
+        ) AS DDD
     WHERE
         COALESCE(ddd.AmountManual, ddd.Amount + COALESCE(AmountSecond,0)) > 0;
 

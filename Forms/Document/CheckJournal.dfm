@@ -398,6 +398,7 @@ inherited CheckJournalForm: TCheckJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 60
           end
           object Deadlines: TcxGridDBColumn
             Caption = #1057#1088#1086#1082#1080
@@ -405,6 +406,7 @@ inherited CheckJournalForm: TCheckJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 60
           end
         end
       end

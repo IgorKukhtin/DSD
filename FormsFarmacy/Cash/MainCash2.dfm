@@ -3255,6 +3255,12 @@ inherited MainCashForm2: TMainCashForm2
         Value = 'NULL'
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RoundingDown'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 32
     Top = 56
