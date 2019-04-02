@@ -31,6 +31,8 @@ $BODY$
   DECLARE vbAVGDateStart TDateTime; --ƒата нач. расчета ср. цены
   DECLARE vbAVGDateEnd TDateTime;   --ƒата окон. расчета ср. цены 
 
+  DECLARE vbCostCredit TFloat;
+  
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
 BEGIN
@@ -44,6 +46,21 @@ BEGIN
 --     RAISE EXCEPTION 'ѕовторите действие через 15 мин.';
 -- end if;
 
+     -- получаем значение константы
+     vbCostCredit := COALESCE ((SELECT COALESCE (ObjectFloat_SiteDiscount.ValueData, 0)          :: TFloat    AS SiteDiscount
+                                FROM Object AS Object_GlobalConst
+                                     INNER JOIN ObjectBoolean AS ObjectBoolean_SiteDiscount
+                                                              ON ObjectBoolean_SiteDiscount.ObjectId = Object_GlobalConst.Id
+                                                             AND ObjectBoolean_SiteDiscount.DescId = zc_ObjectBoolean_GlobalConst_SiteDiscount()
+                                                             AND ObjectBoolean_SiteDiscount.ValueData = TRUE
+                                     INNER JOIN ObjectFloat AS ObjectFloat_SiteDiscount
+                                                           ON ObjectFloat_SiteDiscount.ObjectId = Object_GlobalConst.Id
+                                                          AND ObjectFloat_SiteDiscount.DescId = zc_ObjectFloat_GlobalConst_SiteDiscount()
+                                                          AND COALESCE (ObjectFloat_SiteDiscount.ValueData, 0) <> 0
+                                WHERE Object_GlobalConst.DescId = zc_Object_GlobalConst()
+                                  AND Object_GlobalConst.Id =zc_Enum_GlobalConst_CostCredit()
+                                )
+                                , 0)  :: TFloat;
 
     vbCURRENT_DOW := CASE WHEN EXTRACT (DOW FROM CURRENT_DATE) = 0 THEN 7 ELSE EXTRACT (DOW FROM CURRENT_DATE) END ; -- день недели сегодн€
 
@@ -353,6 +370,12 @@ BEGIN
                                   FROM tmpMIF
                                   WHERE tmpMIF.DescId = zc_MIFloat_JuridicalPrice()
                                   )
+
+      , tmpMIF_DefermentPrice AS (SELECT tmpMIF.*
+                                  FROM tmpMIF
+                                  WHERE tmpMIF.DescId = zc_MIFloat_DefermentPrice()
+                                  )
+
       , tmpMIF_Summ  AS (SELECT tmpMIF.*
                          FROM tmpMIF
                          WHERE tmpMIF.DescId = zc_MIFloat_Summ()
@@ -566,6 +589,7 @@ BEGIN
            , COALESCE (tmpMI.isErased, FALSE)     ::Boolean         AS isErased
            , COALESCE (MIFloat_Price.ValueData,0) ::TFloat          AS Price            -- !!!на самом деле здесь zc_MIFloat_PriceFrom!!!
            , COALESCE (MIFloat_JuridicalPrice.ValueData,0) ::TFloat AS SuperFinalPrice
+           , COALESCE (MIFloat_DefermentPrice.ValueData,0) ::TFloat AS SuperFinalPrice_Deferment
 
            , tmpMI.PriceOptSP
            , CASE WHEN tmpMI.isSP = TRUE AND MIFloat_Price.ValueData > tmpMI.PriceOptSP THEN TRUE ELSE FALSE END isPriceDiff
@@ -684,6 +708,7 @@ BEGIN
 
             LEFT JOIN tmpMIF_Price          AS MIFloat_Price          ON MIFloat_Price.MovementItemId          = tmpMI.MovementItemId
             LEFT JOIN tmpMIF_JuridicalPrice AS MIFloat_JuridicalPrice ON MIFloat_JuridicalPrice.MovementItemId = tmpMI.MovementItemId
+            LEFT JOIN tmpMIF_DefermentPrice AS MIFloat_DefermentPrice ON MIFloat_DefermentPrice.MovementItemId = tmpMI.MovementItemId
             LEFT JOIN tmpMIF_Summ           AS MIFloat_Summ           ON MIFloat_Summ.MovementItemId           = tmpMI.MovementItemId
             LEFT JOIN tmpMIF_AmountSecond   AS MIFloat_AmountSecond   ON MIFloat_AmountSecond.MovementItemId   = tmpMI.MovementItemId
             LEFT JOIN tmpMIF_AmountManual   AS MIFloat_AmountManual   ON MIFloat_AmountManual.MovementItemId   = tmpMI.MovementItemId
@@ -778,6 +803,11 @@ BEGIN
                                       FROM tmpMIF
                                       WHERE tmpMIF.DescId = zc_MIFloat_JuridicalPrice()
                                       )
+      , tmpMIFloat_DefermentPrice AS (SELECT tmpMIF.*
+                                      FROM tmpMIF
+                                      WHERE tmpMIF.DescId = zc_MIFloat_DefermentPrice()
+                                      )
+                                  
       , tmpMIString_Maker AS (SELECT MIString_Maker.*
                               FROM MovementItemString AS MIString_Maker
                               WHERE MIString_Maker.DescId = zc_MIString_Maker()
@@ -875,6 +905,7 @@ BEGIN
               , MI_Child.Amount                     ::TFLoat  AS Remains
               , MIFloat_Price.ValueData             ::TFLoat  AS Price
               , MIFloat_JuridicalPrice.ValueData    ::TFLoat  AS SuperFinalPrice
+              , MIFloat_DefermentPrice.ValueData     ::TFloat AS SuperFinalPrice_Deferment
 
               , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN FALSE ELSE TRUE END  ::Boolean AS isPromo
               
@@ -897,6 +928,7 @@ BEGIN
              LEFT JOIN tmpMIDate_PartionGoods    AS MIDate_PartionGoods    ON MIDate_PartionGoods.MovementItemId    = MI_Child.Id
              LEFT JOIN tmpMIFloat_Price          AS MIFloat_Price          ON MIFloat_Price.MovementItemId          = MI_Child.Id
              LEFT JOIN tmpMIFloat_JuridicalPrice AS MIFloat_JuridicalPrice ON MIFloat_JuridicalPrice.MovementItemId = MI_Child.Id
+             LEFT JOIN tmpMIFloat_DefermentPrice AS MIFloat_DefermentPrice ON MIFloat_JuridicalPrice.MovementItemId = MI_Child.Id
              LEFT JOIN tmpMIString_Maker         AS MIString_Maker         ON MIString_Maker.MovementItemId         = MI_Child.Id
              LEFT JOIN tmpJuridical                                        ON tmpJuridical.MovementItemId           = MI_Child.Id
              LEFT JOIN tmpContract                                         ON tmpContract.MovementItemId            = MI_Child.Id
@@ -987,7 +1019,8 @@ BEGIN
                              , Deferment Integer
                              , Bonus TFloat
                              , Percent TFloat
-                             , SuperFinalPrice TFloat) ON COMMIT DROP;
+                             , SuperFinalPrice TFloat
+                             , SuperFinalPrice_Deferment TFloat) ON COMMIT DROP;
 
 
       -- —охраниели данные
@@ -1132,12 +1165,20 @@ BEGIN
                         THEN COALESCE (PriceSettings.Percent, 0)
                    ELSE 0
               END :: TFloat AS Percent
+              
             , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
                         THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
                    WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
                         THEN FinalPrice * (100 + COALESCE (PriceSettings.Percent, 0)) / 100
                    ELSE FinalPrice
               END :: TFloat AS SuperFinalPrice
+              
+            , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
+                        THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
+                   WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
+                        THEN FinalPrice * (100 + COALESCE (PriceSettings.Percent, 0)) / 100
+                   ELSE FinalPrice - FinalPrice * ((ddd.Deferment+1) * vbCostCredit) / 100
+              END :: TFloat AS SuperFinalPrice_Deferment
 /**/
        FROM
              (SELECT DISTINCT MovementItemOrder.Id
@@ -1583,12 +1624,13 @@ BEGIN
                              , DDD.MakerName
                              , DDD.PartionGoodsDate
                              , DDD.SuperFinalPrice
+                             , DDD.SuperFinalPrice_Deferment
                              , DDD.Price
                              , DDD.MinId
                         FROM (SELECT *, MIN(Id) OVER (PARTITION BY MovementItemId) AS MinId
                               FROM (SELECT *
                                          -- , MIN (SuperFinalPrice) OVER (PARTITION BY MovementItemId) AS MinSuperFinalPrice
-                                         , ROW_NUMBER() OVER (PARTITION BY _tmpMI.MovementItemId ORDER BY _tmpMI.SuperFinalPrice ASC, _tmpMI.PartionGoodsDate DESC, _tmpMI.Deferment DESC) AS Ord
+                                         , ROW_NUMBER() OVER (PARTITION BY _tmpMI.MovementItemId ORDER BY _tmpMI.SuperFinalPrice_Deferment ASC, _tmpMI.PartionGoodsDate DESC, _tmpMI.Deferment DESC) AS Ord
                                     FROM _tmpMI
                                    ) AS DDD
                               -- WHERE DDD.SuperFinalPrice = DDD.MinSuperFinalPrice
@@ -1625,6 +1667,7 @@ BEGIN
                        , COALESCE(PriceList.ContractId, MinPrice.ContractId)              AS ContractId
                        , COALESCE(PriceList.ContractName, MinPrice.ContractName)          AS ContractName
                        , COALESCE(PriceList.SuperFinalPrice, MinPrice.SuperFinalPrice)    AS SuperFinalPrice
+                       , COALESCE(PriceList.SuperFinalPrice_Deferment, MinPrice.SuperFinalPrice_Deferment) AS SuperFinalPrice_Deferment
                        --, MovementItem.Goods_isTOP
                        , MovementItem.Price_isTOP
                        , MIFloat_AmountSecond.ValueData                                   AS AmountSecond
@@ -1702,6 +1745,7 @@ BEGIN
                        , tmpMI_all_MinLot.ContractId
                        , tmpMI_all_MinLot.ContractName
                        , tmpMI_all_MinLot.SuperFinalPrice
+                       , tmpMI_all_MinLot.SuperFinalPrice_Deferment
                        , tmpMI_all_MinLot.Price_isTOP
                        , tmpMI_all_MinLot.AmountSecond
                        , tmpMI_all_MinLot.AmountAll
@@ -1781,6 +1825,7 @@ BEGIN
                          , tmpMI.ContractName
                          , tmpMI.MakerName
                          , tmpMI.SuperFinalPrice
+                         , tmpMI.SuperFinalPrice_Deferment
                          , COALESCE(tmpMI.isCalculated, FALSE)                     AS isCalculated
                          , tmpMI.AmountSecond                                      AS AmountSecond
                          , NULLIF(tmpMI.AmountAll,0)                               AS AmountAll
@@ -2178,6 +2223,7 @@ BEGIN
            , tmpMI.ContractName                             AS ContractName
            , tmpMI.MakerName                                AS MakerName
            , tmpMI.SuperFinalPrice                          AS SuperFinalPrice
+           , tmpMI.SuperFinalPrice_Deferment                AS SuperFinalPrice_Deferment
            , COALESCE (tmpGoodsMain.PriceOptSP,0)        ::TFloat     AS PriceOptSP
            , CASE WHEN tmpGoodsMain.isSP = TRUE AND (tmpMI.Price > (COALESCE (tmpGoodsMain.PriceOptSP,0))) THEN TRUE ELSE FALSE END isPriceDiff
            , COALESCE(tmpMI.isCalculated, FALSE)                      AS isCalculated

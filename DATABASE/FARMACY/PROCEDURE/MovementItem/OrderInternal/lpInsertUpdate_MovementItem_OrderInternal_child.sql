@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_OrderInternal()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderInternal_child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TDateTime, TVarChar, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderInternal_child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, TDateTime, TVarChar, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderInternal_child(
  INOUT ioId                        Integer   , -- Ключ объекта <Элемент документа>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_OrderInternal_child(
     IN inAmount                    TFloat    , -- 
     IN inPrice                     TFloat    , -- 
     IN inJuridicalPrice            TFloat    , -- 
+    IN inDefermentPrice            TFloat    , -- 
     IN inPriceListMovementItemId   Integer   , -- 
     IN inPartionGoods              TDateTime , -- 
     IN inMaker                     TVarChar  , -- 
@@ -41,6 +43,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
     -- сохранили свойство
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_JuridicalPrice(), ioId, inJuridicalPrice);
+        -- сохранили свойство
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_DefermentPrice(), ioId, inDefermentPrice);
     -- сохранили свойство
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementItemId(), ioId, inPriceListMovementItemId);
 
@@ -67,6 +71,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.04.19         * inDefermentPrice
  23.10.14                         *
 */
 

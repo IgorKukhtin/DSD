@@ -115,24 +115,24 @@ BEGIN
 
      -- !!!временно!!! - для сквозной синхронизации!!! со "всеми" Retail.Id (а не только vbObjectId)
      PERFORM lpInsertUpdate_Object_Goods_Retail (ioId            := COALESCE (tmpGoods.GoodsId, ioId)
-                                               , inCode          := CASE WHEN ioId <> 0 THEN inCode ELSE vbCode :: TVarChar END
-                                               , inName          := inName
-                                               , inGoodsGroupId  := inGoodsGroupId
-                                               , inMeasureId     := inMeasureId
-                                               , inNDSKindId     := inNDSKindId
-                                               , inMinimumLot    := inMinimumLot
-                                               , inReferCode     := inReferCode
-                                               , inReferPrice    := inReferPrice
-                                               , inPrice         := inPrice
-                                               , inIsClose       := inIsClose
-                                               , inTOP           := inTOP
-                                               , inPercentMarkup := inPercentMarkup
-                                               , inNameUkr       := inNameUkr
-                                               , inCodeUKTZED    := inCodeUKTZED
-                                               , inExchangeId    := inExchangeId
-                                               , inGoodsAnalogId := inGoodsAnalogId
-                                               , inObjectId      := Object_Retail.Id
-                                               , inUserId        := vbUserId
+                                               , inCode          := CASE WHEN ioId <> 0 THEN inCode ELSE vbCode :: TVarChar END   :: TVarChar
+                                               , inName          := inName                      :: TVarChar
+                                               , inGoodsGroupId  := inGoodsGroupId              :: Integer
+                                               , inMeasureId     := inMeasureId   :: Integer
+                                               , inNDSKindId     := inNDSKindId   :: Integer
+                                               , inMinimumLot    := inMinimumLot  :: TFloat
+                                               , inReferCode     := inReferCode   :: Integer
+                                               , inReferPrice    := inReferPrice  :: TFloat
+                                               , inPrice         := inPrice       :: TFloat
+                                               , inIsClose       := inIsClose     :: Boolean
+                                               , inTOP           := inTOP         :: Boolean
+                                               , inPercentMarkup := inPercentMarkup :: TFloat
+                                               , inNameUkr       := inNameUkr      :: TVarChar
+                                               , inCodeUKTZED    := inCodeUKTZED   :: TVarChar
+                                               , inExchangeId    := inExchangeId     :: Integer
+                                               , inGoodsAnalogId := inGoodsAnalogId  :: Integer
+                                               , inObjectId      := Object_Retail.Id :: Integer
+                                               , inUserId        := vbUserId         :: Integer
                                                 )
      FROM Object AS Object_Retail
           LEFT JOIN (SELECT DISTINCT
@@ -181,7 +181,7 @@ BEGIN
      vbMainGoodsId:= (SELECT Object_Goods_Main_View.Id FROM Object_Goods_Main_View  WHERE Object_Goods_Main_View.GoodsCode = vbCode);
 
      -- Добавление/Изменение данных в общем справочнике
-     vbMainGoodsId := lpInsertUpdate_Object_Goods (vbMainGoodsId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, NULL, vbUserId, 0, '');
+     vbMainGoodsId := lpInsertUpdate_Object_Goods (vbMainGoodsId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, 0, vbUserId, 0, '');
 
      -- сохранили свойства - связи товаров сети с общим
      PERFORM gpInsertUpdate_Object_LinkGoods_Load (inGoodsMainCode    := inCode
