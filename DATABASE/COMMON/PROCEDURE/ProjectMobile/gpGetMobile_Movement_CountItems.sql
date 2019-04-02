@@ -23,16 +23,17 @@ BEGIN
       -- определение идентификатора документа по глобальному уникальному идентификатору
       SELECT MovementString_GUID.MovementId 
            , Movement.DescId
-      INTO vbId 
-         , vbDescId
+             INTO vbId 
+                , vbDescId
       FROM MovementString AS MovementString_GUID
            JOIN Movement ON Movement.Id = MovementString_GUID.MovementId
+                        AND Movement.DescId <> zc_Movement_RouteMember()
       WHERE MovementString_GUID.DescId = zc_MovementString_GUID() 
         AND MovementString_GUID.ValueData = inMovementGUID;
 
       IF COALESCE (vbId, 0) <> 0
       THEN
-           IF vbDescId NOT IN (zc_Movement_OrderExternal(), zc_Movement_ReturnIn(), zc_Movement_StoreReal())
+           IF vbDescId NOT IN (zc_Movement_OrderExternal(), zc_Movement_ReturnIn(), zc_Movement_StoreReal(), zc_Movement_RouteMember())
            THEN
                 SELECT Code, ItemName INTO vbDescCode, vbDescName FROM MovementDesc WHERE Id = vbDescId;
 

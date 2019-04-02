@@ -5,9 +5,9 @@
   row: 167 = qryPrice.SQL.Text := 'Select * from gpSelect_Object_Price...
   exe класть на //91.210.37.210:2511/d$/ (его запускает служба)
 */
-DROP FUNCTION IF EXISTS gpSelect_Object_Price(Integer, Boolean,Boolean,TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_Price(Integer, TDateTime, Boolean,Boolean,TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_Price(Integer, Integer, Boolean,Boolean,TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Price (Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Price (Integer, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Price (Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Price(
     IN inUnitId      Integer,       -- подразделение
@@ -210,7 +210,12 @@ BEGIN
                                                          AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
                          )
    , tmpPrice_View AS (SELECT ObjectLink_Price_Unit.ObjectId          AS Id
-                            , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+                            , Price_Goods.ChildObjectId               AS GoodsId
+                            , CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                    AND ObjectFloat_Goods_Price.ValueData > 0
+                                        THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                                   ELSE ROUND (Price_Value.ValueData, 2)
+                              END                           :: TFloat AS Price 
                             , MCS_Value.ValueData                     AS MCSValue 
                             , Price_Goods.ChildObjectId               AS GoodsId
                             , price_datechange.valuedata              AS DateChange 
@@ -237,6 +242,14 @@ BEGIN
                                                   ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
                                                  AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                                                  AND (Price_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)
+
+                            -- Фикс цена для всей Сети
+                            LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                                   ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.ChildObjectId
+                                                  AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()   
+                            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                    ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
+                                                   AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()  
 
                             -- ограничение по торговой сети
                             INNER JOIN ObjectLink AS ObjectLink_Goods_Object
@@ -813,7 +826,11 @@ BEGIN
                            )
 
 , tmpPrice_View AS (SELECT tmpPrice.Id          AS Id
-                               , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+                               , CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                       AND ObjectFloat_Goods_Price.ValueData > 0
+                                           THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                                      ELSE ROUND (Price_Value.ValueData, 2)
+                                 END                           :: TFloat AS Price 
                                , MCS_Value.ValueData                     AS MCSValue 
                                , tmpPrice.GoodsId                        AS GoodsId
                                , price_datechange.valuedata              AS DateChange 
@@ -840,7 +857,14 @@ BEGIN
                                LEFT JOIN ObjectFloat AS Price_Value
                                                      ON Price_Value.ObjectId = tmpPrice.Id
                                                     AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
-
+                               -- Фикс цена для всей Сети
+                               LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                                      ON ObjectFloat_Goods_Price.ObjectId = tmpPrice.GoodsId
+                                                     AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()   
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                       ON ObjectBoolean_Goods_TOP.ObjectId = tmpPrice.GoodsId
+                                                      AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()  
+                                                    
                                LEFT JOIN ObjectFloat AS MCS_Value
                                                      ON MCS_Value.ObjectId = tmpPrice.Id
                                                     AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
@@ -1466,5 +1490,4 @@ where tmp.EndDate <> coalesce (tmp2.StartDate, zc_DateEnd())
 -- select ObjectHistoryDesc.Code, ObjectId, StartDate, count (*) from ObjectHistory  join ObjectHistoryDesc on ObjectHistoryDesc. Id = DescId group by ObjectHistoryDesc.Code, ObjectId, StartDate having count (*) > 1
 */
 -- тест
--- select * from gpSelect_Object_Price(inUnitId := 183292 , inStartDate := ('24.02.2016 17:24:00')::TDateTime , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3');
---select * from gpSelect_Object_Price(inUnitId := 183292 , inGoodsId := 0 , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3');
+-- SELECT * FROM gpSelect_Object_Price(inUnitId := 183292 , inGoodsId := 0 , inisShowAll := 'False' , inisShowDel := 'False' ,  inSession := '3');

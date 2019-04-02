@@ -1669,7 +1669,7 @@ procedure TMainForm.StartProcess;
                //по списку
                cbComplete_List.Checked:=true;
                //с задержкой
-               cb100MSec.Checked:=true;
+               //cb100MSec.Checked:=true;
 
                OKCompleteDocumentButtonClick(Self);
 end;
@@ -20839,7 +20839,7 @@ begin
                   try MSec_complete:=StrToInt(SessionIdEdit.Text);if MSec_complete<=0 then MSec_complete:=100;except MSec_complete:=100;end;
                   if cb100MSec.Checked then begin SessionIdEdit.Text:=IntToStr(MSec_complete); MyDelay(MSec_complete);end;
              end
-             else MyDelay(15 * 1000);
+             else MyDelay(8 * 1000);
              //
              //
              toStoredProc_two.Params.ParamByName('inStartDate').Value:=FieldByName('StartDate').AsDateTime;
@@ -20852,7 +20852,7 @@ begin
                   try MSec_complete:=StrToInt(SessionIdEdit.Text);if MSec_complete<=0 then MSec_complete:=100;except MSec_complete:=100;end;
                   if cb100MSec.Checked then begin SessionIdEdit.Text:=IntToStr(MSec_complete); MyDelay(MSec_complete);end;
              end
-             else MyDelay(15 * 1000);
+             else MyDelay(8 * 1000);
              //
              //
              //

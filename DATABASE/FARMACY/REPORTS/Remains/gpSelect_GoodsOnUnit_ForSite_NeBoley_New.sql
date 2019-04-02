@@ -38,7 +38,11 @@ BEGIN
                        )
           , tmpUnitPrice AS (SELECT tmpUnit.UnitId
                                   , ObjectLink_Price_Goods.ChildObjectId AS GoodsId
-                                  , ObjectFloat_Price_Value.ValueData    AS Price
+                                  , CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                          AND ObjectFloat_Goods_Price.ValueData > 0
+                                              THEN ObjectFloat_Goods_Price.ValueData
+                                         ELSE ObjectFloat_Price_Value.ValueData
+                                    END AS Price
                              FROM tmpUnit
                                   JOIN ObjectLink AS ObjectLink_Price_Unit
                                                   ON ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
@@ -53,6 +57,13 @@ BEGIN
                                   JOIN ObjectFloat AS ObjectFloat_Price_Value
                                                    ON ObjectFloat_Price_Value.DescId = zc_ObjectFloat_Price_Value()
                                                   AND ObjectFloat_Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                  -- Фикс цена для всей Сети
+                                  LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                                         ON ObjectFloat_Goods_Price.ObjectId = ObjectLink_Price_Goods.ChildObjectId
+                                                        AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()   
+                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                          ON ObjectBoolean_Goods_TOP.ObjectId = ObjectLink_Price_Goods.ChildObjectId
+                                                         AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()  
                             )
           , tmpRemains AS (SELECT Container.ObjectId               AS GoodsId
                                 , MIN (tmpUnitPrice.Price)::TFloat AS Price

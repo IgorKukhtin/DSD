@@ -185,6 +185,14 @@ BEGIN
                                                            AND ObjectFloat.DescId   IN (zc_ObjectFloat_Price_Value(), zc_ObjectFloat_Price_MCSValue())
                                                            AND ObjectFloat.ValueData <> 0
                   )
+       , tmpOF_goods AS (SELECT ObjectFloat.* FROM ObjectFloat WHERE ObjectFloat.ObjectId IN (SELECT DISTINCT tmpObjPrice.ObjectId FROM tmpObjPrice)
+                                                                 AND ObjectFloat.DescId   IN (zc_ObjectFloat_Goods_Price())
+                                                                 AND ObjectFloat.ValueData <> 0
+                  )
+       , tmpOB_goods AS (SELECT ObjectBoolean.* FROM ObjectBoolean WHERE ObjectBoolean.ObjectId IN (SELECT DISTINCT tmpObjPrice.ObjectId FROM tmpObjPrice)
+                                                                     AND ObjectBoolean.DescId   IN (zc_ObjectBoolean_Goods_TOP())
+                                                                     AND ObjectBoolean.ValueData = TRUE
+                  )
        , tmpPrice AS (SELECT tmpObjPrice.ObjectId
                            , CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
                                      AND ObjectFloat_Goods_Price.ValueData > 0
@@ -200,12 +208,12 @@ BEGIN
                                            ON ObjectFloat_MCS.ObjectId = tmpObjPrice.PriceId
                                           AND ObjectFloat_MCS.DescId = zc_ObjectFloat_Price_MCSValue()
                            -- Фикс цена для всей Сети
-                           LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
-                                                  ON ObjectFloat_Goods_Price.ObjectId = tmpObjPrice.ObjectId
-                                                 AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()   
-                           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
-                                                   ON ObjectBoolean_Goods_TOP.ObjectId = tmpObjPrice.ObjectId
-                                                  AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()  
+                           LEFT JOIN tmpOF_goods  AS ObjectFloat_Goods_Price
+                                            ON ObjectFloat_Goods_Price.ObjectId = tmpObjPrice.ObjectId
+                                           AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
+                           LEFT JOIN tmpOB_goods AS ObjectBoolean_Goods_TOP
+                                           ON ObjectBoolean_Goods_TOP.ObjectId = tmpObjPrice.ObjectId
+                                          AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
                      )
        /*, tmpPrice AS (SELECT ObjectLink_Goods.ChildObjectId AS ObjectId, COALESCE (ROUND (ObjectFloat_Value.ValueData, 2), 0) AS Price, COALESCE (ObjectFloat_MCS.ValueData, 0) AS MCSValue
                       -- FROM tmpGoods
@@ -237,7 +245,7 @@ BEGIN
                                          THEN TRUE
                                      ELSE FALSE
                                END                                                               AS NewRow
-                             , Accommodation.AccommodationId                                     AS AccommodationID 
+                             , Accommodation.AccommodationId                                     AS AccommodationID
                              , GoodsRemains.MinExpirationDate                                    AS MinExpirationDate
                         FROM tmpPrice
                              LEFT JOIN GoodsRemains ON GoodsRemains.ObjectId = tmpPrice.ObjectId
@@ -261,7 +269,7 @@ BEGIN
             , tmpDiff.MCSValue
             , tmpDiff.Reserved
             , tmpDiff.NewRow
-            , tmpDiff.AccommodationID 
+            , tmpDiff.AccommodationID
             , CASE WHEN COALESCE (ObjectBoolean_First.ValueData, FALSE) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc
             , tmpDiff.MinExpirationDate
        FROM tmpDiff
@@ -279,7 +287,7 @@ BEGIN
       , MCSValue          = _DIFF.MCSValue
       , Reserved          = _DIFF.Reserved
       , AccommodationId   = _DIFF.AccommodationId
-      , MinExpirationDate = _DIFF.MinExpirationDate      
+      , MinExpirationDate = _DIFF.MinExpirationDate
     FROM
         _DIFF
     WHERE CashSessionSnapShot.CashSessionId = inCashSessionId

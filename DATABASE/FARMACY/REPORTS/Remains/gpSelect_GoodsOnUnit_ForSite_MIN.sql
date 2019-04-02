@@ -157,7 +157,11 @@ BEGIN
                (SELECT _tmpList.UnitId
                      , _tmpList.GoodsId
                      , _tmpList.Amount
-                     , ObjectFloat_Price_Value.ValueData AS Price
+                     , CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                             AND ObjectFloat_Goods_Price.ValueData > 0
+                                 THEN ObjectFloat_Goods_Price.ValueData
+                            ELSE ObjectFloat_Price_Value.ValueData
+                       END AS Price
                        --  № п/п
                      , ROW_NUMBER() OVER (PARTITION BY _tmpList.GoodsId ORDER BY ObjectFloat_Price_Value.ValueData ASC) AS Ord
                 -- FROM _tmpGoodsMinPrice_List
@@ -172,6 +176,13 @@ BEGIN
                      LEFT JOIN ObjectFloat AS ObjectFloat_Price_Value
                                            ON ObjectFloat_Price_Value.ObjectId = ObjectLink_Price_Goods.ObjectId
                                           AND ObjectFloat_Price_Value.DescId   = zc_ObjectFloat_Price_Value()
+                     -- Фикс цена для всей Сети
+                     LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                            ON ObjectFloat_Goods_Price.ObjectId = ObjectLink_Price_Goods.ChildObjectId
+                                           AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()   
+                     LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                             ON ObjectBoolean_Goods_TOP.ObjectId = ObjectLink_Price_Goods.ChildObjectId
+                                            AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()  
                )
           , Price_Unit AS
                (SELECT Price_Unit_all.UnitId

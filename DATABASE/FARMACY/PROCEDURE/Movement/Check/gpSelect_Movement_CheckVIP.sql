@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_CheckVIP()
+ -- Function: gpSelect_Movement_CheckVIP()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_CheckVIP (Boolean, TVarChar);
 
