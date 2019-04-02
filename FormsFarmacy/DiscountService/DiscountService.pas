@@ -484,7 +484,7 @@ begin
                 Item.PrimaryPrice.XSToNative (myFloatToStr (CheckCDS.FieldByName('PriceSale').AsFloat));
                 //Сумма без учета скидки
                 Item.PrimaryAmount := TXSDecimal.Create;
-                Item.PrimaryAmount.XSToNative (myFloatToStr( GetSumm (CheckCDS.FieldByName('Amount').AsFloat, CheckCDS.FieldByName('PriceSale').AsFloat)));
+                Item.PrimaryAmount.XSToNative (myFloatToStr( GetSumm (CheckCDS.FieldByName('Amount').AsFloat, CheckCDS.FieldByName('PriceSale').AsFloat, False)));
 
                 //Цена товара (с учетом скидки)
                 Item.RequestedPrice := TXSDecimal.Create;
@@ -494,7 +494,7 @@ begin
                 Item.RequestedQuantity.XSToNative (myFloatToStr (CheckCDS.FieldByName('Amount').AsFloat));
                 //Сумма за кол-во товара (с учетом скидки)
                 Item.RequestedAmount := TXSDecimal.Create;
-                Item.RequestedAmount.XSToNative(myFloatToStr( GetSumm (CheckCDS.FieldByName('Amount').AsFloat, CheckCDS.FieldByName('Price').AsFloat)));
+                Item.RequestedAmount.XSToNative(myFloatToStr( GetSumm (CheckCDS.FieldByName('Amount').AsFloat, CheckCDS.FieldByName('Price').AsFloat, False)));
 
                 // Подготовили список для отправки
                 SetLength(SendList, i);
@@ -943,7 +943,7 @@ begin
             Item.RequestedQuantity.XSToNative(myFloatToStr(CheckCDS.FieldByName('Amount').AsFloat));
             //Предполагаемая сумма за кол-во товара
             Item.RequestedAmount := TXSDecimal.Create;
-            Item.RequestedAmount.XSToNative(myFloatToStr( GetSumm(CheckCDS.FieldByName('Amount').AsFloat, lPriceSale)));
+            Item.RequestedAmount.XSToNative(myFloatToStr( GetSumm(CheckCDS.FieldByName('Amount').AsFloat, lPriceSale, False)));
 
 
             // Подготовили список для отправки
@@ -983,7 +983,7 @@ begin
                CheckCDS.FieldByName('ChangePercent').asCurrency     :=0;
                //Рекомендованная скидка в виде фиксированной суммы от общей цены за все кол-во товара (общая сумма скидки за все кол-во товара)
                CheckCDS.FieldByName('SummChangePercent').asCurrency :=0;
-               CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,lPriceSale);
+               CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,lPriceSale,False);
                CheckCDS.Post;
            end;
       //
@@ -1063,18 +1063,18 @@ begin
                if lSummChangePercent > 0
                then
                    // типа как для кол-ва = 1, может так правильно округлит?
-                   lPrice:= GetSumm(1, (GetSumm(lQuantity, lPriceSale) - lSummChangePercent) / lQuantity)
+                   lPrice:= GetSumm(1, (GetSumm(lQuantity, lPriceSale,False) - lSummChangePercent) / lQuantity, False)
                else begin
                    // тоже типа как для кол-ва = 1, может так правильно округлит?
-                   lPrice:= GetSumm(1, lPriceSale * (1 - lChangePercent / 100));
+                   lPrice:= GetSumm(1, lPriceSale * (1 - lChangePercent / 100), False);
                    // а еще досчитаем сумму скидки
-                   lSummChangePercent := GetSumm(lQuantity, lPriceSale) - GetSumm(lQuantity, lPrice)
+                   lSummChangePercent := GetSumm(lQuantity, lPriceSale, False) - GetSumm(lQuantity, lPrice, False)
                end;
 
                //проверка
-               if lSummChangePercent >= GetSumm(lQuantity, lPriceSale) then
+               if lSummChangePercent >= GetSumm(lQuantity, lPriceSale, False) then
                begin
-                    ShowMessage ('Ошибка.Сумма скидки  <' + myFloatToStr(lSummChangePercent) + '> не может быть больше чем <' + myFloatToStr(GetSumm(lQuantity, lPriceSale)) + '>.'
+                    ShowMessage ('Ошибка.Сумма скидки  <' + myFloatToStr(lSummChangePercent) + '> не может быть больше чем <' + myFloatToStr(GetSumm(lQuantity, lPriceSale, False)) + '>.'
                     + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
                     + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
                     //ошибка
@@ -1102,7 +1102,7 @@ begin
            CheckCDS.FieldByName('ChangePercent').asCurrency     :=lChangePercent;
            //Рекомендованная скидка в виде фиксированной суммы от общей цены за все кол-во товара (общая сумма скидки за все кол-во товара)
            CheckCDS.FieldByName('SummChangePercent').asCurrency :=lSummChangePercent;
-           CheckCDS.FieldByName('Summ').asCurrency := GetSumm(lQuantity,lPrice);
+           CheckCDS.FieldByName('Summ').asCurrency := GetSumm(lQuantity,lPrice, False);
            CheckCDS.Post;
 
           end; // for i := 0 to Length(ResList) - 1
@@ -1172,20 +1172,20 @@ begin
                     //!!! расчет Цена - уже со скидкой !!!
                     if lSummChangePercent > 0 then
                       // типа как для кол-ва = 1, может так правильно округлит?
-                      lPrice := GetSumm(1, (GetSumm(lQuantity, lPriceSale) - lSummChangePercent) / lQuantity)
+                      lPrice := GetSumm(1, (GetSumm(lQuantity, lPriceSale, False) - lSummChangePercent) / lQuantity, False)
                     else
                     begin
                       // тоже типа как для кол-ва = 1, может так правильно округлит?
-                      lPrice:= GetSumm(1, lPriceSale * (1 - lChangePercent / 100));
+                      lPrice:= GetSumm(1, lPriceSale * (1 - lChangePercent / 100), False);
                       // а еще досчитаем сумму скидки
-                      lSummChangePercent := GetSumm(lQuantity, lPriceSale) - GetSumm(lQuantity, lPrice)
+                      lSummChangePercent := GetSumm(lQuantity, lPriceSale, False) - GetSumm(lQuantity, lPrice, False)
                     end;
 
                     //проверка
-                    if lSummChangePercent >= GetSumm(lQuantity, lPriceSale) then
+                    if lSummChangePercent >= GetSumm(lQuantity, lPriceSale, False) then
                     begin
                       ShowMessage ('Ошибка.Сумма скидки  <' + myFloatToStr(lSummChangePercent)
-                        + '> не может быть больше чем <' + myFloatToStr(GetSumm(lQuantity, lPriceSale)) + '>.'
+                        + '> не может быть больше чем <' + myFloatToStr(GetSumm(lQuantity, lPriceSale, False)) + '>.'
                         + sLineBreak + 'Для карты № <' + lCardNumber + '>.'
                         + sLineBreak + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')'
                         + CheckCDS.FieldByName('GoodsName').AsString);
@@ -1214,7 +1214,7 @@ begin
                   CheckCDS.FieldByName('ChangePercent').asCurrency     := lChangePercent;
                   //Рекомендованная скидка в виде фиксированной суммы от общей цены за все кол-во товара (общая сумма скидки за все кол-во товара)
                   CheckCDS.FieldByName('SummChangePercent').asCurrency := lSummChangePercent;
-                  CheckCDS.FieldByName('Summ').asCurrency := GetSumm(lQuantity, lPrice);
+                  CheckCDS.FieldByName('Summ').asCurrency := GetSumm(lQuantity, lPrice, False);
                   CheckCDS.Post;
                 end;
             except

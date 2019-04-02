@@ -72,9 +72,11 @@ BEGIN
        Object_CashRegister.ValueData       AS CashRegisterName
      , Object_Goods.NDS                    AS NDS
 
-     , Sum(CASE WHEN COALESCE (MB_RoundingTo10.ValueData, False) = True
+     , Sum(CASE WHEN COALESCE (MB_RoundingDown.ValueData, False) = True
+                THEN TRUNC(COALESCE (MovementItem.Amount, 0) * MIFloat_Price.ValueData, 1)::TFloat
+                ELSE CASE WHEN COALESCE (MB_RoundingTo10.ValueData, False) = True
                 THEN (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 1))::TFloat
-                ELSE (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat END) AS AmountSumm
+                ELSE (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat END END) AS AmountSumm
 
   FROM Movement
 
@@ -91,6 +93,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MB_RoundingTo10
                                       ON MB_RoundingTo10.MovementId = MovementItem.MovementId
                                      AND MB_RoundingTo10.DescId = zc_MovementBoolean_RoundingTo10()
+            LEFT JOIN MovementBoolean AS MB_RoundingDown
+                                      ON MB_RoundingDown.MovementId = MovementItem.MovementId
+                                     AND MB_RoundingDown.DescId = zc_MovementBoolean_RoundingDown()
 
             LEFT JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
   WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inDate)
@@ -109,6 +114,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 02.04.19                                                                                     *
  03.12.18                                                                                     *
 */
 

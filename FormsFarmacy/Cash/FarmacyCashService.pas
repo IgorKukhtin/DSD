@@ -65,6 +65,8 @@ type
     BANKPOS     : integer;       //Банк POS терминала
     //***25.02.19
     JACKCHECK   : integer;       //Галка
+    //***02.04.19
+    ROUNDDOWN   : boolean;       //Округление в низ
   end;
   TBodyRecord = record
     ID: Integer;            //ид записи
@@ -1122,6 +1124,8 @@ begin
                 BANKPOS := FieldByName('BANKPOS').AsInteger;
                 // ***25.02.19
                 JACKCHECK := FieldByName('JACKCHECK').AsInteger;
+                // ***02.04.19
+                ROUNDDOWN := FieldByName('ROUNDDOWN').AsBoolean;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1256,6 +1260,8 @@ begin
                   dsdSave.Params.AddParam('inBankPOSTerminalId', ftInteger, ptInput, Head.BANKPOS);
                   // ***20.02.19
                   dsdSave.Params.AddParam('inJackdawsChecksCode', ftInteger, ptInput, Head.JACKCHECK);
+                  // ***02.04.19
+                  dsdSave.Params.AddParam('inRoundingDown', ftBoolean, ptInput, Head.ROUNDDOWN);
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 
