@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_ImportTypeItems()
+-- Function: ()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_JuridicalSettingsItem (Integer, Integer, TFloat, TFloat, TVarchar);
 

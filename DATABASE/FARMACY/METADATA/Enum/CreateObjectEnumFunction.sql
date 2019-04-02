@@ -351,6 +351,10 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_BarCode() RETURNS Integer AS $B
 CREATE OR REPLACE FUNCTION zc_Enum_ImportType_BarCode_Price() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_BarCode_Price' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_BarCode_Price() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_BarCode_Price' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+--Загрузка Цен в справочник товаров сети
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_Goods_Price() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_Goods_Price' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_Goods_Price() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_Goods_Price' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 -- !!!
 -- !!! Типы аналитик для проводок
 -- !!!
@@ -411,6 +415,8 @@ CREATE OR REPLACE FUNCTION zc_Enum_SPKind_1303() RETURNS integer AS $BODY$BEGIN 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 02.04.19         * zc_Enum_ImportType_Goods_Price
+                    zc_Enum_ImportSetting_Goods_Price
  07.01.19                                                                                                   * zc_Enum_GlobalConst_ConnectReportParam
  02.11.18                                                                                                   * zc_Enum_PaidType_CardADD
  05.06.17                                                                                    * Загрузка данных по штрих-кодам

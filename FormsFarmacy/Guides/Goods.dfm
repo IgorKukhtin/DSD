@@ -4,23 +4,23 @@ inherited GoodsForm: TGoodsForm
   ClientWidth = 886
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 902
-  ExplicitHeight = 482
+  ExplicitHeight = 481
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 886
     Height = 417
-    ExplicitWidth = 883
+    ExplicitWidth = 886
     ExplicitHeight = 417
     ClientRectBottom = 417
     ClientRectRight = 886
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 883
+      ExplicitWidth = 886
       ExplicitHeight = 417
       inherited cxGrid: TcxGrid
         Width = 886
         Height = 417
-        ExplicitWidth = 883
+        ExplicitWidth = 886
         ExplicitHeight = 417
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -617,6 +617,45 @@ inherited GoodsForm: TGoodsForm
       QuestionBeforeExecute = #1054#1073#1085#1086#1074#1080#1090#1100' '#1089#1074'-'#1074#1086' '#1050#1086#1083'-'#1074#1086' '#1087#1088#1072#1081#1089#1086#1074' '#1087#1086' '#1074#1089#1077#1084' '#1089#1077#1090#1103#1084'?'
       InfoAfterExecute = #1050#1086#1083'-'#1074#1086' '#1087#1088#1072#1081#1089#1086#1074' '#1086#1073#1085#1086#1074#1083#1077#1085#1086
     end
+    object actGetImportSetting_Goods_Price: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting_Goods_Price
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting_Goods_Price
+        end>
+      Caption = 'actGetImportSetting_Goods_Price'
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <>
+    end
+    object actStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_Goods_Price
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1094#1077#1085' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1062#1077#1085#1099' '#1080#1079' '#1092#1072#1081#1083#1072' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1062#1077#1085#1099
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1062#1077#1085#1099
+      ImageIndex = 41
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -709,6 +748,14 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -754,6 +801,10 @@ inherited GoodsForm: TGoodsForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1072#1081#1089#1086#1074' '#1087#1086' '#1074#1089#1077#1084' '#1089#1077#1090#1103#1084
       Style = dmMain.cxContentStyle
       PaintStyle = psCaption
+    end
+    object bbStartLoad: TdxBarButton
+      Action = actStartLoad
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -995,7 +1046,12 @@ inherited GoodsForm: TGoodsForm
     Top = 144
   end
   object FormParams: TdsdFormParams
-    Params = <>
+    Params = <
+      item
+        Name = 'ImportSettingId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
     Left = 240
     Top = 64
   end
@@ -1375,5 +1431,37 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 808
     Top = 296
+  end
+  object spGetImportSetting_Goods_Price: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TGoodsForm;zc_Object_ImportSetting_Goods_Price'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 360
+    Top = 128
   end
 end
