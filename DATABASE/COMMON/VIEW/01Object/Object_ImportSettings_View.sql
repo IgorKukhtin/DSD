@@ -11,6 +11,9 @@ CREATE OR REPLACE VIEW Object_ImportSettings_View AS
            , Object_Juridical.Id         AS JuridicalId
            , Object_Juridical.ValueData  AS JuridicalName 
                      
+           , COALESCE(ObjectLink_ImportSettings_Contract.ChildObjectId, 0)  AS ContractId
+           , Object_Contract.ValueData  AS ContractName 
+           
            , Object_FileType.Id         AS FileTypeId
            , Object_FileType.ValueData  AS FileTypeName 
            
@@ -21,17 +24,24 @@ CREATE OR REPLACE VIEW Object_ImportSettings_View AS
            , Object_EmailKind.ValueData  AS EmailKindName 
 
            , ObjectFloat_StartRow.ValueData::Integer AS StartRow
+           , ObjectBoolean_HDR.ValueData      AS HDR
            , ObjectString_Directory.ValueData AS Directory
            , ObjectBlob_Query.ValueData       AS Query
            
            , Object_ImportSettings.isErased   AS isErased
            , ObjectString_ProcedureName.ValueData AS ProcedureName
+           , ObjectString_JSONParamName.ValueData AS JSONParamName
            
        FROM Object AS Object_ImportSettings
            LEFT JOIN ObjectLink AS ObjectLink_ImportSettings_Juridical
                                 ON ObjectLink_ImportSettings_Juridical.ObjectId = Object_ImportSettings.Id
                                AND ObjectLink_ImportSettings_Juridical.DescId = zc_ObjectLink_ImportSettings_Juridical()
            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_ImportSettings_Juridical.ChildObjectId
+           
+           LEFT JOIN ObjectLink AS ObjectLink_ImportSettings_Contract
+                                ON ObjectLink_ImportSettings_Contract.ObjectId = Object_ImportSettings.Id
+                               AND ObjectLink_ImportSettings_Contract.DescId = zc_ObjectLink_ImportSettings_Contract()
+           LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = ObjectLink_ImportSettings_Contract.ChildObjectId           
            
            LEFT JOIN ObjectLink AS ObjectLink_ImportSettings_FileType
                                 ON ObjectLink_ImportSettings_FileType.ObjectId = Object_ImportSettings.Id
@@ -50,6 +60,13 @@ CREATE OR REPLACE VIEW Object_ImportSettings_View AS
            LEFT JOIN ObjectString AS ObjectString_ProcedureName 
                                   ON ObjectString_ProcedureName.ObjectId = Object_ImportType.Id
                                  AND ObjectString_ProcedureName.DescId = zc_ObjectString_ImportType_ProcedureName()
+           LEFT JOIN ObjectString AS ObjectString_JSONParamName 
+                                  ON ObjectString_JSONParamName.ObjectId = Object_ImportType.Id
+                                 AND ObjectString_JSONParamName.DescId = zc_ObjectString_ImportType_JSONParamName()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_HDR 
+                                   ON ObjectBoolean_HDR.ObjectId = Object_ImportSettings.Id
+                                  AND ObjectBoolean_HDR.DescId = zc_ObjectBoolean_ImportSettings_HDR()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_StartRow 
                                   ON ObjectFloat_StartRow.ObjectId = Object_ImportSettings.Id
@@ -72,7 +89,6 @@ ALTER TABLE Object_ImportSettings_View  OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».  œÓ‰ÏÓ„ËÎ¸Ì˚È ¬.¬.
- 29.03.19         *
  09.02.18                                                         * JSONParamName
  24.07.14                         *
 */

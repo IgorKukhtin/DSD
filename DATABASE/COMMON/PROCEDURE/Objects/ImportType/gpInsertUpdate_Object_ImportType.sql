@@ -36,6 +36,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ImportType_ProcedureName(), ioId, inProcedureName);
    
    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ImportType_JSONParamName(), ioId, inJSONParamName);
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

@@ -811,10 +811,6 @@ object IncomeForm: TIncomeForm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'dxBarButton3'
-        end
-        item
-          Visible = True
           ItemName = 'bbStatic'
         end
         item
