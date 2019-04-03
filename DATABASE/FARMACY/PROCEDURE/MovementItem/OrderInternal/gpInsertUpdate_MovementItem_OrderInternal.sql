@@ -53,7 +53,7 @@ BEGIN
 
      -- Проверка что б такого элемента не было - т.е. ошибку лайт)
      IF COALESCE (vbId, 0) <> 0 AND COALESCE (inId, 0) = 0
-     THEN
+     THEN 
      
         RETURN QUERY
         SELECT MovementItem.Id    AS ioId
@@ -132,7 +132,9 @@ BEGIN
     inPrice := COALESCE(inPrice, 0);
     --проверить что у нас на самом деле меняется
     SELECT MinimumLot INTO vbMinimumLot
-    FROM Object_Goods_View WHERE Id = inGoodsId;
+    FROM Object_Goods_View 
+    WHERE Id = inGoodsId
+    and MinimumLot <> 0;
     
     SELECT
         (CEIL((Amount + COALESCE(MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0) ) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1)),

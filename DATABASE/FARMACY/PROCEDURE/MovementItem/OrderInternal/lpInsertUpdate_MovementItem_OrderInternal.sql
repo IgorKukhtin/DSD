@@ -31,10 +31,12 @@ BEGIN
     -- сохранили <Ёлемент документа>
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
 
-    IF inAmountManual IS NULL
+    IF inAmountManual IS NULL 
     THEN
         SELECT MinimumLot INTO vbMinimumLot
-        FROM Object_Goods_View WHERE Id = inGoodsId;
+        FROM Object_Goods_View 
+        WHERE Id = inGoodsId
+        and MinimumLot <> 0;
     
         SELECT
             (CEIL((inAmount + COALESCE(MIFloat_AmountSecond.ValueData,0) + COALESCE(MIFloat_ListDiff.ValueData,0)) / COALESCE(vbMinimumLot, 1)) * COALESCE(vbMinimumLot, 1))

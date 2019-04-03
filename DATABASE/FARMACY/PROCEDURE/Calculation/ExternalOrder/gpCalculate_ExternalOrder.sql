@@ -160,8 +160,8 @@ BEGIN
                     inUnitId := vbUnitId,
                inMainGoodsId := MovementItem.ObjectId,
                    inGoodsId := COALESCE(PriceList.GoodsId, MinPrice.GoodsId),
-                    inAmount := (COALESCE(MIFloat_AmountManual.ValueData,CEIL((MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0))
-                                      / COALESCE(Object_Goods.MinimumLot, 1)) * COALESCE(Object_Goods.MinimumLot, 1)))::TFloat, 
+                    inAmount := (COALESCE(MIFloat_AmountManual.ValueData, CEIL((MovementItem.Amount + COALESCE(MIFloat_AmountSecond.ValueData,0))
+                                      / COALESCE(CASE WHEN Object_Goods.MinimumLot = 0 THEN 1 ELSE Object_Goods.MinimumLot END, 1)) * COALESCE(CASE WHEN Object_Goods.MinimumLot = 0 THEN 1 ELSE Object_Goods.MinimumLot END, 1)))::TFloat, 
                      inPrice := COALESCE(PriceList.Price, MinPrice.Price), 
           inPartionGoodsDate := COALESCE(PriceList.PartionGoodsDate, MinPrice.PartionGoodsDate),
                    inComment := MIString_Comment.ValueData,
