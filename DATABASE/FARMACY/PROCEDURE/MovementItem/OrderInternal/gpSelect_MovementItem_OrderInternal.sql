@@ -88,7 +88,9 @@ BEGIN
     WHERE Movement.Id = inMovementId;
 
     vbOperDateEnd := vbOperDate + INTERVAL '1 DAY';
-    vbDate180 := CURRENT_DATE + INTERVAL '180 DAY';
+    vbDate180 := CURRENT_DATE + zc_Interval_ExpirationDate();
+    --vbDate180 := CURRENT_DATE + INTERVAL '180 DAY';
+    
 
     vbAVGDateStart := vbOperDate - INTERVAL '30 day';
     vbAVGDateEnd   := vbOperDate;
@@ -1630,7 +1632,7 @@ BEGIN
                         FROM (SELECT *, MIN(Id) OVER (PARTITION BY MovementItemId) AS MinId
                               FROM (SELECT *
                                          -- , MIN (SuperFinalPrice) OVER (PARTITION BY MovementItemId) AS MinSuperFinalPrice
-                                         , ROW_NUMBER() OVER (PARTITION BY _tmpMI.MovementItemId ORDER BY _tmpMI.SuperFinalPrice_Deferment ASC, _tmpMI.PartionGoodsDate DESC, _tmpMI.Deferment DESC) AS Ord
+                                         , ROW_NUMBER() OVER (PARTITION BY _tmpMI.MovementItemId ORDER BY _tmpMI.SuperFinalPrice ASC, _tmpMI.PartionGoodsDate DESC, _tmpMI.Deferment DESC) AS Ord
                                     FROM _tmpMI
                                    ) AS DDD
                               -- WHERE DDD.SuperFinalPrice = DDD.MinSuperFinalPrice

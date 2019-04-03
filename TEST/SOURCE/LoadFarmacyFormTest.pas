@@ -113,6 +113,7 @@ type
     procedure LoadSaleFormTest;
     procedure LoadServiceFormTest;
     procedure LoadSendFormTest;
+        procedure LoadSendPartionDateFormTest;
     procedure LoadSendOnPriceFormTest;
     procedure LoadSystemFormTest;
     procedure LoadSPObjectFormTest;
@@ -1700,6 +1701,14 @@ begin
   // диалог изменения цены получателя
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceBySendDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceBySendDialogForm');
+end;
+
+  procedure TLoadFormTest.LoadSendPartionDateFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionDateJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendPartionDateJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionDateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendPartionDateForm');
 end;
 
 procedure TLoadFormTest.LoadSendOnPriceFormTest;

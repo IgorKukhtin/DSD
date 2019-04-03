@@ -674,7 +674,9 @@ uses
   CashGoodsOneToExpirationDate in '..\..\FormsFarmacy\Cash\CashGoodsOneToExpirationDate.pas' {CashGoodsOneToExpirationDate: TParentForm},
   EmployeeScheduleUnit in '..\..\FormsFarmacy\Cash\EmployeeScheduleUnit.pas' {EmployeeScheduleUnitForm: TParentForm},
   GoodsAnalog in '..\..\FormsFarmacy\Guides\GoodsAnalog.pas' {GoodsAnalogForm: TParentForm},
-  GoodsAnalogEdit in '..\..\FormsFarmacy\Guides\GoodsAnalogEdit.pas' {GoodsAnalogEditForm: TParentForm};
+  GoodsAnalogEdit in '..\..\FormsFarmacy\Guides\GoodsAnalogEdit.pas' {GoodsAnalogEditForm: TParentForm},
+  SendPartionDateJournal in '..\..\FormsFarmacy\Document\SendPartionDateJournal.pas' {SendPartionDateJournalForm: TParentForm},
+  SendPartionDate in '..\..\FormsFarmacy\Document\SendPartionDate.pas' {SendPartionDateForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

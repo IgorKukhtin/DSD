@@ -1050,10 +1050,20 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_AmountStorage() RETURNS Integer AS $BODY$B
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_AmountStorage', 'Факт кол-во точки-отправителя'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountStorage');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_PriceExp() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PriceExp'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_PriceExp', 'цена (срок меньше месяца)'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PriceExp');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_Expired() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Expired'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_Expired', '0 -просрочен, 1 -меньше 1мес, 2 -меньше 6мес'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Expired');
+  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
  02.04.19         * zc_MIFloat_DefermentPrice
+                    zc_MIFloat_PriceExp
+                    zc_MIFloat_Expired
  05.02.19         * zc_MIFloat_AmountStorage
  29.01.19         * zc_MIFloat_RateSummaExp
  24.01.19         * zc_MIFloat_CurrencyValue

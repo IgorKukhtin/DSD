@@ -500,6 +500,8 @@ type
     actJackdawsChecks1: TMenuItem;
     actPUSH: TdsdOpenForm;
     actPUSH1: TMenuItem;
+    actSendPartionDate: TdsdOpenForm;
+    miSendPartionDate: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
