@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Maker (Integer,Integer,TVarChar, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Maker(
  INOUT ioId              Integer   ,    -- ключ объекта <Производитель>
@@ -18,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Maker(
     IN inisReport2       Boolean,       -- отправлять "отчет по продажам"
     IN inisReport3       Boolean,       -- отправлять "реализация за период с остатками на конец периода"
     IN inisReport4       Boolean,       -- отправлять "приход расход остаток"
+    IN inisQuarter       Boolean,       -- Отправлять дополнительно квартальные отчеты
     IN inSession         TVarChar       -- сессия пользователя
 )
  RETURNS Integer AS
@@ -69,6 +71,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Maker_Report3(), ioId, inisReport3);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Maker_Report4(), ioId, inisReport4);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Maker_Quarter(), ioId, inisQuarter);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -76,10 +80,11 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql;
 
-/*-------------------------------------------------------------------------------*/
-/*
+/*-------------------------------------------------------------------------------
+
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 03.04.19                                                       *
  18.01.19         *
  11.01.19         *
  11.02.14         *  
