@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , Weight TFloat
              , WeightPackage TFloat, WeightPackageSticker TFloat
              , WeightTotal TFloat, ChangePercentAmount TFloat
-             , WeightMin TFloat, WeightMax TFloat
+             , WeightMin TFloat, WeightMax TFloat, WeightAvg TFloat
              , Height TFloat, Length TFloat, Width TFloat
              , NormInDays TFloat
              , isOrder Boolean, isScaleCeh Boolean, isNotMobile Boolean
@@ -210,6 +210,7 @@ BEGIN
 
            , COALESCE (ObjectFloat_WeightMin.ValueData,0)       ::TFloat  AS WeightMin
            , COALESCE (ObjectFloat_WeightMax.ValueData,0)       ::TFloat  AS WeightMax
+           , ((COALESCE (ObjectFloat_WeightMin.ValueData,0) + COALESCE (ObjectFloat_WeightMax.ValueData,0)) / 2) :: TFloat AS WeightAvg
            , COALESCE (ObjectFloat_Height.ValueData,0)          ::TFloat  AS Height
            , COALESCE (ObjectFloat_Length.ValueData,0)          ::TFloat  AS Length
            , COALESCE (ObjectFloat_Width.ValueData,0)           ::TFloat  AS Width
