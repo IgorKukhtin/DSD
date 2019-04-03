@@ -1,6 +1,6 @@
 -- View: Object_Goods_View
 
---DROP VIEW IF EXISTS Object_Goods_View CASCADE;
+-- DROP VIEW IF EXISTS Object_Goods_View CASCADE;
 
 CREATE OR REPLACE VIEW Object_Goods_View AS
          SELECT 
@@ -19,15 +19,16 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
            , Object_NDSKind.ValueData                         AS NDSKindName
            , ObjectFloat_NDSKind_NDS.ValueData                AS NDS
            , ObjectString_Goods_Maker.ValueData               AS MakerName
-           , ObjectFloat_Goods_MinimumLot.ValueData           AS MinimumLot
-           , COALESCE(ObjectBoolean_Goods_Close.ValueData, false)   AS isClose
-           , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false)     AS isTOP
-           , COALESCE(ObjectBoolean_First.ValueData, False)         AS isFirst
-           , COALESCE(ObjectBoolean_Second.ValueData, False)        AS isSecond
-           , ObjectBoolean_Published.ValueData                      AS isPublished
+           , COALESCE (ObjectFloat_Goods_MinimumLot.ValueData, 0) :: TFloat AS MinimumLot
+           , COALESCE (ObjectBoolean_Goods_Close.ValueData, FALSE)    AS isClose
+           , COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE)      AS isTOP
+           , COALESCE (ObjectBoolean_First.ValueData, FALSE)          AS isFirst
+           , COALESCE (ObjectBoolean_Second.ValueData, FALSE)         AS isSecond
+           , ObjectBoolean_Published.ValueData                        AS isPublished
            , ObjectFloat_Goods_PercentMarkup.ValueData        AS PercentMarkup
            , ObjectFloat_Goods_Price.ValueData                AS Price
-           , COALESCE(ObjectBoolean_Goods_IsUpload.ValueData,FALSE) AS IsUpload 
+           , COALESCE (ObjectBoolean_Goods_IsUpload.ValueData, FALSE) AS IsUpload 
+           , COALESCE (ObjectBoolean_Promo.ValueData, FALSE)          AS IsPromo
        FROM ObjectLink AS ObjectLink_Goods_Object
 
             LEFT JOIN Object AS Object_Goods 
@@ -80,6 +81,10 @@ CREATE OR REPLACE VIEW Object_Goods_View AS
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Published
                                 ON ObjectBoolean_Published.ObjectId = ObjectLink_Goods_Object.ObjectId 
                                AND ObjectBoolean_Published.DescId = zc_ObjectBoolean_Goods_Published()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Promo
+                                ON ObjectBoolean_Promo.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                               AND ObjectBoolean_Promo.DescId   = zc_ObjectBoolean_Goods_Promo()
+                               
 
         LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_PercentMarkup
                                ON ObjectFloat_Goods_PercentMarkup.ObjectId = ObjectLink_Goods_Object.ObjectId 

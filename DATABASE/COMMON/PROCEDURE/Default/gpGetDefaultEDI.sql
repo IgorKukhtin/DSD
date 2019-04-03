@@ -20,7 +20,7 @@ BEGIN
           , 'ftp349067'      :: TVarChar AS Password
 --        , FALSE            :: Boolean  AS gIsDelete
           , TRUE             :: Boolean  AS gIsDelete
-          , 2                :: Integer  AS HoursInterval_del
+          , 1                :: Integer  AS HoursInterval_del
            ;
    ELSE
    RETURN QUERY
@@ -29,7 +29,7 @@ BEGIN
           , 'ftp349067'      :: TVarChar AS Password
 --        , FALSE            :: Boolean  AS gIsDelete
           , TRUE             :: Boolean  AS gIsDelete
-          , 2                :: Integer  AS HoursInterval_del
+          , 1                :: Integer  AS HoursInterval_del
             ;
    END IF;
     

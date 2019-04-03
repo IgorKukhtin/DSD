@@ -109,10 +109,14 @@ end if;
                                , Movement.InvNumber
                                , Movement.StatusId
                                , tmpRoleAccessKey.AccessKeyId
-                          FROM tmpStatus
-                               JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Sale() AND Movement.StatusId = tmpStatus.StatusId
+                       -- FROM tmpStatus
+                       --      JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Sale() AND Movement.StatusId = tmpStatus.StatusId
+                          FROM Movement
                                LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
                           WHERE inIsPartnerDate = FALSE
+                            AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                            AND Movement.DescId = zc_Movement_Sale()
+                            AND (Movement.StatusId <> zc_Enum_Status_Erased() OR inIsErased = TRUE)
                          UNION ALL
                           SELECT MovementDate_OperDatePartner.MovementId  AS Id
                                , Movement.OperDate
@@ -121,7 +125,8 @@ end if;
                                , tmpRoleAccessKey.AccessKeyId
                           FROM MovementDate AS MovementDate_OperDatePartner
                                JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_Sale()
-                               JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                                            AND (Movement.StatusId <> zc_Enum_Status_Erased() OR inIsErased = TRUE)
+                            -- JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
                                LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
                           WHERE inIsPartnerDate = TRUE
                             AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate

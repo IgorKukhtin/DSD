@@ -281,7 +281,7 @@ BEGIN
         ResultSet.isOneJuridical,
         -- CASE WHEN ResultSet.isTop_calc = TRUE THEN ResultSet.isTop_calc ELSE ResultSet.IsTop END :: Boolean AS IsTop,
         ResultSet.IsTop_Goods,
-        CASE WHEN ResultSet.MinExpirationDate < (CURRENT_DATE + Interval '6 MONTH')
+        CASE WHEN ResultSet.MinExpirationDate < (CURRENT_DATE + zc_Interval_ExpirationDate())
                   THEN TRUE
              ELSE TRUE
         END  AS Reprice
@@ -304,7 +304,7 @@ BEGIN
              )
          /*AND (ResultSet.ExpirationDate IS NULL
            OR ResultSet.ExpirationDate = '1899-12-30'::TDateTime
-           OR ResultSet.ExpirationDate > (CURRENT_DATE + Interval '6 MONTH')
+           OR ResultSet.ExpirationDate > (CURRENT_DATE + zc_Interval_ExpirationDate())
              )*/
          AND (COALESCE(ResultSet.LastPrice,0) = 0
            OR ABS (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 100.0

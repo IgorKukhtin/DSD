@@ -228,7 +228,8 @@ begin
               Hour_onDel:= Hour;
          end
     // поставили что НЕ надо удалить
-    else FormParams.ParamByName('gIsDelete').Value := FALSE;
+    // else FormParams.ParamByName('gIsDelete').Value := FALSE;
+    else FormParams.ParamByName('gIsDelete').Value := TRUE;
 
     //
     OptionsMemo.Lines.Clear;
