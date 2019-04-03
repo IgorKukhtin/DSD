@@ -54,7 +54,7 @@ BEGIN
      SELECT 1, MovementItem.Id, MILinkObject_Unit.ObjectId
      FROM Movement
 
-          LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.id
+          INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
                                 AND MovementItem.DescId = zc_MI_Master()
                                 AND MovementItem.ObjectId = vbUserId
 
@@ -65,13 +65,12 @@ BEGIN
      WHERE Movement.OperDate = vbDate
           AND Movement.DescId = zc_Movement_EmployeeSchedule();
 
-
      IF (SELECT UnitId FROM tmpMainUnit WHERE ID = 1) IS NULL
      THEN
        WITH tmLogAll AS (SELECT count(*) as CountLog
                               , EmployeeWorkLog.UnitId
                          FROM EmployeeWorkLog
-                         WHERE EmployeeWorkLog.DateLogIn >= vbDate AND EmployeeWorkLog.DateLogIn < CURRENT_DATE
+                         WHERE EmployeeWorkLog.DateLogIn >= CURRENT_DATE - INTERVAL '1 MONTH'  AND EmployeeWorkLog.DateLogIn < CURRENT_DATE
                            AND EmployeeWorkLog.UserId = vbUserId
                          GROUP BY EmployeeWorkLog.UnitId),
 

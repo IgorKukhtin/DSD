@@ -53,28 +53,69 @@ BEGIN
                         WHERE Movement.ID = inMovementId
                           AND (MovementItem.IsErased = FALSE OR inIsErased = TRUE)),
 
+            tmpMainPrev AS (SELECT
+                                   MovementItem.ObjectId      AS UserId
+                                 , MILinkObject_Unit.ObjectId AS UnitId
+                            FROM Movement
+
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.id
+                                                        AND MovementItem.DescId = zc_MI_Master()
+                                                        AND MovementItem.ObjectId NOT IN (SELECT tmpMain.UserId FROM tmpMain)
+
+                                 INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                   ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                                  AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+
+                            WHERE Movement.DescId = zc_Movement_EmployeeSchedule()
+                              AND Movement.OperDate = inDate - INTERVAL '1 MONTH'
+                              AND (MovementItem.IsErased = FALSE OR inIsErased = TRUE)),
+
             tmLogAll AS (SELECT count(*) as CountLog
                               , EmployeeWorkLog.UserId
                               , EmployeeWorkLog.UnitId
                          FROM EmployeeWorkLog
                          WHERE EmployeeWorkLog.DateLogIn >= inDate - INTERVAL '1 MONTH' AND EmployeeWorkLog.DateLogIn < inDate - INTERVAL '1 DAY'
                            AND EmployeeWorkLog.UserId NOT IN (SELECT tmpMain.UserId FROM tmpMain)
+                           AND EmployeeWorkLog.UserId NOT IN (SELECT tmpMainPrev.UserId FROM tmpMainPrev)
                          GROUP BY EmployeeWorkLog.UserId, EmployeeWorkLog.UnitId),
 
             tmLog AS (SELECT ROW_NUMBER() OVER (PARTITION BY tmLogAll.UserId ORDER BY tmLogAll.CountLog DESC) AS Ord
                            , tmLogAll.UserId
                            , tmLogAll.UnitId
-                      FROM tmLogAll)
+                      FROM tmLogAll),
+            tmLogAllPrev AS (SELECT count(*) as CountLog
+                              , EmployeeWorkLog.UserId
+                              , EmployeeWorkLog.UnitId
+                         FROM EmployeeWorkLog
+                         WHERE EmployeeWorkLog.DateLogIn >= inDate - INTERVAL '2 MONTH' AND EmployeeWorkLog.DateLogIn < inDate - INTERVAL '1 DAY'
+                           AND EmployeeWorkLog.UserId NOT IN (SELECT tmpMain.UserId FROM tmpMain)
+                           AND EmployeeWorkLog.UserId NOT IN (SELECT tmpMainPrev.UserId FROM tmpMainPrev)
+                           AND EmployeeWorkLog.UserId NOT IN (SELECT tmLog.UserId FROM tmLog)
+                         GROUP BY EmployeeWorkLog.UserId, EmployeeWorkLog.UnitId),
+
+            tmLogPrev AS (SELECT ROW_NUMBER() OVER (PARTITION BY tmLogAllPrev.UserId ORDER BY tmLogAllPrev.CountLog DESC) AS Ord
+                           , tmLogAllPrev.UserId
+                           , tmLogAllPrev.UnitId
+                      FROM tmLogAllPrev)
 
      INSERT INTO tmpMainUnit (UserId, UnitId)
      SELECT tmpMain.UserId
           , tmpMain.UnitId
      FROM tmpMain
      UNION ALL
+     SELECT tmpMainPrev.UserId
+          , tmpMainPrev.UnitId
+     FROM tmpMainPrev
+     UNION ALL
      SELECT tmLog.UserId
           , tmLog.UnitId
      FROM tmLog
-     WHERE tmLog.Ord = 1;
+     WHERE tmLog.Ord = 1
+     UNION ALL
+     SELECT tmLogPrev.UserId
+          , tmLogPrev.UnitId
+     FROM tmLogPrev
+     WHERE tmLogPrev.Ord = 1;
 
       -- Графики по аптекам
      CREATE TEMP TABLE tmpUnserUnit (UserId Integer, UnitId Integer,

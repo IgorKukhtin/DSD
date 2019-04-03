@@ -372,7 +372,6 @@ type
     Multiplicity: TcxGridDBColumn;
     actOpenCashGoodsOneToExpirationDate: TdsdOpenForm;
     actCashGoodsOneToExpirationDate: TAction;
-    actCashGoodsOneToExpirationDate1: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1710,8 +1709,8 @@ begin
       if fErr = true
       then ShowMessage ('Ошибка.Чек распечатан.Продажа не сохранена')
       else begin
-      Add_Log('Уменьшение остатков по партиям');
-      UpdateRemainsGoodsToExpirationDate;
+//      Add_Log('Уменьшение остатков по партиям');
+//      UpdateRemainsGoodsToExpirationDate;
       Add_Log('Сохранение чека');
       ShapeState.Brush.Color := clRed;
       ShapeState.Repaint;

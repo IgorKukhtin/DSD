@@ -435,8 +435,8 @@ begin
          SaveUnitConfig;
          //Получение ночных скидок
          SaveTaxUnitNight;
-         //Получение остатков по партиям
-         SaveGoodsExpirationDate;
+//         //Получение остатков по партиям
+//         SaveGoodsExpirationDate;
          // Отправка сообщения приложению про надобность обновить остатки из файла
          PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
         end;
@@ -520,8 +520,8 @@ begin   //yes
           SaveUnitConfig;
           //Получение ночных скидок
           SaveTaxUnitNight;
-          //Получение остатков по партиям
-          SaveGoodsExpirationDate;
+//          //Получение остатков по партиям
+//          SaveGoodsExpirationDate;
 
           PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 3);
           // Вывод уведомления сервиса
