@@ -407,6 +407,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
           object CodeCalc_Sh: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1042#1052#1057' '#1096#1090'.'
             DataBinding.FieldName = 'CodeCalc_Sh'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -415,6 +416,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
           object CodeCalc_Nom: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1042#1052#1057' '#1085#1086#1084#1080#1085#1072#1083
             DataBinding.FieldName = 'CodeCalc_Nom'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -423,6 +425,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
           object CodeCalc_Ves: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1042#1052#1057' '#1085#1077#1085#1086#1084#1080#1085#1072#1083
             DataBinding.FieldName = 'CodeCalc_Ves'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -431,11 +434,46 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
           object isCodeCalc_Diff: TcxGridDBColumn
             Caption = #1055#1086#1074#1090#1086#1088' '#1082#1086#1076#1072' '#1042#1052#1057
             DataBinding.FieldName = 'isCodeCalc_Diff'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1087#1086#1074#1090#1086#1088' '#1082#1086#1076#1072' '#1042#1052#1057
             Options.Editing = False
             Width = 81
+          end
+          object WmsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1042#1052#1057'*'
+            DataBinding.FieldName = 'WmsCode'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.;-0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object WmsCodeCalc_Sh: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1042#1052#1057'* '#1096#1090'.'
+            DataBinding.FieldName = 'WmsCodeCalc_Sh'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object WmsCodeCalc_Nom: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1042#1052#1057'* '#1085#1086#1084#1080#1085#1072#1083
+            DataBinding.FieldName = 'WmsCodeCalc_Nom'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object WmsCodeCalc_Ves: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1042#1052#1057'* '#1085#1077#1085#1086#1084#1080#1085#1072#1083
+            DataBinding.FieldName = 'WmsCodeCalc_Ves'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
           end
           object BoxCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1103#1097#1080#1082#1072' (E2/E3)'

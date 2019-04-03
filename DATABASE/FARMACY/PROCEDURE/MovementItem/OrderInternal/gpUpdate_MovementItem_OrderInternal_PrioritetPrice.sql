@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_MovementItem_OrderInternal()
+-- Function: gpUpdate_MovementItem_OrderInternal_PrioritetPartner()
 
 DROP FUNCTION IF EXISTS gpUpdate_MovementItem_OrderInternal_PrioritetPartner
          (Integer, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, TVarChar, TFloat, TFloat, TVarChar);

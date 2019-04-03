@@ -351,6 +351,7 @@ BEGIN
                         LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_MinimumLot
                                                ON ObjectFloat_Goods_MinimumLot.ObjectId = tmpMI.GoodsId
                                               AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
+                                              AND ObjectFloat_Goods_MinimumLot.ValueData <> 0
                         LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                                               ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
                                              AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
@@ -1632,7 +1633,7 @@ BEGIN
                         FROM (SELECT *, MIN(Id) OVER (PARTITION BY MovementItemId) AS MinId
                               FROM (SELECT *
                                          -- , MIN (SuperFinalPrice) OVER (PARTITION BY MovementItemId) AS MinSuperFinalPrice
-                                         , ROW_NUMBER() OVER (PARTITION BY _tmpMI.MovementItemId ORDER BY _tmpMI.SuperFinalPrice ASC, _tmpMI.PartionGoodsDate DESC, _tmpMI.Deferment DESC) AS Ord
+                                         , ROW_NUMBER() OVER (PARTITION BY _tmpMI.MovementItemId ORDER BY _tmpMI.SuperFinalPrice_Deferment ASC, _tmpMI.PartionGoodsDate DESC, _tmpMI.Deferment DESC) AS Ord
                                     FROM _tmpMI
                                    ) AS DDD
                               -- WHERE DDD.SuperFinalPrice = DDD.MinSuperFinalPrice

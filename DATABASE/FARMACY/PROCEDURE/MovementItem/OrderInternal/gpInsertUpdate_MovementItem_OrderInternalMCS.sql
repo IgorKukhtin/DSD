@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_MovementItem_OrderInternal()
+-- Function: gpInsertUpdate_MovementItem_OrderInternalMCS()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderInternalMCS(Integer, Boolean, TVarChar);
 
@@ -327,9 +327,9 @@ BEGIN
                                             ,inValueData      := CEIL ((MovementItemSaved.Amount
                                                                       + COALESCE (MIFloat_AmountSecond.ValueData, 0)
                                                                       + COALESCE (MIFloat_ListDiff.ValueData, 0)
-                                                                       ) / COALESCE (Object_Goods.MinimumLot, 1)
+                                                                       ) / COALESCE (CASE WHEN Object_Goods.MinimumLot = 0 THEN 1 ELSE Object_Goods.MinimumLot END, 1)
                                                                       )
-                                                               * COALESCE (Object_Goods.MinimumLot, 1)
+                                                               * COALESCE (CASE WHEN Object_Goods.MinimumLot = 0 THEN 1 ELSE Object_Goods.MinimumLot END, 1)
                                             )
         FROM MovementItem AS MovementItemSaved
             INNER JOIN MovementItemFloat AS MIFloat_AmountSecond

@@ -1794,8 +1794,8 @@ inherited OrderInternalForm: TOrderInternalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 242
-    Top = 360
+    Left = 258
+    Top = 352
   end
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
@@ -2235,6 +2235,15 @@ inherited OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inSuperPrice_Deferment'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'SuperPrice_Deferment'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPrice'
         Value = Null
         Component = ChildCDS
@@ -2280,6 +2289,14 @@ inherited OrderInternalForm: TOrderInternalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'SuperFinalPrice'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SuperPrice_Deferment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SuperPrice_Deferment'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
