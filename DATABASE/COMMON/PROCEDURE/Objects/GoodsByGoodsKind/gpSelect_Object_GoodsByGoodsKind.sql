@@ -35,6 +35,10 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , CodeCalc_Nom TVarChar
              , CodeCalc_Ves TVarChar
              , isCodeCalc_Diff Boolean
+             , WmsCode           Integer
+             , WmsCodeCalc_Sh    TVarChar 
+             , WmsCodeCalc_Nom   TVarChar 
+             , WmsCodeCalc_Ves   TVarChar
               )
 AS
 $BODY$
@@ -72,6 +76,22 @@ BEGIN
                                          ELSE NULL
                                     END  :: TVarChar AS CodeCalc_Ves
 
+                                  --  
+                                  , ObjectFloat_WmsCode.ValueData AS WmsCode
+                                  
+                                  , CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh.ChildObjectId, 0)  <> 0 
+                                         THEN (''||COALESCE (ObjectFloat_WmsCode.ValueData,0)::Integer||'.'||CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh.ChildObjectId, 0) <> 0 THEN 1 ELSE 0 END)
+                                         ELSE NULL
+                                    END  :: TVarChar AS WmsCodeCalc_Sh
+                                  , CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom.ChildObjectId, 0)  <> 0 
+                                         THEN (''||COALESCE (ObjectFloat_WmsCode.ValueData,0)::Integer||'.'||CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom.ChildObjectId, 0) <> 0 THEN 2 ELSE 0 END)
+                                         ELSE NULL
+                                    END  :: TVarChar AS WmsCodeCalc_Nom
+                                  , CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.ChildObjectId, 0)  <> 0 
+                                         THEN (''||COALESCE (ObjectFloat_WmsCode.ValueData,0)::Integer||'.'||CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.ChildObjectId, 0) <> 0 THEN 3 ELSE 0 END)
+                                         ELSE NULL
+                                    END  :: TVarChar AS WmsCodeCalc_Ves
+
                              FROM Object_GoodsByGoodsKind_View
                                   LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBasis
                                                        ON ObjectLink_GoodsByGoodsKind_GoodsBasis.ObjectId = Object_GoodsByGoodsKind_View.Id
@@ -96,7 +116,12 @@ BEGIN
                                   LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves
                                                        ON ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.ObjectId = Object_GoodsByGoodsKind_View.Id
                                                       AND ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves()
+
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_WmsCode
+                                                        ON ObjectFloat_WmsCode.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                       AND ObjectFloat_WmsCode.DescId = zc_ObjectFloat_GoodsByGoodsKind_WmsCode()
                              )
+
    , tmpCodeCalc AS (SELECT tmp.CodeCalc_Sh, tmp.CodeCalc_Nom, tmp.CodeCalc_Ves
                           , COUNT (*) OVER (PARTITION BY tmp.CodeCalc_Sh) AS Count1
                           , COUNT (*) OVER (PARTITION BY tmp.CodeCalc_Nom) AS Count2
@@ -188,6 +213,11 @@ BEGIN
                   WHEN (COALESCE (tmpCodeCalc_1.Count1, 1) + COALESCE (tmpCodeCalc_2.Count2, 1) + COALESCE (tmpCodeCalc_3.Count3, 1)) <= 3 THEN FALSE 
                   ELSE TRUE
              END  AS isCodeCalc_Diff
+
+           , Object_GoodsByGoodsKind_View.WmsCode          :: Integer
+           , Object_GoodsByGoodsKind_View.WmsCodeCalc_Sh   :: TVarChar 
+           , Object_GoodsByGoodsKind_View.WmsCodeCalc_Nom  :: TVarChar 
+           , Object_GoodsByGoodsKind_View.WmsCodeCalc_Ves  :: TVarChar
 
        FROM tmpGoodsByGoodsKind AS Object_GoodsByGoodsKind_View
             /*LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBasis

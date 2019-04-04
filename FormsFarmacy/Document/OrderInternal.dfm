@@ -2238,7 +2238,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Name = 'inSuperPrice_Deferment'
         Value = Null
         Component = ChildCDS
-        ComponentItem = 'SuperPrice_Deferment'
+        ComponentItem = 'SuperFinalPrice_Deferment'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2296,7 +2296,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Name = 'SuperPrice_Deferment'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'SuperPrice_Deferment'
+        ComponentItem = 'SuperFinalPrice_Deferment'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

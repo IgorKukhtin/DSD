@@ -31,6 +31,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind_VMC(
    OUT outCodeCalc_Sh          TVarChar,
    OUT outCodeCalc_Nom         TVarChar,
    OUT outCodeCalc_Ves         TVarChar,
+   OUT outWmsCode              Integer,
+   OUT outWmsCodeCalc_Sh       TVarChar,
+   OUT outWmsCodeCalc_Nom      TVarChar,
+   OUT outWmsCodeCalc_Ves      TVarChar,
     IN inSession               TVarChar 
 )
 RETURNS RECORD
@@ -38,6 +42,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbGoodsPropertyBoxId Integer;
+   DECLARE vbWmsCode Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsByGoodsKind_VMC());
@@ -123,10 +128,30 @@ BEGIN
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves(), ioId, Null);
    END IF;
 
+
+   -- WmsCode
+   IF inisGoodsTypeKind_Sh = TRUE OR inisGoodsTypeKind_Nom = TRUE OR inisGoodsTypeKind_Ves = TRUE
+   THEN
+       IF NOT EXISTS (SELECT ObjectFloat.ValueData
+                      FROM ObjectFloat
+                      WHERE ObjectFloat.DescId = zc_ObjectFloat_GoodsByGoodsKind_WmsCode()
+                        AND ObjectFloat.ObjectId = ioId
+                        AND ObjectFloat.ValueData <> 0
+                      )
+       THEN
+           -- находим макс код + 1
+           vbWmsCode := ((SELECT MAX (ObjectFloat.ValueData) FROM ObjectFloat WHERE ObjectFloat.DescId = zc_ObjectFloat_GoodsByGoodsKind_WmsCode()) + 1 ) :: Integer;
+           -- записываем новый код = последнему сохр + 1
+           PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WmsCode(), ioId, vbWmsCode);
+       END IF;
+   END IF;
+   
    -- расчет кодов ВМС
    SELECT CodeCalc_Sh, CodeCalc_Nom, CodeCalc_Ves, isCodeCalc_Diff
+        , WmsCodeCalc_Sh, WmsCodeCalc_Nom, WmsCodeCalc_Ves, WmsCode
      INTO outCodeCalc_Sh, outCodeCalc_Nom, outCodeCalc_Ves, outisCodeCalc_Diff
-   FROM gpSelect_Object_GoodsByGoodsKind (inSession) AS tmp
+        , outWmsCodeCalc_Sh, outWmsCodeCalc_Nom, outWmsCodeCalc_Ves, outWmsCode
+   FROM gpSelect_Object_GoodsByGoodsKind_VMC (inSession) AS tmp
    WHERE tmp.Id = ioId;
    
    -- если внесли ящик 1 тогда сохраняем данные

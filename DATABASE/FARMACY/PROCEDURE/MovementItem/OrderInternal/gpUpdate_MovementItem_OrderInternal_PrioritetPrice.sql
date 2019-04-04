@@ -22,7 +22,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_OrderInternal_PrioritetPartner(
 RETURNS TABLE (JuridicalId Integer, JuridicalName TVarChar, 
                ContractId Integer, ContractName TVarChar,
                GoodsId Integer, GoodsCode TVarChar, GoodsName TVarChar,
-               SuperPrice TFloat, Price TFloat)
+               SuperPrice TFloat, SuperPrice_Deferment TFloat, Price TFloat)
 AS               
 $BODY$
    DECLARE vbUserId Integer;

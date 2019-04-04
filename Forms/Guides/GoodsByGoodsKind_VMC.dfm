@@ -1763,6 +1763,37 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         ComponentItem = 'CodeCalc_Nom'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWmsCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WmsCode'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWmsCodeCalc_Sh'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WmsCodeCalc_Sh'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWmsCodeCalc_Nom'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WmsCodeCalc_Nom'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWmsCodeCalc_Nom'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WmsCodeCalc_Nom'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 304

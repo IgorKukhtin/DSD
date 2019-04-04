@@ -13,6 +13,7 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbWmsCode Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsByGoodsKind_VMC());
@@ -63,6 +64,20 @@ BEGIN
    THEN
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom(), inId, zc_Enum_GoodsTypeKind_Nom());
+
+         --WmsCode
+         IF NOT EXISTS (SELECT ObjectFloat.ValueData
+                        FROM ObjectFloat
+                        WHERE ObjectFloat.DescId = zc_ObjectFloat_GoodsByGoodsKind_WmsCode()
+                          AND ObjectFloat.ObjectId = inId
+                          AND ObjectFloat.ValueData <> 0
+                        )
+         THEN
+             -- находим макс код + 1
+             vbWmsCode := ((SELECT MAX (ObjectFloat.ValueData) FROM ObjectFloat WHERE ObjectFloat.DescId = zc_ObjectFloat_GoodsByGoodsKind_WmsCode()) + 1 ) :: Integer;
+             -- записываем новый код = последнему сохр + 1
+             PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WmsCode(), inId, vbWmsCode);
+         END IF;
    ELSE
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom(), inId, Null);

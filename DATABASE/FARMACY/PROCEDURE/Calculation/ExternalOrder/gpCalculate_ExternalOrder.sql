@@ -50,8 +50,8 @@ BEGIN
        -- вернем обратно, что б gpSelect вернул "текущие" данные
        PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Document(), inInternalOrder, FALSE);
 
-       CREATE TEMP TABLE _tmpMI_OrderInternal_Master (MovementItemId Integer, PartionGoods TDateTime, MinimumLot TFloat, MCS TFloat, PriceFrom TFloat, JuridicalPrice TFloat, Remains TFloat, Reserved TFloat, Income TFloat, CheckAmount TFloat, SendAmount TFloat, AmountDeferred TFloat, Maker TVarChar, isClose Boolean, isFirst Boolean, isSecond Boolean, isTOP Boolean, isUnitTOP Boolean, isMCSNotRecalc Boolean, isMCSIsClose Boolean, GoodsId_partner Integer, JuridicalId Integer, ContractId Integer) ON COMMIT DROP;
-       CREATE TEMP TABLE _tmpMI_OrderInternal_Child  (MovementItemId Integer, GoodsId Integer, PartionGoods TDateTime, Price TFloat, JuridicalPrice TFloat, PriceListMovementItemId Integer, Maker TVarChar, JuridicalId Integer, ContractId Integer) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpMI_OrderInternal_Master (MovementItemId Integer, PartionGoods TDateTime, MinimumLot TFloat, MCS TFloat, PriceFrom TFloat, JuridicalPrice TFloat, DefermentPrice TFloat, Remains TFloat, Reserved TFloat, Income TFloat, CheckAmount TFloat, SendAmount TFloat, AmountDeferred TFloat, Maker TVarChar, isClose Boolean, isFirst Boolean, isSecond Boolean, isTOP Boolean, isUnitTOP Boolean, isMCSNotRecalc Boolean, isMCSIsClose Boolean, GoodsId_partner Integer, JuridicalId Integer, ContractId Integer) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpMI_OrderInternal_Child  (MovementItemId Integer, GoodsId Integer, PartionGoods TDateTime, Price TFloat, JuridicalPrice TFloat, DefermentPrice TFloat, PriceListMovementItemId Integer, Maker TVarChar, JuridicalId Integer, ContractId Integer) ON COMMIT DROP;
        --
        SELECT zfCalc_Word_Split (tmp.CurName_all, ';', 1) AS CurName1
             , zfCalc_Word_Split (tmp.CurName_all, ';', 2) AS CurName2
@@ -115,13 +115,13 @@ BEGIN
                                                               , inMovementId                := inInternalOrder
                                                               , inParentId                  := COALESCE (MovementItem.ParentId, _tmpMI_OrderInternal_Child.MovementItemId)
                                                               , inGoodsId                   := COALESCE (MovementItem.GoodsId, _tmpMI_OrderInternal_Child.GoodsId)
-                                                              , inAmount                    := 0
-                                                              , inPrice                     := COALESCE (_tmpMI_OrderInternal_Child.Price, 0)
-                                                              , inJuridicalPrice            := COALESCE (_tmpMI_OrderInternal_Child.JuridicalPrice, 0)
-                                                              , inDefermentPrice            := COALESCE (_tmpMI_OrderInternal_Child.DefermentPrice, 0)
+                                                              , inAmount                    := 0                                              ::TFloat
+                                                              , inPrice                     := COALESCE (_tmpMI_OrderInternal_Child.Price, 0) ::TFloat
+                                                              , inJuridicalPrice            := COALESCE (_tmpMI_OrderInternal_Child.JuridicalPrice, 0) ::TFloat
+                                                              , inDefermentPrice            := COALESCE (_tmpMI_OrderInternal_Child.DefermentPrice, 0) ::TFloat
                                                               , inPriceListMovementItemId   := COALESCE (_tmpMI_OrderInternal_Child.PriceListMovementItemId, 0)
-                                                              , inPartionGoods              := _tmpMI_OrderInternal_Child.PartionGoods
-                                                              , inMaker                     := _tmpMI_OrderInternal_Child.Maker
+                                                              , inPartionGoods              := _tmpMI_OrderInternal_Child.PartionGoods  :: TDateTime
+                                                              , inMaker                     := _tmpMI_OrderInternal_Child.Maker         :: TVarChar
                                                               , inJuridicalId               := COALESCE (MovementItem.JuridicalId, _tmpMI_OrderInternal_Child.JuridicalId)
                                                               , inContractId                := COALESCE (MovementItem.ContractId, _tmpMI_OrderInternal_Child.ContractId)
                                                               , inUserId                    := vbUserId

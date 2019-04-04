@@ -1176,12 +1176,7 @@ BEGIN
                    ELSE FinalPrice
               END :: TFloat AS SuperFinalPrice
               
-            , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
-                        THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
-                   WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
-                        THEN FinalPrice * (100 + COALESCE (PriceSettings.Percent, 0)) / 100
-                   ELSE FinalPrice - FinalPrice * ((ddd.Deferment+1) * vbCostCredit) / 100
-              END :: TFloat AS SuperFinalPrice_Deferment
+            , (ddd.FinalPrice - ddd.FinalPrice * ((ddd.Deferment) * vbCostCredit) / 100) :: TFloat AS SuperFinalPrice_Deferment
 /**/
        FROM
              (SELECT DISTINCT MovementItemOrder.Id
@@ -2277,28 +2272,13 @@ BEGIN
              END  AS OrderShedule_Color
              
            , AVGIncome.AVGIncomePrice    AS AVGPrice
-/*           , CASE WHEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10
-                     THEN TRUE
-                  ELSE FALSE
-             END AS AVGPriceWarning*/
+
            , CASE WHEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10
                      THEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) * 100
                   WHEN COALESCE (AVGIncome.AVGIncomePrice, 0) = 0 THEN 5000
                   ELSE 0
              END AS AVGPriceWarning
 
-           /*
-           , CASE WHEN COALESCE (tmpOrderLast_2days.Amount, 0) > 1 THEN 16777134   -- цвет фона - голубой подрязд 2 дня заказ;
-                  WHEN COALESCE (tmpOrderLast_10.Amount, 0) > 9 THEN 167472630     -- цвет фона - розовый подрязд 10 заказов нет привязки к товару поставщика;
-                  ELSE  zc_Color_White()
-             END  AS Fond_Color
-
-           , CASE WHEN COALESCE (tmpOrderLast_2days.Amount, 0) > 1 THEN TRUE
-                  ELSE  FALSE
-             END  AS isLast_2days
-
-           , COALESCE (tmpRepeat.isRepeat, FALSE) AS isRepeat
-           */
            -- , tmpJuridicalArea.AreaId                                      AS AreaId
            -- , COALESCE (tmpJuridicalArea.AreaName, '')      :: TVarChar    AS AreaName
            -- , Object_Area.ValueData                         :: TVarChar    AS AreaName_Goods
