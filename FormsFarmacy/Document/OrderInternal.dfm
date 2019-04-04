@@ -818,14 +818,14 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 82
           end
-          object colPrice_DayDeferment: TcxGridDBColumn
-            Caption = #1050#1088'. '#1089#1088'-'#1074#1072', '#1075#1088#1085'/'#1076#1077#1085#1100
-            DataBinding.FieldName = 'Price_DayDeferment'
+          object colPersent_Deferment: TcxGridDBColumn
+            Caption = '% '#1089#1090#1086#1080#1084'. '#1082#1088'. '#1089#1088'-'#1074
+            DataBinding.FieldName = 'Persent_Deferment'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Properties.DisplayFormat = ',0.#### %;-,0.#### %; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1090#1086#1080#1084#1086#1089#1090#1100' '#1082#1088#1077#1076#1080#1090'. '#1089#1088#1077#1076#1089#1090#1074'  '#1079#1072' 1 '#1076#1077#1085#1100
+            HeaderHint = '% '#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1082#1088#1077#1076#1080#1090'. '#1089#1088#1077#1076#1089#1090#1074
             Options.Editing = False
             Width = 72
           end
