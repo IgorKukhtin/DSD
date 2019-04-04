@@ -63,12 +63,16 @@ $BODY$
   DECLARE vbObjectId Integer;
   DECLARE vbMarginCategoryId Integer;
   DECLARE vbMarginPercent_ExpirationDate TFloat;
+  DECLARE vbInterval_ExpirationDate Interval;
 BEGIN
     vbUserId := inSession;
     vbObjectId := COALESCE (lpGet_DefaultValue('zc_Object_Retail', vbUserId), '0');
 
     -- % наценки для срока годности < 6 мес.
     vbMarginPercent_ExpirationDate:= (SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.DescId = zc_ObjectFloat_Retail_MarginPercent() AND ObjectFloat.ObjectId = vbObjectId);
+    -- 
+    -- vbInterval_ExpirationDate:= zc_Interval_ExpirationDate();
+    vbInterval_ExpirationDate:= '6 MONTH' :: Interval;
 
     --
     SELECT
@@ -225,12 +229,16 @@ BEGIN
 
                  ELSE CASE -- % наценки для срока годности < 6 мес.
                            WHEN vbMarginPercent_ExpirationDate > 0
-                            AND SelectMinPrice_AllGoods.MinExpirationDate < (CURRENT_DATE + zc_Interval_ExpirationDate())
+                            AND SelectMinPrice_AllGoods.MinExpirationDate < (CURRENT_DATE + vbInterval_ExpirationDate)
+                            AND SelectMinPrice_AllGoods.MinExpirationDate > zc_DateStart()
+                            AND SelectMinPrice_AllGoods.MinExpirationDate > CURRENT_DATE
                             AND COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0
                                 THEN vbMarginPercent_ExpirationDate + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0)
                            -- % наценки для срока годности < 6 мес.
                            WHEN vbMarginPercent_ExpirationDate > 0
-                            AND SelectMinPrice_AllGoods.MinExpirationDate < (CURRENT_DATE + zc_Interval_ExpirationDate())
+                            AND SelectMinPrice_AllGoods.MinExpirationDate < (CURRENT_DATE + vbInterval_ExpirationDate)
+                            AND SelectMinPrice_AllGoods.MinExpirationDate > zc_DateStart()
+                            AND SelectMinPrice_AllGoods.MinExpirationDate > CURRENT_DATE
                                 THEN vbMarginPercent_ExpirationDate + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0)
 
                            WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0
@@ -243,12 +251,16 @@ BEGIN
           , zfCalc_SalePrice((SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)               -- Цена С НДС
                             , CASE -- % наценки для срока годности < 6 мес.
                                    WHEN vbMarginPercent_ExpirationDate > 0
-                                    AND SelectMinPrice_AllGoods.MinExpirationDate < (CURRENT_DATE + zc_Interval_ExpirationDate())
+                                    AND SelectMinPrice_AllGoods.MinExpirationDate < (CURRENT_DATE + vbInterval_ExpirationDate)
+                                    AND SelectMinPrice_AllGoods.MinExpirationDate > zc_DateStart()
+                                    AND SelectMinPrice_AllGoods.MinExpirationDate > CURRENT_DATE
                                     AND COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0
                                         THEN vbMarginPercent_ExpirationDate + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0)
                                    -- % наценки для срока годности < 6 мес.
                                    WHEN vbMarginPercent_ExpirationDate > 0
-                                    AND SelectMinPrice_AllGoods.MinExpirationDate < (CURRENT_DATE + zc_Interval_ExpirationDate())
+                                    AND SelectMinPrice_AllGoods.MinExpirationDate < (CURRENT_DATE + vbInterval_ExpirationDate)
+                                    AND SelectMinPrice_AllGoods.MinExpirationDate > zc_DateStart()
+                                    AND SelectMinPrice_AllGoods.MinExpirationDate > CURRENT_DATE
                                         THEN vbMarginPercent_ExpirationDate + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0)
 
                                    WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0
@@ -385,7 +397,14 @@ BEGIN
         -- CASE WHEN ResultSet.isTop_calc = TRUE THEN ResultSet.isTop_calc ELSE ResultSet.IsTop END :: Boolean AS IsTop,
         ResultSet.IsTop_Goods,
         ResultSet.IsPromo,
-        CASE WHEN COALESCE (ResultSet.IsTop_Goods, FALSE) = FALSE AND ResultSet.MinExpirationDate < (CURRENT_DATE + zc_Interval_ExpirationDate()) AND COALESCE (vbMarginPercent_ExpirationDate, 0) = 0
+        CASE WHEN COALESCE (ResultSet.IsTop_Goods, FALSE) = FALSE
+                        AND ResultSet.MinExpirationDate > zc_DateStart()
+                        AND ResultSet.MinExpirationDate <= CURRENT_DATE
+                  THEN FALSE
+             WHEN COALESCE (ResultSet.IsTop_Goods, FALSE) = FALSE
+                        AND ResultSet.MinExpirationDate < (CURRENT_DATE + vbInterval_ExpirationDate)
+                        AND ResultSet.MinExpirationDate > zc_DateStart()
+                        AND COALESCE (vbMarginPercent_ExpirationDate, 0) = 0
                   THEN FALSE
              WHEN COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isPriceFix = TRUE OR ResultSet.PriceFix_Goods <> 0)
                   THEN TRUE
@@ -396,8 +415,8 @@ BEGIN
              WHEN COALESCE (inUnitId_to, 0) = 0
                   THEN TRUE
 
-             WHEN inUnitId_to <> 0 AND (ResultSet.MinExpirationDate < (CURRENT_DATE + zc_Interval_ExpirationDate())
-                                    OR  ResultSet.MinExpirationDate_to < (CURRENT_DATE + zc_Interval_ExpirationDate())
+             WHEN inUnitId_to <> 0 AND (ResultSet.MinExpirationDate < (CURRENT_DATE + vbInterval_ExpirationDate)
+                                    OR  ResultSet.MinExpirationDate_to < (CURRENT_DATE + vbInterval_ExpirationDate)
                                     /*OR  ResultSet.isIncome = TRUE */)
                   THEN FALSE
 
@@ -437,8 +456,11 @@ BEGIN
              )
          AND (ResultSet.ExpirationDate IS NULL
            OR ResultSet.ExpirationDate = '1899-12-30'::TDateTime
-           OR ResultSet.ExpirationDate > (CURRENT_DATE + zc_Interval_ExpirationDate())
-           OR vbMarginPercent_ExpirationDate > 0
+           OR ResultSet.ExpirationDate <= zc_DateStart()
+           OR ResultSet.ExpirationDate > (CURRENT_DATE + vbInterval_ExpirationDate)
+           OR (vbMarginPercent_ExpirationDate > 0
+           AND ResultSet.ExpirationDate > CURRENT_DATE
+              )
              )
          AND (COALESCE(ResultSet.LastPrice,0) = 0
            OR ABS (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0
@@ -455,7 +477,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_AllGoodsPrice (Integer,  Integer,  TFloat, Boolean, TFloat, TFloat, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
