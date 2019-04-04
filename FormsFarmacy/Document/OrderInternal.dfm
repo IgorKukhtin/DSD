@@ -778,6 +778,8 @@ inherited OrderInternalForm: TOrderInternalForm
           object coCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 67
           end
@@ -785,12 +787,15 @@ inherited OrderInternalForm: TOrderInternalForm
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 109
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 57
           end
@@ -799,6 +804,7 @@ inherited OrderInternalForm: TOrderInternalForm
             DataBinding.FieldName = 'Percent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.## %;-,0.## %; ;'
+            Visible = False
             Options.Editing = False
             Width = 70
           end
@@ -807,14 +813,29 @@ inherited OrderInternalForm: TOrderInternalForm
             DataBinding.FieldName = 'SuperFinalPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 82
+          end
+          object colPrice_DayDeferment: TcxGridDBColumn
+            Caption = #1050#1088'. '#1089#1088'-'#1074#1072', '#1075#1088#1085'/'#1076#1077#1085#1100
+            DataBinding.FieldName = 'Price_DayDeferment'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1086#1080#1084#1086#1089#1090#1100' '#1082#1088#1077#1076#1080#1090'. '#1089#1088#1077#1076#1089#1090#1074'  '#1079#1072' 1 '#1076#1077#1085#1100
+            Options.Editing = False
+            Width = 72
           end
           object colSuperFinalPrice_Deferment: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1089#1088#1072#1074#1085#1077#1085#1080#1103' ('#1082#1088#1077#1076'.'#1088#1077#1089'.)'
             DataBinding.FieldName = 'SuperFinalPrice_Deferment'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 82
           end

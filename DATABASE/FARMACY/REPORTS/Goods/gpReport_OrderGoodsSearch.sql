@@ -12,6 +12,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,ItemName TVarChar       --Название(тип) документа
               ,Amount TFloat           --Кол-во товара в документе
               ,Amount_SpecZakaz TFloat   --Кол-во спецзаказ в заявке внутренней
+              ,Amount_ListFiff  TFloat   --Кол-во отказ
               ,Code Integer            --Код товара
               ,Name TVarChar           --Наименование товара
               ,PartnerGoodsName TVarChar  --Наименование поставщика
@@ -93,6 +94,7 @@ BEGIN
             ,COALESCE(MIFloat_AmountManual.ValueData,
                       MovementItem.Amount)            AS Amount
             ,CASE WHEN Movement.DescId = zc_Movement_OrderInternal() THEN MovementItem.Amount ELSE 0 END   :: TFloat AS Amount_SpecZakaz
+            ,CASE WHEN Movement.DescId = zc_Movement_ListDiff() THEN MovementItem.Amount ELSE 0 END        :: TFloat AS Amount_ListFiff
             ,Object.ObjectCode                        AS Code
             ,Object.ValueData                         AS Name
             ,MI_Income_View.PartnerGoodsName          AS PartnerGoodsName
@@ -119,8 +121,9 @@ BEGIN
             ,MovementString_InvNumberBranch.ValueData AS InvNumberBranch
             ,MovementDate_Branch.ValueData            AS BranchDate
 
-            ,MovementDate_Insert.ValueData        AS InsertDate
-            ,Object_Insert.ValueData              AS InsertName
+            ,CASE WHEN Movement.DescId = zc_Movement_ListDiff() THEN MIDate_Insert.ValueData ELSE MovementDate_Insert.ValueData END       AS InsertDate
+            ,CASE WHEN Movement.DescId = zc_Movement_ListDiff() THEN ObjectMI_Insert.ValueData ELSE Object_Insert.ValueData END AS InsertName
+
       FROM Movement
         JOIN Object AS Status
                     ON Status.Id = Movement.StatusId
@@ -224,9 +227,21 @@ BEGIN
                                     ON MIFloat_PriceSample.MovementItemId = MovementItem.Id
                                    AND MIFloat_PriceSample.DescId = zc_MIFloat_PriceSample()
 
+        LEFT JOIN MovementItemLinkObject AS MILO_Insert
+                                          ON MILO_Insert.MovementItemId = MovementItem.Id
+                                         AND MILO_Insert.DescId = zc_MILinkObject_Insert()
+                                         AND Movement.DescId = zc_Movement_ListDiff()
+        LEFT JOIN Object AS ObjectMI_Insert ON ObjectMI_Insert.Id = MILO_Insert.ObjectId
+
+        LEFT JOIN MovementItemDate AS MIDate_Insert
+                                   ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                  AND MIDate_Insert.DescId = zc_MIDate_Insert()
+                                  AND Movement.DescId = zc_Movement_ListDiff()
 
     WHERE Movement.DescId in (zc_Movement_OrderInternal(), zc_Movement_OrderExternal(), zc_Movement_Income(), zc_Movement_Send(), zc_Movement_Check()
-                            , zc_Movement_Sale(), zc_Movement_Loss(), zc_Movement_ReturnOut())
+                            , zc_Movement_Sale(), zc_Movement_Loss(), zc_Movement_ReturnOut()
+                            , zc_Movement_ListDiff()
+                            )
       AND Movement.OperDate >= inStartDate AND Movement.OperDate <inEndDate + INTERVAL '1 DAY'
       AND (Object_Unit.Id = vbUnitId OR vbUnitId = 0)
       AND (ObjectLink_Juridical_Retail.ChildObjectId = vbRetailId OR vbRetailId = 0)
