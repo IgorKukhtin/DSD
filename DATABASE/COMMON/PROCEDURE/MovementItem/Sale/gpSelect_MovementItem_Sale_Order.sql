@@ -139,6 +139,88 @@ BEGIN
                              FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect
                             )
             -- Существующие MovementItem
+          , tmp_MI AS (SELECT MovementItem.*                               AS MovementItemId
+                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                                   AND MovementItem.DescId     = zc_MI_Master()
+                                                   AND MovementItem.isErased   = tmpIsErased.isErased
+                       )
+          -- оптимизацация
+          , tmpMIFLoat_AmountPartner AS (SELECT MovementItemFloat.*
+                                         FROM MovementItemFloat
+                                         WHERE MovementItemFloat.DescId = zc_MIFloat_AmountPartner()
+                                           AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+
+          , tmpMIFLoat_AmountChangePercent AS (SELECT MovementItemFloat.*
+                                         FROM MovementItemFloat
+                                         WHERE MovementItemFloat.DescId = zc_MIFloat_AmountChangePercent()
+                                           AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+          , tmpMIFLoat_ChangePercentAmount AS (SELECT MovementItemFloat.*
+                                         FROM MovementItemFloat
+                                         WHERE MovementItemFloat.DescId = zc_MIFloat_ChangePercentAmount()
+                                           AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+
+          , tmpMIFLoat_ChangePercent AS (SELECT MovementItemFloat.*
+                                         FROM MovementItemFloat
+                                         WHERE MovementItemFloat.DescId = zc_MIFloat_ChangePercent()
+                                           AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+
+          , tmpMIFLoat_Price AS (SELECT MovementItemFloat.*
+                                         FROM MovementItemFloat
+                                         WHERE MovementItemFloat.DescId = zc_MIFloat_Price()
+                                           AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+
+          , tmpMIFLoat_CountForPrice AS (SELECT MovementItemFloat.*
+                                         FROM MovementItemFloat
+                                         WHERE MovementItemFloat.DescId = zc_MIFloat_CountForPrice()
+                                           AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+
+          , tmpMIFLoat_HeadCount AS (SELECT MovementItemFloat.*
+                                         FROM MovementItemFloat
+                                         WHERE MovementItemFloat.DescId = zc_MIFloat_HeadCount()
+                                           AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+
+          , tmpMIFLoat_BoxCount AS (SELECT MovementItemFloat.*
+                                         FROM MovementItemFloat
+                                         WHERE MovementItemFloat.DescId = zc_MIFloat_BoxCount()
+                                           AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+          , tmpMIFLoat_PromoMovementId AS (SELECT MovementItemFloat.MovementItemId
+                                                , MovementItemFloat.ValueData ::Integer
+                                                , MovementItemFloat.DescId
+                                         FROM MovementItemFloat
+                                         WHERE MovementItemFloat.DescId = zc_MIFloat_PromoMovementId()
+                                           AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+
+          , tmpMIString_PartionGoods AS (SELECT MovementItemString.*
+                                         FROM MovementItemString
+                                         WHERE MovementItemString.DescId = zc_MIString_PartionGoods()
+                                           AND MovementItemString.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+          , tmMILinkObject_GoodsKind AS (SELECT MovementItemLinkObject.*
+                                         FROM MovementItemLinkObject
+                                         WHERE MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                                           AND MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+          , tmMILinkObject_Box AS (SELECT MovementItemLinkObject.*
+                                         FROM MovementItemLinkObject
+                                         WHERE MovementItemLinkObject.DescId = zc_MILinkObject_Box()
+                                           AND MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+          , tmMILinkObject_Asset AS (SELECT MovementItemLinkObject.*
+                                         FROM MovementItemLinkObject
+                                         WHERE MovementItemLinkObject.DescId = zc_MILinkObject_Asset()
+                                           AND MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+
           , tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
                            , MovementItem.ObjectId                         AS GoodsId
                            , MovementItem.Amount                           AS Amount
@@ -158,109 +240,147 @@ BEGIN
 
                            , MILinkObject_Box.ObjectId                     AS BoxId
                            , MILinkObject_Asset.ObjectId                   AS AssetId
-                           , MIFloat_PromoMovement.ValueData               AS MovementId_Promo
+                           , MIFloat_PromoMovement.ValueData ::Integer     AS MovementId_Promo
 
                            , MovementItem.isErased
-                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                                   AND MovementItem.DescId     = zc_MI_Master()
-                                                   AND MovementItem.isErased   = tmpIsErased.isErased
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                       FROM tmp_MI AS MovementItem
+                            LEFT JOIN tmMILinkObject_GoodsKind AS MILinkObject_GoodsKind
                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                                             ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
-                                                             ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
-                                 LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
-                                                             ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
-                                 LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                                             ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
-                                 LEFT JOIN MovementItemFloat AS MIFloat_Price
+                            LEFT JOIN tmpMIFLoat_AmountPartner AS MIFloat_AmountPartner
+                                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                   --    AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                            LEFT JOIN tmpMIFLoat_AmountChangePercent AS MIFloat_AmountChangePercent
+                                                        ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
+                            LEFT JOIN tmpMIFLoat_ChangePercentAmount AS MIFloat_ChangePercentAmount
+                                                        ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
+                            LEFT JOIN tmpMIFLoat_ChangePercent AS MIFloat_ChangePercent
+                                                        ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+
+                            LEFT JOIN tmpMIFLoat_Price AS MIFloat_Price
+                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                            LEFT JOIN tmpMIFLoat_CountForPrice AS MIFloat_CountForPrice
+                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                            LEFT JOIN tmpMIFLoat_HeadCount AS MIFloat_HeadCount
+                                                        ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                            LEFT JOIN tmpMIFLoat_BoxCount AS MIFloat_BoxCount
+                                                        ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
+
+                            LEFT JOIN tmpMIString_PartionGoods AS MIString_PartionGoods
+                                                         ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
+                                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+
+                            LEFT JOIN tmMILinkObject_Box AS MILinkObject_Box
+                                                             ON MILinkObject_Box.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
+                            LEFT JOIN tmMILinkObject_Asset AS MILinkObject_Asset
+                                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+
+                            LEFT JOIN tmpMIFLoat_PromoMovementId AS MIFloat_PromoMovement
+                                                        ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                     )
+
+           -- Связь с акциями для существующих MovementItem
+          , tmpMIPromo_ AS (SELECT tmp.MovementId_Promo   AS MovementId_Promo
+                                 , MovementItem.Id        AS MovementItemId
+                                 , MovementItem.ObjectId  AS GoodsId
+                                 , MovementItem.Amount    AS TaxPromo
+                            FROM (SELECT DISTINCT tmpMI.MovementId_Promo :: Integer AS MovementId_Promo FROM tmpMI WHERE tmpMI.MovementId_Promo <> 0) AS tmp
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId_Promo
+                                                        AND MovementItem.DescId = zc_MI_Master()
+                                                        AND MovementItem.isErased = FALSE
+                             )          
+          , tmpMILO_GoodsKind_promo AS (SELECT MovementItemLinkObject.*
+                                        FROM MovementItemLinkObject
+                                        WHERE MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                                          AND MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMIPromo_.MovementItemId FROM tmpMIPromo_)
+                                        )
+          , tmpMIPromo_all AS (SELECT tmp.MovementId_Promo
+                                    , tmp.MovementItemId
+                                    , tmp.GoodsId
+                                    , tmp.TaxPromo
+                                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                               FROM tmpMIPromo_ AS tmp
+                                    LEFT JOIN tmpMILO_GoodsKind_promo AS MILinkObject_GoodsKind
+                                                                      ON MILinkObject_GoodsKind.MovementItemId = tmp.MovementItemId
+                                                                     --AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                              )
+            -- Акции по товарам для существующих MovementItem
+          , tmpMIFLoat_PriceWithOutVAT_promo AS (SELECT *
+                                                 FROM MovementItemFloat
+                                                 WHERE MovementItemFloat.DescId = zc_MIFloat_PriceWithOutVAT()
+                                                   AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIPromo_.MovementItemId FROM tmpMIPromo_)
+                                                )
+          , tmpMIPromo AS (SELECT DISTINCT
+                                  tmpMIPromo_all.MovementId_Promo
+                                , tmpMIPromo_all.GoodsId
+                                , tmpMIPromo_all.GoodsKindId
+                                , CASE WHEN tmpMIPromo_all.TaxPromo <> 0 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
+                           FROM tmpMIPromo_all
+                                LEFT JOIN tmpMIFLoat_PriceWithOutVAT_promo AS MIFloat_PriceWithOutVAT
+                                                                           ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
+                                                                          AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
+                          )
+          -- Товары из заявки
+          , tmpMIOrder_ AS (SELECT MovementItem.ObjectId AS GoodsId
+                                 , MovementItem.Id
+                                 , MovementItem.Amount
+                            FROM (SELECT MovementLinkMovement_Order.MovementChildId AS MovementId
+                                  FROM MovementLinkMovement AS MovementLinkMovement_Order
+                                  WHERE MovementLinkMovement_Order.MovementId = inMovementId
+                                    AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                                 ) AS tmpMovement
+                               INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
+                                                      AND MovementItem.DescId     = zc_MI_Master()
+                                                      AND MovementItem.isErased   = FALSE
+                            )
+          
+          , tmpMILO_GoodsKind_Order AS (SELECT MovementItemLinkObject.*
+                                        FROM MovementItemLinkObject
+                                        WHERE MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                                          AND MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMIOrder_.Id FROM tmpMIOrder_)
+                                        )
+                                        
+          , tmpMIFLoat_Order AS (SELECT MovementItemFloat.*
+                                 FROM MovementItemFloat
+                                 WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIOrder_.Id FROM tmpMIOrder_)
+                                   AND MovementItemFloat.DescId IN (zc_MIFloat_AmountSecond()
+                                                                  , zc_MIFloat_Price()
+                                                                  , zc_MIFloat_CountForPrice() )
+                                )
+     
+          , tmpMI_Order AS (SELECT MovementItem.GoodsId
+                                 , SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS Amount
+                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                 , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
+                                 , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
+                            FROM tmpMIOrder_ AS MovementItem
+                                 LEFT JOIN tmpMILO_GoodsKind_Order AS MILinkObject_GoodsKind
+                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                 LEFT JOIN tmpMIFLoat_Order AS MIFloat_AmountSecond
+                                                             ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                                 LEFT JOIN tmpMIFLoat_Order AS MIFloat_Price
                                                              ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                 LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                 LEFT JOIN tmpMIFLoat_Order AS MIFloat_CountForPrice
                                                              ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                             AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-                                 LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
-                                                             ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
-                                 LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
-                                                             ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
-
-                                 LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                                              ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
-                                                             AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-
-                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Box
-                                                                  ON MILinkObject_Box.MovementItemId = MovementItem.Id
-                                                                 AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
-                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
-                                                                  ON MILinkObject_Asset.MovementItemId = MovementItem.Id
-                                                                 AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
-
-                                 LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
-                                                             ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
-                     )
-           -- Связь с акциями для существующих MovementItem
-         , tmpMIPromo_all AS (SELECT tmp.MovementId_Promo                          AS MovementId_Promo
-                                   , MovementItem.Id                               AS MovementItemId
-                                   , MovementItem.ObjectId                         AS GoodsId
-                                   , MovementItem.Amount                           AS TaxPromo
-                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                              FROM (SELECT DISTINCT tmpMI.MovementId_Promo :: Integer AS MovementId_Promo FROM tmpMI WHERE tmpMI.MovementId_Promo <> 0) AS tmp
-                                   INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId_Promo
-                                                          AND MovementItem.DescId = zc_MI_Master()
-                                                          AND MovementItem.isErased = FALSE
-                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                             )
-               -- Акции по товарам для существующих MovementItem
-             , tmpMIPromo AS (SELECT DISTINCT 
-                                     tmpMIPromo_all.MovementId_Promo
-                                   , tmpMIPromo_all.GoodsId
-                                   , tmpMIPromo_all.GoodsKindId
-                                   , CASE WHEN tmpMIPromo_all.TaxPromo <> 0 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
-                              FROM tmpMIPromo_all
-                                   LEFT JOIN MovementItemFloat AS MIFloat_PriceWithOutVAT
-                                                               ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
-                                                              AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
-                             )
-           -- Товары из заявки
-        , tmpMI_Order AS (SELECT MovementItem.ObjectId                         AS GoodsId
-                               , SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS Amount
-                               , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                               , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
-                               , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
-                          FROM MovementItem
-                               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                               AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                               LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
-                                                           ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                                          AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
-                               LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                           ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                               LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                                           ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                                          AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-                          WHERE MovementItem.MovementId = vbMovementId_order
-                            AND MovementItem.DescId     = zc_MI_Master()
-                            AND MovementItem.isErased   = FALSE
-                            AND MovementItem.Amount     <> 0
-                          GROUP BY MovementItem.ObjectId
-                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-                                 , COALESCE (MIFloat_Price.ValueData, 0)
-                                 , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-                         )
+                            GROUP BY MovementItem.GoodsId
+                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                   , COALESCE (MIFloat_Price.ValueData, 0)
+                                   , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+                           )
           -- поиск для Товаров из заявки - MovementItemId продажи
         , tmpMI_Order_find AS (SELECT tmpMI_Order.GoodsId
                                     , tmpMI_Order.Amount
@@ -537,7 +657,90 @@ BEGIN
                                    , CASE WHEN vbPriceWithVAT_pl = TRUE  OR vbVATPercent_pl = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice * vbVATPercent_pl END AS Price_PriceList_vat
                              FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect
                             )
+
             -- Существующие MovementItem
+          , tmp_MI AS (SELECT MovementItem.*                               AS MovementItemId
+                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                                   AND MovementItem.DescId     = zc_MI_Master()
+                                                   AND MovementItem.isErased   = tmpIsErased.isErased
+                       )
+          -- оптимизацация
+          , tmpMIFLoat_AmountPartner AS (SELECT MovementItemFloat.*
+                                         FROM MovementItemFloat
+                                         WHERE MovementItemFloat.DescId = zc_MIFloat_AmountPartner()
+                                           AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+
+          , tmpMIFLoat_AmountChangePercent AS (SELECT MovementItemFloat.*
+                                         FROM MovementItemFloat
+                                         WHERE MovementItemFloat.DescId = zc_MIFloat_AmountChangePercent()
+                                           AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+          , tmpMIFLoat_ChangePercentAmount AS (SELECT MovementItemFloat.*
+                                         FROM MovementItemFloat
+                                         WHERE MovementItemFloat.DescId = zc_MIFloat_ChangePercentAmount()
+                                           AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+
+          , tmpMIFLoat_ChangePercent AS (SELECT MovementItemFloat.*
+                                         FROM MovementItemFloat
+                                         WHERE MovementItemFloat.DescId = zc_MIFloat_ChangePercent()
+                                           AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+
+          , tmpMIFLoat_Price AS (SELECT MovementItemFloat.*
+                                         FROM MovementItemFloat
+                                         WHERE MovementItemFloat.DescId = zc_MIFloat_Price()
+                                           AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+
+          , tmpMIFLoat_CountForPrice AS (SELECT MovementItemFloat.*
+                                         FROM MovementItemFloat
+                                         WHERE MovementItemFloat.DescId = zc_MIFloat_CountForPrice()
+                                           AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+
+          , tmpMIFLoat_HeadCount AS (SELECT MovementItemFloat.*
+                                         FROM MovementItemFloat
+                                         WHERE MovementItemFloat.DescId = zc_MIFloat_HeadCount()
+                                           AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+
+          , tmpMIFLoat_BoxCount AS (SELECT MovementItemFloat.*
+                                         FROM MovementItemFloat
+                                         WHERE MovementItemFloat.DescId = zc_MIFloat_BoxCount()
+                                           AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+          , tmpMIFLoat_PromoMovementId AS (SELECT MovementItemFloat.MovementItemId
+                                                , MovementItemFloat.ValueData ::Integer
+                                                , MovementItemFloat.DescId
+                                         FROM MovementItemFloat
+                                         WHERE MovementItemFloat.DescId = zc_MIFloat_PromoMovementId()
+                                           AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+
+          , tmpMIString_PartionGoods AS (SELECT MovementItemString.*
+                                         FROM MovementItemString
+                                         WHERE MovementItemString.DescId = zc_MIString_PartionGoods()
+                                           AND MovementItemString.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+          , tmMILinkObject_GoodsKind AS (SELECT MovementItemLinkObject.*
+                                         FROM MovementItemLinkObject
+                                         WHERE MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                                           AND MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+          , tmMILinkObject_Box AS (SELECT MovementItemLinkObject.*
+                                         FROM MovementItemLinkObject
+                                         WHERE MovementItemLinkObject.DescId = zc_MILinkObject_Box()
+                                           AND MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+          , tmMILinkObject_Asset AS (SELECT MovementItemLinkObject.*
+                                         FROM MovementItemLinkObject
+                                         WHERE MovementItemLinkObject.DescId = zc_MILinkObject_Asset()
+                                           AND MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmp_MI.Id FROM tmp_MI)
+                                        )
+
           , tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
                            , MovementItem.ObjectId                         AS GoodsId
                            , MovementItem.Amount                           AS Amount
@@ -557,109 +760,142 @@ BEGIN
 
                            , MILinkObject_Box.ObjectId                     AS BoxId
                            , MILinkObject_Asset.ObjectId                   AS AssetId
-                           , MIFloat_PromoMovement.ValueData               AS MovementId_Promo
+                           , MIFloat_PromoMovement.ValueData ::Integer     AS MovementId_Promo
 
                            , MovementItem.isErased
-                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                                   AND MovementItem.DescId     = zc_MI_Master()
-                                                   AND MovementItem.isErased   = tmpIsErased.isErased
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                       FROM tmp_MI AS MovementItem
+                            LEFT JOIN tmMILinkObject_GoodsKind AS MILinkObject_GoodsKind
                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                                             ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
-                                                             ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
-                                 LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
-                                                             ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
-                                 LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                                             ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                            LEFT JOIN tmpMIFLoat_AmountPartner AS MIFloat_AmountPartner
+                                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                   --    AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                            LEFT JOIN tmpMIFLoat_AmountChangePercent AS MIFloat_AmountChangePercent
+                                                        ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
+                            LEFT JOIN tmpMIFLoat_ChangePercentAmount AS MIFloat_ChangePercentAmount
+                                                        ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
+                            LEFT JOIN tmpMIFLoat_ChangePercent AS MIFloat_ChangePercent
+                                                        ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
 
-                                 LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                             ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                 LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                                             ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-                                 LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
-                                                             ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
-                                 LEFT JOIN MovementItemFloat AS MIFloat_BoxCount
-                                                             ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
+                            LEFT JOIN tmpMIFLoat_Price AS MIFloat_Price
+                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                            LEFT JOIN tmpMIFLoat_CountForPrice AS MIFloat_CountForPrice
+                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                            LEFT JOIN tmpMIFLoat_HeadCount AS MIFloat_HeadCount
+                                                        ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                            LEFT JOIN tmpMIFLoat_BoxCount AS MIFloat_BoxCount
+                                                        ON MIFloat_BoxCount.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_BoxCount.DescId = zc_MIFloat_BoxCount()
 
-                                 LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                                              ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
-                                                             AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                            LEFT JOIN tmpMIString_PartionGoods AS MIString_PartionGoods
+                                                         ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
+                                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
 
-                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Box
-                                                                  ON MILinkObject_Box.MovementItemId = MovementItem.Id
-                                                                 AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
-                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
-                                                                  ON MILinkObject_Asset.MovementItemId = MovementItem.Id
-                                                                 AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                            LEFT JOIN tmMILinkObject_Box AS MILinkObject_Box
+                                                             ON MILinkObject_Box.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_Box.DescId = zc_MILinkObject_Box()
+                            LEFT JOIN tmMILinkObject_Asset AS MILinkObject_Asset
+                                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
 
-                                 LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
-                                                             ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                            LEFT JOIN tmpMIFLoat_PromoMovementId AS MIFloat_PromoMovement
+                                                        ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                      )
            -- Связь с акциями для существующих MovementItem
-         , tmpMIPromo_all AS (SELECT tmp.MovementId_Promo                          AS MovementId_Promo
+          , tmpMIPromo_ AS (SELECT tmp.MovementId_Promo                          AS MovementId_Promo
                                    , MovementItem.Id                               AS MovementItemId
                                    , MovementItem.ObjectId                         AS GoodsId
                                    , MovementItem.Amount                           AS TaxPromo
-                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                              FROM (SELECT DISTINCT tmpMI.MovementId_Promo :: Integer AS MovementId_Promo FROM tmpMI WHERE tmpMI.MovementId_Promo <> 0) AS tmp
-                                   INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId_Promo
-                                                          AND MovementItem.DescId = zc_MI_Master()
-                                                          AND MovementItem.isErased = FALSE
-                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                             )
-               -- Акции по товарам для существующих MovementItem
-             , tmpMIPromo AS (SELECT DISTINCT
-                                     tmpMIPromo_all.MovementId_Promo
-                                   , tmpMIPromo_all.GoodsId
-                                   , tmpMIPromo_all.GoodsKindId
-                                   , CASE WHEN tmpMIPromo_all.TaxPromo <> 0 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
-                              FROM tmpMIPromo_all
-                                   LEFT JOIN MovementItemFloat AS MIFloat_PriceWithOutVAT
-                                                               ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
-                                                              AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
-                             )
+                            FROM (SELECT DISTINCT tmpMI.MovementId_Promo :: Integer AS MovementId_Promo FROM tmpMI WHERE tmpMI.MovementId_Promo <> 0) AS tmp
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId_Promo
+                                                        AND MovementItem.DescId = zc_MI_Master()
+                                                        AND MovementItem.isErased = FALSE
+                             )          
+          , tmpMILO_GoodsKind_promo AS (SELECT MovementItemLinkObject.*
+                                        FROM MovementItemLinkObject
+                                        WHERE MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                                          AND MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMIPromo_.MovementItemId FROM tmpMIPromo_)
+                                        )
+          , tmpMIPromo_all AS (SELECT tmp.MovementId_Promo
+                                    , tmp.MovementItemId
+                                    , tmp.GoodsId
+                                    , tmp.TaxPromo
+                                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                               FROM tmpMIPromo_ AS tmp
+                                    LEFT JOIN tmpMILO_GoodsKind_promo AS MILinkObject_GoodsKind
+                                                                      ON MILinkObject_GoodsKind.MovementItemId = tmp.MovementItemId
+                                                                     --AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                              )
+            -- Акции по товарам для существующих MovementItem
+          , tmpMIFLoat_PriceWithOutVAT_promo AS (SELECT *
+                                                 FROM MovementItemFloat
+                                                 WHERE MovementItemFloat.DescId = zc_MIFloat_PriceWithOutVAT()
+                                                   AND MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIPromo_.MovementItemId FROM tmpMIPromo_)
+                                                )
+          , tmpMIPromo AS (SELECT DISTINCT
+                                  tmpMIPromo_all.MovementId_Promo
+                                , tmpMIPromo_all.GoodsId
+                                , tmpMIPromo_all.GoodsKindId
+                                , CASE WHEN tmpMIPromo_all.TaxPromo <> 0 THEN MIFloat_PriceWithOutVAT.ValueData ELSE 0 END AS PricePromo
+                           FROM tmpMIPromo_all
+                                LEFT JOIN tmpMIFLoat_PriceWithOutVAT_promo AS MIFloat_PriceWithOutVAT
+                                                                           ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
+                                                                          AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
+                          )
           -- Товары из заявки
-        , tmpMI_Order AS (SELECT MovementItem.ObjectId                         AS GoodsId
+          , tmpMIOrder_ AS (SELECT MovementItem.ObjectId AS GoodsId
+                                 , MovementItem.Id
+                                 , MovementItem.Amount
+                            FROM (SELECT MovementLinkMovement_Order.MovementChildId AS MovementId
+                                  FROM MovementLinkMovement AS MovementLinkMovement_Order
+                                  WHERE MovementLinkMovement_Order.MovementId = inMovementId
+                                    AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+                                 ) AS tmpMovement
+                               INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
+                                                      AND MovementItem.DescId     = zc_MI_Master()
+                                                      AND MovementItem.isErased   = FALSE
+                            )
+          
+          , tmpMILO_GoodsKind_Order AS (SELECT MovementItemLinkObject.*
+                                        FROM MovementItemLinkObject
+                                        WHERE MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                                          AND MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMIOrder_.Id FROM tmpMIOrder_)
+                                        )
+                                        
+          , tmpMIFLoat_Order AS (SELECT MovementItemFloat.*
+                                 FROM MovementItemFloat
+                                 WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIOrder_.Id FROM tmpMIOrder_)
+                                   AND MovementItemFloat.DescId IN (zc_MIFloat_AmountSecond()
+                                                                  , zc_MIFloat_Price()
+                                                                  , zc_MIFloat_CountForPrice() )
+                                )
+     
+        , tmpMI_Order AS (SELECT MovementItem.GoodsId
                                , SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS Amount
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
                                , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
-                          FROM (SELECT MovementLinkMovement_Order.MovementChildId AS MovementId
-                                FROM MovementLinkMovement AS MovementLinkMovement_Order
-                                WHERE MovementLinkMovement_Order.MovementId = inMovementId
-                                  AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
-                               ) AS tmpMovement
-                               INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
-                                                      AND MovementItem.DescId     = zc_MI_Master()
-                                                      AND MovementItem.isErased   = FALSE
-                               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                          FROM tmpMIOrder_ AS MovementItem
+                               LEFT JOIN tmpMILO_GoodsKind_Order AS MILinkObject_GoodsKind
                                                                 ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                               LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                               LEFT JOIN tmpMIFLoat_Order AS MIFloat_AmountSecond
                                                            ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                                           AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
-                               LEFT JOIN MovementItemFloat AS MIFloat_Price
+                               LEFT JOIN tmpMIFLoat_Order AS MIFloat_Price
                                                            ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                               LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                               LEFT JOIN tmpMIFLoat_Order AS MIFloat_CountForPrice
                                                            ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                           AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-                          GROUP BY MovementItem.ObjectId
+                          GROUP BY MovementItem.GoodsId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                  , COALESCE (MIFloat_Price.ValueData, 0)
                                  , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
@@ -832,7 +1068,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_Sale_Order (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -844,3 +1079,4 @@ ALTER FUNCTION gpSelect_MovementItem_Sale_Order (Integer, Integer, TDateTime, Bo
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_Sale_Order (inMovementId:= 1257078, inPriceListId:= zc_PriceList_Basis(), inOperDate:= CURRENT_TIMESTAMP, inShowAll:= TRUE, inisErased:= TRUE, inSession:= '2')
 -- SELECT * FROM gpSelect_MovementItem_Sale_Order (inMovementId:= 1257078, inPriceListId:= zc_PriceList_Basis(), inOperDate:= CURRENT_TIMESTAMP, inShowAll:= FALSE, inisErased:= TRUE, inSession:= '2')
+-- select * from gpSelect_MovementItem_Sale_Order22(inMovementId := 12913592 , inPriceListId := 18840 , inOperDate := ('04.04.2019')::TDateTime , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '5');
