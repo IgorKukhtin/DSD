@@ -630,7 +630,7 @@ BEGIN
             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END :: Boolean  AS isSP,
             Object_IntenalSP.ValueData AS IntenalSPName,
             CashSessionSnapShot.MinExpirationDate,
-            CASE WHEN CashSessionSnapShot.MinExpirationDate < CURRENT_DATE + zc_Interval_ExpirationDate() THEN zc_Color_Blue() ELSE zc_Color_Black() END AS Color_ExpirationDate,                --vbAVGDateEnd
+            CASE WHEN CashSessionSnapShot.MinExpirationDate < CURRENT_DATE + zc_Interval_ExpirationDate() THEN zc_Color_Red() ELSE zc_Color_Black() END AS Color_ExpirationDate,                --vbAVGDateEnd
             COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName,
 
             COALESCE(tmpIncome.AmountIncome,0)            :: TFloat   AS AmountIncome,

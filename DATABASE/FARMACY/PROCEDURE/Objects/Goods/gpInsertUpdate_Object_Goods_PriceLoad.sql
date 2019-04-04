@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_Goods_MinimumLot()
+-- Function: ()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods_PriceLoad(TVarChar, TFloat, TVarChar);
 

@@ -239,12 +239,13 @@ BEGIN
               END :: TFloat AS SuperFinalPrice   
 
               -- цена  с учетом стоимости кредитных ресурсов
-            , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
+            /*, CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
                         THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
                    WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
                         THEN FinalPrice * (100 + COALESCE (PriceSettings.Percent, 0)) / 100
                    ELSE FinalPrice - FinalPrice * ((ddd.Deferment+1) * vbCostCredit) / 100
-              END :: TFloat AS SuperFinalPrice_Deferment
+              END :: TFloat AS SuperFinalPrice_Deferment*/
+            , (FinalPrice - FinalPrice * ((ddd.Deferment) * vbCostCredit) / 100) :: TFloat AS SuperFinalPrice_Deferment
 /**/
        FROM 
              (SELECT DISTINCT MovementItemOrder.Id

@@ -4,7 +4,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
   ClientWidth = 991
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
   ExplicitWidth = 1007
-  ExplicitHeight = 604
+  ExplicitHeight = 603
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -325,8 +325,6 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             Align = alClient
             PopupMenu = PopupMenu
             TabOrder = 1
-            ExplicitLeft = 2
-            ExplicitTop = -2
             object cxGridDBTableView2: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = MasterDS
@@ -2562,7 +2560,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         Value = 81178
         MultiSelectSeparator = ','
       end>
-    Left = 834
+    Left = 818
     Top = 6
   end
   object GuidesUpdate: TdsdGuides

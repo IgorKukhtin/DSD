@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , Weight TFloat
              , WeightPackage TFloat, WeightPackageSticker TFloat
              , WeightTotal TFloat, ChangePercentAmount TFloat
-             , WeightMin TFloat, WeightMax TFloat
+             , WeightMin TFloat, WeightMax TFloat, WeightAvg TFloat
              , Height TFloat, Length TFloat, Width TFloat
              , NormInDays TFloat
              , isOrder Boolean, isScaleCeh Boolean, isNotMobile Boolean
@@ -35,6 +35,11 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , CodeCalc_Nom TVarChar
              , CodeCalc_Ves TVarChar
              , isCodeCalc_Diff Boolean
+             
+             , WmsCode           Integer
+             , WmsCodeCalc_Sh    TVarChar 
+             , WmsCodeCalc_Nom   TVarChar 
+             , WmsCodeCalc_Ves   TVarChar
              --
              --, GoodsPropertyBoxId Integer
              , BoxId Integer, BoxCode Integer, BoxName TVarChar
@@ -83,6 +88,21 @@ BEGIN
                                          THEN (''||COALESCE (Object_Goods_main.ObjectCode,0)||'.'||COALESCE (Object_GoodsByGoodsKind_View.GoodsKindCode,0)||'.'||COALESCE (Object_GoodsBrand.ObjectCode,0)||'.'||CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.ChildObjectId, 0) <> 0 THEN 3 ELSE 0 END)
                                          ELSE NULL
                                     END  :: TVarChar AS CodeCalc_Ves
+                                  --  
+                                  , ObjectFloat_WmsCode.ValueData AS WmsCode
+                                  
+                                  , CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh.ChildObjectId, 0)  <> 0 
+                                         THEN (''||COALESCE (ObjectFloat_WmsCode.ValueData,0)::Integer||'.'||CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh.ChildObjectId, 0) <> 0 THEN 1 ELSE 0 END)
+                                         ELSE NULL
+                                    END  :: TVarChar AS WmsCodeCalc_Sh
+                                  , CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom.ChildObjectId, 0)  <> 0 
+                                         THEN (''||COALESCE (ObjectFloat_WmsCode.ValueData,0)::Integer||'.'||CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom.ChildObjectId, 0) <> 0 THEN 2 ELSE 0 END)
+                                         ELSE NULL
+                                    END  :: TVarChar AS WmsCodeCalc_Nom
+                                  , CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.ChildObjectId, 0)  <> 0 
+                                         THEN (''||COALESCE (ObjectFloat_WmsCode.ValueData,0)::Integer||'.'||CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.ChildObjectId, 0) <> 0 THEN 3 ELSE 0 END)
+                                         ELSE NULL
+                                    END  :: TVarChar AS WmsCodeCalc_Ves
 
                              FROM Object_GoodsByGoodsKind_View
                                   LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBasis
@@ -108,6 +128,10 @@ BEGIN
                                   LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves
                                                        ON ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.ObjectId = Object_GoodsByGoodsKind_View.Id
                                                       AND ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves()
+
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_WmsCode
+                                                        ON ObjectFloat_WmsCode.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                       AND ObjectFloat_WmsCode.DescId = zc_ObjectFloat_GoodsByGoodsKind_WmsCode()
                              )
    , tmpCodeCalc AS (SELECT tmp.CodeCalc_Sh, tmp.CodeCalc_Nom, tmp.CodeCalc_Ves
                           , COUNT (*) OVER (PARTITION BY tmp.CodeCalc_Sh) AS Count1
@@ -210,6 +234,7 @@ BEGIN
 
            , COALESCE (ObjectFloat_WeightMin.ValueData,0)       ::TFloat  AS WeightMin
            , COALESCE (ObjectFloat_WeightMax.ValueData,0)       ::TFloat  AS WeightMax
+           , ((COALESCE (ObjectFloat_WeightMin.ValueData,0) + COALESCE (ObjectFloat_WeightMax.ValueData,0)) / 2) :: TFloat AS WeightAvg
            , COALESCE (ObjectFloat_Height.ValueData,0)          ::TFloat  AS Height
            , COALESCE (ObjectFloat_Length.ValueData,0)          ::TFloat  AS Length
            , COALESCE (ObjectFloat_Width.ValueData,0)           ::TFloat  AS Width
@@ -253,11 +278,16 @@ BEGIN
            , Object_GoodsByGoodsKind_View.CodeCalc_Sh  :: TVarChar 
            , Object_GoodsByGoodsKind_View.CodeCalc_Nom  :: TVarChar 
            , Object_GoodsByGoodsKind_View.CodeCalc_Ves  :: TVarChar 
-             
+           
            , CASE WHEN Object_GoodsByGoodsKind_View.isGoodsTypeKind_Sh = FALSE AND Object_GoodsByGoodsKind_View.isGoodsTypeKind_Nom = FALSE AND Object_GoodsByGoodsKind_View.isGoodsTypeKind_Ves = FALSE THEN FALSE
                   WHEN (COALESCE (tmpCodeCalc_1.Count1, 1) + COALESCE (tmpCodeCalc_2.Count2, 1) + COALESCE (tmpCodeCalc_3.Count3, 1)) <= 3 THEN FALSE 
                   ELSE TRUE
              END  AS isCodeCalc_Diff
+
+           , Object_GoodsByGoodsKind_View.WmsCode          :: Integer
+           , Object_GoodsByGoodsKind_View.WmsCodeCalc_Sh   :: TVarChar 
+           , Object_GoodsByGoodsKind_View.WmsCodeCalc_Nom  :: TVarChar 
+           , Object_GoodsByGoodsKind_View.WmsCodeCalc_Ves  :: TVarChar
 
             -- ящик 1
             , tmpGoodsPropertyBox.BoxId

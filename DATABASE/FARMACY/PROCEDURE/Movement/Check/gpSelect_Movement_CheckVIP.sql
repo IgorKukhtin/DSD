@@ -1,4 +1,4 @@
- -- Function: gpSelect_Movement_CheckVIP()
+-- Function: gpSelect_Movement_CheckVIP()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_CheckVIP (Boolean, TVarChar);
 
@@ -65,16 +65,15 @@ BEGIN
 
      RETURN QUERY
        WITH
-           tmpStatus AS (SELECT zc_Enum_Status_UnComplete() AS StatusId UNION ALL SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE)
-
-       , tmpMovAll AS (SELECT Movement.Id
+         tmpMovAll AS (SELECT Movement.Id
                       FROM Movement
-                            INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
                             INNER JOIN MovementBoolean AS MovementBoolean_Deferred
                                                        ON Movement.Id = MovementBoolean_Deferred.MovementId
                                                       AND MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
                                                       AND MovementBoolean_Deferred.ValueData = TRUE
-                      WHERE Movement.DescId = zc_Movement_Check()
+                      WHERE Movement.DescId = zc_Movement_Check() 
+                        AND (zc_Enum_Status_UnComplete() = Movement.StatusId 
+                             OR zc_Enum_Status_Erased() = Movement.StatusId and inIsErased = TRUE)
                     )
        , tmpMov AS (SELECT Movement.Id
                            , MovementLinkObject_Unit.ObjectId AS UnitId

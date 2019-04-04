@@ -24,6 +24,16 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
               Kind = skSum
               Position = spFooter
               Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ListFiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_SpecZakaz
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -35,6 +45,16 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = Name
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ListFiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_SpecZakaz
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -129,6 +149,18 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
           object Amount_SpecZakaz: TcxGridDBColumn
             Caption = #1057#1087#1077#1094#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'Amount_SpecZakaz'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 46
+          end
+          object Amount_ListFiff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1072#1079#1099
+            DataBinding.FieldName = 'Amount_ListFiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

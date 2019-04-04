@@ -88,7 +88,9 @@ BEGIN
     WHERE Movement.Id = inMovementId;
 
     vbOperDateEnd := vbOperDate + INTERVAL '1 DAY';
-    vbDate180 := CURRENT_DATE + INTERVAL '180 DAY';
+    vbDate180 := CURRENT_DATE + zc_Interval_ExpirationDate();
+    --vbDate180 := CURRENT_DATE + INTERVAL '180 DAY';
+    
 
     vbAVGDateStart := vbOperDate - INTERVAL '30 day';
     vbAVGDateEnd   := vbOperDate;
@@ -349,6 +351,7 @@ BEGIN
                         LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_MinimumLot
                                                ON ObjectFloat_Goods_MinimumLot.ObjectId = tmpMI.GoodsId
                                               AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
+                                              AND ObjectFloat_Goods_MinimumLot.ValueData <> 0
                         LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                                               ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
                                              AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
@@ -903,9 +906,11 @@ BEGIN
                 END                                           AS PartionGoodsDateColor
               , tmpGoods.MinimumLot                 ::TFLoat  AS MinimumLot
               , MI_Child.Amount                     ::TFLoat  AS Remains
+              
               , MIFloat_Price.ValueData             ::TFLoat  AS Price
               , MIFloat_JuridicalPrice.ValueData    ::TFLoat  AS SuperFinalPrice
-              , MIFloat_DefermentPrice.ValueData     ::TFloat AS SuperFinalPrice_Deferment
+              , MIFloat_DefermentPrice.ValueData    ::TFloat  AS SuperFinalPrice_Deferment
+              , (MIFloat_Price.ValueData * vbCostCredit / 100) ::TFloat  AS Price_DayDeferment
 
               , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN FALSE ELSE TRUE END  ::Boolean AS isPromo
               
@@ -1173,12 +1178,7 @@ BEGIN
                    ELSE FinalPrice
               END :: TFloat AS SuperFinalPrice
               
-            , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
-                        THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
-                   WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
-                        THEN FinalPrice * (100 + COALESCE (PriceSettings.Percent, 0)) / 100
-                   ELSE FinalPrice - FinalPrice * ((ddd.Deferment+1) * vbCostCredit) / 100
-              END :: TFloat AS SuperFinalPrice_Deferment
+            , (ddd.FinalPrice - ddd.FinalPrice * ((ddd.Deferment) * vbCostCredit) / 100) :: TFloat AS SuperFinalPrice_Deferment
 /**/
        FROM
              (SELECT DISTINCT MovementItemOrder.Id
@@ -2274,28 +2274,13 @@ BEGIN
              END  AS OrderShedule_Color
              
            , AVGIncome.AVGIncomePrice    AS AVGPrice
-/*           , CASE WHEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10
-                     THEN TRUE
-                  ELSE FALSE
-             END AS AVGPriceWarning*/
+
            , CASE WHEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10
                      THEN (ABS(AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) * 100
                   WHEN COALESCE (AVGIncome.AVGIncomePrice, 0) = 0 THEN 5000
                   ELSE 0
              END AS AVGPriceWarning
 
-           /*
-           , CASE WHEN COALESCE (tmpOrderLast_2days.Amount, 0) > 1 THEN 16777134   -- цвет фона - голубой подрязд 2 дня заказ;
-                  WHEN COALESCE (tmpOrderLast_10.Amount, 0) > 9 THEN 167472630     -- цвет фона - розовый подрязд 10 заказов нет привязки к товару поставщика;
-                  ELSE  zc_Color_White()
-             END  AS Fond_Color
-
-           , CASE WHEN COALESCE (tmpOrderLast_2days.Amount, 0) > 1 THEN TRUE
-                  ELSE  FALSE
-             END  AS isLast_2days
-
-           , COALESCE (tmpRepeat.isRepeat, FALSE) AS isRepeat
-           */
            -- , tmpJuridicalArea.AreaId                                      AS AreaId
            -- , COALESCE (tmpJuridicalArea.AreaName, '')      :: TVarChar    AS AreaName
            -- , Object_Area.ValueData                         :: TVarChar    AS AreaName_Goods
@@ -2397,6 +2382,8 @@ BEGIN
                 END                                                          AS PartionGoodsDateColor
               , ObjectFloat_Goods_MinimumLot.ValueData                       AS MinimumLot
               , MIFloat_Remains.ValueData                                    AS Remains
+              
+              , (_tmpMI.Price * vbCostCredit / 100)           :: TFloat      AS Price_DayDeferment
 
               , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN FALSE ELSE TRUE END  ::Boolean AS isPromo
               , COALESCE(GoodsPromo.OperDatePromo, NULL)      :: TDateTime   AS OperDatePromo

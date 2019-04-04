@@ -113,6 +113,7 @@ type
     procedure LoadSaleFormTest;
     procedure LoadServiceFormTest;
     procedure LoadSendFormTest;
+        procedure LoadSendPartionDateFormTest;
     procedure LoadSendOnPriceFormTest;
     procedure LoadSystemFormTest;
     procedure LoadSPObjectFormTest;
@@ -697,12 +698,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ListDiffForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ListDiffForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ListDiffDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ListDiffDialogForm');
     exit;
-    {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_GoodsPriceChangeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Check_GoodsPriceChangeForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_GoodsPriceChangeDialogForm'));
@@ -827,10 +829,10 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_UnLiquidForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_UnLiquidDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_UnLiquidDialogForm');
-
+     }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportOrderGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReportOrderGoodsForm');
-
+    {
     // отчет распределение остатков
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsForm');
@@ -857,13 +859,13 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSoldForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldForm');
-    }
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalCollationForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationSaldoForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalCollationSaldoForm');
-     {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionMoveForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionMoveForm');
 
@@ -927,13 +929,13 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_WageForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_WageDialogForm');
-    }
+
     //отчет доходности
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitDialogForm');
-    {
+
     // средний чек за период
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckMiddle_DetailForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckMiddle_DetailForm');
@@ -1700,6 +1702,14 @@ begin
   // диалог изменения цены получателя
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceBySendDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceBySendDialogForm');
+end;
+
+  procedure TLoadFormTest.LoadSendPartionDateFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionDateJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendPartionDateJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPartionDateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendPartionDateForm');
 end;
 
 procedure TLoadFormTest.LoadSendOnPriceFormTest;

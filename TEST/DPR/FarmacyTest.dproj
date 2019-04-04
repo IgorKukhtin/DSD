@@ -2289,6 +2289,14 @@
 				<Form>GoodsAnalogEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\SendPartionDateJournal.pas">
+				<Form>SendPartionDateJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\SendPartionDate.pas">
+				<Form>SendPartionDateForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

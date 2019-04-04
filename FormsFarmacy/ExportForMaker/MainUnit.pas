@@ -58,6 +58,7 @@ type
     N3: TMenuItem;
     N4: TMenuItem;
     btnAllMaker: TButton;
+    isQuarter: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -76,6 +77,10 @@ type
     FormAddFile : boolean;
     DateStartAdd : TDateTime;
     DateEndAdd : TDateTime;
+
+    FormQuarterFile : boolean;
+    DateStartQuarter : TDateTime;
+    DateEndQuarter : TDateTime;
 
     FileName: String;
     SavePath: String;
@@ -205,6 +210,42 @@ begin
       begin
         RepType := 3;
         ReportIncomeConsumptionBalance(DateStartAdd, DateEndAdd);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+    end;
+
+      // квартальные отчеты
+    if FormQuarterFile then
+    begin
+      if qryMaker.FieldByName('isReport1').AsBoolean then
+      begin
+        RepType := 0;
+        ReportIncome(DateStartQuarter, DateEndQuarter);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReport2').AsBoolean then
+      begin
+        RepType := 1;
+        ReportCheck(DateStartQuarter, DateEndQuarter);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReport3').AsBoolean then
+      begin
+        RepType := 2;
+        ReportAnalysisRemainsSelling(DateStartQuarter, DateEndQuarter);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReport4').AsBoolean then
+      begin
+        RepType := 3;
+        ReportIncomeConsumptionBalance(DateStartQuarter, DateEndQuarter);
         btnExportClick(Nil);
         btnSendMailClick(Nil);
       end;
@@ -506,7 +547,7 @@ begin
   if grtvMaker.DataController.Summary.FooterSummaryItems.Count > 0 then
     grtvMaker.DataController.Summary.FooterSummaryItems.Clear;
 
-  FormAddFile := False;
+  FormAddFile := False; FormQuarterFile := False;
   if qryMaker.FieldByName('AmountDay').AsInteger <> 0 then
   begin
      if qryMaker.FieldByName('AmountDay').AsInteger = 14 then
@@ -546,9 +587,15 @@ begin
     DateStart := StartOfTheMonth(DateEnd);
     if qryMaker.FieldByName('AmountMonth').AsInteger > 1 then
       DateStart := IncMonth(DateStart, 1 - qryMaker.FieldByName('AmountMonth').AsInteger);
+    if (qryMaker.FieldByName('AmountMonth').AsInteger = 1) and
+        qryMaker.FieldByName('isQuarter').AsBoolean and (MonthOf(DateEnd) in [3, 6, 9, 12]) then
+    begin
+      FormQuarterFile := True;
+      DateEndQuarter := DateEnd;
+      DateStartQuarter := IncMonth(DateStart, - 2);
+    end;
   end;
 end;
-
 
 procedure TMainForm.pmClick(Sender: TObject);
 begin

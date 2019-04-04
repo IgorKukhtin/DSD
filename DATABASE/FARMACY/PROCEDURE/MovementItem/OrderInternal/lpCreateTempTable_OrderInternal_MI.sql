@@ -115,6 +115,7 @@ BEGIN
         , tmpMIF_MinimumLot AS (SELECT tmpMIF.*
                                 FROM tmpMIF
                                 WHERE tmpMIF.DescId = zc_MIFloat_MinimumLot()
+                                  AND tmpMIF.ValueData <> 0
                                 )
   
         , tmpMIF_MCS AS (SELECT tmpMIF.*

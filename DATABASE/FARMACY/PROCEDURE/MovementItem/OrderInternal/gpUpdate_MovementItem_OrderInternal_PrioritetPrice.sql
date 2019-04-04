@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_MovementItem_OrderInternal()
+-- Function: gpUpdate_MovementItem_OrderInternal_PrioritetPartner()
 
 DROP FUNCTION IF EXISTS gpUpdate_MovementItem_OrderInternal_PrioritetPartner
          (Integer, Integer, TVarChar, Integer, TVarChar, Integer, TVarChar, TVarChar, TFloat, TFloat, TVarChar);
@@ -22,7 +22,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_OrderInternal_PrioritetPartner(
 RETURNS TABLE (JuridicalId Integer, JuridicalName TVarChar, 
                ContractId Integer, ContractName TVarChar,
                GoodsId Integer, GoodsCode TVarChar, GoodsName TVarChar,
-               SuperPrice TFloat, Price TFloat)
+               SuperPrice TFloat, SuperPrice_Deferment TFloat, Price TFloat)
 AS               
 $BODY$
    DECLARE vbUserId Integer;

@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1053#1086#1074#1099#1081' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
-  ClientHeight = 438
+  ClientHeight = 458
   ClientWidth = 372
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 79
-    Top = 399
+    Left = 77
+    Top = 415
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 229
-    Top = 399
+    Left = 227
+    Top = 415
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -155,7 +155,7 @@
   end
   object cbReport4: TcxCheckBox
     Left = 40
-    Top = 362
+    Top = 361
     Hint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
     Caption = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
     ParentShowHint = False
@@ -190,6 +190,16 @@
     Properties.ReadOnly = False
     TabOrder = 21
     Width = 145
+  end
+  object cbQuarter: TcxCheckBox
+    Left = 40
+    Top = 388
+    Hint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
+    Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086' '#1082#1074#1072#1088#1090#1072#1083#1100#1085#1099#1077' '#1086#1090#1095#1077#1090#1099
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 22
+    Width = 296
   end
   object ActionList: TActionList
     Left = 272
@@ -331,6 +341,14 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisQuarter'
+        Value = Null
+        Component = cbQuarter
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -456,6 +474,13 @@
         Name = 'isReport4'
         Value = Null
         Component = cbReport4
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isQuarter'
+        Value = Null
+        Component = cbQuarter
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

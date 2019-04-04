@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isReport2  Boolean
              , isReport3  Boolean
              , isReport4  Boolean
+             , isQuarter  Boolean
              , isErased   Boolean
              ) AS
 $BODY$
@@ -51,6 +52,7 @@ BEGIN
            , FALSE :: Boolean   AS isReport2
            , FALSE :: Boolean   AS isReport3
            , FALSE :: Boolean   AS isReport4
+           , FALSE :: Boolean   AS isQuarter
 
            , CAST (NULL AS Boolean) AS isErased
            ;
@@ -79,6 +81,7 @@ BEGIN
            , COALESCE (ObjectBoolean_Maker_Report2.ValueData, FALSE) :: Boolean AS isReport2
            , COALESCE (ObjectBoolean_Maker_Report3.ValueData, FALSE) :: Boolean AS isReport3
            , COALESCE (ObjectBoolean_Maker_Report4.ValueData, FALSE) :: Boolean AS isReport4
+           , COALESCE (ObjectBoolean_Maker_Quarter.ValueData, FALSE) :: Boolean AS isQuarter
 
            , Object_Maker.isErased AS isErased
            
@@ -113,6 +116,9 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Maker_Report4
                                    ON ObjectBoolean_Maker_Report4.ObjectId = Object_Maker.Id
                                   AND ObjectBoolean_Maker_Report4.DescId = zc_ObjectBoolean_Maker_Report4()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Maker_Quarter
+                                   ON ObjectBoolean_Maker_Quarter.ObjectId = Object_Maker.Id
+                                  AND ObjectBoolean_Maker_Quarter.DescId = zc_ObjectBoolean_Maker_Quarter()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_Day
                                  ON ObjectFloat_Day.ObjectId = Object_Maker.Id
@@ -133,7 +139,8 @@ ALTER FUNCTION gpGet_Object_Maker(integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 03.04.19                                                       *
  18.01.19         *
  11.01.19         *
  11.02.14         *  

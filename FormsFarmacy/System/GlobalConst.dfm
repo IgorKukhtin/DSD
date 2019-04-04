@@ -9,16 +9,18 @@ inherited GlobalConstForm: TGlobalConstForm
   inherited PageControl: TcxPageControl
     Width = 550
     Height = 297
-    ExplicitWidth = 373
+    ExplicitWidth = 550
+    ExplicitHeight = 297
     ClientRectBottom = 297
     ClientRectRight = 550
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 373
-      ExplicitHeight = 282
+      ExplicitWidth = 550
+      ExplicitHeight = 297
       inherited cxGrid: TcxGrid
         Width = 550
         Height = 297
-        ExplicitWidth = 373
+        ExplicitWidth = 550
+        ExplicitHeight = 297
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -59,14 +61,14 @@ inherited GlobalConstForm: TGlobalConstForm
             Width = 88
           end
           object SiteDiscount: TcxGridDBColumn
-            Caption = '% '#1089#1082#1080#1076#1082#1080' '#1076#1083#1103' '#1089#1072#1081#1090#1072
+            Caption = #1047#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'SiteDiscount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 98
           end
           object isSiteDiscount: TcxGridDBColumn
-            Caption = #1055#1086#1076#1082#1083#1102#1095#1077#1085#1072' '#1089#1082#1080#1076#1082#1072' '#1076#1083#1103' '#1089#1072#1081#1090#1072
+            Caption = #1055#1086#1076#1082#1083#1102#1095#1077#1085#1086
             DataBinding.FieldName = 'isSiteDiscount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

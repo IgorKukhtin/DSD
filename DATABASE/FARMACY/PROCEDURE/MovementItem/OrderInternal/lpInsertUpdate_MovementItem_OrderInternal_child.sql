@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_MovementItem_OrderInternal()
+-- Function: lpInsertUpdate_MovementItem_OrderInternal_child()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderInternal_child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TDateTime, TVarChar, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderInternal_child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, TDateTime, TVarChar, Integer, Integer, Integer);
