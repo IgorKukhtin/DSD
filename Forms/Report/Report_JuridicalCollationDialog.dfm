@@ -195,6 +195,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
@@ -202,6 +203,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindId'
@@ -209,6 +211,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
@@ -217,6 +220,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractId'
@@ -224,6 +228,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
@@ -232,6 +237,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
@@ -239,6 +245,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -247,6 +254,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
@@ -254,6 +262,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -262,6 +271,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountId'
@@ -269,6 +279,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountName'
@@ -277,6 +288,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
@@ -284,6 +296,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
@@ -292,6 +305,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 42
     Top = 168
@@ -301,6 +315,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
     LookupControl = edAccount
     FormNameParam.Value = 'TAccount_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccount_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -311,6 +326,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -319,6 +335,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 128
     Top = 125
@@ -328,6 +345,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -338,6 +356,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -346,6 +365,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 272
     Top = 12
@@ -355,6 +375,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
     LookupControl = edInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -363,6 +384,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Value = ''
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -370,11 +392,13 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Juridical'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 368
     Top = 125
@@ -384,6 +408,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -393,6 +418,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -401,6 +427,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractId'
@@ -408,6 +435,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
@@ -416,6 +444,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
@@ -423,6 +452,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -431,6 +461,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 72
@@ -440,6 +471,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
     LookupControl = edPartner
     FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartner_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -449,6 +481,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -457,6 +490,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
@@ -464,6 +498,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -472,12 +507,14 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractId'
         Value = ''
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
@@ -485,12 +522,14 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
@@ -498,6 +537,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 328
     Top = 72
@@ -507,6 +547,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
     LookupControl = ceContract
     FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -516,6 +557,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -524,6 +566,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
@@ -531,6 +574,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -539,6 +583,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
@@ -546,6 +591,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
@@ -554,6 +600,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindId'
@@ -561,6 +608,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
@@ -568,18 +616,21 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
@@ -587,6 +638,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -594,6 +646,7 @@ object Report_JuridicalCollationDialogForm: TReport_JuridicalCollationDialogForm
         Component = PartnerGuides
         ComponentItem = 'TextValue'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 384
     Top = 14
