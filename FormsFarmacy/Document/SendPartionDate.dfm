@@ -159,6 +159,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsData.Inserting = False
+          OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True

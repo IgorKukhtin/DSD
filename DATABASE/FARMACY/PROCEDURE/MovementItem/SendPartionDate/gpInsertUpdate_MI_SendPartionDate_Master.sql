@@ -63,10 +63,10 @@ BEGIN
                       , Container.ObjectId            AS GoodsId
                       , SUM(Container.Amount)::TFloat AS Amount
                  FROM Container
-                 WHERE Container.DescId = zc_Container_Count()
-                   AND Container.ObjectId = inGoodsId
+                 WHERE Container.DescId        = zc_Container_Count()
+                   AND Container.ObjectId      = inGoodsId
                    AND Container.WhereObjectId = vbUnitId
-                   AND Container.Amount <> 0
+                   AND Container.Amount        <> 0
                  GROUP BY Container.Id
                         , Container.ObjectId   
                  HAVING SUM(Container.Amount) <> 0
@@ -87,7 +87,7 @@ BEGIN
               LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
                                                 ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
                                                AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
-           WHERE COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180
+           --WHERE COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180
            GROUP BY tmp.ContainerId
                   , tmp.GoodsId
                   , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd());
@@ -116,7 +116,7 @@ BEGIN
                       , tmpRemains.ContainerId
                       --, tmpRemains.MovementItemId_partion
                       , SUM (tmpRemains.Amount) OVER (PARTITION BY tmpRemains.GoodsId ORDER BY tmpRemains.ExpirationDate, tmpRemains.ContainerId) AS RemainsAmountSUM
-                      , ROW_NUMBER() OVER (PARTITION BY ExpirationDate ORDER BY tmpRemains.ExpirationDate DESC, tmpRemains.ContainerId DESC) AS DOrd
+                      , ROW_NUMBER() OVER (/*PARTITION BY ExpirationDate */ORDER BY tmpRemains.ExpirationDate DESC, tmpRemains.ContainerId DESC) AS DOrd
                  FROM tmpRemains
                 )
     -- расчет
@@ -133,12 +133,15 @@ BEGIN
           , tmpCalc.ContainerId   ::Integer
           , CASE WHEN tmpCalc.ExpirationDate < vbOperDate THEN 0
                  WHEN tmpCalc.ExpirationDate <= vbDate30 THEN 1
-                 ELSE 2
+                 WHEN tmpCalc.ExpirationDate <= vbDate180 THEN 2
+                 ELSE 999
             END                      ::TFloat AS Expired
           , tmpCalc.ExpirationDate
-     FROM MI_Child 
-          LEFT JOIN tmpCalc ON tmpCalc.GoodsId = MI_Child.GoodsId
-                           AND tmpCalc.ContainerId = MI_Child.ContainerId;
+     FROM tmpRemains 
+          FULL JOIN tmpCalc ON tmpCalc.GoodsId     = tmpRemains.GoodsId
+                           AND tmpCalc.ContainerId = tmpRemains.ContainerId
+          LEFT JOIN MI_Child ON MI_Child.GoodsId    = tmpRemains.GoodsId
+                           AND MI_Child.ContainerId = tmpRemains.ContainerId;
 
      -- снимаем удаление со строк чайлд, которые нам нужны
      UPDATE MovementItem 
