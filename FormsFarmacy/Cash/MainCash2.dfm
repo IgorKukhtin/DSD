@@ -777,6 +777,14 @@ inherited MainCashForm2: TMainCashForm2
           HeaderAlignmentHorz = taCenter
           Width = 46
         end
+        object GoodsAnalogName: TcxGridDBColumn
+          Caption = #1040#1085#1072#1083#1086#1075#1080
+          DataBinding.FieldName = 'GoodsAnalogName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 65
+        end
       end
       object MainGridLevel: TcxGridLevel
         GridView = MainGridDBTableView

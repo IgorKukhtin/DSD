@@ -38,6 +38,7 @@ function BankPOSTerminal_lcl: String;
 function UnitConfig_lcl: String;
 function TaxUnitNight_lcl: String;
 function GoodsExpirationDate_lcl: String;
+function GoodsAnalog_lcl: String;
 
 procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
 procedure LoadLocalData(ADst: TClientDataSet; AFileName: String);
@@ -134,6 +135,11 @@ End;
 function GoodsExpirationDate_lcl: String;
 Begin
   Result := ExtractFilePath(Application.ExeName) + 'GoodsExpirationDate.local';
+End;
+
+function GoodsAnalog_lcl: String;
+Begin
+  Result := ExtractFilePath(Application.ExeName) + 'GoodsAnalog.local';
 End;
 
 function AddIntField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string): TVKDBFFieldDef;

@@ -372,6 +372,7 @@ type
     Multiplicity: TcxGridDBColumn;
     actOpenCashGoodsOneToExpirationDate: TdsdOpenForm;
     actCashGoodsOneToExpirationDate: TAction;
+    GoodsAnalogName: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -589,7 +590,8 @@ var
 
   MutexDBF, MutexDBFDiff, MutexVip, MutexRemains, MutexAlternative, MutexAllowedConduct,
   MutexDiffKind, MutexDiffCDS, MutexEmployeeWorkLog, MutexBankPOSTerminal,
-  MutexUnitConfig, MutexTaxUnitNight, MutexGoods, MutexGoodsExpirationDate : THandle;  // MutexAllowedConduct только 2 форма
+  MutexUnitConfig, MutexTaxUnitNight, MutexGoods, MutexGoodsExpirationDate,
+  MutexGoodsAnalog : THandle;  // MutexAllowedConduct только 2 форма
 
   LastErr: Integer;
   FM_SERVISE: Integer;  // для передачи сообщений между приложение и сервисом // только 2 форма
@@ -3405,6 +3407,8 @@ begin
   LastErr := GetLastError;
   MutexGoods := CreateMutex(nil, false, 'farmacycashMutexGoods');
   LastErr := GetLastError;
+  MutexGoodsAnalog := CreateMutex(nil, false, 'farmacycashMutexGoodsAnalog');
+  LastErr := GetLastError;
   DiscountServiceForm:= TDiscountServiceForm.Create(Self);
 
   //сгенерили гуид для определения сессии
@@ -4348,6 +4352,7 @@ begin
   CloseHandle(MutexTaxUnitNight);
   CloseHandle(MutexGoodsExpirationDate);
   CloseHandle(MutexGoods);
+  CloseHandle(MutexGoodsAnalog);
 end;
 
 procedure TMainCashForm2.ParentFormKeyDown(Sender: TObject; var Key: Word;

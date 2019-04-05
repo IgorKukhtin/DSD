@@ -14,8 +14,7 @@ uses
   cxGrid,  cxSplitter, cxContainer,  cxTextEdit, cxCurrencyEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxLookupEdit,
   cxDBLookupEdit, cxDBLookupComboBox,  cxCheckBox, cxNavigator, CashInterface,  cxImageComboBox , dsdAddOn,
   Vcl.ImgList, LocalStorage, IdFTPCommon, IdGlobal, IdFTP, IdSSLOpenSSL, IdExplicitTLSClientServerBase,
-  UnilWin
-  ;
+  UnilWin;
 
 type
  THeadRecord = record
@@ -180,6 +179,7 @@ type
     procedure SaveUnitConfig;
     procedure SaveTaxUnitNight;
     procedure SaveGoodsExpirationDate;
+    procedure SaveGoodsAnalog;
 
     procedure SendZReport;
     procedure SendEmployeeWorkLog;
@@ -209,7 +209,8 @@ var
   AllowedConduct : Boolean = false;
   MutexDBF, MutexDBFDiff,  MutexVip, MutexRemains, MutexAlternative, MutexRefresh,
   MutexAllowedConduct, MutexGoods, MutexDiffCDS, MutexDiffKind, MutexEmployeeWorkLog,
-  MutexBankPOSTerminal, MutexUnitConfig, MutexTaxUnitNight, MutexGoodsExpirationDate: THandle;
+  MutexBankPOSTerminal, MutexUnitConfig, MutexTaxUnitNight, MutexGoodsExpirationDate,
+  MutexGoodsAnalog: THandle;
   LastErr: Integer;
 
   FM_SERVISE: Integer;
@@ -435,8 +436,10 @@ begin
          SaveUnitConfig;
          //Получение ночных скидок
          SaveTaxUnitNight;
-//         //Получение остатков по партиям
+         //Получение остатков по партиям
 //         SaveGoodsExpirationDate;
+         //Получение справочника аналогов
+         SaveGoodsAnalog;
          // Отправка сообщения приложению про надобность обновить остатки из файла
          PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
         end;
@@ -520,8 +523,10 @@ begin   //yes
           SaveUnitConfig;
           //Получение ночных скидок
           SaveTaxUnitNight;
-//          //Получение остатков по партиям
+          //Получение остатков по партиям
 //          SaveGoodsExpirationDate;
+          //Получение справочника аналогов
+          SaveGoodsAnalog;
 
           PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 3);
           // Вывод уведомления сервиса
@@ -600,6 +605,8 @@ begin
   MutexGoodsExpirationDate := CreateMutex(nil, false, 'farmacycashMutexGoodsExpirationDate');
   LastErr := GetLastError;
   MutexGoods := CreateMutex(nil, false, 'farmacycashMutexGoods');
+  LastErr := GetLastError;
+  MutexGoodsAnalog := CreateMutex(nil, false, 'farmacycashMutexGoodsAnalog');
   LastErr := GetLastError;
   FHasError := false;
   //сгенерили гуид для определения сессии
@@ -1667,25 +1674,33 @@ var
 begin
   sp := TdsdStoredProc.Create(nil);
   try
-    ds := TClientDataSet.Create(nil);
     try
-      sp.OutputType := otDataSet;
-      sp.DataSet := ds;
-
-      sp.StoredProcName := 'gpSelect_Cash_BankPOSTerminal';
-      sp.Params.Clear;
-      sp.Execute;
-      Add_Log('Start MutexBankPOSTerminal');
-      WaitForSingleObject(MutexBankPOSTerminal, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+      ds := TClientDataSet.Create(nil);
       try
-        SaveLocalData(ds,BankPOSTerminal_lcl);
-      finally
-        Add_Log('End MutexBankPOSTerminal');
-        ReleaseMutex(MutexBankPOSTerminal);
-      end;
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
 
-    finally
-      ds.free;
+        sp.StoredProcName := 'gpSelect_Cash_BankPOSTerminal';
+        sp.Params.Clear;
+        sp.Execute;
+        Add_Log('Start MutexBankPOSTerminal');
+        WaitForSingleObject(MutexBankPOSTerminal, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          SaveLocalData(ds,BankPOSTerminal_lcl);
+        finally
+          Add_Log('End MutexBankPOSTerminal');
+          ReleaseMutex(MutexBankPOSTerminal);
+        end;
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        Add_Log('SaveBankPOSTerminal Exception: ' + E.Message);
+        Exit;
+      end;
     end;
   finally
     freeAndNil(sp);
@@ -1699,26 +1714,34 @@ var
 begin
   sp := TdsdStoredProc.Create(nil);
   try
-    ds := TClientDataSet.Create(nil);
     try
-      sp.OutputType := otDataSet;
-      sp.DataSet := ds;
-
-      sp.StoredProcName := 'gpSelect_Cash_UnitConfig';
-      sp.Params.Clear;
-      sp.Params.AddParam('inCashRegister', ftString, ptInput, iniLocalCashRegisterGet);
-      sp.Execute;
-      Add_Log('Start MutexUnitConfig');
-      WaitForSingleObject(MutexUnitConfig, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+      ds := TClientDataSet.Create(nil);
       try
-        SaveLocalData(ds,UnitConfig_lcl);
-      finally
-        Add_Log('End MutexUnitConfig');
-        ReleaseMutex(MutexUnitConfig);
-      end;
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
 
-    finally
-      ds.free;
+        sp.StoredProcName := 'gpSelect_Cash_UnitConfig';
+        sp.Params.Clear;
+        sp.Params.AddParam('inCashRegister', ftString, ptInput, iniLocalCashRegisterGet);
+        sp.Execute;
+        Add_Log('Start MutexUnitConfig');
+        WaitForSingleObject(MutexUnitConfig, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          SaveLocalData(ds,UnitConfig_lcl);
+        finally
+          Add_Log('End MutexUnitConfig');
+          ReleaseMutex(MutexUnitConfig);
+        end;
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        Add_Log('SaveUnitConfig Exception: ' + E.Message);
+        Exit;
+      end;
     end;
   finally
     freeAndNil(sp);
@@ -1732,25 +1755,33 @@ var
 begin
   sp := TdsdStoredProc.Create(nil);
   try
-    ds := TClientDataSet.Create(nil);
     try
-      sp.OutputType := otDataSet;
-      sp.DataSet := ds;
-
-      sp.StoredProcName := 'gpSelect_Cash_TaxUnitNight';
-      sp.Params.Clear;
-      sp.Execute;
-      Add_Log('Start MutexTaxUnitNight');
-      WaitForSingleObject(MutexTaxUnitNight, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+      ds := TClientDataSet.Create(nil);
       try
-        SaveLocalData(ds,TaxUnitNight_lcl);
-      finally
-        Add_Log('End MutexTaxUnitNight');
-        ReleaseMutex(MutexTaxUnitNight);
-      end;
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
 
-    finally
-      ds.free;
+        sp.StoredProcName := 'gpSelect_Cash_TaxUnitNight';
+        sp.Params.Clear;
+        sp.Execute;
+        Add_Log('Start MutexTaxUnitNight');
+        WaitForSingleObject(MutexTaxUnitNight, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          SaveLocalData(ds,TaxUnitNight_lcl);
+        finally
+          Add_Log('End MutexTaxUnitNight');
+          ReleaseMutex(MutexTaxUnitNight);
+        end;
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        Add_Log('SaveTaxUnitNight Exception: ' + E.Message);
+        Exit;
+      end;
     end;
   finally
     freeAndNil(sp);
@@ -1765,31 +1796,79 @@ var
 begin
   sp := TdsdStoredProc.Create(nil);
   try
-    ds := TClientDataSet.Create(nil);
     try
-      sp.OutputType := otDataSet;
-      sp.DataSet := ds;
-
-      sp.StoredProcName := 'gpSelect_CashGoodsToExpirationDate';
-      sp.Params.Clear;
-      sp.Execute;
-      Add_Log('Start MutexGoodsExpirationDate');
-      WaitForSingleObject(MutexGoodsExpirationDate, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+      ds := TClientDataSet.Create(nil);
       try
-        SaveLocalData(ds,GoodsExpirationDate_lcl);
-      finally
-        Add_Log('End MutexGoodsExpirationDate');
-        ReleaseMutex(MutexGoodsExpirationDate);
-      end;
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
 
-    finally
-      ds.free;
+        sp.StoredProcName := 'gpSelect_CashGoodsToExpirationDate';
+        sp.Params.Clear;
+        sp.Execute;
+        Add_Log('Start MutexGoodsExpirationDate');
+        WaitForSingleObject(MutexGoodsExpirationDate, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          SaveLocalData(ds,GoodsExpirationDate_lcl);
+        finally
+          Add_Log('End MutexGoodsExpirationDate');
+          ReleaseMutex(MutexGoodsExpirationDate);
+        end;
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        Add_Log('SaveGoodsExpirationDate Exception: ' + E.Message);
+        Exit;
+      end;
     end;
   finally
     freeAndNil(sp);
   end;
 end;
 
+         //Получение справочника аналогов
+procedure TMainCashForm2.SaveGoodsAnalog;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
+
+        sp.StoredProcName := 'gpSelect_Object_GoodsAnalog';
+        sp.Params.Clear;
+        sp.Execute;
+        Add_Log('Start MutexGoodsAnalog');
+        WaitForSingleObject(MutexGoodsAnalog, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          SaveLocalData(ds,GoodsAnalog_lcl);
+        finally
+          Add_Log('End MutexGoodsAnalog');
+          ReleaseMutex(MutexGoodsAnalog);
+        end;
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        Add_Log('SaveGoodsAnalog Exception: ' + E.Message);
+        Exit;
+      end;
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
 
 procedure TMainCashForm2.SendZReport;
   var IdFTP : Tidftp;
@@ -2066,6 +2145,7 @@ begin
  CloseHandle(MutexTaxUnitNight);
  CloseHandle(MutexGoodsExpirationDate);
  CloseHandle(MutexGoods);
+ CloseHandle(MutexGoodsAnalog);
 end;
 
 

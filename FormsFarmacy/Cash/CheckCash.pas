@@ -91,7 +91,6 @@ type
     colRemains: TcxGridDBColumn;
     colColor_calc: TcxGridDBColumn;
     cbSite: TcxCheckBox;
-    cbDeadlines: TcxCheckBox;
     cbDelay: TcxCheckBox;
   private
     { Private declarations }

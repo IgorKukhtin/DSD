@@ -24,7 +24,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                isMCSAuto Boolean, isMCSNotRecalcOld Boolean,
                AccommodationId Integer, AccommodationName TVarChar,
                PriceChange TFloat, FixPercent TFloat, Multiplicity TFloat,
-               DoesNotShare boolean
+               DoesNotShare boolean, GoodsAnalogId Integer, GoodsAnalogName TVarChar
                )
 AS
 $BODY$
@@ -649,6 +649,8 @@ BEGIN
           , tmpPriceChange.FixPercent
           , tmpPriceChange.Multiplicity
           , COALESCE (ObjectBoolean_DoesNotShare.ValueData, FALSE) AS DoesNotShare
+          , Object_GoodsAnalog.Id                                  AS GoodsAnalogId
+          , Object_GoodsAnalog.ValueData                           AS GoodsAnalogName
 
          FROM
             CashSessionSnapShot
@@ -705,6 +707,12 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_DoesNotShare
                                     ON ObjectBoolean_DoesNotShare.ObjectId = Goods.Id
                                    AND ObjectBoolean_DoesNotShare.DescId = zc_ObjectBoolean_Goods_DoesNotShare()
+
+           -- Аналоги товара
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsAnalog
+                                ON ObjectLink_Goods_GoodsAnalog.ObjectId = Goods.Id
+                               AND ObjectLink_Goods_GoodsAnalog.DescId = zc_ObjectLink_Goods_GoodsAnalog()
+           LEFT JOIN Object AS Object_GoodsAnalog ON Object_GoodsAnalog.Id = ObjectLink_Goods_GoodsAnalog.ChildObjectId
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId
         ORDER BY
@@ -718,6 +726,7 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 04.05.19                                                                                                    * GoodsAnalog
  06.03.19                                                                                                    * DoesNotShare
  11.02.19                                                                                                    *
  30.10.18                                                                                                    *

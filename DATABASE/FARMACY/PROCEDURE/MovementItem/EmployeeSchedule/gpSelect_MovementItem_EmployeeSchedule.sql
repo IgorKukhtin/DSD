@@ -557,6 +557,7 @@ BEGIN
                                          WHERE MovementItem.MovementId = inMovementId
                                            AND MovementItem.DescId = zc_MI_Master())
          AND tmPersonal_View.Ord = 1
+         AND COALESCE (tmpUnserUnit.UnitID, 0) > 0
        UNION ALL
 
        SELECT
