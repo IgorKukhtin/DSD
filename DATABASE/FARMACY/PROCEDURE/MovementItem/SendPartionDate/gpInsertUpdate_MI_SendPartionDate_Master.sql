@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_MI_SendPartionDate_Master()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SendPartionDate_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SendPartionDate_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SendPartionDate_Master(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
+    IN inAmountRemains       TFloat    , --
     IN inPrice               TFloat    , -- цена (срок от 1 мес до 6 мес)
     IN inPriceExp            TFloat    , -- цена (срок меньше месяца)
     IN inSession             TVarChar    -- сессия пользователя
@@ -31,12 +33,14 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceExp(), ioId, inPriceExp);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountRemains(), ioId, inAmountRemains);
 
     -- пересчитали Итоговые суммы по накладной
-    PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+    --PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
     
     -- сохранили протокол
-    PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
+    --PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
 
 END;
 $BODY$

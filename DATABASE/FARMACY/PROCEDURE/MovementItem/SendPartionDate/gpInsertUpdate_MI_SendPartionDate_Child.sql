@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_MI_SendPartionDate_Child()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SendPartionDate_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_SendPartionDate_Child (Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_SendPartionDate_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inParentId            Integer   , --
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
+    IN inExpirationDate      TDateTime ,
     IN inAmount              TFloat    , -- Количество
     IN inContainerId         TFloat    , -- 
     IN inExpired             TFloat    , -- 
@@ -33,11 +35,14 @@ BEGIN
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Expired(), ioId, inExpired);
 
+    -- сохранили <цену>
+    PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ExpirationDate(), ioId, inExpirationDate);
+    
     -- пересчитали Итоговые суммы по накладной
     --PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
     
     -- сохранили протокол
-    PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
+    --PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
 
 END;
 $BODY$

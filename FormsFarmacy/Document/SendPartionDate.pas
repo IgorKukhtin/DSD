@@ -57,7 +57,7 @@ type
     macPrintCheck: TMultiAction;
     bbPrintCheck: TdxBarButton;
     actGet_SP_Prior: TdsdExecStoredProc;
-    bbGet_SP_Prior: TdxBarButton;
+    bbInsertMI: TdxBarButton;
     cxLabel10: TcxLabel;
     edInsertName: TcxButtonEdit;
     GuidesInsert: TdsdGuides;
@@ -72,6 +72,8 @@ type
     ExpirationDate: TcxGridDBColumn;
     spInsertUpdateMIChild: TdsdStoredProc;
     actUpdateDetailDS: TdsdUpdateDataSet;
+    spInsertMI: TdsdStoredProc;
+    actInsertMI: TdsdExecStoredProc;
   private
     { Private declarations }
   public
