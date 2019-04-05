@@ -12,18 +12,18 @@ inherited SendPartionDateForm: TSendPartionDateForm
     Width = 811
     Height = 430
     ExplicitTop = 123
-    ExplicitWidth = 813
-    ExplicitHeight = 419
+    ExplicitWidth = 811
+    ExplicitHeight = 430
     ClientRectBottom = 430
     ClientRectRight = 811
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 813
-      ExplicitHeight = 395
+      ExplicitWidth = 811
+      ExplicitHeight = 406
       inherited cxGrid: TcxGrid
         Width = 811
         Height = 227
-        ExplicitWidth = 813
-        ExplicitHeight = 216
+        ExplicitWidth = 811
+        ExplicitHeight = 227
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -130,8 +130,6 @@ inherited SendPartionDateForm: TSendPartionDateForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitTop = 224
-        ExplicitWidth = 813
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -159,6 +157,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
           OptionsData.CancelOnExit = False
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsData.Inserting = False
           OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
@@ -234,8 +233,6 @@ inherited SendPartionDateForm: TSendPartionDateForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 216
-        ExplicitWidth = 813
       end
     end
   end
@@ -243,7 +240,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
     Width = 811
     Height = 97
     TabOrder = 3
-    ExplicitWidth = 813
+    ExplicitWidth = 811
     ExplicitHeight = 97
     inherited edInvNumber: TcxTextEdit
       Left = 9
@@ -418,6 +415,18 @@ inherited SendPartionDateForm: TSendPartionDateForm
       ImageIndex = 74
       QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1089#1088#1086#1082#1072#1084' '#1075#1086#1076#1085#1086#1089#1090#1080'?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1099
+    end
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end>
     end
     inherited actPrint: TdsdPrintAction
       StoredProcList = <

@@ -81,6 +81,16 @@ inherited Report_Movement_ListDiffForm: TReport_Movement_ListDiffForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaDiff
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountIncome
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummaIncome
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -149,6 +159,16 @@ inherited Report_Movement_ListDiffForm: TReport_Movement_ListDiffForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaDiff
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = AmountIncome
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummaIncome
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -242,6 +262,29 @@ inherited Report_Movement_ListDiffForm: TReport_Movement_ListDiffForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 102
+          end
+          object AmountIncome: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093'.'
+            DataBinding.FieldName = 'AmountIncome'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
+            Options.Editing = False
+            Width = 80
+          end
+          object SummaIncome: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093'. '#1074' '#1094#1077#1085#1072#1093'  '#1088#1077#1072#1083'.'
+            DataBinding.FieldName = 'SummaIncome'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072'  '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
             Options.Editing = False
             Width = 102
           end

@@ -23,7 +23,7 @@ BEGIN
     vbDate180 := CURRENT_DATE + INTERVAL '6 MONTH';
     vbDate30  := CURRENT_DATE + INTERVAL '1 MONTH';
 
-    -- остатки по подразделению со срокок менее 6 месяцев
+    -- остатки по подразделению
     CREATE TEMP TABLE tmpRemains (ContainerId Integer, GoodsId Integer, Amount TFloat, ExpirationDate TDateTime) ON COMMIT DROP;
           INSERT INTO tmpRemains (ContainerId, GoodsId, Amount, ExpirationDate)
            SELECT tmp.ContainerId
@@ -111,14 +111,14 @@ BEGIN
         LEFT JOIN tmpPrice ON tmpPrice.GoodsId = COALESCE (MI_Master.GoodsId, tmpRemains.GoodsId);
 
     --- сохраняем MI_Master
-    PERFORM gpInsertUpdate_MI_SendPartionDate_Master(ioId            := tmpMaster.Id
+    PERFORM lpInsertUpdate_MI_SendPartionDate_Master(ioId            := tmpMaster.Id
                                                    , inMovementId    := inMovementId
                                                    , inGoodsId       := tmpMaster.GoodsId  
                                                    , inAmount        := tmpMaster.Amount        :: TFloat     -- Количество
                                                    , inAmountRemains := tmpMaster.AmountRemains :: TFloat     --
                                                    , inPrice         := tmpMaster.Price         :: TFloat     -- цена (срок от 1 мес до 6 мес)
                                                    , inPriceExp      := tmpMaster.PriceExp      :: TFloat     -- цена (срок меньше месяца)
-                                                   , inSession       := inSession)
+                                                   , inUserId       := vbUserId)
     FROM tmpMaster;                                
     
     -- теперь к мастеру сохраним чайлды
@@ -160,7 +160,7 @@ BEGIN
         LEFT JOIN MI_Master ON MI_Master.GoodsId = COALESCE (MI_Child.GoodsId, tmpRemains.GoodsId);
     
     --- сохраняем MI_Child
-    PERFORM gpInsertUpdate_MI_SendPartionDate_Child(ioId            := tmpChild.Id
+    PERFORM lpInsertUpdate_MI_SendPartionDate_Child(ioId            := tmpChild.Id
                                                   , inParentId      := tmpChild.ParentId
                                                   , inMovementId    := inMovementId
                                                   , inGoodsId       := tmpChild.GoodsId  
@@ -168,7 +168,7 @@ BEGIN
                                                   , inAmount        := tmpChild.Amount        :: TFloat
                                                   , inContainerId   := tmpChild.ContainerId   :: TFloat
                                                   , inExpired       := tmpChild.Expired       :: TFloat
-                                                  , inSession       := inSession)
+                                                  , inUserId        := vbUserId)
     FROM tmpChild;
 
 
