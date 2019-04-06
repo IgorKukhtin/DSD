@@ -41,7 +41,6 @@ object UnitForm: TUnitForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.HeaderHeight = 50
@@ -53,6 +52,7 @@ object UnitForm: TUnitForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object Code: TcxGridDBColumn
@@ -60,6 +60,7 @@ object UnitForm: TUnitForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 38
       end
       object Name: TcxGridDBColumn
@@ -67,6 +68,7 @@ object UnitForm: TUnitForm
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         SortIndex = 0
         SortOrder = soAscending
         Width = 142
@@ -76,6 +78,7 @@ object UnitForm: TUnitForm
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 95
       end
       object BusinessName: TcxGridDBColumn
@@ -83,6 +86,7 @@ object UnitForm: TUnitForm
         DataBinding.FieldName = 'BusinessName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 76
       end
       object JuridicalName: TcxGridDBColumn
@@ -91,6 +95,7 @@ object UnitForm: TUnitForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object AccountGroupCode: TcxGridDBColumn
@@ -99,6 +104,7 @@ object UnitForm: TUnitForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
       end
       object AreaName: TcxGridDBColumn
@@ -106,6 +112,7 @@ object UnitForm: TUnitForm
         DataBinding.FieldName = 'AreaName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 60
       end
       object AccountGroupName: TcxGridDBColumn
@@ -114,6 +121,7 @@ object UnitForm: TUnitForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object AccountDirectionCode: TcxGridDBColumn
@@ -122,6 +130,7 @@ object UnitForm: TUnitForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
       end
       object AccountDirectionName: TcxGridDBColumn
@@ -129,6 +138,7 @@ object UnitForm: TUnitForm
         DataBinding.FieldName = 'AccountDirectionName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 76
       end
       object ProfitLossGroupCode: TcxGridDBColumn
@@ -137,6 +147,7 @@ object UnitForm: TUnitForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
       end
       object ProfitLossGroupName: TcxGridDBColumn
@@ -145,6 +156,7 @@ object UnitForm: TUnitForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object ProfitLossDirectionCode: TcxGridDBColumn
@@ -153,6 +165,7 @@ object UnitForm: TUnitForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
       end
       object ProfitLossDirectionName: TcxGridDBColumn
@@ -160,6 +173,7 @@ object UnitForm: TUnitForm
         DataBinding.FieldName = 'ProfitLossDirectionName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 76
       end
       object InvNumber: TcxGridDBColumn
@@ -219,6 +233,14 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 100
       end
+      object isPartionDate: TcxGridDBColumn
+        Caption = #1055#1072#1088#1090#1080#1080' '#1076#1072#1090#1099' '#1074' '#1091#1095#1077#1090#1077
+        DataBinding.FieldName = 'isPartionDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
       object PersonalSheetWorkTimeName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1076#1086#1089#1090#1091#1087' '#1082' '#1090#1072#1073#1077#1083#1102' '#1088'.'#1074#1088#1077#1084#1077#1085#1080')'
         DataBinding.FieldName = 'PersonalSheetWorkTimeName'
@@ -227,18 +249,12 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 120
       end
-      object isPartionDate: TcxGridDBColumn
-        Caption = #1055#1072#1088#1090#1080#1080' '#1076#1072#1090#1099' '#1074' '#1091#1095#1077#1090#1077
-        DataBinding.FieldName = 'isPartionDate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
       object isPartionGoodsKind: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1080' '#1087#1086' '#1074#1080#1076#1091' '#1091#1087#1072#1082'. '#1076#1083#1103' '#1089#1099#1088#1100#1103
         DataBinding.FieldName = 'isPartionGoodsKind'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 66
       end
       object UnitCode_HistoryCost: TcxGridDBColumn
@@ -247,11 +263,20 @@ object UnitForm: TUnitForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object UnitName_HistoryCost: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1089'/'#1089' '#1074#1086#1079#1074#1088#1072#1090')'
         DataBinding.FieldName = 'UnitName_HistoryCost'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actUnitChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -280,6 +305,7 @@ object UnitForm: TUnitForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 40
       end
     end
@@ -550,6 +576,53 @@ object UnitForm: TUnitForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actUnitChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'UnitChoiceForm'
+      FormName = 'TUnit_ObjectForm'
+      FormNameParam.Value = 'TUnit_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitId_HistoryCost'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitName_HistoryCost'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitCode_HistoryCost'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actUpdate_HistoryCost: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_HistoryCost
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_HistoryCost
+        end>
+      Caption = 'actUpdate_HistoryCost'
+      ImageIndex = 76
+      DataSource = GridDS
+    end
   end
   object GridDS: TDataSource
     DataSet = ClientDataSet
@@ -608,5 +681,30 @@ object UnitForm: TUnitForm
     SummaryItemList = <>
     Left = 176
     Top = 200
+  end
+  object spUpdate_HistoryCost: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Unit_HistoryCost'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId_HistoryCost'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'UnitId_HistoryCost'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 624
+    Top = 232
   end
 end

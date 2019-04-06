@@ -1,6 +1,8 @@
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Object_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_Object_Unit' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Get_Object_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Get_Object_Unit' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_Object_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_Object_Unit' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Unit_HistoryCost() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Unit_HistoryCost' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+
 
 DO $$
 BEGIN
@@ -22,7 +24,13 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Object_Unit()
                                   , inCode:= 3
                                   , inName:= 'получение данных - справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Unit())||'>.'
                                   , inEnumName:= 'zc_Enum_Process_Select_Object_Unit');
-                                  
+                            
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Unit_HistoryCost()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 4
+                                  , inName:= 'сохранение данных - справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Unit())||'>.'
+                                  , inEnumName:= 'zc_Enum_Process_Update_Object_Unit_HistoryCost');
+      
  -- заливка прав - InsertUpdate
  PERFORM gpInsertUpdate_Object_RoleProcess (ioId        := tmpData.RoleRightId
                                           , inRoleId    := tmpRole.RoleId
@@ -93,6 +101,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.04.19         * zc_Enum_Process_InsertUpdate_Object_Unit_HistoryCost
  25.10.13                                        * add PERFORM
  07.10.13                                        *
 */

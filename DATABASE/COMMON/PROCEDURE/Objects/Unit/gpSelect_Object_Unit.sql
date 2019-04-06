@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                AreaId Integer, AreaName TVarChar,
                PersonalSheetWorkTimeId Integer, PersonalSheetWorkTimeName TVarChar,
                PartnerCode Integer, PartnerName TVarChar,
-               UnitCode_HistoryCost Integer, UnitName_HistoryCost TVarChar,
+               UnitId_HistoryCost Integer, UnitCode_HistoryCost Integer, UnitName_HistoryCost TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
                isLeaf Boolean, isPartionDate Boolean, isPartionGoodsKind boolean,
                isErased Boolean,
@@ -117,6 +117,7 @@ BEGIN
            , Object_Partner.ObjectCode             AS PartnerCode
            , Object_Partner.ValueData              AS PartnerName
 
+           , Object_Unit_HistoryCost.Id            AS UnitId_HistoryCost
            , Object_Unit_HistoryCost.ObjectCode    AS UnitCode_HistoryCost
            , Object_Unit_HistoryCost.ValueData     AS UnitName_HistoryCost
 
@@ -250,6 +251,7 @@ BEGIN
            , CAST (0 as Integer)    AS PartnerCode
            , CAST ('' as TVarChar)  AS PartnerName
 
+           , CAST (0 as Integer)    AS UnitId_HistoryCost
            , CAST (0 as Integer)    AS UnitCode_HistoryCost
            , CAST ('' as TVarChar)  AS UnitName_HistoryCost
 
@@ -321,6 +323,7 @@ BEGIN
            , CAST (0 as Integer)    AS PartnerCode
            , CAST ('' as TVarChar)  AS PartnerName
 
+           , CAST (0 as Integer)    AS UnitId_HistoryCost
            , CAST (0 as Integer)    AS UnitCode_HistoryCost
            , CAST ('' as TVarChar)  AS UnitName_HistoryCost
 
@@ -343,6 +346,7 @@ ALTER FUNCTION gpSelect_Object_Unit (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 05.04.19         * UnitId_HistoryCost
  06.03.17         * add isPartionGoodsKind
  16.11.16         * SheetWorkTime
  26.07.16         * Address

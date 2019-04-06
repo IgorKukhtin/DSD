@@ -2320,6 +2320,7 @@ begin
 // exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitTreeForm'));
