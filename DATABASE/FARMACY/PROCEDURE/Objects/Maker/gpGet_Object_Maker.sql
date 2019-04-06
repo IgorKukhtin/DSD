@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isReport3  Boolean
              , isReport4  Boolean
              , isQuarter  Boolean
+             , is4Month   Boolean
              , isErased   Boolean
              ) AS
 $BODY$
@@ -53,6 +54,7 @@ BEGIN
            , FALSE :: Boolean   AS isReport3
            , FALSE :: Boolean   AS isReport4
            , FALSE :: Boolean   AS isQuarter
+           , FALSE :: Boolean   AS is4Month
 
            , CAST (NULL AS Boolean) AS isErased
            ;
@@ -82,6 +84,7 @@ BEGIN
            , COALESCE (ObjectBoolean_Maker_Report3.ValueData, FALSE) :: Boolean AS isReport3
            , COALESCE (ObjectBoolean_Maker_Report4.ValueData, FALSE) :: Boolean AS isReport4
            , COALESCE (ObjectBoolean_Maker_Quarter.ValueData, FALSE) :: Boolean AS isQuarter
+           , COALESCE (ObjectBoolean_Maker_4Month.ValueData, FALSE) :: Boolean  AS is4Month
 
            , Object_Maker.isErased AS isErased
            
@@ -119,6 +122,9 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Maker_Quarter
                                    ON ObjectBoolean_Maker_Quarter.ObjectId = Object_Maker.Id
                                   AND ObjectBoolean_Maker_Quarter.DescId = zc_ObjectBoolean_Maker_Quarter()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Maker_4Month
+                                   ON ObjectBoolean_Maker_4Month.ObjectId = Object_Maker.Id
+                                  AND ObjectBoolean_Maker_4Month.DescId = zc_ObjectBoolean_Maker_4Month()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_Day
                                  ON ObjectFloat_Day.ObjectId = Object_Maker.Id
@@ -140,6 +146,7 @@ ALTER FUNCTION gpGet_Object_Maker(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 05.04.19                                                       *
  03.04.19                                                       *
  18.01.19         *
  11.01.19         *

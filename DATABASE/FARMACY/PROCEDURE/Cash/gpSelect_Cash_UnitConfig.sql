@@ -11,8 +11,8 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                ParentName TVarChar,
                TaxUnitNight Boolean, TaxUnitStartDate TDateTime, TaxUnitEndDate TDateTime,
                TimePUSHFinal1 TDateTime, TimePUSHFinal2 TDateTime,
-               isSP Boolean, DateSP TDateTime, StartTimeSP TDateTime, EndTimeSP TDateTime
-
+               isSP Boolean, DateSP TDateTime, StartTimeSP TDateTime, EndTimeSP TDateTime,
+               FtpDir TVarChar
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -84,6 +84,9 @@ BEGIN
        , ObjectDate_SP.ValueData                       :: TDateTime AS DateSP
        , CASE WHEN COALESCE (ObjectDate_StartSP.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_StartSP.ValueData ELSE Null END :: TDateTime AS StartTimeSP
        , CASE WHEN COALESCE (ObjectDate_EndSP.ValueData ::Time,'00:00')   <> '00:00' THEN ObjectDate_EndSP.ValueData ELSE Null END   :: TDateTime AS EndTimeSP
+       , CASE WHEN Object_Parent.ID IN (7433754, 4103484, 10127251) 
+         THEN 'Franchise' 
+         ELSE '' END::TVarChar                               AS FtpDir
 
    FROM Object AS Object_Unit
 
@@ -140,10 +143,12 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 05.04.19                                                       *
  22.03.19                                                       *
  20.02.19                                                       *
 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Cash_UnitConfig('3000497773', '308120')
+-- 
+SELECT * FROM gpSelect_Cash_UnitConfig('3000497773', '308120')

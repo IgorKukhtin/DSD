@@ -1556,6 +1556,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckVIPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckVIPForm');
   //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckDelayVIPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckDelayVIPForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckVIP_ErrorForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckVIP_ErrorForm');
   //

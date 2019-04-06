@@ -373,6 +373,16 @@ type
     actOpenCashGoodsOneToExpirationDate: TdsdOpenForm;
     actCashGoodsOneToExpirationDate: TAction;
     GoodsAnalogName: TcxGridDBColumn;
+    actOpenDelayVIPForm: TdsdOpenForm;
+    VIP2: TMenuItem;
+    actGoodsAnalog: TAction;
+    actGoodsAnalogChoose: TAction;
+    N23: TMenuItem;
+    N24: TMenuItem;
+    pnlAnalogFilter: TPanel;
+    Label19: TLabel;
+    Label20: TLabel;
+    edAnalogFilter: TcxTextEdit;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -466,6 +476,8 @@ type
     procedure TimerPUSHTimer(Sender: TObject);
     procedure actDoesNotShareExecute(Sender: TObject);
     procedure actCashGoodsOneToExpirationDateExecute(Sender: TObject);
+    procedure actGoodsAnalogExecute(Sender: TObject);
+    procedure actGoodsAnalogChooseExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -607,7 +619,8 @@ implementation
 
 uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog, CashWork, MessagesUnit,
      LocalWorkUnit, Splash, DiscountService, MainCash, UnilWin, ListDiff, ListGoods,
-	   MediCard.Intf, PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog, GoodsToExpirationDate;
+	   MediCard.Intf, PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog,
+     GoodsToExpirationDate, ChoiceGoodsAnalog;
 
 const
   StatusUnCompleteCode = 1;
@@ -1237,17 +1250,19 @@ end;
 
 procedure TMainCashForm2.ClearFilterAll;
 begin
-  if pnlExpirationDateFilter.Visible then
+  if pnlExpirationDateFilter.Visible or pnlAnalogFilter.Visible then
   begin
     RemainsCDS.DisableControls;
     RemainsCDS.Filtered := False;
     try
       RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0';
       pnlExpirationDateFilter.Visible := False;
+      pnlAnalogFilter.Visible := False;
     finally
       RemainsCDS.Filtered := True;
       RemainsCDS.EnableControls;
       edlExpirationDateFilter.Text := '';
+      edAnalogFilter.Text := '';
     end;
   end;
 end;
@@ -1260,7 +1275,7 @@ begin
   begin
     ClearFilterAll;
     Exit;
-  end;
+  end else ClearFilterAll;;
 
   S := '';
   while True do
@@ -1321,6 +1336,68 @@ begin
   lblMoneyInCash.Caption := FormatFloat(',0.00',spGetMoneyInCash.ParamByName('outTotalSumm').AsFloat);
   //
   TimerMoneyInCash.Enabled:=True;
+end;
+
+procedure TMainCashForm2.actGoodsAnalogChooseExecute(Sender: TObject);
+  var nGoodsAnalogId : integer; GoodsAnalogName : string;
+begin
+  if pnlAnalogFilter.Visible then
+  begin
+    ClearFilterAll;
+    Exit;
+  end else ClearFilterAll;
+
+  if not ChoiceGoodsAnalogExecute(nGoodsAnalogId, GoodsAnalogName) then Exit;
+
+  RemainsCDS.DisableControls;
+  RemainsCDS.Filtered := False;
+  try
+    try
+      RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0) and GoodsAnalogId = ' + IntToStr(nGoodsAnalogId);
+      edAnalogFilter.Text := GoodsAnalogName;
+      pnlAnalogFilter.Visible := True;
+    except
+      RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0';
+      pnlAnalogFilter.Visible := False;
+      edAnalogFilter.Text := '';
+    end;
+  finally
+    RemainsCDS.Filtered := True;
+    RemainsCDS.EnableControls;
+  end;
+end;
+
+procedure TMainCashForm2.actGoodsAnalogExecute(Sender: TObject);
+begin
+  if pnlAnalogFilter.Visible then
+  begin
+    ClearFilterAll;
+    Exit;
+  end else ClearFilterAll;
+
+  if RemainsCDS.FieldByName('GoodsAnalogId').IsNull or
+    (RemainsCDS.FieldByName('GoodsAnalogId').AsInteger = 0) then
+  begin
+    actGoodsAnalogChooseExecute(Sender);
+    Exit;
+  end;
+
+  RemainsCDS.DisableControls;
+  RemainsCDS.Filtered := False;
+  try
+    try
+      RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0) and GoodsAnalogId = ' + RemainsCDS.FieldByName('GoodsAnalogId').AsString;
+      edAnalogFilter.Text := RemainsCDS.FieldByName('GoodsAnalogName').AsString;
+      pnlAnalogFilter.Visible := True;
+    except
+      RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0';
+      pnlAnalogFilter.Visible := False;
+      edAnalogFilter.Text := '';
+    end;
+  finally
+    RemainsCDS.Filtered := True;
+    RemainsCDS.EnableControls;
+  end;
 end;
 
 procedure TMainCashForm2.TimerMoneyInCashTimer(Sender: TObject);

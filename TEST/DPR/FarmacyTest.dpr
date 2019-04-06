@@ -676,7 +676,8 @@ uses
   GoodsAnalog in '..\..\FormsFarmacy\Guides\GoodsAnalog.pas' {GoodsAnalogForm: TParentForm},
   GoodsAnalogEdit in '..\..\FormsFarmacy\Guides\GoodsAnalogEdit.pas' {GoodsAnalogEditForm: TParentForm},
   SendPartionDateJournal in '..\..\FormsFarmacy\Document\SendPartionDateJournal.pas' {SendPartionDateJournalForm: TParentForm},
-  SendPartionDate in '..\..\FormsFarmacy\Document\SendPartionDate.pas' {SendPartionDateForm: TParentForm};
+  SendPartionDate in '..\..\FormsFarmacy\Document\SendPartionDate.pas' {SendPartionDateForm: TParentForm},
+  CheckDelayVIP in '..\..\FormsFarmacy\Document\CheckDelayVIP.pas' {CheckDelayVIPForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

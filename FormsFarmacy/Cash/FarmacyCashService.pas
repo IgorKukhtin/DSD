@@ -1829,7 +1829,7 @@ begin
   end;
 end;
 
-         //Получение справочника аналогов
+//Получение справочника аналогов
 procedure TMainCashForm2.SaveGoodsAnalog;
 var
   sp : TdsdStoredProc;
@@ -1900,6 +1900,40 @@ procedure TMainCashForm2.SendZReport;
     Result:=True;
   End;
 
+  function GetFtpDIR : string;
+  var
+    ds : TClientDataSet;
+  begin
+    Result := '';
+
+    if FileExists('UnitConfig_lcl') then
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        Add_Log('Start MutexUnitConfig');
+        WaitForSingleObject(MutexUnitConfig, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          LoadLocalData(ds,UnitConfig_lcl);
+          Result := ds.FieldByName('FtpDir').AsString;
+          if Result <> '' then Result := Result + '/';
+
+        finally
+          Add_Log('End MutexUnitConfig');
+          ReleaseMutex(MutexUnitConfig);
+        end;
+
+      except
+        on E: Exception do
+        begin
+          Add_Log('SaveUnitConfig Exception: ' + E.Message);
+          Exit;
+        end;
+      end
+    finally
+      ds.free;
+    end;
+  end;
+
 begin
 
   try
@@ -1951,7 +1985,7 @@ begin
       IdFTP.Connect;
       if IdFTP.Connected then
       try
-        if not ChangeDirFTP(iniLocalUnitNameGet, True) then Exit;
+        if not ChangeDirFTP(GetFtpDIR + iniLocalUnitNameGet, True) then Exit;
         for i := 0 to sl.Count - 1 do
         begin
           IdFTP.Put(p + sl.Strings[i], sl.Strings[i], False);
