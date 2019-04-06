@@ -51,4 +51,4 @@ ALTER FUNCTION gpInsertUpdate_Object_MedocLoadInfo (TDateTime, TVarChar) OWNER T
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Route()
+-- SELECT * FROM ()

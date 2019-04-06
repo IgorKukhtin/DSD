@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  cxCurrencyEdit;
+  cxCurrencyEdit, cxCalendar;
 
 type
   TRouteForm = class(TParentForm)
@@ -66,6 +66,8 @@ type
     RateSumma: TcxGridDBColumn;
     RatePrice: TcxGridDBColumn;
     RateSummaAdd: TcxGridDBColumn;
+    StartRunPlan: TcxGridDBColumn;
+    EndRunPlan: TcxGridDBColumn;
 
   private
     { Private declarations }

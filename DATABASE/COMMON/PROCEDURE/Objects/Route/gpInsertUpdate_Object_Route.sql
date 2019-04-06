@@ -7,12 +7,15 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar,
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Tfloat, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, TDateTime, TDateTime, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Route(
  INOUT ioId             Integer   , -- Ключ объекта <маршрут>
     IN inCode           Integer   , -- свойство <Код маршрута>
     IN inName           TVarChar  , -- свойство <Наименование маршрута>
+    IN inStartRunPlan   TDateTime , -- Время выезда план
+    IN inEndRunPlan     TDateTime , -- Время возвращения план
     IN inRateSumma      Tfloat    , -- Сумма коммандировочных
     IN inRatePrice      Tfloat    , -- Ставка грн/км (дальнобойные)
     IN inTimePrice      Tfloat    , -- Ставка грн/ч (коммандировочные)
@@ -73,6 +76,11 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Route_RateSummaExp(), ioId, inRateSummaExp);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Route_StartRunPlan(), ioId, inStartRunPlan);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Route_EndRunPlan(), ioId, inEndRunPlan);
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -84,6 +92,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.04.19         *
  29.01.19         * add RateSummaExp
  24.10.17         * add RateSummaAdd
  24.05.16         * add TimePrice

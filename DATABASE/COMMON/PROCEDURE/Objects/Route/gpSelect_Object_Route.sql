@@ -12,7 +12,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , RouteKindId Integer, RouteKindCode Integer, RouteKindName TVarChar
              , FreightId Integer, FreightCode Integer, FreightName TVarChar
-             , RouteGroupId Integer, RouteGroupCode Integer, RouteGroupName TVarChar           
+             , RouteGroupId Integer, RouteGroupCode Integer, RouteGroupName TVarChar
+             , StartRunPlan TDateTime, EndRunPlan TDateTime
              , isErased Boolean
              ) AS
 $BODY$
@@ -56,7 +57,10 @@ BEGIN
   
        , Object_RouteGroup.Id         AS RouteGroupId 
        , Object_RouteGroup.ObjectCode AS RouteGroupCode
-       , Object_RouteGroup.ValueData  AS RouteGroupName       
+       , Object_RouteGroup.ValueData  AS RouteGroupName  
+
+       , CASE WHEN COALESCE(ObjectDate_StartRunPlan.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_StartRunPlan.ValueData ELSE Null END ::TDateTime  AS StartRunPlan
+       , CASE WHEN COALESCE(ObjectDate_EndRunPlan.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_EndRunPlan.ValueData ELSE Null END ::TDateTime  AS EndRunPlan    
        
        , Object_Route.isErased   AS isErased
        
@@ -80,6 +84,14 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_RateSummaExp
                               ON ObjectFloat_RateSummaExp.ObjectId = Object_Route.Id
                              AND ObjectFloat_RateSummaExp.DescId = zc_ObjectFloat_Route_RateSummaExp()
+
+        LEFT JOIN ObjectDate AS ObjectDate_StartRunPlan
+                             ON ObjectDate_StartRunPlan.ObjectId = Object_Route.Id
+                            AND ObjectDate_StartRunPlan.DescId = zc_ObjectDate_Route_StartRunPlan()
+
+        LEFT JOIN ObjectDate AS ObjectDate_EndRunPlan
+                             ON ObjectDate_EndRunPlan.ObjectId = Object_Route.Id
+                            AND ObjectDate_EndRunPlan.DescId = zc_ObjectDate_Route_EndRunPlan()
 
         LEFT JOIN ObjectLink AS ObjectLink_Route_Unit ON ObjectLink_Route_Unit.ObjectId = Object_Route.Id
                                                      AND ObjectLink_Route_Unit.DescId = zc_ObjectLink_Route_Unit()
@@ -136,6 +148,9 @@ BEGIN
            , 0 AS RouteGroupCode
            , '' :: TVarChar AS RouteGroupName       
 
+           , NULL   :: TDateTime AS StartRunPlan
+           , NULL   :: TDateTime AS EndRunPlan 
+
            , FALSE AS isErased
   ;
   
@@ -148,6 +163,7 @@ ALTER FUNCTION gpSelect_Object_Route (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 06.04.19         * 
  29.01.19         * add RateSummaExp
  24.10.17         * add RateSummaAdd
  24.05.16         * add TimePrice

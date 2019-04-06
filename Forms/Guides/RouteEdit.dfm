@@ -3,7 +3,7 @@
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'>'
   ClientHeight = 534
-  ClientWidth = 361
+  ClientWidth = 337
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,14 +17,14 @@
   PixelsPerInch = 96
   TextHeight = 13
   object edRouteName: TcxTextEdit
-    Left = 32
-    Top = 88
+    Left = 97
+    Top = 42
     TabOrder = 0
-    Width = 273
+    Width = 208
   end
   object cxLabel1: TcxLabel
-    Left = 32
-    Top = 68
+    Left = 97
+    Top = 19
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
@@ -59,7 +59,7 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 273
+    Width = 59
   end
   object ceUnit: TcxButtonEdit
     Left = 32
@@ -225,10 +225,47 @@
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
     TabOrder = 25
+    Width = 135
+  end
+  object cxLabel11: TcxLabel
+    Left = 32
+    Top = 68
+    Caption = #1042#1088#1077#1084#1103' '#1074#1099#1077#1079#1076#1072' '#1087#1083#1072#1085
+  end
+  object edStartRunPlan: TcxDateEdit
+    Left = 32
+    Top = 87
+    EditValue = 43225d
+    Properties.ArrowsForYear = False
+    Properties.AssignedValues.EditFormat = True
+    Properties.DateButtons = [btnNow]
+    Properties.DateOnError = deNull
+    Properties.DisplayFormat = 'HH:MM'
+    Properties.Kind = ckDateTime
+    Properties.Nullstring = ' '
+    Properties.YearsInMonthList = False
+    TabOrder = 27
+    Width = 135
+  end
+  object edEndRunPlan: TcxDateEdit
+    Left = 173
+    Top = 87
+    EditValue = 43234d
+    Properties.ArrowsForYear = False
+    Properties.AssignedValues.EditFormat = True
+    Properties.DateButtons = [btnNow]
+    Properties.DisplayFormat = 'HH:MM'
+    Properties.Kind = ckDateTime
+    TabOrder = 28
     Width = 132
   end
+  object cxLabel12: TcxLabel
+    Left = 173
+    Top = 68
+    Caption = #1042#1088#1077#1084#1103' '#1074#1086#1079#1074#1088#1072#1097#1077#1085#1080#1103' '#1087#1083#1072#1085
+  end
   object ActionList: TActionList
-    Left = 328
+    Left = 304
     Top = 10
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -284,6 +321,22 @@
         Value = ''
         Component = edRouteName
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartRunPlan'
+        Value = 'NULL'
+        Component = edStartRunPlan
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndRunPlan'
+        Value = 'NULL'
+        Component = edEndRunPlan
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -364,7 +417,7 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 328
+    Left = 304
     Top = 72
   end
   object dsdFormParams: TdsdFormParams
@@ -513,9 +566,23 @@
         Component = edRateSummaExp
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartRunPlan'
+        Value = 'NULL'
+        Component = edStartRunPlan
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndRunPlan'
+        Value = 'NULL'
+        Component = edEndRunPlan
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 328
+    Left = 304
     Top = 130
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -530,11 +597,12 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 96
-    Top = 72
+    Left = 264
+    Top = 160
   end
   object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
-    Left = 128
+    Left = 184
+    Top = 424
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'

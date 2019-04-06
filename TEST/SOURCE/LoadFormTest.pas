@@ -1342,17 +1342,19 @@ end;
 
 procedure TLoadFormTest.LoadTransportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportRouteJournalForm'));
+ {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportRouteJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportRouteJournalForm');
   exit;
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TTransportForm');
   }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTransportForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportJournalForm');
   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportJournalChoiceForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadTransportServiceFormTest;

@@ -357,9 +357,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_CashRegister_TimePUSHFinal2() RETURNS I
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashRegister(), 'zc_ObjectDate_CashRegister_TimePUSHFinal2', 'Время второго PUSH сообщения о завершении работы' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_CashRegister_TimePUSHFinal2');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Route_StartRunPlan() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Route_StartRunPlan'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Route(), 'zc_ObjectDate_Route_StartRunPlan', 'Время выезда план' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Route_StartRunPlan');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Route_EndRunPlan() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Route_EndRunPlan'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Route(), 'zc_ObjectDate_Route_EndRunPlan', 'Время возвращения план' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Route_EndRunPlan');
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 06.04.19         * zc_ObjectDate_Route_StartRunPlan
+                    zc_ObjectDate_Route_EndRunPlan
  20.03.19         * zc_ObjectDate_Unit_SP
                     zc_ObjectDate_Unit_StartSP
                     zc_ObjectDate_Unit_EndSP
