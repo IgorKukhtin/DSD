@@ -68,7 +68,12 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashLviv() RETURNS Integer 
 
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceDnepr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_ServiceDnepr' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceKiev() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_ServiceKiev' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
--- CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceZaporozhye() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_ServiceZaporozhye' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceKrRog() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_ServiceKrRog' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceNikolaev() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_ServiceNikolaev' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceKharkov() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_ServiceKharkov' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceCherkassi() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_ServiceCherkassi' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceOdessa() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_ServiceOdessa' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceZaporozhye() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_ServiceZaporozhye' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceLviv() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_ServiceLviv' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_DocumentUser() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_DocumentUser' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -252,15 +257,57 @@ BEGIN
                                    , inCode:= 31
                                    , inName:= 'Услуги Днепр (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_ServiceDnepr');
-
  -- по Филиалу ограничиваются Документы для Услуг
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_ServiceKiev()
                                    , inDescId:= zc_Object_Process()
                                    , inCode:= 32
                                    , inName:= 'Услуги Киев (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_ServiceKiev');
+ -- по Филиалу ограничиваются Документы для Услуг
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_ServiceKrRog()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 31
+                                   , inName:= 'Услуги Кр Рог (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_ServiceKrRog');
+                                  
+ -- по Филиалу ограничиваются Документы для Услуг
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_ServiceNikolaev()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 31
+                                   , inName:= 'Услуги НИКОЛАЕВ (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_ServiceNikolaev');
+ -- по Филиалу ограничиваются Документы для Услуг
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_ServiceKharkov()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 31
+                                   , inName:= 'Услуги ХАРЬКОВ (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_ServiceKharkov');
+ -- по Филиалу ограничиваются Документы для Услуг
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_ServiceCherkassi()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 31
+                                   , inName:= 'Услуги ЧЕРКАССЫ (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_ServiceCherkassi');
+ -- по Филиалу ограничиваются Документы для Услуг
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_ServiceOdessa()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 31
+                                   , inName:= 'Услуги Одесса (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_ServiceOdessa');
+ -- по Филиалу ограничиваются Документы для Услуг
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_ServiceZaporozhye()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 31
+                                   , inName:= 'Услуги Запорожье (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_ServiceZaporozhye');
 
-
+ -- по Филиалу ограничиваются Документы для Услуг
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_ServiceLviv()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 32
+                                   , inName:= 'Услуги Львов (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_ServiceLviv');
+                                   
 
  -- по Пользователю ограничиваются Документы для товаров
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_DocumentUser()
@@ -553,13 +600,6 @@ BEGIN
                                    , inCode:= 21
                                    , inName:= 'Касса Львов (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_CashLviv');
-
- -- по Филиалу ограничиваются Документы для Услуг
- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_ServiceLviv()
-                                   , inDescId:= zc_Object_Process()
-                                   , inCode:= 32
-                                   , inName:= 'Услуги Львов (доступ просмотра)'
-                                   , inEnumName:= 'zc_Enum_Process_AccessKey_ServiceLviv');
 
  -- по Филиалу ограничиваются Документы для товаров
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_DocumentLviv()

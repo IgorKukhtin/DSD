@@ -163,7 +163,9 @@ BEGIN
 
 
      -- !!!Если это последняя инвент в текущем месяце, тогда "зависшие" коп. надо списать!!!
-     vbIsLastOnMonth:= NOT EXISTS (SELECT 1
+     vbIsLastOnMonth:= (vbOperDate + INTERVAL '1 DAY' = DATE_TRUNC ('MONTH', vbOperDate + INTERVAL '1 DAY'));
+
+     /*vbIsLastOnMonth:= NOT EXISTS (SELECT 1
                                    FROM Movement
                                         INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                                       ON MovementLinkObject_From.MovementId = Movement.Id
@@ -175,7 +177,7 @@ BEGIN
                                          )
                                      AND Movement.DescId = zc_Movement_Inventory()
                                      AND Movement.StatusId = zc_Enum_Status_Complete()
-                                  );
+                                  );*/
 
 
      IF inMovementId IN (11270863 , 11250369, 11648660)
@@ -877,8 +879,22 @@ BEGIN
              , _tmp.ContainerId
              , _tmp.AccountId
              , SUM (_tmp.OperSumm) AS OperSumm
-        FROM  -- 1.1. это введенные остатки
+        FROM  -- 1.0. для филиала
              (SELECT _tmpItem.MovementItemId
+                   , COALESCE (Container_Summ.Id, 0)       AS ContainerId
+                   , COALESCE (Container_Summ.ObjectId, 0) AS AccountId
+                   , CAST ((_tmpItem.OperCount - COALESCE (_tmpRemainsCount.OperCount, 0)) * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4)) AS OperSumm
+              FROM _tmpItem
+                   LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpItem.ContainerId_Goods
+                   LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
+                                                        AND Container_Summ.DescId = zc_Container_Summ()
+                   INNER JOIN HistoryCost ON HistoryCost.ContainerId = Container_Summ.Id
+                                         AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
+              WHERE vbPriceListId   <> 0 -- !!!
+                AND vbIsLastOnMonth = FALSE
+             UNION ALL
+              -- 1.1. это введенные остатки
+              SELECT _tmpItem.MovementItemId
                    , CASE WHEN vbPriceListId <> 0 AND View_Account.AccountDirectionId <> zc_Enum_AccountDirection_60200() -- Прибыль будущих периодов + на филиалах
                            AND COALESCE (ContainerLinkObject_InfoMoney.ObjectId, 0)       <> zc_Enum_InfoMoney_80401() -- прибыль текущего периода
                            AND COALESCE (ContainerLinkObject_InfoMoneyDetail.ObjectId, 0) <> zc_Enum_InfoMoney_80401() -- прибыль текущего периода
@@ -952,6 +968,8 @@ BEGIN
                                                  ON ContainerLinkObject_InfoMoneyDetail.ContainerId = Container_Summ.Id
                                                 AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
                                                 AND vbPriceListId > 0
+              WHERE (vbPriceListId   = 0 -- !!!
+                  OR vbIsLastOnMonth = TRUE)
 
              /*UNION ALL
               -- 1.1. это введенные остатки
@@ -1019,12 +1037,14 @@ BEGIN
                    LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpRemainsSumm.ContainerId_Goods
                    LEFT JOIN _tmpItem ON _tmpItem.ContainerId_Goods = _tmpRemainsCount.ContainerId_Goods
 
-              WHERE  vbIsLastOnMonth = TRUE
+              WHERE vbIsLastOnMonth = TRUE
                 AND COALESCE (_tmpItem.OperCount, 0) = 0 AND COALESCE (_tmpRemainsCount.OperCount_find, 0) = 0
                 AND (_tmpRemainsSumm.InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_10000(), zc_Enum_InfoMoneyGroup_30000()) -- Основное сырье + Доходы
                   OR _tmpRemainsSumm.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20600(), zc_Enum_InfoMoneyDestination_20700(), zc_Enum_InfoMoneyDestination_20800(), zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_21300()) -- Прочие материалы + Товары + Ирна + Чапли + Дворкин + Незавершенное производство
                   OR _tmpRemainsSumm.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100(), zc_Enum_InfoMoneyDestination_20200(), zc_Enum_InfoMoneyDestination_20300(), zc_Enum_InfoMoneyDestination_20400(), zc_Enum_InfoMoneyDestination_20500()) -- ...........
                     )
+                AND (vbPriceListId   = 0 -- !!!
+                  OR vbIsLastOnMonth = TRUE)
 
              UNION ALL
               -- это расчетные остатки (их надо вычесть) - !!!для "филиалы"!!!!
@@ -1062,7 +1082,10 @@ BEGIN
                      OR vbIsLastOnMonth = FALSE
                      OR _tmpRemainsCount.OperCount_find <> 0
                     )
-               AND (vbUnitId IN (301309 -- Склад ГП ф.Запорожье
+                AND vbPriceListId   > 0    -- !!!
+                AND vbIsLastOnMonth = TRUE -- !!!
+
+               /*AND (vbUnitId IN (301309 -- Склад ГП ф.Запорожье
                                , 309599 -- Склад возвратов ф.Запорожье
 
                                , 346093 -- Склад ГП ф.Одесса
@@ -1090,12 +1113,12 @@ BEGIN
                  OR (vbBranchId NOT IN (zc_Branch_Basis(), 0)
                      AND vbOperDate > '31.12.2017'
                     )
-                   )
+                   )*/
              ) AS _tmp
         WHERE  zc_isHistoryCost() = TRUE
         GROUP BY _tmp.MovementItemId
                , _tmp.ContainerId
-                , _tmp.AccountId
+               , _tmp.AccountId
        )
         SELECT tmp_all.MovementItemId
              , 0 AS ContainerId_ProfitLoss

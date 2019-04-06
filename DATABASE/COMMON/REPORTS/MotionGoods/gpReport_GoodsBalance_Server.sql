@@ -84,7 +84,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , CountEnd_sh_calc TFloat
              , CountEnd_Weight_calc TFloat
 
-             , CountLoss_sh     TFloat
+            , CountLoss_sh     TFloat
              , CountLoss_Weight TFloat
              , SummLoss         TFloat
              , PriceLoss        TFloat
@@ -189,6 +189,21 @@ BEGIN
                     -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
                     LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1*/
               ;
+        ELSE
+            IF COALESCE (inUnitGroupId, 0) = 0 AND COALESCE (inLocationId, 0) = 0
+           AND (inGoodsGroupId <> 0 OR inGoodsId <> 0)
+           AND inIsAllMO = FALSE AND inIsAllAuto = FALSE
+            THEN
+                INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
+                 SELECT Object.Id AS LocationId
+                      , zc_ContainerLinkObject_Unit() AS DescId
+                      , tmpDesc.ContainerDescId
+                 FROM Object
+                      -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
+                      LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
+                 WHERE Object.DescId = zc_Object_Unit();
+            END IF;
+
         /*ELSE
               SELECT tmp.LocationId, tmp.DescId, tmpDesc.ContainerDescId
               FROM
@@ -588,6 +603,7 @@ BEGIN
                                AND Movement.DescId   = zc_Movement_ProductionSeparate()
                                AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                AND MovementLinkObject_Unit.ObjectId IN (SELECT _tmpLocation.LocationId FROM _tmpLocation)
+                               AND (inUnitGroupId <> 0 OR inLocationId <> 0)
 
                              GROUP BY MovementLinkObject_Unit.ObjectId
                                     , MovementItem.ObjectId

@@ -171,17 +171,29 @@ BEGIN
            WHERE inUnitGroupId <> 0 AND COALESCE (inLocationId, 0) = 0
 
           UNION
-               SELECT Object.Id AS LocationId
-                    , CASE WHEN Object.DescId = zc_Object_Unit()   THEN zc_ContainerLinkObject_Unit() 
-                           WHEN Object.DescId = zc_Object_Car()    THEN zc_ContainerLinkObject_Car() 
-                           WHEN Object.DescId = zc_Object_Member() THEN zc_ContainerLinkObject_Member()
-                      END AS DescId
-                    , tmpDesc.ContainerDescId
-               FROM Object
-                    -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
-                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
-               WHERE Object.Id    = inLocationId
-                 AND inLocationId > 0
+           SELECT Object.Id AS LocationId
+                , CASE WHEN Object.DescId = zc_Object_Unit()   THEN zc_ContainerLinkObject_Unit() 
+                       WHEN Object.DescId = zc_Object_Car()    THEN zc_ContainerLinkObject_Car() 
+                       WHEN Object.DescId = zc_Object_Member() THEN zc_ContainerLinkObject_Member()
+                  END AS DescId
+                , tmpDesc.ContainerDescId
+           FROM Object
+                -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
+                LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
+           WHERE Object.Id    = inLocationId
+             AND inLocationId > 0
+          UNION
+           SELECT Object.Id AS LocationId
+                , zc_ContainerLinkObject_Unit() AS DescId
+                , tmpDesc.ContainerDescId
+           FROM Object
+                -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
+                LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
+           WHERE Object.DescId = zc_Object_Unit()
+             AND COALESCE (inUnitGroupId, 0) = 0 AND COALESCE (inLocationId, 0) = 0
+             AND (inGoodsGroupId <> 0 OR inGoodsId <> 0)
+             AND inIsAllMO = FALSE AND inIsAllAuto = FALSE
+
              /*UNION
                SELECT lfSelect.UnitId               AS LocationId
                     , zc_ContainerLinkObject_Unit() AS DescId

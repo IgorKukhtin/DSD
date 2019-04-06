@@ -112,13 +112,15 @@ BEGIN
                                                                                                 , 122 -- Продажа/Возврат покупатель-просмотр ВСЕХ документов
 --                                                                                                , 1101 -- Бухг
                                                                                                  )
-                                                                             AND ((RoleCode BETWEEN 40 and 49
+                                                                             AND (((RoleCode BETWEEN 40 and 49
+                                                                                 OR RoleCode BETWEEN 71 and 78)
                                                                                AND inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Service()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_ProfitLossService())
                                                                                   )
                                                                                OR (NOT RoleCode BETWEEN 40 and 49
-                                                                                   AND inProcessId NOT IN (zc_Enum_Process_InsertUpdate_Movement_Service()
-                                                                                                         , zc_Enum_Process_InsertUpdate_Movement_ProfitLossService())
+                                                                               AND NOT RoleCode BETWEEN 71 and 78
+                                                                               AND inProcessId NOT IN (zc_Enum_Process_InsertUpdate_Movement_Service()
+                                                                                                     , zc_Enum_Process_InsertUpdate_Movement_ProfitLossService())
                                                                                   )
                                                                                  )
                                                                              AND ((AccessKeyId IN (SELECT AccessKeyId FROM Object_RoleAccessKeyDocument_View WHERE ProcessId = inProcessId)
@@ -216,13 +218,15 @@ BEGIN
                                                                                                 , 122 -- Продажа/Возврат покупатель-просмотр ВСЕХ документов
 --                                                                                                , 1101 -- Бухг
                                                                                                  )
-                                                                             AND ((RoleCode BETWEEN 40 and 49
+                                                                             AND (((RoleCode BETWEEN 40 and 49
+                                                                                 OR RoleCode BETWEEN 71 and 78)
                                                                                AND inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Service()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_ProfitLossService())
                                                                                   )
                                                                                OR (NOT RoleCode BETWEEN 40 and 49
-                                                                                   AND inProcessId NOT IN (zc_Enum_Process_InsertUpdate_Movement_Service()
-                                                                                                         , zc_Enum_Process_InsertUpdate_Movement_ProfitLossService())
+                                                                               AND NOT RoleCode BETWEEN 71 and 78
+                                                                               AND inProcessId NOT IN (zc_Enum_Process_InsertUpdate_Movement_Service()
+                                                                                                     , zc_Enum_Process_InsertUpdate_Movement_ProfitLossService())
                                                                                   )
                                                                                  )
                                                                              AND ((AccessKeyId IN (SELECT AccessKeyId FROM Object_RoleAccessKeyDocument_View WHERE ProcessId = inProcessId)
