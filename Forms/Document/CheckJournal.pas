@@ -78,7 +78,6 @@ type
     BanksPOSTerminalsName: TcxGridDBColumn;
     JackdawsChecksName: TcxGridDBColumn;
     Delay: TcxGridDBColumn;
-    Deadlines: TcxGridDBColumn;
   private
     { Private declarations }
   public

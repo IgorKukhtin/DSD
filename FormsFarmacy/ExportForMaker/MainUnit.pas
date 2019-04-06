@@ -587,14 +587,16 @@ begin
     DateStart := StartOfTheMonth(DateEnd);
     if qryMaker.FieldByName('AmountMonth').AsInteger > 1 then
       DateStart := IncMonth(DateStart, 1 - qryMaker.FieldByName('AmountMonth').AsInteger);
-    if (qryMaker.FieldByName('AmountMonth').AsInteger = 1) and
-        qryMaker.FieldByName('isQuarter').AsBoolean and (MonthOf(DateEnd) in [3, 6, 9, 12]) then
-    begin
-      FormQuarterFile := True;
-      DateEndQuarter := DateEnd;
-      DateStartQuarter := IncMonth(DateStart, - 2);
-    end;
   end;
+
+  if qryMaker.FieldByName('isQuarter').AsBoolean and (MonthOf(Date) in [1, 4, 7, 10]) and
+    (DateStart <= IncDay(StartOfTheMonth(Date), -1)) and (DateEnd >= IncDay(StartOfTheMonth(Date), -1))  then
+  begin
+    FormQuarterFile := True;
+    DateEndQuarter := IncDay(StartOfTheMonth(Date), -1);
+    DateStartQuarter := IncMonth(StartOfTheMonth(DateEndQuarter), - 2);
+  end;
+
 end;
 
 procedure TMainForm.pmClick(Sender: TObject);

@@ -227,9 +227,9 @@ inherited MainCashForm2: TMainCashForm2
   end
   object MainPanel: TPanel [2]
     Left = 0
-    Top = 161
+    Top = 182
     Width = 820
-    Height = 177
+    Height = 156
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
@@ -237,7 +237,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 0
       Top = 21
       Width = 820
-      Height = 123
+      Height = 102
       Align = alClient
       TabOrder = 0
       object MainGridDBTableView: TcxGridDBTableView
@@ -363,7 +363,6 @@ inherited MainCashForm2: TMainCashForm2
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = '0.## %'
           HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 57
         end
@@ -371,7 +370,6 @@ inherited MainCashForm2: TMainCashForm2
           Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1086#1090#1087'. '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
           DataBinding.FieldName = 'Multiplicity'
           HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 68
         end
@@ -777,6 +775,13 @@ inherited MainCashForm2: TMainCashForm2
           HeaderAlignmentHorz = taCenter
           Width = 46
         end
+        object GoodsAnalogName: TcxGridDBColumn
+          Caption = #1040#1085#1072#1083#1086#1075#1080
+          DataBinding.FieldName = 'GoodsAnalogName'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 65
+        end
       end
       object MainGridLevel: TcxGridLevel
         GridView = MainGridDBTableView
@@ -784,7 +789,7 @@ inherited MainCashForm2: TMainCashForm2
     end
     object SearchPanel: TPanel
       Left = 0
-      Top = 144
+      Top = 123
       Width = 820
       Height = 33
       Align = alBottom
@@ -1670,6 +1675,56 @@ inherited MainCashForm2: TMainCashForm2
       OnKeyDown = edPromoCodeKeyDown
       OnKeyPress = edPromoCodeKeyPress
       Width = 162
+    end
+  end
+  object pnlAnalogFilter: TPanel [11]
+    Left = 0
+    Top = 161
+    Width = 820
+    Height = 21
+    Align = alTop
+    Color = 15656679
+    ParentBackground = False
+    TabOrder = 11
+    Visible = False
+    object Label19: TLabel
+      Left = 1
+      Top = 1
+      Width = 186
+      Height = 19
+      Align = alLeft
+      Caption = '     '#1060#1080#1083#1100#1090#1088' '#1087#1086' '#1072#1085#1072#1083#1086#1075#1091' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072'.'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      ExplicitHeight = 13
+    end
+    object Label20: TLabel
+      Left = 500
+      Top = 2
+      Width = 40
+      Height = 13
+      Align = alCustom
+      Caption = #1040#1085#1072#1083#1086#1075':'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object edAnalogFilter: TcxTextEdit
+      Left = 567
+      Top = 0
+      Properties.MaxLength = 8
+      TabOrder = 0
+      OnExit = edPromoCodeExit
+      OnKeyDown = edPromoCodeKeyDown
+      OnKeyPress = edPromoCodeKeyPress
+      Width = 214
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -2749,6 +2804,29 @@ inherited MainCashForm2: TMainCashForm2
       ShortCut = 16467
       OnExecute = actCashGoodsOneToExpirationDateExecute
     end
+    object actOpenDelayVIPForm: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1077' VIP '#1095#1077#1082#1080
+      FormName = 'TCheckDelayVIPForm'
+      FormNameParam.Value = 'TCheckDelayVIPForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoodsAnalog: TAction
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1072#1085#1072#1083#1086#1075#1080' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072
+      ShortCut = 16449
+      OnExecute = actGoodsAnalogExecute
+    end
+    object actGoodsAnalogChoose: TAction
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1072#1085#1072#1083#1086#1075#1080' '#1089' '#1074#1099#1073#1086#1088#1086#1084' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ShortCut = 49217
+      OnExecute = actGoodsAnalogChooseExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3038,6 +3116,12 @@ inherited MainCashForm2: TMainCashForm2
     end
     object actUpdateRemainsCDS1: TMenuItem
       Action = actDoesNotShare
+    end
+    object N23: TMenuItem
+      Action = actGoodsAnalog
+    end
+    object N24: TMenuItem
+      Action = actGoodsAnalogChoose
     end
   end
   object FormParams: TdsdFormParams
@@ -4031,13 +4115,16 @@ inherited MainCashForm2: TMainCashForm2
     Left = 472
     Top = 408
     object pm_VIP1: TMenuItem
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1095#1077#1082#1086#1074
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' VIP '#1095#1077#1082#1086#1074
       OnClick = pm_VIP1Click
     end
     object pm_VIP2: TMenuItem
       Tag = 1
       Caption = #1055#1086#1080#1089#1082' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1086#1074' '#1074' VIP '#1095#1077#1082#1072#1093
       OnClick = pm_VIP1Click
+    end
+    object VIP2: TMenuItem
+      Action = actOpenDelayVIPForm
     end
   end
   object CashListDiffCDS: TClientDataSet

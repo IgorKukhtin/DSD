@@ -87,9 +87,11 @@ type
     bbPrintGroupPersonal: TdxBarButton;
     actPrintPeriodGroup: TdsdPrintAction;
     macPrintPeriodGroup: TMultiAction;
-    bb: TdxBarButton;
+    bbPrintPeriodGroup: TdxBarButton;
     spSelectPrintGroup: TdsdStoredProc;
     spSelectPrintPeriodGroup: TdsdStoredProc;
+    actPrintForDriver: TdsdPrintAction;
+    bbPrintForDriver: TdxBarButton;
   private
     { Private declarations }
   public

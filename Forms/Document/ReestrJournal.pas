@@ -52,6 +52,8 @@ type
     OperDatePartner: TcxGridDBColumn;
     MemberName: TcxGridDBColumn;
     TotalCountKg: TcxGridDBColumn;
+    actPrintForDriver: TdsdPrintAction;
+    bbPrintForDriver: TdxBarButton;
   private
     { Private declarations }
   public

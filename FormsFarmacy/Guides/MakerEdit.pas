@@ -49,6 +49,7 @@ type
     cxLabel6: TcxLabel;
     edAmountMonth: TcxCurrencyEdit;
     cbQuarter: TcxCheckBox;
+    cb4Month: TcxCheckBox;
   private
     { Private declarations }
   public

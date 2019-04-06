@@ -4412,16 +4412,16 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         item
           Name = 'inPaidKindId'
           Value = Null
-          Component = GuidesPaidKind
-          ComponentItem = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'PaidKindId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'inPaidKindName'
           Value = Null
-          Component = GuidesPaidKind
-          ComponentItem = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'PaidKindName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -4439,6 +4439,23 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Value = ''
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inCurrencyId'
+          Value = Null
+          Component = GuidesCurrency
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inCurrencyName'
+          Value = Null
+          Component = GuidesCurrency
+          ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -5053,6 +5070,10 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         item
           Visible = True
           ItemName = 'bbOpenReportForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

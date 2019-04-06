@@ -23,6 +23,8 @@ RETURNS TABLE (GoodsId        Integer,
                Summa          TFloat,
                AmountSale     TFloat,
                SummaSale      TFloat,
+               AmountIncome   TFloat,
+               SummaIncome    TFloat,
                AmountDiff     TFloat,
                SummaDiff      TFloat,
                isTOP    Boolean,
@@ -152,8 +154,9 @@ BEGIN
       -- продажи
       , tmpCheck AS (SELECT --MIContainer.WhereObjectId_analyzer          AS UnitId
                             MIContainer.ObjectId_analyzer               AS GoodsId
-                          , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount
-                          , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS SummaSale
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Check() THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END) AS Amount
+                          , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Check() THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS SummaSale
+
                      FROM MovementItemContainer AS MIContainer
                           INNER JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
                           INNER JOIN (SELECT DISTINCT tmpData_MI.GoodsId FROM tmpData_MI) AS tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
@@ -164,7 +167,36 @@ BEGIN
                             --, MIContainer.WhereObjectId_analyzer
                      HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                      )
+      , tmpIncome AS (SELECT -- MovementLinkObject_To.ObjectId          AS UnitId
+                             MI_Income.ObjectId                      AS GoodsId
+                           , SUM(COALESCE (MI_Income.Amount, 0))     AS AmountIncome  
+                           , SUM(COALESCE (MI_Income.Amount, 0) * COALESCE(MIFloat_PriceSale.ValueData,0))  AS SummSale_Income    
+                      FROM Movement AS Movement_Income
+                           INNER JOIN MovementDate AS MovementDate_Branch
+                                                   ON MovementDate_Branch.MovementId = Movement_Income.Id
+                                                  AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
+                                                  AND MovementDate_Branch.ValueData >= '01.04.2019' AND MovementDate_Branch.ValueData < '02.04.2019'
+                            
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                         ON MovementLinkObject_To.MovementId = Movement_Income.Id
+                                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                       -- AND MovementLinkObject_To.ObjectId = 183292
+                           INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_To.ObjectId
                           
+                           LEFT JOIN MovementItem AS MI_Income 
+                                                  ON MI_Income.MovementId = Movement_Income.Id
+                                                 AND MI_Income.isErased   = False
+                           INNER JOIN (SELECT DISTINCT tmpData_MI.GoodsId FROM tmpData_MI) AS tmpGoods ON tmpGoods.GoodsId = MI_Income.ObjectId
+
+                           LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                                       ON MIFloat_PriceSale.MovementItemId = MI_Income.Id
+                                                      AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+
+                       WHERE Movement_Income.DescId = zc_Movement_Income()
+                         AND Movement_Income.StatusId = zc_Enum_Status_Complete() 
+                       GROUP BY MI_Income.ObjectId
+                    )   
+                         
    
         SELECT
              Object_Goods_View.Id                      AS GoodsId
@@ -179,6 +211,9 @@ BEGIN
            
            , tmpCheck.Amount           ::TFloat AS AmountSale
            , tmpCheck.SummaSale        ::TFloat AS SummaSale
+           , tmpIncome.AmountIncome    ::TFloat AS AmountIncome
+           , tmpIncome.SummSale_Income ::TFloat AS SummaIncome
+
            , (COALESCE (tmpData.Amount,0) - COALESCE (tmpCheck.Amount,0))    :: TFloat AS AmountDiff
            , (COALESCE (tmpData.Summa, 0) - COALESCE (tmpCheck.SummaSale,0)) :: TFloat AS SummaDiff
            
@@ -216,7 +251,8 @@ BEGIN
                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
 
             LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
-            LEFT JOIN tmpCheck ON tmpCheck.GoodsId = tmpData.GoodsId
+            LEFT JOIN tmpCheck   ON tmpCheck.GoodsId   = tmpData.GoodsId
+            LEFT JOIN tmpIncome  ON tmpIncome.GoodsId  = tmpData.GoodsId
 
 
         ORDER BY GoodsGroupName

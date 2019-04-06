@@ -102,7 +102,8 @@ uses
   NeoFiscalPrinterDriver_TLB in '..\FormsFarmacy\Cash\NeoFiscalPrinterDriver_TLB.pas',
   dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
   ChoiceBankPOSTerminal in '..\FormsFarmacy\Cash\ChoiceBankPOSTerminal.pas' {ChoiceBankPOSTerminalForm: TParentForm},
-  GoodsToExpirationDate in '..\FormsFarmacy\Cash\GoodsToExpirationDate.pas';
+  GoodsToExpirationDate in '..\FormsFarmacy\Cash\GoodsToExpirationDate.pas',
+  ChoiceGoodsAnalog in '..\FormsFarmacy\Cash\ChoiceGoodsAnalog.pas' {ChoiceGoodsAnalogForm: TParentForm};
 
 {$R *.res}
 

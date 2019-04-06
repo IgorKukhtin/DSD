@@ -393,16 +393,8 @@ inherited CheckJournalForm: TCheckJournalForm
             Width = 87
           end
           object Delay: TcxGridDBColumn
-            Caption = #1055#1088#1086#1089#1088#1086#1095#1082#1072
+            Caption = #1055#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1081' VIP '#1095#1077#1082
             DataBinding.FieldName = 'Delay'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object Deadlines: TcxGridDBColumn
-            Caption = #1057#1088#1086#1082#1080
-            DataBinding.FieldName = 'Deadlines'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

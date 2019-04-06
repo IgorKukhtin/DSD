@@ -271,6 +271,10 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\FormsFarmacy\Cash\GoodsToExpirationDate.pas"/>
+			<DCCReference Include="..\FormsFarmacy\Cash\ChoiceGoodsAnalog.pas">
+				<Form>ChoiceGoodsAnalogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

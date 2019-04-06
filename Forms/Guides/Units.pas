@@ -21,7 +21,7 @@ uses
   dxSkinsdxBarPainter, dsdAddOn, dsdDB, Datasnap.DBClient, dsdAction,
   Vcl.ActnList, dxBarExtItems, dxBar, cxClasses, cxPropertiesStore, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxSplitter;
+  cxGrid, cxSplitter, cxButtonEdit;
 
 type
   TUnitForm = class(TParentForm)
@@ -82,6 +82,9 @@ type
     UnitName_HistoryCost: TcxGridDBColumn;
     Address: TcxGridDBColumn;
     isPartionGoodsKind: TcxGridDBColumn;
+    actUnitChoiceForm: TOpenChoiceForm;
+    spUpdate_HistoryCost: TdsdStoredProc;
+    actUpdate_HistoryCost: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

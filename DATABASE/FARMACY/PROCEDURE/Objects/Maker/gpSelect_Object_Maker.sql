@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isReport3  Boolean
              , isReport4  Boolean
              , isQuarter  Boolean
+             , is4Month  Boolean
              , isErased   Boolean
              ) AS
 $BODY$BEGIN
@@ -61,6 +62,7 @@ $BODY$BEGIN
            , COALESCE (ObjectBoolean_Maker_Report3.ValueData, FALSE) :: Boolean AS isReport3
            , COALESCE (ObjectBoolean_Maker_Report4.ValueData, FALSE) :: Boolean AS isReport4
            , COALESCE (ObjectBoolean_Maker_Quarter.ValueData, FALSE) :: Boolean AS isQuarter
+           , COALESCE (ObjectBoolean_Maker_4Month.ValueData, FALSE) :: Boolean  AS is4Month
 
            , Object_Maker.isErased AS isErased
            
@@ -98,6 +100,9 @@ $BODY$BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Maker_Quarter
                                    ON ObjectBoolean_Maker_Quarter.ObjectId = Object_Maker.Id
                                   AND ObjectBoolean_Maker_Quarter.DescId = zc_ObjectBoolean_Maker_Quarter()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Maker_4Month
+                                   ON ObjectBoolean_Maker_4Month.ObjectId = Object_Maker.Id
+                                  AND ObjectBoolean_Maker_4Month.DescId = zc_ObjectBoolean_Maker_4Month()
 
            LEFT JOIN ObjectString AS ObjectString_Phone
                                   ON ObjectString_Phone.ObjectId = Object_ContactPerson.Id 
@@ -124,6 +129,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 05.04.19                                                       *
  03.04.19                                                       *
  16.01.19         *
  11.01.19         *

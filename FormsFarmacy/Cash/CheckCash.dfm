@@ -10,19 +10,19 @@ inherited CheckCashForm: TCheckCashForm
     Top = 200
     Width = 817
     Height = 323
-    ExplicitTop = 182
+    ExplicitTop = 200
     ExplicitWidth = 817
-    ExplicitHeight = 341
+    ExplicitHeight = 323
     ClientRectBottom = 323
     ClientRectRight = 817
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 817
-      ExplicitHeight = 317
+      ExplicitHeight = 299
       inherited cxGrid: TcxGrid
         Width = 817
         Height = 299
         ExplicitWidth = 817
-        ExplicitHeight = 317
+        ExplicitHeight = 299
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -402,27 +402,18 @@ inherited CheckCashForm: TCheckCashForm
       TabOrder = 24
       Width = 47
     end
-    object cbDeadlines: TcxCheckBox
-      Left = 184
-      Top = 149
-      Hint = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1081' '#1095#1077#1082' '#1085#1072' 30 '#1076#1077#1085#1100' '#1087#1086#1089#1083#1077' '#1087#1088#1086#1089#1088#1086#1095#1082#1080' '#1072#1074#1090#1086#1084#1072#1090#1086#1084' '#1087#1088#1086#1074#1077#1076#1077#1085
-      Caption = #1057#1088#1086#1082#1080
-      Properties.ReadOnly = True
-      TabOrder = 25
-      Width = 61
-    end
     object cbDelay: TcxCheckBox
       Left = 102
       Top = 149
       Hint = 
-        #1063#1077#1082' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1091#1076#1072#1083#1077#1085' '#1080' '#1086#1090#1084#1077#1095#1077#1085' '#1087#1086' '#1080#1089#1090#1077#1095#1077#1085#1080#1080' 2 '#1076#1085#1077#1081' '#1076#1083#1103' '#1089#1072#1081#1090#1072 +
-        ' 2 '#1076#1085#1103' '#1087#1086#1089#1083#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103
-      Caption = #1055#1088#1086#1089#1088#1086#1095#1082#1072
+        #1063#1077#1082' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1091#1076#1072#1083#1077#1085' '#1087#1086' '#1080#1089#1090#1077#1095#1077#1085#1080#1080' 2 '#1076#1085#1077#1081', '#1076#1083#1103' '#1089#1072#1081#1090#1072' 2 '#1076#1085#1103' '#1087#1086 +
+        #1089#1083#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103
+      Caption = #1055#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1081' VIP '#1095#1077#1082
       ParentShowHint = False
       Properties.ReadOnly = True
       ShowHint = True
-      TabOrder = 26
-      Width = 83
+      TabOrder = 25
+      Width = 143
     end
   end
   object edInvNumberOrder: TcxTextEdit [2]
@@ -1425,6 +1416,13 @@ inherited CheckCashForm: TCheckCashForm
         Value = Null
         Component = edTotalSummPayAdd
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Delay'
+        Value = Null
+        Component = cbDelay
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 112

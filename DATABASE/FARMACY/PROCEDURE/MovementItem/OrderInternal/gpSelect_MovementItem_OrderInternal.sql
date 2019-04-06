@@ -910,7 +910,7 @@ BEGIN
               , MIFloat_Price.ValueData             ::TFLoat  AS Price
               , MIFloat_JuridicalPrice.ValueData    ::TFLoat  AS SuperFinalPrice
               , MIFloat_DefermentPrice.ValueData    ::TFloat  AS SuperFinalPrice_Deferment
-              , (MIFloat_Price.ValueData * vbCostCredit / 100) ::TFloat  AS Price_DayDeferment
+              , (tmpContract.Deferment * vbCostCredit) ::TFloat  AS Persent_Deferment
 
               , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN FALSE ELSE TRUE END  ::Boolean AS isPromo
               
@@ -2383,7 +2383,7 @@ BEGIN
               , ObjectFloat_Goods_MinimumLot.ValueData                       AS MinimumLot
               , MIFloat_Remains.ValueData                                    AS Remains
               
-              , (_tmpMI.Price * vbCostCredit / 100)           :: TFloat      AS Price_DayDeferment
+              , (_tmpMI.Deferment * vbCostCredit)             :: TFloat      AS Persent_Deferment
 
               , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN FALSE ELSE TRUE END  ::Boolean AS isPromo
               , COALESCE(GoodsPromo.OperDatePromo, NULL)      :: TDateTime   AS OperDatePromo

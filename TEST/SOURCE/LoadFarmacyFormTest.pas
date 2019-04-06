@@ -698,13 +698,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-    {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ListDiffForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ListDiffForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ListDiffDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ListDiffDialogForm');
     exit;
-
+     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_GoodsPriceChangeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Check_GoodsPriceChangeForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_GoodsPriceChangeDialogForm'));
@@ -1555,6 +1555,9 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckVIPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckVIPForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckDelayVIPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckDelayVIPForm');
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckVIP_ErrorForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckVIP_ErrorForm');

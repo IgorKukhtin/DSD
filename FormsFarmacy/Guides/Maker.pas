@@ -99,6 +99,7 @@ type
     AmountDay: TcxGridDBColumn;
     SendLast: TcxGridDBColumn;
     isQuarter: TcxGridDBColumn;
+    is4Month: TcxGridDBColumn;
   private
     { Private declarations }
   public

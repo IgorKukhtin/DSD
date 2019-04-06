@@ -1,29 +1,29 @@
 inherited SendPartionDateForm: TSendPartionDateForm
   Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1088#1086#1082'/ '#1085#1077' '#1089#1088#1086#1082
-  ClientHeight = 542
-  ClientWidth = 813
+  ClientHeight = 553
+  ClientWidth = 811
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 829
-  ExplicitHeight = 580
+  ExplicitWidth = 827
+  ExplicitHeight = 591
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 123
-    Width = 813
-    Height = 419
+    Width = 811
+    Height = 430
     ExplicitTop = 123
-    ExplicitWidth = 813
-    ExplicitHeight = 419
-    ClientRectBottom = 419
-    ClientRectRight = 813
+    ExplicitWidth = 811
+    ExplicitHeight = 430
+    ClientRectBottom = 430
+    ClientRectRight = 811
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 813
-      ExplicitHeight = 395
+      ExplicitWidth = 811
+      ExplicitHeight = 406
       inherited cxGrid: TcxGrid
-        Width = 813
-        Height = 216
-        ExplicitWidth = 813
-        ExplicitHeight = 216
+        Width = 811
+        Height = 227
+        ExplicitWidth = 811
+        ExplicitHeight = 227
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -124,8 +124,8 @@ inherited SendPartionDateForm: TSendPartionDateForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 224
-        Width = 813
+        Top = 235
+        Width = 811
         Height = 171
         Align = alBottom
         PopupMenu = PopupMenu
@@ -157,7 +157,9 @@ inherited SendPartionDateForm: TSendPartionDateForm
           OptionsData.CancelOnExit = False
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsData.Inserting = False
+          OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
@@ -180,6 +182,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 134
           end
           object ContainerId: TcxGridDBColumn
@@ -225,8 +228,8 @@ inherited SendPartionDateForm: TSendPartionDateForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 216
-        Width = 813
+        Top = 227
+        Width = 811
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
@@ -235,10 +238,10 @@ inherited SendPartionDateForm: TSendPartionDateForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 813
+    Width = 811
     Height = 97
     TabOrder = 3
-    ExplicitWidth = 813
+    ExplicitWidth = 811
     ExplicitHeight = 97
     inherited edInvNumber: TcxTextEdit
       Left = 9
@@ -395,6 +398,36 @@ inherited SendPartionDateForm: TSendPartionDateForm
         end>
       Caption = 'actUpdateMainDS'
       DataSource = DetailDS
+    end
+    object actInsertMI: TdsdExecStoredProc [8]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertMI
+      StoredProcList = <
+        item
+          StoredProc = spInsertMI
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1089#1088#1086#1082#1072#1084
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1089#1088#1086#1082#1072#1084
+      ImageIndex = 74
+      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1089#1088#1086#1082#1072#1084' '#1075#1086#1076#1085#1086#1089#1090#1080'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1099
+    end
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end>
     end
     inherited actPrint: TdsdPrintAction
       StoredProcList = <
@@ -605,6 +638,14 @@ inherited SendPartionDateForm: TSendPartionDateForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertMI'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -633,9 +674,8 @@ inherited SendPartionDateForm: TSendPartionDateForm
       Category = 0
       ImageIndex = 15
     end
-    object bbGet_SP_Prior: TdxBarButton
-      Action = actGet_SP_Prior
-      Caption = #1040#1042#1058#1054#1047#1040#1055#1054#1051#1053#1048#1058#1068
+    object bbInsertMI: TdxBarButton
+      Action = actInsertMI
       Category = 0
     end
   end
@@ -959,6 +999,15 @@ inherited SendPartionDateForm: TSendPartionDateForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountRemains'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountRemains'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1335,5 +1384,38 @@ inherited SendPartionDateForm: TSendPartionDateForm
     ParamKeyField = 'inMovementId'
     Left = 424
     Top = 416
+  end
+  object spInsertMI: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_SendPartionDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 568
+    Top = 408
   end
 end

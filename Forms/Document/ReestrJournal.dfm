@@ -1,30 +1,30 @@
 inherited ReestrJournalForm: TReestrJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' ('#1074#1080#1079#1072')>'
-  ClientHeight = 411
+  ClientHeight = 421
   ClientWidth = 838
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 854
-  ExplicitHeight = 446
+  ExplicitHeight = 459
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
     Width = 838
-    Height = 352
+    Height = 362
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 838
     ExplicitHeight = 352
-    ClientRectBottom = 352
+    ClientRectBottom = 362
     ClientRectRight = 838
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 838
       ExplicitHeight = 352
       inherited cxGrid: TcxGrid
         Width = 838
-        Height = 352
+        Height = 362
         ExplicitWidth = 838
         ExplicitHeight = 352
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -693,6 +693,50 @@ inherited ReestrJournalForm: TReestrJournalForm
           MultiSelectSeparator = ','
         end>
     end
+    object actPrintForDriver: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090#1085#1099#1081' '#1083#1080#1089#1090' '#1076#1083#1103' '#1074#1086#1076#1080#1090#1077#1083#1103'>'
+      Hint = #1055#1077#1095#1072#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090#1085#1099#1081' '#1083#1080#1089#1090' '#1076#1083#1103' '#1074#1086#1076#1080#1090#1077#1083#1103'>'
+      ImageIndex = 17
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGroup'
+          Value = 'FALSE'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_ReestrDriver'
+      ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1056#1077#1077#1089#1090#1088#1072
+      ReportNameParam.Value = 'PrintMovement_ReestrDriver'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -733,6 +777,9 @@ inherited ReestrJournalForm: TReestrJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -885,6 +932,14 @@ inherited ReestrJournalForm: TReestrJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintForDriver'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -904,6 +959,10 @@ inherited ReestrJournalForm: TReestrJournalForm
       Action = actPrint
       Category = 0
       ImageIndex = 3
+    end
+    object bbPrintForDriver: TdxBarButton
+      Action = actPrintForDriver
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

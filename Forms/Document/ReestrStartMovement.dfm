@@ -650,6 +650,9 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actRefreshStart: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
@@ -682,7 +685,51 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         end>
       RefreshOnTabSetChanges = True
     end
-    object macPrintPeriodGroup: TMultiAction [3]
+    object actPrintForDriver: TdsdPrintAction [3]
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090#1085#1099#1081' '#1083#1080#1089#1090' '#1076#1083#1103' '#1074#1086#1076#1080#1090#1077#1083#1103'>'
+      Hint = #1055#1077#1095#1072#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090#1085#1099#1081' '#1083#1080#1089#1090' '#1076#1083#1103' '#1074#1086#1076#1080#1090#1077#1083#1103'>'
+      ImageIndex = 17
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = 0
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGroup'
+          Value = 'FALSE'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_ReestrDriver'
+      ReportNameParam.Name = #1052#1072#1088#1096#1088#1091#1090#1085#1099#1081' '#1083#1080#1089#1090' '#1076#1083#1103' '#1074#1086#1076#1080#1090#1077#1083#1103
+      ReportNameParam.Value = 'PrintMovement_ReestrDriver'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object macPrintPeriodGroup: TMultiAction [4]
       Category = 'Print'
       MoveParams = <>
       ActionList = <
@@ -696,7 +743,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1058#1055' - '#1042#1057#1045' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1074#1080#1079#1086#1081' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
       ImageIndex = 19
     end
-    object actPrintPeriodGroup: TdsdPrintAction [5]
+    object actPrintPeriodGroup: TdsdPrintAction [6]
       Category = 'Print'
       MoveParams = <>
       StoredProc = spSelectPrintPeriodGroup
@@ -753,11 +800,14 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     inherited actMISetUnErased: TdsdUpdateErased
       ShortCut = 0
     end
-    object actUpdateDataSet: TdsdUpdateDataSet [11]
+    object actUpdateDataSet: TdsdUpdateDataSet [12]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -837,7 +887,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         item
         end>
     end
-    object macPrintPeriod: TMultiAction [18]
+    object macPrintPeriod: TMultiAction [19]
       Category = 'Print'
       MoveParams = <>
       ActionList = <
@@ -851,7 +901,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1042#1057#1045' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1074#1080#1079#1086#1081' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
       ImageIndex = 16
     end
-    object actGoodsKindChoice: TOpenChoiceForm [19]
+    object actGoodsKindChoice: TOpenChoiceForm [20]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1127,6 +1177,9 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -1224,6 +1277,14 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintForDriver'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintPeriod'
         end
         item
@@ -1240,7 +1301,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbPrintPeriodGroup'
         end
         item
           Visible = True
@@ -1285,8 +1346,12 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       Category = 0
       ImageIndex = 20
     end
-    object bb: TdxBarButton
+    object bbPrintPeriodGroup: TdxBarButton
       Action = macPrintPeriodGroup
+      Category = 0
+    end
+    object bbPrintForDriver: TdxBarButton
+      Action = actPrintForDriver
       Category = 0
     end
   end

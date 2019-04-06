@@ -2289,6 +2289,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end
       item
         Name = 'inPartnerName'
+        Value = Null
         Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -2324,6 +2325,23 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Name = 'inContractName'
         Value = Null
         Component = GuidesContract
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyId'
+        Value = Null
+        Component = GuidesCurrency
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyName'
+        Value = Null
+        Component = GuidesCurrency
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

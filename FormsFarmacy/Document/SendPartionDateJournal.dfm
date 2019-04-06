@@ -12,17 +12,17 @@ inherited SendPartionDateJournalForm: TSendPartionDateJournalForm
     Height = 421
     TabOrder = 3
     ExplicitWidth = 841
-    ExplicitHeight = 478
+    ExplicitHeight = 421
     ClientRectBottom = 421
     ClientRectRight = 841
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 841
-      ExplicitHeight = 478
+      ExplicitHeight = 421
       inherited cxGrid: TcxGrid
         Width = 841
         Height = 421
         ExplicitWidth = 841
-        ExplicitHeight = 478
+        ExplicitHeight = 421
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -466,13 +466,6 @@ inherited SendPartionDateJournalForm: TSendPartionDateJournalForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'fff'
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
       end>
     Left = 136
     Top = 163
@@ -539,21 +532,6 @@ inherited SendPartionDateJournalForm: TSendPartionDateJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsCurrentData'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outOperDate'
-        Value = 'NULL'
-        Component = MasterCDS
-        ComponentItem = 'OperDate'
-        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 80
