@@ -23,6 +23,13 @@ BEGIN
     vbDate180 := CURRENT_DATE + INTERVAL '6 MONTH';
     vbDate30  := CURRENT_DATE + INTERVAL '1 MONTH';
 
+     -- снимаем удаление со всех строк
+     UPDATE MovementItem
+     SET isErased = FALSE
+     WHERE MovementItem.MovementId = inMovementId
+--       AND MovementItem.isErased = TRUE
+;
+
     -- остатки по подразделению
     CREATE TEMP TABLE tmpRemains (ContainerId Integer, GoodsId Integer, Amount TFloat, ExpirationDate TDateTime) ON COMMIT DROP;
           INSERT INTO tmpRemains (ContainerId, GoodsId, Amount, ExpirationDate)
@@ -78,7 +85,7 @@ BEGIN
                                                     AND MIFloat_PriceExp.DescId = zc_MIFloat_PriceExp()
                     WHERE MovementItem.MovementId = inMovementId
                       AND MovementItem.DescId = zc_MI_Master()
-                      AND MovementItem.IsErased = FALSE
+                      --AND MovementItem.IsErased = FALSE
                     )
 
     , tmpPrice AS (SELECT Price_Goods.ChildObjectId                AS GoodsId
@@ -100,7 +107,6 @@ BEGIN
           , tmpRemains.AmountRemains          ::TFloat   AS AmountRemains
           , COALESCE(MI_Master.Price, tmpPrice.Price)    AS Price
           , COALESCE(MI_Master.PriceExp, tmpPrice.Price) AS PriceExp
-          --, COALESCE(MI_Master.IsErased, FALSE)          AS isErased
     FROM (SELECT tmpRemains.GoodsId
                , SUM (tmpRemains.Amount) AS AmountRemains
                , SUM (CASE WHEN tmpRemains.ExpirationDate <= vbDate180 THEN tmpRemains.Amount ELSE 0 END) AS Amount
@@ -114,12 +120,13 @@ BEGIN
     PERFORM lpInsertUpdate_MI_SendPartionDate_Master(ioId            := tmpMaster.Id
                                                    , inMovementId    := inMovementId
                                                    , inGoodsId       := tmpMaster.GoodsId  
-                                                   , inAmount        := tmpMaster.Amount        :: TFloat     -- Количество
-                                                   , inAmountRemains := tmpMaster.AmountRemains :: TFloat     --
-                                                   , inPrice         := tmpMaster.Price         :: TFloat     -- цена (срок от 1 мес до 6 мес)
-                                                   , inPriceExp      := tmpMaster.PriceExp      :: TFloat     -- цена (срок меньше месяца)
+                                                   , inAmount        := COALESCE (tmpMaster.Amount,0)        :: TFloat     -- Количество
+                                                   , inAmountRemains := COALESCE (tmpMaster.AmountRemains,0) :: TFloat     --
+                                                   , inPrice         := COALESCE (tmpMaster.Price,0)         :: TFloat     -- цена (срок от 1 мес до 6 мес)
+                                                   , inPriceExp      := COALESCE (tmpMaster.PriceExp,0)      :: TFloat     -- цена (срок меньше месяца)
                                                    , inUserId       := vbUserId)
-    FROM tmpMaster;                                
+    FROM tmpMaster; 
+                                  
     
     -- теперь к мастеру сохраним чайлды
     -- выбираем сохр мастер
@@ -136,7 +143,11 @@ BEGIN
     , MI_Child AS (SELECT MovementItem.Id                    AS Id
                         , MovementItem.ParentId              AS ParentId
                         , MovementItem.ObjectId              AS GoodsId
+                        , MIFloat_ContainerId.ValueData      AS ContainerId
                    FROM  MovementItem
+                        LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                    ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                                   AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
                    WHERE MovementItem.MovementId = inMovementId
                      AND MovementItem.DescId = zc_MI_Child() 
                      AND MovementItem.isErased = FALSE
@@ -157,20 +168,38 @@ BEGIN
           WHERE tmpRemains.ExpirationDate <= vbDate180
           ) AS tmpRemains
         FULL JOIN MI_Child ON MI_Child.GoodsId = tmpRemains.GoodsId
+                          AND MI_Child.ContainerId = tmpRemains.ContainerId
         LEFT JOIN MI_Master ON MI_Master.GoodsId = COALESCE (MI_Child.GoodsId, tmpRemains.GoodsId);
     
+
+
     --- сохраняем MI_Child
     PERFORM lpInsertUpdate_MI_SendPartionDate_Child(ioId            := tmpChild.Id
                                                   , inParentId      := tmpChild.ParentId
                                                   , inMovementId    := inMovementId
                                                   , inGoodsId       := tmpChild.GoodsId  
                                                   , inExpirationDate:= tmpChild.ExpirationDate
-                                                  , inAmount        := tmpChild.Amount        :: TFloat
-                                                  , inContainerId   := tmpChild.ContainerId   :: TFloat
-                                                  , inExpired       := tmpChild.Expired       :: TFloat
+                                                  , inAmount        := COALESCE (tmpChild.Amount,0)        :: TFloat
+                                                  , inContainerId   := COALESCE (tmpChild.ContainerId,0)   :: TFloat
+                                                  , inExpired       := COALESCE (tmpChild.Expired,0)       :: TFloat
                                                   , inUserId        := vbUserId)
-    FROM tmpChild;
+    FROM tmpChild
+    WHERE COALESCE (tmpChild.Amount,0) <> 0;
 
+     -- удаляем строки, которые нам не нужны
+     UPDATE MovementItem 
+     SET isErased = TRUE
+     WHERE MovementItem.Id IN (SELECT tmpMaster.Id
+                               FROM tmpMaster 
+                               WHERE COALESCE (tmpMaster.AmountRemains, 0) = 0
+                                 AND tmpMaster.Id <> 0);
+     -- удаляем строки чайлд, которые нам не нужны
+     UPDATE MovementItem 
+     SET isErased = TRUE
+     WHERE MovementItem.Id IN (SELECT tmpChild.Id
+                               FROM tmpChild 
+                               WHERE COALESCE (tmpChild.Amount, 0) = 0
+                                 AND COALESCE (tmpChild.Id, 0) <> 0);
 
 END;
 $BODY$

@@ -116,7 +116,7 @@ BEGIN
                       , tmpRemains.ContainerId
                       --, tmpRemains.MovementItemId_partion
                       , SUM (tmpRemains.Amount) OVER (PARTITION BY tmpRemains.GoodsId ORDER BY tmpRemains.ExpirationDate, tmpRemains.ContainerId) AS RemainsAmountSUM
-                      , ROW_NUMBER() OVER (/*PARTITION BY ExpirationDate */ORDER BY tmpRemains.ExpirationDate DESC, tmpRemains.ContainerId DESC) AS DOrd
+                      , ROW_NUMBER() OVER (ORDER BY tmpRemains.ExpirationDate DESC, tmpRemains.ContainerId DESC) AS DOrd
                  FROM tmpRemains
                 )
     -- расчет
