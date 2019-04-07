@@ -30,7 +30,24 @@ RETURNS TABLE (
 AS
 $BODY$
   DECLARE vbMainJuridicalId Integer;
+  DECLARE vbCostCredit TFloat;
 BEGIN
+
+     -- получаем значение константы % кредитных средств
+     vbCostCredit := COALESCE ((SELECT COALESCE (ObjectFloat_SiteDiscount.ValueData, 0)          :: TFloat    AS SiteDiscount
+                                FROM Object AS Object_GlobalConst
+                                     INNER JOIN ObjectBoolean AS ObjectBoolean_SiteDiscount
+                                                              ON ObjectBoolean_SiteDiscount.ObjectId = Object_GlobalConst.Id
+                                                             AND ObjectBoolean_SiteDiscount.DescId = zc_ObjectBoolean_GlobalConst_SiteDiscount()
+                                                             AND ObjectBoolean_SiteDiscount.ValueData = TRUE
+                                     INNER JOIN ObjectFloat AS ObjectFloat_SiteDiscount
+                                                           ON ObjectFloat_SiteDiscount.ObjectId = Object_GlobalConst.Id
+                                                          AND ObjectFloat_SiteDiscount.DescId = zc_ObjectFloat_GlobalConst_SiteDiscount()
+                                                          AND COALESCE (ObjectFloat_SiteDiscount.ValueData, 0) <> 0
+                                WHERE Object_GlobalConst.DescId = zc_Object_GlobalConst()
+                                  AND Object_GlobalConst.Id =zc_Enum_GlobalConst_CostCredit()
+                                )
+                                , 0)  :: TFloat;
 
     -- Нашли у Аптеки "Главное юр лицо"
     SELECT Object_Unit_View.JuridicalId INTO vbMainJuridicalId FROM Object_Unit_View WHERE Object_Unit_View.Id = inUnitId;
@@ -190,6 +207,7 @@ BEGIN
 
         END :: TFloat AS SuperFinalPrice
 */
+ /*   -- до 07,04,19
       , CASE --- если Дней отсрочки по договору = 0 + ТОП-позиция учитывает % из ... (что б уравновесить ... )
              WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
                   THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
@@ -200,7 +218,9 @@ BEGIN
              ELSE FinalPrice
 
         END :: TFloat AS SuperFinalPrice
-
+*/
+        -- с 07,04,2019
+      , (FinalPrice - FinalPrice * ((ddd.Deferment) * vbCostCredit) / 100) :: TFloat AS SuperFinalPrice
       , ddd.isTOP
       , ddd.PercentMarkup
 
