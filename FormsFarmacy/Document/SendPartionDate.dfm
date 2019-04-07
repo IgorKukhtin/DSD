@@ -22,6 +22,8 @@ inherited SendPartionDateForm: TSendPartionDateForm
       inherited cxGrid: TcxGrid
         Width = 811
         Height = 227
+        ExplicitLeft = -3
+        ExplicitTop = 2
         ExplicitWidth = 811
         ExplicitHeight = 227
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -377,6 +379,33 @@ inherited SendPartionDateForm: TSendPartionDateForm
     end
   end
   inherited ActionList: TActionList
+    object actRefreshUnit: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdateMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
+    inherited actInsertUpdateMovement: TdsdExecStoredProc
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+        end>
+    end
     inherited actShowAll: TBooleanStoredProcAction
       StoredProcList = <
         item
@@ -385,7 +414,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
         item
         end>
     end
-    object actUpdateDetailDS: TdsdUpdateDataSet [7]
+    object actUpdateDetailDS: TdsdUpdateDataSet [8]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -400,7 +429,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
       Caption = 'actUpdateMainDS'
       DataSource = DetailDS
     end
-    object actInsertMI: TdsdExecStoredProc [8]
+    object actInsertMI: TdsdExecStoredProc [9]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -743,7 +772,8 @@ inherited SendPartionDateForm: TSendPartionDateForm
     StoredProcName = 'gpUpdate_Status_SendPartionDate'
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Top = 232
+    Left = 176
+    Top = 256
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_SendPartionDate'
@@ -932,13 +962,6 @@ inherited SendPartionDateForm: TSendPartionDateForm
         Control = edOperDate
       end
       item
-        Control = edUnit
-      end
-      item
-      end
-      item
-      end
-      item
         Control = edComment
       end
       item
@@ -952,9 +975,15 @@ inherited SendPartionDateForm: TSendPartionDateForm
       item
       end
       item
+      end
+      item
+      end
+      item
+      end
+      item
       end>
-    Left = 208
-    Top = 233
+    Left = 224
+    Top = 201
   end
   inherited RefreshAddOn: TRefreshAddOn
     Left = 72
@@ -1418,5 +1447,18 @@ inherited SendPartionDateForm: TSendPartionDateForm
     PackSize = 1
     Left = 568
     Top = 408
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefreshUnit
+    ComponentList = <
+      item
+        Component = GuidesUnit
+      end
+      item
+      end>
+    Left = 536
+    Top = 192
   end
 end

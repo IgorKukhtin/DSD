@@ -74,6 +74,8 @@ type
     actUpdateDetailDS: TdsdUpdateDataSet;
     spInsertMI: TdsdStoredProc;
     actInsertMI: TdsdExecStoredProc;
+    RefreshDispatcher: TRefreshDispatcher;
+    actRefreshUnit: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

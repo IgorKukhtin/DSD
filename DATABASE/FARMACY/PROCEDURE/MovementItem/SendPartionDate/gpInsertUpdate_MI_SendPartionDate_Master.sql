@@ -26,6 +26,12 @@ BEGIN
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SendPartionDate());
     vbUserId := inSession;
 
+    -- переопределяем
+    IF COALESCE (inAmount,0) > COALESCE (inAmountRemains,0)
+    THEN
+        inAmount = inAmountRemains;
+    END IF;
+
     --
     vbUnitId := (SELECT MovementLinkObject_Unit.ObjectId
                  FROM MovementLinkObject AS MovementLinkObject_Unit

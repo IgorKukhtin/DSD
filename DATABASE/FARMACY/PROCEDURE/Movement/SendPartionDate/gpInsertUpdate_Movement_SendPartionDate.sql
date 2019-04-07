@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SendPartionDate(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
    DECLARE vbUserUnitId Integer;
 BEGIN
@@ -41,6 +42,20 @@ BEGIN
         END IF;     
      END IF;     
 
+     vbUnitId := (SELECT MovementLinkObject_Unit.ObjectId
+                  FROM MovementLinkObject AS MovementLinkObject_Unit
+                  WHERE MovementLinkObject_Unit.MovementId = ioId
+                    AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit());
+
+     -- Eсли выбирают др. подразделение все строки метим на удаление
+     IF vbUnitId <> 0 AND vbUnitId <> inUnitId
+     THEN
+         --
+         UPDATE MovementItem
+         SET isErased = TRUE
+         WHERE MovementItem.MovementId = ioId;
+     END IF;
+     
      -- сохранили <ƒокумент>
      ioId := lpInsertUpdate_Movement_SendPartionDate (ioId               := ioId
                                                    , inInvNumber        := inInvNumber
