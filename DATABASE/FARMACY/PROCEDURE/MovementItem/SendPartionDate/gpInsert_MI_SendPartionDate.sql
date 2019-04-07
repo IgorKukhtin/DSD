@@ -31,9 +31,10 @@ BEGIN
 ;
 
     -- остатки по подразделению
-    CREATE TEMP TABLE tmpRemains (ContainerId Integer, GoodsId Integer, Amount TFloat, ExpirationDate TDateTime) ON COMMIT DROP;
-          INSERT INTO tmpRemains (ContainerId, GoodsId, Amount, ExpirationDate)
+    CREATE TEMP TABLE tmpRemains (ContainerId Integer, MovementId_Income Integer, GoodsId Integer, Amount TFloat, ExpirationDate TDateTime) ON COMMIT DROP;
+          INSERT INTO tmpRemains (ContainerId, MovementId_Income, GoodsId, Amount, ExpirationDate)
            SELECT tmp.ContainerId
+                , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) AS MovementId_Income
                 , tmp.GoodsId
                 , SUM (tmp.Amount) AS Amount                                                                    -- остаток
                 , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) ::TDateTime AS ExpirationDate        -- Срок годности
@@ -67,7 +68,8 @@ BEGIN
           -- WHERE COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180
            GROUP BY tmp.ContainerId
                   , tmp.GoodsId
-                  , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd());
+                  , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())
+                  , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId);
 
     CREATE TEMP TABLE tmpMaster (Id Integer, GoodsId Integer, Amount TFloat, AmountRemains TFloat, Price TFloat, PriceExp TFloat) ON COMMIT DROP;
           INSERT INTO tmpMaster (Id, GoodsId, Amount, AmountRemains, Price, PriceExp)
@@ -130,8 +132,8 @@ BEGIN
     
     -- теперь к мастеру сохраним чайлды
     -- выбираем сохр мастер
-    CREATE TEMP TABLE tmpChild (Id Integer, ParentId Integer, GoodsId Integer, Amount TFloat, ContainerId Integer, Expired TFloat, ExpirationDate TDateTime) ON COMMIT DROP;
-          INSERT INTO tmpChild (Id, ParentId, GoodsId, Amount, ContainerId, Expired, ExpirationDate)
+    CREATE TEMP TABLE tmpChild (Id Integer, ParentId Integer, GoodsId Integer, Amount TFloat, ContainerId Integer, MovementId_Income Integer, Expired TFloat, ExpirationDate TDateTime) ON COMMIT DROP;
+          INSERT INTO tmpChild (Id, ParentId, GoodsId, Amount, ContainerId, MovementId_Income, Expired, ExpirationDate)
     WITH
       MI_Master AS (SELECT MovementItem.Id       AS Id
                          , MovementItem.ObjectId AS GoodsId
@@ -140,6 +142,7 @@ BEGIN
                       AND MovementItem.DescId = zc_MI_Master()
                       AND MovementItem.IsErased = FALSE
                     )   
+
     , MI_Child AS (SELECT MovementItem.Id                    AS Id
                         , MovementItem.ParentId              AS ParentId
                         , MovementItem.ObjectId              AS GoodsId
@@ -148,16 +151,19 @@ BEGIN
                         LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                                     ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
                                                    AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+
                    WHERE MovementItem.MovementId = inMovementId
                      AND MovementItem.DescId = zc_MI_Child() 
                      AND MovementItem.isErased = FALSE
                     )
+
     --связвываем чайлд с мастером
     SELECT COALESCE (MI_Child.Id,0)                        AS Id
          , COALESCE (MI_Master.Id, MI_Child.ParentId, 0)      AS ParentId
          , COALESCE (MI_Child.GoodsId, tmpRemains.GoodsId) AS GoodsId
          , tmpRemains.Amount                               AS Amount
          , tmpRemains.ContainerId                 ::Integer
+         , tmpRemains.MovementId_Income
          , CASE WHEN tmpRemains.ExpirationDate < inOperDate THEN 0
                 WHEN tmpRemains.ExpirationDate <= vbDate30 THEN 1
                 ELSE 2
@@ -181,6 +187,7 @@ BEGIN
                                                   , inExpirationDate:= tmpChild.ExpirationDate
                                                   , inAmount        := COALESCE (tmpChild.Amount,0)        :: TFloat
                                                   , inContainerId   := COALESCE (tmpChild.ContainerId,0)   :: TFloat
+                                                  , inMovementId_Income  := COALESCE (tmpChild.MovementId_Income,0)   :: TFloat
                                                   , inExpired       := COALESCE (tmpChild.Expired,0)       :: TFloat
                                                   , inUserId        := vbUserId)
     FROM tmpChild

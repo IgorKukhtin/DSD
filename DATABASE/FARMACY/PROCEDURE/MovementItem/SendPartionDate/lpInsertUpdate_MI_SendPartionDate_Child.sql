@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MI_SendPartionDate_Child()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_SendPartionDate_Child (Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_SendPartionDate_Child (Integer, Integer, Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_SendPartionDate_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,7 +10,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_SendPartionDate_Child(
     IN inGoodsId             Integer   , -- Товары
     IN inExpirationDate      TDateTime ,
     IN inAmount              TFloat    , -- Количество
-    IN inContainerId         TFloat    , -- 
+    IN inContainerId         TFloat    , --
+    IN inMovementId_Income   TFloat    , --
     IN inExpired             TFloat    , -- 
     IN inUserId              Integer    -- сессия пользователя
 )
@@ -25,12 +27,14 @@ BEGIN
     -- сохранили <Элемент документа>
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inGoodsId, inMovementId, inAmount, inParentId);
     
-    -- сохранили <цену>
+    -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContainerId(), ioId, inContainerId);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), ioId, inMovementId_Income);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Expired(), ioId, inExpired);
 
-    -- сохранили <цену>
+    -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ExpirationDate(), ioId, inExpirationDate);
     
     -- пересчитали Итоговые суммы по накладной

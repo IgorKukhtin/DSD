@@ -12,17 +12,16 @@ inherited SendPartionDateForm: TSendPartionDateForm
     Width = 900
     Height = 430
     ExplicitTop = 123
-    ExplicitWidth = 811
+    ExplicitWidth = 900
     ExplicitHeight = 430
     ClientRectBottom = 430
     ClientRectRight = 900
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 811
+      ExplicitWidth = 900
       ExplicitHeight = 406
       inherited cxGrid: TcxGrid
         Width = 900
         Height = 227
-        ExplicitTop = 2
         ExplicitWidth = 900
         ExplicitHeight = 227
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -215,7 +214,6 @@ inherited SendPartionDateForm: TSendPartionDateForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 811
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -289,13 +287,13 @@ inherited SendPartionDateForm: TSendPartionDateForm
             Width = 125
           end
           object OperDate_Income: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076
+            Caption = #1044#1072#1090#1072' '#1072#1087#1090#1077#1082#1080' ('#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'OperDate_Income'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 80
+            Width = 90
           end
           object Invnumber_Income: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076
@@ -346,7 +344,6 @@ inherited SendPartionDateForm: TSendPartionDateForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitWidth = 811
       end
     end
   end
@@ -354,7 +351,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
     Width = 900
     Height = 97
     TabOrder = 3
-    ExplicitWidth = 811
+    ExplicitWidth = 900
     ExplicitHeight = 97
     inherited edInvNumber: TcxTextEdit
       Left = 9
