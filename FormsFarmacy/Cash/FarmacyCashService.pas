@@ -170,6 +170,9 @@ type
     FSaveRealAllRunning: boolean;
     FirstRemainsReceived: boolean;
     FHasError: boolean;
+
+    function SaveCashRemains : Boolean;
+    procedure SaveCashRemainsDif;
     procedure SaveLocalVIP;
     procedure SaveLocalGoods;
     procedure SaveLocalDiffKind;
@@ -250,14 +253,17 @@ begin
 
         3: begin
             SaveRealAll;    // попросили провести чеки
+            tiServise.Hint := '';
            end;
 
         4: begin
-             SaveListDiff;  // попросили отправить листы звквзовж
+             SaveListDiff;  // попросили отправить листы звквзов
+             tiServise.Hint := '';
            end;
 
         5: begin
              SendZReport;  // попросили отправить Z отчеты
+             tiServise.Hint := '';
            end;
 
         9: begin
@@ -391,169 +397,94 @@ begin
   end;
 end;
 
-
 procedure TMainCashForm2.actCashRemainsExecute(Sender: TObject);
 begin
   if FSaveRealAllRunning then Exit; // нельзя запускать, пока отгружаются чеки
   if ExistNotCompletedCheck then Exit; // нельзя получать, пока есть неотгруженные чеки
-  Add_Log('Start MutexRemains 335');
-  WaitForSingleObject(MutexRemains, INFINITE);
   try
     MainCashForm2.tiServise.IconIndex:=1;
-    try
-      MainCashForm2.spSelect_CashRemains_Diff.Execute(False, False, False);
-      DiffCDS.First;
-      if DiffCDS.FieldCount>0 then
-      begin
-         Add_Log('Start MutexDBFDiff 344');
-         WaitForSingleObject(MutexDBFDiff, INFINITE);
-         try
-           FLocalDataBaseDiff.Open;
-           while not DiffCDS.Eof  do
-           begin
-              FLocalDataBaseDiff.Append;
-              FLocalDataBaseDiff.Fields[0].AsString:=DiffCDS.Fields[0].AsString;
-              FLocalDataBaseDiff.Fields[1].AsString:=DiffCDS.Fields[1].AsString;
-              FLocalDataBaseDiff.Fields[2].AsString:=DiffCDS.Fields[2].AsString;
-              FLocalDataBaseDiff.Fields[3].AsString:=DiffCDS.Fields[3].AsString;
-              FLocalDataBaseDiff.Fields[4].AsString:=DiffCDS.Fields[4].AsString;
-              FLocalDataBaseDiff.Fields[5].AsString:=DiffCDS.Fields[5].AsString;
-              FLocalDataBaseDiff.Fields[6].AsString:=DiffCDS.Fields[6].AsString;
-              FLocalDataBaseDiff.Fields[7].AsString:=DiffCDS.Fields[7].AsString;
-              FLocalDataBaseDiff.Fields[8].AsString:=DiffCDS.Fields[8].AsString;
-              FLocalDataBaseDiff.Fields[9].AsString:=DiffCDS.Fields[9].AsString;
-              FLocalDataBaseDiff.Post;
-              DiffCDS.Next;
-           end;
-           FLocalDataBaseDiff.Close;
-         finally
-           Add_Log('End MutexDBFDiff 344');
-           ReleaseMutex(MutexDBFDiff);
-         end;
-         //Получение POS терминалов
-         SaveBankPOSTerminal;
-         //Получение конфигурации аптеки
-         SaveUnitConfig;
-         //Получение ночных скидок
-         SaveTaxUnitNight;
-         //Получение остатков по партиям
-//         SaveGoodsExpirationDate;
-         //Получение справочника аналогов
-         SaveGoodsAnalog;
-         // Отправка сообщения приложению про надобность обновить остатки из файла
-         PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
-        end;
-    except
-      if gc_User.Local then
-       begin
-         tiServise.BalloonHint:='Локальный режим';
-         tiServise.ShowBalloonHint;
-         Exit;
-       end;
+    //Получение конфигурации аптеки
+    SaveUnitConfig;
+    //Получение разницы остатков
+    SaveCashRemainsDif;
+    //Получение POS терминалов
+    if not gc_User.Local then SaveBankPOSTerminal;
+    //Получение ночных скидок
+    if not gc_User.Local then SaveTaxUnitNight;
+    //Получение остатков по партиям
+//    if not gc_User.Local then SaveGoodsExpirationDate;
+    //Получение справочника аналогов
+    if not gc_User.Local then SaveGoodsAnalog;
+    // Отправка сообщения приложению про надобность обновить остатки из файла
+    PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
+    // Меняем хинт
+    if gc_User.Local then
+    begin
+      tiServise.BalloonHint:='Обрыв соединения';
+    end else
+    begin
+      tiServise.BalloonHint:='Разница в остатках получена.';
     end;
   finally
-    Add_Log('End MutexRemains 335');
-    ReleaseMutex(MutexRemains);
+    tiServise.Hint := '';
     MainCashForm2.tiServise.IconIndex := GetTrayIcon;
   end;
-
 end;
 
 procedure TMainCashForm2.actRefreshAllExecute(Sender: TObject);
-var nRemainsFieldCount, nAlternativeFieldCount: integer;
-    bError: boolean;
+var bError: boolean;
 begin   //yes
   if FSaveRealAllRunning then Exit; // нельзя запускать, пока отгружаются чеки
   if ExistNotCompletedCheck then Exit; // нельзя запускать, пока есть неотгруженные чеки
   // обновления данных с сервера
   Add_Log('Refresh all start');
-  Add_Log('Start MutexRemains 390');
-  WaitForSingleObject(MutexRemains, INFINITE);
-  Add_Log('Start MutexAlternative 393');
-  WaitForSingleObject(MutexAlternative, INFINITE);
   bError := false;
   try
     MainCashForm2.tiServise.IconIndex:=1;
     // посылаем сообщение о начале получения полных остатков
     PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 4);
-    tiServise.Hint := 'Получение остатков';
     Application.ProcessMessages;
 
     if not gc_User.Local  then
     Begin
-      RemainsCDS.DisableControls;
-      AlternativeCDS.DisableControls;
-      try
-        try
-          nRemainsFieldCount := -1;
-          if RemainsCDS.Active then
-            nRemainsFieldCount := RemainsCDS.Fields.Count;
-          nAlternativeFieldCount := -1;
-          if AlternativeCDS.Active then
-            nAlternativeFieldCount := AlternativeCDS.Fields.Count;
-          //Получение остатков
-          actRefresh.Execute;
-          //Проверка количества столбцов в новом наборе
-          if (nRemainsFieldCount > RemainsCDS.Fields.Count)
-             or
-             (nAlternativeFieldCount > AlternativeCDS.Fields.Count) then
-          begin
-            tiServise.BalloonHint:='Ошибка при получении остатков - были получены неполные данные.';
-            tiServise.ShowBalloonHint;
-            bError := true;
-            Add_Log('Ошибка при получении остатков');
-            Add_Log('Remains: было столбцов: '+ IntToStr(nRemainsFieldCount) + ', получено: '+ IntToStr(RemainsCDS.Fields.Count));
-            Add_Log('Alternative: было столбцов: '+ IntToStr(nAlternativeFieldCount) + ', получено: '+ IntToStr(AlternativeCDS.Fields.Count));
-            Exit;
-          end;
-          //Сохранение остатков в локальной базе
-          SaveLocalData(RemainsCDS,Remains_lcl);
-          SaveLocalData(AlternativeCDS,Alternative_lcl);
-          //Проверка обновления программ
-          SecureUpdateVersion;
-          //Получение ВИП чеков и сохранение в локальной базе
-          SaveLocalVIP;
-          //Получение товаров
-          SaveLocalGoods;
-          //Получение причин отказов
-          SaveLocalDiffKind;
-          //Получение POS терминалов
-          SaveBankPOSTerminal;
-          //Получение конфигурации аптеки
-          SaveUnitConfig;
-          //Получение ночных скидок
-          SaveTaxUnitNight;
-          //Получение остатков по партиям
-//          SaveGoodsExpirationDate;
-          //Получение справочника аналогов
-          SaveGoodsAnalog;
 
-          PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 3);
-          // Вывод уведомления сервиса
-          tiServise.BalloonHint:='Остатки обновлены.';
-          tiServise.ShowBalloonHint;
-          FirstRemainsReceived := true;
-        except
-          if gc_User.Local then
-          begin
-            tiServise.BalloonHint:='Обрыв соединения';
-            tiServise.ShowBalloonHint;
-          end;
-        end;
-      finally
-        RemainsCDS.EnableControls;
-        AlternativeCDS.EnableControls;
+      //Получение конфигурации аптеки
+      SaveUnitConfig;
+      //Получение остатков
+      bError := SaveCashRemains;
+      //Проверка обновления программ
+      if not gc_User.Local then SecureUpdateVersion;
+      //Получение ВИП чеков и сохранение в локальной базе
+      if not gc_User.Local then SaveLocalVIP;
+      //Получение товаров
+      if not gc_User.Local then SaveLocalGoods;
+      //Получение причин отказов
+      if not gc_User.Local then SaveLocalDiffKind;
+      //Получение POS терминалов
+      if not gc_User.Local then SaveBankPOSTerminal;
+      //Получение ночных скидок
+      if not gc_User.Local then SaveTaxUnitNight;
+      //Получение остатков по партиям
+//      if not gc_User.Local then SaveGoodsExpirationDate;
+      //Получение справочника аналогов
+      if not gc_User.Local then SaveGoodsAnalog;
+
+      PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 3);
+      // Вывод уведомления сервиса
+      if gc_User.Local then
+      begin
+        tiServise.BalloonHint:='Обрыв соединения';
+        tiServise.ShowBalloonHint;
+      end else
+      begin
+        tiServise.BalloonHint:='Остатки обновлены.';
+        tiServise.ShowBalloonHint;
+        FirstRemainsReceived := true;
       end;
     End;
   finally
     tiServise.Hint := '';
-    PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 5);
-    Add_Log('End MutexRemains 390');
-    ReleaseMutex(MutexRemains);
-    Add_Log('End MutexAlternative 393');
-    ReleaseMutex(MutexAlternative);
-    if not bError then
-      ChangeStatus('Сохранили');
+    if not bError then ChangeStatus('Сохранили');
     MainCashForm2.tiServise.IconIndex := GetTrayIcon;
     Add_Log('Refresh all end');
   end;
@@ -632,11 +563,13 @@ begin
   ChangeStatus('Инициализация локального хранилища - да');
   FSaveRealAllRunning := false;
   TimerSaveReal.Enabled := false;
+  SaveUnitConfig; // Обновляем конфигурацию
   SaveRealAll;  // Проводим чеки которые остались не проведенными раньше. Учитывается CountСhecksAtOnce = 7
                 // проведутся первые 7 чеков и будут ждать или таймер или пока не пройдет первая покупка
   SaveListDiff; // Отправляем листы отказов
   SendZReport;  // Отправляем Z отчеты
   SendEmployeeWorkLog;  // Отправляем лога работы сотрудников
+  tiServise.Hint := '';
   if not FHasError then
     ChangeStatus('Получение остатков');
   FirstRemainsReceived := false;
@@ -723,55 +656,161 @@ begin
   end;
 end;
 
+function TMainCashForm2.SaveCashRemains : boolean;
+  var nRemainsFieldCount, nAlternativeFieldCount: integer;
+begin
+  Result := False;
+  tiServise.Hint := 'Получение остатков';
+  Add_Log('Start MutexRemains 390');
+  WaitForSingleObject(MutexRemains, INFINITE);
+  Add_Log('Start MutexAlternative 393');
+  WaitForSingleObject(MutexAlternative, INFINITE);
+  RemainsCDS.DisableControls;
+  AlternativeCDS.DisableControls;
+  try
+    try
+      nRemainsFieldCount := -1;
+      if RemainsCDS.Active then
+        nRemainsFieldCount := RemainsCDS.Fields.Count;
+      nAlternativeFieldCount := -1;
+      if AlternativeCDS.Active then
+        nAlternativeFieldCount := AlternativeCDS.Fields.Count;
+      //Получение остатков
+      actRefresh.Execute;
+      //Проверка количества столбцов в новом наборе
+      if (nRemainsFieldCount > RemainsCDS.Fields.Count)
+         or
+         (nAlternativeFieldCount > AlternativeCDS.Fields.Count) then
+      begin
+        tiServise.BalloonHint:='Ошибка при получении остатков - были получены неполные данные.';
+        tiServise.ShowBalloonHint;
+        Result := true;
+        Add_Log('Ошибка при получении остатков');
+        Add_Log('Remains: было столбцов: '+ IntToStr(nRemainsFieldCount) + ', получено: '+ IntToStr(RemainsCDS.Fields.Count));
+        Add_Log('Alternative: было столбцов: '+ IntToStr(nAlternativeFieldCount) + ', получено: '+ IntToStr(AlternativeCDS.Fields.Count));
+        Exit;
+      end;
+      //Сохранение остатков в локальной базе
+      SaveLocalData(RemainsCDS,Remains_lcl);
+      SaveLocalData(AlternativeCDS,Alternative_lcl);
+    Except ON E:Exception do
+      Add_Log('Ошибка при получении остатков:' + E.Message);
+    end;
+  finally
+    RemainsCDS.EnableControls;
+    AlternativeCDS.EnableControls;
+    Add_Log('End MutexRemains 390');
+    ReleaseMutex(MutexRemains);
+    Add_Log('End MutexAlternative 393');
+    ReleaseMutex(MutexAlternative);
+  end;
+end;
+
+procedure TMainCashForm2.SaveCashRemainsDif;
+begin
+  tiServise.Hint := 'Получение разницы остатков';
+  Add_Log('Start MutexRemains 335');
+  WaitForSingleObject(MutexRemains, INFINITE);
+  try
+    try
+      MainCashForm2.spSelect_CashRemains_Diff.Execute(False, False, False);
+      DiffCDS.First;
+      if DiffCDS.FieldCount > 0 then
+      begin
+        Add_Log('Start MutexDBFDiff 344');
+        WaitForSingleObject(MutexDBFDiff, INFINITE);
+        try
+          FLocalDataBaseDiff.Open;
+          while not DiffCDS.Eof  do
+          begin
+             FLocalDataBaseDiff.Append;
+             FLocalDataBaseDiff.Fields[0].AsString:=DiffCDS.Fields[0].AsString;
+             FLocalDataBaseDiff.Fields[1].AsString:=DiffCDS.Fields[1].AsString;
+              FLocalDataBaseDiff.Fields[2].AsString:=DiffCDS.Fields[2].AsString;
+             FLocalDataBaseDiff.Fields[3].AsString:=DiffCDS.Fields[3].AsString;
+             FLocalDataBaseDiff.Fields[4].AsString:=DiffCDS.Fields[4].AsString;
+             FLocalDataBaseDiff.Fields[5].AsString:=DiffCDS.Fields[5].AsString;
+             FLocalDataBaseDiff.Fields[6].AsString:=DiffCDS.Fields[6].AsString;
+             FLocalDataBaseDiff.Fields[7].AsString:=DiffCDS.Fields[7].AsString;
+             FLocalDataBaseDiff.Fields[8].AsString:=DiffCDS.Fields[8].AsString;
+             FLocalDataBaseDiff.Fields[9].AsString:=DiffCDS.Fields[9].AsString;
+             FLocalDataBaseDiff.Post;
+             DiffCDS.Next;
+          end;
+          FLocalDataBaseDiff.Close;
+        finally
+          Add_Log('End MutexDBFDiff 344');
+          ReleaseMutex(MutexDBFDiff);
+        end;
+      end;
+    except
+      if gc_User.Local then
+      begin
+         tiServise.BalloonHint:='Локальный режим';
+         tiServise.ShowBalloonHint;
+      end;
+    end;
+  finally
+    Add_Log('End MutexRemains 335');
+    ReleaseMutex(MutexRemains);
+    MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+  end;
+end;
+
 procedure TMainCashForm2.SaveLocalVIP;
 var
   sp : TdsdStoredProc;
   ds : TClientDataSet;
 begin  //+
   // pr вызывается из обновления остатков
+  tiServise.Hint := 'Получение информации о VIP чеках';
   sp := TdsdStoredProc.Create(nil);
   try
     ds := TClientDataSet.Create(nil);
     try
-      sp.OutputType := otDataSet;
-      sp.DataSet := ds;
-
-      sp.StoredProcName := 'gpSelect_Object_Member';
-      sp.Params.Clear;
-      sp.Params.AddParam('inIsShowAll',ftBoolean,ptInput,False);
-      sp.Execute(False,False);
-      Add_Log('Start MutexVip 604');
-      WaitForSingleObject(MutexVip, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
       try
-        SaveLocalData(ds,Member_lcl);
-      finally
-        Add_Log('End MutexVip 604');
-        ReleaseMutex(MutexVip);
-      end;
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
 
-      sp.StoredProcName := 'gpSelect_Movement_CheckVIP';
-      sp.Params.Clear;
-      sp.Params.AddParam('inIsErased',ftBoolean,ptInput,False);
-      sp.Execute(False,False);
-      Add_Log('Start MutexVip 617');
-      WaitForSingleObject(MutexVip, INFINITE);
-      try
-        SaveLocalData(ds,Vip_lcl);
-      finally
-        Add_Log('End MutexVip 617');
-        ReleaseMutex(MutexVip);
-      end;
+        sp.StoredProcName := 'gpSelect_Object_Member';
+        sp.Params.Clear;
+        sp.Params.AddParam('inIsShowAll',ftBoolean,ptInput,False);
+        sp.Execute(False,False);
+        Add_Log('Start MutexVip 604');
+        WaitForSingleObject(MutexVip, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          SaveLocalData(ds,Member_lcl);
+        finally
+          Add_Log('End MutexVip 604');
+          ReleaseMutex(MutexVip);
+        end;
 
-      sp.StoredProcName := 'gpSelect_MovementItem_CheckDeferred';
-      sp.Params.Clear;
-      sp.Execute(False,False);
-      Add_Log('Start MutexVip 629');
-      WaitForSingleObject(MutexVip, INFINITE);
-      try
-        SaveLocalData(ds,VipList_lcl);
-      finally
-        Add_Log('End MutexVip 629');
-        ReleaseMutex(MutexVip);
+        sp.StoredProcName := 'gpSelect_Movement_CheckVIP';
+        sp.Params.Clear;
+        sp.Params.AddParam('inIsErased',ftBoolean,ptInput,False);
+        sp.Execute(False,False);
+        Add_Log('Start MutexVip 617');
+        WaitForSingleObject(MutexVip, INFINITE);
+        try
+          SaveLocalData(ds,Vip_lcl);
+        finally
+          Add_Log('End MutexVip 617');
+          ReleaseMutex(MutexVip);
+        end;
+
+        sp.StoredProcName := 'gpSelect_MovementItem_CheckDeferred';
+        sp.Params.Clear;
+        sp.Execute(False,False);
+        Add_Log('Start MutexVip 629');
+        WaitForSingleObject(MutexVip, INFINITE);
+        try
+          SaveLocalData(ds,VipList_lcl);
+        finally
+          Add_Log('End MutexVip 629');
+          ReleaseMutex(MutexVip);
+        end;
+      Except ON E:Exception do
+        Add_Log('Ошибка отправки листа отказов:' + E.Message);
       end;
     finally
       ds.free;
@@ -793,6 +832,7 @@ begin  //+
   if FileExists(Goods_lcl) and FileGetDateTimeInfo(Goods_lcl, DateTime) and
     (StartOfTheDay(DateTime.CreationTime) >= Date) then Exit;
 
+  tiServise.Hint := 'Получение списка медикаментов';
   sp := TdsdStoredProc.Create(nil);
   try
     ds := TClientDataSet.Create(nil);
@@ -861,6 +901,7 @@ var
 begin  //+
   // pr вызывается из обновления остатков
 
+  tiServise.Hint := 'Получение причин отказов';
   sp := TdsdStoredProc.Create(nil);
   try
     ds := TClientDataSet.Create(nil);
@@ -871,12 +912,12 @@ begin  //+
       sp.StoredProcName := 'gpSelect_Object_DiffKindCash';
       sp.Params.Clear;
       sp.Execute;
-      Add_Log('Start DiffKind');
+      Add_Log('Start MutexDiffKind');
       WaitForSingleObject(MutexDiffKind, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
       try
         SaveLocalData(ds,DiffKind_lcl);
       finally
-        Add_Log('End DiffKind');
+        Add_Log('End MutexDiffKind');
         ReleaseMutex(MutexDiffKind);
       end;
 
@@ -898,6 +939,7 @@ begin
     SendZReport;
     SendEmployeeWorkLog;
   finally
+    tiServise.Hint := '';
     TimerSaveReal.Enabled := True;
   end;
 end;
@@ -1672,6 +1714,7 @@ var
   sp : TdsdStoredProc;
   ds : TClientDataSet;
 begin
+  tiServise.Hint := 'Получение банковских терминалов';
   sp := TdsdStoredProc.Create(nil);
   try
     try
@@ -1712,6 +1755,7 @@ var
   sp : TdsdStoredProc;
   ds : TClientDataSet;
 begin
+  tiServise.Hint := 'Получение конфигурации';
   sp := TdsdStoredProc.Create(nil);
   try
     try
@@ -1753,6 +1797,7 @@ var
   sp : TdsdStoredProc;
   ds : TClientDataSet;
 begin
+  tiServise.Hint := 'Получение ночных скидок';
   sp := TdsdStoredProc.Create(nil);
   try
     try
@@ -1835,6 +1880,7 @@ var
   sp : TdsdStoredProc;
   ds : TClientDataSet;
 begin
+  tiServise.Hint := 'Получение аналогов товаров';
   sp := TdsdStoredProc.Create(nil);
   try
     try
@@ -1906,7 +1952,7 @@ procedure TMainCashForm2.SendZReport;
   begin
     Result := '';
 
-    if FileExists('UnitConfig_lcl') then
+    if FileExists(UnitConfig_lcl) then
     try
       ds := TClientDataSet.Create(nil);
       try
@@ -1935,6 +1981,8 @@ procedure TMainCashForm2.SendZReport;
   end;
 
 begin
+
+  tiServise.Hint := 'Отправка Z отчетов';
 
   try
     spLoadFTPParam.Execute;
@@ -2023,6 +2071,8 @@ begin
   if FileExists(EmployeeWorkLog_lcl) then
   begin
 
+    tiServise.Hint := 'Отправка лога работы сотрудников';
+
     OldProgram := False;
     OldServise := False;
 
@@ -2095,6 +2145,7 @@ procedure TMainCashForm2.SecureUpdateVersion;
   var LocalVersionInfo, BaseVersionInfo: TVersionInfo;
       OldProgram, OldServise : Boolean;
 begin
+  tiServise.Hint := 'Сохранение информации об обновлении версии';
   OldProgram := False;
   OldServise := False;
   try
