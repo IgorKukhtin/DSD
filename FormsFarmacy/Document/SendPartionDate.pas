@@ -41,7 +41,6 @@ type
     edComment: TcxTextEdit;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
-    chAmountRemains: TcxGridDBColumn;
     chAmount: TcxGridDBColumn;
     ContainerId: TcxGridDBColumn;
     Expired_text: TcxGridDBColumn;
@@ -76,6 +75,12 @@ type
     actInsertMI: TdsdExecStoredProc;
     RefreshDispatcher: TRefreshDispatcher;
     actRefreshUnit: TdsdDataSetRefresh;
+    OperDate_Income: TcxGridDBColumn;
+    Invnumber_Income: TcxGridDBColumn;
+    FromName_Income: TcxGridDBColumn;
+    ContractName_Income: TcxGridDBColumn;
+    actOpenFormIncome: TdsdOpenForm;
+    bbOpenFormIncome: TdxBarButton;
   private
     { Private declarations }
   public

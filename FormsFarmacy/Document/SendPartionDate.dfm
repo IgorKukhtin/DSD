@@ -1,30 +1,29 @@
 inherited SendPartionDateForm: TSendPartionDateForm
   Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1089#1088#1086#1082'/ '#1085#1077' '#1089#1088#1086#1082
   ClientHeight = 553
-  ClientWidth = 811
+  ClientWidth = 900
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 827
+  ExplicitWidth = 916
   ExplicitHeight = 591
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 123
-    Width = 811
+    Width = 900
     Height = 430
     ExplicitTop = 123
     ExplicitWidth = 811
     ExplicitHeight = 430
     ClientRectBottom = 430
-    ClientRectRight = 811
+    ClientRectRight = 900
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 811
       ExplicitHeight = 406
       inherited cxGrid: TcxGrid
-        Width = 811
+        Width = 900
         Height = 227
-        ExplicitLeft = -3
         ExplicitTop = 2
-        ExplicitWidth = 811
+        ExplicitWidth = 900
         ExplicitHeight = 227
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -37,6 +36,26 @@ inherited SendPartionDateForm: TSendPartionDateForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_0
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_all
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -57,6 +76,26 @@ inherited SendPartionDateForm: TSendPartionDateForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_0
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_all
             end>
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
@@ -82,7 +121,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 267
+            Width = 217
           end
           object AmountRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
@@ -104,6 +143,50 @@ inherited SendPartionDateForm: TSendPartionDateForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object Amount_0: TcxGridDBColumn
+            Caption = #1055#1088#1086#1089#1088#1086#1095#1077#1085#1086
+            DataBinding.FieldName = 'Amount_0'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 53
+          end
+          object Amount_1: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' 1 '#1084#1077#1089'.'
+            DataBinding.FieldName = 'Amount_1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 52
+          end
+          object Amount_2: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' 6 '#1084#1077#1089'.'
+            DataBinding.FieldName = 'Amount_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 52
+          end
+          object Amount_all: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1073#1086#1083#1077#1077' 6 '#1084#1077#1089'.'
+            DataBinding.FieldName = 'Amount_all'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 49
+          end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' ('#1089#1088#1086#1082' '#1086#1090' 1 '#1084#1077#1089' '#1076#1086' 6 '#1084#1077#1089')'
             DataBinding.FieldName = 'Price'
@@ -111,27 +194,28 @@ inherited SendPartionDateForm: TSendPartionDateForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 124
+            Width = 102
           end
           object PriceExp: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' ('#1089#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' '#1084#1077#1089#1103#1094#1072')'
+            Caption = #1062#1077#1085#1072' ('#1089#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' 1 '#1084#1077#1089'.)'
             DataBinding.FieldName = 'PriceExp'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 119
+            Width = 104
           end
         end
       end
       object cxGrid1: TcxGrid
         Left = 0
         Top = 235
-        Width = 811
+        Width = 900
         Height = 171
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 811
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -167,17 +251,6 @@ inherited SendPartionDateForm: TSendPartionDateForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object chAmountRemains: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1074' '#1087#1072#1088#1090#1080#1080
-            DataBinding.FieldName = 'AmountRemains'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 185
-          end
           object chAmount: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
             DataBinding.FieldName = 'Amount'
@@ -215,6 +288,42 @@ inherited SendPartionDateForm: TSendPartionDateForm
             Options.Editing = False
             Width = 125
           end
+          object OperDate_Income: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'OperDate_Income'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Invnumber_Income: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'Invnumber_Income'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object FromName_Income: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'FromName_Income'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object ContractName_Income: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractName_Income'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 80
+          end
           object chisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -232,16 +341,17 @@ inherited SendPartionDateForm: TSendPartionDateForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 227
-        Width = 811
+        Width = 900
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitWidth = 811
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 811
+    Width = 900
     Height = 97
     TabOrder = 3
     ExplicitWidth = 811
@@ -396,6 +506,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     inherited actInsertUpdateMovement: TdsdExecStoredProc
@@ -599,6 +710,41 @@ inherited SendPartionDateForm: TSendPartionDateForm
       Caption = #1040#1042#1058#1054#1047#1040#1055#1054#1051#1053#1048#1058#1068' '#1057#1055
       ImageIndex = 74
     end
+    object actOpenFormIncome: TdsdOpenForm
+      Category = 'OpenIncome'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1080#1093#1086#1076'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1080#1093#1086#1076'>'
+      ImageIndex = 28
+      FormName = 'TIncomeForm'
+      FormNameParam.Value = 'TIncomeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = DetailDCS
+          ComponentItem = 'MovementId_Income'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -668,6 +814,14 @@ inherited SendPartionDateForm: TSendPartionDateForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenFormIncome'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertMI'
         end
         item
@@ -706,6 +860,10 @@ inherited SendPartionDateForm: TSendPartionDateForm
     end
     object bbInsertMI: TdxBarButton
       Action = actInsertMI
+      Category = 0
+    end
+    object bbOpenFormIncome: TdxBarButton
+      Action = actOpenFormIncome
       Category = 0
     end
   end
@@ -991,7 +1149,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     Left = 734
-    Top = 176
+    Top = 200
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     Left = 654
@@ -1195,8 +1353,8 @@ inherited SendPartionDateForm: TSendPartionDateForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 640
-    Top = 152
+    Left = 792
+    Top = 112
   end
   object GuidesMemberSP: TdsdGuides
     KeyField = 'Id'
@@ -1272,8 +1430,8 @@ inherited SendPartionDateForm: TSendPartionDateForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 656
-    Top = 120
+    Left = 704
+    Top = 96
   end
   object GuidesInsert: TdsdGuides
     KeyField = 'Id'
