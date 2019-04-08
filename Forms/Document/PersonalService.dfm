@@ -2,8 +2,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 681
   ClientWidth = 1307
+  ExplicitTop = -19
   ExplicitWidth = 1323
-  ExplicitHeight = 716
+  ExplicitHeight = 719
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1627,7 +1628,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Width = 182
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 299
+    Left = 323
     Top = 336
   end
   inherited cxPropertiesStore: TcxPropertiesStore

@@ -865,10 +865,10 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationSaldoForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalCollationSaldoForm');
-
+     }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionMoveForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionMoveForm');
-
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionMoveDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionMoveDialogForm');
 

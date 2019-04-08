@@ -217,7 +217,6 @@ BEGIN
                                    ELSE ROUND (Price_Value.ValueData, 2)
                               END                           :: TFloat AS Price 
                             , MCS_Value.ValueData                     AS MCSValue 
-                            , Price_Goods.ChildObjectId               AS GoodsId
                             , price_datechange.valuedata              AS DateChange 
                             , MCS_datechange.valuedata                AS MCSDateChange 
                             , COALESCE(MCS_isClose.ValueData,False)   AS MCSIsClose 
@@ -642,7 +641,7 @@ BEGIN
             FROM Object_Goods_View
                 INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object_Goods_View.Id 
                                      AND ObjectLink.ChildObjectId = vbObjectId
-                LEFT OUTER JOIN tmpPrice_View ON tmpPrice_View.Goodsid = Object_Goods_View.Id
+                LEFT OUTER JOIN tmpPrice_View ON tmpPrice_View.GoodsId = Object_Goods_View.Id
 
                 LEFT OUTER JOIN tmpRemeins AS Object_Remains
                                            ON Object_Remains.ObjectId = Object_Goods_View.Id
