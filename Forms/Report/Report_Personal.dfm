@@ -4,7 +4,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
   ClientWidth = 901
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 917
-  ExplicitHeight = 590
+  ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -126,6 +126,16 @@ inherited Report_PersonalForm: TReport_PersonalForm
               Format = ',0.00##'
               Kind = skSum
               Column = SummNalogRet
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ServiceSumm_inf
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ServiceSumm_dif
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -227,6 +237,16 @@ inherited Report_PersonalForm: TReport_PersonalForm
               Format = ',0.00##'
               Kind = skSum
               Column = SummNalogRet
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ServiceSumm_inf
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ServiceSumm_dif
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -416,6 +436,30 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object ServiceSumm_inf: TcxGridDBColumn
+            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'ServiceSumm_inf'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1072#1095#1080#1089#1083#1077#1085#1086' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
+            Options.Editing = False
+            Width = 80
+          end
+          object ServiceSumm_dif: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'.'
+            DataBinding.FieldName = 'ServiceSumm_dif'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1085#1072#1095#1080#1089#1083#1077#1085#1086' '#1086#1090' '#1085#1072#1095#1080#1089#1083#1077#1085#1086' ('#1080#1085#1092'.)'
+            Options.Editing = False
+            Width = 45
           end
           object IncomeSumm: TcxGridDBColumn
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1043#1057#1052
