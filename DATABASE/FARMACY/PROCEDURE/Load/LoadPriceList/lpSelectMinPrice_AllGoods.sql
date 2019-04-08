@@ -37,6 +37,7 @@ AS
 $BODY$
   DECLARE vbMainJuridicalId Integer;
   DECLARE vbIsGoodsPromo Boolean;
+  DECLARE vbCostCredit TFloat;
 BEGIN
     -- !!!так "криво" определятся НАДО ЛИ учитывать маркет. контракт!!!
     vbIsGoodsPromo:= inObjectId >=0;
@@ -47,6 +48,21 @@ BEGIN
     -- Нашли у Аптеки "Главное юр лицо"
     SELECT Object_Unit_View.JuridicalId INTO vbMainJuridicalId FROM Object_Unit_View WHERE Object_Unit_View.Id = inUnitId;
 
+     -- получаем значение константы % кредитных средств
+     vbCostCredit := COALESCE ((SELECT COALESCE (ObjectFloat_SiteDiscount.ValueData, 0)          :: TFloat    AS SiteDiscount
+                                FROM Object AS Object_GlobalConst
+                                     INNER JOIN ObjectBoolean AS ObjectBoolean_SiteDiscount
+                                                              ON ObjectBoolean_SiteDiscount.ObjectId = Object_GlobalConst.Id
+                                                             AND ObjectBoolean_SiteDiscount.DescId = zc_ObjectBoolean_GlobalConst_SiteDiscount()
+                                                             AND ObjectBoolean_SiteDiscount.ValueData = TRUE
+                                     INNER JOIN ObjectFloat AS ObjectFloat_SiteDiscount
+                                                           ON ObjectFloat_SiteDiscount.ObjectId = Object_GlobalConst.Id
+                                                          AND ObjectFloat_SiteDiscount.DescId = zc_ObjectFloat_GlobalConst_SiteDiscount()
+                                                          AND COALESCE (ObjectFloat_SiteDiscount.ValueData, 0) <> 0
+                                WHERE Object_GlobalConst.DescId = zc_Object_GlobalConst()
+                                  AND Object_GlobalConst.Id =zc_Enum_GlobalConst_CostCredit()
+                                )
+                                , 0)  :: TFloat;
 
     -- !!!ОПТИМИЗАЦИЯ!!!
     ANALYZE ObjectLink;
@@ -197,7 +213,9 @@ BEGIN
                   )
     -- Список цены + ТОП + % наценки
   , GoodsPrice AS
-       (SELECT _tmpMinPrice_RemainsList.GoodsId, COALESCE (ObjectBoolean_Top.ValueData, FALSE) AS isTOP, COALESCE (ObjectFloat_PercentMarkup.ValueData, 0) AS PercentMarkup
+       (SELECT _tmpMinPrice_RemainsList.GoodsId
+             , COALESCE (ObjectBoolean_Top.ValueData, FALSE) AS isTOP
+             , COALESCE (ObjectFloat_PercentMarkup.ValueData, 0) AS PercentMarkup
         FROM _tmpMinPrice_RemainsList
              INNER JOIN ObjectLink AS ObjectLink_Price_Goods
                                    -- ON ObjectLink_Price_Goods.ChildObjectId = _tmpMinPrice_RemainsList.GoodsId
@@ -367,7 +385,9 @@ BEGIN
 
         END :: TFloat AS SuperFinalPrice
 / */
-      , CASE -- если Дней отсрочки по договору = 0 + ТОП-позиция учитывает % из ... (что б уравновесить ... )
+     
+     /*  --было до 07,04,2019
+     , CASE -- если Дней отсрочки по договору = 0 + ТОП-позиция учитывает % из ... (что б уравновесить ... )
              WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
                   THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
              -- если Дней отсрочки по договору = 0 + НЕ ТОП-позиция = учитывает % из Установки для ценовых групп (что б уравновесить ... )
@@ -377,6 +397,9 @@ BEGIN
              ELSE FinalPrice
 
         END :: TFloat AS SuperFinalPrice
+        */
+        -- с 07,04,2019
+      , (FinalPrice - FinalPrice * ((ddd.Deferment) * vbCostCredit) / 100) :: TFloat AS SuperFinalPrice
 /* */
       , ddd.isTOP
       , ddd.PercentMarkup

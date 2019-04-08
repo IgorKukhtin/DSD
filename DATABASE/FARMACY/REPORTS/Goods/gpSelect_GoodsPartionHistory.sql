@@ -37,7 +37,8 @@ RETURNS TABLE (
     PartionDescName  TVarChar,  --вид документа партии
     PartionPrice     TFloat,    --цена партии
     InsertName       TVarChar,  --Пользователь(созд.) 
-    InsertDate       TDateTime  --Дата(созд.)
+    InsertDate       TDateTime, --Дата(созд.)
+    ExpirationDate   TDateTime
   )
 AS
 $BODY$
@@ -153,7 +154,7 @@ BEGIN
                          )
       , tmpRem_All AS (SELECT _tmpRem.ContainerId
                             , tmpPrice.MCSValue
-                            , CLO_Party.ObjectID   AS PartyId
+                            , CLO_Party.ObjectId   AS PartyId
                             , _tmpRem.RemainsStart
                             , _tmpRem.RemainsEnd
                        FROM _tmpRem
@@ -348,13 +349,16 @@ BEGIN
             COALESCE(Movement_Party.OperDate, NULL)  ::TDateTime AS PartionOperDate,   -- Дата док.партии
             COALESCE(MovementDesc.ItemName, NULL)    ::TVarChar  AS PartionDescName,
             COALESCE(MIFloat_Price.ValueData, NULL)  ::TFloat    AS PartionPrice,
-            Res.InsertName  ::TVarChar,         --Пользователь(созд.) 
-            Res.InsertDate  ::TDateTime         --Дата(созд.)
+            Res.InsertName  ::TVarChar,          --Пользователь(созд.) 
+            Res.InsertDate  ::TDateTime,         --Дата(созд.)
+            
+            CASE WHEN inIsPartion = True THEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) ELSE NULL END ::TDateTime  AS ExpirationDate
         FROM Res 
            LEFT JOIN Object AS Object_PartionMovementItem 
                             ON Object_PartionMovementItem.Id = Res.PartyId --CLI_MI.ObjectId
                             AND inIsPartion = True
-           LEFT JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
+           -- элемент прихода
+           LEFT JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode :: Integer
 
            LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
                                              ON MIFloat_Price.MovementItemId = MovementItem.ID
@@ -363,6 +367,17 @@ BEGIN
            LEFT JOIN Movement AS Movement_Party ON Movement_Party.Id = MovementItem.MovementId 
                                          --     AND inIsPartion = True
            LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_Party.DescId
+
+           -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+           LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                       ON MIFloat_MovementItem.MovementItemId = MovementItem.Id
+                                      AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+           -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+           LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                      
+           LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                             ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MovementItem.Id)  --Object_PartionMovementItem.ObjectCode
+                                            AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
           
         ORDER BY Res.OrdNum;
 END;
@@ -372,6 +387,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 08.04.19         * add ExpirationDate
  24.05.18         * оптимизация
  07.01.17         *
  01.07.16         * add inIsPartion

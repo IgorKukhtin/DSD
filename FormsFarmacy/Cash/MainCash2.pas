@@ -582,6 +582,9 @@ type
     // Уменьшение остатка в наличии по партиям
     procedure UpdateRemainsGoodsToExpirationDate;
 
+    // Установка фильтра по аналогу
+    procedure SetGoodsAnalogFilter(AGoodsAnalogId : Integer; AGoodsAnalogName : string);
+
   public
     procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String; var AOperDateSP : TDateTime);
     procedure SetPromoCode(APromoCodeId: Integer; APromoName, APromoCodeGUID: String;
@@ -1294,6 +1297,7 @@ begin
     try
       RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0) and MinExpirationDate <= ' +
         QuotedStr(FormatDateTime(FormatSettings.ShortDateFormat, IncMonth(Date, I)));
+      RemainsCDS.Filtered := True;
       edlExpirationDateFilter.Text := FormatDateTime(FormatSettings.ShortDateFormat, IncMonth(Date, I));
       pnlExpirationDateFilter.Visible := True;
     except
@@ -1338,23 +1342,16 @@ begin
   TimerMoneyInCash.Enabled:=True;
 end;
 
-procedure TMainCashForm2.actGoodsAnalogChooseExecute(Sender: TObject);
-  var nGoodsAnalogId : integer; GoodsAnalogName : string;
+// Установка фильтра по аналогу
+procedure TMainCashForm2.SetGoodsAnalogFilter(AGoodsAnalogId : Integer; AGoodsAnalogName : string);
 begin
-  if pnlAnalogFilter.Visible then
-  begin
-    ClearFilterAll;
-    Exit;
-  end else ClearFilterAll;
-
-  if not ChoiceGoodsAnalogExecute(nGoodsAnalogId, GoodsAnalogName) then Exit;
-
   RemainsCDS.DisableControls;
   RemainsCDS.Filtered := False;
   try
     try
-      RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0) and GoodsAnalogId = ' + IntToStr(nGoodsAnalogId);
-      edAnalogFilter.Text := GoodsAnalogName;
+      RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0) and GoodsAnalogId = ' + IntToStr(AGoodsAnalogId);
+      RemainsCDS.Filtered := True;
+      edAnalogFilter.Text := AGoodsAnalogName;
       pnlAnalogFilter.Visible := True;
     except
       RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0';
@@ -1365,6 +1362,19 @@ begin
     RemainsCDS.Filtered := True;
     RemainsCDS.EnableControls;
   end;
+end;
+
+procedure TMainCashForm2.actGoodsAnalogChooseExecute(Sender: TObject);
+  var nGoodsAnalogId : integer; cGoodsAnalogName : string;
+begin
+  if pnlAnalogFilter.Visible then
+  begin
+    ClearFilterAll;
+    Exit;
+  end else ClearFilterAll;
+
+  if ChoiceGoodsAnalogExecute(nGoodsAnalogId, cGoodsAnalogName) then
+    SetGoodsAnalogFilter(nGoodsAnalogId, cGoodsAnalogName);
 end;
 
 procedure TMainCashForm2.actGoodsAnalogExecute(Sender: TObject);
@@ -1380,24 +1390,7 @@ begin
   begin
     actGoodsAnalogChooseExecute(Sender);
     Exit;
-  end;
-
-  RemainsCDS.DisableControls;
-  RemainsCDS.Filtered := False;
-  try
-    try
-      RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0) and GoodsAnalogId = ' + RemainsCDS.FieldByName('GoodsAnalogId').AsString;
-      edAnalogFilter.Text := RemainsCDS.FieldByName('GoodsAnalogName').AsString;
-      pnlAnalogFilter.Visible := True;
-    except
-      RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0';
-      pnlAnalogFilter.Visible := False;
-      edAnalogFilter.Text := '';
-    end;
-  finally
-    RemainsCDS.Filtered := True;
-    RemainsCDS.EnableControls;
-  end;
+  end else SetGoodsAnalogFilter(RemainsCDS.FieldByName('GoodsAnalogId').AsInteger, RemainsCDS.FieldByName('GoodsAnalogName').AsString);
 end;
 
 procedure TMainCashForm2.TimerMoneyInCashTimer(Sender: TObject);
@@ -2102,7 +2095,9 @@ begin
  // if RemainsCDS.Active and AlternativeCDS.Active then
 
 //a1  код из события RemainsCDSAfterScroll для ускорения работы приложения
- if RemainsCDS.FieldByName('AlternativeGroupId').AsInteger = 0 then
+ if RemainsCDS.IsEmpty then
+    AlternativeCDS.Filter := 'Remains > 0 AND MainGoodsId= 0'
+ else if RemainsCDS.FieldByName('AlternativeGroupId').AsInteger = 0 then
     AlternativeCDS.Filter := 'Remains > 0 AND MainGoodsId='+RemainsCDS.FieldByName('Id').AsString
   else
     AlternativeCDS.Filter := '(Remains > 0 AND MainGoodsId='+RemainsCDS.FieldByName('Id').AsString +

@@ -109,14 +109,14 @@ BEGIN
                 FROM (SELECT tmp1.MemberId
                             -- кол-во календарных дней без праздничных
                            , (SELECT COUNT (*) - SUM (CASE WHEN gpSelect.isHoliday = TRUE THEN 1 ELSE 0 END)
-                              FROM gpSelect_Object_Calendar (inStartDate := tmp1.DateIn_Calc, inEndDate := tmp2.DateOut_Calc - INTERVAL '1 DAY', inSession := inSession) AS gpSelect) :: TFloat AS Day_calendar
+                              FROM gpSelect_Object_Calendar (inStartDate := tmp1.DateIn_Calc, inEndDate := tmp2.DateOut_Calc , inSession := inSession) AS gpSelect) :: TFloat AS Day_calendar
 
-                           , DATE_PART('YEAR', AGE (tmp2.DateOut_Calc, tmp1.DateIn_Calc)) * 12 
-                                                + DATE_PART('MONTH', AGE (tmp2.DateOut_Calc, tmp1.DateIn_Calc))  AS Month_work 
+                           , DATE_PART('YEAR', AGE (tmp2.DateOut_Calc + interval '1 day', tmp1.DateIn_Calc)) * 12 
+                                                + DATE_PART('MONTH', AGE (tmp2.DateOut_Calc+ interval '1 day', tmp1.DateIn_Calc))  AS Month_work 
                       FROM tmp1
                            JOIN tmp2 ON tmp1.ord = tmp2.ord
                                     AND tmp2.MemberId = tmp1.MemberId
-                      WHERE DATE_PART('YEAR', AGE (tmp2.DateOut_Calc, tmp1.DateIn_Calc)) * 12 + DATE_PART('MONTH', AGE (tmp2.DateOut_Calc, tmp1.DateIn_Calc)) >= 6
+                      WHERE DATE_PART('YEAR', AGE (tmp2.DateOut_Calc + interval '1 day', tmp1.DateIn_Calc)) * 12 + DATE_PART('MONTH', AGE (tmp2.DateOut_Calc + interval '1 day', tmp1.DateIn_Calc)) >= 6
                       ) AS tmp
                 GROUP BY tmp.MemberId
                 )

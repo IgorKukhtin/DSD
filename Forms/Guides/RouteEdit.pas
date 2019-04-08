@@ -18,7 +18,8 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdAddOn, cxPropertiesStore,
   dsdDB, dsdAction, Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons,
-  cxLabel, cxTextEdit, dsdGuides, cxMaskEdit, cxButtonEdit;
+  cxLabel, cxTextEdit, dsdGuides, cxMaskEdit, cxButtonEdit, Vcl.ComCtrls,
+  dxCore, cxDateUtils, cxDropDownEdit, cxCalendar;
 
 type
   TRouteEditForm = class(TParentForm)
@@ -62,6 +63,10 @@ type
     edRateSummaAdd: TcxCurrencyEdit;
     cxLabel10: TcxLabel;
     edRateSummaExp: TcxCurrencyEdit;
+    cxLabel11: TcxLabel;
+    edStartRunPlan: TcxDateEdit;
+    edEndRunPlan: TcxDateEdit;
+    cxLabel12: TcxLabel;
 
   private
     { Private declarations }

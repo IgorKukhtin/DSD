@@ -26,6 +26,12 @@ BEGIN
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SendPartionDate());
     vbUserId := inSession;
 
+    -- переопределяем
+    IF COALESCE (inAmount,0) > COALESCE (inAmountRemains,0)
+    THEN
+        inAmount = inAmountRemains;
+    END IF;
+
     --
     vbUnitId := (SELECT MovementLinkObject_Unit.ObjectId
                  FROM MovementLinkObject AS MovementLinkObject_Unit
@@ -53,9 +59,10 @@ BEGIN
     -- и сразу формируем строки чайлд
     --по товару выбираем партии
     -- остатки по подразделению
-    CREATE TEMP TABLE tmpRemains (ContainerId Integer, GoodsId Integer, Amount TFloat, ExpirationDate TDateTime) ON COMMIT DROP;
-          INSERT INTO tmpRemains (ContainerId, GoodsId, Amount, ExpirationDate)
+    CREATE TEMP TABLE tmpRemains (ContainerId Integer, MovementId_Income Integer, GoodsId Integer, Amount TFloat, ExpirationDate TDateTime) ON COMMIT DROP;
+          INSERT INTO tmpRemains (ContainerId, MovementId_Income, GoodsId, Amount, ExpirationDate)
            SELECT tmp.ContainerId
+                , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) AS MovementId_Income
                 , tmp.GoodsId
                 , SUM (tmp.Amount) AS Amount                                                                    -- остаток
                 , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) ::TDateTime AS ExpirationDate        -- Срок годности
@@ -90,19 +97,24 @@ BEGIN
            --WHERE COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180
            GROUP BY tmp.ContainerId
                   , tmp.GoodsId
-                  , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd());
+                  , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())
+                  , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId);
 
-    CREATE TEMP TABLE tmpChild (Id Integer,  Amount TFloat, ContainerId Integer, Expired TFloat, ExpirationDate TDateTime) ON COMMIT DROP;
-          INSERT INTO tmpChild (Id, Amount, ContainerId, Expired, ExpirationDate)
+    CREATE TEMP TABLE tmpChild (Id Integer, ContainerId Integer, MovementId_Income Integer, Amount TFloat, Expired TFloat, ExpirationDate TDateTime) ON COMMIT DROP;
+          INSERT INTO tmpChild (Id, ContainerId, MovementId_Income, Amount, Expired, ExpirationDate)
     WITH
       MI_Child AS (SELECT MovementItem.Id                    AS Id
                         , MovementItem.ParentId              AS ParentId
                         , MovementItem.ObjectId              AS GoodsId
                         , MIFloat_ContainerId.ValueData      AS ContainerId
+                        
                    FROM MovementItem
                         LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                                     ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
                                                    AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+                        LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                    ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                   AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
                    WHERE MovementItem.MovementId = inMovementId
                      AND MovementItem.ParentId = ioId
                      AND MovementItem.DescId = zc_MI_Child() 
@@ -116,7 +128,7 @@ BEGIN
                       , tmpRemains.ContainerId
                       --, tmpRemains.MovementItemId_partion
                       , SUM (tmpRemains.Amount) OVER (PARTITION BY tmpRemains.GoodsId ORDER BY tmpRemains.ExpirationDate, tmpRemains.ContainerId) AS RemainsAmountSUM
-                      , ROW_NUMBER() OVER (/*PARTITION BY ExpirationDate */ORDER BY tmpRemains.ExpirationDate DESC, tmpRemains.ContainerId DESC) AS DOrd
+                      , ROW_NUMBER() OVER (ORDER BY tmpRemains.ExpirationDate DESC, tmpRemains.ContainerId DESC) AS DOrd
                  FROM tmpRemains
                 )
     -- расчет
@@ -129,8 +141,9 @@ BEGIN
                  WHERE DD.AmountMaster - (DD.RemainsAmountSUM - DD.RemainsAmount) > 0
                 )
      SELECT COALESCE (MI_Child.Id,0)          AS Id
+          , tmpCalc.ContainerId
+          , tmpRemains.MovementId_Income
           , tmpCalc.Amount_Calc               AS Amount
-          , tmpCalc.ContainerId   ::Integer
           , CASE WHEN tmpCalc.ExpirationDate < vbOperDate THEN 0
                  WHEN tmpCalc.ExpirationDate <= vbDate30 THEN 1
                  WHEN tmpCalc.ExpirationDate <= vbDate180 THEN 2
@@ -167,6 +180,7 @@ BEGIN
                                                    , inExpirationDate:= tmpChild.ExpirationDate
                                                    , inAmount        := tmpChild.Amount        :: TFloat
                                                    , inContainerId   := tmpChild.ContainerId   :: TFloat
+                                                   , inMovementId_Income  := COALESCE (tmpChild.MovementId_Income,0) :: TFloat
                                                    , inExpired       := tmpChild.Expired       :: TFloat
                                                    , inUserId        := vbUserId)
      FROM tmpChild

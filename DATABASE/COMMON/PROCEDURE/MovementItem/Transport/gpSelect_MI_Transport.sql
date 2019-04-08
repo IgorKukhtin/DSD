@@ -20,6 +20,15 @@ BEGIN
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_MI_Transport());
 
     OPEN Cursor1 FOR 
+      WITH
+      tmpMI AS (SELECT MovementItem.*
+                     , ROW_NUMBER() OVER (ORDER BY MovementItem.isErased ASC , MovementItem.Id ASC) AS Ord
+                FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                     JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                      AND MovementItem.DescId     = zc_MI_Master()
+                                      AND MovementItem.isErased   = tmpIsErased.isErased
+                )
+
         SELECT 
               MovementItem.Id
             , MovementItem.ObjectId    AS RouteId
@@ -53,14 +62,14 @@ BEGIN
             , Object_RouteKindFreight.Id         AS RouteKindId_Freight
             , Object_RouteKindFreight.ValueData  AS RouteKindName_Freight
  
+            , CASE WHEN COALESCE(ObjectDate_StartRunPlan.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_StartRunPlan.ValueData ELSE Null END ::TDateTime  AS StartRunPlan
+            , CASE WHEN COALESCE(ObjectDate_EndRunPlan.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_EndRunPlan.ValueData ELSE Null END ::TDateTime  AS EndRunPlan
+        
             , MIString_Comment.ValueData   AS Comment
             
             , MovementItem.isErased     AS isErased
             
-        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-             JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                              AND MovementItem.DescId     = zc_MI_Master()
-                              AND MovementItem.isErased   = tmpIsErased.isErased
+        FROM tmpMI AS MovementItem
              LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementItem.ObjectId
 
              LEFT JOIN MovementItemFloat AS MIFloat_RateSumma
@@ -134,6 +143,14 @@ BEGIN
                                              AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
 
+             LEFT JOIN ObjectDate AS ObjectDate_StartRunPlan
+                                  ON ObjectDate_StartRunPlan.ObjectId = Object_Route.Id
+                                 AND ObjectDate_StartRunPlan.DescId = zc_ObjectDate_Route_StartRunPlan()
+                                 AND MovementItem.Ord = 1
+             LEFT JOIN ObjectDate AS ObjectDate_EndRunPlan
+                                  ON ObjectDate_EndRunPlan.ObjectId = Object_Route.Id
+                                 AND ObjectDate_EndRunPlan.DescId = zc_ObjectDate_Route_EndRunPlan()
+                                 AND MovementItem.Ord = 1
       ;
     
     RETURN NEXT Cursor1;

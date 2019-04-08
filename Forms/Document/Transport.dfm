@@ -489,6 +489,30 @@
             HeaderAlignmentVert = vaCenter
             Width = 97
           end
+          object StartRunPlan: TcxGridDBColumn
+            Caption = #1042#1088#1077#1084#1103' '#1074#1099#1077#1079#1076#1072' '#1087#1083#1072#1085
+            DataBinding.FieldName = 'StartRunPlan'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'HH:MM'
+            Properties.Kind = ckDateTime
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1088#1077#1084#1103' '#1074#1099#1077#1079#1076#1072' '#1087#1083#1072#1085
+            Options.Editing = False
+            Width = 90
+          end
+          object EndRunPlan: TcxGridDBColumn
+            Caption = #1042#1088#1077#1084#1103' '#1074#1086#1079#1074#1088'. '#1087#1083#1072#1085
+            DataBinding.FieldName = 'EndRunPlan'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'HH:MM'
+            Properties.Kind = ckDateTime
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1088#1077#1084#1103' '#1074#1086#1079#1074#1088#1072#1097#1077#1085#1080#1103' '#1087#1083#1072#1085
+            Options.Editing = False
+            Width = 90
+          end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
@@ -1019,6 +1043,9 @@
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1047#1072#1087#1088#1072#1074#1082#1072
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
@@ -1333,6 +1360,9 @@
     object cxTabSheetReport: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridReport: TcxGrid
         Left = 0
         Top = 0

@@ -35,13 +35,20 @@ BEGIN
     IF inShowAll
     THEN    
         -- остатки по подразделению
-    CREATE TEMP TABLE tmpRemains (ContainerId Integer, GoodsId Integer, Amount TFloat, AmountRemains TFloat, ExpirationDate TDateTime) ON COMMIT DROP;
-          INSERT INTO tmpRemains (ContainerId, GoodsId, Amount, AmountRemains, ExpirationDate)
+    CREATE TEMP TABLE tmpRemains (ContainerId Integer, MovementId_Income Integer, GoodsId Integer, Amount TFloat, AmountRemains TFloat, Amount_0 TFloat, Amount_1 TFloat, Amount_2 TFloat, ExpirationDate TDateTime) ON COMMIT DROP;
+          INSERT INTO tmpRemains (ContainerId, MovementId_Income, GoodsId, Amount, AmountRemains, Amount_0, Amount_1, Amount_2, ExpirationDate)
            SELECT tmp.ContainerId
+                , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) AS MovementId_Income
                 , tmp.GoodsId
                 , SUM (CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180 THEN  tmp.Amount ELSE 0 END) AS Amount
                 , SUM (tmp.Amount) AS AmountRemains
+
+                , SUM (CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbOperDate THEN tmp.Amount ELSE 0 END) AS Amount_0   -- просрочено
+                , SUM (CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate30 AND COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) > vbOperDate THEN tmp.Amount ELSE 0 END) AS Amount_1   -- ћеньше 1 мес€ца
+                , SUM (CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180 AND COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) > vbDate30 THEN tmp.Amount ELSE 0 END) AS Amount_2   -- ћеньше 6 мес€ца
+
                 , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())  AS ExpirationDate
+                
            FROM (SELECT Container.Id  AS ContainerId
                       , Container.ObjectId            AS GoodsId
                       , SUM(Container.Amount)::TFloat AS Amount
@@ -74,6 +81,7 @@ BEGIN
            GROUP BY tmp.ContainerId
                   , tmp.GoodsId
                   , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())
+                  , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
            ;
            
        -- –езультат другой
@@ -113,7 +121,21 @@ BEGIN
                          WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit() 
                            AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                          )
-    
+
+                 , MI_Child AS (SELECT MovementItem.ParentId
+                                     , SUM (CASE WHEN COALESCE (MIFloat_Expired.ValueData,0) = 0 THEN MovementItem.Amount ELSE 0 END) AS Amount_0   -- просрочено
+                                     , SUM (CASE WHEN COALESCE (MIFloat_Expired.ValueData,0) = 1 THEN MovementItem.Amount ELSE 0 END) AS Amount_1   -- ћеньше 1 мес€ца
+                                     , SUM (CASE WHEN COALESCE (MIFloat_Expired.ValueData,0) = 2 THEN MovementItem.Amount ELSE 0 END) AS Amount_2   -- ћеньше 1 мес€ца
+                                FROM  MovementItem
+                                    LEFT JOIN MovementItemFloat AS MIFloat_Expired
+                                                                ON MIFloat_Expired.MovementItemId = MovementItem.Id
+                                                               AND MIFloat_Expired.DescId = zc_MIFloat_Expired()
+                                WHERE MovementItem.MovementId = inMovementId
+                                  AND MovementItem.DescId = zc_MI_Child() 
+                                  AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
+                                GROUP BY MovementItem.ParentId
+                                 )
+
     SELECT COALESCE(MI_Master.Id,0)                     AS Id
          -- , COALESCE (MI_Master.GoodsId, tmpRemains.GoodsId) AS GoodsId
           , Object_Goods.Id            AS GoodsId
@@ -121,12 +143,20 @@ BEGIN
           , Object_Goods.ValueData     AS GoodsName
           , COALESCE (MI_Master.Amount, tmpRemains.Amount)                          AS Amount
           , COALESCE (MI_Master.AmountRemains, tmpRemains.AmountRemains) ::TFloat   AS AmountRemains
+          , tmpRemains.Amount_0
+          , tmpRemains.Amount_1
+          , tmpRemains.Amount_2
+          , tmpRemains.Amount_all
           , COALESCE (MI_Master.Price, tmpPrice.Price)    AS Price
           , COALESCE (MI_Master.PriceExp, tmpPrice.Price) AS PriceExp
           --, COALESCE(MI_Master.IsErased, FALSE)          AS isErased
     FROM (SELECT tmpRemains.GoodsId
                , SUM (tmpRemains.AmountRemains) AS AmountRemains
                , SUM (tmpRemains.Amount)        AS Amount
+               , SUM (tmpRemains.Amount_0)      AS Amount_0
+               , SUM (tmpRemains.Amount_1)      AS Amount_1
+               , SUM (tmpRemains.Amount_2)      AS Amount_2
+               , SUM (tmpRemains.AmountRemains - (tmpRemains.Amount_0 + tmpRemains.Amount_1 + tmpRemains.Amount_2) ) AS Amount_all
           FROM tmpRemains 
           GROUP BY tmpRemains.GoodsId
           ) AS tmpRemains 
@@ -150,6 +180,7 @@ BEGIN
                              , MovementItem.ParentId         AS ParentId
                              , MovementItem.ObjectId         AS GoodsId
                              , MIFloat_ContainerId.ValueData AS ContainerId
+                             , MovementItem.isErased
                         FROM MovementItem
                              LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                                          ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
@@ -158,6 +189,29 @@ BEGIN
                           AND MovementItem.DescId = zc_MI_Child() 
                           AND MovementItem.isErased = FALSE
                          )
+
+         , tmpIncome AS (SELECT Movement.Id
+                              , MovementDate_Branch.ValueData AS BranchDate
+                              , Movement.Invnumber            AS Invnumber
+                              , Object_From.ValueData         AS FromName
+                              , Object_Contract.ValueData     AS ContractName
+                         FROM Movement
+                              LEFT JOIN MovementDate AS MovementDate_Branch
+                                                     ON MovementDate_Branch.MovementId = Movement.Id
+                                                    AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
+
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                           ON MovementLinkObject_From.MovementId = Movement.Id
+                                                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                              LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                           ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                          AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                              LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+                         WHERE Movement.Id IN (SELECT DISTINCT tmpRemains.MovementId_Income FROM tmpRemains)
+                         )
+
          --св€звываем чайлд с мастером
          SELECT COALESCE (MI_Child.Id,0)                        AS Id
               , COALESCE (MI_Master.Id, MI_Child.ParentId, 0)      AS ParentId
@@ -177,13 +231,21 @@ BEGIN
                      ELSE 999
                 END                                    ::TFloat AS Expired
               , tmpRemains.ExpirationDate
+
+              , tmpRemains.MovementId_Income  AS MovementId_Income
+              , tmpIncome.BranchDate          AS OperDate_Income
+              , tmpIncome.Invnumber           AS Invnumber_Income
+              , tmpIncome.FromName            AS FromName_Income
+              , tmpIncome.ContractName        AS ContractName_Income
+              , COALESCE (MI_Child.isErased, FALSE) AS isErased
          FROM (SELECT tmpRemains.*
                FROM tmpRemains 
                WHERE tmpRemains.ExpirationDate <= vbDate180
                ) AS tmpRemains
              FULL JOIN MI_Child ON MI_Child.GoodsId     = tmpRemains.GoodsId
                                AND MI_Child.ContainerId = tmpRemains.ContainerId
-             LEFT JOIN MI_Master ON MI_Master.GoodsId = COALESCE (MI_Child.GoodsId, tmpRemains.GoodsId);
+             LEFT JOIN MI_Master ON MI_Master.GoodsId = COALESCE (MI_Child.GoodsId, tmpRemains.GoodsId)
+             LEFT JOIN tmpIncome ON tmpIncome.Id = tmpRemains.MovementId_Income;
 
        RETURN NEXT Cursor2;
    
@@ -212,17 +274,35 @@ BEGIN
                                    AND MovementItem.DescId = zc_MI_Master() 
                                    AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
                                  )  
-                                         
+
+                 , MI_Child AS (SELECT MovementItem.ParentId
+                                     , SUM (CASE WHEN COALESCE (MIFloat_Expired.ValueData,0) = 0 THEN MovementItem.Amount ELSE 0 END) AS Amount_0   -- просрочено
+                                     , SUM (CASE WHEN COALESCE (MIFloat_Expired.ValueData,0) = 1 THEN MovementItem.Amount ELSE 0 END) AS Amount_1   -- ћеньше 1 мес€ца
+                                     , SUM (CASE WHEN COALESCE (MIFloat_Expired.ValueData,0) = 2 THEN MovementItem.Amount ELSE 0 END) AS Amount_2   -- ћеньше 1 мес€ца
+                                FROM  MovementItem
+                                    LEFT JOIN MovementItemFloat AS MIFloat_Expired
+                                                                ON MIFloat_Expired.MovementItemId = MovementItem.Id
+                                                               AND MIFloat_Expired.DescId = zc_MIFloat_Expired()
+                                WHERE MovementItem.MovementId = inMovementId
+                                  AND MovementItem.DescId = zc_MI_Child() 
+                                  AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
+                                GROUP BY MovementItem.ParentId
+                                 )
                SELECT MI_Master.Id               AS Id
                     , MI_Master.GoodsId          AS GoodsId
                     , Object_Goods.ObjectCode    AS GoodsCode
                     , Object_Goods.ValueData     AS GoodsName
                     , MI_Master.Amount           AS Amount
                     , MI_Master.AmountRemains    AS AmountRemains
+                    , MI_Child.Amount_0
+                    , MI_Child.Amount_1
+                    , MI_Child.Amount_2
+                    , (COALESCE (MI_Master.AmountRemains,0) - (COALESCE (MI_Child.Amount_0,0) + COALESCE (MI_Child.Amount_1,0) + COALESCE (MI_Child.Amount_2,0))) AS Amount_all 
                     , MI_Master.Price            AS Price
                     , MI_Master.PriceExp         AS PriceExp
                     , MI_Master.IsErased         AS isErased
                FROM MI_Master
+                   LEFT JOIN MI_Child ON MI_Child.ParentId = MI_Master.Id
                    LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_Master.GoodsId;
    
           RETURN NEXT Cursor1;
@@ -235,6 +315,7 @@ BEGIN
                                      , MovementItem.Amount                AS Amount
                                      , MIFloat_ContainerId.ValueData      AS ContainerId
                                      , MIFloat_Expired.ValueData          AS Expired
+                                     , MIFloat_MovementId.ValueData ::Integer AS MovementId_Income
                                      , MIDate_ExpirationDate.ValueData    AS ExpirationDate
                                      , MovementItem.isErased              AS isErased
                                 FROM  MovementItem
@@ -244,6 +325,10 @@ BEGIN
                                     LEFT JOIN MovementItemFloat AS MIFloat_Expired
                                                                 ON MIFloat_Expired.MovementItemId = MovementItem.Id
                                                                AND MIFloat_Expired.DescId = zc_MIFloat_Expired()
+                                    LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                                ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                               AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+
                                     LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
                                                                ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
                                                               AND MIDate_ExpirationDate.DescId = zc_MIDate_ExpirationDate()
@@ -251,6 +336,28 @@ BEGIN
                                 WHERE MovementItem.MovementId = inMovementId
                                   AND MovementItem.DescId = zc_MI_Child() 
                                   AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
+                                 )
+
+                 , tmpIncome AS (SELECT Movement.Id
+                                      , MovementDate_Branch.ValueData AS BranchDate
+                                      , Movement.Invnumber            AS Invnumber
+                                      , Object_From.ValueData         AS FromName
+                                      , Object_Contract.ValueData     AS ContractName
+                                 FROM Movement
+                                      LEFT JOIN MovementDate AS MovementDate_Branch
+                                                             ON MovementDate_Branch.MovementId = Movement.Id
+                                                            AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
+
+                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                   ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                      LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                                   ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                      LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+                                 WHERE Movement.Id IN (SELECT DISTINCT MI_Child.MovementId_Income FROM MI_Child)
                                  )
                                          
                SELECT
@@ -266,8 +373,17 @@ BEGIN
                         WHEN MI_Child.Expired = 2 THEN 'ћеньше 6 мес€цев'
                         ELSE ''
                    END :: TVarChar AS Expired_text
-                 , MI_Child.IsErased    AS isErased
+
+                 , MI_Child.MovementId_Income    AS MovementId_Income
+                 , tmpIncome.BranchDate          AS OperDate_Income
+                 , tmpIncome.Invnumber           AS Invnumber_Income
+                 , tmpIncome.FromName            AS FromName_Income
+                 , tmpIncome.ContractName        AS ContractName_Income
+
+                 , MI_Child.IsErased             AS isErased
+
                FROM MI_Child
+                    LEFT JOIN tmpIncome ON tmpIncome.Id = MI_Child.MovementId_Income
                ;  
    
           RETURN NEXT Cursor2;

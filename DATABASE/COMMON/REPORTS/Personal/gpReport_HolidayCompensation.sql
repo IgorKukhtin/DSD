@@ -130,8 +130,8 @@ end if;
                       AND Movement.StatusId = zc_Enum_Status_Complete()
                     )
   
-  , tmpPersonalService AS (SELECT ObjectLink_Personal_Member.ChildObjectId        AS MemberId
-                                , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0)) AS Amount
+  , tmpPersonalService AS (SELECT ObjectLink_Personal_Member.ChildObjectId          AS MemberId
+                                , SUM (COALESCE (MIFloat_SummService.ValueData, 0)) AS Amount
                            FROM tmpMovement AS Movement
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId = zc_MI_Master()
@@ -152,9 +152,13 @@ end if;
 
                                 LEFT JOIN tmpMemberPersonalServiceList ON tmpMemberPersonalServiceList.PersonalServiceListId = ObjectLink_Personal_PersonalServiceList.ChildObjectId
 
-                                LEFT JOIN MovementItemFloat AS MIFloat_SummToPay
+                                LEFT JOIN MovementItemFloat AS MIFloat_SummService
+                                                            ON MIFloat_SummService.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
+
+                                /*LEFT JOIN MovementItemFloat AS MIFloat_SummToPay
                                                             ON MIFloat_SummToPay.MovementItemId = MovementItem.Id
-                                                           AND MIFloat_SummToPay.DescId = zc_MIFloat_SummToPay()
+                                                           AND MIFloat_SummToPay.DescId = zc_MIFloat_SummToPay()*/
 
                            WHERE tmpMemberPersonalServiceList.PersonalServiceListId > 0
                            GROUP BY ObjectLink_Personal_Member.ChildObjectId

@@ -13,7 +13,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , RouteKindId Integer, RouteKindCode Integer, RouteKindName TVarChar
              , FreightId Integer, FreightCode Integer, FreightName TVarChar
-             , RouteGroupId Integer, RouteGroupCode Integer, RouteGroupName TVarChar             
+             , RouteGroupId Integer, RouteGroupCode Integer, RouteGroupName TVarChar
+             , StartRunPlan TDateTime, EndRunPlan TDateTime
              , isErased Boolean
              ) AS
 $BODY$BEGIN
@@ -55,7 +56,10 @@ $BODY$BEGIN
            , CAST (0 as Integer)   AS RouteGroupId 
            , CAST (0 as Integer)   AS RouteGroupCode
            , CAST ('' as TVarChar) AS RouteGroupName           
-            
+
+           , NULL   :: TDateTime   AS StartRunPlan
+           , NULL   :: TDateTime   AS EndRunPlan 
+
            , CAST (NULL AS Boolean) AS isErased
            ;
    ELSE
@@ -90,7 +94,10 @@ $BODY$BEGIN
            , Object_RouteGroup.Id         AS RouteGroupId 
            , Object_RouteGroup.ObjectCode AS RouteGroupCode
            , Object_RouteGroup.ValueData  AS RouteGroupName              
-           
+
+           , COALESCE (ObjectDate_StartRunPlan.ValueData, NULL)   :: TDateTime AS StartRunPlan
+           , COALESCE (ObjectDate_EndRunPlan.ValueData, NULL)     :: TDateTime AS EndRunPlan 
+
            , Object_Route.isErased   AS isErased
            
        FROM Object AS Object_Route
@@ -111,6 +118,14 @@ $BODY$BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_RateSummaExp
                                   ON ObjectFloat_RateSummaExp.ObjectId = Object_Route.Id
                                  AND ObjectFloat_RateSummaExp.DescId = zc_ObjectFloat_Route_RateSummaExp()
+
+            LEFT JOIN ObjectDate AS ObjectDate_StartRunPlan
+                                 ON ObjectDate_StartRunPlan.ObjectId = Object_Route.Id
+                                AND ObjectDate_StartRunPlan.DescId = zc_ObjectDate_Route_StartRunPlan()
+    
+            LEFT JOIN ObjectDate AS ObjectDate_EndRunPlan
+                                 ON ObjectDate_EndRunPlan.ObjectId = Object_Route.Id
+                                AND ObjectDate_EndRunPlan.DescId = zc_ObjectDate_Route_EndRunPlan()
 
             LEFT JOIN ObjectLink AS ObjectLink_Route_Unit ON ObjectLink_Route_Unit.ObjectId = Object_Route.Id
                                                          AND ObjectLink_Route_Unit.DescId = zc_ObjectLink_Route_Unit()

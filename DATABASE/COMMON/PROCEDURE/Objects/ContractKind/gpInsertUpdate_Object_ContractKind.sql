@@ -54,4 +54,4 @@ ALTER FUNCTION gpInsertUpdate_Object_ContractKind (Integer, Integer, TVarChar, T
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Route()
+-- SELECT * FROM ()
