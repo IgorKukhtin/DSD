@@ -427,6 +427,10 @@ BEGIN
                                        , 0 AS AmountForWeght 
                                        , 0 AS AmountReceiptForWeght
                                   FROM tmpMI_ContainerIn1 AS tmpMI_ContainerIn
+                                       INNER JOIN (SELECT DISTINCT tmpOut1.GoodsId_in
+                                                   FROM tmpOut1
+                                                   ) AS tmpGoodsIn ON tmpGoodsIn.GoodsId_in = tmpMI_ContainerIn.GoodsId
+
                                        LEFT JOIN tmpContainer_in1 AS tmpContainer_in ON tmpContainer_in.ContainerId = tmpMI_ContainerIn.ContainerId
                                        LEFT JOIN tmpMI_Master_Cuter1 AS tmpMI_Master_Cuter 
                                                                      ON tmpMI_Master_Cuter.MovementItemId = tmpMI_ContainerIn.MovementItemId
@@ -907,6 +911,10 @@ BEGIN
                                        , 0 AS AmountForWeght 
                                        , 0 AS AmountReceiptForWeght
                                   FROM tmpMI_ContainerIn2 AS tmpMI_ContainerIn
+                                       INNER JOIN (SELECT DISTINCT tmpOut2.GoodsId_in
+                                                   FROM tmpOut2
+                                                   ) AS tmpGoodsIn ON tmpGoodsIn.GoodsId_in = tmpMI_ContainerIn.GoodsId
+
                                        LEFT JOIN tmpContainer_in2 AS tmpContainer_in ON tmpContainer_in.ContainerId = tmpMI_ContainerIn.ContainerId
                                        LEFT JOIN tmpMI_Master_Cuter2 AS tmpMI_Master_Cuter 
                                                                      ON tmpMI_Master_Cuter.MovementItemId = tmpMI_ContainerIn.MovementItemId
@@ -1222,3 +1230,5 @@ $BODY$
 -- SELECT * FROM gpReport_ProductionUnion_Olap (inStartDate:= '01.06.2018', inEndDate:= '30.06.2018', inStartDate2:= '01.07.2018', inEndDate2:= '31.07.2018', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 8449, inToId:= 8458, inSession:= zfCalc_UserAdmin());
 -- SELECT * FROM gpReport_ProductionUnion_Olap (inStartDate:= '01.06.2018', inEndDate:= '30.06.2018', inStartDate2:= '01.07.2018', inEndDate2:= '31.07.2018', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 8447, inToId:= 8458, inSession:= zfCalc_UserAdmin());
 -- SELECT * FROM gpReport_ProductionUnion_Olap (inStartDate:= '01.06.2018', inEndDate:= '30.06.2018', inStartDate2:= '01.07.2018', inEndDate2:= '31.07.2018', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 8447, inToId:= 8447, inSession:= zfCalc_UserAdmin());
+
+--select * from gpReport_ProductionUnion_Olap(inStartDate := ('01.06.2018')::TDateTime , inEndDate := ('01.06.2018')::TDateTime , inStartDate2 := ('01.07.2018')::TDateTime , inEndDate2 := ('01.07.2018')::TDateTime , inIsMovement := 'False' , inisPartion := 'False' , inGoodsGroupId := 1995 , inGoodsId := 0 , inChildGoodsGroupId := 1945 , inChildGoodsId := 0 , inFromId := 8447 , inToId := 8447 ,  inSession := '5');

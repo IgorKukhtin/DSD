@@ -4,7 +4,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
   ClientWidth = 824
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 840
-  ExplicitHeight = 398
+  ExplicitHeight = 397
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -171,6 +171,14 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 44
+          end
+          object ExpirationDate: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'ExpirationDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object MCSValue: TcxGridDBColumn
             Caption = #1053#1058#1047
