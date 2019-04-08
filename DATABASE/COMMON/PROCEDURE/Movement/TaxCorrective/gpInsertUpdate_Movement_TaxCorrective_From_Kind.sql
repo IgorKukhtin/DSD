@@ -325,11 +325,18 @@ BEGIN
                                                              ON MIFloat_ChangePercent.MovementItemId = MI_Master.Id
                                                             AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
 
+                                 LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id       = MIFloat_MovementId.ValueData :: Integer
+                                                                    AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
+                                 LEFT JOIN MovementItem AS MI_Sale ON MI_Sale.MovementId = Movement_Sale.Id
+                                                                  AND MI_Sale.DescId     = zc_MI_Master()
+                                                                  AND MI_Sale.Id         = MIFloat_MovementItemId.ValueData :: Integer
+                                                                  AND MI_Sale.isErased   = FALSE
+
                                  LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
-                                                                ON MovementLinkMovement_Tax.MovementId     = MIFloat_MovementId.ValueData :: Integer
+                                                                ON MovementLinkMovement_Tax.MovementId     = MI_Sale.MovementId -- MIFloat_MovementId.ValueData :: Integer
                                                                AND MovementLinkMovement_Tax.DescId         = zc_MovementLinkMovement_Master()
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                  ON MILinkObject_GoodsKind.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                                                  ON MILinkObject_GoodsKind.MovementItemId = MI_Sale.Id         -- MIFloat_MovementItemId.ValueData :: Integer
                                                                  AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                             WHERE MI_Master.MovementId = inMovementId
                               AND MI_Master.DescId     = zc_MI_Master()
@@ -348,7 +355,7 @@ BEGIN
                                             )
              -- РЕЗУЛЬТАТ
              SELECT COALESCE (tmpMovement_Corrective.MovementId, 0) AS MovementId_Corrective
-                  , tmpMI.MovementId_Tax
+                  , COALESCE (tmpMI.MovementId_Tax, 0) AS MovementId_Tax
                   , tmpMI.GoodsId
                   , tmpMI.GoodsKindId
                   , tmpMI.Amount
@@ -356,8 +363,20 @@ BEGIN
                   , tmpMI.CountForPrice
              FROM tmpMI
                   LEFT JOIN tmpMovement_Corrective ON tmpMovement_Corrective.MovementId_Tax = tmpMI.MovementId_Tax
-             WHERE tmpMI.MovementId_Tax > 0
+             -- WHERE tmpMI.MovementId_Tax > 0
             ;
+          -- Проверка
+          IF EXISTS (SELECT 1 FROM _tmpResult WHERE COALESCE (_tmpResult.MovementId_Tax, 0) = 0)
+          THEN
+              RAISE EXCEPTION 'Ошибка. Для товара <%> <%>%кол-во = <%> цена = <%>%не определен № налоговой.'
+                            , lfGet_Object_ValueData    ((SELECT _tmpResult.GoodsId     FROM _tmpResult ORDER BY ABS (_tmpResult.Amount) DESC, _tmpResult.OperPrice, _tmpResult.GoodsId, _tmpResult.GoodsKindId LIMIT 1))
+                            , lfGet_Object_ValueData_sh ((SELECT _tmpResult.GoodsKindId FROM _tmpResult ORDER BY ABS (_tmpResult.Amount) DESC, _tmpResult.OperPrice, _tmpResult.GoodsId, _tmpResult.GoodsKindId LIMIT 1))
+                            , CHR (13)
+                            , lfGet_Object_ValueData_sh ((SELECT _tmpResult.Amount      FROM _tmpResult ORDER BY ABS (_tmpResult.Amount) DESC, _tmpResult.OperPrice, _tmpResult.GoodsId, _tmpResult.GoodsKindId LIMIT 1))
+                            , lfGet_Object_ValueData_sh ((SELECT _tmpResult.OperPrice   FROM _tmpResult ORDER BY ABS (_tmpResult.Amount) DESC, _tmpResult.OperPrice, _tmpResult.GoodsId, _tmpResult.GoodsKindId LIMIT 1))
+                            , CHR (13)
+                             ;
+          END IF;
 
      ELSE
      IF inIsTaxLink = FALSE OR vbMovementDescId = zc_Movement_PriceCorrective()

@@ -280,15 +280,16 @@ AS
            , CAST ('PrintMovement_Sale39118745' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('39118745','39118195','39117631', '39118572', '39143745'
-                                       , '39117799' -- Нордон
-                                       , '41805811' -- Гловер
-                                       , '40145541' -- Амиата
-                                       , '39775097' -- Легион-2015
-                                       , '41299013' -- Ф.К.С. ТОВ
-                                       , '41360805' -- ФРЕЯ 2017 ТОВ
-                                       , '41201250' -- Левайс
-                                       , '41200660' -- Релайз
+       AND OH_JuridicalDetails.OKPO IN ('39118745','39118195','39117631', '39118572', '39143745' -- ? + Фінєст + ? + ? + ?
+                                      , '39117799' -- Нордон
+                                      , '41805811' -- Гловер
+                                      , '40145541' -- Амиата
+                                      , '39775097' -- Легион-2015
+                                      , '41299013' -- Ф.К.С. ТОВ
+                                      , '41360805' -- ФРЕЯ 2017 ТОВ
+                                      , '41201250' -- Левайс
+                                      , '41200660' -- Релайз
+                                      , '42599711' -- Пангеон
                                        )  -- добвавили из др.группу ритейл
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION

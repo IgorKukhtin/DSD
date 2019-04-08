@@ -686,9 +686,19 @@ BEGIN
                                                                       -- AND _tmpMovement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
                           LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                       ON MIFloat_MovementId.MovementItemId = MovementItem_Child.Id
-                                                     AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
-                          LEFT JOIN _tmpMovement2 AS _tmpMovement_find ON _tmpMovement_find.MovementId = MIFloat_MovementId.ValueData :: Integer
-                          LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = MIFloat_MovementId.ValueData :: Integer
+                                                     AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                          LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
+                                                      ON MIFloat_MovementItemId.MovementItemId = MovementItem_Child.Id
+                                                     AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
+                          LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id       = MIFloat_MovementId.ValueData :: Integer
+                                                             AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
+                          LEFT JOIN MovementItem AS MI_Sale ON MI_Sale.MovementId = Movement_Sale.Id
+                                                           AND MI_Sale.DescId     = zc_MI_Master()
+                                                           AND MI_Sale.Id         = MIFloat_MovementItemId.ValueData :: Integer
+                                                           AND MI_Sale.isErased   = FALSE
+
+                          LEFT JOIN _tmpMovement2 AS _tmpMovement_find ON _tmpMovement_find.MovementId = MI_Sale.MovementId -- MIFloat_MovementId.ValueData :: Integer
+                          LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = MI_Sale.MovementId -- MIFloat_MovementId.ValueData :: Integer
                                                         AND MovementLinkMovement.DescId     = zc_MovementLinkMovement_Master()
                                                         AND _tmpMovement_find.MovementId IS NULL
                    
