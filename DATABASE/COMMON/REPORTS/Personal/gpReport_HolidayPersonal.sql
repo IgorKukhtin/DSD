@@ -72,7 +72,7 @@ BEGIN
                           )
     -- сотрудники дата приема , увольнения
   , tmpPersonal AS (SELECT Object_Personal_View.*
-                         , CASE WHEN Object_Personal_View.DateIn <= vbStartDate THEN vbStartDate ELSE Object_Personal_View.DateIn END AS DateIn_Calc      -- 
+                         , CASE WHEN Object_Personal_View.DateIn < vbStartDate THEN vbStartDate ELSE Object_Personal_View.DateIn END AS DateIn_Calc      -- 
                          , CASE WHEN Object_Personal_View.isDateOut = FALSE THEN vbEndDate ELSE Object_Personal_View.DateOut_user END AS DateOut_Calc  -- CURRENT_DATE  -- если дата увольнения путая ставим = дате форм. отчета, для расчета отр. месяцев на дату форм. отчета
                     FROM tmpMemberPersonal
                          LEFT JOIN Object_Personal_View ON Object_Personal_View.MemberId = tmpMemberPersonal.MemberId
