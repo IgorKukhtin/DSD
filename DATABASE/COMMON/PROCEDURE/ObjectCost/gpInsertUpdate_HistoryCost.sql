@@ -1362,6 +1362,7 @@ $BODY$
 -- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 428364 , 428364 ); -- Склад возвратов ф.Николаев (Херсон)
 -- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 409007 , 409007 ); -- Склад возвратов ф.Харьков
 -- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 428363 ,428363 ); -- Склад возвратов ф.Черкассы (Кировоград)
+-- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 3080696,3080696 ); -- Склад возвратов ф.Львов
 
 -- select 'zc_isHistoryCost', zc_isHistoryCost()union all select 'zc_isHistoryCost_byInfoMoneyDetail', zc_isHistoryCost_byInfoMoneyDetail() order by 1;
 
