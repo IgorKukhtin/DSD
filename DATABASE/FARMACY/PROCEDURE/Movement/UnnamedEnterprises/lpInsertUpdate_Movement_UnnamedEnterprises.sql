@@ -53,6 +53,43 @@ BEGIN
         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ClientsByBank(), ioId, inClientsByBankId);
     END IF;
     
+    IF vbIsInsert = TRUE AND COALESCE(inComment, '') = '' AND COALESCE (inClientsByBankId, 0) <> 0 AND
+      EXISTS( SELECT MovementString_Comment.ValueData
+              FROM Movement
+
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_ClientsByBank
+                                                 ON MovementLinkObject_ClientsByBank.MovementId = Movement.Id
+                                                AND MovementLinkObject_ClientsByBank.DescId = zc_MovementLinkObject_ClientsByBank()
+                                                AND MovementLinkObject_ClientsByBank.ObjectId = inClientsByBankId
+
+                   INNER JOIN MovementString AS MovementString_Comment
+                                            ON MovementString_Comment.MovementId = Movement.Id
+                                           AND MovementString_Comment.DescId = zc_MovementString_Comment()
+                                           AND COALESCE(MovementString_Comment.ValueData, '') <> ''
+
+              WHERE Movement.DescId = zc_Movement_UnnamedEnterprises()
+                AND Movement.StatusId = zc_Enum_Status_Complete())
+    THEN
+      SELECT MovementString_Comment.ValueData
+      INTO inComment
+      FROM Movement
+
+           INNER JOIN MovementLinkObject AS MovementLinkObject_ClientsByBank
+                                         ON MovementLinkObject_ClientsByBank.MovementId = Movement.Id
+                                        AND MovementLinkObject_ClientsByBank.DescId = zc_MovementLinkObject_ClientsByBank()
+                                        AND MovementLinkObject_ClientsByBank.ObjectId = inClientsByBankId
+
+           INNER JOIN MovementString AS MovementString_Comment
+                                    ON MovementString_Comment.MovementId = Movement.Id
+                                   AND MovementString_Comment.DescId = zc_MovementString_Comment()
+                                   AND COALESCE(MovementString_Comment.ValueData, '') <> ''
+
+      WHERE Movement.DescId = zc_Movement_UnnamedEnterprises()
+        AND Movement.StatusId = zc_Enum_Status_Complete()   
+      ORDER BY Movement.OperDate DESC
+      LIMIT 1;
+    END IF;
+    
     -- ÒÓı‡ÌËÎË <œËÏÂ˜‡ÌËÂ>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
@@ -110,6 +147,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ÿ‡·ÎËÈ Œ.¬.
+ 09.04.19         *
  30.09.18         *
 */
 --

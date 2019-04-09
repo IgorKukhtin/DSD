@@ -33,6 +33,11 @@ BEGIN
     FROM MovementLinkObject AS MovementLinkObject_Unit
     WHERE MovementLinkObject_Unit.MovementId = inMovementId
       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit();
+      
+    IF COALESCE (inMovementId, 0) = 0 OR COALESCE (vbUnitId, 0) = 0
+    THEN
+      Return;
+    END IF;
 
     -- Результат
     IF inShowAll THEN
@@ -392,6 +397,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.
+ 09.04.19         *
  23.02.19         *
  30.09.18         *
 */

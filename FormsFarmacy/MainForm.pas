@@ -502,6 +502,8 @@ type
     actPUSH1: TMenuItem;
     actSendPartionDate: TdsdOpenForm;
     miSendPartionDate: TMenuItem;
+    actGoodsInventory: TdsdOpenForm;
+    N182: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

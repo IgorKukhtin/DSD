@@ -2301,6 +2301,14 @@
 				<Form>CheckDelayVIPForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsInventory.pas">
+				<Form>Report_GoodsInventoryForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsInventoryDialog.pas">
+				<Form>Report_GoodsInventoryDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

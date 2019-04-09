@@ -4,28 +4,26 @@ inherited InventoryForm: TInventoryForm
   ClientWidth = 878
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 894
-  ExplicitHeight = 681
+  ExplicitHeight = 682
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 77
     Width = 878
     Height = 566
-    Properties.ActivePage = cxTabSheetChild
     ExplicitTop = 77
     ExplicitWidth = 878
     ExplicitHeight = 566
     ClientRectBottom = 566
     ClientRectRight = 878
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 0
-      ExplicitWidth = 898
-      ExplicitHeight = 557
+      ExplicitWidth = 878
+      ExplicitHeight = 542
       inherited cxGrid: TcxGrid
         Width = 878
         Height = 542
-        ExplicitWidth = 898
-        ExplicitHeight = 557
+        ExplicitWidth = 878
+        ExplicitHeight = 542
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -820,6 +818,7 @@ inherited InventoryForm: TInventoryForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetChild
       MoveParams = <>
+      Enabled = False
       StoredProc = spSelect_MI_Child
       StoredProcList = <
         item
@@ -835,7 +834,6 @@ inherited InventoryForm: TInventoryForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spGet
       StoredProcList = <
         item
@@ -861,7 +859,6 @@ inherited InventoryForm: TInventoryForm
     end
     inherited actRefresh: TdsdDataSetRefresh
       TabSheet = tsMain
-      Enabled = False
       StoredProcList = <
         item
           StoredProc = spGet
@@ -875,9 +872,6 @@ inherited InventoryForm: TInventoryForm
         item
           StoredProc = spSelect_MI_Child
         end>
-    end
-    inherited actGridToExcel: TdsdGridToExcel
-      Enabled = False
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
