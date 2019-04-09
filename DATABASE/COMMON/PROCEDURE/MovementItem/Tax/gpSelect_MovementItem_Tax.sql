@@ -17,7 +17,8 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
               )
 AS
 $BODY$
-  DECLARE vbOperDate TDateTime;
+  DECLARE vbOperDate     TDateTime;
+  DECLARE vbOperDate_rus TDateTime;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -28,9 +29,20 @@ BEGIN
 
      -- определили
      vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+     -- определили
+     vbOperDate_rus:= (SELECT CASE WHEN MovementString_InvNumberRegistered.ValueData <> '' THEN COALESCE (MovementDate_DateRegistered.ValueData, Movement.OperDate) ELSE CURRENT_DATE END
+                       FROM Movement
+                            LEFT JOIN MovementString AS MovementString_InvNumberRegistered
+                                                     ON MovementString_InvNumberRegistered.MovementId = Movement.Id
+                                                    AND MovementString_InvNumberRegistered.DescId     = zc_MovementString_InvNumberRegistered()
+                            LEFT JOIN MovementDate AS MovementDate_DateRegistered
+                                                   ON MovementDate_DateRegistered.MovementId = Movement.Id
+                                                  AND MovementDate_DateRegistered.DescId     = zc_MovementDate_DateRegistered()
+                       WHERE Movement.Id = inMovementId
+                      );
 
 
-     IF inShowAll THEN
+     IF inShowAll = TRUE THEN
 
      RETURN QUERY
        SELECT
@@ -98,7 +110,13 @@ BEGIN
              MovementItem.Id                        AS Id
            , CASE WHEN vbOperDate < '01.03.2016' AND 1=1
                        THEN ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
-                  ELSE ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData, MovementItem.Id)
+                  ELSE ROW_NUMBER() OVER (ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
+                                                             THEN ObjectString_Goods_RUS.ValueData
+                                                        ELSE Object_Goods.ValueData
+                                                   END
+                                                 , Object_GoodsKind.ValueData
+                                                 , MovementItem.Id
+                                         )
              END :: Integer AS LineNum
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
@@ -125,6 +143,9 @@ BEGIN
                              AND MovementItem.isErased   = tmpIsErased.isErased
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+            LEFT JOIN ObjectString AS ObjectString_Goods_RUS
+                                   ON ObjectString_Goods_RUS.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_RUS.DescId = zc_ObjectString_Goods_RUS()
 
             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
@@ -161,7 +182,13 @@ BEGIN
                        THEN MIFloat_NPP.ValueData
                   WHEN vbOperDate < '01.03.2016' AND 1=1
                        THEN -1 * ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
-                  ELSE -1 * ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData, MovementItem.Id)
+                  ELSE -1 * ROW_NUMBER() OVER (ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
+                                                             THEN ObjectString_Goods_RUS.ValueData
+                                                        ELSE Object_Goods.ValueData
+                                                   END
+                                                 , Object_GoodsKind.ValueData
+                                                 , MovementItem.Id
+                                              )
              END :: Integer AS LineNum
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
@@ -187,6 +214,9 @@ BEGIN
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
+            LEFT JOIN ObjectString AS ObjectString_Goods_RUS
+                                   ON ObjectString_Goods_RUS.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_RUS.DescId = zc_ObjectString_Goods_RUS()
             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()

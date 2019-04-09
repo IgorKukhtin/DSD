@@ -84,7 +84,7 @@ BEGIN
         FROM ObjectLink AS ObjectLink_User_Member
              INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
                                    ON ObjectLink_PersonalServiceList_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
-                                  AND ObjectLink_PersonalServiceList_Member.DescId        = zc_ObjectLink_MemberPersonalServiceList_Member()
+                                  AND ObjectLink_PersonalServiceList_Member.DescId        = zc_ObjectLink_PersonalServiceList_Member()
         WHERE ObjectLink_User_Member.ObjectId = vbUserId
           AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
        ;

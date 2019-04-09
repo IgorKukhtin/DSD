@@ -230,6 +230,19 @@ BEGIN
                     -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
                     LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1*/
               ;
+        ELSE
+            IF COALESCE (inUnitGroupId, 0) = 0 AND COALESCE (inLocationId, 0) = 0
+           AND (inGoodsGroupId <> 0 OR inGoodsId <> 0)
+            THEN
+                INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
+                 SELECT Object.Id                     AS LocationId
+                      , zc_ContainerLinkObject_Unit() AS DescId
+                      , tmpDesc.ContainerDescId
+                 FROM Object
+                      -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
+                      LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
+                 WHERE Object.DescId = zc_Object_Unit();
+            END IF;
         END IF;
     END IF;
 

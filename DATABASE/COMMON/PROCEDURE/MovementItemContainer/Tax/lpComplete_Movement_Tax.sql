@@ -9,12 +9,24 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_Tax(
  RETURNS VOID
 AS
 $BODY$
-  DECLARE vbOperDate TDateTime;
-  DECLARE vbObjectId Integer;
-  DECLARE vbPrice TFloat;
+  DECLARE vbOperDate     TDateTime;
+  DECLARE vbOperDate_rus TDateTime;
+  DECLARE vbObjectId     Integer;
+  DECLARE vbPrice        TFloat;
 BEGIN
      -- определили
      vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+     -- определили
+     vbOperDate_rus:= (SELECT CASE WHEN MovementString_InvNumberRegistered.ValueData <> '' THEN COALESCE (MovementDate_DateRegistered.ValueData, Movement.OperDate) ELSE CURRENT_DATE END
+                       FROM Movement
+                            LEFT JOIN MovementString AS MovementString_InvNumberRegistered
+                                                     ON MovementString_InvNumberRegistered.MovementId = Movement.Id
+                                                    AND MovementString_InvNumberRegistered.DescId     = zc_MovementString_InvNumberRegistered()
+                            LEFT JOIN MovementDate AS MovementDate_DateRegistered
+                                                   ON MovementDate_DateRegistered.MovementId = Movement.Id
+                                                  AND MovementDate_DateRegistered.DescId     = zc_MovementDate_DateRegistered()
+                       WHERE Movement.Id = inMovementId
+                      );
 
      -- получили цену для DocumentTaxKind
      vbPrice := (SELECT ObjectFloat_Price.ValueData
@@ -97,10 +109,19 @@ BEGIN
      FROM (SELECT MovementItem.Id
                 , CASE WHEN vbOperDate < '01.03.2016' AND 1=1
                             THEN ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
-                       ELSE ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData, MovementItem.Id)
+                       ELSE ROW_NUMBER() OVER (ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
+                                                                  THEN ObjectString_Goods_RUS.ValueData
+                                                             ELSE Object_Goods.ValueData
+                                                        END
+                                                      , Object_GoodsKind.ValueData
+                                                      , MovementItem.Id
+                                              )
                   END AS LineNum
            FROM MovementItem
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+                LEFT JOIN ObjectString AS ObjectString_Goods_RUS
+                                       ON ObjectString_Goods_RUS.ObjectId = Object_Goods.Id
+                                      AND ObjectString_Goods_RUS.DescId = zc_ObjectString_Goods_RUS()
                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
