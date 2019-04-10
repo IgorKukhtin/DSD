@@ -60,8 +60,9 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не заполнено значение <ФИО (сотрудник)> для Сумма начислено = <%>.', zfConvert_FloatToString (inSummService);
      END IF;
      -- проверка
-     IF COALESCE (inInfoMoneyId, 0) = 0
+     IF COALESCE (inInfoMoneyId, 0) = 0 -- AND inSummService <> 0
      THEN
+         IF inSummService = 0 THEN RETURN; END IF;
          RAISE EXCEPTION 'Ошибка.Не заполнено значение <УП статья> для Сумма начислено = <%>.', zfConvert_FloatToString (inSummService);
      END IF;
      -- проверка

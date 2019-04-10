@@ -111,8 +111,8 @@
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
 			<Debugger_RunParams>/skipcheckconnect</Debugger_RunParams>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.2.7.78;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-			<VerInfo_Build>78</VerInfo_Build>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.2.7.80;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Build>80</VerInfo_Build>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_MinorVer>2</VerInfo_MinorVer>
@@ -196,7 +196,6 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\LookAndFillSettings.pas">
 				<Form>LookAndFillSettingsForm</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\EDI\OrdrspXML.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\InvoiceXML.pas"/>
@@ -285,7 +284,11 @@
 						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
-					<Excluded_Packages/>
+					<Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
+					</Excluded_Packages>
 					<Source>
 						<Source Name="MainSource">Farmacy.dpr</Source>
 					</Source>

@@ -1,9 +1,11 @@
 -- Function: lfSelect_Object_Member_findPersonal (TVarChar)
 
+DROP FUNCTION IF EXISTS lfSelect_Object_Member_findPersonal (Integer, TVarChar);
 DROP FUNCTION IF EXISTS lfSelect_Object_Member_findPersonal (TVarChar);
 
 CREATE OR REPLACE FUNCTION lfSelect_Object_Member_findPersonal(
-    IN inSession          TVarChar       -- сессия пользователя
+--  IN inMemberId         Integer   DEFAULT 0,
+    IN inSession          TVarChar  DEFAULT ''     -- сессия пользователя
 )
 RETURNS TABLE (MemberId Integer, PersonalId Integer
              , UnitId   Integer, PositionId Integer
@@ -64,6 +66,7 @@ BEGIN
                                                       AND ObjectBoolean_Main.DescId   = zc_ObjectBoolean_Personal_Main()
                           WHERE ObjectLink_Personal_Member.ChildObjectId > 0
                             AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                         -- AND (ObjectLink_Personal_Member.ChildObjectId = inMemberId OR inMemberId = 0)
                          )
      -- Результат
      SELECT tmpPersonal.MemberId
@@ -90,4 +93,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lfSelect_Object_Member_findPersonal(zfCalc_UserAdmin())
+-- SELECT * FROM lfSelect_Object_Member_findPersonal (zfCalc_UserAdmin())

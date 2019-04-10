@@ -502,9 +502,9 @@ BEGIN
                                , 0 AS Loss_Summ
 
                                  -- Кол-во: Долг
-                               , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() THEN -1 * MIConatiner.Amount ELSE 0 END) AS Debt_Amount
+                               , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() THEN 1 * MIConatiner.Amount ELSE 0 END) AS Debt_Amount
                                  -- Сумма: Долг
-                               , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() THEN -1 * MIConatiner.Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END ELSE 0 END) AS Debt_Summ
+                               , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() THEN 1 * MIConatiner.Amount * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END ELSE 0 END) AS Debt_Summ
 
                                  -- Кол-во: Только Продажа
                                , SUM (CASE WHEN MIConatiner.DescId = zc_MIContainer_Count() AND MIConatiner.Amount < 0 AND MIConatiner.MovementDescId IN (zc_Movement_Sale(), zc_Movement_GoodsAccount()) THEN -1 * MIConatiner.Amount ELSE 0 END) :: TFloat AS Sale_Amount

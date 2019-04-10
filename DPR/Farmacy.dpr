@@ -1,7 +1,8 @@
 program Farmacy;
 
 uses
-  MidasLib,Windows,
+  //MidasLib,
+  Windows,
   Vcl.Forms,
   Controls,
   SysUtils,
