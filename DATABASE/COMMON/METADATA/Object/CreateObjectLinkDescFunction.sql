@@ -253,6 +253,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPropertyValue_GoodsTypeKind_Ves() 
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_GoodsPropertyValue_GoodsTypeKind_Ves', 'Связь Значения свойств товаров для классификатора с Категория товара "Неноминальный"', zc_Object_GoodsPropertyValue(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyValue_GoodsTypeKind_Ves');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPropertyValue_Box() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyValue_Box'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_GoodsPropertyValue_Box', 'Связь Значения свойств товаров для классификатора с ящиком', zc_Object_GoodsPropertyValue(), zc_Object_Box() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyValue_Box');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ImportExportLink_ObjectMain() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ImportExportLink_ObjectMain'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
@@ -2130,6 +2134,7 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 10.04.19         * zc_ObjectLink_GoodsPropertyValue_Box
  01.04.19                                                                                      * zzc_ObjectLink_Goods_GoodsAnalog
  26.02.19         * zc_ObjectLink_GoodsPropertyValue_GoodsTypeKind_Sh
                     zc_ObjectLink_GoodsPropertyValue_GoodsTypeKind_Nom
