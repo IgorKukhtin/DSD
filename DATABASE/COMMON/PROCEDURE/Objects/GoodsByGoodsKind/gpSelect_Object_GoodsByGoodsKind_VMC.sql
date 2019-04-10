@@ -1,9 +1,16 @@
 -- Function: gpSelect_Object_GoodsByGoodsKind_VMC(TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_GoodsByGoodsKind_VMC (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_GoodsByGoodsKind_VMC (Integer,Integer,Integer,Integer,Integer,Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsByGoodsKind_VMC(
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inRetail1Id       Integer,
+    IN inRetail2Id       Integer,
+    IN inRetail3Id       Integer,
+    IN inRetail4Id       Integer,
+    IN inRetail5Id       Integer,
+    IN inRetail6Id       Integer,
+    IN inSession       TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
@@ -52,6 +59,25 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , BoxVolume_2 TFloat, BoxWeight_2 TFloat
              , BoxHeight_2 TFloat, BoxLength_2 TFloat, BoxWidth_2 TFloat
              , WeightGross_2 TFloat
+             
+             , BoxId_Retail1 Integer, BoxName_Retail1 TVarChar
+             , BoxId_Retail2 Integer, BoxName_Retail2 TVarChar
+             , BoxId_Retail3 Integer, BoxName_Retail3 TVarChar
+             , BoxId_Retail4 Integer, BoxName_Retail4 TVarChar
+             , BoxId_Retail5 Integer, BoxName_Retail5 TVarChar
+             , BoxId_Retail6 Integer, BoxName_Retail6 TVarChar
+             , WeightOnBox_Retail1 TFloat
+             , WeightOnBox_Retail2 TFloat
+             , WeightOnBox_Retail3 TFloat
+             , WeightOnBox_Retail4 TFloat
+             , WeightOnBox_Retail5 TFloat
+             , WeightOnBox_Retail6 TFloat
+             , CountOnBox_Retail1 TFloat
+             , CountOnBox_Retail2 TFloat
+             , CountOnBox_Retail3 TFloat
+             , CountOnBox_Retail4 TFloat
+             , CountOnBox_Retail5 TFloat
+             , CountOnBox_Retail6 TFloat
               )
 AS
 $BODY$
@@ -201,6 +227,47 @@ BEGIN
                               WHERE Object_GoodsPropertyBox.DescId = zc_Object_GoodsPropertyBox()
                                 AND Object_GoodsPropertyBox.isErased = FALSE
              )
+
+   , tmpGoodsPropertyValue AS (SELECT ObjectLink_Retail_GoodsProperty.ObjectId              AS RetailId
+                                    , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId     AS GoodsId
+                                    , ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId AS GoodsKindId
+                                    , Object_Box.Id                                         AS BoxId
+                                    , Object_Box.ObjectCode                                 AS BoxCode
+                                    , Object_Box.ValueData                                  AS BoxName
+                                    , ObjectFloat_WeightOnBox.ValueData                     AS WeightOnBox
+                                    , ObjectFloat_CountOnBox.ValueData                      AS CountOnBox
+                               FROM ObjectLink AS ObjectLink_GoodsPropertyValue_Box
+                                    LEFT JOIN Object AS Object_Box ON Object_Box.Id = ObjectLink_GoodsPropertyValue_Box.ChildObjectId
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                                         ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_Box.ObjectId
+                                                        AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                                         ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_Box.ObjectId
+                                                        AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_WeightOnBox
+                                                          ON ObjectFloat_WeightOnBox.ObjectId = ObjectLink_GoodsPropertyValue_Box.ObjectId
+                                                         AND ObjectFloat_WeightOnBox.DescId = zc_ObjectFloat_GoodsPropertyValue_WeightOnBox()
+                                                         AND COALESCE (ObjectFloat_WeightOnBox.ValueData,0) <> 0
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_CountOnBox
+                                                          ON ObjectFloat_CountOnBox.ObjectId = ObjectLink_GoodsPropertyValue_Box.ObjectId
+                                                         AND ObjectFloat_CountOnBox.DescId = zc_ObjectFloat_GoodsPropertyValue_CountOnBox()
+                                                         AND COALESCE (ObjectFloat_CountOnBox.ValueData,0) <> 0
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                                         ON ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId = ObjectLink_GoodsPropertyValue_Box.ObjectId
+                                                        AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_Retail_GoodsProperty
+                                                         ON ObjectLink_Retail_GoodsProperty.ChildObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId
+                                                        AND ObjectLink_Retail_GoodsProperty.DescId = zc_ObjectLink_Retail_GoodsProperty()
+
+                               WHERE ObjectLink_GoodsPropertyValue_Box.DescId = zc_ObjectLink_GoodsPropertyValue_Box()
+                                 AND COALESCE (ObjectLink_GoodsPropertyValue_Box.ChildObjectId,0) <> 0
+                               )
+
        --
        SELECT
              Object_GoodsByGoodsKind_View.Id
@@ -313,6 +380,27 @@ BEGIN
             , tmpGoodsPropertyBox_2.BoxLength   AS BoxLength_2
             , tmpGoodsPropertyBox_2.BoxWidth    AS BoxWidth_2
             , (tmpGoodsPropertyBox_2.WeightOnBox + tmpGoodsPropertyBox_2.BoxWeight) :: TFloat AS WeightGross_2
+            
+            , tmpRetail1.BoxId AS BoxId_Retail1, tmpRetail1.BoxName AS BoxName_Retail1
+            , tmpRetail2.BoxId AS BoxId_Retail2, tmpRetail2.BoxName AS BoxName_Retail2
+            , tmpRetail3.BoxId AS BoxId_Retail3, tmpRetail3.BoxName AS BoxName_Retail3
+            , tmpRetail4.BoxId AS BoxId_Retail4, tmpRetail4.BoxName AS BoxName_Retail4
+            , tmpRetail5.BoxId AS BoxId_Retail5, tmpRetail5.BoxName AS BoxName_Retail5
+            , tmpRetail6.BoxId AS BoxId_Retail6, tmpRetail6.BoxName AS BoxName_Retail6
+
+            , tmpRetail1.WeightOnBox AS WeightOnBox_Retail1
+            , tmpRetail2.WeightOnBox AS WeightOnBox_Retail2
+            , tmpRetail3.WeightOnBox AS WeightOnBox_Retail3
+            , tmpRetail4.WeightOnBox AS WeightOnBox_Retail4
+            , tmpRetail5.WeightOnBox AS WeightOnBox_Retail5
+            , tmpRetail6.WeightOnBox AS WeightOnBox_Retail6
+
+            , tmpRetail1.CountOnBox AS CountOnBox_Retail1
+            , tmpRetail2.CountOnBox AS CountOnBox_Retail2
+            , tmpRetail3.CountOnBox AS CountOnBox_Retail3
+            , tmpRetail4.CountOnBox AS CountOnBox_Retail4
+            , tmpRetail5.CountOnBox AS CountOnBox_Retail5
+            , tmpRetail6.CountOnBox AS CountOnBox_Retail6
 
        FROM tmpGoodsByGoodsKind AS Object_GoodsByGoodsKind_View
             LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
@@ -459,7 +547,31 @@ BEGIN
                                           ON tmpGoodsPropertyBox_2.GoodsId     = Object_GoodsByGoodsKind_View.GoodsId
                                          AND tmpGoodsPropertyBox_2.GoodsKindId = Object_GoodsByGoodsKind_View.GoodsKindId
                                          AND tmpGoodsPropertyBox_2.BoxId NOT IN (zc_Box_E2(), zc_Box_E3())
-                                         
+
+            LEFT JOIN tmpGoodsPropertyValue AS tmpRetail1 
+                                            ON tmpRetail1.RetailId    = inRetail1Id
+                                           AND tmpRetail1.GoodsId     = Object_GoodsByGoodsKind_View.GoodsId
+                                           AND tmpRetail1.GoodsKindId = Object_GoodsByGoodsKind_View.GoodsKindId
+            LEFT JOIN tmpGoodsPropertyValue AS tmpRetail2 
+                                            ON tmpRetail2.RetailId    = inRetail2Id
+                                           AND tmpRetail2.GoodsId     = Object_GoodsByGoodsKind_View.GoodsId
+                                           AND tmpRetail2.GoodsKindId = Object_GoodsByGoodsKind_View.GoodsKindId
+            LEFT JOIN tmpGoodsPropertyValue AS tmpRetail3 
+                                            ON tmpRetail3.RetailId    = inRetail3Id
+                                           AND tmpRetail3.GoodsId     = Object_GoodsByGoodsKind_View.GoodsId
+                                           AND tmpRetail3.GoodsKindId = Object_GoodsByGoodsKind_View.GoodsKindId
+            LEFT JOIN tmpGoodsPropertyValue AS tmpRetail4 
+                                            ON tmpRetail4.RetailId    = inRetail4Id
+                                           AND tmpRetail4.GoodsId     = Object_GoodsByGoodsKind_View.GoodsId
+                                           AND tmpRetail4.GoodsKindId = Object_GoodsByGoodsKind_View.GoodsKindId
+            LEFT JOIN tmpGoodsPropertyValue AS tmpRetail5 
+                                            ON tmpRetail5.RetailId    = inRetail5Id
+                                           AND tmpRetail5.GoodsId     = Object_GoodsByGoodsKind_View.GoodsId
+                                           AND tmpRetail5.GoodsKindId = Object_GoodsByGoodsKind_View.GoodsKindId
+            LEFT JOIN tmpGoodsPropertyValue AS tmpRetail6 
+                                            ON tmpRetail6.RetailId    = inRetail6Id
+                                           AND tmpRetail6.GoodsId     = Object_GoodsByGoodsKind_View.GoodsId
+                                           AND tmpRetail6.GoodsKindId = Object_GoodsByGoodsKind_View.GoodsKindId
       ;
 
 END;
@@ -493,4 +605,4 @@ group by BarCodeShort
 having count (*) > 1
 */
 -- тест
--- SELECT * FROM gpSelect_Object_GoodsByGoodsKind_VMC (zfCalc_UserAdmin())  limit 10
+-- SELECT * FROM gpSelect_Object_GoodsByGoodsKind_VMC (0,0,0,0,0,0,zfCalc_UserAdmin())  limit 10

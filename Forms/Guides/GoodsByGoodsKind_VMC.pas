@@ -21,7 +21,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxLabel;
+  dxSkinXmas2008Blue, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxLabel,
+  Vcl.ExtCtrls;
 
 type
   TGoodsByGoodsKind_VMCForm = class(TAncestorEnumForm)
@@ -92,6 +93,34 @@ type
     isCodeCalc_Diff: TcxGridDBColumn;
     BoxChoiceForm: TOpenChoiceForm;
     Box2ChoiceForm: TOpenChoiceForm;
+    Panel: TPanel;
+    edRetail2: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    cxLabel6: TcxLabel;
+    edRetail1: TcxButtonEdit;
+    GuidesRetail1: TdsdGuides;
+    GuidesRetail2: TdsdGuides;
+    cxLabel1: TcxLabel;
+    edRetail3: TcxButtonEdit;
+    GuidesRetail3: TdsdGuides;
+    cxLabel2: TcxLabel;
+    edRetail4: TcxButtonEdit;
+    GuidesRetail4: TdsdGuides;
+    cxLabel4: TcxLabel;
+    edRetail5: TcxButtonEdit;
+    GuidesRetail5: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edRetail6: TcxButtonEdit;
+    GuidesRetail6: TdsdGuides;
+    BoxRetailForm1: TOpenChoiceForm;
+    BoxRetailForm2: TOpenChoiceForm;
+    BoxRetailForm3: TOpenChoiceForm;
+    BoxRetailForm4: TOpenChoiceForm;
+    BoxRetailForm5: TOpenChoiceForm;
+    BoxRetailForm6: TOpenChoiceForm;
+    RefreshDispatcher: TRefreshDispatcher;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

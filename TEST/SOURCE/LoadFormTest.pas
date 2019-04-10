@@ -499,6 +499,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_VMCForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_VMCDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_VMCDialogForm');
+  // торг. сети
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGK_VMCDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsByGK_VMCDialogForm');
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsExternalForm');
@@ -606,7 +609,6 @@ end;
 
 procedure TLoadFormTest.LoadGoodsPropertyValueFormTest;
 begin
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueForm');
   {

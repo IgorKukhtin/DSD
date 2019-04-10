@@ -32,6 +32,7 @@ object GoodsByGoodsKind_VMCDialogForm: TGoodsByGoodsKind_VMCDialogForm
     Top = 229
     Width = 75
     Height = 25
+    Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 2
     TabOrder = 1
@@ -112,8 +113,8 @@ object GoodsByGoodsKind_VMCDialogForm: TGoodsByGoodsKind_VMCDialogForm
     Width = 135
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 255
-    Top = 204
+    Left = 247
+    Top = 132
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -125,8 +126,8 @@ object GoodsByGoodsKind_VMCDialogForm: TGoodsByGoodsKind_VMCDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 8
-    Top = 202
+    Left = 224
+    Top = 50
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -170,8 +171,8 @@ object GoodsByGoodsKind_VMCDialogForm: TGoodsByGoodsKind_VMCDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 55
-    Top = 212
+    Left = 79
+    Top = 132
   end
   object PeriodChoice: TPeriodChoice
     Left = 144

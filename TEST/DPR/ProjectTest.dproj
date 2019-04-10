@@ -3642,6 +3642,10 @@
 				<Form>GoodsByGoodsKind_VMCForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsByGK_VMCDialog.pas">
+				<Form>GoodsByGK_VMCDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
