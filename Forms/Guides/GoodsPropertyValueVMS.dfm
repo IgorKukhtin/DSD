@@ -314,6 +314,35 @@ object GoodsPropertyValueVMSForm: TGoodsPropertyValueVMSForm
         HeaderHint = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072' "'#1053#1077#1085#1086#1084#1080#1085#1072#1083#1100#1085#1099#1081'"'
         Width = 60
       end
+      object BoxName: TcxGridDBColumn
+        Caption = #1071#1097#1080#1082
+        DataBinding.FieldName = 'BoxName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object WeightOnBox: TcxGridDBColumn
+        Caption = #1082#1086#1083'. '#1082#1075'. '#1074' '#1103#1097'.'
+        DataBinding.FieldName = 'WeightOnBox'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1082#1075'. '#1074' '#1103#1097'.'
+        Options.Editing = False
+        Width = 82
+      end
+      object CountOnBox: TcxGridDBColumn
+        Caption = #1082#1086#1083'. '#1077#1076'. '#1074' '#1103#1097'.'
+        DataBinding.FieldName = 'CountOnBox'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'

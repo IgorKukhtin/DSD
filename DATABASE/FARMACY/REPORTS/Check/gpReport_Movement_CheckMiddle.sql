@@ -100,7 +100,7 @@ BEGIN
                            , MovementLinkObject_Unit.ObjectId
                            , CASE WHEN inisDAy = True THEN DATE_TRUNC('day', Movement_Check.OperDate) ELSE NULL END
                    )
-                   
+
         -- док. соц проекта, если заполнен № рецепта
         , tmpMovSP AS (SELECT DISTINCT MovementString_InvNumberSP.MovementId
                        FROM MovementString AS MovementString_InvNumberSP
@@ -124,7 +124,10 @@ BEGIN
         , tmpCheck AS (SELECT Movement_Check.UnitId
                             , Movement_Check.Id
                             , Movement_Check.OperDate
-                            , SUM (CASE WHEN COALESCE (tmpMovSP.MovementId, 0) <> 0 THEN COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0) ELSE 0 END) AS SummChangePercent_SP
+                            , SUM (CASE WHEN COALESCE (tmpMovSP.MovementId, 0) <> 0 AND MovementLinkObject_SPKind.ObjectId <> zc_Enum_SPKind_1303()
+                                        THEN COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0) 
+                                        ELSE 0 
+                                   END) AS SummChangePercent_SP
                             , SUM (CASE WHEN MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303() 
                                         THEN COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0) 
                                         ELSE 0 
@@ -189,9 +192,8 @@ BEGIN
                            , (COALESCE (MI_Check.Count_1303, 0))
                     HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) <> 0 
                    )                                                               
+
         -- выбираем продажи по товарам соц.проекта 1303
-        
-        
         , tmpMovement_Sale AS (SELECT CASE WHEN inisDAy = True THEN DATE_TRUNC('day', Movement_Sale.OperDate) ELSE NULL END ::TDateTime  AS OperDate
                                     , MovementLinkObject_Unit.ObjectId             AS UnitId
                                     , Movement_Sale.Id                             AS Id
@@ -218,7 +220,6 @@ BEGIN
         , tmpSale_1303 AS (SELECT Movement_Sale.OperDate      AS OperDate
                                 , Movement_Sale.UnitId        AS UnitId
                                 , SUM (COALESCE (-1 * MIContainer.Amount, MI_Sale.Amount) * COALESCE (MIFloat_PriceSale.ValueData, 0)) AS SummSale_1303
-                               -- , SUM (Movement_Sale.Count_1303)  AS Count_1303
                                 , Count (DISTINCT Movement_Sale.Id)          AS Count_1303
                            FROM tmpMovement_Sale AS Movement_Sale
                                 INNER JOIN MovementItem AS MI_Sale
@@ -427,7 +428,7 @@ BEGIN
 
         ORDER BY 2, 1 ;
     RETURN NEXT Cursor1;
-    
+
     OPEN Cursor2 FOR
      
     -- Результат
@@ -481,10 +482,14 @@ BEGIN
                                           )
                                        
         , tmpCheck AS (SELECT Movement_Check.Id
-                            , DATE_TRUNC('Month', Movement_Check.OperDate)                                                                  AS OperDate
-                            , SUM (CASE WHEN COALESCE (tmpMovSP.MovementId, 0) <> 0 THEN COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0) ELSE 0 END)                     AS SummChangePercent_SP
+                            , DATE_TRUNC('Month', Movement_Check.OperDate) AS OperDate
+                            , SUM (CASE WHEN COALESCE (tmpMovSP.MovementId, 0) <> 0 AND MovementLinkObject_SPKind.ObjectId <> zc_Enum_SPKind_1303()
+                                        THEN COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0)
+                                        ELSE 0
+                                   END) AS SummChangePercent_SP
+
                             , SUM (CASE WHEN MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303() THEN COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0) ELSE 0 END) AS SummSale_1303
-                            , SUM (CASE WHEN MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303() THEN 1 ELSE 0 END)                  AS Count_1303
+                            , SUM (CASE WHEN MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303() THEN 1 ELSE 0 END) AS Count_1303
                        FROM tmpMovementCheck AS Movement_Check
                             LEFT JOIN tmpMLO_SPKind AS MovementLinkObject_SPKind
                                                     ON MovementLinkObject_SPKind.MovementId = Movement_Check.Id
@@ -653,6 +658,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 09.04.19         * из Суммы реимбурсации убираем суммы по пост.1303
  09.10.17         *
  01.09.17         *
  25.04.17         * 

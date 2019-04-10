@@ -23,6 +23,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isOrder Boolean
              , isErased Boolean
              , isGoodsTypeKind_Sh Boolean, isGoodsTypeKind_Nom Boolean, isGoodsTypeKind_Ves Boolean
+             , BoxId Integer, BoxCode Integer, BoxName TVarChar
+             , WeightOnBox TFloat, CountOnBox  TFloat
              )
 AS
 $BODY$
@@ -98,6 +100,12 @@ BEGIN
        , CASE WHEN COALESCE (ObjectLink_GoodsTypeKind_Sh.ChildObjectId, 0)  <> 0 THEN TRUE ELSE FALSE END AS isGoodsTypeKind_Sh
        , CASE WHEN COALESCE (ObjectLink_GoodsTypeKind_Nom.ChildObjectId, 0) <> 0 THEN TRUE ELSE FALSE END AS isGoodsTypeKind_Nom
        , CASE WHEN COALESCE (ObjectLink_GoodsTypeKind_Ves.ChildObjectId, 0) <> 0 THEN TRUE ELSE FALSE END AS isGoodsTypeKind_Ves
+       
+       , Object_Box.Id                          AS BoxId
+       , Object_Box.ObjectCode                  AS BoxCode
+       , Object_Box.ValueData                   AS BoxName
+       , ObjectFloat_WeightOnBox.ValueData      AS WeightOnBox
+       , ObjectFloat_CountOnBox.ValueData       AS CountOnBox
 
    FROM Object AS Object_GoodsPropertyValue
         LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
@@ -116,6 +124,13 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_AmountDoc
                               ON ObjectFloat_AmountDoc.ObjectId = Object_GoodsPropertyValue.Id
                              AND ObjectFloat_AmountDoc.DescId = zc_ObjectFloat_GoodsPropertyValue_AmountDoc()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_WeightOnBox
+                              ON ObjectFloat_WeightOnBox.ObjectId = Object_GoodsPropertyValue.Id
+                             AND ObjectFloat_WeightOnBox.DescId = zc_ObjectFloat_GoodsPropertyValue_WeightOnBox()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CountOnBox
+                              ON ObjectFloat_CountOnBox.ObjectId = Object_GoodsPropertyValue.Id
+                             AND ObjectFloat_CountOnBox.DescId = zc_ObjectFloat_GoodsPropertyValue_CountOnBox()
 
         LEFT JOIN ObjectString AS ObjectString_BarCodeShort
                                ON ObjectString_BarCodeShort.ObjectId = Object_GoodsPropertyValue.Id
@@ -188,6 +203,11 @@ BEGIN
                              ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                             AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
         LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Box
+                             ON ObjectLink_GoodsPropertyValue_Box.ObjectId = Object_GoodsPropertyValue.Id
+                            AND ObjectLink_GoodsPropertyValue_Box.DescId = zc_ObjectLink_GoodsPropertyValue_Box()
+        LEFT JOIN Object AS Object_Box ON Object_Box.Id = ObjectLink_GoodsPropertyValue_Box.ChildObjectId
 
         LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -305,6 +325,12 @@ BEGIN
        , COALESCE (tmpObjectLink.isGoodsTypeKind_Sh,  FALSE) :: Boolean AS isGoodsTypeKind_Sh
        , COALESCE (tmpObjectLink.isGoodsTypeKind_Nom, FALSE) :: Boolean AS isGoodsTypeKind_Nom
        , COALESCE (tmpObjectLink.isGoodsTypeKind_Ves, FALSE) :: Boolean AS isGoodsTypeKind_Ves
+
+       , tmpObjectLink.BoxId
+       , tmpObjectLink.BoxCode
+       , tmpObjectLink.BoxName
+       , tmpObjectLink.WeightOnBox
+       , tmpObjectLink.CountOnBox
     FROM tmpGoods 
         LEFT JOIN (SELECT Object_GoodsPropertyValue.Id          AS GoodsPropertyValueId
                         , Object_GoodsPropertyValue.ObjectCode  AS GoodsPropertyValueCode
@@ -340,6 +366,11 @@ BEGIN
                         , CASE WHEN COALESCE (ObjectLink_GoodsTypeKind_Nom.ChildObjectId, 0) <> 0 THEN TRUE ELSE FALSE END AS isGoodsTypeKind_Nom
                         , CASE WHEN COALESCE (ObjectLink_GoodsTypeKind_Ves.ChildObjectId, 0) <> 0 THEN TRUE ELSE FALSE END AS isGoodsTypeKind_Ves
 
+                        , Object_Box.Id                          AS BoxId
+                        , Object_Box.ObjectCode                  AS BoxCode
+                        , Object_Box.ValueData                   AS BoxName
+                        , ObjectFloat_WeightOnBox.ValueData      AS WeightOnBox
+                        , ObjectFloat_CountOnBox.ValueData       AS CountOnBox
                    FROM ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
                       LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                            ON ObjectLink_GoodsPropertyValue_Goods.ObjectId =  ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -368,6 +399,11 @@ BEGIN
                                            ON ObjectLink_GoodsTypeKind_Ves.ObjectId = Object_GoodsPropertyValue.Id
                                           AND ObjectLink_GoodsTypeKind_Ves.DescId   = zc_ObjectLink_GoodsPropertyValue_GoodsTypeKind_Ves()
 
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Box
+                                           ON ObjectLink_GoodsPropertyValue_Box.ObjectId = Object_GoodsPropertyValue.Id
+                                          AND ObjectLink_GoodsPropertyValue_Box.DescId = zc_ObjectLink_GoodsPropertyValue_Box()
+                      LEFT JOIN Object AS Object_Box ON Object_Box.Id = ObjectLink_GoodsPropertyValue_Box.ChildObjectId
+
                       LEFT JOIN ObjectFloat AS ObjectFloat_Amount
                                             ON ObjectFloat_Amount.ObjectId = Object_GoodsPropertyValue.Id 
                                            AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
@@ -377,6 +413,13 @@ BEGIN
                       LEFT JOIN ObjectFloat AS ObjectFloat_AmountDoc
                                             ON ObjectFloat_AmountDoc.ObjectId = Object_GoodsPropertyValue.Id
                                            AND ObjectFloat_AmountDoc.DescId = zc_ObjectFloat_GoodsPropertyValue_AmountDoc()
+
+                      LEFT JOIN ObjectFloat AS ObjectFloat_WeightOnBox
+                                            ON ObjectFloat_WeightOnBox.ObjectId = Object_GoodsPropertyValue.Id
+                                           AND ObjectFloat_WeightOnBox.DescId = zc_ObjectFloat_GoodsPropertyValue_WeightOnBox()
+                      LEFT JOIN ObjectFloat AS ObjectFloat_CountOnBox
+                                            ON ObjectFloat_CountOnBox.ObjectId = Object_GoodsPropertyValue.Id
+                                           AND ObjectFloat_CountOnBox.DescId = zc_ObjectFloat_GoodsPropertyValue_CountOnBox()
 
                       LEFT JOIN ObjectString AS ObjectString_BarCodeShort
                                              ON ObjectString_BarCodeShort.ObjectId = Object_GoodsPropertyValue.Id
@@ -433,6 +476,7 @@ END;$BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 10.04.19         * 
  30.03.19         * add Quality
  26.02.19         *
  17.12.18         * add Quality10, Quality2

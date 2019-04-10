@@ -55,6 +55,11 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             item
               Format = ',0.00'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaSale
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -100,6 +105,11 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = UnitName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaSale
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -332,6 +342,17 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 91
+          end
+          object SummaSale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1072' '#1091' '#1092#1072#1082#1090'. '#1088#1086#1079#1076#1088#1110#1073'. '#1094#1110#1085#1072#1093' '#1088#1077#1072#1083#1110#1079#1072#1094#1110#1111' '#1074' '#1072#1087#1090#1077#1094#1110', '#1075#1088#1085'.'
+            DataBinding.FieldName = 'SummaSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####; ; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 102
           end
           object DailyNormSP: TcxGridDBColumn
             Caption = #1044#1086#1073#1086#1074#1072' '#1076#1086#1079#1072' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091', '#1088#1077#1082#1086#1084#1077#1085#1076#1086#1074#1072#1085#1072' '#1042#1054#1054#1047' (13)'

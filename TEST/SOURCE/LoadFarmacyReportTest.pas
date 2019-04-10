@@ -82,10 +82,10 @@ begin
   LoadReportFromFile('PrintReport_CheckSP_4212299', ReportPath + '\PrintReport_CheckSP_4212299.fr3');
 
   LoadReportFromFile('–еестр лекарственных препаратов', ReportPath + '\–еестр лекарственных препаратов.fr3');
-
+  }
   LoadReportFromFile('—чет постановление 1303', ReportPath + '\—чет постановление 1303.fr3');
   exit;
-
+  {
   LoadReportFromFile('Pеестр по постановлению 1303', ReportPath + '\Pеестр по постановлению 1303.fr3');
   }
   LoadReportFromFile('Pеестр по постановлению 1303(счет)', ReportPath + '\Pеестр по постановлению 1303(счет).fr3');

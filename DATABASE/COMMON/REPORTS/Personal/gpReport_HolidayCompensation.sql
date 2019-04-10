@@ -32,9 +32,7 @@ $BODY$
     DECLARE vbDayHoliday   TFloat;
     --DECLARE vbCountDay     TFloat;
 BEGIN
-IF inSession <> '5' THEN
-return;
-end if;
+
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
     vbUserId := inSession::Integer;

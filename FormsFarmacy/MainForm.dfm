@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 229
+  ExplicitHeight = 230
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -2686,6 +2686,30 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actGoodsInventory: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1074#1093#1086#1078#1076#1077#1085#1080#1102' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072' '#1074' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1074#1093#1086#1078#1076#1077#1085#1080#1102' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072' '#1074' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
+      FormName = 'TReport_GoodsInventoryForm'
+      FormNameParam.Value = 'TReport_GoodsInventoryForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actCreditLimitDistributor: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1050#1088#1077#1076#1080#1090#1085#1099#1077' '#1083#1080#1084#1080#1090#1099' '#1087#1086' '#1076#1080#1089#1090#1088#1080#1073#1100#1102#1090#1086#1088#1091
+      Hint = #1050#1088#1077#1076#1080#1090#1085#1099#1077' '#1083#1080#1084#1080#1090#1099' '#1087#1086' '#1076#1080#1089#1090#1088#1080#1073#1100#1102#1090#1086#1088#1091
+      FormName = 'TCreditLimitDistributorForm'
+      FormNameParam.Value = 'TCreditLimitDistributorForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3495,57 +3519,63 @@ inherited MainForm: TMainForm
       object ID1: TMenuItem [14]
         Action = actReport_GoodsRemains_AnotherRetail
       end
-      object N7: TMenuItem [15]
+      object N182: TMenuItem [15]
+        Action = actGoodsInventory
+      end
+      object N183: TMenuItem [16]
+        Action = actCreditLimitDistributor
+      end
+      object N7: TMenuItem [17]
         Caption = '-'
       end
-      object miSaveData: TMenuItem [16]
+      object miSaveData: TMenuItem [18]
         Action = actSaveData
       end
-      object miPriceGroupSettings: TMenuItem [17]
+      object miPriceGroupSettings: TMenuItem [19]
         Action = actPriceGroupSettings
       end
-      object N102: TMenuItem [18]
+      object N102: TMenuItem [20]
         Action = actPriceGroupSettingsTOP
       end
-      object miJuridicalSettings: TMenuItem [19]
+      object miJuridicalSettings: TMenuItem [21]
         Action = actJuridicalSettings
       end
-      object N9: TMenuItem [20]
+      object N9: TMenuItem [22]
         Caption = '-'
       end
-      object miImportType: TMenuItem [21]
+      object miImportType: TMenuItem [23]
         Action = actImportType
       end
-      object miImportSettings: TMenuItem [22]
+      object miImportSettings: TMenuItem [24]
         Action = actImportSettings
       end
-      object miImportExportLink: TMenuItem [23]
+      object miImportExportLink: TMenuItem [25]
         Action = actImportExportLink
       end
-      object miGlobalConst: TMenuItem [24]
+      object miGlobalConst: TMenuItem [26]
         Action = actGlobalConst
       end
-      object FarmacyCash1: TMenuItem [26]
+      object FarmacyCash1: TMenuItem [28]
         Action = actUnitForFarmacyCash
       end
-      object N10: TMenuItem [28]
+      object N10: TMenuItem [30]
         Caption = '-'
       end
-      object miReprice: TMenuItem [29]
+      object miReprice: TMenuItem [31]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072
         OnClick = miRepriceClick
       end
-      object miRepriceChange: TMenuItem [30]
+      object miRepriceChange: TMenuItem [32]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1094#1077#1085' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
         OnClick = miRepriceChangeClick
       end
-      object miExportSalesForSupp: TMenuItem [31]
+      object miExportSalesForSupp: TMenuItem [33]
         Action = actExportSalesForSuppClick
       end
-      object N173: TMenuItem [32]
+      object N173: TMenuItem [34]
         Action = actRepriceUnitSheduler
       end
-      object miRecalcMCSSheduler: TMenuItem [33]
+      object miRecalcMCSSheduler: TMenuItem [35]
         Action = actRecalcMCSSheduler
       end
     end

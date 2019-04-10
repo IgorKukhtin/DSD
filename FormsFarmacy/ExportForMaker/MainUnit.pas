@@ -608,14 +608,14 @@ begin
        begin
          DateEnd := IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1);
          DateStart := IncDay(StartOfTheMonth(DateEnd), 15);
+
+         FormAddFile := True;
+         DateEndAdd := DateEnd;
+         DateStartAdd := StartOfTheMonth(DateEndAdd);
        end else
        begin
          DateStart := StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime);
          DateEnd := IncDay(DateStart, 14);
-
-         FormAddFile := True;
-         DateEndAdd := IncDay(DateStart, -1);
-         DateStartAdd := StartOfTheMonth(DateEndAdd);
        end;
      end else
      begin

@@ -53,9 +53,10 @@ BEGIN
                                 , Container.WhereObjectId AS UnitId
                                 , Container.Amount        AS Amount
                            FROM Container 
-                                INNER JOIN tmpUnit ON Container.WhereObjectId = tmpUnit.Unitid
+                         --       INNER JOIN tmpUnit ON Container.WhereObjectId = tmpUnit.Unitid
                            WHERE Container.DescId = zc_Container_Count()
-                           --  AND Container.Amount <> 0
+                             AND Container.WhereObjectId IN (SELECT tmpUnit.UnitId FROM tmpUnit)
+                            AND Container.Amount <> 0
                            GROUP BY Container.Id, Container.ObjectId, Container.Amount, Container.WhereObjectId
                            )
         , tmpRemains_All AS (SELECT tmp.GoodsId
@@ -92,6 +93,31 @@ BEGIN
                                                  ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
                                                 AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                        )
+
+        , tmpOH_Price_Start AS (SELECT ObjectHistory.*
+                                FROM ObjectHistory
+                                WHERE ObjectHistory.ObjectId IN (SELECT DISTINCT tmpPrice.PriceId FROM tmpPrice)
+                                  AND ObjectHistory.DescId = zc_ObjectHistory_Price()
+                                  AND inStartDate >= ObjectHistory.StartDate AND inStartDate < ObjectHistory.EndDate
+                                )
+        , tmpOH_Price_End AS (SELECT ObjectHistory.*
+                              FROM ObjectHistory
+                              WHERE ObjectHistory.ObjectId IN (SELECT DISTINCT tmpPrice.PriceId FROM tmpPrice)
+                                AND ObjectHistory.DescId = zc_ObjectHistory_Price()
+                                AND inEndDate >= ObjectHistory.StartDate AND inEndDate < ObjectHistory.EndDate
+                              )
+
+        , tmpOHFloat_Start AS (SELECT ObjectHistoryFloat.*
+                               FROM ObjectHistoryFloat
+                               WHERE ObjectHistoryFloat.ObjectHistoryId IN (SELECT DISTINCT tmpOH_Price_Start.Id FROM tmpOH_Price_Start)
+                                 AND ObjectHistoryFloat.DescId = zc_ObjectHistoryFloat_Price_Value()
+                              )
+        , tmpOHFloat_End AS (SELECT ObjectHistoryFloat.*
+                             FROM ObjectHistoryFloat
+                             WHERE ObjectHistoryFloat.ObjectHistoryId IN (SELECT DISTINCT tmpOH_Price_End.Id FROM tmpOH_Price_End)
+                               AND ObjectHistoryFloat.DescId = zc_ObjectHistoryFloat_Price_Value()
+                            )
+
         -- для остатка получаем значение цены
         , tmpPriceRemains AS ( SELECT tmpRemains.GoodsId                                  AS GoodsId
                                     , tmpRemains.UnitId                                   AS UnitId
@@ -102,21 +128,21 @@ BEGIN
                                                     AND tmpPrice.unitid  = tmpRemains.UnitId
                                   -- получаем значения цены из истории значений на начало дня 
                                                                                            
-                                  LEFT JOIN ObjectHistory AS ObjectHistory_Price
-                                                          ON ObjectHistory_Price.ObjectId = tmpPrice.PriceId 
-                                                         AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
-                                                         AND inStartDate >= ObjectHistory_Price.StartDate AND inStartDate < ObjectHistory_Price.EndDate
-                                  LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
-                                                               ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
-                                                              AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
+                                  LEFT JOIN tmpOH_Price_Start AS ObjectHistory_Price
+                                                                   ON ObjectHistory_Price.ObjectId = tmpPrice.PriceId 
+                                                                 -- AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
+                                                                 -- AND inStartDate >= ObjectHistory_Price.StartDate AND inStartDate < ObjectHistory_Price.EndDate
+                                  LEFT JOIN tmpOHFloat_Start AS ObjectHistoryFloat_Price
+                                                             ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
+                                                            --AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
                                   -- получаем значения цены из истории значений на конеч. дату                                                          
-                                  LEFT JOIN ObjectHistory AS ObjectHistory_PriceEnd
+                                  LEFT JOIN tmpOH_Price_End AS ObjectHistory_PriceEnd
                                                           ON ObjectHistory_PriceEnd.ObjectId = tmpPrice.PriceId 
-                                                         AND ObjectHistory_PriceEnd.DescId = zc_ObjectHistory_Price()
-                                                         AND inEndDate >= ObjectHistory_PriceEnd.StartDate AND inEndDate < ObjectHistory_PriceEnd.EndDate
-                                  LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceEnd
-                                                               ON ObjectHistoryFloat_PriceEnd.ObjectHistoryId = ObjectHistory_PriceEnd.Id
-                                                              AND ObjectHistoryFloat_PriceEnd.DescId = zc_ObjectHistoryFloat_Price_Value()
+                                                       --  AND ObjectHistory_PriceEnd.DescId = zc_ObjectHistory_Price()
+                                                       --  AND inEndDate >= ObjectHistory_PriceEnd.StartDate AND inEndDate < ObjectHistory_PriceEnd.EndDate
+                                  LEFT JOIN tmpOHFloat_End AS ObjectHistoryFloat_PriceEnd
+                                                           ON ObjectHistoryFloat_PriceEnd.ObjectHistoryId = ObjectHistory_PriceEnd.Id
+                                                          --AND ObjectHistoryFloat_PriceEnd.DescId = zc_ObjectHistoryFloat_Price_Value()
                                 )
         , tmpRemains AS (SELECT tmpRemains_All.UnitId
                               --, SUM (tmpRemains_All.RemainsStart) AS RemainsStart
@@ -155,14 +181,17 @@ BEGIN
                                 WHERE tmpData_ContainerAll.Amount <> 0
                                )
         -- док. соц проекта, если заполнен № рецепта
-        , tmpMS_InvNumberSP AS (SELECT tmp.MovementId
-                                FROM (SELECT DISTINCT tmpData_Container.MovementId
-                                      FROM tmpData_Container
-                                      ) AS tmp
-                                      INNER JOIN MovementString AS MovementString_InvNumberSP
-                                                                ON MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
-                                                               AND MovementString_InvNumberSP.MovementId = tmp.MovementId
-                                                               AND MovementString_InvNumberSP.ValueData <> ''
+        , tmpMS_InvNumberSP AS (SELECT DISTINCT MovementString_InvNumberSP.MovementId
+                                     , CASE WHEN MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303() THEN TRUE ELSE FALSE END AS isSP_1303
+                                FROM MovementString AS MovementString_InvNumberSP
+                                --- разделить соц. про и пост 1303
+                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_SPKind
+                                                                  ON MovementLinkObject_SPKind.MovementId = MovementString_InvNumberSP.MovementId
+                                                                 AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+
+                                WHERE MovementString_InvNumberSP.MovementId IN (SELECT DISTINCT tmpData_Container.MovementId FROM tmpData_Container)
+                                  AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
+                                  AND COALESCE (MovementString_InvNumberSP.ValueData, '') <> ''
                                 )
                                            
         , tmpMIF_SummChangePercent AS (SELECT MIFloat_SummChangePercent.*
@@ -171,8 +200,11 @@ BEGIN
                                          AND MIFloat_SummChangePercent.MovementItemId IN (SELECT DISTINCT tmpData_Container.MI_Id FROM tmpData_Container)
                                       )
         , tmpSP AS (SELECT tmpData_Container.UnitId
-                         , SUM (COALESCE (MovementFloat_SummChangePercent.ValueData, 0)) AS SummChangePercent_SP
-                    FROM (SELECT DISTINCT tmpData_Container.MI_ID, tmpData_Container.UnitId 
+                         , SUM (CASE WHEN tmpData_Container.isSP_1303 = TRUE  THEN COALESCE (MovementFloat_SummChangePercent.ValueData, 0) ELSE 0 END) AS SummChangePercent_SP1303
+                         , SUM (CASE WHEN tmpData_Container.isSP_1303 = FALSE THEN COALESCE (MovementFloat_SummChangePercent.ValueData, 0) ELSE 0 END) AS SummChangePercent_SP
+                    FROM (SELECT DISTINCT tmpData_Container.MI_Id
+                               , tmpData_Container.UnitId
+                               , tmpMS_InvNumberSP.isSP_1303
                           FROM tmpData_Container
                                INNER JOIN tmpMS_InvNumberSP ON tmpMS_InvNumberSP.MovementId = tmpData_Container.MovementId
                           ) AS tmpData_Container
@@ -187,14 +219,14 @@ BEGIN
                                     , Movement_Sale.Id                             AS Id
                                FROM Movement AS Movement_Sale
                                     INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                            ON MovementLinkObject_Unit.MovementId = Movement_Sale.Id
-                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                                  ON MovementLinkObject_Unit.MovementId = Movement_Sale.Id
+                                                                 AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                     INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
                                     
                                     INNER JOIN MovementString AS MovementString_InvNumberSP
-                                           ON MovementString_InvNumberSP.MovementId = Movement_Sale.Id
-                                          AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
-                                          AND COALESCE (MovementString_InvNumberSP.ValueData,'') <> ''
+                                                              ON MovementString_InvNumberSP.MovementId = Movement_Sale.Id
+                                                             AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
+                                                             AND COALESCE (MovementString_InvNumberSP.ValueData,'') <> ''
 
                                WHERE Movement_Sale.DescId = zc_Movement_Sale()
                                  AND Movement_Sale.OperDate >= inStartDate AND Movement_Sale.OperDate < inEndDate + INTERVAL '1 DAY'
@@ -296,7 +328,7 @@ BEGIN
                             , tmpData_all.GoodsId
                             , tmpData_all.UnitId
                     )
-                        
+                    
        , tmpData_Case AS (SELECT tmpData.UnitId
                                      , SUM(tmpData.Summa)        AS Summa
                                      , SUM(tmpData.SummaSale)    AS SummaSale
@@ -316,7 +348,8 @@ BEGIN
                                      , SUM(CASE WHEN tmpData.JuridicalId_Income = inJuridical2Id THEN tmpData.SummaWithVAT ELSE 0 END)     AS SummaWithVAT2
                                  
                                      , COALESCE (tmpSP.SummChangePercent_SP, 0)               AS SummSale_SP
-                                     , COALESCE (tmpSale_1303.SummSale_1303, 0)               AS SummSale_1303
+                                     , (COALESCE (tmpSale_1303.SummSale_1303, 0)
+                                      + COALESCE (tmpSP.SummChangePercent_SP1303, 0))         AS SummSale_1303
                                      , COALESCE (tmpSale_1303.TotalSummPrimeCost, 0)          AS SummPrimeCost_1303
                    
                                 FROM tmpData
@@ -326,6 +359,7 @@ BEGIN
                                        , COALESCE (tmpSP.SummChangePercent_SP, 0)
                                        , COALESCE (tmpSale_1303.SummSale_1303, 0)
                                        , COALESCE (tmpSale_1303.TotalSummPrimeCost, 0)
+                                       , COALESCE (tmpSP.SummChangePercent_SP1303, 0)
                                )
 
        , tmpData_Full AS (SELECT tmpData.UnitId
@@ -494,23 +528,32 @@ BEGIN
                                          AND MIFloat_SummChangePercent.MovementItemId IN (SELECT DISTINCT tmpData_Container.MI_Id FROM tmpData_Container)
                                       )
         -- док. соц проекта, если заполнен № рецепта
-        , tmpMS_InvNumberSP AS (SELECT MovementString_InvNumberSP.MovementId
+        , tmpMS_InvNumberSP AS (SELECT DISTINCT MovementString_InvNumberSP.MovementId
+                                     , CASE WHEN MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303() THEN TRUE ELSE FALSE END AS isSP_1303
                                 FROM MovementString AS MovementString_InvNumberSP
-                                WHERE MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
-                                  AND MovementString_InvNumberSP.ValueData <> ''
-                                  AND MovementString_InvNumberSP.MovementId IN (SELECT DISTINCT tmpData_Container.MovementId FROM tmpData_Container) 
+                                --- разделить соц. про и пост 1303
+                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_SPKind
+                                                                  ON MovementLinkObject_SPKind.MovementId = MovementString_InvNumberSP.MovementId
+                                                                 AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+
+                                WHERE MovementString_InvNumberSP.MovementId IN (SELECT DISTINCT tmpData_Container.MovementId FROM tmpData_Container)
+                                  AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
+                                  AND COALESCE (MovementString_InvNumberSP.ValueData, '') <> ''
                                 )
                                 
-        , tmpSP AS (SELECT tmpData_Container.OperDate
-                         , SUM (COALESCE (MovementFloat_SummChangePercent.ValueData, 0)) AS SummChangePercent_SP
-                    FROM (SELECT DISTINCT tmpData_Container.MI_ID, tmpData_Container.OperDate 
+        , tmpSP AS (SELECT tmpData_Container.UnitId
+                         , SUM (CASE WHEN tmpData_Container.isSP_1303 = TRUE  THEN COALESCE (MovementFloat_SummChangePercent.ValueData, 0) ELSE 0 END) AS SummChangePercent_SP1303
+                         , SUM (CASE WHEN tmpData_Container.isSP_1303 = FALSE THEN COALESCE (MovementFloat_SummChangePercent.ValueData, 0) ELSE 0 END) AS SummChangePercent_SP
+                    FROM (SELECT DISTINCT tmpData_Container.MI_Id
+                               , tmpData_Container.UnitId
+                               , tmpMS_InvNumberSP.isSP_1303
                           FROM tmpData_Container
                                INNER JOIN tmpMS_InvNumberSP ON tmpMS_InvNumberSP.MovementId = tmpData_Container.MovementId
                           ) AS tmpData_Container
-                         -- сумма скидки SP
-                         LEFT JOIN tmpMIF_SummChangePercent AS MovementFloat_SummChangePercent
-                                                            ON MovementFloat_SummChangePercent.MovementItemId = tmpData_Container.MI_Id
-                    GROUP BY tmpData_Container.OperDate
+                            -- сумма скидки SP
+                            LEFT JOIN tmpMIF_SummChangePercent AS MovementFloat_SummChangePercent
+                                                               ON MovementFloat_SummChangePercent.MovementItemId = tmpData_Container.MI_Id
+                    GROUP BY tmpData_Container.UnitId
                     )
                     
         -- выбираем продажи по товарам соц.проекта 1303
@@ -627,17 +670,20 @@ BEGIN
                                , SUM(tmpData.SummaSale)    AS SummaSale
                                , SUM(tmpData.SummaWithVAT) AS SummaWithVAT
                                
-                               , tmpSP.SummChangePercent_SP  AS SummSale_SP
-                               , tmpSale_1303.SummSale_1303
-                               , tmpSale_1303.TotalSummPrimeCost
+                               , COALESCE (tmpSP.SummChangePercent_SP, 0)         AS SummSale_SP
+                               , (COALESCE (tmpSale_1303.SummSale_1303, 0)
+                                + COALESCE (tmpSP.SummChangePercent_SP1303, 0))   AS SummSale_1303
+                                      
+                               , COALESCE (tmpSale_1303.TotalSummPrimeCost, 0)    AS TotalSummPrimeCost
              
                           FROM tmpData
                                LEFT JOIN tmpSale_1303 ON tmpSale_1303.OperDate = tmpData.OperDate
                                LEFT JOIN tmpSP        ON tmpSP.OperDate        = tmpData.OperDate
                           GROUP BY tmpData.OperDate
-                               , tmpSale_1303.SummSale_1303
+                               , COALESCE (tmpSale_1303.SummSale_1303, 0)
                                , tmpSale_1303.TotalSummPrimeCost
-                               , tmpSP.SummChangePercent_SP
+                               , COALESCE (tmpSP.SummChangePercent_SP, 0)
+                               ,COALESCE (tmpSP.SummChangePercent_SP1303, 0)
                           )
 
      -- результат  
@@ -683,6 +729,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 09.04.19         * из Суммы реимбурсации убираем суммы по пост.1303
  04.09.17         *
  25.01.17         * ограничение по торговой сети
                     оптимизация, строим отчет на проводках

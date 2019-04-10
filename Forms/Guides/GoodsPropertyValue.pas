@@ -84,6 +84,9 @@ type
     BarCodeShort: TcxGridDBColumn;
     BoxCount: TcxGridDBColumn;
     GoodsBoxChoiceForm: TOpenChoiceForm;
+    BoxName: TcxGridDBColumn;
+    WeightOnBox: TcxGridDBColumn;
+    CountOnBox: TcxGridDBColumn;
   private
     { Private declarations }
   public

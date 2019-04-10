@@ -1540,8 +1540,7 @@ begin
   if not (Sender is tcxButton) then
   begin
 
-    if (Self.FormParams.ParamByName('SPTax').Value <> 0)
-       and (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
+    if (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
     begin
       ShowMessage('Применен соц проект.'#13#10'Для променениея ручной скидки обнулите чек и набрать позиции заново..');
       Exit;
@@ -2921,8 +2920,7 @@ end;
 procedure TMainCashForm2.actSetSiteDiscountExecute(Sender: TObject);
   var nRecNo : Integer; nSiteDiscount : Currency;
 begin
-  if (Self.FormParams.ParamByName('SPTax').Value <> 0)
-     and (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
+  if (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
   begin
     ShowMessage('Применен соц проект.'#13#10'Для променениея скидка через сайт обнулите чек и набрать позиции заново..');
     Exit;

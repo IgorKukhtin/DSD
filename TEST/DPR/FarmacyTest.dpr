@@ -677,7 +677,11 @@ uses
   GoodsAnalogEdit in '..\..\FormsFarmacy\Guides\GoodsAnalogEdit.pas' {GoodsAnalogEditForm: TParentForm},
   SendPartionDateJournal in '..\..\FormsFarmacy\Document\SendPartionDateJournal.pas' {SendPartionDateJournalForm: TParentForm},
   SendPartionDate in '..\..\FormsFarmacy\Document\SendPartionDate.pas' {SendPartionDateForm: TParentForm},
-  CheckDelayVIP in '..\..\FormsFarmacy\Document\CheckDelayVIP.pas' {CheckDelayVIPForm: TParentForm};
+  CheckDelayVIP in '..\..\FormsFarmacy\Document\CheckDelayVIP.pas' {CheckDelayVIPForm: TParentForm},
+  Report_GoodsInventory in '..\..\FormsFarmacy\Report\Report_GoodsInventory.pas' {Report_GoodsInventoryForm: TParentForm},
+  Report_GoodsInventoryDialog in '..\..\FormsFarmacy\Report\Report_GoodsInventoryDialog.pas' {Report_GoodsInventoryDialogForm: TParentForm},
+  CreditLimitDistributor in '..\..\FormsFarmacy\Object\CreditLimitDistributor.pas' {CreditLimitDistributorForm: TParentForm},
+  CreditLimitDistributorEdit in '..\..\FormsFarmacy\Object\CreditLimitDistributorEdit.pas' {CreditLimitDistributorEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

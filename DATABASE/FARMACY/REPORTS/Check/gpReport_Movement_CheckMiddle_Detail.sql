@@ -98,11 +98,14 @@ BEGIN
         , tmpCheck AS (SELECT Movement_Check.UnitId
                             , Movement_Check.Id
                             , Movement_Check.OperDate
-                            , SUM (CASE WHEN COALESCE (tmpMovSP.MovementId, 0) <> 0 THEN COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0) ELSE 0 END) AS SummChangePercent_SP
-                            , SUM (CASE WHEN MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303() 
+                            , SUM (CASE WHEN COALESCE (tmpMovSP.MovementId, 0) <> 0 AND MovementLinkObject_SPKind.ObjectId <> zc_Enum_SPKind_1303()
+                                        THEN COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0)
+                                        ELSE 0
+                                   END) AS SummChangePercent_SP
+                            , SUM (CASE WHEN MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303()
                                         THEN COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0) 
                                         ELSE 0 
-                                   END)                                                                                    AS SummSale_1303
+                                   END) AS SummSale_1303
                             , SUM (CASE WHEN MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_1303() THEN 1 ELSE 0 END) AS Count_1303
                        FROM tmpMovementCheck AS Movement_Check
                             LEFT JOIN tmpMLO_SPKind AS MovementLinkObject_SPKind
@@ -247,7 +250,7 @@ BEGIN
                                         , tmpMI.OperDate 
                                  ) AS tmpMI
                                    FULL JOIN tmpSale_1303 ON tmpSale_1303.Unitid = tmpMI.Unitid
-                                                        AND (COALESCE (tmpSale_1303.OperDate, Null) = COALESCE (tmpMI.OperDate, Null) OR (inisMonth = FALSE AND inisDay = FALSE))
+                                                         AND (COALESCE (tmpSale_1303.OperDate, Null) = COALESCE (tmpMI.OperDate, Null) OR (inisMonth = FALSE AND inisDay = FALSE))
                             ) AS tmpMI
                             GROUP BY tmpMI.Unitid
                                    , tmpMI.OperDate 
@@ -366,6 +369,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 09.04.19         * из Суммы реимбурсации убираем суммы по пост.1303
  21.06.18                                                                                     *
  24.01.18         *
  09.10.17         *

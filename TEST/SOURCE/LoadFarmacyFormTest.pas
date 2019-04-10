@@ -38,6 +38,7 @@ type
     procedure LoadContactPersonFormTest;
     procedure LoadClientsByBankFormTest;
     procedure LoadContractFormTest;
+    procedure LoadCreditLimitDistributorFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadCreateOrderFromMCSFormTest;
     procedure LoadDefaultFormTest;
@@ -49,6 +50,7 @@ type
     procedure LoadFiscalFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsFormTest;
+    procedure LoadGoodsInventoryFormTest;
     procedure LoadGoodsCategoryFormTest;
     procedure LoadGoodsSPMovementFormTest;
     procedure LoadImportSettingsFormTest;
@@ -113,7 +115,7 @@ type
     procedure LoadSaleFormTest;
     procedure LoadServiceFormTest;
     procedure LoadSendFormTest;
-        procedure LoadSendPartionDateFormTest;
+    procedure LoadSendPartionDateFormTest;
     procedure LoadSendOnPriceFormTest;
     procedure LoadSystemFormTest;
     procedure LoadSPObjectFormTest;
@@ -425,6 +427,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCreateOrderFromMCSForm');
 end;
 
+procedure TLoadFormTest.LoadCreditLimitDistributorFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCreditLimitDistributorForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCreditLimitDistributorForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCreditLimitDistributorEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCreditLimitDistributorEditForm');
+end;
+
 procedure TLoadFormTest.LoadCurrencyFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyForm'));
@@ -446,6 +456,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TFiscalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFiscalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TFiscalEditForm');
+end;
+
+procedure TLoadFormTest.LoadGoodsInventoryFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsInventoryDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsInventoryDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsInventoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsInventoryForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsCategoryFormTest;
@@ -1789,11 +1807,11 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSPEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMemberSPEditForm');
     //exit;
-   }
+
   // отчет реестр по постановлению 1303
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPDialogForm');
   exit;
@@ -1824,13 +1842,13 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsSPForm');
     exit;
-
+  }
   // отчет по продажам товара соц. проекта
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSPDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSPDialogForm');
-  }
+
 end;
 
 procedure TLoadFormTest.LoadServiceFormTest;

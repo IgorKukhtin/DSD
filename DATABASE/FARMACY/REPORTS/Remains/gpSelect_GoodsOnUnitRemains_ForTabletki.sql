@@ -73,34 +73,63 @@ BEGIN
                     HAVING SUM (tmpRemains.Amount) > 0
                    )
 
-   , Reserve AS (SELECT MovementItem.ObjectId
-                     , SUM (MovementItem.Amount) as ReserveAmount
-                FROM Movement
-                     INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                   ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                                  AND MovementLinkObject_Unit.DescId     = zc_MovementLinkObject_Unit()
-                                                  AND MovementLinkObject_Unit.ObjectID   = inUnitId
-                     INNER JOIN Object AS Object_Unit ON Object_Unit.ID = MovementLinkObject_Unit.ObjectId
-                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                       AND MovementItem.DescId     = zc_MI_Master()
-                                                       AND MovementItem.isErased   = FALSE
-                WHERE Movement.DescId   = zc_Movement_Check()
-                  AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                GROUP BY MovementItem.ObjectId
-               )
+   -- выбираем отложенные Чеки (как в кассе колонка VIP)
+   , tmpMovementChek AS (SELECT Movement.Id
+                         FROM MovementBoolean AS MovementBoolean_Deferred
+                              INNER JOIN Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
+                                                 AND Movement.DescId = zc_Movement_Check()
+                                                 AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                           AND MovementLinkObject_Unit.ObjectId = inUnitId
+                         WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
+                           AND MovementBoolean_Deferred.ValueData = TRUE
+                        UNION
+                         SELECT Movement.Id
+                         FROM MovementString AS MovementString_CommentError
+                              INNER JOIN Movement ON Movement.Id     = MovementString_CommentError.MovementId
+                                                 AND Movement.DescId = zc_Movement_Check()
+                                                 AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                           AND MovementLinkObject_Unit.ObjectId = inUnitId
+                        WHERE MovementString_CommentError.DescId = zc_MovementString_CommentError()
+                          AND MovementString_CommentError.ValueData <> ''
+                        )
+       , tmpReserve AS (SELECT MovementItem.ObjectId             AS GoodsId
+                         , SUM (MovementItem.Amount)::TFloat AS ReserveAmount
+                    FROM tmpMovementChek
+                         INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementChek.Id
+                                                AND MovementItem.DescId     = zc_MI_Master()
+                                                AND MovementItem.isErased   = FALSE
+                    GROUP BY MovementItem.ObjectId
+                    )
        , T1 AS (SELECT MIN (Remains.ObjectId) AS ObjectId
                 FROM Remains
                      INNER JOIN Object AS Object_Goods ON Object_Goods.Id = Remains.ObjectId
                 GROUP BY Object_Goods.ObjectCode
                )
-       , tmpPrice AS (SELECT Object_Price_View.GoodsId
-                     , Object_Price_View.Price AS Price
-                     , CASE WHEN vbSiteDiscount = 0 THEN Object_Price_View.Price 
-                        ELSE CEIL(Object_Price_View.Price * (100.0 - vbSiteDiscount) / 10.0) / 10.0 END::TFloat AS PriceReserve
-                FROM Object_Price_View
-                WHERE Object_Price_View.GoodsId IN (SELECT DISTINCT Remains.ObjectId FROM Remains)
-                  AND Object_Price_View.UnitId  = inUnitId
-               )
+      ,  tmpPrice AS (SELECT ObjectLink_Price_Unit.ObjectId          AS Id
+                           , Price_Goods.ChildObjectId               AS GoodsId
+                      FROM ObjectLink AS ObjectLink_Price_Unit
+                           INNER JOIN ObjectLink AS Price_Goods
+                                                 ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                      WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                        AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
+                           )
+
+      , tmpPrice_View AS (SELECT tmpPrice.GoodsId 
+                               , ROUND(Price_Value.ValueData,2)::TFloat AS Price
+                               , CASE WHEN vbSiteDiscount = 0 THEN Price_Value.ValueData 
+                                 ELSE CEIL(ROUND(Price_Value.ValueData,2) * (100.0 - vbSiteDiscount) / 10.0) / 10.0 END::TFloat AS PriceReserve
+                          FROM tmpPrice
+                               LEFT JOIN ObjectFloat AS Price_Value
+                                                     ON Price_Value.ObjectId = tmpPrice.Id
+                                                    AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                          )
        , tmpResult AS (
                       --Шапка
                       SELECT '<?xml version="1.0" encoding="utf-8"?>'::TVarChar AS RowData
@@ -122,9 +151,9 @@ BEGIN
 
                              INNER JOIN Object AS Object_Goods ON Object_Goods.Id = Remains.ObjectId
 
-                             LEFT OUTER JOIN tmpPrice AS Object_Price ON Object_Price.GoodsId = Remains.ObjectId
+                             LEFT OUTER JOIN tmpPrice_View AS Object_Price ON Object_Price.GoodsId = Remains.ObjectId
 
-                             LEFT OUTER JOIN Reserve AS Reserve_Goods ON Reserve_Goods.ObjectId = Remains.ObjectId
+                             LEFT OUTER JOIN tmpReserve AS Reserve_Goods ON Reserve_Goods.GoodsId = Remains.ObjectId
 
                         WHERE (Remains.Amount - COALESCE (Reserve_Goods.ReserveAmount, 0)) > 0
                       UNION ALL
