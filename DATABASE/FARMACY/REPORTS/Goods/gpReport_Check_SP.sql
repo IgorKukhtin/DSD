@@ -41,7 +41,8 @@ RETURNS TABLE (MovementId     Integer
              , Amount         TFloat
              , PriceSale      TFloat
              , PriceCheckSP   TFloat 
-             , SummaSP        TFloat 
+             , SummaSP        TFloat
+             , SummaSale      TFloat
              , NumLine        Integer
              , CountInvNumberSP  Integer
 
@@ -670,6 +671,7 @@ BEGIN
                     THEN CAST (tmpData.Price_calc * tmpData.Amount AS NUMERIC(16,2))
                     ELSE CAST (tmpData.SummChangePercent AS NUMERIC(16,2)) 
                END                                                              :: TFloat  AS SummaSP
+             , CAST (tmpData.PriceSale * tmpData.Amount AS NUMERIC(16,2))       :: TFloat  AS SummaSale
              , CAST (ROW_NUMBER() OVER (PARTITION BY Object_PartnerMedical.Id/*, Object_Unit.Id*/ ORDER BY Object_PartnerMedical.ValueData, /*Object_Unit.ValueData,*/ tmpGoodsSP.IntenalSPName, tmpData.OperDate ) AS Integer) AS NumLine    --PARTITION BY Object_Juridical.ValueData
              , CAST (tmpCountR.CountInvNumberSP AS Integer) AS CountInvNumberSP
 

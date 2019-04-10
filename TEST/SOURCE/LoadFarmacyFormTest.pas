@@ -115,7 +115,7 @@ type
     procedure LoadSaleFormTest;
     procedure LoadServiceFormTest;
     procedure LoadSendFormTest;
-        procedure LoadSendPartionDateFormTest;
+    procedure LoadSendPartionDateFormTest;
     procedure LoadSendOnPriceFormTest;
     procedure LoadSystemFormTest;
     procedure LoadSPObjectFormTest;
@@ -1807,11 +1807,11 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSPEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMemberSPEditForm');
     //exit;
-   }
+
   // отчет реестр по постановлению 1303
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPDialogForm');
   exit;
@@ -1842,13 +1842,13 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsSPForm');
     exit;
-
+  }
   // отчет по продажам товара соц. проекта
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSPDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSPDialogForm');
-  }
+
 end;
 
 procedure TLoadFormTest.LoadServiceFormTest;

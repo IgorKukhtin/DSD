@@ -1,24 +1,24 @@
 inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
   Caption = #1057#1074#1103#1079#1100' '#1082#1072#1090#1077#1075#1086#1088#1080#1081' '#1085#1072#1094#1077#1085#1086#1082
-  ClientHeight = 319
-  ClientWidth = 563
-  ExplicitWidth = 579
-  ExplicitHeight = 357
+  ClientHeight = 331
+  ClientWidth = 708
+  ExplicitWidth = 724
+  ExplicitHeight = 369
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 563
-    Height = 293
+    Width = 708
+    Height = 305
     ExplicitWidth = 563
     ExplicitHeight = 293
-    ClientRectBottom = 293
-    ClientRectRight = 563
+    ClientRectBottom = 305
+    ClientRectRight = 708
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 563
       ExplicitHeight = 293
       inherited cxGrid: TcxGrid
-        Width = 563
-        Height = 293
+        Width = 708
+        Height = 305
         ExplicitWidth = 563
         ExplicitHeight = 293
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -66,6 +66,21 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 176
+          end
+          object JuridicalName_our: TcxGridDBColumn
+            Caption = #1053#1072#1096#1077' '#1102#1088'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName_our'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 91
           end
           object colJuridicalName: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1074#1077#1094
