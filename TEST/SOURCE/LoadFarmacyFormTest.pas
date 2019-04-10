@@ -38,6 +38,7 @@ type
     procedure LoadContactPersonFormTest;
     procedure LoadClientsByBankFormTest;
     procedure LoadContractFormTest;
+    procedure LoadCreditLimitDistributorFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadCreateOrderFromMCSFormTest;
     procedure LoadDefaultFormTest;
@@ -424,6 +425,14 @@ begin
   Exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCreateOrderFromMCSForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCreateOrderFromMCSForm');
+end;
+
+procedure TLoadFormTest.LoadCreditLimitDistributorFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCreditLimitDistributorForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCreditLimitDistributorForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCreditLimitDistributorEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCreditLimitDistributorEditForm');
 end;
 
 procedure TLoadFormTest.LoadCurrencyFormTest;

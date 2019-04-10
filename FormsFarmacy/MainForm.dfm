@@ -2698,6 +2698,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actCreditLimitDistributor: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1050#1088#1077#1076#1080#1090#1085#1099#1077' '#1083#1080#1084#1080#1090#1099' '#1087#1086' '#1076#1080#1089#1090#1088#1080#1073#1100#1102#1090#1086#1088#1091
+      Hint = #1050#1088#1077#1076#1080#1090#1085#1099#1077' '#1083#1080#1084#1080#1090#1099' '#1087#1086' '#1076#1080#1089#1090#1088#1080#1073#1100#1102#1090#1086#1088#1091
+      FormName = 'TCreditLimitDistributorForm'
+      FormNameParam.Value = 'TCreditLimitDistributorForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3510,57 +3522,60 @@ inherited MainForm: TMainForm
       object N182: TMenuItem [15]
         Action = actGoodsInventory
       end
-      object N7: TMenuItem [16]
+      object N183: TMenuItem [16]
+        Action = actCreditLimitDistributor
+      end
+      object N7: TMenuItem [17]
         Caption = '-'
       end
-      object miSaveData: TMenuItem [17]
+      object miSaveData: TMenuItem [18]
         Action = actSaveData
       end
-      object miPriceGroupSettings: TMenuItem [18]
+      object miPriceGroupSettings: TMenuItem [19]
         Action = actPriceGroupSettings
       end
-      object N102: TMenuItem [19]
+      object N102: TMenuItem [20]
         Action = actPriceGroupSettingsTOP
       end
-      object miJuridicalSettings: TMenuItem [20]
+      object miJuridicalSettings: TMenuItem [21]
         Action = actJuridicalSettings
       end
-      object N9: TMenuItem [21]
+      object N9: TMenuItem [22]
         Caption = '-'
       end
-      object miImportType: TMenuItem [22]
+      object miImportType: TMenuItem [23]
         Action = actImportType
       end
-      object miImportSettings: TMenuItem [23]
+      object miImportSettings: TMenuItem [24]
         Action = actImportSettings
       end
-      object miImportExportLink: TMenuItem [24]
+      object miImportExportLink: TMenuItem [25]
         Action = actImportExportLink
       end
-      object miGlobalConst: TMenuItem [25]
+      object miGlobalConst: TMenuItem [26]
         Action = actGlobalConst
       end
-      object FarmacyCash1: TMenuItem [27]
+      object FarmacyCash1: TMenuItem [28]
         Action = actUnitForFarmacyCash
       end
-      object N10: TMenuItem [29]
+      object N10: TMenuItem [30]
         Caption = '-'
       end
-      object miReprice: TMenuItem [30]
+      object miReprice: TMenuItem [31]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072
         OnClick = miRepriceClick
       end
-      object miRepriceChange: TMenuItem [31]
+      object miRepriceChange: TMenuItem [32]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1094#1077#1085' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
         OnClick = miRepriceChangeClick
       end
-      object miExportSalesForSupp: TMenuItem [32]
+      object miExportSalesForSupp: TMenuItem [33]
         Action = actExportSalesForSuppClick
       end
-      object N173: TMenuItem [33]
+      object N173: TMenuItem [34]
         Action = actRepriceUnitSheduler
       end
-      object miRecalcMCSSheduler: TMenuItem [34]
+      object miRecalcMCSSheduler: TMenuItem [35]
         Action = actRecalcMCSSheduler
       end
     end
