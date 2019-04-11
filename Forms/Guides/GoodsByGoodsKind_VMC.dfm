@@ -590,7 +590,31 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' '#1087#1086#1083#1085#1086#1075#1086' '#1103#1097#1080#1082#1072
             Options.Editing = False
-            Width = 58
+            Width = 73
+          end
+          object WeightAvgGross: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' '#1087#1086' '#1089#1088'. '#1074#1077#1089#1091' '#1103#1097#1080#1082#1072' (E2/E3)'
+            DataBinding.FieldName = 'WeightAvgGross'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' '#1087#1086' '#1089#1088#1077#1076#1085#1077#1084#1091' '#1074#1077#1089#1091' '#1103#1097#1080#1082#1072
+            Options.Editing = False
+            Width = 73
+          end
+          object WeightAvgNet: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1085#1077#1090#1090#1086' '#1087#1086' '#1089#1088'. '#1074#1077#1089#1091' '#1103#1097#1080#1082#1072' (E2/E3)'
+            DataBinding.FieldName = 'WeightAvgNet'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1089' '#1085#1077#1090#1090#1086' '#1087#1086' '#1089#1088#1077#1076#1085#1077#1084#1091' '#1074#1077#1089#1091' '#1103#1097#1080#1082#1072' (E2/E3)'
+            Options.Editing = False
+            Width = 73
           end
           object BoxCode_2: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1103#1097#1080#1082#1072' ('#1043#1086#1092#1088#1072')'
@@ -702,7 +726,31 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' '#1087#1086#1083#1085#1086#1075#1086' '#1103#1097#1080#1082#1072
             Options.Editing = False
-            Width = 56
+            Width = 73
+          end
+          object WeightAvgGross_2: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' '#1087#1086' '#1089#1088'. '#1074#1077#1089#1091' '#1103#1097#1080#1082#1072' ('#1043#1086#1092#1088#1072')'
+            DataBinding.FieldName = 'WeightAvgGross_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' '#1087#1086' '#1089#1088'. '#1074#1077#1089#1091' '#1103#1097#1080#1082#1072' ('#1043#1086#1092#1088#1072')'
+            Options.Editing = False
+            Width = 76
+          end
+          object WeightAvgNet_2: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1085#1077#1090#1090#1086' '#1087#1086' '#1089#1088'. '#1074#1077#1089#1091' '#1103#1097#1080#1082#1072' ('#1043#1086#1092#1088#1072')'
+            DataBinding.FieldName = 'WeightAvgNet_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1089' '#1085#1077#1090#1090#1086' '#1087#1086' '#1089#1088'. '#1074#1077#1089#1091' '#1103#1097#1080#1082#1072' ('#1043#1086#1092#1088#1072')'
+            Options.Editing = False
+            Width = 78
           end
           object BoxName_Retail1: TcxGridDBColumn
             Caption = #1071#1097#1080#1082' ('#1057#1077#1090#1100' 1)'

@@ -16,62 +16,63 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind_VMC(
  INOUT ioId                    Integer  , -- ключ объекта <Товар>
     IN inGoodsId               Integer  , -- Товары
     IN inGoodsKindId           Integer  , -- Виды товаров
-    IN inBoxId                 Integer  , -- ящик
-    IN inBoxId_2               Integer  , -- ящик
-    IN inWeightMin             TFloat  , -- 
-    IN inWeightMax             TFloat  , -- 
-    IN inHeight                TFloat  , -- 
-    IN inLength                TFloat  , -- 
-    IN inWidth                 TFloat  , -- 
-    IN inNormInDays            TFloat  , -- 
-    IN inCountOnBox            TFloat  , -- 
-    IN inWeightOnBox           TFloat  , -- 
-    IN inCountOnBox_2          TFloat  , -- 
-    IN inWeightOnBox_2         TFloat  , -- 
-   OUT outWeightGross          TFloat  , -- 
-   OUT outWeightGross_2        TFloat  , -- 
-    IN inisGoodsTypeKind_Sh    Boolean , -- 
-    IN inisGoodsTypeKind_Nom   Boolean , -- 
-    IN inisGoodsTypeKind_Ves   Boolean , -- 
-   OUT outisCodeCalc_Diff      Boolean ,
-   OUT outCodeCalc_Sh          TVarChar,
-   OUT outCodeCalc_Nom         TVarChar,
-   OUT outCodeCalc_Ves         TVarChar,
-   OUT outWmsCode              Integer,
-   OUT outWmsCodeCalc_Sh       TVarChar,
-   OUT outWmsCodeCalc_Nom      TVarChar,
-   OUT outWmsCodeCalc_Ves      TVarChar,
+    IN inBoxId                 Integer  , -- Ящик (E2/E3)
+    IN inBoxId_2               Integer  , -- ящик (Гофра)
+    IN inWeightMin             TFloat  , -- Мин. вес
+    IN inWeightMax             TFloat  , -- Мах. вес
+    IN inHeight                TFloat  , -- Высота
+    IN inLength                TFloat  , -- Длина
+    IN inWidth                 TFloat  , -- Ширина
+    IN inNormInDays            TFloat  , -- Cрок годности, дн.
+    IN inCountOnBox            TFloat  , -- Кол-во ед. в ящ. (E2/E3)
+    IN inWeightOnBox           TFloat  , -- Кол-во кг. в ящ. (E2/E3)
+    IN inCountOnBox_2          TFloat  , -- Кол-во ед. в ящ. (Гофра)
+    IN inWeightOnBox_2         TFloat  , -- Кол-во кг. в ящ. (Гофра)
+   OUT outWeightGross          TFloat  , -- Вес брутто полного ящика (E2/E3)
+   OUT outWeightGross_2        TFloat  , -- Вес брутто полного ящика (Гофра)
+    IN inisGoodsTypeKind_Sh    Boolean , -- Штучный
+    IN inisGoodsTypeKind_Nom   Boolean , -- Номинальный
+    IN inisGoodsTypeKind_Ves   Boolean , -- Неноминальный
+   OUT outisCodeCalc_Diff      Boolean , -- Повтор кода ВМС
+   OUT outCodeCalc_Sh          TVarChar, -- Код ВМС шт.      
+   OUT outCodeCalc_Nom         TVarChar, -- Код ВМС номинал  
+   OUT outCodeCalc_Ves         TVarChar, -- Код ВМС неноминал
+   OUT outWmsCode              Integer , -- новый Код ВМС*
+   OUT outWmsCodeCalc_Sh       TVarChar, -- новый Код ВМС* шт.
+   OUT outWmsCodeCalc_Nom      TVarChar, -- новый Код ВМС* номинал
+   OUT outWmsCodeCalc_Ves      TVarChar, -- новый Код ВМС* неноминал
    
-    IN inRetail1Id                 Integer  , -- 
-    IN inRetail2Id                 Integer  , -- 
-    IN inRetail3Id                 Integer  , -- 
-    IN inRetail4Id                 Integer  , -- 
-    IN inRetail5Id                 Integer  , -- 
-    IN inRetail6Id                 Integer  , -- 
- INOUT ioBoxId_Retail1             Integer  , -- ящик
- INOUT ioBoxId_Retail2             Integer  , -- ящик
- INOUT ioBoxId_Retail3             Integer  , -- ящик
- INOUT ioBoxId_Retail4             Integer  , -- ящик
- INOUT ioBoxId_Retail5             Integer  , -- ящик
- INOUT ioBoxId_Retail6             Integer  , -- ящик
-   OUT outBoxName_Retail1          TVarChar,
-   OUT outBoxName_Retail2          TVarChar,
-   OUT outBoxName_Retail3          TVarChar,
-   OUT outBoxName_Retail4          TVarChar,
-   OUT outBoxName_Retail5          TVarChar,
-   OUT outBoxName_Retail6          TVarChar, 
- INOUT ioCountOnBox_Retail1        TFloat  , --
- INOUT ioCountOnBox_Retail2        TFloat  , --
- INOUT ioCountOnBox_Retail3        TFloat  , --
- INOUT ioCountOnBox_Retail4        TFloat  , --
- INOUT ioCountOnBox_Retail5        TFloat  , --
- INOUT ioCountOnBox_Retail6        TFloat  , --
- INOUT ioWeightOnBox_Retail1       TFloat  , -- 
- INOUT ioWeightOnBox_Retail2       TFloat  , -- 
- INOUT ioWeightOnBox_Retail3       TFloat  , -- 
- INOUT ioWeightOnBox_Retail4       TFloat  , -- 
- INOUT ioWeightOnBox_Retail5       TFloat  , -- 
- INOUT ioWeightOnBox_Retail6       TFloat  , -- 
+    IN inRetail1Id                 Integer  , -- Сеть 1
+    IN inRetail2Id                 Integer  , -- Сеть 2
+    IN inRetail3Id                 Integer  , -- Сеть 3
+    IN inRetail4Id                 Integer  , -- Сеть 4
+    IN inRetail5Id                 Integer  , -- Сеть 5
+    IN inRetail6Id                 Integer  , -- Сеть 6
+ INOUT ioBoxId_Retail1             Integer  , -- ящик для Сети 1
+ INOUT ioBoxId_Retail2             Integer  , -- ящик для Сети 2
+ INOUT ioBoxId_Retail3             Integer  , -- ящик для Сети 3
+ INOUT ioBoxId_Retail4             Integer  , -- ящик для Сети 4
+ INOUT ioBoxId_Retail5             Integer  , -- ящик для Сети 5
+ INOUT ioBoxId_Retail6             Integer  , -- ящик для Сети 6
+   OUT outBoxName_Retail1          TVarChar , -- ящик Название для Сети 1
+   OUT outBoxName_Retail2          TVarChar , -- ящик Название для Сети 2 
+   OUT outBoxName_Retail3          TVarChar , -- ящик Название для Сети 3
+   OUT outBoxName_Retail4          TVarChar , -- ящик Название для Сети 4
+   OUT outBoxName_Retail5          TVarChar , -- ящик Название для Сети 5
+   OUT outBoxName_Retail6          TVarChar , -- ящик Название для Сети 6
+ INOUT ioCountOnBox_Retail1        TFloat   , -- количество ед. в ящ. для Сети 1
+ INOUT ioCountOnBox_Retail2        TFloat   , -- количество ед. в ящ. для Сети 2
+ INOUT ioCountOnBox_Retail3        TFloat   , -- количество ед. в ящ. для Сети 3
+ INOUT ioCountOnBox_Retail4        TFloat   , -- количество ед. в ящ. для Сети 4
+ INOUT ioCountOnBox_Retail5        TFloat   , -- количество ед. в ящ. для Сети 5
+ INOUT ioCountOnBox_Retail6        TFloat   , -- количество ед. в ящ. для Сети 6
+
+ INOUT ioWeightOnBox_Retail1       TFloat   , -- количество кг. в ящ. для Сети 1
+ INOUT ioWeightOnBox_Retail2       TFloat   , -- количество кг. в ящ. для Сети 2
+ INOUT ioWeightOnBox_Retail3       TFloat   , -- количество кг. в ящ. для Сети 3
+ INOUT ioWeightOnBox_Retail4       TFloat   , -- количество кг. в ящ. для Сети 4
+ INOUT ioWeightOnBox_Retail5       TFloat   , -- количество кг. в ящ. для Сети 5
+ INOUT ioWeightOnBox_Retail6       TFloat   , -- количество кг. в ящ. для Сети 6
 
     IN inSession               TVarChar 
 )
