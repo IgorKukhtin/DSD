@@ -110,6 +110,11 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaSale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaSP_pack
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -382,6 +387,16 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
+          end
+          object SummaSP_pack: TcxGridDBColumn
+            Caption = #1057#1091#1084#1072' '#1074#1110#1076#1096#1082#1086#1076#1091#1074#1072#1085#1085#1103' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' '#1083#1110#1082#1072#1088#1089#1100#1082#1086#1075#1086' '#1079#1072#1089#1086#1073#1091', '#1075#1088#1085' (15)'
+            DataBinding.FieldName = 'SummaSP_pack'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 103
           end
           object PaymentSP: TcxGridDBColumn
             Caption = #1057#1091#1084#1072' '#1076#1086#1087#1083#1072#1090#1080' '#1079#1072' '#1091#1087#1072#1082#1086#1074#1082#1091', '#1075#1088#1085' (16)'
@@ -1803,8 +1818,8 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       item
         Component = JuridicalGuides
       end>
-    Left = 304
-    Top = 168
+    Left = 272
+    Top = 232
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
