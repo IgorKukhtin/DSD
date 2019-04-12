@@ -345,11 +345,36 @@ BEGIN
    --
    IF COALESCE (inRetail1Id,0) <> 0
    THEN 
+       -- проверяем чтоб 1 сеть  = 1 классификатор св-в товаров
+       IF EXISTS (SELECT COUNT (DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId)
+                  FROM ObjectLink AS ObjectLink_Juridical_Retail
+                          INNER JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+                                               ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Juridical_Retail.ObjectId
+                                              AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
+                  WHERE ObjectLink_Juridical_Retail.ChildObjectId = inRetail1Id
+                    AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                    AND COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) <> 0
+                    AND COALESCE (ObjectLink_Juridical_GoodsProperty.ChildObjectId,0) <> 0
+                  GROUP BY ObjectLink_Juridical_Retail.ChildObjectId
+                  HAVING COUNT (DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId) > 1)
+       THEN
+           RAISE EXCEPTION 'Ошибка. Сети <%> соответствует более одного классификатора', lfGet_Object_ValueData (inRetail1Id);
+       END IF;
+
        -- находим GoodsPropertyValueId
        vbGoodsPropertyValueId := (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId AS GoodsPropertyValueId
-                                  FROM ObjectLink AS ObjectLink_Retail_GoodsProperty
+                                  FROM (SELECT DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
+                                        FROM ObjectLink AS ObjectLink_Juridical_Retail
+                                                INNER JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+                                                                     ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Juridical_Retail.ObjectId
+                                                                    AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
+                                        WHERE ObjectLink_Juridical_Retail.ChildObjectId = inRetail1Id
+                                          AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                          AND COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) <> 0
+                                          AND COALESCE (ObjectLink_Juridical_GoodsProperty.ChildObjectId,0) <> 0
+                                        ) AS tmpGoodsProperty
                                        INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
-                                                             ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = ObjectLink_Retail_GoodsProperty.ChildObjectId
+                                                             ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
                                                             AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
                                        INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                                              ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -359,8 +384,6 @@ BEGIN
                                                              ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                             AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
                                                             AND ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId = inGoodsKindId
-                                  WHERE ObjectLink_Retail_GoodsProperty.ObjectId = inRetail1Id
-                                    AND ObjectLink_Retail_GoodsProperty.DescId = zc_ObjectLink_Retail_GoodsProperty()
                                   );
        IF COALESCE (vbGoodsPropertyValueId) <> 0
        THEN
@@ -380,12 +403,36 @@ BEGIN
    --
    IF COALESCE (inRetail2Id,0) <> 0
    THEN 
-   --RAISE EXCEPTION 'Ошибка.  <%>.', vbBoxId_Retail;
+       -- проверяем чтоб 1 сеть  = 1 классификатор св-в товаров
+       IF EXISTS (SELECT COUNT (DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId)
+                  FROM ObjectLink AS ObjectLink_Juridical_Retail
+                          INNER JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+                                               ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Juridical_Retail.ObjectId
+                                              AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
+                  WHERE ObjectLink_Juridical_Retail.ChildObjectId = inRetail2Id
+                    AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                    AND COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) <> 0
+                    AND COALESCE (ObjectLink_Juridical_GoodsProperty.ChildObjectId,0) <> 0
+                  GROUP BY ObjectLink_Juridical_Retail.ChildObjectId
+                  HAVING COUNT (DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId) > 1)
+       THEN
+           RAISE EXCEPTION 'Ошибка. Сети <%> соответствует более одного классификатора', inRetail1Id;
+       END IF;
+
        -- находим GoodsPropertyValueId
        vbGoodsPropertyValueId := (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId AS GoodsPropertyValueId
-                                  FROM ObjectLink AS ObjectLink_Retail_GoodsProperty
+                                  FROM (SELECT DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
+                                        FROM ObjectLink AS ObjectLink_Juridical_Retail
+                                                INNER JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+                                                                     ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Juridical_Retail.ObjectId
+                                                                    AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
+                                        WHERE ObjectLink_Juridical_Retail.ChildObjectId = inRetail2Id
+                                          AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                          AND COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) <> 0
+                                          AND COALESCE (ObjectLink_Juridical_GoodsProperty.ChildObjectId,0) <> 0
+                                        ) AS tmpGoodsProperty
                                        INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
-                                                             ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = ObjectLink_Retail_GoodsProperty.ChildObjectId
+                                                             ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
                                                             AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
                                        INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                                              ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -395,8 +442,6 @@ BEGIN
                                                              ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                             AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
                                                             AND ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId = inGoodsKindId
-                                  WHERE ObjectLink_Retail_GoodsProperty.ObjectId = inRetail2Id
-                                    AND ObjectLink_Retail_GoodsProperty.DescId = zc_ObjectLink_Retail_GoodsProperty()
                                   );
        IF COALESCE (vbGoodsPropertyValueId) <> 0
        THEN
@@ -415,12 +460,37 @@ BEGIN
    END IF;
    --
    IF COALESCE (inRetail3Id,0) <> 0
-   THEN 
+   THEN
+       -- проверяем чтоб 1 сеть  = 1 классификатор св-в товаров
+       IF EXISTS (SELECT COUNT (DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId)
+                  FROM ObjectLink AS ObjectLink_Juridical_Retail
+                          INNER JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+                                               ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Juridical_Retail.ObjectId
+                                              AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
+                  WHERE ObjectLink_Juridical_Retail.ChildObjectId = inRetail3Id
+                    AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                    AND COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) <> 0
+                    AND COALESCE (ObjectLink_Juridical_GoodsProperty.ChildObjectId,0) <> 0
+                  GROUP BY ObjectLink_Juridical_Retail.ChildObjectId
+                  HAVING COUNT (DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId) > 1)
+       THEN
+           RAISE EXCEPTION 'Ошибка. Сети <%> соответствует более одного классификатора', inRetail1Id;
+       END IF;
+
        -- находим GoodsPropertyValueId
        vbGoodsPropertyValueId := (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId AS GoodsPropertyValueId
-                                  FROM ObjectLink AS ObjectLink_Retail_GoodsProperty
+                                  FROM (SELECT DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
+                                        FROM ObjectLink AS ObjectLink_Juridical_Retail
+                                                INNER JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+                                                                     ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Juridical_Retail.ObjectId
+                                                                    AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
+                                        WHERE ObjectLink_Juridical_Retail.ChildObjectId = inRetail3Id
+                                          AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                          AND COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) <> 0
+                                          AND COALESCE (ObjectLink_Juridical_GoodsProperty.ChildObjectId,0) <> 0
+                                        ) AS tmpGoodsProperty
                                        INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
-                                                             ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = ObjectLink_Retail_GoodsProperty.ChildObjectId
+                                                             ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
                                                             AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
                                        INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                                              ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -430,8 +500,6 @@ BEGIN
                                                              ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                             AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
                                                             AND ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId = inGoodsKindId
-                                  WHERE ObjectLink_Retail_GoodsProperty.ObjectId = inRetail3Id
-                                    AND ObjectLink_Retail_GoodsProperty.DescId = zc_ObjectLink_Retail_GoodsProperty()
                                   );
        IF COALESCE (vbGoodsPropertyValueId) <> 0
        THEN
@@ -451,11 +519,36 @@ BEGIN
    --
    IF COALESCE (inRetail4Id,0) <> 0
    THEN 
+       -- проверяем чтоб 1 сеть  = 1 классификатор св-в товаров
+       IF EXISTS (SELECT COUNT (DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId)
+                  FROM ObjectLink AS ObjectLink_Juridical_Retail
+                          INNER JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+                                               ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Juridical_Retail.ObjectId
+                                              AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
+                  WHERE ObjectLink_Juridical_Retail.ChildObjectId = inRetail4Id
+                    AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                    AND COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) <> 0
+                    AND COALESCE (ObjectLink_Juridical_GoodsProperty.ChildObjectId,0) <> 0
+                  GROUP BY ObjectLink_Juridical_Retail.ChildObjectId
+                  HAVING COUNT (DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId) > 1)
+       THEN
+           RAISE EXCEPTION 'Ошибка. Сети <%> соответствует более одного классификатора', inRetail1Id;
+       END IF;
+
        -- находим GoodsPropertyValueId
        vbGoodsPropertyValueId := (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId AS GoodsPropertyValueId
-                                  FROM ObjectLink AS ObjectLink_Retail_GoodsProperty
+                                  FROM (SELECT DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
+                                        FROM ObjectLink AS ObjectLink_Juridical_Retail
+                                                INNER JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+                                                                     ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Juridical_Retail.ObjectId
+                                                                    AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
+                                        WHERE ObjectLink_Juridical_Retail.ChildObjectId = inRetail4Id
+                                          AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                          AND COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) <> 0
+                                          AND COALESCE (ObjectLink_Juridical_GoodsProperty.ChildObjectId,0) <> 0
+                                        ) AS tmpGoodsProperty
                                        INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
-                                                             ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = ObjectLink_Retail_GoodsProperty.ChildObjectId
+                                                             ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
                                                             AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
                                        INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                                              ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -465,8 +558,6 @@ BEGIN
                                                              ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                             AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
                                                             AND ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId = inGoodsKindId
-                                  WHERE ObjectLink_Retail_GoodsProperty.ObjectId = inRetail4Id
-                                    AND ObjectLink_Retail_GoodsProperty.DescId = zc_ObjectLink_Retail_GoodsProperty()
                                   );
        IF COALESCE (vbGoodsPropertyValueId) <> 0
        THEN
@@ -486,11 +577,36 @@ BEGIN
    --
    IF COALESCE (inRetail5Id,0) <> 0
    THEN 
+       -- проверяем чтоб 1 сеть  = 1 классификатор св-в товаров
+       IF EXISTS (SELECT COUNT (DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId)
+                  FROM ObjectLink AS ObjectLink_Juridical_Retail
+                          INNER JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+                                               ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Juridical_Retail.ObjectId
+                                              AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
+                  WHERE ObjectLink_Juridical_Retail.ChildObjectId = inRetail5Id
+                    AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                    AND COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) <> 0
+                    AND COALESCE (ObjectLink_Juridical_GoodsProperty.ChildObjectId,0) <> 0
+                  GROUP BY ObjectLink_Juridical_Retail.ChildObjectId
+                  HAVING COUNT (DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId) > 1)
+       THEN
+           RAISE EXCEPTION 'Ошибка. Сети <%> соответствует более одного классификатора', inRetail1Id;
+       END IF;
+
        -- находим GoodsPropertyValueId
        vbGoodsPropertyValueId := (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId AS GoodsPropertyValueId
-                                  FROM ObjectLink AS ObjectLink_Retail_GoodsProperty
+                                  FROM (SELECT DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
+                                        FROM ObjectLink AS ObjectLink_Juridical_Retail
+                                                INNER JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+                                                                     ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Juridical_Retail.ObjectId
+                                                                    AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
+                                        WHERE ObjectLink_Juridical_Retail.ChildObjectId = inRetail5Id
+                                          AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                          AND COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) <> 0
+                                          AND COALESCE (ObjectLink_Juridical_GoodsProperty.ChildObjectId,0) <> 0
+                                        ) AS tmpGoodsProperty
                                        INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
-                                                             ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = ObjectLink_Retail_GoodsProperty.ChildObjectId
+                                                             ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
                                                             AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
                                        INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                                              ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -500,8 +616,6 @@ BEGIN
                                                              ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                             AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
                                                             AND ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId = inGoodsKindId
-                                  WHERE ObjectLink_Retail_GoodsProperty.ObjectId = inRetail5Id
-                                    AND ObjectLink_Retail_GoodsProperty.DescId = zc_ObjectLink_Retail_GoodsProperty()
                                   );
        IF COALESCE (vbGoodsPropertyValueId) <> 0
        THEN
@@ -521,11 +635,36 @@ BEGIN
    --
    IF COALESCE (inRetail6Id,0) <> 0
    THEN 
+       -- проверяем чтоб 1 сеть  = 1 классификатор св-в товаров
+       IF EXISTS (SELECT COUNT (DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId)
+                  FROM ObjectLink AS ObjectLink_Juridical_Retail
+                          INNER JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+                                               ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Juridical_Retail.ObjectId
+                                              AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
+                  WHERE ObjectLink_Juridical_Retail.ChildObjectId = inRetail6Id
+                    AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                    AND COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) <> 0
+                    AND COALESCE (ObjectLink_Juridical_GoodsProperty.ChildObjectId,0) <> 0
+                  GROUP BY ObjectLink_Juridical_Retail.ChildObjectId
+                  HAVING COUNT (DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId) > 1)
+       THEN
+           RAISE EXCEPTION 'Ошибка. Сети <%> соответствует более одного классификатора', inRetail1Id;
+       END IF;
+
        -- находим GoodsPropertyValueId
        vbGoodsPropertyValueId := (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId AS GoodsPropertyValueId
-                                  FROM ObjectLink AS ObjectLink_Retail_GoodsProperty
+                                  FROM (SELECT DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
+                                        FROM ObjectLink AS ObjectLink_Juridical_Retail
+                                                INNER JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+                                                                     ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Juridical_Retail.ObjectId
+                                                                    AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
+                                        WHERE ObjectLink_Juridical_Retail.ChildObjectId = inRetail6Id
+                                          AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                          AND COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) <> 0
+                                          AND COALESCE (ObjectLink_Juridical_GoodsProperty.ChildObjectId,0) <> 0
+                                        ) AS tmpGoodsProperty
                                        INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
-                                                             ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = ObjectLink_Retail_GoodsProperty.ChildObjectId
+                                                             ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
                                                             AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
                                        INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                                              ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -535,8 +674,6 @@ BEGIN
                                                              ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                             AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
                                                             AND ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId = inGoodsKindId
-                                  WHERE ObjectLink_Retail_GoodsProperty.ObjectId = inRetail6Id
-                                    AND ObjectLink_Retail_GoodsProperty.DescId = zc_ObjectLink_Retail_GoodsProperty()
                                   );
        IF COALESCE (vbGoodsPropertyValueId) <> 0
        THEN

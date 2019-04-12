@@ -543,14 +543,14 @@ BEGIN
    
      -- קאיה
      , tmpMI_Child AS (SELECT MovementItem.Id                          AS Id
-                           , MovementItem.ParentId                    AS ParentId
-                           , MovementItem.ObjectId                    AS MemberId
-                           , MovementItem.Amount
-
-                           , MILinkObject_PositionLevel.ObjectId      AS PositionLevelId
-                           , MILinkObject_StaffList.ObjectId          AS StaffListId
-                           , MILinkObject_ModelService.ObjectId       AS ModelServiceId
-                           , MILinkObject_StaffListSummKind.ObjectId  AS StaffListSummKindId
+                            , MovementItem.ParentId                    AS ParentId
+                            , MovementItem.ObjectId                    AS MemberId
+                            , MovementItem.Amount                      AS Amount
+ 
+                            , MILinkObject_PositionLevel.ObjectId      AS PositionLevelId
+                            , MILinkObject_StaffList.ObjectId          AS StaffListId
+                            , MILinkObject_ModelService.ObjectId       AS ModelServiceId
+                            , MILinkObject_StaffListSummKind.ObjectId  AS StaffListSummKindId
                           -- , MILinkObject_StorageLine.ObjectId        AS StorageLineId
 
                       FROM MovementItem 
@@ -573,6 +573,11 @@ BEGIN
                          AND MovementItem.DescId = zc_MI_Child()
                          AND MovementItem.isErased = FALSE
                       )
+     , tmpChild_TotalSumm AS (SELECT tmpMI_Child.ParentId
+                                   , SUM (tmpMI_Child.Amount) AS Amount
+                              FROM tmpMI_Child
+                              GROUP BY tmpMI_Child.ParentId
+                              )
      , tmpChild AS (SELECT tmpMI_Child.ParentId
                          , tmpMI_Child.MemberId                
                          , tmpMI_Child.PositionLevelId
@@ -677,15 +682,17 @@ BEGIN
             , tmpAll.SummTransportTaxi      :: TFloat AS SummTransportTaxi
             , tmpAll.SummPhone              :: TFloat AS SummPhone
             , (tmpAll.SummService + COALESCE (tmpAll.SummAdd, 0) + COALESCE (tmpAll.SummNalogRet, 0) + COALESCE ( tmpAll.SummHoliday, 0) - COALESCE (tmpAll.SummMinus, 0) - COALESCE (tmpAll.SummNalog, 0)) :: TFloat AS TotalSumm
+            
+            , tmpChild_TotalSumm.Amount     :: TFloat AS TotalSummChild
             -- קאיכה
-            , Object_PositionLevel.Id                  AS PositionLevelId
-            , Object_PositionLevel.ValueData           AS PositionLevelName
+            , Object_PositionLevel.Id                 AS PositionLevelId
+            , Object_PositionLevel.ValueData          AS PositionLevelName
 
-            , Object_ModelService.Id                   AS ModelServiceId
-            , Object_ModelService.ValueData            AS ModelServiceName
+            , Object_ModelService.Id                  AS ModelServiceId
+            , Object_ModelService.ValueData           AS ModelServiceName
 
-            , Object_StaffListSummKind.Id              AS StaffListSummKindId
-            , Object_StaffListSummKind.ValueData       AS StaffListSummKindName
+            , Object_StaffListSummKind.Id             AS StaffListSummKindId
+            , Object_StaffListSummKind.ValueData      AS StaffListSummKindName
 
             --, Object_StorageLine.Id                    AS StorageLineId
             --, Object_StorageLine.ValueData             AS StorageLineName
@@ -708,6 +715,8 @@ BEGIN
        FROM tmpMaster AS tmpAll
             LEFT JOIN tmpChild ON tmpChild.ParentId = tmpAll.Id
 
+            LEFT JOIN tmpChild_TotalSumm ON tmpChild_TotalSumm.ParentId = tmpAll.Id
+
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpAll.PersonalId
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpAll.UnitId
             LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpAll.PositionId
@@ -719,7 +728,7 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Member_Official
                                     ON ObjectBoolean_Member_Official.ObjectId = tmpAll.MemberId
                                    AND ObjectBoolean_Member_Official.DescId = zc_ObjectBoolean_Member_Official()
-                                   
+
             -- קאיכה
             LEFT JOIN Object AS Object_PositionLevel     ON Object_PositionLevel.Id     = tmpChild.PositionLevelId
             LEFT JOIN Object AS Object_StaffList         ON Object_StaffList.Id         = tmpChild.StaffListId

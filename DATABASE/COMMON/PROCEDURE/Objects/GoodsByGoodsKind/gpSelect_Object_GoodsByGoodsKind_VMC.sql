@@ -238,7 +238,21 @@ BEGIN
                                 AND Object_GoodsPropertyBox.isErased = FALSE
              )
 
-   , tmpGoodsPropertyValue AS (SELECT ObjectLink_Retail_GoodsProperty.ObjectId              AS RetailId
+   , tmpRetail AS (SELECT tmp.RetailId, tmp.GoodsPropertyId
+                   FROM (SELECT ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
+                              , ObjectLink_Juridical_GoodsProperty.ChildObjectId   AS GoodsPropertyId
+                              , ROW_NUMBER() OVER(PARTITION BY ObjectLink_Juridical_Retail.ChildObjectId ORDER BY ObjectLink_Juridical_GoodsProperty.ChildObjectId) as Ord
+                         FROM ObjectLink AS ObjectLink_Juridical_Retail
+                                 INNER JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+                                                      ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Juridical_Retail.ObjectId
+                                                     AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
+                         WHERE ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                           AND COALESCE (ObjectLink_Juridical_Retail.ChildObjectId,0) <> 0
+                           AND COALESCE (ObjectLink_Juridical_GoodsProperty.ChildObjectId,0) <> 0
+                         ) AS tmp
+                   WHERE Ord = 1)
+
+   , tmpGoodsPropertyValue AS (SELECT tmpRetail.RetailId                                    AS RetailId
                                     , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId     AS GoodsId
                                     , ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId AS GoodsKindId
                                     , Object_Box.Id                                         AS BoxId
@@ -270,9 +284,7 @@ BEGIN
                                                          ON ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId = ObjectLink_GoodsPropertyValue_Box.ObjectId
                                                         AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
 
-                                    LEFT JOIN ObjectLink AS ObjectLink_Retail_GoodsProperty
-                                                         ON ObjectLink_Retail_GoodsProperty.ChildObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId
-                                                        AND ObjectLink_Retail_GoodsProperty.DescId = zc_ObjectLink_Retail_GoodsProperty()
+                                    LEFT JOIN tmpRetail ON tmpRetail.GoodsPropertyId = ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId
 
                                WHERE ObjectLink_GoodsPropertyValue_Box.DescId = zc_ObjectLink_GoodsPropertyValue_Box()
                                  AND COALESCE (ObjectLink_GoodsPropertyValue_Box.ChildObjectId,0) <> 0

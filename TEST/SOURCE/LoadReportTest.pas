@@ -321,10 +321,10 @@ begin
    LoadReportFromFile('PrintMovement_ReestrReturnStartPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrReturnStartPeriod.fr3');
 
    LoadReportFromFile('PrintMovement_Reestr', ReportPath + '\Товарный Учет\PrintMovement_Reestr.fr3');
-   }
+
    LoadReportFromFile('PrintMovement_ReestrDriver', ReportPath + '\Товарный Учет\PrintMovement_ReestrDriver.fr3');
    exit;
-   {
+
    LoadReportFromFile('PrintMovement_ReestrPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrPeriod.fr3');
 
    LoadReportFromFile('PrintMovement_ReestrStartPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrStartPeriod.fr3');
@@ -348,10 +348,10 @@ begin
   LoadReportFromFile('PrintMovement_SalePack', ReportPath + '\Товарный Учет\PrintMovement_SalePack.fr3');
 
   LoadReportFromFile('PrintMovement_Quality', ReportPath + '\Товарный Учет\PrintMovement_Quality.fr3');
-  }
+
   LoadReportFromFile('PrintMovement_Quality32049199', ReportPath + '\Товарный Учет\PrintMovement_Quality32049199.fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintMovement_ReturnIn', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn.fr3');
   LoadReportFromFile('PrintMovement_ReturnIn32049199', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn32049199.fr3');
   LoadReportFromFile('PrintMovement_ReturnIn32516492', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn32516492.fr3');
@@ -414,9 +414,11 @@ begin
   LoadReportFromFile('PrintMovement_ProductionUnion', ReportPath + '\Товарный Учет\PrintMovement_ProductionUnion.fr3');
 
   LoadReportFromFile('PrintMovement_PersonalService', ReportPath + '\Персонал\PrintMovement_PersonalService.fr3');
+
+  }
   LoadReportFromFile('PrintMovement_PersonalServiceDetail', ReportPath + '\Персонал\PrintMovement_PersonalServiceDetail.fr3');
   exit;
-  LoadReportFromFile('Приложение7', ReportPath + '\Отчеты(филиалы)\Приложение7.fr3');
+  {LoadReportFromFile('Приложение7', ReportPath + '\Отчеты(филиалы)\Приложение7.fr3');
   LoadReportFromFile('Приложение7 Новое', ReportPath + '\Отчеты(филиалы)\Приложение7 Новое.fr3');
 
   LoadReportFromFile('Приложение1', ReportPath + '\Отчеты(филиалы)\Приложение1.fr3');
