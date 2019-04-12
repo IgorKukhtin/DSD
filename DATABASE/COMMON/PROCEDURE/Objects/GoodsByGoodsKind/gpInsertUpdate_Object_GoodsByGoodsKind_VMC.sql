@@ -416,7 +416,7 @@ BEGIN
                   GROUP BY ObjectLink_Juridical_Retail.ChildObjectId
                   HAVING COUNT (DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId) > 1)
        THEN
-           RAISE EXCEPTION 'Ошибка. Сети <%> соответствует более одного классификатора', inRetail1Id;
+           RAISE EXCEPTION 'Ошибка. Сети <%> соответствует более одного классификатора', lfGet_Object_ValueData (inRetail2Id);
        END IF;
 
        -- находим GoodsPropertyValueId
@@ -474,7 +474,7 @@ BEGIN
                   GROUP BY ObjectLink_Juridical_Retail.ChildObjectId
                   HAVING COUNT (DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId) > 1)
        THEN
-           RAISE EXCEPTION 'Ошибка. Сети <%> соответствует более одного классификатора', inRetail1Id;
+           RAISE EXCEPTION 'Ошибка. Сети <%> соответствует более одного классификатора', lfGet_Object_ValueData (inRetail3Id);
        END IF;
 
        -- находим GoodsPropertyValueId
@@ -532,7 +532,7 @@ BEGIN
                   GROUP BY ObjectLink_Juridical_Retail.ChildObjectId
                   HAVING COUNT (DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId) > 1)
        THEN
-           RAISE EXCEPTION 'Ошибка. Сети <%> соответствует более одного классификатора', inRetail1Id;
+           RAISE EXCEPTION 'Ошибка. Сети <%> соответствует более одного классификатора', lfGet_Object_ValueData (inRetail4Id);
        END IF;
 
        -- находим GoodsPropertyValueId
@@ -590,7 +590,7 @@ BEGIN
                   GROUP BY ObjectLink_Juridical_Retail.ChildObjectId
                   HAVING COUNT (DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId) > 1)
        THEN
-           RAISE EXCEPTION 'Ошибка. Сети <%> соответствует более одного классификатора', inRetail1Id;
+           RAISE EXCEPTION 'Ошибка. Сети <%> соответствует более одного классификатора', lfGet_Object_ValueData (inRetail5Id);
        END IF;
 
        -- находим GoodsPropertyValueId
@@ -648,7 +648,7 @@ BEGIN
                   GROUP BY ObjectLink_Juridical_Retail.ChildObjectId
                   HAVING COUNT (DISTINCT ObjectLink_Juridical_GoodsProperty.ChildObjectId) > 1)
        THEN
-           RAISE EXCEPTION 'Ошибка. Сети <%> соответствует более одного классификатора', inRetail1Id;
+           RAISE EXCEPTION 'Ошибка. Сети <%> соответствует более одного классификатора', lfGet_Object_ValueData (inRetail6Id);
        END IF;
 
        -- находим GoodsPropertyValueId
