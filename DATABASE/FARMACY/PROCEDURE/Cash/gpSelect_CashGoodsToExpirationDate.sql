@@ -77,5 +77,4 @@ $BODY$
 */
 
 -- тест
---
- SELECT * FROM gpSelect_CashGoodsToExpirationDate (inSession := '3354092');
+-- SELECT * FROM gpSelect_CashGoodsToExpirationDate (inSession := '3354092');

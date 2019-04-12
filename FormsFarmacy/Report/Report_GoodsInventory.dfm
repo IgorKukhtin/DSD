@@ -13,17 +13,17 @@ inherited Report_GoodsInventoryForm: TReport_GoodsInventoryForm
     Height = 292
     TabOrder = 3
     ExplicitTop = 67
-    ExplicitWidth = 824
+    ExplicitWidth = 843
     ExplicitHeight = 292
     ClientRectBottom = 292
     ClientRectRight = 843
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 824
+      ExplicitWidth = 843
       ExplicitHeight = 292
       inherited cxGrid: TcxGrid
         Width = 843
         Height = 292
-        ExplicitWidth = 824
+        ExplicitWidth = 843
         ExplicitHeight = 292
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False
@@ -119,7 +119,7 @@ inherited Report_GoodsInventoryForm: TReport_GoodsInventoryForm
   inherited Panel: TPanel
     Width = 843
     Height = 41
-    ExplicitWidth = 824
+    ExplicitWidth = 843
     ExplicitHeight = 41
     object cxLabel3: TcxLabel
       Left = 419
@@ -182,49 +182,44 @@ inherited Report_GoodsInventoryForm: TReport_GoodsInventoryForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actOpenDocument: TdsdOpenForm
+    object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      FormNameParam.Name = 'FormClass'
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TInventoryForm'
       FormNameParam.Value = ''
-      FormNameParam.Component = FormParams
-      FormNameParam.ComponentItem = 'FormClass'
       FormNameParam.DataType = ftString
-      FormNameParam.ParamType = ptInput
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'MovementId'
+          ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
       isShowModal = False
-    end
-    object actGet_MovementFormClass: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actGet_MovementFormClass'
-    end
-    object mactOpenDocument: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGet_MovementFormClass
-        end
-        item
-          Action = actOpenDocument
-        end>
-      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 1
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -367,6 +362,10 @@ inherited Report_GoodsInventoryForm: TReport_GoodsInventoryForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -398,13 +397,15 @@ inherited Report_GoodsInventoryForm: TReport_GoodsInventoryForm
       Action = ExecuteDialog
       Category = 0
     end
+    object dxBarButton1: TdxBarButton
+      Action = actUpdate
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
       item
-        Action = mactOpenDocument
-      end
-      item
+        Action = actUpdate
       end>
   end
   inherited PopupMenu: TPopupMenu
@@ -412,7 +413,7 @@ inherited Report_GoodsInventoryForm: TReport_GoodsInventoryForm
       Caption = '-'
     end
     object N3: TMenuItem
-      Action = actOpenDocument
+      Action = actUpdate
     end
   end
   inherited PeriodChoice: TPeriodChoice
@@ -456,7 +457,7 @@ inherited Report_GoodsInventoryForm: TReport_GoodsInventoryForm
     Params = <
       item
         Name = 'FormClass'
-        Value = Null
+        Value = 'TInventoryForm'
         DataType = ftString
         MultiSelectSeparator = ','
       end

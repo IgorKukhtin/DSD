@@ -425,7 +425,7 @@ inherited InventoryForm: TInventoryForm
       end
     end
     object cxTabSheetChild: TcxTabSheet
-      Caption = #1048#1089#1090#1086#1088#1080#1103
+      Caption = #1048#1089#1090#1086#1088#1080#1103' '#1096'/'#1082
       ImageIndex = 2
       object cxGridChild: TcxGrid
         Left = 0

@@ -16,6 +16,11 @@ BEGIN
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Juridical());
    vbUserId:= inSession;
 
+   IF 375661 <> inSession::Integer AND 4183126 <> inSession::Integer AND 8001630 <> inSession::Integer
+   THEN
+      RAISE EXCEPTION 'Изменение <Кредитных лимитов> вам запрещено.';
+   END IF;
+
    IF COALESCE (inId, 0) = 0
    THEN
       RAISE EXCEPTION 'Ошибка. Не выбрано юр.лицо';

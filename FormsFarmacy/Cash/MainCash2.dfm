@@ -2403,7 +2403,9 @@ inherited MainCashForm2: TMainCashForm2
     end
     object actManualDiscount: TAction
       Caption = #1044#1072#1090#1100' '#1088#1091#1095#1085#1091#1102' '#1089#1082#1080#1076#1082#1091
+      Enabled = False
       ShortCut = 120
+      Visible = False
       OnExecute = actManualDiscountExecute
     end
     object actDivisibilityDialog: TAction

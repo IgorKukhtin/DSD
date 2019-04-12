@@ -26,12 +26,10 @@ type
     InvNumber: TcxGridDBColumn;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    actOpenDocument: TdsdOpenForm;
+    actUpdate: TdsdInsertUpdateAction;
     N2: TMenuItem;
     N3: TMenuItem;
     FormParams: TdsdFormParams;
-    actGet_MovementFormClass: TdsdExecStoredProc;
-    mactOpenDocument: TMultiAction;
     rdGoods: TRefreshDispatcher;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
@@ -42,6 +40,7 @@ type
     Amount: TcxGridDBColumn;
     Saldo: TcxGridDBColumn;
     IsErased: TcxGridDBColumn;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

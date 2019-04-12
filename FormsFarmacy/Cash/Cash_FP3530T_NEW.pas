@@ -206,7 +206,7 @@ begin
   begin
 
     L := '';
-    Res := TRegEx.Split(GoodsName, ' ');
+    Res := TRegEx.Split(StringReplace(GoodsName, '%', 'проц.', [rfReplaceAll, rfIgnoreCase]), ' ');
     for I := 0 to High(Res) do
     begin
       if L <> '' then L := L + ' ';
