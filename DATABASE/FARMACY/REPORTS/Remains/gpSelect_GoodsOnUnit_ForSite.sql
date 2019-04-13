@@ -446,7 +446,8 @@ BEGIN
                      , tmp.MarginCategoryId
                 FROM (SELECT tmpList.UnitId
                            , ObjectLink_MarginCategory.ChildObjectId AS MarginCategoryId
-                           , ROW_NUMBER() OVER (PARTITION BY tmpList.UnitId, ObjectLink_MarginCategory.ChildObjectId ORDER BY tmpList.UnitId, ObjectLink_MarginCategory.ChildObjectId) AS Ord
+                        -- , ROW_NUMBER() OVER (PARTITION BY tmpList.UnitId, ObjectLink_MarginCategory.ChildObjectId ORDER BY tmpList.UnitId, ObjectLink_MarginCategory.ChildObjectId) AS Ord
+                           , ROW_NUMBER() OVER (PARTITION BY tmpList.UnitId ORDER BY tmpList.UnitId, ObjectLink_MarginCategory.ChildObjectId) AS Ord
                       FROM _tmpUnitMinPrice_List AS tmpList
                            INNER JOIN ObjectLink AS ObjectLink_MarginCategoryLink_Unit
                                                  ON ObjectLink_MarginCategoryLink_Unit.ChildObjectId = tmpList.UnitId
@@ -722,6 +723,7 @@ $BODY$
 
 -- тест
 -- SELECT * FROM ResourseProtocol ORDER BY Id DESC LIMIT 4000
+-- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '375627', inGoodsId_list:= '58654', inSession:= zfCalc_UserSite()) ORDER BY 1;
 -- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '1781716', inGoodsId_list:= '47761', inSession:= zfCalc_UserSite()) ORDER BY 1;
 -- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '377613,183292', inGoodsId_list:= '331,951,16876,40618', inSession:= zfCalc_UserSite()) ORDER BY 1;
 -- SELECT p.id, p.id_site, p.name, p.name_site, p.article, p.article, p.unitid, p.juridicalid, p.juridicalname, p.contractid, p.contractname, p.expirationdate, p.manufacturer, p.remains, p.price_unit, p.price_mino, p.price_mino, p.price_min, p.price_mind FROM gpSelect_GoodsOnUnit_ForSite('183292,183288,377605,375627,394426,472116,494882,1529734,1781716,377606,377595,183290,183289,183294,377613,377574,377594,377610,183293,375626,183291', '508,517,520,526,523,511,544,538,553,559,562,565,571,547,1642,1654,1714,1867,1933,2059,2095,2230,2257,2275,2323,2341,2344,2320,2509,2515', zfCalc_UserSite()) AS p ORDER BY p.price_unit

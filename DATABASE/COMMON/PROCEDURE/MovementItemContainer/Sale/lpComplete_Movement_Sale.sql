@@ -546,10 +546,59 @@ END IF;*/
                                                          ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                         AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
                       )
+, tmpContainer_all AS (SELECT tmpMI.MovementItemId
+                            , tmpMI.GoodsId
+                            , tmpMI.OperCount  AS Amount
+                            , tmp.ContainerId  AS ContainerId
+                            , tmp.Amount       AS Amount_container
+                            , SUM (tmp.Amount) OVER (PARTITION BY tmpMI.GoodsId ORDER BY tmp.PartionGoodsDate,      tmp.ContainerId    )  AS AmountSUM --
+                            , ROW_NUMBER()     OVER (PARTITION BY tmpMI.GoodsId ORDER BY tmp.PartionGoodsDate DESC, tmp.ContainerId DESC) AS Ord      -- !!!Надо отловить ПОСЛЕДНИЙ!!!
+                            , tmp.PartionGoodsId
+                       FROM tmpMI_all AS tmpMI
+                            INNER JOIN 
+                      (SELECT tmpMI.MovementItemId                                  AS MovementItemId
+                            , Container.Id                                          AS ContainerId
+                            , Container.Amount                                      AS Amount
+                            , COALESCE (CLO_PartionGoods.ObjectId, 0)               AS PartionGoodsId
+                            , COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) AS PartionGoodsDate
+                       FROM tmpMI_all AS tmpMI
+                            INNER JOIN Container ON Container.ObjectId = tmpMI.GoodsId
+                                                AND Container.DescId   = zc_Container_Count()
+                                                AND Container.Amount   > 0
+                            INNER JOIN ContainerLinkObject AS CLO_Member
+                                                           ON CLO_Member.ContainerId = Container.Id
+                                                          AND CLO_Member.DescId      = zc_ContainerLinkObject_Member()
+                                                                                     -- !!!была ошибка в проводках!!!
+                                                          AND CLO_Member.ObjectId    = vbMemberId_From
+                            -- !!!
+                            LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                          ON CLO_PartionGoods.ContainerId = Container.Id
+                                                         AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                            LEFT JOIN ObjectDate as ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
+                                                                    AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
+                       WHERE tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                            , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                            , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                             )
+                      ) AS tmp ON tmp.MovementItemId = tmpMI.MovementItemId
+                      )
+    , tmpContainer AS (SELECT DD.ContainerId
+                            , DD.GoodsId
+                            , DD.MovementItemId
+                            , DD.PartionGoodsId
+                            , CASE WHEN DD.Amount - DD.AmountSUM > 0 AND DD.Ord <> 1
+                                        THEN DD.Amount_container
+                                   ELSE DD.Amount - DD.AmountSUM + DD.Amount_container
+                              END AS Amount
+                       FROM (SELECT * FROM tmpContainer_all) AS DD
+                       WHERE DD.Amount - (DD.AmountSUM - DD.Amount_container) > 0
+                      )
         -- Результат - суммы и скидка если надо
         SELECT
               _tmp.MovementItemId
-            , 0 AS ContainerId_Goods
+
+              -- !!!или подбор партий!!!
+            , _tmp.ContainerId_Goods AS ContainerId_Goods
             , 0 AS ContainerId_GoodsPartner
 
             , 0 AS ContainerId_GoodsTransit_01 -- Счет - кол-во Транзит
@@ -753,8 +802,8 @@ END IF;*/
                    ELSE FALSE
               END AS isPromo
 
-              -- Партии товара, сформируем позже
-            , 0 AS PartionGoodsId
+              -- Партии товара, сформируем позже - !!!или подбор партий!!!
+            , _tmp.PartionGoodsId_Item AS PartionGoodsId
 
 
             , _tmp.PriceListPrice
@@ -831,6 +880,11 @@ END IF;*/
                   , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)      AS isPartionCount
                   , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)       AS isPartionSumm
 
+                    -- !!!или подбор партий!!!
+                  , tmpMI.ContainerId_Goods
+                    -- !!!или подбор партий!!!
+                  , tmpMI.PartionGoodsId_Item
+
               FROM
              (-- перевод цены в валюту zc_Enum_Currency_Basis
               SELECT tmpMI.MovementItemId
@@ -858,6 +912,12 @@ END IF;*/
                          END AS Price_original
                        , tmpMI.Price AS Price_Currency
                    , tmpMI.CountForPrice
+
+                     -- !!!или подбор партий!!!
+                   , tmpMI.ContainerId_Goods
+                     -- !!!или подбор партий!!!
+                   , tmpMI.PartionGoodsId_Item
+
               FROM
              (-- расчет цены с учетом скидки !!!"иногда"!!!
               SELECT tmpMI_all.MovementItemId
@@ -870,9 +930,11 @@ END IF;*/
                    , COALESCE (tmpChangePrice.isChangePrice, FALSE) AS isChangePrice
                    , tmpMI_all.MovementId_promo
 
-                   , tmpMI_all.OperCount
-                   , tmpMI_all.OperCount_ChangePercent
-                   , tmpMI_all.OperCount_Partner
+                     -- !!!или подбор партий!!!
+                   , COALESCE (tmpContainer.Amount, tmpMI_all.OperCount)               AS OperCount
+                   , COALESCE (tmpContainer.Amount, tmpMI_all.OperCount_ChangePercent) AS OperCount_ChangePercent
+                   , COALESCE (tmpContainer.Amount, tmpMI_all.OperCount_Partner)       AS OperCount_Partner
+
                    , CASE WHEN tmpChangePrice.isChangePrice = TRUE AND tmpMI_all.ChangePercent <> 0 -- !!!для НАЛ "иногда" не учитываем, для БН - всегда учитываем!!!
                                THEN CAST ( (1 + tmpMI_all.ChangePercent / 100) * tmpMI_all.Price_original AS NUMERIC (16, 2))
                           ELSE tmpMI_all.Price_original
@@ -880,8 +942,14 @@ END IF;*/
                    , tmpMI_all.Price_original
                    , tmpMI_all.CountForPrice
 
+                     -- !!!или подбор партий!!!
+                   , COALESCE (tmpContainer.ContainerId, 0) AS ContainerId_Goods
+                     -- !!!или подбор партий!!!
+                   , COALESCE (tmpContainer.PartionGoodsId, 0) AS PartionGoodsId_Item
+
               FROM tmpMI_all
                    LEFT JOIN tmpChangePrice ON tmpChangePrice.isChangePrice = TRUE
+                   LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = tmpMI_all.MovementItemId
              ) AS tmpMI
              ) AS tmpMI
 
@@ -909,7 +977,8 @@ END IF;*/
                                                                                              END
                    LEFT JOIN tmpPL_Basis ON tmpPL_Basis.GoodsId = tmpMI.GoodsId
                    LEFT JOIN tmpPL_Jur ON tmpPL_Jur.GoodsId = tmpMI.GoodsId
-             ) AS _tmp;
+             ) AS _tmp
+            ;
 
      -- !!!надо определить - есть ли скидка в цене!!!
      vbIsChangePrice:= (SELECT _tmpItem.isChangePrice FROM _tmpItem LIMIT 1);
@@ -1169,7 +1238,17 @@ END IF;*/
                                                         END;
 
      -- формируются Партии товара, ЕСЛИ надо ...
-     UPDATE _tmpItem SET PartionGoodsId = CASE WHEN _tmpItem.ObjectDescId     = zc_Object_Asset()
+     UPDATE _tmpItem SET PartionGoodsId = CASE WHEN (_tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                  OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                  OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                  OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                    )
+                                                 AND (_tmpItem.PartionGoodsId    > 0
+                                                   OR _tmpItem.ContainerId_Goods > 0
+                                                     )
+                                                    THEN _tmpItem.PartionGoodsId
+
+                                               WHEN _tmpItem.ObjectDescId     = zc_Object_Asset()
                                                  OR _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
                                                     THEN (SELECT CLO_PartionGoods.ObjectId -- ObjectLink_Goods.ObjectId
                                                           FROM ObjectLink AS ObjectLink_Goods
@@ -1499,7 +1578,9 @@ END IF;*/
 
 
      -- 1.2.0. определяется ContainerId_Goods для количественного учета - !!!если продажа от Контрагента -> Контрагенту!!!
-     UPDATE _tmpItemPartnerFrom SET ContainerId_Goods = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDatePartner -- !!!по "Дате покупателя"!!!
+     UPDATE _tmpItemPartnerFrom SET ContainerId_Goods = CASE WHEN _tmpItem.ContainerId_Goods > 0 THEN _tmpItem.ContainerId_Goods
+                                                        ELSE
+                                                        lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDatePartner -- !!!по "Дате покупателя"!!!
                                                                                            , inUnitId                 := NULL -- !!!подразделения нет!!!
                                                                                            , inCarId                  := NULL
                                                                                            , inMemberId               := NULL
@@ -1512,6 +1593,7 @@ END IF;*/
                                                                                            , inBranchId               := NULL
                                                                                            , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                             )
+                                                        END
      FROM _tmpItem
      WHERE _tmpItem.MovementItemId = _tmpItemPartnerFrom.MovementItemId
     ;

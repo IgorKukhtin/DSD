@@ -22,7 +22,8 @@ RETURNS TABLE (Id Integer, LineNum Integer, LineNumTaxOld Integer, LineNumTax In
               )
 AS
 $BODY$
-  DECLARE vbOperDate TDateTime;
+  DECLARE vbOperDate     TDateTime;
+  DECLARE vbOperDate_rus TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_TaxCorrective());
@@ -30,7 +31,28 @@ BEGIN
      --
      IF inShowAll THEN
 
+     -- определили
      vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+     -- определили
+     vbOperDate_rus:= (SELECT CASE WHEN MovementString_InvNumberRegistered_Child.ValueData <> '' 
+                                        THEN COALESCE (MovementDate_DateRegistered_Child.ValueData, Movement_child.OperDate)
+                                   ELSE CURRENT_DATE
+                              END
+                       FROM MovementLinkMovement AS MLM
+                            INNER JOIN Movement AS Movement_child 
+                                                ON Movement_child.Id = MLM.MovementChildId
+                                               AND Movement_child.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+    
+                            LEFT JOIN MovementDate AS MovementDate_DateRegistered_Child
+                                                   ON MovementDate_DateRegistered_Child.MovementId = Movement_child.Id
+                                                  AND MovementDate_DateRegistered_Child.DescId     = zc_MovementDate_DateRegistered()
+                            LEFT JOIN MovementString AS MovementString_InvNumberRegistered_Child
+                                                     ON MovementString_InvNumberRegistered_Child.MovementId = Movement_child.Id
+                                                    AND MovementString_InvNumberRegistered_Child.DescId     = zc_MovementString_InvNumberRegistered()
+                       WHERE MLM.MovementId = inMovementId 
+                         AND MLM.DescId     = zc_MovementLinkMovement_Child()
+                      );
+
 
      -- Результат
      RETURN QUERY
@@ -117,7 +139,13 @@ BEGIN
       UNION ALL
        SELECT
              MovementItem.Id                        AS Id
-           , CAST (ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData, MovementItem.Id) AS Integer) AS LineNum    
+           , CAST (ROW_NUMBER() OVER (ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
+                                                         THEN ObjectString_Goods_RUS.ValueData
+                                                    ELSE Object_Goods.ValueData
+                                               END
+                                             , Object_GoodsKind.ValueData
+                                             , MovementItem.Id
+                                     ) AS Integer) AS LineNum    
            , CASE WHEN COALESCE (MIBoolean_isAuto.ValueData, True) = True THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE COALESCE(MIFloat_NPP.ValueData,0) END  :: Integer AS LineNumTaxOld
            , CASE WHEN COALESCE (MIBoolean_isAuto.ValueData, True) = True THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE COALESCE(MIFloat_NPP.ValueData,0) END  :: Integer AS LineNumTax
 --           , COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) :: Integer AS LineNumTax
@@ -129,8 +157,11 @@ BEGIN
            
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
-           , COALESCE (ObjectString_Goods_UKTZED.ValueData,'') :: TVarChar     AS GoodsCodeUKTZED
-           , Object_Goods.ValueData                 AS GoodsName
+           , COALESCE (ObjectString_Goods_UKTZED.ValueData,'') :: TVarChar AS GoodsCodeUKTZED
+           , CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
+                       THEN ObjectString_Goods_RUS.ValueData
+                  ELSE Object_Goods.ValueData
+             END :: TVarChar                             AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
@@ -155,6 +186,9 @@ BEGIN
                              AND MovementItem.isErased   = tmpIsErased.isErased
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+            LEFT JOIN ObjectString AS ObjectString_Goods_RUS
+                                   ON ObjectString_Goods_RUS.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_RUS.DescId = zc_ObjectString_Goods_RUS()
 
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -229,7 +263,13 @@ BEGIN
        -- Результат     
        SELECT
              MovementItem.Id
-           , CAST (ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData, MovementItem.Id) AS Integer) AS LineNum    
+           , CAST (ROW_NUMBER() OVER (ORDER BY CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
+                                                         THEN ObjectString_Goods_RUS.ValueData
+                                                    ELSE Object_Goods.ValueData
+                                               END
+                                             , Object_GoodsKind.ValueData
+                                             , MovementItem.Id
+                                     ) AS Integer) AS LineNum    
            , CASE WHEN COALESCE (MIBoolean_isAuto.ValueData, True) = True THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE COALESCE(MIFloat_NPP.ValueData,0) END  :: Integer AS LineNumTaxOld
            , CASE WHEN COALESCE (MIBoolean_isAuto.ValueData, True) = True THEN COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) ELSE COALESCE(MIFloat_NPP.ValueData,0) END  :: Integer AS LineNumTax 
            , COALESCE (MIBoolean_isAuto.ValueData, True) ::Boolean    AS isAuto
@@ -240,8 +280,11 @@ BEGIN
 
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
-           , COALESCE (ObjectString_Goods_UKTZED.ValueData,'') :: TVarChar     AS GoodsCodeUKTZED
-           , Object_Goods.ValueData                 AS GoodsName
+           , COALESCE (ObjectString_Goods_UKTZED.ValueData,'') :: TVarChar AS GoodsCodeUKTZED
+           , CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
+                       THEN ObjectString_Goods_RUS.ValueData
+                  ELSE Object_Goods.ValueData
+             END :: TVarChar                             AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
@@ -263,6 +306,9 @@ BEGIN
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+            LEFT JOIN ObjectString AS ObjectString_Goods_RUS
+                                   ON ObjectString_Goods_RUS.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_RUS.DescId = zc_ObjectString_Goods_RUS()
 
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id

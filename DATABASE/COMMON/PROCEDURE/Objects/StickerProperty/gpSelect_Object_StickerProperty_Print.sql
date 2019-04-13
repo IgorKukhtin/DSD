@@ -59,11 +59,14 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , DateProduction    TDateTime
              , NumPack           TFloat
              , NumTech           TFloat
+
+             , BranchCode        Integer
               )
 AS
 $BODY$
     DECLARE vbUserId Integer;
 
+    DECLARE vbBranchCode    Integer;
     DECLARE vbStickerFileId Integer;
     DECLARE vbParam1        Integer;
     DECLARE vbParam2        Integer;
@@ -80,6 +83,13 @@ BEGIN
      --    RAISE EXCEPTION 'Ошибка.Переданы некорректные параметры печати.';
      --END IF;
 
+     -- поиск
+     vbBranchCode:= (WITH tmpMember AS (SELECT OL.ChildObjectId AS MemberId FROM ObjectLink AS OL WHERE OL.ObjectId = vbUserId AND OL.DescId = zc_ObjectLink_User_Member())
+                     SELECT Object_Branch.ObjectCode
+                     FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                          INNER JOIN tmpMember ON tmpMember.MemberId = lfSelect.MemberId
+                          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = CASE WHEN lfSelect.BranchId > 0 THEN lfSelect.BranchId ELSE zc_Branch_Basis() END
+                    );
 
      -- поиск ШАБЛОНА
      vbStickerFileId:= (WITH -- Шаблоны "по умолчанию" - для конкретной ТМ
@@ -375,6 +385,8 @@ BEGIN
             , inDateProduction    :: TDateTime AS DateProduction
             , inNumPack           :: TFloat    AS NumPack
             , inNumTech           :: TFloat    AS NumTech
+            
+            , vbBranchCode        :: Integer   AS BranchCode
 
        FROM Object AS Object_StickerProperty
              LEFT JOIN Object AS Object_StickerFile ON Object_StickerFile.Id = vbStickerFileId

@@ -48,7 +48,8 @@ BEGIN
                                               , tmp.MarginCategoryId
                                          FROM (SELECT tmpList.UnitId
                                                     , ObjectLink_MarginCategory.ChildObjectId AS MarginCategoryId
-                                                    , ROW_NUMBER() OVER (PARTITION BY tmpList.UnitId, ObjectLink_MarginCategory.ChildObjectId ORDER BY tmpList.UnitId, ObjectLink_MarginCategory.ChildObjectId) AS Ord
+                                                 -- , ROW_NUMBER() OVER (PARTITION BY tmpList.UnitId, ObjectLink_MarginCategory.ChildObjectId ORDER BY tmpList.UnitId, ObjectLink_MarginCategory.ChildObjectId) AS Ord
+                                                    , ROW_NUMBER() OVER (PARTITION BY tmpList.UnitId ORDER BY tmpList.UnitId, ObjectLink_MarginCategory.ChildObjectId) AS Ord
                                                FROM (SELECT vbUnitRec.UnitId AS UnitId) AS tmpList
                                                     INNER JOIN ObjectLink AS ObjectLink_MarginCategoryLink_Unit
                                                                           ON ObjectLink_MarginCategoryLink_Unit.ChildObjectId = tmpList.UnitId

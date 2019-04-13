@@ -121,7 +121,10 @@ BEGIN
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , COALESCE (ObjectString_Goods_UKTZED.ValueData,'') :: TVarChar     AS GoodsCodeUKTZED
-           , Object_Goods.ValueData                 AS GoodsName
+           , CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
+                       THEN ObjectString_Goods_RUS.ValueData
+                  ELSE Object_Goods.ValueData
+             END :: TVarChar                             AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
@@ -193,7 +196,10 @@ BEGIN
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , COALESCE (ObjectString_Goods_UKTZED.ValueData,'') :: TVarChar     AS GoodsCodeUKTZED
-           , Object_Goods.ValueData                 AS GoodsName
+           , CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> ''
+                       THEN ObjectString_Goods_RUS.ValueData
+                  ELSE Object_Goods.ValueData
+             END :: TVarChar                             AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 

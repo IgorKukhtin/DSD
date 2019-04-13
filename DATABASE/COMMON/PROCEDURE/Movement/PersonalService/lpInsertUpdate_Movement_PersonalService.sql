@@ -52,7 +52,7 @@ BEGIN
                              AND MovementDate.DescId = zc_MIDate_ServiceDate()
                            LIMIT 1
                           );
-     IF vbMovementId_check <> 0 -- AND inUserId <> 5
+     IF vbMovementId_check <> 0 AND 1=0 -- AND inUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.Найдена другая <Ведомость начисления> № <%> от <%> для <%> за <%>.Дублирование запрещено.', (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_check)
                                                                                                                            , DATE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_check))

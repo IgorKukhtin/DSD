@@ -1,8 +1,8 @@
 -- Function: gpSelect_Movement_Sale_DATA()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_DATA (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_DATA22 (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_DATA(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_DATA22 (
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
     IN inIsPartnerDate      Boolean   ,
@@ -142,7 +142,9 @@ end if;
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                             )
         --, tmpContract_InvNumber AS (SELECT * FROM Object_Contract_InvNumber_Sale_View)
-        , tmpJuridicalDetails AS (SELECT * FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.JuridicalId IN (SELECT DISTINCT tmpJuridicalTo.Id FROM tmpJuridicalTo))
+        , tmpJuridicalDetails AS (SELECT * FROM ObjectHistory_JuridicalDetails_View
+                                  WHERE ObjectHistory_JuridicalDetails_View.JuridicalId IN (SELECT DISTINCT tmpJuridicalTo.Id FROM tmpJuridicalTo)
+                                 )
         , tmpMovement AS (SELECT Movement.Id
                                , Movement.OperDate
                                , Movement.InvNumber
@@ -161,18 +163,155 @@ end if;
                                            AND MovementLinkObject.DescId = zc_MovementLinkObject_From()
                                          )
 
-        , tmpMovementBoolean AS (SELECT MovementBoolean.*
-                                 FROM MovementBoolean
-                                 WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                   AND MovementBoolean.DescId IN (zc_MovementBoolean_EdiOrdspr()
-                                                                , zc_MovementBoolean_Checked()
-                                                                , zc_MovementBoolean_PriceWithVAT()
-                                                                , zc_MovementBoolean_EdiInvoice()
-                                                                , zc_MovementBoolean_EdiDesadv()
-                                                                , zc_MovementBoolean_Print()
-                                                                , zc_MovementBoolean_Promo()
-                                                                )
-                                 )
+        , tmpMovementFloat AS (SELECT MovementFloat.*
+                               FROM MovementFloat
+                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                 -- AND MovementFloat.ValueData <> 0
+                                 AND MovementFloat.DescId IN (zc_MovementFloat_VATPercent()
+                                                            , zc_MovementFloat_ChangePercent()
+                                                            , zc_MovementFloat_TotalCount()
+                                                            , zc_MovementFloat_TotalCountPartner()
+                                                            , zc_MovementFloat_TotalCountTare()
+                                                            , zc_MovementFloat_TotalCountSh()
+                                                            , zc_MovementFloat_TotalCountKg()
+                                                            , zc_MovementFloat_TotalSummMVAT()
+                                                            , zc_MovementFloat_TotalSummPVAT()
+                                                            , zc_MovementFloat_TotalSummChange()
+                                                            , zc_MovementFloat_TotalSumm()
+                                                            , zc_MovementFloat_AmountCurrency()
+                                                            , zc_MovementFloat_CurrencyValue()
+                                                            , zc_MovementFloat_ParValue()
+                                                            , zc_MovementFloat_CurrencyPartnerValue()
+                                                            , zc_MovementFloat_ParPartnerValue()
+                                                             )
+                              )
+      , tmpMovement_property AS (SELECT Movement.*
+                                      , MovementBoolean_Checked.ValueData             AS isChecked
+                                      , MovementBoolean_PriceWithVAT.ValueData        AS isPriceWithVAT
+                                      , MovementBoolean_EdiOrdspr.ValueData           AS isEdiOrdspr
+                                      , MovementBoolean_EdiInvoice.ValueData          AS isEdiInvoice
+                                      , MovementBoolean_EdiDesadv.ValueData           AS isEdiDesadv
+                                      , MovementBoolean_Print.ValueData               AS isPrint
+                                      , MovementBoolean_Promo.ValueData               AS isPromo
+
+                                      /*, MovementDate_Insert.ValueData                 AS InsertDate
+                                      , MovementDate_Payment.ValueData                AS PaymentDate
+                                      , MovementDate_OperDatePartner.ValueData        AS OperDatePartner
+
+                                      , MovementString_InvNumberPartner.ValueData     AS InvNumberPartner
+                                      , MovementString_Comment.ValueData              AS Comment
+                                      , MovementString_InvNumberOrder.ValueData       AS InvNumberOrder*/
+                         
+                                      /*, MovementFloat_VATPercent.ValueData            AS VATPercent
+                                      , MovementFloat_ChangePercent.ValueData         AS ChangePercent
+                                      , MovementFloat_TotalCount.ValueData            AS TotalCount
+                                      , MovementFloat_TotalCountPartner.ValueData     AS TotalCountPartner
+                                      , MovementFloat_TotalCountTare.ValueData        AS TotalCountTare
+                                      , MovementFloat_TotalCountSh.ValueData          AS TotalCountSh
+                                      , MovementFloat_TotalCountKg.ValueData          AS TotalCountKg
+                                      , MovementFloat_TotalSummMVAT.ValueData         AS TotalSummMVAT
+                                      , MovementFloat_TotalSummPVAT.ValueData         AS TotalSummPVAT
+                                      , MovementFloat_TotalSummChange.ValueData       AS TotalSummChange
+                                      , MovementFloat_TotalSumm.ValueData             AS TotalSumm
+                                      , MovementFloat_AmountCurrency.ValueData        AS AmountCurrency
+                                      , MovementFloat_CurrencyValue.ValueData         AS CurrencyValue
+                                      , MovementFloat_ParValue.ValueData              AS ParValue
+                                      , MovementFloat_CurrencyPartnerValue.ValueData  AS CurrencyPartnerValue
+                                      , MovementFloat_ParPartnerValue.ValueData       AS ParPartnerValue*/
+
+                                 FROM tmpMovement AS Movement
+                                      LEFT JOIN MovementBoolean AS MovementBoolean_Checked
+                                                                   ON MovementBoolean_Checked.MovementId = Movement.Id
+                                                                  AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+                                      LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                                                   ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                                                  AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                                      LEFT JOIN MovementBoolean AS MovementBoolean_EdiOrdspr
+                                                                   ON MovementBoolean_EdiOrdspr.MovementId =  Movement.Id
+                                                                  AND MovementBoolean_EdiOrdspr.DescId = zc_MovementBoolean_EdiOrdspr()
+                                      LEFT JOIN MovementBoolean AS MovementBoolean_EdiInvoice
+                                                                   ON MovementBoolean_EdiInvoice.MovementId =  Movement.Id
+                                                                  AND MovementBoolean_EdiInvoice.DescId = zc_MovementBoolean_EdiInvoice()
+                                      LEFT JOIN MovementBoolean AS MovementBoolean_EdiDesadv
+                                                                   ON MovementBoolean_EdiDesadv.MovementId =  Movement.Id
+                                                                  AND MovementBoolean_EdiDesadv.DescId = zc_MovementBoolean_EdiDesadv()
+                                      LEFT JOIN MovementBoolean AS MovementBoolean_Print
+                                                                   ON MovementBoolean_Print.MovementId =  Movement.Id
+                                                                  AND MovementBoolean_Print.DescId = zc_MovementBoolean_Print()
+                                      LEFT JOIN MovementBoolean AS MovementBoolean_Promo
+                                                                   ON MovementBoolean_Promo.MovementId =  Movement.Id
+                                                                  AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
+
+                                      /*LEFT JOIN MovementDate AS MovementDate_Insert
+                                                                ON MovementDate_Insert.MovementId =  Movement.Id
+                                                               AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+                                      LEFT JOIN MovementDate AS MovementDate_Payment
+                                                                ON MovementDate_Payment.MovementId =  Movement.Id
+                                                               AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
+                                      LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                                                ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                                               AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
+                                      LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                                                  ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                                                 AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+                                      LEFT JOIN MovementString AS MovementString_Comment
+                                                                  ON MovementString_Comment.MovementId = Movement.Id
+                                                                 AND MovementString_Comment.DescId = zc_MovementString_Comment()
+                                      LEFT JOIN MovementString AS MovementString_InvNumberOrder
+                                                                  ON MovementString_InvNumberOrder.MovementId =  Movement.Id
+                                                                 AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()*/
+                          
+                                      /*LEFT JOIN tmpMovementFloat AS MovementFloat_VATPercent
+                                                                 ON MovementFloat_VATPercent.MovementId =  Movement.Id
+                                                                AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+                                      LEFT JOIN tmpMovementFloat AS MovementFloat_ChangePercent
+                                                                 ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                                                AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                                      LEFT JOIN tmpMovementFloat AS MovementFloat_TotalCount
+                                                                 ON MovementFloat_TotalCount.MovementId =  Movement.Id
+                                                                AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+                                      LEFT JOIN tmpMovementFloat AS MovementFloat_TotalCountPartner
+                                                                 ON MovementFloat_TotalCountPartner.MovementId =  Movement.Id
+                                                                AND MovementFloat_TotalCountPartner.DescId = zc_MovementFloat_TotalCountPartner()
+                                      LEFT JOIN tmpMovementFloat AS MovementFloat_TotalCountTare
+                                                                 ON MovementFloat_TotalCountTare.MovementId = Movement.Id
+                                                                AND MovementFloat_TotalCountTare.DescId = zc_MovementFloat_TotalCountTare()
+                                      LEFT JOIN tmpMovementFloat AS MovementFloat_TotalCountSh
+                                                                 ON MovementFloat_TotalCountSh.MovementId =  Movement.Id
+                                                                AND MovementFloat_TotalCountSh.DescId = zc_MovementFloat_TotalCountSh()
+                                      LEFT JOIN tmpMovementFloat AS MovementFloat_TotalCountKg
+                                                                 ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
+                                                                AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+                                      LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSummMVAT
+                                                                 ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
+                                                                AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
+                                      LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSummPVAT
+                                                                 ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
+                                                                AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
+                                      LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSummChange
+                                                                 ON MovementFloat_TotalSummChange.MovementId =  Movement.Id
+                                                                AND MovementFloat_TotalSummChange.DescId = zc_MovementFloat_TotalSummChange()
+                                      LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSumm
+                                                                 ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                                                AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                                      LEFT JOIN tmpMovementFloat AS MovementFloat_AmountCurrency
+                                                                 ON MovementFloat_AmountCurrency.MovementId = Movement.Id
+                                                                AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
+                                      LEFT JOIN tmpMovementFloat AS MovementFloat_CurrencyValue
+                                                                 ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
+                                                                AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+                                      LEFT JOIN tmpMovementFloat AS MovementFloat_ParValue
+                                                                 ON MovementFloat_ParValue.MovementId = Movement.Id
+                                                                AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
+                                      LEFT JOIN tmpMovementFloat AS MovementFloat_CurrencyPartnerValue
+                                                                 ON MovementFloat_CurrencyPartnerValue.MovementId = Movement.Id
+                                                                AND MovementFloat_CurrencyPartnerValue.DescId = zc_MovementFloat_CurrencyPartnerValue()
+                                      LEFT JOIN tmpMovementFloat AS MovementFloat_ParPartnerValue
+                                                                 ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
+                                                                AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
+                                                                */
+                                )
         , tmpMovementDate AS (SELECT MovementDate.*
                               FROM MovementDate
                               WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
@@ -187,9 +326,9 @@ end if;
                                   AND MovementString.DescId IN (zc_MovementString_InvNumberPartner()
                                                               , zc_MovementString_Comment()
                                                               , zc_MovementString_InvNumberOrder()
-                                                              )
+                                                               )
                                )
-        , tmpMovementFloat AS (SELECT MovementFloat.*
+/*        , tmpMovementFloat AS (SELECT MovementFloat.*
                                FROM MovementFloat
                                WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                                  AND MovementFloat.DescId IN (zc_MovementFloat_VATPercent()
@@ -209,102 +348,7 @@ end if;
                                                             , zc_MovementFloat_CurrencyPartnerValue()
                                                             , zc_MovementFloat_ParPartnerValue()
                                                              )
-                              )
-   /* , tmpMovementFloat_VATPercent AS (SELECT MovementFloat.*
-                               FROM MovementFloat
-                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                 AND MovementFloat.DescId = zc_MovementFloat_VATPercent()
-                              )
-     , tmpMovementFloat_ChangePercent AS (SELECT MovementFloat.*
-                               FROM MovementFloat
-                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                 AND MovementFloat.DescId =  zc_MovementFloat_ChangePercent()
-                              )
-     , tmpMovementFloat_TotalCount AS (SELECT MovementFloat.*
-                               FROM MovementFloat
-                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                 AND MovementFloat.DescId = zc_MovementFloat_TotalCount()
-                              )
-     , tmpMovementFloat_TotalCountPartner AS (SELECT MovementFloat.*
-                               FROM MovementFloat
-                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                 AND MovementFloat.DescId = zc_MovementFloat_TotalCountPartner()
-                              )
-     , tmpMovementFloat_TotalCountTare AS (SELECT MovementFloat.*
-                               FROM MovementFloat
-                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                 AND MovementFloat.DescId = zc_MovementFloat_TotalCountTare()
-                              )
-     , tmpMovementFloat_TotalCountSh AS (SELECT MovementFloat.*
-                               FROM MovementFloat
-                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                 AND MovementFloat.DescId = zc_MovementFloat_TotalCountSh()
-                              )
-     , tmpMovementFloat_TotalCountKg AS (SELECT MovementFloat.*
-                               FROM MovementFloat
-                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                 AND MovementFloat.DescId = zc_MovementFloat_TotalCountKg()
-                              )
-     , tmpMovementFloat_TotalSummMVAT AS (SELECT MovementFloat.*
-                               FROM MovementFloat
-                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                 AND MovementFloat.DescId = zc_MovementFloat_TotalSummMVAT()
-                              )
-     , tmpMovementFloat_TotalSummPVAT AS (SELECT MovementFloat.*
-                               FROM MovementFloat
-                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                 AND MovementFloat.DescId = zc_MovementFloat_TotalSummPVAT()
-                              )
-     , tmpMovementFloat_TotalSummChange AS (SELECT MovementFloat.*
-                               FROM MovementFloat
-                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                 AND MovementFloat.DescId = zc_MovementFloat_TotalSummChange()
-                              )
-     , tmpMovementFloat_TotalSumm AS (SELECT MovementFloat.*
-                               FROM MovementFloat
-                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                 AND MovementFloat.DescId = zc_MovementFloat_TotalSumm()
-                              )
-     , tmpMovementFloat_AmountCurrency AS (SELECT MovementFloat.*
-                               FROM MovementFloat
-                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                 AND MovementFloat.DescId = zc_MovementFloat_AmountCurrency()
-                              )
-     , tmpMovementFloat_CurrencyValue AS (SELECT MovementFloat.*
-                               FROM MovementFloat
-                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                 AND MovementFloat.DescId = zc_MovementFloat_CurrencyValue()
-                              )
-     , tmpMovementFloat_ParValue AS (SELECT MovementFloat.*
-                               FROM MovementFloat
-                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                 AND MovementFloat.DescId = zc_MovementFloat_ParValue()
-                              )
-     , tmpMovementFloat_CurrencyPartnerValue AS (SELECT MovementFloat.*
-                               FROM MovementFloat
-                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                 AND MovementFloat.DescId = zc_MovementFloat_CurrencyPartnerValue()
-                              )
-     , tmpMovementFloat_ParPartnerValue AS (SELECT MovementFloat.*
-                               FROM MovementFloat
-                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                 AND MovementFloat.DescId = zc_MovementFloat_ParPartnerValue()
-                              )
-*/
-  /*      , tmpMLO AS (SELECT MovementLinkObject.*
-                     FROM MovementLinkObject
-                     WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                       AND MovementLinkObject.DescId IN (zc_MovementLinkObject_From()
-                                                       , zc_MovementLinkObject_To()
-                                                       , zc_MovementLinkObject_PaidKind()
-                                                       , zc_MovementLinkObject_Contract()
-                                                       , zc_MovementLinkObject_PriceList()
-                                                       , zc_MovementLinkObject_CurrencyDocument()
-                                                       , zc_MovementLinkObject_CurrencyPartner()
-                                                       , zc_MovementLinkObject_ReestrKind()
-                                                       )
-                     )*/
-
+                              )*/
         , tmpMovementLinkObject_PaidKind AS (SELECT MovementLinkObject.*
                                              FROM MovementLinkObject
                                              WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
@@ -540,42 +584,64 @@ end if;
                           WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpCar.Id FROM tmpCar)
                             AND ObjectLink.DescId = zc_ObjectLink_Car_CarModel()
                          )
-
      -- –езультат
      SELECT
-             Movement.Id                                    AS Id
-           , Movement.InvNumber                             AS InvNumber
---           , zfConvert_StringToNumber (Movement.InvNumber)  AS InvNumber
-           , Movement.OperDate                              AS OperDate
-           , Object_Status.ObjectCode                       AS StatusCode
-           , Object_Status.ValueData                        AS StatusName
-           , COALESCE (MovementBoolean_Checked.ValueData, FALSE) AS Checked
-           , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
+             Movement.Id                                     AS Id
+           , Movement.InvNumber                              AS InvNumber
+--         , zfConvert_StringToNumber (Movement.InvNumber)   AS InvNumber
+           , Movement.OperDate                               AS OperDate
+           , Object_Status.ObjectCode                        AS StatusCode
+           , Object_Status.ValueData                         AS StatusName
+           , COALESCE (Movement.isChecked, FALSE) :: Boolean AS Checked
+           , Movement.isPriceWithVAT                         AS PriceWithVAT
 
-           , MovementDate_Payment.ValueData                 AS PaymentDate
-           , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
-           , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
+           , MovementDate_Payment.ValueData                  AS PaymentDate
+           , MovementDate_OperDatePartner.ValueData          AS OperDatePartner
+           , MovementString_InvNumberPartner.ValueData       AS InvNumberPartner
+--!!!      , Movement.PaymentDate                            AS PaymentDate
+--!!!      , Movement.OperDatePartner                        AS OperDatePartner
+--!!!      , Movement.InvNumberPartner                       AS InvNumberPartner
 
-           , MovementFloat_VATPercent.ValueData             AS VATPercent
-           , MovementFloat_ChangePercent.ValueData          AS ChangePercent
-           , MovementFloat_TotalCount.ValueData             AS TotalCount
-           , MovementFloat_TotalCountPartner.ValueData      AS TotalCountPartner
-           , MovementFloat_TotalCountTare.ValueData         AS TotalCountTare
-           , MovementFloat_TotalCountSh.ValueData           AS TotalCountSh
-           , MovementFloat_TotalCountKg.ValueData           AS TotalCountKg
+           , MovementFloat_VATPercent.ValueData            AS VATPercent
+           , MovementFloat_ChangePercent.ValueData         AS ChangePercent
+           , MovementFloat_TotalCount.ValueData            AS TotalCount
+           , MovementFloat_TotalCountPartner.ValueData     AS TotalCountPartner
+           , MovementFloat_TotalCountTare.ValueData        AS TotalCountTare
+           , MovementFloat_TotalCountSh.ValueData          AS TotalCountSh
+           , MovementFloat_TotalCountKg.ValueData          AS TotalCountKg
            , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
-           , MovementFloat_TotalSummMVAT.ValueData          AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData          AS TotalSummPVAT
-           , MovementFloat_TotalSummChange.ValueData        AS TotalSummChange
-           , MovementFloat_TotalSumm.ValueData              AS TotalSumm
-           , MovementFloat_AmountCurrency.ValueData         AS TotalSummCurrency
+           , MovementFloat_TotalSummMVAT.ValueData         AS TotalSummMVAT
+           , MovementFloat_TotalSummPVAT.ValueData         AS TotalSummPVAT
+           , MovementFloat_TotalSummChange.ValueData       AS TotalSummChange
+           , MovementFloat_TotalSumm.ValueData             AS TotalSumm
+           , MovementFloat_AmountCurrency.ValueData        AS TotalSummCurrency
 
-           , MovementFloat_CurrencyValue.ValueData          AS CurrencyValue
-           , MovementFloat_ParValue.ValueData               AS ParValue
-           , MovementFloat_CurrencyPartnerValue.ValueData   AS CurrencyPartnerValue
-           , MovementFloat_ParPartnerValue.ValueData        AS ParPartnerValue
+           , MovementFloat_CurrencyValue.ValueData         AS CurrencyValue
+           , MovementFloat_ParValue.ValueData              AS ParValue
+           , MovementFloat_CurrencyPartnerValue.ValueData  AS CurrencyPartnerValue
+           , MovementFloat_ParPartnerValue.ValueData       AS ParPartnerValue
+
+/*         , Movement.VATPercent             AS VATPercent
+           , Movement.ChangePercent          AS ChangePercent
+           , Movement.TotalCount             AS TotalCount
+           , Movement.TotalCountPartner      AS TotalCountPartner
+           , Movement.TotalCountTare         AS TotalCountTare
+           , Movement.TotalCountSh           AS TotalCountSh
+           , Movement.TotalCountKg           AS TotalCountKg
+           , CAST (COALESCE (Movement.TotalSummPVAT, 0) - COALESCE (Movement.TotalSummMVAT, 0) AS TFloat) AS TotalSummVAT
+           , Movement.TotalSummMVAT          AS TotalSummMVAT
+           , Movement.TotalSummPVAT          AS TotalSummPVAT
+           , Movement.TotalSummChange        AS TotalSummChange
+           , Movement.TotalSumm              AS TotalSumm
+           , Movement.AmountCurrency         AS TotalSummCurrency
+
+           , Movement.CurrencyValue          AS CurrencyValue
+           , Movement.ParValue               AS ParValue
+           , Movement.CurrencyPartnerValue   AS CurrencyPartnerValue
+           , Movement.ParPartnerValue        AS ParPartnerValue*/
 
            , MovementLinkMovement_Order.MovementChildId     AS MovementId_Order
+--!!!      , Movement.InvNumberOrder                        AS InvNumberOrder
            , MovementString_InvNumberOrder.ValueData        AS InvNumberOrder
            , Object_From.Id                                 AS FromId
            , Object_From.ValueData                          AS FromName
@@ -627,9 +693,9 @@ end if;
            , COALESCE (MovementBoolean_Electron.ValueData, FALSE)         AS isElectron
            , COALESCE (MovementBoolean_Medoc.ValueData, FALSE)            AS isMedoc
 
-           , COALESCE (MovementBoolean_EdiOrdspr.ValueData, FALSE)    AS EdiOrdspr
-           , COALESCE (MovementBoolean_EdiInvoice.ValueData, FALSE)   AS EdiInvoice
-           , COALESCE (MovementBoolean_EdiDesadv.ValueData, FALSE)    AS EdiDesadv
+           , COALESCE (Movement.isEdiOrdspr, FALSE)    :: Boolean AS EdiOrdspr
+           , COALESCE (Movement.isEdiInvoice, FALSE)   :: Boolean AS EdiInvoice
+           , COALESCE (Movement.isEdiDesadv, FALSE)    :: Boolean AS EdiDesadv
 
            , COALESCE (ObjectBoolean_EdiOrdspr.ValueData, CAST (False AS Boolean))     AS isEdiOrdspr_partner
            , COALESCE (ObjectBoolean_EdiInvoice.ValueData, CAST (False AS Boolean))    AS isEdiInvoice_partner
@@ -637,6 +703,7 @@ end if;
 
            , CAST (CASE WHEN Movement_DocumentMaster.Id IS NOT NULL -- MovementLinkMovement_Master.MovementChildId IS NOT NULL
                               AND (Movement_DocumentMaster.StatusId <> zc_Enum_Status_Complete()
+--!!!                           OR (Movement.OperDatePartner <> Movement_DocumentMaster.OperDate
                                 OR (MovementDate_OperDatePartner.ValueData <> Movement_DocumentMaster.OperDate
                                 AND MovementLinkObject_DocumentTaxKind_Master.ObjectId IN (zc_Enum_DocumentTaxKind_Tax())
                                    )
@@ -649,12 +716,14 @@ end if;
                         THEN TRUE
                         ELSE FALSE
                    END AS Boolean) AS isError
-           , COALESCE (MovementBoolean_Print.ValueData, False) AS isPrinted
-           , COALESCE (MovementBoolean_Promo.ValueData, False) AS isPromo
+           , COALESCE (Movement.isPrint, False) :: Boolean AS isPrinted
+           , COALESCE (Movement.isPromo, False) :: Boolean AS isPromo
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
 
-           , MovementDate_Insert.ValueData AS InsertDate
-           , MovementString_Comment.ValueData       AS Comment
+           , MovementDate_Insert.ValueData    AS InsertDate
+           , MovementString_Comment.ValueData AS Comment
+--!!!      , Movement.InsertDate     AS InsertDate
+--!!!      , Movement.Comment        AS Comment
 
            , Object_ReestrKind.Id             		    AS ReestrKindId
            , Object_ReestrKind.ValueData       		    AS ReestrKindName
@@ -669,41 +738,13 @@ end if;
            || zfCalc_PartionMovementName (CASE WHEN MovementBoolean_Peresort.ValueData = TRUE THEN -1 ELSE 1 END * Movement_Production.DescId, MovementDesc_Production.ItemName, Movement_Production.InvNumber, Movement_Production.OperDate)
              ) :: TVarChar AS InvNumber_ProductionFull
 
-       FROM tmpMovement AS Movement
+       FROM tmpMovement_property AS Movement
 
             LEFT JOIN tmpStatus AS Object_Status ON Object_Status.Id = Movement.StatusId
-
-            LEFT JOIN tmpMovementBoolean AS MovementBoolean_Checked
-                                         ON MovementBoolean_Checked.MovementId = Movement.Id
-                                        AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
-            LEFT JOIN tmpMovementBoolean AS MovementBoolean_PriceWithVAT
-                                         ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
-                                        AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-
-            LEFT JOIN tmpMovementBoolean AS MovementBoolean_EdiOrdspr
-                                         ON MovementBoolean_EdiOrdspr.MovementId =  Movement.Id
-                                        AND MovementBoolean_EdiOrdspr.DescId = zc_MovementBoolean_EdiOrdspr()
-
-            LEFT JOIN tmpMovementBoolean AS MovementBoolean_EdiInvoice
-                                         ON MovementBoolean_EdiInvoice.MovementId =  Movement.Id
-                                        AND MovementBoolean_EdiInvoice.DescId = zc_MovementBoolean_EdiInvoice()
-
-            LEFT JOIN tmpMovementBoolean AS MovementBoolean_EdiDesadv
-                                         ON MovementBoolean_EdiDesadv.MovementId =  Movement.Id
-                                        AND MovementBoolean_EdiDesadv.DescId = zc_MovementBoolean_EdiDesadv()
-
-            LEFT JOIN tmpMovementBoolean AS MovementBoolean_Print
-                                         ON MovementBoolean_Print.MovementId =  Movement.Id
-                                        AND MovementBoolean_Print.DescId = zc_MovementBoolean_Print()
-
-            LEFT JOIN tmpMovementBoolean AS MovementBoolean_Promo
-                                         ON MovementBoolean_Promo.MovementId =  Movement.Id
-                                        AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
 
             LEFT JOIN tmpMovementDate AS MovementDate_Insert
                                       ON MovementDate_Insert.MovementId =  Movement.Id
                                      AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
-
             LEFT JOIN tmpMovementDate AS MovementDate_Payment
                                       ON MovementDate_Payment.MovementId =  Movement.Id
                                      AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
@@ -714,14 +755,13 @@ end if;
             LEFT JOIN tmpMovementString AS MovementString_InvNumberPartner
                                         ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                        AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-
             LEFT JOIN tmpMovementString AS MovementString_Comment
                                         ON MovementString_Comment.MovementId = Movement.Id
                                        AND MovementString_Comment.DescId = zc_MovementString_Comment()
-
             LEFT JOIN tmpMovementString AS MovementString_InvNumberOrder
                                         ON MovementString_InvNumberOrder.MovementId =  Movement.Id
                                        AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+
 
             LEFT JOIN tmpMovementFloat AS MovementFloat_VATPercent
                                        ON MovementFloat_VATPercent.MovementId =  Movement.Id
@@ -954,3 +994,5 @@ $BODY$
 -- SELECT * FROM gpSelect_Movement_Sale_DATA (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inJuridicalBasisId:= 0, inUserId:= zfCalc_UserAdmin() :: Integer)
 --Ѕыло 1 мес€ц - 3 мин 21 сек
 --сейчас 1 мес€ц - 28 сек
+-- select * from gpSelect_Movement_Sale_DATA (instartdate := ('01.04.2019')::TDateTime , inenddate := ('11.04.2019')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inUserId := 2953032)
+-- select * from gpSelect_Movement_Sale_DATA (instartdate := ('01.04.2019')::TDateTime , inenddate := ('11.04.2019')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inUserId := 5)

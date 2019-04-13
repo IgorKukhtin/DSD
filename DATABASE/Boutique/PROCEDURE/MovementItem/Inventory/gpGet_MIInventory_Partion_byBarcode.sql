@@ -34,6 +34,8 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
+
+     IF inBarCode = '' THEN RETURN; END IF;
      
 
      -- Нашли
