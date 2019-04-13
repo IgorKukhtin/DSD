@@ -1,8 +1,8 @@
--- Function: gpSelect_Object_CreditLimitDistributor()
+-- Function: gpSelect_Object_Juridical_CreditLimitDistributor()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_CreditLimitDistributor(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Juridical_CreditLimitDistributor(TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_CreditLimitDistributor(
+CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical_CreditLimitDistributor(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, 
@@ -20,7 +20,7 @@ BEGIN
            , Object_Juridical.ObjectCode         AS Code
            , Object_Juridical.ValueData          AS Name
 
-           , ObjectFloat_CreditLimit.ValueData   AS Percent
+           , ObjectFloat_CreditLimit.ValueData   AS CreditLimit
 
            , Object_Juridical.isErased           AS isErased
                       
@@ -45,5 +45,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
---
- SELECT * FROM gpSelect_Object_CreditLimitDistributor('3')
+-- SELECT * FROM gpSelect_Object_Juridical_CreditLimitDistributor('3')

@@ -1,26 +1,31 @@
 inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1058#1086#1074#1072#1088' '#1080' '#1042#1080#1076' '#1090#1086#1074#1072#1088#1072'> ('#1042#1052#1057')'
   ClientHeight = 420
-  ClientWidth = 1030
-  ExplicitWidth = 1046
+  ClientWidth = 1039
+  AddOnFormData.isAlwaysRefresh = True
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
+  ExplicitWidth = 1055
   ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1030
-    Height = 394
-    ExplicitWidth = 1030
-    ExplicitHeight = 394
-    ClientRectBottom = 394
-    ClientRectRight = 1030
+    Top = 56
+    Width = 1039
+    Height = 364
+    ExplicitTop = 56
+    ExplicitWidth = 1039
+    ExplicitHeight = 364
+    ClientRectBottom = 364
+    ClientRectRight = 1039
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1030
-      ExplicitHeight = 394
+      ExplicitWidth = 1039
+      ExplicitHeight = 364
       inherited cxGrid: TcxGrid
-        Width = 1030
-        Height = 394
-        ExplicitWidth = 1030
-        ExplicitHeight = 394
+        Width = 1039
+        Height = 364
+        ExplicitWidth = 1039
+        ExplicitHeight = 364
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -585,7 +590,31 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' '#1087#1086#1083#1085#1086#1075#1086' '#1103#1097#1080#1082#1072
             Options.Editing = False
-            Width = 58
+            Width = 73
+          end
+          object WeightAvgGross: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' '#1087#1086' '#1089#1088'. '#1074#1077#1089#1091' '#1103#1097#1080#1082#1072' (E2/E3)'
+            DataBinding.FieldName = 'WeightAvgGross'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' '#1087#1086' '#1089#1088#1077#1076#1085#1077#1084#1091' '#1074#1077#1089#1091' '#1103#1097#1080#1082#1072
+            Options.Editing = False
+            Width = 73
+          end
+          object WeightAvgNet: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1085#1077#1090#1090#1086' '#1087#1086' '#1089#1088'. '#1074#1077#1089#1091' '#1103#1097#1080#1082#1072' (E2/E3)'
+            DataBinding.FieldName = 'WeightAvgNet'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1089' '#1085#1077#1090#1090#1086' '#1087#1086' '#1089#1088#1077#1076#1085#1077#1084#1091' '#1074#1077#1089#1091' '#1103#1097#1080#1082#1072' (E2/E3)'
+            Options.Editing = False
+            Width = 73
           end
           object BoxCode_2: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1103#1097#1080#1082#1072' ('#1043#1086#1092#1088#1072')'
@@ -697,7 +726,241 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' '#1087#1086#1083#1085#1086#1075#1086' '#1103#1097#1080#1082#1072
             Options.Editing = False
-            Width = 56
+            Width = 73
+          end
+          object WeightAvgGross_2: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' '#1087#1086' '#1089#1088'. '#1074#1077#1089#1091' '#1103#1097#1080#1082#1072' ('#1043#1086#1092#1088#1072')'
+            DataBinding.FieldName = 'WeightAvgGross_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' '#1087#1086' '#1089#1088'. '#1074#1077#1089#1091' '#1103#1097#1080#1082#1072' ('#1043#1086#1092#1088#1072')'
+            Options.Editing = False
+            Width = 76
+          end
+          object WeightAvgNet_2: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1085#1077#1090#1090#1086' '#1087#1086' '#1089#1088'. '#1074#1077#1089#1091' '#1103#1097#1080#1082#1072' ('#1043#1086#1092#1088#1072')'
+            DataBinding.FieldName = 'WeightAvgNet_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1089' '#1085#1077#1090#1090#1086' '#1087#1086' '#1089#1088'. '#1074#1077#1089#1091' '#1103#1097#1080#1082#1072' ('#1043#1086#1092#1088#1072')'
+            Options.Editing = False
+            Width = 78
+          end
+          object BoxName_Retail1: TcxGridDBColumn
+            Caption = #1071#1097#1080#1082' ('#1057#1077#1090#1100' 1)'
+            DataBinding.FieldName = 'BoxName_Retail1'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = BoxRetailForm1
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 66
+          end
+          object CountOnBox_Retail1: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1077#1076'. '#1074' '#1103#1097'.  ('#1057#1077#1090#1100' 1)'
+            DataBinding.FieldName = 'CountOnBox_Retail1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 66
+          end
+          object WeightOnBox_Retail1: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1082#1075'. '#1074' '#1103#1097'.  ('#1057#1077#1090#1100' 1)'
+            DataBinding.FieldName = 'WeightOnBox_Retail1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 63
+          end
+          object BoxName_Retail2: TcxGridDBColumn
+            Caption = #1071#1097#1080#1082' ('#1057#1077#1090#1100' 2)'
+            DataBinding.FieldName = 'BoxName_Retail2'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = BoxRetailForm2
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 66
+          end
+          object CountOnBox_Retail2: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1077#1076'. '#1074' '#1103#1097'.  ('#1057#1077#1090#1100' 2)'
+            DataBinding.FieldName = 'CountOnBox_Retail2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 66
+          end
+          object WeightOnBox_Retail2: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1082#1075'. '#1074' '#1103#1097'.  ('#1057#1077#1090#1100' 2)'
+            DataBinding.FieldName = 'WeightOnBox_Retail2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 63
+          end
+          object BoxName_Retail3: TcxGridDBColumn
+            Caption = #1071#1097#1080#1082' ('#1057#1077#1090#1100' 3)'
+            DataBinding.FieldName = 'BoxName_Retail3'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = BoxRetailForm3
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 66
+          end
+          object CountOnBox_Retail3: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1077#1076'. '#1074' '#1103#1097'.  ('#1057#1077#1090#1100' 3)'
+            DataBinding.FieldName = 'CountOnBox_Retail3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 66
+          end
+          object WeightOnBox_Retail3: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1082#1075'. '#1074' '#1103#1097'.  ('#1057#1077#1090#1100' 3)'
+            DataBinding.FieldName = 'WeightOnBox_Retail3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 63
+          end
+          object BoxName_Retail4: TcxGridDBColumn
+            Caption = #1071#1097#1080#1082' ('#1057#1077#1090#1100' 4)'
+            DataBinding.FieldName = 'BoxName_Retail4'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = BoxRetailForm4
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 66
+          end
+          object CountOnBox_Retail4: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1077#1076'. '#1074' '#1103#1097'.  ('#1057#1077#1090#1100' 4)'
+            DataBinding.FieldName = 'CountOnBox_Retail4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 66
+          end
+          object WeightOnBox_Retail4: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1082#1075'. '#1074' '#1103#1097'.  ('#1057#1077#1090#1100' 4)'
+            DataBinding.FieldName = 'WeightOnBox_Retail4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 63
+          end
+          object BoxName_Retail5: TcxGridDBColumn
+            Caption = #1071#1097#1080#1082' ('#1057#1077#1090#1100' 5)'
+            DataBinding.FieldName = 'BoxName_Retail5'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = BoxRetailForm5
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 66
+          end
+          object CountOnBox_Retail51: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1077#1076'. '#1074' '#1103#1097'.  ('#1057#1077#1090#1100' 5)'
+            DataBinding.FieldName = 'CountOnBox_Retail5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 66
+          end
+          object WeightOnBox_Retail5: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1082#1075'. '#1074' '#1103#1097'.  ('#1057#1077#1090#1100' 5)'
+            DataBinding.FieldName = 'WeightOnBox_Retail5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 63
+          end
+          object BoxName_Retail6: TcxGridDBColumn
+            Caption = #1071#1097#1080#1082' ('#1057#1077#1090#1100' 6)'
+            DataBinding.FieldName = 'BoxName_Retail6'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = BoxRetailForm6
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 66
+          end
+          object CountOnBox_Retail6: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1077#1076'. '#1074' '#1103#1097'.  ('#1057#1077#1090#1100' 6)'
+            DataBinding.FieldName = 'CountOnBox_Retail6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 61
+          end
+          object WeightOnBox_Retail6: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1082#1075'. '#1074' '#1103#1097'.  ('#1057#1077#1090#1100' 6)'
+            DataBinding.FieldName = 'WeightOnBox_Retail6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 63
           end
         end
       end
@@ -719,6 +982,155 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         Width = 157
       end
     end
+  end
+  object Panel: TPanel [1]
+    Left = 0
+    Top = 0
+    Width = 1039
+    Height = 30
+    Align = alTop
+    TabOrder = 5
+    object edRetail2: TcxButtonEdit
+      Left = 215
+      Top = 6
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 1
+      Width = 120
+    end
+    object cxLabel3: TcxLabel
+      Left = 174
+      Top = 7
+      Caption = #1057#1077#1090#1100' 2:'
+    end
+    object cxLabel6: TcxLabel
+      Left = 5
+      Top = 7
+      Caption = #1057#1077#1090#1100' 1:'
+    end
+    object edRetail1: TcxButtonEdit
+      Left = 48
+      Top = 6
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 0
+      Width = 120
+    end
+  end
+  object cxLabel1: TcxLabel [2]
+    Left = 340
+    Top = 7
+    Caption = #1057#1077#1090#1100' 3:'
+  end
+  object edRetail3: TcxButtonEdit [3]
+    Left = 383
+    Top = 6
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 120
+  end
+  object cxLabel2: TcxLabel [4]
+    Left = 509
+    Top = 7
+    Caption = #1057#1077#1090#1100' 4:'
+  end
+  object edRetail4: TcxButtonEdit [5]
+    Left = 552
+    Top = 6
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 120
+  end
+  object cxLabel4: TcxLabel [6]
+    Left = 678
+    Top = 7
+    Caption = #1057#1077#1090#1100' 5:'
+  end
+  object edRetail5: TcxButtonEdit [7]
+    Left = 719
+    Top = 6
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 120
+  end
+  object cxLabel5: TcxLabel [8]
+    Left = 844
+    Top = 7
+    Caption = #1057#1077#1090#1100' 6:'
+  end
+  object edRetail6: TcxButtonEdit [9]
+    Left = 887
+    Top = 6
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 120
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = GuidesRetail1
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesRetail2
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesRetail3
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesRetail4
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesRetail5
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesRetail6
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
   end
   inherited ActionList: TActionList
     inherited ChoiceGuides: TdsdChoiceGuides
@@ -902,6 +1314,210 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'BoxCode_2'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object BoxRetailForm1: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'BoxChoiceForm'
+      FormName = 'TBoxForm'
+      FormNameParam.Value = 'TBoxForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxId_Retail1'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxName_Retail1'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object BoxRetailForm2: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'BoxChoiceForm'
+      FormName = 'TBoxForm'
+      FormNameParam.Value = 'TBoxForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxId_Retail2'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxName_Retail2'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object BoxRetailForm3: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'BoxChoiceForm'
+      FormName = 'TBoxForm'
+      FormNameParam.Value = 'TBoxForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxId_Retail3'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxName_Retail3'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object BoxRetailForm4: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'BoxChoiceForm'
+      FormName = 'TBoxForm'
+      FormNameParam.Value = 'TBoxForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxId_Retail4'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxName_Retail4'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object BoxRetailForm5: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'BoxChoiceForm'
+      FormName = 'TBoxForm'
+      FormNameParam.Value = 'TBoxForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxId_Retail5'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxName_Retail5'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object BoxRetailForm6: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'BoxChoiceForm'
+      FormName = 'TBoxForm'
+      FormNameParam.Value = 'TBoxForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxId_Retail6'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxName_Retail6'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxCode'
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1376,20 +1992,186 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         end>
       isShowModal = True
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1090#1086#1088#1075#1086#1074#1099#1077' '#1089#1077#1090#1080
+      FormName = 'TGoodsByGK_VMCDialogForm'
+      FormNameParam.Value = 'TGoodsByGK_VMCDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Retail1Id'
+          Value = Null
+          Component = GuidesRetail1
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Retail2Id'
+          Value = Null
+          Component = GuidesRetail2
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Retail3Id'
+          Value = Null
+          Component = GuidesRetail3
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Retail4Id'
+          Value = Null
+          Component = GuidesRetail4
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Retail5Id'
+          Value = Null
+          Component = GuidesRetail5
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Retail6Id'
+          Value = Null
+          Component = GuidesRetail6
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Retail1Name'
+          Value = Null
+          Component = GuidesRetail1
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Retail2Name'
+          Value = Null
+          Component = GuidesRetail2
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Retail3Name'
+          Value = Null
+          Component = GuidesRetail3
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Retail4Name'
+          Value = Null
+          Component = GuidesRetail4
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Retail5Name'
+          Value = Null
+          Component = GuidesRetail5
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Retail6Name'
+          Value = Null
+          Component = GuidesRetail6
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
-    Left = 56
-    Top = 40
+    Left = 64
+    Top = 208
   end
   inherited MasterCDS: TClientDataSet
-    Top = 40
+    Left = 24
+    Top = 208
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsByGoodsKind_VMC'
-    Top = 40
+    Params = <
+      item
+        Name = 'inRetail1Id'
+        Value = Null
+        Component = GuidesRetail1
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetail2Id'
+        Value = Null
+        Component = GuidesRetail2
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetail3Id'
+        Value = Null
+        Component = GuidesRetail3
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetail4Id'
+        Value = Null
+        Component = GuidesRetail4
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetail5Id'
+        Value = Null
+        Component = GuidesRetail5
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetail6Id'
+        Value = Null
+        Component = GuidesRetail6
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 88
+    Top = 208
   end
   inherited BarManager: TdxBarManager
-    Top = 40
+    Left = 136
+    Top = 184
     DockControlHeights = (
       0
       0
@@ -1404,6 +2186,14 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         item
           Visible = True
           ItemName = 'bbInsertRecord'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExecuteDialog'
         end
         item
           Visible = True
@@ -1549,10 +2339,15 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       Action = macUpdateVes_No
       Category = 0
     end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
+      ImageIndex = 35
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 136
-    Top = 184
+    Left = 176
+    Top = 208
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_GoodsByGoodsKind_VMC'
@@ -1794,10 +2589,262 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         ComponentItem = 'WmsCodeCalc_Nom'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetail1Id'
+        Value = Null
+        Component = GuidesRetail1
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetail2Id'
+        Value = Null
+        Component = GuidesRetail2
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetail3Id'
+        Value = Null
+        Component = GuidesRetail3
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetail4Id'
+        Value = Null
+        Component = GuidesRetail4
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetail5Id'
+        Value = Null
+        Component = GuidesRetail5
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRetail6Id'
+        Value = Null
+        Component = GuidesRetail6
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioBoxId_Retail1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BoxId_Retail1'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioBoxId_Retail2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BoxId_Retail2'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioBoxId_Retail3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BoxId_Retail3'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioBoxId_Retail4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BoxId_Retail4'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioBoxId_Retail5'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BoxId_Retail5'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioBoxId_Retail6'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BoxId_Retail6'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBoxName_Retail1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BoxName_Retail1'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBoxName_Retail2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BoxName_Retail2'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBoxName_Retail3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BoxName_Retail3'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBoxName_Retail4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BoxName_Retail4'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBoxName_Retail5'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BoxName_Retail5'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBoxName_Retail6'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BoxName_Retail6'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioCountOnBox_Retail1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountOnBox_Retail1'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioCountOnBox_Retail2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountOnBox_Retail2'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioCountOnBox_Retail3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountOnBox_Retail3'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioCountOnBox_Retail4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountOnBox_Retail4'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioCountOnBox_Retail5'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountOnBox_Retail5'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioCountOnBox_Retail6'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CountOnBox_Retail6'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWeightOnBox_Retail1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightOnBox_Retail1'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWeightOnBox_Retail2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightOnBox_Retail2'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWeightOnBox_Retail3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightOnBox_Retail3'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWeightOnBox_Retail4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightOnBox_Retail4'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWeightOnBox_Retail5'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightOnBox_Retail5'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWeightOnBox_Retail6'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightOnBox_Retail6'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 304
-    Top = 112
+    Top = 152
   end
   object spInsertUpdateList: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_GoodsByGoodsKind_VMC'
@@ -2206,5 +3253,205 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
     AutoWidth = True
     Left = 720
     Top = 344
+  end
+  object GuidesRetail1: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRetail1
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRetail1
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRetail1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 120
+    Top = 65528
+  end
+  object GuidesRetail2: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRetail2
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRetail2
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRetail2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 232
+    Top = 65528
+  end
+  object GuidesRetail3: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRetail3
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRetail3
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRetail3
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 440
+    Top = 65528
+  end
+  object GuidesRetail4: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRetail4
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRetail4
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRetail4
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 592
+    Top = 3
+  end
+  object GuidesRetail5: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRetail5
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRetail5
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRetail5
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 773
+    Top = 3
+  end
+  object GuidesRetail6: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRetail6
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRetail6
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRetail6
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 944
+    Top = 2
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesRetail1
+      end
+      item
+        Component = GuidesRetail2
+      end
+      item
+        Component = GuidesRetail3
+      end
+      item
+        Component = GuidesRetail4
+      end
+      item
+        Component = GuidesRetail5
+      end
+      item
+        Component = GuidesRetail6
+      end>
+    Left = 280
+    Top = 216
   end
 end

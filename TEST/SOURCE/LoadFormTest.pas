@@ -499,6 +499,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_VMCForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_VMCDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_VMCDialogForm');
+  // торг. сети
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGK_VMCDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsByGK_VMCDialogForm');
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsExternalForm');
@@ -606,7 +609,6 @@ end;
 
 procedure TLoadFormTest.LoadGoodsPropertyValueFormTest;
 begin
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueForm');
   {
@@ -1141,19 +1143,19 @@ begin
 end;
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
-  }
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerJournalForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalChoiceForm');
 

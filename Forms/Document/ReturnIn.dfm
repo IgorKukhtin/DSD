@@ -3,7 +3,7 @@ inherited ReturnInForm: TReturnInForm
   ClientHeight = 648
   ClientWidth = 1252
   ExplicitWidth = 1268
-  ExplicitHeight = 683
+  ExplicitHeight = 686
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -3040,6 +3040,7 @@ inherited ReturnInForm: TReturnInForm
           Component = DetailCDS
           ComponentItem = 'OperDate_Master'
           DataType = ftDateTime
+          ParamType = ptUnknown
           MultiSelectSeparator = ','
         end
         item
