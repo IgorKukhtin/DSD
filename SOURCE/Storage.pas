@@ -29,6 +29,7 @@ type
     function ExecuteProc(pData: String; pExecOnServer: boolean = false;
       AMaxAtempt: Byte = 10; ANeedShowException: Boolean = True): Variant;
     procedure LoadReportList(ASession: string);
+    procedure LoadReportLocalList(ASession: string);
     property Connection: String read GetConnection;
   end;
 
@@ -61,7 +62,7 @@ const
    XMLStructureLenghtLenght = 10;
 
 type
-  TConnectionType = (ctMain, ctReport);
+  TConnectionType = (ctMain, ctReport, ctReportLocal);
 
   TConnection = class
   private
@@ -102,6 +103,7 @@ type
     // критичесая секция нужна из-за таймера
     FCriticalSection: TCriticalSection;
     FReportList: TStringList;
+    FReportLocalList: TStringList;
     FConnectionList: TConnectionList;
     function PrepareStr: AnsiString;
     function ExecuteProc(pData: String; pExecOnServer: boolean = false;
@@ -110,6 +112,7 @@ type
     function ProcessMultiDataSet: Variant;
     function GetConnection: string;
     procedure LoadReportList(ASession: string);
+    procedure LoadReportLocalList(ASession: string);
     function CheckConnectionType(pData: string): TConnectionType;
     procedure InsertReportProtocol(pData: string);
   public
@@ -223,13 +226,49 @@ begin
   end;
 end;
 
+procedure TStorage.LoadReportLocalList(ASession: string);
+const
+  {создаем XML вызова процедуры на сервере}
+  pXML =
+    '<xml Session = "%s" AutoWidth = "0">' +
+      '<gpSelect_Object_ReportLocalService OutputType = "otDataSet" DataSetType = "TClientDataSet">' +
+      '</gpSelect_Object_ReportLocalService>' +
+    '</xml>';
+var
+  DataSet: TClientDataSet;
+  Stream: TStringStream;
+begin
+  FReportLocalList.Clear;
+  try
+    DataSet := TClientDataSet.Create(nil);
+    Stream := nil;
+    try
+      Stream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [ASession])));
+      DataSet.LoadFromStream(Stream);
+      if not DataSet.IsEmpty then
+        while not DataSet.Eof do
+        begin
+          if not DataSet.FieldByName('isErased').AsBoolean then
+            FReportLocalList.Add(DataSet.FieldByName('Name').AsString);
+          DataSet.Next;
+        end;
+    finally
+      if Assigned(Stream) then
+        Stream.Free;
+      DataSet.Free;
+    end;
+  except
+  end;
+end;
+
 class function TStorage.NewInstance: TObject;
 var
-  lConnectionPathRep:String;
+  lConnectionPathRep, lConnectionPathRepLocal : String;
 begin
   if not Assigned(Instance) then begin
     Instance := TStorage(inherited NewInstance);
     Instance.FReportList := TStringList.Create;
+    Instance.FReportLocalList := TStringList.Create;
     Instance.FConnectionList := TConnectionList.Create;
 
     if gc_ProgramName = 'FDemo.exe' then
@@ -244,9 +283,15 @@ begin
         lConnectionPathRep := ReplaceStr(ConnectionPath, '\farmacy_init.php', '\farmacy_initRep.php')
       else lConnectionPathRep := ReplaceStr(ConnectionPath, '\init.php', '\initRep.php');
 
+      if Pos('\farmacy_init.php', ConnectionPath) > 0 then
+        lConnectionPathRepLocal := ReplaceStr(ConnectionPath, '\farmacy_init.php', '\farmacy_initRepLocal.php')
+      else lConnectionPathRepLocal := ReplaceStr(ConnectionPath, '\init.php', '\initRepLocal.php');
+
       Instance.FConnectionList.AddFromFile(ConnectionPath, ctMain);
       if (lConnectionPathRep <> ConnectionPath) and FileExists(lConnectionPathRep) then
         Instance.FConnectionList.AddFromFile(lConnectionPathRep, ctReport);
+      if (lConnectionPathRepLocal <> ConnectionPath) and FileExists(lConnectionPathRepLocal) then
+        Instance.FConnectionList.AddFromFile(lConnectionPathRepLocal, ctReportLocal);
     end;
 
     if Instance.FConnectionList.Count = 0 then
@@ -386,6 +431,13 @@ var
   S: string;
 begin
   Result := ctMain;
+  if FReportLocalList.Count > 0 then
+    for S in FReportLocalList do
+      if Pos(S + ' ', pData) > 0 then
+      begin
+        Result := ctReportLocal;
+        Break;
+      end;
   if FReportList.Count > 0 then
     for S in FReportList do
       if Pos(S + ' ', pData) > 0 then
@@ -435,6 +487,9 @@ begin
     if CType = ctReport then
       InsertReportProtocol(pData);
 
+    if CType = ctReportLocal then
+     AMaxAtempt := 4;   // для отчетов через локальный сервер 3 прохода
+
     FSendList.Clear;
     FSendList.Add('XML=' + '<?xml version="1.0" encoding="windows-1251"?>' + pData);
     Logger.AddToLog(pData);
@@ -474,15 +529,40 @@ begin
                     //ShowMessage('Программа переведена в режим автономной работы.'+#13+
                     //            'Перезайдите в программу после восстановления связи с сервером.')
                   end;
-                  case E.LastError of
-                    10051: raise EStorageException.Create('Отсутсвует подключение к сети. Обратитесь к системному администратору. context TStorage. ' + E.Message, );
-                    10054: raise EStorageException.Create('Соединение сброшено сервером. Попробуйте действие еще раз. context TStorage. ' + E.Message);
-                    10060: raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
-                    11001: raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
-                    10065: raise EStorageException.Create('Нет соединения с интернетом. Обратитесь к системному администратору. context TStorage. ' + E.Message);
-                    10061: raise EStorageException.Create('Потеряно соединения с WEB сервером. Необходимо перезайти в программу после восстановления соединения.');
-                  else
-                    raise E;
+                  case CType of
+                     ctMain :
+                        case E.LastError of
+                          10051: raise EStorageException.Create('Отсутсвует подключение к сети. Обратитесь к системному администратору. context TStorage. ' + E.Message, );
+                          10054: raise EStorageException.Create('Соединение сброшено сервером. Попробуйте действие еще раз. context TStorage. ' + E.Message);
+                          10060: raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                          11001: raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                          10065: raise EStorageException.Create('Нет соединения с интернетом. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                          10061: raise EStorageException.Create('Потеряно соединения с WEB сервером. Необходимо перезайти в программу после восстановления соединения.');
+                        else
+                          raise E;
+                        end;
+                     ctReport :
+                        case E.LastError of
+                          10051: raise EStorageException.Create('Отсутсвует подключение к сети. Обратитесь к системному администратору. context TStorage. ' + E.Message, );
+                          10054: raise EStorageException.Create('Соединение сброшено сервером отчетов. Попробуйте действие еще раз. context TStorage. ' + E.Message);
+                          10060: raise EStorageException.Create('Нет доступа к серверу отчетов. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                          11001: raise EStorageException.Create('Нет доступа к серверу отчетов. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                          10065: raise EStorageException.Create('Нет соединения с интернетом. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                          10061: raise EStorageException.Create('Потеряно соединения с WEB сервером отчетов. Необходимо перезайти в программу после восстановления соединения.');
+                        else
+                          raise E;
+                        end;
+                     ctReportLocal :
+                        case E.LastError of
+                          10051: raise EStorageException.Create('Отсутсвует подключение к сети. Обратитесь к системному администратору. context TStorage. ' + E.Message, );
+                          10054: raise EStorageException.Create('Соединение сброшено локальным сервером отчетов. Попробуйте действие еще раз. context TStorage. ' + E.Message);
+                          10060: raise EStorageException.Create('Нет доступа к локальному серверу отчетов. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                          11001: raise EStorageException.Create('Нет доступа к локальному серверу отчетов. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                          10065: raise EStorageException.Create('Нет соединения с интернетом. Обратитесь к системному администратору. context TStorage. ' + E.Message);
+                          10061: raise EStorageException.Create('Потеряно соединения с локальному WEB серверу отчетов. Необходимо перезайти в программу после восстановления соединения.');
+                        else
+                          raise E;
+                        end;
                   end;
                 End;
               End

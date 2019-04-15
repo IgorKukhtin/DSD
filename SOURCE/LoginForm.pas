@@ -81,6 +81,7 @@ begin
         if FAllowLocalConnect then
           SaveLocalConnect(edUserName.Text, edPassword.Text, gc_User.Session);
         TStorageFactory.GetStorage.LoadReportList(gc_User.Session);
+        TStorageFactory.GetStorage.LoadReportLocalList(gc_User.Session);
         ModalResult := mrOk;
       End
       else

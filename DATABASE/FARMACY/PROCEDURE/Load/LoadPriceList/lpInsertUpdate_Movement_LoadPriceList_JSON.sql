@@ -274,7 +274,7 @@ BEGIN
                INNER JOIN 
                     (SELECT DISTINCT inGoodsCode 
                         FROM tblJSON 
-                        WHERE COALESCE(GoodsID, 0) = 0) 
+                        WHERE COALESCE(GoodsID, 0) = 0 and tblJSON.inGoodsCode <> '0' and COALESCE(tblJSON.inGoodsCode, '') <> '') 
                                    AS tblJSON 
                                    ON ObjectString.ValueData = tblJSON.inGoodsCode
 
@@ -292,7 +292,7 @@ BEGIN
     SET GoodsID = tmpGoodsCode.GoodsID,
         isSpecCondition = tmpGoodsCode.isSpecCondition
     FROM tmpGoodsCode
-    WHERE inGoodsCode = tmpGoodsCode.GoodsCode AND ORD = 1;
+    WHERE inGoodsCode = tmpGoodsCode.GoodsCode AND tblJSON.inGoodsCode <> '0' and COALESCE(tblJSON.inGoodsCode, '') <> '' AND ORD = 1;
     
     -- !!!замена параметра!!!
     UPDATE tblJSON

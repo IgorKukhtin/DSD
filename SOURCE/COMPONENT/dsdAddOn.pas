@@ -707,6 +707,39 @@ type
     destructor  Destroy; override;
   end;
 
+  TWinControlListItem = class(TCollectionItem)
+  private
+    FControl: TWinControl;
+    FStoredProc: TdsdStoredProc;
+    FGotoControl: TWinControl;
+    FAction: TCustomAction;
+    FKeyDown : TKeyEvent;
+    procedure SetControl(const Value: TWinControl);
+    procedure SetGotoControl(const Value: TWinControl);
+    procedure edKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+  protected
+    function GetDisplayName: string; override;
+  public
+    procedure Assign(Source: TPersistent); override;
+  published
+    property Action: TCustomAction read FAction write FAction;
+    property Control: TWinControl read FControl write SetControl;
+    property GotoControl: TWinControl read FGotoControl write SetGotoControl;
+    property StoredProc: TdsdStoredProc read FStoredProc write FStoredProc;
+  end;
+
+  TdsdEnterManager = class(TComponent)
+  private
+    FControlList: TCollection;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property ControlList: TCollection read FControlList write FControlList;
+  end;
+
   procedure Register;
 
 implementation
@@ -736,7 +769,8 @@ begin
     TRefreshDispatcher,
     TPivotAddOn,
     TdsdGMMap,
-    TdsdWebBrowser
+    TdsdWebBrowser,
+    TdsdEnterManager
   ]);
 
   RegisterActions('DSDLib', [TExecuteDialog], TExecuteDialog);
@@ -3035,7 +3069,7 @@ var
           F.LongDateFormat := 'hh:mm:ss';
           AField.AsDateTime := StrToDateTime(S,F);
         End;
-      ftFloat,ftCurrency,ftBCD,ftExtended:
+      ftFloat,ftCurrency,ftBCD,TFieldType.ftExtended:
         AField.Value := AParam.AsFloat;
     ELSE
       if VarToStr(AParam.Value) = '' then
@@ -3632,6 +3666,94 @@ end;
 procedure TGeoMarkerList.SetGeoMarker(Index: Integer; const Value: TGeoMarker);
 begin
   inherited SetItem(Index, Value);
+end;
+
+{ TWinControlListItem }
+
+procedure TWinControlListItem.Assign(Source: TPersistent);
+begin
+  if Source is TWinControlListItem then
+     with TWinControlListItem(Source) do begin
+       Self.Control := Control;
+       Self.GotoControl := GotoControl;
+       Self.StoredProc := StoredProc;
+     end
+  else
+    inherited Assign(Source);
+end;
+
+function TWinControlListItem.GetDisplayName: string;
+begin
+  result := inherited;
+  if Assigned(FControl) then
+     result := FControl.Name
+end;
+
+procedure TWinControlListItem.SetControl(const Value: TWinControl);
+begin
+  if Assigned(Value) then
+  begin
+    if Value is TcxTextEdit then
+       (Value as TcxTextEdit).OnKeyDown := edKeyDown
+    else if Value is TcxButtonEdit then
+       (Value as TcxButtonEdit).OnKeyDown := edKeyDown
+    else if Value is TcxCurrencyEdit then
+       (Value as TcxCurrencyEdit).OnKeyDown := edKeyDown
+    else if Value is TcxDateEdit then
+       (Value as TcxDateEdit).OnKeyDown := edKeyDown
+    else raise Exception.Create(Value.Name + ' не имеет свойства OnKeyDown');
+  end;
+
+  FControl := Value;
+end;
+
+procedure TWinControlListItem.SetGotoControl(const Value: TWinControl);
+begin
+  FGotoControl := Value;
+end;
+
+procedure TWinControlListItem.edKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  if (Shift = []) and (Key = VK_RETURN) then
+  begin
+    Key := 0;
+    try
+      if Assigned(FStoredProc) then FStoredProc.Execute;
+      if Assigned(FAction) then FAction.Execute;
+    finally
+      if Assigned(FGotoControl) then FGotoControl.SetFocus;
+    end;
+  end else if Assigned(FKeyDown) then FKeyDown(Sender, Key, Shift);
+end;
+
+
+{ TEnterManager }
+
+constructor TdsdEnterManager.Create(AOwner: TComponent);
+begin
+  inherited;
+  ControlList := TOwnedCollection.Create(Self, TWinControlListItem);
+end;
+
+destructor TdsdEnterManager.Destroy;
+begin
+  FreeAndNil(FControlList);
+  inherited;
+end;
+
+procedure TdsdEnterManager.Notification(AComponent: TComponent;
+  Operation: TOperation);
+var i: integer;
+begin
+  inherited;
+  if csDestroying in ComponentState then
+     exit;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) then begin
+      for i := 0 to ControlList.Count - 1 do
+         if TWinControlListItem(ControlList.Items[i]).Control = AComponent then
+            TWinControlListItem(ControlList.Items[i]).Control := nil;
+    end;
 end;
 
 end.
