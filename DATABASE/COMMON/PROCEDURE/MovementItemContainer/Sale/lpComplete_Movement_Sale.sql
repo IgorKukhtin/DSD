@@ -576,10 +576,19 @@ END IF;*/
                                                          AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                             LEFT JOIN ObjectDate as ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
                                                                     AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
-                       WHERE tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
-                                                            , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
-                                                            , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
-                                                             )
+
+                            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                 ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI.GoodsId
+                                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+         
+        
+                            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney
+                                                            ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
+                       WHERE View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                                     , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                                     , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                      )
                       ) AS tmp ON tmp.MovementItemId = tmpMI.MovementItemId
                       )
     , tmpContainer AS (SELECT DD.ContainerId
@@ -1186,7 +1195,8 @@ END IF;*/
      THEN
          -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
          UPDATE _tmpItem SET OperSumm_PriceList = _tmpItem.OperSumm_PriceList - (vbOperSumm_PriceList_byItem - vbOperSumm_PriceList)
-         WHERE _tmpItem.MovementItemId IN (SELECT _tmpItem.MovementItemId FROM _tmpItem ORDER BY _tmpItem.OperSumm_PriceList DESC, _tmpItem.MovementItemId DESC LIMIT 1);
+         WHERE _tmpItem.MovementItemId    = (SELECT _tmpItem.MovementItemId    FROM _tmpItem ORDER BY _tmpItem.OperSumm_PriceList DESC, _tmpItem.MovementItemId DESC LIMIT 1)
+           AND _tmpItem.ContainerId_Goods = (SELECT _tmpItem.ContainerId_Goods FROM _tmpItem ORDER BY _tmpItem.OperSumm_PriceList DESC, _tmpItem.MovementItemId DESC LIMIT 1);
      END IF;
 
      -- если не равны ДВЕ Итоговые суммы СПЕЦ. прайс-листа по Контрагенту
@@ -1194,7 +1204,8 @@ END IF;*/
      THEN
          -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
          UPDATE _tmpItem SET OperSumm_PriceListJur = _tmpItem.OperSumm_PriceListJur - (vbOperSumm_PriceListJur_byItem - vbOperSumm_PriceListJur)
-         WHERE _tmpItem.MovementItemId IN (SELECT _tmpItem.MovementItemId FROM _tmpItem ORDER BY _tmpItem.OperSumm_PriceListJur DESC, _tmpItem.MovementItemId DESC LIMIT 1);
+         WHERE _tmpItem.MovementItemId    = (SELECT _tmpItem.MovementItemId    FROM _tmpItem ORDER BY _tmpItem.OperSumm_PriceListJur DESC, _tmpItem.MovementItemId DESC LIMIT 1)
+           AND _tmpItem.ContainerId_Goods = (SELECT _tmpItem.ContainerId_Goods FROM _tmpItem ORDER BY _tmpItem.OperSumm_PriceListJur DESC, _tmpItem.MovementItemId DESC LIMIT 1);
      END IF;
 
      -- если не равны ДВЕ Итоговые суммы по Контрагенту !!!без скидки!!!
@@ -1202,7 +1213,8 @@ END IF;*/
      THEN
          -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
          UPDATE _tmpItem SET OperSumm_Partner = _tmpItem.OperSumm_Partner - (vbOperSumm_Partner_byItem - vbOperSumm_Partner)
-         WHERE _tmpItem.MovementItemId IN (SELECT _tmpItem.MovementItemId FROM _tmpItem ORDER BY _tmpItem.OperSumm_Partner DESC, _tmpItem.MovementItemId DESC LIMIT 1);
+         WHERE _tmpItem.MovementItemId    = (SELECT _tmpItem.MovementItemId    FROM _tmpItem ORDER BY _tmpItem.OperSumm_Partner DESC, _tmpItem.MovementItemId DESC LIMIT 1)
+           AND _tmpItem.ContainerId_Goods = (SELECT _tmpItem.ContainerId_Goods FROM _tmpItem ORDER BY _tmpItem.OperSumm_Partner DESC, _tmpItem.MovementItemId DESC LIMIT 1);
      END IF;
 
      -- если не равны ДВЕ Итоговые суммы по Контрагенту
@@ -1210,7 +1222,8 @@ END IF;*/
      THEN
          -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
          UPDATE _tmpItem SET OperSumm_Partner_ChangePercent = _tmpItem.OperSumm_Partner_ChangePercent - (vbOperSumm_Partner_ChangePercent_byItem - vbOperSumm_Partner_ChangePercent)
-         WHERE _tmpItem.MovementItemId IN (SELECT _tmpItem.MovementItemId FROM _tmpItem ORDER BY _tmpItem.OperSumm_Partner_ChangePercent DESC, _tmpItem.MovementItemId DESC LIMIT 1);
+         WHERE _tmpItem.MovementItemId    = (SELECT _tmpItem.MovementItemId    FROM _tmpItem ORDER BY _tmpItem.OperSumm_Partner_ChangePercent DESC, _tmpItem.MovementItemId DESC LIMIT 1)
+           AND _tmpItem.ContainerId_Goods = (SELECT _tmpItem.ContainerId_Goods FROM _tmpItem ORDER BY _tmpItem.OperSumm_Partner_ChangePercent DESC, _tmpItem.MovementItemId DESC LIMIT 1);
      END IF;
 
      -- если не равны ДВЕ Итоговые суммы для кол-во с уч. %ск.вес
@@ -1218,7 +1231,8 @@ END IF;*/
      THEN
          -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
          UPDATE _tmpItem SET OperSumm_PartnerVirt_ChangePercent = _tmpItem.OperSumm_PartnerVirt_ChangePercent - (vbOperSumm_PartnerVirt_ChangePercent_byItem - vbOperSumm_PartnerVirt_ChangePercent)
-         WHERE _tmpItem.MovementItemId IN (SELECT _tmpItem.MovementItemId FROM _tmpItem ORDER BY _tmpItem.OperSumm_PartnerVirt_ChangePercent DESC, _tmpItem.MovementItemId DESC LIMIT 1);
+         WHERE _tmpItem.MovementItemId    = (SELECT _tmpItem.MovementItemId    FROM _tmpItem ORDER BY _tmpItem.OperSumm_PartnerVirt_ChangePercent DESC, _tmpItem.MovementItemId DESC LIMIT 1)
+           AND _tmpItem.ContainerId_Goods = (SELECT _tmpItem.ContainerId_Goods FROM _tmpItem ORDER BY _tmpItem.OperSumm_PartnerVirt_ChangePercent DESC, _tmpItem.MovementItemId DESC LIMIT 1);
      END IF;
 
      -- если не равны ДВЕ Итоговые суммы в валюте по Контрагенту
@@ -1226,7 +1240,8 @@ END IF;*/
      THEN
          -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
          UPDATE _tmpItem SET OperSumm_Currency = _tmpItem.OperSumm_Currency - (vbOperSumm_Currency_byItem - vbOperSumm_Currency)
-         WHERE _tmpItem.MovementItemId IN (SELECT _tmpItem.MovementItemId FROM _tmpItem ORDER BY _tmpItem.OperSumm_Currency DESC, _tmpItem.MovementItemId DESC LIMIT 1);
+         WHERE _tmpItem.MovementItemId    = (SELECT _tmpItem.MovementItemId    FROM _tmpItem ORDER BY _tmpItem.OperSumm_Currency DESC, _tmpItem.MovementItemId DESC LIMIT 1)
+           AND _tmpItem.ContainerId_Goods = (SELECT _tmpItem.ContainerId_Goods FROM _tmpItem ORDER BY _tmpItem.OperSumm_Currency DESC, _tmpItem.MovementItemId DESC LIMIT 1);
      END IF;
 
      -- !!!правильный расчет суммы - Скидка Акция!!!
@@ -1578,9 +1593,7 @@ END IF;*/
 
 
      -- 1.2.0. определяется ContainerId_Goods для количественного учета - !!!если продажа от Контрагента -> Контрагенту!!!
-     UPDATE _tmpItemPartnerFrom SET ContainerId_Goods = CASE WHEN _tmpItem.ContainerId_Goods > 0 THEN _tmpItem.ContainerId_Goods
-                                                        ELSE
-                                                        lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDatePartner -- !!!по "Дате покупателя"!!!
+     UPDATE _tmpItemPartnerFrom SET ContainerId_Goods = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDatePartner -- !!!по "Дате покупателя"!!!
                                                                                            , inUnitId                 := NULL -- !!!подразделения нет!!!
                                                                                            , inCarId                  := NULL
                                                                                            , inMemberId               := NULL
@@ -1593,12 +1606,13 @@ END IF;*/
                                                                                            , inBranchId               := NULL
                                                                                            , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                             )
-                                                        END
      FROM _tmpItem
      WHERE _tmpItem.MovementItemId = _tmpItemPartnerFrom.MovementItemId
     ;
      -- 1.2.1. определяется ContainerId_Goods для количественного учета
-     UPDATE _tmpItem SET ContainerId_Goods = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate -- по "Дате склад"
+     UPDATE _tmpItem SET ContainerId_Goods = CASE WHEN _tmpItem.ContainerId_Goods > 0 THEN _tmpItem.ContainerId_Goods
+                                             ELSE
+                                             lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate -- по "Дате склад"
                                                                                 , inUnitId                 := vbUnitId_From
                                                                                 , inCarId                  := NULL
                                                                                 , inMemberId               := vbMemberId_From
@@ -1628,6 +1642,7 @@ END IF;*/
                                                                                 , inBranchId               := vbBranchId_From -- эта аналитика нужна для филиала
                                                                                 , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                  )
+                                             END
                   -- у покупателя
                 , ContainerId_GoodsTransit_01 = CASE WHEN vbAccountId_GoodsTransit_01 <> 0 AND _tmpItem.isLossMaterials = FALSE -- !!!если НЕ списание!!!
                                         THEN lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate -- по "Дате склад"
@@ -1871,9 +1886,10 @@ END IF;*/
         AND zc_isHistoryCost()  = TRUE -- !!!если нужны проводки!!!
      THEN
      -- 1.3.1.1. самое интересное: заполняем таблицу - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_ProfitLoss_40208, ContainerId_ProfitLoss_10500, ContainerId_ProfitLoss_10400, ContainerId_ProfitLoss_20200, ContainerId, AccountId, ContainerId_Transit_01, ContainerId_Transit_02, ContainerId_Transit_51, ContainerId_Transit_52, ContainerId_Transit_53, OperSumm, OperSumm_ChangePercent, OperSumm_Partner, isLossMaterials)
+     INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_Goods, ContainerId_ProfitLoss_40208, ContainerId_ProfitLoss_10500, ContainerId_ProfitLoss_10400, ContainerId_ProfitLoss_20200, ContainerId, AccountId, ContainerId_Transit_01, ContainerId_Transit_02, ContainerId_Transit_51, ContainerId_Transit_52, ContainerId_Transit_53, OperSumm, OperSumm_ChangePercent, OperSumm_Partner, isLossMaterials)
         SELECT
               _tmpItem.MovementItemId
+            , _tmpItem.ContainerId_Goods
             , 0 AS ContainerId_ProfitLoss_40208 -- Счет - прибыль (ОПиУ - разница в весе : с/с2 - с/с3)
             , 0 AS ContainerId_ProfitLoss_10500 -- Счет - прибыль (ОПиУ - скидки в весе : с/с1 - с/с2)
             , 0 AS ContainerId_ProfitLoss_10400 -- Счет - прибыль (ОПиУ - себестоимости реализации : с/с3)
@@ -1916,7 +1932,7 @@ END IF;*/
                                                                                  AND _tmpItem.isTareReturning                = FALSE
              -- так находим для остальных
              LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
-                                                  AND Container_Summ.DescId = zc_Container_Summ()
+                                                  AND Container_Summ.DescId   = zc_Container_Summ()
              /*JOIN ContainerObjectCost AS ContainerObjectCost_Basis
                                       ON ContainerObjectCost_Basis.ContainerId = COALESCE (lfContainerSumm_20901.ContainerId, Container_Summ.Id)
                                      AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()*/
@@ -1927,11 +1943,13 @@ END IF;*/
              OR _tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0) <> 0)       -- !!!
           AND vbPartnerId_From = 0 -- !!!если НЕ продажа от Контрагента -> Контрагенту!!!
         GROUP BY _tmpItem.MovementItemId
+               , _tmpItem.ContainerId_Goods
                , Container_Summ.Id
                , Container_Summ.ObjectId
                , lfContainerSumm_20901.ContainerId
                , lfContainerSumm_20901.AccountId
-               , _tmpItem.isLossMaterials;
+               , _tmpItem.isLossMaterials
+                ;
 
      END IF; -- if vbIsHistoryCost = TRUE AND zc_isHistoryCost() = TRUE
 
@@ -2044,9 +2062,10 @@ END IF;*/
                                                                                          )
                                                       ELSE 0
                                                       END
-     FROM (SELECT _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId FROM _tmpItemSumm) AS _tmpItemSumm_find
-          INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm_find.MovementItemId
-                             AND _tmpItem.isLossMaterials = FALSE -- !!!если НЕ списание!!!
+     FROM (SELECT _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId, _tmpItemSumm.ContainerId_Goods FROM _tmpItemSumm) AS _tmpItemSumm_find
+          INNER JOIN _tmpItem ON _tmpItem.MovementItemId    = _tmpItemSumm_find.MovementItemId
+                             AND _tmpItem.ContainerId_Goods = _tmpItemSumm_find.ContainerId_Goods
+                             AND _tmpItem.isLossMaterials   = FALSE -- !!!если НЕ списание!!!
           LEFT JOIN ContainerLinkObject AS CLO_JuridicalBasis ON CLO_JuridicalBasis.ContainerId = _tmpItemSumm_find.ContainerId
                                                              AND CLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
           LEFT JOIN ContainerLinkObject AS CLO_Business ON CLO_Business.ContainerId = _tmpItemSumm_find.ContainerId
@@ -2069,9 +2088,10 @@ END IF;*/
                                                   AND CLO_Car.DescId = zc_ContainerLinkObject_Car()
           LEFT JOIN ContainerLinkObject AS CLO_Member ON CLO_Member.ContainerId = _tmpItemSumm_find.ContainerId
                                                      AND CLO_Member.DescId = zc_ContainerLinkObject_Member()
-     WHERE _tmpItemSumm.MovementItemId = _tmpItemSumm_find.MovementItemId
-       AND _tmpItemSumm.ContainerId    = _tmpItemSumm_find.ContainerId
-       AND vbAccountId_GoodsTransit_01 <> 0
+     WHERE _tmpItemSumm.MovementItemId    = _tmpItemSumm_find.MovementItemId
+       AND _tmpItemSumm.ContainerId       = _tmpItemSumm_find.ContainerId
+       AND _tmpItemSumm.ContainerId_Goods = _tmpItemSumm_find.ContainerId_Goods
+       AND vbAccountId_GoodsTransit_01    <> 0
     ;
 
 
@@ -2079,6 +2099,7 @@ END IF;*/
         WITH tmpAccount_60000 AS (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE Object_Account_View.AccountGroupId = zc_Enum_AccountGroup_60000()) -- Прибыль будущих периодов
            , tmpMIContainer AS
             (SELECT _tmpItemSumm.MovementItemId
+                  , _tmpItemSumm.ContainerId_Goods
                   , _tmpItemSumm.AccountId
                   , _tmpItemSumm.ContainerId
                   , _tmpItemSumm.ContainerId_Transit_01
@@ -2096,6 +2117,7 @@ END IF;*/
                AND _tmpItemSumm.isLossMaterials = TRUE -- !!!если списание!!!
             UNION ALL
              SELECT _tmpItemSumm.MovementItemId
+                  , _tmpItemSumm.ContainerId_Goods
                   , _tmpItemSumm.AccountId
                   , _tmpItemSumm.ContainerId
                   , _tmpItemSumm.ContainerId_Transit_01
@@ -2113,6 +2135,7 @@ END IF;*/
                AND _tmpItemSumm.isLossMaterials  = FALSE -- !!!если НЕ списание!!!
             UNION ALL
              SELECT _tmpItemSumm.MovementItemId
+                  , _tmpItemSumm.ContainerId_Goods
                   , _tmpItemSumm.AccountId
                   , _tmpItemSumm.ContainerId
                   , _tmpItemSumm.ContainerId_Transit_01
@@ -2130,6 +2153,7 @@ END IF;*/
                AND _tmpItemSumm.isLossMaterials                                  = FALSE -- !!!если НЕ списание!!!
             UNION ALL
              SELECT _tmpItemSumm.MovementItemId
+                  , _tmpItemSumm.ContainerId_Goods
                   , _tmpItemSumm.AccountId
                   , _tmpItemSumm.ContainerId
                   , _tmpItemSumm.ContainerId_Transit_01
@@ -2167,7 +2191,8 @@ END IF;*/
             , vbOperDate -- т.е. по "Дате склад"
             , tmpMIContainer.isActive
        FROM tmpMIContainer
-            INNER JOIN _tmpItem ON _tmpItem.MovementItemId = tmpMIContainer.MovementItemId
+            INNER JOIN _tmpItem ON _tmpItem.MovementItemId    = tmpMIContainer.MovementItemId
+                               AND _tmpItem.ContainerId_Goods = tmpMIContainer.ContainerId_Goods
      UNION ALL
        -- это две проводки для счета Транзит
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, tmpMIContainer.MovementItemId
@@ -2215,7 +2240,8 @@ END IF;*/
        FROM (SELECT vbOperDate AS OperDate UNION SELECT vbOperDatePartner AS OperDate) AS tmpOperDate
             INNER JOIN _tmpItem ON vbAccountId_GoodsTransit_01 <> 0
                                AND _tmpItem.isLossMaterials    = FALSE -- !!!если НЕ списание!!!
-            INNER JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = _tmpItem.MovementItemId
+            INNER JOIN tmpMIContainer ON tmpMIContainer.MovementItemId    = _tmpItem.MovementItemId
+                                     AND tmpMIContainer.ContainerId_Goods = _tmpItem.ContainerId_Goods
             LEFT JOIN tmpAccount_60000 ON tmpAccount_60000.AccountId = tmpMIContainer.AccountId
       ;
 
@@ -2511,7 +2537,8 @@ END IF;*/
                                                THEN zc_Enum_ProfitLoss_70104() -- ЕКСПЕРТ-АГРОТРЕЙД
                                      END AS ProfitLossId_Corporate
                              FROM _tmpItemSumm
-                                  JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
+                                  JOIN _tmpItem ON _tmpItem.MovementItemId    = _tmpItemSumm.MovementItemId
+                                               AND _tmpItem.ContainerId_Goods = _tmpItemSumm.ContainerId_Goods
                              GROUP BY _tmpItem.InfoMoneyDestinationId
                                     , _tmpItem.BusinessId_From
                                     , _tmpItem.GoodsKindId
@@ -2525,8 +2552,10 @@ END IF;*/
                       ) AS _tmpItem_group
                 ) AS _tmpItem_byProfitLoss
           ) AS _tmpItem_byDestination ON _tmpItem_byDestination.InfoMoneyDestinationId = _tmpItem.InfoMoneyDestinationId
-                                     AND _tmpItem_byDestination.BusinessId_From = _tmpItem.BusinessId_From
-     WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
+                                     AND _tmpItem_byDestination.BusinessId_From        = _tmpItem.BusinessId_From
+     WHERE _tmpItemSumm.MovementItemId    = _tmpItem.MovementItemId
+       AND _tmpItemSumm.ContainerId_Goods = _tmpItem.ContainerId_Goods
+     ;
 
      -- 2.2. формируются Проводки - Прибыль (Себестоимость) + !!!нет MovementItemId!!! + !!!добавлен GoodsId + GoodsKindId!!!
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
@@ -2554,7 +2583,8 @@ END IF;*/
                   , SUM (_tmpItemSumm.OperSumm_ChangePercent - _tmpItemSumm.OperSumm_Partner) AS OperSumm
                   , _tmpItem.isLossMaterials                  AS isLossMaterials
              FROM _tmpItemSumm
-                  INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
+                  INNER JOIN _tmpItem ON _tmpItem.MovementItemId    = _tmpItemSumm.MovementItemId
+                                     AND _tmpItem.ContainerId_Goods = _tmpItemSumm.ContainerId_Goods
              WHERE _tmpItem.isLossMaterials = FALSE -- !!!если НЕ списание!!!
              GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_40208, _tmpItem.ContainerId_Goods, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.isLossMaterials
             UNION ALL
@@ -2567,7 +2597,8 @@ END IF;*/
                   , SUM (_tmpItemSumm.OperSumm - _tmpItemSumm.OperSumm_ChangePercent) AS OperSumm
                   , _tmpItem.isLossMaterials                  AS isLossMaterials
              FROM _tmpItemSumm
-                  INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
+                  INNER JOIN _tmpItem ON _tmpItem.MovementItemId    = _tmpItemSumm.MovementItemId
+                                     AND _tmpItem.ContainerId_Goods = _tmpItemSumm.ContainerId_Goods
              WHERE _tmpItem.isLossMaterials = FALSE -- !!!если НЕ списание!!!
              GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_10500, _tmpItem.ContainerId_Goods, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.isLossMaterials
             UNION ALL
@@ -2580,7 +2611,8 @@ END IF;*/
                   , SUM (_tmpItemSumm.OperSumm_Partner)       AS OperSumm
                   , _tmpItem.isLossMaterials                  AS isLossMaterials
              FROM _tmpItemSumm
-                  INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
+                  INNER JOIN _tmpItem ON _tmpItem.MovementItemId    = _tmpItemSumm.MovementItemId
+                                     AND _tmpItem.ContainerId_Goods = _tmpItemSumm.ContainerId_Goods
              WHERE _tmpItem.isLossMaterials = FALSE -- !!!если НЕ списание!!!
              GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_10400, _tmpItem.ContainerId_Goods, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.isLossMaterials
 
@@ -2594,7 +2626,8 @@ END IF;*/
                   , SUM (_tmpItemSumm.OperSumm)               AS OperSumm
                   , _tmpItem.isLossMaterials                  AS isLossMaterials
              FROM _tmpItemSumm
-                  INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
+                  INNER JOIN _tmpItem ON _tmpItem.MovementItemId    = _tmpItemSumm.MovementItemId
+                                     AND _tmpItem.ContainerId_Goods = _tmpItemSumm.ContainerId_Goods
              WHERE _tmpItem.isLossMaterials = TRUE -- !!!если списание!!!
              GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_20200, _tmpItem.ContainerId_Goods, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.isLossMaterials
 
@@ -3096,17 +3129,23 @@ END IF;*/
      DELETE FROM MovementLinkObject WHERE DescId = zc_MILinkObject_Branch() AND MovementId = inMovementId;*/
      -- !!!6.0.1. формируются свойства в элементах документа из данных для проводок!!!
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), _tmpItem.MovementItemId, vbBranchId_From)
-     FROM _tmpItem;
+     FROM (SELECT DISTINCT _tmpItem.MovementItemId FROM _tmpItem) AS _tmpItem;
      -- !!!6.0.2. формируются свойство связь с <филиал> в документе из данных для проводок!!!
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Branch(), inMovementId, vbBranchId_From);
      -- !!!6.0.3. формируются свойства в элементах документа из данных для проводок!!!
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Business(), _tmpItem.MovementItemId, _tmpItem.BusinessId_From)
-     FROM _tmpItem;
+     FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.BusinessId_From FROM _tmpItem) AS _tmpItem;
      -- !!!6.0.4. формируется свойство <zc_MIFloat_Summ - Сумма> + <zc_MIFloat_SummFrom - Сумма (ушло)> + <zc_MIFloat_SummPriceList - Сумма по прайсу>!!!
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(),          _tmpItem.MovementItemId, _tmpItem.OperSumm_Partner_ChangePercent)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummFrom(),      _tmpItem.MovementItemId, _tmpItem.OperSumm_PartnerVirt_ChangePercent)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPriceList(), _tmpItem.MovementItemId, _tmpItem.OperSumm_PriceList)
-     FROM _tmpItem;
+     FROM (SELECT _tmpItem.MovementItemId
+                , SUM (_tmpItem.OperSumm_Partner_ChangePercent)     AS OperSumm_Partner_ChangePercent
+                , SUM (_tmpItem.OperSumm_PartnerVirt_ChangePercent) AS OperSumm_PartnerVirt_ChangePercent
+                , SUM (_tmpItem.OperSumm_PriceList)                 AS OperSumm_PriceList
+           FROM _tmpItem
+           GROUP BY _tmpItem.MovementItemId
+          ) AS _tmpItem;
 
 
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки
@@ -3125,11 +3164,11 @@ END IF;*/
      FROM (SELECT 1 AS x) AS x1
            LEFT JOIN
           (SELECT MIN (MIFloat_PromoMovement.ValueData) AS MovementId_min,  MAX (MIFloat_PromoMovement.ValueData) AS MovementId_max
-           FROM _tmpItem
+           FROM (SELECT DISTINCT _tmpItem.MovementItemId FROM _tmpItem) AS _tmpItem
                 INNER JOIN MovementItemFloat AS MIFloat_PromoMovement
                                              ON MIFloat_PromoMovement.MovementItemId = _tmpItem.MovementItemId
-                                            AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
-                                            AND MIFloat_PromoMovement.ValueData <> 0
+                                            AND MIFloat_PromoMovement.DescId         = zc_MIFloat_PromoMovementId()
+                                            AND MIFloat_PromoMovement.ValueData      <> 0
           ) AS tmp ON 1 = 1;
 
      -- 6.2.3. ФИНИШ - Обязательно меняем статус документа + сохранили протокол

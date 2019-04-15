@@ -229,14 +229,14 @@ BEGIN
 
                  ELSE CASE -- % наценки для срока годности < 6 мес.
                            WHEN vbMarginPercent_ExpirationDate > 0
-                            AND SelectMinPrice_AllGoods.MinExpirationDate < (CURRENT_DATE + vbInterval_ExpirationDate)
+                            AND SelectMinPrice_AllGoods.MinExpirationDate <= (CURRENT_DATE + vbInterval_ExpirationDate)
                             AND SelectMinPrice_AllGoods.MinExpirationDate > zc_DateStart()
                             AND SelectMinPrice_AllGoods.MinExpirationDate > CURRENT_DATE
                             AND COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0
                                 THEN vbMarginPercent_ExpirationDate + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0)
                            -- % наценки для срока годности < 6 мес.
                            WHEN vbMarginPercent_ExpirationDate > 0
-                            AND SelectMinPrice_AllGoods.MinExpirationDate < (CURRENT_DATE + vbInterval_ExpirationDate)
+                            AND SelectMinPrice_AllGoods.MinExpirationDate <= (CURRENT_DATE + vbInterval_ExpirationDate)
                             AND SelectMinPrice_AllGoods.MinExpirationDate > zc_DateStart()
                             AND SelectMinPrice_AllGoods.MinExpirationDate > CURRENT_DATE
                                 THEN vbMarginPercent_ExpirationDate + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0)
@@ -251,14 +251,14 @@ BEGIN
           , zfCalc_SalePrice((SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)               -- Цена С НДС
                             , CASE -- % наценки для срока годности < 6 мес.
                                    WHEN vbMarginPercent_ExpirationDate > 0
-                                    AND SelectMinPrice_AllGoods.MinExpirationDate < (CURRENT_DATE + vbInterval_ExpirationDate)
+                                    AND SelectMinPrice_AllGoods.MinExpirationDate <= (CURRENT_DATE + vbInterval_ExpirationDate)
                                     AND SelectMinPrice_AllGoods.MinExpirationDate > zc_DateStart()
                                     AND SelectMinPrice_AllGoods.MinExpirationDate > CURRENT_DATE
                                     AND COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0
                                         THEN vbMarginPercent_ExpirationDate + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0)
                                    -- % наценки для срока годности < 6 мес.
                                    WHEN vbMarginPercent_ExpirationDate > 0
-                                    AND SelectMinPrice_AllGoods.MinExpirationDate < (CURRENT_DATE + vbInterval_ExpirationDate)
+                                    AND SelectMinPrice_AllGoods.MinExpirationDate <= (CURRENT_DATE + vbInterval_ExpirationDate)
                                     AND SelectMinPrice_AllGoods.MinExpirationDate > zc_DateStart()
                                     AND SelectMinPrice_AllGoods.MinExpirationDate > CURRENT_DATE
                                         THEN vbMarginPercent_ExpirationDate + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0)
@@ -402,7 +402,7 @@ BEGIN
                         AND ResultSet.MinExpirationDate <= CURRENT_DATE
                   THEN FALSE
              WHEN COALESCE (ResultSet.IsTop_Goods, FALSE) = FALSE
-                        AND ResultSet.MinExpirationDate < (CURRENT_DATE + vbInterval_ExpirationDate)
+                        AND ResultSet.MinExpirationDate <= (CURRENT_DATE + vbInterval_ExpirationDate)
                         AND ResultSet.MinExpirationDate > zc_DateStart()
                         AND COALESCE (vbMarginPercent_ExpirationDate, 0) = 0
                   THEN FALSE
@@ -415,8 +415,8 @@ BEGIN
              WHEN COALESCE (inUnitId_to, 0) = 0
                   THEN TRUE
 
-             WHEN inUnitId_to <> 0 AND (ResultSet.MinExpirationDate < (CURRENT_DATE + vbInterval_ExpirationDate)
-                                    OR  ResultSet.MinExpirationDate_to < (CURRENT_DATE + vbInterval_ExpirationDate)
+             WHEN inUnitId_to <> 0 AND (ResultSet.MinExpirationDate <= (CURRENT_DATE + vbInterval_ExpirationDate)
+                                    OR  ResultSet.MinExpirationDate_to <= (CURRENT_DATE + vbInterval_ExpirationDate)
                                     /*OR  ResultSet.isIncome = TRUE */)
                   THEN FALSE
 

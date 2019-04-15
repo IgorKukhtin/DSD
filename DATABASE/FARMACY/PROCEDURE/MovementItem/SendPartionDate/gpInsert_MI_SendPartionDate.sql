@@ -72,8 +72,9 @@ BEGIN
                   , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
            ;
 
+    -- 
     CREATE TEMP TABLE tmpMaster (Id Integer, GoodsId Integer, Amount TFloat, AmountRemains TFloat, Price TFloat, PriceExp TFloat) ON COMMIT DROP;
-          INSERT INTO tmpMaster (Id, GoodsId, Amount, AmountRemains, Price, PriceExp)
+    INSERT INTO tmpMaster (Id, GoodsId, Amount, AmountRemains, Price, PriceExp)
     WITH
       MI_Master AS (SELECT MovementItem.Id                    AS Id
                          , MovementItem.ObjectId              AS GoodsId
@@ -112,10 +113,20 @@ BEGIN
           , COALESCE(MI_Master.PriceExp, tmpPrice.Price) AS PriceExp
     FROM (SELECT tmpRemains.GoodsId
                , SUM (tmpRemains.Amount) AS AmountRemains
-               , SUM (CASE WHEN tmpRemains.ExpirationDate <= vbDate180 THEN tmpRemains.Amount ELSE 0 END) AS Amount
+               , SUM (CASE WHEN tmpRemains.ExpirationDate <= vbDate180
+                            AND tmpRemains.ExpirationDate > zc_DateStart()
+                            AND tmpRemains.ExpirationDate > CURRENT_DATE - INTERVAL '3 YEAR'
+                                THEN tmpRemains.Amount
+                           ELSE 0
+                      END) AS Amount
           FROM tmpRemains 
           GROUP BY tmpRemains.GoodsId
-          HAVING SUM (CASE WHEN tmpRemains.ExpirationDate <= vbDate180 THEN tmpRemains.Amount ELSE 0 END) <> 0
+          HAVING SUM (CASE WHEN tmpRemains.ExpirationDate <= vbDate180
+                            AND tmpRemains.ExpirationDate > zc_DateStart()
+                            AND tmpRemains.ExpirationDate > CURRENT_DATE - INTERVAL '3 YEAR'
+                                THEN tmpRemains.Amount
+                           ELSE 0
+                      END) <> 0
           ) AS tmpRemains
         FULL OUTER JOIN MI_Master ON MI_Master.GoodsId = tmpRemains.GoodsId
         LEFT JOIN tmpPrice ON tmpPrice.GoodsId = COALESCE (MI_Master.GoodsId, tmpRemains.GoodsId);

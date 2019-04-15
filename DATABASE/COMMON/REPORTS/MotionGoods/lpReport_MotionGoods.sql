@@ -361,7 +361,7 @@ BEGIN
                                  THEN zc_Enum_AccountGroup_110000() -- Транзит
                             ELSE COALESCE (tmpAccount.AccountGroupId, 0)
                        END AS AccountGroupId
-                     , Container.Amount
+                     , Container.Amount 
                      , _tmpLocation.DescId    AS Value1_ch
                      , CLO_Member.ContainerId AS Value2_ch
                 FROM _tmpLocation
@@ -403,8 +403,15 @@ BEGIN
     -- !!!!!!!!!!!!!!!!!!!!!!!
     ANALYZE _tmpListContainer;
 
+if inUserId = 5 and 1=0
+then
+RAISE EXCEPTION '<%   %>', (select count(*) from _tmpListContainer where _tmpListContainer.AccountId = 0)
+, (select count(*) from _tmpListContainer )
+;
+end if;
+
     -- 1. пытаемся найти <Счет> для zc_Container_Count
-    UPDATE _tmpListContainer SET AccountId = _tmpListContainer_summ.AccountId
+    UPDATE _tmpListContainer SET AccountId      = _tmpListContainer_summ.AccountId
                                , AccountGroupId = _tmpListContainer_summ.AccountGroupId
     FROM _tmpListContainer AS _tmpListContainer_summ
          INNER JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
@@ -433,14 +440,21 @@ BEGIN
       AND _tmpListContainer_summ.Amount <> 0
    ;
     -- 2.2. пытаемся найти <Счет> для zc_Container_Count
-    UPDATE _tmpListContainer SET AccountId = _tmpListContainer_summ.AccountId
+    UPDATE _tmpListContainer SET AccountId      = _tmpListContainer_summ.AccountId
                                , AccountGroupId = _tmpListContainer_summ.AccountGroupId
-    FROM _tmpListContainer AS _tmpListContainer_summ
+    FROM (SELECT _tmpListContainer.ContainerId_count, _tmpListContainer.AccountId, _tmpListContainer.AccountGroupId, _tmpListContainer.ContainerDescId
+                 -- № п/п
+               , ROW_NUMBER() OVER (PARTITION BY _tmpListContainer.ContainerId_count ORDER BY _tmpListContainer.ContainerId_begin DESC) AS Ord
+          FROM _tmpListContainer
+          WHERE _tmpListContainer.ContainerDescId = zc_Container_Summ()
+            AND _tmpListContainer.AccountGroupId  <> zc_Enum_AccountGroup_110000() -- Транзит
+         ) AS _tmpListContainer_summ
     WHERE _tmpListContainer.ContainerId_count = _tmpListContainer_summ.ContainerId_count
       AND _tmpListContainer.ContainerDescId = zc_Container_Count()
-      AND _tmpListContainer_summ.ContainerDescId = zc_Container_Summ()
+      -- AND _tmpListContainer_summ.ContainerDescId = zc_Container_Summ()
       AND _tmpListContainer.AccountId = 0
       AND _tmpListContainer_summ.AccountGroupId <> zc_Enum_AccountGroup_110000() -- Транзит
+      AND _tmpListContainer_summ.Ord = 1 -- !!!последний!!!
    ;
 
     -- все ContainerId

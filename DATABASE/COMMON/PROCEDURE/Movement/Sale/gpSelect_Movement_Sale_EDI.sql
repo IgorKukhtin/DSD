@@ -316,7 +316,7 @@ BEGIN
                                  , inGLNCodeJuridical      := ObjectString_Juridical_GLNCode.ValueData
                                   ) AS RecipientGLNCode
 
-           , CASE WHEN OH_JuridicalDetails_To.JuridicalId = 15158 -- МЕТРО Кеш енд Кері Україна ТОВ
+           , CASE WHEN 1=0 AND OH_JuridicalDetails_To.JuridicalId = 15158 -- МЕТРО Кеш енд Кері Україна ТОВ
                        THEN '' -- если Метро, тогда наш = "пусто"
                   ELSE zfCalc_GLNCodeCorporate (inGLNCode                  := ObjectString_Partner_GLNCode.ValueData
                                               , inGLNCodeCorporate_partner := ObjectString_Partner_GLNCodeCorporate.ValueData
