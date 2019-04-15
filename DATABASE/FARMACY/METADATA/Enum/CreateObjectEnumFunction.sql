@@ -8,6 +8,9 @@ CREATE OR REPLACE FUNCTION zc_Enum_GlobalConst_SiteDiscount() RETURNS integer AS
 CREATE OR REPLACE FUNCTION zc_Enum_GlobalConst_CostCredit() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_GlobalConst_CostCredit' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 --CREATE OR REPLACE FUNCTION zc_Enum_GlobalConst_ConnectParam() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_GlobalConst_ConnectParam' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 --CREATE OR REPLACE FUNCTION zc_Enum_GlobalConst_ConnectReportParam() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_GlobalConst_ConnectReportParam' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+--CREATE OR REPLACE FUNCTION zc_Enum_GlobalConst_ConnectReportParam() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_GlobalConst_ConnectReportParam' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+--CREATE OR REPLACE FUNCTION zc_Enum_GlobalConst_ConnectReportLocalService()  RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_GlobalConst_ConnectReportLocalService' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 
 -- !!!
 -- !!! Роли
@@ -415,6 +418,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_SPKind_1303() RETURNS integer AS $BODY$BEGIN 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 15.04.19                                                                                                   * zc_Enum_GlobalConst_ConnectReportLocalService
  02.04.19         * zc_Enum_ImportType_Goods_Price
                     zc_Enum_ImportSetting_Goods_Price
  07.01.19                                                                                                   * zc_Enum_GlobalConst_ConnectReportParam

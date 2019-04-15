@@ -16,8 +16,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Deficit TFloat, DeficitSumm TFloat
              , Proficit TFloat, ProficitSumm TFloat, Diff TFloat, DiffSumm TFloat
              , Diff_calc TFloat, DiffSumm_calc TFloat, Diff_diff TFloat, DiffSumm_diff TFloat
-             , MIComment TVarChar      
-             , isAuto Boolean      
+             , MIComment TVarChar
+             , isAuto Boolean
              )
 AS
 $BODY$
@@ -28,13 +28,22 @@ DECLARE
   vbUnitId Integer;
   vbOperDate TDateTime;
   vbIsFullInvent Boolean;
+  vbIsRemains Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Inventory());
     -- inShowAll:= TRUE;
     vbUserId:= lpGetUserBySession (inSession);
     vbObjectId := lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
+    vbIsRemains := True;
 
+    IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+              WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId in (2, 393039, 1915124, 59582))
+    THEN
+      vbIsRemains := True;
+    ELSE
+      vbIsRemains := False;
+    END IF;
 
     -- вытягиваем дату и подразделение и ...
     SELECT DATE_TRUNC ('DAY', Movement.OperDate) + INTERVAL '1 DAY' AS OperDate     -- при рассчете остатка добавил 1 день для условия >=
@@ -51,7 +60,7 @@ BEGIN
                                          ON MB_FullInvent.MovementId = Movement.Id
                                         AND MB_FullInvent.DescId = zc_MovementBoolean_FullInvent()
     WHERE Movement.Id = inMovementId;
-    
+
 
 
     IF inShowAll = FALSE AND vbIsFullInvent = TRUE
@@ -59,7 +68,7 @@ BEGIN
         -- РЕЗУЛЬТАТ
         RETURN QUERY
             WITH tmpPrice AS (SELECT Price_Goods.ChildObjectId               AS GoodsId
-                                   , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+                                   , ROUND(Price_Value.ValueData,2)::TFloat  AS Price
                               FROM ObjectLink AS ObjectLink_Price_Unit
                                    LEFT JOIN ObjectLink AS Price_Goods
                                           ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
@@ -67,47 +76,47 @@ BEGIN
                                    LEFT JOIN ObjectFloat AS Price_Value
                                           ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
                               WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                                AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId  
+                                AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                              )
                  -- остатки на начало следующего дня
                , REMAINS AS (
-                                SELECT 
+                                SELECT
                                     T0.ObjectId
                                    ,SUM (T0.Amount) :: TFloat AS Amount
                                 FROM(
                                         -- остатки
-                                        SELECT 
-                                             Container.Id 
+                                        SELECT
+                                             Container.Id
                                            , Container.ObjectId  -- Товар
                                            , Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0.0) AS Amount
                                         FROM Container
-                                            /*JOIN ContainerLinkObject AS CLI_Unit 
+                                            /*JOIN ContainerLinkObject AS CLI_Unit
                                                                      ON CLI_Unit.containerid = Container.Id
                                                                     AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
                                                                     AND CLI_Unit.ObjectId = vbUnitId*/
                                             LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
                                                                                  -- AND DATE_TRUNC ('DAY', MovementItemContainer.Operdate) > vbOperDate
                                                                                  AND MovementItemContainer.Operdate >= vbOperDate
-                                        WHERE 
+                                        WHERE
                                             Container.DescID = zc_Container_Count()
                                         AND Container.WhereObjectId = vbUnitId
-                                        GROUP BY 
-                                            Container.Id 
+                                        GROUP BY
+                                            Container.Id
                                            ,Container.ObjectId
                                         HAVING Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) <> 0
 
                                        UNION ALL
                                         -- надо минуснуть то что в проводках (тогда получим расчетный остаток, при этом фактический - это тот что вводит пользователь)
-                                        SELECT 
-                                             Container.Id 
+                                        SELECT
+                                             Container.Id
                                            , Container.ObjectId  -- Товар
                                            , -1 * SUM (MovementItemContainer.Amount) AS Amount
                                         FROM MovementItemContainer
                                             INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                                         WHERE MovementItemContainer.DescID = zc_MIContainer_Count()
                                           AND MovementItemContainer.MovementId = inMovementId
-                                        GROUP BY 
-                                            Container.Id 
+                                        GROUP BY
+                                            Container.Id
                                            ,Container.ObjectId
                                     ) as T0
                                 GROUP BY ObjectId
@@ -192,7 +201,7 @@ BEGIN
               , (COALESCE (MovementItem.Amount, 0) * COALESCE (MovementItem.Price, tmpPrice.Price)) :: TFloat AS Summ
 
               , COALESCE (MovementItem.isErased, FALSE) :: Boolean                  AS isErased
-              , REMAINS.Amount                                                      AS Remains_Amount
+              , CASE WHEN vbIsRemains = TRUE THEN REMAINS.Amount ELSE NULL END :: TFloat AS Remains_Amount
 
               , (COALESCE (REMAINS.Amount,0) * COALESCE (MovementItem.Price, tmpPrice.Price)) :: TFloat AS Remains_Summ
 
@@ -239,15 +248,15 @@ BEGIN
 
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (MovementItem.ObjectId, REMAINS.ObjectId)
 
-                LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id 
+                LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
             ;
 
-    ELSEIF inShowAll = FALSE 
+    ELSEIF inShowAll = FALSE
     THEN
         -- РЕЗУЛЬТАТ
         RETURN QUERY
             WITH tmpPrice AS (SELECT Price_Goods.ChildObjectId               AS GoodsId
-                                   , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+                                   , ROUND(Price_Value.ValueData,2)::TFloat  AS Price
                               FROM ObjectLink AS ObjectLink_Price_Unit
                                    LEFT JOIN ObjectLink AS Price_Goods
                                           ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
@@ -255,47 +264,47 @@ BEGIN
                                    LEFT JOIN ObjectFloat AS Price_Value
                                           ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
                               WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                                AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId    
+                                AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                              )
                  -- остатки на начало следующего дня
                , REMAINS AS (
-                                SELECT 
+                                SELECT
                                     T0.ObjectId
                                    ,SUM (T0.Amount) :: TFloat AS Amount
                                 FROM(
                                         -- остатки
-                                        SELECT 
-                                             Container.Id 
+                                        SELECT
+                                             Container.Id
                                            , Container.ObjectId  -- Товар
                                            , Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0.0) AS Amount
                                         FROM Container
-                                            /*JOIN ContainerLinkObject AS CLI_Unit 
+                                            /*JOIN ContainerLinkObject AS CLI_Unit
                                                                      ON CLI_Unit.containerid = Container.Id
                                                                     AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
                                                                     AND CLI_Unit.ObjectId = vbUnitId*/
                                             LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
                                                                                  -- AND DATE_TRUNC ('DAY', MovementItemContainer.Operdate) > vbOperDate
                                                                                  AND MovementItemContainer.Operdate >= vbOperDate
-                                        WHERE 
+                                        WHERE
                                             Container.DescID = zc_Container_Count()
                                         AND Container.WhereObjectId = vbUnitId
-                                        GROUP BY 
-                                            Container.Id 
+                                        GROUP BY
+                                            Container.Id
                                            ,Container.ObjectId
                                         HAVING Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) <> 0
 
                                        UNION ALL
                                         -- надо минуснуть то что в проводках (тогда получим расчетный остаток, при этом фактический - это тот что вводит пользователь)
-                                        SELECT 
-                                             Container.Id 
+                                        SELECT
+                                             Container.Id
                                            , Container.ObjectId  -- Товар
                                            , -1 * SUM (MovementItemContainer.Amount) AS Amount
                                         FROM MovementItemContainer
                                             INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                                         WHERE MovementItemContainer.DescID = zc_MIContainer_Count()
                                           AND MovementItemContainer.MovementId = inMovementId
-                                        GROUP BY 
-                                            Container.Id 
+                                        GROUP BY
+                                            Container.Id
                                            ,Container.ObjectId
                                     ) as T0
                                 GROUP BY ObjectId
@@ -344,7 +353,7 @@ BEGIN
               , (COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS Summ
 
               , COALESCE (MovementItem.isErased, FALSE) :: Boolean                  AS isErased
-              , REMAINS.Amount                                                      AS Remains_Amount
+              , CASE WHEN vbIsRemains = TRUE THEN REMAINS.Amount ELSE NULL END :: TFloat AS Remains_Amount
 
               , (COALESCE (REMAINS.Amount,0) * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS Remains_Summ
 
@@ -415,7 +424,7 @@ BEGIN
         -- РЕЗУЛЬТАТ
         RETURN QUERY
             WITH tmpPrice AS (SELECT Price_Goods.ChildObjectId               AS GoodsId
-                                   , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+                                   , ROUND(Price_Value.ValueData,2)::TFloat  AS Price
                               FROM ObjectLink AS ObjectLink_Price_Unit
                                    LEFT JOIN ObjectLink AS Price_Goods
                                           ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
@@ -427,43 +436,43 @@ BEGIN
                              )
                  -- остатки на начало следующего дня
                , REMAINS AS (
-                                SELECT 
+                                SELECT
                                     T0.ObjectId
                                    ,SUM (T0.Amount) :: TFloat AS Amount
                                 FROM(
                                         -- остатки
-                                        SELECT 
-                                             Container.Id 
+                                        SELECT
+                                             Container.Id
                                            , Container.ObjectId  -- Товар
                                            , Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0.0) AS Amount
                                         FROM Container
-                                            /*JOIN ContainerLinkObject AS CLI_Unit 
+                                            /*JOIN ContainerLinkObject AS CLI_Unit
                                                                      ON CLI_Unit.containerid = Container.Id
                                                                     AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
                                                                     AND CLI_Unit.ObjectId = vbUnitId*/
                                             LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
                                                                                  -- AND DATE_TRUNC ('DAY', MovementItemContainer.Operdate) > vbOperDate
                                                                                  AND MovementItemContainer.Operdate >= vbOperDate
-                                        WHERE 
+                                        WHERE
                                             Container.DescID = zc_Container_Count()
                                         AND Container.WhereObjectId = vbUnitId
-                                        GROUP BY 
-                                            Container.Id 
+                                        GROUP BY
+                                            Container.Id
                                            ,Container.ObjectId
                                         HAVING Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) <> 0
 
                                        UNION ALL
                                         -- надо минуснуть то что в проводках (тогда получим расчетный остаток, при этом фактический - это тот что вводит пользователь)
-                                        SELECT 
-                                             Container.Id 
+                                        SELECT
+                                             Container.Id
                                            , Container.ObjectId  -- Товар
                                            , -1 * SUM (MovementItemContainer.Amount) AS Amount
                                         FROM MovementItemContainer
                                             INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                                         WHERE MovementItemContainer.DescID = zc_MIContainer_Count()
                                           AND MovementItemContainer.MovementId = inMovementId
-                                        GROUP BY 
-                                            Container.Id 
+                                        GROUP BY
+                                            Container.Id
                                            ,Container.ObjectId
                                     ) as T0
                                 GROUP BY ObjectId
@@ -512,7 +521,7 @@ BEGIN
               , (MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS Summ
 
               , MovementItem.isErased                                               AS isErased
-              , REMAINS.Amount                                                      AS Remains_Amount
+              , CASE WHEN vbIsRemains = TRUE THEN REMAINS.Amount ELSE NULL END :: TFloat AS Remains_Amount
 
               , (COALESCE (REMAINS.Amount, 0) * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS Remains_Summ
 
@@ -554,7 +563,7 @@ BEGIN
               -- , CASE WHEN MovementItem.ObjectId > 0 THEN COALESCE (MIBoolean_isAuto.ValueData, FALSE) WHEN REMAINS.Amount <> 0 THEN TRUE ELSE FALSE END :: Boolean AS isAuto
               , COALESCE (MIBoolean_isAuto.ValueData, FALSE) AS isAuto
 
-           FROM Object_Goods_View AS Object_Goods 
+           FROM Object_Goods_View AS Object_Goods
                 LEFT JOIN REMAINS  ON REMAINS.ObjectId = Object_Goods.Id
                 LEFT JOIN tmpPrice ON tmpPrice.GoodsId = Object_Goods.Id
 
@@ -594,8 +603,9 @@ ALTER FUNCTION gpSelect_MovementItem_Inventory (Integer, Boolean, Boolean, TVarC
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.   Воробкало А.А.
- 12.06.17         * 
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.   Воробкало А.А.   Шаблий О.В.
+ 10.04.19                                                                                      *
+ 12.06.17         *
  05.01.17         *
  29.06.16         *
  11.07.15                                                                        *

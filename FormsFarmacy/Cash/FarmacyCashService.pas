@@ -171,6 +171,8 @@ type
     FirstRemainsReceived: boolean;
     FHasError: boolean;
 
+    function SetFarmacyNameByUser : boolean;
+
     function SaveCashRemains : Boolean;
     procedure SaveCashRemainsDif;
     procedure SaveLocalVIP;
@@ -252,23 +254,23 @@ begin
         2: actSetCashSessionId.Execute;    // обновление кеш сесии
 
         3: begin
-            SaveRealAll;    // попросили провести чеки
+            if SetFarmacyNameByUser then SaveRealAll;    // попросили провести чеки
             tiServise.Hint := '';
            end;
 
         4: begin
-             SaveListDiff;  // попросили отправить листы звквзов
+             if SetFarmacyNameByUser then SaveListDiff;  // попросили отправить листы звквзов
              tiServise.Hint := '';
            end;
 
         5: begin
-             SendZReport;  // попросили отправить Z отчеты
+             if SetFarmacyNameByUser then SendZReport;  // попросили отправить Z отчеты
              tiServise.Hint := '';
            end;
 
         9: begin
   //           ShowMessage('запрос на выключение');
-             SendEmployeeWorkLog;
+             if SetFarmacyNameByUser then SendEmployeeWorkLog;
              MainCashForm2.Close;    // закрыть сервис
            end;
         10: begin    // остановить проведение чеков
@@ -403,27 +405,33 @@ begin
   if ExistNotCompletedCheck then Exit; // нельзя получать, пока есть неотгруженные чеки
   try
     MainCashForm2.tiServise.IconIndex:=1;
-    //Получение конфигурации аптеки
-    SaveUnitConfig;
-    //Получение разницы остатков
-    SaveCashRemainsDif;
-    //Получение POS терминалов
-    if not gc_User.Local then SaveBankPOSTerminal;
-    //Получение ночных скидок
-    if not gc_User.Local then SaveTaxUnitNight;
-    //Получение остатков по партиям
-//    if not gc_User.Local then SaveGoodsExpirationDate;
-    //Получение справочника аналогов
-    if not gc_User.Local then SaveGoodsAnalog;
-    // Отправка сообщения приложению про надобность обновить остатки из файла
-    PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
-    // Меняем хинт
-    if gc_User.Local then
+    if SetFarmacyNameByUser then
     begin
-      tiServise.BalloonHint:='Обрыв соединения';
-    end else
+      //Получение конфигурации аптеки
+      SaveUnitConfig;
+      //Получение разницы остатков
+      SaveCashRemainsDif;
+      //Получение POS терминалов
+      if not gc_User.Local then SaveBankPOSTerminal;
+      //Получение ночных скидок
+      if not gc_User.Local then SaveTaxUnitNight;
+      //Получение остатков по партиям
+  //    if not gc_User.Local then SaveGoodsExpirationDate;
+      //Получение справочника аналогов
+      if not gc_User.Local then SaveGoodsAnalog;
+      // Отправка сообщения приложению про надобность обновить остатки из файла
+      PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
+      // Меняем хинт
+      if gc_User.Local then
+      begin
+        tiServise.BalloonHint:='Обрыв соединения';
+      end else
+      begin
+        tiServise.BalloonHint:='Разница в остатках получена.';
+      end;
+      end else
     begin
-      tiServise.BalloonHint:='Разница в остатках получена.';
+      tiServise.BalloonHint:='Ошибка сохранения аптеки содруднику.';
     end;
   finally
     tiServise.Hint := '';
@@ -447,39 +455,46 @@ begin   //yes
 
     if not gc_User.Local  then
     Begin
-
-      //Получение конфигурации аптеки
-      SaveUnitConfig;
-      //Получение остатков
-      bError := SaveCashRemains;
-      //Проверка обновления программ
-      if not gc_User.Local then SecureUpdateVersion;
-      //Получение ВИП чеков и сохранение в локальной базе
-      if not gc_User.Local then SaveLocalVIP;
-      //Получение товаров
-      if not gc_User.Local then SaveLocalGoods;
-      //Получение причин отказов
-      if not gc_User.Local then SaveLocalDiffKind;
-      //Получение POS терминалов
-      if not gc_User.Local then SaveBankPOSTerminal;
-      //Получение ночных скидок
-      if not gc_User.Local then SaveTaxUnitNight;
-      //Получение остатков по партиям
-//      if not gc_User.Local then SaveGoodsExpirationDate;
-      //Получение справочника аналогов
-      if not gc_User.Local then SaveGoodsAnalog;
-
-      PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 3);
-      // Вывод уведомления сервиса
-      if gc_User.Local then
+      if SetFarmacyNameByUser then
       begin
-        tiServise.BalloonHint:='Обрыв соединения';
-        tiServise.ShowBalloonHint;
+
+        //Получение конфигурации аптеки
+        SaveUnitConfig;
+        //Получение остатков
+        bError := SaveCashRemains;
+        //Проверка обновления программ
+        if not gc_User.Local then SecureUpdateVersion;
+        //Получение ВИП чеков и сохранение в локальной базе
+        if not gc_User.Local then SaveLocalVIP;
+        //Получение товаров
+        if not gc_User.Local then SaveLocalGoods;
+        //Получение причин отказов
+        if not gc_User.Local then SaveLocalDiffKind;
+        //Получение POS терминалов
+        if not gc_User.Local then SaveBankPOSTerminal;
+        //Получение ночных скидок
+        if not gc_User.Local then SaveTaxUnitNight;
+        //Получение остатков по партиям
+  //      if not gc_User.Local then SaveGoodsExpirationDate;
+        //Получение справочника аналогов
+        if not gc_User.Local then SaveGoodsAnalog;
+
+        PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 3);
+        // Вывод уведомления сервиса
+        if gc_User.Local then
+        begin
+          tiServise.BalloonHint:='Обрыв соединения';
+          tiServise.ShowBalloonHint;
+        end else
+        begin
+          tiServise.BalloonHint:='Остатки обновлены.';
+          tiServise.ShowBalloonHint;
+          FirstRemainsReceived := true;
+        end;
       end else
       begin
-        tiServise.BalloonHint:='Остатки обновлены.';
+        tiServise.BalloonHint:='Ошибка сохранения аптеки содруднику.';
         tiServise.ShowBalloonHint;
-        FirstRemainsReceived := true;
       end;
     End;
   finally
@@ -563,13 +578,16 @@ begin
   ChangeStatus('Инициализация локального хранилища - да');
   FSaveRealAllRunning := false;
   TimerSaveReal.Enabled := false;
-  SaveUnitConfig; // Обновляем конфигурацию
-  SaveRealAll;  // Проводим чеки которые остались не проведенными раньше. Учитывается CountСhecksAtOnce = 7
-                // проведутся первые 7 чеков и будут ждать или таймер или пока не пройдет первая покупка
-  SaveListDiff; // Отправляем листы отказов
-  SendZReport;  // Отправляем Z отчеты
-  SendEmployeeWorkLog;  // Отправляем лога работы сотрудников
-  tiServise.Hint := '';
+  if SetFarmacyNameByUser then
+  begin
+    SaveUnitConfig; // Обновляем конфигурацию
+    SaveRealAll;  // Проводим чеки которые остались не проведенными раньше. Учитывается CountСhecksAtOnce = 7
+                  // проведутся первые 7 чеков и будут ждать или таймер или пока не пройдет первая покупка
+    SaveListDiff; // Отправляем листы отказов
+    SendZReport;  // Отправляем Z отчеты
+    SendEmployeeWorkLog;  // Отправляем лога работы сотрудников
+    tiServise.Hint := '';
+  end;
   if not FHasError then
     ChangeStatus('Получение остатков');
   FirstRemainsReceived := false;
@@ -588,13 +606,13 @@ end;
 
 procedure TMainCashForm2.N2Click(Sender: TObject);
 begin
-TimerGetRemains.Enabled := not TimerGetRemains.Enabled;
-N2.Checked := TimerGetRemains.Enabled;
+  TimerGetRemains.Enabled := not TimerGetRemains.Enabled;
+  N2.Checked := TimerGetRemains.Enabled;
 end;
 
 procedure TMainCashForm2.N3Click(Sender: TObject);
 begin
-SaveRealAll;
+  if SetFarmacyNameByUser then SaveRealAll;
 end;
 
 procedure TMainCashForm2.N4Click(Sender: TObject);
@@ -934,10 +952,13 @@ begin
   TimerSaveReal.Enabled := False;
 
   try
-    SaveRealAll;
-    SaveListDiff;
-    SendZReport;
-    SendEmployeeWorkLog;
+    if SetFarmacyNameByUser then
+    begin
+      SaveRealAll;
+      SaveListDiff;
+      SendZReport;
+      SendEmployeeWorkLog;
+    end;
   finally
     tiServise.Hint := '';
     TimerSaveReal.Enabled := True;
@@ -956,6 +977,33 @@ begin
     Add_Log('End MutexRefresh 660');
     ReleaseMutex(MutexRefresh);
     TimerGetRemains.Enabled := not FirstRemainsReceived;
+  end;
+end;
+
+
+function TMainCashForm2.SetFarmacyNameByUser : boolean;
+var
+  sp : TdsdStoredProc;
+begin
+  // pr Cохранения аптеки содруднику
+  tiServise.Hint := 'Cохранения аптеки содруднику';
+  Result := False;
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      sp.OutputType := otResult;
+      sp.StoredProcName := 'gpGet_CheckFarmacyName_byUser';
+      sp.Params.Clear;
+      sp.Params.AddParam('outIsEnter',ftString,ptOutput, Null);
+      sp.Params.AddParam('outUnitId',ftString,ptOutput, Null);
+      sp.Params.AddParam('inUnitName',ftString,ptInput, iniLocalUnitNameGet);
+      if sp.Execute(False,False) = '' then Result := sp.Params.ParamByName('outIsEnter').Value;
+
+    Except ON E:Exception do
+      Add_Log('Ошибка сохранения аптеки содруднику:' + E.Message);
+    end;
+  finally
+    freeAndNil(sp);
   end;
 end;
 

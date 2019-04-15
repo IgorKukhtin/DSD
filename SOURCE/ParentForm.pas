@@ -484,6 +484,7 @@ initialization
   RegisterClass (TdsdDataSetRefreshEx);
   RegisterClass (TdsdGMMap);
   RegisterClass (TdsdWebBrowser);
+  RegisterClass (TdsdEnterManager);
 
 // дкъ реярю
 

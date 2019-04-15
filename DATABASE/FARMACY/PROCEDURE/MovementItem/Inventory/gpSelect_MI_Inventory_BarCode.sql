@@ -20,7 +20,7 @@ BEGIN
      -- Результат
      RETURN QUERY 
        SELECT NULL :: TVarChar AS BarCode
-            , 0    :: Tfloat   AS Amount;
+            , 1    :: Tfloat   AS Amount;
   
 END;
 $BODY$

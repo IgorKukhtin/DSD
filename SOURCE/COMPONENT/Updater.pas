@@ -8,6 +8,7 @@ type
   private
      class procedure UpdateConnect (Connection: string);
      class procedure UpdateConnectReport (Connection: string; Restart : boolean = True);
+     class procedure UpdateConnectReportLocal (Connection: string; Restart : boolean = True);
      class procedure UpdateProgram;
   public
      class procedure AutomaticCheckConnect;
@@ -23,7 +24,7 @@ uses UnilWin, VCL.Dialogs, Controls, StdCtrls, FormStorage, SysUtils, forms,
 
 class procedure TUpdater.AutomaticCheckConnect;
 var StoredProc: TdsdStoredProc;
-    Connection, ReportConnection: String;
+    Connection, ReportConnection, ReportConnectionLocal: String;
     StringList: TStringList;
     StringListConnection: TStringList;
     i:Integer;
@@ -148,6 +149,55 @@ begin
 
     end;
 
+    // теперь тоже самое для отчетов фармаси через сервис
+    if Pos('\farmacy_init.php', ConnectionPath) > 0 then
+    begin
+        StoredProc.Params.Clear;
+        StoredProc.Params.AddParam('inConstName', ftString, ptInput, 'zc_Enum_GlobalConst_ConnectReportLocalService');
+        StoredProc.Params.AddParam('gpGetConstName', ftString, ptOutput, '');
+        StoredProc.OutputType := otResult;
+        StoredProc.StoredProcName := 'gpGetConstName';
+        try
+          StoredProc.Execute;
+        except
+          // Если это наша ошибка, то тихонько обходим
+          on E: EStorageException do begin
+             exit;
+          end;
+          // Если не наша, то возмущаемся
+          on E: Exception do
+              raise;
+        end;
+        ReportConnectionLocal := StoredProc.ParamByName('gpGetConstName').AsString;
+        //
+        StringList := TStringList.Create;
+        StringListConnection := TStringList.Create;
+        StringListConnection.Text := ReportConnectionLocal;
+        with StringList do begin
+           if FileExists(ReplaceStr(ConnectionPath,'\farmacy_init.php','\farmacy_initRepLocal.php')) = TRUE
+           then LoadFromFile(ReplaceStr(ConnectionPath,'\farmacy_init.php','\farmacy_initRepLocal.php'));
+           fFind:=Count <> 0;
+           if fFind then
+           begin
+             if Count = StringListConnection.Count then
+               for i:=0 to Count-1 do
+               begin
+                 fFind:= Strings[i] = StringListConnection.Strings[i];
+                 if fFind = FALSE then Break;
+               end
+             else fFind:=False;
+           end;
+           StringList.Free;
+           StringListConnection.Free;
+        end;
+
+
+        if    (fFind = FALSE) and (ReportConnectionLocal<>'')
+        then
+           UpdateConnectReportLocal(ReportConnectionLocal, False);
+
+    end;
+
   finally
     StoredProc.Free;
   end;
@@ -200,6 +250,29 @@ begin
     if Pos('\farmacy_init.php', ConnectionPath) > 0 then
       StringList.SaveToFile(ReplaceStr(ConnectionPath,'\farmacy_init.php','\farmacy_initRep.php'))
     else StringList.SaveToFile(ReplaceStr(ConnectionPath,'\init.php','\initRep.php'));
+  finally
+    StringList.Free;
+  end;
+  if Restart then
+  begin
+    ShowMessage('Путь к серверу ОТЧЕТОВ изменен на <'+Connection+'>. Нажмите кнопку для перезапуска');
+    Application.Terminate;
+    ShellExecute(Application.Handle, 'open', PWideChar(Application.ExeName), nil, nil, SW_SHOWNORMAl);
+  end;
+end;
+
+class procedure TUpdater.UpdateConnectReportLocal (Connection: string; Restart : boolean = True);
+var StringList: TStringList;
+begin
+  StringList := TStringList.Create;
+  try
+    if Pos('srv2-r.alan', Connection) > 0 then Connection:=ReplaceStr(Connection,'srv2-r.alan','srv-r.alan');
+    StringList.Add(Connection);
+    if Pos('srv2-r.alan', Connection) > 0 then StringList.Add(ReplaceStr(Connection,'srv2-r.alan','srv-r.alan'));
+    if Pos('srv-r.alan', Connection) > 0 then StringList.Add(ReplaceStr(Connection,'srv-r.alan','srv2-r.alan'));
+    if Pos('\farmacy_init.php', ConnectionPath) > 0 then
+      StringList.SaveToFile(ReplaceStr(ConnectionPath,'\farmacy_init.php','\farmacy_initRepLocal.php'))
+    else StringList.SaveToFile(ReplaceStr(ConnectionPath,'\init.php','\initRepLocal.php'));
   finally
     StringList.Free;
   end;
