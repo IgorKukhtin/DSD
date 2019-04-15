@@ -681,7 +681,9 @@ uses
   Report_GoodsInventory in '..\..\FormsFarmacy\Report\Report_GoodsInventory.pas' {Report_GoodsInventoryForm: TParentForm},
   Report_GoodsInventoryDialog in '..\..\FormsFarmacy\Report\Report_GoodsInventoryDialog.pas' {Report_GoodsInventoryDialogForm: TParentForm},
   CreditLimitDistributor in '..\..\FormsFarmacy\Object\CreditLimitDistributor.pas' {CreditLimitDistributorForm: TParentForm},
-  CreditLimitDistributorEdit in '..\..\FormsFarmacy\Object\CreditLimitDistributorEdit.pas' {CreditLimitDistributorEditForm: TParentForm};
+  CreditLimitDistributorEdit in '..\..\FormsFarmacy\Object\CreditLimitDistributorEdit.pas' {CreditLimitDistributorEditForm: TParentForm},
+  OrderInternalPromoJournal in '..\..\FormsFarmacy\Document\OrderInternalPromoJournal.pas' {OrderInternalPromoJournalForm: TParentForm},
+  OrderInternalPromo in '..\..\FormsFarmacy\Document\OrderInternalPromo.pas' {OrderInternalPromoForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

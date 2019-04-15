@@ -328,9 +328,18 @@ CREATE OR REPLACE FUNCTION zc_Movement_SendPartionDate() RETURNS Integer AS $BOD
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_SendPartionDate', 'Изменение срок/ не срок' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_SendPartionDate');
 
+CREATE OR REPLACE FUNCTION zc_Movement_OrderInternalPromo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_OrderInternalPromo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_OrderInternalPromo', 'Заявки внутренние(маркет-товары)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_OrderInternalPromo');
+
+CREATE OR REPLACE FUNCTION zc_Movement_OrderInternalPromoPartner() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_OrderInternalPromoPartner'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_OrderInternalPromoPartner', 'Список дистрибьютеров для ОТЧЕТА' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_OrderInternalPromoPartner');
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 15.04.19         * zc_Movement_OrderInternalPromo
+                    zc_Movement_OrderInternalPromoPartner
  02.04.19         * zc_Movement_SendPartionDate
  10.03.19                                                                                     * zc_Movement_PUSH
  20.12.18         * zc_Movement_MemberHoliday

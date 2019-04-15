@@ -78,6 +78,7 @@ type
     procedure LoadKindFormTest;
     procedure LoadOrderSheduleFormTest;
     procedure LoadOrderInternalFormTest;
+    procedure LoadOrderInternalPromoFormTest;
     procedure LoadOrderExternalFormTest;
     procedure LoadObjectUnionFormTest;
     procedure LoadOverFormTest;
@@ -1374,6 +1375,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalLiteForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalForm');
+end;
+
+procedure TLoadFormTest.LoadOrderInternalPromoFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPromoForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPromoForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPromoJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPromoJournalForm');
 end;
 
 procedure TLoadFormTest.LoadObjectUnionFormTest;
