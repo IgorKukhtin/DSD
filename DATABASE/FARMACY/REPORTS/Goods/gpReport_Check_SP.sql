@@ -580,12 +580,15 @@ BEGIN
         , tmpCountR AS (SELECT  tmpData.JuridicalId
                               , tmpData.HospitalId
                               , tmpParam.PartnerMedical_ContractId AS ContractId
-                              , COUNT ( DISTINCT tmpData.InvNumberSP) AS CountInvNumberSP
+                              , COUNT ( DISTINCT tmpData.InvNumberSP_calc) AS CountInvNumberSP
                         FROM (SELECT DISTINCT tmpMI.UnitId
                                    , tmpMI.JuridicalId
                                    , tmpMI.HospitalId
                                    , tmpMI.InvNumberSP
                                    , tmpMI.OperDate
+                                   , tmpMI.MedicSPName
+                                   , tmpMI.OperDateSP
+                                   , (tmpMI.InvNumberSP||'_'||tmpMI.MedicSPName) :: TVarChar AS InvNumberSP_calc-- составной для того чтоб посчитать кол-во рецептов, если вдруг одинаковые номера у разных врачей
                               FROM tmpMI) AS tmpData
                              LEFT JOIN tmpParam ON tmpParam.UnitId = tmpData.UnitId
                                    AND tmpParam.JuridicalId = tmpData.JuridicalId
