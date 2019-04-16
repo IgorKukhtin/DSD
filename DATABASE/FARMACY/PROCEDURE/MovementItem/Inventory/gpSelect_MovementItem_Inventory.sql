@@ -202,7 +202,8 @@ BEGIN
               , (COALESCE (MovementItem.Amount, 0) * COALESCE (MovementItem.Price, tmpPrice.Price)) :: TFloat AS Summ
 
               , COALESCE (MovementItem.isErased, FALSE) :: Boolean                  AS isErased
-              , CASE WHEN vbIsRemains = TRUE THEN REMAINS.Amount ELSE NULL END :: TFloat AS Remains_Amount
+              , REMAINS.Amount  :: TFloat                                           AS Remains_Amount
+--              , CASE WHEN vbIsRemains = TRUE THEN REMAINS.Amount ELSE NULL END :: TFloat AS Remains_Amount
 
               , (COALESCE (REMAINS.Amount,0) * COALESCE (MovementItem.Price, tmpPrice.Price)) :: TFloat AS Remains_Summ
 
@@ -355,7 +356,8 @@ BEGIN
               , (COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS Summ
 
               , COALESCE (MovementItem.isErased, FALSE) :: Boolean                  AS isErased
-              , CASE WHEN vbIsRemains = TRUE THEN REMAINS.Amount ELSE NULL END :: TFloat AS Remains_Amount
+              , REMAINS.Amount :: TFloat                                            AS Remains_Amount
+--              , CASE WHEN vbIsRemains = TRUE THEN REMAINS.Amount ELSE NULL END :: TFloat AS Remains_Amount
 
               , (COALESCE (REMAINS.Amount,0) * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS Remains_Summ
 
@@ -524,7 +526,8 @@ BEGIN
               , (MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS Summ
 
               , MovementItem.isErased                                               AS isErased
-              , CASE WHEN vbIsRemains = TRUE THEN REMAINS.Amount ELSE NULL END :: TFloat AS Remains_Amount
+              , REMAINS.Amount :: TFloat                                            AS Remains_Amount
+--              , CASE WHEN vbIsRemains = TRUE THEN REMAINS.Amount ELSE NULL END :: TFloat AS Remains_Amount
 
               , (COALESCE (REMAINS.Amount, 0) * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS Remains_Summ
 
