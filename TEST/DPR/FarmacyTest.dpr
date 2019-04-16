@@ -23,7 +23,6 @@ uses
   Storage in '..\..\SOURCE\Storage.pas',
   UtilConvert in '..\..\SOURCE\UtilConvert.pas',
   dsdAction in '..\..\SOURCE\COMPONENT\dsdAction.pas',
-  dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas',
   dsdDB in '..\..\SOURCE\COMPONENT\dsdDB.pas',
   dsdGuides in '..\..\SOURCE\COMPONENT\dsdGuides.pas',
   DataModul in '..\..\SOURCE\DataModul.pas' {dmMain: TDataModule},
@@ -683,7 +682,9 @@ uses
   CreditLimitDistributor in '..\..\FormsFarmacy\Object\CreditLimitDistributor.pas' {CreditLimitDistributorForm: TParentForm},
   CreditLimitDistributorEdit in '..\..\FormsFarmacy\Object\CreditLimitDistributorEdit.pas' {CreditLimitDistributorEditForm: TParentForm},
   OrderInternalPromoJournal in '..\..\FormsFarmacy\Document\OrderInternalPromoJournal.pas' {OrderInternalPromoJournalForm: TParentForm},
-  OrderInternalPromo in '..\..\FormsFarmacy\Document\OrderInternalPromo.pas' {OrderInternalPromoForm: TParentForm};
+  OrderInternalPromo in '..\..\FormsFarmacy\Document\OrderInternalPromo.pas' {OrderInternalPromoForm: TParentForm},
+  Updater in '..\..\SOURCE\COMPONENT\Updater.pas',
+  dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

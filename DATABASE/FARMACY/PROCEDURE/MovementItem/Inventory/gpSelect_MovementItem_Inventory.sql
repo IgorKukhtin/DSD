@@ -75,6 +75,7 @@ BEGIN
                                          AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                                    LEFT JOIN ObjectFloat AS Price_Value
                                           ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                         AND Price_Value.DescId =  zc_ObjectFloat_Price_Value()
                               WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                                 AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                              )
@@ -263,6 +264,7 @@ BEGIN
                                          AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                                    LEFT JOIN ObjectFloat AS Price_Value
                                           ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                         AND Price_Value.DescId =  zc_ObjectFloat_Price_Value()
                               WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                                 AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                              )
@@ -431,6 +433,7 @@ BEGIN
                                          AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                                    LEFT JOIN ObjectFloat AS Price_Value
                                           ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                         AND Price_Value.DescId =  zc_ObjectFloat_Price_Value()
                               WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                                 AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                              )
@@ -460,7 +463,7 @@ BEGIN
                                             Container.Id
                                            ,Container.ObjectId
                                         HAVING Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) <> 0
-
+ 
                                        UNION ALL
                                         -- надо минуснуть то что в проводках (тогда получим расчетный остаток, при этом фактический - это тот что вводит пользователь)
                                         SELECT
