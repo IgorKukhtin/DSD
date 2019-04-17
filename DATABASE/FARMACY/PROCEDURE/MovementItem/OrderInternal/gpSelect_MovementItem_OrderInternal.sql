@@ -127,7 +127,8 @@ BEGIN
 
 --raise notice 'Value: %', 0;
 
-     OPEN Cursor1 FOR
+--     OPEN Cursor1 FOR
+     CREATE TEMP TABLE _tmpRes1 ON COMMIT DROP AS
      WITH
         --Данные Справочника График заказа/доставки
         tmpDateList AS (SELECT ''||tmpDayOfWeek.DayOfWeekName|| '-' || DATE_PART ('day', tmp.OperDate :: Date) ||'' AS OperDate
@@ -732,9 +733,10 @@ BEGIN
             LEFT JOIN AVGIncome ON AVGIncome.ObjectId = tmpMI.GoodsId
            ;
 
-     RETURN NEXT Cursor1;
+--     RETURN NEXT Cursor1;
 
-     OPEN Cursor2 FOR
+--     OPEN Cursor2 FOR
+     CREATE TEMP TABLE _tmpRes2 ON COMMIT DROP AS
      WITH
         PriceSettings    AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval    (vbUserId::TVarChar))
       , PriceSettingsTOP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsTOPInterval (vbUserId::TVarChar))
@@ -883,12 +885,13 @@ BEGIN
              , COALESCE(JuridicalSettings.Bonus, 0)::TFloat   AS Bonus
              , COALESCE (tmpContract.Deferment, 0)::Integer   AS Deferment
 ---
-             , CASE WHEN COALESCE (tmpContract.Deferment, 0) = 0
+/*             , CASE WHEN COALESCE (tmpContract.Deferment, 0) = 0
                          THEN 0
                     WHEN tmpMI.isTOP = TRUE
                          THEN COALESCE (PriceSettingsTOP.Percent, 0)
                     ELSE PriceSettings.Percent
                END :: TFloat AS Percent
+*/
 ---
              , CASE WHEN COALESCE (tmpContract.Deferment, 0) = 0 AND tmpMI.isTOP = TRUE
                         THEN COALESCE (PriceSettingsTOP.Percent, 0)
@@ -960,7 +963,13 @@ BEGIN
 
           ;
 
-     RETURN NEXT Cursor2;
+--     RETURN NEXT Cursor2;
+
+       OPEN Cursor1 FOR SELECT * FROM _tmpRes1;
+       RETURN NEXT Cursor1;
+
+       OPEN Cursor2 FOR SELECT * FROM _tmpRes2;
+       RETURN NEXT Cursor2;
 
 
     ELSE
@@ -2445,12 +2454,14 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 16.04.18                                                                    * оптимизация
  11.02.19         * признак Товары соц-проект берем и документа
  07.02.19         * если isBonusClose = true бонусы не учитываем
  02.11.18         *
  19.10.18         * isPriceClose замена на isPriceCloseOrder
  10.09.18         * add Remains_Diff --не хватает с учетом отлож. чеков
  31.08.18         * add Reserved               
+ 09.04.18                                                                    * оптимизация
  02.10.17         * add area
  12.09.17         *
  04.08.17         *
@@ -2473,7 +2484,6 @@ $BODY$
  15.07.14                                                       *
  15.07.14                                                       *
  03.07.14                                                       *
- 09.04.18                                                                    * оптимизация
 */
 
 /*

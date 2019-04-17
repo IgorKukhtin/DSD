@@ -506,6 +506,8 @@ type
     N182: TMenuItem;
     actCreditLimitDistributor: TdsdOpenForm;
     N183: TMenuItem;
+    actOrderInternalPromo: TdsdOpenForm;
+    miOrderInternalPromo: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

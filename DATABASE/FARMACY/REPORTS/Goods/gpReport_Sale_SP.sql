@@ -413,8 +413,8 @@ BEGIN
                            AND (( (COALESCE(ObjectLink_Contract_GroupMemberSP.ChildObjectId,0) = inGroupMemberSPId AND inisGroupMemberSP = FALSE AND COALESCE(inGroupMemberSPId,0) <> 0)
                               OR (COALESCE(ObjectLink_Contract_GroupMemberSP.ChildObjectId,0) = 0 AND inisGroupMemberSP = TRUE AND COALESCE(inGroupMemberSPId,0) <> 0)
                               OR COALESCE(inGroupMemberSPId,0) = 0
-                               ) AND inEndDate < '01.01.2019')
-                           AND (COALESCE (ObjectFloat_PercentSP.ValueData,0) = inPercentSP OR COALESCE (inPercentSP,0) = 0)
+                               ) OR inEndDate > '01.01.2019')
+                          -- AND ( ( (COALESCE (ObjectFloat_PercentSP.ValueData,0) = inPercentSP OR COALESCE (inPercentSP,0) = 0) ) OR inEndDate > '01.01.2019')
                         )
   
  , tmpMovDetails AS (SELECT tmpSale.Id   AS MovementId
@@ -495,7 +495,7 @@ BEGIN
                                                                                                           THEN COALESCE (tmpSale.GroupMemberSPId,0)
                                                                                                          ELSE 0
                                                                                                     END                                             --4063780;6;"ƒит€чий"  -- test 3690580
-                                                AND inEndDate < '01.01.2019')
+                                                OR inEndDate > '01.01.2019')
                   --                          AND COALESCE (tmpContract.PercentSP,0) = tmpSale.ChangePercent
 
                           -- расчетный счет из договора
@@ -517,7 +517,7 @@ BEGIN
     , tmpCountR AS (SELECT  tmpMovDetails.JuridicalId
                           , tmpMovDetails.HospitalId
                           , tmpMovDetails.PartnerMedical_ContractId AS ContractId
-                          , COUNT (DISTINCT tmpMovDetails.InvNumberSP) AS CountSP
+                          , COUNT (DISTINCT (tmpMovDetails.InvNumberSP||'_'||tmpMovDetails.MedicSP)) AS CountSP
                     FROM tmpMovDetails
                     GROUP BY tmpMovDetails.JuridicalId
                            , tmpMovDetails.HospitalId

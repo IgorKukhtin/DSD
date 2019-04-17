@@ -23,6 +23,43 @@ BEGIN
   vbStartDate := DATE_TRUNC ('DAY', inStartDate);
   vbEndDate := DATE_TRUNC ('DAY', inEndDate);
 
+     INSERT INTO ResourseProtocol (UserId
+                                 , OperDate
+                                 , Value1
+                                 , Value2
+                                 , Value3
+                                 , Value4
+                                 , Value5
+                                 , Time1
+                                 , Time2
+                                 , Time3
+                                 , Time4
+                                 , Time5
+                                 , ProcName
+                                 , ProtocolData
+                                  )
+        WITH tmp_pg AS (SELECT * FROM pg_stat_activity WHERE state = 'active')
+        SELECT vbUserId
+               -- во сколько началась
+             , CURRENT_TIMESTAMP
+             , (SELECT COUNT (*) FROM tmp_pg)                                   AS Value1
+             , (SELECT COUNT (*) FROM tmp_pg WHERE client_addr =  '172.17.2.4') AS Value2
+             , (SELECT COUNT (*) FROM tmp_pg WHERE client_addr <> '172.17.2.4') AS Value3
+             , 0 AS Value4
+             , 0 AS Value5
+             , CLOCK_TIMESTAMP() AS Time1
+             , CLOCK_TIMESTAMP() AS Time2
+             , CLOCK_TIMESTAMP() AS Time3
+             , CLOCK_TIMESTAMP() AS Time4
+             , CLOCK_TIMESTAMP() AS Time5
+               -- ProcName
+             , 'gpReport_IncomeConsumptionBalance'
+               -- ProtocolData
+             , ''
+        WHERE vbUserId > 0
+        ;
+
+
   OPEN cur1 FOR
   WITH
     tmpContainer AS (

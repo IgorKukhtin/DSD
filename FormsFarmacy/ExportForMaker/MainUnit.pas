@@ -600,7 +600,7 @@ begin
        end else
        begin
          DateStart := StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime);
-         DateEnd := IncDay(DateStart, 13);
+         DateEnd := IncDay(DateStart, 14);
        end;
      end else if qryMaker.FieldByName('AmountDay').AsInteger = 15 then
      begin
@@ -1003,6 +1003,7 @@ begin
 
   if not FileExists(SavePath + FileName + '.xls') then Exit;
 
+  Add_Log('Начало отправки отчета: ' + SavePath + FileName + '.xls');
 
   if SendMail(qryMailParam.FieldByName('Mail_Host').AsString,
        qryMailParam.FieldByName('Mail_Port').AsInteger,

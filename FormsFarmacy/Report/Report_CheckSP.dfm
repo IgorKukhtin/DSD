@@ -33,47 +33,26 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
               Column = Amount
             end
             item
-              Format = ',0.00'
+              Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
+              Column = SummaSale
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummaSale
+              Column = SummaSP_pack
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PriceSP
+            end
+            item
+              Format = ',0.####'
+              Kind = skAverage
+              Column = CountSP
             end>
           DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
@@ -83,18 +62,6 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -115,6 +82,16 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaSP_pack
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PriceSP
+            end
+            item
+              Format = ',0.####'
+              Kind = skAverage
+              Column = CountSP
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False

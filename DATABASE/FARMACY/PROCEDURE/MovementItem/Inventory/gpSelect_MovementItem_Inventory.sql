@@ -75,6 +75,7 @@ BEGIN
                                          AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                                    LEFT JOIN ObjectFloat AS Price_Value
                                           ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                         AND Price_Value.DescId =  zc_ObjectFloat_Price_Value()
                               WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                                 AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                              )
@@ -201,7 +202,8 @@ BEGIN
               , (COALESCE (MovementItem.Amount, 0) * COALESCE (MovementItem.Price, tmpPrice.Price)) :: TFloat AS Summ
 
               , COALESCE (MovementItem.isErased, FALSE) :: Boolean                  AS isErased
-              , CASE WHEN vbIsRemains = TRUE THEN REMAINS.Amount ELSE NULL END :: TFloat AS Remains_Amount
+              , REMAINS.Amount  :: TFloat                                           AS Remains_Amount
+--              , CASE WHEN vbIsRemains = TRUE THEN REMAINS.Amount ELSE NULL END :: TFloat AS Remains_Amount
 
               , (COALESCE (REMAINS.Amount,0) * COALESCE (MovementItem.Price, tmpPrice.Price)) :: TFloat AS Remains_Summ
 
@@ -263,6 +265,7 @@ BEGIN
                                          AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                                    LEFT JOIN ObjectFloat AS Price_Value
                                           ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                         AND Price_Value.DescId =  zc_ObjectFloat_Price_Value()
                               WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                                 AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                              )
@@ -353,7 +356,8 @@ BEGIN
               , (COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS Summ
 
               , COALESCE (MovementItem.isErased, FALSE) :: Boolean                  AS isErased
-              , CASE WHEN vbIsRemains = TRUE THEN REMAINS.Amount ELSE NULL END :: TFloat AS Remains_Amount
+              , REMAINS.Amount :: TFloat                                            AS Remains_Amount
+--              , CASE WHEN vbIsRemains = TRUE THEN REMAINS.Amount ELSE NULL END :: TFloat AS Remains_Amount
 
               , (COALESCE (REMAINS.Amount,0) * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS Remains_Summ
 
@@ -431,6 +435,7 @@ BEGIN
                                          AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
                                    LEFT JOIN ObjectFloat AS Price_Value
                                           ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                         AND Price_Value.DescId =  zc_ObjectFloat_Price_Value()
                               WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                                 AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                              )
@@ -460,7 +465,7 @@ BEGIN
                                             Container.Id
                                            ,Container.ObjectId
                                         HAVING Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) <> 0
-
+ 
                                        UNION ALL
                                         -- надо минуснуть то что в проводках (тогда получим расчетный остаток, при этом фактический - это тот что вводит пользователь)
                                         SELECT
@@ -521,7 +526,8 @@ BEGIN
               , (MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS Summ
 
               , MovementItem.isErased                                               AS isErased
-              , CASE WHEN vbIsRemains = TRUE THEN REMAINS.Amount ELSE NULL END :: TFloat AS Remains_Amount
+              , REMAINS.Amount :: TFloat                                            AS Remains_Amount
+--              , CASE WHEN vbIsRemains = TRUE THEN REMAINS.Amount ELSE NULL END :: TFloat AS Remains_Amount
 
               , (COALESCE (REMAINS.Amount, 0) * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS Remains_Summ
 

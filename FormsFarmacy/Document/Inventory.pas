@@ -85,19 +85,19 @@ type
     bb: TdxBarButton;
     Num: TcxGridDBColumn;
     isLast: TcxGridDBColumn;
-    DataSource: TDataSource;
-    ClientDataSet: TClientDataSet;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
     spSelectBarCode: TdsdStoredProc;
-    actUpdateDataSource: TdsdUpdateDataSet;
     actRefreshStart: TdsdDataSetRefresh;
-    cxGrid1: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
-    BarCode: TcxGridDBColumn;
-    cxGridLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
     spInsert_MI_Inventory: TdsdStoredProc;
-    Amount: TcxGridDBColumn;
+    Panel1: TPanel;
+    edBarCode: TcxTextEdit;
+    dsdEnterManager: TdsdEnterManager;
+    ceAmount: TcxCurrencyEdit;
+    actBarCodeScan: TMultiAction;
+    actSpBarCodeScan: TdsdExecStoredProc;
+    cxLabel4: TcxLabel;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public

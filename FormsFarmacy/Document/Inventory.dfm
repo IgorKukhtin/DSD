@@ -429,11 +429,11 @@ inherited InventoryForm: TInventoryForm
       ImageIndex = 2
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 83
+        Top = 54
         Width = 878
-        Height = 459
+        Height = 488
         Align = alClient
-        TabOrder = 0
+        TabOrder = 1
         object cxGridChildDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -588,153 +588,48 @@ inherited InventoryForm: TInventoryForm
           GridView = cxGridChildDBTableView
         end
       end
-      object cxGrid1: TcxGrid
-        Left = 0
-        Top = 0
-        Width = 878
-        Height = 75
-        Align = alTop
-        PopupMenu = PopupMenu
-        TabOrder = 1
-        object cxGridDBTableView1: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = DataSource
-          DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
-              Kind = skCount
-            end>
-          DataController.Summary.SummaryGroups = <>
-          Images = dmMain.SortImageList
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Inserting = False
-          OptionsView.GroupByBox = False
-          OptionsView.GroupSummaryLayout = gslAlignWithColumns
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.HeaderHeight = 40
-          OptionsView.Indicator = True
-          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object BarCode: TcxGridDBColumn
-            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1058#1086#1074#1072#1088'>'
-            DataBinding.FieldName = 'BarCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 180
-          end
-          object Amount: TcxGridDBColumn
-            Caption = #1060#1072#1082#1090'. '#1086#1089#1090#1072#1090#1086#1082' ('#1090#1077#1082'.'#1087#1086#1083#1100#1079'.)'
-            DataBinding.FieldName = 'Amount'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 120
-          end
-        end
-        object cxGridLevel1: TcxGridLevel
-          GridView = cxGridDBTableView1
-        end
-      end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 75
+        Top = 46
         Width = 878
         Height = 8
         HotZoneClassName = 'TcxXPTaskBarStyle'
         HotZone.Visible = False
         AlignSplitter = salTop
-        Control = cxGrid1
+        Control = Panel1
+      end
+      object Panel1: TPanel
+        Left = 0
+        Top = 0
+        Width = 878
+        Height = 46
+        Align = alTop
+        ShowCaption = False
+        TabOrder = 0
+        object edBarCode: TcxTextEdit
+          Left = 16
+          Top = 22
+          TabOrder = 0
+          Width = 193
+        end
+        object ceAmount: TcxCurrencyEdit
+          Left = 239
+          Top = 22
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####'
+          TabOrder = 1
+          Width = 90
+        end
+        object cxLabel4: TcxLabel
+          Left = 16
+          Top = 5
+          Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
+        end
+        object cxLabel5: TcxLabel
+          Left = 239
+          Top = 5
+          Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+        end
       end
     end
   end
@@ -1157,7 +1052,16 @@ inherited InventoryForm: TInventoryForm
         end>
       Caption = 'actSelect'
     end
-    object actUpdateDataSource: TdsdUpdateDataSet
+    object actBarCodeScan: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSpBarCodeScan
+        end>
+      Caption = 'actBarCodeScan'
+    end
+    object actSpBarCodeScan: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1172,8 +1076,7 @@ inherited InventoryForm: TInventoryForm
         item
           StoredProc = spSelectBarCode
         end>
-      Caption = 'actUpdateDataSource'
-      DataSource = DataSource
+      Caption = 'actSpBarCodeScan'
     end
   end
   inherited MasterDS: TDataSource
@@ -2179,21 +2082,8 @@ inherited InventoryForm: TInventoryForm
     Left = 526
     Top = 553
   end
-  object DataSource: TDataSource
-    DataSet = ClientDataSet
-    Left = 640
-    Top = 155
-  end
-  object ClientDataSet: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 568
-    Top = 155
-  end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableView1
     OnDblClickActionList = <
       item
       end>
@@ -2207,10 +2097,8 @@ inherited InventoryForm: TInventoryForm
     ColumnAddOnList = <>
     ColumnEnterList = <
       item
-        Column = BarCode
       end
       item
-        Column = Amount
       end>
     SummaryItemList = <>
     Left = 528
@@ -2218,12 +2106,25 @@ inherited InventoryForm: TInventoryForm
   end
   object spSelectBarCode: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_Inventory_BarCode'
-    DataSet = ClientDataSet
     DataSets = <
       item
-        DataSet = ClientDataSet
       end>
-    Params = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'BarCode'
+        Value = Null
+        Component = edBarCode
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount'
+        Value = Null
+        Component = ceAmount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 432
     Top = 104
@@ -2244,8 +2145,7 @@ inherited InventoryForm: TInventoryForm
       item
         Name = 'inBarCode'
         Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'BarCode'
+        Component = edBarCode
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2253,8 +2153,7 @@ inherited InventoryForm: TInventoryForm
       item
         Name = 'inAmountUser'
         Value = '1'
-        Component = ClientDataSet
-        ComponentItem = 'Amount'
+        Component = ceAmount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2262,5 +2161,18 @@ inherited InventoryForm: TInventoryForm
     PackSize = 1
     Left = 352
     Top = 123
+  end
+  object dsdEnterManager: TdsdEnterManager
+    ControlList = <
+      item
+        Action = actBarCodeScan
+        Control = edBarCode
+      end
+      item
+        Control = ceAmount
+        GotoControl = edBarCode
+      end>
+    Left = 760
+    Top = 296
   end
 end
