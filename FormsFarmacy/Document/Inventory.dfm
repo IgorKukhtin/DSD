@@ -606,18 +606,19 @@ inherited InventoryForm: TInventoryForm
         Align = alTop
         ShowCaption = False
         TabOrder = 0
+        ExplicitTop = 2
         object edBarCode: TcxTextEdit
           Left = 16
           Top = 22
-          TabOrder = 0
+          TabOrder = 1
           Width = 193
         end
         object ceAmount: TcxCurrencyEdit
-          Left = 239
+          Left = 220
           Top = 22
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####'
-          TabOrder = 1
+          TabOrder = 0
           Width = 90
         end
         object cxLabel4: TcxLabel
@@ -626,9 +627,45 @@ inherited InventoryForm: TInventoryForm
           Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
         end
         object cxLabel5: TcxLabel
-          Left = 239
+          Left = 220
           Top = 5
           Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+        end
+        object ceAmountAdd: TcxCurrencyEdit
+          Left = 727
+          Top = 22
+          TabStop = False
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####'
+          Properties.ReadOnly = True
+          TabOrder = 4
+          Width = 90
+        end
+        object cxLabel6: TcxLabel
+          Left = 735
+          Top = 5
+          Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+        end
+        object edGoodsCode: TcxTextEdit
+          Left = 335
+          Top = 22
+          TabStop = False
+          Properties.ReadOnly = True
+          TabOrder = 6
+          Width = 66
+        end
+        object cxLabel7: TcxLabel
+          Left = 335
+          Top = 4
+          Caption = #1055#1086#1089#1083#1077#1076#1085#1080#1081' '#1076#1086#1073#1072#1074#1083#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088
+        end
+        object edGoodsName: TcxTextEdit
+          Left = 407
+          Top = 22
+          TabStop = False
+          Properties.ReadOnly = True
+          TabOrder = 8
+          Width = 314
         end
       end
     end
@@ -2157,6 +2194,26 @@ inherited InventoryForm: TInventoryForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsCode'
+        Value = Null
+        Component = edGoodsCode
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsName'
+        Value = Null
+        Component = edGoodsName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountAdd'
+        Value = Null
+        Component = ceAmountAdd
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 352
@@ -2172,6 +2229,12 @@ inherited InventoryForm: TInventoryForm
         Control = ceAmount
         GotoControl = edBarCode
       end>
+    TabSheetList = <
+      item
+        TabSheet = cxTabSheetChild
+        Control = edBarCode
+      end>
+    PageControl = PageControl
     Left = 760
     Top = 296
   end

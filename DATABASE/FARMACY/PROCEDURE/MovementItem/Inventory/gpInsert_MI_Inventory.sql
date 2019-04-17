@@ -6,9 +6,12 @@ CREATE OR REPLACE FUNCTION gpInsert_MI_Inventory(
     IN inMovementId          Integer   , -- Ключ объекта <Документ Инвентаризации>
     IN inBarCode             TVarChar  , -- штрихкод товара
     IN inAmountUser          TFloat    , -- Количество тек.пользователя
+   OUT outGoodsCode          Integer   ,
+   OUT outGoodsName          TVarChar  , 
+   OUT outAmountAdd          TFloat    ,    
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS VOID
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -203,7 +206,18 @@ BEGIN
                                                 , inUserId             := vbUserId
                                                   );
     END IF;
-
+    
+    
+    SELECT
+      ObjectCode,
+      ValueData
+    INTO
+      outGoodsCode,
+      outGoodsName
+    FROM Object 
+    WHERE ID = vbGoodsId;
+   
+    outAmountAdd := inAmountUser;  
     --
 
 END;
@@ -213,10 +227,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий О.В.
+ 17.04.19                                                                                      *
  10.04.19                                                                                    *
  01.03.17         *
 */
 
 -- тест
--- SELECT * FROM gpInsert_MI_Inventory (ioId:= 0, inMovementId:= 0, inGoodsId:= 1, outAmount:= 0, inSession:= '2')
--- SELECT * FROM gpInsert_MI_Inventory (ioId := 58062345 , inMovementId := 3497252 , inGoodsId := 337 , outAmount := 1 , vbPrice := 0 , inComment := '' ,  inSession := '3');
+-- select * from gpInsert_MI_Inventory(inMovementId := 7784548 , inBarCode := '4047642001824' , inAmountUser := 1 ,  inSession := '3354092');

@@ -79,9 +79,7 @@ BEGIN
                 INNER JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
                 LEFT JOIN Object AS Object_User ON Object_User.Id = tmpMI_Child.UserId
-            ORDER BY GoodsName
-                   , UserName
-                   , Date_Insert desc
+            ORDER BY tmpMI_Child.Id desc
             ;
 
 END;
@@ -90,7 +88,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.   Воробкало А.А.   Шаблий О.В.
+ 17.04.19                                                                                      *
  05.01.17         *
 */
 

@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 229
+  ExplicitHeight = 230
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -1475,7 +1475,7 @@ inherited MainForm: TMainForm
     object actOrderInternalLite: TdsdOpenForm [118]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
-      Caption = #1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077
+      Caption = #1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077' ('#1076#1083#1103' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1074')'
       FormName = 'TOrderInternalLiteForm'
       FormNameParam.Value = 'TOrderInternalLiteForm'
       FormNameParam.DataType = ftString
@@ -2342,8 +2342,8 @@ inherited MainForm: TMainForm
     object actReport_Sold_DayUserForm: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1083#1072#1085#1091' '#1087#1088#1086#1076#1072#1078' ('#1076#1085#1077#1074#1085#1086#1081')'
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1083#1072#1085#1091' '#1087#1088#1086#1076#1072#1078' ('#1076#1085#1077#1074#1085#1086#1081')'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1083#1072#1085#1091' '#1087#1088#1086#1076#1072#1078' ('#1076#1085#1077#1074#1085#1086#1081', '#1076#1083#1103' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1074')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1083#1072#1085#1091' '#1087#1088#1086#1076#1072#1078' ('#1076#1085#1077#1074#1085#1086#1081', '#1076#1083#1103' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1074')'
       FormName = 'TReport_Sold_DayUserForm'
       FormNameParam.Value = 'TReport_Sold_DayUserForm'
       FormNameParam.DataType = ftString

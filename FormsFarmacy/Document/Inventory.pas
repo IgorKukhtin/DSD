@@ -98,6 +98,11 @@ type
     actSpBarCodeScan: TdsdExecStoredProc;
     cxLabel4: TcxLabel;
     cxLabel5: TcxLabel;
+    ceAmountAdd: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
+    edGoodsCode: TcxTextEdit;
+    cxLabel7: TcxLabel;
+    edGoodsName: TcxTextEdit;
   private
     { Private declarations }
   public

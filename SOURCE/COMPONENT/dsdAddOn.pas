@@ -6,7 +6,7 @@ uses Windows, Winapi.Messages, Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTable
      cxTextEdit, DB, dsdAction, cxGridTableView,
      VCL.Graphics, cxGraphics, cxStyles, cxCalendar, Forms, Controls,
      SysUtils, dsdDB, Contnrs, cxGridCustomView, cxGridCustomTableView, dsdGuides,
-     VCL.ActnList, cxCustomPivotGrid, cxDBPivotGrid, cxEdit, cxCustomData,
+     VCL.ActnList, cxCustomPivotGrid, cxDBPivotGrid, cxEdit, cxCustomData, cxPC,
      GMClasses, GMMap, GMMapVCL, GMGeoCode, GMConstants, GMMarkerVCL, SHDocVw, ExtCtrls,
      Winapi.ShellAPI, System.StrUtils, GMDirection, GMDirectionVCL;
 
@@ -728,9 +728,30 @@ type
     property StoredProc: TdsdStoredProc read FStoredProc write FStoredProc;
   end;
 
+  TTabSheetListItem = class(TCollectionItem)
+  private
+    FTabSheet: TcxTabSheet;
+    FControl: TWinControl;
+    FKeyDown : TKeyEvent;
+    procedure SetTabSheet(const Value: TcxTabSheet);
+  protected
+    function GetDisplayName: string; override;
+  public
+    procedure Assign(Source: TPersistent); override;
+  published
+    property TabSheet: TcxTabSheet read FTabSheet write FTabSheet;
+    property Control: TWinControl read FControl write FControl;
+  end;
+
   TdsdEnterManager = class(TComponent)
   private
     FControlList: TCollection;
+    FTabSheetList: TCollection;
+    FPageControl: TcxPageControl;
+
+    FOnChange: TNotifyEvent;
+    procedure SetPageControl(const Value: TcxPageControl);
+    procedure PageControl1Change(Sender: TObject);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
@@ -738,6 +759,8 @@ type
     destructor Destroy; override;
   published
     property ControlList: TCollection read FControlList write FControlList;
+    property TabSheetList: TCollection read FTabSheetList write FTabSheetList;
+    property PageControl: TcxPageControl read FPageControl write SetPageControl;
   end;
 
   procedure Register;
@@ -3677,6 +3700,7 @@ begin
        Self.Control := Control;
        Self.GotoControl := GotoControl;
        Self.StoredProc := StoredProc;
+       Self.Action := Action;
      end
   else
     inherited Assign(Source);
@@ -3691,17 +3715,51 @@ end;
 
 procedure TWinControlListItem.SetControl(const Value: TWinControl);
 begin
+  if FControl = Value then Exit;
+
+  if Assigned(Value) then
+  begin
+    if not (Value is TcxTextEdit) and
+       not (Value is TcxButtonEdit) and
+       not (Value is TcxCurrencyEdit) and
+       not (Value is TcxDateEdit) then
+       raise Exception.Create(Value.ClassName + ' не поддерживаеться');
+  end;
+
+  if Assigned(FControl) and Assigned(FKeyDown) then
+  begin
+    if FControl is TcxTextEdit then
+       (FControl as TcxTextEdit).OnKeyDown := FKeyDown
+    else if FControl is TcxButtonEdit then
+       (FControl as TcxButtonEdit).OnKeyDown := FKeyDown
+    else if FControl is TcxCurrencyEdit then
+       (FControl as TcxCurrencyEdit).OnKeyDown := FKeyDown
+    else if FControl is TcxDateEdit then
+       (FControl as TcxDateEdit).OnKeyDown := FKeyDown;
+  end;
+
   if Assigned(Value) then
   begin
     if Value is TcxTextEdit then
-       (Value as TcxTextEdit).OnKeyDown := edKeyDown
+    begin
+      FKeyDown := (Value as TcxTextEdit).OnKeyDown;
+      (Value as TcxTextEdit).OnKeyDown := edKeyDown
+    end
     else if Value is TcxButtonEdit then
-       (Value as TcxButtonEdit).OnKeyDown := edKeyDown
+    begin
+      FKeyDown := (Value as TcxButtonEdit).OnKeyDown;
+      (Value as TcxButtonEdit).OnKeyDown := edKeyDown
+    end
     else if Value is TcxCurrencyEdit then
-       (Value as TcxCurrencyEdit).OnKeyDown := edKeyDown
+    begin
+      FKeyDown := (Value as TcxCurrencyEdit).OnKeyDown;
+      (Value as TcxCurrencyEdit).OnKeyDown := edKeyDown
+    end
     else if Value is TcxDateEdit then
-       (Value as TcxDateEdit).OnKeyDown := edKeyDown
-    else raise Exception.Create(Value.Name + ' не имеет свойства OnKeyDown');
+    begin
+      FKeyDown := (Value as TcxDateEdit).OnKeyDown;
+      (Value as TcxDateEdit).OnKeyDown := edKeyDown
+    end;
   end;
 
   FControl := Value;
@@ -3726,6 +3784,30 @@ begin
   end else if Assigned(FKeyDown) then FKeyDown(Sender, Key, Shift);
 end;
 
+{ TTabSheetListItem }
+
+procedure TTabSheetListItem.Assign(Source: TPersistent);
+begin
+  if Source is TTabSheetListItem then
+     with TTabSheetListItem(Source) do begin
+       Self.Control := Control;
+       Self.TabSheet := TabSheet;
+     end
+  else
+    inherited Assign(Source);
+end;
+
+function TTabSheetListItem.GetDisplayName: string;
+begin
+  result := inherited;
+  if Assigned(FTabSheet) then
+     result := FTabSheet.Name
+end;
+
+procedure TTabSheetListItem.SetTabSheet(const Value: TcxTabSheet);
+begin
+
+end;
 
 { TEnterManager }
 
@@ -3733,12 +3815,42 @@ constructor TdsdEnterManager.Create(AOwner: TComponent);
 begin
   inherited;
   ControlList := TOwnedCollection.Create(Self, TWinControlListItem);
+  TabSheetList := TOwnedCollection.Create(Self, TTabSheetListItem);
 end;
 
 destructor TdsdEnterManager.Destroy;
 begin
+  FreeAndNil(FTabSheetList);
   FreeAndNil(FControlList);
   inherited;
+end;
+
+procedure TdsdEnterManager.SetPageControl(const Value: TcxPageControl);
+begin
+  if FPageControl = Value then Exit;
+
+  if Assigned(FPageControl) and Assigned(FOnChange) then
+  begin
+    FPageControl.OnChange := FOnChange;
+  end;
+
+  if Assigned(Value) then
+  begin
+    FOnChange := Value.OnChange;
+    Value.OnChange := PageControl1Change;
+  end;
+
+  FPageControl := Value;
+end;
+
+procedure TdsdEnterManager.PageControl1Change(Sender: TObject);
+var i: integer;
+begin
+  if Assigned(FPageControl) then
+    for i := 0 to TabSheetList.Count - 1 do
+      if TTabSheetListItem(TabSheetList.Items[i]).TabSheet = FPageControl.ActivePage then
+        if Assigned(TTabSheetListItem(TabSheetList.Items[i]).FControl) then
+          TTabSheetListItem(TabSheetList.Items[i]).FControl.SetFocus;
 end;
 
 procedure TdsdEnterManager.Notification(AComponent: TComponent;
@@ -3750,9 +3862,23 @@ begin
      exit;
   if csDesigning in ComponentState then
     if (Operation = opRemove) then begin
+      if AComponent = FPageControl then PageControl := nil;
       for i := 0 to ControlList.Count - 1 do
+      begin
          if TWinControlListItem(ControlList.Items[i]).Control = AComponent then
             TWinControlListItem(ControlList.Items[i]).Control := nil;
+         if TWinControlListItem(ControlList.Items[i]).GotoControl = AComponent then
+            TWinControlListItem(ControlList.Items[i]).GotoControl := nil;
+         if TWinControlListItem(ControlList.Items[i]).Action = AComponent then
+            TWinControlListItem(ControlList.Items[i]).Action := nil;
+      end;
+      for i := 0 to TabSheetList.Count - 1 do
+      begin
+         if TTabSheetListItem(TabSheetList.Items[i]).Control = AComponent then
+            TTabSheetListItem(TabSheetList.Items[i]).Control := nil;
+         if TTabSheetListItem(TabSheetList.Items[i]).TabSheet = AComponent then
+            TTabSheetListItem(TabSheetList.Items[i]).TabSheet := nil;
+      end;
     end;
 end;
 
