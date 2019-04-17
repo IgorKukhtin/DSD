@@ -38,6 +38,16 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
               Format = ',0.##'
               Kind = skSum
               Column = TotalCount
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = TotalDiffSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Diff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -72,6 +82,16 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
               Format = ',0.##'
               Kind = skSum
               Column = TotalCount
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = TotalDiffSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_Diff
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -111,6 +131,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #8470' '#1076#1086#1082'. ('#1089#1086#1088#1090#1080#1088#1086#1074#1082#1072')'
+            Options.Editing = False
             Width = 61
           end
           inherited colOperDate: TcxGridDBColumn
@@ -199,6 +220,7 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072' '#1087#1086#1076#1087#1080#1089#1072#1085#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Options.Editing = False
             Width = 70
           end
           object ChangePercent: TcxGridDBColumn
@@ -280,6 +302,27 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 69
+          end
+          object TotalDiffSumm: TcxGridDBColumn
+            Caption = #1050#1086#1088#1088#1077#1082#1090'. '#1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'TotalDiffSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1086#1095#1085#1072#1103' '#1089#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            Width = 69
+          end
+          object Summ_Diff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'.'
+            DataBinding.FieldName = 'Summ_Diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' '#1086#1090' '#1050#1086#1088#1088'. '#1089#1091#1084#1084#1099' '#1089' '#1053#1044#1057
             Options.Editing = False
             Width = 69
           end
@@ -548,6 +591,8 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Invoice'
+    Left = 128
+    Top = 171
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (
@@ -695,6 +740,23 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         ComponentItem = 'isDocument'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTotalDiffSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalDiffSumm'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSumm_Diff'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summ_Diff'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

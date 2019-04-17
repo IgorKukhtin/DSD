@@ -49,6 +49,9 @@ BEGIN
 
     -- Сохранили свойство <Итого Сумма>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), ioId, inTotalSumm);
+    -- Сохранили свойство <> автоматически заполняться данными колонки Сумма с НДС>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalDiffSumm(), ioId, inTotalSumm);
+    
     -- Сохранили свойство <Итого колво рецептов>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), ioId, inTotalCount);
     -- Сохранили свойство <% скидки>

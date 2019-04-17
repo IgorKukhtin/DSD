@@ -18,6 +18,8 @@ RETURNS TABLE (Id                  Integer
              , TotalSummWithOutVAT TFloat
              , TotalSummVAT        TFloat
              , TotalSumm_Contract  TFloat
+             , TotalDiffSumm       TFloat
+             , Summ_Diff           TFloat
              , TotalCount          TFloat
              , ChangePercent       TFloat
 
@@ -141,7 +143,8 @@ BEGIN
                               AND MovementFloat.DescId IN ( zc_MovementFloat_TotalSumm()
                                                           , zc_MovementFloat_TotalCount()
                                                           , zc_MovementFloat_ChangePercent()
-                                                          , zc_MovementFloat_SP() )
+                                                          , zc_MovementFloat_SP()
+                                                          , zc_MovementFloat_TotalDiffSumm())
                             )
 
      , tmpMovementDate AS (SELECT MovementDate.*
@@ -190,6 +193,8 @@ BEGIN
       , COALESCE (CAST (MovementFloat_TotalSumm.ValueData/(1.07) AS NUMERIC (16,2)),0) ::TFloat  AS TotalSummWithOutVAT
       , COALESCE (CAST (MovementFloat_TotalSumm.ValueData - (MovementFloat_TotalSumm.ValueData/(1.07))  AS NUMERIC (16,2)),0) ::TFloat  AS TotalSummVAT
       , COALESCE (ObjectFloat_TotalSumm.ValueData, 0)       :: TFloat AS TotalSumm_Contract
+      , COALESCE (MovementFloat_TotalDiffSumm.ValueData,0)  :: TFloat AS TotalDiffSumm
+      , ( COALESCE (MovementFloat_TotalSumm.ValueData,0) - COALESCE (MovementFloat_TotalDiffSumm.ValueData,0) ) :: TFloat AS Summ_Diff
       , COALESCE (MovementFloat_TotalCount.ValueData,0)     :: TFloat AS TotalCount
       , COALESCE (MovementFloat_ChangePercent.ValueData, 0) :: TFloat AS ChangePercent
 
@@ -249,6 +254,10 @@ BEGIN
         LEFT JOIN tmpMovementFloat AS MovementFloat_SP
                                    ON MovementFloat_SP.MovementId = Movement.Id
                                   AND MovementFloat_SP.DescId = zc_MovementFloat_SP()
+
+        LEFT JOIN tmpMovementFloat AS MovementFloat_TotalDiffSumm
+                                   ON MovementFloat_TotalDiffSumm.MovementId = Movement.Id
+                                  AND MovementFloat_TotalDiffSumm.DescId = zc_MovementFloat_TotalDiffSumm()
 
         LEFT JOIN tmpMovementDate AS MovementDate_OperDateStart
                                   ON MovementDate_OperDateStart.MovementId = Movement.Id
@@ -326,6 +335,7 @@ ALTER FUNCTION gpSelect_Movement_Invoice (TDateTime, TDateTime, Boolean, TVarCha
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 17.04.19         * add TotalDiffSumm
  18.02.19         * add ChangePercent
  14.02.19         * add TotalCount
  20.08.18         *
