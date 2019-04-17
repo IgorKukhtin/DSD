@@ -9,13 +9,20 @@ RETURNS TABLE (Id Integer, Text TBlob)
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbUnitId Integer;
+   DECLARE vbUnitKey TVarChar;
    DECLARE vbMovementID Integer;
    DECLARE vbEmployeeSchedule TVarChar;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
-   vbUserId:= lpGetUserBySession (inSession);
+    vbUserId:= lpGetUserBySession (inSession);
+    vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+    IF vbUnitKey = '' THEN
+       vbUnitKey := '0';
+    END IF;
+    vbUnitId := vbUnitKey::Integer;
 
     CREATE TEMP TABLE _PUSH (Id  Integer
                            , Text TBlob) ON COMMIT DROP;
@@ -60,6 +67,15 @@ BEGIN
    IF SUBSTRING(vbEmployeeSchedule, date_part('day',  CURRENT_DATE)::Integer, 1) = '0'
    THEN
       INSERT INTO _PUSH (Id, Text) VALUES (1, 'Уважаемые коллеги, не забудьте сегодня поставить отметку времени прихода в  график (Ctrl+T) исходя из персонального графика работы (07:00, 08:00, 10:00)');
+   END IF;
+   
+   -- Уведомление по рецептам Хелси и Фармасикеш
+   IF vbUnitId in (9951517, 375627, 183289) 
+     AND date_part('HOUR',  CURRENT_TIME)::Integer = 17 
+     AND date_part('MINUTE',  CURRENT_TIME)::Integer >= 30
+     AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 50
+   THEN
+      INSERT INTO _PUSH (Id, Text) VALUES (1, 'В конце рабочего дня проверить соотвествие рецептов, прошедших по Хелси и Фармасикеш! За качество сверки  фармацевт несет полную отвественность!"');
    END IF;
 
    -- PUSH уведомления

@@ -22,7 +22,7 @@ $BODY$
    DECLARE vbOperDate TDateTime;
    DECLARE vbPrice TFloat;
    DECLARE vbAmount TFloat;
-   DECLARE vbCountUser TFloat;
+   DECLARE vbAmountUser TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
@@ -33,11 +33,6 @@ BEGIN
     END IF;
 
     inBarCode := TRIM(COALESCE(inBarCode, ''));
-
-    IF COALESCE (inAmountUser,0) = 0
-    THEN
-      inAmountUser := 1;
-    END IF;
 
     --определяем подразделение и дату документа
     SELECT DATE_TRUNC ('DAY', Movement.OperDate)
@@ -154,9 +149,10 @@ BEGIN
     -- Нужно определить итого кол-во (последнее кол-во по всем пользователям + текущее)
     -- и кол-во пользователей, сформировавших остаток
     SELECT SUM (tmp.Amount) AS  Amount
-         , (Count (tmp.Num) + 1) :: TFloat AS CountUser
-    INTO vbAmount, vbCountUser
-    FROM (SELECT MovementItem.Amount        AS Amount
+         , SUM (tmp.AmountUser) AS  AmountUser
+    INTO vbAmount, vbAmountUser
+    FROM (SELECT MovementItem.Amount                                                             AS Amount
+               , CASE WHEN MovementItem.ObjectId = vbUserId then MovementItem.Amount ELSE 0 END  AS AmountUser 
                , CAST (ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY MovementItem.ObjectId, MIDate_Insert.ValueData DESC) AS Integer) AS Num
           FROM MovementItem
                LEFT JOIN MovementItemDate AS MIDate_Insert
@@ -165,11 +161,12 @@ BEGIN
           WHERE MovementItem.ParentId = vbId
             AND MovementItem.DescId     = zc_MI_Child()
             AND MovementItem.isErased  = FALSE
-            AND MovementItem.ObjectId  <> vbUserId
            ) AS tmp
     WHERE tmp.Num = 1;
 
-    vbAmount := COALESCE (inAmountUser,0) + COALESCE (vbAmount, 0);
+    vbAmount := COALESCE (inAmountUser, 1) + COALESCE (vbAmount, 0);
+    vbAmountUser := COALESCE (inAmountUser, 1) + COALESCE (vbAmountUser, 0);
+    
     -- определяем цену
     vbPrice := (SELECT ROUND(Price_Value.ValueData,2)::TFloat
                 FROM ObjectLink AS Price_Unit
@@ -202,7 +199,7 @@ BEGIN
         PERFORM lpInsertUpdate_MI_Inventory_Child(inId                 := 0
                                                 , inMovementId         := inMovementId
                                                 , inParentId           := vbId
-                                                , inAmountUser         := inAmountUser
+                                                , inAmountUser         := vbAmountUser
                                                 , inUserId             := vbUserId
                                                   );
     END IF;
