@@ -349,7 +349,7 @@ object Report_ReceiptSaleAnalyzeRealDialogForm: TReport_ReceiptSaleAnalyzeRealDi
         MultiSelectSeparator = ','
       end>
     Left = 40
-    Top = 200
+    Top = 208
   end
   object FromUnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -694,6 +694,7 @@ object Report_ReceiptSaleAnalyzeRealDialogForm: TReport_ReceiptSaleAnalyzeRealDi
         Value = 42705d
         Component = deStart
         DataType = ftDateTime
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -701,6 +702,7 @@ object Report_ReceiptSaleAnalyzeRealDialogForm: TReport_ReceiptSaleAnalyzeRealDi
         Value = 42705d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
