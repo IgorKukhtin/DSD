@@ -117,6 +117,7 @@ BEGIN
             , CASE WHEN inIsCeh = TRUE
                         THEN tmp.isProductionIn = 'TRUE' -- для производства - в настройках
                    WHEN vbBranchId = zc_Branch_Basis() AND (Object_From.Id IS NULL OR ObjectLink_UnitFrom_Branch.ChildObjectId > 0)
+                    AND tmp.MovementDescId IN (zc_Movement_SendOnPrice() :: TVarChar)
                         THEN TRUE -- для главного - приход на него
                    WHEN vbBranchId = zc_Branch_Basis()
                         THEN FALSE -- для главного - расход с него

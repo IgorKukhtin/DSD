@@ -165,7 +165,7 @@ end if;
 
         , tmpMovementFloat AS (SELECT MovementFloat.*
                                FROM MovementFloat
-                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                               WHERE MovementFloat.MovementId = null -- IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                                  -- AND MovementFloat.ValueData <> 0
                                  AND MovementFloat.DescId IN (zc_MovementFloat_VATPercent()
                                                             , zc_MovementFloat_ChangePercent()
@@ -314,7 +314,7 @@ end if;
                                 )
         , tmpMovementDate AS (SELECT MovementDate.*
                               FROM MovementDate
-                              WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                              WHERE MovementDate.MovementId = null -- IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                                 AND MovementDate.DescId IN (zc_MovementDate_Insert()
                                                           , zc_MovementDate_Payment()
                                                           , zc_MovementDate_OperDatePartner()
@@ -323,7 +323,7 @@ end if;
         , tmpMovementString AS (SELECT MovementString.*
                                 FROM MovementString
                                 WHERE MovementString.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                  AND MovementString.DescId IN (zc_MovementString_InvNumberPartner()
+                                  AND MovementString.DescId = null --  IN (zc_MovementString_InvNumberPartner()
                                                               , zc_MovementString_Comment()
                                                               , zc_MovementString_InvNumberOrder()
                                                                )
@@ -994,5 +994,5 @@ $BODY$
 -- SELECT * FROM gpSelect_Movement_Sale_DATA (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inJuridicalBasisId:= 0, inUserId:= zfCalc_UserAdmin() :: Integer)
 --Ѕыло 1 мес€ц - 3 мин 21 сек
 --сейчас 1 мес€ц - 28 сек
--- select * from gpSelect_Movement_Sale_DATA (instartdate := ('01.04.2019')::TDateTime , inenddate := ('11.04.2019')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inUserId := 2953032)
--- select * from gpSelect_Movement_Sale_DATA (instartdate := ('01.04.2019')::TDateTime , inenddate := ('11.04.2019')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inUserId := 5)
+-- select * from gpSelect_Movement_Sale_DATA22 (instartdate := ('01.04.2019')::TDateTime , inenddate := ('30.04.2019')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inUserId := 2953032)
+-- select * from gpSelect_Movement_Sale_DATA22 (instartdate := ('01.04.2019')::TDateTime , inenddate := ('30.04.2019')::TDateTime , inIsPartnerDate := 'False' , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inUserId := 5)
