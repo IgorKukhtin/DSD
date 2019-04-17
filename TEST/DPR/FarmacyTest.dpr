@@ -701,7 +701,7 @@ begin
 
   if FindCmdLineSwitch('realfarmacy', true)
   then gc_AdminPassword := 'Админ1234'
-  else gc_AdminPassword := 'Админ1234';
+  else gc_AdminPassword := 'Админ1111';
 
   gc_ProgramName := 'Farmacy.exe';
 
