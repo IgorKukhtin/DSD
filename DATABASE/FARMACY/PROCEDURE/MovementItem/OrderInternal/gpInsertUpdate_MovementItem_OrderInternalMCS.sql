@@ -83,7 +83,7 @@ BEGIN
                                                                                                               ,inUserId     := vbUserId)
                                                 ,inValueData       := tmp.ValueData
                                                 )
-        FROM (WITH Object_Price AS (SELECT ObjectLink_Price_Unit.ChildObjectId     AS UnitId
+        FROM ( WITH    tmpPrice AS (SELECT ObjectLink_Price_Unit.ChildObjectId     AS UnitId
                                          , Price_Goods.ChildObjectId               AS GoodsId
                                          , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
                                          , MCS_Value.ValueData                     AS MCSValue
@@ -114,6 +114,47 @@ BEGIN
                                       AND COALESCE(MCS_isClose.ValueData,False) = False
                                       AND COALESCE(MCS_Value.ValueData,0) > 0
                                    )
+            -- данные из ассорт. матрицы
+            , tmpGoodsCategory AS (SELECT ObjectLink_Child_retail.ChildObjectId AS GoodsId
+                                        , ObjectFloat_Value.ValueData           AS Value
+                                   FROM Object AS Object_GoodsCategory
+                                       INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Unit
+                                                             ON ObjectLink_GoodsCategory_Unit.ObjectId = Object_GoodsCategory.Id
+                                                            AND ObjectLink_GoodsCategory_Unit.DescId = zc_ObjectLink_GoodsCategory_Unit()
+                                                            AND ObjectLink_GoodsCategory_Unit.ChildObjectId = vbUnitId
+                                       INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Goods
+                                                             ON ObjectLink_GoodsCategory_Goods.ObjectId = Object_GoodsCategory.Id
+                                                            AND ObjectLink_GoodsCategory_Goods.DescId = zc_ObjectLink_GoodsCategory_Goods()
+                                       INNER JOIN ObjectFloat AS ObjectFloat_Value 
+                                                              ON ObjectFloat_Value.ObjectId = Object_GoodsCategory.Id
+                                                             AND ObjectFloat_Value.DescId = zc_ObjectFloat_GoodsCategory_Value()
+                                                             AND COALESCE (ObjectFloat_Value.ValueData,0) <> 0
+                                       -- выходим на товар сети
+                                       INNER JOIN ObjectLink AS ObjectLink_Main_retail
+                                                             ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_GoodsCategory_Goods.ChildObjectId
+                                                            AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                       INNER JOIN ObjectLink AS ObjectLink_Child_retail
+                                                             ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
+                                                            AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                       INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                             ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
+                                                            AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                            AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
+                                   WHERE Object_GoodsCategory.DescId = zc_Object_GoodsCategory()
+                                     AND Object_GoodsCategory.isErased = FALSE
+                                   )
+            -- подменяем НТЗ на значение из ассорт. матрицы, если в ассотр. матрице значение больше
+            , Object_Price AS (SELECT tmpPrice.UnitId
+                                         , tmpPrice.GoodsId
+                                         , tmpPrice.Price 
+                                         , CASE WHEN tmpGoodsCategory.Value IS NOT NULL 
+                                                THEN CASE WHEN COALESCE (tmpGoodsCategory.Value, 0) < COALESCE (tmpPrice.MCSValue, 0) THEN COALESCE (tmpPrice.MCSValue,0) ELSE tmpGoodsCategory.Value END 
+                                                ELSE 0
+                                           END ::TFloat AS MCSValue
+                                         , tmpPrice.MCSValue_min
+                                    FROM tmpPrice
+                                         LEFT JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpPrice.GoodsId
+                               )
 
             , MovementItemSaved AS (SELECT T1.Id,
                                            T1.Amount, 

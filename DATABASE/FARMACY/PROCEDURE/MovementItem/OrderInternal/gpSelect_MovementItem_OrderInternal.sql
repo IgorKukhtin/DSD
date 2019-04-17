@@ -261,6 +261,36 @@ BEGIN
                        WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                          AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                        )
+      -- данные из ассорт. матрицы
+      , tmpGoodsCategory AS (SELECT ObjectLink_Child_retail.ChildObjectId AS GoodsId
+                                  , ObjectFloat_Value.ValueData                  AS Value
+                             FROM Object AS Object_GoodsCategory
+                                 INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Unit
+                                                       ON ObjectLink_GoodsCategory_Unit.ObjectId = Object_GoodsCategory.Id
+                                                      AND ObjectLink_GoodsCategory_Unit.DescId = zc_ObjectLink_GoodsCategory_Unit()
+                                                      AND ObjectLink_GoodsCategory_Unit.ChildObjectId = vbUnitId
+                                 INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Goods
+                                                       ON ObjectLink_GoodsCategory_Goods.ObjectId = Object_GoodsCategory.Id
+                                                      AND ObjectLink_GoodsCategory_Goods.DescId = zc_ObjectLink_GoodsCategory_Goods()
+                                 INNER JOIN ObjectFloat AS ObjectFloat_Value 
+                                                        ON ObjectFloat_Value.ObjectId = Object_GoodsCategory.Id
+                                                       AND ObjectFloat_Value.DescId = zc_ObjectFloat_GoodsCategory_Value()
+                                                       AND COALESCE (ObjectFloat_Value.ValueData,0) <> 0
+                            -- выходим на товар сети
+                            INNER JOIN ObjectLink AS ObjectLink_Main_retail
+                                                  ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_GoodsCategory_Goods.ChildObjectId
+                                                 AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                            INNER JOIN ObjectLink AS ObjectLink_Child_retail
+                                                  ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
+                                                 AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                            INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                  ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
+                                                 AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                 AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
+                                                 
+                             WHERE Object_GoodsCategory.DescId = zc_Object_GoodsCategory()
+                               AND Object_GoodsCategory.isErased = FALSE
+                             )
 
       , tmpMI_Child AS (SELECT MI_Child.ParentId AS MIMasterId
                              , MI_Child.Id       AS MIId
@@ -620,6 +650,7 @@ BEGIN
            , tmpMI.Reserved
            , CASE WHEN (COALESCE (tmpMI.Remains,0) - COALESCE (tmpMI.Reserved,0)) < 0 THEN (COALESCE (tmpMI.Remains,0) - COALESCE (tmpMI.Reserved,0)) ELSE 0 END :: TFLoat AS Remains_Diff   --не хватает с учетом отлож. чеком
            , tmpMI.MCS
+           , tmpGoodsCategory.Value AS MCS_GoodsCategory
 
            , tmpMI.MCSIsClose
            , tmpMI.MCSNotRecalc
@@ -731,6 +762,7 @@ BEGIN
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
             
             LEFT JOIN AVGIncome ON AVGIncome.ObjectId = tmpMI.GoodsId
+            LEFT JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpMI.GoodsId
            ;
 
 --     RETURN NEXT Cursor1;
@@ -1457,6 +1489,38 @@ BEGIN
                        WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                          AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                        )
+
+      -- данные из ассорт. матрицы
+      , tmpGoodsCategory AS (SELECT ObjectLink_Child_retail.ChildObjectId AS GoodsId
+                                  , ObjectFloat_Value.ValueData                  AS Value
+                             FROM Object AS Object_GoodsCategory
+                                 INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Unit
+                                                       ON ObjectLink_GoodsCategory_Unit.ObjectId = Object_GoodsCategory.Id
+                                                      AND ObjectLink_GoodsCategory_Unit.DescId = zc_ObjectLink_GoodsCategory_Unit()
+                                                      AND ObjectLink_GoodsCategory_Unit.ChildObjectId = vbUnitId
+                                 INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Goods
+                                                       ON ObjectLink_GoodsCategory_Goods.ObjectId = Object_GoodsCategory.Id
+                                                      AND ObjectLink_GoodsCategory_Goods.DescId = zc_ObjectLink_GoodsCategory_Goods()
+                                 INNER JOIN ObjectFloat AS ObjectFloat_Value 
+                                                        ON ObjectFloat_Value.ObjectId = Object_GoodsCategory.Id
+                                                       AND ObjectFloat_Value.DescId = zc_ObjectFloat_GoodsCategory_Value()
+                                                       AND COALESCE (ObjectFloat_Value.ValueData,0) <> 0
+                                 -- выходим на товар сети
+                                 INNER JOIN ObjectLink AS ObjectLink_Main_retail
+                                                       ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_GoodsCategory_Goods.ChildObjectId
+                                                      AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                 INNER JOIN ObjectLink AS ObjectLink_Child_retail
+                                                       ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
+                                                      AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                 INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                       ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
+                                                      AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                      AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
+                                                 
+                             WHERE Object_GoodsCategory.DescId = zc_Object_GoodsCategory()
+                               AND Object_GoodsCategory.isErased = FALSE
+                             )
+
 
       , tmpMI_All AS (SELECT MovementItem.*
                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -2245,6 +2309,7 @@ BEGIN
            , COALESCE (tmpReserve.Amount, 0)                       :: TFloat AS Reserved           -- кол-во в отложенных чеках
            , CASE WHEN (COALESCE (Remains.Amount,0) - COALESCE (tmpReserve.Amount, 0)) < 0 THEN (COALESCE (Remains.Amount, 0) - COALESCE (tmpReserve.Amount, 0)) ELSE 0 END :: TFLoat AS Remains_Diff  --не хватает с учетом отлож. чеком
            , Object_Price_View.MCSValue                                      AS MCS
+           , tmpGoodsCategory.Value                                          AS MCS_GoodsCategory
            , COALESCE (Object_Price_View.MCSIsClose, FALSE)                  AS MCSIsClose
            , COALESCE (Object_Price_View.MCSNotRecalc, FALSE)                AS MCSNotRecalc
            , Income.Income_Amount                                            AS Income_Amount
@@ -2327,6 +2392,7 @@ BEGIN
             LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Object.ChildObjectId
             --средняя цена
             LEFT JOIN AVGIncome ON AVGIncome.ObjectId = tmpMI.GoodsId
+            LEFT JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpMI.GoodsId
             
 /*            LEFT JOIN tmpObjectLink_Area AS ObjectLink_Goods_Area
                                  ON ObjectLink_Goods_Area.ObjectId = tmpMI.PartnerGoodsId
