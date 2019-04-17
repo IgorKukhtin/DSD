@@ -14,7 +14,6 @@ object Report_ReceiptSaleAnalyzeRealDialogForm: TReport_ReceiptSaleAnalyzeRealDi
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -742,7 +741,7 @@ object Report_ReceiptSaleAnalyzeRealDialogForm: TReport_ReceiptSaleAnalyzeRealDi
   end
   object ActionList: TActionList
     Left = 227
-    Top = 113
+    Top = 97
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
