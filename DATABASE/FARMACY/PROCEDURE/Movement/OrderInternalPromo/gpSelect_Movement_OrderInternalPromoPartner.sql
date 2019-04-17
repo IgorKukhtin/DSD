@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternalPromoPartner(
 )
 RETURNS TABLE (Id Integer
              , JuridicalId Integer
+             , JuridicalCode Integer
              , JuridicalName TVarChar
              , Comment TVarChar
              , IsErased  Boolean
@@ -26,6 +27,7 @@ BEGIN
 
      SELECT Movement.Id                              AS Id
           , MovementLinkObject_Juridical.ObjectId    AS JuridicalId
+          , Object_Juridical.ObjectCode              AS JuridicalCode
           , Object_Juridical.ValueData               AS JuridicalName
           , MovementString_Comment.ValueData         AS Comment
           , CASE WHEN Movement.StatusId = zc_Enum_Status_Erased() THEN TRUE ELSE FALSE END AS IsErased

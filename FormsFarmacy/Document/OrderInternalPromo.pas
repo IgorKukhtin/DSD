@@ -99,16 +99,14 @@ type
     dxBarButton1: TdxBarButton;
     JuridicalName: TcxGridDBColumn;
     ContractName: TcxGridDBColumn;
-    actUpdate_Checked_Yes: TdsdExecStoredProc;
-    actUpdate_Checked_No: TdsdExecStoredProc;
-    macUpdate_Checked_Yes_List: TMultiAction;
-    macUpdate_Checked_Yes: TMultiAction;
+    actInsertChild: TdsdExecStoredProc;
+    actInsertMaster: TdsdExecStoredProc;
     actRefreshMI: TdsdDataSetRefresh;
-    macUpdate_Checked_No_List: TMultiAction;
-    macUpdate_Checked_No: TMultiAction;
-    bbUpdate_Checked_Yes: TdxBarButton;
-    bbUpdate_Checked_No: TdxBarButton;
+    bbInsertMaster: TdxBarButton;
+    bbInsertChild: TdxBarButton;
     Invnumber_Promo: TcxGridDBColumn;
+    spInsert: TdsdStoredProc;
+    spInsertChild: TdsdStoredProc;
   private
     { Private declarations }
   public

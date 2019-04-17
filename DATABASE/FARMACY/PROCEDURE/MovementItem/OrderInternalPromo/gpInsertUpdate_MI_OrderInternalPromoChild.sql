@@ -1,8 +1,8 @@
--- Function: gpInsertUpdate_MovementItem_Promo()
+-- Function: gpInsertUpdate_MovementItem_OrderInternalPromo()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoChild (Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_OrderInternalPromoChild (Integer, Integer, Integer, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoChild(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_OrderInternalPromoChild(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inJuridicalId         Integer   , -- Товары
@@ -15,7 +15,7 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo());
+    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternalPromo());
     vbUserId := inSession;
   
      -- определяется признак Создание/Корректировка

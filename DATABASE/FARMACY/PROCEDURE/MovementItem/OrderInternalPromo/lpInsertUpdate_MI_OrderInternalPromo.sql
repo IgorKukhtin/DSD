@@ -1,15 +1,16 @@
--- Function: lpInsertUpdate_MovementItem_Promo()
+-- Function: lpInsertUpdate_MI_OrderInternalPromo()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Promo (Integer, Integer, Integer, TFloat, TFloat, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Promo (Integer, Integer, Integer, TFloat, TFloat, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderInternalPromo (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
 
-CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Promo(
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_OrderInternalPromo(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
+    IN inJuridicalId         Integer   , --
+    IN inContractId          Integer   , --
     IN inAmount              TFloat    , -- Количество
+    IN inPromoMovementId     TFloat    , -- MovementId-Маркетинговый контракт
     IN inPrice               TFloat    , -- Цена
-    IN inIsChecked           Boolean   , --
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -25,9 +26,13 @@ BEGIN
     
     -- сохранили <цену>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PromoMovementId(), ioId, inPromoMovementId);
 
-    -- сохранили свойство <>
-    PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Checked(), ioId, inIsChecked);
+    -- сохранили связь с <>
+    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Juridical(), ioId, inJuridicalId);
+    -- сохранили связь с <>
+    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), ioId, inContractId);
 
     -- пересчитали Итоговые суммы по накладной
     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
@@ -42,6 +47,5 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 12.11.18         *
- 24.04.16         *
+ 16.04.19         *
  */

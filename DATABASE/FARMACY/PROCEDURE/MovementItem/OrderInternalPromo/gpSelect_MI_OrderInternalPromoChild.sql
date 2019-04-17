@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_OrderInternalPromoChild(
     IN inIsErased    Boolean      , -- все
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer
+RETURNS TABLE (Id Integer, ParentId Integer
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , Amount TFloat, AmountOut TFloat, Remains TFloat
              , IsErased Boolean
@@ -24,6 +24,7 @@ BEGIN
 
         RETURN QUERY
            SELECT MovementItem.Id
+                , MovementItem.ParentId
                 , Object_Unit.Id                   AS UnitId
                 , Object_Unit.ObjectCode           AS UnitCode
                 , Object_Unit.ValueData            AS UnitName
