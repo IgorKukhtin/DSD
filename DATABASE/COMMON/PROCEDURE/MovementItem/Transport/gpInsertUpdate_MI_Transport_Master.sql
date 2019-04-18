@@ -38,6 +38,11 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
    DECLARE vbHours TFloat;
+   DECLARE vbOperDate TDateTime;
+   DECLARE vbStartRunPlan TDateTime;
+   DECLARE vbEndRunPlan TDateTime;
+   DECLARE vbHoursWork TFloat;
+   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_TransportMaster());
@@ -84,8 +89,42 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Неверное значение <Пробег, км (дополнительный вид топлива)>, т.к. у <Автомобиля> не установлен <Дополнительный вид топлива>.';
    END IF;
 
-
-
+   -- дата документа
+   vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+   
+   -- если это если ioId = 0 ТОЛЬКО тогда сделать гет StartRunPlan + HoursPlan и сохранить в zc_MovementDate_StartRunPlan + zc_MovementDate_EndRunPlan + zc_MovementDate_StartRun + zc_MovementDate_EndRun + zc_MovementFloat_HoursWork 
+   -- + если это первый НЕ УДАЛЕННЫЙ zc_MI_Master, т.е. когда добавляют 2,3 маршрут - уже параметры не менять
+   IF  COALESCE (ioId, 0) = 0 AND NOT EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE)
+   THEN 
+       SELECT (vbOperDate ::Date + ObjectDate_StartRunPlan.ValueData::Time) ::TDateTime AS StartRunPlan
+            , ((vbOperDate ::Date + ObjectDate_StartRunPlan.ValueData ::Time) ::TDateTime + (ObjectDate_EndRunPlan.ValueData - ObjectDate_StartRunPlan.ValueData)) :: TDateTime AS EndRunPlan
+            -- расчитали свойство <Кол-во рабочих часов>
+            , EXTRACT (DAY FROM (ObjectDate_EndRunPlan.ValueData - ObjectDate_StartRunPlan.ValueData)) * 24 
+            + EXTRACT (HOUR FROM (ObjectDate_EndRunPlan.ValueData - ObjectDate_StartRunPlan.ValueData)) 
+            + CAST (EXTRACT (MIN FROM (ObjectDate_EndRunPlan.ValueData - ObjectDate_StartRunPlan.ValueData)) / 60 AS NUMERIC (16, 2)) AS HoursWork
+      INTO vbStartRunPlan, vbEndRunPlan, vbHoursWork  
+       FROM Object AS Object_Route
+            LEFT JOIN ObjectDate AS ObjectDate_StartRunPlan
+                                 ON ObjectDate_StartRunPlan.ObjectId = Object_Route.Id
+                                AND ObjectDate_StartRunPlan.DescId = zc_ObjectDate_Route_StartRunPlan()
+    
+            LEFT JOIN ObjectDate AS ObjectDate_EndRunPlan
+                                 ON ObjectDate_EndRunPlan.ObjectId = Object_Route.Id
+                                AND ObjectDate_EndRunPlan.DescId = zc_ObjectDate_Route_EndRunPlan()
+       WHERE Object_Route.Id = inRouteId;
+       
+       -- сохранили связь с <Дата/Время выезда план>
+       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartRunPlan(), inMovementId, vbStartRunPlan);
+       -- сохранили связь с <Дата/Время возвращения план>
+       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndRunPlan(), inMovementId, vbEndRunPlan);
+       -- сохранили связь с <Дата/Время выезда факт>
+       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartRun(), inMovementId, vbStartRunPlan);
+       -- сохранили связь с <Дата/Время возвращения факт>
+       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndRun(), inMovementId, vbEndRunPlan);
+       -- сохранили свойство <Кол-во рабочих часов>
+       PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursWork(), inMovementId, vbHoursWork);
+   END IF;
+  
    -- определяется признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
 

@@ -22,7 +22,7 @@ BEGIN
     OPEN Cursor1 FOR 
       WITH
       tmpMI AS (SELECT MovementItem.*
-                     , ROW_NUMBER() OVER (ORDER BY MovementItem.isErased ASC , MovementItem.Id ASC) AS Ord
+                     , ROW_NUMBER() OVER (ORDER BY MovementItem.isErased ASC, MovementItem.Id ASC) AS Ord
                 FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                      JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                       AND MovementItem.DescId     = zc_MI_Master()
@@ -55,15 +55,15 @@ BEGIN
             , COALESCE (MIFloat_RateSummaAdd.ValueData, 0) :: TFloat AS RateSummaAdd
             , COALESCE (MIFloat_RateSummaExp.ValueData, 0) :: TFloat AS RateSummaExp
 
-            , Object_Freight.Id           AS FreightId
-            , Object_Freight.ValueData    AS FreightName
-            , Object_RouteKind.Id         AS RouteKindId
-            , Object_RouteKind.ValueData  AS RouteKindName
+            , Object_Freight.Id                  AS FreightId
+            , Object_Freight.ValueData           AS FreightName
+            , Object_RouteKind.Id                AS RouteKindId
+            , Object_RouteKind.ValueData         AS RouteKindName
             , Object_RouteKindFreight.Id         AS RouteKindId_Freight
             , Object_RouteKindFreight.ValueData  AS RouteKindName_Freight
  
-            , CASE WHEN COALESCE(ObjectDate_StartRunPlan.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_StartRunPlan.ValueData ELSE Null END ::TDateTime  AS StartRunPlan
-            , CASE WHEN COALESCE(ObjectDate_EndRunPlan.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_EndRunPlan.ValueData ELSE Null END ::TDateTime  AS EndRunPlan
+            --, CASE WHEN COALESCE(ObjectDate_StartRunPlan.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_StartRunPlan.ValueData ELSE Null END ::TDateTime  AS StartRunPlan
+            --, CASE WHEN COALESCE(ObjectDate_EndRunPlan.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_EndRunPlan.ValueData ELSE Null END ::TDateTime  AS EndRunPlan
         
             , MIString_Comment.ValueData   AS Comment
             
@@ -143,14 +143,6 @@ BEGIN
                                              AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
 
-             LEFT JOIN ObjectDate AS ObjectDate_StartRunPlan
-                                  ON ObjectDate_StartRunPlan.ObjectId = Object_Route.Id
-                                 AND ObjectDate_StartRunPlan.DescId = zc_ObjectDate_Route_StartRunPlan()
-                                 AND MovementItem.Ord = 1
-             LEFT JOIN ObjectDate AS ObjectDate_EndRunPlan
-                                  ON ObjectDate_EndRunPlan.ObjectId = Object_Route.Id
-                                 AND ObjectDate_EndRunPlan.DescId = zc_ObjectDate_Route_EndRunPlan()
-                                 AND MovementItem.Ord = 1
       ;
     
     RETURN NEXT Cursor1;

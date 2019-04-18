@@ -230,7 +230,10 @@
   object cxLabel11: TcxLabel
     Left = 32
     Top = 68
-    Caption = #1042#1088#1077#1084#1103' '#1074#1099#1077#1079#1076#1072' '#1087#1083#1072#1085
+    Hint = #1042#1088#1077#1084#1103' '#1074#1099#1077#1079#1076#1072' '#1087#1083#1072#1085
+    Caption = #1042#1088#1077#1084#1103' '#1074#1099#1077#1079#1076#1072
+    ParentShowHint = False
+    ShowHint = True
   end
   object edStartRunPlan: TcxDateEdit
     Left = 32
@@ -245,24 +248,53 @@
     Properties.Nullstring = ' '
     Properties.YearsInMonthList = False
     TabOrder = 27
-    Width = 135
-  end
-  object edEndRunPlan: TcxDateEdit
-    Left = 173
-    Top = 87
-    EditValue = 43234d
-    Properties.ArrowsForYear = False
-    Properties.AssignedValues.EditFormat = True
-    Properties.DateButtons = [btnNow]
-    Properties.DisplayFormat = 'HH:MM'
-    Properties.Kind = ckDateTime
-    TabOrder = 28
-    Width = 132
+    Width = 73
   end
   object cxLabel12: TcxLabel
-    Left = 173
+    Left = 217
+    Top = 69
+    Hint = #1042#1088#1077#1084#1103' '#1074#1086#1079#1074#1088#1072#1097#1077#1085#1080#1103' '#1087#1083#1072#1085
+    Caption = #1042#1088#1077#1084#1103' '#1074#1086#1079#1074#1088'.'
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object cxLabel13: TcxLabel
+    Left = 115
     Top = 68
-    Caption = #1042#1088#1077#1084#1103' '#1074#1086#1079#1074#1088#1072#1097#1077#1085#1080#1103' '#1087#1083#1072#1085
+    Hint = #1042' '#1087#1091#1090#1080' '#1087#1083#1072#1085', '#1095#1072#1089#1099'/'#1084#1080#1085'.'
+    Caption = #1042' '#1087#1091#1090#1080', '#1095#1072#1089#1099'/'#1084#1080#1085'.'
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object edHoursPlan: TcxCurrencyEdit
+    Left = 115
+    Top = 87
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0.'
+    TabOrder = 30
+    Width = 40
+  end
+  object edMinutePlan: TcxCurrencyEdit
+    Left = 170
+    Top = 87
+    Properties.AssignedValues.MinValue = True
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0.'
+    Properties.MaxValue = 59.000000000000000000
+    TabOrder = 31
+    Width = 40
+  end
+  object cxLabel14: TcxLabel
+    Left = 157
+    Top = 90
+    Caption = ':'
+  end
+  object edEndRunPlan: TcxTextEdit
+    Left = 217
+    Top = 87
+    Properties.ReadOnly = True
+    TabOrder = 33
+    Width = 88
   end
   object ActionList: TActionList
     Left = 304
@@ -333,10 +365,18 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inEndRunPlan'
+        Name = 'inHoursPlan'
         Value = 'NULL'
-        Component = edEndRunPlan
-        DataType = ftDateTime
+        Component = edHoursPlan
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMinutePlan'
+        Value = Null
+        Component = edMinutePlan
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -381,23 +421,26 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnit'
+        Name = 'inUnitId'
         Value = ''
         Component = UnitGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inBranch'
+        Name = 'inBranchId'
         Value = ''
         Component = BranchGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inRouteKind'
+        Name = 'inRouteKindId'
         Value = ''
         Component = RouteKindGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -405,6 +448,7 @@
         Name = 'inFreight'
         Value = ''
         Component = FreightGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -418,7 +462,7 @@
       end>
     PackSize = 1
     Left = 304
-    Top = 72
+    Top = 224
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -578,7 +622,21 @@
         Name = 'EndRunPlan'
         Value = 'NULL'
         Component = edEndRunPlan
-        DataType = ftDateTime
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'HoursPlan'
+        Value = Null
+        Component = edHoursPlan
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MinutePlan'
+        Value = Null
+        Component = edMinutePlan
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

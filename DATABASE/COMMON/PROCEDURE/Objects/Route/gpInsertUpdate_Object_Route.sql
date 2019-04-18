@@ -8,6 +8,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar,
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Tfloat, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, TDateTime, TDateTime, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, TDateTime, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, TDateTime, TVarChar, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Tfloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Route(
@@ -15,7 +17,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Route(
     IN inCode           Integer   , -- свойство <Код маршрута>
     IN inName           TVarChar  , -- свойство <Наименование маршрута>
     IN inStartRunPlan   TDateTime , -- Время выезда план
-    IN inEndRunPlan     TDateTime , -- Время возвращения план
+    IN inHoursPlan      Tfloat    , -- Время в пути - часы
+    IN inMinutePlan     Tfloat    , -- Время в пути - минуты
     IN inRateSumma      Tfloat    , -- Сумма коммандировочных
     IN inRatePrice      Tfloat    , -- Ставка грн/км (дальнобойные)
     IN inTimePrice      Tfloat    , -- Ставка грн/ч (коммандировочные)
@@ -79,8 +82,8 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Route_StartRunPlan(), ioId, inStartRunPlan);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Route_EndRunPlan(), ioId, inEndRunPlan);
-   
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Route_EndRunPlan(), ioId, (inStartRunPlan + (inHoursPlan||' hour '||inMinutePlan||' minute') :: INTERVAL) );
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 

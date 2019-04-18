@@ -65,8 +65,12 @@ type
     edRateSummaExp: TcxCurrencyEdit;
     cxLabel11: TcxLabel;
     edStartRunPlan: TcxDateEdit;
-    edEndRunPlan: TcxDateEdit;
     cxLabel12: TcxLabel;
+    cxLabel13: TcxLabel;
+    edHoursPlan: TcxCurrencyEdit;
+    edMinutePlan: TcxCurrencyEdit;
+    cxLabel14: TcxLabel;
+    edEndRunPlan: TcxTextEdit;
 
   private
     { Private declarations }

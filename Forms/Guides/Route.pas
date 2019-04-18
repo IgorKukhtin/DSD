@@ -68,6 +68,7 @@ type
     RateSummaAdd: TcxGridDBColumn;
     StartRunPlan: TcxGridDBColumn;
     EndRunPlan: TcxGridDBColumn;
+    HoursRunPlan: TcxGridDBColumn;
 
   private
     { Private declarations }

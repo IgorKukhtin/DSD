@@ -13,7 +13,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , RouteKindId Integer, RouteKindCode Integer, RouteKindName TVarChar
              , FreightId Integer, FreightCode Integer, FreightName TVarChar
              , RouteGroupId Integer, RouteGroupCode Integer, RouteGroupName TVarChar
-             , StartRunPlan TDateTime, EndRunPlan TDateTime
+             , StartRunPlan TDateTime, EndRunPlan TVarChar
+             , HoursRunPlan TVarChar
              , isErased Boolean
              ) AS
 $BODY$
@@ -59,9 +60,28 @@ BEGIN
        , Object_RouteGroup.ObjectCode AS RouteGroupCode
        , Object_RouteGroup.ValueData  AS RouteGroupName  
 
-       , CASE WHEN COALESCE(ObjectDate_StartRunPlan.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_StartRunPlan.ValueData ELSE Null END ::TDateTime  AS StartRunPlan
-       , CASE WHEN COALESCE(ObjectDate_EndRunPlan.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_EndRunPlan.ValueData ELSE Null END ::TDateTime  AS EndRunPlan    
+       , CASE WHEN COALESCE (ObjectDate_StartRunPlan.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_StartRunPlan.ValueData ELSE Null END ::TDateTime  AS StartRunPlan
+       --, CASE WHEN COALESCE (ObjectDate_EndRunPlan.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_EndRunPlan.ValueData ELSE Null END ::TDateTime  AS EndRunPlan    
        
+       , CASE WHEN (COALESCE (ObjectDate_StartRunPlan.ValueData ::Time,'00:00') <> '00:00' OR COALESCE (ObjectDate_EndRunPlan.ValueData ::Time,'00:00') <> '00:00') AND ObjectDate_StartRunPlan.ValueData <> ObjectDate_EndRunPlan.ValueData 
+              THEN CASE WHEN DATE_PART ('DAY', (ObjectDate_EndRunPlan.ValueData - ObjectDate_StartRunPlan.ValueData)) <> 0
+                        THEN  DATE_PART ('DAY', (ObjectDate_EndRunPlan.ValueData - ObjectDate_StartRunPlan.ValueData)) || CASE WHEN DATE_PART ('DAY', (ObjectDate_EndRunPlan.ValueData - ObjectDate_StartRunPlan.ValueData)) = 1 THEN ' день '
+                                                                                                                                WHEN DATE_PART ('DAY', (ObjectDate_EndRunPlan.ValueData - ObjectDate_StartRunPlan.ValueData)) > 4 THEN ' дней '
+                                                                                                                                ELSE ' дня '
+                                                                                                                           END 
+                        ELSE '' 
+                   END
+                   || (ObjectDate_EndRunPlan.ValueData ::Time) ::TVarChar
+              ELSE ''
+         END :: TVarChar AS EndRunPlan
+
+       , CASE WHEN COALESCE (ObjectDate_StartRunPlan.ValueData ::Time,'00:00') <> '00:00' OR COALESCE (ObjectDate_EndRunPlan.ValueData ::Time,'00:00') <> '00:00'
+         THEN  CAST ( (DATE_PART ('DAY', (ObjectDate_EndRunPlan.ValueData - ObjectDate_StartRunPlan.ValueData))::TFloat * 24 )
+            + DATE_PART ('HOUR', (ObjectDate_EndRunPlan.ValueData - ObjectDate_StartRunPlan.ValueData)):: TFloat  AS NUMERIC (16,0)) :: TVarChar || ' часов '
+           || (DATE_PART ('MINUTE', (ObjectDate_EndRunPlan.ValueData - ObjectDate_StartRunPlan.ValueData))):: TVarChar || ' минут'
+                   ELSE ''
+             END :: TVarChar AS HoursRunPlan
+                                                        
        , Object_Route.isErased   AS isErased
        
    FROM Object AS Object_Route
@@ -149,7 +169,8 @@ BEGIN
            , '' :: TVarChar AS RouteGroupName       
 
            , NULL   :: TDateTime AS StartRunPlan
-           , NULL   :: TDateTime AS EndRunPlan 
+           , NULL   :: TVarChar AS EndRunPlan 
+           , NULL   :: TVarChar  AS HoursRunPlan
 
            , FALSE AS isErased
   ;

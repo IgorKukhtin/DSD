@@ -117,6 +117,14 @@ object RouteForm: TRouteForm
         Options.Editing = False
         Width = 90
       end
+      object HoursRunPlan: TcxGridDBColumn
+        Caption = #1042#1088#1077#1084#1103' '#1074' '#1087#1091#1090#1080' '#1087#1083#1072#1085
+        DataBinding.FieldName = 'HoursRunPlan'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object RateSumma: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1084#1072#1085#1076'.'
         DataBinding.FieldName = 'RateSumma'

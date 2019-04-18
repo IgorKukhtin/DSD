@@ -14,7 +14,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , RouteKindId Integer, RouteKindCode Integer, RouteKindName TVarChar
              , FreightId Integer, FreightCode Integer, FreightName TVarChar
              , RouteGroupId Integer, RouteGroupCode Integer, RouteGroupName TVarChar
-             , StartRunPlan TDateTime, EndRunPlan TDateTime
+             , StartRunPlan TDateTime, EndRunPlan TVarChar
+             , HoursPlan TFloat, MinutePlan TFloat
              , isErased Boolean
              ) AS
 $BODY$BEGIN
@@ -58,7 +59,9 @@ $BODY$BEGIN
            , CAST ('' as TVarChar) AS RouteGroupName           
 
            , NULL   :: TDateTime   AS StartRunPlan
-           , NULL   :: TDateTime   AS EndRunPlan 
+           , NULL   :: TVarChar   AS EndRunPlan 
+           , CAST (0 as TFloat)    AS HoursPlan
+           , CAST (0 as TFloat)    AS MinutePlan
 
            , CAST (NULL AS Boolean) AS isErased
            ;
@@ -96,8 +99,30 @@ $BODY$BEGIN
            , Object_RouteGroup.ValueData  AS RouteGroupName              
 
            , COALESCE (ObjectDate_StartRunPlan.ValueData, NULL)   :: TDateTime AS StartRunPlan
-           , COALESCE (ObjectDate_EndRunPlan.ValueData, NULL)     :: TDateTime AS EndRunPlan 
+           --, COALESCE (ObjectDate_EndRunPlan.ValueData, NULL)     :: TDateTime AS EndRunPlan 
+           , CASE WHEN (COALESCE (ObjectDate_StartRunPlan.ValueData ::Time,'00:00') <> '00:00' OR COALESCE (ObjectDate_EndRunPlan.ValueData ::Time,'00:00') <> '00:00') AND ObjectDate_StartRunPlan.ValueData <> ObjectDate_EndRunPlan.ValueData
+                  THEN CASE WHEN DATE_PART ('DAY', (ObjectDate_EndRunPlan.ValueData - ObjectDate_StartRunPlan.ValueData)) <> 0
+                            THEN  DATE_PART ('DAY', (ObjectDate_EndRunPlan.ValueData - ObjectDate_StartRunPlan.ValueData)) || CASE WHEN DATE_PART ('DAY', (ObjectDate_EndRunPlan.ValueData - ObjectDate_StartRunPlan.ValueData)) = 1 THEN ' ‰ÂÌ¸ '
+                                                                                                                                    WHEN DATE_PART ('DAY', (ObjectDate_EndRunPlan.ValueData - ObjectDate_StartRunPlan.ValueData)) > 4 THEN ' ‰ÌÂÈ '
+                                                                                                                                    ELSE ' ‰Ìˇ '
+                                                                                                                               END 
+                            ELSE '' 
+                       END
+                       || (ObjectDate_EndRunPlan.ValueData ::Time) ::TVarChar
+                  ELSE ''
+             END :: TVarChar AS EndRunPlan
 
+           , CASE WHEN COALESCE (ObjectDate_StartRunPlan.ValueData ::Time,'00:00') <> '00:00' OR COALESCE (ObjectDate_EndRunPlan.ValueData ::Time,'00:00') <> '00:00'
+                  THEN (DATE_PART ('DAY', (ObjectDate_EndRunPlan.ValueData - ObjectDate_StartRunPlan.ValueData))::TFloat * 24 )
+                      + DATE_PART ('HOUR', (ObjectDate_EndRunPlan.ValueData - ObjectDate_StartRunPlan.ValueData)):: TFloat
+                  ELSE 0
+             END                   :: TFloat AS HoursPlan
+
+           , CASE WHEN COALESCE (ObjectDate_StartRunPlan.ValueData ::Time,'00:00') <> '00:00' OR COALESCE (ObjectDate_EndRunPlan.ValueData ::Time,'00:00') <> '00:00'
+                  THEN DATE_PART ('MINUTE', (ObjectDate_EndRunPlan.ValueData - ObjectDate_StartRunPlan.ValueData)) :: TFloat
+                  ELSE 0
+             END                   :: TFloat AS MinutePlan
+             
            , Object_Route.isErased   AS isErased
            
        FROM Object AS Object_Route
@@ -160,6 +185,7 @@ ALTER FUNCTION gpGet_Object_Route (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.04.19         * 
  29.01.19         * add RateSummaExp
  24.10.17         * add RateSummaAdd
  24.05.16         * add TimePrice
