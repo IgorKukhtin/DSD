@@ -587,6 +587,7 @@ type
 
   public
     procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String; var AOperDateSP : TDateTime);
+    function pCheck_InvNumberSP(ASPKind : integer; ANumber : string) : boolean;
     procedure SetPromoCode(APromoCodeId: Integer; APromoName, APromoCodeGUID: String;
       APromoCodeChangePercent: currency);
   end;
@@ -5672,6 +5673,37 @@ begin
               APartnerMedicalName := trim(FLocalDataBaseHead.FieldByName('PMEDICALN').AsString);
               AMedicSP            := trim(FLocalDataBaseHead.FieldByName('MEDICSP').AsString);
               AOperDateSP         := FLocalDataBaseHead.FieldByName('OPERDATESP').AsCurrency;
+            end;
+
+            FLocalDataBaseHead.Next;
+       end;
+     finally
+       FLocalDataBaseBody.Active:=False;
+       ReleaseMutex(MutexDBF);
+     end;
+     //
+  except
+  end;
+
+end;
+
+function TMainCashForm2.pCheck_InvNumberSP(ASPKind : integer; ANumber : string) : boolean;
+begin
+
+ Result := False;
+//
+ try
+     WaitForSingleObject(MutexDBF, INFINITE);
+     try
+       FLocalDataBaseHead.Active:=True;
+       FLocalDataBaseHead.First;
+       while not FLocalDataBaseHead.EOF do
+       begin
+            if (FLocalDataBaseHead.FieldByName('SPKindId').AsInteger = ASPKind) and
+              (FLocalDataBaseHead.FieldByName('INVNUMSP').AsString = ANumber) then
+            begin
+              Result := True;
+              Break;
             end;
 
             FLocalDataBaseHead.Next;

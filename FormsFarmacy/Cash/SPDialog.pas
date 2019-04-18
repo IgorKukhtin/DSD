@@ -56,6 +56,7 @@ type
     GuidesMemberSP: TdsdGuides;
     edGroupMemberSP: TcxTextEdit;
     spSelect_Object_MemberSP: TdsdStoredProc;
+    spGet_Movement_InvNumberSP: TdsdStoredProc;
     procedure bbOkClick(Sender: TObject);
     procedure DiscountExternalGuidesAfterChoice(Sender: TObject);
     procedure bbSP_PriorClick(Sender: TObject);
@@ -66,12 +67,71 @@ type
   public
      function DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String;
        var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer): boolean;
+     function CheckInvNumberSP(ASPKind : integer; ANumber : string) : boolean;
   end;
 
 
 implementation
+
 {$R *.dfm}
-uses IniUtils, DiscountService, MainCash, MainCash2;
+
+uses IniUtils, DiscountService, RegularExpressions, MainCash, MainCash2;
+
+function TSPDialogForm.CheckInvNumberSP(ASPKind : integer; ANumber : string) : boolean;
+  var Res: TArray<string>; I, J : Integer; bCheck : boolean;
+begin
+  Result := False;
+  if Length(ANumber) <> 19 then
+  begin
+    ShowMessage ('Ошибка.<Номер рецепта> должен содержать 19 символов...');
+    exit;
+  end;
+
+  Res := TRegEx.Split(ANumber, '-');
+
+  if High(Res) <> 3 then
+  begin
+    ShowMessage ('Ошибка.<Номер рецепта> должен содержать 4 блока по 4 символа разделенных символом "-" ...');
+    exit;
+  end;
+
+  for I := 0 to High(Res) do
+  begin
+    if Length(Res[I]) <> 4 then
+    begin
+      ShowMessage ('Ошибка.<Номер рецепта> должен содержать 4 блока по 4 символа разделенных символом "-"...');
+      exit;
+    end;
+
+    for J := 1 to 4 do if not (Res[I][J] in ['0'..'9','A'..'Z']) then
+    begin
+      ShowMessage ('Ошибка.<Номер рецепта> должен содержать только цыфры и большие буквы латинского алфовита...');
+      exit;
+    end;
+  end;
+
+  //Сначала ищем в текущем ДБФ
+  if isMainForm_OLD = TRUE
+  then bCheck := MainCash.MainCashForm.pCheck_InvNumberSP (ASPKind, ANumber)
+  else bCheck := MainCash2.MainCashForm.pCheck_InvNumberSP (ASPKind, ANumber);
+
+  if bCheck then
+  begin
+    ShowMessage ('Ошибка.<Номер рецепта> уже использован. Повторное использование запрещено...');
+    exit;
+  end;
+
+  if spGet_Movement_InvNumberSP.Execute = '' then
+  begin
+    if spGet_Movement_InvNumberSP.ParamByName('outIsExists').Value then
+    begin
+      ShowMessage ('Ошибка.<Номер рецепта> уже использован. Повторное использование запрещено...');
+      Exit;
+    end;
+  end else Exit;
+
+  Result := True;
+end;
 
 procedure TSPDialogForm.bbOkClick(Sender: TObject);
 var Key :Integer;
@@ -101,6 +161,7 @@ begin
           ModalResult:=mrNone; // не надо закрывать
           exit;
     end;
+
     // 23.01.2018 - «№ амбулатории»  - убрать эту ячейку , она не нужна
     {if trim (edAmbulance.Text) = '' then
     begin ActiveControl:=edAmbulance;
@@ -115,6 +176,12 @@ begin
     begin
           ActiveControl:=edSPKind;
           ShowMessage ('Внимание.Значение <Вид соц.проекта> не установлено.');
+          ModalResult:=mrNone; // не надо закрывать
+          exit;
+    end;
+
+    if not Panel2.Visible and not CheckInvNumberSP(Key, edInvNumberSP.Text) then
+    begin ActiveControl:=edInvNumberSP;
           ModalResult:=mrNone; // не надо закрывать
           exit;
     end;

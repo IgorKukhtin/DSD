@@ -431,7 +431,7 @@ begin
     '  RetailName AS "Торговая сеть", '#13#10 +
     '  MainJuridicalName AS "Наше юр. лицо" '#13#10 +
     'from gpReport_MovementIncome_Promo(:inMaker, :inStartDate, :inEndDate, ''3'') '#13#10 +
-    'where isSendMaker = True and MainJuridicalId not in (2141104, 3031071, 5603546, 377601)';
+    'where isSendMaker = True and MainJuridicalId not in (2141104, 183295, 3031071, 5603546, 377601, 5778621, 5062813)';
 
   qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
   qryReport_Upload.Params.ParamByName('inStartDate').Value := ADateStart;
@@ -484,7 +484,7 @@ begin
     '  InvNumber AS "№ документа", '#13#10 +
     '  JuridicalName AS "Поставщик" '#13#10 +
     'from gpReport_MovementCheck_Promo(:inMaker, :inStartDate, :inEndDate, ''3'')'#13#10 +
-    'where isSendMaker = True and MainJuridicalId not in (2141104, 3031071, 5603546, 377601)';
+    'where isSendMaker = True and MainJuridicalId not in (2141104, 183295, 3031071, 5603546, 377601, 5778621, 5062813)';
 
   qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
   qryReport_Upload.Params.ParamByName('inStartDate').Value := ADateStart;

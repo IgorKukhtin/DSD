@@ -159,7 +159,8 @@ BEGIN
                          ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
 
     WHERE COALESCE(tmpMovement.CountItem, tmpContainer.Saldo - COALESCE(tmpSaldoOut.Saldo, 0)) <> 0
-      AND ObjectLink_Unit_Parent.ChildObjectId not in (2141104, 3031071, 5603546, 377601)
+      AND ObjectLink_Unit_Parent.ChildObjectId not in (2141104, 3031071, 5603546, 377601, 5778621, 5062813)
+      AND tmpContainer.UnitID not in (SELECT Object_Unit_View.Id FROM Object_Unit_View WHERE COALESCE (Object_Unit_View.ParentId, 0) = 0)
     ORDER BY Object_Goods.ObjectCode, Object_Parent.ValueData, Object_Unit.ValueData;
 
 
@@ -172,6 +173,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ÿ‡·ÎËÈ Œ.¬.
+ 18.04.19        *
  01.02.19        *                                                                         *
 
 */

@@ -654,7 +654,7 @@ inherited SPDialogForm: TSPDialogForm
       end>
     PackSize = 1
     Left = 312
-    Top = 184
+    Top = 168
   end
   object GuidesMemberSP: TdsdGuides
     KeyField = 'Id'
@@ -787,5 +787,36 @@ inherited SPDialogForm: TSPDialogForm
     PackSize = 1
     Left = 368
     Top = 112
+  end
+  object spGet_Movement_InvNumberSP: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_InvNumberSP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inSPKindId'
+        Value = Null
+        Component = SPKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumberSP'
+        Value = ''
+        Component = edInvNumberSP
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsExists'
+        Value = ''
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 80
+    Top = 168
   end
 end

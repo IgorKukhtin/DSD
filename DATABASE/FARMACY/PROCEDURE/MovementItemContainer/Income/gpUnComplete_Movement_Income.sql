@@ -1,10 +1,13 @@
--- Function: gpUnComplete_Movement_Income (Integer, TVarChar)
+-- Function: gpUnComplete_Movement_Income (Integer, TVarChar, TVarChar)
 
-DROP FUNCTION IF EXISTS gpUnComplete_Movement_Income (Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpUnComplete_Movement_Check (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUnComplete_Movement_Check (Integer, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUnComplete_Movement_Income(
+CREATE OR REPLACE FUNCTION gpUnComplete_Movement_Check(
     IN inMovementId        Integer               , -- ключ Документа
-    IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
+    IN inUsersession	   TVarChar              , -- сессия пользователя (подменяем реальную)
+--    IN inSession         TVarChar DEFAULT ''     -- сессия пользователя
+    IN inSession           TVarChar                -- сессия пользователя
 )
 RETURNS VOID
 AS
@@ -13,15 +16,21 @@ $BODY$
   DECLARE vbOperDate    TDateTime;
   DECLARE vbUnit        Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Income());
-
+    if coalesce(inUserSession, '') <> '' then 
+     inSession := inUserSession;
+    end if;
+    -- проверка прав пользователя на вызов процедуры
+    IF (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId) = zc_Enum_Status_Complete()
+    THEN
+        vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Income());
+    ELSE
+        vbUserId:=inSession::Integer;
+    END IF;
      -- проверка - если <Master> Удален, то <Ошибка>
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_UnComplete(), inComment:= 'распровести');
-    
     -- Проверить, что бы не было переучета позже даты документа
     SELECT
-        Movement.OperDate,
+        date_trunc('day', Movement.OperDate),
         Movement_Unit.ObjectId AS Unit
     INTO
         vbOperDate,
@@ -31,8 +40,17 @@ BEGIN
                                       ON Movement_Unit.MovementId = Movement.Id
                                      AND Movement_Unit.DescId = zc_MovementLinkObject_Unit()
     WHERE Movement.Id = inMovementId;
+    
+    IF EXISTS(SELECT 1 FROM MovementBoolean AS MovementBoolean_Delay
+              WHERE MovementBoolean_Delay.MovementId = inMovementId
+                AND MovementBoolean_Delay.DescId    = zc_MovementBoolean_Delay()
+                AND MovementBoolean_Delay.ValueData = TRUE)
+    THEN
+      -- сохранили свойство <Дата создания просрочки>
+      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Delay(), inMovementId, CURRENT_TIMESTAMP);
+    END IF;
 
-    /*IF EXISTS(SELECT 1
+/*    IF EXISTS(SELECT 1
               FROM Movement AS Movement_Inventory
                   INNER JOIN MovementItem AS MI_Inventory
                                           ON MI_Inventory.MovementId = Movement_Inventory.Id
@@ -57,9 +75,8 @@ BEGIN
                   Movement_Inventory.StatusId = zc_Enum_Status_Complete()
               )
     THEN
-        RAISE EXCEPTION 'Ошибка. По одному или более товарам есть документ переучета позже даты текущего прихода. Отмена проведения документа запрещена!';
+        RAISE EXCEPTION 'Ошибка. По одному или более товарам есть документ переучета позже даты текущей продажи. Отмена проведения документа запрещена!';
     END IF;*/
-    
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);
@@ -70,9 +87,10 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 18.04.19                                                                    *
  03.07.14                                                       *
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement_Income (inMovementId:= 149639, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpUnComplete_Movement_Check (inMovementId:= 149639, inSession:= zfCalc_UserAdmin())

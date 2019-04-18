@@ -144,7 +144,9 @@ BEGIN
 
    WHERE ((tmpContainer.Saldo - COALESCE(tmpAnalysisContainerItem.Saldo, 0)) <> 0 OR
            COALESCE(tmpAnalysisContainerItem.Amount, 0) <> 0)
-     AND ObjectLink_Unit_Parent.ChildObjectId not in (2141104, 3031071, 5603546, 377601);
+     AND ObjectLink_Unit_Parent.ChildObjectId not in (2141104, 3031071, 5603546, 377601, 5778621, 5062813)
+     AND tmpContainer.UnitID not in (SELECT Object_Unit_View.Id FROM Object_Unit_View WHERE COALESCE (Object_Unit_View.ParentId, 0) = 0
+);
 
 
 
@@ -156,6 +158,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ÿ‡·ÎËÈ Œ.¬.
+ 18.04.19        *
  01.01.19        *                                                                         *
 
 */
