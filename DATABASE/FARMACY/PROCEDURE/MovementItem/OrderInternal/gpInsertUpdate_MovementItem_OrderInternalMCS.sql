@@ -121,7 +121,7 @@ BEGIN
                                        INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Unit
                                                              ON ObjectLink_GoodsCategory_Unit.ObjectId = Object_GoodsCategory.Id
                                                             AND ObjectLink_GoodsCategory_Unit.DescId = zc_ObjectLink_GoodsCategory_Unit()
-                                                            AND ObjectLink_GoodsCategory_Unit.ChildObjectId = vbUnitId
+                                                            AND ObjectLink_GoodsCategory_Unit.ChildObjectId = inUnitId
                                        INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Goods
                                                              ON ObjectLink_GoodsCategory_Goods.ObjectId = Object_GoodsCategory.Id
                                                             AND ObjectLink_GoodsCategory_Goods.DescId = zc_ObjectLink_GoodsCategory_Goods()
@@ -147,13 +147,15 @@ BEGIN
             , Object_Price AS (SELECT tmpPrice.UnitId
                                          , tmpPrice.GoodsId
                                          , tmpPrice.Price 
-                                         , CASE WHEN tmpGoodsCategory.Value IS NOT NULL 
-                                                THEN CASE WHEN COALESCE (tmpGoodsCategory.Value, 0) < COALESCE (tmpPrice.MCSValue, 0) THEN COALESCE (tmpPrice.MCSValue,0) ELSE tmpGoodsCategory.Value END 
+                                         , COALESCE (tmpPrice.MCSValue, 0)  ::TFloat AS MCSValue
+                                         /*, CASE WHEN tmpGoodsCategory.Value IS NOT NULL 
+                                                THEN CASE WHEN COALESCE (tmpGoodsCategory.Value, 0) <= COALESCE (tmpPrice.MCSValue, 0) THEN COALESCE (tmpPrice.MCSValue,0) ELSE tmpGoodsCategory.Value END 
                                                 ELSE 0
-                                           END ::TFloat AS MCSValue
+                                           END ::TFloat AS MCSValue*/   --- недоразобралась с заменой
+
                                          , tmpPrice.MCSValue_min
                                     FROM tmpPrice
-                                         LEFT JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpPrice.GoodsId
+                                        -- LEFT JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpPrice.GoodsId
                                )
 
             , MovementItemSaved AS (SELECT T1.Id,

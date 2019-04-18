@@ -39,7 +39,7 @@ BEGIN
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
     
     -- сохранили протокол
-    PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
+    --PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 
 END;
 $BODY$

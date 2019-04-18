@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 230
+  ExplicitHeight = 229
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -3076,9 +3076,6 @@ inherited MainForm: TMainForm
       object N14: TMenuItem
         Action = actOrderInternalLite
       end
-      object miOrderInternalPromo: TMenuItem
-        Action = actOrderInternalPromo
-      end
       object N15: TMenuItem
         Action = actPriceList
       end
@@ -3328,6 +3325,9 @@ inherited MainForm: TMainForm
       end
       object miReport_Check_GoodsPriceChange: TMenuItem
         Action = actReport_Check_GoodsPriceChange
+      end
+      object miOrderInternalPromo: TMenuItem
+        Action = actOrderInternalPromo
       end
       object N132: TMenuItem
         Caption = '-'

@@ -34,7 +34,7 @@ BEGIN
           , inOperDate		                             AS OperDate
           , Object_Status.Code               	             AS StatusCode
           , Object_Status.Name            	             AS StatusName
-          , Null :: TDateTime                                AS StartSale
+          , DATE_TRUNC ('MONTH', inOperDate) :: TDateTime   AS StartSale
           , 0::TFloat                                        AS Amount
           , NULL::Integer                                    AS RetailId
           , NULL::TVarChar                                   AS RetailName
