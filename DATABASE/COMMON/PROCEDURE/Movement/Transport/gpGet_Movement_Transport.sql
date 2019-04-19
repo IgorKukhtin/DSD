@@ -89,10 +89,10 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
            
-           , CAST (DATE_TRUNC ('MINUTE', MovementDate_StartRunPlan.ValueData) AS TDateTime) AS StartRunPlan
-           , CAST (DATE_TRUNC ('MINUTE', MovementDate_EndRunPlan.ValueData)   AS TDateTime) AS EndRunPlan
-           , CAST (DATE_TRUNC ('MINUTE', MovementDate_StartRun.ValueData)     AS TDateTime) AS StartRun
-           , CAST (DATE_TRUNC ('MINUTE', MovementDate_EndRun.ValueData)       AS TDateTime) AS EndRun
+           , CAST (DATE_TRUNC ('MINUTE', COALESCE (MovementDate_StartRunPlan.ValueData, Movement.OperDate)) AS TDateTime) AS StartRunPlan
+           , CAST (DATE_TRUNC ('MINUTE', COALESCE (MovementDate_EndRunPlan.ValueData, Movement.OperDate))   AS TDateTime) AS EndRunPlan
+           , CAST (DATE_TRUNC ('MINUTE', COALESCE (MovementDate_StartRun.ValueData, Movement.OperDate))     AS TDateTime) AS StartRun
+           , CAST (DATE_TRUNC ('MINUTE', COALESCE (MovementDate_EndRun.ValueData, Movement.OperDate))       AS TDateTime) AS EndRun
           
            , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat) AS HoursWork
            , MovementFloat_HoursAdd.ValueData      AS HoursAdd
