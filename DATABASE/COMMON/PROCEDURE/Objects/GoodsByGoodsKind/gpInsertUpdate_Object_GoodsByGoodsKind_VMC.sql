@@ -28,8 +28,17 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind_VMC(
     IN inWeightOnBox           TFloat  , -- Кол-во кг. в ящ. (E2/E3)
     IN inCountOnBox_2          TFloat  , -- Кол-во ед. в ящ. (Гофра)
     IN inWeightOnBox_2         TFloat  , -- Кол-во кг. в ящ. (Гофра)
+
    OUT outWeightGross          TFloat  , -- Вес брутто полного ящика (E2/E3)
+   OUT outWeightOnBox          TFloat  , -- Кол-во кг. в ящ. (E2/E3)
+   OUT outWeightAvgGross       TFloat  , -- Вес брутто по среднему весу ящика (E2/E3)
+   OUT outWeightAvgNet         TFloat  , -- Вес нетто по среднему весу ящика (E2/E3)
+   
    OUT outWeightGross_2        TFloat  , -- Вес брутто полного ящика (Гофра)
+   OUT outWeightOnBox_2        TFloat  , -- Кол-во кг. в ящ (Гофра)   
+   OUT outWeightAvgGross_2     TFloat  , -- Вес брутто по среднему весу ящика (Гофра)
+   OUT outWeightAvgNet_2       TFloat  , -- Вес нетто по среднему весу ящика (Гофра)
+   
     IN inisGoodsTypeKind_Sh    Boolean , -- Штучный
     IN inisGoodsTypeKind_Nom   Boolean , -- Номинальный
     IN inisGoodsTypeKind_Ves   Boolean , -- Неноминальный
@@ -182,20 +191,13 @@ BEGIN
                       )
        THEN
            -- находим макс код + 1
-           vbWmsCode := ((SELECT MAX (ObjectFloat.ValueData) FROM ObjectFloat WHERE ObjectFloat.DescId = zc_ObjectFloat_GoodsByGoodsKind_WmsCode()) + 1 ) :: Integer;
+           vbWmsCode := (COALESCE ( (SELECT MAX (ObjectFloat.ValueData) FROM ObjectFloat WHERE ObjectFloat.DescId = zc_ObjectFloat_GoodsByGoodsKind_WmsCode()),0) + 1 ) :: Integer;
            -- записываем новый код = последнему сохр + 1
            PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WmsCode(), ioId, vbWmsCode);
        END IF;
    END IF;
    
-   -- расчет кодов ВМС
-   SELECT CodeCalc_Sh, CodeCalc_Nom, CodeCalc_Ves, isCodeCalc_Diff
-        , WmsCodeCalc_Sh, WmsCodeCalc_Nom, WmsCodeCalc_Ves, WmsCode
-     INTO outCodeCalc_Sh, outCodeCalc_Nom, outCodeCalc_Ves, outisCodeCalc_Diff
-        , outWmsCodeCalc_Sh, outWmsCodeCalc_Nom, outWmsCodeCalc_Ves, outWmsCode
-   FROM gpSelect_Object_GoodsByGoodsKind_VMC (0,0,0,0,0,0,inSession) AS tmp                --- Не важно какие сети
-   WHERE tmp.Id = ioId;
-   
+
    -- если внесли ящик 1 тогда сохраняем данные
    IF COALESCE (inBoxId,0) <> 0
    THEN
@@ -240,11 +242,12 @@ BEGIN
                                                        inWeightOnBox          := inWeightOnBox  , -- количество кг. в ящ.
                                                        inSession              := inSession);
                                                        
-       outWeightGross := inWeightOnBox + (SELECT ObjectFloat_Weight.ValueData
+      /* outWeightGross := inWeightOnBox + (SELECT ObjectFloat_Weight.ValueData
                                           FROM ObjectFloat AS ObjectFloat_Weight
                                           WHERE ObjectFloat_Weight.ObjectId = inBoxId
                                             AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Box_Weight()
                                           );
+      */
    END IF;
 
    -- если внесли ящик 2 тогда сохраняем данные
@@ -292,11 +295,12 @@ BEGIN
                                                        inWeightOnBox          := inWeightOnBox_2  , -- количество кг. в ящ.
                                                        inSession              := inSession);
 
-       outWeightGross_2 := inWeightOnBox_2 + (SELECT ObjectFloat_Weight.ValueData
+       /*outWeightGross_2 := inWeightOnBox_2 + (SELECT ObjectFloat_Weight.ValueData
                                               FROM ObjectFloat AS ObjectFloat_Weight
                                               WHERE ObjectFloat_Weight.ObjectId = inBoxId_2
                                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Box_Weight()
                                               );
+      */
    END IF;
 
    -- сохранили протокол
@@ -691,6 +695,251 @@ BEGIN
        outBoxName_Retail6 := ''::TVarChar;  
    END IF;
 
+   -- исходящие параметры все из селекта
+   -- расчет кодов ВМС
+   SELECT tmp.CodeCalc_Sh, tmp.CodeCalc_Nom, tmp.CodeCalc_Ves, tmp.isCodeCalc_Diff
+        , tmp.WmsCodeCalc_Sh, tmp.WmsCodeCalc_Nom, tmp.WmsCodeCalc_Ves, tmp.WmsCode
+
+        , tmp.WeightOnBox, tmp.WeightGross, tmp.WeightAvgGross, tmp.WeightAvgNet  
+        , tmp.WeightOnBox_2, tmp.WeightGross_2, tmp.WeightAvgGross_2, tmp.WeightAvgNet_2
+
+     INTO outCodeCalc_Sh, outCodeCalc_Nom, outCodeCalc_Ves, outisCodeCalc_Diff
+        , outWmsCodeCalc_Sh, outWmsCodeCalc_Nom, outWmsCodeCalc_Ves, outWmsCode
+
+        , outWeightOnBox, outWeightGross, outWeightAvgGross, outWeightAvgNet  
+        , outWeightOnBox_2, outWeightGross_2, outWeightAvgGross_2, outWeightAvgNet_2
+   FROM (WITH
+             tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.*
+                                          , CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh.ChildObjectId, 0)  <> 0 THEN TRUE ELSE FALSE END AS isGoodsTypeKind_Sh
+                                          , CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom.ChildObjectId, 0) <> 0 THEN TRUE ELSE FALSE END AS isGoodsTypeKind_Nom
+                                          , CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.ChildObjectId, 0) <> 0 THEN TRUE ELSE FALSE END AS isGoodsTypeKind_Ves
+        
+                                          , CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh.ChildObjectId, 0)  <> 0
+                                                 THEN (''||COALESCE (Object_Goods_main.ObjectCode,0)||'.'||COALESCE (Object_GoodsByGoodsKind_View.GoodsKindCode,0)||'.'||COALESCE (Object_GoodsBrand.ObjectCode,0)||'.'||CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh.ChildObjectId, 0)  <> 0 THEN 1 ELSE 0 END)
+                                                 ELSE NULL
+                                            END  :: TVarChar AS CodeCalc_Sh
+                                          , CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom.ChildObjectId, 0) <> 0
+                                                 THEN (''||COALESCE (Object_Goods_main.ObjectCode,0)||'.'||COALESCE (Object_GoodsByGoodsKind_View.GoodsKindCode,0)||'.'||COALESCE (Object_GoodsBrand.ObjectCode,0)||'.'||CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom.ChildObjectId, 0) <> 0 THEN 2 ELSE 0 END)
+                                                 ELSE NULL
+                                            END  :: TVarChar AS CodeCalc_Nom
+                                          , CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.ChildObjectId, 0) <> 0
+                                                 THEN (''||COALESCE (Object_Goods_main.ObjectCode,0)||'.'||COALESCE (Object_GoodsByGoodsKind_View.GoodsKindCode,0)||'.'||COALESCE (Object_GoodsBrand.ObjectCode,0)||'.'||CASE WHEN COALESCE (ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.ChildObjectId, 0) <> 0 THEN 3 ELSE 0 END)
+                                                 ELSE NULL
+                                            END  :: TVarChar AS CodeCalc_Ves
+                                          --
+                                          , ObjectFloat_WmsCode.ValueData AS WmsCode
+        
+                                          , CASE WHEN ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh.ChildObjectId <> 0
+                                                 THEN REPEAT ('', 3 - LENGTH ((ObjectFloat_WmsCode.ValueData :: Integer) :: TVarChar))
+                                                   || (COALESCE (ObjectFloat_WmsCode.ValueData, 0) :: Integer) :: TVarChar
+                                                -- || '.'
+                                                   || '1'
+                                                 ELSE ''
+                                            END :: TVarChar AS WmsCodeCalc_Sh
+        
+                                          , CASE WHEN ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom.ChildObjectId <> 0
+                                                 THEN REPEAT ('', 3 - LENGTH ((ObjectFloat_WmsCode.ValueData :: Integer) :: TVarChar))
+                                                    || (COALESCE (ObjectFloat_WmsCode.ValueData, 0) :: Integer) :: TVarChar
+                                                --  || '.'
+                                                    || '2'
+                                                 ELSE ''
+                                            END :: TVarChar AS WmsCodeCalc_Nom
+        
+                                          , CASE WHEN ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.ChildObjectId  <> 0
+                                                 THEN REPEAT ('', 3 - LENGTH ((ObjectFloat_WmsCode.ValueData :: Integer) :: TVarChar))
+                                                    || (COALESCE (ObjectFloat_WmsCode.ValueData, 0) :: Integer) :: TVarChar
+                                                 -- || '.'
+                                                    || '3'
+                                                 ELSE ''
+                                            END :: TVarChar AS WmsCodeCalc_Ves
+        
+                                     FROM Object_GoodsByGoodsKind_View
+                                          LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsMain
+                                                               ON ObjectLink_GoodsByGoodsKind_GoodsMain.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                              AND ObjectLink_GoodsByGoodsKind_GoodsMain.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsMain()
+                                          LEFT JOIN Object AS Object_Goods_main ON Object_Goods_main.Id = ObjectLink_GoodsByGoodsKind_GoodsMain.ChildObjectId
+        
+                                          LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBrand
+                                                               ON ObjectLink_GoodsByGoodsKind_GoodsBrand.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                              AND ObjectLink_GoodsByGoodsKind_GoodsBrand.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsBrand()
+                                          LEFT JOIN Object AS Object_GoodsBrand ON Object_GoodsBrand.Id = ObjectLink_GoodsByGoodsKind_GoodsBrand.ChildObjectId
+        
+                                          LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh
+                                                               ON ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                              AND ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh()
+                                          LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom
+                                                               ON ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                              AND ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Nom()
+                                          LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves
+                                                               ON ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                              AND ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves()
+        
+                                          LEFT JOIN ObjectFloat AS ObjectFloat_WmsCode
+                                                                ON ObjectFloat_WmsCode.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                               AND ObjectFloat_WmsCode.DescId = zc_ObjectFloat_GoodsByGoodsKind_WmsCode()
+                                     WHERE Object_GoodsByGoodsKind_View.Id = ioId   --403369 --
+                                     )
+           , tmpCodeCalc AS (SELECT tmp.CodeCalc_Sh, tmp.CodeCalc_Nom, tmp.CodeCalc_Ves
+                                  , COUNT (*) OVER (PARTITION BY tmp.CodeCalc_Sh) AS Count1
+                                  , COUNT (*) OVER (PARTITION BY tmp.CodeCalc_Nom) AS Count2
+                                  , COUNT (*) OVER (PARTITION BY tmp.CodeCalc_Ves) AS Count3
+                             FROM tmpGoodsByGoodsKind AS tmp
+                             WHERE tmp.isGoodsTypeKind_Sh  <> False
+                                OR tmp.isGoodsTypeKind_Nom <> False
+                                OR tmp.isGoodsTypeKind_Ves <> False
+                             GROUP BY tmp.CodeCalc_Sh, tmp.CodeCalc_Nom, tmp.CodeCalc_Ves
+                             )
+        
+           , tmpGoodsPropertyBox AS (SELECT ObjectLink_GoodsPropertyBox_Goods.ChildObjectId     AS GoodsId
+                                          , ObjectLink_GoodsPropertyBox_GoodsKind.ChildObjectId AS GoodsKindId
+        
+                                          , ObjectLink_GoodsPropertyBox_Box.ChildObjectId  AS BoxId
+        
+                                          , ObjectFloat_WeightOnBox.ValueData    AS WeightOnBox
+                                          , ObjectFloat_CountOnBox.ValueData     AS CountOnBox
+                                          , ObjectFloat_Weight.ValueData         AS BoxWeight
+                                      FROM Object AS Object_GoodsPropertyBox
+                                           LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyBox_GoodsKind
+                                                                ON ObjectLink_GoodsPropertyBox_GoodsKind.ObjectId = Object_GoodsPropertyBox.Id
+                                                               AND ObjectLink_GoodsPropertyBox_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyBox_GoodsKind()
+        
+                                           LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyBox_Goods
+                                                                ON ObjectLink_GoodsPropertyBox_Goods.ObjectId = Object_GoodsPropertyBox.Id
+                                                               AND ObjectLink_GoodsPropertyBox_Goods.DescId = zc_ObjectLink_GoodsPropertyBox_Goods()
+        
+                                           LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyBox_Box
+                                                                ON ObjectLink_GoodsPropertyBox_Box.ObjectId = Object_GoodsPropertyBox.Id
+                                                               AND ObjectLink_GoodsPropertyBox_Box.DescId = zc_ObjectLink_GoodsPropertyBox_Box()
+                                                               AND (ObjectLink_GoodsPropertyBox_Box.ChildObjectId IN (inBoxId, inBoxId_2))   --  (1036512,1036504 ))---
+                                           LEFT JOIN ObjectFloat AS ObjectFloat_WeightOnBox
+                                                                 ON ObjectFloat_WeightOnBox.ObjectId = Object_GoodsPropertyBox.Id
+                                                                AND ObjectFloat_WeightOnBox.DescId = zc_ObjectFloat_GoodsPropertyBox_WeightOnBox()
+        
+                                           LEFT JOIN ObjectFloat AS ObjectFloat_CountOnBox
+                                                                 ON ObjectFloat_CountOnBox.ObjectId = Object_GoodsPropertyBox.Id
+                                                                AND ObjectFloat_CountOnBox.DescId = zc_ObjectFloat_GoodsPropertyBox_CountOnBox()
+                                           
+                                           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                                 ON ObjectFloat_Weight.ObjectId = ObjectLink_GoodsPropertyBox_Box.ChildObjectId
+                                                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Box_Weight()
+        
+                                      WHERE Object_GoodsPropertyBox.DescId = zc_Object_GoodsPropertyBox()
+                                        AND Object_GoodsPropertyBox.isErased = FALSE
+                     )
+        
+               --
+               SELECT Object_GoodsByGoodsKind_View.CodeCalc_Sh  :: TVarChar           -- шт. - расчет: код на упак+вид+бренд+категория
+                   , Object_GoodsByGoodsKind_View.CodeCalc_Nom  :: TVarChar          -- номинал - расчет: код на упак+вид+бренд+категория
+                   , Object_GoodsByGoodsKind_View.CodeCalc_Ves  :: TVarChar          -- неноминал - расчет: код на упак+вид+бренд+категория
+        
+                     -- Повтор кода ВМС - расчет: код на упак+вид+бренд+категория
+                   , CASE WHEN Object_GoodsByGoodsKind_View.isGoodsTypeKind_Sh = FALSE AND Object_GoodsByGoodsKind_View.isGoodsTypeKind_Nom = FALSE AND Object_GoodsByGoodsKind_View.isGoodsTypeKind_Ves = FALSE THEN FALSE
+                          WHEN (COALESCE (tmpCodeCalc_1.Count1, 1) + COALESCE (tmpCodeCalc_2.Count2, 1) + COALESCE (tmpCodeCalc_3.Count3, 1)) <= 3 THEN FALSE
+                          ELSE TRUE
+                     END  AS isCodeCalc_Diff                                         -- Повтор кода ВМС
+        
+                   , Object_GoodsByGoodsKind_View.WmsCode          :: Integer        -- Код ВМС* для выгрузки
+                   , Object_GoodsByGoodsKind_View.WmsCodeCalc_Sh   :: TVarChar       -- шт. - Код ВМС* для выгрузки
+                   , Object_GoodsByGoodsKind_View.WmsCodeCalc_Nom  :: TVarChar       -- номинал - Код ВМС* для выгрузки
+                   , Object_GoodsByGoodsKind_View.WmsCodeCalc_Ves  :: TVarChar       -- неноминал - Код ВМС* для выгрузки
+        
+                      -- Кол-во кг. в ящ. (E2/E3)
+                    , CASE WHEN tmpGoodsPropertyBox.CountOnBox > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
+                                THEN tmpGoodsPropertyBox.CountOnBox * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
+                           ELSE tmpGoodsPropertyBox.WeightOnBox
+                      END :: TFloat AS WeightOnBox
+        
+                      -- Вес брутто полного ящика (E2/E3)
+                    , (CASE WHEN tmpGoodsPropertyBox.CountOnBox > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
+                                 THEN tmpGoodsPropertyBox.CountOnBox * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
+                            ELSE tmpGoodsPropertyBox.WeightOnBox
+                       END
+                     + tmpGoodsPropertyBox.BoxWeight
+                      ) :: TFloat AS WeightGross
+        
+                     -- Вес брутто по среднему весу ящика (E2/E3)
+                    , (CASE WHEN tmpGoodsPropertyBox.CountOnBox > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
+                                 THEN tmpGoodsPropertyBox.CountOnBox * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
+                            ELSE 0 
+                       END
+                     + tmpGoodsPropertyBox.BoxWeight
+                      ) :: TFloat AS WeightAvgGross
+        
+                      -- Вес нетто по среднему весу ящика (E2/E3)
+                    , (CASE WHEN tmpGoodsPropertyBox.CountOnBox > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
+                                 THEN tmpGoodsPropertyBox.CountOnBox * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
+                            ELSE 0
+                       END
+                      ) :: TFloat AS WeightAvgNet
+        
+                      -- Кол-во кг. в ящ. (Гофра)
+                    , CASE WHEN tmpGoodsPropertyBox_2.CountOnBox > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
+                                THEN tmpGoodsPropertyBox_2.CountOnBox * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
+                           ELSE tmpGoodsPropertyBox_2.WeightOnBox
+                      END :: TFloat AS WeightOnBox_2
+        
+                      -- Вес брутто полного ящика (Гофра)
+                    , (CASE WHEN tmpGoodsPropertyBox_2.CountOnBox > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
+                                 THEN tmpGoodsPropertyBox_2.CountOnBox * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
+                            ELSE tmpGoodsPropertyBox_2.WeightOnBox
+                       END
+                     + tmpGoodsPropertyBox_2.BoxWeight
+                      ) :: TFloat AS WeightGross_2
+        
+                     -- Вес брутто по среднему весу ящика (Гофра)
+                    , (CASE WHEN tmpGoodsPropertyBox_2.CountOnBox > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
+                                 THEN tmpGoodsPropertyBox_2.CountOnBox * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
+                            ELSE 0
+                       END
+                     + tmpGoodsPropertyBox_2.BoxWeight
+                      ) :: TFloat AS WeightAvgGross_2
+        
+                      -- Вес нетто по среднему весу ящика (Гофра)
+                    , (CASE WHEN tmpGoodsPropertyBox_2.CountOnBox > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
+                                 THEN tmpGoodsPropertyBox_2.CountOnBox * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
+                            ELSE 0
+                       END
+                      ) :: TFloat AS WeightAvgNet_2
+           
+               FROM tmpGoodsByGoodsKind AS Object_GoodsByGoodsKind_View
+                    LEFT JOIN ObjectFloat AS ObjectFloat_WeightMin
+                                          ON ObjectFloat_WeightMin.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                         AND ObjectFloat_WeightMin.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightMin()
+        
+                    LEFT JOIN ObjectFloat AS ObjectFloat_WeightMax
+                                          ON ObjectFloat_WeightMax.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                         AND ObjectFloat_WeightMax.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightMax()
+        
+                    LEFT JOIN (SELECT DISTINCT tmpCodeCalc.CodeCalc_Sh , tmpCodeCalc.Count1 FROM tmpCodeCalc WHERE tmpCodeCalc.CodeCalc_Sh  IS NOT NULL) AS tmpCodeCalc_1 ON tmpCodeCalc_1.CodeCalc_Sh = Object_GoodsByGoodsKind_View.CodeCalc_Sh
+                    LEFT JOIN (SELECT DISTINCT tmpCodeCalc.CodeCalc_Nom, tmpCodeCalc.Count2 FROM tmpCodeCalc WHERE tmpCodeCalc.CodeCalc_Nom IS NOT NULL) AS tmpCodeCalc_2 ON tmpCodeCalc_2.CodeCalc_Nom = Object_GoodsByGoodsKind_View.CodeCalc_Nom
+                    LEFT JOIN (SELECT DISTINCT tmpCodeCalc.CodeCalc_Ves, tmpCodeCalc.Count3 FROM tmpCodeCalc WHERE tmpCodeCalc.CodeCalc_Ves IS NOT NULL) AS tmpCodeCalc_3 ON tmpCodeCalc_3.CodeCalc_Ves = Object_GoodsByGoodsKind_View.CodeCalc_Ves
+        
+                    LEFT JOIN tmpGoodsPropertyBox ON tmpGoodsPropertyBox.GoodsId     = Object_GoodsByGoodsKind_View.GoodsId
+                                                 AND tmpGoodsPropertyBox.GoodsKindId = Object_GoodsByGoodsKind_View.GoodsKindId
+                                                 AND tmpGoodsPropertyBox.BoxId IN (zc_Box_E2(), zc_Box_E3())
+        
+                    LEFT JOIN tmpGoodsPropertyBox AS tmpGoodsPropertyBox_2
+                                                  ON tmpGoodsPropertyBox_2.GoodsId     = Object_GoodsByGoodsKind_View.GoodsId
+                                                 AND tmpGoodsPropertyBox_2.GoodsKindId = Object_GoodsByGoodsKind_View.GoodsKindId
+                                                 AND tmpGoodsPropertyBox_2.BoxId NOT IN (zc_Box_E2(), zc_Box_E3())
+               ) AS tmp;
+   
+/*   SELECT CodeCalc_Sh, CodeCalc_Nom, CodeCalc_Ves, isCodeCalc_Diff
+        , WmsCodeCalc_Sh, WmsCodeCalc_Nom, WmsCodeCalc_Ves, WmsCode
+
+        , tmp.WeightOnBox, tmp.WeightGross, tmp.WeightAvgGross, tmp.WeightAvgNet  
+        , tmp.WeightOnBox_2, tmp.WeightGross_2, tmp.WeightAvgGross_2, tmp.WeightAvgNet_2
+
+     INTO outCodeCalc_Sh, outCodeCalc_Nom, outCodeCalc_Ves, outisCodeCalc_Diff
+        , outWmsCodeCalc_Sh, outWmsCodeCalc_Nom, outWmsCodeCalc_Ves, outWmsCode
+
+        , outWeightOnBox, outWeightGross, outWeightAvgGross, outWeightAvgNet  
+        , outWeightOnBox_2, outWeightGross_2, outWeightAvgGross_2, outWeightAvgNet_2
+   FROM gpSelect_Object_GoodsByGoodsKind_VMC (0,0,0,0,0,0,inSession) AS tmp                --- Не важно какие сети
+   WHERE tmp.Id = ioId;
+   */
+   
+   
 
 END;
 $BODY$

@@ -5,9 +5,8 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -266
   ExplicitWidth = 1055
-  ExplicitHeight = 455
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2569,10 +2568,10 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outCodeCalc_Nom'
+        Name = 'outCodeCalc_Ves'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'CodeCalc_Nom'
+        ComponentItem = 'CodeCalc_Ves'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -2600,10 +2599,10 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outWmsCodeCalc_Nom'
+        Name = 'outWmsCodeCalc_Ves'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'WmsCodeCalc_Nom'
+        ComponentItem = 'WmsCodeCalc_Ves'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -2857,6 +2856,54 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         ComponentItem = 'WeightOnBox_Retail6'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWeightOnBox'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightOnBox'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWeightAvgGross'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightAvgGross'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWeightAvgNet'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightAvgNet'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWeightOnBox_2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightOnBox_2'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWeightAvgGross_2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightAvgGross_2'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWeightAvgNet_2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightAvgNet_2'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
