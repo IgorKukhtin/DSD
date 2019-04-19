@@ -414,10 +414,19 @@ CREATE OR REPLACE FUNCTION zc_Enum_ConfirmedKind_SmsYes() RETURNS Integer AS $BO
 CREATE OR REPLACE FUNCTION zc_Enum_SPKind_SP()  RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_SPKind_SP' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_SPKind_1303() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_SPKind_1303' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-- !!!
+-- !!! Типы срок/не срок
+-- !!!
+
+CREATE OR REPLACE FUNCTION zc_Enum_PartionDateKind_0() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PartionDateKind_0' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_PartionDateKind_1() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PartionDateKind_1' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_PartionDateKind_6() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_PartionDateKind_6' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 19.04.19         * zc_Enum_PartionDateKind...
  15.04.19                                                                                                   * zc_Enum_GlobalConst_ConnectReportLocalService
  02.04.19         * zc_Enum_ImportType_Goods_Price
                     zc_Enum_ImportSetting_Goods_Price

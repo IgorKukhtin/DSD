@@ -122,20 +122,6 @@ BEGIN
                            AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                          )
 
-                 , MI_Child AS (SELECT MovementItem.ParentId
-                                     , SUM (CASE WHEN COALESCE (MIFloat_Expired.ValueData,0) = 0 THEN MovementItem.Amount ELSE 0 END) AS Amount_0   -- просрочено
-                                     , SUM (CASE WHEN COALESCE (MIFloat_Expired.ValueData,0) = 1 THEN MovementItem.Amount ELSE 0 END) AS Amount_1   -- ћеньше 1 мес€ца
-                                     , SUM (CASE WHEN COALESCE (MIFloat_Expired.ValueData,0) = 2 THEN MovementItem.Amount ELSE 0 END) AS Amount_2   -- ћеньше 1 мес€ца
-                                FROM  MovementItem
-                                    LEFT JOIN MovementItemFloat AS MIFloat_Expired
-                                                                ON MIFloat_Expired.MovementItemId = MovementItem.Id
-                                                               AND MIFloat_Expired.DescId = zc_MIFloat_Expired()
-                                WHERE MovementItem.MovementId = inMovementId
-                                  AND MovementItem.DescId = zc_MI_Child() 
-                                  AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
-                                GROUP BY MovementItem.ParentId
-                                 )
-
     SELECT COALESCE(MI_Master.Id,0)                     AS Id
          -- , COALESCE (MI_Master.GoodsId, tmpRemains.GoodsId) AS GoodsId
           , Object_Goods.Id            AS GoodsId
@@ -278,9 +264,9 @@ BEGIN
                                  )  
 
                  , MI_Child AS (SELECT MovementItem.ParentId
-                                     , SUM (CASE WHEN COALESCE (MIFloat_Expired.ValueData,0) = 0 THEN MovementItem.Amount ELSE 0 END) AS Amount_0   -- просрочено
-                                     , SUM (CASE WHEN COALESCE (MIFloat_Expired.ValueData,0) = 1 THEN MovementItem.Amount ELSE 0 END) AS Amount_1   -- ћеньше 1 мес€ца
-                                     , SUM (CASE WHEN COALESCE (MIFloat_Expired.ValueData,0) = 2 THEN MovementItem.Amount ELSE 0 END) AS Amount_2   -- ћеньше 1 мес€ца
+                                     , SUM (CASE WHEN COALESCE (MIFloat_Expired.ValueData,0) = zc_Enum_PartionDateKind_0() THEN MovementItem.Amount ELSE 0 END) AS Amount_0   -- просрочено
+                                     , SUM (CASE WHEN COALESCE (MIFloat_Expired.ValueData,0) = zc_Enum_PartionDateKind_1() THEN MovementItem.Amount ELSE 0 END) AS Amount_1   -- ћеньше 1 мес€ца
+                                     , SUM (CASE WHEN COALESCE (MIFloat_Expired.ValueData,0) = zc_Enum_PartionDateKind_6() THEN MovementItem.Amount ELSE 0 END) AS Amount_2   -- ћеньше 1 мес€ца
                                      , MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())) AS ExpirationDate
                                 FROM  MovementItem
                                     LEFT JOIN MovementItemFloat AS MIFloat_Expired
@@ -294,6 +280,7 @@ BEGIN
                                   AND (MovementItem.isErased  = FALSE OR inIsErased = TRUE)
                                 GROUP BY MovementItem.ParentId
                                  )
+
                SELECT MI_Master.Id               AS Id
                     , MI_Master.GoodsId          AS GoodsId
                     , Object_Goods.ObjectCode    AS GoodsCode
@@ -321,7 +308,7 @@ BEGIN
                                      , MovementItem.ObjectId              AS GoodsId
                                      , MovementItem.Amount                AS Amount
                                      , MIFloat_ContainerId.ValueData      AS ContainerId
-                                     , MIFloat_Expired.ValueData          AS Expired
+                                     , MIFloat_Expired.ValueData          AS PartionDateKindId
                                      , MIFloat_MovementId.ValueData ::Integer AS MovementId_Income
                                      , MIDate_ExpirationDate.ValueData    AS ExpirationDate
                                      , MovementItem.isErased              AS isErased
@@ -368,18 +355,14 @@ BEGIN
                                  )
                                          
                SELECT
-                   COALESCE (MI_Child.Id, 0)     AS Id
-                 , COALESCE (MI_Child.ParentId, 0) AS ParentId
+                   COALESCE (MI_Child.Id, 0)        AS Id
+                 , COALESCE (MI_Child.ParentId, 0)  AS ParentId
                  , MI_Child.GoodsId AS GoodsId
                  , MI_Child.ExpirationDate ::TDateTime
-                 , MI_Child.Amount      ::TFloat AS Amount
-                 , MI_Child.ContainerId ::TFloat
-                 , MI_Child.Expired
-                 , CASE WHEN COALESCE (MI_Child.Expired,0) = 0 THEN 'ѕросрочено'
-                        WHEN MI_Child.Expired = 1 THEN 'ћеньше 1 мес€ца'
-                        WHEN MI_Child.Expired = 2 THEN 'ћеньше 6 мес€цев'
-                        ELSE ''
-                   END :: TVarChar AS Expired_text
+                 , MI_Child.Amount         ::TFloat AS Amount
+                 , MI_Child.ContainerId    ::TFloat
+                 , ObjectFloat_Month.ValueData      AS Expired
+                 , Object_PartionDateKind.ValueData :: TVarChar AS Expired_text
 
                  , MI_Child.MovementId_Income    AS MovementId_Income
                  , tmpIncome.BranchDate          AS OperDate_Income
@@ -391,6 +374,11 @@ BEGIN
 
                FROM MI_Child
                     LEFT JOIN tmpIncome ON tmpIncome.Id = MI_Child.MovementId_Income
+                    
+                    LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MI_Child.PartionDateKindId
+                    LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                                          ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
+                                         AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
                ;  
    
           RETURN NEXT Cursor2;

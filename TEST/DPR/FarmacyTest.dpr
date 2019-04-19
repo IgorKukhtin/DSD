@@ -684,7 +684,8 @@ uses
   OrderInternalPromoJournal in '..\..\FormsFarmacy\Document\OrderInternalPromoJournal.pas' {OrderInternalPromoJournalForm: TParentForm},
   OrderInternalPromo in '..\..\FormsFarmacy\Document\OrderInternalPromo.pas' {OrderInternalPromoForm: TParentForm},
   Updater in '..\..\SOURCE\COMPONENT\Updater.pas',
-  dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas';
+  dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas',
+  PartionDateKind in '..\..\FormsFarmacy\Kind\PartionDateKind.pas' {PartionDateKindForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

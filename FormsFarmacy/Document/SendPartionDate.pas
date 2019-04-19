@@ -54,7 +54,7 @@ type
     actPrintCheck: TdsdPrintAction;
     PrintDialog: TExecuteDialog;
     macPrintCheck: TMultiAction;
-    bbPrintCheck: TdxBarButton;
+    bbOpenPartionDateKind: TdxBarButton;
     actGet_SP_Prior: TdsdExecStoredProc;
     bbInsertMI: TdxBarButton;
     cxLabel10: TcxLabel;
@@ -82,6 +82,7 @@ type
     actOpenFormIncome: TdsdOpenForm;
     bbOpenFormIncome: TdxBarButton;
     minExpirationDate: TcxGridDBColumn;
+    actOpenPartionDateKind: TdsdOpenForm;
   private
     { Private declarations }
   public

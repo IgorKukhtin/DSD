@@ -86,6 +86,7 @@ type
     procedure LoadPaidKindFormTest;
     procedure LoadPaidTypeFormTest;
     procedure LoadPartnerMedicalFormTest;
+    procedure LoadPartionDateKindFormTest;
     procedure LoadPaymentFormTest;
     procedure LoadPersonalFormTest;
     procedure LoadPersonalGroupFormTest;
@@ -1791,6 +1792,12 @@ procedure TLoadFormTest.LoadSPKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSPKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSPKindForm');
+end;
+
+procedure TLoadFormTest.LoadPartionDateKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionDateKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionDateKindForm');
 end;
 
 procedure TLoadFormTest.LoadSystemFormTest;

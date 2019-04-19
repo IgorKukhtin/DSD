@@ -3,9 +3,8 @@ inherited SendPartionDateForm: TSendPartionDateForm
   ClientHeight = 553
   ClientWidth = 900
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitLeft = -127
   ExplicitWidth = 916
-  ExplicitHeight = 588
+  ExplicitHeight = 591
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -755,6 +754,18 @@ inherited SendPartionDateForm: TSendPartionDateForm
         end>
       isShowModal = False
     end
+    object actOpenPartionDateKind: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1080#1087#1099' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082'>'
+      ImageIndex = 24
+      FormName = 'TPartionDateKindForm'
+      FormNameParam.Value = 'TPartionDateKindForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -840,6 +851,14 @@ inherited SendPartionDateForm: TSendPartionDateForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenPartionDateKind'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -863,10 +882,9 @@ inherited SendPartionDateForm: TSendPartionDateForm
           ItemName = 'dxBarStatic'
         end>
     end
-    object bbPrintCheck: TdxBarButton
-      Action = macPrintCheck
+    object bbOpenPartionDateKind: TdxBarButton
+      Action = actOpenPartionDateKind
       Category = 0
-      ImageIndex = 15
     end
     object bbInsertMI: TdxBarButton
       Action = actInsertMI

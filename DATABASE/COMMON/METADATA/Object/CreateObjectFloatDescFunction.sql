@@ -1349,10 +1349,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Juridical_CreditLimit() RETURNS Intege
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Juridical(), 'zc_ObjectFloat_Juridical_CreditLimit', 'Кредитный лимит по дистрибьютору' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Juridical_CreditLimit');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PartionDateKind_Month() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionDateKind_Month'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PartionDateKind(), 'zc_ObjectFloat_PartionDateKind_Month', 'Кол-во месяцев' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionDateKind_Month');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 19.04.19         * zc_ObjectFloat_PartionDateKind_Month
  10.04.19         * zc_ObjectFloat_GoodsPropertyValue_WeightOnBox
                     zc_ObjectFloat_GoodsPropertyValue_CountOnBox
  10.04.19                                                                                      * zc_ObjectFloat_Juridical_CreditLimit 

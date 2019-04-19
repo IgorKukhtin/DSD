@@ -508,6 +508,8 @@ type
     N183: TMenuItem;
     actOrderInternalPromo: TdsdOpenForm;
     miOrderInternalPromo: TMenuItem;
+    actPartionDateKind: TdsdOpenForm;
+    N184: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
