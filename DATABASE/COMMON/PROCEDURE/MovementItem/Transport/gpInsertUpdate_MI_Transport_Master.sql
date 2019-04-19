@@ -102,7 +102,9 @@ BEGIN
             , EXTRACT (DAY FROM (ObjectDate_EndRunPlan.ValueData - ObjectDate_StartRunPlan.ValueData)) * 24 
             + EXTRACT (HOUR FROM (ObjectDate_EndRunPlan.ValueData - ObjectDate_StartRunPlan.ValueData)) 
             + CAST (EXTRACT (MIN FROM (ObjectDate_EndRunPlan.ValueData - ObjectDate_StartRunPlan.ValueData)) / 60 AS NUMERIC (16, 2)) AS HoursWork
-      INTO vbStartRunPlan, vbEndRunPlan, vbHoursWork  
+
+              INTO vbStartRunPlan, vbEndRunPlan, vbHoursWork  
+
        FROM Object AS Object_Route
             LEFT JOIN ObjectDate AS ObjectDate_StartRunPlan
                                  ON ObjectDate_StartRunPlan.ObjectId = Object_Route.Id
@@ -113,16 +115,20 @@ BEGIN
                                 AND ObjectDate_EndRunPlan.DescId = zc_ObjectDate_Route_EndRunPlan()
        WHERE Object_Route.Id = inRouteId;
        
-       -- сохранили связь с <Дата/Время выезда план>
-       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartRunPlan(), inMovementId, vbStartRunPlan);
-       -- сохранили связь с <Дата/Время возвращения план>
-       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndRunPlan(), inMovementId, vbEndRunPlan);
-       -- сохранили связь с <Дата/Время выезда факт>
-       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartRun(), inMovementId, vbStartRunPlan);
-       -- сохранили связь с <Дата/Время возвращения факт>
-       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndRun(), inMovementId, vbEndRunPlan);
-       -- сохранили свойство <Кол-во рабочих часов>
-       PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursWork(), inMovementId, vbHoursWork);
+       IF NOT (vbStartRunPlan IS NULL) AND NOT (vbEndRunPlan IS NULL)
+       THEN
+           -- сохранили связь с <Дата/Время выезда план>
+           PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartRunPlan(), inMovementId, vbStartRunPlan);
+           -- сохранили связь с <Дата/Время возвращения план>
+           PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndRunPlan(), inMovementId, vbEndRunPlan);
+           -- сохранили связь с <Дата/Время выезда факт>
+           PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartRun(), inMovementId, vbStartRunPlan);
+           -- сохранили связь с <Дата/Время возвращения факт>
+           PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndRun(), inMovementId, vbEndRunPlan);
+           -- сохранили свойство <Кол-во рабочих часов>
+           PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursWork(), inMovementId, vbHoursWork);
+       END IF;
+
    END IF;
   
    -- определяется признак Создание/Корректировка
