@@ -18,10 +18,16 @@ CREATE OR REPLACE FUNCTION zc_MIContainer_SummIncomeMovementPayment() RETURNS in
 INSERT INTO MovementItemContainerDesc(Code, ItemName)
   SELECT 'zc_MIContainer_SummIncomeMovementPayment', 'суммовая - остаток по оплате приходной накладной' WHERE NOT EXISTS (SELECT * FROM MovementItemContainerDesc WHERE Code = 'zc_MIContainer_SummIncomeMovementPayment');
 
+-- !!!Farmacy!!!
+CREATE OR REPLACE FUNCTION zc_MIContainer_CountPartionDate() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemContainerDesc WHERE Code = 'zc_MIContainer_CountPartionDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemContainerDesc (Code, ItemName)
+  SELECT 'zc_MIContainer_CountPartionDate', 'Количественный учет (по дате партии)' WHERE NOT EXISTS (SELECT * FROM MovementItemContainerDesc WHERE Code = 'zc_MIContainer_CountPartionDate');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.04.19                                        * add zc_MIContainer_CountPartionDate
  11.02.15                         * 
  12.11.14                                        * add zc_MIContainer_SummCurrency
  14.09.13                                        * add zc_MIContainer_CountSupplier

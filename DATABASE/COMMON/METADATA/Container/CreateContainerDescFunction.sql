@@ -18,9 +18,16 @@ CREATE OR REPLACE FUNCTION zc_Container_SummIncomeMovementPayment() RETURNS inte
 INSERT INTO ContainerDesc(Code, ItemName)
   SELECT 'zc_Container_SummIncomeMovementPayment', 'суммовая - остаток по оплате приходной накладной' WHERE NOT EXISTS (SELECT * FROM ContainerDesc WHERE Code = 'zc_Container_SummIncomeMovementPayment');
 
+-- !!!Farmacy!!!
+CREATE OR REPLACE FUNCTION zc_Container_CountPartionDate() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ContainerDesc WHERE Code = 'zc_Container_CountPartionDate'); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO ContainerDesc(Code, ItemName)
+  SELECT 'zc_Container_CountPartionDate', 'Остатки количественного учета (по дате партии)' WHERE NOT EXISTS (SELECT * FROM ContainerDesc WHERE Code = 'zc_Container_CountPartionDate');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.04.19                                        * add zc_MIContainer_CountPartionDate
  11.02.15                         * add zc_Container_SummIncomeMovementPayment
  12.11.14                                        * add zc_Container_SummCurrency
  14.09.13                                        * add zc_Container_CountSupplier
