@@ -373,7 +373,7 @@ BEGIN
          , tmpContainer AS (SELECT Container.Id
                                  , Container.ObjectId    AS GoodsId
                                  , SUM(Container.Amount) AS Amount
-                                 , Object_PartionMovementItem.ObjectCode  AS MI_Id  -- AVG(MIFloat_Price.ValueData)::TFloat AS PriceIn
+                                 , Object_PartionMovementItem.ObjectCode ::Integer AS MI_Id  -- AVG(MIFloat_Price.ValueData)::TFloat AS PriceIn
                             FROM MovementItem_Send
                                 INNER JOIN Container ON Container.ObjectId = MovementItem_Send.ObjectId
                                                     AND Container.DescId = zc_Container_Count()
@@ -419,6 +419,7 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                           ON MIFloat_Price.MovementItemId = tmpContainer.MI_Id
                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
                           GROUP BY tmpContainer.GoodsId
                           )
 
@@ -577,7 +578,8 @@ BEGIN
            , Object_ReasonDifferences.ValueData                        AS ReasonDifferencesName
            , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
            --, tmpMIContainer.MinExpirationDate   
-           , CASE WHEN MovementItem_Send.Amount <> 0 THEN tmpMIContainer.MinExpirationDate ELSE COALESCE (tmpMinExpirationDate.MinExpirationDate, tmpMIContainer.MinExpirationDate) END AS MinExpirationDate
+           --, CASE WHEN MovementItem_Send.Amount <> 0 THEN tmpMIContainer.MinExpirationDate ELSE COALESCE (tmpMinExpirationDate.MinExpirationDate, tmpMIContainer.MinExpirationDate) END AS MinExpirationDate
+           , CASE WHEN tmpMIContainer.MinExpirationDate = zc_DateEnd() THEN COALESCE (tmpMinExpirationDate.MinExpirationDate, tmpMIContainer.MinExpirationDate, zc_DateEnd()) ELSE tmpMIContainer.MinExpirationDate END AS MinExpirationDate
            , MovementItem_Send.IsErased                                AS isErased
 
            , tmpGoodsParam.GoodsGroupName                                      AS GoodsGroupName
@@ -612,7 +614,7 @@ BEGIN
             LEFT JOIN tmpGoodsParam ON tmpGoodsParam.GoodsId = MovementItem_Send.ObjectId
 
             LEFT JOIN tmpMinExpirationDate ON tmpMinExpirationDate.GoodsId = MovementItem_Send.ObjectId
-                                          AND MovementItem_Send.Amount = 0
+                                         -- AND MovementItem_Send.Amount = 0
 ;
      END IF;
 
@@ -624,7 +626,8 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.04.19         *
  05.02.19         * add AmountStorage 
  21.03.17         *
  22.01.17         *
