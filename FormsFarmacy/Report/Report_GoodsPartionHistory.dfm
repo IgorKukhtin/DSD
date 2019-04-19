@@ -188,6 +188,15 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
             HeaderAlignmentVert = vaCenter
             Width = 54
           end
+          object MCS_GoodsCategory: TcxGridDBColumn
+            Caption = #1053#1058#1047' ('#1072#1089#1089#1086#1088#1090'. '#1084#1072#1090#1088'.)'
+            DataBinding.FieldName = 'MCS_GoodsCategory'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1058#1047' ('#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1072#1103' '#1084#1072#1090#1088#1080#1094#1072')'
+            Options.Editing = False
+            Width = 59
+          end
           object CheckMember: TcxGridDBColumn
             Caption = #1052#1077#1085#1077#1076#1078#1077#1088
             DataBinding.FieldName = 'CheckMember'

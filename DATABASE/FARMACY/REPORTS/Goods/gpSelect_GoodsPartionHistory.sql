@@ -28,7 +28,8 @@ RETURNS TABLE (
     AmountOut        TFloat,    --Кол-во расход
     AmountInvent     TFloat,    --Кол-во переучет
     Saldo            TFloat,    --Остаток после операции
-    MCSValue         TFloat,     --НТЗ
+    MCSValue         TFloat,    --НТЗ
+    MCS_GoodsCategory TFloat,   -- НТЗ из ассортиментной матрицы
     CheckMember      TVarChar,  --Менеджер
     Bayer            TVarChar,  --Покупатель
     PartyId          Integer,
@@ -323,6 +324,38 @@ BEGIN
             FROM tmpRem_All                           
            )
 
+
+        -- данные из ассорт. матрицы
+      , tmpGoodsCategory AS (SELECT ObjectLink_Child_retail.ChildObjectId AS GoodsId
+                                  , ObjectFloat_Value.ValueData           AS Value
+                             FROM Object AS Object_GoodsCategory
+                                 INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Unit
+                                                       ON ObjectLink_GoodsCategory_Unit.ObjectId = Object_GoodsCategory.Id
+                                                      AND ObjectLink_GoodsCategory_Unit.DescId = zc_ObjectLink_GoodsCategory_Unit()
+                                                      AND ObjectLink_GoodsCategory_Unit.ChildObjectId = inUnitId
+                                 INNER JOIN ObjectLink AS ObjectLink_GoodsCategory_Goods
+                                                       ON ObjectLink_GoodsCategory_Goods.ObjectId = Object_GoodsCategory.Id
+                                                      AND ObjectLink_GoodsCategory_Goods.DescId = zc_ObjectLink_GoodsCategory_Goods()
+                                 INNER JOIN ObjectFloat AS ObjectFloat_Value 
+                                                        ON ObjectFloat_Value.ObjectId = Object_GoodsCategory.Id
+                                                       AND ObjectFloat_Value.DescId = zc_ObjectFloat_GoodsCategory_Value()
+                                                       AND COALESCE (ObjectFloat_Value.ValueData,0) <> 0
+                                 -- выходим на товар сети
+                                 INNER JOIN ObjectLink AS ObjectLink_Main_retail
+                                                       ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_GoodsCategory_Goods.ChildObjectId
+                                                      AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                 INNER JOIN ObjectLink AS ObjectLink_Child_retail
+                                                       ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
+                                                      AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                 INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                       ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
+                                                      AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                      AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
+                                 INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = ObjectLink_Child_retail.ChildObjectId
+                             WHERE Object_GoodsCategory.DescId = zc_Object_GoodsCategory()
+                               AND Object_GoodsCategory.isErased = FALSE
+                             )
+                                   
         -- результат
         SELECT
             Res.ContainerId,
@@ -342,6 +375,7 @@ BEGIN
             NULLIF(Res.AmountInvent,0)::TFloat, --Кол-во переучет
             Res.Saldo::TFloat,                  --Остаток после операции
             Res.MCSValue::TFloat,               --НТЗ
+            tmpGoodsCategory.Value ::TFloat AS MCS_GoodsCategory,  --НТЗ  из ассортиментной матрица
             Res.CheckMember::TVarChar,          --Менеджер
             Res.Bayer::TVarChar,                --Покупатель
             Res.PartyId ,                       --# партии
@@ -378,6 +412,8 @@ BEGIN
            LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
                                              ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MovementItem.Id)  --Object_PartionMovementItem.ObjectCode
                                             AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+
+           LEFT JOIN tmpGoodsCategory ON 1=1
           
         ORDER BY Res.OrdNum;
 END;
