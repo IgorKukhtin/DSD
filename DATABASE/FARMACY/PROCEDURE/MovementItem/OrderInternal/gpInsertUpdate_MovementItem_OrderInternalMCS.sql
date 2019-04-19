@@ -147,15 +147,15 @@ BEGIN
             , Object_Price AS (SELECT tmpPrice.UnitId
                                          , tmpPrice.GoodsId
                                          , tmpPrice.Price 
-                                         , COALESCE (tmpPrice.MCSValue, 0)  ::TFloat AS MCSValue
-                                         /*, CASE WHEN tmpGoodsCategory.Value IS NOT NULL 
-                                                THEN CASE WHEN COALESCE (tmpGoodsCategory.Value, 0) <= COALESCE (tmpPrice.MCSValue, 0) THEN COALESCE (tmpPrice.MCSValue,0) ELSE tmpGoodsCategory.Value END 
-                                                ELSE 0
-                                           END ::TFloat AS MCSValue*/   --- недоразобралась с заменой
+                                         --, COALESCE (tmpPrice.MCSValue, 0)  ::TFloat AS MCSValue
+                                         , CASE WHEN COALESCE (tmpGoodsCategory.Value, 0) <= COALESCE (tmpPrice.MCSValue, 0) 
+                                                THEN COALESCE (tmpPrice.MCSValue,0) 
+                                                ELSE tmpGoodsCategory.Value
+                                           END ::TFloat AS MCSValue   --- недоразобралась с заменой
 
                                          , tmpPrice.MCSValue_min
                                     FROM tmpPrice
-                                        -- LEFT JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpPrice.GoodsId
+                                         LEFT JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpPrice.GoodsId
                                )
 
             , MovementItemSaved AS (SELECT T1.Id,
