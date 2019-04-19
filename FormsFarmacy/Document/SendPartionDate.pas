@@ -81,6 +81,7 @@ type
     ContractName_Income: TcxGridDBColumn;
     actOpenFormIncome: TdsdOpenForm;
     bbOpenFormIncome: TdxBarButton;
+    minExpirationDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

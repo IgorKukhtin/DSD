@@ -3,8 +3,9 @@ inherited SendPartionDateForm: TSendPartionDateForm
   ClientHeight = 553
   ClientWidth = 900
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
+  ExplicitLeft = -127
   ExplicitWidth = 916
-  ExplicitHeight = 591
+  ExplicitHeight = 588
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -97,6 +98,10 @@ inherited SendPartionDateForm: TSendPartionDateForm
               Column = Amount_all
             end>
           OptionsBehavior.IncSearch = True
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -121,6 +126,14 @@ inherited SendPartionDateForm: TSendPartionDateForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 217
+          end
+          object minExpirationDate: TcxGridDBColumn
+            Caption = #1052#1080#1085'. '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'ExpirationDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object AmountRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
