@@ -147,15 +147,17 @@ BEGIN
           , tmpRemains.Amount_1
           , tmpRemains.Amount_2
           , tmpRemains.Amount_all
+          , tmpRemains.ExpirationDate :: TDateTime AS ExpirationDate
           , COALESCE (MI_Master.Price, tmpPrice.Price)    AS Price
           , COALESCE (MI_Master.PriceExp, tmpPrice.Price) AS PriceExp
           --, COALESCE(MI_Master.IsErased, FALSE)          AS isErased
     FROM (SELECT tmpRemains.GoodsId
-               , SUM (tmpRemains.AmountRemains) AS AmountRemains
-               , SUM (tmpRemains.Amount)        AS Amount
-               , SUM (tmpRemains.Amount_0)      AS Amount_0
-               , SUM (tmpRemains.Amount_1)      AS Amount_1
-               , SUM (tmpRemains.Amount_2)      AS Amount_2
+               , MIN (tmpRemains.ExpirationDate) AS ExpirationDate
+               , SUM (tmpRemains.AmountRemains)  AS AmountRemains
+               , SUM (tmpRemains.Amount)         AS Amount
+               , SUM (tmpRemains.Amount_0)       AS Amount_0
+               , SUM (tmpRemains.Amount_1)       AS Amount_1
+               , SUM (tmpRemains.Amount_2)       AS Amount_2
                , SUM (tmpRemains.AmountRemains - (tmpRemains.Amount_0 + tmpRemains.Amount_1 + tmpRemains.Amount_2) ) AS Amount_all
           FROM tmpRemains 
           GROUP BY tmpRemains.GoodsId
@@ -279,13 +281,17 @@ BEGIN
                                      , SUM (CASE WHEN COALESCE (MIFloat_Expired.ValueData,0) = 0 THEN MovementItem.Amount ELSE 0 END) AS Amount_0   -- просрочено
                                      , SUM (CASE WHEN COALESCE (MIFloat_Expired.ValueData,0) = 1 THEN MovementItem.Amount ELSE 0 END) AS Amount_1   -- ћеньше 1 мес€ца
                                      , SUM (CASE WHEN COALESCE (MIFloat_Expired.ValueData,0) = 2 THEN MovementItem.Amount ELSE 0 END) AS Amount_2   -- ћеньше 1 мес€ца
+                                     , MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())) AS ExpirationDate
                                 FROM  MovementItem
                                     LEFT JOIN MovementItemFloat AS MIFloat_Expired
                                                                 ON MIFloat_Expired.MovementItemId = MovementItem.Id
-                                                               AND MIFloat_Expired.DescId = zc_MIFloat_Expired()
+                                                               AND MIFloat_Expired.DescId         = zc_MIFloat_Expired()
+                                    LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
+                                                               ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
+                                                              AND MIDate_ExpirationDate.DescId         = zc_MIDate_ExpirationDate()
                                 WHERE MovementItem.MovementId = inMovementId
-                                  AND MovementItem.DescId = zc_MI_Child() 
-                                  AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
+                                  AND MovementItem.DescId     = zc_MI_Child() 
+                                  AND (MovementItem.isErased  = FALSE OR inIsErased = TRUE)
                                 GROUP BY MovementItem.ParentId
                                  )
                SELECT MI_Master.Id               AS Id
@@ -294,13 +300,14 @@ BEGIN
                     , Object_Goods.ValueData     AS GoodsName
                     , MI_Master.Amount           AS Amount
                     , MI_Master.AmountRemains    AS AmountRemains
-                    , MI_Child.Amount_0
-                    , MI_Child.Amount_1
-                    , MI_Child.Amount_2
-                    , (COALESCE (MI_Master.AmountRemains,0) - (COALESCE (MI_Child.Amount_0,0) + COALESCE (MI_Child.Amount_1,0) + COALESCE (MI_Child.Amount_2,0))) AS Amount_all 
-                    , MI_Master.Price            AS Price
-                    , MI_Master.PriceExp         AS PriceExp
-                    , MI_Master.IsErased         AS isErased
+                    , MI_Child.Amount_0       :: TFloat    AS Amount_0
+                    , MI_Child.Amount_1       :: TFloat    AS Amount_1
+                    , MI_Child.Amount_2       :: TFloat    AS Amount_2
+                    , (COALESCE (MI_Master.AmountRemains,0) - (COALESCE (MI_Child.Amount_0,0) + COALESCE (MI_Child.Amount_1,0) + COALESCE (MI_Child.Amount_2,0))) :: TFloat AS Amount_all
+                    , MI_Child.ExpirationDate :: TDateTime AS ExpirationDate
+                    , MI_Master.Price          :: TFloat   AS Price
+                    , MI_Master.PriceExp       :: TFloat   AS PriceExp
+                    , MI_Master.IsErased                   AS isErased
                FROM MI_Master
                    LEFT JOIN MI_Child ON MI_Child.ParentId = MI_Master.Id
                    LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_Master.GoodsId;
