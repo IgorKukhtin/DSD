@@ -62,7 +62,47 @@ BEGIN
     vbDate30  := CURRENT_DATE + (vbMonth_1||' MONTH' ) ::INTERVAL;
     vbOperDate:= CURRENT_DATE + (vbMonth_0||' MONTH' ) ::INTERVAL;
 
+    -- текущие остатки по подразделению
+    CREATE TEMP TABLE tmpCountPartionDate (ContainerId Integer, GoodsId Integer, Amount TFloat, AmountRemains TFloat, Amount_0 TFloat, Amount_1 TFloat, Amount_2 TFloat) ON COMMIT DROP;
+          INSERT INTO tmpCountPartionDate (ContainerId, GoodsId, Amount, AmountRemains, Amount_0, Amount_1, Amount_2)
+                 SELECT Container.Id         AS ContainerId
+                      , Container.ObjectId   AS GoodsId
+                      , SUM (CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180 THEN  Container.Amount ELSE 0 END) AS Amount
+                      , SUM (Container.Amount) AS AmountRemains
+                      , SUM (CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbOperDate THEN Container.Amount ELSE 0 END) AS Amount_0   -- просрочено
+                      , SUM (CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate30 AND COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) > vbOperDate THEN Container.Amount ELSE 0 END) AS Amount_1   -- ћеньше 1 мес€ца
+                      , SUM (CASE WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180 AND COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) > vbDate30 THEN Container.Amount ELSE 0 END) AS Amount_2   -- ћеньше 6 мес€ца
+                 FROM Container
+                      JOIN ContainerLinkObject AS CLO_Unit 
+                                               ON CLO_Unit.ContainerId = Container.Id
+                                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                              AND CLO_Unit.ObjectId = vbUnitId
+                      LEFT JOIN ContainerLinkObject AS CLO_PartionGoods 
+                                                    ON CLO_PartionGoods.ContainerId = Container.Id
+                                                   AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                      LEFT JOIN ContainerLinkObject AS CLO_PartionMovementItem 
+                                                    ON CLO_PartionMovementItem.ContainerId = Container.Id
+                                                   AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
 
+                      LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLO_PartionMovementItem.ObjectId
+                      -- элемент прихода
+                      LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                      -- если это парти€, котора€ была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                      LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                  ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                 AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                      -- элемента прихода от поставщика (если это парти€, котора€ была создана инвентаризацией)
+                      LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                                 
+                      LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                                        ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                       AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                     
+                 WHERE Container.DescId = zc_Container_CountPartionDate()
+                 GROUP BY Container.Id
+                        , Container.ObjectId;
+                 
+                 
     IF inShowAll
     THEN    
         -- остатки по подразделению
@@ -99,10 +139,10 @@ BEGIN
                         , Container.ObjectId   
                  HAVING SUM(Container.Amount) <> 0
                  ) AS tmp
-              LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
-                                            ON ContainerLinkObject_MovementItem.Containerid =  tmp.ContainerId
-                                           AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
-              LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+              LEFT JOIN ContainerlinkObject AS CLO_PartionMovementItem
+                                            ON CLO_PartionMovementItem.Containerid =  tmp.ContainerId
+                                           AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+              LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLO_PartionMovementItem.ObjectId
               -- элемент прихода
               LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
               -- если это парти€, котора€ была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
@@ -126,8 +166,9 @@ BEGIN
                          WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180
                           AND COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) >  vbDate30 THEN zc_Enum_PartionDateKind_6()
                          ELSE 999
-                    END
-           ;
+                    END;
+                    
+ 
            
        -- –езультат другой
        OPEN Cursor1 FOR
@@ -178,6 +219,12 @@ BEGIN
           , tmpRemains.Amount_1
           , tmpRemains.Amount_2
           , tmpRemains.Amount_all
+
+          , tmpCountPartionDate.Amount         :: TFloat  AS AmountPartionDate
+          , tmpCountPartionDate.Amount_0       :: TFloat  AS AmountPartionDate_0
+          , tmpCountPartionDate.Amount_1       :: TFloat  AS AmountPartionDate_1
+          , tmpCountPartionDate.Amount_2       :: TFloat  AS AmountPartionDate_2
+
           , tmpRemains.ExpirationDate :: TDateTime AS ExpirationDate
           , COALESCE (MI_Master.Price, tmpPrice.Price)    AS Price
           , COALESCE (MI_Master.PriceExp, tmpPrice.Price) AS PriceExp
@@ -196,7 +243,7 @@ BEGIN
         FULL OUTER JOIN MI_Master ON MI_Master.GoodsId = tmpRemains.GoodsId
         LEFT JOIN tmpPrice ON tmpPrice.GoodsId = COALESCE (MI_Master.GoodsId, tmpRemains.GoodsId)
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (MI_Master.GoodsId, tmpRemains.GoodsId)
-        ;
+        LEFT JOIN tmpCountPartionDate ON tmpCountPartionDate.GoodsId = COALESCE (MI_Master.GoodsId, tmpRemains.GoodsId);
 
        RETURN NEXT Cursor1;
 
@@ -333,13 +380,20 @@ BEGIN
                     , MI_Child.Amount_1       :: TFloat    AS Amount_1
                     , MI_Child.Amount_2       :: TFloat    AS Amount_2
                     , (COALESCE (MI_Master.AmountRemains,0) - (COALESCE (MI_Child.Amount_0,0) + COALESCE (MI_Child.Amount_1,0) + COALESCE (MI_Child.Amount_2,0))) :: TFloat AS Amount_all
+
+                    , tmpCountPartionDate.Amount         :: TFloat  AS AmountPartionDate
+                    , tmpCountPartionDate.Amount_0       :: TFloat  AS AmountPartionDate_0
+                    , tmpCountPartionDate.Amount_1       :: TFloat  AS AmountPartionDate_1
+                    , tmpCountPartionDate.Amount_2       :: TFloat  AS AmountPartionDate_2
+                    
                     , MI_Child.ExpirationDate :: TDateTime AS ExpirationDate
                     , MI_Master.Price          :: TFloat   AS Price
                     , MI_Master.PriceExp       :: TFloat   AS PriceExp
                     , MI_Master.IsErased                   AS isErased
                FROM MI_Master
                    LEFT JOIN MI_Child ON MI_Child.ParentId = MI_Master.Id
-                   LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_Master.GoodsId;
+                   LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_Master.GoodsId
+                   LEFT JOIN tmpCountPartionDate ON tmpCountPartionDate.GoodsId = MI_Master.GoodsId;
    
           RETURN NEXT Cursor1;
    
@@ -402,6 +456,8 @@ BEGIN
                  , MI_Child.GoodsId AS GoodsId
                  , MI_Child.ExpirationDate ::TDateTime
                  , MI_Child.Amount         ::TFloat AS Amount
+                 , tmpCountPartionDate.Amount         :: TFloat  AS AmountPartionDate
+              
                  , MI_Child.ContainerId    ::TFloat
                  , ObjectFloat_Month.ValueData      AS Expired
                  , Object_PartionDateKind.ValueData :: TVarChar AS PartionDateKindName
@@ -418,10 +474,12 @@ BEGIN
                     LEFT JOIN tmpIncome ON tmpIncome.Id = MI_Child.MovementId_Income
                     
                     LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MI_Child.PartionDateKindId
+                    
                     LEFT JOIN ObjectFloat AS ObjectFloat_Month
                                           ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
                                          AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
-               ;  
+
+                    LEFT JOIN tmpCountPartionDate ON tmpCountPartionDate.ContainerId = MI_Child.ContainerId;  
    
           RETURN NEXT Cursor2;
    END IF; 

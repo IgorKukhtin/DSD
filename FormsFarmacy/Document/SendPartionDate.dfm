@@ -55,6 +55,26 @@ inherited SendPartionDateForm: TSendPartionDateForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_all
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartionDate
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartionDate_0
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPart_1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartionDate_2
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -95,6 +115,26 @@ inherited SendPartionDateForm: TSendPartionDateForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_all
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartionDate
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartionDate_0
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPart_1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPartionDate_2
             end>
           OptionsBehavior.IncSearch = True
           OptionsData.CancelOnExit = True
@@ -216,6 +256,50 @@ inherited SendPartionDateForm: TSendPartionDateForm
             HeaderAlignmentVert = vaCenter
             Width = 104
           end
+          object AmountPartionDate: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082')'
+            DataBinding.FieldName = 'AmountPartionDate'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 52
+          end
+          object AmountPartionDate_0: TcxGridDBColumn
+            Caption = #1055#1088#1086#1089#1088#1086#1095#1077#1085#1086' ('#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082')'
+            DataBinding.FieldName = 'AmountPartionDate_0'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 53
+          end
+          object AmountPart_1: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' 1 '#1084#1077#1089'. ('#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082')'
+            DataBinding.FieldName = 'AmountPart_1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 52
+          end
+          object AmountPartionDate_2: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1084#1077#1085#1100#1096#1077' 6 '#1084#1077#1089'. ('#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082')'
+            DataBinding.FieldName = 'AmountPartionDate_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 52
+          end
         end
       end
       object cxGrid1: TcxGrid
@@ -235,12 +319,22 @@ inherited SendPartionDateForm: TSendPartionDateForm
               Format = ',0.####'
               Kind = skSum
               Column = chAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountPartionDate
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
               Column = chAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountPartionDate
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -269,7 +363,18 @@ inherited SendPartionDateForm: TSendPartionDateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 134
+            Width = 84
+          end
+          object chAmountPartionDate: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082')'
+            DataBinding.FieldName = 'AmountPartionDate'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object ContainerId: TcxGridDBColumn
             Caption = #1048#1076#1080#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1087#1072#1088#1090#1080#1080
@@ -356,6 +461,7 @@ inherited SendPartionDateForm: TSendPartionDateForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitTop = 221
       end
     end
   end
@@ -1325,13 +1431,13 @@ inherited SendPartionDateForm: TSendPartionDateForm
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 128
-    Top = 376
+    Left = 112
+    Top = 440
   end
   object DetailDS: TDataSource
     DataSet = DetailDCS
-    Left = 160
-    Top = 376
+    Left = 176
+    Top = 440
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
