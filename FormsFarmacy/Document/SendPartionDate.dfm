@@ -279,11 +279,11 @@ inherited SendPartionDateForm: TSendPartionDateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 157
+            Width = 125
           end
-          object Expired_text: TcxGridDBColumn
-            Caption = #1055#1088#1086#1089#1088#1086#1095#1077#1085#1086
-            DataBinding.FieldName = 'Expired_text'
+          object PartionDateKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087#1099' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082
+            DataBinding.FieldName = 'PartionDateKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = '0 - '#1087#1088#1086#1089#1088'., 1 - '#1084#1077#1085#1100#1096#1077' 1 '#1084#1077#1089', 2 - '#1084#1077#1085#1100#1096#1077' 6 '#1084#1077#1089
@@ -1569,6 +1569,14 @@ inherited SendPartionDateForm: TSendPartionDateForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPartionDateKindId'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'PartionDateKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmount'
         Value = Null
         Component = DetailDCS
@@ -1587,10 +1595,10 @@ inherited SendPartionDateForm: TSendPartionDateForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inExpired'
+        Name = 'inMovementId_Income'
         Value = Null
         Component = DetailDCS
-        ComponentItem = 'Expired'
+        ComponentItem = 'MovementId_Income'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

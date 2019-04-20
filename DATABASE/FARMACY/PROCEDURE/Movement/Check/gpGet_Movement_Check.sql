@@ -40,6 +40,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              
              , BankPOSTerminalId Integer, BankPOSTerminalName TVarChar
              , JackdawsChecksId Integer, JackdawsChecksName TVarChar
+             , PartionDateKindId Integer, PartionDateKindName TVarChar
              , Delay Boolean
 )
 AS
@@ -104,6 +105,9 @@ BEGIN
            , Object_JackdawsChecks.Id                                     AS JackdawsChecksId
            , Object_JackdawsChecks.ValueData                              AS JackdawsChecksName
 
+           , Object_PartionDateKind.Id                                    AS PartionDateKindId
+           , Object_PartionDateKind.ValueData                             AS PartionDateKindName
+
            , COALESCE (MovementBoolean_Delay.ValueData, False)::Boolean       AS Delay
 
         FROM Movement_Check_View AS Movement_Check
@@ -154,6 +158,11 @@ BEGIN
                                          AND MovementLinkObject_JackdawsChecks.DescId = zc_MovementLinkObject_JackdawsChecks()
              LEFT JOIN Object AS Object_JackdawsChecks ON Object_JackdawsChecks.Id = MovementLinkObject_JackdawsChecks.ObjectId
 
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_PartionDateKind
+                                          ON MovementLinkObject_PartionDateKind.MovementId = Movement_Check.Id
+                                         AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
+             LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MovementLinkObject_PartionDateKind.ObjectId
+
              LEFT JOIN MovementBoolean AS MovementBoolean_Delay
                                        ON MovementBoolean_Delay.MovementId = Movement_Check.Id
                                       AND MovementBoolean_Delay.DescId = zc_MovementBoolean_Delay()
@@ -168,6 +177,7 @@ ALTER FUNCTION gpGet_Movement_Check (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 20.04.19         * PartionDateKind
  01.04.19                                                                      * add Delay
  25.02.19                                                                      * add JackdawsChecks
  16.02.19                                                                      * add BankPOSTerminal

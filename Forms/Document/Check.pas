@@ -124,6 +124,10 @@ type
     dxBarButton3: TdxBarButton;
     spUpdateJackdawsChecks: TdsdStoredProc;
     cbDelay: TcxCheckBox;
+    cxLabel29: TcxLabel;
+    edPartionDateKind: TcxButtonEdit;
+    GuidesPartionDateKind: TdsdGuides;
+    ContainerId: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -43,7 +43,7 @@ type
     cxGridDBTableView1: TcxGridDBTableView;
     chAmount: TcxGridDBColumn;
     ContainerId: TcxGridDBColumn;
-    Expired_text: TcxGridDBColumn;
+    PartionDateKindName: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     DetailDCS: TClientDataSet;
     DetailDS: TDataSource;

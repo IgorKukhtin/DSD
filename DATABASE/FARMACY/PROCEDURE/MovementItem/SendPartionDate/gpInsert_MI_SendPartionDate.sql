@@ -168,8 +168,8 @@ BEGIN
     
     -- теперь к мастеру сохраним чайлды
     -- выбираем сохр мастер
-    CREATE TEMP TABLE tmpChild (Id Integer, ParentId Integer, GoodsId Integer, Amount TFloat, ContainerId Integer, MovementId_Income Integer, Expired TFloat, ExpirationDate TDateTime) ON COMMIT DROP;
-          INSERT INTO tmpChild (Id, ParentId, GoodsId, Amount, ContainerId, MovementId_Income, Expired, ExpirationDate)
+    CREATE TEMP TABLE tmpChild (Id Integer, ParentId Integer, GoodsId Integer, Amount TFloat, ContainerId Integer, MovementId_Income Integer, PartionDateKindId Integer, ExpirationDate TDateTime) ON COMMIT DROP;
+          INSERT INTO tmpChild (Id, ParentId, GoodsId, Amount, ContainerId, MovementId_Income, PartionDateKindId, ExpirationDate)
     WITH
       MI_Master AS (SELECT MovementItem.Id       AS Id
                          , MovementItem.ObjectId AS GoodsId
@@ -195,7 +195,7 @@ BEGIN
 
     --связвываем чайлд с мастером
     SELECT COALESCE (MI_Child.Id,0)                        AS Id
-         , COALESCE (MI_Master.Id, MI_Child.ParentId, 0)      AS ParentId
+         , COALESCE (MI_Master.Id, MI_Child.ParentId, 0)   AS ParentId
          , COALESCE (MI_Child.GoodsId, tmpRemains.GoodsId) AS GoodsId
          , tmpRemains.Amount                               AS Amount
          , tmpRemains.ContainerId                 ::Integer
@@ -203,7 +203,7 @@ BEGIN
          , CASE WHEN tmpRemains.ExpirationDate <= vbDate0 THEN zc_Enum_PartionDateKind_0()
                 WHEN tmpRemains.ExpirationDate <= vbDate30 THEN zc_Enum_PartionDateKind_1()
                 ELSE zc_Enum_PartionDateKind_6()
-           END                                    ::TFloat AS Expired
+           END                                             AS PartionDateKindId
          , tmpRemains.ExpirationDate
     FROM (SELECT tmpRemains.*
           FROM tmpRemains 
@@ -216,16 +216,16 @@ BEGIN
 
 
     --- сохраняем MI_Child
-    PERFORM lpInsertUpdate_MI_SendPartionDate_Child(ioId            := tmpChild.Id
-                                                  , inParentId      := tmpChild.ParentId
-                                                  , inMovementId    := inMovementId
-                                                  , inGoodsId       := tmpChild.GoodsId  
-                                                  , inExpirationDate:= tmpChild.ExpirationDate
-                                                  , inAmount        := COALESCE (tmpChild.Amount,0)        :: TFloat
-                                                  , inContainerId   := COALESCE (tmpChild.ContainerId,0)   :: TFloat
-                                                  , inMovementId_Income  := COALESCE (tmpChild.MovementId_Income,0)   :: TFloat
-                                                  , inExpired       := COALESCE (tmpChild.Expired,0)       :: TFloat
-                                                  , inUserId        := vbUserId)
+    PERFORM lpInsertUpdate_MI_SendPartionDate_Child(ioId                 := tmpChild.Id
+                                                  , inParentId           := tmpChild.ParentId
+                                                  , inMovementId         := inMovementId
+                                                  , inGoodsId            := tmpChild.GoodsId  
+                                                  , inPartionDateKindId  := tmpChild.PartionDateKindId
+                                                  , inExpirationDate     := tmpChild.ExpirationDate
+                                                  , inAmount             := COALESCE (tmpChild.Amount,0)        :: TFloat
+                                                  , inContainerId        := COALESCE (tmpChild.ContainerId,0)   :: TFloat
+                                                  , inMovementId_Income  := COALESCE (tmpChild.MovementId_Income,0):: TFloat
+                                                  , inUserId             := vbUserId)
     FROM tmpChild
     WHERE COALESCE (tmpChild.Amount,0) <> 0;
 

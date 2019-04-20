@@ -43,6 +43,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Passport_MemberSP TVarChar
              , BankPOSTerminalName TVarChar
              , JackdawsChecksName TVarChar
+             , PartionDateKindName TVarChar
              , Delay Boolean
               )
 AS
@@ -132,14 +133,15 @@ BEGIN
            , COALESCE (ObjectString_Passport.ValueData, '')  :: TVarChar  AS Passport_MemberSP
            , Object_BankPOSTerminal.ValueData                             AS BankPOSTerminalName
            , Object_JackdawsChecks.ValueData                              AS JackdawsChecksName
-
-           , COALESCE (MovementBoolean_Delay.ValueData, False)::Boolean       AS Delay
+           , Object_PartionDateKind.ValueData                :: TVarChar  AS PartionDateKindName
+           , COALESCE (MovementBoolean_Delay.ValueData, False)::Boolean   AS Delay
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
                    , MovementString_CommentError.ValueData               AS CommentError
                    , MovementString_InvNumberSP.ValueData                AS InvNumberSP
                    , MovementLinkObject_CheckMember.ObjectId             AS MemberId
+                   , MovementLinkObject_PartionDateKind.ObjectId         AS PartionDateKindId
                    , COALESCE(MovementBoolean_Deferred.ValueData, False) AS IsDeferred
               FROM Movement
                    INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
@@ -157,6 +159,11 @@ BEGIN
                    LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
                                                 ON MovementLinkObject_CheckMember.MovementId = Movement.Id
                                                AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
+
+                   LEFT JOIN MovementLinkObject AS MovementLinkObject_PartionDateKind
+                                                ON MovementLinkObject_PartionDateKind.MovementId = Movement.Id
+                                               AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
+
                    LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                              ON MovementBoolean_Deferred.MovementId = Movement.Id
                                             AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
@@ -177,6 +184,8 @@ BEGIN
            ) AS Movement_Check 
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Check.StatusId
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement_Check.UnitId
+
+             LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = Movement_Check.PartionDateKindId
 
              LEFT JOIN MovementDate AS MovementDate_OperDateSP
                                     ON MovementDate_OperDateSP.MovementId = Movement_Check.Id
@@ -238,12 +247,12 @@ BEGIN
                                          AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
              LEFT JOIN Object AS Object_CashRegister ON Object_CashRegister.Id = MovementLinkObject_CashRegister.ObjectId
  
-   	         LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidType
+   	     LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidType
                                           ON MovementLinkObject_PaidType.MovementId = Movement_Check.Id
                                          AND MovementLinkObject_PaidType.DescId = zc_MovementLinkObject_PaidType()
              LEFT JOIN Object AS Object_PaidType ON Object_PaidType.Id = MovementLinkObject_PaidType.ObjectId								  
 
- 	         LEFT JOIN Object AS Object_CashMember ON Object_CashMember.Id = Movement_Check.MemberId
+             LEFT JOIN Object AS Object_CashMember ON Object_CashMember.Id = Movement_Check.MemberId
 
              LEFT JOIN MovementLinkObject AS MovementLinkObject_DiscountCard
                                           ON MovementLinkObject_DiscountCard.MovementId = Movement_Check.Id
