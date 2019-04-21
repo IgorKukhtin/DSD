@@ -2326,6 +2326,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\Updater.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdAddOn.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Kind\PartionDateKind.pas">
+				<Form>PartionDateKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
