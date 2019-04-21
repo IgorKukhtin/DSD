@@ -128,7 +128,7 @@ BEGIN
                                   , tmpData.UnitId
                                   , tmpData.AmountOUT
                                   , tmpData.Remains
-                                  , ROUND ( (tmpData.Amount_Master / tmpData.AmountOutSUM) * tmpData.AmountOUT, 2) AS Amount_Calc
+                                  , ROUND ( (tmpData.Amount_Master / tmpData.AmountOutSUM) * tmpData.AmountOUT, 0) AS Amount_Calc
                             FROM tmpData)
               -- вспомогательные расчеты для распределения заказа
              , tmpData111 AS (SELECT tmpMI_Master.GoodsId
@@ -151,8 +151,8 @@ BEGIN
               , DD.AmountOUT
               , DD.Remains
               , CASE WHEN DD.Amount_Master - DD.Amount_CalcSUM > 0 AND DD.DOrd <> 1
-                          THEN (DD.Amount_Calc)                                           ---ceil
-                     ELSE ( DD.Amount_Master - DD.Amount_CalcSUM + DD.Amount_Calc)
+                          THEN ceil (DD.Amount_Calc)                                           ---ceil
+                     ELSE ceil ( DD.Amount_Master - DD.Amount_CalcSUM + DD.Amount_Calc)
                 END AS AmountIn
          FROM tmpData111 AS DD
          WHERE DD.Amount_Master - (DD.Amount_CalcSUM - DD.Amount_Calc) > 0;

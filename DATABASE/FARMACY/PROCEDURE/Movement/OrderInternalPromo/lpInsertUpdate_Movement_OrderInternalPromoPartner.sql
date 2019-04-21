@@ -1,25 +1,21 @@
--- Function: gpInsertUpdate_Movement_OrderInternalPromo()
+-- Function: lpInsertUpdate_Movement_OrderInternalPromoPartner()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderInternalPromoPartner (Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderInternalPromoPartner (Integer, Integer, Integer, Integer);
 
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderInternalPromoPartner(
+CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderInternalPromoPartner(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ>
     IN inParentId              Integer    , -- главый документ 
     IN inJuridicalId           Integer    , -- 
-    IN inComment               TVarChar   , -- Примечание
-    IN inSession               TVarChar     -- сессия пользователя
+    IN inUserId                Integer     -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$
-   DECLARE vbUserId    Integer;
    DECLARE vbIsInsert  Boolean;
    DECLARE vbOperdate  Tdatetime;
    DECLARE vbInvnumber Tvarchar;   
 BEGIN
-    -- проверка прав пользователя на вызов процедуры
-    vbUserId := inSession;
-       
+
     -- определяем признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;
     
@@ -35,11 +31,8 @@ BEGIN
     -- сохранили связь с <>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), ioId, inJuridicalId);
     
-    -- сохранили <Примечание>
-    PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
-    
     -- сохранили протокол
-    PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
+--    PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
 END;
 $BODY$
@@ -48,5 +41,5 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 15.14.19         *
+ 21.04.19         *
 */

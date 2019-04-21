@@ -407,10 +407,8 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'IsErased'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 97
       end
     end
@@ -1019,6 +1017,18 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end
         item
           Visible = True
+          ItemName = 'bbSetErasedPromoPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedPromoPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertMaster'
         end
         item
@@ -1107,6 +1117,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     end
     object bbSetUnErasedPromoPartner: TdxBarButton
       Action = actSetUnErasedPromoPartner
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
       Category = 0
     end
     object bbInsertPromoPartner: TdxBarButton
@@ -1727,7 +1738,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
-    Left = 302
+    Left = 278
     Top = 513
   end
   object spSelectPromoPartner: TdsdStoredProc
@@ -1759,31 +1770,15 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     Top = 496
   end
   object spInsertUpdatePromoPartner: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_OrderInternalPromoPartner'
+    StoredProcName = 'gpUpdate_Movement_OrderInternalPromoPartner'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = PartnerDCS
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inParentId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalId'
-        Value = Null
-        Component = PartnerDCS
-        ComponentItem = 'JuridicalId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1793,6 +1788,15 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Component = PartnerDCS
         ComponentItem = 'Comment'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisErased'
+        Value = Null
+        Component = PartnerDCS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1852,8 +1856,8 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     PackSize = 1
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 376
-    Top = 496
+    Left = 344
+    Top = 504
   end
   object spUpdate_MovementItemContainer: TdsdStoredProc
     StoredProcName = 'gpUpdate_MIContainer_OrderInternalPromo'
