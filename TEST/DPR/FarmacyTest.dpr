@@ -685,7 +685,8 @@ uses
   OrderInternalPromo in '..\..\FormsFarmacy\Document\OrderInternalPromo.pas' {OrderInternalPromoForm: TParentForm},
   Updater in '..\..\SOURCE\COMPONENT\Updater.pas',
   dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas',
-  PartionDateKind in '..\..\FormsFarmacy\Kind\PartionDateKind.pas' {PartionDateKindForm: TParentForm};
+  PartionDateKind in '..\..\FormsFarmacy\Kind\PartionDateKind.pas' {PartionDateKindForm: TParentForm},
+  Report_OrderInternalPromoOLAP in '..\..\FormsFarmacy\Report\Report_OrderInternalPromoOLAP.pas' {Report_OrderInternalPromoOLAPForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

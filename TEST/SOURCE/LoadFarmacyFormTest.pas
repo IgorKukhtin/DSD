@@ -1385,6 +1385,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPromoForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPromoJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPromoJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderInternalPromoOLAPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderInternalPromoOLAPForm');
 end;
 
 procedure TLoadFormTest.LoadObjectUnionFormTest;
