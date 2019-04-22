@@ -26,6 +26,7 @@ RETURNS TABLE (Id            Integer
              , MakerSP       TVarChar
              , ReestrSP      TVarChar
              , ReestrDateSP  TVarChar
+             , IdSP          TVarChar
              , IntenalSPId   Integer 
              , IntenalSPName TVarChar
              , BrandSPId     Integer 
@@ -74,17 +75,18 @@ BEGIN
              , MIString_MakerSP.ValueData                            AS MakerSP
              , MIString_ReestrSP.ValueData                           AS ReestrSP
              , MIString_ReestrDateSP.ValueData                       AS ReestrDateSP
+             , COALESCE (MIString_IdSP.ValueData, '')     ::TVarChar AS IdSP
 
-             , COALESCE (Object_IntenalSP.Id ,0)           ::Integer  AS IntenalSPId
-             , COALESCE (Object_IntenalSP.ValueData,'')    ::TVarChar AS IntenalSPName
+             , COALESCE (Object_IntenalSP.Id ,0)          ::Integer  AS IntenalSPId
+             , COALESCE (Object_IntenalSP.ValueData,'')   ::TVarChar AS IntenalSPName
 
-             , COALESCE (Object_BrandSP.Id ,0)             ::Integer  AS BrandSPId
-             , COALESCE (Object_BrandSP.ValueData,'')      ::TVarChar AS BrandSPName
+             , COALESCE (Object_BrandSP.Id ,0)            ::Integer  AS BrandSPId
+             , COALESCE (Object_BrandSP.ValueData,'')     ::TVarChar AS BrandSPName
 
-             , COALESCE (Object_KindOutSP.Id ,0)           ::Integer  AS KindOutSPId
-             , COALESCE (Object_KindOutSP.ValueData,'')    ::TVarChar AS KindOutSPName
+             , COALESCE (Object_KindOutSP.Id ,0)          ::Integer  AS KindOutSPId
+             , COALESCE (Object_KindOutSP.ValueData,'')   ::TVarChar AS KindOutSPName
 
-             , COALESCE (MovementItem.isErased, FALSE)     ::Boolean  AS isErased
+             , COALESCE (MovementItem.isErased, FALSE)    ::Boolean  AS isErased
 
         FROM tmpGoodsMain
              LEFT JOIN MovementItem ON MovementItem.ObjectId = tmpGoodsMain.Id
@@ -137,6 +139,9 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_ReestrDateSP
                                           ON MIString_ReestrDateSP.MovementItemId = MovementItem.Id
                                          AND MIString_ReestrDateSP.DescId = zc_MIString_ReestrDateSP()
+             LEFT JOIN MovementItemString AS MIString_IdSP
+                                          ON MIString_IdSP.MovementItemId = MovementItem.Id
+                                         AND MIString_IdSP.DescId = zc_MIString_IdSP()
 
              LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
                                               ON MI_IntenalSP.MovementItemId = MovementItem.Id
@@ -178,6 +183,7 @@ BEGIN
              , MIString_MakerSP.ValueData                            AS MakerSP
              , MIString_ReestrSP.ValueData                           AS ReestrSP
              , MIString_ReestrDateSP.ValueData                       AS ReestrDateSP
+             , COALESCE (MIString_IdSP.ValueData, '')     ::TVarChar AS IdSP
 
              , COALESCE(Object_IntenalSP.Id ,0)           ::Integer  AS IntenalSPId
              , COALESCE(Object_IntenalSP.ValueData,'')    ::TVarChar AS IntenalSPName
@@ -188,7 +194,7 @@ BEGIN
              , COALESCE(Object_KindOutSP.Id ,0)           ::Integer  AS KindOutSPId
              , COALESCE(Object_KindOutSP.ValueData,'')    ::TVarChar AS KindOutSPName
 
-             , COALESCE (MovementItem.isErased, FALSE)     ::Boolean  AS isErased
+             , COALESCE (MovementItem.isErased, FALSE)    ::Boolean  AS isErased
 
         FROM MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
@@ -236,6 +242,9 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_ReestrDateSP
                                          ON MIString_ReestrDateSP.MovementItemId = MovementItem.Id
                                         AND MIString_ReestrDateSP.DescId = zc_MIString_ReestrDateSP()
+             LEFT JOIN MovementItemString AS MIString_IdSP
+                                          ON MIString_IdSP.MovementItemId = MovementItem.Id
+                                         AND MIString_IdSP.DescId = zc_MIString_IdSP()
 
             LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
                                              ON MI_IntenalSP.MovementItemId = MovementItem.Id
@@ -265,7 +274,8 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 14.08.18         * 
+ 22.04.19         * add IdSP
+ 14.08.18         *
 */
 
 --“≈—“

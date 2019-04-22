@@ -62,6 +62,7 @@ type
     macStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
     spGetImportSettingId: TdsdStoredProc;
+    IdSP: TcxGridDBColumn;
   private
     { Private declarations }
   public
