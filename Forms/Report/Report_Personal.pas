@@ -105,6 +105,7 @@ type
     MoneySummCardSecond: TcxGridDBColumn;
     MoneySummCash: TcxGridDBColumn;
     SummNalogRet: TcxGridDBColumn;
+    BusinessName: TcxGridDBColumn;
   private
     { Private declarations }
   public

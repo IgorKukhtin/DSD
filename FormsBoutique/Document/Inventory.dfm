@@ -1270,26 +1270,6 @@ object InventoryForm: TInventoryForm
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
     end
-    object actRefreshMI: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelectMI
-      StoredProcList = <
-        item
-          StoredProc = spSelectMI
-        end
-        item
-          StoredProc = spGetTotalSumm
-        end
-        item
-          StoredProc = spSelectBarCode
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1311,6 +1291,39 @@ object InventoryForm: TInventoryForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshMI: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectMI
+      StoredProcList = <
+        item
+          StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelectBarCode
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshItemEdit: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectBarCode
+      StoredProcList = <
+        item
+          StoredProc = spSelectBarCode
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       RefreshOnTabSetChanges = False
     end
     object actPrint: TdsdPrintAction
@@ -1819,8 +1832,8 @@ object InventoryForm: TInventoryForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-      DataSource = MasterDS
-      DataSetRefresh = actRefreshMI
+      DataSource = DataSource
+      DataSetRefresh = actRefreshItemEdit
       IdFieldName = 'Id'
     end
     object actGoodsItemForm2: TdsdOpenForm

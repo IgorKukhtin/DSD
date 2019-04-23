@@ -143,12 +143,13 @@ BEGIN
                        GROUP BY Container.PartionId
                               , Container.ObjectId
                               , Container.WhereObjectId
-                       HAVING SUM (Container.Amount)<> 0
+                       HAVING SUM (Container.Amount) <> 0
                       )
 
     , tmpGoods AS (SELECT tmpPartionGoods.PartnerId
                         , tmpPartionGoods.UnitId 
                    --   , COALESCE (tmpContainer.UnitId, tmpPartionGoods.UnitId) AS UnitId
+                        , tmpContainer.UnitId AS UnitId_Container
                         , tmpPartionGoods.OperDate
                         , tmpPartionGoods.GoodsId
                         , tmpPartionGoods.CurrencyId
@@ -174,6 +175,7 @@ BEGIN
                                                OR inUnitId > 0)
                    GROUP BY tmpPartionGoods.PartnerId
                           , tmpPartionGoods.UnitId
+                          , tmpContainer.UnitId
                        -- , COALESCE (tmpContainer.UnitId, tmpPartionGoods.UnitId)
                           , tmpPartionGoods.OperDate
                           , tmpPartionGoods.GoodsId
@@ -196,7 +198,7 @@ BEGIN
                        OR inShowAll = TRUE
                    )
 
-    , tmpDiscountList AS (SELECT DISTINCT tmpGoods.UnitId, tmpGoods.GoodsId FROM tmpGoods)
+    , tmpDiscountList AS (SELECT DISTINCT tmpGoods.UnitId_Container AS UnitId, tmpGoods.GoodsId FROM tmpGoods)
 
           , tmpOL1 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ChildObjectId IN (SELECT DISTINCT tmpGoods.GoodsId FROM tmpGoods)
                                                   AND ObjectLink.DescId        = zc_ObjectLink_DiscountPeriodItem_Goods()
@@ -210,10 +212,10 @@ BEGIN
                            , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS DiscountTax
                       FROM tmpDiscountList
                            INNER JOIN tmpOL1 AS ObjectLink_DiscountPeriodItem_Goods
-                                                 ON ObjectLink_DiscountPeriodItem_Goods.ChildObjectId = tmpDiscountList.GoodsId
+                                             ON ObjectLink_DiscountPeriodItem_Goods.ChildObjectId = tmpDiscountList.GoodsId
                            INNER JOIN tmpOL2 AS ObjectLink_DiscountPeriodItem_Unit
-                                                 ON ObjectLink_DiscountPeriodItem_Unit.ObjectId      = ObjectLink_DiscountPeriodItem_Goods.ObjectId
-                                                AND ObjectLink_DiscountPeriodItem_Unit.ChildObjectId = tmpDiscountList.UnitId
+                                             ON ObjectLink_DiscountPeriodItem_Unit.ObjectId      = ObjectLink_DiscountPeriodItem_Goods.ObjectId
+                                            AND ObjectLink_DiscountPeriodItem_Unit.ChildObjectId = tmpDiscountList.UnitId
                            INNER JOIN ObjectHistory AS ObjectHistory_DiscountPeriodItem
                                                     ON ObjectHistory_DiscountPeriodItem.ObjectId = ObjectLink_DiscountPeriodItem_Goods.ObjectId
                                                    AND ObjectHistory_DiscountPeriodItem.DescId   = zc_ObjectHistory_DiscountPeriodItem()
@@ -339,7 +341,7 @@ BEGIN
            LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId 
 
 
-           LEFT JOIN tmpDiscount ON tmpDiscount.UnitId  = tmpPartionGoods.UnitId
+           LEFT JOIN tmpDiscount ON tmpDiscount.UnitId  = tmpPartionGoods.UnitId_Container -- UnitId
                                 AND tmpDiscount.GoodsId = tmpPartionGoods.GoodsId    
 
            LEFT JOIN tmpCurrency  ON tmpCurrency.CurrencyToId = tmpPartionGoods.CurrencyId         

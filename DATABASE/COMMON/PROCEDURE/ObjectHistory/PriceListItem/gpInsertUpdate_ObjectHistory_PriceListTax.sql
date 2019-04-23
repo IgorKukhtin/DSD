@@ -50,8 +50,10 @@ BEGIN
                                                      , inPriceListId := inPriceListToId
                                                      , inGoodsId     := ObjectLink_PriceListItem_Goods.ChildObjectId
                                                      , inOperDate    := inOperDate
-                                                     , inValue       := CAST (ObjectHistoryFloat_PriceListItem_Value.ValueData
-                                                                           + (ObjectHistoryFloat_PriceListItem_Value.ValueData * inTax / 100) AS Numeric (16,2)) ::TFloat
+                                                     , inValue       := CASE WHEN ObjectBoolean_PriceWithVAT.ValueData = TRUE
+                                                                                  THEN 6 * CAST (ObjectHistoryFloat_PriceListItem_Value.ValueData * (1 + inTax / 100) / 6 AS Numeric (16, 2))
+                                                                             ELSE 5 * CAST (ObjectHistoryFloat_PriceListItem_Value.ValueData * (1 + inTax / 100) / 5 AS Numeric (16, 2))
+                                                                        END :: TFloat
                                                      , inUserId      := vbUserId)
    /*PERFORM  gpInsertUpdate_ObjectHistory_PriceListItemLast
                                                       (ioId          := inId
@@ -63,17 +65,20 @@ BEGIN
                                                      , inIsLast      := TRUE
                                                      , inSession     := inSession)*/
               FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
+                  LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
+                                          ON ObjectBoolean_PriceWithVAT.ObjectId = ObjectLink_PriceListItem_PriceList.ChildObjectId
+                                         AND ObjectBoolean_PriceWithVAT.DescId   = zc_ObjectBoolean_PriceList_PriceWithVAT()
                   LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                  ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                 AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
 
                   LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
-                                    ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
-                                   AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
-                                   AND inOperDateFrom >= ObjectHistory_PriceListItem.StartDate AND inOperDateFrom < ObjectHistory_PriceListItem.EndDate
+                                          ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                         AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
+                                         AND inOperDateFrom >= ObjectHistory_PriceListItem.StartDate AND inOperDateFrom < ObjectHistory_PriceListItem.EndDate
                   LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
-                                         ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
-                                        AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                                               ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                              AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
 
               WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
                 AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListFromId

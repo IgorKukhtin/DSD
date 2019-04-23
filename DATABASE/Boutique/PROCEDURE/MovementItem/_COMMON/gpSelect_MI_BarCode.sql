@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_MI_BarCode (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_MI_BarCode(
     IN inSession              TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (BarCode TVarChar, BarCode_str TVarChar)
+RETURNS TABLE (Id Integer, BarCode TVarChar, BarCode_str TVarChar)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -17,7 +17,8 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
-       SELECT NULL :: TVarChar AS BarCode
+       SELECT 0    :: Integer  AS Id
+            , NULL :: TVarChar AS BarCode
             , NULL :: TVarChar AS BarCode_str;
   
 END;

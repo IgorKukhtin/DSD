@@ -261,7 +261,7 @@ BEGIN
 
        WHERE MovementBoolean_isIncome.ValueData is NULL
          -- AND COALESCE (Object_To.DescId, 0) NOT IN (zc_Object_Car(), zc_Object_Member(), zc_Object_Founder()) -- !!!яюлне мейпюяхбне пеьемхе!!!
-         AND View_InfoMoney.InfoMoneyId <> zc_Enum_InfoMoney_20401() -- !!!яюлне мейпюяхбне пеьемхе!!!
+         AND COALESCE (View_InfoMoney.InfoMoneyId, 0) <> zc_Enum_InfoMoney_20401() -- !!!яюлне мейпюяхбне пеьемхе!!!
     ;
 
 END;

@@ -1,4 +1,4 @@
-   -- FunctiON: gpReport_CheckBonus ()
+-- FunctiON: gpReport_CheckBonus ()
 
 DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, TVarChar);
@@ -41,8 +41,8 @@ inisMovement:= FALSE;
 
     RETURN QUERY
       WITH tmpContract_all AS (SELECT View_Contract.* FROM Object_Contract_View AS View_Contract
-                               WHERE (View_Contract.PaidKindId  = inPaidKindId  OR COALESCE (inPaidKindId, 0)  = 0)
-                                 AND (View_Contract.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
+                               WHERE (View_Contract.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
+                                 AND (View_Contract.PaidKindId  = inPaidKindId  OR COALESCE (inPaidKindId, 0)  = 0)
                               )
            -- все договора - не закрытые или для Базы
          , tmpContract_find AS (SELECT View_Contract.*

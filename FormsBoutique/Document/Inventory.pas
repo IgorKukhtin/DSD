@@ -135,6 +135,7 @@ type
     actGoodsItem: TdsdInsertUpdateAction;
     AmountSecond_diff: TcxGridDBColumn;
     CurrencyName: TcxGridDBColumn;
+    actRefreshItemEdit: TdsdDataSetRefresh;
   private
   public
   end;

@@ -163,7 +163,9 @@ BEGIN
 
 
      -- !!!≈сли это последн€€ инвент в текущем мес€це, тогда "зависшие" коп. надо списать!!!
-     vbIsLastOnMonth:= (vbOperDate + INTERVAL '1 DAY' = DATE_TRUNC ('MONTH', vbOperDate + INTERVAL '1 DAY'));
+     vbIsLastOnMonth:= (vbOperDate + INTERVAL '1 DAY' = DATE_TRUNC ('MONTH', vbOperDate + INTERVAL '1 DAY'))
+                    OR vbPriceListId = 0
+                      ;
 
      /*vbIsLastOnMonth:= NOT EXISTS (SELECT 1
                                    FROM Movement

@@ -4,7 +4,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
   ClientWidth = 901
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 917
-  ExplicitHeight = 593
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -258,6 +258,13 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object BusinessName: TcxGridDBColumn
+            Caption = #1041#1080#1079#1085#1077#1089
+            DataBinding.FieldName = 'BusinessName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object PersonalServiceListCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1074#1077#1076'-'#1089#1090#1100
             DataBinding.FieldName = 'PersonalServiceListCode'
