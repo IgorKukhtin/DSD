@@ -45,7 +45,7 @@ BEGIN
                     FROM Movement WHERE Movement.Id = inMovementId);
 
      -- + пол года к текущей для определения сроков годности
-     vbDate180 := CURRENT_DATE + zc_Interval_ExpirationDate(); --+ INTERVAL '180 DAY';
+     vbDate180 := CURRENT_DATE + zc_Interval_ExpirationDate()+ zc_Interval_ExpirationDate(); --+ INTERVAL '180 DAY';  -- нужен 1 год (функция =6 мес.)
    
      -- ПАРАМЕТРЫ
      SELECT MovementLinkObject.ObjectId AS UnitId

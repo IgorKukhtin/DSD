@@ -111,6 +111,7 @@ type
     procedure LoadRepriceFormTest;
     procedure LoadRepriceChangeFormTest;
     procedure LoadRetailFormTest;
+    procedure LoadRetailCostCreditFormTest;
     procedure LoadReturnInFormTest;
     procedure LoadReturnTypeFormTest;
     procedure LoadReturnOutFormTest;
@@ -1071,6 +1072,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRetailForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRetailEditForm');
+end;
+
+procedure TLoadFormTest.LoadRetailCostCreditFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailCostCreditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRetailCostCreditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailCostCreditEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRetailCostCreditEditForm');
 end;
 
 procedure TLoadFormTest.LoadReturnOutFormTest;

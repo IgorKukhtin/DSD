@@ -88,7 +88,7 @@ BEGIN
     WHERE Movement.Id = inMovementId;
 
     vbOperDateEnd := vbOperDate + INTERVAL '1 DAY';
-    vbDate180 := CURRENT_DATE + zc_Interval_ExpirationDate();
+    vbDate180 := CURRENT_DATE + zc_Interval_ExpirationDate()+ zc_Interval_ExpirationDate();   -- нужен 1 год (функция =6 мес.)
     --vbDate180 := CURRENT_DATE + INTERVAL '180 DAY';
     
 

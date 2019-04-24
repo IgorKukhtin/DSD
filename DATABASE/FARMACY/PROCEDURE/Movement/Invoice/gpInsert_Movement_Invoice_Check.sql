@@ -29,12 +29,12 @@ BEGIN
        THEN
            RETURN;
     END IF;
-
+/* по просьбе Любы 23,04,2019 закоментила
     IF COALESCE (inPartnerMedicalId, 0) = 0
        THEN
            RAISE EXCEPTION 'Ошибка.Не выбран Заклад охорони здоров`я.';
     END IF;
-
+*/
     CREATE TEMP TABLE tmpReport (MovementId_Check Integer, JuridicalId Integer, PartnerMedicalId Integer,  ContractId Integer, SummaComp TFloat, CountSP TFloat) ON COMMIT DROP;
     CREATE TEMP TABLE tmpInvoice (MovementId Integer, InvNumber TVarChar, JuridicalId Integer, PartnerMedicalId Integer,  ContractId Integer) ON COMMIT DROP;
 

@@ -88,6 +88,10 @@ CREATE OR REPLACE FUNCTION zc_MIString_IdSP() RETURNS Integer AS $BODY$BEGIN RET
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_IdSP', 'ID лікарського засобу(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_IdSP');
 
+CREATE OR REPLACE FUNCTION zc_MIString_DosageIdSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_DosageIdSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_DosageIdSP', 'DosageID лікарського засобу' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_DosageIdSP');
+
 CREATE OR REPLACE FUNCTION zc_MIString_Pack() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Pack'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_Pack', 'Сила дії/Дозування (Соц. проект)(5)' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Pack');
@@ -124,6 +128,7 @@ INSERT INTO MovementItemStringDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 24.04.19         * zc_MIString_DosageIdSP
  22.04.19         * zc_MIString_IdSP 
  17.02.19                                                                                      * zc_MIString_ComingValueDayUser
  09.12.18                                                                                      * zc_MIString_ComingValueDay

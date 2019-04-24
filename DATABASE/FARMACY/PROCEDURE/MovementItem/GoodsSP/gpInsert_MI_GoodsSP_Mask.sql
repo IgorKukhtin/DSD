@@ -37,6 +37,7 @@ BEGIN
                                                 , inReestrSP           := COALESCE (MI_Mask.ReestrSP, MI_Master.ReestrSP, '')        :: TVarChar
                                                 , inReestrDateSP       := COALESCE (MI_Mask.ReestrDateSP, MI_Master.ReestrDateSP, ''):: TVarChar
                                                 , inIdSP               := COALESCE (MI_Mask.IdSP, MI_Master.IdSP, '')                :: TVarChar
+                                                , inDosageIdSP         := COALESCE (MI_Mask.IdSP, MI_Master.DosageIdSP, '')          :: TVarChar
                                                 , inUserId             := vbUserId
                                                 )
                                                 
@@ -51,7 +52,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-  22.04.19        * add IdSP
+  22.04.19        * add IdSP, DosageIdSP
   22.08.18        *
 */
 

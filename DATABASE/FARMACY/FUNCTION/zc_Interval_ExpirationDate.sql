@@ -9,7 +9,7 @@ AS
 $BODY$
 BEGIN 
     RETURN
-          ('12 MONTH' );
+          ('6 MONTH' );
 END; 
 $BODY$ 
 LANGUAGE PLPGSQL IMMUTABLE;

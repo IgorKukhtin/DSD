@@ -1998,6 +1998,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_TaxUnit_Unit() RETURNS Integer AS $BODY
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_TaxUnit_Unit', 'Подразделение', zc_Object_TaxUnit(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_TaxUnit_Unit');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_RetailCostCredit_Retail() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_RetailCostCredit_Retail'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_RetailCostCredit_Retail', 'Торговая сеть', zc_Object_RetailCostCredit(), zc_Object_Retail() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_RetailCostCredit_Retail');
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -2134,6 +2138,7 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 23.04.19         * zc_ObjectLink_RetailCostCredit_Retail
  10.04.19         * zc_ObjectLink_GoodsPropertyValue_Box
  01.04.19                                                                                      * zzc_ObjectLink_Goods_GoodsAnalog
  26.02.19         * zc_ObjectLink_GoodsPropertyValue_GoodsTypeKind_Sh

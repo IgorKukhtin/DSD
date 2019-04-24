@@ -686,7 +686,9 @@ uses
   Updater in '..\..\SOURCE\COMPONENT\Updater.pas',
   dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas',
   PartionDateKind in '..\..\FormsFarmacy\Kind\PartionDateKind.pas' {PartionDateKindForm: TParentForm},
-  Report_OrderInternalPromoOLAP in '..\..\FormsFarmacy\Report\Report_OrderInternalPromoOLAP.pas' {Report_OrderInternalPromoOLAPForm: TParentForm};
+  Report_OrderInternalPromoOLAP in '..\..\FormsFarmacy\Report\Report_OrderInternalPromoOLAP.pas' {Report_OrderInternalPromoOLAPForm: TParentForm},
+  RetailCostCredit in '..\..\FormsFarmacy\Guides\RetailCostCredit.pas' {RetailCostCreditForm: TParentForm},
+  RetailCostCreditEdit in '..\..\FormsFarmacy\Guides\RetailCostCreditEdit.pas' {RetailCostCreditEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

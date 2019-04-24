@@ -5,6 +5,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsSP_From_Excel (Integer, Integer, 
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsSP_From_Excel (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                             , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsSP_From_Excel (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                            , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_GoodsSP_From_Excel(
     IN inMovementId          Integer   ,    -- 
@@ -29,6 +31,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_GoodsSP_From_Excel(
     IN inMakerSP             TVarChar  ,    --
     IN inReestrSP            TVarChar  ,    --  
     IN inIdSP                TVarChar  ,    --
+    IN inDosageIdSP          TVarChar  ,    --
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS VOID
@@ -146,6 +149,7 @@ BEGIN
                                                , inReestrSP            := TRIM(inReestrSP)      ::TVarChar
                                                , inReestrDateSP        := TRIM(inReestrDateSP)  ::TVarChar
                                                , inIdSP                := TRIM(inIdSP)          ::TVarChar
+                                               , inDosageIdSP          := TRIM(inDosageIdSP)    ::TVarChar
                                                , inUserId              := vbUserId);
    
 END;
@@ -154,7 +158,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 22.04.19         * add IdSP
+ 22.04.19         * add IdSP, inDosageIdSP
  25.08.18         *
 */
 

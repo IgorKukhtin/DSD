@@ -10,6 +10,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_GoodsSP (Integer, Integer,  
                                                            , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                            , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_GoodsSP (Integer, Integer,  Integer, Integer, Integer, Integer
+                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                           , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_GoodsSP(
  INOUT ioId                   Integer   , -- Ключ записи
     IN inMovementId           Integer   ,
@@ -32,6 +36,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_GoodsSP(
     IN inReestrSP             TVarChar,
     IN inReestrDateSP         TVarChar,
     IN inIdSP                 TVarChar  ,    --
+    IN inDosageIdSP           TVarChar  ,    --
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -66,6 +71,7 @@ BEGIN
                                                , inReestrSP            := inReestrSP
                                                , inReestrDateSP        := inReestrDateSP
                                                , inIdSP                := inIdSP
+                                               , inDosageIdSP          := inDosageIdSP
                                                , inUserId              := vbUserId);
 
 END;
@@ -75,7 +81,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 22.04.19         * add IdSP
+ 22.04.19         * add IdSP, inDosageIdSP
  14.08.18         *
 */
 --
