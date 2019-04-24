@@ -5,7 +5,6 @@ inherited ContractChoiceForm: TContractChoiceForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 844
-  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -225,7 +224,7 @@ inherited ContractChoiceForm: TContractChoiceForm
       Width = 107
     end
     object edJuridical: TcxButtonEdit
-      Left = 117
+      Left = 112
       Top = 8
       Properties.Buttons = <
         item
@@ -234,8 +233,28 @@ inherited ContractChoiceForm: TContractChoiceForm
         end>
       Properties.ReadOnly = True
       TabOrder = 0
-      Width = 450
+      Width = 274
     end
+  end
+  object cxLabel1: TcxLabel [2]
+    Left = 422
+    Top = 9
+    AutoSize = False
+    Caption = #1053#1072#1096#1077' '#1070#1088'. '#1083#1080#1094#1086':'
+    Height = 17
+    Width = 88
+  end
+  object edJuridicalBasis: TcxButtonEdit [3]
+    Left = 512
+    Top = 8
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 269
   end
   inherited ActionList: TActionList
     inherited actInsert: TInsertUpdateChoiceAction
@@ -288,6 +307,14 @@ inherited ContractChoiceForm: TContractChoiceForm
         Name = 'inJuridical'
         Value = Null
         Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalBasisId'
+        Value = Null
+        Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -495,7 +522,8 @@ inherited ContractChoiceForm: TContractChoiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 320
+    Left = 256
+    Top = 8
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -513,6 +541,21 @@ inherited ContractChoiceForm: TContractChoiceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisId'
+        Value = Null
+        Component = GuidesJuridicalBasis
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = Null
+        Component = GuidesJuridicalBasis
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 512
     Top = 160
@@ -527,5 +570,34 @@ inherited ContractChoiceForm: TContractChoiceForm
       end>
     Left = 576
     Top = 144
+  end
+  object GuidesJuridicalBasis: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalBasis
+    FormNameParam.Value = 'TJuridicalCorporateForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridicalCorporateForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridicalBasis
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridicalBasis
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 584
+    Top = 8
   end
 end

@@ -1,10 +1,11 @@
 -- Function: gpSelect_Object_Contract()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_ContractChoice(Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ContractChoice(Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ContractChoice(
-    IN inJuridicalId   Integer ,      -- 
-    IN inSession       TVarChar       -- сесси€ пользовател€
+    IN inJuridicalId        Integer ,      -- 
+    IN inJuridicalBasisId   Integer ,      -- 
+    IN inSession            TVarChar       -- сесси€ пользовател€
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                JuridicalBasisId Integer, JuridicalBasisName TVarChar,
@@ -25,6 +26,15 @@ BEGIN
    -- проверка прав пользовател€ на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Contract());
 
+   -- не во всех договорах указано гл. юр.лицо, поэтому если не найден такой договор то показываем все 
+   IF NOT EXISTS (SELECT 1 
+                  FROM Object_Contract_View
+                  WHERE (Object_Contract_View.JuridicalId = inJuridicalId OR inJuridicalId = 0)
+                    AND (Object_Contract_View.JuridicalBasisId = inJuridicalBasisId OR inJuridicalBasisId = 0))
+   THEN
+       inJuridicalBasisId := 0;
+   END IF;
+   
    RETURN QUERY 
        SELECT 
              Object_Contract_View.Id
@@ -102,7 +112,8 @@ BEGIN
                                 ON ObjectLink_BankAccount_Bank.ObjectId = Object_Contract_View.BankAccountId
                                AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
            LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
-       WHERE Object_Contract_View.JuridicalId = inJuridicalId OR inJuridicalId = 0
+       WHERE (Object_Contract_View.JuridicalId = inJuridicalId OR inJuridicalId = 0)
+         AND (Object_Contract_View.JuridicalBasisId = inJuridicalBasisId OR inJuridicalBasisId = 0)
 ;
   
 END;
@@ -118,4 +129,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ContractChoice (0, '2')
+-- SELECT * FROM gpSelect_Object_ContractChoice (59612 ,0, '2')

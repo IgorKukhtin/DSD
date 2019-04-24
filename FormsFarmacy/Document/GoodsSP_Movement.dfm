@@ -1225,6 +1225,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         Component = MasterCDS
         ComponentItem = 'DosageIdSP'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 160

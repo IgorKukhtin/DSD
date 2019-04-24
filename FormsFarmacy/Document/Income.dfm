@@ -2346,14 +2346,14 @@
       item
         Name = 'ContractId'
         Value = Null
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
         Value = Null
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2534,7 +2534,7 @@
       item
         Name = 'inContractId'
         Value = 0.000000000000000000
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2605,7 +2605,7 @@
         Guides = GuidesTo
       end
       item
-        Guides = ContractGuides
+        Guides = GuidesContract
       end>
     Left = 160
     Top = 192
@@ -3005,7 +3005,7 @@
     Left = 560
     Top = 8
   end
-  object ContractGuides: TdsdGuides
+  object GuidesContract: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContract
     FormNameParam.Value = 'TContractChoiceForm'
@@ -3017,7 +3017,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3025,7 +3025,7 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -3045,9 +3045,24 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 639
-    Top = 232
+    Left = 783
+    Top = 8
   end
   object spIncome_GoodsId: TdsdStoredProc
     StoredProcName = 'gpUpdate_MovementItem_Income_GoodsId'
@@ -3295,8 +3310,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 836
-    Top = 80
+    Left = 828
+    Top = 72
   end
   object spUpdateMovementIncome_OrderExt: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Income_OrderExternal'
