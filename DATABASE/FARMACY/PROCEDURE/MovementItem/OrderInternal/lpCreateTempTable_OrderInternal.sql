@@ -191,6 +191,11 @@ BEGIN
                                           , LoadPriceList.AreaId
                                      FROM LoadPriceList
                                      )
+
+              -- данные по % кредитных средств из справочника
+              , tmpCostCredit AS (SELECT * FROM gpSelect_Object_RetailCostCredit(inRetailId := inObjectId, inShowAll := FALSE, inisErased := FALSE, inSession := inUserId :: TVarChar) AS tmp)
+
+
        -- Результат
        SELECT row_number() OVER ()
             , ddd.Id AS MovementItemId 
@@ -239,13 +244,7 @@ BEGIN
               END :: TFloat AS SuperFinalPrice   
 
               -- цена  с учетом стоимости кредитных ресурсов
-            /*, CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
-                        THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
-                   WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
-                        THEN FinalPrice * (100 + COALESCE (PriceSettings.Percent, 0)) / 100
-                   ELSE FinalPrice - FinalPrice * ((ddd.Deferment+1) * vbCostCredit) / 100
-              END :: TFloat AS SuperFinalPrice_Deferment*/
-            , (FinalPrice - FinalPrice * ((ddd.Deferment) * vbCostCredit) / 100) :: TFloat AS SuperFinalPrice_Deferment
+            , (FinalPrice - FinalPrice * ((ddd.Deferment) * COALESCE (tmpCostCredit.Percent, vbCostCredit) ) / 100) :: TFloat AS SuperFinalPrice_Deferment
 /**/
        FROM 
              (SELECT DISTINCT MovementItemOrder.Id
@@ -338,6 +337,7 @@ BEGIN
    
        LEFT JOIN PriceSettings    ON ddd.MinPrice BETWEEN PriceSettings.MinPrice    AND PriceSettings.MaxPrice
        LEFT JOIN PriceSettingsTOP ON ddd.MinPrice BETWEEN PriceSettingsTOP.MinPrice AND PriceSettingsTOP.MaxPrice
+       LEFT JOIN tmpCostCredit    ON ddd.MinPrice BETWEEN tmpCostCredit.MinPrice    AND tmpCostCredit.PriceLimit
   ;
 
 END;

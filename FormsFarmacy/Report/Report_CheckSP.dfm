@@ -440,7 +440,6 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
           object JuridicalFullName: TcxGridDBColumn
             Caption = #1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103' ('#1087#1086#1074#1085#1072' '#1085#1072#1079#1074#1072')'
             DataBinding.FieldName = 'JuridicalFullName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -982,7 +981,24 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 230
+    Width = 316
+  end
+  object cxLabel6: TcxLabel [4]
+    Left = 455
+    Top = 34
+    Caption = #1070#1088'.'#1083#1080#1094#1086' '#1054#1047' ('#1087#1083#1072#1090#1077#1083#1100#1096#1080#1082'):'
+  end
+  object edJuridicalMedic: TcxButtonEdit [5]
+    Left = 595
+    Top = 33
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 262
   end
   inherited ActionList: TActionList
     object actGetReportNameSPDepartmen: TdsdExecStoredProc
@@ -1132,7 +1148,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         item
           Name = 'JuridicalId'
           Value = ''
-          Component = JuridicalGuides
+          Component = GuidesJuridical
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1140,7 +1156,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         item
           Name = 'JuridicalName'
           Value = ''
-          Component = JuridicalGuides
+          Component = GuidesJuridical
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1149,7 +1165,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         item
           Name = 'UnitId'
           Value = Null
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1157,7 +1173,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         item
           Name = 'UnitName'
           Value = Null
-          Component = UnitGuides
+          Component = GuidesUnit
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1166,7 +1182,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         item
           Name = 'HospitalId'
           Value = Null
-          Component = HospitalGuides
+          Component = GuidesHospital
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1174,7 +1190,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         item
           Name = 'HospitalName'
           Value = Null
-          Component = HospitalGuides
+          Component = GuidesHospital
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1618,7 +1634,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       item
         Name = 'inJuridicalId'
         Value = Null
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1626,7 +1642,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       item
         Name = 'inUnitId'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1634,7 +1650,15 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       item
         Name = 'inHospitalId'
         Value = Null
-        Component = HospitalGuides
+        Component = GuidesHospital
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalMedicId'
+        Value = Null
+        Component = GuidesJuridicalMedic
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1787,18 +1811,18 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         Component = PeriodChoice
       end
       item
-        Component = UnitGuides
+        Component = GuidesUnit
       end
       item
-        Component = HospitalGuides
+        Component = GuidesHospital
       end
       item
-        Component = JuridicalGuides
+        Component = GuidesJuridical
       end>
     Left = 272
     Top = 232
   end
-  object UnitGuides: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
     FormNameParam.Value = 'TUnitTreeForm'
@@ -1810,7 +1834,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1818,7 +1842,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1827,7 +1851,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
     Left = 248
     Top = 24
   end
-  object JuridicalGuides: TdsdGuides
+  object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridicalCorporateForm'
@@ -1839,7 +1863,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       item
         Name = 'Key'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1847,7 +1871,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1855,7 +1879,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       end>
     Left = 312
   end
-  object HospitalGuides: TdsdGuides
+  object GuidesHospital: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceHospital
     FormNameParam.Value = 'TPartnerMedicalForm'
@@ -1867,7 +1891,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       item
         Name = 'Key'
         Value = ''
-        Component = HospitalGuides
+        Component = GuidesHospital
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1875,13 +1899,13 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = HospitalGuides
+        Component = GuidesHospital
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 600
+    Left = 808
   end
   object spSavePrintMovement: TdsdStoredProc
     StoredProcName = 'gpInsert_Movement_Invoice_Check'
@@ -1907,7 +1931,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       item
         Name = 'inJuridicalId'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1915,7 +1939,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       item
         Name = 'inUnitId'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1923,7 +1947,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       item
         Name = 'inPartnerMedicalId'
         Value = ''
-        Component = HospitalGuides
+        Component = GuidesHospital
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1976,7 +2000,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       item
         Name = 'inJuridicalId'
         Value = Null
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1984,7 +2008,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       item
         Name = 'inPartnerMedicalId'
         Value = Null
-        Component = HospitalGuides
+        Component = GuidesHospital
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2009,7 +2033,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       item
         Name = 'inJuridicalId'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2033,5 +2057,34 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
     PackSize = 1
     Left = 848
     Top = 272
+  end
+  object GuidesJuridicalMedic: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalMedic
+    FormNameParam.Value = 'TJuridicalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridicalForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridicalMedic
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridicalMedic
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 720
+    Top = 32
   end
 end

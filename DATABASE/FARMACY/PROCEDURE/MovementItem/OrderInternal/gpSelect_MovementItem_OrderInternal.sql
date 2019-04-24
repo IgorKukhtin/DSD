@@ -910,6 +910,10 @@ BEGIN
                           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_Child.ObjectId
                     )
 
+      -- данные по % кредитных средств из справочника
+      , tmpCostCredit AS (SELECT * FROM gpSelect_Object_RetailCostCredit(inRetailId := vbObjectId, inShowAll := FALSE, inisErased := FALSE, inSession := inSession) AS tmp)
+
+
         SELECT tmpMI.MovementItemId                           AS MovementItemId
              , MI_Child.Id
              , tmpGoods.GoodsCode
@@ -945,7 +949,7 @@ BEGIN
               , MIFloat_Price.ValueData             ::TFLoat  AS Price
               , MIFloat_JuridicalPrice.ValueData    ::TFLoat  AS SuperFinalPrice
               , MIFloat_DefermentPrice.ValueData    ::TFloat  AS SuperFinalPrice_Deferment
-              , (tmpContract.Deferment * vbCostCredit) ::TFloat  AS Persent_Deferment
+              , (tmpContract.Deferment * COALESCE (tmpCostCredit.Percent, vbCostCredit) ) ::TFloat  AS Persent_Deferment
 
               , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN FALSE ELSE TRUE END  ::Boolean AS isPromo
               
@@ -992,6 +996,8 @@ BEGIN
                                  ON ObjectLink_Goods_Area.ObjectId = tmpMI.PartnerGoodsId
                                 AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
+
+            LEFT JOIN tmpCostCredit ON MIFloat_Price.ValueData BETWEEN tmpCostCredit.MinPrice  AND tmpCostCredit.PriceLimit
 
           ;
 
@@ -1171,6 +1177,11 @@ BEGIN
                                           , LoadPriceList.AreaId
                                      FROM LoadPriceList
                                      )
+
+      -- данные по % кредитных средств из справочника
+      , tmpCostCredit AS (SELECT * FROM gpSelect_Object_RetailCostCredit(inRetailId := vbObjectId, inShowAll := FALSE, inisErased := FALSE, inSession := inSession) AS tmp)
+
+
        -- Результат
        SELECT row_number() OVER ()
             , ddd.Id AS MovementItemId
@@ -1219,7 +1230,7 @@ BEGIN
                    ELSE FinalPrice
               END :: TFloat AS SuperFinalPrice
               
-            , (ddd.FinalPrice - ddd.FinalPrice * ((ddd.Deferment) * vbCostCredit) / 100) :: TFloat AS SuperFinalPrice_Deferment
+            , (ddd.FinalPrice - ddd.FinalPrice * ((ddd.Deferment) * COALESCE (tmpCostCredit.Percent, vbCostCredit) ) / 100) :: TFloat AS SuperFinalPrice_Deferment
 /**/
        FROM
              (SELECT DISTINCT MovementItemOrder.Id
@@ -1313,6 +1324,7 @@ BEGIN
 
        LEFT JOIN PriceSettings    ON ddd.MinPrice BETWEEN PriceSettings.MinPrice    AND PriceSettings.MaxPrice
        LEFT JOIN PriceSettingsTOP ON ddd.MinPrice BETWEEN PriceSettingsTOP.MinPrice AND PriceSettingsTOP.MaxPrice
+       LEFT JOIN tmpCostCredit    ON ddd.MinPrice BETWEEN tmpCostCredit.MinPrice  AND tmpCostCredit.PriceLimit
   ;
 
 -- lpCreateTempTable_OrderInternal Конец процедуры
@@ -2450,6 +2462,11 @@ BEGIN
                          FROM MovementItem
                          WHERE MovementItem.Id IN (SELECT DISTINCT _tmpMI.MovementItemId FROM _tmpMI)
                          )
+
+   -- данные по % кредитных средств из справочника
+   , tmpCostCredit AS (SELECT * FROM gpSelect_Object_RetailCostCredit(inRetailId := vbObjectId, inShowAll := FALSE, inisErased := FALSE, inSession := inSession) AS tmp)
+
+
         ---
         SELECT _tmpMI.*
               , CASE WHEN PartionGoodsDate < vbDate180 THEN zc_Color_Red() -- zc_Color_Blue() --456
@@ -2458,7 +2475,7 @@ BEGIN
               , ObjectFloat_Goods_MinimumLot.ValueData                       AS MinimumLot
               , MIFloat_Remains.ValueData                                    AS Remains
               
-              , (_tmpMI.Deferment * vbCostCredit)             :: TFloat      AS Persent_Deferment
+              , (_tmpMI.Deferment * COALESCE (tmpCostCredit.Percent, vbCostCredit))             :: TFloat      AS Persent_Deferment
 
               , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN FALSE ELSE TRUE END  ::Boolean AS isPromo
               , COALESCE(GoodsPromo.OperDatePromo, NULL)      :: TDateTime   AS OperDatePromo
@@ -2491,6 +2508,8 @@ BEGIN
                                      ON ObjectLink_Goods_Area.ObjectId = _tmpMI.GoodsId
                                     AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
              LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
+             
+             LEFT JOIN tmpCostCredit ON _tmpMI.Price BETWEEN tmpCostCredit.MinPrice  AND tmpCostCredit.PriceLimit
 ;
 
 
@@ -2520,6 +2539,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 24.04.19         *
  16.04.18                                                                    * оптимизация
  11.02.19         * признак Товары соц-проект берем и документа
  07.02.19         * если isBonusClose = true бонусы не учитываем
