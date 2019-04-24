@@ -914,10 +914,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_CashRegister_SerialNumber() RETURNS I
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_CashRegister_SerialNumber', zc_Object_CashRegister(), 'Номер заводской' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CashRegister_SerialNumber');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_HelsiEnum() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_HelsiEnum'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_HelsiEnum', zc_Object_HelsiEnum(), 'Параметр доступа к сайту Хелси' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_HelsiEnum');
+
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 24.04.19                                                                                                         * zc_ObjectString_HelsiEnum
  30.03.19         * zc_ObjectString_GoodsPropertyValue_Quality
  21.03.19         * zc_ObjectString_Goods_RUS
  29.01.19         * zc_ObjectString_Retail_OKPO
