@@ -39,7 +39,10 @@ type
     actExit: TAction;
     CuterWeight_current: TcxGridDBColumn;
     CuterWeight_total: TcxGridDBColumn;
-    Amount_diff: TcxGridDBColumn;
+    Cuter_diff: TcxGridDBColumn;
+    RealWeight_current: TcxGridDBColumn;
+    RealWeight_total: TcxGridDBColumn;
+    Real_diff: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -93,6 +96,7 @@ begin
        else Params.ParamByName('inMovementItemId').Value:= 0;
        Params.ParamByName('inGoodsCode').Value     := execParamsGoods.ParamByName('GoodsCode').AsInteger;
        Params.ParamByName('inUnitId').Value        := execParamsGoods.ParamByName('UnitId').AsInteger;
+       Params.ParamByName('inDocumentKindId').Value:= execParamsGoods.ParamByName('DocumentKindId').AsInteger;
        Execute;
      end;
 
@@ -296,6 +300,7 @@ begin
        Params.AddParam('inMovementItemId', ftInteger, ptInput, 0);
        Params.AddParam('inGoodsCode', ftInteger, ptInput, 0);
        Params.AddParam('inUnitId', ftInteger, ptInput, 0);
+       Params.AddParam('inDocumentKindId', ftInteger, ptInput, 0);
        //Execute;
   end;
 

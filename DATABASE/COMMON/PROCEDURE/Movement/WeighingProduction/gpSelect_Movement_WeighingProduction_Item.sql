@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , UserName TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
 
+             , StartBegin TDateTime, EndBegin TDateTime, diffBegin_sec TFloat
              , GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat
@@ -124,6 +125,11 @@ BEGIN
 
              , Object_DocumentKind.Id          AS DocumentKindId
              , Object_DocumentKind.ValueData   AS DocumentKindName
+
+             , MIDate_StartBegin.ValueData  AS StartBegin
+             , MIDate_EndBegin.ValueData    AS EndBegin
+             , EXTRACT (EPOCH FROM (COALESCE (MIDate_EndBegin.ValueData, zc_DateStart()) - COALESCE (MIDate_StartBegin.ValueData, zc_DateStart())) :: INTERVAL) :: TFloat AS diffBegin_sec
+
 
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
@@ -232,6 +238,13 @@ BEGIN
                                           ON MIBoolean_StartWeighing.MovementItemId = MovementItem.Id
                                          AND MIBoolean_StartWeighing.DescId = zc_MIBoolean_StartWeighing()
 
+            LEFT JOIN MovementItemDate AS MIDate_StartBegin
+                                       ON MIDate_StartBegin.MovementItemId = MovementItem.Id
+                                      AND MIDate_StartBegin.DescId         = zc_MIDate_StartBegin()
+            LEFT JOIN MovementItemDate AS MIDate_EndBegin
+                                       ON MIDate_EndBegin.MovementItemId = MovementItem.Id
+                                      AND MIDate_EndBegin.DescId         = zc_MIDate_EndBegin()
+
             LEFT JOIN MovementItemDate AS MIDate_Insert
                                        ON MIDate_Insert.MovementItemId = MovementItem.Id
                                       AND MIDate_Insert.DescId = zc_MIDate_Insert()
@@ -324,7 +337,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpSelect_Movement_WeighingProduction_Item (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -336,4 +348,4 @@ $BODY$
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_WeighingProduction_Item (inStartDate:= '01.05.2016', inEndDate:= '01.05.2016', inGoodsGroupId:= 0, inGoodsId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_WeighingProduction_Item (inStartDate:= '01.05.2016', inEndDate:= '01.05.2016', inGoodsGroupId:= 0, inGoodsId:= 0, inJuridicalBasisId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

@@ -1613,10 +1613,11 @@ END IF;
      END IF;
 
 
-     -- дописали св-во <Дата/время создания>
+     -- дописали св-во <Протокол Дата/время начало>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartBegin(), inMovementId, vbOperDate_StartBegin);
-     -- дописали св-во <Дата/время создания>
+     -- дописали св-во <Протокол Дата/время завершение>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndBegin(), inMovementId, CLOCK_TIMESTAMP());
+
 
      -- Результат
      RETURN QUERY

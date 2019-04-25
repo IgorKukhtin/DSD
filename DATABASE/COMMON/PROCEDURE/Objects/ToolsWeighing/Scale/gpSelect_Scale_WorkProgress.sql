@@ -1,13 +1,15 @@
 -- Function: gpSelect_Scale_WorkProgress()
 
 DROP FUNCTION IF EXISTS gpSelect_Scale_WorkProgress (TDateTime, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Scale_WorkProgress (TDateTime, Integer, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Scale_WorkProgress (TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Scale_WorkProgress (TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Scale_WorkProgress(
     IN inOperDate              TDateTime,
     IN inMovementItemId        Integer,
     IN inGoodsCode             Integer,
     IN inUnitId                Integer,
+    IN inDocumentKindId        Integer,
     IN inSession               TVarChar      -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, MovementItemId Integer, InvNumber TVarChar, OperDate TDateTime
@@ -18,16 +20,32 @@ RETURNS TABLE (MovementId Integer, MovementItemId Integer, InvNumber TVarChar, O
              , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar
              , GoodsKindId_Complete Integer, GoodsKindCode_Complete Integer, GoodsKindName_Complete TVarChar
              , MeasureId Integer, MeasureCode Integer, MeasureName TVarChar
+               -- Кол-во факт
              , Amount TFloat
+               -- Куттеров факт
              , CuterCount TFloat
+
+               -- вес сырой - Закрыт
              , RealWeight TFloat
+               -- вес куттер - Закрыт
              , CuterWeight TFloat
+               -- вес сырой - Не закрыт
+             , RealWeight_current TFloat
+               -- вес куттер - Не закрыт
              , CuterWeight_current TFloat
+               -- вес сырой - Итого
+             , RealWeight_total TFloat
+               -- вес куттер - Итого
              , CuterWeight_total TFloat
-             , Amount_diff TFloat
+               -- вес сырой - разница
+             , Real_diff TFloat
+               -- вес куттер - разница
+             , Cuter_diff TFloat
+
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , MovementInfo TVarChar
+             , DocumentKindId Integer, DocumentKindName TVarChar
              , isErased Boolean
               )
 AS
@@ -64,6 +82,8 @@ BEGIN
                                  , MIFloat_CuterCount.ValueData     AS CuterCount
                                  , COALESCE (MIFloat_RealWeight.ValueData, 0)  AS RealWeight
                                  , COALESCE (MIFloat_CuterWeight.ValueData, 0) AS CuterWeight
+                                 , Object_DocumentKind.Id           AS DocumentKindId
+                                 , Object_DocumentKind.ValueData    AS DocumentKindName
                             FROM Movement
                                  INNER JOIN MovementLinkObject AS MLO_From
                                                                ON MLO_From.MovementId = Movement.Id
@@ -73,6 +93,11 @@ BEGIN
                                                                ON MLO_To.MovementId = Movement.Id
                                                               AND MLO_To.DescId     = zc_MovementLinkObject_From()
                                                               AND MLO_To.ObjectId   = inUnitId
+                                 LEFT JOIN MovementLinkObject AS MLO_DocumentKind
+                                                              ON MLO_DocumentKind.MovementId = Movement.Id
+                                                             AND MLO_DocumentKind.DescId     = zc_MovementLinkObject_DocumentKind()
+                                 LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MLO_DocumentKind.ObjectId
+
                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                         AND MovementItem.DescId     = zc_MI_Master()
                                                         AND MovementItem.isErased   = FALSE
@@ -93,17 +118,25 @@ BEGIN
                                                             AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
                                  LEFT JOIN MovementItemFloat AS MIFloat_RealWeight
                                                              ON MIFloat_RealWeight.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
+                                                            AND MIFloat_RealWeight.DescId         = zc_MIFloat_RealWeight()
                                  LEFT JOIN MovementItemFloat AS MIFloat_CuterWeight
                                                              ON MIFloat_CuterWeight.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_CuterWeight.DescId = zc_MIFloat_CuterWeight()
+                                                            AND MIFloat_CuterWeight.DescId         = zc_MIFloat_CuterWeight()
 
                             WHERE Movement.OperDate BETWEEN inOperDate - INTERVAL '1 DAY' AND inOperDate
                               AND Movement.DescId   = zc_Movement_ProductionUnion()
                               AND Movement.StatusId = zc_Enum_Status_Complete()
                            )
+         -- Не закрыт
        , tmpMI_Weighing AS (SELECT tmpMI.MovementItemId
-                                 , SUM (MovementItem.Amount) :: TFloat AS Amount
+                                 , SUM (CASE WHEN MLO_DocumentKind.ObjectId = zc_Enum_DocumentKind_CuterWeight()
+                                                  THEN MovementItem.Amount
+                                             ELSE 0
+                                        END) :: TFloat AS CuterWeight
+                                 , SUM (CASE WHEN MLO_DocumentKind.ObjectId = zc_Enum_DocumentKind_RealWeight()
+                                                  THEN MovementItem.Amount
+                                             ELSE 0
+                                        END) :: TFloat AS RealWeight
                             FROM tmpMI
                                  INNER JOIN MovementItemFloat AS MIFloat_MovementItemId
                                                               ON MIFloat_MovementItemId.ValueData = tmpMI.MovementItemId
@@ -113,6 +146,9 @@ BEGIN
                                  INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
                                                     AND Movement.DescId   = zc_Movement_WeighingProduction()
                                                     AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                 LEFT JOIN MovementLinkObject AS MLO_DocumentKind
+                                                              ON MLO_DocumentKind.MovementId = Movement.Id
+                                                             AND MLO_DocumentKind.DescId     = zc_MovementLinkObject_DocumentKind()
                             GROUP BY tmpMI.MovementItemId
                            )
        -- Результат
@@ -138,13 +174,26 @@ BEGIN
             , Object_Measure.Id           AS MeasureId
             , Object_Measure.ObjectCode   AS MeasureCode
             , Object_Measure.ValueData    AS MeasureName
+              -- Кол-во факт
             , tmpMI.Amount
+              -- Куттеров факт
             , tmpMI.CuterCount
+              -- вес сырой - Закрыт
             , tmpMI.RealWeight  :: TFloat AS RealWeight
+              -- вес куттер - Закрыт
             , tmpMI.CuterWeight :: TFloat AS CuterWeight
-            , tmpMI_Weighing.Amount AS CuterWeight_current
-            , (tmpMI.CuterWeight + COALESCE (tmpMI_Weighing.Amount, 0))                :: TFloat AS CuterWeight_total
-            , (tmpMI.Amount - tmpMI.CuterWeight - COALESCE (tmpMI_Weighing.Amount, 0)) :: TFloat AS Amount_diff
+              -- вес сырой - Не закрыт
+            , tmpMI_Weighing.RealWeight   AS RealWeight_current
+              -- вес куттер - Не закрыт
+            , tmpMI_Weighing.CuterWeight  AS CuterWeight_current
+              -- вес сырой - Итого
+            , (tmpMI.RealWeight  + COALESCE (tmpMI_Weighing.RealWeight, 0))                 :: TFloat AS CuterWeight_total
+              -- вес куттер - Итого
+            , (tmpMI.CuterWeight + COALESCE (tmpMI_Weighing.CuterWeight, 0))                :: TFloat AS CuterWeight_total
+              -- вес сырой - разница
+            , (-1 * tmpMI.Amount + tmpMI.RealWeight  + COALESCE (tmpMI_Weighing.RealWeight, 0))  :: TFloat AS Real_diff
+              -- вес куттер - разница
+            , (-1 * tmpMI.Amount + tmpMI.CuterWeight + COALESCE (tmpMI_Weighing.CuterWeight, 0)) :: TFloat AS Amount_diff
 
             , Object_Insert.ValueData             AS InsertName
             , Object_Update.ValueData             AS UpdateName
@@ -157,9 +206,26 @@ BEGIN
             || ' вид=<' || COALESCE (Object_GoodsKindComplete.ValueData, '') || '>'
             || ' кут.=<' || zfConvert_FloatToString (tmpMI.CuterCount) || '>'
             || ' кол.=<' || zfConvert_FloatToString (tmpMI.Amount) || '>'
-            || ' итого взвеш.=<' || zfConvert_FloatToString (tmpMI.CuterWeight + COALESCE (tmpMI_Weighing.Amount, 0)) || '>'
-            || ' разница=<' || zfConvert_FloatToString (tmpMI.Amount - tmpMI.CuterWeight - COALESCE (tmpMI_Weighing.Amount, 0)) || '>'
+            || ' итого взвеш.=<' || CASE -- вес куттер - Итого
+                                         WHEN inDocumentKindId = zc_Enum_DocumentKind_CuterWeight()
+                                              THEN zfConvert_FloatToString (tmpMI.CuterWeight + COALESCE (tmpMI_Weighing.CuterWeight, 0)) || '>'
+                                         -- вес сырой - Итого
+                                         WHEN inDocumentKindId = zc_Enum_DocumentKind_RealWeight()
+                                              THEN zfConvert_FloatToString (tmpMI.RealWeight + COALESCE (tmpMI_Weighing.RealWeight, 0)) || '>'
+                                         ELSE '?'
+                                    END
+            || ' разница=<' || CASE -- вес куттер - разница
+                                    WHEN inDocumentKindId = zc_Enum_DocumentKind_CuterWeight()
+                                         THEN zfConvert_FloatToString (-1 * tmpMI.Amount + tmpMI.CuterWeight + COALESCE (tmpMI_Weighing.CuterWeight, 0)) || '>'
+                                    -- вес сырой - разница
+                                    WHEN inDocumentKindId = zc_Enum_DocumentKind_RealWeight()
+                                         THEN zfConvert_FloatToString (-1 * tmpMI.Amount + tmpMI.RealWeight  + COALESCE (tmpMI_Weighing.RealWeight, 0)) || '>'
+                                    ELSE '?'
+                               END
               ) :: TVarChar AS MovementInfo
+
+            , tmpMI.DocumentKindId
+            , tmpMI.DocumentKindName
 
             , FALSE AS isErased
 
@@ -212,7 +278,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Scale_WorkProgress (TDateTime, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Scale_WorkProgress (TDateTime, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -222,4 +288,4 @@ ALTER FUNCTION gpSelect_Scale_WorkProgress (TDateTime, Integer, Integer, Integer
 */
 
 -- тест
--- SELECT * FROM gpSelect_Scale_WorkProgress (inOperDate:= CURRENT_DATE, inMovementItemId:= 0, inGoodsCode:= 0, inUnitId:= 8447, inSession:=zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Scale_WorkProgress (inOperDate:= CURRENT_DATE, inMovementItemId:= 0, inGoodsCode:= 0, inUnitId:= 8447, inDocumentKindId:= 0, inSession:=zfCalc_UserAdmin())

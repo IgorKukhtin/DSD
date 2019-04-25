@@ -5,8 +5,8 @@
 /*
    VACUUM FULL Container;
    VACUUM ANALYZE Container;
-   VACUUM FULL ObjectFloa;
-   VACUUM ANALYZE ObjectFloa;
+   VACUUM FULL ObjectFloat;
+   VACUUM ANALYZE ObjectFloat;
    VACUUM FULL ContainerLinkObject;
    VACUUM ANALYZE ContainerLinkObject;
 */

@@ -397,6 +397,7 @@ begin
      Params:=nil;
      ParamAdd(Params,'OperDate',ftDateTime);         //
      ParamAdd(Params,'UnitId',ftInteger);            //
+     ParamAdd(Params,'DocumentKindId',ftInteger);    //
      ParamAdd(Params,'GoodsId',ftInteger);           // Товары
      ParamAdd(Params,'GoodsCode',ftInteger);         // Товары
      ParamAdd(Params,'GoodsName',ftString);          // Товары

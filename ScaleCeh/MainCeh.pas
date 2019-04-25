@@ -766,6 +766,7 @@ begin
                 except ParamsWorkProgress.ParamByName('MovementItemId').AsInteger:= 0; end;
                 ParamsWorkProgress.ParamByName('GoodsCode').AsInteger:=0;
                 ParamsWorkProgress.ParamByName('UnitId').AsInteger:=ParamsMovement.ParamByName('FromId').AsInteger;
+                ParamsWorkProgress.ParamByName('DocumentKindId').AsInteger:=ParamsMovement.ParamByName('DocumentKindId').AsInteger;
 
                 if GuideWorkProgressForm.Execute(ParamsWorkProgress)//isChoice=TRUE
                 then MovementInfo:=ParamsWorkProgress.ParamByName('MovementInfo').AsString;
@@ -1216,6 +1217,7 @@ begin
           except ParamsWorkProgress.ParamByName('MovementItemId').AsInteger:= 0; end;
           ParamsWorkProgress.ParamByName('GoodsCode').AsInteger:=GoodsCode_int;
           ParamsWorkProgress.ParamByName('UnitId').AsInteger:=ParamsMovement.ParamByName('FromId').AsInteger;
+          ParamsWorkProgress.ParamByName('DocumentKindId').AsInteger:=ParamsMovement.ParamByName('DocumentKindId').AsInteger;
 
           if GuideWorkProgressForm.Execute(ParamsWorkProgress)//isChoice=TRUE
           then begin

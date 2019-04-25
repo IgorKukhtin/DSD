@@ -55,10 +55,15 @@ $BODY$
             
    DECLARE vbPrice_301 TFloat; -- !!!цена для Специй!!!
 
+   DECLARE vbOperDate_StartBegin TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Insert_Scale_MI());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- сразу запомнили время начала выполнения Проц.
+     vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
 
 
      -- проверка
@@ -379,6 +384,13 @@ BEGIN
 
      --
      vbTotalSumm:= (SELECT ValueData FROM MovementFloat WHERE MovementId = inMovementId AND DescId = zc_MovementFloat_TotalSumm());
+
+
+     -- дописали св-во <Протокол Дата/время начало>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_StartBegin(), vbId, vbOperDate_StartBegin);
+     -- дописали св-во <Протокол Дата/время завершение>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_EndBegin(), vbId, CLOCK_TIMESTAMP());
+
 
 -- !!! ВРЕМЕННО !!!
 IF inSession = '5' AND 1=1 AND inBranchCode < 1000 THEN

@@ -42,6 +42,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , PositionCode5 Integer, PositionName5 TVarChar
              , UserName TVarChar
 
+             , StartBegin TDateTime, EndBegin TDateTime, diffBegin_sec TFloat
              , GoodsCode Integer, GoodsName TVarChar, GoodsGroupNameFull TVarChar
              , MIAmount TFloat,  AmountPartner TFloat
              , RealWeight TFloat,CountTare TFloat, WeightTare TFloat
@@ -188,6 +189,11 @@ BEGIN
              , Object_Position5.ObjectCode AS PositionCode5, Object_Position5.ValueData AS PositionName5
 
              , Object_User.ValueData              AS UserName
+
+             , MIDate_StartBegin.ValueData  AS StartBegin
+             , MIDate_EndBegin.ValueData    AS EndBegin
+             , EXTRACT (EPOCH FROM (COALESCE (MIDate_EndBegin.ValueData, zc_DateStart()) - COALESCE (MIDate_StartBegin.ValueData, zc_DateStart())) :: INTERVAL) :: TFloat AS diffBegin_sec
+
 
              , Object_Goods.ObjectCode          AS GoodsCode
              , Object_Goods.ValueData           AS GoodsName
@@ -422,6 +428,13 @@ BEGIN
 
             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpGoods.GoodsId
+
+            LEFT JOIN MovementItemDate AS MIDate_StartBegin
+                                       ON MIDate_StartBegin.MovementItemId = MovementItem.Id
+                                      AND MIDate_StartBegin.DescId         = zc_MIDate_StartBegin()
+            LEFT JOIN MovementItemDate AS MIDate_EndBegin
+                                       ON MIDate_EndBegin.MovementItemId = MovementItem.Id
+                                      AND MIDate_EndBegin.DescId         = zc_MIDate_EndBegin()
 
             LEFT JOIN MovementItemDate AS MIDate_Insert
                                              ON MIDate_Insert.MovementItemId = MovementItem.Id

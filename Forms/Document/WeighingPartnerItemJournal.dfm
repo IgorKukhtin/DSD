@@ -27,7 +27,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 42736d
+      EditValue = 43466d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -37,7 +37,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42736d
+      EditValue = 43466d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -110,6 +110,11 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = BoxCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = diffBegin_sec
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -156,6 +161,11 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
           Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = FromName
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = diffBegin_sec
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -684,6 +694,30 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
+      end
+      object StartBegin: TcxGridDBColumn
+        Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1086
+        DataBinding.FieldName = 'StartBegin'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object EndBegin: TcxGridDBColumn
+        Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1077
+        DataBinding.FieldName = 'EndBegin'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object diffBegin_sec: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1089#1077#1082'.'
+        DataBinding.FieldName = 'diffBegin_sec'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object IsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'

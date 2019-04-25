@@ -38,10 +38,16 @@ $BODY$
 
    DECLARE vbId Integer;
    DECLARE vbDocumentKindId Integer;
+
+   DECLARE vbOperDate_StartBegin TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Insert_ScaleCeh_MI());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- сразу запомнили время начала выполнения Проц.
+     vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
 
 
      -- определили <Тип документа>
@@ -101,6 +107,14 @@ BEGIN
                                                           , inStorageLineId       := inStorageLineId
                                                           , inSession             := inSession
                                                            );
+
+
+
+     -- дописали св-во <Протокол Дата/время начало>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_StartBegin(), vbId, vbOperDate_StartBegin);
+     -- дописали св-во <Протокол Дата/время завершение>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_EndBegin(), vbId, CLOCK_TIMESTAMP());
+
 
      -- Результат
      RETURN QUERY

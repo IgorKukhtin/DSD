@@ -119,7 +119,7 @@ object GuideWorkProgressForm: TGuideWorkProgressForm
           item
             Format = ',0.####'
             Kind = skSum
-            Column = Amount_diff
+            Column = Cuter_diff
           end
           item
             Format = ',0.####'
@@ -134,7 +134,22 @@ object GuideWorkProgressForm: TGuideWorkProgressForm
           item
             Format = ',0.####'
             Kind = skSum
-            Column = colRealWeight
+            Column = RealWeight
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = RealWeight_current
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = RealWeight_total
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = Real_diff
           end>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -155,7 +170,7 @@ object GuideWorkProgressForm: TGuideWorkProgressForm
           item
             Format = ',0.####'
             Kind = skSum
-            Column = Amount_diff
+            Column = Cuter_diff
           end
           item
             Format = ',0.####'
@@ -170,7 +185,22 @@ object GuideWorkProgressForm: TGuideWorkProgressForm
           item
             Format = ',0.####'
             Kind = skSum
-            Column = colRealWeight
+            Column = RealWeight
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = RealWeight_current
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = RealWeight_total
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = Real_diff
           end>
         DataController.Summary.SummaryGroups = <>
         OptionsCustomize.ColumnHiding = True
@@ -274,6 +304,28 @@ object GuideWorkProgressForm: TGuideWorkProgressForm
           Options.Editing = False
           Width = 70
         end
+        object Cuter_diff: TcxGridDBColumn
+          Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074#1077#1089' '#1082#1091#1090#1090#1077#1088
+          DataBinding.FieldName = 'Cuter_diff'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1056#1072#1079#1085#1080#1094#1072' '#1074#1077#1089' '#1082#1091#1090#1090#1077#1088' ('#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077')'
+          Width = 70
+        end
+        object Real_diff: TcxGridDBColumn
+          Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074#1077#1089' '#1089#1099#1088#1086#1081
+          DataBinding.FieldName = 'Real_diff'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1056#1072#1079#1085#1080#1094#1072' '#1074#1077#1089' '#1089#1099#1088#1086#1081' ('#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077')'
+          Width = 70
+        end
         object CuterCount: TcxGridDBColumn
           Caption = #1050#1091#1090#1090#1077#1088#1086#1074' '#1092#1072#1082#1090
           DataBinding.FieldName = 'CuterCount'
@@ -282,63 +334,80 @@ object GuideWorkProgressForm: TGuideWorkProgressForm
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          HeaderHint = #1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
           Options.Editing = False
           Width = 60
         end
         object Amount: TcxGridDBColumn
-          Caption = #1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086
+          Caption = #1050#1086#1083'-'#1074#1086' '#1092#1072#1082#1090
           DataBinding.FieldName = 'Amount'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          HeaderHint = #1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
           Options.Editing = False
           Width = 70
         end
         object CuterWeight_total: TcxGridDBColumn
-          Caption = #1048#1090#1086#1075#1086' '#1087'/'#1092' '#1092#1072#1082#1090'('#1074#1079#1074#1077#1096'.)'
+          Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1082#1091#1090#1090#1077#1088
           DataBinding.FieldName = 'CuterWeight_total'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 90
+          HeaderHint = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1082#1091#1090#1090#1077#1088' ('#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077')'
+          Width = 80
         end
-        object Amount_diff: TcxGridDBColumn
-          Caption = #1056#1072#1079#1085#1080#1094#1072' ('#1074#1079#1074#1077#1096'.)'
-          DataBinding.FieldName = 'Amount_diff'
+        object RealWeight_total: TcxGridDBColumn
+          Caption = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1089#1099#1088#1086#1081
+          DataBinding.FieldName = 'RealWeight_total'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 70
-        end
-        object CuterWeight: TcxGridDBColumn
-          Caption = #1047#1072#1082#1088#1099#1090' '#1087'/'#1092' '#1092#1072#1082#1090'('#1074#1079#1074#1077#1096'.)'
-          DataBinding.FieldName = 'CuterWeight'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 85
+          HeaderHint = #1048#1090#1086#1075#1086' '#1074#1077#1089' '#1089#1099#1088#1086#1081' ('#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077')'
+          Width = 80
         end
         object CuterWeight_current: TcxGridDBColumn
-          Caption = #1053#1077' '#1079#1072#1082#1088#1099#1090' '#1087'/'#1092' '#1092#1072#1082#1090'('#1074#1079#1074#1077#1096'.)'
+          Caption = #1053#1077' '#1079#1072#1082#1088#1099#1090' '#1074#1077#1089' '#1082#1091#1090#1090#1077#1088
           DataBinding.FieldName = 'CuterWeight_current'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 100
+          HeaderHint = #1053#1077' '#1079#1072#1082#1088#1099#1090' '#1074#1077#1089' '#1082#1091#1090#1090#1077#1088' ('#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077')'
+          Width = 70
         end
-        object colRealWeight: TcxGridDBColumn
-          Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090
+        object RealWeight_current: TcxGridDBColumn
+          Caption = #1053#1077' '#1079#1072#1082#1088#1099#1090' '#1074#1077#1089' '#1089#1099#1088#1086#1081
+          DataBinding.FieldName = 'RealWeight_current'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1053#1077' '#1079#1072#1082#1088#1099#1090' '#1074#1077#1089' '#1089#1099#1088#1086#1081' ('#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077')'
+          Width = 70
+        end
+        object CuterWeight: TcxGridDBColumn
+          Caption = #1047#1072#1082#1088#1099#1090' '#1074#1077#1089' '#1082#1091#1090#1090#1077#1088
+          DataBinding.FieldName = 'CuterWeight'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1047#1072#1082#1088#1099#1090' '#1074#1077#1089' '#1082#1091#1090#1090#1077#1088' ('#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077')'
+          Options.Editing = False
+          Width = 75
+        end
+        object RealWeight: TcxGridDBColumn
+          Caption = #1047#1072#1082#1088#1099#1090' '#1074#1077#1089' '#1089#1099#1088#1086#1081
           DataBinding.FieldName = 'RealWeight'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
@@ -346,8 +415,9 @@ object GuideWorkProgressForm: TGuideWorkProgressForm
           Properties.ReadOnly = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          HeaderHint = #1047#1072#1082#1088#1099#1090' '#1074#1077#1089' '#1089#1099#1088#1086#1081' ('#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077')'
           Options.Editing = False
-          Width = 60
+          Width = 75
         end
         object colReceiptCode: TcxGridDBColumn
           Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'.'

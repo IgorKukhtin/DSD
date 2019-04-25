@@ -105,6 +105,9 @@ type
     bbProtocol: TdxBarButton;
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
+    StartBegin: TcxGridDBColumn;
+    EndBegin: TcxGridDBColumn;
+    diffBegin_sec: TcxGridDBColumn;
   private
   public
   end;

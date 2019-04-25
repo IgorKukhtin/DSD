@@ -27,7 +27,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 43101d
+      EditValue = 43466d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -37,7 +37,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 43101d
+      EditValue = 43466d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -672,7 +672,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         Width = 70
       end
       object StartBegin: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1086
+        Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1086
         DataBinding.FieldName = 'StartBegin'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -681,7 +681,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         Width = 70
       end
       object EndBegin: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1077
+        Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1077
         DataBinding.FieldName = 'EndBegin'
         Visible = False
         HeaderAlignmentHorz = taCenter
