@@ -402,7 +402,7 @@ BEGIN
         END :: TFloat AS SuperFinalPrice
         */
         -- ñ 07,04,2019
-      , (FinalPrice - FinalPrice * ((ddd.Deferment) * COALESCE (tmpCostCredit.Percent, vbCostCredit) / 100) :: TFloat AS SuperFinalPrice
+      , (FinalPrice - FinalPrice * ((ddd.Deferment) * COALESCE (tmpCostCredit.Percent, vbCostCredit)) / 100) :: TFloat AS SuperFinalPrice
 /* */
       , ddd.isTOP
       , ddd.PercentMarkup

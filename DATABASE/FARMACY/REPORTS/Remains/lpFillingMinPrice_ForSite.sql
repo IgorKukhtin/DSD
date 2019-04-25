@@ -386,7 +386,6 @@ ALTER FUNCTION lpFillingMinPrice_ForSite () OWNER TO postgres;
 */
 
 -- тест
---
-SELECT * FROM lpFillingMinPrice_ForSite ()
+--SELECT * FROM lpFillingMinPrice_ForSite ()
 -- SELECT Count(*) FROM MinPrice_ForSite
 
