@@ -32,6 +32,9 @@ type
     JuridicalGuide: TdsdGuides;
     UnitGuides: TdsdGuides;
     HospitalGuides: TdsdGuides;
+    cxLabel2: TcxLabel;
+    edJuridicalMedic: TcxButtonEdit;
+    GuidesJuridicalMedic: TdsdGuides;
   private
     { Private declarations }
   public

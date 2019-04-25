@@ -1195,6 +1195,23 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalMedicId'
+          Value = Null
+          Component = GuidesJuridicalMedic
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalMedicName'
+          Value = Null
+          Component = GuidesJuridicalMedic
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1801,6 +1818,10 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
       Category = 0
     end
   end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    Left = 488
+    Top = 248
+  end
   inherited PeriodChoice: TPeriodChoice
     Left = 40
     Top = 64
@@ -1948,6 +1969,14 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
         Name = 'inPartnerMedicalId'
         Value = ''
         Component = GuidesHospital
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalMedicId'
+        Value = Null
+        Component = GuidesJuridicalMedic
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
