@@ -58,7 +58,7 @@ type
     Price: TcxGridDBColumn;
     PartnerGoodsCode: TcxGridDBColumn;
     PartnerGoodsName: TcxGridDBColumn;
-    ContractGuides: TdsdGuides;
+    GuidesContract: TdsdGuides;
     cxLabel5: TcxLabel;
     edContract: TcxButtonEdit;
     edPaymentDate: TcxDateEdit;

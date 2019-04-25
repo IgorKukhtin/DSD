@@ -22,6 +22,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,OperDate TDateTime      --Дата документа
               ,InvNumber TVarChar      --№ документа
               ,StatusName TVarChar     --Состояние документа
+              ,UnitId Integer          --ID Подразделение
               ,UnitName TVarChar       --Подразделение
               ,MainJuridicalId integer  --Наше Юр. лицо
               ,MainJuridicalName TVarChar  --Наше Юр. лицо
@@ -346,6 +347,7 @@ BEGIN
             , Movement.OperDate                        AS OperDate
             , Movement.InvNumber                       AS InvNumber
             , Movement.StatusName                      AS StatusName
+            , tmpUnitParam.UnitID                      AS UnitID
             , tmpUnitParam.UnitName                    AS UnitName
             , tmpUnitParam.MainJuridicalId             AS MainJuridicalId
             , tmpUnitParam.MainJuridicalName           AS MainJuridicalName
@@ -400,6 +402,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В. 
+ 18.04.19                                                      *
  01.02.19                                                      *
  27.01.19                                                      *
  24.01.19                                                      *

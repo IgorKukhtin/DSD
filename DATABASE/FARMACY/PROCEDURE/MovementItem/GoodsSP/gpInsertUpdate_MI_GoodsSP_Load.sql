@@ -3,6 +3,11 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsSP_From_Excel (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                             , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsSP_From_Excel (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                            , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsSP_From_Excel (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                            , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_GoodsSP_From_Excel(
     IN inMovementId          Integer   ,    -- 
     IN inCode                Integer   ,    -- код объекта <Товар> MainID
@@ -25,6 +30,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_GoodsSP_From_Excel(
     IN inCodeATX             TVarChar  ,    --
     IN inMakerSP             TVarChar  ,    --
     IN inReestrSP            TVarChar  ,    --  
+    IN inIdSP                TVarChar  ,    --
+    IN inDosageIdSP          TVarChar  ,    --
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS VOID
@@ -141,6 +148,8 @@ BEGIN
                                                , inMakerSP             := TRIM(inMakerSP)       ::TVarChar
                                                , inReestrSP            := TRIM(inReestrSP)      ::TVarChar
                                                , inReestrDateSP        := TRIM(inReestrDateSP)  ::TVarChar
+                                               , inIdSP                := TRIM(inIdSP)          ::TVarChar
+                                               , inDosageIdSP          := TRIM(inDosageIdSP)    ::TVarChar
                                                , inUserId              := vbUserId);
    
 END;
@@ -149,6 +158,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.04.19         * add IdSP, inDosageIdSP
  25.08.18         *
 */
 

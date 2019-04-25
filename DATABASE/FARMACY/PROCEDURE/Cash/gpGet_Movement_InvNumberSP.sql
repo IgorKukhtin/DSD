@@ -31,6 +31,7 @@ BEGIN
             WHERE Movement.OperDate >= DATE_TRUNC ('YEAR', CURRENT_DATE) 
               AND Movement.OperDate < DATE_TRUNC ('YEAR', CURRENT_DATE) + INTERVAL '1 YEAR'
               AND Movement.DescId = zc_Movement_Check()
+              AND Movement.StatusId <> zc_Enum_Status_Erased()
             LIMIT 1)
   THEN
     outIsExists := True;  
@@ -47,6 +48,7 @@ ALTER FUNCTION gpGet_Movement_InvNumberSP (Integer, TVarChar, TVarChar) OWNER TO
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 22.04.19                                                                     * 
  18.04.19                                                                     * 
 
 */

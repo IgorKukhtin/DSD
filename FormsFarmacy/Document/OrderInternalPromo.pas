@@ -60,7 +60,6 @@ type
     bbactStartLoad: TdxBarButton;
     InsertRecordChild: TInsertRecord;
     bbInsertRecordChild: TdxBarButton;
-    actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
     cxSplitter2: TcxSplitter;
     cxGrid2: TcxGrid;
@@ -90,9 +89,8 @@ type
     macInsertPromoPartner: TMultiAction;
     actRefreshPromoPartner: TdsdDataSetRefresh;
     bbInsertPromoPartner: TdxBarButton;
-    actOpenReportMinPriceForm: TdsdOpenForm;
+    actOpenReport: TdsdOpenForm;
     bbReportMinPriceForm: TdxBarButton;
-    actOpenReportMinPrice_All: TdsdOpenForm;
     bbOpenReportMinPrice_All: TdxBarButton;
     actUpdateMovementItemContainer: TdsdExecStoredProc;
     spUpdate_MovementItemContainer: TdsdStoredProc;

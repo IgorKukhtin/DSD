@@ -12,7 +12,9 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                TaxUnitNight Boolean, TaxUnitStartDate TDateTime, TaxUnitEndDate TDateTime,
                TimePUSHFinal1 TDateTime, TimePUSHFinal2 TDateTime,
                isSP Boolean, DateSP TDateTime, StartTimeSP TDateTime, EndTimeSP TDateTime,
-               FtpDir TVarChar
+               FtpDir TVarChar,
+               Helsi_Id TVarChar, Helsi_be TVarChar, Helsi_ClientId TVarChar, 
+               Helsi_ClientSecret TVarChar, Helsi_UserName TVarChar, Helsi_Password TVarChar
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -87,6 +89,12 @@ BEGIN
        , CASE WHEN Object_Parent.ID IN (7433754, 4103484, 10127251) 
          THEN 'Franchise' 
          ELSE '' END::TVarChar                               AS FtpDir
+       , Object_Helsi_Id.ValueData                           AS Helsi_Id
+       , Object_Helsi_be.ValueData                           AS Helsi_be
+       , Object_Helsi_ClientId.ValueData                     AS Helsi_ClientId
+       , Object_Helsi_ClientSecret.ValueData                 AS Helsi_ClientSecret
+       , Object_Helsi_UserName.ValueData                     AS Helsi_UserName
+       , Object_Helsi_Password.ValueData                     AS Helsi_Password
 
    FROM Object AS Object_Unit
 
@@ -129,6 +137,13 @@ BEGIN
                              ON ObjectDate_EndSP.ObjectId = Object_Unit.Id
                             AND ObjectDate_EndSP.DescId = zc_ObjectDate_Unit_EndSP()
 
+        LEFT JOIN Object AS Object_Helsi_Id ON Object_Helsi_Id.Id = zc_Enum_Helsi_Id()
+        LEFT JOIN Object AS Object_Helsi_be ON Object_Helsi_be.Id = zc_Enum_Helsi_be()
+        LEFT JOIN Object AS Object_Helsi_ClientId ON Object_Helsi_ClientId.Id = zc_Enum_Helsi_ClientId()
+        LEFT JOIN Object AS Object_Helsi_ClientSecret ON Object_Helsi_ClientSecret.Id = zc_Enum_Helsi_ClientSecret()
+        LEFT JOIN Object AS Object_Helsi_UserName ON Object_Helsi_UserName.Id = zc_Enum_Helsi_UserName()
+        LEFT JOIN Object AS Object_Helsi_Password ON Object_Helsi_Password.Id = zc_Enum_Helsi_Password()
+
    WHERE Object_Unit.Id = vbUnitId
    --LIMIT 1
    ;
@@ -143,6 +158,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 21.04.19                                                       *
  05.04.19                                                       *
  22.03.19                                                       *
  20.02.19                                                       *
@@ -150,5 +166,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- ÚÂÒÚ
--- 
-SELECT * FROM gpSelect_Cash_UnitConfig('3000497773', '308120')
+-- SELECT * FROM gpSelect_Cash_UnitConfig('3000497773', '308120')

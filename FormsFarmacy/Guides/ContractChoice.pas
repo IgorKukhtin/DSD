@@ -49,6 +49,9 @@ type
     GuidesJuridical: TdsdGuides;
     FormParams: TdsdFormParams;
     RefreshDispatcher: TRefreshDispatcher;
+    cxLabel1: TcxLabel;
+    edJuridicalBasis: TcxButtonEdit;
+    GuidesJuridicalBasis: TdsdGuides;
   private
     { Private declarations }
   public

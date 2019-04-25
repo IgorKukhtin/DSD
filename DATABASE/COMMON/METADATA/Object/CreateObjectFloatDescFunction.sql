@@ -1353,9 +1353,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_PartionDateKind_Month() RETURNS Intege
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_PartionDateKind(), 'zc_ObjectFloat_PartionDateKind_Month', 'Кол-во месяцев' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionDateKind_Month');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_RetailCostCredit_MinPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RetailCostCredit_MinPrice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_RetailCostCredit(), 'zc_ObjectFloat_RetailCostCredit_MinPrice', 'Начальная цена' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RetailCostCredit_MinPrice');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_RetailCostCredit_Percent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RetailCostCredit_Percent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_RetailCostCredit(), 'zc_ObjectFloat_RetailCostCredit_Percent', '% кредитных средств' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RetailCostCredit_Percent');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 23.04.19         * zc_ObjectFloat_RetailCostCredit_MinPrice
+                    zc_ObjectFloat_RetailCostCredit_Percent
  19.04.19         * zc_ObjectFloat_PartionDateKind_Month
  10.04.19         * zc_ObjectFloat_GoodsPropertyValue_WeightOnBox
                     zc_ObjectFloat_GoodsPropertyValue_CountOnBox

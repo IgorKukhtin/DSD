@@ -3,6 +3,13 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_GoodsSP (Integer, Integer, Integer, Integer, Integer, Integer
                                                            , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                            , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_GoodsSP (Integer, Integer, Integer, Integer, Integer, Integer
+                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                           , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer);
+
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_GoodsSP (Integer, Integer, Integer, Integer, Integer, Integer
+                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                           , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_GoodsSP(
  INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа>
@@ -25,6 +32,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_GoodsSP(
     IN inMakerSP              TVarChar,
     IN inReestrSP             TVarChar,
     IN inReestrDateSP         TVarChar,
+    IN inIdSP                 TVarChar,
+    IN inDosageIdSP           TVarChar,
     IN inUserId               Integer     -- пользователь
 )
 RETURNS Integer
@@ -67,6 +76,10 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_ReestrSP(), ioId, inReestrSP);
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_ReestrDateSP(), ioId, inReestrDateSP);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_IdSP(), ioId, inIdSP);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_DosageIdSP(), ioId, inDosageIdSP);
 
     -- сохранили связь с <>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_IntenalSP(), ioId, inIntenalSPId);
@@ -85,6 +98,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А,
+               Фелонюк И.В.    Кухтин И.В.   Климентьев К.И.
+ 22.04.19         * add IdSP, inDosageIdSP
  14.08.18         *
  */

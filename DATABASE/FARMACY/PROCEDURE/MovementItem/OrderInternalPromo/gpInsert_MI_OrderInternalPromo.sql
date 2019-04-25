@@ -78,12 +78,11 @@ BEGIN
          WHERE COALESCE (SelectMinPrice_AllGoods.Price,0) > 0
          ) AS tmpAll;
          
-    -- по мастеру заполняем     zc_Movement_OrderInternalPromoPartner 
-    PERFORM gpInsertUpdate_Movement_OrderInternalPromoPartner (ioId         := 0
+    -- по мастеру заполняем zc_Movement_OrderInternalPromoPartner 
+    PERFORM lpInsertUpdate_Movement_OrderInternalPromoPartner (ioId         := 0
                                                              , inParentId   := inMovementId
                                                              , inJuridicalId:= tmp.JuridicalId
-                                                             , inComment    := ''  ::TVarChar
-                                                             , inSession    := inSession) 
+                                                             , inUserId     := vbUserId)
     FROM (SELECT DISTINCT MILinkObject_Juridical.ObjectId AS JuridicalId
           FROM MovementItem
                INNER JOIN MovementItemLinkObject AS MILinkObject_Juridical
@@ -97,7 +96,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

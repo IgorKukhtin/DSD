@@ -1,6 +1,7 @@
 -- Function: gpInsert_Movement_Invoice_Check()
 
 DROP FUNCTION IF EXISTS gpInsert_Movement_Invoice_Check (TDateTime, TDateTime, Integer, Integer, Integer, TDateTime, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Movement_Invoice_Check (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TDateTime, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Movement_Invoice_Check(
     IN inStartDate        TDateTime,  -- Дата начала
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsert_Movement_Invoice_Check(
     IN inJuridicalId      Integer  ,  -- Юр.лицо
     IN inUnitId           Integer  ,  -- Аптека
     IN inPartnerMedicalId Integer  ,  -- Больница
+    IN inJuridicalMedicId Integer  ,  -- юр.лицо плательщик с 01,04,2019
     
     IN inDateInvoice      TDateTime  , -- дата счета
     IN inInvoice          TVarChar   , -- счет
@@ -29,12 +31,12 @@ BEGIN
        THEN
            RETURN;
     END IF;
-
+/* по просьбе Любы 23,04,2019 закоментила
     IF COALESCE (inPartnerMedicalId, 0) = 0
        THEN
            RAISE EXCEPTION 'Ошибка.Не выбран Заклад охорони здоров`я.';
     END IF;
-
+*/
     CREATE TEMP TABLE tmpReport (MovementId_Check Integer, JuridicalId Integer, PartnerMedicalId Integer,  ContractId Integer, SummaComp TFloat, CountSP TFloat) ON COMMIT DROP;
     CREATE TEMP TABLE tmpInvoice (MovementId Integer, InvNumber TVarChar, JuridicalId Integer, PartnerMedicalId Integer,  ContractId Integer) ON COMMIT DROP;
 
@@ -42,16 +44,31 @@ BEGIN
      INSERT INTO tmpReport (MovementId_Check, JuridicalId, PartnerMedicalId, ContractId, SummaComp, CountSP)
        SELECT  tmp.MovementId
              , tmp.JuridicalId
-             , tmp.HospitalId
+             , CASE WHEN inJuridicalMedicId <> 0 AND inStartDate >= '01.04.2019'  THEN inJuridicalMedicId ELSE tmp.HospitalId END
              , tmp.ContractId
-             , SUM (tmp.SummaSP)          AS SummaComp
-             , MAX (tmp.CountInvNumberSP) AS CountSP
-       FROM gpReport_Check_SP(inStartDate:=inStartDate, inEndDate:=inEndDate, inJuridicalId:=inJuridicalId
-                            , inUnitId:= inUnitId, inHospitalId:=inPartnerMedicalId, inSession:=inSession) AS tmp
+             , SUM (tmp.SummaComp)          AS SummaComp
+             , SUM (tmp.CountSP)            AS CountSP
+       FROM (SELECT  tmp.MovementId
+                   , tmp.JuridicalId
+                   , tmp.HospitalId
+                   , CASE WHEN inJuridicalMedicId <> 0 AND inStartDate >= '01.04.2019'  THEN tmp.ContractId_Department ELSE tmp.ContractId END AS ContractId
+                   , SUM (tmp.SummaSP)          AS SummaComp
+                   ,  (tmp.CountInvNumberSP) AS CountSP
+             FROM gpReport_Check_SP(inStartDate:=inStartDate, inEndDate:=inEndDate, inJuridicalId:=inJuridicalId
+                                  , inUnitId:= inUnitId, inHospitalId:=inPartnerMedicalId, inJuridicalMedicId := inJuridicalMedicId, inSession:=inSession) AS tmp
+             GROUP BY tmp.MovementId
+                    , tmp.JuridicalId
+                    , tmp.HospitalId
+                    , CASE WHEN inJuridicalMedicId <> 0 AND inStartDate >= '01.04.2019'  THEN tmp.ContractId_Department ELSE tmp.ContractId END
+                    , tmp.CountInvNumberSP
+             ) AS tmp
+             
        GROUP BY tmp.MovementId
               , tmp.JuridicalId
-              , tmp.HospitalId
+              , CASE WHEN inJuridicalMedicId <> 0 AND inStartDate >= '01.04.2019'  THEN inJuridicalMedicId ELSE tmp.HospitalId END
               , tmp.ContractId;
+
+
 
      -- ищем , вдруг уже создан счет
      INSERT INTO tmpInvoice (MovementId, InvNumber, JuridicalId, PartnerMedicalId, ContractId)

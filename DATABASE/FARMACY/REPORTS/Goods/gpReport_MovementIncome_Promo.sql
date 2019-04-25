@@ -20,6 +20,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
              , NDS         TFloat      -- % ндс
              , OperDate TDateTime      --Дата документа
              , InvNumber TVarChar      --№ документа
+             , UnitID Integer          --ID Подразделение
              , UnitName TVarChar       --Подразделение
              , MainJuridicalId Integer  --Наше Юр. лицо
              , MainJuridicalName TVarChar  --Наше Юр. лицо
@@ -249,6 +250,7 @@ BEGIN
    
   -- получаем свойства Документов
   , tmpMov AS (SELECT  tmpMovMI.MovementId           
+                     , Object_Unit.ID                           AS UnitId
                      , Object_Unit.ValueData                    AS UnitName
                      , Object_MainJuridical.Id                  AS MainJuridicalId
                      , Object_MainJuridical.ValueData           AS MainJuridicalName
@@ -393,6 +395,7 @@ BEGIN
 
             , tmpMovMI.OperDate
             , tmpMovMI.InvNumber
+            , tmpMov.UnitID
             , tmpMov.UnitName
             , tmpMov.MainJuridicalId
             , tmpMov.MainJuridicalName
@@ -447,6 +450,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В. 
+ 18.04.19                                                                                    *
  01.02.19                                                      *
  27.01.19                                                                                    *
  17.01.19                                                                                    *

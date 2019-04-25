@@ -3,8 +3,8 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' <'#1054#1090#1095#1077#1090#1072' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1090#1086#1074#1072#1088#1086#1074' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072'>'
-  ClientHeight = 214
-  ClientWidth = 383
+  ClientHeight = 262
+  ClientWidth = 378
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 74
-    Top = 166
+    Top = 222
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
   end
   object cxButton2: TcxButton
     Left = 248
-    Top = 166
+    Top = 222
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -116,15 +116,32 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
     TabOrder = 11
     Width = 230
   end
+  object cxLabel2: TcxLabel
+    Left = 30
+    Top = 158
+    Caption = #1070#1088'.'#1083#1080#1094#1086' '#1054#1047' ('#1087#1083#1072#1090#1077#1083#1100#1096#1080#1082'):'
+  end
+  object edJuridicalMedic: TcxButtonEdit
+    Left = 31
+    Top = 178
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 322
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
     Left = 344
-    Top = 165
+    Top = 221
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 223
-    Top = 171
+    Left = 215
+    Top = 211
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -137,7 +154,7 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 128
-    Top = 177
+    Top = 233
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -207,9 +224,26 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalMedicId'
+        Value = Null
+        Component = GuidesJuridicalMedic
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalMedicName'
+        Value = Null
+        Component = GuidesJuridicalMedic
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 23
-    Top = 147
+    Top = 203
   end
   object JuridicalGuide: TdsdGuides
     KeyField = 'Id'
@@ -297,5 +331,34 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
       end>
     Left = 176
     Top = 112
+  end
+  object GuidesJuridicalMedic: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalMedic
+    FormNameParam.Value = 'TJuridicalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridicalForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridicalMedic
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridicalMedic
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 184
+    Top = 176
   end
 end

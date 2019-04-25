@@ -177,7 +177,10 @@ BEGIN
         WHERE ObjectBoolean_Top.ValueData = TRUE OR ObjectFloat_PercentMarkup.ValueData <> 0
        )
 
-    -- почти финальный список
+  -- данные по % кредитных средств из справочника
+  , tmpCostCredit AS (SELECT * FROM gpSelect_Object_RetailCostCredit(inRetailId := inObjectId, inShowAll := FALSE, inisErased := FALSE, inSession := inUserId :: TVarChar) AS tmp)
+
+   -- почти финальный список
   , FinalList AS
        (SELECT 
         ddd.GoodsId
@@ -220,7 +223,7 @@ BEGIN
         END :: TFloat AS SuperFinalPrice
 */
         -- с 07,04,2019
-      , (FinalPrice - FinalPrice * ((ddd.Deferment) * vbCostCredit) / 100) :: TFloat AS SuperFinalPrice
+      , (FinalPrice - FinalPrice * ((ddd.Deferment) * COALESCE (tmpCostCredit.Percent, vbCostCredit)) / 100) :: TFloat AS SuperFinalPrice
       , ddd.isTOP
       , ddd.PercentMarkup
 
@@ -310,6 +313,7 @@ BEGIN
        -- Установки для ценовых групп (если товар с острочкой - тогда этот процент уравновешивает товары с оплатой по факту)
        LEFT JOIN PriceSettings    ON ddd.MinPrice BETWEEN PriceSettings.MinPrice    AND PriceSettings.MaxPrice
        LEFT JOIN PriceSettingsTOP ON ddd.MinPrice BETWEEN PriceSettingsTOP.MinPrice AND PriceSettingsTOP.MaxPrice
+       LEFT JOIN tmpCostCredit    ON ddd.MinPrice BETWEEN tmpCostCredit.MinPrice    AND tmpCostCredit.PriceLimit
    )
     -- отсортировали по цене + Дней отсрочки и получили первого
   , MinPriceList AS (SELECT *

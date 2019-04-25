@@ -37,13 +37,13 @@ type
     NumLine: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     ceUnit: TcxButtonEdit;
-    UnitGuides: TdsdGuides;
+    GuidesUnit: TdsdGuides;
     cxLabel4: TcxLabel;
     edJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
+    GuidesJuridical: TdsdGuides;
     cxLabel5: TcxLabel;
     ceHospital: TcxButtonEdit;
-    HospitalGuides: TdsdGuides;
+    GuidesHospital: TdsdGuides;
     actPrint_152: TdsdPrintAction;
     bbPrint1: TdxBarButton;
     OperDate: TcxGridDBColumn;
@@ -86,6 +86,9 @@ type
     actGetReportNameSPDepartmen: TdsdExecStoredProc;
     spGetReporNameSPDepartment: TdsdStoredProc;
     DepartmentId: TcxGridDBColumn;
+    cxLabel6: TcxLabel;
+    edJuridicalMedic: TcxButtonEdit;
+    GuidesJuridicalMedic: TdsdGuides;
   private
     { Private declarations }
   public

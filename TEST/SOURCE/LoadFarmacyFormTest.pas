@@ -111,6 +111,7 @@ type
     procedure LoadRepriceFormTest;
     procedure LoadRepriceChangeFormTest;
     procedure LoadRetailFormTest;
+    procedure LoadRetailCostCreditFormTest;
     procedure LoadReturnInFormTest;
     procedure LoadReturnTypeFormTest;
     procedure LoadReturnOutFormTest;
@@ -1073,6 +1074,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRetailEditForm');
 end;
 
+procedure TLoadFormTest.LoadRetailCostCreditFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailCostCreditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRetailCostCreditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailCostCreditEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRetailCostCreditEditForm');
+end;
+
 procedure TLoadFormTest.LoadReturnOutFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutForm'));
@@ -1385,6 +1394,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPromoForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPromoJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPromoJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderInternalPromoOLAPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderInternalPromoOLAPForm');
 end;
 
 procedure TLoadFormTest.LoadObjectUnionFormTest;
@@ -1500,6 +1512,7 @@ procedure TLoadFormTest.LoadIncomeFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyForm'));

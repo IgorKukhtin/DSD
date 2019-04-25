@@ -24,7 +24,8 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                isMCSAuto Boolean, isMCSNotRecalcOld Boolean,
                AccommodationId Integer, AccommodationName TVarChar,
                PriceChange TFloat, FixPercent TFloat, Multiplicity TFloat,
-               DoesNotShare boolean, GoodsAnalogId Integer, GoodsAnalogName TVarChar
+               DoesNotShare boolean, GoodsAnalogId Integer, GoodsAnalogName TVarChar,
+               CountSP TFloat, IdSP TVarChar, DosageIdSP TVarChar
                )
 AS
 $BODY$
@@ -212,11 +213,14 @@ BEGIN
 
     RETURN QUERY
       WITH -- Товары соц-проект
-           tmpGoodsSP AS (SELECT MovementItem.ObjectId       AS GoodsId
-                               , MI_IntenalSP.ObjectId       AS IntenalSPId
-                               , MIFloat_PriceSP.ValueData   AS PriceSP
-                               , MIFloat_PaymentSP.ValueData AS PaymentSP
-                                 -- № п/п - на всякий случай
+           tmpGoodsSP AS (SELECT MovementItem.ObjectId         AS GoodsId
+                               , MI_IntenalSP.ObjectId         AS IntenalSPId
+                               , MIFloat_PriceSP.ValueData     AS PriceSP
+                               , MIFloat_PaymentSP.ValueData   AS PaymentSP
+                               , MIFloat_CountSP.ValueData     AS CountSP
+                               , MIString_IdSP.ValueData       AS IdSP
+                               , MIString_DosageIdSP.ValueData AS DosageIdSP
+                                                                -- № п/п - на всякий случай
                                , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
                           FROM Movement
                                INNER JOIN MovementDate AS MovementDate_OperDateStart
@@ -244,6 +248,19 @@ BEGIN
                                                            ON MIFloat_PaymentSP.MovementItemId = MovementItem.Id
                                                           AND MIFloat_PaymentSP.DescId = zc_MIFloat_PaymentSP()
    
+                               -- Кількість одиниць лікарського засобу у споживчій упаковці (Соц. проект)(6)
+                               LEFT JOIN MovementItemFloat AS MIFloat_CountSP
+                                                           ON MIFloat_CountSP.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_CountSP.DescId = zc_MIFloat_CountSP()
+                               -- ID лікарського засобу
+                               LEFT JOIN MovementItemString AS MIString_IdSP
+                                                            ON MIString_IdSP.MovementItemId = MovementItem.Id
+                                                           AND MIString_IdSP.DescId = zc_MIString_IdSP()
+                               -- DosageID лікарського засобу 
+                               LEFT JOIN MovementItemString AS MIString_DosageIdSP
+                                                            ON MIString_DosageIdSP.MovementItemId = MovementItem.Id
+                                                           AND MIString_DosageIdSP.DescId = zc_MIString_DosageIdSP()
+
                           WHERE Movement.DescId = zc_Movement_GoodsSP()
                             AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                          )
@@ -651,6 +668,10 @@ BEGIN
           , COALESCE (ObjectBoolean_DoesNotShare.ValueData, FALSE) AS DoesNotShare
           , Object_GoodsAnalog.Id                                  AS GoodsAnalogId
           , Object_GoodsAnalog.ValueData                           AS GoodsAnalogName
+          , tmpGoodsSP.CountSP
+          , tmpGoodsSP.IdSP
+          , tmpGoodsSP.DosageIdSP
+          
 
          FROM
             CashSessionSnapShot
@@ -726,7 +747,8 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
- 04.05.19                                                                                                    * GoodsAnalog
+ 24.04.19                                                                                                    * Helsi
+ 04.04.19                                                                                                    * GoodsAnalog
  06.03.19                                                                                                    * DoesNotShare
  11.02.19                                                                                                    *
  30.10.18                                                                                                    *

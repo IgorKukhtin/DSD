@@ -40,7 +40,7 @@ BEGIN
      INSERT INTO tmpReport (MovementId_Sale, JuridicalId, PartnerMedicalId, ContractId, SummaComp, CountSP)
        SELECT  tmp.MovementId
              , tmp.JuridicalId
-             , tmp.HospitalId
+             , CASE WHEN inPartnerMedicalId tmp.HospitalId
              , tmp.ContractId
              , SUM (tmp.SummaComp) AS SummaComp
              , MAX (CountSP)       AS CountSP

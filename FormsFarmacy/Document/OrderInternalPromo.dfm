@@ -407,10 +407,8 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'IsErased'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 97
       end
     end
@@ -662,40 +660,6 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
           StoredProc = spGet
         end>
     end
-    object actOpenReportMinPrice_All: TdsdOpenForm
-      Category = 'DSDLib'
-      TabSheet = tsMain
-      MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1052#1080#1085'. '#1094#1077#1085#1072' '#1076#1080#1089#1090#1088'. ('#1074#1089#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1080')>'
-      Hint = #1054#1090#1095#1077#1090' <'#1052#1080#1085'. '#1094#1077#1085#1072' '#1076#1080#1089#1090#1088'. ('#1074#1089#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1080')>'
-      ImageIndex = 24
-      FormName = 'TReport_MinPrice_byPromoForm'
-      FormNameParam.Value = 'TReport_MinPrice_byPromoForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inMovementId'
-          Value = '0'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInvNumber'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 'NULL'
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
     object PartnerChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -723,15 +687,16 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end>
       isShowModal = False
     end
-    object actOpenReportMinPriceForm: TdsdOpenForm
+    object actOpenReport: TdsdOpenForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1052#1080#1085'. '#1094#1077#1085#1072' '#1076#1080#1089#1090#1088#1080#1073#1100#1102#1090#1077#1088#1072' ('#1084#1072#1088#1082#1077#1090#1080#1085#1075')>'
-      Hint = #1054#1090#1095#1077#1090' <'#1052#1080#1085'. '#1094#1077#1085#1072' '#1076#1080#1089#1090#1088#1080#1073#1100#1102#1090#1077#1088#1072' ('#1084#1072#1088#1082#1077#1090#1080#1085#1075')>'
+      PostDataSetBeforeExecute = False
+      Caption = #1054#1090#1095#1077#1090' <'#1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077' ('#1084#1072#1088#1082#1077#1090'-'#1090#1086#1074#1072#1088#1099')>'
+      Hint = #1054#1090#1095#1077#1090' <'#1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077' ('#1084#1072#1088#1082#1077#1090'-'#1090#1086#1074#1072#1088#1099')>'
       ImageIndex = 26
-      FormName = 'TReport_MinPrice_byPromoForm'
-      FormNameParam.Value = 'TReport_MinPrice_byPromoForm'
+      FormName = 'TReport_OrderInternalPromoOLAPForm'
+      FormNameParam.Value = 'TReport_OrderInternalPromoOLAPForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -744,53 +709,32 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inInvNumber'
+          Name = 'inRetailId'
           Value = ''
-          Component = edInvNumber
+          Component = GuidesRetail
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inRetailName'
+          Value = Null
+          Component = GuidesRetail
+          ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inOperDate'
-          Value = 42132d
-          Component = edOperDate
+          Name = 'inStartDate'
+          Value = 'NULL'
+          Component = edStartSale
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actOpenReportForm: TdsdOpenForm
-      Category = 'DSDLib'
-      TabSheet = tsMain
-      MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1080#1093#1086#1076#1072'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1055#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1080#1093#1086#1076#1072' '#1090#1086#1074#1072#1088#1086#1074' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072'>'
-      ImageIndex = 25
-      FormName = 'TReport_MovementIncome_byPromoForm'
-      FormNameParam.Value = 'TReport_MovementIncome_byPromoForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inMovementId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
         end
         item
-          Name = 'inInvNumber'
-          Value = ''
-          Component = edInvNumber
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
+          Name = 'inEndDate'
           Value = 42132d
           Component = edOperDate
           DataType = ftDateTime
@@ -1019,6 +963,18 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end
         item
           Visible = True
+          ItemName = 'bbSetErasedPromoPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedPromoPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertMaster'
         end
         item
@@ -1094,8 +1050,11 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Category = 0
     end
     object bbOpenReportForm: TdxBarButton
-      Action = actOpenReportForm
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1080#1093#1086#1076#1072'>'
       Category = 0
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1086' '#1094#1077#1085#1072#1084' '#1087#1088#1080#1093#1086#1076#1072' '#1090#1086#1074#1072#1088#1086#1074' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072'>'
+      Visible = ivAlways
+      ImageIndex = 25
     end
     object bbInsertRecordPartner: TdxBarButton
       Action = InsertRecordPartner
@@ -1107,6 +1066,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     end
     object bbSetUnErasedPromoPartner: TdxBarButton
       Action = actSetUnErasedPromoPartner
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
       Category = 0
     end
     object bbInsertPromoPartner: TdxBarButton
@@ -1114,12 +1074,15 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       Category = 0
     end
     object bbReportMinPriceForm: TdxBarButton
-      Action = actOpenReportMinPriceForm
+      Action = actOpenReport
       Category = 0
     end
     object bbOpenReportMinPrice_All: TdxBarButton
-      Action = actOpenReportMinPrice_All
+      Caption = #1054#1090#1095#1077#1090' <'#1052#1080#1085'. '#1094#1077#1085#1072' '#1076#1080#1089#1090#1088'. ('#1074#1089#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1080')>'
       Category = 0
+      Hint = #1054#1090#1095#1077#1090' <'#1052#1080#1085'. '#1094#1077#1085#1072' '#1076#1080#1089#1090#1088'. ('#1074#1089#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1080')>'
+      Visible = ivAlways
+      ImageIndex = 24
     end
     object dxBarButton1: TdxBarButton
       Action = actUpdateMovementItemContainer
@@ -1727,7 +1690,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
-    Left = 302
+    Left = 278
     Top = 513
   end
   object spSelectPromoPartner: TdsdStoredProc
@@ -1759,31 +1722,15 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     Top = 496
   end
   object spInsertUpdatePromoPartner: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_OrderInternalPromoPartner'
+    StoredProcName = 'gpUpdate_Movement_OrderInternalPromoPartner'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = PartnerDCS
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inParentId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalId'
-        Value = Null
-        Component = PartnerDCS
-        ComponentItem = 'JuridicalId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1793,6 +1740,15 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Component = PartnerDCS
         ComponentItem = 'Comment'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisErased'
+        Value = Null
+        Component = PartnerDCS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1852,8 +1808,8 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     PackSize = 1
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 376
-    Top = 496
+    Left = 344
+    Top = 504
   end
   object spUpdate_MovementItemContainer: TdsdStoredProc
     StoredProcName = 'gpUpdate_MIContainer_OrderInternalPromo'

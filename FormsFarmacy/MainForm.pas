@@ -510,6 +510,8 @@ type
     miOrderInternalPromo: TMenuItem;
     actPartionDateKind: TdsdOpenForm;
     N184: TMenuItem;
+    actRetailCostCredit: TdsdOpenForm;
+    miRetailCostCredit: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
