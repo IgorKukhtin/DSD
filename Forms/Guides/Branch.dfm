@@ -39,7 +39,6 @@ object BranchForm: TBranchForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -58,7 +57,7 @@ object BranchForm: TBranchForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 124
+        Width = 150
       end
       object InvNumber: TcxGridDBColumn
         Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1082#1086#1076
@@ -66,14 +65,14 @@ object BranchForm: TBranchForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 46
+        Width = 80
       end
       object PlaceOf: TcxGridDBColumn
         Caption = #1052#1077#1089#1090#1086' '#1089#1086#1089#1090#1072#1074#1083#1077#1085#1080#1103' '#1076#1086#1082'.'
         DataBinding.FieldName = 'PlaceOf'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Width = 120
       end
       object PersonalName: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1041#1091#1093#1075#1072#1083#1090#1077#1088' '#1088#1072#1089#1093'. '#1085#1072#1082#1083'.'
@@ -88,7 +87,7 @@ object BranchForm: TBranchForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 75
+        Width = 120
       end
       object PersonalStoreName: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1050#1083#1072#1076#1086#1074#1097#1080#1082')'
@@ -103,7 +102,7 @@ object BranchForm: TBranchForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 76
+        Width = 120
       end
       object PersonalBookkeeperName: TcxGridDBColumn
         Caption = #1060#1048#1054' '#1089#1086#1090#1088#1091#1076#1085#1080#1082' ('#1041#1091#1093#1075#1072#1083#1090#1077#1088') '#1085#1072#1083#1086#1075'. '#1085#1072#1082#1083'.'
@@ -118,7 +117,7 @@ object BranchForm: TBranchForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 75
+        Width = 200
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -166,7 +165,7 @@ object BranchForm: TBranchForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 76
+        Width = 120
       end
       object Member1Name: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088' ('#1058#1058#1053')'
@@ -174,7 +173,7 @@ object BranchForm: TBranchForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 76
+        Width = 120
       end
       object Member2Name: TcxGridDBColumn
         Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1058#1058#1053')'
@@ -182,7 +181,7 @@ object BranchForm: TBranchForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 76
+        Width = 120
       end
       object Member3Name: TcxGridDBColumn
         Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1086#1077' '#1083#1080#1094#1086'('#1074#1110#1076#1087#1091#1089#1082' '#1076#1086#1079#1074#1086#1083#1080#1074') ('#1058#1058#1053')'
@@ -190,7 +189,7 @@ object BranchForm: TBranchForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 76
+        Width = 200
       end
       object Member4Name: TcxGridDBColumn
         Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1086#1077' '#1083#1080#1094#1086'('#1079#1076#1072#1074') ('#1058#1058#1053')'

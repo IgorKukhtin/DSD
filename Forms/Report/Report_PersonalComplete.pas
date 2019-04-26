@@ -83,6 +83,13 @@ type
     BranchName: TcxGridDBColumn;
     bbIsDay: TdxBarControlContainerItem;
     UnitName: TcxGridDBColumn;
+    cbIsMovement: TcxCheckBox;
+    bbIsMovement: TdxBarControlContainerItem;
+    BranchFromName: TcxGridDBColumn;
+    BranchToName: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    MovementDescName: TcxGridDBColumn;
   private
   public
   end;

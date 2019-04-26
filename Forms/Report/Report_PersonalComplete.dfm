@@ -128,6 +128,50 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object MovementDescName: TcxGridDBColumn
+        Caption = #1042#1080#1076' ljrevtynf'
+        DataBinding.FieldName = 'MovementDescName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090
+        Width = 80
+      end
+      object BranchFromName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083' '#1054#1090' '#1082#1086#1075#1086
+        DataBinding.FieldName = 'BranchFromName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090
+        Width = 70
+      end
+      object BranchToName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083' '#1050#1086#1084#1091
+        DataBinding.FieldName = 'BranchToName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090
+        Width = 70
+      end
+      object FromName: TcxGridDBColumn
+        Caption = #1054#1090' '#1082#1086#1075#1086
+        DataBinding.FieldName = 'FromName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090
+        Width = 70
+      end
+      object ToName: TcxGridDBColumn
+        Caption = #1050#1086#1084#1091
+        DataBinding.FieldName = 'ToName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090
+        Width = 70
+      end
       object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
@@ -283,7 +327,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     object deStart: TcxDateEdit
       Left = 60
       Top = 5
-      EditValue = 42736d
+      EditValue = 43466d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -292,7 +336,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     object deEnd: TcxDateEdit
       Left = 60
       Top = 30
-      EditValue = 42736d
+      EditValue = 43466d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 3
@@ -359,6 +403,15 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     Properties.ReadOnly = True
     TabOrder = 8
     Width = 251
+  end
+  object cbIsMovement: TcxCheckBox
+    Left = 416
+    Top = 87
+    Action = actIsDay
+    Caption = #1054#1090' '#1082#1086#1075#1086' / '#1050#1086#1084#1091
+    Properties.ReadOnly = False
+    TabOrder = 9
+    Width = 109
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -482,6 +535,10 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         end
         item
           Visible = True
+          ItemName = 'bbIsMovement'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -547,6 +604,13 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       Hint = 'bbIsDay'
       Visible = ivAlways
       Control = cbIsDay
+    end
+    object bbIsMovement: TdxBarControlContainerItem
+      Caption = 'bbIsMovement'
+      Category = 0
+      Hint = 'bbIsMovement'
+      Visible = ivAlways
+      Control = cbIsMovement
     end
   end
   object ActionList: TActionList
@@ -638,14 +702,6 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inIsDay'
-          Value = Null
-          Component = cbIsDay
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'BranchId'
           Value = Null
           Component = BranchGuides
@@ -659,6 +715,22 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Component = BranchGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inIsDay'
+          Value = Null
+          Component = cbIsDay
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inIsMovement'
+          Value = Null
+          Component = cbIsMovement
+          DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1003,6 +1075,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       item
         Name = 'inIsDetail'
         Value = False
+        Component = cbIsMovement
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1138,10 +1211,13 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Component = deStart
       end
       item
+        Component = BranchGuides
+      end
+      item
         Component = cbIsDay
       end
       item
-        Component = BranchGuides
+        Component = cbIsMovement
       end>
     Left = 144
     Top = 344

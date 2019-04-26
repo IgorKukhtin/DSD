@@ -33,6 +33,7 @@ type
     cxLabel2: TcxLabel;
     edBranch: TcxButtonEdit;
     BranchGuides: TdsdGuides;
+    cbIsMovement: TcxCheckBox;
   private
     { Private declarations }
   public

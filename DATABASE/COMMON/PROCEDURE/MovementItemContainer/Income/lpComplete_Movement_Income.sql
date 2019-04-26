@@ -84,6 +84,8 @@ $BODY$
   DECLARE vbCurrencyValue TFloat;
   DECLARE vbParValue TFloat;
 
+  DECLARE vbMovementId_Invoice Integer;
+
 BEGIN
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
@@ -134,6 +136,7 @@ BEGIN
           , _tmp.MemberId_Packer, _tmp.PaidKindId, _tmp.ContractId, _tmp.JuridicalId_Basis_To, _tmp.BusinessId_To, _tmp.BusinessId_Route
           , _tmp.CurrencyDocumentId, _tmp.CurrencyPartnerId, _tmp.CurrencyValue, _tmp.ParValue
           , _tmp.InvoiceSumm, _tmp.InvoiceSumm_Currency
+          , _tmp.MovementId_Invoice
             INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePrice
                , vbMovementDescId, vbOperDate, vbOperDatePartner, vbJuridicalId_From, vbIsCorporate_From, vbInfoMoneyId_CorporateFrom, vbPartnerId_From, vbMemberId_From, vbCardFuelId_From, vbTicketFuelId_From
                , vbInfoMoneyId_From
@@ -142,6 +145,7 @@ BEGIN
                , vbMemberId_Packer, vbPaidKindId, vbContractId, vbJuridicalId_Basis_To, vbBusinessId_To, vbBusinessId_Route
                , vbCurrencyDocumentId, vbCurrencyPartnerId, vbCurrencyValue, vbParValue
                , vbInvoiceSumm, vbInvoiceSumm_Currency
+               , vbMovementId_Invoice
 
 
      FROM (WITH tmpMI_Invoice AS (SELECT MI_Invoice.MovementId AS MovementId
@@ -341,6 +345,8 @@ BEGIN
                                      ELSE tmpMovement_Invoice.TotalSumm_f1
                                 END
                  END AS InvoiceSumm_Currency
+                 
+               , tmpMovement_Invoice.MovementId AS MovementId_Invoice
 
            FROM Movement
                 LEFT JOIN tmpMovement_Invoice ON 1=1
@@ -497,6 +503,12 @@ BEGIN
              AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
           ) AS _tmp;
 
+
+     -- проверка - MovementId_Invoice
+     IF vbMovementDescId = zc_Movement_IncomeAsset() AND COALESCE (vbMovementId_Invoice, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Необходимо заполнить значение <№ док. Счет>.';
+     END IF;
 
      -- проверка
      IF COALESCE (vbContractId, 0) = 0

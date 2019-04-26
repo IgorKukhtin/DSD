@@ -18,6 +18,10 @@ RETURNS TABLE (OperDate TDateTime
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , PositionId Integer, PositionCode Integer, PositionName TVarChar
 
+             , MovementDescName TVarChar
+             , BranchFromName TVarChar, BranchToName TVarChar
+             , FromName TVarChar, ToName TVarChar
+
              , TotalCount     TFloat   -- Количество (компл.)
              , TotalCountKg   TFloat   -- Вес (компл.)
              , CountMI        TFloat   -- Кол. строк (компл.)
@@ -77,6 +81,7 @@ BEGIN
                            )
         -- Все документы
       , tmpMovement_all AS (SELECT Movement.Id AS MovementId
+                                 , CASE WHEN inIsDetail = TRUE THEN COALESCE (MovementFloat_MovementDesc.ValueData, Movement.DescId) :: Integer ELSE 0 END AS MovementDescId
                                  , Movement.InvNumber
                                  , Movement.OperDate
                                  , MovementLinkObject_Personal.ObjectId                        AS PersonalId
@@ -110,6 +115,10 @@ BEGIN
                                  LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
                                                          ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
                                                         AND MovementFloat_TotalCountKg.DescId     = zc_MovementFloat_TotalCountKg()
+                                 LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
+                                                         ON MovementFloat_MovementDesc.MovementId =  Movement.Id
+                                                        AND MovementFloat_MovementDesc.DescId     = zc_MovementFloat_MovementDesc()
+                                                        
 
                             WHERE Movement.DescId   = zc_Movement_WeighingPartner()
                               -- AND Movement.Id = 7594708 
@@ -170,6 +179,12 @@ BEGIN
               , tmp.PositionCode
               , tmp.PositionName
 
+              , MovementDesc.ItemName       AS MovementDescName
+              , Object_BranchFrom.ValueData AS BranchFromName
+              , Object_BranchTo.ValueData   AS BranchToName
+              , Object_From.ValueData       AS FromName
+              , Object_To.ValueData         AS ToName
+
               , SUM (tmp.TotalCount)        :: TFloat AS TotalCount
               , SUM (tmp.TotalCountKg)      :: TFloat AS TotalCountKg
               , SUM (tmp.CountMI)           :: TFloat AS CountMI
@@ -211,6 +226,7 @@ BEGIN
                    , tmpMovement_all.BranchId
                    , tmpMovement_all.FromId
                    , tmpMovement_all.ToId
+                   , tmpMovement_all.MovementDescId
 
               FROM tmpMovement_all
                    INNER JOIN tmpPersonal_all          ON tmpPersonal_all.PersonalId = tmpMovement_all.PersonalId
@@ -248,8 +264,9 @@ BEGIN
                    , tmpMovement_all.BranchId
                    , tmpMovement_all.FromId
                    , tmpMovement_all.ToId
+                   , tmpMovement_all.MovementDescId
 
-              FROM (SELECT DISTINCT tmpMovement_all.MovementId, tmpMovement_all.OperDate, tmpMovement_all.UserId, tmpMovement_all.TotalCount, tmpMovement_all.TotalCountKg, tmpMovement_all.BranchId, tmpMovement_all.FromId, tmpMovement_all.ToId FROM tmpMovement_all) AS tmpMovement_all
+              FROM (SELECT DISTINCT tmpMovement_all.MovementId, tmpMovement_all.MovementDescId, tmpMovement_all.OperDate, tmpMovement_all.UserId, tmpMovement_all.TotalCount, tmpMovement_all.TotalCountKg, tmpMovement_all.BranchId, tmpMovement_all.FromId, tmpMovement_all.ToId FROM tmpMovement_all) AS tmpMovement_all
                     LEFT JOIN tmpUser_findPersonal ON tmpUser_findPersonal.UserId = tmpMovement_all.UserId
 
                     LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id             = tmpUser_findPersonal.UnitId
@@ -264,6 +281,20 @@ BEGIN
 
             LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmp.BranchId
 
+            LEFT JOIN Object AS Object_From   ON Object_From.Id   = tmp.FromId
+            LEFT JOIN Object AS Object_To     ON Object_To.Id     = tmp.ToId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_BranchFrom
+                                 ON ObjectLink_Unit_BranchFrom.ObjectId =  tmp.FromId
+                                AND ObjectLink_Unit_BranchFrom.DescId   = zc_ObjectLink_Unit_Branch()
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_BranchTo
+                                 ON ObjectLink_Unit_BranchTo.ObjectId =  tmp.ToId
+                                AND ObjectLink_Unit_BranchTo.DescId   = zc_ObjectLink_Unit_Branch()
+            LEFT JOIN Object AS Object_BranchFrom ON Object_BranchFrom.Id = ObjectLink_Unit_BranchFrom.ChildObjectId
+            LEFT JOIN Object AS Object_BranchTo   ON Object_BranchTo.Id   = ObjectLink_Unit_BranchTo.ChildObjectId
+
+            LEFT JOIN MovementDesc ON MovementDesc.Id   = tmp.MovementDescId
+
         GROUP BY tmp.OperDate
                , tmp.UnitId
                , tmp.UnitCode
@@ -277,6 +308,11 @@ BEGIN
                , Object_Branch.ValueData
                , tmp.FromId
                , tmp.ToId
+               , Object_BranchFrom.ValueData
+               , Object_BranchTo.ValueData
+               , Object_From.ValueData
+               , Object_To.ValueData
+               , MovementDesc.ItemName
                 ;
 
 END;
