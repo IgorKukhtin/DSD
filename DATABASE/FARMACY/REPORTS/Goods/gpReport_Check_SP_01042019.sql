@@ -412,7 +412,7 @@ BEGIN
         , tmpParam AS (SELECT tmp.UnitId
                             , tmp.JuridicalId
                             , tmp.JuridicalMedicId
-                            , tmp.HospitalId
+                            --, tmp.HospitalId
                            
                             , ObjectHistory_JuridicalDetails.FullName AS JuridicalFullName
                             , ObjectHistory_JuridicalDetails.JuridicalAddress
@@ -444,7 +444,7 @@ BEGIN
 
                        FROM (SELECT DISTINCT tmpMI.UnitId
                                   , tmpMI.JuridicalId
-                                  , tmpMI.HospitalId
+                                  --, tmpMI.HospitalId
                                   , tmpMI.JuridicalMedicId
                              FROM tmpMI) AS tmp
 
