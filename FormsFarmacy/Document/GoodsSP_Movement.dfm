@@ -322,7 +322,24 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
   inherited ActionList: TActionList
     Left = 55
     Top = 303
-    object actRefreshMI: TdsdDataSetRefresh [0]
+    object actDoLoadDop: TExecuteImportSettingsAction [0]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingDopId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inMovementId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actRefreshMI: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -337,10 +354,42 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
+    object actGetImportSettingDop: TdsdExecStoredProc [2]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingDopId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingDopId
+        end>
+      Caption = 'actGetImportSetting'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1086#1087'. '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091'  '#1080#1079' '#1092#1072#1081#1083#1072
+    end
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object actInsertMI: TdsdExecStoredProc [6]
+    object macStartLoadDop: TMultiAction [5]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingDop
+        end
+        item
+          Action = actDoLoadDop
+        end
+        item
+          Action = actRefreshMI
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1086#1087'. '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100'  '#1044#1086#1087'. '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1086#1087'. '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072
+      ImageIndex = 48
+      WithoutNext = True
+    end
+    object actInsertMI: TdsdExecStoredProc [9]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -395,7 +444,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
           StoredProc = spGet
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [15]
+    object actGoodsKindChoice: TOpenChoiceForm [18]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -733,6 +782,14 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -760,6 +817,10 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
     object bbStartLoad: TdxBarButton
       Action = macStartLoad
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macStartLoadDop
       Category = 0
     end
   end
@@ -844,7 +905,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ImportSettingIsUploadId'
+        Name = 'ImportSettingDopId'
         Value = Null
         MultiSelectSeparator = ','
       end
@@ -853,7 +914,8 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
         Value = Null
         MultiSelectSeparator = ','
       end>
-    Left = 848
+    Left = 808
+    Top = 240
   end
   inherited StatusGuides: TdsdGuides
     Left = 56
@@ -1527,8 +1589,8 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
     OutputType = otResult
     Params = <>
     PackSize = 1
-    Left = 947
-    Top = 310
+    Left = 939
+    Top = 398
   end
   object spGetImportSettingId: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -1561,5 +1623,37 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
     PackSize = 1
     Left = 912
     Top = 240
+  end
+  object spGetImportSettingDopId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TGoodsSPMovementForm;zc_Object_ImportSetting_GoodsSPDopMovement'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingDopId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 912
+    Top = 296
   end
 end
