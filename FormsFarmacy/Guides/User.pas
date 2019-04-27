@@ -103,6 +103,8 @@ type
     InDate: TcxGridDBColumn;
     FarmacyCashDate: TcxGridDBColumn;
     isSite: TcxGridDBColumn;
+    dxBarButton1: TdxBarButton;
+    OpenUserHelsiEditForm: TdsdOpenForm;
   private
     { Private declarations }
   public

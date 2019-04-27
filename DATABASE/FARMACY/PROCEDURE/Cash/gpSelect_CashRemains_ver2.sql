@@ -25,7 +25,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                AccommodationId Integer, AccommodationName TVarChar,
                PriceChange TFloat, FixPercent TFloat, Multiplicity TFloat,
                DoesNotShare boolean, GoodsAnalogId Integer, GoodsAnalogName TVarChar,
-               CountSP TFloat, IdSP TVarChar, DosageIdSP TVarChar
+               CountSP TFloat, IdSP TVarChar, DosageIdSP TVarChar, PriceRetSP TFloat, PaymentSP TFloat
                )
 AS
 $BODY$
@@ -215,6 +215,7 @@ BEGIN
       WITH -- Товары соц-проект
            tmpGoodsSP AS (SELECT MovementItem.ObjectId         AS GoodsId
                                , MI_IntenalSP.ObjectId         AS IntenalSPId
+                               , MIFloat_PriceRetSP.ValueData  AS PriceRetSP  
                                , MIFloat_PriceSP.ValueData     AS PriceSP
                                , MIFloat_PaymentSP.ValueData   AS PaymentSP
                                , MIFloat_CountSP.ValueData     AS CountSP
@@ -239,6 +240,10 @@ BEGIN
                                LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
                                                                 ON MI_IntenalSP.MovementItemId = MovementItem.Id
                                                                AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP()
+                               -- Роздрібна  ціна за упаковку, грн
+                               LEFT JOIN MovementItemFloat AS MIFloat_PriceRetSP
+                                                           ON MIFloat_PriceRetSP.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_PriceRetSP.DescId = zc_MIFloat_PriceRetSP() 
                                -- Розмір відшкодування за упаковку (Соц. проект) - (15)
                                LEFT JOIN MovementItemFloat AS MIFloat_PriceSP
                                                            ON MIFloat_PriceSP.MovementItemId = MovementItem.Id
@@ -668,9 +673,11 @@ BEGIN
           , COALESCE (ObjectBoolean_DoesNotShare.ValueData, FALSE) AS DoesNotShare
           , Object_GoodsAnalog.Id                                  AS GoodsAnalogId
           , Object_GoodsAnalog.ValueData                           AS GoodsAnalogName
-          , tmpGoodsSP.CountSP
-          , tmpGoodsSP.IdSP
-          , tmpGoodsSP.DosageIdSP
+          , tmpGoodsSP.CountSP                                     AS CountSP
+          , tmpGoodsSP.IdSP                                        AS IdSP
+          , tmpGoodsSP.DosageIdSP                                  AS DosageIdSP
+          , tmpGoodsSP.PriceRetSP                                  AS PriceRetSP
+          , tmpGoodsSP.PaymentSP                                   AS PaymentSP
           
 
          FROM

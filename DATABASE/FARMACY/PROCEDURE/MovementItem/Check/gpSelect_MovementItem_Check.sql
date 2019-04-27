@@ -29,6 +29,10 @@ RETURNS TABLE (Id Integer, ParentId integer
              , AccommodationName TVarChar
              , Multiplicity TFloat
              , DoesNotShare Boolean
+             , IdSP TVarChar
+             , CountSP TFloat
+             , PriceRetSP TFloat
+             , PaymentSP TFloat
 
              , ContainerId TFloat
              , ExpirationDate      TDateTime
@@ -156,6 +160,10 @@ BEGIN
            , Null::TFloat                                                        AS Multiplicity 
 
            , COALESCE (ObjectBoolean_DoesNotShare.ValueData, FALSE)              AS DoesNotShare
+           , Null::TVArChar                                                      AS IdSP  
+           , Null::TFloat                                                        AS CountSP 
+           , Null::TFloat                                                        AS PriceRetSP
+           , Null::TFloat                                                        AS PaymentSP
 
            , MIFloat_ContainerId.ContainerId  ::TFloat                           AS ContainerId
            , COALESCE (tmpContainer.ExpirationDate, NULL)      :: TDateTime      AS ExpirationDate
@@ -195,6 +203,7 @@ ALTER FUNCTION gpSelect_MovementItem_Check (Integer, TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А. Воробкало А.А   Шаблий О.В.
+ 25.04.19                                                                                   *
  20.04.19         * 
  31.03.19                                                                                   *
  15.03.19                                                                                   *
