@@ -1,9 +1,11 @@
 unit dsdInternetAction;
 
+{$I ..\dsdVer.inc}
+
 interface
 
 uses
-  dsdAction, dsdDB, Classes, cxGrid;
+  dsdAction, dsdDB, Classes, cxGrid {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 type
 

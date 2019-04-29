@@ -1,9 +1,12 @@
 unit ExternalLoad;
 
+{$I ..\dsdVer.inc}
+
 interface
 
 uses
-  dsdAction, dsdDb, Classes, DB, ExternalData, ADODB, Winapi.ActiveX, System.Win.COMObj, Vcl.Forms, DBXJSON;
+  dsdAction, dsdDb, Classes, DB, ExternalData, ADODB, Winapi.ActiveX, System.Win.COMObj, Vcl.Forms
+  {$IFDEF DELPHI103RIO}, JSON, Actions {$ELSE} , DBXJSON {$ENDIF};
 
 type
 

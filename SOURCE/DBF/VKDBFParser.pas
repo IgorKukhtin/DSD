@@ -1,14 +1,23 @@
-{Copyright:      Vlad Karpov
- 		 mailto:KarpovVV@protek.ru
-		 http:\\vlad-karpov.narod.ru
-     ICQ#136489711
- Author:         Vlad Karpov
- Remarks:        Freeware with pay for support, see license.txt
-}
+{**********************************************************************************}
+{                                                                                  }
+{ Project vkDBF - dbf ntx clipper compatibility delphi component                   }
+{                                                                                  }
+{ This Source Code Form is subject to the terms of the Mozilla Public              }
+{ License, v. 2.0. If a copy of the MPL was not distributed with this              }
+{ file, You can obtain one at http://mozilla.org/MPL/2.0/.                         }
+{                                                                                  }
+{ The Initial Developer of the Original Code is Vlad Karpov (KarpovVV@protek.ru).  }
+{                                                                                  }
+{ Contributors:                                                                    }
+{   Sergey Klochkov (HSerg@sklabs.ru)                                              }
+{                                                                                  }
+{ You may retrieve the latest version of this file at the Project vkDBF home page, }
+{ located at http://sourceforge.net/projects/vkdbf/                                }
+{                                                                                  }
+{**********************************************************************************}
 unit VKDBFParser;
 
 {$I VKDBF.DEF}
-{$WARNINGS OFF}
 
 interface
 
@@ -78,7 +87,7 @@ type
     FDependentFields: TBits;
     FIndexKeyValue: boolean;
     FPartualKeyValue: boolean;
-    FFields: TList;
+    FFields: TVKListOfFields;
     FKeyValues: Variant;
     FKeyFromValues: boolean;
     FFC: AnsiChar;
@@ -136,7 +145,8 @@ type
 
 implementation
 
-uses SysUtils, DBConsts, VKDBFDataSet, ActiveX;
+uses
+  SysUtils, AnsiStrings, DBConsts, VKDBFDataSet;
 
 const
 
@@ -503,7 +513,7 @@ begin
       begin
         Inc(P);
         TokenStart := P;
-        P := AnsiStrScan(P, ']');
+        P := {$IFDEF DELPHIXE4}AnsiStrings.{$ENDIF}AnsiStrScan(P, ']');
         if P = nil then DatabaseError(SExprNameError);
         SetString(FTokenString, TokenStart, P - TokenStart);
         FToken := etName;
@@ -868,8 +878,8 @@ begin
     etLiteral:
       begin
         if FNumericLit then begin
-          if DecimalSeparator <> '.' then
-            FTokenString := StringReplace(FTokenString, '.', DecimalSeparator, []);
+          if {$IFDEF DELPHIXE}FormatSettings.{$ENDIF}DecimalSeparator <> '.' then
+            FTokenString := StringReplace(FTokenString, '.', {$IFDEF DELPHIXE}FormatSettings.{$ENDIF}DecimalSeparator, []);
           Result := FFilter.NewNode(enConst, coNOTDEFINED, FTokenString, nil, nil);
           Result^.FDataType := ftFloat;
         end else begin
@@ -1126,9 +1136,9 @@ function TVKDBFExprParser.Execute(Root: PDBFExprNode): Variant;
                           if ln > lnL then
                               ln := lnL;
                           if (foCaseInsensitive in FOptions) then
-                              Result := AnsiStrLIComp(PAnsiChar(sL), PAnsiChar(sR), ln) = 0
+                              Result := {$IFDEF DELPHIXE4}AnsiStrings.{$ENDIF}AnsiStrLIComp(PAnsiChar(sL), PAnsiChar(sR), ln) = 0
                           else
-                              Result := AnsiStrLComp(PAnsiChar(sL), PAnsiChar(sR), ln) = 0;
+                              Result := {$IFDEF DELPHIXE4}AnsiStrings.{$ENDIF}AnsiStrLComp(PAnsiChar(sL), PAnsiChar(sR), ln) = 0;
                           Exit;
                       end;
                   end;
@@ -1197,15 +1207,11 @@ function TVKDBFExprParser.Execute(Root: PDBFExprNode): Variant;
                         if code <> 0 then
                           Result := Null
                         else begin
-													{$IFDEF VER130}
+                          {$IFDEF DELPHI6}
+                          Vr := kk;
+                          {$ELSE}
                           TVarData(Vr).VType := VT_DECIMAL;
                           Decimal(Vr).lo64 := kk;
-													{$ENDIF}
-													{$IFDEF VER140}
-													Vr := kk;
-													{$ENDIF}
-													{$IFDEF VER150}
-													Vr := kk;
 													{$ENDIF}
                           Result := Vr;
                         end;
@@ -1579,7 +1585,7 @@ function TVKDBFExprParser.Execute(Root: PDBFExprNode): Variant;
             ANode^.FDataPrec := V.FDataPrec;
             if not VarIsNull(Vr) then begin
               if VarType(Vr) = varDate then begin
-                //2816789 - значение функции при дате = 12/30/1899
+                //2816789 - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ = 12/30/1899
                 Result := 2816789 - Integer(trunc(VarToDateTime(Vr)));
                 ANode^.FDataLen := 10;
                 ANode^.FDataPrec := 0;
@@ -2015,7 +2021,7 @@ function TVKDBFExprParser.EvaluteKey(const KeyFields: AnsiString;
   const KeyValues: Variant; const CF: AnsiChar = #$20): AnsiString;
 begin
   if CF <> #$20 then FFC := CF;
-  FFields := TList.Create;
+  FFields := TVKListOfFields.Create;
   FKeyValues := KeyValues;
   FKeyFromValues := true;
   try

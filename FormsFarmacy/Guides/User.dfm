@@ -911,10 +911,10 @@ object UserForm: TUserForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'ClientDataSet'
+          Name = 'ID'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'ClientDataSet'
+          ComponentItem = 'ID'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>

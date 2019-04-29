@@ -1,8 +1,10 @@
 unit Scales;
 
+{$I ..\dsdVer.inc}
+
 interface
 
-uses dsdAction, Classes, dsdDb, SysScalesLib_TLB;
+uses dsdAction, Classes, dsdDb, SysScalesLib_TLB {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 type
 

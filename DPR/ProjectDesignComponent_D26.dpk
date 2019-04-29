@@ -29,7 +29,7 @@ package ProjectDesignComponent_D26;
 
 requires
   rtl,
-  ProjectComponent,
+  ProjectComponent_D26,
   DesignIde;
 
 contains

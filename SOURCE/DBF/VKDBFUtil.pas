@@ -1,20 +1,39 @@
-{Copyright:      Vlad Karpov
- 		 mailto:KarpovVV@protek.ru
-		 http:\\vlad-karpov.narod.ru
-     ICQ#136489711
- Author:         Vlad Karpov
- Remarks:        Freeware with pay for support, see license.txt
-}
+{**********************************************************************************}
+{                                                                                  }
+{ Project vkDBF - dbf ntx clipper compatibility delphi component                   }
+{                                                                                  }
+{ This Source Code Form is subject to the terms of the Mozilla Public              }
+{ License, v. 2.0. If a copy of the MPL was not distributed with this              }
+{ file, You can obtain one at http://mozilla.org/MPL/2.0/.                         }
+{                                                                                  }
+{ The Initial Developer of the Original Code is Vlad Karpov (KarpovVV@protek.ru).  }
+{                                                                                  }
+{ Contributors:                                                                    }
+{   Sergey Klochkov (HSerg@sklabs.ru)                                              }
+{                                                                                  }
+{ You may retrieve the latest version of this file at the Project vkDBF home page, }
+{ located at http://sourceforge.net/projects/vkdbf/                                }
+{                                                                                  }
+{**********************************************************************************}
 unit VKDBFUtil;
+
+{$I VKDBF.DEF}
 
 interface
 
-{$I VKDBF.DEF}
-{$WARNINGS OFF}
-
 uses
+  Db, Windows, SysUtils, Dialogs,
+  {$IFDEF DELPHIXE3} System.Generics.Collections, {$ELSE} Classes, {$ENDIF DELPHIXE3}
   {$IFDEF VKDBF_LOGGIN}VKDBFLogger,{$ENDIF}
-  Windows, SysUtils, Dialogs, VKDBFMemMgr;
+  VKDBFMemMgr;
+
+type
+  {$IFDEF DELPHIXE3}
+  TVKListOfFields = TList<TField>;
+  {$ELSE}
+  TVKListOfFields = TList;
+  {$ENDIF DELPHIXE3}
+
 
 function GetTmpFileName(PathName: AnsiString = 'SYSTEM_TMP_PATH'): AnsiString;
 function GetTmpPath: AnsiString;
@@ -27,7 +46,7 @@ procedure Int2Str(val: Integer; width: Integer; var s: AnsiString);
 function DtoS(d: TDateTime): AnsiString;
 function TtoS(d: TDateTime): AnsiString;
 function DTtoS(d: TDateTime): AnsiString;
-procedure WriteBugFile(FileName: AnsiString; Str: AnsiString);
+procedure WriteBugFile(FileName: string; Str: AnsiString);
 function ClipperVal(const str: AnsiString): Extended;
 function SubStr( sStr: AnsiString; iStart: Integer; iCount: Integer = 0) : AnsiString;
 function Stuff(sSource: AnsiString; iStart, iDel: Integer; sInsert: AnsiString = ''): AnsiString;
@@ -274,7 +293,6 @@ var
   cpBufferPath: pAnsiChar;
   i: Integer;
 begin
-
   cpBufferPath := VKDBFMemMgr.oMem.GetMem('GetTmpPath', MAX_PATH + 1);
   FillChar(cpBufferPath^, MAX_PATH + 1, 0);
 
@@ -294,27 +312,32 @@ begin
   Result := Copy(cpBufferPath, 1, Length(cpBufferPath));
 
   VKDBFMemMgr.oMem.FreeMem(cpBufferPath);
-
 end;
 
-procedure WriteBugFile(FileName: AnsiString; Str: AnsiString);
+procedure WriteBugFile(FileName: string; Str: AnsiString);
 const
-  CR = #13#10;
+  CR: AnsiString = #13#10;
 var
-  h: Integer;
+  h: THandle;
   q: string;
+  chunk: AnsiString;
 begin
   if FileExists(FileName) then
     h := Sysutils.FileOpen(FileName, fmOpenReadWrite or fmShareDenyNone)
   else
     h := Sysutils.FileCreate(FileName);
-  if h > 0 then begin
-    Sysutils.FileSeek(h, 0, 2);
-    DateTimeToString(q, 'dd.mm.yyyy hh:nn:ss ', now);
-    q := q + Str + CR;
-    Sysutils.FileWrite(h, pAnsiChar(q)^, Length(q));
-    Sysutils.FileClose(h);
-  end;
+
+  if h > 0 then
+    begin
+      try
+        Sysutils.FileSeek(h, 0, 2);
+        DateTimeToString(q, 'dd.mm.yyyy hh:nn:ss ', now);
+        chunk := AnsiString(q) + Str + CR;
+        Sysutils.FileWrite(h, PAnsiChar(chunk)^, Length(chunk));
+      finally
+        Sysutils.FileClose(h);
+      end;
+    end;
 end;
 
 function ClipperVal(const str: AnsiString): Extended;

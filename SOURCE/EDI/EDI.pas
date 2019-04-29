@@ -1,8 +1,11 @@
 unit EDI;
 
+{$I ..\dsdVer.inc}
+
 interface
 
-uses DBClient, Classes, DB, dsdAction, IdFTP, ComDocXML, dsdDb, OrderXML, UtilConst;
+uses DBClient, Classes, DB, dsdAction, IdFTP, ComDocXML, dsdDb, OrderXML, UtilConst
+     {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 type
 
@@ -1054,7 +1057,7 @@ begin
     begin
       ROWNUM := IntToStr(i);
       NodeValue := '-' + StringReplace(FormatFloat('0.00',
-        HeaderDataSet.FieldByName('AmountSumm').AsFloat), DecimalSeparator,
+        HeaderDataSet.FieldByName('AmountSumm').AsFloat), FormatSettings.DecimalSeparator,
         cMainDecimalSeparator, []);
     end;
     inc(i);

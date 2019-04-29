@@ -324,6 +324,9 @@ begin
 
       (C as TcxGridDBBandedColumn).OnGetProperties := cxGridDBTableViewTextGetProperties;
     end;
+
+    // Показываем кнопку сегодня
+    if C is TcxDateEdit then (C as TcxDateEdit).Properties.DateButtons := (C as TcxDateEdit).Properties.DateButtons + [btnToday];
   end;
 
 end;
@@ -485,6 +488,7 @@ initialization
   RegisterClass (TdsdGMMap);
   RegisterClass (TdsdWebBrowser);
   RegisterClass (TdsdEnterManager);
+  RegisterClass (TdsdFileToBase64);
 
 // ДЛЯ ТЕСТА
 

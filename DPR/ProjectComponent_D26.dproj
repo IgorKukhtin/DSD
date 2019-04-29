@@ -1,12 +1,12 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{A409EC74-B7D5-47CD-BA6A-8C1B58C73E85}</ProjectGuid>
-        <MainSource>ProjectComponent.dpk</MainSource>
+        <MainSource>ProjectComponent_D26.dpk</MainSource>
         <ProjectVersion>18.5</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">Win64</Platform>
+        <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>3</TargetedPlatforms>
         <AppType>Package</AppType>
     </PropertyGroup>
@@ -65,7 +65,7 @@
         <GenDll>true</GenDll>
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
-        <SanitizedProjectName>ProjectComponent</SanitizedProjectName>
+        <SanitizedProjectName>ProjectComponent_D26</SanitizedProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_BplOutput>..\BIN\Bpl\$(ProductVersion)</DCC_BplOutput>
@@ -250,7 +250,7 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Source>
-                    <Source Name="MainSource">ProjectComponent.dpk</Source>
+                    <Source Name="MainSource">ProjectComponent_D26.dpk</Source>
                 </Source>
                 <VersionInfo>
                     <VersionInfo Name="IncludeVerInfo">True</VersionInfo>

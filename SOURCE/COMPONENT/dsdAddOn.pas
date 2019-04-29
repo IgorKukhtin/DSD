@@ -1,14 +1,17 @@
 unit dsdAddOn;
 
+{$I ..\dsdVer.inc}
+
 interface
 
 uses Windows, Winapi.Messages, Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
-     cxTextEdit, DB, dsdAction, cxGridTableView,
+     cxTextEdit, DB, dsdAction, cxGridTableView, Dialogs,
      VCL.Graphics, cxGraphics, cxStyles, cxCalendar, Forms, Controls,
      SysUtils, dsdDB, Contnrs, cxGridCustomView, cxGridCustomTableView, dsdGuides,
      VCL.ActnList, cxCustomPivotGrid, cxDBPivotGrid, cxEdit, cxCustomData, cxPC,
      GMClasses, GMMap, GMMapVCL, GMGeoCode, GMConstants, GMMarkerVCL, SHDocVw, ExtCtrls,
-     Winapi.ShellAPI, System.StrUtils, GMDirection, GMDirectionVCL;
+     Winapi.ShellAPI, System.StrUtils, GMDirection, GMDirectionVCL
+     {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 const
   WM_SETFLAG = WM_USER + 2;
@@ -264,7 +267,7 @@ type
       AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
     // рисуем свой цвет у выделенной ячейки при выгрузке в Excel, например, или печати
     procedure OnGetContentStyle(Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
-      AItem: TcxCustomGridTableItem; out AStyle: TcxStyle);
+      AItem: TcxCustomGridTableItem; {$IFDEF DELPHI103RIO} var {$ELSE} out {$ENDIF} AStyle: TcxStyle);
     // поменять цвет грида в случае установки фильтра
     procedure onFilterChanged(Sender: TObject);
     // если при выходе из грида ДатаСет в Edit mode, то делаем Post
@@ -763,17 +766,38 @@ type
     property PageControl: TcxPageControl read FPageControl write SetPageControl;
   end;
 
+  TdsdFileToBase64 = class(TComponent)
+  private
+    FLookupControl: TWinControl;
+    FFileOpenDialog: TFileOpenDialog;
+
+    procedure OpenFile;
+    procedure SetLookupControl(const Value: TWinControl); virtual;
+    procedure OnDblClick(Sender: TObject);
+    procedure OnButtonClick(Sender: TObject; AButtonIndex: Integer);
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    // визуальный компонент
+    property LookupControl: TWinControl read FLookupControl write SetLookupControl;
+  end;
+
+
+
   procedure Register;
 
 implementation
 
 uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf,
-     cxFilter, cxClasses, cxLookAndFeelPainters,
+     dxCore, cxFilter, cxClasses, cxLookAndFeelPainters,
      cxGridCommon, math, cxPropertiesStore, UtilConst, cxStorage,
-     cxGeometry, cxCheckBox, dxBar, cxButtonEdit, cxCurrencyEdit,
+     cxGeometry, cxCheckBox, dxBar, cxButtonEdit, cxDBEdit, cxCurrencyEdit,
      VCL.Menus, ParentForm, ChoicePeriod, cxGrid, cxDBData, Variants,
      cxGridDBBandedTableView, cxGridDBDataDefinitions,cxGridBandedTableView,
-     cxDropDownEdit, cxMemo, Dialogs, dsdException;
+     cxDropDownEdit, cxMemo, dsdException, Soap.EncdDecd;
 
 type
 
@@ -793,7 +817,8 @@ begin
     TPivotAddOn,
     TdsdGMMap,
     TdsdWebBrowser,
-    TdsdEnterManager
+    TdsdEnterManager,
+    TdsdFileToBase64
   ]);
 
   RegisterActions('DSDLib', [TExecuteDialog], TExecuteDialog);
@@ -1094,7 +1119,7 @@ end;
 
 procedure TdsdDBViewAddOn.OnGetContentStyle(Sender: TcxCustomGridTableView;
   ARecord: TcxCustomGridRecord; AItem: TcxCustomGridTableItem;
-  out AStyle: TcxStyle);
+  {$IFDEF DELPHI103RIO} var {$ELSE} out {$ENDIF} AStyle: TcxStyle);
 var Column: TcxGridColumn;
     i, j: integer;
     isBold_calc:Boolean;
@@ -3881,5 +3906,88 @@ begin
       end;
     end;
 end;
+
+  { TdsdFileToBase64 }
+
+constructor TdsdFileToBase64.Create(AOwner: TComponent);
+begin
+  inherited;
+  FFileOpenDialog := TFileOpenDialog.Create(Self);
+  FFileOpenDialog.SetSubComponent(true);
+  FFileOpenDialog.FreeNotification(Self);
+end;
+
+destructor TdsdFileToBase64.Destroy;
+begin
+  FreeAndNil(FFileOpenDialog);
+  inherited;
+end;
+
+procedure TdsdFileToBase64.SetLookupControl(const Value: TWinControl);
+begin
+  FLookupControl := Value;
+  if not Assigned(FLookupControl) then
+     exit;
+  TAccessControl(FLookupControl).OnDblClick := OnDblClick;
+  if FLookupControl is TcxButtonEdit then
+     (LookupControl as TcxButtonEdit).Properties.OnButtonClick := OnButtonClick;
+  if FLookupControl is TcxDBButtonEdit then
+     (LookupControl as TcxDBButtonEdit).Properties.OnButtonClick := OnButtonClick;
+end;
+
+procedure TdsdFileToBase64.OnDblClick(Sender: TObject);
+begin
+  OpenFile;
+end;
+
+procedure TdsdFileToBase64.OnButtonClick(Sender: TObject; AButtonIndex: Integer);
+begin
+  if Sender is TcxButtonEdit then
+     if not Assigned(TcxButtonEdit(Sender).Properties.Buttons[AButtonIndex].Action) then
+        OnDblClick(Sender);
+  if Sender is TcxDBButtonEdit then
+     if not Assigned(TcxDBButtonEdit(Sender).Properties.Buttons[AButtonIndex].Action) then
+        OnDblClick(Sender);
+end;
+
+procedure TdsdFileToBase64.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited;
+  if csDestroying in ComponentState then
+     exit;
+  if (Operation = opRemove) then begin
+      if (AComponent = FLookupControl) then
+         FLookupControl := nil;
+  end;
+end;
+
+procedure TdsdFileToBase64.OpenFile;
+  var
+      fileStream: TFileStream;
+      base64Stream: TStringStream;
+begin
+  if FFileOpenDialog.Execute then
+  begin
+    fileStream := TFileStream.Create(FFileOpenDialog.FileName, fmOpenRead);
+    base64Stream := TStringStream.Create;
+    try
+      EncodeStream(fileStream, base64Stream);
+
+      if Assigned(LookupControl) then begin
+         if LookupControl is TcxButtonEdit then
+            (LookupControl as TcxButtonEdit).Text := base64Stream.DataString;
+         if LookupControl is TcxDBButtonEdit then
+            (LookupControl as TcxDBButtonEdit).Text := base64Stream.DataString;
+      end;
+
+    finally
+      FreeAndNil(fileStream);
+      FreeAndNil(base64Stream);
+    end;
+  end;
+end;
+
+
 
 end.

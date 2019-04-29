@@ -13,8 +13,8 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                TimePUSHFinal1 TDateTime, TimePUSHFinal2 TDateTime,
                isSP Boolean, DateSP TDateTime, StartTimeSP TDateTime, EndTimeSP TDateTime,
                FtpDir TVarChar,
-               Helsi_Id TVarChar, Helsi_be TVarChar, Helsi_ClientId TVarChar, 
-               Helsi_ClientSecret TVarChar, Helsi_UserName TVarChar, Helsi_Password TVarChar
+               Helsi_IdSP Integer, Helsi_Id TVarChar, Helsi_be TVarChar, Helsi_ClientId TVarChar, 
+               Helsi_ClientSecret TVarChar, Helsi_IntegrationClient TVarChar
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -89,12 +89,13 @@ BEGIN
        , CASE WHEN Object_Parent.ID IN (7433754, 4103484, 10127251) 
          THEN 'Franchise' 
          ELSE '' END::TVarChar                               AS FtpDir
+         
+       , Object_Helsi_IdSP.Id                                AS Helsi_IdSP
        , Object_Helsi_Id.ValueData                           AS Helsi_Id
        , Object_Helsi_be.ValueData                           AS Helsi_be
        , Object_Helsi_ClientId.ValueData                     AS Helsi_ClientId
        , Object_Helsi_ClientSecret.ValueData                 AS Helsi_ClientSecret
-       , Object_Helsi_UserName.ValueData                     AS Helsi_UserName
-       , Object_Helsi_Password.ValueData                     AS Helsi_Password
+       , Object_Helsi_IntegrationClient.ValueData            AS Helsi_IntegrationClient
 
    FROM Object AS Object_Unit
 
@@ -137,12 +138,13 @@ BEGIN
                              ON ObjectDate_EndSP.ObjectId = Object_Unit.Id
                             AND ObjectDate_EndSP.DescId = zc_ObjectDate_Unit_EndSP()
 
+        LEFT JOIN Object AS Object_Helsi_IdSP ON Object_Helsi_IdSP.DescId = zc_Object_SPKind()
+                                             AND Object_Helsi_IdSP.ObjectCode  = 1
         LEFT JOIN Object AS Object_Helsi_Id ON Object_Helsi_Id.Id = zc_Enum_Helsi_Id()
         LEFT JOIN Object AS Object_Helsi_be ON Object_Helsi_be.Id = zc_Enum_Helsi_be()
         LEFT JOIN Object AS Object_Helsi_ClientId ON Object_Helsi_ClientId.Id = zc_Enum_Helsi_ClientId()
         LEFT JOIN Object AS Object_Helsi_ClientSecret ON Object_Helsi_ClientSecret.Id = zc_Enum_Helsi_ClientSecret()
-        LEFT JOIN Object AS Object_Helsi_UserName ON Object_Helsi_UserName.Id = zc_Enum_Helsi_UserName()
-        LEFT JOIN Object AS Object_Helsi_Password ON Object_Helsi_Password.Id = zc_Enum_Helsi_Password()
+        LEFT JOIN Object AS Object_Helsi_IntegrationClient ON Object_Helsi_IntegrationClient.Id = zc_Enum_Helsi_IntegrationClient()
 
    WHERE Object_Unit.Id = vbUnitId
    --LIMIT 1

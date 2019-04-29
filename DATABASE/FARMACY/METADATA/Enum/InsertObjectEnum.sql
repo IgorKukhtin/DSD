@@ -3528,8 +3528,8 @@ BEGIN
   PERFORM lpInsertUpdate_Object_HelsiEnum (inId:= zc_Enum_Helsi_be(), inDescId:= zc_Object_HelsiEnum(), inCode:= 2, inName:= 'https://qa2api.helsi.pro/', inEnumName:= 'zc_Enum_Helsi_be');
   PERFORM lpInsertUpdate_Object_HelsiEnum (inId:= zc_Enum_Helsi_ClientId(), inDescId:= zc_Object_HelsiEnum(), inCode:= 3, inName:= '1c5c52fb-89b8-45c3-84a4-19856ead3425', inEnumName:= 'zc_Enum_Helsi_ClientId');
   PERFORM lpInsertUpdate_Object_HelsiEnum (inId:= zc_Enum_Helsi_ClientSecret(), inDescId:= zc_Object_HelsiEnum(), inCode:= 4, inName:= '715b15a025bcccc81f3cd640f4f0ea1f815cdadc', inEnumName:= 'zc_Enum_Helsi_ClientSecret');
-  PERFORM lpInsertUpdate_Object_HelsiEnum (inId:= zc_Enum_Helsi_UserName(), inDescId:= zc_Object_HelsiEnum(), inCode:= 5, inName:= 'y.bondarenko+pro2@helsi.me', inEnumName:= 'zc_Enum_Helsi_UserName');
-  PERFORM lpInsertUpdate_Object_HelsiEnum (inId:= zc_Enum_Helsi_Password(), inDescId:= zc_Object_HelsiEnum(), inCode:= 6, inName:= 'Test12345678', inEnumName:= 'zc_Enum_Helsi_Password');
+  PERFORM lpInsertUpdate_Object_HelsiEnum (inId:= zc_Enum_Helsi_IntegrationClient(), inDescId:= zc_Object_HelsiEnum(), inCode:= 5, inName:= 'http://localhost:5000/', inEnumName:= 'zc_Enum_Helsi_IntegrationClient');
+--  PERFORM lpInsertUpdate_Object_HelsiEnum (inId:= zc_Enum_Helsi_Password(), inDescId:= zc_Object_HelsiEnum(), inCode:= 6, inName:= 'Test12345678', inEnumName:= 'zc_Enum_Helsi_Password');
 END $$;
 
 

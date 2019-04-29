@@ -12,13 +12,16 @@
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.RefreshAction = dsdDataSetRefresh
+  AddOnFormData.Params = dsdFormParams
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
     Left = 13
     Top = 71
+    TabStop = False
     Properties.ReadOnly = True
-    TabOrder = 0
+    TabOrder = 7
     Width = 273
   end
   object cxLabel1: TcxLabel
@@ -34,7 +37,7 @@
     Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
-    TabOrder = 2
+    TabOrder = 5
   end
   object cxButton2: TcxButton
     Left = 189
@@ -45,7 +48,7 @@
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
-    TabOrder = 3
+    TabOrder = 6
   end
   object Код: TcxLabel
     Left = 13
@@ -55,10 +58,11 @@
   object ceCode: TcxCurrencyEdit
     Left = 13
     Top = 26
+    TabStop = False
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
-    TabOrder = 5
+    TabOrder = 10
     Width = 185
   end
   object cxLabel3: TcxLabel
@@ -74,7 +78,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 7
+    TabOrder = 0
     Width = 273
   end
   object cxLabel4: TcxLabel
@@ -86,14 +90,14 @@
     Left = 13
     Top = 175
     Properties.PasswordChar = '*'
-    TabOrder = 9
+    TabOrder = 1
     Width = 273
   end
   object edUserPassword: TcxTextEdit
     Left = 13
-    Top = 221
+    Top = 223
     Properties.PasswordChar = '*'
-    TabOrder = 10
+    TabOrder = 2
     Width = 273
   end
   object cxLabel5: TcxLabel
@@ -115,7 +119,7 @@
     Left = 13
     Top = 320
     Properties.PasswordChar = '*'
-    TabOrder = 14
+    TabOrder = 4
     Width = 273
   end
   object edKey: TcxButtonEdit
@@ -126,7 +130,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 15
+    TabOrder = 3
     Width = 273
   end
   object ActionList: TActionList
@@ -168,37 +172,23 @@
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCode'
-        Value = 0.000000000000000000
-        Component = ceCode
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inName'
+        Name = 'inUnitId'
         Value = ''
-        Component = edName
-        DataType = ftString
+        Component = UnitGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPassword'
-        Value = ''
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSign'
+        Name = 'inUserName'
         Value = Null
         Component = edUserName
         DataType = ftString
@@ -206,7 +196,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inSeal'
+        Name = 'inUserPassword'
         Value = Null
         Component = edUserPassword
         DataType = ftString
@@ -216,37 +206,16 @@
       item
         Name = 'inKey'
         Value = Null
-        DataType = ftString
+        Component = edKey
+        DataType = ftWideString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inProjectMobile'
+        Name = 'inKeyPassword'
         Value = Null
         Component = edKeyPassword
         DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisProjectMobile'
-        Value = Null
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisSite'
-        Value = Null
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMemberId'
-        Value = ''
-        Component = UnitGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -292,14 +261,14 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MemberId'
+        Name = 'UnitId'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MemberName'
+        Name = 'UnitName'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'TextValue'
@@ -307,48 +276,31 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Password'
-        Value = ''
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UserSign'
+        Name = 'UserName'
         Value = Null
         Component = edUserName
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UserSeal'
+        Name = 'UserPassword'
         Value = Null
         Component = edUserPassword
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UserKey'
+        Name = 'Key'
         Value = Null
-        DataType = ftString
+        Component = edKey
+        DataType = ftWideString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ProjectMobile'
+        Name = 'KeyPassword'
         Value = Null
         Component = edKeyPassword
         DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isProjectMobile'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isSite'
-        Value = Null
-        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -400,5 +352,10 @@
     StorageType = stStream
     Left = 221
     Top = 136
+  end
+  object dsdFileToBase641: TdsdFileToBase64
+    LookupControl = edKey
+    Left = 176
+    Top = 256
   end
 end

@@ -1,7 +1,7 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{DE44FE0D-7A69-4306-87B4-D2BC98098BF0}</ProjectGuid>
-        <MainSource>ProjectDesignComponent.dpk</MainSource>
+        <MainSource>ProjectDesignComponent_D26.dpk</MainSource>
         <ProjectVersion>18.5</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
@@ -65,12 +65,12 @@
         <GenDll>true</GenDll>
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
-        <SanitizedProjectName>ProjectDesignComponent</SanitizedProjectName>
+        <SanitizedProjectName>ProjectDesignComponent_D26</SanitizedProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_BplOutput>..\BIN\Bpl\$(ProductVersion)</DCC_BplOutput>
         <DCC_DcuOutput>..\DCU\$(Config)\$(ProductVersion)\$(Platform)</DCC_DcuOutput>
-        <DCC_UsePackage>DSDComponent;ProjectComponent;ZLibEx;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>DSDComponent;ProjectComponent;ZLibEx;ProjectComponent_D26;$(DCC_UsePackage)</DCC_UsePackage>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_Locale>1033</VerInfo_Locale>
@@ -83,6 +83,7 @@
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <DCC_UsePackage>ProjectComponent_D26;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
@@ -119,7 +120,7 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="rtl.dcp"/>
-        <DCCReference Include="ProjectComponent.dcp"/>
+        <DCCReference Include="ProjectComponent_D26.dcp"/>
         <DCCReference Include="DesignIde.dcp"/>
         <DCCReference Include="..\SOURCE\COMPONENT\dsdComponentEditor.pas"/>
         <BuildConfiguration Include="Release">
@@ -140,7 +141,7 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Source>
-                    <Source Name="MainSource">ProjectDesignComponent.dpk</Source>
+                    <Source Name="MainSource">ProjectDesignComponent_D26.dpk</Source>
                 </Source>
                 <VersionInfo>
                     <VersionInfo Name="IncludeVerInfo">True</VersionInfo>

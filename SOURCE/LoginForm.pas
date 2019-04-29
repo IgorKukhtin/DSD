@@ -81,7 +81,6 @@ begin
         if FAllowLocalConnect then
           SaveLocalConnect(edUserName.Text, edPassword.Text, gc_User.Session);
         TStorageFactory.GetStorage.LoadReportList(gc_User.Session);
-        TStorageFactory.GetStorage.LoadReportLocalList(gc_User.Session);
         ModalResult := mrOk;
       End
       else
@@ -136,6 +135,7 @@ begin
   with cxPropertiesStore.Components.Add do begin
     Component := edUserName;
     Properties.Add('Users');
+    Properties.Add('Text');
   end;
   with cxPropertiesStore.Components.Add do begin
     Component := Self;

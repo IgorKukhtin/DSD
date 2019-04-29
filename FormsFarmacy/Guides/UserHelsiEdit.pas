@@ -38,6 +38,7 @@ type
     cxLabel7: TcxLabel;
     edKeyPassword: TcxTextEdit;
     edKey: TcxButtonEdit;
+    dsdFileToBase641: TdsdFileToBase64;
   private
     { Private declarations }
   public
