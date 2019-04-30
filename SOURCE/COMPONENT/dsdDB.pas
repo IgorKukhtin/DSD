@@ -220,7 +220,7 @@ begin
         B := DataSets[0].DataSet.GetBookmark;
      try
         if DataSets[0].DataSet is TClientDataSet then begin
-           FStringStream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML));
+           FStringStream := TStringStream.Create(String(TStorageFactory.GetStorage.ExecuteProc(GetXML)));
            TClientDataSet(DataSets[0].DataSet).LoadFromStream(FStringStream);
         end;
      finally
@@ -473,7 +473,7 @@ begin
           B := DataSets[i].DataSet.GetBookmark;
         if DataSets[i].DataSet is TClientDataSet then begin
 //          TClientDataSet(DataSets[i].DataSet).XMLData := XMLResult[i];
-           FStringStream := TStringStream.Create(XMLResult[i]);
+           FStringStream := TStringStream.Create(String(XMLResult[i]));
            XMLResult[i] := '';
            try
               TClientDataSet(DataSets[i].DataSet).LoadFromStream(FStringStream);

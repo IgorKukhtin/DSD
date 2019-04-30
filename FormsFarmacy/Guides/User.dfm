@@ -492,6 +492,10 @@ object UserForm: TUserForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end>
       OneOnRow = True
       Row = 0
@@ -540,6 +544,10 @@ object UserForm: TUserForm
     end
     object bbProtocolRole: TdxBarButton
       Action = actProtocolRoleForm
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = OpenUserHelsiEditForm
       Category = 0
     end
   end
@@ -886,6 +894,27 @@ object UserForm: TUserForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object OpenUserHelsiEditForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1059#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1076#1086#1089#1090#1091#1087#1072' '#1082' '#1089#1072#1081#1090#1091' '#1061#1077#1083#1089#1080
+      Hint = #1059#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1076#1086#1089#1090#1091#1087#1072' '#1082' '#1089#1072#1081#1090#1091' '#1061#1077#1083#1089#1080
+      ImageIndex = 55
+      FormName = 'TUserHelsiEditForm'
+      FormNameParam.Value = 'TUserHelsiEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'ID'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ID'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>

@@ -1,8 +1,10 @@
 unit ExternalDocumentLoad;
 
+{$I ..\dsdVer.inc}
+
 interface
 
-uses ExternalLoad, dsdDB, Classes;
+uses ExternalLoad, dsdDB, Classes {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 type
 

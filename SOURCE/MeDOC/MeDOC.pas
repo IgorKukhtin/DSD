@@ -1,8 +1,10 @@
 unit MeDOC;
 
+{$I ..\dsdVer.inc}
+
 interface
 
-uses dsdAction, DB, Classes;
+uses dsdAction, DB, Classes {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 type
 

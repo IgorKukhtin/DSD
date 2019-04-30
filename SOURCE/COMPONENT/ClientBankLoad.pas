@@ -1,8 +1,10 @@
 unit ClientBankLoad;
 
+{$I ..\dsdVer.inc}
+
 interface
 
-uses dsdAction, DB, dsdDb, Classes, ExternalLoad;
+uses dsdAction, DB, dsdDb, Classes, ExternalLoad {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 type
 

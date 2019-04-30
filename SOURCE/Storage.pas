@@ -1,5 +1,7 @@
 unit Storage;
 
+{$I dsdVer.inc}
+
 interface
 
 uses SysUtils;
@@ -185,7 +187,8 @@ begin
   IdHTTPWork.FExecOnServer := False;
 
   try
-    IdHTTP.Post(FConnectionList.CurrentConnection[ctMain].CString, FSendList, FReceiveStream, TIdTextEncoding.GetEncoding(1251));
+    IdHTTP.Post(FConnectionList.CurrentConnection[ctMain].CString, FSendList, FReceiveStream,
+      {$IFDEF DELPHI103RIO} IndyTextEncoding(1251) {$ELSE} TIdTextEncoding.GetEncoding(1251) {$ENDIF});
   except
     IdHTTP.Disconnect;
   end;
@@ -208,7 +211,7 @@ begin
     DataSet := TClientDataSet.Create(nil);
     Stream := nil;
     try
-      Stream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [ASession])));
+      Stream := TStringStream.Create(String(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [ASession]))));
       DataSet.LoadFromStream(Stream);
       if not DataSet.IsEmpty then
         while not DataSet.Eof do
@@ -243,7 +246,7 @@ begin
     DataSet := TClientDataSet.Create(nil);
     Stream := nil;
     try
-      Stream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [ASession])));
+      Stream := TStringStream.Create(String(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [ASession]))));
       DataSet.LoadFromStream(Stream);
       if not DataSet.IsEmpty then
         while not DataSet.Eof do
@@ -513,7 +516,8 @@ begin
         for AttemptCount := 1 to AMaxAtempt do
         Begin
           try
-            idHTTP.Post(CString + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, TIdTextEncoding.GetEncoding(1251));
+            idHTTP.Post(CString + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream,
+              {$IFDEF DELPHI103RIO} IndyTextEncoding(1251) {$ELSE} TIdTextEncoding.GetEncoding(1251) {$ENDIF});
             ok := true;
             break;
           except
@@ -532,7 +536,7 @@ begin
                   case CType of
                      ctMain :
                         case E.LastError of
-                          10051: raise EStorageException.Create('Отсутсвует подключение к сети. Обратитесь к системному администратору. context TStorage. ' + E.Message, );
+                          10051: raise EStorageException.Create('Отсутсвует подключение к сети. Обратитесь к системному администратору. context TStorage. ' + E.Message);
                           10054: raise EStorageException.Create('Соединение сброшено сервером. Попробуйте действие еще раз. context TStorage. ' + E.Message);
                           10060: raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
                           11001: raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
@@ -543,7 +547,7 @@ begin
                         end;
                      ctReport :
                         case E.LastError of
-                          10051: raise EStorageException.Create('Отсутсвует подключение к сети. Обратитесь к системному администратору. context TStorage. ' + E.Message, );
+                          10051: raise EStorageException.Create('Отсутсвует подключение к сети. Обратитесь к системному администратору. context TStorage. ' + E.Message);
                           10054: raise EStorageException.Create('Соединение сброшено сервером отчетов. Попробуйте действие еще раз. context TStorage. ' + E.Message);
                           10060: raise EStorageException.Create('Нет доступа к серверу отчетов. Обратитесь к системному администратору. context TStorage. ' + E.Message);
                           11001: raise EStorageException.Create('Нет доступа к серверу отчетов. Обратитесь к системному администратору. context TStorage. ' + E.Message);
@@ -554,7 +558,7 @@ begin
                         end;
                      ctReportLocal :
                         case E.LastError of
-                          10051: raise EStorageException.Create('Отсутсвует подключение к сети. Обратитесь к системному администратору. context TStorage. ' + E.Message, );
+                          10051: raise EStorageException.Create('Отсутсвует подключение к сети. Обратитесь к системному администратору. context TStorage. ' + E.Message);
                           10054: raise EStorageException.Create('Соединение сброшено локальным сервером отчетов. Попробуйте действие еще раз. context TStorage. ' + E.Message);
                           10060: raise EStorageException.Create('Нет доступа к локальному серверу отчетов. Обратитесь к системному администратору. context TStorage. ' + E.Message);
                           11001: raise EStorageException.Create('Нет доступа к локальному серверу отчетов. Обратитесь к системному администратору. context TStorage. ' + E.Message);

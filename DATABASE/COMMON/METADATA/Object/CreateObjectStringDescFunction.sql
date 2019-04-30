@@ -918,10 +918,23 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_HelsiEnum() RETURNS Integer AS $BODY$
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_HelsiEnum', zc_Object_HelsiEnum(), 'Параметр доступа к сайту Хелси' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_HelsiEnum');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_User_Helsi_UserName() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_User_Helsi_UserName'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_User_Helsi_UserName', zc_Object_User(), 'Имя пользователя на сайте Хелси' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_User_Helsi_UserName');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_User_Helsi_UserPassword() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_User_Helsi_UserPassword'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_User_Helsi_UserPassword', zc_Object_User(), 'Пароль пользователя на сайте Хелси' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_User_Helsi_UserPassword');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_User_Helsi_KeyPassword() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_User_Helsi_KeyPassword'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_User_Helsi_KeyPassword', zc_Object_User(), 'Пароль к файловому ключу' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_User_Helsi_KeyPassword');
+
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 27.04.19                                                                                                         * zc_ObjectString_User_Helsi_
  24.04.19                                                                                                         * zc_ObjectString_HelsiEnum
  30.03.19         * zc_ObjectString_GoodsPropertyValue_Quality
  21.03.19         * zc_ObjectString_Goods_RUS

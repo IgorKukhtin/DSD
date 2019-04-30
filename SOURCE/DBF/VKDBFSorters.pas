@@ -1,13 +1,21 @@
-{Copyright:      Vlad Karpov
- 		 mailto:KarpovVV@protek.ru
-		 http:\\vlad-karpov.narod.ru
-     ICQ#136489711
- Author:         Vlad Karpov
- Remarks:        Freeware with pay for support, see license.txt
-}
+{**********************************************************************************}
+{                                                                                  }
+{ Project vkDBF - dbf ntx clipper compatibility delphi component                   }
+{                                                                                  }
+{ This Source Code Form is subject to the terms of the Mozilla Public              }
+{ License, v. 2.0. If a copy of the MPL was not distributed with this              }
+{ file, You can obtain one at http://mozilla.org/MPL/2.0/.                         }
+{                                                                                  }
+{ The Initial Developer of the Original Code is Vlad Karpov (KarpovVV@protek.ru).  }
+{                                                                                  }
+{ Contributors:                                                                    }
+{   Sergey Klochkov (HSerg@sklabs.ru)                                              }
+{                                                                                  }
+{ You may retrieve the latest version of this file at the Project vkDBF home page, }
+{ located at http://sourceforge.net/projects/vkdbf/                                }
+{                                                                                  }
+{**********************************************************************************}
 unit VKDBFSorters;
-
-{$WARNINGS OFF}
 
 interface
 
@@ -100,7 +108,7 @@ type
     function GetPSortItem(ndx: DWord): PSORT_ITEM; virtual;
     function AddNewItem(var item: SORT_ITEM): boolean; virtual;
   protected
-    procedure GetHashCode(Sender: TObject; Item: PSORT_ITEM; out HashCode: DWord); virtual;
+    procedure GetVKHashCode(Sender: TObject; Item: PSORT_ITEM; out HashCode: DWord); virtual;
     function Hash(Item: PSORT_ITEM): DWord; virtual;
     function GetCurrentSortItem: PSORT_ITEM; virtual; abstract;
     procedure AllocateSpace; virtual;
@@ -1091,7 +1099,7 @@ begin
     FNormalizeCoeffNeg := $FFFFFFFF shr ( 32 - Integer(FMaxBitsInHashCode) + 1 );
   end else begin
     FStandardHash := True;
-    FGetHashCodeMethod := GetHashCode;
+    FGetHashCodeMethod := GetVKHashCode;
     FHashTableSize := htst256;
     FHashTableSizeValue := 1 shl Integer(FHashTableSize);
   end;
@@ -1108,7 +1116,7 @@ begin
   inherited Destroy;
 end;
 
-procedure TVKSorterAbstract.GetHashCode(Sender: TObject;
+procedure TVKSorterAbstract.GetVKHashCode(Sender: TObject;
   Item: PSORT_ITEM; out HashCode: DWord);
 begin
   HashCode := DWord(pByte(@Item.key[0])^);

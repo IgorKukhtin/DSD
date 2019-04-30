@@ -1,10 +1,12 @@
 unit ExternalSave;
 
+{$I ..\dsdVer.inc}
+
 interface
 
 uses
   dsdAction, dsdDb, Classes, Forms, DB, ExternalData, System.Win.ComObj,
-  cxGrid, cxGridDBTableView;
+  cxGrid, cxGridDBTableView {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 type
 

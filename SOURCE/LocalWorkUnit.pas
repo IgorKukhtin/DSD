@@ -39,11 +39,15 @@ function UnitConfig_lcl: String;
 function TaxUnitNight_lcl: String;
 function GoodsExpirationDate_lcl: String;
 function GoodsAnalog_lcl: String;
+function CashAttachment_lcl: String;
+function UserHelsi_lcl: String;
+
 
 procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
 procedure LoadLocalData(ADst: TClientDataSet; AFileName: String);
 function GetFileSizeByName(AFileName: String): DWord;
 function GetBackupFileName(AFileName: String): string;
+function CreateCashAttachment(ATable : TClientDataSet): Boolean;
 
 implementation
 
@@ -140,6 +144,16 @@ End;
 function GoodsAnalog_lcl: String;
 Begin
   Result := ExtractFilePath(Application.ExeName) + 'GoodsAnalog.local';
+End;
+
+function CashAttachment_lcl: String;
+Begin
+  Result := ExtractFilePath(Application.ExeName) + 'CashAttachment.local';
+End;
+
+function UserHelsi_lcl: String;
+Begin
+  Result := ExtractFilePath(Application.ExeName) + 'UserHelsi.local';
 End;
 
 function AddIntField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string): TVKDBFFieldDef;
@@ -367,5 +381,24 @@ Begin
   end;
 
 End;
+
+function CreateCashAttachment(ATable : TClientDataSet): Boolean;
+var
+  User: TClientDataSet;
+  bNeedCreateFields: boolean;
+Begin
+  result := False;
+  try
+    ATable.FieldDefs.Add('CashCode',ftInteger);
+    ATable.FieldDefs.Add('GoodsCode',ftInteger);
+    ATable.FieldDefs.Add('Price',ftCurrency);
+    ATable.CreateDataSet;
+    ATable.Open;
+    result := True;
+  finally
+    User.Free;
+  end;
+End;
+
 
 end.

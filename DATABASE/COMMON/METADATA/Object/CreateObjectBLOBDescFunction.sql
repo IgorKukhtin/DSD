@@ -51,9 +51,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectBlob_Sticker_Info() RETURNS integer AS $BODY
 INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
    SELECT zc_object_Sticker(), 'zc_ObjectBlob_Sticker_Info','Состав продукта' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_Sticker_Info');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBlob_User_Helsi_Key() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_User_Helsi_Key'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
+   SELECT zc_Object_User(), 'zc_ObjectBlob_User_Helsi_Key','Файловый ключь' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_User_Helsi_Key');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий О.В.
+ 27.04.19                                                                         * zc_ObjectBlob_User_Helsi_Key
  23.10.17         * zc_ObjectBlob_Sticker_Info
  26.03.17         * add zc_ObjectBlob_PhotoMobile_Data
  16.01.16         * add zc_ObjectBlob_RouteMember_Description

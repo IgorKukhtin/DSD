@@ -1,8 +1,11 @@
 unit MeDocCOM;
 
+{$I ..\dsdVer.inc}
+
 interface
 
-uses MEDOC_TLB, dsdAction, DB, Classes, dsdDB, DBClient;
+uses MEDOC_TLB, dsdAction, DB, Classes, dsdDB, DBClient
+     {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 type
   TMedocCOM = class

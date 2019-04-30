@@ -2134,13 +2134,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_UnitBankPOSTerminal_BankPOSTerminal() R
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_UnitBankPOSTerminal_BankPOSTerminal', 'Ссылка на банков POS терминалов', zc_Object_UnitBankPOSTerminal(), zc_Object_BankPOSTerminal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_UnitBankPOSTerminal_BankPOSTerminal');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_User_Helsi_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_User_Helsi_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_User_Helsi_Unit', 'Связь с Подразделением для которого зарегестрирован ключ', zc_Object_User(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_User_Helsi_Unit');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 27.04.19                                                                                      * zc_ObjectLink_User_Helsi_Unit
  23.04.19         * zc_ObjectLink_RetailCostCredit_Retail
  10.04.19         * zc_ObjectLink_GoodsPropertyValue_Box
- 01.04.19                                                                                      * zzc_ObjectLink_Goods_GoodsAnalog
+ 01.04.19                                                                                      * zc_ObjectLink_Goods_GoodsAnalog
  26.02.19         * zc_ObjectLink_GoodsPropertyValue_GoodsTypeKind_Sh
                     zc_ObjectLink_GoodsPropertyValue_GoodsTypeKind_Nom
                     zc_ObjectLink_GoodsPropertyValue_GoodsTypeKind_Ves

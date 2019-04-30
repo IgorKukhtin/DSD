@@ -102,7 +102,7 @@ BEGIN
           THEN MovementDate_Delay.ValueData
           ELSE CASE WHEN MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = ''
                THEN MovementDate_UserConfirmedKind.ValueData
-               ELSE Movement.OperDate END END <= DATE_TRUNC ('DAY', CURRENT_DATE) - INTERVAL '3 DAY') AS Movement;
+               ELSE Movement.OperDate END END <= DATE_TRUNC ('DAY', CURRENT_DATE) - INTERVAL '4 DAY') AS Movement;
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

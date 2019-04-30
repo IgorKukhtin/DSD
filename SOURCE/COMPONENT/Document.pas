@@ -1,8 +1,10 @@
 unit Document;
 
+{$I ..\dsdVer.inc}
+
 interface
 
-uses Classes, dsdDB, dsdAction;
+uses Classes, dsdDB, dsdAction {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 type
   TDocument = class(TComponent)

@@ -63,6 +63,11 @@ type
     bbStartLoad: TdxBarButton;
     spGetImportSettingId: TdsdStoredProc;
     IdSP: TcxGridDBColumn;
+    spGetImportSettingDopId: TdsdStoredProc;
+    actDoLoadDop: TExecuteImportSettingsAction;
+    actGetImportSettingDop: TdsdExecStoredProc;
+    macStartLoadDop: TMultiAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

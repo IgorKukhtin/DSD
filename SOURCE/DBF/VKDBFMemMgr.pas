@@ -1,20 +1,27 @@
-{Copyright:      Vlad Karpov
- 		 mailto:KarpovVV@protek.ru
-		 http:\\vlad-karpov.narod.ru
-     ICQ#136489711
- Author:         Vlad Karpov
- Remarks:        Freeware with pay for support, see license.txt
-}
+{**********************************************************************************}
+{                                                                                  }
+{ Project vkDBF - dbf ntx clipper compatibility delphi component                   }
+{                                                                                  }
+{ This Source Code Form is subject to the terms of the Mozilla Public              }
+{ License, v. 2.0. If a copy of the MPL was not distributed with this              }
+{ file, You can obtain one at http://mozilla.org/MPL/2.0/.                         }
+{                                                                                  }
+{ The Initial Developer of the Original Code is Vlad Karpov (KarpovVV@protek.ru).  }
+{                                                                                  }
+{ Contributors:                                                                    }
+{   Sergey Klochkov (HSerg@sklabs.ru)                                              }
+{                                                                                  }
+{ You may retrieve the latest version of this file at the Project vkDBF home page, }
+{ located at http://sourceforge.net/projects/vkdbf/                                }
+{                                                                                  }
+{**********************************************************************************}
 unit VKDBFMemMgr;
-
-{$WARNINGS OFF}
 
 interface
 
 uses
   contnrs, Dialogs, syncobjs,
-  {$IFDEF VER140} Variants, {$ENDIF}
-  {$IFDEF VER150} Variants, {$ENDIF}
+  {$IFDEF DELPHI6} Variants, {$ENDIF}
   {$IFDEF VKDBFMEMCONTROL} Windows, DB,{$ENDIF}
   sysutils;
 
@@ -73,7 +80,6 @@ type
   end;
 
   {$IFDEF VKDBFMEMCONTROL}
-  //function Int64toVariant(value: Int64): Variant;
   //function getUseDbf: boolean;
   //procedure setUseDBF(newValue: boolean);
   function getUseExDbf: boolean;
@@ -100,15 +106,11 @@ uses
 {$IFDEF VKDBFMEMCONTROL}
 function Int64toVariant(value: Int64): Variant;
 begin
-  {$IFDEF VER130}
+  {$IFDEF DELPHI6}
+  Result := value;
+  {$ELSE}
   TVarData(Result).VType := VT_DECIMAL;
   Decimal(Result).lo64 := value;
-  {$ENDIF}
-  {$IFDEF VER140}
-  Result := value;
-  {$ENDIF}
-  {$IFDEF VER150}
-  Result := value;
   {$ENDIF}
 end;
 function getUseDbf: boolean;

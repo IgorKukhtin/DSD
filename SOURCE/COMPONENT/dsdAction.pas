@@ -1,11 +1,13 @@
 unit dsdAction;
 
+{$I ..\dsdVer.inc}
+
 interface
 
 uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst,
   cxControls, dsdGuides, ImgList, cxPC, cxGrid, cxGridTableView, cxDBPivotGrid,
   cxGridDBTableView, frxClass, frxExportPDF, cxGridCustomView, Dialogs, Controls,
-  dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL;
+  dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 type
 
@@ -1716,7 +1718,7 @@ begin
           IsCtrlPressed);
       cxegExportToText:
         cxExportPivotGridToText(FileName, TcxCustomPivotGrid(FGrid),
-          IsCtrlPressed);
+          IsCtrlPressed {$IFDEF DELPHI103RIO}, 'txt', nil,  nil {$ENDIF});
       cxegExportToExcel, cxegExportToXlsx:
         cxExportPivotGridToExcel(FileName, TcxCustomPivotGrid(FGrid),
           IsCtrlPressed);

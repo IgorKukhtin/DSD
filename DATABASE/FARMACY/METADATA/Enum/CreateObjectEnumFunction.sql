@@ -340,7 +340,9 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_GoodsSP() RETURNS Integer AS $B
 --Загрузка Данные по Соц.проекту в документ
 CREATE OR REPLACE FUNCTION zc_Enum_ImportType_GoodsSPMovement() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_GoodsSPMovement' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_GoodsSPMovement() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_GoodsSPMovement' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
+--Загрузка доп. данных по Соц.проекту в документ
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_GoodsSPDopMovement() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_GoodsSPDopMovement' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_GoodsSPDopMovement() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_GoodsSPDopMovement' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 --Загрузка Врач  Соц.проекту
 CREATE OR REPLACE FUNCTION zc_Enum_ImportType_MedicSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_MedicSP' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -429,8 +431,8 @@ BEGIN
   CREATE OR REPLACE FUNCTION zc_Enum_Helsi_be() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Helsi_be' AND DescId = zc_ObjectString_HelsiEnum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
   CREATE OR REPLACE FUNCTION zc_Enum_Helsi_ClientId() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Helsi_ClientId' AND DescId = zc_ObjectString_HelsiEnum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
   CREATE OR REPLACE FUNCTION zc_Enum_Helsi_ClientSecret() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Helsi_ClientSecret' AND DescId = zc_ObjectString_HelsiEnum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  CREATE OR REPLACE FUNCTION zc_Enum_Helsi_IntegrationClient() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Helsi_IntegrationClient' AND DescId = zc_ObjectString_HelsiEnum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
   CREATE OR REPLACE FUNCTION zc_Enum_Helsi_UserName() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Helsi_UserName' AND DescId = zc_ObjectString_HelsiEnum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-  CREATE OR REPLACE FUNCTION zc_Enum_Helsi_Password() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Helsi_Password' AND DescId = zc_ObjectString_HelsiEnum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 END $$;
 
 

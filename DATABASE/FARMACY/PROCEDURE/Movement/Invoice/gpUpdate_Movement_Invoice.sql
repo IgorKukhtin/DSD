@@ -16,11 +16,24 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_Invoice(
 RETURNS TFloat AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbStatusId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Invoice());
     vbUserId := inSession;
 
+
+    vbStatusId := (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inId);
+    IF vbStatusId = zc_Enum_Status_Erased()
+    THEN
+        RAISE EXCEPTION 'Ошибка.Документ № <%> от <%> удален. Изменения запрещены.', (SELECT InvNumber FROM Movement WHERE Id = inId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inId);
+    END IF;
+    IF vbStatusId = zc_Enum_Status_Complete()
+    THEN
+        RAISE EXCEPTION 'Ошибка.Документ № <%> от <%> проведен. Изменения запрещены.', (SELECT InvNumber FROM Movement WHERE Id = inId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inId);
+    END IF;
+
+    
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_DateRegistered(), inId, inDateRegistered);    
 

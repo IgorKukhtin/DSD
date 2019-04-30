@@ -111,7 +111,7 @@ BEGIN
                                        FROM ObjectLink
                                        WHERE ObjectLink.DescId = zc_ObjectLink_PartnerMedical_Department()
                                       ) AS tmp
-                                    LEFT JOIN Object AS Object_Department ON Object_Department.Id =  tmp.DepartmentId
+                                    LEFT JOIN Object AS Object_Department ON Object_Department.Id = tmp.DepartmentId
                                     LEFT JOIN ObjectLink AS ObjectLink_Contract_Department
                                                          ON ObjectLink_Contract_Department.ChildObjectId = tmp.DepartmentId
                                                         AND ObjectLink_Contract_Department.DescId = zc_ObjectLink_Contract_Juridical()
@@ -306,13 +306,14 @@ BEGIN
                             AND ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
 
         LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := Object_Juridical.Id, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_JuridicalDetails ON 1=1
-        LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := ObjectLink_PartnerMedical_Juridical.ChildObjectId , inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_PartnerMedicalDetails ON 1=1
+        LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := CASE WHEN Object_PartnerMedical.DescId = zc_Object_Juridical() THEN Object_PartnerMedical.Id ELSE ObjectLink_PartnerMedical_Juridical.ChildObjectId END
+                                                        , inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_PartnerMedicalDetails ON 1=1
  
         LEFT JOIN tmpBankAccount ON tmpBankAccount.JuridicalId = Object_Juridical.Id
                                 AND tmpBankAccount.BankAccount = ObjectHistory_JuridicalDetails.BankAccount
 
         LEFT JOIN tmpBankAccount AS tmpPartnerMedicalBankAccount 
-                                 ON tmpPartnerMedicalBankAccount.JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId  --ObjectLink_PartnerMedical_Juridical.ChildObjectId
+                                 ON tmpPartnerMedicalBankAccount.JuridicalId = CASE WHEN Object_PartnerMedical.DescId = zc_Object_Juridical() THEN Object_PartnerMedical.Id ELSE ObjectLink_PartnerMedical_Juridical.ChildObjectId END --ObjectLink_PartnerMedical_Juridical.ChildObjectId
                                 AND tmpPartnerMedicalBankAccount.BankAccount = ObjectHistory_PartnerMedicalDetails.BankAccount
         
         LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Department 
