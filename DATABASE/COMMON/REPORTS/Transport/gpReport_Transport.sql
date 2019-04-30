@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_Transport(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (InvNumberTransport Integer, OperDate TDateTime
-             , BranchName TVarChar
+             , BranchName TVarChar, UnitName_car TVarChar
              , CarModelName TVarChar, CarName TVarChar
              , PersonalDriverName TVarChar
              , RouteName TVarChar, RouteKindName TVarChar
@@ -551,10 +551,18 @@ BEGIN
 
                            )
          -- вытаскиваем из реестра виз кол-во накладных и вес
-         , tmpDataReestr AS (SELECT tmp.MovementId                                            AS MovementId
-                                  , STRING_AGG (DISTINCT Movement_Reestr.InvNumber, ';')      AS InvNumber
-                                  , COUNT (DISTINCT MovementFloat_MovementItemId.MovementId)  AS CountDoc
-                                  , SUM (MovementFloat_TotalCountKg.ValueData)                AS TotalCountKg
+         , tmpDataReestr AS (SELECT tmp.MovementId                                AS MovementId
+                               -- , STRING_AGG (DISTINCT tmp.InvNumber, ';')      AS InvNumber
+                                  , STRING_AGG (DISTINCT tmp.InvNumber || ' ' || tmp.FromName, ';')          AS InvNumber
+                                  , COUNT (DISTINCT tmp.MovementId_sale)          AS CountDoc
+                                  , SUM (tmp.TotalCountKg)                        AS TotalCountKg
+                             FROM
+                            (SELECT tmp.MovementId                                            AS MovementId
+                               -- , STRING_AGG (DISTINCT Movement_Reestr.InvNumber, ';')      AS InvNumber
+                                  , Movement_Reestr.InvNumber                                 AS InvNumber
+                                  , Object_From.ValueData                                     AS FromName
+                                  , MovementFloat_MovementItemId.MovementId                   AS MovementId_sale
+                                  , MovementFloat_TotalCountKg.ValueData                      AS TotalCountKg
                              FROM (SELECT DISTINCT tmpTransport.MovementId FROM tmpTransport) AS tmp
                                   INNER JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                                                   ON MovementLinkMovement_Transport.MovementChildId = tmp.MovementId
@@ -575,6 +583,15 @@ BEGIN
                                   LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
                                                           ON MovementFloat_TotalCountKg.MovementId = MovementFloat_MovementItemId.MovementId -- Movement_Sale.Id
                                                          AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                               ON MovementLinkObject_From.MovementId = MovementFloat_MovementItemId.MovementId
+                                                              AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                  LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+                                  INNER JOIN Movement AS Movement_Sale
+                                                      ON Movement_Sale.Id       = MovementFloat_MovementItemId.MovementId
+                                                     AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
+                             ORDER BY tmp.MovementId, Movement_Reestr.InvNumber, Object_From.ValueData
+                            ) AS tmp
                              GROUP BY tmp.MovementId
                              )
 
@@ -582,6 +599,7 @@ BEGIN
         SELECT zfConvert_StringToNumber (tmpFuel.InvNumber) AS InvNumberTransport
              , tmpFuel.OperDate
              , ViewObject_Unit.BranchName
+             , ViewObject_Unit.Name             AS UnitName_car
              , Object_CarModel.ValueData        AS CarModelName
              , Object_Car.ValueData             AS CarName
              , View_PersonalDriver.PersonalName AS PersonalDriverName
@@ -619,9 +637,9 @@ BEGIN
              , MAX (tmpFuel.SumTransportTaxi)         :: TFloat AS SumTransportTaxi
              , MAX (tmpFuel.SumRateExp)               :: TFloat AS SumRateExp
 
-             , MAX (tmpDataReestr.CountDoc)           :: TFloat   AS CountDoc_Reestr
-             , MAX (tmpDataReestr.TotalCountKg)       :: TFloat   AS TotalCountKg_Reestr
-             , MAX (tmpDataReestr.InvNumber)          :: TVarChar AS InvNumber_Reestr
+             , MAX (COALESCE (tmpDataReestr.CountDoc, 0))           :: TFloat   AS CountDoc_Reestr
+             , MAX (COALESCE (tmpDataReestr.TotalCountKg, 0))       :: TFloat   AS TotalCountKg_Reestr
+             , MAX (COALESCE (tmpDataReestr.InvNumber, ''))         :: TVarChar AS InvNumber_Reestr
 
               -- группировка по всем
         FROM (SELECT tmpAll.MovementId
@@ -791,14 +809,14 @@ BEGIN
 
              -- ограничиваем по филиалу, если нужно
              LEFT JOIN ObjectLink AS ObjectLink_Car_Unit 
-                             ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
-                            AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
+                                  ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
+                                 AND ObjectLink_Car_Unit.DescId   = zc_ObjectLink_Car_Unit()
              LEFT JOIN Object_Unit_View AS ViewObject_Unit
-                                   ON ViewObject_Unit.Id = ObjectLink_Car_Unit.ChildObjectId
+                                        ON ViewObject_Unit.Id = ObjectLink_Car_Unit.ChildObjectId
                                    
              -- данные из реестра виз
              LEFT JOIN tmpDataReestr ON tmpDataReestr.MovementId = tmpFuel.MovementId
-                                     AND tmpFuel.Ord = 1
+                                    AND tmpFuel.Ord = 1
         WHERE COALESCE (ViewObject_Unit.BranchId, 0) = inBranchId 
            OR inBranchId = 0 
            OR (inBranchId = zc_Branch_Basis() AND COALESCE (ViewObject_Unit.BranchId, 0) = 0)   
@@ -814,6 +832,7 @@ BEGIN
                , Object_RateFuelKind.ValueData
                , Object_Fuel.ValueData
                , ViewObject_Unit.BranchName
+               , ViewObject_Unit.Name
        ;
 
 END;
@@ -834,6 +853,4 @@ ALTER FUNCTION gpReport_Transport (TDateTime, TDateTime, Integer, Integer, TVarC
 */
 
 -- тест
--- SELECT * FROM gpReport_Transport (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inCarId:= null,  inBranchId:= 1, inSession:= zfCalc_UserAdmin());
---select * from gpReport_Transport(inStartDate := ('01.12.2016')::TDateTime , inEndDate := ('31.12.2016')::TDateTime , inCarId := 0 , inBranchId := 0 ,  inSession := '5') as tt----
---where InvNumberTransport = 38113
+-- SELECT * FROM gpReport_Transport (inStartDate:= '01.01.2019', inEndDate:= '01.01.2019', inCarId:= null,  inBranchId:= 1, inSession:= zfCalc_UserAdmin());

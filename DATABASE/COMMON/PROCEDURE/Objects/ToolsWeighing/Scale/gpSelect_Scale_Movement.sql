@@ -38,6 +38,10 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , PositionId3 Integer, PositionCode3 Integer, PositionName3 TVarChar
              , PositionId4 Integer, PositionCode4 Integer, PositionName4 TVarChar
              , PositionId5 Integer, PositionCode5 Integer, PositionName5 TVarChar
+               -- Стикеровщик 1
+             , PersonalId1_Stick Integer, PersonalCode1_Stick Integer, PersonalName1_Stick TVarChar
+             , PositionId1_Stick Integer, PositionCode1_Stick Integer, PositionName1_Stick TVarChar
+
              , EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean
              , UserName TVarChar
               )
@@ -154,6 +158,9 @@ BEGIN
              , Object_Position4.Id AS PositionId4, Object_Position4.ObjectCode AS PositionCode4, Object_Position4.ValueData AS PositionName4
              , Object_Position5.Id AS PositionId5, Object_Position5.ObjectCode AS PositionCode5, Object_Position5.ValueData AS PositionName5
 
+             , Object_Personal1_Stick.Id AS PersonalId1_Stick, Object_Personal1_Stick.ObjectCode AS PersonalCode1_Stick, Object_Personal1_Stick.ValueData AS PersonalName1_Stick
+             , Object_Position1_Stick.Id AS PositionId1_Stick, Object_Position1_Stick.ObjectCode AS PositionCode1_Stick, Object_Position1_Stick.ValueData AS PositionName1_Stick
+
              , COALESCE (MovementBoolean_EdiOrdspr.ValueData, FALSE)    AS EdiOrdspr
              , COALESCE (MovementBoolean_EdiInvoice.ValueData, FALSE)   AS EdiInvoice
              , COALESCE (MovementBoolean_EdiDesadv.ValueData, FALSE)    AS EdiDesadv
@@ -249,6 +256,15 @@ BEGIN
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
 
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal1_Stick
+                                         ON MovementLinkObject_Personal1_Stick.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal1_Stick.DescId = zc_MovementLinkObject_PersonalStick1()
+            LEFT JOIN Object AS Object_Personal1_Stick ON Object_Personal1_Stick.Id = MovementLinkObject_Personal1_Stick.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position1_Stick
+                                         ON MovementLinkObject_Position1_Stick.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position1_Stick.DescId = zc_MovementLinkObject_PositionStick1()
+            LEFT JOIN Object AS Object_Position1_Stick ON Object_Position1_Stick.Id = MovementLinkObject_Position1_Stick.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal1
                                          ON MovementLinkObject_Personal1.MovementId = Movement.Id
@@ -378,4 +394,4 @@ ALTER FUNCTION gpSelect_Scale_Movement (TDateTime, TDateTime, Boolean, TVarChar)
 */
 
 -- тест
--- SELECT * FROM gpSelect_Scale_Movement (inStartDate:= '01.05.2015', inEndDate:= '01.05.2015', inIsComlete:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Scale_Movement (inStartDate:= '01.05.2019', inEndDate:= '01.05.2019', inIsComlete:= TRUE, inSession:= zfCalc_UserAdmin())

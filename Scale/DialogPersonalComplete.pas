@@ -67,6 +67,17 @@ type
     EditPersonalCode5: TcxCurrencyEdit;
     gbPersonalName5: TGroupBox;
     EditPersonalName5: TcxButtonEdit;
+    infoPanelPersonaStick1: TPanel;
+    PanelPositionStick1: TPanel;
+    LabelPositionStickName1: TLabel;
+    gbPositionStickName1: TGroupBox;
+    PanelPositionStickName1: TPanel;
+    PanelPersonalStick1: TPanel;
+    LabelPersonalStickName1: TLabel;
+    gbPersonalStickCode1: TGroupBox;
+    EditPersonalStickCode1: TcxCurrencyEdit;
+    gbPersonalStickName1: TGroupBox;
+    EditPersonalStickName1: TcxButtonEdit;
 
     procedure FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
     procedure EditPersonalCode1Exit(Sender: TObject);
@@ -135,6 +146,10 @@ begin
           EditPersonalCode5.Text:=ParamByName('PersonalCode5').AsString;
           EditPersonalName5.Text:=ParamByName('PersonalName5').AsString;
           PanelPositionName5.Caption:=ParamByName('PositionName5').AsString;
+
+          EditPersonalStickCode1.Text:=ParamByName('PersonalCode1_Stick').AsString;
+          EditPersonalStickName1.Text:=ParamByName('PersonalName1_Stick').AsString;
+          PanelPositionStickName1.Caption:=ParamByName('PositionName1_Stick').AsString;
      end;
      ActiveControl:=EditPersonalCode1;
      fStartWrite:=false;
@@ -147,6 +162,7 @@ end;
 {------------------------------------------------------------------------}
 function TDialogPersonalCompleteForm.Checked: boolean; //Проверка корректного ввода в Edit
 var PersonalCode1:Integer;
+    PersonalStickCode1:Integer;
     PersonalCode2:Integer;
     PersonalCode3:Integer;
     PersonalCode4:Integer;
@@ -159,12 +175,15 @@ begin
      try PersonalCode3:= StrToInt(EditPersonalCode3.Text); except PersonalCode3:= 0;end;
      try PersonalCode4:= StrToInt(EditPersonalCode4.Text); except PersonalCode4:= 0;end;
      try PersonalCode5:= StrToInt(EditPersonalCode5.Text); except PersonalCode5:= 0;end;
+     try PersonalStickCode1:= StrToInt(EditPersonalStickCode1.Text); except PersonalStickCode1:= 0;end;
      //
      EditPersonalCode1Exit(EditPersonalCode1);
      EditPersonalCode1Exit(EditPersonalCode2);
      EditPersonalCode1Exit(EditPersonalCode3);
      EditPersonalCode1Exit(EditPersonalCode4);
      EditPersonalCode1Exit(EditPersonalCode5);
+     EditPersonalCode1Exit(EditPersonalStickCode1);
+
      //
      //
      Result:=(PersonalCode1<>0)and(trim(EditPersonalName1.Text)<>'')and(ParamsPersonalComplete_local.ParamByName('PersonalId1').AsInteger<>0);
@@ -178,7 +197,7 @@ begin
      //
      Result:=((PersonalCode2<>0)and(trim(EditPersonalName2.Text)<>'')and(ParamsPersonalComplete_local.ParamByName('PersonalId2').AsInteger<>0))
           or ((PersonalCode2=0)and(trim(EditPersonalName2.Text)='')and(ParamsPersonalComplete_local.ParamByName('PersonalId2').AsInteger=0)
-              and(PersonalCode3=0)and(PersonalCode4=0)
+              and(PersonalCode3=0)and(PersonalCode4=0)and(PersonalCode5=0)
              );
      if not Result then
      begin
@@ -190,7 +209,7 @@ begin
      //
      Result:=((PersonalCode3<>0)and(trim(EditPersonalName3.Text)<>'')and(ParamsPersonalComplete_local.ParamByName('PersonalId3').AsInteger<>0))
           or ((PersonalCode3=0)and(trim(EditPersonalName3.Text)='')and(ParamsPersonalComplete_local.ParamByName('PersonalId3').AsInteger=0)
-              and(PersonalCode4=0)
+              and(PersonalCode4=0)and(PersonalCode5=0)
              );
      if not Result then
      begin
@@ -202,6 +221,7 @@ begin
      //
      Result:=((PersonalCode4<>0)and(trim(EditPersonalName4.Text)<>'')and(ParamsPersonalComplete_local.ParamByName('PersonalId4').AsInteger<>0))
           or ((PersonalCode4=0)and(trim(EditPersonalName4.Text)='')and(ParamsPersonalComplete_local.ParamByName('PersonalId4').AsInteger=0)
+           and(PersonalCode5=0)
              );
      if not Result then
      begin
@@ -222,6 +242,17 @@ begin
      end;
      //
      //
+     Result:=((PersonalStickCode1<>0)and(trim(EditPersonalStickName1.Text)<>'')and(ParamsPersonalComplete_local.ParamByName('PersonalId1_Stick').AsInteger<>0))
+          or ((PersonalStickCode1=0)and(trim(EditPersonalStickName1.Text)='')and(ParamsPersonalComplete_local.ParamByName('PersonalId1_Stick').AsInteger=0)
+             );
+     if not Result then
+     begin
+           ActiveControl:=EditPersonalStickCode1;
+           ShowMessage('Введите Стикеровщик 1.');
+           exit;
+     end;
+     //
+     //
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogPersonalCompleteForm.FormCreate(Sender: TObject);
@@ -237,7 +268,8 @@ begin
       else if (ActiveControl=EditPersonalCode2)or(ActiveControl=EditPersonalName2)then ActiveControl:=EditPersonalCode3
            else if (ActiveControl=EditPersonalCode3)or(ActiveControl=EditPersonalName3)then ActiveControl:=EditPersonalCode4
                 else if (ActiveControl=EditPersonalCode4)or(ActiveControl=EditPersonalName4) then ActiveControl:=EditPersonalCode5
-                     else if (ActiveControl=EditPersonalCode5)or(ActiveControl=EditPersonalName5) then bbOkClick(self);
+                     else if (ActiveControl=EditPersonalCode5)or(ActiveControl=EditPersonalName5) then ActiveControl:=EditPersonalStickCode1
+                          else if (ActiveControl=EditPersonalStickCode1)or(ActiveControl=EditPersonalStickName1) then bbOkClick(self);
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogPersonalCompleteForm.EditPersonalCode1KeyDown(Sender: TObject;var Key: Word; Shift: TShiftState);
@@ -251,7 +283,8 @@ begin
          else if (TcxCurrencyEdit(Sender).Tag = 2) then if Value = 0 then ActiveControl:=EditPersonalName2 else ActiveControl:=EditPersonalCode3
               else if (TcxCurrencyEdit(Sender).Tag = 3) then if Value = 0 then ActiveControl:=EditPersonalName3 else ActiveControl:=EditPersonalCode4
                    else if (TcxCurrencyEdit(Sender).Tag = 4) then if Value = 0 then ActiveControl:=EditPersonalName4 else ActiveControl:=EditPersonalCode5
-                        else if (TcxCurrencyEdit(Sender).Tag = 5) then if Value = 0 then ActiveControl:=EditPersonalName5 else bbOkClick(self);
+                        else if (TcxCurrencyEdit(Sender).Tag = 5) then if Value = 0 then ActiveControl:=EditPersonalName5 else ActiveControl:=EditPersonalStickCode1
+                             else if (TcxCurrencyEdit(Sender).Tag = 11) then if Value = 0 then ActiveControl:=EditPersonalStickName1 else bbOkClick(self);
     end;
 end;
 {------------------------------------------------------------------------------}
@@ -263,7 +296,8 @@ begin
          else if (TcxCurrencyEdit(Sender).Tag = 2) then ActiveControl:=EditPersonalCode3
               else if (TcxCurrencyEdit(Sender).Tag = 3) then ActiveControl:=EditPersonalCode4
                    else if (TcxCurrencyEdit(Sender).Tag = 4) then ActiveControl:=EditPersonalCode5
-                        else if (TcxCurrencyEdit(Sender).Tag = 5) then bbOkClick(self);
+                        else if (TcxCurrencyEdit(Sender).Tag = 5) then ActiveControl:=EditPersonalStickCode1
+                             else if (TcxCurrencyEdit(Sender).Tag = 11) then bbOkClick(self);
     end;
 end;
 {------------------------------------------------------------------------------}
@@ -277,27 +311,40 @@ var execParams:TParams;
 begin
     idx:=IntToStr(TcxButtonEdit(Sender).Tag);
     //
-    if idx = '1' then try PersonalCode:= StrToInt(EditPersonalCode1.Text); except PersonalCode:= 0;end;
-    if idx = '2' then try PersonalCode:= StrToInt(EditPersonalCode2.Text); except PersonalCode:= 0;end;
-    if idx = '3' then try PersonalCode:= StrToInt(EditPersonalCode3.Text); except PersonalCode:= 0;end;
-    if idx = '4' then try PersonalCode:= StrToInt(EditPersonalCode4.Text); except PersonalCode:= 0;end;
-    if idx = '5' then try PersonalCode:= StrToInt(EditPersonalCode5.Text); except PersonalCode:= 0;end;
+    if idx = '1'  then try PersonalCode:= StrToInt(EditPersonalCode1.Text);      except PersonalCode:= 0;end;
+    if idx = '2'  then try PersonalCode:= StrToInt(EditPersonalCode2.Text);      except PersonalCode:= 0;end;
+    if idx = '3'  then try PersonalCode:= StrToInt(EditPersonalCode3.Text);      except PersonalCode:= 0;end;
+    if idx = '4'  then try PersonalCode:= StrToInt(EditPersonalCode4.Text);      except PersonalCode:= 0;end;
+    if idx = '5'  then try PersonalCode:= StrToInt(EditPersonalCode5.Text);      except PersonalCode:= 0;end;
+    if idx = '11' then try PersonalCode:= StrToInt(EditPersonalStickCode1.Text); except PersonalCode:= 0;end;
     //
     if PersonalCode = 0 then
     begin
-         ParamsPersonalComplete_local.ParamByName('PersonalId'+idx).AsInteger:=0;
-         ParamsPersonalComplete_local.ParamByName('PersonalCode'+idx).AsInteger:=0;
-         ParamsPersonalComplete_local.ParamByName('PersonalName'+idx).AsString:='';
-         ParamsPersonalComplete_local.ParamByName('PositionId'+idx).AsInteger:=0;
-         ParamsPersonalComplete_local.ParamByName('PositionCode'+idx).AsInteger:=0;
-         ParamsPersonalComplete_local.ParamByName('PositionName'+idx).AsString:='';
+         if TcxButtonEdit(Sender).Tag < 10
+         then begin
+             ParamsPersonalComplete_local.ParamByName('PersonalId'+idx).AsInteger:=0;
+             ParamsPersonalComplete_local.ParamByName('PersonalCode'+idx).AsInteger:=0;
+             ParamsPersonalComplete_local.ParamByName('PersonalName'+idx).AsString:='';
+             ParamsPersonalComplete_local.ParamByName('PositionId'+idx).AsInteger:=0;
+             ParamsPersonalComplete_local.ParamByName('PositionCode'+idx).AsInteger:=0;
+             ParamsPersonalComplete_local.ParamByName('PositionName'+idx).AsString:='';
+         end
+         else begin
+             ParamsPersonalComplete_local.ParamByName('PersonalId'+idx+'_Stick').AsInteger:=0;
+             ParamsPersonalComplete_local.ParamByName('PersonalCode'+idx+'_Stick').AsInteger:=0;
+             ParamsPersonalComplete_local.ParamByName('PersonalName'+idx+'_Stick').AsString:='';
+             ParamsPersonalComplete_local.ParamByName('PositionId'+idx+'_Stick').AsInteger:=0;
+             ParamsPersonalComplete_local.ParamByName('PositionCode'+idx+'_Stick').AsInteger:=0;
+             ParamsPersonalComplete_local.ParamByName('PositionName'+idx+'_Stick').AsString:='';
+         end;
          //
          fStartWrite:=true;
-         if idx = '1' then begin EditPersonalName1.Text:=''; PanelPositionName1.Caption:=''; end;
-         if idx = '2' then begin EditPersonalName2.Text:=''; PanelPositionName2.Caption:=''; end;
-         if idx = '3' then begin EditPersonalName3.Text:=''; PanelPositionName3.Caption:=''; end;
-         if idx = '4' then begin EditPersonalName4.Text:=''; PanelPositionName4.Caption:=''; end;
-         if idx = '5' then begin EditPersonalName5.Text:=''; PanelPositionName5.Caption:=''; end;
+         if idx = '1'  then begin EditPersonalName1.Text:='';      PanelPositionName1.Caption:=''; end;
+         if idx = '2'  then begin EditPersonalName2.Text:='';      PanelPositionName2.Caption:=''; end;
+         if idx = '3'  then begin EditPersonalName3.Text:='';      PanelPositionName3.Caption:=''; end;
+         if idx = '4'  then begin EditPersonalName4.Text:='';      PanelPositionName4.Caption:=''; end;
+         if idx = '5'  then begin EditPersonalName5.Text:='';      PanelPositionName5.Caption:=''; end;
+         if idx = '11' then begin EditPersonalStickName1.Text:=''; PanelPositionStickName1.Caption:=''; end;
          fStartWrite:=false;
          //
          fChangePersonalCode:=false;
@@ -308,12 +355,23 @@ begin
               //
               if DMMainScaleForm.gpGet_Scale_Personal(execParams,PersonalCode) = true
               then begin
-                        ParamsPersonalComplete_local.ParamByName('PersonalId'+idx).AsInteger:=execParams.ParamByName('PersonalId').AsInteger;
-                        ParamsPersonalComplete_local.ParamByName('PersonalCode'+idx).AsInteger:=execParams.ParamByName('PersonalCode').AsInteger;
-                        ParamsPersonalComplete_local.ParamByName('PersonalName'+idx).AsString:=execParams.ParamByName('PersonalName').AsString;
-                        ParamsPersonalComplete_local.ParamByName('PositionId'+idx).AsInteger:=execParams.ParamByName('PositionId').AsInteger;
-                        ParamsPersonalComplete_local.ParamByName('PositionCode'+idx).AsInteger:=execParams.ParamByName('PositionCode').AsInteger;
-                        ParamsPersonalComplete_local.ParamByName('PositionName'+idx).AsString:=execParams.ParamByName('PositionName').AsString;
+                        if TcxButtonEdit(Sender).Tag < 10
+                        then begin
+                            ParamsPersonalComplete_local.ParamByName('PersonalId'+idx).AsInteger:=execParams.ParamByName('PersonalId').AsInteger;
+                            ParamsPersonalComplete_local.ParamByName('PersonalCode'+idx).AsInteger:=execParams.ParamByName('PersonalCode').AsInteger;
+                            ParamsPersonalComplete_local.ParamByName('PersonalName'+idx).AsString:=execParams.ParamByName('PersonalName').AsString;
+                            ParamsPersonalComplete_local.ParamByName('PositionId'+idx).AsInteger:=execParams.ParamByName('PositionId').AsInteger;
+                            ParamsPersonalComplete_local.ParamByName('PositionCode'+idx).AsInteger:=execParams.ParamByName('PositionCode').AsInteger;
+                            ParamsPersonalComplete_local.ParamByName('PositionName'+idx).AsString:=execParams.ParamByName('PositionName').AsString;
+                        end
+                        else begin
+                            ParamsPersonalComplete_local.ParamByName('PersonalId'+idx+'_Stick').AsInteger:=execParams.ParamByName('PersonalId').AsInteger;
+                            ParamsPersonalComplete_local.ParamByName('PersonalCode'+idx+'_Stick').AsInteger:=execParams.ParamByName('PersonalCode').AsInteger;
+                            ParamsPersonalComplete_local.ParamByName('PersonalName'+idx+'_Stick').AsString:=execParams.ParamByName('PersonalName').AsString;
+                            ParamsPersonalComplete_local.ParamByName('PositionId'+idx+'_Stick').AsInteger:=execParams.ParamByName('PositionId').AsInteger;
+                            ParamsPersonalComplete_local.ParamByName('PositionCode'+idx+'_Stick').AsInteger:=execParams.ParamByName('PositionCode').AsInteger;
+                            ParamsPersonalComplete_local.ParamByName('PositionName'+idx+'_Stick').AsString:=execParams.ParamByName('PositionName').AsString;
+                        end;
                         //
                         fStartWrite:=true;
                         //
@@ -347,6 +405,12 @@ begin
                               EditPersonalName5.Text:=execParams.ParamByName('PersonalName').AsString;
                               PanelPositionName5.Caption:=execParams.ParamByName('PositionName').AsString;
                          end;
+                         if idx = '11' then
+                         begin
+                              EditPersonalStickCode1.Text:=execParams.ParamByName('PersonalCode').AsString;
+                              EditPersonalStickName1.Text:=execParams.ParamByName('PersonalName').AsString;
+                              PanelPositionStickName1.Caption:=execParams.ParamByName('PositionName').AsString;
+                         end;
                         //
                         fStartWrite:=false;
                         //
@@ -359,11 +423,12 @@ begin
                         ParamsPersonalComplete_local.ParamByName('PersonalId'+idx).AsInteger:=0;
                         //
                         fStartWrite:=true;
-                        if idx = '1' then begin EditPersonalName1.Text:=''; PanelPositionName1.Caption:=''; ActiveControl:=EditPersonalCode1; end;
-                        if idx = '2' then begin EditPersonalName2.Text:=''; PanelPositionName2.Caption:=''; ActiveControl:=EditPersonalCode2; end;
-                        if idx = '3' then begin EditPersonalName3.Text:=''; PanelPositionName3.Caption:=''; ActiveControl:=EditPersonalCode3; end;
-                        if idx = '4' then begin EditPersonalName4.Text:=''; PanelPositionName4.Caption:=''; ActiveControl:=EditPersonalCode4; end;
-                        if idx = '5' then begin EditPersonalName5.Text:=''; PanelPositionName5.Caption:=''; ActiveControl:=EditPersonalCode5; end;
+                        if idx = '1'  then begin EditPersonalName1.Text:='';      PanelPositionName1.Caption:=''; ActiveControl:=EditPersonalCode1; end;
+                        if idx = '2'  then begin EditPersonalName2.Text:='';      PanelPositionName2.Caption:=''; ActiveControl:=EditPersonalCode2; end;
+                        if idx = '3'  then begin EditPersonalName3.Text:='';      PanelPositionName3.Caption:=''; ActiveControl:=EditPersonalCode3; end;
+                        if idx = '4'  then begin EditPersonalName4.Text:='';      PanelPositionName4.Caption:=''; ActiveControl:=EditPersonalCode4; end;
+                        if idx = '5'  then begin EditPersonalName5.Text:='';      PanelPositionName5.Caption:=''; ActiveControl:=EditPersonalCode5; end;
+                        if idx = '11' then begin EditPersonalStickName1.Text:=''; PanelPositionStickName1.Caption:=''; ActiveControl:=EditPersonalStickCode1; end;
                         fStartWrite:=false;
                         //
                    end;
@@ -395,12 +460,23 @@ begin
      //
      if GuidePersonalForm.Execute(execParams)
      then begin
-               ParamsPersonalComplete_local.ParamByName('PersonalId'+idx).AsInteger:=execParams.ParamByName('PersonalId').AsInteger;
-               ParamsPersonalComplete_local.ParamByName('PersonalCode'+idx).AsInteger:=execParams.ParamByName('PersonalCode').AsInteger;
-               ParamsPersonalComplete_local.ParamByName('PersonalName'+idx).AsString:=execParams.ParamByName('PersonalName').AsString;
-               ParamsPersonalComplete_local.ParamByName('PositionId'+idx).AsInteger:=execParams.ParamByName('PositionId').AsInteger;
-               ParamsPersonalComplete_local.ParamByName('PositionCode'+idx).AsInteger:=execParams.ParamByName('PositionCode').AsInteger;
-               ParamsPersonalComplete_local.ParamByName('PositionName'+idx).AsString:=execParams.ParamByName('PositionName').AsString;
+               if TcxButtonEdit(Sender).Tag < 10
+               then begin
+                   ParamsPersonalComplete_local.ParamByName('PersonalId'+idx).AsInteger:=execParams.ParamByName('PersonalId').AsInteger;
+                   ParamsPersonalComplete_local.ParamByName('PersonalCode'+idx).AsInteger:=execParams.ParamByName('PersonalCode').AsInteger;
+                   ParamsPersonalComplete_local.ParamByName('PersonalName'+idx).AsString:=execParams.ParamByName('PersonalName').AsString;
+                   ParamsPersonalComplete_local.ParamByName('PositionId'+idx).AsInteger:=execParams.ParamByName('PositionId').AsInteger;
+                   ParamsPersonalComplete_local.ParamByName('PositionCode'+idx).AsInteger:=execParams.ParamByName('PositionCode').AsInteger;
+                   ParamsPersonalComplete_local.ParamByName('PositionName'+idx).AsString:=execParams.ParamByName('PositionName').AsString;
+               end
+               else begin
+                   ParamsPersonalComplete_local.ParamByName('PersonalId'+idx+'_Stick').AsInteger:=execParams.ParamByName('PersonalId').AsInteger;
+                   ParamsPersonalComplete_local.ParamByName('PersonalCode'+idx+'_Stick').AsInteger:=execParams.ParamByName('PersonalCode').AsInteger;
+                   ParamsPersonalComplete_local.ParamByName('PersonalName'+idx+'_Stick').AsString:=execParams.ParamByName('PersonalName').AsString;
+                   ParamsPersonalComplete_local.ParamByName('PositionId'+idx+'_Stick').AsInteger:=execParams.ParamByName('PositionId').AsInteger;
+                   ParamsPersonalComplete_local.ParamByName('PositionCode'+idx+'_Stick').AsInteger:=execParams.ParamByName('PositionCode').AsInteger;
+                   ParamsPersonalComplete_local.ParamByName('PositionName'+idx+'_Stick').AsString:=execParams.ParamByName('PositionName').AsString;
+               end;
                //
                fStartWrite:=true;
                //
@@ -437,6 +513,13 @@ begin
                     EditPersonalCode5.Text:=execParams.ParamByName('PersonalCode').AsString;
                     EditPersonalName5.Text:=execParams.ParamByName('PersonalName').AsString;
                     PanelPositionName5.Caption:=execParams.ParamByName('PositionName').AsString;
+                    ActiveControl:=EditPersonalStickCode1;
+               end;
+               if idx = '11' then
+               begin
+                    EditPersonalStickCode1.Text:=execParams.ParamByName('PersonalCode').AsString;
+                    EditPersonalStickName1.Text:=execParams.ParamByName('PersonalName').AsString;
+                    PanelPositionStickName1.Caption:=execParams.ParamByName('PositionName').AsString;
                     ActiveControl:=bbOk;
                end;
                //

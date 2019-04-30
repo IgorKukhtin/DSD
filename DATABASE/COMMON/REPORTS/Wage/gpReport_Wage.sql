@@ -254,13 +254,14 @@ BEGIN
        , 0             AS ModelServiceId
        , Report_2.StaffListSummKindId
 
-    FROM gpSelect_Report_Wage_Sum (inStartDate      := inStartDate,
-                                   inEndDate        := inEndDate, --дата окончания периода
-                                   inUnitId         := inUnitId,   --подразделение
-                                   inMemberId       := inMemberId,   --сотрудник
-                                   inPositionId     := inPositionId,   --должность
-                                   inSession        := inSession
+    FROM gpSelect_Report_Wage_Sum (inStartDate      := CASE WHEN inModelServiceId > 0 THEN NULL ELSE inStartDate END
+                                 , inEndDate        := CASE WHEN inModelServiceId > 0 THEN NULL ELSE inEndDate   END
+                                 , inUnitId         := CASE WHEN inModelServiceId > 0 THEN NULL ELSE inUnitId    END
+                                 , inMemberId       := inMemberId
+                                 , inPositionId     := inPositionId
+                                 , inSession        := inSession
                                   ) AS Report_2
+    WHERE COALESCE (inModelServiceId, 0) = 0
    )
 
     --

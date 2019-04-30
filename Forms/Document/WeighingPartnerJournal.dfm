@@ -556,6 +556,27 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object PersonalCode1_Stick: TcxGridDBColumn
+        Caption = #1050#1086#1076'1 '#1089#1086#1090#1088'. '#1089#1090#1080#1082'.'
+        DataBinding.FieldName = 'PersonalCode1_Stick'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object PersonalName1_Stick: TcxGridDBColumn
+        Caption = 'C'#1090#1080#1082#1077#1088#1086#1074#1097#1080#1082' 1'
+        DataBinding.FieldName = 'PersonalName1_Stick'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object PositionName1_Stick: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' c'#1090#1080#1082'.1'
+        DataBinding.FieldName = 'PositionName1_Stick'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
       object PersonalCode1: TcxGridDBColumn
         Caption = #1050#1086#1076'1 '#1089#1086#1090#1088'. '#1082#1086#1084#1087#1083'.'
         DataBinding.FieldName = 'PersonalCode1'

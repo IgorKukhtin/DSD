@@ -321,7 +321,8 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_InPack(),    inDescId:= zc_Object_SelectKind(), inCode:= 5, inName:= 'Кол-во упаковок приход (расчет)',  inEnumName:= 'zc_Enum_SelectKind_InPack');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_InHead(),    inDescId:= zc_Object_SelectKind(), inCode:= 6, inName:= 'Кол-во голов приход',              inEnumName:= 'zc_Enum_SelectKind_InHead');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_OutHead(),   inDescId:= zc_Object_SelectKind(), inCode:= 7, inName:= 'Кол-во голов расход',              inEnumName:= 'zc_Enum_SelectKind_OutHead');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_MI_Master(),      inDescId:= zc_Object_SelectKind(), inCode:= 8,  inName:= 'Кол-во вес по документам компл. ',  inEnumName:= 'zc_Enum_SelectKind_MI_Master');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_MI_Master(),      inDescId:= zc_Object_SelectKind(), inCode:= 8,  inName:= 'Кол-во вес по документам компл.',   inEnumName:= 'zc_Enum_SelectKind_MI_Master');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_MI_MasterSh(),    inDescId:= zc_Object_SelectKind(), inCode:= 14, inName:= 'Кол-во штук по документам стикер.', inEnumName:= 'zc_Enum_SelectKind_MI_MasterSh');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_MI_MasterCount(), inDescId:= zc_Object_SelectKind(), inCode:= 9,  inName:= 'Кол-во строк по документам компл.', inEnumName:= 'zc_Enum_SelectKind_MI_MasterCount');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_MovementCount(),  inDescId:= zc_Object_SelectKind(), inCode:= 10, inName:= 'Кол-во документов компл.',          inEnumName:= 'zc_Enum_SelectKind_MovementCount');
 

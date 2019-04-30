@@ -88,6 +88,7 @@ type
     SumTransportAddLong: TcxGridDBColumn;
     SumTransportTaxi: TcxGridDBColumn;
     InvNumber_Reestr: TcxGridDBColumn;
+    UnitName_car: TcxGridDBColumn;
   private
   public
   end;

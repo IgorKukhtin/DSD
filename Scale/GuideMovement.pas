@@ -122,6 +122,9 @@ type
     PositionName5: TcxGridDBColumn;
     bbPrintPackWeight_Fozzy: TSpeedButton;
     bbExport_Email: TSpeedButton;
+    PersonalCode1_Stick: TcxGridDBColumn;
+    PersonalName1_Stick: TcxGridDBColumn;
+    PositionName1_Stick: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -463,6 +466,13 @@ begin
     execParams.ParamByName('PositionId5').AsInteger:=CDS.FieldByName('PositionId5').AsInteger;
     execParams.ParamByName('PositionCode5').AsInteger:=CDS.FieldByName('PositionCode5').AsInteger;
     execParams.ParamByName('PositionName5').AsString:=CDS.FieldByName('PositionName5').AsString;
+    //
+    execParams.ParamByName('PersonalId1_Stick').AsInteger:=CDS.FieldByName('PersonalId1_Stick').AsInteger;
+    execParams.ParamByName('PersonalCode1_Stick').AsInteger:=CDS.FieldByName('PersonalCode1_Stick').AsInteger;
+    execParams.ParamByName('PersonalName1_Stick').AsString:=CDS.FieldByName('PersonalName1_Stick').AsString;
+    execParams.ParamByName('PositionId1_Stick').AsInteger:=CDS.FieldByName('PositionId1_Stick').AsInteger;
+    execParams.ParamByName('PositionCode1_Stick').AsInteger:=CDS.FieldByName('PositionCode1_Stick').AsInteger;
+    execParams.ParamByName('PositionName1_Stick').AsString:=CDS.FieldByName('PositionName1_Stick').AsString;
     //
     execParams.ParamByName('MovementId').AsInteger:=CDS.FieldByName('Id').AsInteger;
     execParams.ParamByName('InvNumber').AsString:=CDS.FieldByName('InvNumber').AsString;

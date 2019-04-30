@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
              , MovementId_TransportGoods Integer, InvNumber_TransportGoods TVarChar, OperDate_TransportGoods TDateTime
              , MovementId_Tax Integer, InvNumberPartner_Tax TVarChar, OperDate_Tax TDateTime
-             , StartWeighing TDateTime, EndWeighing TDateTime 
+             , StartWeighing TDateTime, EndWeighing TDateTime
              , MovementDescNumber Integer, MovementDescName TVarChar
              , WeighingNumber TFloat
              , InvNumberOrder TVarChar
@@ -40,6 +40,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , PositionCode3 Integer, PositionName3 TVarChar
              , PositionCode4 Integer, PositionName4 TVarChar
              , PositionCode5 Integer, PositionName5 TVarChar
+             , PersonalCode1_Stick Integer, PersonalName1_Stick TVarChar
+             , PositionCode1_Stick Integer, PositionName1_Stick TVarChar
              , UserName TVarChar
 
              , StartBegin TDateTime, EndBegin TDateTime, diffBegin_sec TFloat
@@ -68,7 +70,7 @@ BEGIN
 
 
      -- Результат
-     RETURN QUERY 
+     RETURN QUERY
        WITH _tmpGoods AS -- (GoodsId Integer) ON COMMIT DROP;
              (SELECT lfSelect.GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
               WHERE inGoodsGroupId <> 0 AND COALESCE (inGoodsId, 0) = 0
@@ -133,7 +135,7 @@ BEGIN
                END :: TVarChar AS InvNumberPartner_Tax
              , Movement_Tax.OperDate                 AS OperDate_Tax
 
-             , MovementDate_StartWeighing.ValueData  AS StartWeighing  
+             , MovementDate_StartWeighing.ValueData  AS StartWeighing
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
 
              , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
@@ -188,6 +190,9 @@ BEGIN
              , Object_Position4.ObjectCode AS PositionCode4, Object_Position4.ValueData AS PositionName4
              , Object_Position5.ObjectCode AS PositionCode5, Object_Position5.ValueData AS PositionName5
 
+             , Object_Personal1_Stick.ObjectCode AS PersonalCode1_Stick, Object_Personal1_Stick.ValueData AS PersonalName1_Stick
+             , Object_Position1_Stick.ObjectCode AS PositionCode1_Stick, Object_Position1_Stick.ValueData AS PositionName1_Stick
+
              , Object_User.ValueData              AS UserName
 
              , MIDate_StartBegin.ValueData  AS StartBegin
@@ -208,7 +213,7 @@ BEGIN
 
              , MIFloat_HeadCount.ValueData                  AS HeadCount
              , MIFloat_BoxCount.ValueData                   AS BoxCount
- 
+
              , MIFloat_BoxNumber.ValueData                  AS BoxNumber
              , MIFloat_LevelNumber.ValueData                AS LevelNumber
 
@@ -252,7 +257,7 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_EndWeighing
                                    ON MovementDate_EndWeighing.MovementId =  Movement.Id
                                   AND MovementDate_EndWeighing.DescId = zc_MovementDate_EndWeighing()
-                                  
+
             LEFT JOIN MovementFloat AS MovementFloat_MovementDescNumber
                                     ON MovementFloat_MovementDescNumber.MovementId =  Movement.Id
                                    AND MovementFloat_MovementDescNumber.DescId = zc_MovementFloat_MovementDescNumber()
@@ -303,12 +308,12 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-            
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-            
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
@@ -319,6 +324,15 @@ BEGIN
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal1_Stick
+                                         ON MovementLinkObject_Personal1_Stick.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal1_Stick.DescId = zc_MovementLinkObject_PersonalStick1()
+            LEFT JOIN Object AS Object_Personal1_Stick ON Object_Personal1_Stick.Id = MovementLinkObject_Personal1_Stick.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position1_Stick
+                                         ON MovementLinkObject_Position1_Stick.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position1_Stick.DescId = zc_MovementLinkObject_PositionStick1()
+            LEFT JOIN Object AS Object_Position1_Stick ON Object_Position1_Stick.Id = MovementLinkObject_Position1_Stick.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal1
                                          ON MovementLinkObject_Personal1.MovementId = Movement.Id
@@ -339,7 +353,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal5
                                          ON MovementLinkObject_Personal5.MovementId = Movement.Id
                                         AND MovementLinkObject_Personal5.DescId = zc_MovementLinkObject_PersonalComplete5()
-            LEFT JOIN Object AS Object_Personal5 ON Object_Personal5.Id = MovementLinkObject_Personal5.ObjectId            
+            LEFT JOIN Object AS Object_Personal5 ON Object_Personal5.Id = MovementLinkObject_Personal5.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Position1
                                          ON MovementLinkObject_Position1.MovementId = Movement.Id
@@ -378,7 +392,7 @@ BEGIN
             LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement_Tax.MovementChildId
             LEFT JOIN MovementString AS MS_InvNumberPartner_Tax ON MS_InvNumberPartner_Tax.MovementId = MovementLinkMovement_Tax.MovementChildId
                                                                AND MS_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
-                                                               
+
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                            ON MovementLinkMovement_Order.MovementId = Movement.Id
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
@@ -397,7 +411,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                                            AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
-            
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement_Transport.Id
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
@@ -445,7 +459,7 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                              ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
-                                                                 
+
             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
                                         ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
                                        AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
@@ -521,7 +535,7 @@ BEGIN
                                           ON MIBoolean_BarCode.MovementItemId =  MovementItem.Id
                                          AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
       ;
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -539,4 +553,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_WeighingPartner_Item (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inGoodsGroupId:= 0, inGoodsId:= 0, inJuridicalBasisId:= zc_Juridical_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_WeighingPartner_Item (inStartDate:= '01.08.2019', inEndDate:= '01.08.2019', inGoodsGroupId:= 0, inGoodsId:= 0, inJuridicalBasisId:= zc_Juridical_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

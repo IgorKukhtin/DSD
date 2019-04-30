@@ -303,11 +303,14 @@ BEGIN
                                        AND ObjectLink_UnitRoute_Business.DescId = zc_ObjectLink_Unit_Business()
                    -- для затрат
                    LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId
-                   = CASE WHEN ObjectLink_UnitRoute_Branch.ChildObjectId IS NULL
-                               THEN COALESCE (MILinkObject_Unit_parent.ObjectId, COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0)) -- если филиал = "пусто", тогда затраты по принадлежности маршрута к подразделению, т.е. это мясо(з+сб), снабжение, админ, произв.
+                   = CASE -- если филиал = "пусто", тогда затраты по принадлежности маршрута к подразделению, т.е. это мясо(з+сб), снабжение, админ, произв.
+                          WHEN ObjectLink_UnitRoute_Branch.ChildObjectId IS NULL
+                               THEN COALESCE (MILinkObject_Unit_parent.ObjectId, COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0))
+                          -- если "собственный" маршрут, тогда затраты по принадлежности маршрута к подразделению, т.е. это филиалы
                           WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  = COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0)
-                               THEN COALESCE (MILinkObject_Unit_parent.ObjectId, COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0)) -- если "собственный" маршрут, тогда затраты по принадлежности маршрута к подразделению, т.е. это филиалы
-                          ELSE vbUnitId_Forwarding -- иначе Подразделение (Место отправки), т.е. везут на филиалы но затраты к ним не падают
+                               THEN COALESCE (MILinkObject_Unit_parent.ObjectId, COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0))
+                          -- иначе Подразделение (Место отправки), т.е. везут на филиалы но затраты к ним не падают
+                          ELSE vbUnitId_Forwarding
                      END
                    -- здесь нужен только 20401; "ГСМ";
                    LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_20401()

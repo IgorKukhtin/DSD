@@ -226,6 +226,8 @@ begin
        Params.AddParam('inPositionId3', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId3').AsInteger);
        Params.AddParam('inPositionId4', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId4').AsInteger);
        Params.AddParam('inPositionId5', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId5').AsInteger);
+       Params.AddParam('inPersonalId1_Stick', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PersonalId1_Stick').AsInteger);
+       Params.AddParam('inPositionId1_Stick', ftInteger, ptInput, execParamsPersonalComplete.ParamByName('PositionId1_Stick').AsInteger);
        //try
          Execute;
        {except

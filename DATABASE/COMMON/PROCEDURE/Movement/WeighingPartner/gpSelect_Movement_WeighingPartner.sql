@@ -39,6 +39,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , PositionCode3 Integer, PositionName3 TVarChar
              , PositionCode4 Integer, PositionName4 TVarChar
              , PositionCode5 Integer, PositionName5 TVarChar
+             , PersonalCode1_Stick Integer, PersonalName1_Stick TVarChar
+             , PositionCode1_Stick Integer, PositionName1_Stick TVarChar
              , UserName TVarChar
              , isPromo Boolean
              , MovementPromo TVarChar
@@ -170,11 +172,14 @@ BEGIN
              , Object_Position4.ObjectCode AS PositionCode4, Object_Position4.ValueData AS PositionName4
              , Object_Position5.ObjectCode AS PositionCode5, Object_Position5.ValueData AS PositionName5
 
+             , Object_Personal1_Stick.ObjectCode AS PersonalCode1_Stick, Object_Personal1_Stick.ValueData AS PersonalName1_Stick
+             , Object_Position1_Stick.ObjectCode AS PositionCode1_Stick, Object_Position1_Stick.ValueData AS PositionName1_Stick
+
              , Object_User.ValueData              AS UserName
 
              , COALESCE (MovementBoolean_Promo.ValueData, False) AS isPromo
              , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
-             
+
              , MovementFloat_BranchCode.ValueData :: Integer AS BranchCode
 
        FROM tmpStatus
@@ -272,6 +277,15 @@ BEGIN
             LEFT JOIN Object AS Object_PersonalLoss ON Object_PersonalLoss.Id = MovementLinkObject_Contract.ObjectId
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal1_Stick
+                                         ON MovementLinkObject_Personal1_Stick.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal1_Stick.DescId = zc_MovementLinkObject_PersonalStick1()
+            LEFT JOIN Object AS Object_Personal1_Stick ON Object_Personal1_Stick.Id = MovementLinkObject_Personal1_Stick.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position1_Stick
+                                         ON MovementLinkObject_Position1_Stick.MovementId = Movement.Id
+                                        AND MovementLinkObject_Position1_Stick.DescId = zc_MovementLinkObject_PositionStick1()
+            LEFT JOIN Object AS Object_Position1_Stick ON Object_Position1_Stick.Id = MovementLinkObject_Position1_Stick.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal1
                                          ON MovementLinkObject_Personal1.MovementId = Movement.Id
@@ -394,7 +408,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
- 17.12.18         * 
+ 17.12.18         *
  05.10.16         * add inJuridicalBasisId
  04.10.16         * add AccessKey
  11.10.14                                        * all
@@ -424,4 +438,4 @@ where Movement.Id = tmp.Id
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_WeighingPartner (inStartDate:= '01.06.2018', inEndDate:= '02.06.2018', inJuridicalBasisId:= zc_Juridical_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_WeighingPartner (inStartDate:= '01.06.2019', inEndDate:= '01.06.2019', inJuridicalBasisId:= zc_Juridical_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

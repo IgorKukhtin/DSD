@@ -118,6 +118,9 @@ type
     EndBegin: TcxGridDBColumn;
     diffBegin_sec: TcxGridDBColumn;
     BranchCode: TcxGridDBColumn;
+    PersonalCode1_Stick: TcxGridDBColumn;
+    PersonalName1_Stick: TcxGridDBColumn;
+    PositionName1_Stick: TcxGridDBColumn;
   private
   public
   end;

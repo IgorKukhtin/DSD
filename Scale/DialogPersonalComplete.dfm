@@ -2,21 +2,21 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
   Left = 529
   Top = 238
   Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#8470
-  ClientHeight = 336
+  ClientHeight = 366
   ClientWidth = 506
   OldCreateOrder = True
   Position = poScreenCenter
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   ExplicitWidth = 522
-  ExplicitHeight = 371
+  ExplicitHeight = 401
   PixelsPerInch = 96
   TextHeight = 14
   inherited bbPanel: TPanel
-    Top = 295
+    Top = 325
     Width = 506
     TabOrder = 4
-    ExplicitTop = 209
+    ExplicitTop = 295
     ExplicitWidth = 506
     inherited bbOk: TBitBtn
       Default = False
@@ -76,6 +76,8 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
+          ExplicitLeft = 1
+          ExplicitTop = 12
         end
       end
     end
@@ -553,7 +555,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 5
-    ExplicitTop = 164
     object PanelPosition5: TPanel
       Left = 320
       Top = 0
@@ -670,6 +671,139 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
           Properties.OnButtonClick = EditPersonalName1PropertiesButtonClick
           TabOrder = 0
           Text = 'EditPersonalName5'
+          OnKeyDown = EditPersonalName1KeyDown
+          Width = 245
+        end
+      end
+    end
+  end
+  object infoPanelPersonaStick1: TPanel
+    Left = 0
+    Top = 273
+    Width = 506
+    Height = 52
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 6
+    ExplicitTop = 8
+    object PanelPositionStick1: TPanel
+      Left = 320
+      Top = 0
+      Width = 186
+      Height = 52
+      Align = alClient
+      BevelOuter = bvNone
+      TabOrder = 1
+      object LabelPositionStickName1: TLabel
+        Left = 0
+        Top = 0
+        Width = 186
+        Height = 13
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' 1'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 79
+      end
+      object gbPositionStickName1: TGroupBox
+        Left = 0
+        Top = 13
+        Width = 186
+        Height = 39
+        Align = alClient
+        TabOrder = 0
+        object PanelPositionStickName1: TPanel
+          Left = 2
+          Top = 16
+          Width = 182
+          Height = 21
+          Align = alClient
+          BevelOuter = bvNone
+          Caption = 'PanelPositionStickName1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clNavy
+          Font.Height = -12
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+        end
+      end
+    end
+    object PanelPersonalStick1: TPanel
+      Left = 0
+      Top = 0
+      Width = 320
+      Height = 52
+      Align = alLeft
+      BevelOuter = bvNone
+      TabOrder = 0
+      object LabelPersonalStickName1: TLabel
+        Left = 0
+        Top = 0
+        Width = 320
+        Height = 13
+        Align = alTop
+        Alignment = taCenter
+        Caption = 'C'#1090#1080#1082#1077#1088#1086#1074#1097#1080#1082' 1'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitLeft = -6
+        ExplicitTop = -6
+      end
+      object gbPersonalStickCode1: TGroupBox
+        Left = 0
+        Top = 13
+        Width = 67
+        Height = 39
+        Align = alLeft
+        Caption = #1050#1086#1076
+        TabOrder = 0
+        object EditPersonalStickCode1: TcxCurrencyEdit
+          Tag = 11
+          Left = 5
+          Top = 14
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Properties.AssignedValues.DisplayFormat = True
+          Properties.DecimalPlaces = 0
+          Properties.OnChange = EditPersonalCode1PropertiesChange
+          TabOrder = 0
+          OnExit = EditPersonalCode1Exit
+          OnKeyDown = EditPersonalCode1KeyDown
+          Width = 55
+        end
+      end
+      object gbPersonalStickName1: TGroupBox
+        Left = 67
+        Top = 13
+        Width = 253
+        Height = 39
+        Align = alClient
+        Caption = #1060#1048#1054
+        TabOrder = 1
+        object EditPersonalStickName1: TcxButtonEdit
+          Tag = 11
+          Left = 5
+          Top = 14
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          Properties.OnButtonClick = EditPersonalName1PropertiesButtonClick
+          TabOrder = 0
+          Text = 'EditPersonalStickName1'
           OnKeyDown = EditPersonalName1KeyDown
           Width = 245
         end

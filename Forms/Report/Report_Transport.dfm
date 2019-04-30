@@ -353,10 +353,17 @@ object Report_TransportForm: TReport_TransportForm
         Width = 70
       end
       object BranchName: TcxGridDBColumn
-        Caption = #1060#1080#1083#1080#1072#1083
+        Caption = #1060#1080#1083#1080#1072#1083' ('#1040#1074#1090#1086')'
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentVert = vaCenter
         Width = 53
+      end
+      object UnitName_car: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1040#1074#1090#1086')'
+        DataBinding.FieldName = 'UnitName_car'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object PersonalDriverName: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100'/ '#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088

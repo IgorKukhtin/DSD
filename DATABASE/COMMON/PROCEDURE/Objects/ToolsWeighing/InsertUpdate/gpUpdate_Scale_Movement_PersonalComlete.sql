@@ -1,7 +1,8 @@
 -- Function: gpUpdate_Scale_Movement_PersonalComlete()
 
 -- DROP FUNCTION IF EXISTS gpUpdate_Scale_Movement_PersonalComlete (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Scale_Movement_PersonalComlete (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpUpdate_Scale_Movement_PersonalComlete (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Scale_Movement_PersonalComlete (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Scale_Movement_PersonalComlete(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
@@ -15,6 +16,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_Scale_Movement_PersonalComlete(
     IN inPositionId3         Integer   , -- Ключ объекта
     IN inPositionId4         Integer   , -- Ключ объекта
     IN inPositionId5         Integer   , -- Ключ объекта
+    IN inPersonalId1_Stick   Integer   , -- Ключ объекта
+    IN inPositionId1_Stick   Integer   , -- Ключ объекта
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS VOID
@@ -49,6 +52,11 @@ BEGIN
      -- сохранили связь с <Должность комплектовщик 5>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PositionComplete5(), inMovementId, inPositionId5);
 
+     -- сохранили связь с <Сотрудник Стикеровщик 1>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalStick1(), inMovementId, inPersonalId1_Stick);
+     -- сохранили связь с <Должность Стикеровщик 1>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PositionStick1(), inMovementId, inPositionId1_Stick);
+
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
 
@@ -59,6 +67,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 30.04.19                                        *
  18.05.15                                        *
 */
 

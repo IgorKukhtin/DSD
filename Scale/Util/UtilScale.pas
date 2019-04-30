@@ -85,6 +85,7 @@ type
   procedure Create_ParamsMovement(var Params:TParams);
   procedure Create_ParamsMI(var Params:TParams);
   procedure Create_ParamsPersonal(var Params:TParams; idx:String);
+  procedure Create_ParamsPersonal_Stick(var Params:TParams; idx:String);
   procedure Create_ParamsPersonalComplete(var Params:TParams);
   procedure Create_ParamsWorkProgress(var Params:TParams);
   procedure Create_ParamsArticleLoss(var Params:TParams);
@@ -377,6 +378,18 @@ begin
      ParamAdd(Params,'PositionName'+idx, ftString);  //
 end;
 {------------------------------------------------------------------------}
+procedure Create_ParamsPersonal_Stick(var Params:TParams;idx:String);
+begin
+     //if (idx = '') or (idx = '1') then Params:=nil;
+
+     ParamAdd(Params,'PersonalId'+idx+'_Stick', ftInteger);   //
+     ParamAdd(Params,'PersonalCode'+idx+'_Stick', ftInteger); //
+     ParamAdd(Params,'PersonalName'+idx+'_Stick', ftString);  //
+     ParamAdd(Params,'PositionId'+idx+'_Stick', ftInteger);   //
+     ParamAdd(Params,'PositionCode'+idx+'_Stick', ftInteger); //
+     ParamAdd(Params,'PositionName'+idx+'_Stick', ftString);  //
+end;
+{------------------------------------------------------------------------}
 procedure Create_ParamsPersonalComplete(var Params:TParams);
 begin
      Create_ParamsPersonal(Params, '1');
@@ -384,6 +397,7 @@ begin
      Create_ParamsPersonal(Params, '3');
      Create_ParamsPersonal(Params, '4');
      Create_ParamsPersonal(Params, '5');
+     Create_ParamsPersonal_Stick(Params, '1');
      ParamAdd(Params,'MovementId', ftInteger);
      ParamAdd(Params,'InvNumber',ftString);
      ParamAdd(Params,'OperDate',ftDateTime);
