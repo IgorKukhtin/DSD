@@ -70,6 +70,11 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Format = ',0.####'
           Kind = skSum
           Column = CountMovement1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalCountStick
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -111,6 +116,11 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Format = ',0.####'
           Kind = skSum
           Column = CountMovement1
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalCountStick
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -129,7 +139,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object MovementDescName: TcxGridDBColumn
-        Caption = #1042#1080#1076' ljrevtynf'
+        Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'MovementDescName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -228,6 +238,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082
         Options.Editing = False
         Width = 80
       end
@@ -239,6 +250,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082
         Options.Editing = False
         Width = 80
       end
@@ -250,6 +262,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082
         Options.Editing = False
         Width = 80
       end
@@ -261,6 +274,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082
         Options.Editing = False
         Width = 80
       end
@@ -272,6 +286,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1083#1072#1076#1086#1074#1097#1080#1082
         Width = 80
       end
       object TotalCountKg1: TcxGridDBColumn
@@ -282,6 +297,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1083#1072#1076#1086#1074#1097#1080#1082
         Width = 67
       end
       object CountMI1: TcxGridDBColumn
@@ -292,6 +308,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1083#1072#1076#1086#1074#1097#1080#1082
         Width = 80
       end
       object CountMovement1: TcxGridDBColumn
@@ -299,10 +316,22 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         DataBinding.FieldName = 'CountMovement1'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1083#1072#1076#1086#1074#1097#1080#1082
         Width = 80
+      end
+      object TotalCountStick: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. ('#1089#1090#1080#1082#1077#1088')'
+        DataBinding.FieldName = 'TotalCountStick'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1090#1080#1082#1077#1088#1086#1074#1097#1080#1082
+        Width = 75
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -401,7 +430,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 8
+    TabOrder = 7
     Width = 251
   end
   object cbIsMovement: TcxCheckBox

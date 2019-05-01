@@ -22,15 +22,17 @@ RETURNS TABLE (OperDate TDateTime
              , BranchFromName TVarChar, BranchToName TVarChar
              , FromName TVarChar, ToName TVarChar
 
-             , TotalCount     TFloat   -- Количество (компл.)
-             , TotalCountKg   TFloat   -- Вес (компл.)
-             , CountMI        TFloat   -- Кол. строк (компл.)
-             , CountMovement  TFloat   -- Кол. док. (компл.)
+             , TotalCount      TFloat   -- Количество (компл.)
+             , TotalCountKg    TFloat   -- Вес (компл.)
+             , CountMI         TFloat   -- Кол. строк (компл.)
+             , CountMovement   TFloat   -- Кол. док. (компл.)
 
-             , TotalCount1    TFloat
-             , TotalCountKg1  TFloat
-             , CountMI1       TFloat
-             , CountMovement1 TFloat
+             , TotalCount1     TFloat   -- Количество (клдв)
+             , TotalCountKg1   TFloat   -- Вес (клдв)
+             , CountMI1        TFloat   -- Кол. строк (клдв)
+             , CountMovement1  TFloat   -- Кол. док. (клдв)
+
+             , TotalCountStick TFloat   -- Количество шт. (стикеровщик)
 
              , BranchName  TVarChar
              , FromId Integer, ToId  Integer
@@ -78,6 +80,8 @@ BEGIN
                             SELECT zc_MovementLinkObject_PersonalComplete4() AS PersonalDescId
                            UNION ALL
                             SELECT zc_MovementLinkObject_PersonalComplete5() AS PersonalDescId
+                         -- UNION ALL
+                         --  SELECT zc_MovementLinkObject_PersonalStick1()    AS PersonalDescId
                            )
         -- Все документы
       , tmpMovement_all AS (SELECT Movement.Id AS MovementId
@@ -118,10 +122,10 @@ BEGIN
                                  LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
                                                          ON MovementFloat_MovementDesc.MovementId =  Movement.Id
                                                         AND MovementFloat_MovementDesc.DescId     = zc_MovementFloat_MovementDesc()
-                                                        
+
 
                             WHERE Movement.DescId   = zc_Movement_WeighingPartner()
-                              -- AND Movement.Id = 7594708 
+                              -- AND Movement.Id = 7594708
                               AND Movement.StatusId = zc_Enum_Status_Complete()
                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                               AND (MovementLinkObject_Personal.ObjectId = inPersonalId OR tmpUser_findPersonal.PersonalId = inPersonalId OR inPersonalId = 0)
@@ -144,27 +148,30 @@ BEGIN
                             GROUP BY tmpMovement_all.MovementId
                            )
          -- Строчная часть
+       , tmpMI_all AS (SELECT MovementItem.MovementId   AS MovementId
+                            , MovementItem.ObjectId     AS GoodsId
+                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                            , COUNT (*) :: TFloat       AS CountMI_detail
+                            , SUM (MovementItem.Amount) AS Amount
+                       FROM MovementItem
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                       WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement)
+                         AND MovementItem.DescId     = zc_MI_Master()
+                         AND MovementItem.isErased   = FALSE
+                       GROUP BY MovementItem.MovementId
+                              , MovementItem.ObjectId
+                              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                      )
+         -- Строчная часть
        , tmpMI AS (SELECT tmpMI.MovementId           AS MovementId
                           -- Кол-во строк !!!ДЛЯ Комлектовщика!!!
                         , COUNT (*)        :: TFloat AS CountMI
                           -- Кол-во строк !!!ДЛЯ Пользователя - Кладовщик!!!
                         , SUM (tmpMI.CountMI_detail) AS CountMI_detail
 
-                   FROM (SELECT MovementItem.MovementId
-                              , MovementItem.ObjectId AS GoodsId
-                              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                              , COUNT (*) :: TFloat AS CountMI_detail
-                         FROM MovementItem
-                              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                         WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement)
-                           AND MovementItem.DescId     = zc_MI_Master()
-                           AND MovementItem.isErased   = FALSE
-                         GROUP BY MovementItem.MovementId
-                                , MovementItem.ObjectId
-                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-                        ) AS tmpMI
+                   FROM tmpMI_all AS tmpMI
                    GROUP BY tmpMI.MovementId
                   )
         -- Результат
@@ -195,6 +202,8 @@ BEGIN
               , SUM (tmp.CountMI1)          :: TFloat AS CountMI1
               , SUM (tmp.CountMovement1)    :: TFloat AS CountMovement1
 
+              , SUM (tmp.TotalCountStick)   :: TFloat AS TotalCountStick
+
               , Object_Branch.ValueData AS BranchName
 
               , tmp.FromId
@@ -222,6 +231,8 @@ BEGIN
                    , 0 AS TotalCountKg1
                    , 0 AS CountMI1
                    , 0 AS CountMovement1
+
+                   , 0 AS TotalCountStick
 
                    , tmpMovement_all.BranchId
                    , tmpMovement_all.FromId
@@ -261,6 +272,8 @@ BEGIN
                    , tmpMI.CountMI_detail         AS CountMI1
                    , 1                            AS CountMovement1
 
+                   , 0 AS TotalCountStick
+
                    , tmpMovement_all.BranchId
                    , tmpMovement_all.FromId
                    , tmpMovement_all.ToId
@@ -276,6 +289,70 @@ BEGIN
                     INNER JOIN tmpMI       ON tmpMI.MovementId       = tmpMovement_all.MovementId
 
               WHERE tmpUser_findPersonal.UserId > 0 OR inPersonalId = 0
+
+
+             UNION ALL
+              -- ДЛЯ Сотрудник - Стикеровщик
+              SELECT CASE WHEN inIsDay = TRUE THEN tmpMovement_all.OperDate ELSE inEndDate END AS OperDate
+                   , Object_Unit.Id             AS UnitId
+                   , Object_Unit.ObjectCode     AS UnitCode
+                   , Object_Unit.ValueData      AS UnitName
+                   , Object_Personal.Id         AS PersonalId
+                   , Object_Personal.ObjectCode AS PersonalCode
+                   , Object_Personal.ValueData  AS PersonalName
+                   , Object_Position.Id         AS PositionId
+                   , Object_Position.ObjectCode AS PositionCode
+                   , Object_Position.ValueData  AS PositionName
+
+                   , 0 AS TotalCount
+                   , 0 AS TotalCountKg
+                   , 0 AS CountMI
+                   , 0 AS CountMovement
+
+                   , 0 AS TotalCount1
+                   , 0 AS TotalCountKg1
+                   , 0 AS CountMI1
+                   , 0 AS CountMovement1
+
+                     -- Кол-во Упаковок (пакетов)
+                   , CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
+                               THEN CAST ((tmpMI.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
+                                        / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
+                          ELSE 0
+                     END AS TotalCountStick
+
+                   , tmpMovement_all.BranchId
+                   , tmpMovement_all.FromId
+                   , tmpMovement_all.ToId
+                   , tmpMovement_all.MovementDescId
+
+              FROM tmpMovement_all
+                         LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
+                                                      ON MovementLinkObject_Personal.MovementId = tmpMovement_all.MovementId
+                                                     AND MovementLinkObject_Personal.DescId     = zc_MovementLinkObject_PersonalStick1()
+
+                   INNER JOIN tmpPersonal_all          ON tmpPersonal_all.PersonalId = MovementLinkObject_Personal.ObjectId
+                   LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id             = tmpPersonal_all.UnitId
+                   LEFT JOIN Object AS Object_Personal ON Object_Personal.Id         = tmpPersonal_all.PersonalId
+                   LEFT JOIN Object AS Object_Position ON Object_Position.Id         = tmpPersonal_all.PositionId
+
+                   INNER JOIN tmpMI_all AS tmpMI ON tmpMI.MovementId       = tmpMovement_all.MovementId
+
+                   -- Товар и Вид товара
+                   LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId     = tmpMI.GoodsId
+                                                         AND Object_GoodsByGoodsKind_View.GoodsKindId = tmpMI.GoodsKindId
+                   -- вес в упаковке: "чистый" вес + вес 1-ого пакета
+                   LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
+                                         ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                        AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
+
+                  LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmpMI.GoodsId
+                                                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                  LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+                  -- вес 1 шт, только для штучного товара, ???почему??? = вес в упаковке
+                  LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                        ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
+                                       AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
 
             ) AS tmp
 
@@ -329,5 +406,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_PersonalComplete (inStartDate:= '01.10.2017', inEndDate:= '31.10.2017', inPersonalId:= 0, inPositionId:= 0, inBranchId:= 0, inIsDay:= FALSE, inIsDetail:= FALSE, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpReport_PersonalComplete (inStartDate:= '01.11.2017', inEndDate:= '02.11.2017', inPersonalId:= 0, inPositionId:= 0, inBranchId:= 0, inIsDay:= FALSE, inIsDetail:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_PersonalComplete (inStartDate:= '01.10.2019', inEndDate:= '31.10.2019', inPersonalId:= 0, inPositionId:= 0, inBranchId:= 0, inIsDay:= FALSE, inIsDetail:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_PersonalComplete (inStartDate:= '01.11.2019', inEndDate:= '02.11.2019', inPersonalId:= 0, inPositionId:= 0, inBranchId:= 0, inIsDay:= FALSE, inIsDetail:= FALSE, inSession:= zfCalc_UserAdmin())

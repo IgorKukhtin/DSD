@@ -90,6 +90,7 @@ type
     FromName: TcxGridDBColumn;
     ToName: TcxGridDBColumn;
     MovementDescName: TcxGridDBColumn;
+    TotalCountStick: TcxGridDBColumn;
   private
   public
   end;

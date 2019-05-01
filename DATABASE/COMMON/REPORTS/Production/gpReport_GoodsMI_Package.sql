@@ -41,9 +41,9 @@ BEGIN
                                                 ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
                                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                       WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
-                          OR Object_InfoMoney_View.InfoMoneyGroupId       = zc_Enum_InfoMoneyGroup_30000() -- Доходы
+                          OR Object_InfoMoney_View.InfoMoneyGroupId      = zc_Enum_InfoMoneyGroup_30000()       -- Доходы
                           OR (inUnitId = 951601 -- ЦЕХ упаковки мясо
-                          AND Object_InfoMoney_View.InfoMoneyDestinationId       = zc_Enum_InfoMoneyDestination_10100() --
+                          AND Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() --
                              )
                      )
    , tmpMI_Union AS  (SELECT tmpMI.OperDate
