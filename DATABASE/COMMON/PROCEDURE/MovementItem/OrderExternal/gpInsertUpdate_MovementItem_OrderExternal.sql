@@ -20,9 +20,15 @@ RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMovementId_Promo Integer;
+   DECLARE vbOperDate_StartBegin TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderExternal());
+
+
+     -- сразу запомнили время начала выполнения Проц.
+     vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
+
 
      -- сохранили
      SELECT tmp.ioId, tmp.ioPrice, tmp.ioCountForPrice, tmp.outAmountSumm
@@ -39,6 +45,12 @@ BEGIN
                                                    , ioCountForPrice      := ioCountForPrice
                                                    , inUserId             := vbUserId
                                                     ) AS tmp;
+
+     -- дописали св-во <Протокол Дата/время начало>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_StartBegin(), ioId, vbOperDate_StartBegin);
+     -- дописали св-во <Протокол Дата/время завершение>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_EndBegin(), ioId, CLOCK_TIMESTAMP());
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

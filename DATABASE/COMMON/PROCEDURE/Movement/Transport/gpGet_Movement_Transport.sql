@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, IdBarCode TVarChar, InvNumber TVarChar, OperDate TDat
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAccessKeyId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Transport());
@@ -30,15 +31,26 @@ BEGIN
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
-
-     RETURN QUERY 
+       --
+       vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_Transport());
+       --
+       RETURN QUERY 
+       WITH tmpBranch  AS (SELECT Object.Id AS BranchId FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = vbAccessKeyId)
+          , tmpUnitAll AS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byProfitLossDirection() AS lfSelect WHERE lfSelect.ProfitLossDirectionId = zc_Enum_ProfitLossDirection_40100())
+          , tmpUnit AS (SELECT Object.*
+                        FROM ObjectLink AS OL_Unit_Branch
+                             INNER JOIN tmpBranch ON tmpBranch.BranchId = OL_Unit_Branch.ChildObjectId
+                             INNER JOIN tmpUnitAll ON tmpUnitAll.UnitId = OL_Unit_Branch.ObjectId
+                             LEFT JOIN Object ON Object.Id = OL_Unit_Branch.ObjectId
+                        WHERE OL_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                       )
        SELECT
              0 AS Id
            , '' :: TVarChar AS IdBarCode
            , CAST (NEXTVAL ('Movement_Transport_seq') AS TVarChar) AS InvNumber
            , CAST (CURRENT_DATE AS TDateTime)      AS OperDate
-           , lfObject_Status.Code                  AS StatusCode
-           , lfObject_Status.Name                  AS StatusName
+           , Object_Status.ObjectCode              AS StatusCode
+           , Object_Status.ValueData               AS StatusName
            
            , CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime) AS StartRunPlan 
            , CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime) AS EndRunPlan
@@ -67,15 +79,15 @@ BEGIN
            , 0                     AS PersonalId
            , CAST ('' as TVarChar) AS PersonalName
 
-           , View_Unit.Id   AS UnitForwardingId
-           , View_Unit.Name AS UnitForwardingName
+           , View_Unit.Id        AS UnitForwardingId
+           , View_Unit.ValueData AS UnitForwardingName
    
            , CAST ('' as TVarChar) AS JuridicalName
 
-       FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
+       FROM Object AS Object_Status
             -- LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_Transport()))
-            LEFT JOIN Object_Unit_View AS View_Unit ON View_Unit.BranchId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_Transport()))
-                                                   AND View_Unit.Id IN (SELECT lfObject_Unit_byProfitLossDirection.UnitId FROM lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection WHERE lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId = zc_Enum_ProfitLossDirection_40100())
+            CROSS JOIN tmpUnit AS View_Unit 
+       WHERE Object_Status.Id = zc_Enum_Status_UnComplete()
        ;
 
      ELSE

@@ -28,6 +28,9 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+    IF COALESCE (inParentId, 0) = 0 THEN RETURN; END IF;
+
+
      RETURN QUERY 
        SELECT
              Movement.Id AS MovementId

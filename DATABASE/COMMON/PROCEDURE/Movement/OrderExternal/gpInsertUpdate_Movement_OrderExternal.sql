@@ -31,9 +31,13 @@ RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbisAuto Boolean;
+   DECLARE vbOperDate_StartBegin TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
+
+     -- сразу запомнили время начала выполнения Проц.
+     vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
 
      -- проверка
      IF COALESCE (inContractId, 0) = 0 AND NOT EXISTS (SELECT Id FROM Object WHERE Id = inFromId AND DescId = zc_Object_ArticleLoss())
@@ -50,13 +54,13 @@ BEGIN
      vbisAuto := COALESCE ( (SELECT MovementBoolean.ValueData FROM MovementBoolean WHERE MovementBoolean.DescId = zc_MovementBoolean_isAuto() AND MovementBoolean.MovementId = ioId), TRUE) :: Boolean ;
      -- 1. эти параметры всегда из Контрагента
      IF vbisAuto = TRUE
-     THEN 
-         -- для этого режима -  расчитаваем значение 
+     THEN
+         -- для этого режима -  расчитаваем значение
          outOperDatePartner:= inOperDate + (COALESCE ((SELECT ValueData FROM ObjectFloat WHERE ObjectId = inFromId AND DescId = zc_ObjectFloat_Partner_PrepareDayCount()), 0) :: TVarChar || ' DAY') :: INTERVAL;
      ELSE
          -- для этого режима - берем св-во
          outOperDatePartner:= (SELECT MovementDate.ValueData
-                               FROM MovementDate 
+                               FROM MovementDate
                                WHERE MovementDate.MovementId = ioId
                                  AND MovementDate.DescId = zc_MovementDate_OperDatePartner());
      END IF;
@@ -145,6 +149,11 @@ BEGIN
 
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+
+     -- дописали св-во <Протокол Дата/время начало>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartBegin(), ioId, vbOperDate_StartBegin);
+     -- дописали св-во <Протокол Дата/время завершение>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndBegin(), ioId, CLOCK_TIMESTAMP());
 
 END;
 $BODY$

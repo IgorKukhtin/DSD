@@ -25,9 +25,14 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbOperDate_Begin1 TDateTime;
 BEGIN
+     -- сразу запомнили время начала выполнения Проц.
+     vbOperDate_Begin1:= CLOCK_TIMESTAMP();
+
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpGetUserBySession (inSession); убрал, что б быстрее... :)
+     vbUserId:= lpGetUserBySession (inSession);
 
 
     -- IF inSession = '5'
@@ -255,6 +260,52 @@ BEGIN
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = tmpGoods.MeasureId
       ;
 
+     -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
+     INSERT INTO ResourseProtocol (UserId
+                                 , OperDate
+                                 , Value1
+                                 , Value2
+                                 , Value3
+                                 , Value4
+                                 , Value5
+                                 , Time1
+                                 , Time2
+                                 , Time3
+                                 , Time4
+                                 , Time5
+                                 , ProcName
+                                 , ProtocolData
+                                  )
+        WITH tmp_pg AS (SELECT * FROM pg_stat_activity WHERE state = 'active')
+        SELECT vbUserId
+               -- во сколько началась
+             , CURRENT_TIMESTAMP
+             , (SELECT COUNT (*) FROM tmp_pg)                                                    AS Value1
+             , (SELECT COUNT (*) FROM tmp_pg WHERE position( 'autovacuum: VACUUM' in query) = 1) AS Value2
+             , NULL AS Value3
+             , NULL AS Value4
+             , NULL AS Value5
+               -- сколько всего выполнялась проц
+             , (CLOCK_TIMESTAMP() - vbOperDate_Begin1) :: INTERVAL AS Time1
+               -- сколько всего выполнялась проц ДО lpSelectMinPrice_List
+             , NULL AS Time2
+               -- сколько всего выполнялась проц lpSelectMinPrice_List
+             , NULL AS Time3
+               -- сколько всего выполнялась проц ПОСЛЕ lpSelectMinPrice_List
+             , NULL AS Time4
+               -- во сколько закончилась
+             , CLOCK_TIMESTAMP() AS Time5
+               -- ProcName
+             , 'gpGet_Scale_GoodsRetail'
+               -- ProtocolData
+             , inBarCode
+    || ', ' || inGoodsPropertyId       :: TVarChar
+    || ', ' || zfConvert_DateToString (inOperDate)
+    || ', ' || inOrderExternalId       :: TVarChar
+    || ', ' || inPriceListId           :: TVarChar
+    || ', ' || inSession
+              ;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -271,4 +322,3 @@ ALTER FUNCTION gpGet_Scale_GoodsRetail (TVarChar, Integer, TDateTime, Integer, I
 -- 2852923001644
 -- SELECT * FROM gpGet_Scale_GoodsRetail (inBarCode:= '4823036501978', inGoodsPropertyId:=83956 , inOperDate:= '01.01.2015', inOrderExternalId:=0, inPriceListId:= zc_PriceList_Basis(), inSession:=zfCalc_UserAdmin())
 -- SELECT * FROM gpGet_Scale_GoodsRetail (inBarCode:= '4823036502289', inGoodsPropertyId:=83956 , inOperDate:= '01.01.2015', inOrderExternalId:=0, inPriceListId:= zc_PriceList_Basis(), inSession:=zfCalc_UserAdmin())
-
