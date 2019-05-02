@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , ArticleGLN TVarChar
              , isErased Boolean
+             , StartBegin TDateTime, EndBegin TDateTime, diffBegin_sec TFloat
               )
 AS
 $BODY$
@@ -106,8 +107,11 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyName
 
            , tmpGoodsPropertyValue.ArticleGLN
-
            , FALSE                      AS isErased
+
+           , NULL                 :: TDateTime  AS StartBegin
+           , NULL                 :: TDateTime  AS EndBegin
+           , 0                    :: TFloat     AS diffBegin_sec
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
                   , Object_Goods.ObjectCode                                           AS GoodsCode
@@ -192,8 +196,11 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyName
 
            , tmpGoodsPropertyValue.ArticleGLN
-
            , MovementItem.isErased                  AS isErased
+
+           , MIDate_StartBegin.ValueData                   AS StartBegin
+           , MIDate_EndBegin.ValueData                     AS EndBegin
+           , EXTRACT (EPOCH FROM (COALESCE (MIDate_EndBegin.ValueData, zc_DateStart()) - COALESCE (MIDate_StartBegin.ValueData, zc_DateStart())) :: INTERVAL) :: TFloat AS diffBegin_sec
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -230,6 +237,13 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_AmountForecastOrder
                                         ON MIFloat_AmountForecastOrder.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountForecastOrder.DescId = zc_MIFloat_AmountForecastOrder()
+
+            LEFT JOIN MovementItemDate AS MIDate_StartBegin
+                                       ON MIDate_StartBegin.MovementItemId = MovementItem.Id
+                                      AND MIDate_StartBegin.DescId         = zc_MIDate_StartBegin()
+            LEFT JOIN MovementItemDate AS MIDate_EndBegin
+                                       ON MIDate_EndBegin.MovementItemId = MovementItem.Id
+                                      AND MIDate_EndBegin.DescId         = zc_MIDate_EndBegin()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -306,6 +320,10 @@ BEGIN
 
            , MovementItem.isErased
 
+           , MIDate_StartBegin.ValueData                   AS StartBegin
+           , MIDate_EndBegin.ValueData                     AS EndBegin
+           , EXTRACT (EPOCH FROM (COALESCE (MIDate_EndBegin.ValueData, zc_DateStart()) - COALESCE (MIDate_StartBegin.ValueData, zc_DateStart())) :: INTERVAL) :: TFloat AS diffBegin_sec
+
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Master()
@@ -342,6 +360,13 @@ BEGIN
                                         ON MIFloat_AmountForecastOrder.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountForecastOrder.DescId = zc_MIFloat_AmountForecastOrder()
 
+            LEFT JOIN MovementItemDate AS MIDate_StartBegin
+                                       ON MIDate_StartBegin.MovementItemId = MovementItem.Id
+                                      AND MIDate_StartBegin.DescId         = zc_MIDate_StartBegin()
+            LEFT JOIN MovementItemDate AS MIDate_EndBegin
+                                       ON MIDate_EndBegin.MovementItemId = MovementItem.Id
+                                      AND MIDate_EndBegin.DescId         = zc_MIDate_EndBegin()
+
             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -370,6 +395,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderExternalUnit (Integer, Integer, TDateT
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 02.05.19         *
  31.03.15         * add GoodsGroupNameFull
  11.02.15         * 
 */

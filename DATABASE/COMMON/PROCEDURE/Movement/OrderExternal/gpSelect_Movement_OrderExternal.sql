@@ -39,6 +39,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , UnitCode Integer
              , UnitName TVarChar
              , PositionName TVarChar
+             , StartBegin      TDateTime
+             , EndBegin        TDateTime
+             , diffBegin_sec   TFloat
               )
 AS
 $BODY$
@@ -149,6 +152,10 @@ BEGIN
            , Object_Unit.ValueData                  AS UnitName
            , CASE WHEN MovementString_GUID.ValueData <> '' THEN Object_Position.ValueData ELSE '' END :: TVarChar AS PositionName
 
+           , MovementDate_StartBegin.ValueData  AS StartBegin
+           , MovementDate_EndBegin.ValueData    AS EndBegin
+           , EXTRACT (EPOCH FROM (COALESCE (MovementDate_EndBegin.ValueData, zc_DateStart()) - COALESCE (MovementDate_StartBegin.ValueData, zc_DateStart())) :: INTERVAL) :: TFloat AS diffBegin_sec
+
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.StatusId = tmpStatus.StatusId
@@ -176,6 +183,13 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_UpdateMobile
                                    ON MovementDate_UpdateMobile.MovementId = Movement.Id
                                   AND MovementDate_UpdateMobile.DescId = zc_MovementDate_UpdateMobile()
+
+            LEFT JOIN MovementDate AS MovementDate_StartBegin
+                                   ON MovementDate_StartBegin.MovementId = Movement.Id
+                                  AND MovementDate_StartBegin.DescId = zc_MovementDate_StartBegin()
+            LEFT JOIN MovementDate AS MovementDate_EndBegin
+                                   ON MovementDate_EndBegin.MovementId = Movement.Id
+                                  AND MovementDate_EndBegin.DescId = zc_MovementDate_EndBegin()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
@@ -324,6 +338,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 02.05.19         *
  05.10.16         * add inJuridicalBasisId
  25.11.15         * add isPromo
  26.05.15         * add Partner

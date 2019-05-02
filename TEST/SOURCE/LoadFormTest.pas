@@ -862,6 +862,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalChoiceForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalItemJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderExternalItemJournalForm');
   // заявки на главный склад
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalUnitForm');

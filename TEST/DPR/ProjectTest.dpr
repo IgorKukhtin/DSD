@@ -1077,7 +1077,8 @@ uses
   ReceiptDialog in '..\..\Forms\Guides\ReceiptDialog.pas' {ReceiptDialogForm: TParentForm},
   ReestrJournal_byReport in '..\..\Forms\Document\ReestrJournal_byReport.pas' {ReestrJournal_byReportForm: TParentForm},
   GoodsByGoodsKind_VMC in '..\..\Forms\Guides\GoodsByGoodsKind_VMC.pas' {GoodsByGoodsKind_VMCForm: TParentForm},
-  GoodsByGK_VMCDialog in '..\..\Forms\Guides\GoodsByGK_VMCDialog.pas' {GoodsByGK_VMCDialogForm: TParentForm};
+  GoodsByGK_VMCDialog in '..\..\Forms\Guides\GoodsByGK_VMCDialog.pas' {GoodsByGK_VMCDialogForm: TParentForm},
+  OrderExternalItemJournal in '..\..\Forms\Document\OrderExternalItemJournal.pas' {OrderExternalItemJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

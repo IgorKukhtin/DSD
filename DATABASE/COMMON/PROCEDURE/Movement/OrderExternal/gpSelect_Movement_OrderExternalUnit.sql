@@ -31,6 +31,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DayCount TFloat
              , isEDI Boolean
              , Comment TVarChar
+             , StartBegin      TDateTime
+             , EndBegin        TDateTime
+             , diffBegin_sec   TFloat
               )
 AS
 $BODY$
@@ -63,6 +66,7 @@ BEGIN
                          UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
                               )
          , tmpUnit AS (SELECT ObjectLink.ObjectId AS UnitId FROM ObjectLink WHERE ObjectLink.ChildObjectId = vbObjectId_Branch_Constraint AND ObjectLink.DescId = zc_ObjectLink_Unit_Branch())
+
        SELECT
              Movement.Id                                    AS Id
            , Movement.InvNumber                             AS InvNumber
@@ -123,6 +127,10 @@ BEGIN
            , COALESCE(MovementLinkMovement_Order.MovementId, 0) <> 0 AS isEDI
            , MovementString_Comment.ValueData       AS Comment
 
+           , MovementDate_StartBegin.ValueData  AS StartBegin
+           , MovementDate_EndBegin.ValueData    AS EndBegin
+           , EXTRACT (EPOCH FROM (COALESCE (MovementDate_EndBegin.ValueData, zc_DateStart()) - COALESCE (MovementDate_StartBegin.ValueData, zc_DateStart())) :: INTERVAL) :: TFloat AS diffBegin_sec
+
        FROM (SELECT Movement.Id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.StatusId = tmpStatus.StatusId
@@ -147,6 +155,13 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDateEnd
                                    ON MovementDate_OperDateEnd.MovementId =  Movement.Id
                                   AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
+
+            LEFT JOIN MovementDate AS MovementDate_StartBegin
+                                   ON MovementDate_StartBegin.MovementId = Movement.Id
+                                  AND MovementDate_StartBegin.DescId = zc_MovementDate_StartBegin()
+            LEFT JOIN MovementDate AS MovementDate_EndBegin
+                                   ON MovementDate_EndBegin.MovementId = Movement.Id
+                                  AND MovementDate_EndBegin.DescId = zc_MovementDate_EndBegin()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
@@ -262,6 +277,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 02.05.19         *
  05.10.16         * add inJurIdicalBasisId
  21.05.15         * add Retail, Partner
  19.02.15         * add OperDateStart, OperDateEnd

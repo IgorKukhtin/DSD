@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , MovementPromo TVarChar, PricePromo TFloat
              , isErased Boolean
              , isPriceEDIDiff Boolean
+             , StartBegin TDateTime, EndBegin TDateTime, diffBegin_sec TFloat
               )
 AS
 $BODY$
@@ -194,6 +195,15 @@ BEGIN
                                                              , zc_MIFloat_ChangePercent()
                                                              )
                            )
+
+          , tmpMI_Date AS (SELECT MovementItemDate.*
+                           FROM MovementItemDate
+                           WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI_G.Id FROM tmpMI_G)
+                             AND MovementItemDate.DescId IN (zc_MIDate_StartBegin()
+                                                           , zc_MIDate_EndBegin()
+                                                            )
+                           )
+
           , tmpMI_Goods AS (SELECT MovementItem.Id                               AS MovementItemId
                                  , MovementItem.GoodsId                          AS GoodsId
                                  , MovementItem.Amount                           AS Amount
@@ -205,6 +215,9 @@ BEGIN
                                  , MIFloat_AmountSecond.ValueData                AS AmountSecond
                                  , MIFloat_Summ.ValueData                        AS Summ
                                  , MIFloat_PromoMovement.ValueData               AS MovementId_Promo
+                                 , MIDate_StartBegin.ValueData                   AS StartBegin
+                                 , MIDate_EndBegin.ValueData                     AS EndBegin
+                                 , EXTRACT (EPOCH FROM (COALESCE (MIDate_EndBegin.ValueData, zc_DateStart()) - COALESCE (MIDate_StartBegin.ValueData, zc_DateStart())) :: INTERVAL) :: TFloat AS diffBegin_sec
                                  , MovementItem.isErased
                             FROM tmpMI_G AS MovementItem
                                  LEFT JOIN tmpMI_LO AS MILinkObject_GoodsKind
@@ -232,6 +245,13 @@ BEGIN
                                  LEFT JOIN tmpMI_Float AS MIFloat_ChangePercent
                                                        ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                                       AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+
+                                 LEFT JOIN tmpMI_Date AS MIDate_StartBegin
+                                                      ON MIDate_StartBegin.MovementItemId = MovementItem.Id
+                                                     AND MIDate_StartBegin.DescId         = zc_MIDate_StartBegin()
+                                 LEFT JOIN tmpMI_Date AS MIDate_EndBegin
+                                                      ON MIDate_EndBegin.MovementItemId = MovementItem.Id
+                                                     AND MIDate_EndBegin.DescId         = zc_MIDate_EndBegin()
                            )
 
            -- Связь с акциями для существующих MovementItem
@@ -306,6 +326,10 @@ BEGIN
 
                            , COALESCE (tmpMI_Goods.MovementId_Promo, 0)                 AS MovementId_Promo
                            , COALESCE (tmpMIPromo.PricePromo, 0)                        AS PricePromo
+
+                           , COALESCE (tmpMI_Goods.StartBegin, NULL)    :: TDateTime    AS StartBegin
+                           , COALESCE (tmpMI_Goods.EndBegin, NULL)      :: TDateTime    AS EndBegin
+                           , COALESCE (tmpMI_Goods.diffBegin_sec, 0)    :: TFloat       AS diffBegin_sec
                            , COALESCE (tmpMI_Goods.isErased, FALSE)                     AS isErased
                        FROM tmpMI_Goods
                             LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId_Promo = tmpMI_Goods.MovementId_Promo
@@ -432,7 +456,12 @@ BEGIN
                                , tmpMI.ChangePercent                                          AS ChangePercent
                                , tmpMI.MovementId_Promo                                       AS MovementId_Promo
                                , tmpMI.PricePromo                                             AS PricePromo
-                               , COALESCE (tmpMI.isErased, FALSE)                             AS isErased
+
+                               , tmpMI.StartBegin                  AS StartBegin
+                               , tmpMI.EndBegin                    AS EndBegin
+                               , tmpMI.diffBegin_sec               AS diffBegin_sec
+                           
+                               , COALESCE (tmpMI.isErased, FALSE)  AS isErased
                           FROM tmpMI
                                FULL JOIN tmpMI_EDI_find ON tmpMI_EDI_find.MovementItemId = tmpMI.MovementItemId
                          )
@@ -537,6 +566,11 @@ BEGIN
 
            , FALSE AS isErased
            , FALSE AS isPriceEDIDiff
+           
+           , NULL                 :: TDateTime  AS StartBegin
+           , NULL                 :: TDateTime  AS EndBegin
+           , 0                    :: TFloat     AS diffBegin_sec
+           
        FROM tmpGoods
 
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId     = tmpGoods.GoodsId
@@ -630,6 +664,9 @@ BEGIN
                   ELSE FALSE
              END ::Boolean AS isPriceEDIDiff
 
+           , tmpMI.StartBegin                  AS StartBegin
+           , tmpMI.EndBegin                    AS EndBegin
+           , tmpMI.diffBegin_sec               AS diffBegin_sec
        FROM tmpMI_all AS tmpMI
             LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpMI.GoodsId
                               AND (tmpPromo.GoodsKindId = tmpMI.GoodsKindId OR tmpPromo.GoodsKindId = 0)
@@ -697,6 +734,14 @@ BEGIN
                                                              )
                            )
 
+          , tmpMI_Date AS (SELECT MovementItemDate.*
+                           FROM MovementItemDate
+                           WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI_G.Id FROM tmpMI_G)
+                             AND MovementItemDate.DescId IN (zc_MIDate_StartBegin()
+                                                           , zc_MIDate_EndBegin()
+                                                            )
+                           )
+
           , tmpMI_Goods AS (SELECT MovementItem.Id                               AS MovementItemId
                                  , MovementItem.GoodsId                          AS GoodsId
                                  , MovementItem.Amount                           AS Amount
@@ -708,6 +753,9 @@ BEGIN
                                  , MIFloat_AmountSecond.ValueData                AS AmountSecond
                                  , MIFloat_Summ.ValueData                        AS Summ
                                  , MIFloat_PromoMovement.ValueData               AS MovementId_Promo
+                                 , MIDate_StartBegin.ValueData                   AS StartBegin
+                                 , MIDate_EndBegin.ValueData                     AS EndBegin
+                                 , EXTRACT (EPOCH FROM (COALESCE (MIDate_EndBegin.ValueData, zc_DateStart()) - COALESCE (MIDate_StartBegin.ValueData, zc_DateStart())) :: INTERVAL) :: TFloat AS diffBegin_sec
                                  , MovementItem.isErased
                             FROM tmpMI_G AS MovementItem
                                  LEFT JOIN tmpMI_LO AS MILinkObject_GoodsKind
@@ -734,7 +782,15 @@ BEGIN
                                  LEFT JOIN tmpMI_Float AS MIFloat_ChangePercent
                                                        ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                                       AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+
+                                 LEFT JOIN tmpMI_Date AS MIDate_StartBegin
+                                                      ON MIDate_StartBegin.MovementItemId = MovementItem.Id
+                                                     AND MIDate_StartBegin.DescId         = zc_MIDate_StartBegin()
+                                 LEFT JOIN tmpMI_Date AS MIDate_EndBegin
+                                                      ON MIDate_EndBegin.MovementItemId = MovementItem.Id
+                                                     AND MIDate_EndBegin.DescId         = zc_MIDate_EndBegin()
                           )
+
            -- Связь с акциями для существующих MovementItem
          , tmpMIPromo_all AS (SELECT tmp.MovementId_Promo                          AS MovementId_Promo
                                    , MovementItem.Id                               AS MovementItemId
@@ -822,6 +878,9 @@ BEGIN
 
                            , COALESCE (tmpMI_Goods.MovementId_Promo, 0)                 AS MovementId_Promo
                            , COALESCE (tmpMIPromo.PricePromo, 0)                        AS PricePromo
+                           , COALESCE (tmpMI_Goods.StartBegin, NULL)    :: TDateTime    AS StartBegin
+                           , COALESCE (tmpMI_Goods.EndBegin, NULL)      :: TDateTime    AS EndBegin
+                           , COALESCE (tmpMI_Goods.diffBegin_sec, 0)    :: TFloat       AS diffBegin_sec
                            , COALESCE (tmpMI_Goods.isErased, FALSE)                     AS isErased
                        FROM tmpMI_Goods
                             LEFT JOIN tmpMIPromo ON tmpMIPromo.MovementId_Promo = tmpMI_Goods.MovementId_Promo
@@ -933,7 +992,10 @@ BEGIN
 
                                , tmpMI.MovementId_Promo                                       AS MovementId_Promo
                                , tmpMI.PricePromo                                             AS PricePromo
-                               , COALESCE (tmpMI.isErased, FALSE)                             AS isErased
+                               , tmpMI.StartBegin                  AS StartBegin
+                               , tmpMI.EndBegin                    AS EndBegin
+                               , tmpMI.diffBegin_sec               AS diffBegin_sec
+                               , COALESCE (tmpMI.isErased, FALSE)  AS isErased
                           FROM tmpMI
                                FULL JOIN tmpMI_EDI_find ON tmpMI_EDI_find.MovementItemId = tmpMI.MovementItemId
                          )
@@ -1012,6 +1074,10 @@ BEGIN
                   ELSE FALSE
              END ::Boolean AS isPriceEDIDiff
 
+           , tmpMI.StartBegin                  AS StartBegin
+           , tmpMI.EndBegin                    AS EndBegin
+           , tmpMI.diffBegin_sec               AS diffBegin_sec
+
        FROM tmpMI_all AS tmpMI
             LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpMI.GoodsId
                               AND (tmpPromo.GoodsKindId = tmpMI.GoodsKindId OR tmpPromo.GoodsKindId = 0)
@@ -1050,6 +1116,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderExternal (Integer, Integer, TDateTime,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.05.19         *
  27.03.18         *
  28.07.16         * add PriceEDI, isPriceEDIDiff
  17.06.15                                        * add vbIsOrderDnepr
