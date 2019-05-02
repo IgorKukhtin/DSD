@@ -19,6 +19,9 @@ BEGIN
     -- сохранили <Примечание>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), inId, inComment);
     
+    --переопределяем. 
+    inIsErased := NOT inIsErased;
+    
     IF inIsErased = TRUE
     THEN
         -- Удаляем Документ

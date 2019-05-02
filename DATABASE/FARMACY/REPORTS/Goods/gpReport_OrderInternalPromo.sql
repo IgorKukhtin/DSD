@@ -12,10 +12,10 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , NDSKindId Integer, NDSKindName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , Price TFloat
-             , Amount_In TFloat, Amount_Out TFloat
-             , Summ_In TFloat, Summ_Out TFloat
              , Amount TFloat, Summ TFloat
              , Amount_Sale TFloat, Amount_Remains TFloat
+             , Amount_Master TFloat
+             , inReportText TVarChar
              , JuridicalName TVarChar
              , ContractName TVarChar
               )
@@ -38,7 +38,6 @@ BEGIN
                               , Object_Goods.ValueData            AS GoodsName
                               , MovementItem.Amount      ::TFloat AS Amount
                               , MIFloat_Price.ValueData  ::TFloat AS Price
-                              , (COALESCE(MovementItem.Amount,0) * COALESCE(MIFloat_Price.ValueData,0)) ::TFloat AS Summ
                               , Object_Juridical.Id               AS JuridicalId
                               , Object_Juridical.ValueData        AS JuridicalName
                               , Object_Contract.Id                AS ContractId
@@ -72,6 +71,7 @@ BEGIN
                              , MovementItem.Amount              AS Amount
                              , MIFloat_AmountOut.ValueData      AS AmountOut
                              , MIFloat_Remains.ValueData        AS Remains
+                             , Count (*) OVER (PARTITION BY MovementItem.ParentId) AS Count_calc
                         FROM MovementItem
                              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.ObjectId
                              LEFT JOIN MovementItemFloat AS MIFloat_AmountOut
@@ -109,14 +109,13 @@ BEGIN
           , tmpMI_Child.UnitCode
           , tmpMI_Child.UnitName
           , tmpMI_Master.Price
-          , CASE WHEN tmpPartner.JuridicalId IS NOT NULL THEN tmpMI_Child.Amount ELSE 0 END :: TFloat AS Amount_In
-          , CASE WHEN tmpPartner.JuridicalId IS NOT NULL THEN 0 ELSE tmpMI_Child.Amount END :: TFloat AS Amount_Out
-          , CASE WHEN tmpPartner.JuridicalId IS NOT NULL THEN tmpMI_Child.Amount * tmpMI_Master.Price ELSE 0 END   :: TFloat AS Summ_In
-          , CASE WHEN tmpPartner.JuridicalId IS NOT NULL THEN 0 ELSE tmpMI_Child.Amount * tmpMI_Master.Price END   :: TFloat AS Summ_Out
-          , tmpMI_Child.Amount    :: TFloat  AS Amount
-          , (tmpMI_Child.Amount * tmpMI_Master.Price)  :: TFloat  AS Summ
+          , tmpMI_Child.Amount                        :: TFloat AS Amount
+          , (tmpMI_Child.Amount * tmpMI_Master.Price) :: TFloat AS Summ
+
           , tmpMI_Child.AmountOut            AS Amount_Sale
           , tmpMI_Child.Remains              AS Amount_Remains
+          , (tmpMI_Master.Amount  / CASE WHEN COALESCE (tmpMI_Child.Count_calc, 0) <> 0 THEN tmpMI_Child.Count_calc ELSE 1 END ):: TFloat AS Amount_Master
+          , CASE WHEN tmpPartner.JuridicalId IS NOT NULL THEN 'дю' ELSE 'мер' END :: TVarChar AS inReportText
           , tmpMI_Master.JuridicalName
           , tmpMI_Master.ContractName
      FROM tmpMI_Master 

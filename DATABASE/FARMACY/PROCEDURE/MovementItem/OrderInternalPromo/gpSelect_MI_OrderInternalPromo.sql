@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer
              , MovementId_Promo Integer, InvNumber_Promo_Full TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , ContractId Integer, ContractName TVarChar
+             , isReport Boolean
              , isErased Boolean
               )
 AS
@@ -31,6 +32,16 @@ BEGIN
 
         -- Результат
         RETURN QUERY
+        WITH
+        tmpPartner AS (SELECT DISTINCT MovementLinkObject_Juridical.ObjectId AS JuridicalId
+                       FROM Movement 
+                          LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                                       ON MovementLinkObject_Juridical.MovementId = Movement.Id
+                                                      AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+                       WHERE Movement.DescId = zc_Movement_OrderInternalPromoPartner()
+                         AND Movement.ParentId = inMovementId
+                         AND Movement.StatusId <> zc_Enum_Status_Erased()
+                       )
 
            SELECT MovementItem.Id
                 , MovementItem.ObjectId                    AS GoodsId
@@ -49,6 +60,7 @@ BEGIN
                 , Object_Contract.Id          AS ContractId
                 , Object_Contract.ValueData   AS ContractName
 
+                , CASE WHEN tmpPartner.JuridicalId IS NOT NULL THEN TRUE ELSE FALSE END AS isReport
                 , MovementItem.IsErased       AS IsErased
            FROM MovementItem
               LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId    
@@ -71,7 +83,9 @@ BEGIN
                                                ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                               AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
               LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
-                                     
+
+              LEFT JOIN tmpPartner ON tmpPartner.JuridicalId = MILinkObject_Juridical.ObjectId
+
            WHERE MovementItem.MovementId = inMovementId
              AND MovementItem.DescId = zc_MI_Master()
              AND (MovementItem.isErased = FALSE or inIsErased = TRUE);

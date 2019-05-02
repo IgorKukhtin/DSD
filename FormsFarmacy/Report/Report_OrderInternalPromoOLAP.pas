@@ -60,10 +60,11 @@ type
     edRetail: TcxButtonEdit;
     GuidesRetail: TdsdGuides;
     cfPrice: TdsdPivotGridCalcFields;
-    cfPriceSale: TdsdPivotGridCalcFields;
+    cfAmount_Master: TdsdPivotGridCalcFields;
     cfPriceSaleReal: TdsdPivotGridCalcFields;
     Summ: TcxDBPivotGridField;
     Amount: TcxDBPivotGridField;
+    Amount_Master: TcxDBPivotGridField;
   private
   public
   end;

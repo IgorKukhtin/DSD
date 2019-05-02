@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer
              , JuridicalCode Integer
              , JuridicalName TVarChar
              , Comment TVarChar
-             , IsErased  Boolean
+             , IsReport  Boolean
               )
 
 AS
@@ -30,9 +30,9 @@ BEGIN
           , Object_Juridical.ObjectCode              AS JuridicalCode
           , Object_Juridical.ValueData               AS JuridicalName
           , MovementString_Comment.ValueData         AS Comment
-          , CASE WHEN Movement.StatusId = zc_Enum_Status_Erased() THEN TRUE ELSE FALSE END AS IsErased
+          , CASE WHEN Movement.StatusId = zc_Enum_Status_Erased() THEN FALSE ELSE TRUE END AS IsReport
      FROM Movement 
-        INNER JOIN tmpStatus ON Movement.StatusId = tmpStatus.StatusId
+        --INNER JOIN tmpStatus ON Movement.StatusId = tmpStatus.StatusId
         
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                      ON MovementLinkObject_Juridical.MovementId = Movement.Id
