@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Tax_From_Kind (
     IN inMovementId                 Integer  , -- ключ Документа
     IN inDocumentTaxKindId          Integer  , -- Тип формирования налогового документа
     IN inDocumentTaxKindId_inf      Integer  , -- Тип формирования налогового документа
-    IN inStartDateTax               TDateTime, -- 
+    IN inStartDateTax               TDateTime, --
    OUT outInvNumberPartner_Master   TVarChar , --
    OUT outDocumentTaxKindId         Integer  , --
    OUT outDocumentTaxKindName       TVarChar , --
@@ -87,7 +87,7 @@ BEGIN
           -- временная таблица - для оптимизации
           DELETE FROM _tmp1_SubQuery;
           DELETE FROM _tmp2_SubQuery;
-          -- временная таблица - 
+          -- временная таблица -
           DELETE FROM _tmpRes;
       ELSE
           -- временная таблица "база" документов
@@ -103,7 +103,7 @@ BEGIN
           -- временная таблица - для оптимизации
           CREATE TEMP TABLE _tmp1_SubQuery (MovementId Integer, OperDate TDateTime, isRegistered Boolean, Amount TFloat) ON COMMIT DROP;
           CREATE TEMP TABLE _tmp2_SubQuery (MovementId_Tax Integer, Amount TFloat) ON COMMIT DROP;
-          -- временная таблица - 
+          -- временная таблица -
           CREATE TEMP TABLE _tmpRes (MessageText Text) ON COMMIT DROP;
       END IF;
 
@@ -131,11 +131,11 @@ BEGIN
                   WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()
                        THEN Movement.InvNumber  -- совпадает с номером документа inMovementId
                   ELSE Movement_Master.InvNumber -- если номер документа пустой, будет создан в lpInsertUpdate_Movement_Tax
-             END AS InvNumber_Tax 
+             END AS InvNumber_Tax
            , CASE WHEN Movement.DescId = zc_Movement_Tax()
                        THEN MS_InvNumberPartner.ValueData -- остается тот что был
                   ELSE MS_InvNumberPartner_Master.ValueData -- если номер налоговой пустой, будет создан в lpInsertUpdate_Movement_Tax
-             END AS InvNumberPartner_Tax 
+             END AS InvNumberPartner_Tax
            , CASE WHEN Movement.DescId = zc_Movement_Tax()
                        THEN Movement.OperDate  -- остается та что была
                   WHEN Movement.DescId = zc_Movement_TransferDebtOut()
@@ -254,7 +254,7 @@ BEGIN
 
       -- если надо, находим существующий <Налоговый документ>
       IF COALESCE (vbMovementId_Tax, 0) = 0 AND inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
-      THEN 
+      THEN
            -- поиск по Юр.лицу + Договор + период
            vbMovementId_Tax:= (SELECT (Movement.Id)
                                FROM Movement
@@ -274,7 +274,7 @@ BEGIN
                                  AND Movement.StatusId <> zc_Enum_Status_Erased());
       ELSE
       IF COALESCE (vbMovementId_Tax, 0) = 0 AND inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
-      THEN 
+      THEN
            -- поиск по Контрагенту + Договор + период
            vbMovementId_Tax:= (SELECT (Movement.Id)
                                FROM Movement
@@ -297,7 +297,7 @@ BEGIN
 
       -- если надо, находим существующий <Налоговый документ-корректировку>
       IF inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
-      THEN 
+      THEN
            -- ВСЕ по Юр.лицу + Договор + период
            INSERT INTO _tmpMovementCorrective (MovementId, MovementId_Tax)
                                          SELECT (Movement.Id) AS MovementId
@@ -322,7 +322,7 @@ BEGIN
 
       ELSE
       IF inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
-      THEN 
+      THEN
            -- ВСЕ по Контрагенту + Договор + период
            INSERT INTO _tmpMovementCorrective (MovementId, MovementId_Tax)
                                          SELECT (Movement.Id) AS MovementId
@@ -348,12 +348,12 @@ BEGIN
       END IF;
 
 
-      -- 
+      --
       IF COALESCE (inMovementId, 0) = 0
       THEN
           RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
       END IF;
-      -- 
+      --
       IF COALESCE (vbFromId, 0) = 0
       THEN
           RAISE EXCEPTION 'Ошибка.Не установлено значение <От кого>.';
@@ -600,8 +600,8 @@ BEGIN
                                                                AND MovementItem.isErased = FALSE
                                         INNER JOIN MovementItemFloat AS MIFloat_Price
                                                                      ON MIFloat_Price.MovementItemId = MovementItem.ParentId
-                                                                    AND MIFloat_Price.DescId = zc_MIFloat_Price() 
-                                                                    AND MIFloat_Price.ValueData <> 0  
+                                                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                                    AND MIFloat_Price.ValueData <> 0
                                         LEFT JOIN MovementItem AS MovementItem_Master ON MovementItem_Master.Id = MovementItem.ParentId
                                                                                      AND MovementItem_Master.isErased = FALSE
                                         LEFT JOIN MovementItemFloat AS MIFloat_MovementId
@@ -676,8 +676,8 @@ BEGIN
                                                  AND MovementItem.isErased = FALSE
                           INNER JOIN MovementItemFloat AS MIFloat_Price
                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price() 
-                                                      AND MIFloat_Price.ValueData <> 0  
+                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                      AND MIFloat_Price.ValueData <> 0
                           LEFT JOIN MovementItem AS MovementItem_Child ON MovementItem_Child.MovementId = _tmpMovement.MovementId_return
                                                                       AND MovementItem_Child.isErased = FALSE
                                                                       AND MovementItem_Child.DescId   = CASE WHEN _tmpMovement.MovementId_return > 0 THEN zc_MI_Child()  END
@@ -696,18 +696,39 @@ BEGIN
                                                            AND MI_Sale.DescId     = zc_MI_Master()
                                                            AND MI_Sale.Id         = MIFloat_MovementItemId.ValueData :: Integer
                                                            AND MI_Sale.isErased   = FALSE
+                          LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner_Sale
+                                                      ON MIFloat_AmountPartner_Sale.MovementItemId = MI_Sale.Id
+                                                     AND MIFloat_AmountPartner_Sale.DescId         = zc_MIFloat_AmountPartner()
 
-                          LEFT JOIN _tmpMovement2 AS _tmpMovement_find ON _tmpMovement_find.MovementId = MI_Sale.MovementId -- MIFloat_MovementId.ValueData :: Integer
-                          LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = MI_Sale.MovementId -- MIFloat_MovementId.ValueData :: Integer
+                          LEFT JOIN _tmpMovement2 AS _tmpMovement_find ON _tmpMovement_find.MovementId = -- MIFloat_MovementId.ValueData :: Integer
+                                                                                                         CASE WHEN Movement_Sale.DescId = zc_Movement_Sale()
+                                                                                                               AND COALESCE (MIFloat_AmountPartner_Sale.ValueData, 0) < COALESCE (MovementItem_Child.Amount, 0)
+                                                                                                                   -- !!!будет error!!!
+                                                                                                                   THEN NULL
+                                                                                                              WHEN COALESCE (MIFloat_AmountPartner_Sale.ValueData, MI_Sale.Amount) < COALESCE (MovementItem_Child.Amount, 0)
+                                                                                                                   -- !!!тоже будет error!!!
+                                                                                                                   THEN NULL
+                                                                                                              ELSE MI_Sale.MovementId
+                                                                                                         END
+                          LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = -- MIFloat_MovementId.ValueData :: Integer
+                                                                                              CASE WHEN Movement_Sale.DescId = zc_Movement_Sale()
+                                                                                                    AND COALESCE (MIFloat_AmountPartner_Sale.ValueData, 0) < COALESCE (MovementItem_Child.Amount, 0)
+                                                                                                        -- !!!будет error!!!
+                                                                                                        THEN NULL
+                                                                                                   WHEN COALESCE (MIFloat_AmountPartner_Sale.ValueData, MI_Sale.Amount) < COALESCE (MovementItem_Child.Amount, 0)
+                                                                                                        -- !!!тоже будет error!!!
+                                                                                                        THEN NULL
+                                                                                                   ELSE MI_Sale.MovementId
+                                                                                              END
                                                         AND MovementLinkMovement.DescId     = zc_MovementLinkMovement_Master()
                                                         AND _tmpMovement_find.MovementId IS NULL
-                   
-                          LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                                      ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                                     AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()                             
+
                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                       ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                                     AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                                     AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
+                          LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                      ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -751,7 +772,7 @@ BEGIN
 
 
 /*
-if inUserId = 5 
+if inUserId = 5
 then
     RAISE EXCEPTION '<%>  %  %   %  %  %', (select count(*) from _tmpMI), (select count(*) from _tmpMI where coalesce (MovementId_Tax, 0) = 0 )
 , (select count(*) from _tmpMI where Amount_TaxCorrective < 0 )
@@ -817,7 +838,7 @@ end if;
       PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Master(), _tmpMovement.MovementId, vbMovementId_Tax)
       FROM _tmpMovement
       WHERE _tmpMovement.DescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut());
-           
+
       -- если есть
       IF inDocumentTaxKindId= zc_Enum_DocumentTaxKind_Tax() AND vbMovementId_Sale <> 0 AND EXISTS (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = vbMovementId_Sale AND DescId = zc_MovementLinkMovement_Sale() AND MovementChildId <> 0)
       THEN
@@ -828,7 +849,7 @@ end if;
       -- 7. удаляем !!!все!!! строки из Налоговой
       PERFORM gpMovementItem_Tax_SetErased (inMovementItemId := tmpMI_Tax.MovementItemId
                                           , inSession := inUserId :: TVarChar)
-      FROM 
+      FROM
            (SELECT MovementItem.Id         AS MovementItemId
                  , MovementItem.ObjectId   AS GoodsId
                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -836,13 +857,13 @@ end if;
             FROM MovementItem
                  LEFT JOIN MovementItemFloat AS MIFloat_Price
                                              ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                            AND MIFloat_Price.DescId = zc_MIFloat_Price() 
+                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             WHERE MovementItem.MovementId = vbMovementId_Tax
               AND MovementItem.isErased = FALSE
-           ) AS tmpMI_Tax 
+           ) AS tmpMI_Tax
           ;
 
 
@@ -889,7 +910,7 @@ end if;
               IF NOT FOUND THEN EXIT; END IF;
 
 
-           -- 
+           --
            DELETE FROM _tmp1_SubQuery;
            DELETE FROM _tmp2_SubQuery;
 
@@ -1191,7 +1212,7 @@ end if;
       PERFORM lpUnComplete_Movement (inMovementId:= tmp.MovementId
                                    , inUserId    := inUserId)
       FROM (-- Много корректировок
-            SELECT DISTINCT _tmpMICorrective.MovementId_Corrective AS MovementId FROM _tmpMICorrective WHERE _tmpMICorrective.MovementId_Corrective <> 0 
+            SELECT DISTINCT _tmpMICorrective.MovementId_Corrective AS MovementId FROM _tmpMICorrective WHERE _tmpMICorrective.MovementId_Corrective <> 0
            ) AS tmp;
 
       -- 5. сохранили корректировку (почти всегда)
@@ -1277,7 +1298,7 @@ end if;
                                ELSE ''
                           END;
 /*
-if inUserId = 5 
+if inUserId = 5
 then
     RAISE EXCEPTION '<%>', outMessageText;
     -- 'Повторите действие через 3 мин.'
@@ -1302,7 +1323,7 @@ end if;
      WHERE MovementLinkMovement_Master.MovementChildId = vbMovementId_Tax
        AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master();
 
-  
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -1311,7 +1332,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 10.05.16         * add 
+ 10.05.16         * add
  09.07.14                                        * add zc_Movement_TransferDebtIn
  03.06.14                                        * add в налоговых цены всегда будут без НДС + в корректировках цены всегда будут без НДС
  16.05.14                                        * set lp

@@ -38,7 +38,8 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
    vbIsAllUnit:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND UserId = vbUserId)
-                 OR vbUserId = 80373
+                 OR vbUserId = 80373 -- Прохорова С.А.
+                 OR vbUserId = 80830 -- Кисличная Т.А.
                ;
 
    -- определяется уровень доступа

@@ -85,6 +85,90 @@ BEGIN
         , tmpContainer_Partner_View AS (SELECT * FROM Container_Partner_View)
         -- , tmpObject_InfoMoney_View AS (SELECT * FROM gpSelect_Object_InfoMoney_Desc ('zc_Object_Juridical', inSession))
 
+        , tmpContract_View AS (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.isErased = FALSE)
+        , tmpJuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View)
+        , tmpInfoMoney_View AS (SELECT * FROM Object_InfoMoney_View)
+        , tmpPartner AS
+    (SELECT Object_Partner.Id
+          , Object_Partner.ObjectCode     
+          , Object_Partner.ValueData AS Name
+          , ObjectDesc.ItemName
+          , Object_Partner.isErased
+          , Object_InfoMoney_View.InfoMoneyId
+          , Object_InfoMoney_View.InfoMoneyCode
+          , Object_InfoMoney_View.InfoMoneyGroupName
+          , Object_InfoMoney_View.InfoMoneyDestinationName
+          , Object_InfoMoney_View.InfoMoneyName
+          , Object_InfoMoney_View.InfoMoneyName_all
+          , View_Contract.ContractId      :: Integer   AS ContractId
+          , View_Contract.ContractCode    :: Integer   AS Code
+          , View_Contract.InvNumber       :: TVarChar  AS InvNumber
+          , View_Contract.ContractStateKindCode        AS ContractStateKindCode
+          , View_Contract.StartDate       :: TDateTime AS StartDate
+          , View_Contract.EndDate         :: TDateTime AS EndDate
+          , View_Contract.ContractTagName :: TVarChar  AS ContractTagName
+          , View_Contract.ContractKindName :: TVarChar AS ContractKindName
+          , Container_Partner_View.MovementId_Partion
+          , Container_Partner_View.PartionMovementName
+          , Container_Partner_View.PaymentDate
+          , ObjectHistory_JuridicalDetails_View.OKPO
+          , Container_Partner_View.AmountDebet
+          , Container_Partner_View.AmountKredit
+          , Object_Branch.ValueData   AS BranchName
+          , Object_PaidKind.Id        AS PaidKindId
+          , Object_PaidKind.ValueData AS PaidKindName
+          , Object_Currency.Id         AS CurrencyId
+          , Object_Currency.ValueData  AS CurrencyName
+          , 0            AS CarId
+          , ''::TVarChar AS CarName
+          , ''::TVarChar AS CarModelName
+          , ''::TVarChar AS UnitName_Car
+          , View_Contract.isErased AS isErased_Contract
+     FROM Object AS Object_Partner
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Partner.DescId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                               ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
+                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+          LEFT JOIN tmpContract_View AS View_Contract ON View_Contract.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+
+          LEFT JOIN tmpContainer_Partner_View AS Container_Partner_View ON Container_Partner_View.PartnerId = Object_Partner.Id
+                                                                       AND Container_Partner_View.ContractId = View_Contract.ContractId
+
+          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (Container_Partner_View.JuridicalId, ObjectLink_Partner_Juridical.ChildObjectId)
+          LEFT JOIN tmpJuridicalDetails_View AS ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
+
+          -- LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (Container_Partner_View.InfoMoneyId, View_Contract.InfoMoneyId)
+          LEFT JOIN tmpInfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (Container_Partner_View.InfoMoneyId, View_Contract.InfoMoneyId)
+          LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = COALESCE (Container_Partner_View.PaidKindId, View_Contract.PaidKindId)
+
+          LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                               ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
+                              AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Container_Partner_View.BranchId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                               ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id 
+                              AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+          LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
+                               ON ObjectLink_Contract_Currency.ObjectId = View_Contract.ContractId 
+                              AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
+          LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
+
+     WHERE Object_Partner.DescId = zc_Object_Partner()
+       AND Object_Partner.isErased = FALSE
+       -- AND View_Contract.isErased = FALSE
+       -- AND COALESCE (Object_Contract_View_Container.PaidKindId, View_Contract.PaidKindId) = zc_Enum_PaidKind_SecondForm()
+       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
+                                                                , 8359 -- 04-Услуги
+                                                                 )
+            OR Object_PersonalTrade.BranchId = vbObjectId_Constraint_Branch
+            OR vbIsConstraint = FALSE)
+    )
+
+     -- Результат
      SELECT Object_Cash.Id
           , Object_Cash.ObjectCode
           , Object_Cash.Valuedata AS Name
@@ -216,80 +300,43 @@ BEGIN
            OR vbIsConstraint_Branch = FALSE
           )
     UNION ALL
-     SELECT Object_Partner.Id
-          , Object_Partner.ObjectCode     
-          , Object_Partner.ValueData AS Name
-          , ObjectDesc.ItemName
-          , Object_Partner.isErased
-          , Object_InfoMoney_View.InfoMoneyId
-          , Object_InfoMoney_View.InfoMoneyCode
-          , Object_InfoMoney_View.InfoMoneyGroupName
-          , Object_InfoMoney_View.InfoMoneyDestinationName
-          , Object_InfoMoney_View.InfoMoneyName
-          , Object_InfoMoney_View.InfoMoneyName_all
-          , View_Contract.ContractId      :: Integer   AS ContractId
-          , View_Contract.ContractCode    :: Integer   AS Code
-          , View_Contract.InvNumber       :: TVarChar  AS InvNumber
-          , View_Contract.ContractStateKindCode        AS ContractStateKindCode
-          , View_Contract.StartDate       :: TDateTime AS StartDate
-          , View_Contract.EndDate         :: TDateTime AS EndDate
-          , View_Contract.ContractTagName :: TVarChar  AS ContractTagName
-          , View_Contract.ContractKindName :: TVarChar AS ContractKindName
-          , Container_Partner_View.MovementId_Partion
-          , Container_Partner_View.PartionMovementName
-          , Container_Partner_View.PaymentDate
-          , ObjectHistory_JuridicalDetails_View.OKPO
-          , Container_Partner_View.AmountDebet
-          , Container_Partner_View.AmountKredit
-          , Object_Branch.ValueData   AS BranchName
-          , Object_PaidKind.Id        AS PaidKindId
-          , Object_PaidKind.ValueData AS PaidKindName
-          , Object_Currency.Id         AS CurrencyId
-          , Object_Currency.ValueData  AS CurrencyName
-          , 0            AS CarId
-          , ''::TVarChar AS CarName
-          , ''::TVarChar AS CarModelName
-          , ''::TVarChar AS UnitName_Car
-     FROM Object AS Object_Partner
-          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Partner.DescId
+     SELECT tmpPartner.Id
+          , tmpPartner.ObjectCode     
+          , tmpPartner.Name
+          , tmpPartner.ItemName
+          , tmpPartner.isErased
+          , tmpPartner.InfoMoneyId
+          , tmpPartner.InfoMoneyCode
+          , tmpPartner.InfoMoneyGroupName
+          , tmpPartner.InfoMoneyDestinationName
+          , tmpPartner.InfoMoneyName
+          , tmpPartner.InfoMoneyName_all
+          , tmpPartner.ContractId
+          , tmpPartner.Code
+          , tmpPartner.InvNumber
+          , tmpPartner.ContractStateKindCode
+          , tmpPartner.StartDate
+          , tmpPartner.EndDate
+          , tmpPartner.ContractTagName
+          , tmpPartner.ContractKindName
+          , tmpPartner.MovementId_Partion
+          , tmpPartner.PartionMovementName
+          , tmpPartner.PaymentDate
+          , tmpPartner.OKPO
+          , tmpPartner.AmountDebet
+          , tmpPartner.AmountKredit
+          , tmpPartner.BranchName
+          , tmpPartner.PaidKindId
+          , tmpPartner.PaidKindName
+          , tmpPartner.CurrencyId
+          , tmpPartner.CurrencyName
+          , tmpPartner.CarId
+          , tmpPartner.CarName
+          , tmpPartner.CarModelName
+          , tmpPartner.UnitName_Car
+     FROM tmpPartner
+     WHERE tmpPartner.isErased_Contract = FALSE
 
-          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                               ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
-                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-          LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
-
-          LEFT JOIN tmpContainer_Partner_View AS Container_Partner_View ON Container_Partner_View.PartnerId = Object_Partner.Id
-                                                                       AND Container_Partner_View.ContractId = View_Contract.ContractId
-
-          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (Container_Partner_View.JuridicalId, ObjectLink_Partner_Juridical.ChildObjectId)
-          LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
-
-          -- LEFT JOIN tmpObject_InfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (Container_Partner_View.InfoMoneyId, View_Contract.InfoMoneyId)
-          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (Container_Partner_View.InfoMoneyId, View_Contract.InfoMoneyId)
-          LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = COALESCE (Container_Partner_View.PaidKindId, View_Contract.PaidKindId)
-
-          LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
-                               ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
-                              AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
-          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Container_Partner_View.BranchId
-
-          LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                               ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id 
-                              AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-          LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
-
-          LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
-                               ON ObjectLink_Contract_Currency.ObjectId = View_Contract.ContractId 
-                              AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
-          LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
-
-     WHERE Object_Partner.DescId = zc_Object_Partner()
-       AND Object_Partner.isErased = FALSE
-       AND View_Contract.isErased = FALSE
-       -- AND COALESCE (Object_Contract_View_Container.PaidKindId, View_Contract.PaidKindId) = zc_Enum_PaidKind_SecondForm()
-       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
-            OR Object_PersonalTrade.BranchId = vbObjectId_Constraint_Branch
-            OR vbIsConstraint = FALSE)
     UNION ALL
      SELECT Object_Juridical.Id
           , Object_Juridical.ObjectCode     
@@ -327,10 +374,11 @@ BEGIN
           , ''::TVarChar AS UnitName_Car
      FROM Object AS Object_Juridical
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
-          LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.JuridicalId = Object_Juridical.Id 
+          INNER JOIN tmpContract_View AS View_Contract ON View_Contract.JuridicalId = Object_Juridical.Id 
           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
-          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
-          LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
+          -- LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
+          LEFT JOIN tmpInfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
+          LEFT JOIN tmpJuridicalDetails_View AS ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
           LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
                                ON ObjectLink_Contract_Currency.ObjectId = View_Contract.ContractId 
@@ -339,7 +387,7 @@ BEGIN
 
      WHERE Object_Juridical.DescId = zc_Object_Juridical()
        AND Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40900()
-       AND View_Contract.isErased = FALSE
+       -- AND View_Contract.isErased = FALSE
        AND Object_Juridical.isErased = FALSE
        AND vbIsConstraint = FALSE
     UNION ALL
@@ -382,7 +430,8 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Founder_InfoMoney
                                ON ObjectLink_Founder_InfoMoney.ObjectId = Object_Founder.Id
                               AND ObjectLink_Founder_InfoMoney.DescId = zc_ObjectLink_Founder_InfoMoney()
-          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Founder_InfoMoney.ChildObjectId
+          -- LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Founder_InfoMoney.ChildObjectId
+          LEFT JOIN tmpInfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Founder_InfoMoney.ChildObjectId
           LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = zc_Enum_Currency_Basis()
     WHERE Object_Founder.DescId = zc_Object_Founder()
       AND Object_Founder.isErased = FALSE

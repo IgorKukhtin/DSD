@@ -414,7 +414,9 @@ BEGIN
          LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Partner_GoodsProperty.ChildObjectId
 
     WHERE (inJuridicalId = 0 OR inJuridicalId = ObjectLink_Partner_Juridical.ChildObjectId)
-      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
+                                                               , 8359 -- 04-”слуги
+                                                                )
            OR Object_PersonalTrade.BranchId = vbBranchId_Constraint
            OR vbIsConstraint = FALSE)
       AND (ObjectLink_Juridical_Retail.ChildObjectId      = inRetailId        OR COALESCE (inRetailId, 0)        = 0)
@@ -504,4 +506,4 @@ order by  coalesce (Object_Retail.ValueData, '€€€€€€€')
 where aaa.Id = Object.Id
 */
 -- тест
--- select * from gpSelect_Object_Partner(inJuridicalId := 0 , inRetailId := 0 , inPersonalTradeId := 0 , inRouteId := 0 , inShowAll := 'False' ,  inSession := '5');
+-- SELECT * FROM gpSelect_Object_Partner(inJuridicalId := 0 , inRetailId := 0 , inPersonalTradeId := 0 , inRouteId := 0 , inShowAll := 'False' ,  inSession := '5');

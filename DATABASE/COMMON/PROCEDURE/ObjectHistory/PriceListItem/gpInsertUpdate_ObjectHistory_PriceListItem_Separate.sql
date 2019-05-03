@@ -148,7 +148,6 @@ BEGIN
                  , 0 AS OutCount
                  , 0 AS OutSumm
             FROM tmpMIContainer AS tmp;
-            ;
 
          -- записываем значения 
          PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId          := 0

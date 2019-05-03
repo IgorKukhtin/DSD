@@ -966,7 +966,7 @@ object GuideMovementForm: TGuideMovementForm
           Width = 70
         end
         object PersonalCode1_Stick: TcxGridDBColumn
-          Caption = 'C'#1090#1080#1082#1077#1088#1086#1074#1097#1080#1082' 1'
+          Caption = #1050#1086#1076'1 '#1089#1086#1090#1088'. c'#1090#1080#1082'.'
           DataBinding.FieldName = 'PersonalCode1_Stick'
           Visible = False
           HeaderAlignmentHorz = taCenter
@@ -974,6 +974,7 @@ object GuideMovementForm: TGuideMovementForm
           Width = 55
         end
         object PersonalName1_Stick: TcxGridDBColumn
+          Caption = 'C'#1090#1080#1082#1077#1088#1086#1074#1097#1080#1082' 1'
           DataBinding.FieldName = 'PersonalName1_Stick'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter

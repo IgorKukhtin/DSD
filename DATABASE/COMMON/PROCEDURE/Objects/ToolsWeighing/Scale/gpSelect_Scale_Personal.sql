@@ -61,12 +61,14 @@ BEGIN
                                                                , 12988 -- стикеровщики
                                                                , 12939 -- грузчик экспедиции
                                                                -- , 12982 -- старший кладовщик
+                                                               , 12988 -- стикеровщик
                                                                 )
                                    )
                                 OR (View_Personal.BranchId = vbBranchId_Constraint
                                 AND vbIsConstraint = TRUE)
-                                OR (View_Personal.PositionId IN (8466 -- водитель
+                                OR (View_Personal.PositionId IN (8466  -- водитель
                                                                , 81178 -- экспедитор
+                                                               , 12988 -- стикеровщик
                                                                 )
                                   ))
                            )

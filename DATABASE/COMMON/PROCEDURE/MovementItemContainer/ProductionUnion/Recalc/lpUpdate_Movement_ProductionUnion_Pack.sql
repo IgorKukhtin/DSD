@@ -434,7 +434,7 @@ BEGIN
                                                     AND ObjectFloat_Value.ValueData <> 0
                               LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                    ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
-                                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                                  AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
                               INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
                                                               AND (Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000()             -- Доходы
                                                                 OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
@@ -920,11 +920,13 @@ BEGIN
                                                    ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
                                                   AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                               INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-                                                              AND Object_InfoMoney_View.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_30000()             -- Доходы
-                                                              AND Object_InfoMoney_View.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_10100() -- Общефирменные + Ирна
-                                                              AND Object_InfoMoney_View.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
-     WHERE _tmpResult.DescId_mi   = zc_MI_Master()
-       AND _tmpResult.isDelete    = FALSE;
+                                                              AND Object_InfoMoney_View.InfoMoneyGroupId        <> zc_Enum_InfoMoneyGroup_30000()       -- Доходы
+                                                           -  AND (Object_InfoMoney_View.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                                                                OR inUnitId = 8451 -- Цех Упаковки
+                                                                  )
+                                                              AND Object_InfoMoney_View.InfoMoneyDestinationId  <> zc_Enum_InfoMoneyDestination_20900() -- Общефирменные  + Ирна
+     WHERE _tmpResult.DescId_mi = zc_MI_Master()
+       AND _tmpResult.isDelete  = FALSE;
 
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_ProductionUnion_CreateTemp();

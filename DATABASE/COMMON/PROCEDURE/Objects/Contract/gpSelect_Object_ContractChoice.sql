@@ -194,7 +194,9 @@ BEGIN
                             AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
         LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
 
-    WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+    WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
+                                                               , 8359 -- 04-Услуги
+                                                                )
            OR tmpListBranch_Constraint.JuridicalId > 0
            OR vbIsConstraint = FALSE
            OR inJuridicalId <> 0
@@ -341,7 +343,9 @@ BEGIN
                             AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
         LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
 
-    WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+    WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
+                                                               , 8359 -- 04-Услуги
+                                                                )
            OR tmpListBranch_Constraint.JuridicalId > 0
            OR vbIsConstraint = FALSE
            OR inJuridicalId <> 0
@@ -464,7 +468,9 @@ BEGIN
                             AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
         LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
 
-    WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+    WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
+                                                               , 8359 -- 04-Услуги
+                                                                )
            OR tmpListBranch_Constraint.JuridicalId > 0
            OR vbIsConstraint = FALSE)
    ;
@@ -587,7 +593,9 @@ BEGIN
                             AND ObjectLink_Contract_Currency.DescId = zc_ObjectLink_Contract_Currency()
         LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Contract_Currency.ChildObjectId
 
-    WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+    WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
+                                                               , 8359 -- 04-Услуги
+                                                                )
            OR tmpListBranch_Constraint.JuridicalId > 0
            OR vbIsConstraint = FALSE
            OR inJuridicalId <> 0

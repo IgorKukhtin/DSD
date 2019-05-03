@@ -300,7 +300,9 @@ BEGIN
        OR (Object_Juridical.Id = 15222 AND vbIsUserOrder = FALSE) -- Кротон НВКФ ТОВ
          )
      --
-     AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+     AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
+                                                              , 8359 -- 04-Услуги
+                                                               )
           OR ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = vbBranchId_Constraint
           OR vbIsConstraint = FALSE
           OR Object_Partner.Id IN (17316 -- Білла 8221,Запорожье,ул.Яценко,2*600400
@@ -559,7 +561,9 @@ BEGIN
        OR (Object_Juridical.Id = 15222 AND vbIsUserOrder = FALSE) -- Кротон НВКФ ТОВ
          )
      --
-     AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+     AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
+                                                              , 8359 -- 04-Услуги
+                                                               )
           OR ObjectLink_Unit_Branch_PersonalTrade.ChildObjectId = vbBranchId_Constraint
           OR vbIsConstraint = FALSE
           OR Object_Partner.Id IN (17316 -- Білла 8221,Запорожье,ул.Яценко,2*600400

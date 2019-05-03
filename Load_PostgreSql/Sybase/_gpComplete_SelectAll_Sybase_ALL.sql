@@ -459,5 +459,7 @@ create table dba._pgMovementReComlete
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 */
 -- тест
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.01.2017', inEndDate:= '31.01.2017', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE)
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.02.2019', inEndDate:= '28.02.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.04.2019', inEndDate:= '30.04.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.04.2019', inEndDate:= '30.04.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE)

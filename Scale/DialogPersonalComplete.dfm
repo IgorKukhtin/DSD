@@ -16,7 +16,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
     Top = 325
     Width = 506
     TabOrder = 4
-    ExplicitTop = 295
+    ExplicitTop = 325
     ExplicitWidth = 506
     inherited bbOk: TBitBtn
       Default = False
@@ -76,8 +76,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitLeft = 1
-          ExplicitTop = 12
         end
       end
     end
@@ -514,6 +512,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
           Properties.DecimalPlaces = 0
+          Properties.OnChange = EditPersonalCode1PropertiesChange
           TabOrder = 0
           OnExit = EditPersonalCode1Exit
           OnKeyDown = EditPersonalCode1KeyDown
@@ -644,6 +643,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
           Properties.Alignment.Vert = taVCenter
           Properties.AssignedValues.DisplayFormat = True
           Properties.DecimalPlaces = 0
+          Properties.OnChange = EditPersonalCode1PropertiesChange
           TabOrder = 0
           OnExit = EditPersonalCode1Exit
           OnKeyDown = EditPersonalCode1KeyDown
@@ -685,7 +685,6 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 6
-    ExplicitTop = 8
     object PanelPositionStick1: TPanel
       Left = 320
       Top = 0
@@ -757,8 +756,7 @@ inherited DialogPersonalCompleteForm: TDialogPersonalCompleteForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitLeft = -6
-        ExplicitTop = -6
+        ExplicitWidth = 92
       end
       object gbPersonalStickCode1: TGroupBox
         Left = 0

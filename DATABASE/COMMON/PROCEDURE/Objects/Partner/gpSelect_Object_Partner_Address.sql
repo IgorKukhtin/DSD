@@ -379,7 +379,9 @@ BEGIN
 
     WHERE (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
       AND (tmpMovement.PartnerId > 0 OR inIsPeriod = FALSE)
-      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+      AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
+                                                               , 8359 -- 04-Услуги
+                                                                )
            OR View_PersonalTrade.BranchId = vbObjectId_Branch_Constraint
            OR tmpMovement.PartnerId > 0
            OR vbIsConstraint = FALSE)
@@ -408,4 +410,4 @@ $BODY$
 */
 
 -- тест
---select * from gpSelect_Object_Partner_Address(inStartDate := ('01.02.2015')::TDateTime , inEndDate := ('28.02.2015')::TDateTime , inIsPeriod := 'False' , inShowAll := 'False' , inJuridicalId := 15029 , inInfoMoneyId := 0 , inPersonalTradeId := 0 , inRetailId := 0 , inRouteId := 0 ,  inSession := '5');
+-- SELECT * FROM gpSelect_Object_Partner_Address(inStartDate := ('01.02.2015')::TDateTime , inEndDate := ('28.02.2015')::TDateTime , inIsPeriod := 'False' , inShowAll := 'False' , inJuridicalId := 15029 , inInfoMoneyId := 0 , inPersonalTradeId := 0 , inRetailId := 0 , inRouteId := 0 ,  inSession := '5');

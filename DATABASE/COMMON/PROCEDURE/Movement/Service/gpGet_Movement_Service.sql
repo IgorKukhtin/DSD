@@ -91,6 +91,16 @@ BEGIN
      ELSE
 
      RETURN QUERY 
+       WITH tmpCost AS (SELECT MovementFloat.ValueData AS MovementServiceId
+                             , STRING_AGG ('¹ ' ||CAST(Movement_Income.InvNumber AS TVarChar) || ' oò '|| TO_CHAR(Movement_Income.Operdate , 'DD.MM.YYYY')|| '.' , ', ')  AS strInvNumber
+                        FROM MovementFloat
+                             LEFT JOIN Movement AS Movement_Cost on Movement_Cost.Id = MovementFloat.Movementid
+                                               AND Movement_Cost.StatusId            <> zc_Enum_Status_Erased()
+                             LEFT JOIN Movement AS Movement_Income on Movement_Income.Id = Movement_Cost.ParentId
+                        WHERE MovementFloat.DescId    = zc_MovementFloat_MovementId()
+                          AND MovementFloat.ValueData = inMovementId_Value
+                        GROUP BY MovementFloat.ValueData
+                       ) 
        SELECT
              inMovementId                        AS Id
            , CASE WHEN inMovementId = 0 THEN CAST (NEXTVAL ('Movement_Service_seq') AS TVarChar) ELSE Movement.InvNumber END AS InvNumber
@@ -236,14 +246,7 @@ BEGIN
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset() 
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
 
-            LEFT JOIN (SELECT MovementFloat.ValueData AS MovementServiceId
-                            , STRING_AGG ('¹ ' ||CAST(Movement_Income.InvNumber AS TVarChar) || ' oò '|| TO_CHAR(Movement_Income.Operdate , 'DD.MM.YYYY')|| '.' , ', ')  AS strInvNumber
-                       FROM MovementFloat
-                          LEFT JOIN Movement AS Movement_Cost on Movement_Cost.id = MovementFloat.Movementid
-                                            AND Movement_Cost.StatusId <> zc_Enum_Status_Erased()
-                          LEFT JOIN Movement AS Movement_Income on Movement_Income.id = Movement_Cost.ParentId
-                       WHERE MovementFloat.DescId = zc_MovementFloat_MovementId()
-                       GROUP BY MovementFloat.ValueData) AS tmpCost ON tmpCost.MovementServiceId = Movement.Id 
+            LEFT JOIN tmpCost ON tmpCost.MovementServiceId = Movement.Id 
             
        WHERE Movement.Id =  inMovementId_Value;
 

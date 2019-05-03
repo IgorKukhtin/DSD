@@ -72,6 +72,11 @@ BEGIN
                                                        THEN 'TRUE'
                                                   WHEN STRPOS (tmp.Name, 'isGoodsComplete') > 0
                                                        THEN 'TRUE'
+                                                  WHEN STRPOS (tmp.Name, 'isPersonalStick')  > 0
+                                                    OR ((STRPOS (tmp.Name, 'isPersonalComplete') > 0)
+                                                    AND (LENGTH (tmp.Name) = LENGTH ('isPersonalComplete1'))
+                                                       )
+                                                       THEN 'TRUE'
                                                   WHEN SUBSTRING (tmp.Name FROM 1 FOR 2) = 'is'
                                                        THEN 'FALSE'
                                                   WHEN STRPOS (tmp.Name, 'Id') > 0
@@ -93,6 +98,12 @@ BEGIN
            UNION SELECT 'isBarCode'              AS Name WHERE inIsCeh = FALSE
            UNION SELECT 'isTareWeightEnter'      AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
            UNION SELECT 'isPersonalComplete'     AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'isPersonalComplete1'    AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'isPersonalComplete2'    AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'isPersonalComplete3'    AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'isPersonalComplete4'    AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'isPersonalComplete5'    AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'isPersonalStick1'       AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
            UNION SELECT 'isPersonalLoss'         AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
            UNION SELECT 'isTax'                  AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
            UNION SELECT 'isTransport'            AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE

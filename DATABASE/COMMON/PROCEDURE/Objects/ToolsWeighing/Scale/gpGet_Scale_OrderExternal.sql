@@ -80,6 +80,8 @@ BEGIN
                                SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8453) AS lfSelect
                                WHERE vbBranchId = zc_Branch_Basis()
                               )
+           , tmpBarCode AS (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId WHERE CHAR_LENGTH (inBarCode) >= 13)
+         , tmpInvNumber AS (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) > 0 AND CHAR_LENGTH (inBarCode) < 13)
           , tmpMovement AS (SELECT tmpMovement.Id
                                  , tmpMovement.InvNumber
                                  , tmpMovement.DescId
@@ -164,33 +166,30 @@ BEGIN
                                        , Movement.InvNumber
                                        , Movement.DescId
                                        , Movement.OperDate
-                                  FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId WHERE CHAR_LENGTH (inBarCode) >= 13
-                                       ) AS tmp
-                                       INNER JOIN Movement ON Movement.Id = tmp.MovementId
-                                                          AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal(), zc_Movement_SendOnPrice())
-                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '18 DAY' AND inOperDate + INTERVAL '8 DAY'
-                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                  FROM Movement
+                                  WHERE Movement.Id IN (SELECT DISTINCT tmpBarCode.MovementId FROM tmpBarCode)
+                                   AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal(), zc_Movement_SendOnPrice())
+                                   AND Movement.OperDate BETWEEN inOperDate - INTERVAL '18 DAY' AND inOperDate + INTERVAL '8 DAY'
+                                   AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  UNION
                                   -- по Ш/К - Приход, т.к. период 80 дней
                                   SELECT Movement.Id
                                        , Movement.InvNumber
                                        , Movement.DescId
                                        , Movement.OperDate
-                                  FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId WHERE CHAR_LENGTH (inBarCode) >= 13
-                                                                                                                      AND inBranchCode BETWEEN 301 AND 310
-                                       ) AS tmp
-                                       INNER JOIN Movement ON Movement.Id = tmp.MovementId
-                                                          AND Movement.DescId = zc_Movement_OrderIncome()
-                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '80 DAY' AND inOperDate + INTERVAL '80 DAY'
-                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                  FROM Movement
+                                  WHERE Movement.Id IN (SELECT DISTINCT tmpBarCode.MovementId FROM tmpBarCode)
+                                    AND Movement.DescId = zc_Movement_OrderIncome()
+                                    AND Movement.OperDate BETWEEN inOperDate - INTERVAL '80 DAY' AND inOperDate + INTERVAL '80 DAY'
+                                    AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                    AND inBranchCode BETWEEN 301 AND 310
                                  UNION
                                   -- по № документа
                                   SELECT Movement.Id
                                        , Movement.InvNumber
                                        , Movement.DescId
                                        , Movement.OperDate
-                                  FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) > 0 AND CHAR_LENGTH (inBarCode) < 13
-                                       ) AS tmp
+                                  FROM tmpInvNumber AS tmp
                                        INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
                                                           AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal(), zc_Movement_SendOnPrice())
                                                           AND Movement.OperDate BETWEEN inOperDate - INTERVAL '18 DAY' AND inOperDate + INTERVAL '8 DAY'
@@ -201,14 +200,14 @@ BEGIN
                                        , Movement.InvNumber
                                        , Movement.DescId
                                        , Movement.OperDate
-                                  FROM (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) > 0 AND CHAR_LENGTH (inBarCode) < 13
-                                                                      AND inBranchCode BETWEEN 301 AND 310
-                                       ) AS tmp
+                                  FROM tmpInvNumber AS tmp
                                        INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
                                                           AND Movement.DescId = zc_Movement_OrderIncome()
                                                           AND Movement.OperDate BETWEEN inOperDate - INTERVAL '80 DAY' AND inOperDate + INTERVAL '80 DAY'
                                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                  WHERE inBranchCode BETWEEN 301 AND 310
                                  ) AS tmpMovement
+
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                               ON MovementLinkObject_Contract.MovementId = tmpMovement.Id
                                                              AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()

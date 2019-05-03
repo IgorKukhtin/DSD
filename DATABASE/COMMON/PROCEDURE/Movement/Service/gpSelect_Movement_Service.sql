@@ -60,9 +60,16 @@ BEGIN
                               INNER JOIN Movement AS Movement_Income
                                                   ON Movement_Income.Id = Movement_Cost.ParentId
                                                  --AND Movement_Income.DescId = zc_Movement_Income()
-                           WHERE MovementFloat.DescId = zc_MovementFloat_MovementId()
-                           GROUP BY MovementFloat.ValueData
-                         )
+
+                              JOIN Movement ON Movement.Id     = MovementFloat.ValueData :: Integer
+                                           AND Movement.DescId = zc_Movement_Service()
+                                           AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                           AND Movement.StatusId = tmpStatus.StatusId
+                              JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                  
+                         WHERE MovementFloat.DescId = zc_MovementFloat_MovementId()
+                         GROUP BY MovementFloat.ValueData
+                        )
 
            , tmpInfoMoneyDestination AS (SELECT DISTINCT ObjectLink_InfoMoneyDestination.ChildObjectId  AS InfoMoneyDestinationId
                                     FROM Object AS Object_SettingsService

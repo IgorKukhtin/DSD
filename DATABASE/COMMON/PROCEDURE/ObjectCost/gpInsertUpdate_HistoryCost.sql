@@ -1394,7 +1394,7 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 */
 
 -- тест***
--- CREATE TABLE HistoryCost_test (InsertDate TDateTime, Itearation Integer, CountDiff Integer, ContainerId Integer, UnitId Integer, isInfoMoney_80401 Boolean, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, calcCount_external TFloat, calcSumm_external TFloat, OutCount TFloat, OutSumm TFloat); CREATE INDEX idx_HistoryCost_test_ContainerId ON HistoryCost_test(ContainerId);
+-- CREATE TABLE HistoryCost_test (InsertDate TDateTime, OperDate TDateTime, Itearation Integer, CountDiff Integer, ContainerId Integer, UnitId Integer, isInfoMoney_80401 Boolean, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, calcCount TFloat, calcSumm TFloat, calcCount_external TFloat, calcSumm_external TFloat, OutCount TFloat, OutSumm TFloat); CREATE INDEX idx_HistoryCost_test_ContainerId ON HistoryCost_test(ContainerId);
 
 -- SELECT * FROM HistoryCost_test WHERE ContainerId = 1260491 ORDER BY InsertDate;
 

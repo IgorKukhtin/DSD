@@ -243,7 +243,9 @@ BEGIN
                             AND ObjectLink_Juridical_PriceList_30201.DescId = zc_ObjectLink_Juridical_PriceList30201()
         LEFT JOIN Object AS Object_PriceList_30201 ON Object_PriceList_30201.Id = ObjectLink_Juridical_PriceList_30201.ChildObjectId
 
-   WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
+   WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
+                                                              , 8359 -- 04-Услуги
+                                                               )
            OR tmpListBranch_Constraint.JuridicalId > 0
            OR vbIsConstraint = FALSE
            OR Object_Juridical.Id IN (408130 -- АГРО СИРОВИНА ТОВ
