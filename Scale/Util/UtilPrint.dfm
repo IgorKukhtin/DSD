@@ -3116,6 +3116,7 @@ object UtilPrintForm: TUtilPrintForm
       item
         Name = 'outFileName'
         Value = Null
+        Component = actExport_Grid
         ComponentItem = 'DefaultFileName'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3123,6 +3124,7 @@ object UtilPrintForm: TUtilPrintForm
       item
         Name = 'outDefaultFileExt'
         Value = Null
+        Component = actExport_Grid
         ComponentItem = 'DefaultFileExt'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3130,6 +3132,7 @@ object UtilPrintForm: TUtilPrintForm
       item
         Name = 'outEncodingANSI'
         Value = Null
+        Component = actExport_Grid
         ComponentItem = 'EncodingANSI'
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -3137,6 +3140,7 @@ object UtilPrintForm: TUtilPrintForm
       item
         Name = 'outFileName'
         Value = Null
+        Component = actSMTPFile
         ComponentItem = 'FileName'
         DataType = ftString
         MultiSelectSeparator = ','
