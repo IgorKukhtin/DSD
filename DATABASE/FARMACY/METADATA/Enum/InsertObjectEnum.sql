@@ -3524,8 +3524,8 @@ END $$;
 --Проверка и погашение рецептов по доступным лекарствам
 DO $$
 BEGIN
-  PERFORM lpInsertUpdate_Object_HelsiEnum (inId:= zc_Enum_Helsi_Id(), inDescId:= zc_Object_HelsiEnum(), inCode:= 1, inName:= 'https://qa2id.helsi.pro/', inEnumName:= 'zc_Enum_Helsi_Id');
-  PERFORM lpInsertUpdate_Object_HelsiEnum (inId:= zc_Enum_Helsi_be(), inDescId:= zc_Object_HelsiEnum(), inCode:= 2, inName:= 'https://qa2api.helsi.pro/', inEnumName:= 'zc_Enum_Helsi_be');
+  PERFORM lpInsertUpdate_Object_HelsiEnum (inId:= zc_Enum_Helsi_Id(), inDescId:= zc_Object_HelsiEnum(), inCode:= 1, inName:= 'https://id.helsi.pro/', inEnumName:= 'zc_Enum_Helsi_Id');
+  PERFORM lpInsertUpdate_Object_HelsiEnum (inId:= zc_Enum_Helsi_be(), inDescId:= zc_Object_HelsiEnum(), inCode:= 2, inName:= 'https://api.helsi.pro/', inEnumName:= 'zc_Enum_Helsi_be');
   PERFORM lpInsertUpdate_Object_HelsiEnum (inId:= zc_Enum_Helsi_ClientId(), inDescId:= zc_Object_HelsiEnum(), inCode:= 3, inName:= '1c5c52fb-89b8-45c3-84a4-19856ead3425', inEnumName:= 'zc_Enum_Helsi_ClientId');
   PERFORM lpInsertUpdate_Object_HelsiEnum (inId:= zc_Enum_Helsi_ClientSecret(), inDescId:= zc_Object_HelsiEnum(), inCode:= 4, inName:= '715b15a025bcccc81f3cd640f4f0ea1f815cdadc', inEnumName:= 'zc_Enum_Helsi_ClientSecret');
   PERFORM lpInsertUpdate_Object_HelsiEnum (inId:= zc_Enum_Helsi_IntegrationClient(), inDescId:= zc_Object_HelsiEnum(), inCode:= 5, inName:= 'http://localhost:5000/', inEnumName:= 'zc_Enum_Helsi_IntegrationClient');

@@ -1,8 +1,9 @@
 -- Function: gpSelect_Movement_CheckDelayVIP()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_CheckDelayVIP (TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_CheckDelayVIP (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_CheckDelayVIP(
+    IN inIsShowAll     Boolean,    -- за последнии 10 дней
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
@@ -285,13 +286,17 @@ BEGIN
    	        LEFT JOIN MovementBoolean AS MovementBoolean_Site
 		                               ON MovementBoolean_Site.MovementId = Movement.Id
 		                              AND MovementBoolean_Site.DescId = zc_MovementBoolean_Site()
+                                                                            
+             LEFT JOIN MovementDate AS MovementDate_Delay
+                                    ON MovementDate_Delay.MovementId = Movement.Id
+                                   AND MovementDate_Delay.DescId = zc_MovementDate_Delay()
 
-       ;
+       WHERE inIsShowAll OR COALESCE(MovementDate_Delay.ValueData, Movement.OperDate) >= CURRENT_DATE - INTERVAL '10 DAY';
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_CheckDelayVIP (TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_CheckDelayVIP (Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -300,4 +305,4 @@ ALTER FUNCTION gpSelect_Movement_CheckDelayVIP (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_CheckDelayVIP (inSession:= '3')
+-- SELECT * FROM gpSelect_Movement_CheckDelayVIP (inIsShowAll := true, inSession:= '3')

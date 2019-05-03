@@ -1012,11 +1012,19 @@ begin
         AND
         ((LowerCase(ComponentItem) = LowerCase('DefaultFileName'))
          or
-         (LowerCase(ComponentItem) = LowerCase('ExportType'))) then begin
+         (LowerCase(ComponentItem) = LowerCase('ExportType'))
+         or
+         (LowerCase(ComponentItem) = LowerCase('DefaultFileExt'))
+         or
+         (LowerCase(ComponentItem) = LowerCase('EncodingANSI'))) then begin
         if LowerCase(ComponentItem) = LowerCase('DefaultFileName') then
            (Component as TExportGrid).DefaultFileName := FValue;
         if LowerCase(ComponentItem) = LowerCase('ExportType') then
            (Component as TExportGrid).ExportType := FValue;
+        if LowerCase(ComponentItem) = LowerCase('DefaultFileExt') then 
+           (Component as TExportGrid).DefaultFileExt := FValue;
+        if LowerCase(ComponentItem) = LowerCase('EncodingANSI') then 
+           (Component as TExportGrid).EncodingANSI := FValue
      end
      else
      if Component is TBooleanStoredProcAction then

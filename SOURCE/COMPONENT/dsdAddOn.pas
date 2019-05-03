@@ -410,6 +410,7 @@ type
     FActive: boolean;
     procedure OnDestroy(Sender: TObject);
   public
+    procedure LoadUserSettingsData(Data: String);
     procedure SaveUserSettings;
     procedure LoadUserSettings;
     constructor Create(AOwner: TComponent); override;
@@ -1559,9 +1560,8 @@ begin
      FOnDestroy(Sender);
 end;
 
-procedure TdsdUserSettingsStorageAddOn.LoadUserSettings;
-var
-  Data: String;
+procedure TdsdUserSettingsStorageAddOn.LoadUserSettingsData(Data: String);
+ var
   XMLDocument: IXMLDocument;
   i: integer;
   PropertiesStore: TcxPropertiesStore;
@@ -1570,13 +1570,6 @@ var
   FormName: string;
   PropertiesStoreComponent: TcxPropertiesStoreComponent;
 begin
-  if gc_isSetDefault then
-     exit;
-  if Owner is TParentForm then
-     FormName := TParentForm(Owner).FormClassName
-  else
-     FormName := Owner.ClassName;
-  Data := TdsdFormStorageFactory.GetStorage.LoadUserFormSettings(FormName);
   if Data <> '' then begin
     XMLDocument := TXMLDocument.Create(nil);
     XMLDocument.LoadFromXML(Data);
@@ -1627,6 +1620,27 @@ begin
       end;
     end;
   end;
+end;
+
+procedure TdsdUserSettingsStorageAddOn.LoadUserSettings;
+var
+  Data: String;
+  XMLDocument: IXMLDocument;
+  i: integer;
+  PropertiesStore: TcxPropertiesStore;
+  GridView: TcxCustomGridView;
+  TreeList: TcxDBTreeList;
+  FormName: string;
+  PropertiesStoreComponent: TcxPropertiesStoreComponent;
+begin
+  if gc_isSetDefault then
+     exit;
+  if Owner is TParentForm then
+     FormName := TParentForm(Owner).FormClassName
+  else
+     FormName := Owner.ClassName;
+  Data := TdsdFormStorageFactory.GetStorage.LoadUserFormSettings(FormName);
+  if Data <> '' then LoadUserSettingsData(Data);
 end;
 
 procedure TdsdUserSettingsStorageAddOn.SaveUserSettings;
