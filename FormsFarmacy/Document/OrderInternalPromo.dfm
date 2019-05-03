@@ -47,13 +47,22 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
+          object isReport: TcxGridDBColumn
+            Caption = #1044#1083#1103' '#1086#1090#1095#1077#1090#1072', '#1076#1072'/'#1085#1077#1090
+            DataBinding.FieldName = 'isReport'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1089#1090'. '#1074' '#1089#1087#1080#1089#1082#1077' '#1076#1083#1103' '#1086#1090#1095#1077#1090#1072
+            Options.Editing = False
+            Width = 69
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 53
+            Width = 48
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -61,7 +70,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 287
+            Width = 243
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'.'
@@ -72,7 +81,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1087#1086' '#1072#1087#1090#1077#1082#1072#1084' ('#1079#1072#1082#1072#1079')'
-            Width = 77
+            Width = 73
           end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1086#1089#1090'.'
@@ -82,7 +91,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-            Width = 74
+            Width = 72
           end
           object Summ: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
@@ -92,7 +101,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 87
+            Width = 82
           end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090'.'
@@ -101,7 +110,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
             Options.Editing = False
-            Width = 72
+            Width = 69
           end
           object ContractName: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088' '#1087#1086#1089#1090'.'
@@ -110,7 +119,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1086#1075#1086#1074#1086#1088' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Options.Editing = False
-            Width = 72
+            Width = 70
           end
           object Invnumber_Promo: TcxGridDBColumn
             Caption = #1052#1072#1088#1082#1077#1090'. '#1082#1086#1085#1090#1088#1072#1082#1090
@@ -118,7 +127,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090
-            Width = 78
+            Width = 74
           end
         end
       end
@@ -174,9 +183,11 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsCustomize.DataRowSizing = True
-          OptionsData.Appending = True
           OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
@@ -208,6 +219,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 77
           end
           object chAmountOut: TcxGridDBColumn
@@ -376,10 +388,20 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object clIsReport: TcxGridDBColumn
+        Caption = #1044#1083#1103' '#1086#1090#1095#1077#1090#1072', '#1076#1072'/'#1085#1077#1090
+        DataBinding.FieldName = 'IsReport'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 86
+      end
       object clJuridicalCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'JuridicalCode'
-        Width = 49
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1076' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+        Width = 41
       end
       object clJuridicalName: TcxGridDBColumn
         Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' ('#1076#1083#1103' '#1086#1090#1095#1077#1090#1072')'
@@ -395,21 +417,14 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 495
+        Width = 385
       end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 324
-      end
-      object clIsErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'IsErased'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 97
+        Width = 288
       end
     end
     object cxGridLevel2: TcxGridLevel
@@ -576,7 +591,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
           StoredProc = spSelect_MI_PromoChild
         end>
     end
-    object dsdUpdatePartnerDS: TdsdUpdateDataSet [15]
+    object actUpdatePartnerDS: TdsdUpdateDataSet [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -584,6 +599,9 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdatePromoPartner
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = 'actUpdatePartnerDS'
       DataSource = PartnerDS
@@ -1679,7 +1697,6 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     Top = 512
   end
   object dsdDBViewAddOn2: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
     View = cxGridDBTableView2
     OnDblClickActionList = <>
     ActionItemList = <>
@@ -1747,7 +1764,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         Name = 'inisErased'
         Value = Null
         Component = PartnerDCS
-        ComponentItem = 'isErased'
+        ComponentItem = 'IsReport'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

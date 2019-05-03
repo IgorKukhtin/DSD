@@ -66,7 +66,7 @@ type
     cxGridDBTableView2: TcxGridDBTableView;
     clJuridicalCode: TcxGridDBColumn;
     clJuridicalName: TcxGridDBColumn;
-    clIsErased: TcxGridDBColumn;
+    clIsReport: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     PartnerDCS: TClientDataSet;
     PartnerDS: TDataSource;
@@ -77,7 +77,7 @@ type
     InsertRecordPartner: TInsertRecord;
     bbInsertRecordPartner: TdxBarButton;
     spInsertUpdatePromoPartner: TdsdStoredProc;
-    dsdUpdatePartnerDS: TdsdUpdateDataSet;
+    actUpdatePartnerDS: TdsdUpdateDataSet;
     spSetErasedPromoPartner: TdsdStoredProc;
     spUnCompletePromoPartner: TdsdStoredProc;
     actSetErasedPromoPartner: TdsdUpdateErased;
@@ -105,6 +105,7 @@ type
     Invnumber_Promo: TcxGridDBColumn;
     spInsert: TdsdStoredProc;
     spInsertChild: TdsdStoredProc;
+    isReport: TcxGridDBColumn;
   private
     { Private declarations }
   public
