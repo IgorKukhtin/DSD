@@ -5,7 +5,7 @@ package ProjectComponent_D26;
 {$ALIGN 8}
 {$ASSERTIONS ON}
 {$BOOLEVAL OFF}
-{$DEBUGINFO ON}
+{$DEBUGINFO OFF}
 {$EXTENDEDSYNTAX ON}
 {$IMPORTEDDATA ON}
 {$IOCHECKS ON}
@@ -68,10 +68,8 @@ requires
   frxe26,
   frxDB26,
   ZLibExD26,
-  vclie,
   GMLib_D26,
-  GMLib_D26_VCL
-;
+  GMLib_D26_VCL;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',

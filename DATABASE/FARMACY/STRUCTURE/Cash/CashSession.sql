@@ -46,6 +46,8 @@ CREATE TABLE CashSessionSnapShot
   isMCSAuto         Boolean     NULL,     -- Режим - НТЗ выставил фармацевт на период
   isMCSNotRecalcOld Boolean     NULL,     -- Спецконтроль кода - значение которое вернется по окончании периода
   AccommodationId   Integer     NULL,     -- Размещение товара
+--  ALTeR TABLE CashSessionSnapShot ADD
+  PartionDateKind   Integer     NULL,     -- Типы срок/не срок
   CONSTRAINT PK_CashSessionSnapShot PRIMARY KEY(CashSessionId,ObjectId)
 );
 
@@ -68,6 +70,7 @@ CREATE INDEX idx_CashSessionSnapShot_ObjectId ON CashSessionSnapShot(ObjectId);
  ДАТА         АВТОР
  ----------------
                  Климентьев К.И.   Кухтин И.В.   Воробкало А.А.   Фелонюк И.В.   Шаблий О.В.
+20.04.2019                                                                         * PartionDateKind                 
 22.08.2018                                                                         *
 09.06.2017                                                           *
 10.09.2015                                           *
