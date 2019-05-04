@@ -435,7 +435,7 @@ BEGIN
      AND ((inIsEndDate = TRUE AND Object_Contract_View.EndDate_Term <= inEndDate AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
           ) OR inIsEndDate = FALSE)
 
-     AND (Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500(), zc_Enum_InfoMoneyDestination_30100()) -- Общефирменные + Маркетинг OR Доходы + Продукция
+     AND (Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21400(), zc_Enum_InfoMoneyDestination_21500(), zc_Enum_InfoMoneyDestination_30100()) -- Общефирменные + услуги полученные OR Маркетинг OR Доходы + Продукция
           OR vbIsCommerce = FALSE)
 
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint

@@ -49,7 +49,11 @@ $BODY$
 
     DECLARE vbIsKiev Boolean;
     
+   DECLARE vbOperDate_Begin1 TDateTime;
 BEGIN
+     -- сразу запомнили время начала выполнения Проц.
+     vbOperDate_Begin1:= CLOCK_TIMESTAMP();
+
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= lpGetUserBySession (inSession);
@@ -1015,6 +1019,32 @@ BEGIN
 
     -- печать тары
     OPEN Cursor3 FOR
+      WITH tmpMI AS (SELECT MovementItem.ObjectId                         AS GoodsId
+                          , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                          , SUM (MovementItem.Amount) AS Amount
+                          , SUM (MovementItem.Amount) AS AmountPartner
+                     FROM tmpListDocSale
+                          LEFT JOIN MovementItem ON MovementItem.MovementId = NULL -- tmpListDocSale.MovementId
+                                                AND MovementItem.DescId     = zc_MI_Master()
+                                                AND MovementItem.isErased   = FALSE
+        
+                          LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                          LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                      ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                          LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+        
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+        
+                     -- WHERE COALESCE (MIFloat_Price.ValueData, 0) = 0
+                     WHERE 1 = 0 -- !!!временно отключил!!!
+                     GROUP BY MovementItem.ObjectId
+                            , MILinkObject_GoodsKind.ObjectId
+                    )
       SELECT Object_Goods.ObjectCode         AS GoodsCode
            , (Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
            , Object_Goods.ValueData          AS GoodsName_two
@@ -1025,32 +1055,7 @@ BEGIN
            , tmpMI.AmountPartner             AS AmountPartner
            , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 0 END )) AS TFloat) AS Amount_Weight
       
-       FROM (SELECT MovementItem.ObjectId                         AS GoodsId
-                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                  , SUM (MovementItem.Amount) AS Amount
-                  , SUM (MovementItem.Amount) AS AmountPartner
-             FROM tmpListDocSale
-                  LEFT JOIN MovementItem ON MovementItem.MovementId = tmpListDocSale.MovementId
-                                        AND MovementItem.DescId     = zc_MI_Master()
-                                        AND MovementItem.isErased   = FALSE
-
-                  LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                  LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                              ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                             AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                  LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
-
-                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-
-             WHERE COALESCE (MIFloat_Price.ValueData, 0) = 0
-               AND 1 = 0 -- !!!временно отключил!!!
-             GROUP BY MovementItem.ObjectId
-                    , MILinkObject_GoodsKind.ObjectId
-            ) AS tmpMI
+       FROM tmpMI
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
@@ -1063,12 +1068,60 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-       WHERE tmpMI.AmountPartner <> 0
+       -- !!!временно отключил!!!
+       -- WHERE tmpMI.AmountPartner <> 0
 
-       ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData
+       -- !!!временно отключил!!!
+       -- ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData
       ;
 
     RETURN NEXT Cursor3;
+
+     -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
+     INSERT INTO ResourseProtocol (UserId
+                                 , OperDate
+                                 , Value1
+                                 , Value2
+                                 , Value3
+                                 , Value4
+                                 , Value5
+                                 , Time1
+                                 , Time2
+                                 , Time3
+                                 , Time4
+                                 , Time5
+                                 , ProcName
+                                 , ProtocolData
+                                  )
+        WITH tmp_pg AS (SELECT * FROM pg_stat_activity WHERE state = 'active')
+        SELECT vbUserId
+               -- во сколько началась
+             , CURRENT_TIMESTAMP
+             , (SELECT COUNT (*) FROM tmp_pg)                                                    AS Value1
+             , (SELECT COUNT (*) FROM tmp_pg WHERE position( 'autovacuum: VACUUM' in query) = 1) AS Value2
+             , NULL AS Value3
+             , NULL AS Value4
+             , NULL AS Value5
+               -- сколько всего выполнялась проц
+             , (CLOCK_TIMESTAMP() - vbOperDate_Begin1) :: INTERVAL AS Time1
+               -- сколько всего выполнялась проц ДО lpSelectMinPrice_List
+             , NULL AS Time2
+               -- сколько всего выполнялась проц lpSelectMinPrice_List
+             , NULL AS Time3
+               -- сколько всего выполнялась проц ПОСЛЕ lpSelectMinPrice_List
+             , NULL AS Time4
+               -- во сколько закончилась
+             , CLOCK_TIMESTAMP() AS Time5
+               -- ProcName
+             , 'gpSelect_Movement_Sale_TotalPrint'
+               -- ProtocolData
+             , zfConvert_DateToString (inStartDate)
+    || ', ' || zfConvert_DateToString (inEndDate)
+    || ', ' || inContractId  :: TVarChar
+    || ', ' || inToId        :: TVarChar
+    || ', ' || inIsList      :: TVarChar
+    || ', ' || inSession
+              ;
 
 END;
 $BODY$
