@@ -169,8 +169,9 @@ BEGIN
 
                             , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0)                        AS EndAmount
                             --
-                            , MIContainer.MovementItemId
-                            , ROW_NUMBER() OVER (PARTITION BY MIContainer.MovementItemId ORDER BY MIContainer.MovementItemId, tmpContainer.ContainerId) AS Ord
+                            , MIN (MIContainer.MovementItemId) AS MovementItemId
+                            -- , MIContainer.MovementItemId
+                            -- , ROW_NUMBER() OVER (PARTITION BY MIContainer.MovementItemId ORDER BY MIContainer.MovementItemId, tmpContainer.ContainerId) AS Ord
                         FROM tmpContainer
                               LEFT JOIN MovementItemContainer AS MIContainer
                                                               ON MIContainer.Containerid = tmpContainer.ContainerId
@@ -187,7 +188,7 @@ BEGIN
                                , tmpContainer.BranchId
                                , tmpContainer.ServiceDate
                                , tmpContainer.Amount
-                               , MIContainer.MovementItemId
+                            -- , MIContainer.MovementItemId
                        )
 
    , tmpMIFloat AS (SELECT MovementItem.Id
@@ -223,7 +224,7 @@ BEGIN
                            , SUM (Operation_all.EndAmount)   AS EndAmount
                       FROM Operation_all
                            LEFT JOIN tmpMIFloat ON tmpMIFloat.Id = Operation_all.MovementItemId
-                                               AND Operation_all.Ord = 1
+                                            -- AND Operation_all.Ord = 1
                       GROUP BY Operation_all.ContainerId
                              , Operation_all.AccountId
                              , Operation_all.PersonalId
