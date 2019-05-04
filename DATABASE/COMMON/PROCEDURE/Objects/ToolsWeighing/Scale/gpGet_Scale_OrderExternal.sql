@@ -69,6 +69,60 @@ BEGIN
                       ELSE (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inBranchCode and Object.DescId = zc_Object_Branch())
                  END;
 
+    -- список
+    CREATE TEMP TABLE _tmpMovement_find_all ON COMMIT DROP
+                              AS (WITH tmpBarCode   AS (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId WHERE CHAR_LENGTH (inBarCode) >= 13)
+                                     , tmpInvNumber AS (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) > 0 AND CHAR_LENGTH (inBarCode) < 13)
+                                  -- по Ш/К
+                                  SELECT Movement.Id
+                                       , Movement.InvNumber
+                                       , Movement.DescId
+                                       , Movement.OperDate
+                                  FROM Movement
+                                  WHERE Movement.Id IN (SELECT DISTINCT tmpBarCode.MovementId FROM tmpBarCode)
+                                   AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal(), zc_Movement_SendOnPrice())
+                                   AND Movement.OperDate BETWEEN inOperDate - INTERVAL '18 DAY' AND inOperDate + INTERVAL '8 DAY'
+                                   AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                 UNION
+                                  -- по Ш/К - Приход, т.к. период 80 дней
+                                  SELECT Movement.Id
+                                       , Movement.InvNumber
+                                       , Movement.DescId
+                                       , Movement.OperDate
+                                  FROM Movement
+                                  WHERE Movement.Id IN (SELECT DISTINCT tmpBarCode.MovementId FROM tmpBarCode)
+                                    AND Movement.DescId = zc_Movement_OrderIncome()
+                                    AND Movement.OperDate BETWEEN inOperDate - INTERVAL '80 DAY' AND inOperDate + INTERVAL '80 DAY'
+                                    AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                    AND inBranchCode BETWEEN 301 AND 310
+                                 UNION
+                                  -- по № документа
+                                  SELECT Movement.Id
+                                       , Movement.InvNumber
+                                       , Movement.DescId
+                                       , Movement.OperDate
+                                  FROM tmpInvNumber AS tmp
+                                       INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
+                                                          AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal(), zc_Movement_SendOnPrice())
+                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '18 DAY' AND inOperDate + INTERVAL '8 DAY'
+                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                 UNION
+                                  -- по № документа - Приход, т.к. период 80 дней
+                                  SELECT Movement.Id
+                                       , Movement.InvNumber
+                                       , Movement.DescId
+                                       , Movement.OperDate
+                                  FROM tmpInvNumber AS tmp
+                                       INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
+                                                          AND Movement.DescId = zc_Movement_OrderIncome()
+                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '80 DAY' AND inOperDate + INTERVAL '80 DAY'
+                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                  WHERE inBranchCode BETWEEN 301 AND 310
+                                 );
+
+    -- ANALYZE
+    ANALYZE _tmpMovement_find_all;
+
     -- Результат
     RETURN QUERY
        WITH tmpUnit_Branch AS (SELECT OL.ObjectId AS UnitId
@@ -80,12 +134,18 @@ BEGIN
                                SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8453) AS lfSelect
                                WHERE vbBranchId = zc_Branch_Basis()
                               )
-           , tmpBarCode AS (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId WHERE CHAR_LENGTH (inBarCode) >= 13)
-         , tmpInvNumber AS (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) > 0 AND CHAR_LENGTH (inBarCode) < 13)
           , tmpMovement AS (SELECT tmpMovement.Id
                                  , tmpMovement.InvNumber
                                  , tmpMovement.DescId
                                  , tmpMovement.OperDate
+
+                                 , Object_From.DescId     AS DescId_From
+                                 , Object_From.ObjectCode AS FromCode
+                                 , Object_From.ValueData  AS FromName
+
+                                 , Object_To.DescId       AS DescId_To
+                                 , Object_To.ObjectCode   AS ToCode
+                                 , Object_To.ValueData    AS ToName
 
                                    -- ContractId
                                  , MovementLinkObject_Contract.ObjectId AS ContractId
@@ -161,52 +221,7 @@ BEGIN
 
                                    END AS isSendOnPriceIn
 
-                            FROM (-- по Ш/К
-                                  SELECT Movement.Id
-                                       , Movement.InvNumber
-                                       , Movement.DescId
-                                       , Movement.OperDate
-                                  FROM Movement
-                                  WHERE Movement.Id IN (SELECT DISTINCT tmpBarCode.MovementId FROM tmpBarCode)
-                                   AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal(), zc_Movement_SendOnPrice())
-                                   AND Movement.OperDate BETWEEN inOperDate - INTERVAL '18 DAY' AND inOperDate + INTERVAL '8 DAY'
-                                   AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                 UNION
-                                  -- по Ш/К - Приход, т.к. период 80 дней
-                                  SELECT Movement.Id
-                                       , Movement.InvNumber
-                                       , Movement.DescId
-                                       , Movement.OperDate
-                                  FROM Movement
-                                  WHERE Movement.Id IN (SELECT DISTINCT tmpBarCode.MovementId FROM tmpBarCode)
-                                    AND Movement.DescId = zc_Movement_OrderIncome()
-                                    AND Movement.OperDate BETWEEN inOperDate - INTERVAL '80 DAY' AND inOperDate + INTERVAL '80 DAY'
-                                    AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                    AND inBranchCode BETWEEN 301 AND 310
-                                 UNION
-                                  -- по № документа
-                                  SELECT Movement.Id
-                                       , Movement.InvNumber
-                                       , Movement.DescId
-                                       , Movement.OperDate
-                                  FROM tmpInvNumber AS tmp
-                                       INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
-                                                          AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal(), zc_Movement_SendOnPrice())
-                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '18 DAY' AND inOperDate + INTERVAL '8 DAY'
-                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                 UNION
-                                  -- по № документа - Приход, т.к. период 80 дней
-                                  SELECT Movement.Id
-                                       , Movement.InvNumber
-                                       , Movement.DescId
-                                       , Movement.OperDate
-                                  FROM tmpInvNumber AS tmp
-                                       INNER JOIN Movement ON Movement.InvNumber = tmp.BarCode
-                                                          AND Movement.DescId = zc_Movement_OrderIncome()
-                                                          AND Movement.OperDate BETWEEN inOperDate - INTERVAL '80 DAY' AND inOperDate + INTERVAL '80 DAY'
-                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                  WHERE inBranchCode BETWEEN 301 AND 310
-                                 ) AS tmpMovement
+                            FROM _tmpMovement_find_all AS tmpMovement
 
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                               ON MovementLinkObject_Contract.MovementId = tmpMovement.Id
@@ -236,6 +251,9 @@ BEGIN
 
                                  LEFT JOIN tmpUnit_Branch AS tmpUnit_Branch_From ON tmpUnit_Branch_From.UnitId = MovementLinkObject_From.ObjectId
                                  LEFT JOIN tmpUnit_Branch AS tmpUnit_Branch_To   ON tmpUnit_Branch_To.UnitId   = MovementLinkObject_To.ObjectId
+
+                                 LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+                                 LEFT JOIN Object AS Object_To   ON Object_To.Id   = MovementLinkObject_To.ObjectId
                            )
            , tmpMovement_find AS (SELECT tmpMovement.Id
                                        , MovementLinkMovement_Order.MovementId AS MovementId_get
@@ -271,13 +289,13 @@ BEGIN
                                                          THEN zc_Movement_Income()
                                                     WHEN tmpMovement.DescId = zc_Movement_OrderInternal()
                                                          THEN zc_Movement_Send()
-                                                    WHEN Object_From.DescId = zc_Object_ArticleLoss()
+                                                    WHEN tmpMovement.DescId_From = zc_Object_ArticleLoss()
                                                          THEN zc_Movement_Loss()
                                                     /*WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
                                                      AND tmpMovement.FromId = 3080691 -- Склад ГП ф.Львов
                                                      AND tmpMovement.ToId   = 8411    -- Склад ГП ф.Киев
                                                          THEN zc_Movement_Send()*/
-                                                    WHEN Object_From.DescId = zc_Object_Unit()
+                                                    WHEN tmpMovement.DescId_From = zc_Object_Unit()
                                                          THEN zc_Movement_SendOnPrice()
 
                                                     ELSE tmpMovement.DescId
@@ -290,11 +308,13 @@ BEGIN
                                              , tmpMovement.isSendOnPriceIn
                                              , tmpMovement.Id AS MovementId
                                         FROM tmpMovement
-                                             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
+                                             -- LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
                                         WHERE tmpMovement.DescId = zc_Movement_OrderIncome()
                                            OR tmpMovement.DescId = zc_Movement_SendOnPrice()
-                                           OR Object_From.DescId = zc_Object_ArticleLoss()
-                                           OR Object_From.DescId = zc_Object_Unit()
+                                        -- OR Object_From.DescId = zc_Object_ArticleLoss()
+                                        -- OR Object_From.DescId = zc_Object_Unit()
+                                           OR tmpMovement.DescId_From = zc_Object_ArticleLoss()
+                                           OR tmpMovement.DescId_From = zc_Object_Unit()
                                        ) AS tmp
                                        INNER JOIN gpSelect_Object_ToolsWeighing_MovementDesc (inBranchCode:= inBranchCode
                                                                                             , inSession   := inSession
@@ -366,6 +386,11 @@ BEGIN
                                                                                                              ELSE COALESCE (tmpSelect.PaidKindId, 0)
                                                                                                         END
                                  )
+           , tmpMLO_PriceList AS (SELECT * FROM MovementLinkObject AS MLO_PriceList
+                                  WHERE MLO_PriceList.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)
+                                    AND MLO_PriceList.DescId     = zc_MovementLinkObject_PriceList()
+                                 )
+       -- Результат
        SELECT tmpMovement.Id                                 AS MovementId
             , tmpMovement.DescId                             AS MovementDescId_order
             , tmpMovement_find.MovementId_get                AS MovementId_get
@@ -378,7 +403,7 @@ BEGIN
                         THEN zc_Movement_Income()
                    WHEN tmpMovement.DescId = zc_Movement_OrderInternal()
                         THEN zc_Movement_Send()
-                   WHEN Object_From.DescId = zc_Object_ArticleLoss()
+                   WHEN tmpMovement.DescId_From = zc_Object_ArticleLoss()
                         THEN zc_Movement_Loss()
 
                    /*WHEN (tmpMovement.DescId = zc_Movement_OrderExternal()
@@ -387,7 +412,7 @@ BEGIN
                     ) -- or inSession = '5'
                         THEN zc_Movement_Send()*/
 
-                   WHEN Object_From.DescId = zc_Object_Unit()
+                   WHEN tmpMovement.DescId_From = zc_Object_Unit()
                         THEN zc_Movement_SendOnPrice()
 
                    WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
@@ -396,12 +421,12 @@ BEGIN
                    ELSE tmpMovement.DescId
 
               END AS MovementDescId
-            , Object_From.Id                                 AS FromId
-            , Object_From.ObjectCode                         AS FromCode
-            , Object_From.ValueData                          AS FromName
-            , Object_To.Id                                   AS ToId
-            , Object_To.ObjectCode                           AS ToCode
-            , Object_To.ValueData                            AS ToName
+            , tmpMovement.FromId                             AS FromId
+            , tmpMovement.FromCode                           AS FromCode
+            , tmpMovement.FromName                           AS FromName
+            , tmpMovement.ToId                               AS ToId
+            , tmpMovement.ToCode                             AS ToCode
+            , tmpMovement.ToName                             AS ToName
             , Object_PaidKind.Id                             AS PaidKindId
             , Object_PaidKind.ValueData                      AS PaidKindName
 
@@ -418,50 +443,50 @@ BEGIN
             , Object_GoodsProperty.ValueData                 AS GoodsPropertyName
 
             , CASE WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
-                        THEN Object_To.Id
+                        THEN tmpMovement.ToId
                    WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
-                        THEN Object_From.Id
+                        THEN tmpMovement.FromId
                    WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = TRUE
-                        THEN Object_From.Id
+                        THEN tmpMovement.FromId
                    WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = FALSE
-                        THEN Object_To.Id
+                        THEN tmpMovement.ToId
               END :: Integer AS PartnerId_calc
             , CASE WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
-                        THEN Object_To.ObjectCode
+                        THEN tmpMovement.ToCode
                    WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
-                        THEN Object_From.ObjectCode
+                        THEN tmpMovement.FromCode
                    WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = TRUE
-                        THEN Object_From.ObjectCode
+                        THEN tmpMovement.FromCode
                    WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = FALSE
-                        THEN Object_To.ObjectCode
+                        THEN tmpMovement.ToCode
               END :: Integer AS PartnerCode_calc
             , CASE WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
-                        THEN Object_To.ValueData
+                        THEN tmpMovement.ToName
                    WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
-                        THEN Object_From.ValueData
+                        THEN tmpMovement.FromName
                    WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = TRUE
-                        THEN Object_From.ValueData
+                        THEN tmpMovement.FromName
                    WHEN tmpMovement.DescId = zc_Movement_SendOnPrice() AND tmpMovement.isSendOnPriceIn = FALSE
-                        THEN Object_To.ValueData
+                        THEN tmpMovement.ToName
               END :: TVarChar AS PartnerName_calc
 
             , MovementFloat_ChangePercent.ValueData AS ChangePercent
             , (SELECT tmp.ChangePercentAmount FROM gpGet_Scale_Partner (inOperDate       := inOperDate
-                                                                      , inMovementDescId := CASE WHEN Object_From.DescId = zc_Object_ArticleLoss()
+                                                                      , inMovementDescId := CASE WHEN tmpMovement.DescId_From = zc_Object_ArticleLoss()
                                                                                                       THEN zc_Movement_Loss()
-                                                                                                 WHEN Object_From.DescId = zc_Object_Unit() AND tmpMovement.DescId = zc_Movement_OrderExternal()
+                                                                                                 WHEN tmpMovement.DescId_From = zc_Object_Unit() AND tmpMovement.DescId = zc_Movement_OrderExternal()
                                                                                                       THEN zc_Movement_SendOnPrice()
                                                                                                  WHEN tmpMovement.DescId = zc_Movement_OrderExternal()
                                                                                                       THEN zc_Movement_Sale()
                                                                                                  ELSE tmpMovement.DescId
                                                                                             END
-                                                                      , inPartnerCode    := -1 * Object_From.Id
+                                                                      , inPartnerCode    := -1 * tmpMovement.FromId
                                                                       , inInfoMoneyId    := COALESCE (View_Contract_InvNumber.InfoMoneyId, zc_Enum_InfoMoney_30101())
                                                                       , inPaidKindId     := Object_PaidKind.Id
                                                                       , inSession        := inSession
                                                                        ) AS tmp
                WHERE COALESCE (tmp.ContractId, 0) = COALESCE (View_Contract_InvNumber.ContractId, 0)
-                  OR Object_From.DescId = zc_Object_Unit()
+                  OR tmpMovement.DescId_From = zc_Object_Unit()
               ) AS ChangePercentAmount
 
             , COALESCE (ObjectBoolean_Partner_EdiOrdspr.ValueData, FALSE)  :: Boolean AS isEdiOrdspr
@@ -484,11 +509,8 @@ BEGIN
             LEFT JOIN tmpMovementDescNumber ON tmpMovementDescNumber.MovementDescNumber > 0
             LEFT JOIN tmpJuridicalPrint ON tmpJuridicalPrint.JuridicalId = tmpMovement.JuridicalId
 
-            LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
-            /*LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = tmpMovement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()*/
-            LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMovement.ToId -- MovementLinkObject_To.ObjectId
+            -- LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
+            -- LEFT JOIN Object AS Object_To   ON Object_To.Id   = tmpMovement.ToId
 
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpMovement.ContractId
             LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = tmpMovement.GoodsPropertyId
@@ -507,9 +529,10 @@ BEGIN
                                  ON ObjectLink_Juridical_PriceList.ObjectId = MovementLinkObject_Juridical.ObjectId 
                                 AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
+            -- LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
+            LEFT JOIN tmpMLO_PriceList AS MovementLinkObject_PriceList
                                          ON MovementLinkObject_PriceList.MovementId = tmpMovement.Id
-                                        AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+                                        AND MovementLinkObject_PriceList.DescId     = zc_MovementLinkObject_PriceList()
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (ObjectLink_Juridical_PriceList.ChildObjectId, CASE WHEN tmpMovement.DescId = zc_Movement_OrderIncome() THEN zc_PriceList_Basis() ELSE MovementLinkObject_PriceList.ObjectId END)
 
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
@@ -589,7 +612,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Scale_OrderExternal (TDateTime, Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
