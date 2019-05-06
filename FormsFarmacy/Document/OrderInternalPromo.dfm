@@ -287,13 +287,17 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
       ExplicitLeft = 168
     end
     inherited edOperDate: TcxDateEdit
-      Left = 265
-      EditValue = 43060d
-      ExplicitLeft = 265
+      Left = 372
+      EditValue = 43790d
+      ExplicitLeft = 372
     end
     inherited cxLabel2: TcxLabel
-      Left = 265
-      ExplicitLeft = 265
+      Left = 372
+      Top = 6
+      Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085'. '#1087#1088#1086#1076#1072#1078
+      ExplicitLeft = 372
+      ExplicitTop = 6
+      ExplicitWidth = 103
     end
     inherited cxLabel15: TcxLabel
       Top = 6
@@ -308,7 +312,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     end
     object lblUnit: TcxLabel
       Left = 478
-      Top = 5
+      Top = 6
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
     end
     object edRetail: TcxButtonEdit
@@ -324,7 +328,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     end
     object cxLabel7: TcxLabel
       Left = 628
-      Top = 5
+      Top = 6
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object edComment: TcxTextEdit
@@ -336,14 +340,14 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     end
   end
   object edStartSale: TcxDateEdit [2]
-    Left = 372
+    Left = 264
     Top = 23
-    EditValue = 42485d
+    EditValue = 43580d
     TabOrder = 6
     Width = 100
   end
   object cxLabel3: TcxLabel [3]
-    Left = 372
+    Left = 264
     Top = 6
     Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1087#1088#1086#1076#1072#1078
   end
@@ -1697,6 +1701,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     Top = 512
   end
   object dsdDBViewAddOn2: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView2
     OnDblClickActionList = <>
     ActionItemList = <>

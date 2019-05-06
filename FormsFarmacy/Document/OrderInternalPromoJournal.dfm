@@ -60,9 +60,20 @@ inherited OrderInternalPromoJournalForm: TOrderInternalPromoJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 71
           end
-          inherited colOperDate: TcxGridDBColumn
+          object StartSale: TcxGridDBColumn [3]
+            Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1087#1088#1086#1076#1072#1078
+            DataBinding.FieldName = 'StartSale'
             HeaderAlignmentHorz = taCenter
-            Width = 62
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1087#1088#1086#1076#1072#1078
+            Options.Editing = False
+            Width = 76
+          end
+          inherited colOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095'. '#1087#1088#1086#1076#1072#1078
+            HeaderAlignmentHorz = taCenter
+            HeaderHint = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1087#1088#1086#1076#1072#1078
+            Width = 79
           end
           object RetailName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075'. '#1089#1077#1090#1100
@@ -71,14 +82,6 @@ inherited OrderInternalPromoJournalForm: TOrderInternalPromoJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 157
-          end
-          object StartSale: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1087#1088#1086#1076#1072#1078
-            DataBinding.FieldName = 'StartSale'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 76
           end
           object Amount: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086
