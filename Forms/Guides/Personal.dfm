@@ -279,6 +279,15 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 35
       end
+      object isPastMain: TcxGridDBColumn
+        Caption = #1055#1088#1077#1076#1099#1076#1091#1097#1077#1077' '#1075#1083#1072#1074#1085#1086#1077
+        DataBinding.FieldName = 'isPastMain'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1077#1076#1099#1076#1091#1097#1077#1077' '#1075#1083#1072#1074#1085#1086#1077' '#1044#1072'/'#1053#1077#1090
+        Options.Editing = False
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

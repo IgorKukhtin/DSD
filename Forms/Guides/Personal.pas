@@ -102,6 +102,7 @@ type
     StorageLineName: TcxGridDBColumn;
     actStorageLine: TOpenChoiceForm;
     PersonalServiceListCardSecondChoice: TOpenChoiceForm;
+    isPastMain: TcxGridDBColumn;
   private
     { Private declarations }
   public
