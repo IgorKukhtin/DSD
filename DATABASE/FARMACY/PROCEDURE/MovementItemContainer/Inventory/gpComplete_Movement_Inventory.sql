@@ -37,7 +37,62 @@ BEGIN
       IF COALESCE (vbUnitId, 0) <> COALESCE (vbUserUnitId, 0)
       THEN
          RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);     
-      END IF;     
+      END IF;  
+   
+      IF (COALESCE ((SELECT COUNT(*) FROM MovementItem WHERE MovementItem.MovementId = inMovementId
+                                                         AND MovementItem.DescId     = zc_MI_Master()
+                                                         AND MovementItem.isErased  = FALSE), 0) > 1 OR 
+          COALESCE ((SELECT COUNT(*) FROM Movement 
+
+                                   INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                 ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                                AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
+                              WHERE Movement.OperDate >= DATE_TRUNC ('DAY', CURRENT_DATE)
+                                              AND Movement.OperDate < DATE_TRUNC ('DAY', CURRENT_DATE) + INTERVAL '1 DAY'
+                                              AND Movement.DescId = zc_Movement_Inventory()
+                                              AND MovementLinkObject_Unit.ObjectId = vbUnitId), 0) > 5) AND
+        EXISTS(SELECT 1
+                FROM Movement
+
+                     INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                   ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                  AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
+                     INNER JOIN MovementLinkObject AS MovementLinkObject_CashRegister
+                                                   ON MovementLinkObject_CashRegister.MovementId = Movement.Id
+                                                  AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
+
+                WHERE Movement.OperDate >= DATE_TRUNC ('DAY', CURRENT_DATE)
+                  AND Movement.OperDate < DATE_TRUNC ('DAY', CURRENT_DATE) + INTERVAL '1 DAY'
+                  AND Movement.DescId = zc_Movement_Check()
+                  AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                  AND Movement.StatusId = zc_Enum_Status_Complete()) AND
+         (SELECT MAX(Movement.OperDate)
+          FROM Movement
+
+               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                             ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
+               INNER JOIN MovementLinkObject AS MovementLinkObject_CashRegister
+                                             ON MovementLinkObject_CashRegister.MovementId = Movement.Id
+                                            AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
+
+          WHERE Movement.OperDate >= DATE_TRUNC ('DAY', CURRENT_DATE)
+            AND Movement.OperDate < DATE_TRUNC ('DAY', CURRENT_DATE) + INTERVAL '1 DAY'
+            AND Movement.DescId = zc_Movement_Check()
+            AND MovementLinkObject_Unit.ObjectId = vbUnitId
+            AND Movement.StatusId = zc_Enum_Status_Complete()) > 
+          COALESCE ((SELECT MAX(EmployeeWorkLog.DateZReport)
+                     FROM EmployeeWorkLog
+                     WHERE EmployeeWorkLog.DateLogIn >= DATE_TRUNC ('DAY', CURRENT_DATE)
+                       AND EmployeeWorkLog.DateLogIn < DATE_TRUNC ('DAY', CURRENT_DATE) + INTERVAL '1 DAY'
+                       AND EmployeeWorkLog.UnitId = 183292
+                       AND EmployeeWorkLog.DateZReport IS NOT NULL),DATE_TRUNC ('DAY', CURRENT_DATE)) 
+      THEN 
+        RAISE EXCEPTION 'Ошибка. Смена не закрыта выполнение операций с инвентаризацией запрещено.';     
+      END IF;             
    END IF;     
   
 

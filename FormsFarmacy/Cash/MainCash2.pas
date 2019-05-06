@@ -1783,8 +1783,8 @@ begin
                              CheckCDS.FieldByName('CountSP').AsCurrency * CheckCDS.FieldByName('Amount').AsCurrency,
                              CheckCDS.FieldByName('PriceSale').asCurrency,
                              RoundTo(CheckCDS.FieldByName('Amount').asCurrency * CheckCDS.FieldByName('PriceSale').asCurrency, -2),
-                             RoundTo(CheckCDS.FieldByName('Amount').asCurrency * CheckCDS.FieldByName('PriceSale').asCurrency, -2) -
-                               RoundTo(CheckCDS.FieldByName('Amount').asCurrency * CheckCDS.FieldByName('Price').asCurrency, -2),
+                             RoundTo(CheckCDS.FieldByName('Amount').asCurrency * CheckCDS.FieldByName('PriceRetSP').asCurrency, -2) -
+                               RoundTo(CheckCDS.FieldByName('Amount').asCurrency * CheckCDS.FieldByName('PaymentSP').asCurrency, -2),
                              ConfirmationCode) then
     begin
       Begin

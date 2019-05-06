@@ -118,7 +118,7 @@ uses MainCash2, RegularExpressions, System.Generics.Collections, Soap.EncdDecd,
 
 var HelsiApi : THelsiApi;
 
-const arError : array [0..13, 0..2] of string =
+const arError : array [0..15, 0..2] of string =
   (('Active medication dispense already exists', 'forbidden', 'Наразі здійснюється погашення цього рецепту'),
   ('Legal entity is not verified', 'request_conflict', 'Увага! Ваш заклад не веріфіковано. Зверніться до керівництва Вашого закладу.'),
   ('Can''t update medication dispense status from PROCESSED to REJECTED', 'request_conflict', 'Диспенс заекспайрится (рецепт разблокируется) автоматически через 10 мин.'),
@@ -127,6 +127,8 @@ const arError : array [0..13, 0..2] of string =
   ('Medication request can not be dispensed. Invoke qualify medication request API to get detailed info', 'request_conflict', 'Неможливо погасити цей рецепт за програмою "Доступні ліки"! Пацієнту щойно було видано препарат з такою же діючою речовиною. Поки що цей рецепт може бути відпущено тільки поза програмою реімбурсації.'),
   ('Program cannot be used - no active contract exists', 'request_conflict', 'Увага! За Вашим закладом відсутній діючий договір за програмою "Доступні ліки" з Національною службою здоров''я України. Зверніться до керівництва Вашого закладу'),
   ('Can''t update medication dispense status from EXPIRED to PROCESSED', 'request_conflict', 'Необхідно повторити операцію погашення'),
+  ('Can''t update medication dispense status from REJECTED to PROCESSED', 'request_conflict', 'Необхідно повторити операцію погашення'),
+  ('Can''t update medication dispense status from REJECTED to REJECTED', 'request_conflict', 'Необхідно повторити операцію погашення'),
   ('Does not match the legal entity', 'request_malformed', 'Помилка! Підпис КЕП не належить юридичній особі. Повторіть спробу використовуючи Ваш коректний КЕП'),
   ('Does not match the signer drfo', 'request_malformed', 'Помилка! Підпис КЕП належить іншому співробітнику. Повторіть спробу використовуючи Ваш коректний КЕП'),
   ('Does not match the signer last name', 'request_malformed', 'Помилка! Проблема з співставленням прізвища підписувача. Повторіть спробу використовуючи Ваш коректний КЕП'),
@@ -237,14 +239,14 @@ begin
     end;
     if cDescription = '' then cDescription := cMessage;
 
-    for I := 0 to 13 do if (LowerCase(arError[I, 0]) = LowerCase(cDescription)) and (LowerCase(arError[I, 1]) = LowerCase(cType)) then
+    for I := 0 to 15 do if (LowerCase(arError[I, 0]) = LowerCase(cDescription)) and (LowerCase(arError[I, 1]) = LowerCase(cType)) then
     begin
       cError := arError[I, 2];
       Break;
     end;
 
     if cError = '' then
-      for I := 0 to 13 do if (LowerCase(arError[I, 0]) = LowerCase(cDescription)) then
+      for I := 0 to 15 do if (LowerCase(arError[I, 0]) = LowerCase(cDescription)) then
       begin
         cError := arError[I, 2];
         Break;
@@ -621,10 +623,9 @@ begin
   except
   end;
 
-  Result := True;
   case FRESTResponse.StatusCode of
     204 : Result := True;
-    else ShowError('Ошибка запроса оплаты рецепта')
+    else ShowError('Ошибка запроса на отмену запроса на погашения')
   end;
 end;
 
