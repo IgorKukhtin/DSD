@@ -16,7 +16,8 @@ uses
   cxButtons, cxNavigator, CashInterface, IniFIles, cxImageComboBox, dxmdaset,
   ActiveX,  Math,
   VKDBFDataSet, FormStorage, CommonData, ParentForm, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, LocalStorage;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, LocalStorage,
+  cxDataControllerConditionalFormattingRulesManagerDialog, System.Actions;
 
 type
   THeadRecord = record
@@ -1330,8 +1331,8 @@ procedure TMainCashForm.actSetSPExecute(Sender: TObject);
 var
   PartnerMedicalId, SPKindId, MemberSPID : Integer;
   PartnerMedicalName, MedicSP, Ambulance, InvNumberSP, SPKindName: String;
-  OperDateSP : TDateTime;
-  SPTax : Currency;
+  OperDateSP : TDateTime; SPTax : Currency;
+  HelsiID, AHelsiName : string; HelsiQty : currency;
 begin
   if (not CheckCDS.IsEmpty) and (Self.FormParams.ParamByName('InvNumberSP').Value = '') then
   Begin
@@ -1354,7 +1355,8 @@ begin
      if Self.FormParams.ParamByName('PartnerMedicalId').Value > 0
      then OperDateSP   := Self.FormParams.ParamByName('OperDateSP').Value
      else OperDateSP   := NOW;
-     if not DiscountDialogExecute(PartnerMedicalId, SPKindId, PartnerMedicalName, Ambulance, MedicSP, InvNumberSP, SPKindName, OperDateSP, SPTax, MemberSPID)
+     if not DiscountDialogExecute(PartnerMedicalId, SPKindId, PartnerMedicalName, Ambulance, MedicSP, InvNumberSP, SPKindName, OperDateSP, SPTax,
+       MemberSPID, HelsiID, AHelsiName, HelsiQty)
      then exit;
   finally
      Free;
@@ -2781,7 +2783,7 @@ begin
       if (FormParams.ParamByName('CheckId').Value = 0) or
          not FLocalDataBaseHead.Locate('ID',FormParams.ParamByName('CheckId').Value,[]) then
       Begin
-        FLocalDataBaseHead.AppendRecord([FormParams.ParamByName('CheckId').Value, //id чека
+        FLocalDataBaseHead.AddRecord(VarArrayOf([FormParams.ParamByName('CheckId').Value, //id чека
                                          AUID,                                    //uid чека
                                          Now,                                     //дата/Время чека
                                          Integer(PaidType),                       //тип оплаты
@@ -2815,7 +2817,7 @@ begin
                                          ASPKindId,                 //Id Вид СП
                                          //***02.02.18
                                          APromoCodeID               //Id промокода
-                                        ]);
+                                        ]));
       End
       else
       Begin

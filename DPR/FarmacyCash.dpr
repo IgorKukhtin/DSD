@@ -1,6 +1,7 @@
 program FarmacyCash;
 
 uses
+  MidasLib,
   Vcl.Forms,
   SysUtils,
   Controls,
@@ -103,7 +104,10 @@ uses
   dsdExportToXMLAction in '..\SOURCE\COMPONENT\dsdExportToXMLAction.pas',
   ChoiceBankPOSTerminal in '..\FormsFarmacy\Cash\ChoiceBankPOSTerminal.pas' {ChoiceBankPOSTerminalForm: TParentForm},
   GoodsToExpirationDate in '..\FormsFarmacy\Cash\GoodsToExpirationDate.pas',
-  ChoiceGoodsAnalog in '..\FormsFarmacy\Cash\ChoiceGoodsAnalog.pas' {ChoiceGoodsAnalogForm: TParentForm};
+  ChoiceGoodsAnalog in '..\FormsFarmacy\Cash\ChoiceGoodsAnalog.pas' {ChoiceGoodsAnalogForm: TParentForm},
+  Helsi in '..\FormsFarmacy\Cash\Helsi.pas',
+  Cash_IKC_C651T in '..\FormsFarmacy\Cash\Cash_IKC_C651T.pas',
+  ChoiceHelsiUserName in '..\FormsFarmacy\Cash\ChoiceHelsiUserName.pas' {ChoiceHelsiUserNameForm: TParentForm};
 
 {$R *.res}
 

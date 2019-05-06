@@ -8,7 +8,6 @@ inherited CashCloseDialogForm: TCashCloseDialogForm
   Position = poScreenCenter
   OnKeyDown = ParentFormKeyDown
   AddOnFormData.isAlwaysRefresh = False
-  AddOnFormData.RefreshAction = nil
   AddOnFormData.Params = nil
   ExplicitWidth = 661
   ExplicitHeight = 193

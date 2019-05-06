@@ -17,7 +17,8 @@ uses
   ActiveX,  Math, ShellApi,
   VKDBFDataSet, FormStorage, CommonData, ParentForm, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, LocalStorage, cxGridExportLink,
-  cxButtonEdit, PosInterface, PosFactory, PayPosTermProcess;
+  cxButtonEdit, PosInterface, PosFactory, PayPosTermProcess,
+  cxDataControllerConditionalFormattingRulesManagerDialog, System.Actions;
 
 type
   THeadRecord = record
@@ -383,6 +384,8 @@ type
     Label19: TLabel;
     Label20: TLabel;
     edAnalogFilter: TcxTextEdit;
+    actSetSPHelsi: TAction;
+    N25: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -478,6 +481,8 @@ type
     procedure actCashGoodsOneToExpirationDateExecute(Sender: TObject);
     procedure actGoodsAnalogExecute(Sender: TObject);
     procedure actGoodsAnalogChooseExecute(Sender: TObject);
+    procedure Label4Click(Sender: TObject);
+    procedure actSetSPHelsiExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -607,7 +612,7 @@ var
   MutexDBF, MutexDBFDiff, MutexVip, MutexRemains, MutexAlternative, MutexAllowedConduct,
   MutexDiffKind, MutexDiffCDS, MutexEmployeeWorkLog, MutexBankPOSTerminal,
   MutexUnitConfig, MutexTaxUnitNight, MutexGoods, MutexGoodsExpirationDate,
-  MutexGoodsAnalog : THandle;  // MutexAllowedConduct только 2 форма
+  MutexGoodsAnalog, MutexUserHelsi : THandle;  // MutexAllowedConduct только 2 форма
 
   LastErr: Integer;
   FM_SERVISE: Integer;  // для передачи сообщений между приложение и сервисом // только 2 форма
@@ -624,7 +629,7 @@ implementation
 uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog, CashWork, MessagesUnit,
      LocalWorkUnit, Splash, DiscountService, MainCash, UnilWin, ListDiff, ListGoods,
 	   MediCard.Intf, PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog,
-     GoodsToExpirationDate, ChoiceGoodsAnalog;
+     GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi;
 
 const
   StatusUnCompleteCode = 1;
@@ -989,6 +994,10 @@ begin
   FormParams.ParamByName('JackdawsChecksCode').Value        := 0;
   //***02.04.19
   FormParams.ParamByName('RoundingDown').Value              := False;
+  //***25.04.19
+  FormParams.ParamByName('HelsiID').Value := '';
+  FormParams.ParamByName('HelsiName').Value := '';
+  FormParams.ParamByName('HelsiQty').Value := 0;
 
   ClearFilterAll;
 
@@ -1254,7 +1263,7 @@ end;
 
 procedure TMainCashForm2.ClearFilterAll;
 begin
-  if pnlExpirationDateFilter.Visible or pnlAnalogFilter.Visible then
+  if RemainsCDS.Filter <> 'Remains <> 0 or Reserved <> 0' then
   begin
     RemainsCDS.DisableControls;
     RemainsCDS.Filtered := False;
@@ -1426,6 +1435,7 @@ begin
   TimerPUSH.Enabled := False;
   TimerPUSH.Interval := 60 * 1000;
   if TimeOf(FPUSHEnd) > TimeOf(Now) then FPUSHEnd := Now;
+  Screen.MessageFont.Size := Screen.MessageFont.Size + 2;
   try
     if FPUSHStart then
     begin
@@ -1473,6 +1483,7 @@ begin
   finally
     FPUSHStart := False;
     TimerPUSH.Enabled := True;
+    Screen.MessageFont.Size := Screen.MessageFont.Size - 2;
   end;
 end;
 
@@ -1673,12 +1684,13 @@ end;
 
 procedure TMainCashForm2.actPutCheckToCashExecute(Sender: TObject);
 var
-  UID,CheckNumber: String;
+  UID,CheckNumber,ConfirmationCode: String;
   lMsg: String;
   fErr: Boolean;
   dsdSave: TdsdStoredProc;
   nBankPOSTerminal : integer;
   nPOSTerminalCode : integer;
+  HelsiError : Boolean;
 begin
   if CheckCDS.RecordCount = 0 then exit;
 
@@ -1693,6 +1705,27 @@ begin
   begin
     ShowMessage('Ошибка.Установлен признак <Скидка через сайт> необходимо установить VIP-чек.');
     Exit;
+  end;
+
+  if (FormParams.ParamByName('HelsiID').Value <> '') then
+  begin
+    if CheckCDS.RecordCount <> 1 then
+    begin
+      ShowMessage('Ошибка.В чеке для Соц.проекта должен быть один товар.');
+      exit;
+    end;
+
+    if (CheckCDS.FieldByName('CountSP').AsCurrency * CheckCDS.FieldByName('Amount').AsCurrency) >
+      FormParams.ParamByName('HelsiQty').Value then
+    begin
+      ShowMessage('Ошибка.'#13#10'В рецепте выписано: ' + FormatCurr('0.####', FormParams.ParamByName('HelsiQty').Value) +
+       ' едениц'#13#10'В чеке: ' + FormatCurr('0.####', CheckCDS.FieldByName('CountSP').AsCurrency * CheckCDS.FieldByName('Amount').AsCurrency) +
+       #13#10'Уменьшите количество.');
+      exit;
+    end;
+
+    if not InputQuery('Введите код подтверждения рецепта', 'Код подтверждения: ', ConfirmationCode) then Exit;
+
   end;
 
   if FormParams.ParamByName('PartnerMedicalId').Value <> 0 then if not CheckSP then Exit;
@@ -1733,6 +1766,34 @@ begin
   end
   else
     ASalerCash:=FTotalSumm;
+
+  HelsiError := False;
+  if (FormParams.ParamByName('HelsiID').Value <> '') then
+  begin
+    HelsiError := True;
+//    if not CreateNewDispense(CheckCDS.FieldByName('IdSP').AsString,
+//                             CheckCDS.FieldByName('CountSP').AsCurrency * CheckCDS.FieldByName('Amount').AsCurrency,
+//                             CheckCDS.FieldByName('PriceRetSP').asCurrency,
+//                             RoundTo(CheckCDS.FieldByName('Amount').asCurrency * CheckCDS.FieldByName('PriceRetSP').asCurrency, -2),
+//                             RoundTo(CheckCDS.FieldByName('Amount').asCurrency * CheckCDS.FieldByName('PriceRetSP').asCurrency, -2) -
+//                               RoundTo(CheckCDS.FieldByName('Amount').asCurrency * CheckCDS.FieldByName('PaymentSP').asCurrency, -2),
+//                             ConfirmationCode) then
+
+    if not CreateNewDispense(CheckCDS.FieldByName('IdSP').AsString,
+                             CheckCDS.FieldByName('CountSP').AsCurrency * CheckCDS.FieldByName('Amount').AsCurrency,
+                             CheckCDS.FieldByName('PriceSale').asCurrency,
+                             RoundTo(CheckCDS.FieldByName('Amount').asCurrency * CheckCDS.FieldByName('PriceSale').asCurrency, -2),
+                             RoundTo(CheckCDS.FieldByName('Amount').asCurrency * CheckCDS.FieldByName('PriceSale').asCurrency, -2) -
+                               RoundTo(CheckCDS.FieldByName('Amount').asCurrency * CheckCDS.FieldByName('Price').asCurrency, -2),
+                             ConfirmationCode) then
+    begin
+      Begin
+        if Self.ActiveControl <> edAmount then
+          Self.ActiveControl := MainGrid;
+        exit;
+      End;
+    end;
+  end;
 
   //показали что началась печать
   ShapeState.Brush.Color := clYellow;
@@ -1832,11 +1893,25 @@ begin
                    UID           // out AUID
                   )
       then Begin
+
+        if (FormParams.ParamByName('HelsiID').Value <> '') then
+        begin
+           HelsiError := not SetPayment(CheckNumber, CheckCDS.FieldByName('Summ').asCurrency);
+           if not HelsiError then HelsiError := not IntegrationClientSign;
+           if not HelsiError then HelsiError := not ProcessSignedDispense;
+        end;
+
         Add_Log('Чек сохранен');
         NewCheck(false);
       End;
            end; // else if fErr = true
     End;
+
+    if HelsiError then
+    begin
+      if RejectDispense then ShowMessage ('Ошибка. Погашение чека отменено...');
+    end;
+
   finally
     ShapeState.Brush.Color := clGreen;
     ShapeState.Repaint;
@@ -1880,17 +1955,20 @@ begin
         AlternativeCDS.EnableControls;
         MainGridDBTableView.EndUpdate;
       end;
-      ChangeStatus('Загрузка приходных накладных от дистрибьютора в медреестр Pfizer МДМ');
-      lMsg:= '';
-      if not DiscountServiceForm.fPfizer_Send(lMsg) then
+      if not gc_User.Local then
       begin
-           ChangeStatus('Ошибка в медреестре Pfizer МДМ :' + lMsg);
-           sleep(3000);
-      end
-      else
-      begin
-           ChangeStatus('Накладные зарегистрированы в медреестре Pfizer МДМ успешно :' + lMsg);
-           sleep(2000);
+        ChangeStatus('Загрузка приходных накладных от дистрибьютора в медреестр Pfizer МДМ');
+        lMsg:= '';
+        if not DiscountServiceForm.fPfizer_Send(lMsg) then
+        begin
+             ChangeStatus('Ошибка в медреестре Pfizer МДМ :' + lMsg);
+             sleep(3000);
+        end
+        else
+        begin
+             ChangeStatus('Накладные зарегистрированы в медреестре Pfizer МДМ успешно :' + lMsg);
+             sleep(2000);
+        end;
       end;
     end
     else
@@ -2994,8 +3072,8 @@ procedure TMainCashForm2.actSetSPExecute(Sender: TObject);
 var
   PartnerMedicalId, SPKindId, MemberSPID : Integer;
   PartnerMedicalName, MedicSP, Ambulance, InvNumberSP, SPKindName: String;
-  OperDateSP : TDateTime;
-  SPTax : Currency;
+  OperDateSP : TDateTime; SPTax : Currency;
+  HelsiID, HelsiName : string; HelsiQty : currency;
 begin
 
   if not CheckSP then Exit;
@@ -3018,12 +3096,16 @@ begin
      SPKindId     := Self.FormParams.ParamByName('SPKindId').Value;
      SPKindName   := Self.FormParams.ParamByName('SPKindName').Value;
      MemberSPID   := Self.FormParams.ParamByName('MemberSPID').Value;
+     HelsiID      := Self.FormParams.ParamByName('HelsiID').Value;
+     HelsiName    := Self.FormParams.ParamByName('HelsiName').Value;
+     HelsiQty     := Self.FormParams.ParamByName('HelsiQty').Value;
 
      //
      if Self.FormParams.ParamByName('PartnerMedicalId').Value > 0
      then OperDateSP   := Self.FormParams.ParamByName('OperDateSP').Value
      else OperDateSP   := NOW;
-     if not DiscountDialogExecute(PartnerMedicalId, SPKindId, PartnerMedicalName, Ambulance, MedicSP, InvNumberSP, SPKindName, OperDateSP, SPTax, MemberSPID)
+     if not DiscountDialogExecute(PartnerMedicalId, SPKindId, PartnerMedicalName, Ambulance, MedicSP, InvNumberSP, SPKindName, OperDateSP, SPTax,
+       MemberSPID, HelsiID, HelsiName, HelsiQty)
      then exit;
   finally
      Free;
@@ -3040,13 +3122,105 @@ begin
   FormParams.ParamByName('SPKindName').Value:= SPKindName;
   FormParams.ParamByName('MemberSPID').Value := MemberSPID;
   FormParams.ParamByName('RoundingDown').Value := SPKindId = 4823009;
+  FormParams.ParamByName('HelsiID').Value := HelsiID;
+  FormParams.ParamByName('HelsiName').Value := HelsiName;
+  FormParams.ParamByName('HelsiQty').Value := HelsiQty;
+
   //
   pnlSP.Visible := InvNumberSP <> '';
-  lblPartnerMedicalName.Caption:= '  ' + PartnerMedicalName; // + '  /  № амб. ' + Ambulance;
-  lblMedicSP.Caption  := '  ' + MedicSP + '  /  № '+InvNumberSP+'  от ' + DateToStr(OperDateSP);
-  if SPTax <> 0 then lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FloatToStr(SPTax) + '% : ' + SPKindName
-  else lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + SPKindName;
+  if FormParams.ParamByName('HelsiID').Value <> '' then
+  begin
+    Label4.Caption:= '     Медикамент.: ';
+    Label7.Caption:= 'Вып.';
+    lblPartnerMedicalName.Caption:= '  ' + HelsiName; // + '  /  № амб. ' + Ambulance;
+    RemainsCDS.DisableControls;
+    RemainsCDS.Filtered := False;
+    try
+      try
+        RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0) and DosageIdSP = ' + QuotedStr(HelsiID);
+        RemainsCDS.Filtered := True;
+      except
+        RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0';
+      end;
+    finally
+      RemainsCDS.Filtered := True;
+      RemainsCDS.EnableControls;
+    end;
+    lblMedicSP.Caption  := CurrToStr(HelsiQty) + ' рец. №' + InvNumberSP + ' от ' + DateToStr(OperDateSP);
+    lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + 'Доступні Ліки';
+  end else
+  begin
+    Label4.Caption:= '     Мед.уч.: ';
+    Label7.Caption:= 'ФИО';
+    lblPartnerMedicalName.Caption:= '  ' + PartnerMedicalName; // + '  /  № амб. ' + Ambulance;
+    lblMedicSP.Caption  := '  ' + MedicSP + '  /  № '+InvNumberSP+'  от ' + DateToStr(OperDateSP);
+    if SPTax <> 0 then lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FloatToStr(SPTax) + '% : ' + SPKindName
+    else lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + SPKindName;
+  end;
+end;
 
+procedure TMainCashForm2.actSetSPHelsiExecute(Sender: TObject);
+var
+  InvNumberSP: String; OperDateSP : TDateTime;
+  HelsiID, HelsiName : string; HelsiQty : currency;
+begin
+
+  if UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger = 0 then
+  Begin
+    ShowMessage('Не определен ID СП !');
+    exit;
+  End;
+
+  if not CheckSP then Exit;
+
+  if (not CheckCDS.IsEmpty) and (Self.FormParams.ParamByName('InvNumberSP').Value = '') or
+    pnlManualDiscount.Visible or pnlPromoCode.Visible or pnlSiteDiscount.Visible then
+  Begin
+    ShowMessage('Текущий чек не пустой. Сначала очистите чек!');
+    exit;
+  End;
+
+  InvNumberSP := '';
+  if not InputQuery('Скидка по соц. проекту "Доступні Ліки"', 'Введите номер рецепта: ', InvNumberSP) then Exit;
+
+  if not GetHelsiReceipt(InvNumberSP, HelsiID, HelsiName, HelsiQty, OperDateSP) then Exit;
+
+  FormParams.ParamByName('InvNumberSP').Value := InvNumberSP;
+  FormParams.ParamByName('OperDateSP').Value := OperDateSP;
+  FormParams.ParamByName('SPKindId').Value  := UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger;
+  FormParams.ParamByName('SPKindName').Value:= 'Доступні Ліки';
+  FormParams.ParamByName('RoundingDown').Value := True;
+  FormParams.ParamByName('HelsiID').Value := HelsiID;
+  FormParams.ParamByName('HelsiName').Value := HelsiName;
+  FormParams.ParamByName('HelsiQty').Value := HelsiQty;
+
+  //
+  pnlSP.Visible := InvNumberSP <> '';
+  if FormParams.ParamByName('HelsiID').Value <> '' then
+  begin
+    Label4.Caption:= '     Медикамент.: ';
+    Label7.Caption:= 'Вып.';
+    lblPartnerMedicalName.Caption:= '  ' + HelsiName; // + '  /  № амб. ' + Ambulance;
+    RemainsCDS.DisableControls;
+    RemainsCDS.Filtered := False;
+    try
+      try
+        RemainsCDS.Filter := '(Remains <> 0 or Reserved <> 0) and DosageIdSP = ' + QuotedStr(HelsiID);
+        RemainsCDS.Filtered := True;
+      except
+        RemainsCDS.Filter := 'Remains <> 0 or Reserved <> 0';
+      end;
+    finally
+      RemainsCDS.Filtered := True;
+      RemainsCDS.EnableControls;
+    end;
+    lblMedicSP.Caption  := CurrToStr(HelsiQty) + '  рец. № ' + InvNumberSP + '  от ' + DateToStr(OperDateSP);
+    lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + 'Доступні Ліки';
+  end else
+  begin
+    Label4.Caption:= '     Мед.уч.: ';
+    Label7.Caption:= 'ФИО';
+  end;
 end;
 
 procedure TMainCashForm2.actSetVIPExecute(Sender: TObject);
@@ -3437,6 +3611,7 @@ var
   F: String;
 begin
   inherited;
+  FormClassName := Self.ClassName;
 
   Application.OnMessage := AppMsgHandler;   // только 2 форма
   // мемдата для сохранения отгруженных чеков во время получение полных остатков
@@ -3480,6 +3655,8 @@ begin
   LastErr := GetLastError;
   MutexGoodsAnalog := CreateMutex(nil, false, 'farmacycashMutexGoodsAnalog');
   LastErr := GetLastError;
+  MutexGoodsAnalog := CreateMutex(nil, false, 'farmacycashMutexUserHelsi');
+  LastErr := GetLastError;
   DiscountServiceForm:= TDiscountServiceForm.Create(Self);
 
   //сгенерили гуид для определения сессии
@@ -3498,10 +3675,11 @@ begin
     exit;
   End;
   ChangeStatus('Загрузка профиля пользователя');
-  //
-  //Временно убрал
-  //UserSettingsStorageAddOn.LoadUserSettings;
-  //
+
+  if gc_User.Local then
+    UserSettingsStorageAddOn.LoadUserSettingsData(GetLocalMainFormData(gc_User.Session))
+  else UserSettingsStorageAddOn.LoadUserSettings;
+
   try
     ChangeStatus('Инициализация оборудования');
     Cash:=TCashFactory.GetCash(iniCashType);
@@ -3905,6 +4083,11 @@ begin
         checkCDS.FieldByName('Remains').asCurrency:=SourceClientDataSet.FieldByName('Remains').asCurrency;
         //***31.03.19
         CheckCDS.FieldByName('DoesNotShare').AsBoolean:=SourceClientDataSet.FieldByName('DoesNotShare').AsBoolean;
+        //***25.04.19
+        CheckCDS.FieldByName('IdSP').AsString:=SourceClientDataSet.FieldByName('IdSP').AsString;
+        CheckCDS.FieldByName('CountSP').AsCurrency:=SourceClientDataSet.FieldByName('CountSP').AsCurrency;
+        CheckCDS.FieldByName('PriceRetSP').AsCurrency:=SourceClientDataSet.FieldByName('PriceRetSP').AsCurrency;
+        CheckCDS.FieldByName('PaymentSP').AsCurrency:=SourceClientDataSet.FieldByName('PaymentSP').AsCurrency;
         if not Assigned(SourceClientDataSet.FindField('Color_calc')) then
         begin
           RemainsCDS.DisableControls;
@@ -3991,6 +4174,12 @@ begin
   else
   if not SoldRegim AND (nAmount = 0) then
     ShowMessage('При изменении количества можно указывать значения не равные 0!');
+end;
+
+procedure TMainCashForm2.Label4Click(Sender: TObject);
+begin
+  inherited;
+
 end;
 
 {------------------------------------------------------------------------------}
@@ -4307,6 +4496,10 @@ begin
   FormParams.ParamByName('JackdawsChecksCode').Value        := 0;
   //***02.04.19
   FormParams.ParamByName('RoundingDown').Value              := False;
+  //***25.04.19
+  FormParams.ParamByName('HelsiID').Value := '';
+  FormParams.ParamByName('HelsiName').Value := '';
+  FormParams.ParamByName('HelsiQty').Value := 0;
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -4360,6 +4553,8 @@ begin
 
   // Ночные скидки
   SetTaxUnitNight;
+  // Отмена фильтров
+  ClearFilterAll;
 end;
 
 procedure TMainCashForm2.ParentFormCloseQuery(Sender: TObject;
@@ -4401,10 +4596,8 @@ begin
     end;
         PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 9); // только 2 форма
   End;
-  //
-  //Временно убрал
-  //UserSettingsStorageAddOn.SaveUserSettings;
-  //
+
+  if not gc_User.Local then UserSettingsStorageAddOn.SaveUserSettings;
 end;
 
 procedure TMainCashForm2.ParentFormDestroy(Sender: TObject);
@@ -4424,6 +4617,7 @@ begin
   CloseHandle(MutexGoodsExpirationDate);
   CloseHandle(MutexGoods);
   CloseHandle(MutexGoodsAnalog);
+  CloseHandle(MutexUserHelsi);
 end;
 
 procedure TMainCashForm2.ParentFormKeyDown(Sender: TObject; var Key: Word;
@@ -4543,7 +4737,7 @@ begin
         AFiscalNumber := '';
       Disc:= 0; PosDisc:= 0;
       if actSpec.Checked then isFiscal := False;
-      if not isFiscal then Cash.AlwaysSold := False;
+      if not isFiscal and Assigned(Cash) then Cash.AlwaysSold := False;
 
       // Контроль чека до печати
       with CheckCDS do
@@ -5202,7 +5396,7 @@ begin
       if (FormParams.ParamByName('CheckId').Value = 0) or
          not FLocalDataBaseHead.Locate('ID',FormParams.ParamByName('CheckId').Value,[]) then
       Begin
-        FLocalDataBaseHead.AppendRecord([FormParams.ParamByName('CheckId').Value, //id чека
+        FLocalDataBaseHead.AddRecord(VarArrayOf([FormParams.ParamByName('CheckId').Value, //id чека
                                          AUID,                                    //uid чека
                                          Now,                                     //дата/Время чека
                                          Integer(PaidType),                       //тип оплаты
@@ -5250,7 +5444,7 @@ begin
                                          AJackdawsChecksCode,      // Галка
                                          //***02.04.19
                                          ARoundingDown             // Округление в низ
-                                        ]);
+                                        ]));
       End
       else
       Begin
@@ -5336,7 +5530,7 @@ begin
         str_log_xml:=''; i:=0;
         while not ADS.Eof do
         Begin
-          FLocalDataBaseBody.AppendRecord([ADS.FieldByName('Id').AsInteger,         //id записи
+          FLocalDataBaseBody.AddRecord(VarArrayOf([ADS.FieldByName('Id').AsInteger,         //id записи
                                            AUID,                                    //uid чека
                                            ADS.FieldByName('GoodsId').AsInteger,    //ид товара
                                            ADS.FieldByName('GoodsCode').AsInteger,  //Код товара
@@ -5352,7 +5546,7 @@ begin
                                            ADS.FieldByName('AmountOrder').asCurrency, // Кол-во заявка
                                            //***10.08.16
                                            ADS.FieldByName('List_UID').AsString // UID строки продажи
-                                           ]);
+                                           ]));
           // сохранили отгруженные препараты для корректировки полных остатков
           if FSaveCheckToMemData then
           begin

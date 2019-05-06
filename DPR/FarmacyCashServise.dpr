@@ -1,6 +1,7 @@
 program FarmacyCashServise;
 
 uses
+  MidasLib,
   Vcl.Forms,
   System.SysUtils,
   Controls,

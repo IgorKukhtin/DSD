@@ -20,7 +20,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, System.Actions;
 
 type
   TSPDialogForm = class(TAncestorDialogForm)
@@ -64,9 +64,15 @@ type
     procedure cePartnerMedicalPropertiesChange(Sender: TObject);
   private
     { Private declarations }
+
+    FHelsiID : string;
+    FHelsiName : string;
+    FHelsiQty : currency;
+    FHelsiDate : TDateTime;
   public
      function DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String;
-       var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer): boolean;
+       var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer;
+       var AHelsiID, AHelsiName : string; var AHelsiQty : currency): boolean;
      function CheckInvNumberSP(ASPKind : integer; ANumber : string) : boolean;
   end;
 
@@ -75,62 +81,67 @@ implementation
 
 {$R *.dfm}
 
-uses IniUtils, DiscountService, RegularExpressions, MainCash, MainCash2;
+uses IniUtils, DiscountService, RegularExpressions, MainCash, MainCash2, Helsi;
 
 function TSPDialogForm.CheckInvNumberSP(ASPKind : integer; ANumber : string) : boolean;
   var Res: TArray<string>; I, J : Integer; bCheck : boolean;
 begin
   Result := False;
-  if Length(ANumber) <> 19 then
-  begin
-    ShowMessage ('Ошибка.<Номер рецепта> должен содержать 19 символов...');
-    exit;
-  end;
 
-  Res := TRegEx.Split(ANumber, '-');
-
-  if High(Res) <> 3 then
+  if (MainCashForm.UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger = 0) or
+    (MainCashForm.UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger <> ASPKind) then
   begin
-    ShowMessage ('Ошибка.<Номер рецепта> должен содержать 4 блока по 4 символа разделенных символом "-" ...');
-    exit;
-  end;
-
-  for I := 0 to High(Res) do
-  begin
-    if Length(Res[I]) <> 4 then
+    if Length(ANumber) <> 19 then
     begin
-      ShowMessage ('Ошибка.<Номер рецепта> должен содержать 4 блока по 4 символа разделенных символом "-"...');
+      ShowMessage ('Ошибка.<Номер рецепта> должен содержать 19 символов...');
       exit;
     end;
 
-    for J := 1 to 4 do if not (Res[I][J] in ['0'..'9','A'..'Z']) then
+    Res := TRegEx.Split(ANumber, '-');
+
+    if High(Res) <> 3 then
     begin
-      ShowMessage ('Ошибка.<Номер рецепта> должен содержать только цыфры и большие буквы латинского алфовита...');
+      ShowMessage ('Ошибка.<Номер рецепта> должен содержать 4 блока по 4 символа разделенных символом "-" ...');
       exit;
     end;
-  end;
 
-  //Сначала ищем в текущем ДБФ
-  if isMainForm_OLD = TRUE
-  then bCheck := MainCash.MainCashForm.pCheck_InvNumberSP (ASPKind, ANumber)
-  else bCheck := MainCash2.MainCashForm.pCheck_InvNumberSP (ASPKind, ANumber);
+    for I := 0 to High(Res) do
+    begin
+      if Length(Res[I]) <> 4 then
+      begin
+        ShowMessage ('Ошибка.<Номер рецепта> должен содержать 4 блока по 4 символа разделенных символом "-"...');
+        exit;
+      end;
 
-  if bCheck then
-  begin
-    ShowMessage ('Ошибка.<Номер рецепта> уже использован. Повторное использование запрещено...');
-    exit;
-  end;
+      for J := 1 to 4 do if not (Res[I][J] in ['0'..'9','A'..'Z']) then
+      begin
+        ShowMessage ('Ошибка.<Номер рецепта> должен содержать только цыфры и большие буквы латинского алфовита...');
+        exit;
+      end;
+    end;
 
-  if spGet_Movement_InvNumberSP.Execute = '' then
-  begin
-    if spGet_Movement_InvNumberSP.ParamByName('outIsExists').Value then
+    //Сначала ищем в текущем ДБФ
+    if isMainForm_OLD = TRUE
+    then bCheck := MainCash.MainCashForm.pCheck_InvNumberSP (ASPKind, ANumber)
+    else bCheck := MainCash2.MainCashForm.pCheck_InvNumberSP (ASPKind, ANumber);
+
+    if bCheck then
     begin
       ShowMessage ('Ошибка.<Номер рецепта> уже использован. Повторное использование запрещено...');
-      Exit;
+      exit;
     end;
-  end else Exit;
 
-  Result := True;
+    if spGet_Movement_InvNumberSP.Execute = '' then
+    begin
+      if spGet_Movement_InvNumberSP.ParamByName('outIsExists').Value then
+      begin
+        ShowMessage ('Ошибка.<Номер рецепта> уже использован. Повторное использование запрещено...');
+        Exit;
+      end;
+    end else Exit;
+
+    Result := True;
+  end else Result := GetHelsiReceipt(ANumber, FHelsiID, FHelsiName, FHelsiQty, FHelsiDate);
 end;
 
 procedure TSPDialogForm.bbOkClick(Sender: TObject);
@@ -280,8 +291,10 @@ begin
 end;
 
 function TSPDialogForm.DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String;
-  var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer): boolean;
+  var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer;
+  var AHelsiID, AHelsiName : string; var AHelsiQty : currency): boolean;
 Begin
+      FHelsiID := ''; FHelsiName := '';
       edAmbulance.Text:= AAmbulance;
       edMedicSP.Text:= AMedicSP;
       edInvNumberSP.Text:= AInvNumberSP;
@@ -350,6 +363,20 @@ Begin
         if Panel2.Visible then
           AMemberSPID := GuidesMemberSP.Params.ParamByName('Key').Value
         else AMemberSPID := 0;
+
+        if (MainCashForm.UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger <> 0) and
+          (MainCashForm.UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger = ASPKindId) then
+        begin
+          AHelsiID            := FHelsiID;
+          AHelsiName          := FHelsiName;
+          AHelsiQty           := FHelsiQty;
+        end else
+        begin
+          AHelsiID            := '';
+          AHelsiName          := '';
+          AHelsiQty           := 0;
+         end;
+
       end
       else begin
               APartnerMedicalId   := 0;
@@ -361,6 +388,9 @@ Begin
               ASPKindId           := 0;
               ASPKindName         := '';
               AMemberSPID         := 0;
+              AHelsiID            := '';
+              AHelsiName          := '';
+              AHelsiQty           := 0;
            end;
 end;
 

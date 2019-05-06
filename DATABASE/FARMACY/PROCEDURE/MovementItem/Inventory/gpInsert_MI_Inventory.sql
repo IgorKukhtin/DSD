@@ -23,6 +23,8 @@ $BODY$
    DECLARE vbPrice TFloat;
    DECLARE vbAmount TFloat;
    DECLARE vbAmountUser TFloat;
+   DECLARE vbUnitKey TVarChar;
+   DECLARE vbUserUnitId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
@@ -43,6 +45,63 @@ BEGIN
                                       ON MLO_Unit.MovementId = Movement.Id
                                      AND MLO_Unit.DescId = zc_MovementLinkObject_Unit()
     WHERE Movement.Id = inMovementId;
+
+     IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+               WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = 308121) -- Для роли "Кассир аптеки"
+     THEN
+     
+        vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+        IF vbUnitKey = '' THEN
+           vbUnitKey := '0';
+        END IF;
+        vbUserUnitId := vbUnitKey::Integer;
+
+        IF COALESCE (vbUnitId, 0) <> COALESCE (vbUserUnitId, 0)
+        THEN
+           RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);     
+        END IF;     
+        IF EXISTS(SELECT 1
+                  FROM Movement
+
+                       INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                     ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                    AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
+                       INNER JOIN MovementLinkObject AS MovementLinkObject_CashRegister
+                                                     ON MovementLinkObject_CashRegister.MovementId = Movement.Id
+                                                    AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
+
+                  WHERE Movement.OperDate >= DATE_TRUNC ('DAY', CURRENT_DATE)
+                    AND Movement.OperDate < DATE_TRUNC ('DAY', CURRENT_DATE) + INTERVAL '1 DAY'
+                    AND Movement.DescId = zc_Movement_Check()
+                    AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                    AND Movement.StatusId = zc_Enum_Status_Complete()) AND
+           (SELECT MAX(Movement.OperDate)
+            FROM Movement
+
+                 INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                               ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                              AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
+                 INNER JOIN MovementLinkObject AS MovementLinkObject_CashRegister
+                                               ON MovementLinkObject_CashRegister.MovementId = Movement.Id
+                                              AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
+
+            WHERE Movement.OperDate >= DATE_TRUNC ('DAY', CURRENT_DATE)
+              AND Movement.OperDate < DATE_TRUNC ('DAY', CURRENT_DATE) + INTERVAL '1 DAY'
+              AND Movement.DescId = zc_Movement_Check()
+              AND MovementLinkObject_Unit.ObjectId = 183292
+              AND Movement.StatusId = zc_Enum_Status_Complete()) > 
+            COALESCE ((SELECT MAX(EmployeeWorkLog.DateZReport)
+                       FROM EmployeeWorkLog
+                       WHERE EmployeeWorkLog.DateLogIn >= DATE_TRUNC ('DAY', CURRENT_DATE)
+                         AND EmployeeWorkLog.DateLogIn < DATE_TRUNC ('DAY', CURRENT_DATE) + INTERVAL '1 DAY'
+                         AND EmployeeWorkLog.UnitId = vbUnitId
+                         AND EmployeeWorkLog.DateZReport IS NOT NULL),DATE_TRUNC ('DAY', CURRENT_DATE)) 
+        THEN 
+          RAISE EXCEPTION 'Ошибка. Смена не закрыта выполнение операций с инвентаризацией запрещено.';     
+        END IF;             
+     END IF;     
 
     -- !!! - определяется <Торговая сеть>!!!
     vbObjectId:= (SELECT ObjectLink_Juridical_Retail.ChildObjectId

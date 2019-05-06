@@ -328,6 +328,25 @@ inherited CheckDelayVIPForm: TCheckDelayVIPForm
       DataSource = MasterDS
       QuestionBeforeExecute = #1054#1090#1084#1077#1085#1080#1090#1100' '#1091#1076#1072#1083#1077#1085#1080#1077' '#1095#1077#1082#1072' '#1080' '#1079#1072#1088#1077#1079#1077#1088#1074#1080#1088#1086#1074#1072#1090#1100' '#1090#1086#1074#1072#1088
     end
+    object actIsShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1079#1072' '#1087#1086#1089#1083#1077#1076#1085#1080#1080' 10 '#1076#1085#1077#1081
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1079#1072' '#1087#1086#1089#1083#1077#1076#1085#1080#1080' 10 '#1076#1085#1077#1081
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -339,6 +358,15 @@ inherited CheckDelayVIPForm: TCheckDelayVIPForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_CheckDelayVIP'
+    Params = <
+      item
+        Name = 'inIsShowAll'
+        Value = Null
+        Component = actIsShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     Left = 72
     Top = 88
   end
@@ -366,6 +394,14 @@ inherited CheckDelayVIPForm: TCheckDelayVIPForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -375,10 +411,6 @@ inherited CheckDelayVIPForm: TCheckDelayVIPForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -438,6 +470,10 @@ inherited CheckDelayVIPForm: TCheckDelayVIPForm
       Hint = #1054#1090#1082#1088#1099#1090#1100' '#1095#1077#1082' '#1076#1083#1103' '#1088#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1103
       Visible = ivAlways
       ImageIndex = 1
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actIsShowAll
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

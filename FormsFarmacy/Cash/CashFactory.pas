@@ -9,7 +9,7 @@ type
 
 implementation
 
-uses Cash_FP3530T, Cash_FP3530T_NEW, Cash_FP320, Cash_IKC_E810T, {CashApp,} SysUtils;
+uses Cash_FP3530T, Cash_FP3530T_NEW, Cash_FP320, Cash_IKC_E810T, Cash_IKC_C651T, {CashApp,} SysUtils;
 { TCashFactory }
 class function TCashFactory.GetCash(CashType: string): ICash;
 begin
@@ -21,6 +21,8 @@ begin
      result := TCashFP320.Create;
   if CashType = 'IKC-E810T' then
      result := TCashIKC_E810T.Create;
+  if CashType = 'IKC-C651T' then
+     result := TCashIKC_C651T.Create;
   if not Assigned(Result) then
      raise Exception.Create('Не правильно указан тип кассы в Ini файле');
 (*CashSamsung:=TCashSamsung.Create(GetDefaultValue_fromFile(ifDefaults,Self.ClassName,'ComPort','COM2:'));

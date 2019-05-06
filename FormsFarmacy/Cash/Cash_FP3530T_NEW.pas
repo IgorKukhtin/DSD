@@ -1,7 +1,7 @@
 unit Cash_FP3530T_NEW;
 
 interface
-uses Windows, CashInterface, DBTables, FP3141_TLB;
+uses Windows, CashInterface, FP3141_TLB;
 type
   TCashFP3530T_NEW = class(TInterfacedObject, ICash)
   private
@@ -53,7 +53,7 @@ type
 
 
 implementation
-uses Forms, SysUtils, Dialogs, Math, Variants, BDE, StrUtils, IniUtils, RegularExpressions, Log;
+uses Forms, SysUtils, Dialogs, Math, Variants, StrUtils, IniUtils, RegularExpressions, Log;
 
 function СообщениеКА(k: string): boolean;
 begin

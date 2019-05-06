@@ -78,6 +78,9 @@ type
     isGoodsCategory: TcxGridDBColumn;
     isSP: TcxGridDBColumn;
     DateSP: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    dxBarButton1: TdxBarButton;
+    spErasedUnErased: TdsdStoredProc;
   private
     { Private declarations }
   public

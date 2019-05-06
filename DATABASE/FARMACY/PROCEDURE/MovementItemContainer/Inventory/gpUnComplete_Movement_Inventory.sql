@@ -39,6 +39,8 @@ BEGIN
         THEN
            RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);     
         END IF;     
+
+        RAISE EXCEPTION 'Ошибка. Отмена подписи инвентаризаций вам запрещена.';     
      END IF;     
 
      -- проверка - если <Master> Удален, то <Ошибка>

@@ -4,13 +4,13 @@ interface
 
 uses
   System.SysUtils, System.Classes, Vcl.Forms, Vcl.Dialogs, Authentication,
-  VKDBFDataSet, DB, DataSnap.DBClient, Windows;
+  VKDBFDataSet, DB, DataSnap.DBClient, Soap.EncdDecd, Windows;
 
 type
   TSaveLocalMode = (slmRewrite, slmUpdate, slmAppend);
 
 function CheckLocalConnect(ALogin, APassword: String; var pUser: TUser): Boolean;
-function SaveLocalConnect(ALogin, APassword, ASession: String): Boolean;
+function GetLocalMainFormData(ASession : string) : String;
 
 function AddIntField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string): TVKDBFFieldDef; overload;
 function AddIntField(ADataBase: TVKSmartDBF; AName: string): TVKDBFFieldDef; overload;
@@ -23,7 +23,6 @@ function AddFloatField(ADataBase: TVKSmartDBF; AName: string): TVKDBFFieldDef; o
 function AddBoolField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string): TVKDBFFieldDef; overload;
 function AddBoolField(ADataBase: TVKSmartDBF; AName: string): TVKDBFFieldDef; overload;
 
-function Users_lcl: String;
 function Remains_lcl: String;
 function Alternative_lcl: String;
 function Goods_lcl: String;
@@ -41,13 +40,16 @@ function GoodsExpirationDate_lcl: String;
 function GoodsAnalog_lcl: String;
 function CashAttachment_lcl: String;
 function UserHelsi_lcl: String;
-
+function UserSettings_lcl: String;
 
 procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
 procedure LoadLocalData(ADst: TClientDataSet; AFileName: String);
 function GetFileSizeByName(AFileName: String): DWord;
 function GetBackupFileName(AFileName: String): string;
 function CreateCashAttachment(ATable : TClientDataSet): Boolean;
+
+var
+  MutexUserSettings: THandle;
 
 implementation
 
@@ -65,11 +67,6 @@ begin
   Result := GetFileSize(Handle, nil);
   CloseHandle(Handle);
 end;
-
-function Users_lcl: String;
-Begin
-  Result := ExtractFilePath(Application.ExeName) + 'users.local';
-End;
 
 function Remains_lcl: String;
 Begin
@@ -154,6 +151,11 @@ End;
 function UserHelsi_lcl: String;
 Begin
   Result := ExtractFilePath(Application.ExeName) + 'UserHelsi.local';
+End;
+
+function UserSettings_lcl: String;
+Begin
+  Result := ExtractFilePath(Application.ExeName) + 'UserSettings.local';
 End;
 
 function AddIntField(ADBFFieldDefs: TVKDBFFieldDefs; AName: string): TVKDBFFieldDef;
@@ -247,19 +249,26 @@ var
   User: TClientDataSet;
 Begin
   result := False;
-  if not FileExists(Users_lcl) then
+  if not FileExists(UserSettings_lcl) then
     exit;
   User := TClientDataSet.Create(nil);
   try
-    User.LoadFromFile(Users_lcl);
-    User.Open;
+
+    WaitForSingleObject(MutexUserSettings, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+    try
+      User.LoadFromFile(UserSettings_lcl);
+      User.Open;
+    finally
+      ReleaseMutex(MutexUserSettings);
+    end;
+
     while not User.Eof do
     Begin
-      if SameText(User.FieldByName('USR').AsString, ALogin) then
+      if SameText(User.FieldByName('Name').AsString, ALogin) then
       Begin
-        if (User.FieldByName('PWD').AsString = APassword) then
+        if (DecodeString(User.FieldByName('Pass').AsString) = APassword) then
         Begin
-          pUser := TUser.Create(User.FieldByName('SSN').AsString, True);
+          pUser := TUser.Create(User.FieldByName('Id').AsString, True);
           result := True;
           exit;
         End
@@ -277,47 +286,37 @@ Begin
   end;
 End;
 
-function SaveLocalConnect(ALogin, APassword, ASession: String): Boolean;
+function GetLocalMainFormData(ASession : string) : String;
 var
   User: TClientDataSet;
-  bNeedCreateFields: boolean;
-Begin
-  result := False;
+begin
+  result := '';
+  if not FileExists(UserSettings_lcl) then
+    exit;
   User := TClientDataSet.Create(nil);
   try
-    bNeedCreateFields := true;
-    if FileExists(users_lcl) then
-    Begin
-      try
-        User.LoadFromFile(Users_lcl);
-        User.Open;
-        bNeedCreateFields := false;
-      except
-      end;
-    End;
-    if bNeedCreateFields then
-    Begin
-      User.FieldDefs.Add('USR',ftString,50);
-      User.FieldDefs.Add('PWD',ftString,50);
-      User.FieldDefs.Add('SSN',ftString,10);
-      User.FieldDefs.Add('LAST',ftDateTime);
-      User.CreateDataSet;
+
+    WaitForSingleObject(MutexUserSettings, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+    try
+      User.LoadFromFile(UserSettings_lcl);
+      User.Open;
+    finally
+      ReleaseMutex(MutexUserSettings);
     end;
-    User.Open;
-    if User.Locate('USR',ALogin,[loCaseInsensitive]) then
-      User.Edit
-    else
-      User.Append;
-    User.FieldByName('USR').AsString := ALogin;
-    User.FieldByName('PWD').AsString := APassword;
-    User.FieldByName('SSN').AsString := ASession;
-    User.FieldByName('LAST').AsDateTime := Now;
-    User.Post;
-    User.SaveToFile(users_lcl);
+
+    while not User.Eof do
+    Begin
+      if SameText(User.FieldByName('Id').AsString, ASession) then
+      Begin
+        result := User.FieldByName('MainForm').AsString;
+        Break;
+      End;
+      User.Next;
+    End;
   finally
     User.Free;
   end;
-End;
+end;
 
 procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
   var I : integer; Tmp: TClientDataSet;
@@ -399,6 +398,12 @@ Begin
     User.Free;
   end;
 End;
+
+initialization
+  MutexUserSettings := CreateMutex(nil, false, 'farmacycashMutexUserSettings');
+
+finalization
+ CloseHandle(MutexUserSettings);
 
 
 end.

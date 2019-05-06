@@ -91,8 +91,7 @@ type
     SavePath: String;
     Subject: String;
 
-    glSubject: String;
-    glSubjectTeva: String;
+    FProcError : Boolean;
 
     function SendMail(const Host: String; const Port: integer; const Password,
       Username: String; const Recipients: String; const FromAdres,
@@ -152,6 +151,8 @@ procedure TMainForm.AllMaker;
 begin
   try
     SetDateParams;
+
+    FProcError := False;
 
     if qryMaker.FieldByName('isReport1').AsBoolean then
     begin
@@ -292,15 +293,18 @@ begin
       end;
     end;
 
-    try
-      qrySetDateSend.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
-      qrySetDateSend.Params.ParamByName('inAddMonth').Value :=  qryMaker.FieldByName('AmountMonth').AsInteger;
-      qrySetDateSend.Params.ParamByName('inAddDay').Value :=  qryMaker.FieldByName('AmountDay').AsInteger;
-      qrySetDateSend.ExecSQL;
-    except
-      on E: Exception do
-      begin
-        Add_Log(E.Message);
+    if not FProcError then
+    begin
+      try
+        qrySetDateSend.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
+        qrySetDateSend.Params.ParamByName('inAddMonth').Value :=  qryMaker.FieldByName('AmountMonth').AsInteger;
+        qrySetDateSend.Params.ParamByName('inAddDay').Value :=  qryMaker.FieldByName('AmountDay').AsInteger;
+        qrySetDateSend.ExecSQL;
+      except
+        on E: Exception do
+        begin
+          Add_Log(E.Message);
+        end;
       end;
     end;
 
@@ -980,6 +984,7 @@ begin
   if not ForceDirectories(SavePath) then
   Begin
     Add_Log('Не могу создать директорию выгрузки');
+    FProcError := True;
     exit;
   end;
 
@@ -993,6 +998,7 @@ begin
       on E: Exception do
       begin
         Add_Log(E.Message);
+        FProcError := True;
         exit;
       end;
     end;
@@ -1021,7 +1027,10 @@ begin
       DeleteFile(SavePath + FileName + '.xls');
     except
       on E: Exception do
+      begin
         Add_Log(E.Message);
+        FProcError := True;
+      end;
     end;
   end;
 end;
@@ -1207,6 +1216,7 @@ begin
     Except ON E:Exception DO
       Begin
         Add_Log(E.Message);
+        FProcError := True;
       end;
     end;
   finally

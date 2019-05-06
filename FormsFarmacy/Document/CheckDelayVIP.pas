@@ -60,6 +60,8 @@ type
     cxSplitter1: TcxSplitter;
     dxBarButton4: TdxBarButton;
     spMovementUnComplete: TdsdStoredProc;
+    dxBarButton5: TdxBarButton;
+    actIsShowAll: TBooleanStoredProcAction;
   private
     { Private declarations }
   public
