@@ -160,6 +160,11 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
               Format = ',0.####'
               Kind = skSum
               Column = chRemains
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = chKoeff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -176,6 +181,11 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
               Format = ',0.####'
               Kind = skSum
               Column = chRemains
+            end
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = chKoeff
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -247,6 +257,18 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
             HeaderHint = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1082#1086#1085#1077#1094' '#1076#1085#1103
             Options.Editing = False
             Width = 77
+          end
+          object chKoeff: TcxGridDBColumn
+            Caption = #1050#1086#1101#1092#1092'.'
+            DataBinding.FieldName = 'Koeff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1072
+            Options.Editing = False
+            Width = 60
           end
           object chIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085

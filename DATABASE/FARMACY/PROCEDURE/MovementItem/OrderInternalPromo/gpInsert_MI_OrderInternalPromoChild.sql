@@ -12,15 +12,16 @@ $BODY$
    DECLARE vbRetailId Integer;
    DECLARE vbStartDate TDateTime;
    DECLARE vbEndDate TDateTime;
+   DECLARE vbDays TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
 
-
      SELECT (MovementDate_StartSale.ValueData - INTERVAL '1 DAY')
           , (Movement.OperDate + INTERVAL '1 DAY')
           , MovementLinkObject_Retail.ObjectId AS RetailId
-    INTO vbStartDate, vbEndDate, vbRetailId
+          , (DATE_PART('day', AGE ((Movement.OperDate + INTERVAL '1 DAY'), (MovementDate_StartSale.ValueData - INTERVAL '1 DAY')))) :: TFloat
+    INTO vbStartDate, vbEndDate, vbRetailId, vbDays
      FROM Movement 
         LEFT JOIN MovementDate AS MovementDate_StartSale
                                ON MovementDate_StartSale.MovementId = Movement.Id
@@ -29,7 +30,6 @@ BEGIN
                                      ON MovementLinkObject_Retail.MovementId = Movement.Id
                                     AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
      WHERE Movement.Id = inMovementId;
-
 
     -- Cуществующие чайлд
      CREATE TEMP TABLE tmpMI_Child (Id Integer, ParentId Integer, UnitId Integer) ON COMMIT DROP;
@@ -108,10 +108,11 @@ BEGIN
              , tmpData AS (SELECT COALESCE (tmpMI_Child.Id,0) AS Id
                                 , tmpMI_Master.Id             AS ParentId
                                 , tmpUnit.UnitId              AS UnitId
-                                , tmpContainer.Amount         AS AmountOut
+                                , tmpContainer.Amount         AS AmountOut_real
+                                , (((tmpContainer.Amount /vbDays )*300 - tmpRemains.Amount)/300) AS AmountOut
                                 , tmpRemains.Amount           AS Remains
                                 , tmpMI_Master.Amount         AS Amount_Master
-                                , SUM (tmpContainer.Amount) OVER (PARTITION BY tmpMI_Master.Id) AS AmountOutSUM
+                                , SUM (((tmpContainer.Amount /vbDays )*300 - tmpRemains.Amount)/300) OVER (PARTITION BY tmpMI_Master.Id) AS AmountOutSUM
                            FROM tmpMI_Master
                                 LEFT JOIN tmpUnit ON 1=1
                                 LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI_Master.GoodsId
@@ -126,9 +127,10 @@ BEGIN
              , tmpData1 AS (SELECT tmpData.Id
                                   , tmpData.ParentId
                                   , tmpData.UnitId
-                                  , tmpData.AmountOUT
+                                  , tmpData.AmountOut
+                                  , tmpData.AmountOut_real
                                   , tmpData.Remains
-                                  , ROUND ( (tmpData.Amount_Master / tmpData.AmountOutSUM) * tmpData.AmountOUT, 0) AS Amount_Calc
+                                  , ROUND ( (tmpData.Amount_Master / tmpData.AmountOutSUM) * tmpData.AmountOut, 0) AS Amount_Calc
                             FROM tmpData)
               -- вспомогательные расчеты для распределения заказа
              , tmpData111 AS (SELECT tmpMI_Master.GoodsId
@@ -138,9 +140,10 @@ BEGIN
                                    , tmpMI_Master.Id              AS ParentId
                                    , tmpData1.Amount_Calc
                                    , tmpData1.AmountOut
+                                   , tmpData1.AmountOut_real
                                    , tmpData1.Remains
-                                   , SUM (tmpData1.Amount_Calc) OVER (PARTITION BY tmpData1.ParentId ORDER BY tmpData1.AmountOUT, tmpMI_Master.Id) AS Amount_CalcSUM
-                                   , ROW_NUMBER() OVER (PARTITION BY tmpMI_Master.GoodsId/*, tmpMI_Master.Id*/ ORDER BY tmpData1.AmountOUT DESC) AS DOrd
+                                   , SUM (tmpData1.Amount_Calc) OVER (PARTITION BY tmpData1.ParentId ORDER BY tmpData1.AmountOut, tmpMI_Master.Id) AS Amount_CalcSUM
+                                   , ROW_NUMBER() OVER (PARTITION BY tmpMI_Master.GoodsId/*, tmpMI_Master.Id*/ ORDER BY tmpData1.AmountOut DESC) AS DOrd
                               FROM tmpMI_Master
                                    INNER JOIN tmpData1 AS tmpData1 ON tmpData1.ParentId = tmpMI_Master.Id
                               )
@@ -148,7 +151,7 @@ BEGIN
          SELECT DD.Id
               , DD.ParentId
               , DD.UnitId
-              , DD.AmountOUT
+              , DD.AmountOut_real AS AmountOut
               , DD.Remains
               , CASE WHEN DD.Amount_Master - DD.Amount_CalcSUM > 0 AND DD.DOrd <> 1
                           THEN ceil (DD.Amount_Calc)                                           ---ceil
@@ -286,9 +289,9 @@ and MovementItem.Iserased = FALSE)
         SELECT tmpData.Id
               , tmpData.ParentId
               , tmpData.UnitId
-              , tmpData.AmountOUT
+              , tmpData.AmountOut
               , tmpData.Remains
-              , ROUND ( (tmpData.Amount_Master / tmpData.AmountOutSUM) * tmpData.AmountOUT,1) AS Amount_Calc
+              , ROUND ( (tmpData.Amount_Master / tmpData.AmountOutSUM) * tmpData.AmountOut,1) AS Amount_Calc
         FROM tmpData)
 
 
@@ -300,8 +303,8 @@ and MovementItem.Iserased = FALSE)
                                       , tmpData1.Amount_Calc      AS Amount_Calc
                                       , tmpData1.Id
                                       , tmpData1.Remains
-                                      , SUM (tmpData1.Amount_Calc) OVER (PARTITION BY tmpData1.ParentId ORDER BY tmpData1.AmountOUT, tmpMI_Master.Id) AS Amount_CalcSUM
-                                      , ROW_NUMBER() OVER (PARTITION BY tmpMI_Master.GoodsId/*, tmpMI_Master.Id*/ ORDER BY tmpData1.AmountOUT DESC) AS DOrd
+                                      , SUM (tmpData1.Amount_Calc) OVER (PARTITION BY tmpData1.ParentId ORDER BY tmpData1.AmountOut, tmpMI_Master.Id) AS Amount_CalcSUM
+                                      , ROW_NUMBER() OVER (PARTITION BY tmpMI_Master.GoodsId/*, tmpMI_Master.Id*/ ORDER BY tmpData1.AmountOut DESC) AS DOrd
                                  FROM tmpMI_Master
                                       INNER JOIN tmpData1 AS tmpData1 ON tmpData1.ParentId = tmpMI_Master.Id
                       )

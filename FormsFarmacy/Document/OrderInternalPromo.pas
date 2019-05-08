@@ -106,6 +106,7 @@ type
     spInsert: TdsdStoredProc;
     spInsertChild: TdsdStoredProc;
     isReport: TcxGridDBColumn;
+    chKoeff: TcxGridDBColumn;
   private
     { Private declarations }
   public

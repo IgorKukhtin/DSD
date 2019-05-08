@@ -11,17 +11,28 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_OrderInternalPromoChild(
 RETURNS TABLE (Id Integer, ParentId Integer
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , Amount TFloat, AmountOut TFloat, Remains TFloat
+             , Koeff TFloat
              , IsErased Boolean
               )
 AS
 $BODY$
     DECLARE vbUserId Integer;
     DECLARE vbStatusId Integer;
+    DECLARE vbDays TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderInternalPromo());
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- данные из шапки документа
+    SELECT (DATE_PART ('DAY', AGE (Movement.OperDate + INTERVAL '1 DAY', MovementDate_StartSale.ValueData))) :: TFloat
+   INTO vbDays
+    FROM Movement
+        LEFT JOIN MovementDate AS MovementDate_StartSale
+                               ON MovementDate_StartSale.MovementId = Movement.Id
+                              AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
+    WHERE Movement.Id = inMovementId;
+    
         RETURN QUERY
            SELECT MovementItem.Id
                 , MovementItem.ParentId
@@ -32,6 +43,7 @@ BEGIN
                 , MovementItem.Amount              AS Amount
                 , MIFloat_AmountOut.ValueData      AS AmountOut
                 , MIFloat_Remains.ValueData        AS Remains
+                , (((MIFloat_AmountOut.ValueData /vbDays )*300 - MIFloat_Remains.ValueData)/300) :: TFloat AS Koeff
                 , MovementItem.IsErased
            FROM MovementItem
                 LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.ObjectId
@@ -48,11 +60,9 @@ BEGIN
              AND MovementItem.DescId = zc_MI_Child()
              AND (MovementItem.isErased = FALSE OR inIsErased = TRUE);
   
-  
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
